@@ -21,8 +21,8 @@ namespace sequoia::testing
     constexpr move_only_allocation_predictions(copy_like_move_assign_prediction copyLikeMove,
                                                mutation_prediction yMutation,
                                                para_move_prediction paraMove,
-                                               move_prediction m={},
-                                               move_assign_prediction moveAssign={},
+                                               move_prediction m,
+                                               move_assign_prediction moveAssign,
                                                number_of_containers numContainersX={},
                                                number_of_containers numContainersY={},
                                                number_of_containers numContainersPostMutation={})
@@ -39,8 +39,8 @@ namespace sequoia::testing
     constexpr move_only_allocation_predictions(copy_like_move_assign_prediction copyLikeMove,
                                                mutation_prediction yMutation,
                                                para_move_prediction paraMove,
-                                               number_of_containers numContainersX,
-                                               number_of_containers numContainersY,
+                                               number_of_containers numContainersX={},
+                                               number_of_containers numContainersY={},
                                                number_of_containers numContainersPostMutation={})
       : copy_like_move_assign{copyLikeMove}
       , mutation{yMutation}
