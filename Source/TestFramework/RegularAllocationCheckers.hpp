@@ -124,9 +124,8 @@ namespace sequoia::testing
                                                     number_of_containers numContainersPostMutation)
   {
     using shifter = alloc_prediction_shifter<T>;
-    const auto mutationContainers{numContainersPostMutation > numContainers ? numContainersPostMutation : number_of_containers{}};
     return {shifter::shift(predictions.copy,      numContainers),
-            shifter::shift(predictions.mutation,  mutationContainers),
+            shifter::shift(predictions.mutation,  post_mutation_container_correction(numContainers, numContainersPostMutation)),
             shifter::shift(predictions.para_copy, numContainers),
             shifter::shift(predictions.para_move, numContainers),
             shifter::shift(predictions.move,      numContainers)};

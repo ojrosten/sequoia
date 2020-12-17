@@ -25,7 +25,7 @@ namespace sequoia::testing
                                                move_assign_prediction moveAssign={},
                                                number_of_containers numContainersX={},
                                                number_of_containers numContainersY={},
-                                               number_of_containers numContainersPostMutation = {})
+                                               number_of_containers numContainersPostMutation={})
       : copy_like_move_assign{copyLikeMove}
       , mutation{yMutation}
       , para_move{paraMove}
@@ -64,7 +64,13 @@ namespace sequoia::testing
 
     [[nodiscard]]
     constexpr int move_allocs() const noexcept { return move; }
-    
+
+    [[nodiscard]]
+    constexpr number_of_containers post_mutation_container_correction() const noexcept
+    {
+      return testing::post_mutation_container_correction(num_containers_y, num_containers_post_mutation);
+    }
+
     copy_like_move_assign_prediction copy_like_move_assign{};
     mutation_prediction mutation{};
     para_move_prediction para_move{};
@@ -81,7 +87,7 @@ namespace sequoia::testing
       ? predictions.num_containers_post_mutation : number_of_containers{} };
 
     return {shifter::shift(predictions.copy_like_move_assign, predictions.num_containers_x, predictions.num_containers_y),
-            shifter::shift(predictions.mutation,    mutationContainers),
+            shifter::shift(predictions.mutation,    predictions.post_mutation_container_correction()),
             shifter::shift(predictions.para_move,   predictions.num_containers_y),
             shifter::shift(predictions.move,        predictions.num_containers_y),
             shifter::shift(predictions.move_assign, predictions.num_containers_y)};

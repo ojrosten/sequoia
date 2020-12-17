@@ -112,7 +112,12 @@ namespace sequoia::testing
   private:
     int m_Num{-1};
   };
-  
+
+  constexpr number_of_containers post_mutation_container_correction(number_of_containers containersPreMutation, number_of_containers containersPostMutation) noexcept
+  {
+    return containersPostMutation > containersPreMutation ? containersPostMutation : number_of_containers{};
+  }
+
   template<auto AllocEvent>
   [[nodiscard]]
   constexpr static alloc_prediction<AllocEvent> increment_msvc_debug_count(alloc_prediction<AllocEvent> p, number_of_containers numContainers, int i=1) noexcept
