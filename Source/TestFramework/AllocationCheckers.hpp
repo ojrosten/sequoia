@@ -332,7 +332,7 @@ namespace sequoia::testing
 
     [[nodiscard]]
     int count(const T& c) const noexcept
-    {        
+    {
       return m_AllocatorGetter(c).allocs();
     }
 
@@ -408,22 +408,29 @@ namespace sequoia::testing
 
   namespace impl
   {
-    template<class T, std::size_t I>
+    template<movable_comparable T, alloc_getter<T> Getter, std::size_t I>
     struct alloc_equivalence_class_generator
     {
       using type = alloc_equivalence_class_t<T>;
     };
 
-    template<class T, std::size_t I>
-      requires (is_tuple_v<alloc_equivalence_class_t<T>>)
-    struct alloc_equivalence_class_generator<T, I>
+    template<movable_comparable T, alloc_getter<T> Getter, std::size_t I>
+      requires (defines_alloc_equivalence_class<Getter>)
+    struct alloc_equivalence_class_generator<T, Getter, I>
     {
-      using allocClass = alloc_equivalence_class_t<T>;
+      using type = typename Getter::alloc_equivalence_class;
+    };
+
+    template<movable_comparable T, alloc_getter<T> Getter, std::size_t I>
+      requires (defines_scoped_alloc_equivalence_class<Getter>)
+    struct alloc_equivalence_class_generator<T, Getter, I>
+    {
+      using allocClass = typename Getter::alloc_equivalence_class;
       using type = std::remove_cvref_t<decltype(std::get<I>(std::declval<allocClass>()))>;
     };
 
-    template<class T, std::size_t I>
-    using alloc_equivalence_class_generator_t = typename alloc_equivalence_class_generator<T, I>::type;
+    template<movable_comparable T, alloc_getter<T> Getter, std::size_t I>
+    using alloc_equivalence_class_generator_t = typename alloc_equivalence_class_generator<T, Getter, I>::type;
   }
 
   /*! \brief A specialization of basic_allocation_info appropriate for std::scoped_allocator_adaptor
@@ -463,7 +470,7 @@ namespace sequoia::testing
 
       auto scopedShifter{
         [](const Predictions& predictions) {
-          using allocClass = impl::alloc_equivalence_class_generator_t<T, I>;
+          using allocClass = impl::alloc_equivalence_class_generator_t<T, Getter, I>;
           return shift<allocClass>(predictions);
         }
       };

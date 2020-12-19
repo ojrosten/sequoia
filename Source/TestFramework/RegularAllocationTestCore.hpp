@@ -31,10 +31,10 @@ namespace sequoia::testing
     
     explicit regular_allocation_extender(test_logger<Mode>& logger) : m_Logger{logger} {}
 
-    regular_allocation_extender(const regular_allocation_extender&) = delete;    
+    regular_allocation_extender(const regular_allocation_extender&) = delete;
     regular_allocation_extender(regular_allocation_extender&&)      = delete;
 
-    regular_allocation_extender& operator=(const regular_allocation_extender&) = delete;  
+    regular_allocation_extender& operator=(const regular_allocation_extender&) = delete;
     regular_allocation_extender& operator=(regular_allocation_extender&&)      = delete;
 
     template<pseudoregular T, invocable<T&> Mutator, alloc_getter<T>... Getters>
@@ -45,7 +45,7 @@ namespace sequoia::testing
     }
 
     template<pseudoregular T, invocable<T&> Mutator, alloc_getter<T>... Getters>
-    requires (orderable<T> && (sizeof...(Getters) > 0))
+      requires (orderable<T> && (sizeof...(Getters) > 0))
     void check_semantics(std::string_view description, const T& x, const T& y, std::weak_ordering order, Mutator m, allocation_info<T, Getters>... info)
     {
       testing::check_semantics(append_lines(description, emphasise("Ordered Semantics")), m_Logger, x, y, order, m, info...);

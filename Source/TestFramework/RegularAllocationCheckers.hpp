@@ -152,9 +152,8 @@ namespace sequoia::testing
             shift<T>(predictions.assign_y_to_x, predictions.num_containers_x, predictions.num_containers_y)};
   }
 
-  // Done through inheritance rather than a using declaration
-  // in order to make use of CTAD. Should be able to revert
-  // to using in C++20...
+  // TO DO: revert to 'using' in C++20; presently this is done through inheritance
+  // in order to make use of CTAD.
 
   template<class T, alloc_getter<T> Getter>
   class allocation_info
