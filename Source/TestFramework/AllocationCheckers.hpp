@@ -133,11 +133,14 @@ namespace sequoia::testing
     }
   }
 
-  template<class Allocator>
-  struct vector_like_allocations_tag {};
+  namespace allocation_equivalence_classes
+  {
+    template<class Allocator>
+    struct container_of_values {};
 
-  template<class Allocator>
-  struct vector_of_ptr_like_allocations_tag {};
+    template<class Allocator>
+    struct container_of_pointers {};
+  }
 
   /*! \brief class template for shifting allocation predictions, especially for MSVC debug builds.
 
@@ -155,7 +158,7 @@ namespace sequoia::testing
   };
 
   template<class Allocator>
-  struct alloc_prediction_shifter<vector_like_allocations_tag<Allocator>>
+  struct alloc_prediction_shifter<allocation_equivalence_classes::container_of_values<Allocator>>
   {
     [[nodiscard]]
     constexpr static copy_prediction shift(copy_prediction p, number_of_containers numContainers) noexcept
@@ -218,10 +221,10 @@ namespace sequoia::testing
   };
 
   template<class Allocator>
-  struct alloc_prediction_shifter<vector_of_ptr_like_allocations_tag<Allocator>>
-    : alloc_prediction_shifter<vector_like_allocations_tag<Allocator>>
+  struct alloc_prediction_shifter<allocation_equivalence_classes::container_of_pointers<Allocator>>
+    : alloc_prediction_shifter<allocation_equivalence_classes::container_of_values<Allocator>>
   {
-    using alloc_prediction_shifter<vector_like_allocations_tag<Allocator>>::shift;
+    using alloc_prediction_shifter<allocation_equivalence_classes::container_of_values<Allocator>>::shift;
 
     [[nodiscard]]
     constexpr static assign_prediction shift(assign_prediction p, number_of_containers numContainersX, number_of_containers numContainersY) noexcept
@@ -246,7 +249,7 @@ namespace sequoia::testing
       return increment_msvc_debug_count(p, diff(numContainersX, numContainersY), num);
     }
   protected:
-    using alloc_prediction_shifter<vector_like_allocations_tag<Allocator>>::diff;
+    using alloc_prediction_shifter<allocation_equivalence_classes::container_of_values<Allocator>>::diff;
   };
 
   [[nodiscard]]
@@ -309,7 +312,7 @@ namespace sequoia::testing
   struct alloc_equivalence_class_generator
   {
     using allocator = std::remove_cvref_t<std::invoke_result_t<Getter, T>>;
-    using type = vector_like_allocations_tag<allocator>;
+    using type = allocation_equivalence_classes::container_of_values<allocator>;
   };
 
   template<movable_comparable T, alloc_getter<T> Getter, std::size_t I>

@@ -156,7 +156,7 @@ namespace sequoia::testing
 
     struct alloc_acquirer
     {
-      using alloc_equivalence_class = vector_of_ptr_like_allocations_tag<allocator_type>;
+      using alloc_equivalence_class = allocation_equivalence_classes::container_of_pointers<allocator_type>;
 
       [[nodiscard]]
       allocator_type operator()(const perfectly_sharing_beast& beast) const
