@@ -21,6 +21,9 @@ namespace sequoia::testing
 {
   template<movable_comparable T, alloc_getter<T> Getter, class Predictions>
   class basic_allocation_info;
+
+  template<auto Event>
+  class alloc_prediction;
 }
 
 namespace sequoia::testing::impl
@@ -31,7 +34,7 @@ namespace sequoia::testing::impl
   };
 
   template<test_mode Mode, movable_comparable T, alloc_getter<T> Getter, class Predictions>
-  static bool check_allocation(std::string_view detail,
+  bool check_allocation(std::string_view detail,
                                test_logger<Mode>& logger,
                                const T& container,
                                const basic_allocation_info<T, Getter, Predictions>& info,
@@ -44,6 +47,19 @@ namespace sequoia::testing::impl
     const auto message{ append_lines(make_type_info<allocator>(), detail) };
 
     return check_equality(message, logger, current - previous, prediction, tutor{allocation_advice{}});
+  }
+
+  template<test_mode Mode, movable_comparable T, alloc_getter<T> Getter, class Predictions, auto Event>
+  bool check_allocation(std::string_view detail,
+    test_logger<Mode>& logger,
+    const T& container,
+    const basic_allocation_info<T, Getter, Predictions>& info,
+    const int previous,
+    const alloc_prediction<Event> prediction)
+  {
+    const auto unshifted{prediction.unshifted()};
+    const auto delta{prediction.value() - unshifted};
+    return check_allocation(detail, logger, container, info, previous + delta, unshifted);
   }
 
   /*! \brief Wraps basic_allocation_info, together with two prior allocation counts.
@@ -102,16 +118,16 @@ namespace sequoia::testing::impl
     template<test_mode Mode>
     void check_copy_assign_y_to_x(test_logger<Mode>& logger, const T& x, const T& y) const
     {
-      constexpr bool propagate{std::allocator_traits<allocator_type>::propagate_on_container_copy_assignment::value};     
+      constexpr bool propagate{std::allocator_traits<allocator_type>::propagate_on_container_copy_assignment::value};
       if constexpr(propagate)
       {
-        const auto yPrediction{info().get_predictions().assign_y_to_x.with_propagation};        
+        const auto yPrediction{info().get_predictions().assign_y_to_x.with_propagation};
         check_allocation("Unexpected allocation detected for propagating copy assignment (x)", logger, x, info(), second_count(), yPrediction);
         check_allocation("Unexpected allocation detected for propagating copy assignment (y)", logger, y, info(), second_count(), yPrediction);
       }
       else
       {
-        const auto xPrediction{info().get_predictions().assign_y_to_x.without_propagation};        
+        const auto xPrediction{info().get_predictions().assign_y_to_x.without_propagation};
         check_allocation("Unexpected allocation detected for copy assignment (x)", logger, x, info(), first_count(), xPrediction);
         check_allocation("Unexpected allocation detected for copy assignment (y)", logger, y, info(), second_count(), 0);
       }
@@ -193,10 +209,16 @@ namespace sequoia::testing::impl
       , m_PriorCount{m_Info.count(x)}
     {}
 
-    template<test_mode Mode>
-    void check(std::string_view detail, test_logger<Mode>& logger, const T& container, const int prediction) const
+    template<test_mode Mode, auto Event>
+    bool check(std::string_view detail, test_logger<Mode>& logger, const T& container, const alloc_prediction<Event> prediction) const
     {
-      check_allocation(detail, logger, container, info(), m_PriorCount, prediction);
+      return check_allocation(detail, logger, container, info(), m_PriorCount, prediction);
+    }
+
+    template<test_mode Mode>
+    bool check(std::string_view detail, test_logger<Mode>& logger, const T& container, const int prediction) const
+    {
+      return check_allocation(detail, logger, container, info(), m_PriorCount, prediction);
     }
 
     [[nodiscard]]

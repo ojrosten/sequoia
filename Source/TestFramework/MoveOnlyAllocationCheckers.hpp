@@ -51,19 +51,19 @@ namespace sequoia::testing
     {}
 
     [[nodiscard]]
-    constexpr int para_move_allocs() const noexcept { return para_move; }
+    constexpr para_move_prediction para_move_allocs() const noexcept { return para_move; }
 
     [[nodiscard]]
-    constexpr int copy_like_move_assign_allocs() const noexcept { return copy_like_move_assign; }
+    constexpr copy_like_move_assign_prediction copy_like_move_assign_allocs() const noexcept { return copy_like_move_assign; }
 
     [[nodiscard]]
-    constexpr int move_assign_allocs() const noexcept { return move_assign; }
+    constexpr move_assign_prediction move_assign_allocs() const noexcept { return move_assign; }
 
     [[nodiscard]]
-    constexpr int mutation_allocs() const noexcept { return mutation; }
+    constexpr mutation_prediction mutation_allocs() const noexcept { return mutation; }
 
     [[nodiscard]]
-    constexpr int move_allocs() const noexcept { return move; }
+    constexpr move_prediction move_allocs() const noexcept { return move; }
 
     [[nodiscard]]
     constexpr number_of_containers post_mutation_container_correction() const noexcept

@@ -72,13 +72,19 @@ namespace sequoia::testing
 
     constexpr alloc_prediction(int unshifted, int delta={}) noexcept
       : m_Unshifted{unshifted}
-      , m_Num{m_Unshifted + delta}
+      , m_Prediction{m_Unshifted + delta}
     {}
 
     [[nodiscard]]
     constexpr operator int() const noexcept
     {
-      return m_Num;
+      return m_Prediction;
+    }
+
+    [[nodiscard]]
+    constexpr int value() const noexcept
+    {
+      return m_Prediction;
     }
 
     [[nodiscard]]
@@ -87,7 +93,7 @@ namespace sequoia::testing
       return m_Unshifted;
     }
   private:
-    int m_Unshifted{}, m_Num{};
+    int m_Unshifted{}, m_Prediction{};
   };
 
   using copy_prediction                  = alloc_prediction<individual_allocation_event::copy>;
@@ -360,11 +366,11 @@ namespace sequoia::testing
   public:
     using allocator_type = std::invoke_result_t<Getter, T>;
     
-    explicit allocation_info_base(Getter allocGetter)
+    constexpr explicit allocation_info_base(Getter allocGetter)
       : m_AllocatorGetter{std::move(allocGetter)}
     {}
 
-    allocation_info_base(const allocation_info_base&) = default;
+    constexpr allocation_info_base(const allocation_info_base&) = default;
 
     [[nodiscard]]
     int count(const T& c) const noexcept
@@ -387,13 +393,13 @@ namespace sequoia::testing
   protected:
     ~allocation_info_base() = default;
 
-    allocation_info_base(allocation_info_base&&) noexcept = default;
+    constexpr allocation_info_base(allocation_info_base&&) noexcept = default;
 
-    allocation_info_base& operator=(const allocation_info_base&)     = default;
-    allocation_info_base& operator=(allocation_info_base&&) noexcept = default;
+    constexpr allocation_info_base& operator=(const allocation_info_base&)     = default;
+    constexpr allocation_info_base& operator=(allocation_info_base&&) noexcept = default;
 
     [[nodiscard]]
-    Getter make_getter() const
+    constexpr Getter make_getter() const
     {
       return m_AllocatorGetter;
     }
@@ -428,13 +434,13 @@ namespace sequoia::testing
     };
 
     template<class Shifter=prediction_shifter>
-    basic_allocation_info(Getter allocGetter, const Predictions& predictions, Shifter shifter=Shifter{})
+    constexpr basic_allocation_info(Getter allocGetter, const Predictions& predictions, Shifter shifter=Shifter{})
       : base_t{std::move(allocGetter)}
       , m_Predictions{shifter(predictions)}
     {}
 
     [[nodiscard]]
-    const Predictions& get_predictions() const noexcept
+    constexpr const Predictions& get_predictions() const noexcept
     {
       return m_Predictions;
     }
@@ -463,7 +469,7 @@ namespace sequoia::testing
 
     constexpr static std::size_t size{alloc_count<allocator_type>::size};
 
-    basic_allocation_info(Getter allocGetter, std::initializer_list<Predictions> predictions)
+    constexpr basic_allocation_info(Getter allocGetter, std::initializer_list<Predictions> predictions)
       : base_t{std::move(allocGetter)}
       , m_Predictions{utilities::to_array<Predictions, size>(predictions)}
     {}
