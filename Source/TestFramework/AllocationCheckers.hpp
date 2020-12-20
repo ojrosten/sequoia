@@ -133,6 +133,12 @@ namespace sequoia::testing
     }
   }
 
+  template<class Allocator>
+  struct vector_like_allocations_tag {};
+
+  template<class Allocator>
+  struct vector_of_ptr_like_allocations_tag {};
+
   /*! \brief class template for shifting allocation predictions, especially for MSVC debug builds.
 
       \anchor alloc_prediction_shifter_primary
@@ -148,8 +154,8 @@ namespace sequoia::testing
     }
   };
 
-  template<class T, class Allocator>
-  struct alloc_prediction_shifter<std::vector<T, Allocator>>
+  template<class Allocator>
+  struct alloc_prediction_shifter<vector_like_allocations_tag<Allocator>>
   {
     [[nodiscard]]
     constexpr static copy_prediction shift(copy_prediction p, number_of_containers numContainers) noexcept
@@ -211,11 +217,11 @@ namespace sequoia::testing
     }
   };
 
-  template<class T, class Allocator>
-  struct alloc_prediction_shifter<std::vector<T*, Allocator>>
-    : alloc_prediction_shifter<std::vector<T, Allocator>>
+  template<class Allocator>
+  struct alloc_prediction_shifter<vector_of_ptr_like_allocations_tag<Allocator>>
+    : alloc_prediction_shifter<vector_like_allocations_tag<Allocator>>
   {
-    using alloc_prediction_shifter<std::vector<T, Allocator>>::shift;
+    using alloc_prediction_shifter<vector_like_allocations_tag<Allocator>>::shift;
 
     [[nodiscard]]
     constexpr static assign_prediction shift(assign_prediction p, number_of_containers numContainersX, number_of_containers numContainersY) noexcept
@@ -240,18 +246,9 @@ namespace sequoia::testing
       return increment_msvc_debug_count(p, diff(numContainersX, numContainersY), num);
     }
   protected:
-    using alloc_prediction_shifter<std::vector<T, Allocator>>::diff;
+    using alloc_prediction_shifter<vector_like_allocations_tag<Allocator>>::diff;
   };
 
-  template<class T>
-  struct alloc_equivalence_class
-  {
-    using type = std::vector<int, std::allocator<int>>;
-  };
-
-  template<class T>
-  using alloc_equivalence_class_t = typename alloc_equivalence_class<T>::type;  
-  
   [[nodiscard]]
   SPECULATIVE_CONSTEVAL copy_prediction
   operator "" _c(unsigned long long int n) noexcept
@@ -307,6 +304,32 @@ namespace sequoia::testing
   {
     return number_of_containers{static_cast<int>(n)};
   }
+
+  template<movable_comparable T, alloc_getter<T> Getter, std::size_t I>
+  struct alloc_equivalence_class_generator
+  {
+    using allocator = std::remove_cvref_t<std::invoke_result_t<Getter, T>>;
+    using type = vector_like_allocations_tag<allocator>;
+  };
+
+  template<movable_comparable T, alloc_getter<T> Getter, std::size_t I>
+    requires (defines_alloc_equivalence_class<Getter>)
+  struct alloc_equivalence_class_generator<T, Getter, I>
+  {
+    using type = typename Getter::alloc_equivalence_class;
+  };
+
+  template<movable_comparable T, alloc_getter<T> Getter, std::size_t I>
+    requires (defines_scoped_alloc_equivalence_class<Getter>)
+  struct alloc_equivalence_class_generator<T, Getter, I>
+  {
+    using allocClass = typename Getter::alloc_equivalence_class;
+    using type = std::remove_cvref_t<decltype(std::get<I>(std::declval<allocClass>()))>;
+  };
+
+  template<movable_comparable T, alloc_getter<T> Getter, std::size_t I>
+  using alloc_equivalence_class_generator_t = typename alloc_equivalence_class_generator<T, Getter, I>::type;
+
 
   /*! \brief Base class for use with both plain (shared counting) allocators and std::scoped_allocator_adaptor
 
@@ -386,7 +409,7 @@ namespace sequoia::testing
     {
       constexpr Predictions operator()(const Predictions& predictions) const
       {
-        using allocClass = alloc_equivalence_class_t<T>;
+        using allocClass = alloc_equivalence_class_generator_t<T, Getter, 0>;
         return shift<allocClass>(predictions);
       }
     };
@@ -406,32 +429,7 @@ namespace sequoia::testing
     Predictions m_Predictions;
   };
 
-  namespace impl
-  {
-    template<movable_comparable T, alloc_getter<T> Getter, std::size_t I>
-    struct alloc_equivalence_class_generator
-    {
-      using type = alloc_equivalence_class_t<T>;
-    };
 
-    template<movable_comparable T, alloc_getter<T> Getter, std::size_t I>
-      requires (defines_alloc_equivalence_class<Getter>)
-    struct alloc_equivalence_class_generator<T, Getter, I>
-    {
-      using type = typename Getter::alloc_equivalence_class;
-    };
-
-    template<movable_comparable T, alloc_getter<T> Getter, std::size_t I>
-      requires (defines_scoped_alloc_equivalence_class<Getter>)
-    struct alloc_equivalence_class_generator<T, Getter, I>
-    {
-      using allocClass = typename Getter::alloc_equivalence_class;
-      using type = std::remove_cvref_t<decltype(std::get<I>(std::declval<allocClass>()))>;
-    };
-
-    template<movable_comparable T, alloc_getter<T> Getter, std::size_t I>
-    using alloc_equivalence_class_generator_t = typename alloc_equivalence_class_generator<T, Getter, I>::type;
-  }
 
   /*! \brief A specialization of basic_allocation_info appropriate for std::scoped_allocator_adaptor
 
@@ -470,7 +468,7 @@ namespace sequoia::testing
 
       auto scopedShifter{
         [](const Predictions& predictions) {
-          using allocClass = impl::alloc_equivalence_class_generator_t<T, Getter, I>;
+          using allocClass = alloc_equivalence_class_generator_t<T, Getter, I>;
           return shift<allocClass>(predictions);
         }
       };

@@ -299,10 +299,7 @@ namespace sequoia::testing
         using handle = std::shared_ptr<int>;
         using beast = perfectly_sharing_beast<int, handle, shared_counting_allocator<handle, PropagateCopy, PropagateMove, PropagateSwap>>;
         using allocator = typename beast::allocator_type;
-
-        auto allocGetter{
-          [](const beast& b){ return b.x.get_allocator(); }
-        };
+        using getter = typename beast::alloc_acquirer;
 
         auto m{
           [](beast& b) {
@@ -310,11 +307,11 @@ namespace sequoia::testing
           }
         };
 
-        check_semantics(LINE("Incorrect copy x allocs"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, m, allocation_info{allocGetter, {0_c, {1_c,0_mu}, {1_awp,1_anp}}});
+        check_semantics(LINE("Incorrect copy x allocs"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, m, allocation_info{getter{}, {0_c, {1_c,0_mu}, {1_awp,1_anp}}});
           
-        check_semantics(LINE("Incorrect copy y allocs"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, m, allocation_info{allocGetter, {1_c, {0_c,0_mu}, {1_awp,1_anp}}});
+        check_semantics(LINE("Incorrect copy y allocs"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, m, allocation_info{getter{}, {1_c, {0_c,0_mu}, {1_awp,1_anp}}});
         
-        check_semantics(LINE("Incorrect mutation allocs"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, m, allocation_info{allocGetter, {1_c, {1_c,1_mu}, {1_awp,1_anp}}});
+        check_semantics(LINE("Incorrect mutation allocs"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, m, allocation_info{getter{}, {1_c, {1_c,1_mu}, {1_awp,1_anp}}});
 
         auto predictions{
           []() -> allocation_predictions {
@@ -327,12 +324,11 @@ namespace sequoia::testing
               return {1_c, {1_c,0_mu}, {0_awp,1_anp}};
             }
           }
-        };                  
+        };
 
-        check_semantics(LINE("Incorrect copy assign y to x allocs"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, m, allocation_info{allocGetter, predictions()});          
+        check_semantics(LINE("Incorrect copy assign y to x allocs"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, m, allocation_info{getter{}, predictions()});
       }
 
-      
 
       {
         using beast = inefficient_serialization<int, shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
@@ -387,21 +383,17 @@ namespace sequoia::testing
       using handle = std::shared_ptr<int>;
       using beast = perfectly_sharing_beast<int, handle, shared_counting_allocator<handle, PropagateCopy, PropagateMove, PropagateSwap>>;
       using allocator = typename beast::allocator_type;
-
-      auto allocGetter{
-        [](const beast& b){ return b.x.get_allocator(); }
-      };
+      using getter = typename beast::alloc_acquirer;
 
       auto mutator{
         [](beast& b) {
           *b.x.front() = 9;
         }
       };
-        
-      
-      check_semantics(LINE(""), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,0_mu}, {1_awp, 1_anp}}});
 
-      check_semantics(LINE(""), beast(allocator{}), beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {0_c, {1_c,0_mu}, {1_awp, 1_anp}}});
+      check_semantics(LINE(""), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{getter{}, {1_c, {1_c,0_mu}, {1_awp, 1_anp}}});
+
+      check_semantics(LINE(""), beast(allocator{}), beast{{5,6}, allocator{}}, mutator, allocation_info{getter{}, {0_c, {1_c,0_mu}, {1_awp, 1_anp}}});
     }
 
     /* TO DO: enable test once there's a fix for this libc++ bug https://bugs.llvm.org/show_bug.cgi?id=48439 {
@@ -480,7 +472,7 @@ namespace sequoia::testing
       check_semantics(LINE(""), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,1_mu,1_pc,2_pm}, {1_awp,1_anp}}});
     }
 
-    
+
     {
       using beast = doubly_normal_beast<int, double, shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>, shared_counting_allocator<double, PropagateCopy, PropagateMove, PropagateSwap>>;
       using xAllocator = typename beast::x_allocator_type;
