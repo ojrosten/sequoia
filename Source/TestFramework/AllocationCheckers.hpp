@@ -143,10 +143,16 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    constexpr operator int() const noexcept
+    constexpr int value() const
     {
+      if (!valid()) throw std::logic_error{"Invalid number of containers!"};
+
       return m_Num;
     }
+
+    [[nodiscard]]
+    friend auto operator<=>(const number_of_containers&, const number_of_containers&) noexcept = default;
+
   private:
     int m_Num{-1};
   };
@@ -178,7 +184,7 @@ namespace sequoia::testing
   {
     if constexpr (has_msvc_v && (iterator_debug_level() > 0))
     {
-      const int multiplier{numContainers.valid() ? static_cast<int>(numContainers) : 1};
+      const int multiplier{numContainers.valid() ? numContainers.value() : 1};
       const int unshifted{p.unshifted()};
       return alloc_prediction<AllocEvent>{unshifted, i * multiplier};
     }
@@ -233,7 +239,7 @@ namespace sequoia::testing
     [[nodiscard]]
     constexpr static mutation_prediction shift(mutation_prediction p, number_of_containers numContainers) noexcept
     {
-      return numContainers.valid() ? increment_msvc_debug_count(p, number_of_containers{}, numContainers) : p;
+      return numContainers.valid() ? increment_msvc_debug_count(p, number_of_containers{}, numContainers.value()) : p;
     }
 
     [[nodiscard]]
@@ -262,7 +268,7 @@ namespace sequoia::testing
   protected:
     constexpr static number_of_containers diff(number_of_containers numContainersX, number_of_containers numContainersY)
     {
-      return number_of_containers{ (numContainersX.valid() && numContainersY.valid()) ? std::max(numContainersY - numContainersX, 0) : -1};
+      return number_of_containers{(numContainersX.valid() && numContainersY.valid()) ? std::max(numContainersY.value() - numContainersX.value(), 0) : -1};
     }
   };
 
