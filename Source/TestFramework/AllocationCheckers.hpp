@@ -63,38 +63,12 @@ namespace sequoia::testing
     copy_like_move_assign
   };
 
-  /*! Type-safe wrapper for allocation predictions, to avoid mixing different allocation events */
-  template<auto Event>
-  class alloc_prediction
+  template<auto To, auto From>
+  [[nodiscard]]
+  constexpr alloc_prediction<To> convert(alloc_prediction<From> p) noexcept
   {
-  public:
-    constexpr alloc_prediction() = default;
-
-    constexpr alloc_prediction(int unshifted, int delta={}) noexcept
-      : m_Unshifted{unshifted}
-      , m_Prediction{m_Unshifted + delta}
-    {}
-
-    [[nodiscard]]
-    constexpr operator int() const noexcept
-    {
-      return m_Prediction;
-    }
-
-    [[nodiscard]]
-    constexpr int value() const noexcept
-    {
-      return m_Prediction;
-    }
-
-    [[nodiscard]]
-    constexpr int unshifted() const noexcept
-    {
-      return m_Unshifted;
-    }
-  private:
-    int m_Unshifted{}, m_Prediction{};
-  };
+    return {p.unshifted(), p.value() - p.unshifted()};
+  }
 
   using copy_prediction                  = alloc_prediction<individual_allocation_event::copy>;
   using move_prediction                  = alloc_prediction<individual_allocation_event::move>;
@@ -169,10 +143,16 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    constexpr operator int() const noexcept
+    constexpr int value() const
     {
+      if (!valid()) throw std::logic_error{"Invalid number of containers!"};
+
       return m_Num;
     }
+
+    [[nodiscard]]
+    friend auto operator<=>(const number_of_containers&, const number_of_containers&) noexcept = default;
+
   private:
     int m_Num{-1};
   };
@@ -184,10 +164,24 @@ namespace sequoia::testing
     return number_of_containers{ static_cast<int>(n) };
   }
 
-  constexpr number_of_containers post_mutation_container_correction(number_of_containers containersPreMutation, number_of_containers containersPostMutation) noexcept
+  struct container_counts
   {
-    return containersPostMutation > containersPreMutation ? containersPostMutation : number_of_containers{};
-  }
+    constexpr container_counts() = default;
+
+    constexpr container_counts(number_of_containers x, number_of_containers y, number_of_containers postMutation) noexcept
+      : num_x{x}
+      , num_y{y}
+      , num_post_mutation{postMutation}
+    {}
+
+    [[nodiscard]]
+    constexpr number_of_containers post_mutation_correction() const noexcept
+    {
+      return  num_post_mutation > num_y ? num_post_mutation : number_of_containers{};
+    }
+
+    number_of_containers num_x{}, num_y{}, num_post_mutation{};
+  };
 
   namespace allocation_equivalence_classes
   {
@@ -204,8 +198,8 @@ namespace sequoia::testing
   {
     if constexpr (has_msvc_v && (iterator_debug_level() > 0))
     {
-      const int multiplier{numContainers.valid() ? static_cast<int>(numContainers) : 1};
-      const int unshifted{static_cast<int>(p)};
+      const int multiplier{numContainers.valid() ? numContainers.value() : 1};
+      const int unshifted{p.unshifted()};
       return alloc_prediction<AllocEvent>{unshifted, i * multiplier};
     }
     else
@@ -259,7 +253,7 @@ namespace sequoia::testing
     [[nodiscard]]
     constexpr static mutation_prediction shift(mutation_prediction p, number_of_containers numContainers) noexcept
     {
-      return numContainers.valid() ? increment_msvc_debug_count(p, number_of_containers{}, numContainers) : p;
+      return numContainers.valid() ? increment_msvc_debug_count(p, number_of_containers{}, numContainers.value()) : p;
     }
 
     [[nodiscard]]
@@ -288,7 +282,7 @@ namespace sequoia::testing
   protected:
     constexpr static number_of_containers diff(number_of_containers numContainersX, number_of_containers numContainersY)
     {
-      return number_of_containers{ (numContainersX.valid() && numContainersY.valid()) ? std::max(numContainersY - numContainersX, 0) : -1};
+      return number_of_containers{(numContainersX.valid() && numContainersY.valid()) ? std::max(numContainersY.value() - numContainersX.value(), 0) : -1};
     }
   };
 

@@ -22,8 +22,34 @@ namespace sequoia::testing
   template<movable_comparable T, alloc_getter<T> Getter, class Predictions>
   class basic_allocation_info;
 
+  enum class null_allocation_event { comparison, spectator, serialization };
+  
+  /*! Type-safe wrapper for allocation predictions, to avoid mixing different allocation events */
   template<auto Event>
-  class alloc_prediction;
+  class alloc_prediction
+  {
+  public:
+    constexpr alloc_prediction() = default;
+
+    constexpr alloc_prediction(int unshifted, int delta={}) noexcept
+      : m_Unshifted{unshifted}
+      , m_Prediction{m_Unshifted + delta}
+    {}
+
+    [[nodiscard]]
+    constexpr int value() const noexcept
+    {
+      return m_Prediction;
+    }
+
+    [[nodiscard]]
+    constexpr int unshifted() const noexcept
+    {
+      return m_Unshifted;
+    }
+  private:
+    int m_Unshifted{}, m_Prediction{};
+  };
 }
 
 namespace sequoia::testing::impl
@@ -111,8 +137,9 @@ namespace sequoia::testing::impl
     template<test_mode Mode>
     void check_no_allocation(std::string_view detail, test_logger<Mode>& logger, const T& x, const T& y) const
     {
-      check_allocation(append_lines(detail, "Unexpected allocation detected (x)"), logger, x, info(), first_count(), 0);
-      check_allocation(append_lines(detail, "Unexpected allocation detected (y)"), logger, y, info(), second_count(), 0);
+      const alloc_prediction<null_allocation_event::comparison> prediction{};
+      check_allocation(append_lines(detail, "Unexpected allocation detected (x)"), logger, x, info(), first_count(), prediction);
+      check_allocation(append_lines(detail, "Unexpected allocation detected (y)"), logger, y, info(), second_count(), prediction);
     }
 
     template<test_mode Mode>
@@ -129,7 +156,9 @@ namespace sequoia::testing::impl
       {
         const auto xPrediction{info().get_predictions().assign_y_to_x.without_propagation};
         check_allocation("Unexpected allocation detected for copy assignment (x)", logger, x, info(), first_count(), xPrediction);
-        check_allocation("Unexpected allocation detected for copy assignment (y)", logger, y, info(), second_count(), 0);
+
+        const alloc_prediction<null_allocation_event::spectator> yPrediction{};
+        check_allocation("Unexpected allocation detected for copy assignment (y)", logger, y, info(), second_count(), yPrediction);
       }
     }
 
@@ -137,18 +166,16 @@ namespace sequoia::testing::impl
     void check_move_assign_y_to_x(test_logger<Mode>& logger, const T& x) const
     {
       constexpr bool propagate{std::allocator_traits<allocator_type>::propagate_on_container_move_assignment::value};
-
-      const bool copyLike{!propagate && !m_AllocatorsEqual};
-
       const auto& predictions{info().get_predictions()};
-      const int xPrediction{copyLike ? predictions.copy_like_move_assign_allocs() : predictions.move_assign_allocs()};
       
-      if constexpr(propagate)
+      if (m_AllocatorsEqual || propagate)
       {
+        const auto xPrediction{predictions.move_assign_allocs()};
         check_allocation("Unexpected allocation detected for propagating move assignment (x)", logger, x, info(), second_count(), xPrediction);
       }
       else
       {
+        const auto xPrediction{predictions.copy_like_move_assign_allocs()};
         check_allocation("Unexpected allocation detected for move assignment (x)", logger, x, info(), first_count(), xPrediction);
       }
     }
@@ -156,7 +183,6 @@ namespace sequoia::testing::impl
     template<test_mode Mode>
     void check_mutation_after_swap(test_logger<Mode>& logger, const T& lhs, const T& rhs) const
     {
-      const auto prediction{info().get_predictions().mutation_allocs()};
       auto lhCount{first_count()}, rhCount{second_count()};
       
       if constexpr(std::allocator_traits<allocator_type>::propagate_on_container_swap::value)
@@ -165,13 +191,16 @@ namespace sequoia::testing::impl
         swap(lhCount, rhCount);
       }
 
-      check_allocation("Unexpected allocation detected following mutation after swap (y)", logger, lhs, info(), lhCount, prediction);
-      check_allocation("Unexpected allocation detected following mutation after swap (x)", logger, rhs, info(), rhCount, 0);
+      const auto lhPrediction{ info().get_predictions().mutation_allocs() };
+      check_allocation("Unexpected allocation detected following mutation after swap (y)", logger, lhs, info(), lhCount, lhPrediction);
+
+      const alloc_prediction<null_allocation_event::spectator> rhPrediction{};
+      check_allocation("Unexpected allocation detected following mutation after swap (x)", logger, rhs, info(), rhCount, rhPrediction);
     }
-  private:    
-    alloc_info m_Info{};    
+  private:
+    alloc_info m_Info{};
     int m_FirstCount{}, m_SecondCount{};
-    bool m_AllocatorsEqual{};    
+    bool m_AllocatorsEqual{};
   };
 
   //================================ Deduction guide ================================//
@@ -211,12 +240,6 @@ namespace sequoia::testing::impl
 
     template<test_mode Mode, auto Event>
     bool check(std::string_view detail, test_logger<Mode>& logger, const T& container, const alloc_prediction<Event> prediction) const
-    {
-      return check_allocation(detail, logger, container, info(), m_PriorCount, prediction);
-    }
-
-    template<test_mode Mode>
-    bool check(std::string_view detail, test_logger<Mode>& logger, const T& container, const int prediction) const
     {
       return check_allocation(detail, logger, container, info(), m_PriorCount, prediction);
     }
@@ -517,7 +540,8 @@ namespace sequoia::testing::impl
   {
     auto checkFn{
       [&logger, &container](const auto& checker){
-        checker.check("Unexpected allocation detected for serialization (y)", logger, container, 0);
+        const alloc_prediction<null_allocation_event::serialization> prediction{};
+        checker.check("Unexpected allocation detected for serialization (y)", logger, container, prediction);
       }
     };
 
@@ -548,7 +572,7 @@ namespace sequoia::testing::impl
 
     template<test_mode Mode, alloc_getter<T>... Getters, class... Predictions>
     static bool post_comparison_action(test_logger<Mode>& logger, std::string_view op, const T& x, const T& y, const dual_allocation_checker<T, Getters, Predictions>&... checkers)
-    {      
+    {
       sentinel<Mode> s{logger, ""};
 
       check_no_allocation(std::string{"Unexpected allocation detected for operator"}.append(op), logger, x, y, checkers...);
