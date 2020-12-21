@@ -63,33 +63,6 @@ namespace sequoia::testing
     copy_like_move_assign
   };
 
-  /*! Type-safe wrapper for allocation predictions, to avoid mixing different allocation events */
-  template<auto Event>
-  class alloc_prediction
-  {
-  public:
-    constexpr alloc_prediction() = default;
-
-    constexpr alloc_prediction(int unshifted, int delta={}) noexcept
-      : m_Unshifted{unshifted}
-      , m_Prediction{m_Unshifted + delta}
-    {}
-
-    [[nodiscard]]
-    constexpr int value() const noexcept
-    {
-      return m_Prediction;
-    }
-
-    [[nodiscard]]
-    constexpr int unshifted() const noexcept
-    {
-      return m_Unshifted;
-    }
-  private:
-    int m_Unshifted{}, m_Prediction{};
-  };
-
   template<auto To, auto From>
   [[nodiscard]]
   constexpr alloc_prediction<To> convert(alloc_prediction<From> p) noexcept

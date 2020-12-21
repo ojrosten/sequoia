@@ -22,10 +22,34 @@ namespace sequoia::testing
   template<movable_comparable T, alloc_getter<T> Getter, class Predictions>
   class basic_allocation_info;
 
-  template<auto Event>
-  class alloc_prediction;
-
   enum class null_allocation_event { comparison, spectator, serialization };
+  
+  /*! Type-safe wrapper for allocation predictions, to avoid mixing different allocation events */
+  template<auto Event>
+  class alloc_prediction
+  {
+  public:
+    constexpr alloc_prediction() = default;
+
+    constexpr alloc_prediction(int unshifted, int delta={}) noexcept
+      : m_Unshifted{unshifted}
+      , m_Prediction{m_Unshifted + delta}
+    {}
+
+    [[nodiscard]]
+    constexpr int value() const noexcept
+    {
+      return m_Prediction;
+    }
+
+    [[nodiscard]]
+    constexpr int unshifted() const noexcept
+    {
+      return m_Unshifted;
+    }
+  private:
+    int m_Unshifted{}, m_Prediction{};
+  };
 }
 
 namespace sequoia::testing::impl
