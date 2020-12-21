@@ -23,27 +23,23 @@ namespace sequoia::testing
                                                para_move_prediction paraMove,
                                                move_prediction m,
                                                move_assign_prediction moveAssign,
-                                               number_of_containers numContainersX={},
-                                               number_of_containers numContainersY={},
-                                               number_of_containers numContainersPostMutation={})
+                                               container_counts containerCounts={})
       : copy_like_move_assign{copyLikeMove}
       , mutation{yMutation}
       , para_move{paraMove}
       , move{m}
       , move_assign{moveAssign}
-      , containers{numContainersX, numContainersY, numContainersPostMutation}
+      , containers{containerCounts}
     {}
 
     constexpr move_only_allocation_predictions(copy_like_move_assign_prediction copyLikeMove,
                                                mutation_prediction yMutation,
                                                para_move_prediction paraMove,
-                                               number_of_containers numContainersX={},
-                                               number_of_containers numContainersY={},
-                                               number_of_containers numContainersPostMutation={})
+                                               container_counts containerCounts={})
       : copy_like_move_assign{copyLikeMove}
       , mutation{yMutation}
       , para_move{paraMove}
-      , containers{numContainersX, numContainersY, numContainersPostMutation}
+      , containers{containerCounts}
     {}
 
     [[nodiscard]]

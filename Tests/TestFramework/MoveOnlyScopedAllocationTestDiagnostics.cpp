@@ -53,7 +53,7 @@ namespace sequoia::testing
                     mutator,
                     move_only_allocation_info{
                         allocGetter,
-                        {{1_clm, 1_mu, 1_pm}, {1_clm, 1_mu, 1_pm, 0_containers, 1_containers, 2_containers}}
+                        {{1_clm, 1_mu, 1_pm}, {1_clm, 1_mu, 1_pm, {0_containers, 1_containers, 2_containers}}}
                     }
     );
   }

@@ -83,13 +83,11 @@ namespace sequoia::testing
     constexpr allocation_predictions(copy_prediction copyX,
                                      individual_allocation_predictions yPredictions,
                                      assignment_allocation_predictions assignYtoX,
-                                     number_of_containers numContainersX={},
-                                     number_of_containers numContainersY={},
-                                     number_of_containers numContainersPostMutation={})
+                                     container_counts containerCounts={})
       : copy_x{copyX}
       , y{yPredictions}
       , assign_y_to_x{assignYtoX}
-      , containers{numContainersX, numContainersY, numContainersPostMutation}
+      , containers{containerCounts}
     {}
 
     [[nodiscard]]
