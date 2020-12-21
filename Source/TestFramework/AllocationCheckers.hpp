@@ -63,23 +63,12 @@ namespace sequoia::testing
     copy_like_move_assign
   };
 
-  /*! Type-safe wrapper for allocation predictions, to avoid mixing different allocation events */
-  template<auto Event>
-  class alloc_prediction
+  template<auto To, auto From>
+  [[nodiscard]]
+  constexpr alloc_prediction<To> convert(alloc_prediction<From> p) noexcept
   {
-  public:
-    constexpr alloc_prediction() = default;
-    
-    constexpr explicit alloc_prediction(int n) noexcept : m_Num{n} {}
-
-    [[nodiscard]]
-    constexpr operator int() const noexcept
-    {
-      return m_Num;
-    }
-  private:
-    int m_Num{};
-  };
+    return {p.unshifted(), p.value() - p.unshifted()};
+  }
 
   using copy_prediction                  = alloc_prediction<individual_allocation_event::copy>;
   using move_prediction                  = alloc_prediction<individual_allocation_event::move>;
@@ -90,6 +79,55 @@ namespace sequoia::testing
   using assign_prediction                = alloc_prediction<assignment_allocation_event::assign>;  
   using move_assign_prediction           = alloc_prediction<assignment_allocation_event::move_assign>;
   using copy_like_move_assign_prediction = alloc_prediction<assignment_allocation_event::copy_like_move_assign>;
+
+  [[nodiscard]]
+  SPECULATIVE_CONSTEVAL
+  copy_prediction operator "" _c(unsigned long long int n) noexcept
+  {
+    return copy_prediction{ static_cast<int>(n) };
+  }
+
+  [[nodiscard]]
+  SPECULATIVE_CONSTEVAL
+  mutation_prediction operator "" _mu(unsigned long long int n) noexcept
+  {
+    return mutation_prediction{ static_cast<int>(n) };
+  }
+
+  [[nodiscard]]
+  SPECULATIVE_CONSTEVAL
+  para_copy_prediction operator "" _pc(unsigned long long int n) noexcept
+  {
+    return para_copy_prediction{ static_cast<int>(n) };
+  }
+
+  [[nodiscard]]
+  SPECULATIVE_CONSTEVAL
+  para_move_prediction operator "" _pm(unsigned long long int n) noexcept
+  {
+    return para_move_prediction{ static_cast<int>(n) };
+  }
+
+  [[nodiscard]]
+  SPECULATIVE_CONSTEVAL
+  assign_prediction operator "" _anp(unsigned long long int n) noexcept
+  {
+    return assign_prediction{ static_cast<int>(n) };
+  }
+
+  [[nodiscard]]
+  SPECULATIVE_CONSTEVAL
+  assign_prop_prediction operator "" _awp(unsigned long long int n) noexcept
+  {
+    return assign_prop_prediction{ static_cast<int>(n) };
+  }
+
+  [[nodiscard]]
+  SPECULATIVE_CONSTEVAL
+  copy_like_move_assign_prediction operator "" _clm(unsigned long long int n) noexcept
+  {
+    return copy_like_move_assign_prediction{ static_cast<int>(n) };
+  }
 
   class number_of_containers
   {
@@ -105,27 +143,64 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    constexpr operator int() const noexcept
+    constexpr int value() const
     {
+      if (!valid()) throw std::logic_error{"Invalid number of containers!"};
+
       return m_Num;
     }
+
+    [[nodiscard]]
+    friend auto operator<=>(const number_of_containers&, const number_of_containers&) noexcept = default;
+
   private:
     int m_Num{-1};
   };
 
-  constexpr number_of_containers post_mutation_container_correction(number_of_containers containersPreMutation, number_of_containers containersPostMutation) noexcept
+  [[nodiscard]]
+  SPECULATIVE_CONSTEVAL
+  number_of_containers operator "" _containers(unsigned long long int n) noexcept
   {
-    return containersPostMutation > containersPreMutation ? containersPostMutation : number_of_containers{};
+    return number_of_containers{ static_cast<int>(n) };
+  }
+
+  struct container_counts
+  {
+    constexpr container_counts() = default;
+
+    constexpr container_counts(number_of_containers x, number_of_containers y, number_of_containers postMutation) noexcept
+      : num_x{x}
+      , num_y{y}
+      , num_post_mutation{postMutation}
+    {}
+
+    [[nodiscard]]
+    constexpr number_of_containers post_mutation_correction() const noexcept
+    {
+      return  num_post_mutation > num_y ? num_post_mutation : number_of_containers{};
+    }
+
+    number_of_containers num_x{}, num_y{}, num_post_mutation{};
+  };
+
+  namespace allocation_equivalence_classes
+  {
+    template<class Allocator>
+    struct container_of_values {};
+
+    template<class Allocator>
+    struct container_of_pointers {};
   }
 
   template<auto AllocEvent>
   [[nodiscard]]
-  constexpr static alloc_prediction<AllocEvent> increment_msvc_debug_count(alloc_prediction<AllocEvent> p, number_of_containers numContainers, int i=1) noexcept
+  constexpr static alloc_prediction<AllocEvent> increment_msvc_debug_count(alloc_prediction<AllocEvent> p, number_of_containers numContainers, int i = 1) noexcept
   {
-    if constexpr(has_msvc_v && (iterator_debug_level() > 0))
+    if constexpr (has_msvc_v && (iterator_debug_level() > 0))
     {
-      const int multiplier{numContainers.valid() ? static_cast<int>(numContainers) : 1};
-      return alloc_prediction<AllocEvent>{static_cast<int>(p) + i*multiplier};
+      const int multiplier{numContainers.valid() ? numContainers.value() : 1};
+      const int unshifted{p.unshifted()};
+      return alloc_prediction<AllocEvent>{unshifted, i * multiplier};
     }
     else
     {
@@ -148,8 +223,8 @@ namespace sequoia::testing
     }
   };
 
-  template<class T, class Allocator>
-  struct alloc_prediction_shifter<std::vector<T, Allocator>>
+  template<class Allocator>
+  struct alloc_prediction_shifter<allocation_equivalence_classes::container_of_values<Allocator>>
   {
     [[nodiscard]]
     constexpr static copy_prediction shift(copy_prediction p, number_of_containers numContainers) noexcept
@@ -178,7 +253,7 @@ namespace sequoia::testing
     [[nodiscard]]
     constexpr static mutation_prediction shift(mutation_prediction p, number_of_containers numContainers) noexcept
     {
-      return numContainers.valid() ? increment_msvc_debug_count(p, number_of_containers{}, numContainers) : p;
+      return numContainers.valid() ? increment_msvc_debug_count(p, number_of_containers{}, numContainers.value()) : p;
     }
 
     [[nodiscard]]
@@ -207,15 +282,15 @@ namespace sequoia::testing
   protected:
     constexpr static number_of_containers diff(number_of_containers numContainersX, number_of_containers numContainersY)
     {
-      return number_of_containers{ (numContainersX.valid() && numContainersY.valid()) ? std::max(numContainersY - numContainersX, 0) : -1};
+      return number_of_containers{(numContainersX.valid() && numContainersY.valid()) ? std::max(numContainersY.value() - numContainersX.value(), 0) : -1};
     }
   };
 
-  template<class T, class Allocator>
-  struct alloc_prediction_shifter<std::vector<T*, Allocator>>
-    : alloc_prediction_shifter<std::vector<T, Allocator>>
+  template<class Allocator>
+  struct alloc_prediction_shifter<allocation_equivalence_classes::container_of_pointers<Allocator>>
+    : alloc_prediction_shifter<allocation_equivalence_classes::container_of_values<Allocator>>
   {
-    using alloc_prediction_shifter<std::vector<T, Allocator>>::shift;
+    using alloc_prediction_shifter<allocation_equivalence_classes::container_of_values<Allocator>>::shift;
 
     [[nodiscard]]
     constexpr static assign_prediction shift(assign_prediction p, number_of_containers numContainersX, number_of_containers numContainersY) noexcept
@@ -240,73 +315,34 @@ namespace sequoia::testing
       return increment_msvc_debug_count(p, diff(numContainersX, numContainersY), num);
     }
   protected:
-    using alloc_prediction_shifter<std::vector<T, Allocator>>::diff;
+    using alloc_prediction_shifter<allocation_equivalence_classes::container_of_values<Allocator>>::diff;
   };
 
-  template<class T>
-  struct alloc_equivalence_class
+  template<movable_comparable T, alloc_getter<T> Getter, std::size_t I>
+  struct alloc_equivalence_class_generator
   {
-    using type = std::vector<int, std::allocator<int>>;
+    using allocator = std::remove_cvref_t<std::invoke_result_t<Getter, T>>;
+    using type = allocation_equivalence_classes::container_of_values<allocator>;
   };
 
-  template<class T>
-  using alloc_equivalence_class_t = typename alloc_equivalence_class<T>::type;  
-  
-  [[nodiscard]]
-  SPECULATIVE_CONSTEVAL copy_prediction
-  operator "" _c(unsigned long long int n) noexcept
+  template<movable_comparable T, alloc_getter<T> Getter, std::size_t I>
+    requires (defines_alloc_equivalence_class<Getter>)
+  struct alloc_equivalence_class_generator<T, Getter, I>
   {
-    return copy_prediction{static_cast<int>(n)};
-  }
+    using type = typename Getter::alloc_equivalence_class;
+  };
 
-  [[nodiscard]]
-  SPECULATIVE_CONSTEVAL mutation_prediction
-  operator "" _mu(unsigned long long int n) noexcept
+  template<movable_comparable T, alloc_getter<T> Getter, std::size_t I>
+    requires (defines_scoped_alloc_equivalence_class<Getter>)
+  struct alloc_equivalence_class_generator<T, Getter, I>
   {
-    return mutation_prediction{static_cast<int>(n)};
-  }
+    using allocClass = typename Getter::alloc_equivalence_class;
+    using type = std::remove_cvref_t<decltype(std::get<I>(std::declval<allocClass>()))>;
+  };
 
-  [[nodiscard]]
-  SPECULATIVE_CONSTEVAL para_copy_prediction
-  operator "" _pc(unsigned long long int n) noexcept
-  {
-    return para_copy_prediction{static_cast<int>(n)};
-  }
+  template<movable_comparable T, alloc_getter<T> Getter, std::size_t I>
+  using alloc_equivalence_class_generator_t = typename alloc_equivalence_class_generator<T, Getter, I>::type;
 
-  [[nodiscard]]
-  SPECULATIVE_CONSTEVAL para_move_prediction
-  operator "" _pm(unsigned long long int n) noexcept
-  {
-    return para_move_prediction{static_cast<int>(n)};
-  }
-
-  [[nodiscard]]
-  SPECULATIVE_CONSTEVAL assign_prediction
-  operator "" _anp(unsigned long long int n) noexcept
-  {
-    return assign_prediction{static_cast<int>(n)};
-  }
-
-  [[nodiscard]]
-  SPECULATIVE_CONSTEVAL assign_prop_prediction
-  operator "" _awp(unsigned long long int n) noexcept
-  {
-    return assign_prop_prediction{static_cast<int>(n)};
-  }
-
-  [[nodiscard]]
-  SPECULATIVE_CONSTEVAL copy_like_move_assign_prediction
-  operator "" _clm(unsigned long long int n) noexcept
-  {
-    return copy_like_move_assign_prediction{static_cast<int>(n)};
-  }
-
-  [[nodiscard]]
-  SPECULATIVE_CONSTEVAL number_of_containers
-  operator "" _containers(unsigned long long int n) noexcept
-  {
-    return number_of_containers{static_cast<int>(n)};
-  }
 
   /*! \brief Base class for use with both plain (shared counting) allocators and std::scoped_allocator_adaptor
 
@@ -324,15 +360,15 @@ namespace sequoia::testing
   public:
     using allocator_type = std::invoke_result_t<Getter, T>;
     
-    explicit allocation_info_base(Getter allocGetter)
+    constexpr explicit allocation_info_base(Getter allocGetter)
       : m_AllocatorGetter{std::move(allocGetter)}
     {}
 
-    allocation_info_base(const allocation_info_base&) = default;
+    constexpr allocation_info_base(const allocation_info_base&) = default;
 
     [[nodiscard]]
     int count(const T& c) const noexcept
-    {        
+    {
       return m_AllocatorGetter(c).allocs();
     }
 
@@ -351,13 +387,13 @@ namespace sequoia::testing
   protected:
     ~allocation_info_base() = default;
 
-    allocation_info_base(allocation_info_base&&) noexcept = default;
+    constexpr allocation_info_base(allocation_info_base&&) noexcept = default;
 
-    allocation_info_base& operator=(const allocation_info_base&)     = default;
-    allocation_info_base& operator=(allocation_info_base&&) noexcept = default;
+    constexpr allocation_info_base& operator=(const allocation_info_base&)     = default;
+    constexpr allocation_info_base& operator=(allocation_info_base&&) noexcept = default;
 
     [[nodiscard]]
-    Getter make_getter() const
+    constexpr Getter make_getter() const
     {
       return m_AllocatorGetter;
     }
@@ -386,19 +422,19 @@ namespace sequoia::testing
     {
       constexpr Predictions operator()(const Predictions& predictions) const
       {
-        using allocClass = alloc_equivalence_class_t<T>;
+        using allocClass = alloc_equivalence_class_generator_t<T, Getter, 0>;
         return shift<allocClass>(predictions);
       }
     };
 
     template<class Shifter=prediction_shifter>
-    basic_allocation_info(Getter allocGetter, const Predictions& predictions, Shifter shifter=Shifter{})
+    constexpr basic_allocation_info(Getter allocGetter, const Predictions& predictions, Shifter shifter=Shifter{})
       : base_t{std::move(allocGetter)}
       , m_Predictions{shifter(predictions)}
     {}
 
     [[nodiscard]]
-    const Predictions& get_predictions() const noexcept
+    constexpr const Predictions& get_predictions() const noexcept
     {
       return m_Predictions;
     }
@@ -406,25 +442,7 @@ namespace sequoia::testing
     Predictions m_Predictions;
   };
 
-  namespace impl
-  {
-    template<class T, std::size_t I>
-    struct alloc_equivalence_class_generator
-    {
-      using type = alloc_equivalence_class_t<T>;
-    };
 
-    template<class T, std::size_t I>
-      requires (is_tuple_v<alloc_equivalence_class_t<T>>)
-    struct alloc_equivalence_class_generator<T, I>
-    {
-      using allocClass = alloc_equivalence_class_t<T>;
-      using type = std::remove_cvref_t<decltype(std::get<I>(std::declval<allocClass>()))>;
-    };
-
-    template<class T, std::size_t I>
-    using alloc_equivalence_class_generator_t = typename alloc_equivalence_class_generator<T, I>::type;
-  }
 
   /*! \brief A specialization of basic_allocation_info appropriate for std::scoped_allocator_adaptor
 
@@ -444,8 +462,8 @@ namespace sequoia::testing
     using predictions_type = Predictions;
 
     constexpr static std::size_t size{alloc_count<allocator_type>::size};
-    
-    basic_allocation_info(Getter allocGetter, std::initializer_list<Predictions> predictions)
+
+    constexpr basic_allocation_info(Getter allocGetter, std::initializer_list<Predictions> predictions)
       : base_t{std::move(allocGetter)}
       , m_Predictions{utilities::to_array<Predictions, size>(predictions)}
     {}
@@ -463,7 +481,7 @@ namespace sequoia::testing
 
       auto scopedShifter{
         [](const Predictions& predictions) {
-          using allocClass = impl::alloc_equivalence_class_generator_t<T, I>;
+          using allocClass = alloc_equivalence_class_generator_t<T, Getter, I>;
           return shift<allocClass>(predictions);
         }
       };

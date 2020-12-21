@@ -150,9 +150,20 @@ namespace sequoia::testing
   template<class T=int, class Handle=std::shared_ptr<T>, class Allocator=std::allocator<Handle>>
   struct perfectly_sharing_beast
   {
-    using handle_type    = Handle;      
+    using handle_type    = Handle;
     using allocator_type = Allocator;
     using container_type = std::vector<handle_type, allocator_type>;
+
+    struct alloc_acquirer
+    {
+      using alloc_equivalence_class = allocation_equivalence_classes::container_of_pointers<allocator_type>;
+
+      [[nodiscard]]
+      allocator_type operator()(const perfectly_sharing_beast& beast) const
+      {
+        return beast.x.get_allocator();
+      }
+    };
 
     explicit perfectly_sharing_beast(const allocator_type& a) : x(a)
     {}
@@ -177,7 +188,7 @@ namespace sequoia::testing
       {
         x.emplace_back(std::make_shared<T>(*e));
       }
-    } 
+    }
 
     perfectly_sharing_beast(perfectly_sharing_beast&&) noexcept = default;
 
@@ -220,7 +231,6 @@ namespace sequoia::testing
         });
     }
 
-
     [[nodiscard]]
     friend bool operator!=(const perfectly_sharing_beast& lhs, const perfectly_sharing_beast& rhs) noexcept
     {
@@ -239,12 +249,6 @@ namespace sequoia::testing
       const std::vector<handle_type, allocator_type> v(a);
       x = v;
     }
-  };
-
-  template<class T, class Handle, class Allocator>
-  struct alloc_equivalence_class<perfectly_sharing_beast<T, Handle, Allocator>>
-  {
-    using type = std::vector<T*, Allocator>;
   };
 
   template<class T=int, class U=double, class xAllocator=std::allocator<T>, class yAllocator=std::allocator<U>>

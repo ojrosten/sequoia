@@ -10,7 +10,7 @@
 #include "RegularAllocationTestCore.hpp"
 
 namespace sequoia::testing
-{  
+{
   class scoped_allocation_false_negative_diagnostics final
     : public regular_allocation_false_negative_test
   {
