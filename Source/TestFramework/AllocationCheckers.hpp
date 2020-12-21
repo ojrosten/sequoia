@@ -164,10 +164,16 @@ namespace sequoia::testing
     return number_of_containers{ static_cast<int>(n) };
   }
 
-  constexpr number_of_containers post_mutation_container_correction(number_of_containers containersPreMutation, number_of_containers containersPostMutation) noexcept
+  struct container_counts
   {
-    return containersPostMutation > containersPreMutation ? containersPostMutation : number_of_containers{};
-  }
+    [[nodiscard]]
+    constexpr number_of_containers post_mutation_correction() const noexcept
+    {
+      return  num_post_mutation > num_y ? num_post_mutation : number_of_containers{};
+    }
+
+    number_of_containers num_x{}, num_y{}, num_post_mutation{};
+  };
 
   namespace allocation_equivalence_classes
   {

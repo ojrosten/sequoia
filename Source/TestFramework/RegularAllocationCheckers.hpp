@@ -89,9 +89,7 @@ namespace sequoia::testing
       : copy_x{copyX}
       , y{yPredictions}
       , assign_y_to_x{assignYtoX}
-      , num_containers_x{numContainersX}
-      , num_containers_y{numContainersY}
-      , num_containers_post_mutation{numContainersPostMutation}
+      , containers{numContainersX, numContainersY, numContainersPostMutation}
     {}
 
     [[nodiscard]]
@@ -118,41 +116,38 @@ namespace sequoia::testing
     copy_prediction copy_x{};
     individual_allocation_predictions y;
     assignment_allocation_predictions assign_y_to_x;
-    number_of_containers num_containers_x{}, num_containers_y{}, num_containers_post_mutation{};
+    container_counts containers;
   };
 
   template<class T>
-  constexpr individual_allocation_predictions shift(const individual_allocation_predictions& predictions,
-                                                    number_of_containers numContainers,
-                                                    number_of_containers numContainersPostMutation)
+  constexpr individual_allocation_predictions shift(const individual_allocation_predictions& predictions, const container_counts& containers)
   {
     using shifter = alloc_prediction_shifter<T>;
-    return {shifter::shift(predictions.copy,      numContainers),
-            shifter::shift(predictions.mutation,  post_mutation_container_correction(numContainers, numContainersPostMutation)),
-            shifter::shift(predictions.para_copy, numContainers),
-            shifter::shift(predictions.para_move, numContainers),
-            shifter::shift(predictions.move,      numContainers)};
+    return {shifter::shift(predictions.copy,      containers.num_y),
+            shifter::shift(predictions.mutation,  containers.post_mutation_correction()),
+            shifter::shift(predictions.para_copy, containers.num_y),
+            shifter::shift(predictions.para_move, containers.num_y),
+            shifter::shift(predictions.move,      containers.num_y)};
   }
 
   template<class T>
-  constexpr assignment_allocation_predictions shift(const assignment_allocation_predictions& predictions,
-                                                    number_of_containers numContainersX,
-                                                    number_of_containers numContainersY)
+  constexpr assignment_allocation_predictions shift(const assignment_allocation_predictions& predictions, const container_counts& containers)
   {
     using shifter = alloc_prediction_shifter<T>;
-    return {shifter::shift(predictions.with_propagation,    numContainersX, numContainersY),
-            shifter::shift(predictions.without_propagation, numContainersX, numContainersY),
-            shifter::shift(predictions.copy_like_move,      numContainersX, numContainersY),
-            shifter::shift(predictions.move, numContainersY)};
+    return {shifter::shift(predictions.with_propagation,    containers.num_x, containers.num_y),
+            shifter::shift(predictions.without_propagation, containers.num_x, containers.num_y),
+            shifter::shift(predictions.copy_like_move,      containers.num_x, containers.num_y),
+            shifter::shift(predictions.move, containers.num_y)};
   }
 
   template<class T>
   constexpr allocation_predictions shift(const allocation_predictions& predictions)
   {
     using shifter = alloc_prediction_shifter<T>;
-    return {shifter::shift(predictions.copy_x, predictions.num_containers_x),
-            shift<T>(predictions.y, predictions.num_containers_y, predictions.num_containers_post_mutation),
-            shift<T>(predictions.assign_y_to_x, predictions.num_containers_x, predictions.num_containers_y)};
+    const auto& containers{predictions.containers};
+    return {shifter::shift(predictions.copy_x, containers.num_x),
+            shift<T>(predictions.y, containers),
+            shift<T>(predictions.assign_y_to_x, containers)};
   }
 
   // TO DO: revert to 'using' in C++20; presently this is done through inheritance

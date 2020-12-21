@@ -31,9 +31,7 @@ namespace sequoia::testing
       , para_move{paraMove}
       , move{m}
       , move_assign{moveAssign}
-      , num_containers_x{numContainersX}
-      , num_containers_y{numContainersY}
-      , num_containers_post_mutation{numContainersPostMutation}
+      , containers{numContainersX, numContainersY, numContainersPostMutation}
     {}
 
     constexpr move_only_allocation_predictions(copy_like_move_assign_prediction copyLikeMove,
@@ -45,9 +43,7 @@ namespace sequoia::testing
       : copy_like_move_assign{copyLikeMove}
       , mutation{yMutation}
       , para_move{paraMove}
-      , num_containers_x{numContainersX}
-      , num_containers_y{numContainersY}
-      , num_containers_post_mutation{numContainersPostMutation}
+      , containers{numContainersX, numContainersY, numContainersPostMutation}
     {}
 
     [[nodiscard]]
@@ -65,29 +61,24 @@ namespace sequoia::testing
     [[nodiscard]]
     constexpr move_prediction move_allocs() const noexcept { return move; }
 
-    [[nodiscard]]
-    constexpr number_of_containers post_mutation_container_correction() const noexcept
-    {
-      return testing::post_mutation_container_correction(num_containers_y, num_containers_post_mutation);
-    }
-
     copy_like_move_assign_prediction copy_like_move_assign{};
     mutation_prediction mutation{};
     para_move_prediction para_move{};
     move_prediction move{};
     move_assign_prediction move_assign{};
-    number_of_containers num_containers_x{}, num_containers_y{}, num_containers_post_mutation{};
+    container_counts containers;
   };
 
   template<class T>
   constexpr move_only_allocation_predictions shift(const move_only_allocation_predictions& predictions)
   {
     using shifter = alloc_prediction_shifter<T>;
-    return {shifter::shift(predictions.copy_like_move_assign, predictions.num_containers_x, predictions.num_containers_y),
-            shifter::shift(predictions.mutation,    predictions.post_mutation_container_correction()),
-            shifter::shift(predictions.para_move,   predictions.num_containers_y),
-            shifter::shift(predictions.move,        predictions.num_containers_y),
-            shifter::shift(predictions.move_assign, predictions.num_containers_y)};
+    const auto& containers{predictions.containers};
+    return {shifter::shift(predictions.copy_like_move_assign, containers.num_x, containers.num_y),
+            shifter::shift(predictions.mutation,    containers.post_mutation_correction()),
+            shifter::shift(predictions.para_move,   containers.num_y),
+            shifter::shift(predictions.move,        containers.num_y),
+            shifter::shift(predictions.move_assign, containers.num_y)};
   }
 
   // Done through inheritance rather than a using declaration
