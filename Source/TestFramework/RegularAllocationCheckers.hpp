@@ -22,8 +22,8 @@ namespace sequoia::testing
     constexpr individual_allocation_predictions(copy_prediction copyPrediction, mutation_prediction mutationPrediction)
       : copy{copyPrediction}
       , mutation{mutationPrediction}
-      , para_copy{copyPrediction}
-      , para_move{copyPrediction}
+      , para_copy{convert<individual_allocation_event::para_copy>(copyPrediction)}
+      , para_move{convert<individual_allocation_event::para_move>(copyPrediction)}
     {}
 
     constexpr individual_allocation_predictions(copy_prediction copyPrediction,
@@ -32,7 +32,7 @@ namespace sequoia::testing
       : copy{copyPrediction}
       , mutation{mutationPrediction}
       , para_copy{paraCopyPrediction}
-      , para_move{copyPrediction}
+      , para_move{convert<individual_allocation_event::para_move>(copyPrediction)}
     {}
       
     constexpr individual_allocation_predictions(copy_prediction copyPrediction,
@@ -56,13 +56,16 @@ namespace sequoia::testing
 
   struct assignment_allocation_predictions
   {
-    constexpr assignment_allocation_predictions(int withPropagation, int withoutPropagation)
+    constexpr assignment_allocation_predictions(assign_prop_prediction withPropagation, assign_prediction withoutPropagation)
       : with_propagation{withPropagation}
       , without_propagation{withoutPropagation}
-      , copy_like_move{without_propagation}
+      , copy_like_move{convert<assignment_allocation_event::copy_like_move_assign>(without_propagation)}
     {}
 
-    constexpr assignment_allocation_predictions(int withPropagation, int withoutPropagation, int copyLikeMove, int pureMove)
+    constexpr assignment_allocation_predictions(assign_prop_prediction withPropagation,
+                                                assign_prediction withoutPropagation,
+                                                copy_like_move_assign_prediction copyLikeMove,
+                                                move_assign_prediction pureMove)
       : with_propagation{withPropagation}
       , without_propagation{withoutPropagation}
       , copy_like_move{copyLikeMove}

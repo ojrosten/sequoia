@@ -25,7 +25,7 @@ namespace sequoia::testing
   template<auto Event>
   class alloc_prediction;
 
-  enum class null_allocation_events { comparison, spectator, serialization };
+  enum class null_allocation_event { comparison, spectator, serialization };
 }
 
 namespace sequoia::testing::impl
@@ -113,7 +113,7 @@ namespace sequoia::testing::impl
     template<test_mode Mode>
     void check_no_allocation(std::string_view detail, test_logger<Mode>& logger, const T& x, const T& y) const
     {
-      const alloc_prediction<null_allocation_events::comparison> prediction{};
+      const alloc_prediction<null_allocation_event::comparison> prediction{};
       check_allocation(append_lines(detail, "Unexpected allocation detected (x)"), logger, x, info(), first_count(), prediction);
       check_allocation(append_lines(detail, "Unexpected allocation detected (y)"), logger, y, info(), second_count(), prediction);
     }
@@ -133,7 +133,7 @@ namespace sequoia::testing::impl
         const auto xPrediction{info().get_predictions().assign_y_to_x.without_propagation};
         check_allocation("Unexpected allocation detected for copy assignment (x)", logger, x, info(), first_count(), xPrediction);
 
-        const alloc_prediction<null_allocation_events::spectator> yPrediction{};
+        const alloc_prediction<null_allocation_event::spectator> yPrediction{};
         check_allocation("Unexpected allocation detected for copy assignment (y)", logger, y, info(), second_count(), yPrediction);
       }
     }
@@ -142,18 +142,16 @@ namespace sequoia::testing::impl
     void check_move_assign_y_to_x(test_logger<Mode>& logger, const T& x) const
     {
       constexpr bool propagate{std::allocator_traits<allocator_type>::propagate_on_container_move_assignment::value};
-
-      const bool copyLike{!propagate && !m_AllocatorsEqual};
-
       const auto& predictions{info().get_predictions()};
-      const int xPrediction{copyLike ? predictions.copy_like_move_assign_allocs() : predictions.move_assign_allocs()};
       
-      if constexpr(propagate)
+      if (m_AllocatorsEqual || propagate)
       {
+        const auto xPrediction{predictions.move_assign_allocs()};
         check_allocation("Unexpected allocation detected for propagating move assignment (x)", logger, x, info(), second_count(), xPrediction);
       }
       else
       {
+        const auto xPrediction{predictions.copy_like_move_assign_allocs()};
         check_allocation("Unexpected allocation detected for move assignment (x)", logger, x, info(), first_count(), xPrediction);
       }
     }
@@ -172,7 +170,7 @@ namespace sequoia::testing::impl
       const auto lhPrediction{ info().get_predictions().mutation_allocs() };
       check_allocation("Unexpected allocation detected following mutation after swap (y)", logger, lhs, info(), lhCount, lhPrediction);
 
-      const alloc_prediction<null_allocation_events::spectator> rhPrediction{};
+      const alloc_prediction<null_allocation_event::spectator> rhPrediction{};
       check_allocation("Unexpected allocation detected following mutation after swap (x)", logger, rhs, info(), rhCount, rhPrediction);
     }
   private:
@@ -518,7 +516,7 @@ namespace sequoia::testing::impl
   {
     auto checkFn{
       [&logger, &container](const auto& checker){
-        const alloc_prediction<null_allocation_events::serialization> prediction{};
+        const alloc_prediction<null_allocation_event::serialization> prediction{};
         checker.check("Unexpected allocation detected for serialization (y)", logger, container, prediction);
       }
     };

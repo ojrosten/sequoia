@@ -76,12 +76,6 @@ namespace sequoia::testing
     {}
 
     [[nodiscard]]
-    constexpr operator int() const noexcept
-    {
-      return m_Prediction;
-    }
-
-    [[nodiscard]]
     constexpr int value() const noexcept
     {
       return m_Prediction;
@@ -95,6 +89,13 @@ namespace sequoia::testing
   private:
     int m_Unshifted{}, m_Prediction{};
   };
+
+  template<auto To, auto From>
+  [[nodiscard]]
+  constexpr alloc_prediction<To> convert(alloc_prediction<From> p) noexcept
+  {
+    return {p.unshifted(), p.value() - p.unshifted()};
+  }
 
   using copy_prediction                  = alloc_prediction<individual_allocation_event::copy>;
   using move_prediction                  = alloc_prediction<individual_allocation_event::move>;
@@ -205,7 +206,7 @@ namespace sequoia::testing
     if constexpr (has_msvc_v && (iterator_debug_level() > 0))
     {
       const int multiplier{numContainers.valid() ? static_cast<int>(numContainers) : 1};
-      const int unshifted{static_cast<int>(p)};
+      const int unshifted{p.unshifted()};
       return alloc_prediction<AllocEvent>{unshifted, i * multiplier};
     }
     else
