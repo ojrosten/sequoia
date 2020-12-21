@@ -166,6 +166,14 @@ namespace sequoia::testing
 
   struct container_counts
   {
+    constexpr container_counts() = default;
+
+    constexpr container_counts(number_of_containers x, number_of_containers y, number_of_containers postMutation) noexcept
+      : num_x{x}
+      , num_y{y}
+      , num_post_mutation{postMutation}
+    {}
+
     [[nodiscard]]
     constexpr number_of_containers post_mutation_correction() const noexcept
     {

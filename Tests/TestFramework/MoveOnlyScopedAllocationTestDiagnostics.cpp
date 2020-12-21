@@ -102,7 +102,7 @@ namespace sequoia::testing
                       beast{},
                       beast{{"something too long for small string optimization"}},
                       mutator,
-                      move_only_allocation_info{allocGetter, {{0_clm, 1_mu, 1_pm}, {1_clm, 1_mu, 1_pm}}}
+                      move_only_allocation_info{allocGetter, {{0_clm, 1_mu, 1_pm}, {1_clm, 1_mu, 1_pm, {0_containers, 1_containers, 2_containers}}}}
       );
     }
 
@@ -112,7 +112,7 @@ namespace sequoia::testing
                     beast{},
                     beast{{"something too long for small string optimization"}},
                     mutator,
-                    move_only_allocation_info{allocGetter, {{1_clm, 0_mu, 1_pm}, {1_clm, 1_mu, 1_pm}}}
+                    move_only_allocation_info{allocGetter, {{1_clm, 0_mu, 1_pm}, {1_clm, 1_mu, 1_pm, {0_containers, 1_containers, 2_containers}}}}
     );
 
     check_semantics(LINE("Incorrect para move outer allocs"),
@@ -121,7 +121,7 @@ namespace sequoia::testing
                     beast{},
                     beast{{"something too long for small string optimization"}},
                     mutator,
-                    move_only_allocation_info{allocGetter, {{1_clm, 1_mu, 0_pm}, {1_clm, 1_mu, 1_pm}}}
+                    move_only_allocation_info{allocGetter, {{1_clm, 1_mu, 0_pm}, {1_clm, 1_mu, 1_pm, {0_containers, 1_containers, 2_containers}}}}
     );
 
     if constexpr(!PropagateMove)
@@ -132,7 +132,7 @@ namespace sequoia::testing
                       beast{},
                       beast{{"something too long for small string optimization"}},
                       mutator,
-                      move_only_allocation_info{allocGetter, {{1_clm, 1_mu, 1_pm}, {0_clm, 1_mu, 1_pm}}}
+                      move_only_allocation_info{allocGetter, {{1_clm, 1_mu, 1_pm}, {0_clm, 1_mu, 1_pm, {0_containers, 1_containers, 2_containers}}}}
       );
     }
 
@@ -141,7 +141,7 @@ namespace sequoia::testing
                     beast{{"something too long for small string optimization"}},
                     beast{},
                     beast{{"something too long for small string optimization"}},
-                    mutator, move_only_allocation_info{allocGetter, {{1_clm, 1_mu, 1_pm}, {1_clm, 0_mu, 1_pm}}}
+                    mutator, move_only_allocation_info{allocGetter, {{1_clm, 1_mu, 1_pm}, {1_clm, 0_mu, 1_pm, {0_containers, 1_containers, 2_containers}}}}
     );
 
     check_semantics(LINE("Incorrect para move inner allocs"),
@@ -150,7 +150,7 @@ namespace sequoia::testing
                     beast{},
                     beast{{"something too long for small string optimization"}},
                     mutator,
-                    move_only_allocation_info{allocGetter, {{1_clm, 1_mu, 1_pm}, {1_clm, 1_mu, 0_pm}}}
+                    move_only_allocation_info{allocGetter, {{1_clm, 1_mu, 1_pm}, {1_clm, 1_mu, 0_pm, {0_containers, 1_containers, 2_containers}}}}
     );
   }
 }
