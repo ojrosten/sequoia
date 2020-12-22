@@ -239,8 +239,8 @@ namespace sequoia::testing
 
     // It is a pity to have to make these substitutions, but it appears
     // to be by far the easiest way to ensure compiler-independent de-mangling.
-    replace_all(name, {{" true, ", " 1, "}, {" true>", " 1>, "}, {"<true>", "<1>, "}});
-    replace_all(name, {{" false, ", " 0, "}, {" false>", " 0>, "}, {"<false>", "<0>, "}});
+    replace_all(name, {{" true,", " 1,"},  {" true>", " 1>, "},  {"<true>", "<1>, "}});
+    replace_all(name, {{" false,", " 0,"}, {" false>", " 0>, "}, {"<false>", "<0>, "}});
 
     return name;
   }
