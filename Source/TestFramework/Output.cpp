@@ -11,8 +11,6 @@
 
 #include "Output.hpp"
 
-#include <vector>
-
 namespace sequoia::testing
 {
   [[nodiscard]]
