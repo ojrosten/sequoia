@@ -18,6 +18,8 @@ namespace sequoia::testing
   {
     namespace fs = std::filesystem;
 
+    t.test_repository(m_TestRepo);
+
     const auto rel{
       [&t, &testRepo{m_TestRepo}, &materialsRepo{m_TestMaterialsRepo}](){
         if(testRepo.empty()) return fs::path{};
@@ -32,7 +34,7 @@ namespace sequoia::testing
 
     const auto materials{!rel.empty() ? m_TestMaterialsRepo / rel : fs::path{}};
     if(fs::exists(materials))
-    {     
+    {
       const auto output{tests_temporary_data_path(m_OutputDir) /= rel};
 
       const auto[original, workingCopy, prediction]{
@@ -50,7 +52,7 @@ namespace sequoia::testing
       };
 
       t.materials(workingCopy, prediction);
-      
+
       if(std::find(m_MaterialsPaths.cbegin(), m_MaterialsPaths.cend(), workingCopy) == m_MaterialsPaths.cend())
       {
         fs::remove_all(output);
@@ -73,7 +75,7 @@ namespace sequoia::testing
     summaries.reserve(m_Tests.size());
     bool hasDiagnostics{};
     summary_writer writer{};
-    
+
     auto compare{
       [](const paths& lhs, const paths& rhs){
         return lhs.workingMaterials < rhs.workingMaterials;
@@ -81,7 +83,7 @@ namespace sequoia::testing
     };
 
     std::set<paths, decltype(compare)> updateables{};
-    
+
     auto process{
       [&summaries, &hasDiagnostics, &writer, &updateables](log_summary summary, const paths& files){
         summaries.push_back(std::move(summary));
@@ -102,7 +104,7 @@ namespace sequoia::testing
         }
       }
     };
-    
+
     if(concurrenyMode < concurrency_mode::test)
     {
       for(auto& pTest : m_Tests)
@@ -138,9 +140,9 @@ namespace sequoia::testing
         if(hasDiagnostics || fs::exists(filename))
         {
           if(std::ofstream file{filename})
-          {           
+          {
             for(const auto& s : summaries)
-            {           
+            {
               file << s.diagnostics_output().data();
             }
           }
@@ -160,7 +162,7 @@ namespace sequoia::testing
     }
 
     return {steady_clock::now() - time, std::move(summaries)};
-  }  
+  }
 
   std::filesystem::path test_family::diagnostics_filename() const
   {
@@ -173,12 +175,12 @@ namespace sequoia::testing
     };
 
     return diagnostics_output_path(m_OutputDir) /= make_name(m_Name);
-  }     
+  }
 
   std::filesystem::path test_family::test_summary_filename(const test& t, const output_mode outputMode, const std::filesystem::path& outputDir, const std::filesystem::path& testRepo)
   {
     namespace fs = std::filesystem;
-    
+
     if((outputMode & output_mode::write_files) != output_mode::write_files) return "";
 
     const auto name{t.source_filename().replace_extension(".txt")};

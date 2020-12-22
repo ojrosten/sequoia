@@ -20,7 +20,7 @@ namespace sequoia::testing
   }
 
   void end_block(std::string& s, const std::size_t newlines, std::string_view footer)
-  {    
+  {
     if(!s.empty())
     {
       std::size_t n{};
@@ -61,7 +61,7 @@ namespace sequoia::testing
     auto mess{append_lines(std::string{"Error -- "}.append(tag).append(" Exception:"), exceptionMessage).append("\n")};
 
     if(!currentMessage.empty())
-    {      
+    {
       std::string_view suffix{exceptionsDetected ? "during last check" : "after check completed"};
       append_lines(mess, std::string{"Exception thrown "}.append(suffix), "Last Recorded Message:\n", currentMessage);
     }
@@ -159,13 +159,23 @@ namespace sequoia::testing
     return text;
   }
 
+  std::string& replace_all(std::string& text, std::initializer_list<replacements> data)
+  {
+    for(const auto& [from, to] : data)
+    {
+      replace_all(text, from, to);
+    }
+
+    return text;
+  }
+
   [[nodiscard]]
-  std::string report_line(const std::filesystem::path& file, const int line, std::string_view message)
+  std::string report_line(const std::filesystem::path& file, const int line, std::string_view message, const std::filesystem::path& repository)
   {
     auto pathToString{
-      [&file](){
+      [&file,&repository](){
         if(file.is_relative())
-        {        
+        {
           auto it{file.begin()};
           while(it != file.end() && (*it == ".."))
           {
@@ -180,11 +190,31 @@ namespace sequoia::testing
 
           return p.generic_string();
         }
+        else if(!repository.empty())
+        {
+          auto filepathIter{file.begin()}, repoIter{repository.begin()};
+          while((repoIter != repository.end()) && (filepathIter != file.end()))
+          {
+            if(*repoIter != *filepathIter) break;
+
+            ++repoIter;
+            ++filepathIter;
+          }
+
+          std::filesystem::path p{*(--repository.end())};
+          for(; filepathIter != file.end(); ++filepathIter)
+          {
+            p /= *filepathIter;
+          }
+
+          return p.generic_string();
+        }
 
         return file.generic_string();
       }
+
     };
-    
+
     return append_lines(pathToString().append(", Line ").append(std::to_string(line)), message).append("\n");
   }
 
@@ -207,6 +237,11 @@ namespace sequoia::testing
       pos = name.find(">>", pos + 1);
     }
 
+    // It is a pity to have to make these substitutions, but it appears
+    // to be by far the easiest way to ensure compiler-independent de-mangling.
+    replace_all(name, {{" true,", " 1,"},  {" true>", " 1>"},  {"<true>", "<1>"}});
+    replace_all(name, {{" false,", " 0,"}, {" false>", " 0>"}, {"<false>", "<0>"}});
+
     return name;
   }
 
@@ -227,18 +262,13 @@ namespace sequoia::testing
     peel(name, "struct ");
     peel(name, "class ");
     peel(name, "enum ");
-    
-    replace_all(name, "<struct ", "<");
-    replace_all(name, "<class ", "<");
-    replace_all(name, "<enum ", "<");
 
     replace_all(name, ",", ", ");
 
-    replace_all(name, ", struct ", ", ");
-    replace_all(name, ", class ", ", ");
-    replace_all(name, ", enum ", ", ");
-
-    replace_all(name, " & __ptr64", "&");
+    replace_all(name, {{"<struct ", "<"}, {", struct ", ", "},
+                       {"<class ", "<"},  {", class ", ", "},
+                       {"<enum ", "<"},   {", enum ", ", "},
+                       {" & __ptr64", "&"}});
 
 #ifdef _MSC_VER
     if constexpr(sizeof(__int64) == sizeof(long long))

@@ -2,7 +2,7 @@
 	Broken equality
 
 	--Regular Semantics--
-	[sequoia::testing::broken_equality<int, sequoia::testing::shared_counting_allocator<int, false, false, false> >]
+	[sequoia::testing::broken_equality<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
 
 	  operator== is inconsistent
 	  [bool]
@@ -14,7 +14,7 @@
 	Broken inequality
 
 	--Regular Semantics--
-	[sequoia::testing::broken_inequality<int, sequoia::testing::shared_counting_allocator<int, false, false, false> >]
+	[sequoia::testing::broken_inequality<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
 
 	  operator!= is inconsistent
 	  [bool]
@@ -26,7 +26,7 @@
 	Inefficient equality
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_equality<int, sequoia::testing::shared_counting_allocator<int, false, false, false> >]
+	[sequoia::testing::inefficient_equality<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -47,7 +47,7 @@
 	Inefficient inequality
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_inequality<int, sequoia::testing::shared_counting_allocator<int, false, false, false> >]
+	[sequoia::testing::inefficient_inequality<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -68,10 +68,10 @@
 	Broken copy
 
 	--Regular Semantics--
-	[sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, false, false, false> >]
+	[sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
 
 	  Inconsistent copy constructor (x)
-	  [sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, false, false, false> >]
+	  [sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
 	  operator== returned false
 	  Obtained : 
 	  Predicted: 1 
@@ -82,10 +82,10 @@
 	Broken para-copy
 
 	--Regular Semantics--
-	[sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, false, false, false> >]
+	[sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
 
 	  Inconsistent para-copy construction
-	  [sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, false, false, false> >]
+	  [sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
 	  operator== returned false
 	  Obtained : 
 	  Predicted: 5 6 
@@ -96,10 +96,10 @@
 	Broken move
 
 	--Regular Semantics--
-	[sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, false, false, false> >]
+	[sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
 
 	  Inconsistent move construction
-	  [sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, false, false, false> >]
+	  [sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
 	  operator== returned false
 	  Obtained : 
 	  Predicted: 5 6 
@@ -110,10 +110,10 @@
 	Broken para-move
 
 	--Regular Semantics--
-	[sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, false, false, false> >]
+	[sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
 
 	  Inconsistent para-move construction
-	  [sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, false, false, false> >]
+	  [sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
 	  operator== returned false
 	  Obtained : 
 	  Predicted: 5 6 
@@ -124,10 +124,10 @@
 	Broken copy assignment
 
 	--Regular Semantics--
-	[sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, false, false, false> >]
+	[sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
 
 	  Inconsistent copy assignment (from y)
-	  [sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, false, false, false> >]
+	  [sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
 	  operator== returned false
 	  Obtained : 1 
 	  Predicted: 5 6 
@@ -138,10 +138,10 @@
 	Broken move assignment
 
 	--Regular Semantics--
-	[sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, false, false, false> >]
+	[sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
 
 	  Inconsistent move assignment (from y)
-	  [sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, false, false, false> >]
+	  [sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
 	  operator== returned false
 	  Obtained : 1 
 	  Predicted: 5 6 
@@ -152,7 +152,7 @@
 	Broken copy value semantics
 
 	--Regular Semantics--
-	[sequoia::testing::broken_copy_value_semantics<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, false, false, false> >]
+	[sequoia::testing::broken_copy_value_semantics<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 0> >]
 
 	  [shared_counting_allocator<
 	  		std::shared_ptr<int>,
@@ -180,7 +180,7 @@
 	Broken copy assignment value semantics
 
 	--Regular Semantics--
-	[sequoia::testing::broken_copy_assignment_value_semantics<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, false, false, false> >]
+	[sequoia::testing::broken_copy_assignment_value_semantics<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 0> >]
 
 	  Either mutation is not doing anything following copy assignment or value semantics are broken, with mutation of an object also changing the object from which it was assigned
 	  [bool]
@@ -192,7 +192,7 @@
 	Inefficient copy
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, false, false, false> >]
+	[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -212,7 +212,7 @@
 	Inefficient copy
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, false, false, false> >]
+	[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -232,7 +232,7 @@
 	Inefficient move
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_move<int, sequoia::testing::shared_counting_allocator<int, false, false, false> >]
+	[sequoia::testing::inefficient_move<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -252,7 +252,7 @@
 	Inefficient para-copy
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, false, false, false> >]
+	[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -272,7 +272,7 @@
 	Inefficient para-move
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_para_move<int, sequoia::testing::shared_counting_allocator<int, false, false, false> >]
+	[sequoia::testing::inefficient_para_move<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -292,7 +292,7 @@
 	Broken check invariant
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, false, false, false> >]
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
 
 	  Precondition - for checking semantics, x and y are assumed to be different
 	  [bool]
@@ -304,7 +304,7 @@
 	Incorrect copy x allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, false, false, false> >]
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -324,7 +324,7 @@
 	Incorrect copy y allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, false, false, false> >]
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -344,7 +344,7 @@
 	Incorrect mutation allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, false, false, false> >]
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -364,7 +364,7 @@
 	Incorrect copy assign y to x allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, false, false, false> >]
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -396,7 +396,7 @@
 	Incorrect copy x allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, false, false, false> >]
+	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 0> >]
 
 	  [shared_counting_allocator<
 	  		std::shared_ptr<int>,
@@ -416,7 +416,7 @@
 	Incorrect copy y allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, false, false, false> >]
+	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 0> >]
 
 	  [shared_counting_allocator<
 	  		std::shared_ptr<int>,
@@ -436,7 +436,7 @@
 	Incorrect mutation allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, false, false, false> >]
+	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 0> >]
 
 	  [shared_counting_allocator<
 	  		std::shared_ptr<int>,
@@ -456,7 +456,7 @@
 	Incorrect copy assign y to x allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, false, false, false> >]
+	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 0> >]
 
 	  [shared_counting_allocator<
 	  		std::shared_ptr<int>,
@@ -488,7 +488,7 @@
 	Inefficient equality
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_serialization<int, sequoia::testing::shared_counting_allocator<int, false, false, false> >]
+	[sequoia::testing::inefficient_serialization<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -508,7 +508,7 @@
 	Broken equality
 
 	--Regular Semantics--
-	[sequoia::testing::broken_equality<int, sequoia::testing::shared_counting_allocator<int, false, false, true> >]
+	[sequoia::testing::broken_equality<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
 
 	  operator== is inconsistent
 	  [bool]
@@ -520,7 +520,7 @@
 	Broken inequality
 
 	--Regular Semantics--
-	[sequoia::testing::broken_inequality<int, sequoia::testing::shared_counting_allocator<int, false, false, true> >]
+	[sequoia::testing::broken_inequality<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
 
 	  operator!= is inconsistent
 	  [bool]
@@ -532,7 +532,7 @@
 	Inefficient equality
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_equality<int, sequoia::testing::shared_counting_allocator<int, false, false, true> >]
+	[sequoia::testing::inefficient_equality<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -553,7 +553,7 @@
 	Inefficient inequality
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_inequality<int, sequoia::testing::shared_counting_allocator<int, false, false, true> >]
+	[sequoia::testing::inefficient_inequality<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -574,10 +574,10 @@
 	Broken copy
 
 	--Regular Semantics--
-	[sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, false, false, true> >]
+	[sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
 
 	  Inconsistent copy constructor (x)
-	  [sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, false, false, true> >]
+	  [sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
 	  operator== returned false
 	  Obtained : 
 	  Predicted: 1 
@@ -588,10 +588,10 @@
 	Broken para-copy
 
 	--Regular Semantics--
-	[sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, false, false, true> >]
+	[sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
 
 	  Inconsistent para-copy construction
-	  [sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, false, false, true> >]
+	  [sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
 	  operator== returned false
 	  Obtained : 
 	  Predicted: 5 6 
@@ -602,10 +602,10 @@
 	Broken move
 
 	--Regular Semantics--
-	[sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, false, false, true> >]
+	[sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
 
 	  Inconsistent move construction
-	  [sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, false, false, true> >]
+	  [sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
 	  operator== returned false
 	  Obtained : 
 	  Predicted: 5 6 
@@ -616,10 +616,10 @@
 	Broken para-move
 
 	--Regular Semantics--
-	[sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, false, false, true> >]
+	[sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
 
 	  Inconsistent para-move construction
-	  [sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, false, false, true> >]
+	  [sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
 	  operator== returned false
 	  Obtained : 
 	  Predicted: 5 6 
@@ -630,10 +630,10 @@
 	Broken copy assignment
 
 	--Regular Semantics--
-	[sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, false, false, true> >]
+	[sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
 
 	  Inconsistent copy assignment (from y)
-	  [sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, false, false, true> >]
+	  [sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
 	  operator== returned false
 	  Obtained : 1 
 	  Predicted: 5 6 
@@ -644,10 +644,10 @@
 	Broken move assignment
 
 	--Regular Semantics--
-	[sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, false, false, true> >]
+	[sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
 
 	  Inconsistent move assignment (from y)
-	  [sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, false, false, true> >]
+	  [sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
 	  operator== returned false
 	  Obtained : 1 
 	  Predicted: 5 6 
@@ -658,7 +658,7 @@
 	Broken copy value semantics
 
 	--Regular Semantics--
-	[sequoia::testing::broken_copy_value_semantics<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, false, false, true> >]
+	[sequoia::testing::broken_copy_value_semantics<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 1> >]
 
 	  [shared_counting_allocator<
 	  		std::shared_ptr<int>,
@@ -690,7 +690,7 @@
 	Broken copy assignment value semantics
 
 	--Regular Semantics--
-	[sequoia::testing::broken_copy_assignment_value_semantics<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, false, false, true> >]
+	[sequoia::testing::broken_copy_assignment_value_semantics<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 1> >]
 
 	  Either mutation is not doing anything following copy assignment or value semantics are broken, with mutation of an object also changing the object from which it was assigned
 	  [bool]
@@ -702,7 +702,7 @@
 	Inefficient copy
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, false, false, true> >]
+	[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -722,7 +722,7 @@
 	Inefficient copy
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, false, false, true> >]
+	[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -742,7 +742,7 @@
 	Inefficient move
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_move<int, sequoia::testing::shared_counting_allocator<int, false, false, true> >]
+	[sequoia::testing::inefficient_move<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -762,7 +762,7 @@
 	Inefficient para-copy
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, false, false, true> >]
+	[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -782,7 +782,7 @@
 	Inefficient para-move
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_para_move<int, sequoia::testing::shared_counting_allocator<int, false, false, true> >]
+	[sequoia::testing::inefficient_para_move<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -802,7 +802,7 @@
 	Broken check invariant
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, false, false, true> >]
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
 
 	  Precondition - for checking semantics, x and y are assumed to be different
 	  [bool]
@@ -814,7 +814,7 @@
 	Incorrect copy x allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, false, false, true> >]
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -834,7 +834,7 @@
 	Incorrect copy y allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, false, false, true> >]
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -854,7 +854,7 @@
 	Incorrect mutation allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, false, false, true> >]
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -886,7 +886,7 @@
 	Incorrect copy assign y to x allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, false, false, true> >]
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -918,7 +918,7 @@
 	Incorrect copy x allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, false, false, true> >]
+	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 1> >]
 
 	  [shared_counting_allocator<
 	  		std::shared_ptr<int>,
@@ -938,7 +938,7 @@
 	Incorrect copy y allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, false, false, true> >]
+	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 1> >]
 
 	  [shared_counting_allocator<
 	  		std::shared_ptr<int>,
@@ -958,7 +958,7 @@
 	Incorrect mutation allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, false, false, true> >]
+	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 1> >]
 
 	  [shared_counting_allocator<
 	  		std::shared_ptr<int>,
@@ -990,7 +990,7 @@
 	Incorrect copy assign y to x allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, false, false, true> >]
+	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 1> >]
 
 	  [shared_counting_allocator<
 	  		std::shared_ptr<int>,
@@ -1022,7 +1022,7 @@
 	Inefficient equality
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_serialization<int, sequoia::testing::shared_counting_allocator<int, false, false, true> >]
+	[sequoia::testing::inefficient_serialization<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -1042,7 +1042,7 @@
 	Broken equality
 
 	--Regular Semantics--
-	[sequoia::testing::broken_equality<int, sequoia::testing::shared_counting_allocator<int, false, true, false> >]
+	[sequoia::testing::broken_equality<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
 
 	  operator== is inconsistent
 	  [bool]
@@ -1054,7 +1054,7 @@
 	Broken inequality
 
 	--Regular Semantics--
-	[sequoia::testing::broken_inequality<int, sequoia::testing::shared_counting_allocator<int, false, true, false> >]
+	[sequoia::testing::broken_inequality<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
 
 	  operator!= is inconsistent
 	  [bool]
@@ -1066,7 +1066,7 @@
 	Inefficient equality
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_equality<int, sequoia::testing::shared_counting_allocator<int, false, true, false> >]
+	[sequoia::testing::inefficient_equality<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -1087,7 +1087,7 @@
 	Inefficient inequality
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_inequality<int, sequoia::testing::shared_counting_allocator<int, false, true, false> >]
+	[sequoia::testing::inefficient_inequality<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -1108,10 +1108,10 @@
 	Broken copy
 
 	--Regular Semantics--
-	[sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, false, true, false> >]
+	[sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
 
 	  Inconsistent copy constructor (x)
-	  [sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, false, true, false> >]
+	  [sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
 	  operator== returned false
 	  Obtained : 
 	  Predicted: 1 
@@ -1122,10 +1122,10 @@
 	Broken para-copy
 
 	--Regular Semantics--
-	[sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, false, true, false> >]
+	[sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
 
 	  Inconsistent para-copy construction
-	  [sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, false, true, false> >]
+	  [sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
 	  operator== returned false
 	  Obtained : 
 	  Predicted: 5 6 
@@ -1136,10 +1136,10 @@
 	Broken move
 
 	--Regular Semantics--
-	[sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, false, true, false> >]
+	[sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
 
 	  Inconsistent move construction
-	  [sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, false, true, false> >]
+	  [sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
 	  operator== returned false
 	  Obtained : 
 	  Predicted: 5 6 
@@ -1150,10 +1150,10 @@
 	Broken para-move
 
 	--Regular Semantics--
-	[sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, false, true, false> >]
+	[sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
 
 	  Inconsistent para-move construction
-	  [sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, false, true, false> >]
+	  [sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
 	  operator== returned false
 	  Obtained : 
 	  Predicted: 5 6 
@@ -1164,10 +1164,10 @@
 	Broken copy assignment
 
 	--Regular Semantics--
-	[sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, false, true, false> >]
+	[sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
 
 	  Inconsistent copy assignment (from y)
-	  [sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, false, true, false> >]
+	  [sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
 	  operator== returned false
 	  Obtained : 1 
 	  Predicted: 5 6 
@@ -1178,10 +1178,10 @@
 	Broken move assignment
 
 	--Regular Semantics--
-	[sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, false, true, false> >]
+	[sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
 
 	  Inconsistent move assignment (from y)
-	  [sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, false, true, false> >]
+	  [sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
 	  operator== returned false
 	  Obtained : 1 
 	  Predicted: 5 6 
@@ -1192,7 +1192,7 @@
 	Broken copy value semantics
 
 	--Regular Semantics--
-	[sequoia::testing::broken_copy_value_semantics<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, false, true, false> >]
+	[sequoia::testing::broken_copy_value_semantics<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 0> >]
 
 	  [shared_counting_allocator<
 	  		std::shared_ptr<int>,
@@ -1220,7 +1220,7 @@
 	Broken copy assignment value semantics
 
 	--Regular Semantics--
-	[sequoia::testing::broken_copy_assignment_value_semantics<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, false, true, false> >]
+	[sequoia::testing::broken_copy_assignment_value_semantics<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 0> >]
 
 	  Either mutation is not doing anything following copy assignment or value semantics are broken, with mutation of an object also changing the object from which it was assigned
 	  [bool]
@@ -1232,7 +1232,7 @@
 	Inefficient copy
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, false, true, false> >]
+	[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -1252,7 +1252,7 @@
 	Inefficient copy
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, false, true, false> >]
+	[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -1272,7 +1272,7 @@
 	Inefficient move
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_move<int, sequoia::testing::shared_counting_allocator<int, false, true, false> >]
+	[sequoia::testing::inefficient_move<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -1292,7 +1292,7 @@
 	Inefficient para-copy
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, false, true, false> >]
+	[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -1312,7 +1312,7 @@
 	Inefficient para-move
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_para_move<int, sequoia::testing::shared_counting_allocator<int, false, true, false> >]
+	[sequoia::testing::inefficient_para_move<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -1332,7 +1332,7 @@
 	Broken check invariant
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, false, true, false> >]
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
 
 	  Precondition - for checking semantics, x and y are assumed to be different
 	  [bool]
@@ -1344,7 +1344,7 @@
 	Incorrect copy x allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, false, true, false> >]
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -1364,7 +1364,7 @@
 	Incorrect copy y allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, false, true, false> >]
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -1384,7 +1384,7 @@
 	Incorrect mutation allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, false, true, false> >]
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -1404,7 +1404,7 @@
 	Incorrect copy assign y to x allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, false, true, false> >]
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -1424,7 +1424,7 @@
 	Incorrect copy x allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, false, true, false> >]
+	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 0> >]
 
 	  [shared_counting_allocator<
 	  		std::shared_ptr<int>,
@@ -1444,7 +1444,7 @@
 	Incorrect copy y allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, false, true, false> >]
+	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 0> >]
 
 	  [shared_counting_allocator<
 	  		std::shared_ptr<int>,
@@ -1464,7 +1464,7 @@
 	Incorrect mutation allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, false, true, false> >]
+	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 0> >]
 
 	  [shared_counting_allocator<
 	  		std::shared_ptr<int>,
@@ -1484,7 +1484,7 @@
 	Incorrect copy assign y to x allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, false, true, false> >]
+	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 0> >]
 
 	  [shared_counting_allocator<
 	  		std::shared_ptr<int>,
@@ -1504,7 +1504,7 @@
 	Inefficient equality
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_serialization<int, sequoia::testing::shared_counting_allocator<int, false, true, false> >]
+	[sequoia::testing::inefficient_serialization<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -1524,7 +1524,7 @@
 	Broken equality
 
 	--Regular Semantics--
-	[sequoia::testing::broken_equality<int, sequoia::testing::shared_counting_allocator<int, false, true, true> >]
+	[sequoia::testing::broken_equality<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
 
 	  operator== is inconsistent
 	  [bool]
@@ -1536,7 +1536,7 @@
 	Broken inequality
 
 	--Regular Semantics--
-	[sequoia::testing::broken_inequality<int, sequoia::testing::shared_counting_allocator<int, false, true, true> >]
+	[sequoia::testing::broken_inequality<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
 
 	  operator!= is inconsistent
 	  [bool]
@@ -1548,7 +1548,7 @@
 	Inefficient equality
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_equality<int, sequoia::testing::shared_counting_allocator<int, false, true, true> >]
+	[sequoia::testing::inefficient_equality<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -1569,7 +1569,7 @@
 	Inefficient inequality
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_inequality<int, sequoia::testing::shared_counting_allocator<int, false, true, true> >]
+	[sequoia::testing::inefficient_inequality<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -1590,10 +1590,10 @@
 	Broken copy
 
 	--Regular Semantics--
-	[sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, false, true, true> >]
+	[sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
 
 	  Inconsistent copy constructor (x)
-	  [sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, false, true, true> >]
+	  [sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
 	  operator== returned false
 	  Obtained : 
 	  Predicted: 1 
@@ -1604,10 +1604,10 @@
 	Broken para-copy
 
 	--Regular Semantics--
-	[sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, false, true, true> >]
+	[sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
 
 	  Inconsistent para-copy construction
-	  [sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, false, true, true> >]
+	  [sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
 	  operator== returned false
 	  Obtained : 
 	  Predicted: 5 6 
@@ -1618,10 +1618,10 @@
 	Broken move
 
 	--Regular Semantics--
-	[sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, false, true, true> >]
+	[sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
 
 	  Inconsistent move construction
-	  [sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, false, true, true> >]
+	  [sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
 	  operator== returned false
 	  Obtained : 
 	  Predicted: 5 6 
@@ -1632,10 +1632,10 @@
 	Broken para-move
 
 	--Regular Semantics--
-	[sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, false, true, true> >]
+	[sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
 
 	  Inconsistent para-move construction
-	  [sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, false, true, true> >]
+	  [sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
 	  operator== returned false
 	  Obtained : 
 	  Predicted: 5 6 
@@ -1646,10 +1646,10 @@
 	Broken copy assignment
 
 	--Regular Semantics--
-	[sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, false, true, true> >]
+	[sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
 
 	  Inconsistent copy assignment (from y)
-	  [sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, false, true, true> >]
+	  [sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
 	  operator== returned false
 	  Obtained : 1 
 	  Predicted: 5 6 
@@ -1660,10 +1660,10 @@
 	Broken move assignment
 
 	--Regular Semantics--
-	[sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, false, true, true> >]
+	[sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
 
 	  Inconsistent move assignment (from y)
-	  [sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, false, true, true> >]
+	  [sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
 	  operator== returned false
 	  Obtained : 1 
 	  Predicted: 5 6 
@@ -1674,7 +1674,7 @@
 	Broken copy value semantics
 
 	--Regular Semantics--
-	[sequoia::testing::broken_copy_value_semantics<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, false, true, true> >]
+	[sequoia::testing::broken_copy_value_semantics<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 1> >]
 
 	  [shared_counting_allocator<
 	  		std::shared_ptr<int>,
@@ -1706,7 +1706,7 @@
 	Broken copy assignment value semantics
 
 	--Regular Semantics--
-	[sequoia::testing::broken_copy_assignment_value_semantics<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, false, true, true> >]
+	[sequoia::testing::broken_copy_assignment_value_semantics<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 1> >]
 
 	  Either mutation is not doing anything following copy assignment or value semantics are broken, with mutation of an object also changing the object from which it was assigned
 	  [bool]
@@ -1718,7 +1718,7 @@
 	Inefficient copy
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, false, true, true> >]
+	[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -1738,7 +1738,7 @@
 	Inefficient copy
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, false, true, true> >]
+	[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -1758,7 +1758,7 @@
 	Inefficient move
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_move<int, sequoia::testing::shared_counting_allocator<int, false, true, true> >]
+	[sequoia::testing::inefficient_move<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -1778,7 +1778,7 @@
 	Inefficient para-copy
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, false, true, true> >]
+	[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -1798,7 +1798,7 @@
 	Inefficient para-move
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_para_move<int, sequoia::testing::shared_counting_allocator<int, false, true, true> >]
+	[sequoia::testing::inefficient_para_move<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -1818,7 +1818,7 @@
 	Broken check invariant
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, false, true, true> >]
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
 
 	  Precondition - for checking semantics, x and y are assumed to be different
 	  [bool]
@@ -1830,7 +1830,7 @@
 	Incorrect copy x allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, false, true, true> >]
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -1850,7 +1850,7 @@
 	Incorrect copy y allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, false, true, true> >]
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -1870,7 +1870,7 @@
 	Incorrect mutation allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, false, true, true> >]
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -1902,7 +1902,7 @@
 	Incorrect copy assign y to x allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, false, true, true> >]
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -1922,7 +1922,7 @@
 	Incorrect copy x allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, false, true, true> >]
+	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 1> >]
 
 	  [shared_counting_allocator<
 	  		std::shared_ptr<int>,
@@ -1942,7 +1942,7 @@
 	Incorrect copy y allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, false, true, true> >]
+	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 1> >]
 
 	  [shared_counting_allocator<
 	  		std::shared_ptr<int>,
@@ -1962,7 +1962,7 @@
 	Incorrect mutation allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, false, true, true> >]
+	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 1> >]
 
 	  [shared_counting_allocator<
 	  		std::shared_ptr<int>,
@@ -1994,7 +1994,7 @@
 	Incorrect copy assign y to x allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, false, true, true> >]
+	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 1> >]
 
 	  [shared_counting_allocator<
 	  		std::shared_ptr<int>,
@@ -2014,7 +2014,7 @@
 	Inefficient equality
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_serialization<int, sequoia::testing::shared_counting_allocator<int, false, true, true> >]
+	[sequoia::testing::inefficient_serialization<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -2034,7 +2034,7 @@
 	Broken equality
 
 	--Regular Semantics--
-	[sequoia::testing::broken_equality<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
+	[sequoia::testing::broken_equality<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 
 	  operator== is inconsistent
 	  [bool]
@@ -2046,7 +2046,7 @@
 	Broken inequality
 
 	--Regular Semantics--
-	[sequoia::testing::broken_inequality<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
+	[sequoia::testing::broken_inequality<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 
 	  operator!= is inconsistent
 	  [bool]
@@ -2058,7 +2058,7 @@
 	Inefficient equality
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_equality<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
+	[sequoia::testing::inefficient_equality<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -2079,7 +2079,7 @@
 	Inefficient inequality
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_inequality<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
+	[sequoia::testing::inefficient_inequality<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -2100,10 +2100,10 @@
 	Broken copy
 
 	--Regular Semantics--
-	[sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
+	[sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 
 	  Inconsistent copy constructor (x)
-	  [sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
+	  [sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 	  operator== returned false
 	  Obtained : 
 	  Predicted: 1 
@@ -2114,10 +2114,10 @@
 	Broken para-copy
 
 	--Regular Semantics--
-	[sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
+	[sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 
 	  Inconsistent para-copy construction
-	  [sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
+	  [sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 	  operator== returned false
 	  Obtained : 
 	  Predicted: 5 6 
@@ -2128,10 +2128,10 @@
 	Broken move
 
 	--Regular Semantics--
-	[sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
+	[sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 
 	  Inconsistent move construction
-	  [sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
+	  [sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 	  operator== returned false
 	  Obtained : 
 	  Predicted: 5 6 
@@ -2142,10 +2142,10 @@
 	Broken para-move
 
 	--Regular Semantics--
-	[sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
+	[sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 
 	  Inconsistent para-move construction
-	  [sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
+	  [sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 	  operator== returned false
 	  Obtained : 
 	  Predicted: 5 6 
@@ -2156,10 +2156,10 @@
 	Broken copy assignment
 
 	--Regular Semantics--
-	[sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
+	[sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 
 	  Inconsistent copy assignment (from y)
-	  [sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
+	  [sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 	  operator== returned false
 	  Obtained : 1 
 	  Predicted: 5 6 
@@ -2170,10 +2170,10 @@
 	Broken move assignment
 
 	--Regular Semantics--
-	[sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
+	[sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 
 	  Inconsistent move assignment (from y)
-	  [sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
+	  [sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 	  operator== returned false
 	  Obtained : 1 
 	  Predicted: 5 6 
@@ -2184,7 +2184,7 @@
 	Broken copy value semantics
 
 	--Regular Semantics--
-	[sequoia::testing::broken_copy_value_semantics<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, true, false, false> >]
+	[sequoia::testing::broken_copy_value_semantics<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 0> >]
 
 	  Mutation is not doing anything following move assignment
 	  [bool]
@@ -2200,7 +2200,7 @@
 	Broken copy assignment value semantics
 
 	--Regular Semantics--
-	[sequoia::testing::broken_copy_assignment_value_semantics<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, true, false, false> >]
+	[sequoia::testing::broken_copy_assignment_value_semantics<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 0> >]
 
 	  Either mutation is not doing anything following copy assignment or value semantics are broken, with mutation of an object also changing the object from which it was assigned
 	  [bool]
@@ -2212,7 +2212,7 @@
 	Inefficient copy
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
+	[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -2232,7 +2232,7 @@
 	Inefficient copy
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
+	[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -2252,7 +2252,7 @@
 	Inefficient move
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_move<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
+	[sequoia::testing::inefficient_move<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -2272,7 +2272,7 @@
 	Inefficient para-copy
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
+	[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -2292,7 +2292,7 @@
 	Inefficient para-move
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_para_move<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
+	[sequoia::testing::inefficient_para_move<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -2312,7 +2312,7 @@
 	Broken check invariant
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 
 	  Precondition - for checking semantics, x and y are assumed to be different
 	  [bool]
@@ -2324,7 +2324,7 @@
 	Incorrect copy x allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -2344,7 +2344,7 @@
 	Incorrect copy y allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -2364,7 +2364,7 @@
 	Incorrect mutation allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -2384,7 +2384,7 @@
 	Incorrect copy assign y to x allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -2416,7 +2416,7 @@
 	Incorrect copy x allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, true, false, false> >]
+	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 0> >]
 
 	  [shared_counting_allocator<
 	  		std::shared_ptr<int>,
@@ -2436,7 +2436,7 @@
 	Incorrect copy y allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, true, false, false> >]
+	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 0> >]
 
 	  [shared_counting_allocator<
 	  		std::shared_ptr<int>,
@@ -2456,7 +2456,7 @@
 	Incorrect mutation allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, true, false, false> >]
+	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 0> >]
 
 	  [shared_counting_allocator<
 	  		std::shared_ptr<int>,
@@ -2476,7 +2476,7 @@
 	Incorrect copy assign y to x allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, true, false, false> >]
+	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 0> >]
 
 	  [shared_counting_allocator<
 	  		std::shared_ptr<int>,
@@ -2508,7 +2508,7 @@
 	Inefficient equality
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_serialization<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
+	[sequoia::testing::inefficient_serialization<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -2528,7 +2528,7 @@
 	Broken equality
 
 	--Regular Semantics--
-	[sequoia::testing::broken_equality<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
+	[sequoia::testing::broken_equality<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 
 	  operator== is inconsistent
 	  [bool]
@@ -2540,7 +2540,7 @@
 	Broken inequality
 
 	--Regular Semantics--
-	[sequoia::testing::broken_inequality<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
+	[sequoia::testing::broken_inequality<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 
 	  operator!= is inconsistent
 	  [bool]
@@ -2552,7 +2552,7 @@
 	Inefficient equality
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_equality<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
+	[sequoia::testing::inefficient_equality<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -2573,7 +2573,7 @@
 	Inefficient inequality
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_inequality<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
+	[sequoia::testing::inefficient_inequality<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -2594,10 +2594,10 @@
 	Broken copy
 
 	--Regular Semantics--
-	[sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
+	[sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 
 	  Inconsistent copy constructor (x)
-	  [sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
+	  [sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 	  operator== returned false
 	  Obtained : 
 	  Predicted: 1 
@@ -2608,10 +2608,10 @@
 	Broken para-copy
 
 	--Regular Semantics--
-	[sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
+	[sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 
 	  Inconsistent para-copy construction
-	  [sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
+	  [sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 	  operator== returned false
 	  Obtained : 
 	  Predicted: 5 6 
@@ -2622,10 +2622,10 @@
 	Broken move
 
 	--Regular Semantics--
-	[sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
+	[sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 
 	  Inconsistent move construction
-	  [sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
+	  [sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 	  operator== returned false
 	  Obtained : 
 	  Predicted: 5 6 
@@ -2636,10 +2636,10 @@
 	Broken para-move
 
 	--Regular Semantics--
-	[sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
+	[sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 
 	  Inconsistent para-move construction
-	  [sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
+	  [sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 	  operator== returned false
 	  Obtained : 
 	  Predicted: 5 6 
@@ -2650,10 +2650,10 @@
 	Broken copy assignment
 
 	--Regular Semantics--
-	[sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
+	[sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 
 	  Inconsistent copy assignment (from y)
-	  [sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
+	  [sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 	  operator== returned false
 	  Obtained : 1 
 	  Predicted: 5 6 
@@ -2664,10 +2664,10 @@
 	Broken move assignment
 
 	--Regular Semantics--
-	[sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
+	[sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 
 	  Inconsistent move assignment (from y)
-	  [sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
+	  [sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 	  operator== returned false
 	  Obtained : 1 
 	  Predicted: 5 6 
@@ -2678,7 +2678,7 @@
 	Broken copy value semantics
 
 	--Regular Semantics--
-	[sequoia::testing::broken_copy_value_semantics<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, true, false, true> >]
+	[sequoia::testing::broken_copy_value_semantics<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 1> >]
 
 	  Mutation is not doing anything following move assignment
 	  [bool]
@@ -2698,7 +2698,7 @@
 	Broken copy assignment value semantics
 
 	--Regular Semantics--
-	[sequoia::testing::broken_copy_assignment_value_semantics<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, true, false, true> >]
+	[sequoia::testing::broken_copy_assignment_value_semantics<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 1> >]
 
 	  Either mutation is not doing anything following copy assignment or value semantics are broken, with mutation of an object also changing the object from which it was assigned
 	  [bool]
@@ -2710,7 +2710,7 @@
 	Inefficient copy
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
+	[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -2730,7 +2730,7 @@
 	Inefficient copy
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
+	[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -2750,7 +2750,7 @@
 	Inefficient move
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_move<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
+	[sequoia::testing::inefficient_move<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -2770,7 +2770,7 @@
 	Inefficient para-copy
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
+	[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -2790,7 +2790,7 @@
 	Inefficient para-move
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_para_move<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
+	[sequoia::testing::inefficient_para_move<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -2810,7 +2810,7 @@
 	Broken check invariant
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 
 	  Precondition - for checking semantics, x and y are assumed to be different
 	  [bool]
@@ -2822,7 +2822,7 @@
 	Incorrect copy x allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -2842,7 +2842,7 @@
 	Incorrect copy y allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -2862,7 +2862,7 @@
 	Incorrect mutation allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -2894,7 +2894,7 @@
 	Incorrect copy assign y to x allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -2926,7 +2926,7 @@
 	Incorrect copy x allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, true, false, true> >]
+	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 1> >]
 
 	  [shared_counting_allocator<
 	  		std::shared_ptr<int>,
@@ -2946,7 +2946,7 @@
 	Incorrect copy y allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, true, false, true> >]
+	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 1> >]
 
 	  [shared_counting_allocator<
 	  		std::shared_ptr<int>,
@@ -2966,7 +2966,7 @@
 	Incorrect mutation allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, true, false, true> >]
+	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 1> >]
 
 	  [shared_counting_allocator<
 	  		std::shared_ptr<int>,
@@ -2998,7 +2998,7 @@
 	Incorrect copy assign y to x allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, true, false, true> >]
+	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 1> >]
 
 	  [shared_counting_allocator<
 	  		std::shared_ptr<int>,
@@ -3030,7 +3030,7 @@
 	Inefficient equality
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_serialization<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
+	[sequoia::testing::inefficient_serialization<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -3050,7 +3050,7 @@
 	Broken equality
 
 	--Regular Semantics--
-	[sequoia::testing::broken_equality<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
+	[sequoia::testing::broken_equality<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 
 	  operator== is inconsistent
 	  [bool]
@@ -3062,7 +3062,7 @@
 	Broken inequality
 
 	--Regular Semantics--
-	[sequoia::testing::broken_inequality<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
+	[sequoia::testing::broken_inequality<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 
 	  operator!= is inconsistent
 	  [bool]
@@ -3074,7 +3074,7 @@
 	Inefficient equality
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_equality<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
+	[sequoia::testing::inefficient_equality<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -3095,7 +3095,7 @@
 	Inefficient inequality
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_inequality<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
+	[sequoia::testing::inefficient_inequality<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -3116,10 +3116,10 @@
 	Broken copy
 
 	--Regular Semantics--
-	[sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
+	[sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 
 	  Inconsistent copy constructor (x)
-	  [sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
+	  [sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 	  operator== returned false
 	  Obtained : 
 	  Predicted: 1 
@@ -3130,10 +3130,10 @@
 	Broken para-copy
 
 	--Regular Semantics--
-	[sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
+	[sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 
 	  Inconsistent para-copy construction
-	  [sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
+	  [sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 	  operator== returned false
 	  Obtained : 
 	  Predicted: 5 6 
@@ -3144,10 +3144,10 @@
 	Broken move
 
 	--Regular Semantics--
-	[sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
+	[sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 
 	  Inconsistent move construction
-	  [sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
+	  [sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 	  operator== returned false
 	  Obtained : 
 	  Predicted: 5 6 
@@ -3158,10 +3158,10 @@
 	Broken para-move
 
 	--Regular Semantics--
-	[sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
+	[sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 
 	  Inconsistent para-move construction
-	  [sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
+	  [sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 	  operator== returned false
 	  Obtained : 
 	  Predicted: 5 6 
@@ -3172,10 +3172,10 @@
 	Broken copy assignment
 
 	--Regular Semantics--
-	[sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
+	[sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 
 	  Inconsistent copy assignment (from y)
-	  [sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
+	  [sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 	  operator== returned false
 	  Obtained : 1 
 	  Predicted: 5 6 
@@ -3186,10 +3186,10 @@
 	Broken move assignment
 
 	--Regular Semantics--
-	[sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
+	[sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 
 	  Inconsistent move assignment (from y)
-	  [sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
+	  [sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 	  operator== returned false
 	  Obtained : 1 
 	  Predicted: 5 6 
@@ -3200,7 +3200,7 @@
 	Broken copy value semantics
 
 	--Regular Semantics--
-	[sequoia::testing::broken_copy_value_semantics<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, true, true, false> >]
+	[sequoia::testing::broken_copy_value_semantics<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 0> >]
 
 	  Mutation is not doing anything following move assignment
 	  [bool]
@@ -3216,7 +3216,7 @@
 	Broken copy assignment value semantics
 
 	--Regular Semantics--
-	[sequoia::testing::broken_copy_assignment_value_semantics<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, true, true, false> >]
+	[sequoia::testing::broken_copy_assignment_value_semantics<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 0> >]
 
 	  Either mutation is not doing anything following copy assignment or value semantics are broken, with mutation of an object also changing the object from which it was assigned
 	  [bool]
@@ -3228,7 +3228,7 @@
 	Inefficient copy
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
+	[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -3248,7 +3248,7 @@
 	Inefficient copy
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
+	[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -3268,7 +3268,7 @@
 	Inefficient move
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_move<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
+	[sequoia::testing::inefficient_move<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -3288,7 +3288,7 @@
 	Inefficient para-copy
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
+	[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -3308,7 +3308,7 @@
 	Inefficient para-move
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_para_move<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
+	[sequoia::testing::inefficient_para_move<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -3328,7 +3328,7 @@
 	Broken check invariant
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 
 	  Precondition - for checking semantics, x and y are assumed to be different
 	  [bool]
@@ -3340,7 +3340,7 @@
 	Incorrect copy x allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -3360,7 +3360,7 @@
 	Incorrect copy y allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -3380,7 +3380,7 @@
 	Incorrect mutation allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -3400,7 +3400,7 @@
 	Incorrect copy assign y to x allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -3432,7 +3432,7 @@
 	Incorrect copy x allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, true, true, false> >]
+	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 0> >]
 
 	  [shared_counting_allocator<
 	  		std::shared_ptr<int>,
@@ -3452,7 +3452,7 @@
 	Incorrect copy y allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, true, true, false> >]
+	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 0> >]
 
 	  [shared_counting_allocator<
 	  		std::shared_ptr<int>,
@@ -3472,7 +3472,7 @@
 	Incorrect mutation allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, true, true, false> >]
+	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 0> >]
 
 	  [shared_counting_allocator<
 	  		std::shared_ptr<int>,
@@ -3492,7 +3492,7 @@
 	Incorrect copy assign y to x allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, true, true, false> >]
+	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 0> >]
 
 	  [shared_counting_allocator<
 	  		std::shared_ptr<int>,
@@ -3524,7 +3524,7 @@
 	Inefficient equality
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_serialization<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
+	[sequoia::testing::inefficient_serialization<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -3544,7 +3544,7 @@
 	Broken equality
 
 	--Regular Semantics--
-	[sequoia::testing::broken_equality<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
+	[sequoia::testing::broken_equality<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 
 	  operator== is inconsistent
 	  [bool]
@@ -3556,7 +3556,7 @@
 	Broken inequality
 
 	--Regular Semantics--
-	[sequoia::testing::broken_inequality<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
+	[sequoia::testing::broken_inequality<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 
 	  operator!= is inconsistent
 	  [bool]
@@ -3568,7 +3568,7 @@
 	Inefficient equality
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_equality<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
+	[sequoia::testing::inefficient_equality<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -3589,7 +3589,7 @@
 	Inefficient inequality
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_inequality<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
+	[sequoia::testing::inefficient_inequality<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -3610,10 +3610,10 @@
 	Broken copy
 
 	--Regular Semantics--
-	[sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
+	[sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 
 	  Inconsistent copy constructor (x)
-	  [sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
+	  [sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 	  operator== returned false
 	  Obtained : 
 	  Predicted: 1 
@@ -3624,10 +3624,10 @@
 	Broken para-copy
 
 	--Regular Semantics--
-	[sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
+	[sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 
 	  Inconsistent para-copy construction
-	  [sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
+	  [sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 	  operator== returned false
 	  Obtained : 
 	  Predicted: 5 6 
@@ -3638,10 +3638,10 @@
 	Broken move
 
 	--Regular Semantics--
-	[sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
+	[sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 
 	  Inconsistent move construction
-	  [sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
+	  [sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 	  operator== returned false
 	  Obtained : 
 	  Predicted: 5 6 
@@ -3652,10 +3652,10 @@
 	Broken para-move
 
 	--Regular Semantics--
-	[sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
+	[sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 
 	  Inconsistent para-move construction
-	  [sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
+	  [sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 	  operator== returned false
 	  Obtained : 
 	  Predicted: 5 6 
@@ -3666,10 +3666,10 @@
 	Broken copy assignment
 
 	--Regular Semantics--
-	[sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
+	[sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 
 	  Inconsistent copy assignment (from y)
-	  [sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
+	  [sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 	  operator== returned false
 	  Obtained : 1 
 	  Predicted: 5 6 
@@ -3680,10 +3680,10 @@
 	Broken move assignment
 
 	--Regular Semantics--
-	[sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
+	[sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 
 	  Inconsistent move assignment (from y)
-	  [sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
+	  [sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 	  operator== returned false
 	  Obtained : 1 
 	  Predicted: 5 6 
@@ -3694,7 +3694,7 @@
 	Broken copy value semantics
 
 	--Regular Semantics--
-	[sequoia::testing::broken_copy_value_semantics<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, true, true, true> >]
+	[sequoia::testing::broken_copy_value_semantics<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 1> >]
 
 	  Mutation is not doing anything following move assignment
 	  [bool]
@@ -3714,7 +3714,7 @@
 	Broken copy assignment value semantics
 
 	--Regular Semantics--
-	[sequoia::testing::broken_copy_assignment_value_semantics<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, true, true, true> >]
+	[sequoia::testing::broken_copy_assignment_value_semantics<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 1> >]
 
 	  Either mutation is not doing anything following copy assignment or value semantics are broken, with mutation of an object also changing the object from which it was assigned
 	  [bool]
@@ -3726,7 +3726,7 @@
 	Inefficient copy
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
+	[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -3746,7 +3746,7 @@
 	Inefficient copy
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
+	[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -3766,7 +3766,7 @@
 	Inefficient move
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_move<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
+	[sequoia::testing::inefficient_move<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -3786,7 +3786,7 @@
 	Inefficient para-copy
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
+	[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -3806,7 +3806,7 @@
 	Inefficient para-move
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_para_move<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
+	[sequoia::testing::inefficient_para_move<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -3826,7 +3826,7 @@
 	Broken check invariant
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 
 	  Precondition - for checking semantics, x and y are assumed to be different
 	  [bool]
@@ -3838,7 +3838,7 @@
 	Incorrect copy x allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -3858,7 +3858,7 @@
 	Incorrect copy y allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -3878,7 +3878,7 @@
 	Incorrect mutation allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -3910,7 +3910,7 @@
 	Incorrect copy assign y to x allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -3942,7 +3942,7 @@
 	Incorrect copy x allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, true, true, true> >]
+	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 1> >]
 
 	  [shared_counting_allocator<
 	  		std::shared_ptr<int>,
@@ -3962,7 +3962,7 @@
 	Incorrect copy y allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, true, true, true> >]
+	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 1> >]
 
 	  [shared_counting_allocator<
 	  		std::shared_ptr<int>,
@@ -3982,7 +3982,7 @@
 	Incorrect mutation allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, true, true, true> >]
+	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 1> >]
 
 	  [shared_counting_allocator<
 	  		std::shared_ptr<int>,
@@ -4014,7 +4014,7 @@
 	Incorrect copy assign y to x allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, true, true, true> >]
+	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 1> >]
 
 	  [shared_counting_allocator<
 	  		std::shared_ptr<int>,
@@ -4046,7 +4046,7 @@
 	Inefficient equality
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_serialization<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
+	[sequoia::testing::inefficient_serialization<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -4066,7 +4066,7 @@
 	Incorrect para-move allocs
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
+	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -4086,7 +4086,7 @@
 	Incorrect mutation allocs
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
+	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -4106,7 +4106,7 @@
 	Incorrect assignment allocs
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
+	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -4126,10 +4126,10 @@
 	Broken move
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_broken_move<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
+	[sequoia::testing::move_only_broken_move<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 
 	  Inconsistent move construction
-	  [sequoia::testing::move_only_broken_move<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
+	  [sequoia::testing::move_only_broken_move<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 	  operator== returned false
 	  Obtained : 
 	  Predicted: 2 
@@ -4140,10 +4140,10 @@
 	Broken move assignment
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
+	[sequoia::testing::move_only_broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 
 	  Inconsistent move assignment (from y)
-	  [sequoia::testing::move_only_broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
+	  [sequoia::testing::move_only_broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 	  operator== returned false
 	  Obtained : 1 
 	  Predicted: 2 
@@ -4154,7 +4154,7 @@
 	Inefficient move
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_inefficient_move<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
+	[sequoia::testing::move_only_inefficient_move<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -4174,7 +4174,7 @@
 	Inefficient move assignment
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_inefficient_move_assignment<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
+	[sequoia::testing::move_only_inefficient_move_assignment<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -4194,7 +4194,7 @@
 	Invariant violated: x != xClone
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
+	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 
 	  Precondition - for checking move-only semantics, x and xClone are assumed to be equal
 	  [bool]
@@ -4206,7 +4206,7 @@
 	Invariant violated: y != YClone
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
+	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 
 	  Precondition - for checking move-only semantics, y and yClone are assumed to be equal
 	  [bool]
@@ -4218,7 +4218,7 @@
 	Invariant violated: x == y
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
+	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 
 	  Precondition - for checking semantics, x and y are assumed to be different
 	  [bool]
@@ -4230,7 +4230,7 @@
 	Incorrect para-move allocs
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
+	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -4250,7 +4250,7 @@
 	Incorrect mutation allocs
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
+	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -4270,7 +4270,7 @@
 	Incorrect assignment allocs
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
+	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -4290,10 +4290,10 @@
 	Broken move
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_broken_move<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
+	[sequoia::testing::move_only_broken_move<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 
 	  Inconsistent move construction
-	  [sequoia::testing::move_only_broken_move<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
+	  [sequoia::testing::move_only_broken_move<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 	  operator== returned false
 	  Obtained : 
 	  Predicted: 2 
@@ -4304,10 +4304,10 @@
 	Broken move assignment
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
+	[sequoia::testing::move_only_broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 
 	  Inconsistent move assignment (from y)
-	  [sequoia::testing::move_only_broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
+	  [sequoia::testing::move_only_broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 	  operator== returned false
 	  Obtained : 1 
 	  Predicted: 2 
@@ -4318,16 +4318,16 @@
 	Broken swap
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_broken_swap<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
+	[sequoia::testing::move_only_broken_swap<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 
 	  Inconsistent Swap (y)
-	  [sequoia::testing::move_only_broken_swap<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
+	  [sequoia::testing::move_only_broken_swap<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 	  operator== returned false
 	  Obtained : 2 
 	  Predicted: 1 
 
 	  Inconsistent Swap (x)
-	  [sequoia::testing::move_only_broken_swap<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
+	  [sequoia::testing::move_only_broken_swap<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 	  operator== returned false
 	  Obtained : 1 
 	  Predicted: 2 
@@ -4338,7 +4338,7 @@
 	Inefficient move
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_inefficient_move<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
+	[sequoia::testing::move_only_inefficient_move<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -4358,7 +4358,7 @@
 	Inefficient move assignment
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_inefficient_move_assignment<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
+	[sequoia::testing::move_only_inefficient_move_assignment<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -4378,7 +4378,7 @@
 	Invariant violated: x != xClone
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
+	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 
 	  Precondition - for checking move-only semantics, x and xClone are assumed to be equal
 	  [bool]
@@ -4390,7 +4390,7 @@
 	Invariant violated: y != YClone
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
+	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 
 	  Precondition - for checking move-only semantics, y and yClone are assumed to be equal
 	  [bool]
@@ -4402,7 +4402,7 @@
 	Invariant violated: x == y
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
+	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 
 	  Precondition - for checking semantics, x and y are assumed to be different
 	  [bool]
@@ -4414,7 +4414,7 @@
 	Incorrect para-move allocs
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
+	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -4434,7 +4434,7 @@
 	Incorrect mutation allocs
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
+	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -4454,10 +4454,10 @@
 	Broken move
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_broken_move<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
+	[sequoia::testing::move_only_broken_move<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 
 	  Inconsistent move construction
-	  [sequoia::testing::move_only_broken_move<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
+	  [sequoia::testing::move_only_broken_move<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 	  operator== returned false
 	  Obtained : 
 	  Predicted: 2 
@@ -4468,10 +4468,10 @@
 	Broken move assignment
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
+	[sequoia::testing::move_only_broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 
 	  Inconsistent move assignment (from y)
-	  [sequoia::testing::move_only_broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
+	  [sequoia::testing::move_only_broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 	  operator== returned false
 	  Obtained : 1 
 	  Predicted: 2 
@@ -4482,7 +4482,7 @@
 	Inefficient move
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_inefficient_move<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
+	[sequoia::testing::move_only_inefficient_move<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -4502,7 +4502,7 @@
 	Inefficient move assignment
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_inefficient_move_assignment<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
+	[sequoia::testing::move_only_inefficient_move_assignment<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -4522,7 +4522,7 @@
 	Invariant violated: x != xClone
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
+	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 
 	  Precondition - for checking move-only semantics, x and xClone are assumed to be equal
 	  [bool]
@@ -4534,7 +4534,7 @@
 	Invariant violated: y != YClone
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
+	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 
 	  Precondition - for checking move-only semantics, y and yClone are assumed to be equal
 	  [bool]
@@ -4546,7 +4546,7 @@
 	Invariant violated: x == y
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
+	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 
 	  Precondition - for checking semantics, x and y are assumed to be different
 	  [bool]
@@ -4558,7 +4558,7 @@
 	Incorrect para-move allocs
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
+	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -4578,7 +4578,7 @@
 	Incorrect mutation allocs
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
+	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -4598,10 +4598,10 @@
 	Broken move
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_broken_move<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
+	[sequoia::testing::move_only_broken_move<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 
 	  Inconsistent move construction
-	  [sequoia::testing::move_only_broken_move<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
+	  [sequoia::testing::move_only_broken_move<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 	  operator== returned false
 	  Obtained : 
 	  Predicted: 2 
@@ -4612,10 +4612,10 @@
 	Broken move assignment
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
+	[sequoia::testing::move_only_broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 
 	  Inconsistent move assignment (from y)
-	  [sequoia::testing::move_only_broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
+	  [sequoia::testing::move_only_broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 	  operator== returned false
 	  Obtained : 1 
 	  Predicted: 2 
@@ -4626,16 +4626,16 @@
 	Broken swap
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_broken_swap<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
+	[sequoia::testing::move_only_broken_swap<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 
 	  Inconsistent Swap (y)
-	  [sequoia::testing::move_only_broken_swap<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
+	  [sequoia::testing::move_only_broken_swap<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 	  operator== returned false
 	  Obtained : 2 
 	  Predicted: 1 
 
 	  Inconsistent Swap (x)
-	  [sequoia::testing::move_only_broken_swap<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
+	  [sequoia::testing::move_only_broken_swap<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 	  operator== returned false
 	  Obtained : 1 
 	  Predicted: 2 
@@ -4646,7 +4646,7 @@
 	Inefficient move
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_inefficient_move<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
+	[sequoia::testing::move_only_inefficient_move<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -4666,7 +4666,7 @@
 	Inefficient move assignment
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_inefficient_move_assignment<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
+	[sequoia::testing::move_only_inefficient_move_assignment<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 
 	  [shared_counting_allocator<
 	  		int,
@@ -4686,7 +4686,7 @@
 	Invariant violated: x != xClone
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
+	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 
 	  Precondition - for checking move-only semantics, x and xClone are assumed to be equal
 	  [bool]
@@ -4698,7 +4698,7 @@
 	Invariant violated: y != YClone
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
+	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 
 	  Precondition - for checking move-only semantics, y and yClone are assumed to be equal
 	  [bool]
@@ -4710,7 +4710,7 @@
 	Invariant violated: x == y
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
+	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 
 	  Precondition - for checking semantics, x and y are assumed to be different
 	  [bool]
@@ -4722,7 +4722,7 @@
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 377
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, false, false, false> >]
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
 
 
 	=======================================
@@ -4731,7 +4731,7 @@
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 379
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, false, false, false> >]
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
 
 
 	=======================================
@@ -4740,7 +4740,7 @@
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 394
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, false, false, false> >]
+	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 0> >]
 
 
 	=======================================
@@ -4749,7 +4749,7 @@
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 396
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, false, false, false> >]
+	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 0> >]
 
 
 	=======================================
@@ -4758,7 +4758,7 @@
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 434
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, false, false, false> >]
+	[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
 
 
 	=======================================
@@ -4767,7 +4767,7 @@
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 453
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, false, false, false> >]
+	[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
 
 
 	=======================================
@@ -4776,7 +4776,7 @@
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 472
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_para_move<int, sequoia::testing::shared_counting_allocator<int, false, false, false> >]
+	[sequoia::testing::inefficient_para_move<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
 
 
 	=======================================
@@ -4785,7 +4785,7 @@
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 498
 
 	--Regular Semantics--
-	[sequoia::testing::doubly_normal_beast<int, double, sequoia::testing::shared_counting_allocator<int, false, false, false>, sequoia::testing::shared_counting_allocator<double, false, false, false> >]
+	[sequoia::testing::doubly_normal_beast<int, double, sequoia::testing::shared_counting_allocator<int, 0, 0, 0>, sequoia::testing::shared_counting_allocator<double, 0, 0, 0> >]
 
 
 	=======================================
@@ -4794,7 +4794,7 @@
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 377
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, false, false, true> >]
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
 
 
 	=======================================
@@ -4803,7 +4803,7 @@
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 379
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, false, false, true> >]
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
 
 
 	=======================================
@@ -4812,7 +4812,7 @@
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 394
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, false, false, true> >]
+	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 1> >]
 
 
 	=======================================
@@ -4821,7 +4821,7 @@
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 396
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, false, false, true> >]
+	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 1> >]
 
 
 	=======================================
@@ -4830,7 +4830,7 @@
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 434
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, false, false, true> >]
+	[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
 
 
 	=======================================
@@ -4839,7 +4839,7 @@
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 453
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, false, false, true> >]
+	[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
 
 
 	=======================================
@@ -4848,7 +4848,7 @@
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 472
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_para_move<int, sequoia::testing::shared_counting_allocator<int, false, false, true> >]
+	[sequoia::testing::inefficient_para_move<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
 
 
 	=======================================
@@ -4857,7 +4857,7 @@
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 498
 
 	--Regular Semantics--
-	[sequoia::testing::doubly_normal_beast<int, double, sequoia::testing::shared_counting_allocator<int, false, false, true>, sequoia::testing::shared_counting_allocator<double, false, false, true> >]
+	[sequoia::testing::doubly_normal_beast<int, double, sequoia::testing::shared_counting_allocator<int, 0, 0, 1>, sequoia::testing::shared_counting_allocator<double, 0, 0, 1> >]
 
 
 	=======================================
@@ -4866,7 +4866,7 @@
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 377
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, false, true, false> >]
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
 
 
 	=======================================
@@ -4875,7 +4875,7 @@
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 379
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, false, true, false> >]
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
 
 
 	=======================================
@@ -4884,7 +4884,7 @@
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 394
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, false, true, false> >]
+	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 0> >]
 
 
 	=======================================
@@ -4893,7 +4893,7 @@
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 396
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, false, true, false> >]
+	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 0> >]
 
 
 	=======================================
@@ -4902,7 +4902,7 @@
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 434
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, false, true, false> >]
+	[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
 
 
 	=======================================
@@ -4911,7 +4911,7 @@
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 453
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, false, true, false> >]
+	[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
 
 
 	=======================================
@@ -4920,7 +4920,7 @@
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 472
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_para_move<int, sequoia::testing::shared_counting_allocator<int, false, true, false> >]
+	[sequoia::testing::inefficient_para_move<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
 
 
 	=======================================
@@ -4929,7 +4929,7 @@
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 498
 
 	--Regular Semantics--
-	[sequoia::testing::doubly_normal_beast<int, double, sequoia::testing::shared_counting_allocator<int, false, true, false>, sequoia::testing::shared_counting_allocator<double, false, true, false> >]
+	[sequoia::testing::doubly_normal_beast<int, double, sequoia::testing::shared_counting_allocator<int, 0, 1, 0>, sequoia::testing::shared_counting_allocator<double, 0, 1, 0> >]
 
 
 	=======================================
@@ -4938,7 +4938,7 @@
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 377
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, false, true, true> >]
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
 
 
 	=======================================
@@ -4947,7 +4947,7 @@
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 379
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, false, true, true> >]
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
 
 
 	=======================================
@@ -4956,7 +4956,7 @@
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 394
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, false, true, true> >]
+	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 1> >]
 
 
 	=======================================
@@ -4965,7 +4965,7 @@
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 396
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, false, true, true> >]
+	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 1> >]
 
 
 	=======================================
@@ -4974,7 +4974,7 @@
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 434
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, false, true, true> >]
+	[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
 
 
 	=======================================
@@ -4983,7 +4983,7 @@
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 453
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, false, true, true> >]
+	[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
 
 
 	=======================================
@@ -4992,7 +4992,7 @@
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 472
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_para_move<int, sequoia::testing::shared_counting_allocator<int, false, true, true> >]
+	[sequoia::testing::inefficient_para_move<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
 
 
 	=======================================
@@ -5001,7 +5001,7 @@
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 498
 
 	--Regular Semantics--
-	[sequoia::testing::doubly_normal_beast<int, double, sequoia::testing::shared_counting_allocator<int, false, true, true>, sequoia::testing::shared_counting_allocator<double, false, true, true> >]
+	[sequoia::testing::doubly_normal_beast<int, double, sequoia::testing::shared_counting_allocator<int, 0, 1, 1>, sequoia::testing::shared_counting_allocator<double, 0, 1, 1> >]
 
 
 	=======================================
@@ -5010,7 +5010,7 @@
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 377
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 
 
 	=======================================
@@ -5019,7 +5019,7 @@
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 379
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 
 
 	=======================================
@@ -5028,7 +5028,7 @@
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 394
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, true, false, false> >]
+	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 0> >]
 
 
 	=======================================
@@ -5037,7 +5037,7 @@
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 396
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, true, false, false> >]
+	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 0> >]
 
 
 	=======================================
@@ -5046,7 +5046,7 @@
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 434
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
+	[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 
 
 	=======================================
@@ -5055,7 +5055,7 @@
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 453
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
+	[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 
 
 	=======================================
@@ -5064,7 +5064,7 @@
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 472
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_para_move<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
+	[sequoia::testing::inefficient_para_move<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 
 
 	=======================================
@@ -5073,7 +5073,7 @@
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 498
 
 	--Regular Semantics--
-	[sequoia::testing::doubly_normal_beast<int, double, sequoia::testing::shared_counting_allocator<int, true, false, false>, sequoia::testing::shared_counting_allocator<double, true, false, false> >]
+	[sequoia::testing::doubly_normal_beast<int, double, sequoia::testing::shared_counting_allocator<int, 1, 0, 0>, sequoia::testing::shared_counting_allocator<double, 1, 0, 0> >]
 
 
 	=======================================
@@ -5082,7 +5082,7 @@
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 377
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 
 
 	=======================================
@@ -5091,7 +5091,7 @@
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 379
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 
 
 	=======================================
@@ -5100,7 +5100,7 @@
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 394
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, true, false, true> >]
+	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 1> >]
 
 
 	=======================================
@@ -5109,7 +5109,7 @@
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 396
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, true, false, true> >]
+	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 1> >]
 
 
 	=======================================
@@ -5118,7 +5118,7 @@
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 434
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
+	[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 
 
 	=======================================
@@ -5127,7 +5127,7 @@
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 453
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
+	[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 
 
 	=======================================
@@ -5136,7 +5136,7 @@
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 472
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_para_move<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
+	[sequoia::testing::inefficient_para_move<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 
 
 	=======================================
@@ -5145,7 +5145,7 @@
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 498
 
 	--Regular Semantics--
-	[sequoia::testing::doubly_normal_beast<int, double, sequoia::testing::shared_counting_allocator<int, true, false, true>, sequoia::testing::shared_counting_allocator<double, true, false, true> >]
+	[sequoia::testing::doubly_normal_beast<int, double, sequoia::testing::shared_counting_allocator<int, 1, 0, 1>, sequoia::testing::shared_counting_allocator<double, 1, 0, 1> >]
 
 
 	=======================================
@@ -5154,7 +5154,7 @@
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 377
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 
 
 	=======================================
@@ -5163,7 +5163,7 @@
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 379
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 
 
 	=======================================
@@ -5172,7 +5172,7 @@
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 394
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, true, true, false> >]
+	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 0> >]
 
 
 	=======================================
@@ -5181,7 +5181,7 @@
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 396
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, true, true, false> >]
+	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 0> >]
 
 
 	=======================================
@@ -5190,7 +5190,7 @@
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 434
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
+	[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 
 
 	=======================================
@@ -5199,7 +5199,7 @@
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 453
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
+	[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 
 
 	=======================================
@@ -5208,7 +5208,7 @@
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 472
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_para_move<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
+	[sequoia::testing::inefficient_para_move<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 
 
 	=======================================
@@ -5217,7 +5217,7 @@
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 498
 
 	--Regular Semantics--
-	[sequoia::testing::doubly_normal_beast<int, double, sequoia::testing::shared_counting_allocator<int, true, true, false>, sequoia::testing::shared_counting_allocator<double, true, true, false> >]
+	[sequoia::testing::doubly_normal_beast<int, double, sequoia::testing::shared_counting_allocator<int, 1, 1, 0>, sequoia::testing::shared_counting_allocator<double, 1, 1, 0> >]
 
 
 	=======================================
@@ -5226,7 +5226,7 @@
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 377
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 
 
 	=======================================
@@ -5235,7 +5235,7 @@
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 379
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 
 
 	=======================================
@@ -5244,7 +5244,7 @@
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 394
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, true, true, true> >]
+	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 1> >]
 
 
 	=======================================
@@ -5253,7 +5253,7 @@
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 396
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, true, true, true> >]
+	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 1> >]
 
 
 	=======================================
@@ -5262,7 +5262,7 @@
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 434
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
+	[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 
 
 	=======================================
@@ -5271,7 +5271,7 @@
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 453
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
+	[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 
 
 	=======================================
@@ -5280,7 +5280,7 @@
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 472
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_para_move<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
+	[sequoia::testing::inefficient_para_move<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 
 
 	=======================================
@@ -5289,7 +5289,7 @@
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 498
 
 	--Regular Semantics--
-	[sequoia::testing::doubly_normal_beast<int, double, sequoia::testing::shared_counting_allocator<int, true, true, true>, sequoia::testing::shared_counting_allocator<double, true, true, true> >]
+	[sequoia::testing::doubly_normal_beast<int, double, sequoia::testing::shared_counting_allocator<int, 1, 1, 1>, sequoia::testing::shared_counting_allocator<double, 1, 1, 1> >]
 
 
 	=======================================
@@ -5299,7 +5299,7 @@
 	Move-only beast
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
+	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 
 
 	=======================================
@@ -5309,7 +5309,7 @@
 	Move-only beast
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
+	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 
 
 	=======================================
@@ -5319,7 +5319,7 @@
 	Move-only beast
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
+	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 
 
 	=======================================
@@ -5329,7 +5329,7 @@
 	Move-only beast
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
+	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 
 
 	=======================================
@@ -5339,7 +5339,7 @@
 	Move-only beast
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
+	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 
 
 	=======================================
@@ -5349,7 +5349,7 @@
 	Move-only beast
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
+	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 
 
 	=======================================
@@ -5359,7 +5359,7 @@
 	Move-only beast
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
+	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 
 
 	=======================================
@@ -5369,7 +5369,7 @@
 	Move-only beast
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
+	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 
 
 	=======================================

@@ -43,7 +43,7 @@ namespace sequoia::testing
 
   [[nodiscard]]
   std::string prediction_message(char obtained, char predicted);
-  
+
   [[nodiscard]]
   std::string prediction_message(std::string_view obtained, std::string_view predicted);
 
@@ -66,7 +66,7 @@ namespace sequoia::testing
 
     constexpr bool delegate{has_detailed_equality_checker_v<T> || range<T>};
     if constexpr(!delegate)
-    {          
+    {
       append_lines(message, prediction_message(obtained, prediction));
     }
 
@@ -81,8 +81,15 @@ namespace sequoia::testing
 
   std::string& replace_all(std::string& text, std::string_view from, std::string_view to);
 
+  struct replacements
+  {
+    std::string_view from, to;
+  };
+
+  std::string& replace_all(std::string& text, std::initializer_list<replacements> data);
+
   [[nodiscard]]
-  std::string report_line(const std::filesystem::path& file, int line, std::string_view message);
+  std::string report_line(const std::filesystem::path& file, int line, std::string_view message, const std::filesystem::path& repository={});
 
   #define LINE(message) report_line(__FILE__, __LINE__, message)
 
@@ -95,12 +102,10 @@ namespace sequoia::testing
   std::string demangle()
   {
     if constexpr(has_msvc_v)
-    {      
+    {
       std::string name{typeid(T).name()};
 
-      tidy_msc_name(name);
-
-      return name;
+      return tidy_msc_name(name);
     }
     else
     {
@@ -111,7 +116,7 @@ namespace sequoia::testing
         {}
 
         ~cxa_demangler() { std::free(data); }
-        
+
         int status{-1};
         char* data;
       };
