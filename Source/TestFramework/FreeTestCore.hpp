@@ -18,6 +18,8 @@
 #include "ConcreteTypeCheckers.hpp"
 #include "Concepts.hpp"
 
+#include "Output.hpp"
+
 namespace sequoia::testing
 {  
   /*! \brief Abstract base class used for type-erasure of the template class basic_test.
@@ -33,14 +35,14 @@ namespace sequoia::testing
   
   class test
   {
-  public:    
+  public:
     explicit test(std::string_view name)
       : m_Name{name}
     {}
 
     virtual ~test() = default;
     
-    test(const test&)            = delete;  
+    test(const test&)            = delete;
     test& operator=(const test&) = delete;
     test& operator=(test&&)      = delete;
 
@@ -71,10 +73,27 @@ namespace sequoia::testing
       return m_PredictiveMaterials;
     }
 
+    [[nodiscard]]
+    const std::filesystem::path& test_repository() const noexcept
+    {
+      return m_TestRepo;
+    }
+
+    void test_repository(std::filesystem::path testRepo)
+    {
+      m_TestRepo = std::move(testRepo);
+    }
+
     void materials(std::filesystem::path workingMaterials, std::filesystem::path predictiveMaterials)
     {
       m_WorkingMaterials    = std::move(workingMaterials);
       m_PredictiveMaterials = std::move(predictiveMaterials);
+    }
+
+    [[nodiscard]]
+    std::string report_line(const std::filesystem::path& file, int line, std::string_view message)
+    {
+      return testing::report_line(file, line, message, test_repository());
     }
   protected:
     test(test&&) noexcept = default;
@@ -89,7 +108,7 @@ namespace sequoia::testing
 
   private:
     std::string m_Name{};
-    std::filesystem::path m_WorkingMaterials{}, m_PredictiveMaterials{};   
+    std::filesystem::path m_WorkingMaterials{}, m_PredictiveMaterials{}, m_TestRepo{};
   };
 
   template<class T>
@@ -120,7 +139,7 @@ namespace sequoia::testing
   template<class Checker>
   class basic_test : public test, protected Checker
   {
-  public:    
+  public:
     using test::test;
 
     ~basic_test() override = default;
@@ -148,7 +167,7 @@ namespace sequoia::testing
       }
       catch(...)
       {
-        log_critical_failure("Unknown", "");        
+        log_critical_failure("Unknown", "");
       }
 
       return summarize(time);

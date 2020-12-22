@@ -351,13 +351,16 @@ namespace sequoia::testing
         replace_all(text, "template<?> ", "");
       }
 
+      const auto header{m_ClassHeader.generic_string()};
+      const auto rawCamel{to_camel_case(m_RawClassName)};
+
       const auto testTypeRelacement{m_TestType + "_"};
-      replace_all(text, "::?_class", m_QualifiedClassName);
-      replace_all(text, "?_class", m_RawClassName);
-      replace_all(text, "?_", testTypeRelacement);
-      replace_all(text, "?Test", to_camel_case(m_TestType).append("Test"));
-      replace_all(text, "?Class.hpp", m_ClassHeader.generic_string());
-      replace_all(text, "?Class", to_camel_case(m_RawClassName));
+      replace_all(text, {{"::?_class", m_QualifiedClassName},
+                         {"?_class", m_RawClassName},
+                         {"?_", testTypeRelacement},
+                         {"?Test", to_camel_case(m_TestType).append("Test")},
+                         {"?Class.hpp", header},
+                         {"?Class", rawCamel}});
 
       if(std::ofstream ofile{file})
       {

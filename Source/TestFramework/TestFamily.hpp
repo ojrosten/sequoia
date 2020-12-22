@@ -70,7 +70,7 @@ namespace sequoia::testing
   {
   public:
     struct results
-    {      
+    {
       log_summary::duration execution_time{};
       std::vector<log_summary> logs;
     };
@@ -79,7 +79,7 @@ namespace sequoia::testing
     {
       explicit summary(log_summary::duration t) : execution_time{t}
       {}
-      
+
       log_summary::duration execution_time{};
       log_summary log{};
     };
@@ -112,7 +112,7 @@ namespace sequoia::testing
     void add_test(concrete_test&& test)
     {
       m_Tests.emplace_back(std::make_unique<concrete_test>(std::forward<concrete_test>(test)));
-      set_materials(*m_Tests.back());      
+      set_materials(*m_Tests.back());
     }
 
     [[nodiscard]]
