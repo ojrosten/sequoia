@@ -356,13 +356,11 @@ namespace sequoia::testing
 
       const auto testTypeRelacement{m_TestType + "_"};
       replace_all(text, {{"::?_class", m_QualifiedClassName},
+                         {"?_class", m_RawClassName},
+                         {"?_", testTypeRelacement},
+                         {"?Class", rawCamel},
                          {"?Test", to_camel_case(m_TestType).append("Test")},
                          {"?Class.hpp", header}});
-
-      replace_all(text, {{"?_class", m_RawClassName},
-                         {"?Class", rawCamel}});
-
-      replace_all(text, "?_", testTypeRelacement);
 
       if(std::ofstream ofile{file})
       {
