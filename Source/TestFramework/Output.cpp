@@ -159,11 +159,50 @@ namespace sequoia::testing
     return text;
   }
 
-  std::string& replace_all(std::string& text, std::initializer_list<replacements> data)
+  std::string& replace_all(std::string& text, std::initializer_list<replacement> data)
   {
-    for(const auto& [from, to] : data)
+    using size_type = std::string::size_type;
+
+    struct replacement_tracker
     {
-      replace_all(text, from, to);
+      replacement repl;
+      size_type matched{};
+    };
+
+    std::vector<replacement_tracker> trackers(data.begin(), data.end());
+
+    auto process{
+      [&text,&trackers](size_type pos) {
+        auto i{text.begin() + pos};
+        while(i != text.end())
+        {
+          for(auto& info : trackers)
+          {
+            auto from{info.repl.from};
+            if(info.matched == from.size())
+            {
+              pos = std::distance(text.begin(), i) - from.size();
+              text.replace(pos, from.size(), info.repl.to);
+              return pos + info.repl.to.size();
+            }
+
+            if(from[info.matched++] != *i) info.matched = {};
+          }
+
+          ++i;
+        }
+
+        return std::string::npos;
+      }
+    };
+
+    size_type pos{};
+    for(;;)
+    {
+      pos = process(pos);
+      if(pos == std::string::npos) break;
+
+      for(auto& tracker : trackers) tracker.matched = {};
     }
 
     return text;

@@ -81,12 +81,12 @@ namespace sequoia::testing
 
   std::string& replace_all(std::string& text, std::string_view from, std::string_view to);
 
-  struct replacements
+  struct replacement
   {
     std::string_view from, to;
   };
 
-  std::string& replace_all(std::string& text, std::initializer_list<replacements> data);
+  std::string& replace_all(std::string& text, std::initializer_list<replacement> data);
 
   [[nodiscard]]
   std::string report_line(const std::filesystem::path& file, int line, std::string_view message, const std::filesystem::path& repository={});
