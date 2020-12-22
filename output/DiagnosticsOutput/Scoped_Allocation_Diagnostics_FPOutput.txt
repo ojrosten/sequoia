@@ -2,10 +2,10 @@
 	Incorrect copy x outer allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 0, 0>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 0, 0> >]
 
 	  [shared_counting_allocator<
-	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 0, 0>,  >,
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 0, 0> >,
 	  		Propagate on copy assignment = false,
 	  		Propagate on move assignment = false,
 	  		Propagate on swap = false
@@ -22,10 +22,10 @@
 	Incorrect copy y outer allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 0, 0>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 0, 0> >]
 
 	  [shared_counting_allocator<
-	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 0, 0>,  >,
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 0, 0> >,
 	  		Propagate on copy assignment = false,
 	  		Propagate on move assignment = false,
 	  		Propagate on swap = false
@@ -42,10 +42,10 @@
 	Incorrect mutation outer allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 0, 0>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 0, 0> >]
 
 	  [shared_counting_allocator<
-	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 0, 0>,  >,
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 0, 0> >,
 	  		Propagate on copy assignment = false,
 	  		Propagate on move assignment = false,
 	  		Propagate on swap = false
@@ -62,10 +62,10 @@
 	Incorrect assignment outer allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 0, 0>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 0, 0> >]
 
 	  [shared_counting_allocator<
-	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 0, 0>,  >,
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 0, 0> >,
 	  		Propagate on copy assignment = false,
 	  		Propagate on move assignment = false,
 	  		Propagate on swap = false
@@ -77,7 +77,7 @@
 	  Predicted: 3
 
 	  [shared_counting_allocator<
-	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 0, 0>,  >,
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 0, 0> >,
 	  		Propagate on copy assignment = false,
 	  		Propagate on move assignment = false,
 	  		Propagate on swap = false
@@ -94,10 +94,10 @@
 	Incorrect para copy x outer allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 0, 0>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 0, 0> >]
 
 	  [shared_counting_allocator<
-	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 0, 0>,  >,
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 0, 0> >,
 	  		Propagate on copy assignment = false,
 	  		Propagate on move assignment = false,
 	  		Propagate on swap = false
@@ -114,10 +114,10 @@
 	Incorrect para move x outer allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 0, 0>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 0, 0> >]
 
 	  [shared_counting_allocator<
-	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 0, 0>,  >,
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 0, 0> >,
 	  		Propagate on copy assignment = false,
 	  		Propagate on move assignment = false,
 	  		Propagate on swap = false
@@ -134,7 +134,7 @@
 	Incorrect copy x inner allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 0, 0>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 0, 0> >]
 
 	  [shared_counting_allocator<
 	  		char,
@@ -154,7 +154,7 @@
 	Incorrect copy y inner allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 0, 0>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 0, 0> >]
 
 	  [shared_counting_allocator<
 	  		char,
@@ -174,7 +174,7 @@
 	Incorrect mutation inner allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 0, 0>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 0, 0> >]
 
 	  [shared_counting_allocator<
 	  		char,
@@ -194,7 +194,7 @@
 	Incorrect assignment inner allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 0, 0>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 0, 0> >]
 
 	  [shared_counting_allocator<
 	  		char,
@@ -226,7 +226,7 @@
 	Incorrect para copy x inner allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 0, 0>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 0, 0> >]
 
 	  [shared_counting_allocator<
 	  		char,
@@ -246,7 +246,7 @@
 	Incorrect para move x inener allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 0, 0>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 0, 0> >]
 
 	  [shared_counting_allocator<
 	  		char,
@@ -266,10 +266,10 @@
 	Incorrect copy x outer allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 0, 1>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 0, 1> >]
 
 	  [shared_counting_allocator<
-	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 0, 1>,  >,
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 0, 1> >,
 	  		Propagate on copy assignment = false,
 	  		Propagate on move assignment = false,
 	  		Propagate on swap = true
@@ -286,10 +286,10 @@
 	Incorrect copy y outer allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 0, 1>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 0, 1> >]
 
 	  [shared_counting_allocator<
-	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 0, 1>,  >,
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 0, 1> >,
 	  		Propagate on copy assignment = false,
 	  		Propagate on move assignment = false,
 	  		Propagate on swap = true
@@ -306,10 +306,10 @@
 	Incorrect mutation outer allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 0, 1>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 0, 1> >]
 
 	  [shared_counting_allocator<
-	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 0, 1>,  >,
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 0, 1> >,
 	  		Propagate on copy assignment = false,
 	  		Propagate on move assignment = false,
 	  		Propagate on swap = true
@@ -321,7 +321,7 @@
 	  Predicted: 2
 
 	  [shared_counting_allocator<
-	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 0, 1>,  >,
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 0, 1> >,
 	  		Propagate on copy assignment = false,
 	  		Propagate on move assignment = false,
 	  		Propagate on swap = true
@@ -338,10 +338,10 @@
 	Incorrect assignment outer allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 0, 1>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 0, 1> >]
 
 	  [shared_counting_allocator<
-	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 0, 1>,  >,
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 0, 1> >,
 	  		Propagate on copy assignment = false,
 	  		Propagate on move assignment = false,
 	  		Propagate on swap = true
@@ -353,7 +353,7 @@
 	  Predicted: 3
 
 	  [shared_counting_allocator<
-	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 0, 1>,  >,
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 0, 1> >,
 	  		Propagate on copy assignment = false,
 	  		Propagate on move assignment = false,
 	  		Propagate on swap = true
@@ -370,10 +370,10 @@
 	Incorrect para copy x outer allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 0, 1>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 0, 1> >]
 
 	  [shared_counting_allocator<
-	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 0, 1>,  >,
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 0, 1> >,
 	  		Propagate on copy assignment = false,
 	  		Propagate on move assignment = false,
 	  		Propagate on swap = true
@@ -390,10 +390,10 @@
 	Incorrect para move x outer allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 0, 1>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 0, 1> >]
 
 	  [shared_counting_allocator<
-	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 0, 1>,  >,
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 0, 1> >,
 	  		Propagate on copy assignment = false,
 	  		Propagate on move assignment = false,
 	  		Propagate on swap = true
@@ -410,7 +410,7 @@
 	Incorrect copy x inner allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 0, 1>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 0, 1> >]
 
 	  [shared_counting_allocator<
 	  		char,
@@ -430,7 +430,7 @@
 	Incorrect copy y inner allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 0, 1>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 0, 1> >]
 
 	  [shared_counting_allocator<
 	  		char,
@@ -450,7 +450,7 @@
 	Incorrect mutation inner allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 0, 1>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 0, 1> >]
 
 	  [shared_counting_allocator<
 	  		char,
@@ -482,7 +482,7 @@
 	Incorrect assignment inner allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 0, 1>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 0, 1> >]
 
 	  [shared_counting_allocator<
 	  		char,
@@ -514,7 +514,7 @@
 	Incorrect para copy x inner allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 0, 1>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 0, 1> >]
 
 	  [shared_counting_allocator<
 	  		char,
@@ -534,7 +534,7 @@
 	Incorrect para move x inener allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 0, 1>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 0, 1> >]
 
 	  [shared_counting_allocator<
 	  		char,
@@ -554,10 +554,10 @@
 	Incorrect copy x outer allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 1, 0>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 1, 0> >]
 
 	  [shared_counting_allocator<
-	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 1, 0>,  >,
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 1, 0> >,
 	  		Propagate on copy assignment = false,
 	  		Propagate on move assignment = true,
 	  		Propagate on swap = false
@@ -574,10 +574,10 @@
 	Incorrect copy y outer allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 1, 0>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 1, 0> >]
 
 	  [shared_counting_allocator<
-	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 1, 0>,  >,
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 1, 0> >,
 	  		Propagate on copy assignment = false,
 	  		Propagate on move assignment = true,
 	  		Propagate on swap = false
@@ -594,10 +594,10 @@
 	Incorrect mutation outer allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 1, 0>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 1, 0> >]
 
 	  [shared_counting_allocator<
-	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 1, 0>,  >,
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 1, 0> >,
 	  		Propagate on copy assignment = false,
 	  		Propagate on move assignment = true,
 	  		Propagate on swap = false
@@ -614,10 +614,10 @@
 	Incorrect assignment outer allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 1, 0>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 1, 0> >]
 
 	  [shared_counting_allocator<
-	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 1, 0>,  >,
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 1, 0> >,
 	  		Propagate on copy assignment = false,
 	  		Propagate on move assignment = true,
 	  		Propagate on swap = false
@@ -634,10 +634,10 @@
 	Incorrect para copy x outer allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 1, 0>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 1, 0> >]
 
 	  [shared_counting_allocator<
-	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 1, 0>,  >,
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 1, 0> >,
 	  		Propagate on copy assignment = false,
 	  		Propagate on move assignment = true,
 	  		Propagate on swap = false
@@ -654,10 +654,10 @@
 	Incorrect para move x outer allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 1, 0>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 1, 0> >]
 
 	  [shared_counting_allocator<
-	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 1, 0>,  >,
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 1, 0> >,
 	  		Propagate on copy assignment = false,
 	  		Propagate on move assignment = true,
 	  		Propagate on swap = false
@@ -674,7 +674,7 @@
 	Incorrect copy x inner allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 1, 0>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 1, 0> >]
 
 	  [shared_counting_allocator<
 	  		char,
@@ -694,7 +694,7 @@
 	Incorrect copy y inner allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 1, 0>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 1, 0> >]
 
 	  [shared_counting_allocator<
 	  		char,
@@ -714,7 +714,7 @@
 	Incorrect mutation inner allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 1, 0>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 1, 0> >]
 
 	  [shared_counting_allocator<
 	  		char,
@@ -734,7 +734,7 @@
 	Incorrect assignment inner allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 1, 0>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 1, 0> >]
 
 	  [shared_counting_allocator<
 	  		char,
@@ -754,7 +754,7 @@
 	Incorrect para copy x inner allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 1, 0>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 1, 0> >]
 
 	  [shared_counting_allocator<
 	  		char,
@@ -774,7 +774,7 @@
 	Incorrect para move x inener allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 1, 0>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 1, 0> >]
 
 	  [shared_counting_allocator<
 	  		char,
@@ -794,10 +794,10 @@
 	Incorrect copy x outer allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 1, 1>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 1, 1> >]
 
 	  [shared_counting_allocator<
-	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 1, 1>,  >,
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 1, 1> >,
 	  		Propagate on copy assignment = false,
 	  		Propagate on move assignment = true,
 	  		Propagate on swap = true
@@ -814,10 +814,10 @@
 	Incorrect copy y outer allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 1, 1>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 1, 1> >]
 
 	  [shared_counting_allocator<
-	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 1, 1>,  >,
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 1, 1> >,
 	  		Propagate on copy assignment = false,
 	  		Propagate on move assignment = true,
 	  		Propagate on swap = true
@@ -834,10 +834,10 @@
 	Incorrect mutation outer allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 1, 1>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 1, 1> >]
 
 	  [shared_counting_allocator<
-	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 1, 1>,  >,
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 1, 1> >,
 	  		Propagate on copy assignment = false,
 	  		Propagate on move assignment = true,
 	  		Propagate on swap = true
@@ -849,7 +849,7 @@
 	  Predicted: 2
 
 	  [shared_counting_allocator<
-	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 1, 1>,  >,
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 1, 1> >,
 	  		Propagate on copy assignment = false,
 	  		Propagate on move assignment = true,
 	  		Propagate on swap = true
@@ -866,10 +866,10 @@
 	Incorrect assignment outer allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 1, 1>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 1, 1> >]
 
 	  [shared_counting_allocator<
-	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 1, 1>,  >,
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 1, 1> >,
 	  		Propagate on copy assignment = false,
 	  		Propagate on move assignment = true,
 	  		Propagate on swap = true
@@ -886,10 +886,10 @@
 	Incorrect para copy x outer allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 1, 1>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 1, 1> >]
 
 	  [shared_counting_allocator<
-	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 1, 1>,  >,
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 1, 1> >,
 	  		Propagate on copy assignment = false,
 	  		Propagate on move assignment = true,
 	  		Propagate on swap = true
@@ -906,10 +906,10 @@
 	Incorrect para move x outer allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 1, 1>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 1, 1> >]
 
 	  [shared_counting_allocator<
-	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 1, 1>,  >,
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 1, 1> >,
 	  		Propagate on copy assignment = false,
 	  		Propagate on move assignment = true,
 	  		Propagate on swap = true
@@ -926,7 +926,7 @@
 	Incorrect copy x inner allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 1, 1>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 1, 1> >]
 
 	  [shared_counting_allocator<
 	  		char,
@@ -946,7 +946,7 @@
 	Incorrect copy y inner allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 1, 1>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 1, 1> >]
 
 	  [shared_counting_allocator<
 	  		char,
@@ -966,7 +966,7 @@
 	Incorrect mutation inner allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 1, 1>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 1, 1> >]
 
 	  [shared_counting_allocator<
 	  		char,
@@ -998,7 +998,7 @@
 	Incorrect assignment inner allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 1, 1>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 1, 1> >]
 
 	  [shared_counting_allocator<
 	  		char,
@@ -1018,7 +1018,7 @@
 	Incorrect para copy x inner allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 1, 1>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 1, 1> >]
 
 	  [shared_counting_allocator<
 	  		char,
@@ -1038,7 +1038,7 @@
 	Incorrect para move x inener allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 1, 1>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 1, 1> >]
 
 	  [shared_counting_allocator<
 	  		char,
@@ -1058,10 +1058,10 @@
 	Incorrect copy x outer allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 0>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >]
 
 	  [shared_counting_allocator<
-	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0>,  >,
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >,
 	  		Propagate on copy assignment = true,
 	  		Propagate on move assignment = false,
 	  		Propagate on swap = false
@@ -1078,10 +1078,10 @@
 	Incorrect copy y outer allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 0>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >]
 
 	  [shared_counting_allocator<
-	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0>,  >,
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >,
 	  		Propagate on copy assignment = true,
 	  		Propagate on move assignment = false,
 	  		Propagate on swap = false
@@ -1098,10 +1098,10 @@
 	Incorrect mutation outer allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 0>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >]
 
 	  [shared_counting_allocator<
-	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0>,  >,
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >,
 	  		Propagate on copy assignment = true,
 	  		Propagate on move assignment = false,
 	  		Propagate on swap = false
@@ -1118,10 +1118,10 @@
 	Incorrect assignment outer allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 0>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >]
 
 	  [shared_counting_allocator<
-	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0>,  >,
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >,
 	  		Propagate on copy assignment = true,
 	  		Propagate on move assignment = false,
 	  		Propagate on swap = false
@@ -1133,7 +1133,7 @@
 	  Predicted: 2
 
 	  [shared_counting_allocator<
-	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0>,  >,
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >,
 	  		Propagate on copy assignment = true,
 	  		Propagate on move assignment = false,
 	  		Propagate on swap = false
@@ -1145,7 +1145,7 @@
 	  Predicted: 2
 
 	  [shared_counting_allocator<
-	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0>,  >,
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >,
 	  		Propagate on copy assignment = true,
 	  		Propagate on move assignment = false,
 	  		Propagate on swap = false
@@ -1162,10 +1162,10 @@
 	Incorrect para copy x outer allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 0>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >]
 
 	  [shared_counting_allocator<
-	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0>,  >,
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >,
 	  		Propagate on copy assignment = true,
 	  		Propagate on move assignment = false,
 	  		Propagate on swap = false
@@ -1182,10 +1182,10 @@
 	Incorrect para move x outer allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 0>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >]
 
 	  [shared_counting_allocator<
-	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0>,  >,
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >,
 	  		Propagate on copy assignment = true,
 	  		Propagate on move assignment = false,
 	  		Propagate on swap = false
@@ -1202,7 +1202,7 @@
 	Incorrect copy x inner allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 0>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >]
 
 	  [shared_counting_allocator<
 	  		char,
@@ -1222,7 +1222,7 @@
 	Incorrect copy y inner allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 0>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >]
 
 	  [shared_counting_allocator<
 	  		char,
@@ -1242,7 +1242,7 @@
 	Incorrect mutation inner allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 0>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >]
 
 	  [shared_counting_allocator<
 	  		char,
@@ -1262,7 +1262,7 @@
 	Incorrect assignment inner allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 0>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >]
 
 	  [shared_counting_allocator<
 	  		char,
@@ -1306,7 +1306,7 @@
 	Incorrect para copy x inner allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 0>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >]
 
 	  [shared_counting_allocator<
 	  		char,
@@ -1326,7 +1326,7 @@
 	Incorrect para move x inener allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 0>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >]
 
 	  [shared_counting_allocator<
 	  		char,
@@ -1346,10 +1346,10 @@
 	Incorrect copy x outer allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 1>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >]
 
 	  [shared_counting_allocator<
-	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1>,  >,
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >,
 	  		Propagate on copy assignment = true,
 	  		Propagate on move assignment = false,
 	  		Propagate on swap = true
@@ -1366,10 +1366,10 @@
 	Incorrect copy y outer allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 1>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >]
 
 	  [shared_counting_allocator<
-	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1>,  >,
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >,
 	  		Propagate on copy assignment = true,
 	  		Propagate on move assignment = false,
 	  		Propagate on swap = true
@@ -1386,10 +1386,10 @@
 	Incorrect mutation outer allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 1>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >]
 
 	  [shared_counting_allocator<
-	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1>,  >,
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >,
 	  		Propagate on copy assignment = true,
 	  		Propagate on move assignment = false,
 	  		Propagate on swap = true
@@ -1401,7 +1401,7 @@
 	  Predicted: 2
 
 	  [shared_counting_allocator<
-	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1>,  >,
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >,
 	  		Propagate on copy assignment = true,
 	  		Propagate on move assignment = false,
 	  		Propagate on swap = true
@@ -1418,10 +1418,10 @@
 	Incorrect assignment outer allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 1>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >]
 
 	  [shared_counting_allocator<
-	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1>,  >,
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >,
 	  		Propagate on copy assignment = true,
 	  		Propagate on move assignment = false,
 	  		Propagate on swap = true
@@ -1433,7 +1433,7 @@
 	  Predicted: 2
 
 	  [shared_counting_allocator<
-	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1>,  >,
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >,
 	  		Propagate on copy assignment = true,
 	  		Propagate on move assignment = false,
 	  		Propagate on swap = true
@@ -1445,7 +1445,7 @@
 	  Predicted: 2
 
 	  [shared_counting_allocator<
-	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1>,  >,
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >,
 	  		Propagate on copy assignment = true,
 	  		Propagate on move assignment = false,
 	  		Propagate on swap = true
@@ -1462,10 +1462,10 @@
 	Incorrect para copy x outer allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 1>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >]
 
 	  [shared_counting_allocator<
-	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1>,  >,
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >,
 	  		Propagate on copy assignment = true,
 	  		Propagate on move assignment = false,
 	  		Propagate on swap = true
@@ -1482,10 +1482,10 @@
 	Incorrect para move x outer allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 1>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >]
 
 	  [shared_counting_allocator<
-	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1>,  >,
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >,
 	  		Propagate on copy assignment = true,
 	  		Propagate on move assignment = false,
 	  		Propagate on swap = true
@@ -1502,7 +1502,7 @@
 	Incorrect copy x inner allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 1>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >]
 
 	  [shared_counting_allocator<
 	  		char,
@@ -1522,7 +1522,7 @@
 	Incorrect copy y inner allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 1>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >]
 
 	  [shared_counting_allocator<
 	  		char,
@@ -1542,7 +1542,7 @@
 	Incorrect mutation inner allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 1>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >]
 
 	  [shared_counting_allocator<
 	  		char,
@@ -1574,7 +1574,7 @@
 	Incorrect assignment inner allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 1>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >]
 
 	  [shared_counting_allocator<
 	  		char,
@@ -1618,7 +1618,7 @@
 	Incorrect para copy x inner allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 1>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >]
 
 	  [shared_counting_allocator<
 	  		char,
@@ -1638,7 +1638,7 @@
 	Incorrect para move x inener allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 1>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >]
 
 	  [shared_counting_allocator<
 	  		char,
@@ -1658,10 +1658,10 @@
 	Incorrect copy x outer allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 0>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >]
 
 	  [shared_counting_allocator<
-	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0>,  >,
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >,
 	  		Propagate on copy assignment = true,
 	  		Propagate on move assignment = true,
 	  		Propagate on swap = false
@@ -1678,10 +1678,10 @@
 	Incorrect copy y outer allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 0>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >]
 
 	  [shared_counting_allocator<
-	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0>,  >,
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >,
 	  		Propagate on copy assignment = true,
 	  		Propagate on move assignment = true,
 	  		Propagate on swap = false
@@ -1698,10 +1698,10 @@
 	Incorrect mutation outer allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 0>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >]
 
 	  [shared_counting_allocator<
-	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0>,  >,
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >,
 	  		Propagate on copy assignment = true,
 	  		Propagate on move assignment = true,
 	  		Propagate on swap = false
@@ -1718,10 +1718,10 @@
 	Incorrect assignment outer allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 0>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >]
 
 	  [shared_counting_allocator<
-	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0>,  >,
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >,
 	  		Propagate on copy assignment = true,
 	  		Propagate on move assignment = true,
 	  		Propagate on swap = false
@@ -1733,7 +1733,7 @@
 	  Predicted: 2
 
 	  [shared_counting_allocator<
-	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0>,  >,
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >,
 	  		Propagate on copy assignment = true,
 	  		Propagate on move assignment = true,
 	  		Propagate on swap = false
@@ -1750,10 +1750,10 @@
 	Incorrect para copy x outer allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 0>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >]
 
 	  [shared_counting_allocator<
-	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0>,  >,
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >,
 	  		Propagate on copy assignment = true,
 	  		Propagate on move assignment = true,
 	  		Propagate on swap = false
@@ -1770,10 +1770,10 @@
 	Incorrect para move x outer allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 0>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >]
 
 	  [shared_counting_allocator<
-	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0>,  >,
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >,
 	  		Propagate on copy assignment = true,
 	  		Propagate on move assignment = true,
 	  		Propagate on swap = false
@@ -1790,7 +1790,7 @@
 	Incorrect copy x inner allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 0>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >]
 
 	  [shared_counting_allocator<
 	  		char,
@@ -1810,7 +1810,7 @@
 	Incorrect copy y inner allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 0>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >]
 
 	  [shared_counting_allocator<
 	  		char,
@@ -1830,7 +1830,7 @@
 	Incorrect mutation inner allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 0>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >]
 
 	  [shared_counting_allocator<
 	  		char,
@@ -1850,7 +1850,7 @@
 	Incorrect assignment inner allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 0>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >]
 
 	  [shared_counting_allocator<
 	  		char,
@@ -1882,7 +1882,7 @@
 	Incorrect para copy x inner allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 0>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >]
 
 	  [shared_counting_allocator<
 	  		char,
@@ -1902,7 +1902,7 @@
 	Incorrect para move x inener allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 0>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >]
 
 	  [shared_counting_allocator<
 	  		char,
@@ -1922,10 +1922,10 @@
 	Incorrect copy x outer allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 1>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >]
 
 	  [shared_counting_allocator<
-	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1>,  >,
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >,
 	  		Propagate on copy assignment = true,
 	  		Propagate on move assignment = true,
 	  		Propagate on swap = true
@@ -1942,10 +1942,10 @@
 	Incorrect copy y outer allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 1>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >]
 
 	  [shared_counting_allocator<
-	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1>,  >,
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >,
 	  		Propagate on copy assignment = true,
 	  		Propagate on move assignment = true,
 	  		Propagate on swap = true
@@ -1962,10 +1962,10 @@
 	Incorrect mutation outer allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 1>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >]
 
 	  [shared_counting_allocator<
-	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1>,  >,
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >,
 	  		Propagate on copy assignment = true,
 	  		Propagate on move assignment = true,
 	  		Propagate on swap = true
@@ -1977,7 +1977,7 @@
 	  Predicted: 2
 
 	  [shared_counting_allocator<
-	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1>,  >,
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >,
 	  		Propagate on copy assignment = true,
 	  		Propagate on move assignment = true,
 	  		Propagate on swap = true
@@ -1994,10 +1994,10 @@
 	Incorrect assignment outer allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 1>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >]
 
 	  [shared_counting_allocator<
-	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1>,  >,
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >,
 	  		Propagate on copy assignment = true,
 	  		Propagate on move assignment = true,
 	  		Propagate on swap = true
@@ -2009,7 +2009,7 @@
 	  Predicted: 2
 
 	  [shared_counting_allocator<
-	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1>,  >,
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >,
 	  		Propagate on copy assignment = true,
 	  		Propagate on move assignment = true,
 	  		Propagate on swap = true
@@ -2026,10 +2026,10 @@
 	Incorrect para copy x outer allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 1>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >]
 
 	  [shared_counting_allocator<
-	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1>,  >,
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >,
 	  		Propagate on copy assignment = true,
 	  		Propagate on move assignment = true,
 	  		Propagate on swap = true
@@ -2046,10 +2046,10 @@
 	Incorrect para move x outer allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 1>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >]
 
 	  [shared_counting_allocator<
-	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1>,  >,
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >,
 	  		Propagate on copy assignment = true,
 	  		Propagate on move assignment = true,
 	  		Propagate on swap = true
@@ -2066,7 +2066,7 @@
 	Incorrect copy x inner allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 1>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >]
 
 	  [shared_counting_allocator<
 	  		char,
@@ -2086,7 +2086,7 @@
 	Incorrect copy y inner allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 1>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >]
 
 	  [shared_counting_allocator<
 	  		char,
@@ -2106,7 +2106,7 @@
 	Incorrect mutation inner allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 1>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >]
 
 	  [shared_counting_allocator<
 	  		char,
@@ -2138,7 +2138,7 @@
 	Incorrect assignment inner allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 1>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >]
 
 	  [shared_counting_allocator<
 	  		char,
@@ -2170,7 +2170,7 @@
 	Incorrect para copy x inner allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 1>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >]
 
 	  [shared_counting_allocator<
 	  		char,
@@ -2190,7 +2190,7 @@
 	Incorrect para move x inener allocs
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 1>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >]
 
 	  [shared_counting_allocator<
 	  		char,
@@ -2210,10 +2210,10 @@
 	Incorrect assigment outer allocs
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 0>,  >]
+	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >]
 
 	  [shared_counting_allocator<
-	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0>,  >,
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >,
 	  		Propagate on copy assignment = true,
 	  		Propagate on move assignment = false,
 	  		Propagate on swap = false
@@ -2230,10 +2230,10 @@
 	Incorrect mutation outer allocs
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 0>,  >]
+	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >]
 
 	  [shared_counting_allocator<
-	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0>,  >,
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >,
 	  		Propagate on copy assignment = true,
 	  		Propagate on move assignment = false,
 	  		Propagate on swap = false
@@ -2250,10 +2250,10 @@
 	Incorrect para move outer allocs
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 0>,  >]
+	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >]
 
 	  [shared_counting_allocator<
-	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0>,  >,
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >,
 	  		Propagate on copy assignment = true,
 	  		Propagate on move assignment = false,
 	  		Propagate on swap = false
@@ -2270,7 +2270,7 @@
 	Incorrect assigment inner allocs
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 0>,  >]
+	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >]
 
 	  [shared_counting_allocator<
 	  		char,
@@ -2290,7 +2290,7 @@
 	Incorrect mutation inner allocs
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 0>,  >]
+	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >]
 
 	  [shared_counting_allocator<
 	  		char,
@@ -2310,7 +2310,7 @@
 	Incorrect para move inner allocs
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 0>,  >]
+	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >]
 
 	  [shared_counting_allocator<
 	  		char,
@@ -2330,10 +2330,10 @@
 	Incorrect assigment outer allocs
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 1>,  >]
+	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >]
 
 	  [shared_counting_allocator<
-	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1>,  >,
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >,
 	  		Propagate on copy assignment = true,
 	  		Propagate on move assignment = false,
 	  		Propagate on swap = true
@@ -2350,10 +2350,10 @@
 	Incorrect mutation outer allocs
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 1>,  >]
+	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >]
 
 	  [shared_counting_allocator<
-	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1>,  >,
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >,
 	  		Propagate on copy assignment = true,
 	  		Propagate on move assignment = false,
 	  		Propagate on swap = true
@@ -2370,10 +2370,10 @@
 	Incorrect para move outer allocs
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 1>,  >]
+	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >]
 
 	  [shared_counting_allocator<
-	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1>,  >,
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >,
 	  		Propagate on copy assignment = true,
 	  		Propagate on move assignment = false,
 	  		Propagate on swap = true
@@ -2390,7 +2390,7 @@
 	Incorrect assigment inner allocs
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 1>,  >]
+	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >]
 
 	  [shared_counting_allocator<
 	  		char,
@@ -2410,7 +2410,7 @@
 	Incorrect mutation inner allocs
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 1>,  >]
+	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >]
 
 	  [shared_counting_allocator<
 	  		char,
@@ -2430,7 +2430,7 @@
 	Incorrect para move inner allocs
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 1>,  >]
+	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >]
 
 	  [shared_counting_allocator<
 	  		char,
@@ -2450,10 +2450,10 @@
 	Incorrect mutation outer allocs
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 0>,  >]
+	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >]
 
 	  [shared_counting_allocator<
-	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0>,  >,
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >,
 	  		Propagate on copy assignment = true,
 	  		Propagate on move assignment = true,
 	  		Propagate on swap = false
@@ -2470,10 +2470,10 @@
 	Incorrect para move outer allocs
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 0>,  >]
+	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >]
 
 	  [shared_counting_allocator<
-	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0>,  >,
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >,
 	  		Propagate on copy assignment = true,
 	  		Propagate on move assignment = true,
 	  		Propagate on swap = false
@@ -2490,7 +2490,7 @@
 	Incorrect mutation inner allocs
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 0>,  >]
+	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >]
 
 	  [shared_counting_allocator<
 	  		char,
@@ -2510,7 +2510,7 @@
 	Incorrect para move inner allocs
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 0>,  >]
+	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >]
 
 	  [shared_counting_allocator<
 	  		char,
@@ -2530,10 +2530,10 @@
 	Incorrect mutation outer allocs
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 1>,  >]
+	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >]
 
 	  [shared_counting_allocator<
-	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1>,  >,
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >,
 	  		Propagate on copy assignment = true,
 	  		Propagate on move assignment = true,
 	  		Propagate on swap = true
@@ -2550,10 +2550,10 @@
 	Incorrect para move outer allocs
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 1>,  >]
+	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >]
 
 	  [shared_counting_allocator<
-	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1>,  >,
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >,
 	  		Propagate on copy assignment = true,
 	  		Propagate on move assignment = true,
 	  		Propagate on swap = true
@@ -2570,7 +2570,7 @@
 	Incorrect mutation inner allocs
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 1>,  >]
+	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >]
 
 	  [shared_counting_allocator<
 	  		char,
@@ -2590,7 +2590,7 @@
 	Incorrect para move inner allocs
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 1>,  >]
+	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >]
 
 	  [shared_counting_allocator<
 	  		char,
@@ -2610,7 +2610,7 @@
 	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 48
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 0, 0>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 0, 0> >]
 
 
 	=======================================
@@ -2619,7 +2619,7 @@
 	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 48
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 0, 1>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 0, 1> >]
 
 
 	=======================================
@@ -2628,7 +2628,7 @@
 	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 48
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 1, 0>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 1, 0> >]
 
 
 	=======================================
@@ -2637,7 +2637,7 @@
 	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 48
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 1, 1>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 1, 1> >]
 
 
 	=======================================
@@ -2646,7 +2646,7 @@
 	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 48
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 0>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >]
 
 
 	=======================================
@@ -2655,7 +2655,7 @@
 	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 48
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 1>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >]
 
 
 	=======================================
@@ -2664,7 +2664,7 @@
 	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 48
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 0>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >]
 
 
 	=======================================
@@ -2673,7 +2673,7 @@
 	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 48
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 1>,  >]
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >]
 
 
 	=======================================
@@ -2682,7 +2682,7 @@
 	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 48
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 0>,  >]
+	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >]
 
 
 	=======================================
@@ -2691,7 +2691,7 @@
 	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 48
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 1>,  >]
+	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >]
 
 
 	=======================================
@@ -2700,7 +2700,7 @@
 	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 48
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 0>,  >]
+	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >]
 
 
 	=======================================
@@ -2709,7 +2709,7 @@
 	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 48
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 1>,  >]
+	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >]
 
 
 	=======================================
