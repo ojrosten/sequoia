@@ -11,6 +11,8 @@
 
 #include "Output.hpp"
 
+#include <vector>
+
 namespace sequoia::testing
 {
   [[nodiscard]]
@@ -159,12 +161,10 @@ namespace sequoia::testing
     return text;
   }
 
-  std::string& replace_all(std::string& text, std::initializer_list<replacements> data)
+  std::string& replace_all(std::string& text, std::initializer_list<replacement> data)
   {
-    for(const auto& [from, to] : data)
-    {
-      replace_all(text, from, to);
-    }
+    for(const auto& r : data)
+      replace_all(text, r.from, r.to);
 
     return text;
   }

@@ -261,7 +261,7 @@ namespace sequoia::testing
       replace_all(m_Family, "_", " ");
     }
 
-    m_ClassHeader = !data.classHeader.empty() ? std::move(data.classHeader) : std::filesystem::path{camelName + ".hpp"};   
+    m_ClassHeader = !data.classHeader.empty() ? std::move(data.classHeader) : std::filesystem::path{camelName + ".hpp"};
     m_HostDirectory = data.host.get(m_ClassHeader);
   }
 
@@ -358,9 +358,9 @@ namespace sequoia::testing
       replace_all(text, {{"::?_class", m_QualifiedClassName},
                          {"?_class", m_RawClassName},
                          {"?_", testTypeRelacement},
+                         {"?Class", rawCamel},
                          {"?Test", to_camel_case(m_TestType).append("Test")},
-                         {"?Class.hpp", header},
-                         {"?Class", rawCamel}});
+                         {"?Class.hpp", header}});
 
       if(std::ofstream ofile{file})
       {
