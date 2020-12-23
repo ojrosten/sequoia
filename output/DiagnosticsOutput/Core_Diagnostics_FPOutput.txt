@@ -1110,9 +1110,9 @@
 	[std::filesystem::path]
 
 	  Path type
-	  /Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/CoreDiagnostics/Stuff/Blah
+	  output/TestsTemporaryData/TestFramework/CoreDiagnostics/Stuff/Blah
 	  vs
-	  /Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/CoreDiagnostics/Stuff/A
+	  output/TestsTemporaryData/TestFramework/CoreDiagnostics/Stuff/A
 
 	  [std::filesystem::file_type]
 	  operator== returned false
@@ -1130,9 +1130,9 @@
 	[std::filesystem::path]
 
 	  Path type
-	  /Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/CoreDiagnostics/Stuff/A
+	  output/TestsTemporaryData/TestFramework/CoreDiagnostics/Stuff/A
 	  vs
-	  /Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/CoreDiagnostics/Stuff/A/foo.txt
+	  output/TestsTemporaryData/TestFramework/CoreDiagnostics/Stuff/A/foo.txt
 
 	  [std::filesystem::file_type]
 	  operator== returned false
@@ -1150,9 +1150,9 @@
 	[std::filesystem::path]
 
 	  Path type
-	  /Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/CoreDiagnostics/Stuff/B/foo.txt
+	  output/TestsTemporaryData/TestFramework/CoreDiagnostics/Stuff/B/foo.txt
 	  vs
-	  /Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/CoreDiagnostics/Stuff/B/bar.txt
+	  output/TestsTemporaryData/TestFramework/CoreDiagnostics/Stuff/B/bar.txt
 
 	  [std::filesystem::file_type]
 	  operator== returned false
@@ -1170,9 +1170,9 @@
 	[std::filesystem::path]
 
 	  Contents of
-	  /Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/CoreDiagnostics/Stuff/A/foo.txt
+	  output/TestsTemporaryData/TestFramework/CoreDiagnostics/Stuff/A/foo.txt
 	  vs
-	  /Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/CoreDiagnostics/Stuff/B/foo.txt
+	  output/TestsTemporaryData/TestFramework/CoreDiagnostics/Stuff/B/foo.txt
 
 	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
 	  operator== returned false
@@ -1214,9 +1214,9 @@
 	[std::filesystem::path]
 
 	  Contents of
-	  /Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/CoreDiagnostics/Stuff/A/foo.txt
+	  output/TestsTemporaryData/TestFramework/CoreDiagnostics/Stuff/A/foo.txt
 	  vs
-	  /Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/CoreDiagnostics/MoreStuff/A/foo.txt
+	  output/TestsTemporaryData/TestFramework/CoreDiagnostics/MoreStuff/A/foo.txt
 
 	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
 	  operator== returned false
@@ -1241,7 +1241,7 @@
 	With equivalent types:
 	[std::filesystem::path]
 
-	  Number of directory entries for /Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/CoreDiagnostics/Stuff/B
+	  Number of directory entries for output/TestsTemporaryData/TestFramework/CoreDiagnostics/Stuff/B
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 1
@@ -1250,8 +1250,8 @@
 	  First directory entry mismatch
 	  [std::filesystem::path]
 	  operator== returned false
-	  Obtained : /Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/CoreDiagnostics/Stuff/B/foo.txt
-	  Predicted: /Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/CoreDiagnostics/MoreStuff/B/bar.txt
+	  Obtained : output/TestsTemporaryData/TestFramework/CoreDiagnostics/Stuff/B/foo.txt
+	  Predicted: output/TestsTemporaryData/TestFramework/CoreDiagnostics/MoreStuff/B/bar.txt
 
 	=======================================
 
@@ -1263,7 +1263,7 @@
 	With equivalent types:
 	[std::filesystem::path]
 
-	  Number of directory entries for /Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/CoreDiagnostics/MoreStuff/B
+	  Number of directory entries for output/TestsTemporaryData/TestFramework/CoreDiagnostics/MoreStuff/B
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 2
@@ -1272,8 +1272,8 @@
 	  First directory entry mismatch
 	  [std::filesystem::path]
 	  operator== returned false
-	  Obtained : /Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/CoreDiagnostics/MoreStuff/B/bar.txt
-	  Predicted: /Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/CoreDiagnostics/Stuff/B/foo.txt
+	  Obtained : output/TestsTemporaryData/TestFramework/CoreDiagnostics/MoreStuff/B/bar.txt
+	  Predicted: output/TestsTemporaryData/TestFramework/CoreDiagnostics/Stuff/B/foo.txt
 
 	=======================================
 

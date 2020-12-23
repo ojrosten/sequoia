@@ -64,7 +64,7 @@ namespace sequoia::testing
     }
   }
 
-  auto test_family::execute(const output_mode outputMode, const concurrency_mode concurrenyMode) -> results 
+  auto test_family::execute(const output_mode outputMode, const concurrency_mode concurrenyMode) -> results
   {
     using namespace std::chrono;
     namespace fs = std::filesystem;
@@ -143,7 +143,9 @@ namespace sequoia::testing
           {
             for(const auto& s : summaries)
             {
-              file << s.diagnostics_output().data();
+              std::string summary{s.diagnostics_output()};
+              replace_all(summary, m_TestRepo.parent_path().generic_string() + "/", "");
+              file << summary;
             }
           }
           else

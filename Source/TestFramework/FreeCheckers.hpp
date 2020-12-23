@@ -126,7 +126,7 @@ namespace sequoia::testing
   bool general_equivalence_check(std::string_view description, test_logger<Mode>& logger, const T& value, const S& s, const U&... u)
   {
     constexpr equivalent_type_processor<S, U...> processor{};
-    
+
     const auto msg{
       [description, types{processor.info()}](){
         return append_lines(description, "Comparison performed using:", make_type_info<EquivChecker>(), "With equivalent types:", types)
@@ -151,10 +151,10 @@ namespace sequoia::testing
       invoke_with_specified_args(fn, std::make_index_sequence<sizeof...(u)>(), s, u...);
     }
     else
-    {      
+    {
       EquivChecker::check(logger, value, s, u..., tutor<null_advisor>{});
     }
-      
+
     return !sentry.failure_detected();
   }
 
@@ -212,7 +212,7 @@ namespace sequoia::testing
       if constexpr(has_detailed_equality_checker_v<T>)
       {
         if constexpr(checker_for<detailed_equality_checker<T>, Mode, T, T, tutor<Advisor>>)
-        {          
+        {
           detailed_equality_checker<T>::check(logger, obtained, prediction, advisor);
         }
         else
@@ -223,7 +223,7 @@ namespace sequoia::testing
       else if constexpr(range<T>)
       {
         check_range("", logger, std::begin(obtained), std::end(obtained), std::begin(prediction), std::end(prediction), advisor);
-      }      
+      }
       else
       {
         static_assert(dependent_false<T>::value, "Unable to check detailed equality for Type");
@@ -245,11 +245,11 @@ namespace sequoia::testing
   bool dispatch_check(std::string_view description, test_logger<Mode>& logger, equivalence_tag, const T& value, S&& s, U&&... u)
   {
     if constexpr(class_template_is_default_instantiable<equivalence_checker, T>)
-    {      
+    {
       return general_equivalence_check<equivalence_checker<T>>(description, logger, value, std::forward<S>(s), std::forward<U>(u)...);
     }
     else if constexpr(range<T>)
-    {      
+    {
       return check_range(add_type_info<T>(description), logger, equivalence_tag{}, std::begin(value), std::end(value), std::begin(std::forward<S>(s)), std::end(std::forward<S>(s)), std::forward<U>(u)...);
     }
     else
@@ -270,7 +270,7 @@ namespace sequoia::testing
   bool dispatch_check(std::string_view description, test_logger<Mode>& logger, weak_equivalence_tag, const T& value, S&& s, U&&... u)
   {
     if constexpr(class_template_is_default_instantiable<weak_equivalence_checker, T>)
-    {      
+    {
       return general_equivalence_check<weak_equivalence_checker<T>>(description, logger, value, std::forward<S>(s), std::forward<U>(u)...);
     }
     else if constexpr(range<T>)
@@ -287,7 +287,7 @@ namespace sequoia::testing
   bool check_range(std::string_view description, test_logger<Mode>& logger, ElementDispatchDiscriminator discriminator, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast, tutor<Advisor> advisor=tutor<Advisor>{})
   {
     auto info{
-      [description](){        
+      [description](){
         return description.empty() || description.back() == '\n'
           ? std::string{description} : std::string{description}.append("\n");
       }
@@ -300,7 +300,7 @@ namespace sequoia::testing
     using std::advance;
 
     const auto actualSize{fixed_width_unsigned_cast(distance(first, last))};
-    const auto predictedSize{fixed_width_unsigned_cast(distance(predictionFirst, predictionLast))};    
+    const auto predictedSize{fixed_width_unsigned_cast(distance(predictionFirst, predictionLast))};
     if(check_equality("Container size wrong", logger, actualSize, predictedSize))
     {
       auto predictionIter{predictionFirst};
@@ -367,13 +367,13 @@ namespace sequoia::testing
   template<test_mode Mode, class T, class S, class... U>
   bool check_equivalence(std::string_view description, test_logger<Mode>& logger, const T& value, S&& s, U&&... u)
   {
-    return dispatch_check(description, logger, equivalence_tag{}, value, std::forward<S>(s), std::forward<U>(u)...);      
+    return dispatch_check(description, logger, equivalence_tag{}, value, std::forward<S>(s), std::forward<U>(u)...);
   }
 
   template<test_mode Mode, class T, class S, class... U>
   bool check_weak_equivalence(std::string_view description, test_logger<Mode>& logger, const T& value, S&& s, U&&... u)
   {
-    return dispatch_check(description, logger, weak_equivalence_tag{}, value, std::forward<S>(s), std::forward<U>(u)...);      
+    return dispatch_check(description, logger, weak_equivalence_tag{}, value, std::forward<S>(s), std::forward<U>(u)...);
   }
 
   template<test_mode Mode, class Advisor=null_advisor>
@@ -381,7 +381,7 @@ namespace sequoia::testing
   {
     return check_equality(description, logger, value, true, std::move(advisor));
   }
-    
+
   template<test_mode Mode, class Iter, class PredictionIter, class Advisor=null_advisor>
   bool check_range(std::string_view description, test_logger<Mode>& logger, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast, tutor<Advisor> advisor=tutor<Advisor>{})
   {
@@ -391,13 +391,13 @@ namespace sequoia::testing
   template<test_mode Mode, class Iter, class PredictionIter>
   bool check_range_equivalence(std::string_view description, test_logger<Mode>& logger, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast)
   {
-    return check_range(description, logger, equivalence_tag{}, first, last, predictionFirst, predictionLast);      
+    return check_range(description, logger, equivalence_tag{}, first, last, predictionFirst, predictionLast);
   }
 
   template<test_mode Mode, class Iter, class PredictionIter>
   bool check_range_weak_equivalence(std::string_view description, test_logger<Mode>& logger, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast)
   {
-    return check_range(description, logger, weak_equivalence_tag{}, first, last, predictionFirst, predictionLast);      
+    return check_range(description, logger, weak_equivalence_tag{}, first, last, predictionFirst, predictionLast);
   }
 
   /*! \brief Exposes elementary check methods, with the option to plug in arbitrary Extenders to compose functionality.
@@ -427,11 +427,11 @@ namespace sequoia::testing
   public:
     constexpr static test_mode mode{Mode};
     using logger_type = test_logger<Mode>;
-      
+
     checker() : Extenders{logger()}... {}
-      
+
     checker(const checker&)            = delete;
-    checker& operator=(const checker&) = delete;      
+    checker& operator=(const checker&) = delete;
     checker& operator=(checker&&)      = delete;
 
     template<class T, class Advisor=null_advisor>
@@ -482,7 +482,7 @@ namespace sequoia::testing
     {
       return log_summary{prefix, logger(), delta};
     }
-  protected:    
+  protected:
     checker(checker&& other) noexcept
       : logger_type{static_cast<logger_type&&>(other)}
       , Extenders{logger()}...
@@ -509,8 +509,8 @@ namespace sequoia::testing
     std::string_view top_level_message() const
     {
       return logger().top_level_message();
-    }   
-      
+    }
+
   private:
     [[nodiscard]]
     test_logger<Mode>& logger() noexcept

@@ -47,7 +47,7 @@ namespace sequoia::testing
       m_Data.qualifiedName = args[0];
       m_Data.equivalentTypes.push_back(args[1]);
       std::reverse(m_Data.equivalentTypes.begin(), m_Data.equivalentTypes.end());
-    }    
+    }
   private:
     creation_data& m_Data;
     std::string m_TestType;
@@ -85,7 +85,7 @@ namespace sequoia::testing
         const auto dir{data.hostRepo / fs::relative(sourcePath, data.sourceRepo.root()).parent_path()};
         fs::create_directories(dir);
 
-        return dir;        
+        return dir;
       }
     };
 
@@ -96,7 +96,7 @@ namespace sequoia::testing
   template_data generate_template_data(std::string_view str)
   {
     std::vector<template_spec> decomposition{};
-    
+
     constexpr auto npos{std::string::npos};
     if(auto openPos{str.find('<')}; openPos != npos)
     {
@@ -191,7 +191,7 @@ namespace sequoia::testing
 
       const auto replacement{std::string(leftSpace, ' ').append(newCopyright).append(std::string(rightSpace, ' '))};
 
-      text.replace(left + 2, reservedSpace, replacement);        
+      text.replace(left + 2, reservedSpace, replacement); 
     }
     else
     {
@@ -220,7 +220,7 @@ namespace sequoia::testing
       }
     }
     else
-    {      
+    {
       m_RawClassName = m_QualifiedClassName;
       start = 0;
     }
@@ -300,7 +300,7 @@ namespace sequoia::testing
         std::string args{};
 
         const auto num{m_EquivalentTypes.size()};
-        for(std::size_t i{}; i < num; ++i)          
+        for(std::size_t i{}; i < num; ++i)
         {
           const auto& type{m_EquivalentTypes[i]};
           if(!type.empty())
@@ -376,7 +376,7 @@ namespace sequoia::testing
   //=========================================== test_runner ===========================================//
 
   test_runner::test_runner(int argc, char** argv, std::string_view copyright, std::filesystem::path testMain, std::filesystem::path hashIncludeTarget, repositories repos, std::ostream& stream)
-    : m_Copyright{copyright}          
+    : m_Copyright{copyright}
     , m_SourceSearchTree{std::move(repos.source)}
     , m_ProjectRoot{project_root(argc, argv)}
     , m_TestMain{std::move(testMain)}
@@ -387,11 +387,11 @@ namespace sequoia::testing
     , m_Stream{stream}
   {
     throw_unless_regular_file(m_TestMain, "\nTry ensuring that the application is run from the appropriate directory");
-    throw_unless_regular_file(m_HashIncludeTarget);    
+    throw_unless_regular_file(m_HashIncludeTarget);
     throw_unless_directory(m_TestRepo);
 
     process_args(argc, argv);
-    
+
     namespace fs = std::filesystem;
     fs::create_directory(m_OutputDir);
     fs::create_directory(diagnostics_output_path(m_OutputDir));
@@ -537,7 +537,7 @@ namespace sequoia::testing
       if(mode(output_mode::verbose)) output += summarize(s, detail, tab, tab);
       familySummary.log += s;
     }
-          
+
     if(mode(output_mode::verbose))
     {
       output.insert(0, report_time(familySummary));
@@ -598,7 +598,7 @@ namespace sequoia::testing
     
     return m_SelectedSources.end();
   }
-                       
+
   void test_runner::execute()
   {
     namespace fs = std::filesystem;
@@ -647,7 +647,7 @@ namespace sequoia::testing
     auto action{
       [options,&root{m_ProjectRoot},&copyright{m_Copyright},&target{m_HashIncludeTarget}](const nascent_test& data, std::string_view stub){
         const auto filePath{data.create_file(copyright, code_templates_path(root), stub, options)};
-        
+
         if(const auto filename{filePath.filename()};
            (filename.extension() == ".hpp") && (filename.string().find("Utilities") == std::string::npos))
         {
@@ -666,7 +666,7 @@ namespace sequoia::testing
     if(!message.empty())
     {
       m_Stream << prefix << '\n';
-      m_Stream << message << "\n\n";      
+      m_Stream << message << "\n\n";
     }
   }
 

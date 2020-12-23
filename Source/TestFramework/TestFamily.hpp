@@ -83,7 +83,7 @@ namespace sequoia::testing
       log_summary::duration execution_time{};
       log_summary log{};
     };
-    
+
     template<concrete_test... Tests>
     test_family(std::string_view name,
                 std::filesystem::path testRepo,
@@ -168,7 +168,7 @@ namespace sequoia::testing
       output_mode mode{output_mode::write_files};
       std::filesystem::path summary, workingMaterials, predictions;
     };
-  };  
+  };
 
   [[nodiscard]]
   std::string summarize(const test_family::summary& summary, summary_detail suppression, indentation ind_0, indentation ind_1);

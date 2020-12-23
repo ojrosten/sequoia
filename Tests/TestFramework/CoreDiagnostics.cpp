@@ -200,9 +200,9 @@ namespace sequoia::testing
 
     check_equivalence(LINE(""), std::vector<std::string>{{"a"}, {"b"}}, std::initializer_list<std::string_view>{"a", "c"}, tutor{[](char, char){
         return "Ah, chars. So easy to get wrong.";
-                                                                                                                                 }});
+    }});
 
-    namespace fs = std::filesystem;    
+    namespace fs = std::filesystem;
 
     check_equivalence(LINE(""), std::pair<const int&, double>{5, 7.8}, std::pair<int, const double&>{-5, 6.8});
     check_equivalence(LINE(""), std::tuple<const int&, double>{5, 7.8}, std::tuple<int, const double&>{-5, 6.8});

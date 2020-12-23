@@ -34,6 +34,8 @@
 
 #include <tuple>
 #include <filesystem>
+#include <optional>
+#include <regex>
 
 namespace sequoia::testing
 {  
@@ -61,7 +63,7 @@ namespace sequoia::testing
                          pos < sz  ? pos - offset : sz - std::min(sz, offset)};
 
       struct message{ std::string mess; bool trunc{}; };
-      
+
       auto make{
         [lpos](string_view_type sv) -> message {
           std::string mess{lpos > 0 ? "..." : ""};
@@ -94,7 +96,7 @@ namespace sequoia::testing
         return tutor{
           [message, advisor] (Char a, Char b) {
             auto m{message};
-            return append_advice(m, {advisor, a, b});            
+            return append_advice(m, {advisor, a, b});
           },
           "\n"
         };
@@ -115,14 +117,14 @@ namespace sequoia::testing
 
       if((iters.first != obtained.end()) && (iters.second != prediction.end()))
       {
-        const auto dist{std::distance(obtained.begin(), iters.first)};          
+        const auto dist{std::distance(obtained.begin(), iters.first)};
         auto adv{make_advisor("", obtained, prediction, dist, advisor)};
 
         const auto mess{
           std::string{"First difference detected at character "}
             .append(std::to_string(dist)).append(":")
         };
-          
+
         check_equality(mess, logger, *(iters.first), *(iters.second), adv);
       }
       else if((iters.first != obtained.end()) || (iters.second != prediction.end()))
@@ -221,7 +223,7 @@ namespace sequoia::testing
     static void check(test_logger<Mode>& logger, const std::tuple<T...>& value, const std::tuple<U...>& prediction, const tutor<Advisor>& advisor)
     {
       static_assert(sizeof...(T) == sizeof...(U));
-      static_assert((std::is_same_v<std::remove_cvref_t<T>, std::remove_cvref_t<U>> && ...));      
+      static_assert((std::is_same_v<std::remove_cvref_t<T>, std::remove_cvref_t<U>> && ...));
 
       check_tuple_elements(logger, value, prediction, advisor);
     }
@@ -274,7 +276,7 @@ namespace sequoia::testing
   {
     template<test_mode Mode>
     static void check(test_logger<Mode>& logger, const std::filesystem::path& path, const std::filesystem::path& prediction)
-    {      
+    {
       namespace fs = std::filesystem;
 
       const auto pathType{fs::status(path).type()};
@@ -302,16 +304,18 @@ namespace sequoia::testing
             }
           }
         }
-      }          
+      }
     }
 
   private:
+    constexpr static std::string_view seqpat{".seqpat"};
+
     constexpr static std::array<std::string_view, 2>
-      st_ExcludedFiles{
-        ".DS_Store",
-        ".keep"
-    };
-    
+      excluded_files{".DS_Store", ".keep"};
+
+    constexpr static std::array<std::string_view, 1>
+      excluded_extensions{seqpat};
+
     template<test_mode Mode>
     static void check_directory(test_logger<Mode>& logger, const std::filesystem::path& dir, const std::filesystem::path& prediction)
     {
@@ -322,8 +326,11 @@ namespace sequoia::testing
           std::vector<fs::path> paths{};
           for(const auto& p : fs::directory_iterator(dir))
           {
-            if(std::find(st_ExcludedFiles.begin(), st_ExcludedFiles.end(), p.path().filename()) == st_ExcludedFiles.end())
+            if(    std::find(excluded_files.begin(),      excluded_files.end(),      p.path().filename())  == excluded_files.end()
+                && std::find(excluded_extensions.begin(), excluded_extensions.end(), p.path().extension()) == excluded_extensions.end())
+            {
                paths.push_back(p);
+            }
           }
 
           std::sort(paths.begin(), paths.end());
@@ -365,18 +372,50 @@ namespace sequoia::testing
     }
 
     template<test_mode Mode>
-    static void check_file(test_logger<Mode>& logger,const std::filesystem::path& file, const std::filesystem::path& prediction)
+    [[nodiscard]]
+    static std::optional<std::string> file_contents(test_logger<Mode>& logger, const std::filesystem::path& file)
     {
-      std::ifstream file1{file}, file2{prediction};
-
-      if(   testing::check(report_failed_read(file), logger, static_cast<bool>(file1))
-         && testing::check(report_failed_read(prediction), logger, static_cast<bool>(file2)))
+      std::ifstream fileStream{file};
+      if(testing::check(report_failed_read(file), logger, static_cast<bool>(fileStream)))
       {
-        std::stringstream buffer1{}, buffer2{};
-        buffer1 << file1.rdbuf();
-        buffer2 << file2.rdbuf();
+        std::stringstream buf{};
+        buf << fileStream.rdbuf();
+        return buf.str();
+      }
 
-        check_equality(preamble("Contents of", file, prediction), logger, buffer1.str(), buffer2.str());
+      return std::nullopt;
+    }
+
+    template<test_mode Mode>
+    static void check_file(test_logger<Mode>& logger, const std::filesystem::path& file, const std::filesystem::path& prediction)
+    {
+      auto fileContents{file_contents(logger, file)}, predictionContents{file_contents(logger, prediction)};
+      if(fileContents && predictionContents)
+      {
+        if(file.extension() != seqpat)
+        {
+          namespace fs = std::filesystem;
+          auto supplPath{[](fs::path f) { return f.replace_extension(seqpat); }(prediction)};
+          if(fs::exists(supplPath))
+          {
+            const auto expressions{file_contents(logger, supplPath)};
+            if(expressions)
+            {
+              std::string::size_type pos{};
+              while(pos < expressions->size())
+              {
+                const auto next{std::min(expressions->find("\n", pos), expressions->size())};
+                const auto count{next - pos};
+                std::basic_regex rgx{expressions->data() + pos, count};
+                fileContents = std::regex_replace(fileContents.value(), rgx, std::string{});
+                predictionContents = std::regex_replace(predictionContents.value(), rgx, std::string{});
+                pos = next;
+              }
+            }
+          }
+        }
+
+        check_equality(preamble("Contents of", file, prediction), logger, fileContents.value(), predictionContents.value());
       }
     }
 
