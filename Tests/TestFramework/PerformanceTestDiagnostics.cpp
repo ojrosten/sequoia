@@ -8,7 +8,15 @@
 #include "PerformanceTestDiagnostics.hpp"
 
 namespace sequoia::testing
-{  
+{
+  namespace
+  {
+    void wait(std::size_t millisecs)
+    {
+      std::this_thread::sleep_for(std::chrono::milliseconds(millisecs));
+    }
+  }
+
   [[nodiscard]]
   std::string_view performance_false_positive_diagnostics::source_file() const noexcept
   {
@@ -22,22 +30,17 @@ namespace sequoia::testing
 
   void performance_false_positive_diagnostics::test_relative_performance()
   {
-    auto wait{[](const size_t millisecs) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(millisecs));
-      }
-    };    
-    
     check_relative_performance(LINE("Performance Test for which fast task is too slow, [1, (2.0, 2.0)"),
-                               [wait]() { return wait(1); },
-                               [wait]() { return wait(1); }, 2.0, 2.0);
+                               []() { return wait(5); },
+                               []() { return wait(5); }, 2.0, 2.0);
       
     check_relative_performance(LINE("Performance Test for which fast task is too slow [1, (2.0, 3.0)"),
-                               [wait]() { return wait(1); },
-                               [wait]() { return wait(1); }, 2.0, 3.0);
+                               []() { return wait(5); },
+                               []() { return wait(5); }, 2.0, 3.0);
       
     check_relative_performance(LINE("Performance Test for which fast task is too fast [4, (2.0, 2.5)]"),
-                               [wait]() { return wait(1); },
-                               [wait]() { return wait(4); }, 2.0, 2.5);      
+                               []() { return wait(5); },
+                               []() { return wait(20); }, 2.0, 2.5);
   }
 
   [[nodiscard]]
@@ -53,18 +56,9 @@ namespace sequoia::testing
 
   void performance_false_negative_diagnostics::test_relative_performance()
   {
-      
-    auto wait{[](const size_t millisecs) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(millisecs));
-      }
-    };
+    auto fast{[]() { return wait(5); } };
 
-    auto fast{[wait]() {
-        return wait(1);
-      }
-    };      
-
-    check_relative_performance(LINE("Performance Test which should pass"), fast, [wait]() { return wait(2); }, 1.8, 2.1, 5);
-    check_relative_performance(LINE("Performance Test which should pass"), fast, [wait]() { return wait(4); }, 3.6, 4.1, 5);
+    check_relative_performance(LINE("Performance Test which should pass"), fast, []() { return wait(10); }, 1.8, 2.1, 5);
+    check_relative_performance(LINE("Performance Test which should pass"), fast, []() { return wait(20); }, 3.6, 4.1, 5);
   }
 }
