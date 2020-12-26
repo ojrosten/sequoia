@@ -461,7 +461,6 @@ namespace sequoia::testing
                     }
                   },
                   {"--verbose",  {"-v"}, {}, [this](const param_list&) { m_OutputMode |= output_mode::verbose; }},
-                  {"--nofiles",  {"-n"}, {}, [this](const param_list&) { m_OutputMode &= ~output_mode::write_files; }},
                   {"--correct-materials", {"-cm"}, {},
                     [this](const param_list&) { m_OutputMode |= output_mode::update_materials; }
                   },

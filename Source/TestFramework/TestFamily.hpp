@@ -22,7 +22,7 @@
 
 namespace sequoia::testing
 {
-  enum class output_mode { none=0, write_files=1, update_materials=2, help=4, verbose=8 };
+  enum class output_mode { none=0, update_materials=1, help=2, verbose=4 };
 
   [[nodiscard]]
   constexpr output_mode operator|(output_mode lhs, output_mode rhs) noexcept
@@ -133,7 +133,7 @@ namespace sequoia::testing
     std::filesystem::path diagnostics_filename() const;
 
     [[nodiscard]]
-    static std::filesystem::path test_summary_filename(const test& t, output_mode outputMode, const std::filesystem::path& outputDir, const std::filesystem::path& testRepo);
+    static std::filesystem::path test_summary_filename(const test& t, const std::filesystem::path& outputDir, const std::filesystem::path& testRepo);
 
     template<class Test, class... Tests>
     void register_tests(Test&& t, Tests&&... tests)
@@ -165,7 +165,7 @@ namespace sequoia::testing
       
       paths(const test& t, output_mode outputMode, const std::filesystem::path& outputDir, const std::filesystem::path& testRepo);
 
-      output_mode mode{output_mode::write_files};
+      output_mode mode{output_mode::none};
       std::filesystem::path summary, workingMaterials, predictions;
     };
   };

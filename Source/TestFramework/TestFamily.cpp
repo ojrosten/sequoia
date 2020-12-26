@@ -133,25 +133,22 @@ namespace sequoia::testing
       }
     }
 
-    if((outputMode & output_mode::write_files) == output_mode::write_files)
+    if(auto filename{diagnostics_filename()}; !filename.empty())
     {
-      if(auto filename{diagnostics_filename()}; !filename.empty())
+      if(hasDiagnostics || fs::exists(filename))
       {
-        if(hasDiagnostics || fs::exists(filename))
+        if(std::ofstream file{filename})
         {
-          if(std::ofstream file{filename})
+          for(const auto& s : summaries)
           {
-            for(const auto& s : summaries)
-            {
-              std::string summary{s.diagnostics_output()};
-              replace_all(summary, m_TestRepo.parent_path().generic_string() + "/", "");
-              file << summary;
-            }
+            std::string summary{s.diagnostics_output()};
+            replace_all(summary, m_TestRepo.parent_path().generic_string() + "/", "");
+            file << summary;
           }
-          else
-          {
-            throw std::runtime_error{report_failed_write(filename)};
-          }
+        }
+        else
+        {
+          throw std::runtime_error{report_failed_write(filename)};
         }
       }
     }
@@ -179,11 +176,9 @@ namespace sequoia::testing
     return diagnostics_output_path(m_OutputDir) /= make_name(m_Name);
   }
 
-  std::filesystem::path test_family::test_summary_filename(const test& t, const output_mode outputMode, const std::filesystem::path& outputDir, const std::filesystem::path& testRepo)
+  std::filesystem::path test_family::test_summary_filename(const test& t, const std::filesystem::path& outputDir, const std::filesystem::path& testRepo)
   {
     namespace fs = std::filesystem;
-
-    if((outputMode & output_mode::write_files) != output_mode::write_files) return "";
 
     const auto name{t.source_filename().replace_extension(".txt")};
     if(name.empty())
@@ -239,7 +234,7 @@ namespace sequoia::testing
 
   test_family::paths::paths(const test& t, output_mode outputMode, const std::filesystem::path& outputDir, const std::filesystem::path& testRepo)
     : mode{outputMode}
-    , summary{test_summary_filename(t, outputMode, outputDir, testRepo)}
+    , summary{test_summary_filename(t, outputDir, testRepo)}
     , workingMaterials{t.working_materials()}
     , predictions{t.predictive_materials()}
   {}
