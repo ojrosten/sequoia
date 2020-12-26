@@ -1,24 +1,24 @@
 	Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 33
 	Performance Test for which fast task is too slow, [1, (2.0, 2.0)
 
-	Fast Task duration: 0.00592243s +- 4 * 0.000707776s
-	Slow Task duration: 0.00715496s +- 4 * 0.00165464s [1.20811; (2, 2)]
+	Fast Task duration: 0.00625398s +- 4 * 0.000176956s
+	Slow Task duration: 0.00639596s +- 4 * 9.27318e-06s [1.0227; (2, 2)]
 
 	=======================================
 
 	Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 37
 	Performance Test for which fast task is too slow [1, (2.0, 3.0)
 
-	Fast Task duration: 0.00568645s +- 4 * 0.000556426s
-	Slow Task duration: 0.00607135s +- 4 * 0.000821509s [1.06769; (2, 3)]
+	Fast Task duration: 0.00639298s +- 4 * 5.10456e-06s
+	Slow Task duration: 0.00633716s +- 4 * 3.42941e-05s [0.991269; (2, 3)]
 
 	=======================================
 
 	Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 41
 	Performance Test for which fast task is too fast [4, (2.0, 2.5)]
 
-	Fast Task duration: 0.00540147s +- 4 * 0.000300237s
-	Slow Task duration: 0.0211225s +- 4 * 0.000979013s [3.91052; (2, 2.5)]
+	Fast Task duration: 0.00639815s +- 4 * 2.04035e-06s
+	Slow Task duration: 0.0229326s +- 4 * 0.00207803s [3.58425; (2, 2.5)]
 
 	=======================================
 
@@ -26,8 +26,8 @@
 	Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 61
 	Performance Test which should pass
 
-	Fast Task duration: 0.00533953s +- 4 * 0.000354927s
-	Slow Task duration: 0.0107046s +- 4 * 0.000107023s [2.00479; (1.8, 2.1)]
+	Fast Task duration: 0.00640852s +- 4 * 4.08901e-06s
+	Slow Task duration: 0.0126492s +- 4 * 1.47746e-06s [1.97381; (1.8, 2.1)]
 
 
 	=======================================
@@ -36,8 +36,8 @@
 	Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 62
 	Performance Test which should pass
 
-	Fast Task duration: 0.00593074s +- 4 * 0.000649532s
-	Slow Task duration: 0.0204467s +- 4 * 0.000336017s [3.44758; (3.4, 4.1)]
+	Fast Task duration: 0.00613393s +- 4 * 0.000517981s
+	Slow Task duration: 0.0223674s +- 4 * 0.00191243s [3.6465; (3.4, 4.1)]
 
 
 	=======================================

@@ -24,7 +24,27 @@ namespace sequoia::testing
           const auto endLine{testOutput.find('\n', pos)};
           const auto refEndLine{referenceOutput.find('\n', pos)};
 
-          return acceptable_mismatch(testOutput.substr(endLine), referenceOutput.substr(refEndLine));
+          if((endLine != npos) && (refEndLine != npos))
+          {
+            std::string_view lineView{testOutput.substr(pos, endLine - pos)};
+            std::string_view refLineView{referenceOutput.substr(pos, refEndLine - pos)};
+            const auto openPos{lineView.find('(')};
+            const auto closePos{lineView.find(')')};
+            const auto refOpenPos{refLineView.find('(')};
+            const auto refClosePos{refLineView.find(')')};
+            if((closePos != npos) && (openPos < closePos) && (refClosePos != npos) &&(refOpenPos < refClosePos))
+            {              
+              const auto[lineIter, refLineIter]{
+                          std::mismatch(lineView.begin() + openPos, lineView.begin() + closePos,
+                                        refLineView.begin() + refOpenPos, refLineView.begin() + refClosePos)
+              };
+
+              if((lineIter != (lineView.begin() + closePos)) || (refLineIter != (refLineView.begin() + refClosePos)))
+                return false;
+            }
+            
+            return acceptable_mismatch(testOutput.substr(endLine), referenceOutput.substr(refEndLine));
+          }
         }
       }
 

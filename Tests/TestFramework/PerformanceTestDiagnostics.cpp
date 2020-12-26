@@ -136,5 +136,33 @@ namespace sequoia::testing
 
       check_equality(LINE(""), postprocess(latest, reference), latest);
     }
+
+    {
+      std::string_view latest{"Task duration: 1.45e-3s +- 3 * 0.0014 [3.4; (2.9, 4.1))]\n"};
+      std::string_view reference{"Task duration: 1.47e-3s +- 3 * 0.0011 [3.4; (2.9, 4.1))]\n"};
+
+      check_equality(LINE(""), postprocess(latest, reference), reference);
+    }
+
+    {
+      std::string_view latest{"Task duration: 1.45e-3s +- 3 * 0.0014 [3.4; (2.9, 4.1))]\n"};
+      std::string_view reference{"Task duration: 1.47e-3s +- 3 * 0.001 [3.4; (2.9, 4.1))]\n"};
+
+      check_equality(LINE(""), postprocess(latest, reference), reference);
+    }
+
+    {
+      std::string_view latest{"Task duration: 1.45e-3s +- 3 * 0.0014 [3.4; (2.8, 4.1))]\n"};
+      std::string_view reference{"Task duration: 1.47e-3s +- 3 * 0.0011 [3.4; (2.9, 4.1))]\n"};
+
+      check_equality(LINE(""), postprocess(latest, reference), latest);
+    }
+
+    {
+      std::string_view latest{"Task duration: 1.45e-3s +- 3 * 0.0014 [3.4; (2.8, 4.1))]\n"};
+      std::string_view reference{"Task duration: 1.47e-3s +- 3 * 0.0011 [3.4; (2.9, 4.0))]\n"};
+
+      check_equality(LINE(""), postprocess(latest, reference), latest);
+    }
   }
 }

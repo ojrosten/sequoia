@@ -3,4 +3,4 @@ False Positive Performance Checks:         3;  Failures:  0
 Performance False Negative Diagnostics
 False Negative Performance Checks:         2;  Failures:  0
 Performance Utilities
-Standard Top Level Checks:                 8;  Failures:  0  [Deep checks: 8]
+Standard Top Level Checks:                12;  Failures:  0  [Deep checks: 12]
