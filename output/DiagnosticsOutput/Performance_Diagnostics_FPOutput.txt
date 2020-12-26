@@ -1,24 +1,24 @@
 	Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 33
 	Performance Test for which fast task is too slow, [1, (2.0, 2.0)
 
-	Fast Task duration: 0.00597117s +- 4 * 1.24141e-05
-	Slow Task duration: 0.00596943s +- 4 * 1.76463e-05 [0.99971; (2, 2)]
+	Fast Task duration: 0.00513349s +- 4 * 4.60788e-05
+	Slow Task duration: 0.00524674s +- 4 * 0.00021102 [1.02206; (2, 2)]
 
 	=======================================
 
 	Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 37
 	Performance Test for which fast task is too slow [1, (2.0, 3.0)
 
-	Fast Task duration: 0.00596627s +- 4 * 1.74533e-05
-	Slow Task duration: 0.00598083s +- 4 * 4.2353e-06 [1.00244; (2, 3)]
+	Fast Task duration: 0.00514691s +- 4 * 3.77861e-05
+	Slow Task duration: 0.00517846s +- 4 * 6.84943e-05 [1.00613; (2, 3)]
 
 	=======================================
 
 	Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 41
 	Performance Test for which fast task is too fast [4, (2.0, 2.5)]
 
-	Fast Task duration: 0.0059615s +- 4 * 2.51064e-05
-	Slow Task duration: 0.0202212s +- 4 * 4.94989e-05 [3.39196; (2, 2.5)]
+	Fast Task duration: 0.00515165s +- 4 * 5.37836e-05
+	Slow Task duration: 0.0216554s +- 4 * 0.00221775 [4.20359; (2, 2.5)]
 
 	=======================================
 
@@ -26,8 +26,8 @@
 	Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 61
 	Performance Test which should pass
 
-	Fast Task duration: 0.00598393s +- 4 * 1.17356e-05
-	Slow Task duration: 0.0109532s +- 4 * 1.0006e-05 [1.83043; (1.8, 2.1)]
+	Fast Task duration: 0.00584777s +- 4 * 0.000109724
+	Slow Task duration: 0.0111921s +- 4 * 0.000723034 [1.91391; (1.8, 2.1)]
 
 
 	=======================================
@@ -36,8 +36,8 @@
 	Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 62
 	Performance Test which should pass
 
-	Fast Task duration: 0.00598733s +- 4 * 5.28263e-05
-	Slow Task duration: 0.0208574s +- 4 * 7.54693e-05 [3.48359; (3.6, 4.1)]
+	Fast Task duration: 0.00566797s +- 4 * 0.000586546
+	Slow Task duration: 0.0209053s +- 4 * 0.000628823 [3.68832; (3.4, 4.1)]
 
 
 	=======================================

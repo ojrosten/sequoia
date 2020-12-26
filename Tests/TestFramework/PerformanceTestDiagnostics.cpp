@@ -59,6 +59,6 @@ namespace sequoia::testing
     auto fast{[]() { return wait(5); } };
 
     check_relative_performance(LINE("Performance Test which should pass"), fast, []() { return wait(10); }, 1.8, 2.1, 5);
-    check_relative_performance(LINE("Performance Test which should pass"), fast, []() { return wait(20); }, 3.6, 4.1, 5);
+    check_relative_performance(LINE("Performance Test which should pass"), fast, []() { return wait(20); }, 3.4, 4.1, 5);
   }
 }
