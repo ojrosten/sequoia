@@ -159,7 +159,7 @@ namespace sequoia::testing
         [num_sds](std::string_view prefix, const auto mean, const auto sig){
             
           std::ostringstream message{};
-          message << mean << "s" << " +- " << num_sds << " * " << sig;
+          message << mean << "s" << " +- " << num_sds << " * " << sig << "s";
 
           return std::string{prefix}.append(" Task duration: ").append(message.str());
         }
@@ -234,4 +234,7 @@ namespace sequoia::testing
   using performance_test                = basic_performance_test<test_mode::standard>;
   using performance_false_negative_test = basic_performance_test<test_mode::false_negative>;
   using performance_false_positive_test = basic_performance_test<test_mode::false_positive>;
+
+  [[nodiscard]]
+  std::string_view postprocess(std::string_view testOutput, std::string_view referenceOutput);
 }

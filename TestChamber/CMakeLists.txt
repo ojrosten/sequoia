@@ -34,6 +34,7 @@ add_library(TestFramework STATIC ../Source/TestFramework/Advice.cpp
                                  ../Source/TestFramework/FileEditors.cpp
                                  ../Source/TestFramework/FileSystem.cpp
                                  ../Source/TestFramework/Output.cpp
+                                 ../Source/TestFramework/PerformanceTestCore.cpp
                                  ../Source/TestFramework/Summary.cpp
                                  ../Source/TestFramework/TestFamily.cpp
                                  ../Source/TestFramework/TestRunner.cpp

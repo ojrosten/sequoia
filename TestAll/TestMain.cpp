@@ -62,7 +62,8 @@ int main(int argc, char** argv)
     runner.add_test_family(
       "Performance Diagnostics",      
       performance_false_positive_diagnostics{"Performance False Positive Diagnostics"},      
-      performance_false_negative_diagnostics{"Performance False Negative Diagnostics"}
+      performance_false_negative_diagnostics{"Performance False Negative Diagnostics"},
+      performance_utilities_test{"Performance Utilities"}
     );
 
     runner.add_test_family(
