@@ -11,6 +11,7 @@
 
 #include "TestFamily.hpp"
 #include "Summary.hpp"
+#include "PerformanceTestCore.hpp"
 
 namespace sequoia::testing
 {
@@ -135,16 +136,50 @@ namespace sequoia::testing
 
     if(auto filename{diagnostics_filename()}; !filename.empty())
     {
+      const auto referenceOutput{
+        [&filename,&summaries]() -> std::string {
+          if(fs::exists(filename))
+          {
+            for(const auto& s : summaries)
+            {
+              if(s.false_positive_performance_checks() || s.false_negative_performance_checks())
+              {
+                if(std::ifstream ifile{filename})
+                {
+                  std::stringstream buf{};
+                  buf << ifile.rdbuf();
+                  return buf.str();
+                }
+
+                break;
+              }
+            }
+          }
+
+          return "";
+        }()
+      };
+
       if(hasDiagnostics || fs::exists(filename))
       {
         if(std::ofstream file{filename})
         {
+          std::string latestOutput{};
           for(const auto& s : summaries)
           {
             std::string summary{s.diagnostics_output()};
+
             replace_all(summary, m_TestRepo.parent_path().generic_string() + "/", "");
-            file << summary;
+
+            latestOutput += summary;
           }
+
+          if(!referenceOutput.empty())
+          {
+            latestOutput = postprocess(latestOutput, referenceOutput);
+          }
+
+          file << latestOutput;
         }
         else
         {
