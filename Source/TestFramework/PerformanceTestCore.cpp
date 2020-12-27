@@ -28,20 +28,28 @@ namespace sequoia::testing
           {
             std::string_view lineView{testOutput.substr(pos, endLine - pos)};
             std::string_view refLineView{referenceOutput.substr(pos, refEndLine - pos)};
-            const auto openPos{lineView.find('(')};
-            const auto closePos{lineView.find(')')};
-            const auto refOpenPos{refLineView.find('(')};
-            const auto refClosePos{refLineView.find(')')};
-            if((closePos != npos) && (openPos < closePos) && (refClosePos != npos) &&(refOpenPos < refClosePos))
-            {              
-              const auto[lineIter, refLineIter]{
-                          std::mismatch(lineView.begin() + openPos, lineView.begin() + closePos,
-                                        refLineView.begin() + refOpenPos, refLineView.begin() + refClosePos)
-              };
 
-              if((lineIter != (lineView.begin() + closePos)) || (refLineIter != (refLineView.begin() + refClosePos)))
-                return false;
-            }
+            auto acceptable{
+              [=](std::string_view open, std::string_view close){
+                const auto openPos{lineView.find(open)};
+                const auto closePos{lineView.find(close)};
+                const auto refOpenPos{refLineView.find(open)};
+                const auto refClosePos{refLineView.find(close)};
+                if((closePos != npos) && (openPos < closePos) && (refClosePos != npos) &&(refOpenPos < refClosePos))
+                {
+                  const auto[lineIter, refLineIter]{
+                          std::mismatch(lineView.begin() + openPos, lineView.begin() + closePos,
+                                        refLineView.begin() + refOpenPos, refLineView.begin() + refClosePos)};
+
+                  return (lineIter == (lineView.begin() + closePos)) && (refLineIter == (refLineView.begin() + refClosePos));
+                }
+
+                return true;
+              }
+            };
+
+            if(!acceptable("-", "*") || !acceptable("(", ")"))
+              return false;
             
             return acceptable_mismatch(testOutput.substr(endLine), referenceOutput.substr(refEndLine));
           }

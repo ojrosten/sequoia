@@ -164,5 +164,12 @@ namespace sequoia::testing
 
       check_equality(LINE(""), postprocess(latest, reference), latest);
     }
+
+    {
+      std::string_view latest{"Task duration: 1.45e-3s +- 3 * 0.0014\n"};
+      std::string_view reference{"Task duration: 1.47e-3s +- 4 * 0.0011\n"};
+
+      check_equality(LINE(""), postprocess(latest, reference), latest);
+    }
   }
 }
