@@ -1,0 +1,98 @@
+	Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 29
+	Broken check invariant
+
+	--Regular Semantics--
+	[sequoia::testing::orderable_regular_beast<int, std::allocator<int> >]
+
+	  Precondition - for checking semantics, order must be weak_ordering::less or weak_ordering::greater
+	  [bool]
+	  check failed
+
+	=======================================
+
+	Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 30
+	Broken check invariant
+
+	--Regular Semantics--
+	[sequoia::testing::orderable_regular_beast<int, std::allocator<int> >]
+
+	  Precondition - for ordered semantics, it is assumed that y > x
+	  [bool]
+	  check failed
+
+	=======================================
+
+	Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 36
+
+	--Regular Semantics--
+	[sequoia::testing::regular_broken_less<int, std::allocator<int> >]
+
+	  operator> and operator< are inconsistent
+	  [bool]
+	  check failed
+
+	  operator< and operator<= are inconsistent
+	  [bool]
+	  check failed
+
+	  operator< and operator>= are inconsistent
+	  [bool]
+	  check failed
+
+	=======================================
+
+	Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 42
+
+	--Regular Semantics--
+	[sequoia::testing::regular_broken_lesseq<int, std::allocator<int> >]
+
+	  operator< and operator<= are inconsistent
+	  [bool]
+	  check failed
+
+	=======================================
+
+	Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 48
+
+	--Regular Semantics--
+	[sequoia::testing::regular_broken_greater<int, std::allocator<int> >]
+
+	  operator> and operator< are inconsistent
+	  [bool]
+	  check failed
+
+	=======================================
+
+	Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 54
+
+	--Regular Semantics--
+	[sequoia::testing::regular_broken_greatereq<int, std::allocator<int> >]
+
+	  operator< and operator<= are inconsistent
+	  [bool]
+	  check failed
+
+	=======================================
+
+	Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 60
+
+	--Regular Semantics--
+	[sequoia::testing::regular_inverted_comparisons<int, std::allocator<int> >]
+
+	  Precondition - for ordered semantics, it is assumed that y > x
+	  [bool]
+	  check failed
+
+	=======================================
+
+	Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 66
+
+	--Regular Semantics--
+	[sequoia::testing::regular_broken_spaceship<int, std::allocator<int> >]
+
+	  operator< and operator<=> are inconsistent
+	  [bool]
+	  check failed
+
+	=======================================
+

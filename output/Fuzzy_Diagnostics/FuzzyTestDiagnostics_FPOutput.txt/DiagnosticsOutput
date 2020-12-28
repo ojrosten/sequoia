@@ -1,0 +1,54 @@
+	False Positive Failure:
+	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 76
+
+	[double]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 77
+
+	[double]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 79
+
+	[double]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 80
+
+	[double]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 86
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 91
+
+	[std::vector<double, std::allocator<double> >]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 94
+
+	[std::vector<std::vector<double, std::allocator<double> >, std::allocator<std::vector<double, std::allocator<double> > > >]
+
+
+	=======================================
+

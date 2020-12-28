@@ -11,7 +11,6 @@
 
 #include "TestFamily.hpp"
 #include "Summary.hpp"
-#include "PerformanceTestCore.hpp"
 
 namespace sequoia::testing
 {
@@ -19,7 +18,7 @@ namespace sequoia::testing
   {
     namespace fs = std::filesystem;
 
-    t.test_repository(m_TestRepo);
+    t.set_filesystem_data(m_TestRepo, m_OutputDir, name());
 
     const auto rel{
       [&t, &testRepo{m_TestRepo}, &materialsRepo{m_TestMaterialsRepo}](){
@@ -52,7 +51,7 @@ namespace sequoia::testing
         }()
       };
 
-      t.materials(workingCopy, prediction);
+      t.set_materials(workingCopy, prediction);
 
       if(std::find(m_MaterialsPaths.cbegin(), m_MaterialsPaths.cend(), workingCopy) == m_MaterialsPaths.cend())
       {
@@ -74,7 +73,6 @@ namespace sequoia::testing
 
     std::vector<log_summary> summaries{};
     summaries.reserve(m_Tests.size());
-    bool hasDiagnostics{};
     summary_writer writer{};
 
     auto compare{
@@ -86,10 +84,8 @@ namespace sequoia::testing
     std::set<paths, decltype(compare)> updateables{};
 
     auto process{
-      [&summaries, &hasDiagnostics, &writer, &updateables](log_summary summary, const paths& files){
+      [&summaries, &writer, &updateables](log_summary summary, const paths& files){
         summaries.push_back(std::move(summary));
-
-        if(!summaries.back().diagnostics_output().empty()) hasDiagnostics = true;
 
         writer.to_file(files.summary, summaries.back());
 
@@ -134,60 +130,6 @@ namespace sequoia::testing
       }
     }
 
-    if(auto filename{diagnostics_filename()}; !filename.empty())
-    {
-      const auto referenceOutput{
-        [&filename,&summaries]() -> std::string {
-          if(fs::exists(filename))
-          {
-            for(const auto& s : summaries)
-            {
-              if(s.false_positive_performance_checks() || s.false_negative_performance_checks())
-              {
-                if(std::ifstream ifile{filename})
-                {
-                  std::stringstream buf{};
-                  buf << ifile.rdbuf();
-                  return buf.str();
-                }
-
-                break;
-              }
-            }
-          }
-
-          return "";
-        }()
-      };
-
-      if(hasDiagnostics || fs::exists(filename))
-      {
-        if(std::ofstream file{filename})
-        {
-          std::string latestOutput{};
-          for(const auto& s : summaries)
-          {
-            std::string summary{s.diagnostics_output()};
-
-            replace_all(summary, m_TestRepo.parent_path().generic_string() + "/", "");
-
-            latestOutput += summary;
-          }
-
-          if(!referenceOutput.empty())
-          {
-            latestOutput = postprocess(latestOutput, referenceOutput);
-          }
-
-          file << latestOutput;
-        }
-        else
-        {
-          throw std::runtime_error{report_failed_write(filename)};
-        }
-      }
-    }
-
     for(const auto& update : updateables)
     {
       fs::remove_all(update.predictions);
@@ -196,19 +138,6 @@ namespace sequoia::testing
     }
 
     return {steady_clock::now() - time, std::move(summaries)};
-  }
-
-  std::filesystem::path test_family::diagnostics_filename() const
-  {
-    auto make_name{
-      [](std::string n){
-        for(auto& c : n) if(c == ' ') c = '_';
-
-        return n.append("_FPOutput.txt");
-      }
-    };
-
-    return diagnostics_output_path(m_OutputDir) /= make_name(m_Name);
   }
 
   std::filesystem::path test_family::test_summary_filename(const test& t, const std::filesystem::path& outputDir, const std::filesystem::path& testRepo)

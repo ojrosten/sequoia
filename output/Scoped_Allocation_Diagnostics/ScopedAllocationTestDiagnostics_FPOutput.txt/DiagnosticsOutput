@@ -1,0 +1,72 @@
+	False Positive Failure:
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 48
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 0, 0> >]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 48
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 0, 1> >]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 48
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 1, 0> >]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 48
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 0, 1, 1> >]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 48
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 48
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 48
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 48
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >]
+
+
+	=======================================
+

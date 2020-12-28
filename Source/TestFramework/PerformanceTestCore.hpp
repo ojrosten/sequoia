@@ -209,7 +209,7 @@ namespace sequoia::testing
     performance_extender(const performance_extender&) = delete;
     performance_extender(performance_extender&&)      = delete;
 
-    performance_extender& operator=(const performance_extender&) = delete;    
+    performance_extender& operator=(const performance_extender&) = delete;
     performance_extender& operator=(performance_extender&&)      = delete;
  
     template<class F, class S>
@@ -219,22 +219,59 @@ namespace sequoia::testing
     }
   protected:
     ~performance_extender() = default;
-
   private:
     test_logger<Mode>& m_Logger;
   };
 
   template<test_mode mode>
   using performance_checker = checker<mode, performance_extender<mode>>;
-  
+
+  [[nodiscard]]
+  std::string_view postprocess(std::string_view testOutput, std::string_view referenceOutput);
+
   template<test_mode mode>
-  using basic_performance_test = basic_test<performance_checker<mode>>;
+  class basic_performance_test : public basic_test<performance_checker<mode>>
+  {
+  public:
+    using base_t = basic_test<performance_checker<mode>>;
+
+    using basic_test<performance_checker<mode>>::basic_test;
+  protected:
+    using time_point = typename base_t::time_point;
+
+    [[nodiscard]]
+    log_summary summarize(const time_point start) const override
+    {
+      auto summary{base_t::summarize(start)};
+
+      if constexpr(mode != test_mode::standard)
+      {
+        const auto referenceOutput{
+          [filename{this->versioned_output_filename()}]() -> std::string {
+            if(std::filesystem::exists(filename))
+            {
+              if(std::ifstream ifile{filename})
+              {
+                std::stringstream buf{};
+                buf << ifile.rdbuf();
+                return buf.str();
+              }
+            }
+
+            return "";
+          }()
+        };
+
+        std::string outputToUse{postprocess(summary.diagnostics_output(), referenceOutput)};
+        summary.diagnostics_output(std::move(outputToUse));
+      }
+
+      return summary;
+    }
+  };
 
   /*! \anchor performance_test_alias */
   using performance_test                = basic_performance_test<test_mode::standard>;
   using performance_false_negative_test = basic_performance_test<test_mode::false_negative>;
   using performance_false_positive_test = basic_performance_test<test_mode::false_positive>;
-
-  [[nodiscard]]
-  std::string_view postprocess(std::string_view testOutput, std::string_view referenceOutput);
 }

@@ -130,9 +130,6 @@ namespace sequoia::testing
     std::vector<std::filesystem::path> m_MaterialsPaths{};
 
     [[nodiscard]]
-    std::filesystem::path diagnostics_filename() const;
-
-    [[nodiscard]]
     static std::filesystem::path test_summary_filename(const test& t, const std::filesystem::path& outputDir, const std::filesystem::path& testRepo);
 
     template<class Test, class... Tests>

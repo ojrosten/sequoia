@@ -19,14 +19,13 @@
 #include "Concepts.hpp"
 
 #include "Output.hpp"
+#include "FileSystem.hpp"
 
 namespace sequoia::testing
 {  
   /*! \brief Abstract base class used for type-erasure of the template class basic_test.
 
       This class allows for convenient, homogeneous treatment of all concrete tests.
-
-      The only state it holds is a string representing the name of the test.
 
       The semantics are such that, of the special member functions, only explicit construction from a
       string_view and (virtual) destruction are publicly available. Move construction is protected;
@@ -49,13 +48,15 @@ namespace sequoia::testing
     [[nodiscard]]
     log_summary execute()
     {
-      return do_execute();
+      const auto summary{do_execute()};
+      do_write_versioned_output(summary);
+      return summary;
     }
 
     [[nodiscard]]
     std::filesystem::path source_filename() const noexcept
     {
-      return {source_file()};
+      return source_file();
     }
 
     [[nodiscard]]
@@ -79,12 +80,22 @@ namespace sequoia::testing
       return m_TestRepo;
     }
 
-    void test_repository(std::filesystem::path testRepo)
+    [[nodiscard]]
+    const std::filesystem::path& versioned_output_filename() const noexcept
     {
-      m_TestRepo = std::move(testRepo);
+      return m_VersionedOutput;
     }
 
-    void materials(std::filesystem::path workingMaterials, std::filesystem::path predictiveMaterials)
+    void set_filesystem_data(std::filesystem::path testRepo, const std::filesystem::path& outputDir, std::string_view familyName)
+    {
+      m_TestRepo        = std::move(testRepo);
+      m_VersionedOutput = make_versioned_output_filename(outputDir, familyName);
+
+      namespace fs = std::filesystem;
+      fs::create_directories(m_VersionedOutput.parent_path());
+    }
+
+    void set_materials(std::filesystem::path workingMaterials, std::filesystem::path predictiveMaterials)
     {
       m_WorkingMaterials    = std::move(workingMaterials);
       m_PredictiveMaterials = std::move(predictiveMaterials);
@@ -101,18 +112,27 @@ namespace sequoia::testing
     /// Pure virtual method, the overrides of which determine the fine details of test execution.
     [[nodiscard]]
     virtual log_summary do_execute() = 0;
-    
+
+    virtual void do_write_versioned_output(const log_summary& summary) const = 0;
+
     /// Pure virtual method which should be overridden in a concrete test's cpp file in order to provide the correct __FILE__
     [[nodiscard]]
     virtual std::string_view source_file() const noexcept = 0;
 
+    [[nodiscard]]
+    virtual std::filesystem::path make_versioned_output_filename(const std::filesystem::path& outputDir, std::string_view familyName) const = 0;
   private:
     std::string m_Name{};
-    std::filesystem::path m_WorkingMaterials{}, m_PredictiveMaterials{}, m_TestRepo{};
+    std::filesystem::path m_WorkingMaterials{}, m_PredictiveMaterials{}, m_TestRepo{}, m_VersionedOutput{};
   };
 
   template<class T>
   concept concrete_test = derived_from<T, test> && !std::is_abstract_v<T>;
+
+  template<class T>
+  concept does_postprocess = requires(T& t, log_summary& s) {
+    t.postprocess(s);
+  };
 
   /*! \brief class template from which all concrete tests should derive.
 
@@ -137,9 +157,12 @@ namespace sequoia::testing
    */
   
   template<class Checker>
+    requires requires() { Checker::mode; }
   class basic_test : public test, protected Checker
   {
   public:
+    constexpr static test_mode mode{Checker::mode};
+
     using test::test;
 
     ~basic_test() override = default;
@@ -171,6 +194,49 @@ namespace sequoia::testing
       }
 
       return summarize(time);
+    }
+
+    [[nodiscard]]
+    std::filesystem::path make_versioned_output_filename(const std::filesystem::path& outputDir, std::string_view familyName) const override
+    {
+      namespace fs = std::filesystem;
+      auto name{fs::path{source_file()}.filename().replace_extension().concat("_")};
+
+      auto makeDirName{
+        [](std::string_view name) -> fs::path {
+          std::string n{name};
+          for(auto& c : n) if(c == ' ') c = '_';
+
+          return n;
+        }
+      };
+
+      if constexpr(mode == test_mode::false_negative)
+      {
+        name.concat("FP");
+      }
+      else if constexpr(mode == test_mode::false_positive)
+      {
+        name.concat("FN");
+      }
+
+      return diagnostics_output_path(outputDir / makeDirName(familyName) / name.concat("Output.txt"));
+    }
+
+    void do_write_versioned_output(const log_summary& summary) const override
+    {
+      if constexpr((mode == test_mode::false_negative) || (mode == test_mode::false_positive))
+      {
+        const auto filename{versioned_output_filename()};
+        if(std::ofstream ofile{filename})
+        {
+          ofile << summary.diagnostics_output();
+        }
+        else
+        {
+          std::cerr << report_failed_write(filename);
+        }
+      }
     }
 
     /// The override in a derived test should call the checks performed by the test.

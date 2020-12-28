@@ -561,6 +561,11 @@ namespace sequoia::testing
     [[nodiscard]]
     std::string_view diagnostics_output() const noexcept { return m_DiagnosticsOutput; }
 
+    void diagnostics_output(std::string output)
+    {
+      m_DiagnosticsOutput = std::move(output);
+    }
+
     [[nodiscard]]
     duration execution_time() const noexcept { return m_Duration; }
       

@@ -1,0 +1,119 @@
+	Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 31
+	Final argument missing
+
+	Expected Exception Type:
+	[int]
+	Unexpected exception thrown (caught by std::exception&):
+	"
+	  Error: expected 1 argument, [case], but found 0 arguments"
+
+	=======================================
+
+	Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 40
+	Unexpected argument
+
+	Expected Exception Type:
+	[int]
+	Unexpected exception thrown (caught by std::exception&):
+	"
+	  Error: unrecognized option '--asyng'"
+
+	=======================================
+
+	Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 48
+	No bound function object
+
+	Expected Exception Type:
+	[int]
+	Unexpected exception thrown (caught by std::exception&):
+	"
+	  Error: Commandline option not bound to a function object"
+
+	=======================================
+
+	Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 56
+	Unexpected argument
+
+	Expected Exception Type:
+	[int]
+	Unexpected exception thrown (caught by std::exception&):
+	"
+	  Error: unrecognized option '-ac'"
+
+	=======================================
+
+	Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 62
+	Mismatched zeroth argument
+
+	Comparison performed using:
+	[sequoia::testing::weak_equivalence_checker<sequoia::parsing::commandline::outcome>]
+	With equivalent types:
+	[sequoia::parsing::commandline::outcome]
+
+	  Zeroth Argument
+	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
+	  operator== returned false
+
+	    Lengths differ
+	    Obtained string is too short
+	    [unsigned long long]
+	    operator== returned false
+	    Obtained : 0
+	    Predicted: 3
+
+	    First missing character: f
+	    Full strings:
+	    Obtained : 
+	    Predicted: foo
+
+	=======================================
+
+	Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 68
+	Function object not generated
+
+	Comparison performed using:
+	[sequoia::testing::weak_equivalence_checker<sequoia::parsing::commandline::outcome>]
+	With equivalent types:
+	[sequoia::parsing::commandline::outcome]
+
+	  Operations
+	  [std::vector<sequoia::parsing::commandline::operation, std::allocator<sequoia::parsing::commandline::operation> >]
+
+	    Element 0 of range incorrect
+	    Comparison performed using:
+	    [sequoia::testing::weak_equivalence_checker<sequoia::parsing::commandline::operation>]
+	    With equivalent types:
+	    [sequoia::parsing::commandline::operation]
+
+	      Existence of function objects differs
+	      [bool]
+	      check failed
+
+	=======================================
+
+	Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 74
+	Help not generated
+
+	Comparison performed using:
+	[sequoia::testing::weak_equivalence_checker<sequoia::parsing::commandline::outcome>]
+	With equivalent types:
+	[sequoia::parsing::commandline::outcome]
+
+	  Help
+	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
+	  operator== returned false
+
+	    Lengths differ
+	    Obtained string is too long
+	    [unsigned long long]
+	    operator== returned false
+	    Obtained : 8
+	    Predicted: 0
+
+	    First excess character: -
+	    Surrounding substring(s):
+	    Obtained : --async...
+	    Predicted: 
+
+	=======================================
+

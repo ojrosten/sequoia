@@ -14,7 +14,18 @@
 #include <filesystem>
 
 namespace sequoia::testing
-{  
+{
+  log_summary& postprocess(log_summary& summary, const std::filesystem::path& testRepo)
+  {
+    std::string updatedOutput{summary.diagnostics_output()};
+
+    replace_all(updatedOutput, testRepo.parent_path().generic_string() + "/", "");
+
+    summary.diagnostics_output(updatedOutput);
+
+    return summary;
+  }
+
   template<class T>
   struct weak_equivalence_checker<perfectly_normal_beast<T>>
   {

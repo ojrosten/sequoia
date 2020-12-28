@@ -11,6 +11,8 @@
 
 namespace sequoia:: testing
 {
+  log_summary& postprocess(log_summary& summary, const std::filesystem::path& testRepo);
+
   class false_positive_diagnostics final : public regular_false_positive_test
   {
   public:
@@ -20,6 +22,13 @@ namespace sequoia:: testing
     std::string_view source_file() const noexcept final;
   private:
     void run_tests() final;
+
+    [[nodiscard]]
+    log_summary summarize(const time_point start) const override
+    {
+      auto summary{regular_false_positive_test::summarize(start)};
+      return postprocess(summary, this->test_repository());
+    }
 
     void basic_tests();
     void test_container_checks();
@@ -39,6 +48,13 @@ namespace sequoia:: testing
     std::string_view source_file() const noexcept final;
   private:
     void run_tests() final;
+
+    [[nodiscard]]
+    log_summary summarize(const time_point start) const override
+    {
+      auto summary{regular_false_negative_test::summarize(start)};
+      return postprocess(summary, this->test_repository());
+    }
 
     void basic_tests();
     void test_container_checks();

@@ -1,0 +1,400 @@
+	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 99
+	Incorrect assigment outer allocs
+
+	--Move-only Semantics--
+	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >]
+
+	  [shared_counting_allocator<
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >,
+	  		Propagate on copy assignment = true,
+	  		Propagate on move assignment = false,
+	  		Propagate on swap = false
+	   >]
+	  Unexpected allocation detected for move assignment (x)
+	  [int]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
+
+	=======================================
+
+	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 109
+	Incorrect mutation outer allocs
+
+	--Move-only Semantics--
+	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >]
+
+	  [shared_counting_allocator<
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >,
+	  		Propagate on copy assignment = true,
+	  		Propagate on move assignment = false,
+	  		Propagate on swap = false
+	   >]
+	  Unexpected allocation detected following mutation after assignment
+	  [int]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
+
+	=======================================
+
+	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 118
+	Incorrect para move outer allocs
+
+	--Move-only Semantics--
+	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >]
+
+	  [shared_counting_allocator<
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >,
+	  		Propagate on copy assignment = true,
+	  		Propagate on move assignment = false,
+	  		Propagate on swap = false
+	   >]
+	  Unexpected allocation detected for para-move construction (y)
+	  [int]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
+
+	=======================================
+
+	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 129
+	Incorrect assigment inner allocs
+
+	--Move-only Semantics--
+	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >]
+
+	  [shared_counting_allocator<
+	  		char,
+	  		Propagate on copy assignment = true,
+	  		Propagate on move assignment = false,
+	  		Propagate on swap = false
+	   >]
+	  Unexpected allocation detected for move assignment (x)
+	  [int]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
+
+	=======================================
+
+	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 139
+	Incorrect mutation inner allocs
+
+	--Move-only Semantics--
+	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >]
+
+	  [shared_counting_allocator<
+	  		char,
+	  		Propagate on copy assignment = true,
+	  		Propagate on move assignment = false,
+	  		Propagate on swap = false
+	   >]
+	  Unexpected allocation detected following mutation after assignment
+	  [int]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
+
+	=======================================
+
+	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 147
+	Incorrect para move inner allocs
+
+	--Move-only Semantics--
+	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >]
+
+	  [shared_counting_allocator<
+	  		char,
+	  		Propagate on copy assignment = true,
+	  		Propagate on move assignment = false,
+	  		Propagate on swap = false
+	   >]
+	  Unexpected allocation detected for para-move construction (y)
+	  [int]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
+
+	=======================================
+
+	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 99
+	Incorrect assigment outer allocs
+
+	--Move-only Semantics--
+	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >]
+
+	  [shared_counting_allocator<
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >,
+	  		Propagate on copy assignment = true,
+	  		Propagate on move assignment = false,
+	  		Propagate on swap = true
+	   >]
+	  Unexpected allocation detected for move assignment (x)
+	  [int]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
+
+	=======================================
+
+	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 109
+	Incorrect mutation outer allocs
+
+	--Move-only Semantics--
+	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >]
+
+	  [shared_counting_allocator<
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >,
+	  		Propagate on copy assignment = true,
+	  		Propagate on move assignment = false,
+	  		Propagate on swap = true
+	   >]
+	  Unexpected allocation detected following mutation after assignment
+	  [int]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
+
+	=======================================
+
+	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 118
+	Incorrect para move outer allocs
+
+	--Move-only Semantics--
+	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >]
+
+	  [shared_counting_allocator<
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >,
+	  		Propagate on copy assignment = true,
+	  		Propagate on move assignment = false,
+	  		Propagate on swap = true
+	   >]
+	  Unexpected allocation detected for para-move construction (y)
+	  [int]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
+
+	=======================================
+
+	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 129
+	Incorrect assigment inner allocs
+
+	--Move-only Semantics--
+	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >]
+
+	  [shared_counting_allocator<
+	  		char,
+	  		Propagate on copy assignment = true,
+	  		Propagate on move assignment = false,
+	  		Propagate on swap = true
+	   >]
+	  Unexpected allocation detected for move assignment (x)
+	  [int]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
+
+	=======================================
+
+	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 139
+	Incorrect mutation inner allocs
+
+	--Move-only Semantics--
+	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >]
+
+	  [shared_counting_allocator<
+	  		char,
+	  		Propagate on copy assignment = true,
+	  		Propagate on move assignment = false,
+	  		Propagate on swap = true
+	   >]
+	  Unexpected allocation detected following mutation after assignment
+	  [int]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
+
+	=======================================
+
+	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 147
+	Incorrect para move inner allocs
+
+	--Move-only Semantics--
+	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >]
+
+	  [shared_counting_allocator<
+	  		char,
+	  		Propagate on copy assignment = true,
+	  		Propagate on move assignment = false,
+	  		Propagate on swap = true
+	   >]
+	  Unexpected allocation detected for para-move construction (y)
+	  [int]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
+
+	=======================================
+
+	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 109
+	Incorrect mutation outer allocs
+
+	--Move-only Semantics--
+	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >]
+
+	  [shared_counting_allocator<
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >,
+	  		Propagate on copy assignment = true,
+	  		Propagate on move assignment = true,
+	  		Propagate on swap = false
+	   >]
+	  Unexpected allocation detected following mutation after assignment
+	  [int]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
+
+	=======================================
+
+	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 118
+	Incorrect para move outer allocs
+
+	--Move-only Semantics--
+	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >]
+
+	  [shared_counting_allocator<
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >,
+	  		Propagate on copy assignment = true,
+	  		Propagate on move assignment = true,
+	  		Propagate on swap = false
+	   >]
+	  Unexpected allocation detected for para-move construction (y)
+	  [int]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
+
+	=======================================
+
+	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 139
+	Incorrect mutation inner allocs
+
+	--Move-only Semantics--
+	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >]
+
+	  [shared_counting_allocator<
+	  		char,
+	  		Propagate on copy assignment = true,
+	  		Propagate on move assignment = true,
+	  		Propagate on swap = false
+	   >]
+	  Unexpected allocation detected following mutation after assignment
+	  [int]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
+
+	=======================================
+
+	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 147
+	Incorrect para move inner allocs
+
+	--Move-only Semantics--
+	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >]
+
+	  [shared_counting_allocator<
+	  		char,
+	  		Propagate on copy assignment = true,
+	  		Propagate on move assignment = true,
+	  		Propagate on swap = false
+	   >]
+	  Unexpected allocation detected for para-move construction (y)
+	  [int]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
+
+	=======================================
+
+	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 109
+	Incorrect mutation outer allocs
+
+	--Move-only Semantics--
+	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >]
+
+	  [shared_counting_allocator<
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >,
+	  		Propagate on copy assignment = true,
+	  		Propagate on move assignment = true,
+	  		Propagate on swap = true
+	   >]
+	  Unexpected allocation detected following mutation after assignment
+	  [int]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
+
+	=======================================
+
+	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 118
+	Incorrect para move outer allocs
+
+	--Move-only Semantics--
+	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >]
+
+	  [shared_counting_allocator<
+	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >,
+	  		Propagate on copy assignment = true,
+	  		Propagate on move assignment = true,
+	  		Propagate on swap = true
+	   >]
+	  Unexpected allocation detected for para-move construction (y)
+	  [int]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
+
+	=======================================
+
+	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 139
+	Incorrect mutation inner allocs
+
+	--Move-only Semantics--
+	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >]
+
+	  [shared_counting_allocator<
+	  		char,
+	  		Propagate on copy assignment = true,
+	  		Propagate on move assignment = true,
+	  		Propagate on swap = true
+	   >]
+	  Unexpected allocation detected following mutation after assignment
+	  [int]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
+
+	=======================================
+
+	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 147
+	Incorrect para move inner allocs
+
+	--Move-only Semantics--
+	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >]
+
+	  [shared_counting_allocator<
+	  		char,
+	  		Propagate on copy assignment = true,
+	  		Propagate on move assignment = true,
+	  		Propagate on swap = true
+	   >]
+	  Unexpected allocation detected for para-move construction (y)
+	  [int]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
+
+	=======================================
+

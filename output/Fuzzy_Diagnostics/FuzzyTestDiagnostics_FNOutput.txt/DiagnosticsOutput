@@ -1,0 +1,76 @@
+	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 29
+
+	[double]
+	Obtained : 3
+	Predicted: 5 +/- 1
+
+	=======================================
+
+	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 30
+
+	[double]
+	Obtained : 7
+	Predicted: 5 +/- 1
+	Advice: Tweak your tolerance!
+
+	=======================================
+
+	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 35
+
+	[double]
+	Fuzzy comparison failed
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 43
+
+	  Element 0 of range incorrect
+	  [double]
+	  Obtained : 0.5
+	  Predicted: -0.1 +/- 0.5
+
+	=======================================
+
+	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 44
+
+	  Element 0 of range incorrect
+	  [double]
+	  Obtained : 0.5
+	  Predicted: -0.1 +/- 0.5
+	  Advice: Consider increasing tolerance!
+
+	=======================================
+
+	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 50
+
+	  Element 1 of range incorrect
+	  [double]
+	  Obtained : 0.6
+	  Predicted: 1.2 +/- 0.5
+
+	=======================================
+
+	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 55
+
+	[std::vector<double, std::allocator<double> >]
+	  Element 1 of range incorrect
+	  [double]
+	  Obtained : -1
+	  Predicted: -1.8 +/- 0.5
+
+	=======================================
+
+	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 58
+
+	[std::vector<std::vector<double, std::allocator<double> >, std::allocator<std::vector<double, std::allocator<double> > > >]
+	  Element 1 of range incorrect
+	  [std::vector<double, std::allocator<double> >]
+	    Element 0 of range incorrect
+	    [double]
+	    Obtained : 5.1
+	    Predicted: 3.7 +/- 0.5
+
+	=======================================
+
