@@ -1,0 +1,111 @@
+	Tests/Core/DataStructures/StaticLinearlyPartitionedSequenceTestingDiagnostics.cpp, Line 26
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::static_linearly_partitioned_sequence<int, 1ul, 1ul, unsigned long> >]
+	With equivalent types:
+	[std::array<std::array<int, 1ul>, 1ul>]
+
+	  Partition 0: iterator
+
+	    Element 0 of range incorrect
+	    [int]
+	    operator== returned false
+	    Obtained : 0
+	    Predicted: 1
+
+	  Partition 0: riterator
+
+	    Element 0 of range incorrect
+	    [int]
+	    operator== returned false
+	    Obtained : 0
+	    Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/StaticLinearlyPartitionedSequenceTestingDiagnostics.cpp, Line 29
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::static_linearly_partitioned_sequence<int, 1ul, 1ul, unsigned long> >]
+	With equivalent types:
+	[std::array<std::array<int, 1ul>, 1ul>]
+
+	  Partition 0: iterator
+
+	    Element 0 of range incorrect
+	    [int]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 2
+
+	  Partition 0: riterator
+
+	    Element 0 of range incorrect
+	    [int]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/StaticLinearlyPartitionedSequenceTestingDiagnostics.cpp, Line 31
+
+	[sequoia::data_structures::static_linearly_partitioned_sequence<int, 1ul, 1ul, unsigned long>]
+	operator== returned false
+
+	  Partition 0
+	  iterator (const)
+
+	    Element 0 of range incorrect
+	    [int]
+	    operator== returned false
+	    Obtained : 0
+	    Predicted: 1
+
+	  Partition 0
+	  r_iterator (const)
+
+	    Element 0 of range incorrect
+	    [int]
+	    operator== returned false
+	    Obtained : 0
+	    Predicted: 1
+
+	  Partition 0
+	  c_iterator
+
+	    Element 0 of range incorrect
+	    [int]
+	    operator== returned false
+	    Obtained : 0
+	    Predicted: 1
+
+	  Partition 0
+	  cr_iterator
+
+	    Element 0 of range incorrect
+	    [int]
+	    operator== returned false
+	    Obtained : 0
+	    Predicted: 1
+
+	  Partition 0
+	  iterator
+
+	    Element 0 of range incorrect
+	    [int]
+	    operator== returned false
+	    Obtained : 0
+	    Predicted: 1
+
+	  Partition 0
+	  r_iterator
+
+	    Element 0 of range incorrect
+	    [int]
+	    operator== returned false
+	    Obtained : 0
+	    Predicted: 1
+
+	=======================================
+
