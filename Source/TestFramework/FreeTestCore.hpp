@@ -220,7 +220,7 @@ namespace sequoia::testing
         name.concat("FN");
       }
 
-      return diagnostics_output_path(outputDir / makeDirName(familyName) / name.concat("Output.txt"));
+      return diagnostics_output_path(outputDir) / makeDirName(familyName) / name.concat("Output.txt");
     }
 
     void do_write_versioned_output(const log_summary& summary) const override
@@ -234,7 +234,7 @@ namespace sequoia::testing
         }
         else
         {
-          std::cerr << report_failed_write(filename);
+          throw std::runtime_error{report_failed_write(filename)};
         }
       }
     }
