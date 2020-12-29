@@ -1,1347 +1,204 @@
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 78
+	False Positive Failure:
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 293
 
 	[bool]
-	check failed
+
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 79
-
-	[bool]
-	check failed
-	Advice: I pity the fool who confuses the bool.
-
-	=======================================
-
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 82
-	Advisor ignored
-
-	[bool]
-	check failed
-
-	=======================================
-
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 86
-	Integers which should compare different
+	False Positive Failure:
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 295
 
 	[int]
-	operator== returned false
-	Obtained : 5
-	Predicted: 4
+
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 87
+	False Positive Failure:
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 296
 
 	[double]
-	operator== returned false
-	Obtained : 6.5
-	Predicted: 5.6
-	Advice: Double, double, toil and trouble
+
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 91
+	False Positive Failure:
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 298
 
 	[std::pair<int, double>]
-	operator== returned false
 
-	  Second element of pair is incorrect
-	  [double]
-	  operator== returned false
-	  Obtained : 7.8
-	  Predicted: -7.8
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 92
-
-	[std::pair<int, double>]
-	operator== returned false
-
-	  First element of pair is incorrect
-	  [int]
-	  operator== returned false
-	  Obtained : 5
-	  Predicted: -5
-
-	=======================================
-
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 93
-
-	[std::pair<int, double>]
-	operator== returned false
-
-	  First element of pair is incorrect
-	  [int]
-	  operator== returned false
-	  Obtained : 5
-	  Predicted: -5
-	  Advice: Integer advice
-
-	  Second element of pair is incorrect
-	  [double]
-	  operator== returned false
-	  Obtained : 7.8
-	  Predicted: 6.8
-	  Advice: Double advice
-
-	=======================================
-
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 95
+	False Positive Failure:
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 300
 
 	[std::tuple<int, double, float>]
-	operator== returned false
 
-	  Element 0 of tuple incorrect
-	  [int]
-	  operator== returned false
-	  Obtained : 4
-	  Predicted: 0
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 96
-
-	[std::tuple<int, double, float>]
-	operator== returned false
-
-	  Element 1 of tuple incorrect
-	  [double]
-	  operator== returned false
-	  Obtained : 3.4
-	  Predicted: 0
-	  Advice: Double advice
-
-	=======================================
-
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 97
-
-	[std::tuple<int, double, float>]
-	operator== returned false
-
-	  Element 2 of tuple incorrect
-	  [float]
-	  operator== returned false
-	  Obtained : -9.2
-	  Predicted: -0
-
-	=======================================
-
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 99
-	Exception expected but nothing thrown
+	False Positive Failure:
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 302
 
 	Expected Exception Type:
 	[std::runtime_error]
-	No exception thrown
+
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 100
-	Exception thrown but of wrong type
-
-	Expected Exception Type:
-	[std::runtime_error]
-	Unexpected exception thrown (caught by std::exception&):
-	"Error"
-
-	=======================================
-
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 101
-	Exception thrown but of unknown type
-
-	Expected Exception Type:
-	[std::runtime_error]
-	Unknown exception thrown
-
-	=======================================
-
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 106
-	Empty vector check which should fail
+	False Positive Failure:
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 307
+	Empty vector check which should pass
 
 	[std::vector<double, std::allocator<double> >]
-	operator== returned false
 
-	  Container size wrong
-	  [unsigned long long]
-	  operator== returned false
-	  Obtained : 0
-	  Predicted: 1
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 107
-	One element vector check which should fail due to wrong value
+	False Positive Failure:
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 308
+	One element vector check which should pass
 
 	[std::vector<double, std::allocator<double> >]
-	operator== returned false
 
-	  Element 0 of range incorrect
-	  [double]
-	  operator== returned false
-	  Obtained : 1
-	  Predicted: 2
-	  Advice: Vector element advice
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 109
-	One element vector check which should fail due to differing sizes
+	False Positive Failure:
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 309
+	Multi-element vector comparison which should pass
 
 	[std::vector<double, std::allocator<double> >]
-	operator== returned false
 
-	  Container size wrong
-	  [unsigned long long]
-	  operator== returned false
-	  Obtained : 1
-	  Predicted: 2
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 110
-	Multi-element vector comparison which should fail due to last element
+	False Positive Failure:
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 313
+	Iterators demarcate identical elements
 
-	[std::vector<double, std::allocator<double> >]
-	operator== returned false
-
-	  Element 1 of range incorrect
-	  [double]
-	  operator== returned false
-	  Obtained : 5
-	  Predicted: 4
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 111
-	Multi-element vector comparison which should fail due to first element
-
-	[std::vector<double, std::allocator<double> >]
-	operator== returned false
-
-	  Element 0 of range incorrect
-	  [double]
-	  operator== returned false
-	  Obtained : 1
-	  Predicted: 0
-
-	=======================================
-
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 112
-	Multi-element vector comparison which should fail due to middle element
-
-	[std::vector<double, std::allocator<double> >]
-	operator== returned false
-
-	  Element 1 of range incorrect
-	  [double]
-	  operator== returned false
-	  Obtained : 3.2
-	  Predicted: 3.3
-
-	=======================================
-
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 113
-	Multi-element vector comparison which should fail due to different sizes
-
-	[std::vector<double, std::allocator<double> >]
-	operator== returned false
-
-	  Container size wrong
-	  [unsigned long long]
-	  operator== returned false
-	  Obtained : 3
-	  Predicted: 2
-
-	=======================================
-
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 117
-	Iterators demarcate differing numbers of elements
-
-	  Container size wrong
-	  [unsigned long long]
-	  operator== returned false
-	  Obtained : 4
-	  Predicted: 6
-
-	=======================================
-
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 118
-	Iterators demarcate differing elements
-
-	  Element 0 of range incorrect
-	  [float]
-	  operator== returned false
-	  Obtained : -4.3
-	  Predicted: 1.1
-
-	  Element 1 of range incorrect
-	  [float]
-	  operator== returned false
-	  Obtained : 2.8
-	  Predicted: -4.3
-
-	  Element 2 of range incorrect
-	  [float]
-	  operator== returned false
-	  Obtained : 6.2
-	  Predicted: 2.8
-
-	  Element 3 of range incorrect
-	  [float]
-	  operator== returned false
-	  Obtained : 7.3
-	  Predicted: 6.2
-
-	=======================================
-
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 124
-	Empty and non-empty strings
+	False Positive Failure:
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 319
+	Differing strings
 
 	[std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
-	operator== returned false
 
-	  Lengths differ
-	  Obtained string is too short
-	  [unsigned long long]
-	  operator== returned false
-	  Obtained : 0
-	  Predicted: 13
-
-	  First missing character: H
-	  Full strings:
-	  Obtained : 
-	  Predicted: Hello, World!
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 125
-	Empty and non-empty strings
-
-	[std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
-	operator== returned false
-
-	  Lengths differ
-	  Obtained string is too long
-	  [unsigned long long]
-	  operator== returned false
-	  Obtained : 13
-	  Predicted: 0
-
-	  First excess character: H
-	  Full strings:
-	  Obtained : Hello, World!
-	  Predicted: 
-
-	=======================================
-
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 126
-	Strings of differing length
-
-	[std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
-	operator== returned false
-
-	  First difference detected at character 0:
-	  [char]
-	  operator== returned false
-	  Obtained : w
-	  Predicted: H
-
-	  Full strings:
-	  Obtained : what?!
-	  Predicted: Hello, World!
-
-	=======================================
-
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 127
-	Differing strings of same length
-
-	[std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
-	operator== returned false
-
-	  First difference detected at character 7:
-	  [char]
-	  operator== returned false
-	  Obtained : w
-	  Predicted: W
-
-	  Full strings:
-	  Obtained : Hello, world?
-	  Predicted: Hello, World!
-
-	=======================================
-
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 131
-	Empty string compared with long string
-
-	[std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
-	operator== returned false
-
-	  Lengths differ
-	  Obtained string is too short
-	  [unsigned long long]
-	  operator== returned false
-	  Obtained : 0
-	  Predicted: 110
-
-	  First missing character: T
-	  Surrounding substring(s):
-	  Obtained : 
-	  Predicted: This is a message which is sufficiently long for only a segm...
-
-	=======================================
-
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 132
-	Long string with empty string
-
-	[std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
-	operator== returned false
-
-	  Lengths differ
-	  Obtained string is too long
-	  [unsigned long long]
-	  operator== returned false
-	  Obtained : 110
-	  Predicted: 0
-
-	  First excess character: T
-	  Surrounding substring(s):
-	  Obtained : This is a message which is sufficiently long for only a segm...
-	  Predicted: 
-
-	=======================================
-
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 134
-	Short string compared with long string
-
-	[std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
-	operator== returned false
-
-	  Lengths differ
-	  Obtained string is too short
-	  [unsigned long long]
-	  operator== returned false
-	  Obtained : 14
-	  Predicted: 110
-
-	  First missing character: a
-	  Surrounding substring(s):
-	  Obtained : This is a mess
-	  Predicted: This is a message which is sufficiently long for only a segm...
-
-	=======================================
-
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 135
-	Long string with short string
-
-	[std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
-	operator== returned false
-
-	  Lengths differ
-	  Obtained string is too long
-	  [unsigned long long]
-	  operator== returned false
-	  Obtained : 110
-	  Predicted: 14
-
-	  First excess character: a
-	  Surrounding substring(s):
-	  Obtained : This is a message which is sufficiently long for only a segm...
-	  Predicted: This is a mess
-
-	=======================================
-
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 137
-	Strings differing by a newline
-
-	[std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
-	operator== returned false
-
-	  First difference detected at character 5:
-	  [char]
-	  operator== returned false
-	  Obtained : '\n'
-	  Predicted: ,
-
-	  Surrounding substring(s):
-	  Obtained : ...\nWorld
-	  Predicted: ..., World
-
-	=======================================
-
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 138
-	Strings differing by a newline
-
-	[std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
-	operator== returned false
-
-	  First difference detected at character 5:
-	  [char]
-	  operator== returned false
-	  Obtained : ,
-	  Predicted: '\n'
-
-	  Surrounding substring(s):
-	  Obtained : ..., World
-	  Predicted: ...\nWorld
-
-	=======================================
-
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 139
-	Strings differing by a newline at the start
-
-	[std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
-	operator== returned false
-
-	  First difference detected at character 0:
-	  [char]
-	  operator== returned false
-	  Obtained : '\n'
-	  Predicted: H
-
-	  Full strings:
-	  Obtained : \nHello, World
-	  Predicted: Hello, World
-
-	=======================================
-
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 140
-	Strings differing by a newline at the start
-
-	[std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
-	operator== returned false
-
-	  First difference detected at character 0:
-	  [char]
-	  operator== returned false
-	  Obtained : H
-	  Predicted: '\n'
-
-	  Full strings:
-	  Obtained : Hello, World
-	  Predicted: \nHello, World
-
-	=======================================
-
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 141
-	Empty string compared with newline
-
-	[std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
-	operator== returned false
-
-	  Lengths differ
-	  Obtained string is too short
-	  [unsigned long long]
-	  operator== returned false
-	  Obtained : 0
-	  Predicted: 1
-
-	  First missing character: '\n'
-	  Full strings:
-	  Obtained : 
-	  Predicted: \n
-
-	=======================================
-
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 142
-	Empty string compared with newline
-
-	[std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
-	operator== returned false
-
-	  Lengths differ
-	  Obtained string is too long
-	  [unsigned long long]
-	  operator== returned false
-	  Obtained : 1
-	  Predicted: 0
-
-	  First excess character: '\n'
-	  Full strings:
-	  Obtained : \n
-	  Predicted: 
-
-	=======================================
-
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 143
-	Strings differing from newline onwards
-
-	[std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
-	operator== returned false
-
-	  First difference detected at character 5:
-	  [char]
-	  operator== returned false
-	  Obtained : ,
-	  Predicted: '\n'
-
-	  Surrounding substring(s):
-	  Obtained : ..., World
-	  Predicted: ...\n
-
-	=======================================
-
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 144
-	Strings differing from newline onwards
-
-	[std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
-	operator== returned false
-
-	  First difference detected at character 5:
-	  [char]
-	  operator== returned false
-	  Obtained : '\n'
-	  Predicted: ,
-
-	  Surrounding substring(s):
-	  Obtained : ...\n
-	  Predicted: ..., World
-
-	=======================================
-
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 145
-	Strings differing from newline onwards
-
-	[std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
-	operator== returned false
-
-	  First difference detected at character 5:
-	  [char]
-	  operator== returned false
-	  Obtained : ,
-	  Predicted: '\n'
-
-	  Surrounding substring(s):
-	  Obtained : ..., World
-	  Predicted: ...\nPeople
-
-	=======================================
-
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 146
-	Strings differing from newline onwards
-
-	[std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
-	operator== returned false
-
-	  First difference detected at character 5:
-	  [char]
-	  operator== returned false
-	  Obtained : '\n'
-	  Predicted: ,
-
-	  Surrounding substring(s):
-	  Obtained : ...\nPeople
-	  Predicted: ..., World
-
-	=======================================
-
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 147
-	Output suppressed by a new line
-
-	[std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
-	operator== returned false
-
-	  First difference detected at character 5:
-	  [char]
-	  operator== returned false
-	  Obtained : ' '
-	  Predicted: ,
-
-	  Surrounding substring(s):
-	  Obtained : Hello  World...
-	  Predicted: Hello, World...
-
-	=======================================
-
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 152
-	Long strings compared with difference near middle
-
-	[std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
-	operator== returned false
-
-	  First difference detected at character 75:
-	  [char]
-	  operator== returned false
-	  Obtained : x
-	  Predicted: d
-
-	  Surrounding substring(s):
-	  Obtained : ...for only a segment to be incluxed when a string diff is perf...
-	  Predicted: ...for only a segment to be included when a string diff is perf...
-
-	=======================================
-
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 153
-	Long strings compared with difference near middle
-
-	[std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
-	operator== returned false
-
-	  First difference detected at character 75:
-	  [char]
-	  operator== returned false
-	  Obtained : d
-	  Predicted: x
-
-	  Surrounding substring(s):
-	  Obtained : ...for only a segment to be included when a string diff is perf...
-	  Predicted: ...for only a segment to be incluxed when a string diff is perf...
-
-	=======================================
-
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 158
-	Long strings compared with difference near end
-
-	[std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
-	operator== returned false
-
-	  First difference detected at character 100:
-	  [char]
-	  operator== returned false
-	  Obtained : x
-	  Predicted: ' '
-
-	  Surrounding substring(s):
-	  Obtained : ...included when a string diff isxperformed
-	  Predicted: ...included when a string diff is performed
-
-	=======================================
-
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 159
-	Long strings compared with difference near end
-
-	[std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
-	operator== returned false
-
-	  First difference detected at character 100:
-	  [char]
-	  operator== returned false
-	  Obtained : ' '
-	  Predicted: x
-
-	  Surrounding substring(s):
-	  Obtained : ...included when a string diff is performed
-	  Predicted: ...included when a string diff isxperformed
-
-	=======================================
-
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 173
+	False Positive Failure:
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 332
 
 	[std::tuple<std::vector<std::pair<int, float>, std::allocator<std::pair<int, float> > >, std::set<double, std::less<double>, std::allocator<double> >, std::complex<double> >]
-	operator== returned false
 
-	  Element 0 of tuple incorrect
-	  [std::vector<std::pair<int, float>, std::allocator<std::pair<int, float> > >]
-	  operator== returned false
-
-	    Element 0 of range incorrect
-	    [std::pair<int, float>]
-	    operator== returned false
-
-	      First element of pair is incorrect
-	      [int]
-	      operator== returned false
-	      Obtained : 1
-	      Predicted: 2
-	      Advice: Nested int advice
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 178
-
-	[std::tuple<std::vector<std::pair<int, float>, std::allocator<std::pair<int, float> > >, std::set<double, std::less<double>, std::allocator<double> >, std::complex<double> >]
-	operator== returned false
-
-	  Element 1 of tuple incorrect
-	  [std::set<double, std::less<double>, std::allocator<double> >]
-	  operator== returned false
-	  Advice: Note reordering of elements upon set construction
-
-	    Element 2 of range incorrect
-	    [double]
-	    operator== returned false
-	    Obtained : 3.3
-	    Predicted: 3.4
-
-	=======================================
-
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 186
-	Broken check invariant
+	False Positive Failure:
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 337
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<int, std::allocator<int> >]
 
-	  Precondition - for checking semantics, x and y are assumed to be different
-	  [bool]
-	  check failed
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 187
-	Broken equality
+	False Positive Failure:
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 338
 
 	--Regular Semantics--
-	[sequoia::testing::broken_equality<int, std::allocator<int> >]
+	[sequoia::testing::perfectly_stringy_beast<char, std::allocator<char> >]
 
-	  operator== is inconsistent
-	  [bool]
-	  check failed
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 188
-	Broken inequality
-
-	--Regular Semantics--
-	[sequoia::testing::broken_inequality<int, std::allocator<int> >]
-
-	  operator!= is inconsistent
-	  [bool]
-	  check failed
-
-	=======================================
-
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 189
-	Broken copy
-
-	--Regular Semantics--
-	[sequoia::testing::broken_copy<int, std::allocator<int> >]
-
-	  Inconsistent copy constructor (x)
-	  [sequoia::testing::broken_copy<int, std::allocator<int> >]
-	  operator== returned false
-	  Obtained : 
-	  Predicted: 1 
-
-	=======================================
-
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 190
-	Broken move
-
-	--Regular Semantics--
-	[sequoia::testing::broken_move<int, std::allocator<int> >]
-
-	  Inconsistent move construction
-	  [sequoia::testing::broken_move<int, std::allocator<int> >]
-	  operator== returned false
-	  Obtained : 
-	  Predicted: 2 
-
-	=======================================
-
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 191
-	Broken copy assignment
-
-	--Regular Semantics--
-	[sequoia::testing::broken_copy_assignment<int, std::allocator<int> >]
-
-	  Inconsistent copy assignment (from y)
-	  [sequoia::testing::broken_copy_assignment<int, std::allocator<int> >]
-	  operator== returned false
-	  Obtained : 1 
-	  Predicted: 2 
-
-	=======================================
-
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 192
-	Broken move assignment
-
-	--Regular Semantics--
-	[sequoia::testing::broken_move_assignment<int, std::allocator<int> >]
-
-	  Inconsistent move assignment (from y)
-	  [sequoia::testing::broken_move_assignment<int, std::allocator<int> >]
-	  operator== returned false
-	  Obtained : 1 
-	  Predicted: 2 
-
-	=======================================
-
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 193
-	Broken self copy assignment
-
-	--Regular Semantics--
-	[sequoia::testing::broken_self_copy_assignment<int, std::allocator<int> >]
-
-	  Inconsistent self copy assignment
-	  [sequoia::testing::broken_self_copy_assignment<int, std::allocator<int> >]
-	  operator== returned false
-	  Obtained : 2 0 
-	  Predicted: 2 
-
-	=======================================
-
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 194
-	Broken swap
-
-	--Regular Semantics--
-	[sequoia::testing::broken_swap<int, std::allocator<int> >]
-
-	  Inconsistent Swap (y)
-	  [sequoia::testing::broken_swap<int, std::allocator<int> >]
-	  operator== returned false
-	  Obtained : 2 
-	  Predicted: 1 
-
-	  Inconsistent Swap (x)
-	  [sequoia::testing::broken_swap<int, std::allocator<int> >]
-	  operator== returned false
-	  Obtained : 1 
-	  Predicted: 2 
-
-	=======================================
-
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 195
-	Broken self swap
-
-	--Regular Semantics--
-	[sequoia::testing::broken_self_swap<int, std::allocator<int> >]
-
-	  Inconsistent Self Swap
-	  [sequoia::testing::broken_self_swap<int, std::allocator<int> >]
-	  operator== returned false
-	  Obtained : 1 0 
-	  Predicted: 1 
-
-	=======================================
-
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 196
-	Broken copy value semantics
-
-	--Regular Semantics--
-	[sequoia::testing::broken_copy_value_semantics<int, std::shared_ptr<int>, std::allocator<std::shared_ptr<int> > >]
-
-	  Either mutation is not doing anything following copy construction or value semantics are broken, with mutation of an object also changing the object from which it was copied
-	  [bool]
-	  check failed
-
-	=======================================
-
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 197
-	Broken copy assignment value semantics
-
-	--Regular Semantics--
-	[sequoia::testing::broken_copy_assignment_value_semantics<int, std::shared_ptr<int>, std::allocator<std::shared_ptr<int> > >]
-
-	  Either mutation is not doing anything following copy assignment or value semantics are broken, with mutation of an object also changing the object from which it was assigned
-	  [bool]
-	  check failed
-
-	=======================================
-
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 199
-	Broken serialization
-
-	--Regular Semantics--
-	[sequoia::testing::broken_serialization<int, std::allocator<int> >]
-
-	  Inconsistent (de)serialization
-	  [sequoia::testing::broken_serialization<int, std::allocator<int> >]
-	  operator== returned false
-	  Obtained : 
-	  Predicted: 
-
-	=======================================
-
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 200
-	Broken deserialization
-
-	--Regular Semantics--
-	[sequoia::testing::broken_deserialization<int, std::allocator<int> >]
-
-	  Inconsistent (de)serialization
-	  [sequoia::testing::broken_deserialization<int, std::allocator<int> >]
-	  operator== returned false
-	  Obtained : 1 
-	  Predicted: 2 
-
-	=======================================
-
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 205
-
-	Comparison performed using:
-	[sequoia::testing::equivalence_checker<std::basic_string<char, std::char_traits<char>, std::allocator<char> > >]
-	With equivalent types:
-	[char [3]]
-
-	  Lengths differ
-	  Obtained string is too long
-	  [unsigned long long]
-	  operator== returned false
-	  Obtained : 3
-	  Predicted: 2
-
-	  First excess character: o
-	  Full strings:
-	  Obtained : foo
-	  Predicted: fo
-
-	=======================================
-
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 206
+	False Positive Failure:
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 343
 
 	Comparison performed using:
 	[sequoia::testing::equivalence_checker<std::basic_string<char, std::char_traits<char>, std::allocator<char> > >]
 	With equivalent types:
 	[char [4]]
 
-	  First difference detected at character 2:
-	  [char]
-	  operator== returned false
-	  Obtained : o
-	  Predicted: b
-
-	  Full strings:
-	  Obtained : foo
-	  Predicted: fob
-	  Advice: Sort your chars out!
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 210
+	False Positive Failure:
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 345
 
 	[std::vector<std::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::basic_string<char, std::char_traits<char>, std::allocator<char> > > >]
 
-	  Element 1 of range incorrect
-	  Comparison performed using:
-	  [sequoia::testing::equivalence_checker<std::basic_string<char, std::char_traits<char>, std::allocator<char> > >]
-	  With equivalent types:
-	  [std::basic_string_view<char, std::char_traits<char> >]
-
-	    First difference detected at character 0:
-	    [char]
-	    operator== returned false
-	    Obtained : b
-	    Predicted: c
-
-	    Full strings:
-	    Obtained : b
-	    Predicted: c
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 212
-
-	[std::vector<std::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::basic_string<char, std::char_traits<char>, std::allocator<char> > > >]
-
-	  Element 1 of range incorrect
-	  Comparison performed using:
-	  [sequoia::testing::equivalence_checker<std::basic_string<char, std::char_traits<char>, std::allocator<char> > >]
-	  With equivalent types:
-	  [std::basic_string_view<char, std::char_traits<char> >]
-
-	    First difference detected at character 0:
-	    [char]
-	    operator== returned false
-	    Obtained : b
-	    Predicted: c
-
-	    Full strings:
-	    Obtained : b
-	    Predicted: c
-	    Advice: Ah, chars. So easy to get wrong.
-
-	=======================================
-
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 218
-
-	Comparison performed using:
-	[sequoia::testing::equivalence_checker<std::pair<int const&, double> >]
-	With equivalent types:
-	[std::pair<int, double const&>]
-
-	  First element of pair is incorrect
-	  [int]
-	  operator== returned false
-	  Obtained : 5
-	  Predicted: -5
-
-	  Second element of pair is incorrect
-	  [double]
-	  operator== returned false
-	  Obtained : 7.8
-	  Predicted: 6.8
-
-	=======================================
-
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 219
-
-	Comparison performed using:
-	[sequoia::testing::equivalence_checker<std::tuple<int const&, double> >]
-	With equivalent types:
-	[std::tuple<int, double const&>]
-
-	  Element 0 of tuple incorrect
-	  [int]
-	  operator== returned false
-	  Obtained : 5
-	  Predicted: -5
-
-	  Element 1 of tuple incorrect
-	  [double]
-	  operator== returned false
-	  Obtained : 7.8
-	  Predicted: 6.8
-
-	=======================================
-
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 221
-	Inequivalence of two different paths, neither of which exists
+	False Positive Failure:
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 349
+	Equivalence of a file to itself
 
 	Comparison performed using:
 	[sequoia::testing::equivalence_checker<std::filesystem::path>]
 	With equivalent types:
 	[std::filesystem::path]
 
-	  Final path token
-	  [std::filesystem::path]
-	  operator== returned false
-	  Obtained : Blah
-	  Predicted: Blurg
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 225
-	Inequivalence of two different paths, one of which exists
+	False Positive Failure:
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 353
+	Equivalence of a directory to itself
 
 	Comparison performed using:
 	[sequoia::testing::equivalence_checker<std::filesystem::path>]
 	With equivalent types:
 	[std::filesystem::path]
 
-	  Path type
-	  output/TestsTemporaryData/TestFramework/CoreDiagnostics/Stuff/Blah
-	  vs
-	  output/TestsTemporaryData/TestFramework/CoreDiagnostics/Stuff/A
-
-	  [std::filesystem::file_type]
-	  operator== returned false
-	  Obtained : not found
-	  Predicted: directory
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 229
-	Inequivalence of directory/file
+	False Positive Failure:
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 357
+	Equivalence of a directory, with sub-directories to itself
 
 	Comparison performed using:
 	[sequoia::testing::equivalence_checker<std::filesystem::path>]
 	With equivalent types:
 	[std::filesystem::path]
 
-	  Path type
-	  output/TestsTemporaryData/TestFramework/CoreDiagnostics/Stuff/A
-	  vs
-	  output/TestsTemporaryData/TestFramework/CoreDiagnostics/Stuff/A/foo.txt
-
-	  [std::filesystem::file_type]
-	  operator== returned false
-	  Obtained : directory
-	  Predicted: regular
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 233
-	Inequivalence of differently named files
+	False Positive Failure:
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 361
+	Equivalence of identical directories in different locations
 
 	Comparison performed using:
 	[sequoia::testing::equivalence_checker<std::filesystem::path>]
 	With equivalent types:
 	[std::filesystem::path]
 
-	  Path type
-	  output/TestsTemporaryData/TestFramework/CoreDiagnostics/Stuff/B/foo.txt
-	  vs
-	  output/TestsTemporaryData/TestFramework/CoreDiagnostics/Stuff/B/bar.txt
-
-	  [std::filesystem::file_type]
-	  operator== returned false
-	  Obtained : regular
-	  Predicted: not found
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 237
-	Inequivalence of file contents
-
-	Comparison performed using:
-	[sequoia::testing::equivalence_checker<std::filesystem::path>]
-	With equivalent types:
-	[std::filesystem::path]
-
-	  Contents of
-	  output/TestsTemporaryData/TestFramework/CoreDiagnostics/Stuff/A/foo.txt
-	  vs
-	  output/TestsTemporaryData/TestFramework/CoreDiagnostics/Stuff/B/foo.txt
-
-	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
-	  operator== returned false
-
-	    First difference detected at character 5:
-	    [char]
-	    operator== returned false
-	    Obtained : ,
-	    Predicted: '\n'
-
-	    Surrounding substring(s):
-	    Obtained : ..., world...
-	    Predicted: ...\n
-
-	=======================================
-
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 241
-	Inequivalence of differently named directories with the same contents
-
-	Comparison performed using:
-	[sequoia::testing::equivalence_checker<std::filesystem::path>]
-	With equivalent types:
-	[std::filesystem::path]
-
-	  Final path token
-	  [std::filesystem::path]
-	  operator== returned false
-	  Obtained : A
-	  Predicted: C
-
-	=======================================
-
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 245
-	Inequivalence of directories with the same files but different contents
-
-	Comparison performed using:
-	[sequoia::testing::equivalence_checker<std::filesystem::path>]
-	With equivalent types:
-	[std::filesystem::path]
-
-	  Contents of
-	  output/TestsTemporaryData/TestFramework/CoreDiagnostics/Stuff/A/foo.txt
-	  vs
-	  output/TestsTemporaryData/TestFramework/CoreDiagnostics/MoreStuff/A/foo.txt
-
-	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
-	  operator== returned false
-
-	    First difference detected at character 5:
-	    [char]
-	    operator== returned false
-	    Obtained : ,
-	    Predicted: '\n'
-
-	    Surrounding substring(s):
-	    Obtained : ..., world...
-	    Predicted: ...\n
-
-	=======================================
-
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 249
-	Inequivalence of directories with some common files
-
-	Comparison performed using:
-	[sequoia::testing::equivalence_checker<std::filesystem::path>]
-	With equivalent types:
-	[std::filesystem::path]
-
-	  Number of directory entries for output/TestsTemporaryData/TestFramework/CoreDiagnostics/Stuff/B
-	  [unsigned long long]
-	  operator== returned false
-	  Obtained : 1
-	  Predicted: 2
-
-	  First directory entry mismatch
-	  [std::filesystem::path]
-	  operator== returned false
-	  Obtained : output/TestsTemporaryData/TestFramework/CoreDiagnostics/Stuff/B/foo.txt
-	  Predicted: output/TestsTemporaryData/TestFramework/CoreDiagnostics/MoreStuff/B/bar.txt
-
-	=======================================
-
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 253
-	Inequivalence of directories with some common files
-
-	Comparison performed using:
-	[sequoia::testing::equivalence_checker<std::filesystem::path>]
-	With equivalent types:
-	[std::filesystem::path]
-
-	  Number of directory entries for output/TestsTemporaryData/TestFramework/CoreDiagnostics/MoreStuff/B
-	  [unsigned long long]
-	  operator== returned false
-	  Obtained : 2
-	  Predicted: 1
-
-	  First directory entry mismatch
-	  [std::filesystem::path]
-	  operator== returned false
-	  Obtained : output/TestsTemporaryData/TestFramework/CoreDiagnostics/MoreStuff/B/bar.txt
-	  Predicted: output/TestsTemporaryData/TestFramework/CoreDiagnostics/Stuff/B/foo.txt
-
-	=======================================
-
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 261
+	False Positive Failure:
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 369
 
 	Comparison performed using:
 	[sequoia::testing::weak_equivalence_checker<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > >]
 	With equivalent types:
 	[std::initializer_list<int>]
 
-	  Element 1 of range incorrect
-	  [int]
-	  operator== returned false
-	  Obtained : 2
-	  Predicted: 1
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 262
-
-	Comparison performed using:
-	[sequoia::testing::weak_equivalence_checker<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > >]
-	With equivalent types:
-	[std::initializer_list<int>]
-
-	  Element 1 of range incorrect
-	  [int]
-	  operator== returned false
-	  Obtained : 2
-	  Predicted: 1
-	  Advice: Don't mess with the beast.
-
-	=======================================
-
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 267
+	False Positive Failure:
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 372
 
 	[std::vector<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> >, std::allocator<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > > >]
 
-	  Element 1 of range incorrect
-	  Comparison performed using:
-	  [sequoia::testing::weak_equivalence_checker<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > >]
-	  With equivalent types:
-	  [std::initializer_list<int>]
-
-	    Element 1 of range incorrect
-	    [int]
-	    operator== returned false
-	    Obtained : 4
-	    Predicted: 5
-
-	=======================================
-
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 268
-
-	[std::vector<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> >, std::allocator<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > > >]
-
-	  Element 1 of range incorrect
-	  Comparison performed using:
-	  [sequoia::testing::weak_equivalence_checker<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > >]
-	  With equivalent types:
-	  [std::initializer_list<int>]
-
-	    Element 1 of range incorrect
-	    [int]
-	    operator== returned false
-	    Obtained : 4
-	    Predicted: 5
-	    Advice: Or at least don't mess with a vector of beasts.
 
 	=======================================
 

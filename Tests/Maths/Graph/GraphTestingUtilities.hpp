@@ -294,12 +294,12 @@ namespace sequoia::testing
       check(append_lines("Exception thrown during asynchronous execution of graph test:", sv), test_logger<Mode>::mode == test_mode::false_positive);
     }
   protected:
-    using time_point = typename base_t::time_point;
+    using duration = typename base_t::duration;
 
     [[nodiscard]]
-    log_summary summarize(const time_point start) const override
+    log_summary summarize(duration delta) const override
     {
-      return base_t::summarize(start) += m_AccumulatedSummaries;
+      return base_t::summarize(delta) += m_AccumulatedSummaries;
     }
 
     [[nodiscard]]

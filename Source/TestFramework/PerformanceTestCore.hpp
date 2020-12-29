@@ -237,12 +237,12 @@ namespace sequoia::testing
 
     using basic_test<performance_checker<mode>>::basic_test;
   protected:
-    using time_point = typename base_t::time_point;
+    using duration = typename base_t::duration;
 
     [[nodiscard]]
-    log_summary summarize(const time_point start) const override
+    log_summary summarize(duration delta) const override
     {
-      auto summary{base_t::summarize(start)};
+      auto summary{base_t::summarize(delta)};
 
       if constexpr(mode != test_mode::standard)
       {

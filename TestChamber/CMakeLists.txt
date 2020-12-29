@@ -33,6 +33,7 @@ add_library(TestFramework STATIC ../Source/TestFramework/Advice.cpp
                                  ../Source/TestFramework/AllocationCheckersDetails.cpp
                                  ../Source/TestFramework/FileEditors.cpp
                                  ../Source/TestFramework/FileSystem.cpp
+                                 ../Source/TestFramework/FreeTestCore.cpp
                                  ../Source/TestFramework/Output.cpp
                                  ../Source/TestFramework/PerformanceTestCore.cpp
                                  ../Source/TestFramework/Summary.cpp

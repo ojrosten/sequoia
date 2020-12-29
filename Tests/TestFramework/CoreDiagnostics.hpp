@@ -24,9 +24,9 @@ namespace sequoia:: testing
     void run_tests() final;
 
     [[nodiscard]]
-    log_summary summarize(const time_point start) const override
+    log_summary summarize(duration delta) const override
     {
-      auto summary{regular_false_positive_test::summarize(start)};
+      auto summary{regular_false_positive_test::summarize(delta)};
       return postprocess(summary, this->test_repository());
     }
 
@@ -50,9 +50,9 @@ namespace sequoia:: testing
     void run_tests() final;
 
     [[nodiscard]]
-    log_summary summarize(const time_point start) const override
+    log_summary summarize(duration delta) const override
     {
-      auto summary{regular_false_negative_test::summarize(start)};
+      auto summary{regular_false_negative_test::summarize(delta)};
       return postprocess(summary, this->test_repository());
     }
 

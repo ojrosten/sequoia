@@ -31,27 +31,20 @@ namespace sequoia::testing
       string_view and (virtual) destruction are publicly available. Move construction is protected;
       all remaining special member functions are deleted to discourage multiple instantiations.
    */
-  
+
   class test
   {
   public:
-    explicit test(std::string_view name)
-      : m_Name{name}
-    {}
+    explicit test(std::string_view name) : m_Name{name} {}
 
     virtual ~test() = default;
-    
+
     test(const test&)            = delete;
     test& operator=(const test&) = delete;
     test& operator=(test&&)      = delete;
 
     [[nodiscard]]
-    log_summary execute()
-    {
-      const auto summary{do_execute()};
-      do_write_versioned_output(summary);
-      return summary;
-    }
+    log_summary execute();
 
     [[nodiscard]]
     std::filesystem::path source_filename() const noexcept
@@ -60,7 +53,10 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    std::string_view name() const noexcept { return m_Name; }
+    std::string_view name() const noexcept
+    {
+      return m_Name;
+    }
 
     [[nodiscard]]
     const std::filesystem::path& working_materials() const noexcept
@@ -86,41 +82,38 @@ namespace sequoia::testing
       return m_VersionedOutput;
     }
 
-    void set_filesystem_data(std::filesystem::path testRepo, const std::filesystem::path& outputDir, std::string_view familyName)
-    {
-      m_TestRepo        = std::move(testRepo);
-      m_VersionedOutput = make_versioned_output_filename(outputDir, familyName);
-
-      namespace fs = std::filesystem;
-      fs::create_directories(m_VersionedOutput.parent_path());
-    }
-
-    void set_materials(std::filesystem::path workingMaterials, std::filesystem::path predictiveMaterials)
-    {
-      m_WorkingMaterials    = std::move(workingMaterials);
-      m_PredictiveMaterials = std::move(predictiveMaterials);
-    }
-
     [[nodiscard]]
-    std::string report_line(const std::filesystem::path& file, int line, std::string_view message)
-    {
-      return testing::report_line(file, line, message, test_repository());
-    }
+    std::string report_line(const std::filesystem::path& file, int line, std::string_view message);
+
+    void set_filesystem_data(std::filesystem::path testRepo, const std::filesystem::path& outputDir, std::string_view familyName);
+
+    void set_materials(std::filesystem::path workingMaterials, std::filesystem::path predictiveMaterials);
   protected:
+    using duration = std::chrono::steady_clock::duration;
+
     test(test&&) noexcept = default;
-
-    /// Pure virtual method, the overrides of which determine the fine details of test execution.
-    [[nodiscard]]
-    virtual log_summary do_execute() = 0;
-
-    virtual void do_write_versioned_output(const log_summary& summary) const = 0;
 
     /// Pure virtual method which should be overridden in a concrete test's cpp file in order to provide the correct __FILE__
     [[nodiscard]]
     virtual std::string_view source_file() const noexcept = 0;
 
     [[nodiscard]]
-    virtual std::filesystem::path make_versioned_output_filename(const std::filesystem::path& outputDir, std::string_view familyName) const = 0;
+    virtual std::filesystem::path make_versioned_output_filename() const = 0;
+
+    virtual void log_critical_failure(std::string_view tag, std::string_view what) = 0;
+
+    /// The override in a derived test should call the checks performed by the test.
+    virtual void run_tests() = 0;
+
+    [[nodiscard]]
+    virtual log_summary summarize(duration delta) const = 0;
+
+    virtual const log_summary& write_versioned_output(const log_summary& summary) const;
+
+    [[nodiscard]]
+    std::filesystem::path make_versioned_output_filepath(const std::filesystem::path& outputDir, std::string_view familyName) const;
+
+    std::filesystem::path output_filename(std::string_view tag) const;
   private:
     std::string m_Name{};
     std::filesystem::path m_WorkingMaterials{}, m_PredictiveMaterials{}, m_TestRepo{}, m_VersionedOutput{};
@@ -129,10 +122,8 @@ namespace sequoia::testing
   template<class T>
   concept concrete_test = derived_from<T, test> && !std::is_abstract_v<T>;
 
-  template<class T>
-  concept does_postprocess = requires(T& t, log_summary& s) {
-    t.postprocess(s);
-  };
+  [[nodiscard]]
+  std::string to_tag(test_mode mode);
 
   /*! \brief class template from which all concrete tests should derive.
 
@@ -172,82 +163,32 @@ namespace sequoia::testing
     basic_test& operator=(basic_test&&)      = delete;
     
   protected:
-    using time_point = std::chrono::time_point<std::chrono::steady_clock>;
-    
     basic_test(basic_test&&) noexcept = default;
 
-    log_summary do_execute() final
-    {
-      using namespace std::chrono;
-      const auto time{steady_clock::now()};
-      try
-      {
-        run_tests();
-      }
-      catch(const std::exception& e)
-      {
-        log_critical_failure("Unexpected", e.what());
-      }
-      catch(...)
-      {
-        log_critical_failure("Unknown", "");
-      }
-
-      return summarize(time);
-    }
-
     [[nodiscard]]
-    std::filesystem::path make_versioned_output_filename(const std::filesystem::path& outputDir, std::string_view familyName) const override
+    std::filesystem::path make_versioned_output_filename() const override
     {
-      namespace fs = std::filesystem;
-      auto name{fs::path{source_file()}.filename().replace_extension().concat("_")};
-
-      auto makeDirName{
-        [](std::string_view name) -> fs::path {
-          std::string n{name};
-          for(auto& c : n) if(c == ' ') c = '_';
-
-          return n;
-        }
-      };
-
-      if constexpr(mode == test_mode::false_negative)
-      {
-        name.concat("FP");
-      }
-      else if constexpr(mode == test_mode::false_positive)
-      {
-        name.concat("FN");
-      }
-
-      return diagnostics_output_path(outputDir) / makeDirName(familyName) / name.concat("Output.txt");
+      return test::output_filename(to_tag(mode));
     }
 
-    void do_write_versioned_output(const log_summary& summary) const override
+    const log_summary& write_versioned_output(const log_summary& summary) const override
     {
-      if constexpr((mode == test_mode::false_negative) || (mode == test_mode::false_positive))
+      if constexpr(mode != test_mode::standard)
       {
-        const auto filename{versioned_output_filename()};
-        if(std::ofstream ofile{filename})
-        {
-          ofile << summary.diagnostics_output();
-        }
-        else
-        {
-          throw std::runtime_error{report_failed_write(filename)};
-        }
+        return test::write_versioned_output(summary);
+      }
+      else
+      {
+        return summary;
       }
     }
 
-    /// The override in a derived test should call the checks performed by the test.
-    virtual void run_tests() = 0;
 
     /// Any override of this is likely to call this first and potentially append to the log_summary
     [[nodiscard]]
-    virtual log_summary summarize(const time_point start) const
+    log_summary summarize(duration delta) const override
     {
-      using namespace std::chrono;
-      return Checker::summary(name(), steady_clock::now() - start);
+      return Checker::summary(name(), delta);
     }
 
   private:
@@ -256,7 +197,7 @@ namespace sequoia::testing
       const auto message{
         exception_message(tag, source_filename(), Checker::top_level_message(), what, Checker::exceptions_detected_by_sentinel())
       };
-      
+
       auto sentry{Checker::make_sentinel("")};
       sentry.log_critical_failure(message);
     }
