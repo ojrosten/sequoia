@@ -571,11 +571,11 @@ namespace sequoia::testing::impl
     using precondition_actions<T>::precondition_actions;
 
     template<test_mode Mode, alloc_getter<T>... Getters, class... Predictions>
-    static bool post_comparison_action(test_logger<Mode>& logger, std::string_view op, const T& x, const T& y, const dual_allocation_checker<T, Getters, Predictions>&... checkers)
+    static bool post_comparison_action(test_logger<Mode>& logger, comparison_flavour flavour, const T& x, const T& y, const dual_allocation_checker<T, Getters, Predictions>&... checkers)
     {
       sentinel<Mode> s{logger, ""};
 
-      check_no_allocation(std::string{"Unexpected allocation detected for operator"}.append(op), logger, x, y, checkers...);
+      check_no_allocation(std::string{"Unexpected allocation detected for operator"}.append(to_string(flavour)), logger, x, y, checkers...);
       
       return !s.failure_detected();
     }
