@@ -1,0 +1,5032 @@
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54
+	Empty data inequivalent to non-empty data 
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::bucketed_storage<int, sequoia::ownership::independent<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::ownership::independent<int> > > >]
+	With equivalent types:
+	[std::initializer_list<std::initializer_list<int> >]
+
+	  Number of elements
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	  Number of partitions
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55
+	Non-empty data inequivalent to empty data 
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::bucketed_storage<int, sequoia::ownership::independent<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::ownership::independent<int> > > >]
+	With equivalent types:
+	[std::initializer_list<std::initializer_list<int> >]
+
+	  Number of elements
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
+
+	  Partition 0: iterator
+
+	    Container size wrong
+	    [unsigned long long]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 0
+
+	  Partition 0: riterator
+
+	    Container size wrong
+	    [unsigned long long]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 0
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56
+	Single partitions holding different elements compare not equal
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::bucketed_storage<int, sequoia::ownership::independent<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::ownership::independent<int> > > >]
+	With equivalent types:
+	[std::initializer_list<std::initializer_list<int> >]
+
+	  Partition 0: iterator
+
+	    Element 0 of range incorrect
+	    [int]
+	    operator== returned false
+	    Obtained : 2
+	    Predicted: 1
+
+	  Partition 0: riterator
+
+	    Element 0 of range incorrect
+	    [int]
+	    operator== returned false
+	    Obtained : 2
+	    Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 57
+	Identical elements divided between different partitions compare notequal
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::bucketed_storage<int, sequoia::ownership::independent<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::ownership::independent<int> > > >]
+	With equivalent types:
+	[std::initializer_list<std::initializer_list<int> >]
+
+	  Number of partitions
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 58
+	Identical elements divided between different partitions compare notequal
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::bucketed_storage<int, sequoia::ownership::independent<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::ownership::independent<int> > > >]
+	With equivalent types:
+	[std::initializer_list<std::initializer_list<int> >]
+
+	  Number of partitions
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 60
+
+	[sequoia::data_structures::bucketed_storage<int, sequoia::ownership::independent<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::ownership::independent<int> > >]
+	operator== returned false
+
+	  Size different
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	  Number of partitions different
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61
+
+	[sequoia::data_structures::bucketed_storage<int, sequoia::ownership::independent<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::ownership::independent<int> > >]
+	operator== returned false
+
+	  Partition 0
+	  iterator (const)
+
+	    Element 0 of range incorrect
+	    [int]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 2
+
+	  Partition 0
+	  r_iterator (const)
+
+	    Element 0 of range incorrect
+	    [int]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 2
+
+	  Partition 0
+	  c_iterator
+
+	    Element 0 of range incorrect
+	    [int]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 2
+
+	  Partition 0
+	  cr_iterator
+
+	    Element 0 of range incorrect
+	    [int]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 2
+
+	  Partition 0
+	  iterator
+
+	    Element 0 of range incorrect
+	    [int]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 2
+
+	  Partition 0
+	  r_iterator
+
+	    Element 0 of range incorrect
+	    [int]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 62
+
+	[sequoia::data_structures::bucketed_storage<int, sequoia::ownership::independent<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::ownership::independent<int> > >]
+	operator== returned false
+
+	  Number of partitions different
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 64
+	Size 0 should not compare equal to 1
+
+	[unsigned long]
+	operator== returned false
+	Obtained : 0
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 65
+	Size 1 should not compare equal to 0
+
+	[unsigned long]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 67
+
+	[unsigned long]
+	operator== returned false
+	Obtained : 0
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 68
+
+	[unsigned long]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 69
+
+	[unsigned long]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 70
+
+	[unsigned long]
+	operator== returned false
+	Obtained : 2
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 72
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 73
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 74
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 75
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 76
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 78
+
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 79
+
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 80
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 81
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 82
+
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 84
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 85
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 86
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 87
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 88
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 90
+
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 91
+
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 92
+
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 93
+
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 94
+
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 97
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 98
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 99
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 101
+
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 102
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 103
+
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 105
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 106
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 107
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 109
+
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 110
+
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 111
+
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54
+	Empty data inequivalent to non-empty data 
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::bucketed_storage<int, sequoia::ownership::shared<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::ownership::shared<int> > > >]
+	With equivalent types:
+	[std::initializer_list<std::initializer_list<int> >]
+
+	  Number of elements
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	  Number of partitions
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55
+	Non-empty data inequivalent to empty data 
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::bucketed_storage<int, sequoia::ownership::shared<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::ownership::shared<int> > > >]
+	With equivalent types:
+	[std::initializer_list<std::initializer_list<int> >]
+
+	  Number of elements
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
+
+	  Partition 0: iterator
+
+	    Container size wrong
+	    [unsigned long long]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 0
+
+	  Partition 0: riterator
+
+	    Container size wrong
+	    [unsigned long long]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 0
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56
+	Single partitions holding different elements compare not equal
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::bucketed_storage<int, sequoia::ownership::shared<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::ownership::shared<int> > > >]
+	With equivalent types:
+	[std::initializer_list<std::initializer_list<int> >]
+
+	  Partition 0: iterator
+
+	    Element 0 of range incorrect
+	    [int]
+	    operator== returned false
+	    Obtained : 2
+	    Predicted: 1
+
+	  Partition 0: riterator
+
+	    Element 0 of range incorrect
+	    [int]
+	    operator== returned false
+	    Obtained : 2
+	    Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 57
+	Identical elements divided between different partitions compare notequal
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::bucketed_storage<int, sequoia::ownership::shared<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::ownership::shared<int> > > >]
+	With equivalent types:
+	[std::initializer_list<std::initializer_list<int> >]
+
+	  Number of partitions
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 58
+	Identical elements divided between different partitions compare notequal
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::bucketed_storage<int, sequoia::ownership::shared<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::ownership::shared<int> > > >]
+	With equivalent types:
+	[std::initializer_list<std::initializer_list<int> >]
+
+	  Number of partitions
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 60
+
+	[sequoia::data_structures::bucketed_storage<int, sequoia::ownership::shared<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::ownership::shared<int> > >]
+	operator== returned false
+
+	  Size different
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	  Number of partitions different
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61
+
+	[sequoia::data_structures::bucketed_storage<int, sequoia::ownership::shared<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::ownership::shared<int> > >]
+	operator== returned false
+
+	  Partition 0
+	  iterator (const)
+
+	    Element 0 of range incorrect
+	    [int]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 2
+
+	  Partition 0
+	  r_iterator (const)
+
+	    Element 0 of range incorrect
+	    [int]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 2
+
+	  Partition 0
+	  c_iterator
+
+	    Element 0 of range incorrect
+	    [int]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 2
+
+	  Partition 0
+	  cr_iterator
+
+	    Element 0 of range incorrect
+	    [int]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 2
+
+	  Partition 0
+	  iterator
+
+	    Element 0 of range incorrect
+	    [int]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 2
+
+	  Partition 0
+	  r_iterator
+
+	    Element 0 of range incorrect
+	    [int]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 62
+
+	[sequoia::data_structures::bucketed_storage<int, sequoia::ownership::shared<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::ownership::shared<int> > >]
+	operator== returned false
+
+	  Number of partitions different
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 64
+	Size 0 should not compare equal to 1
+
+	[unsigned long]
+	operator== returned false
+	Obtained : 0
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 65
+	Size 1 should not compare equal to 0
+
+	[unsigned long]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 67
+
+	[unsigned long]
+	operator== returned false
+	Obtained : 0
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 68
+
+	[unsigned long]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 69
+
+	[unsigned long]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 70
+
+	[unsigned long]
+	operator== returned false
+	Obtained : 2
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 72
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 73
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 74
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 75
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 76
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 78
+
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 79
+
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 80
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 81
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 82
+
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 84
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 85
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 86
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 87
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 88
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 90
+
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 91
+
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 92
+
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 93
+
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 94
+
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 97
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 98
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 99
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 101
+
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 102
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 103
+
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 105
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 106
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 107
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 109
+
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 110
+
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 111
+
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54
+	Empty data inequivalent to non-empty data 
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<int, sequoia::ownership::independent<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::ownership::independent<int> > > >]
+	With equivalent types:
+	[std::initializer_list<std::initializer_list<int> >]
+
+	  Number of elements
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	  Number of partitions
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55
+	Non-empty data inequivalent to empty data 
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<int, sequoia::ownership::independent<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::ownership::independent<int> > > >]
+	With equivalent types:
+	[std::initializer_list<std::initializer_list<int> >]
+
+	  Number of elements
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
+
+	  Partition 0: iterator
+
+	    Container size wrong
+	    [unsigned long long]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 0
+
+	  Partition 0: riterator
+
+	    Container size wrong
+	    [unsigned long long]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 0
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56
+	Single partitions holding different elements compare not equal
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<int, sequoia::ownership::independent<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::ownership::independent<int> > > >]
+	With equivalent types:
+	[std::initializer_list<std::initializer_list<int> >]
+
+	  Partition 0: iterator
+
+	    Element 0 of range incorrect
+	    [int]
+	    operator== returned false
+	    Obtained : 2
+	    Predicted: 1
+
+	  Partition 0: riterator
+
+	    Element 0 of range incorrect
+	    [int]
+	    operator== returned false
+	    Obtained : 2
+	    Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 57
+	Identical elements divided between different partitions compare notequal
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<int, sequoia::ownership::independent<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::ownership::independent<int> > > >]
+	With equivalent types:
+	[std::initializer_list<std::initializer_list<int> >]
+
+	  Number of partitions
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 58
+	Identical elements divided between different partitions compare notequal
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<int, sequoia::ownership::independent<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::ownership::independent<int> > > >]
+	With equivalent types:
+	[std::initializer_list<std::initializer_list<int> >]
+
+	  Number of partitions
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 60
+
+	[sequoia::data_structures::partitioned_sequence<int, sequoia::ownership::independent<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::ownership::independent<int> > >]
+	operator== returned false
+
+	  Size different
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	  Number of partitions different
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61
+
+	[sequoia::data_structures::partitioned_sequence<int, sequoia::ownership::independent<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::ownership::independent<int> > >]
+	operator== returned false
+
+	  Partition 0
+	  iterator (const)
+
+	    Element 0 of range incorrect
+	    [int]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 2
+
+	  Partition 0
+	  r_iterator (const)
+
+	    Element 0 of range incorrect
+	    [int]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 2
+
+	  Partition 0
+	  c_iterator
+
+	    Element 0 of range incorrect
+	    [int]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 2
+
+	  Partition 0
+	  cr_iterator
+
+	    Element 0 of range incorrect
+	    [int]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 2
+
+	  Partition 0
+	  iterator
+
+	    Element 0 of range incorrect
+	    [int]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 2
+
+	  Partition 0
+	  r_iterator
+
+	    Element 0 of range incorrect
+	    [int]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 62
+
+	[sequoia::data_structures::partitioned_sequence<int, sequoia::ownership::independent<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::ownership::independent<int> > >]
+	operator== returned false
+
+	  Number of partitions different
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 64
+	Size 0 should not compare equal to 1
+
+	[unsigned long]
+	operator== returned false
+	Obtained : 0
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 65
+	Size 1 should not compare equal to 0
+
+	[unsigned long]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 67
+
+	[unsigned long]
+	operator== returned false
+	Obtained : 0
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 68
+
+	[unsigned long]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 69
+
+	[unsigned long]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 70
+
+	[unsigned long]
+	operator== returned false
+	Obtained : 2
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 72
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 73
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 74
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 75
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 76
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 78
+
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 79
+
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 80
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 81
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 82
+
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 84
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 85
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 86
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 87
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 88
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 90
+
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 91
+
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 92
+
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 93
+
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 94
+
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 97
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 98
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 99
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 101
+
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 102
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 103
+
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 105
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 106
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 107
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 109
+
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 110
+
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 111
+
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54
+	Empty data inequivalent to non-empty data 
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<int, sequoia::ownership::shared<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::ownership::shared<int> > > >]
+	With equivalent types:
+	[std::initializer_list<std::initializer_list<int> >]
+
+	  Number of elements
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	  Number of partitions
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55
+	Non-empty data inequivalent to empty data 
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<int, sequoia::ownership::shared<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::ownership::shared<int> > > >]
+	With equivalent types:
+	[std::initializer_list<std::initializer_list<int> >]
+
+	  Number of elements
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
+
+	  Partition 0: iterator
+
+	    Container size wrong
+	    [unsigned long long]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 0
+
+	  Partition 0: riterator
+
+	    Container size wrong
+	    [unsigned long long]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 0
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56
+	Single partitions holding different elements compare not equal
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<int, sequoia::ownership::shared<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::ownership::shared<int> > > >]
+	With equivalent types:
+	[std::initializer_list<std::initializer_list<int> >]
+
+	  Partition 0: iterator
+
+	    Element 0 of range incorrect
+	    [int]
+	    operator== returned false
+	    Obtained : 2
+	    Predicted: 1
+
+	  Partition 0: riterator
+
+	    Element 0 of range incorrect
+	    [int]
+	    operator== returned false
+	    Obtained : 2
+	    Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 57
+	Identical elements divided between different partitions compare notequal
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<int, sequoia::ownership::shared<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::ownership::shared<int> > > >]
+	With equivalent types:
+	[std::initializer_list<std::initializer_list<int> >]
+
+	  Number of partitions
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 58
+	Identical elements divided between different partitions compare notequal
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<int, sequoia::ownership::shared<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::ownership::shared<int> > > >]
+	With equivalent types:
+	[std::initializer_list<std::initializer_list<int> >]
+
+	  Number of partitions
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 60
+
+	[sequoia::data_structures::partitioned_sequence<int, sequoia::ownership::shared<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::ownership::shared<int> > >]
+	operator== returned false
+
+	  Size different
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	  Number of partitions different
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61
+
+	[sequoia::data_structures::partitioned_sequence<int, sequoia::ownership::shared<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::ownership::shared<int> > >]
+	operator== returned false
+
+	  Partition 0
+	  iterator (const)
+
+	    Element 0 of range incorrect
+	    [int]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 2
+
+	  Partition 0
+	  r_iterator (const)
+
+	    Element 0 of range incorrect
+	    [int]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 2
+
+	  Partition 0
+	  c_iterator
+
+	    Element 0 of range incorrect
+	    [int]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 2
+
+	  Partition 0
+	  cr_iterator
+
+	    Element 0 of range incorrect
+	    [int]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 2
+
+	  Partition 0
+	  iterator
+
+	    Element 0 of range incorrect
+	    [int]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 2
+
+	  Partition 0
+	  r_iterator
+
+	    Element 0 of range incorrect
+	    [int]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 62
+
+	[sequoia::data_structures::partitioned_sequence<int, sequoia::ownership::shared<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::ownership::shared<int> > >]
+	operator== returned false
+
+	  Number of partitions different
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 64
+	Size 0 should not compare equal to 1
+
+	[unsigned long]
+	operator== returned false
+	Obtained : 0
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 65
+	Size 1 should not compare equal to 0
+
+	[unsigned long]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 67
+
+	[unsigned long]
+	operator== returned false
+	Obtained : 0
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 68
+
+	[unsigned long]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 69
+
+	[unsigned long]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 70
+
+	[unsigned long]
+	operator== returned false
+	Obtained : 2
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 72
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 73
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 74
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 75
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 76
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 78
+
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 79
+
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 80
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 81
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 82
+
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 84
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 85
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 86
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 87
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 88
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 90
+
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 91
+
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 92
+
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 93
+
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 94
+
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 97
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 98
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 99
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 101
+
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 102
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 103
+
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 105
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 106
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 107
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 109
+
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 110
+
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 111
+
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54
+	Empty data inequivalent to non-empty data 
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > > > > >]
+	With equivalent types:
+	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
+
+	  Number of elements
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	  Number of partitions
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55
+	Non-empty data inequivalent to empty data 
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > > > > >]
+	With equivalent types:
+	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
+
+	  Number of elements
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
+
+	  Partition 0: iterator
+
+	    Container size wrong
+	    [unsigned long long]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 0
+
+	  Partition 0: riterator
+
+	    Container size wrong
+	    [unsigned long long]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 0
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56
+	Single partitions holding different elements compare not equal
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > > > > >]
+	With equivalent types:
+	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
+
+	  Partition 0: iterator
+
+	    Element 0 of range incorrect
+	    [std::vector<double, std::allocator<double> >]
+	    operator== returned false
+
+	      Element 0 of range incorrect
+	      [double]
+	      operator== returned false
+	      Obtained : 2
+	      Predicted: 1
+
+	  Partition 0: riterator
+
+	    Element 0 of range incorrect
+	    [std::vector<double, std::allocator<double> >]
+	    operator== returned false
+
+	      Element 0 of range incorrect
+	      [double]
+	      operator== returned false
+	      Obtained : 2
+	      Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 57
+	Identical elements divided between different partitions compare notequal
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > > > > >]
+	With equivalent types:
+	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
+
+	  Number of partitions
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 58
+	Identical elements divided between different partitions compare notequal
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > > > > >]
+	With equivalent types:
+	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
+
+	  Number of partitions
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 60
+
+	[sequoia::data_structures::bucketed_storage<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > > > >]
+	operator== returned false
+
+	  Size different
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	  Number of partitions different
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61
+
+	[sequoia::data_structures::bucketed_storage<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > > > >]
+	operator== returned false
+
+	  Partition 0
+	  iterator (const)
+
+	    Element 0 of range incorrect
+	    [std::vector<double, std::allocator<double> >]
+	    operator== returned false
+
+	      Element 0 of range incorrect
+	      [double]
+	      operator== returned false
+	      Obtained : 1
+	      Predicted: 2
+
+	  Partition 0
+	  r_iterator (const)
+
+	    Element 0 of range incorrect
+	    [std::vector<double, std::allocator<double> >]
+	    operator== returned false
+
+	      Element 0 of range incorrect
+	      [double]
+	      operator== returned false
+	      Obtained : 1
+	      Predicted: 2
+
+	  Partition 0
+	  c_iterator
+
+	    Element 0 of range incorrect
+	    [std::vector<double, std::allocator<double> >]
+	    operator== returned false
+
+	      Element 0 of range incorrect
+	      [double]
+	      operator== returned false
+	      Obtained : 1
+	      Predicted: 2
+
+	  Partition 0
+	  cr_iterator
+
+	    Element 0 of range incorrect
+	    [std::vector<double, std::allocator<double> >]
+	    operator== returned false
+
+	      Element 0 of range incorrect
+	      [double]
+	      operator== returned false
+	      Obtained : 1
+	      Predicted: 2
+
+	  Partition 0
+	  iterator
+
+	    Element 0 of range incorrect
+	    [std::vector<double, std::allocator<double> >]
+	    operator== returned false
+
+	      Element 0 of range incorrect
+	      [double]
+	      operator== returned false
+	      Obtained : 1
+	      Predicted: 2
+
+	  Partition 0
+	  r_iterator
+
+	    Element 0 of range incorrect
+	    [std::vector<double, std::allocator<double> >]
+	    operator== returned false
+
+	      Element 0 of range incorrect
+	      [double]
+	      operator== returned false
+	      Obtained : 1
+	      Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 62
+
+	[sequoia::data_structures::bucketed_storage<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > > > >]
+	operator== returned false
+
+	  Number of partitions different
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 64
+	Size 0 should not compare equal to 1
+
+	[unsigned long]
+	operator== returned false
+	Obtained : 0
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 65
+	Size 1 should not compare equal to 0
+
+	[unsigned long]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 67
+
+	[unsigned long]
+	operator== returned false
+	Obtained : 0
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 68
+
+	[unsigned long]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 69
+
+	[unsigned long]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 70
+
+	[unsigned long]
+	operator== returned false
+	Obtained : 2
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 72
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 73
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 74
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 75
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 76
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 78
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 79
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 80
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 81
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 82
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 84
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 85
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 86
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 87
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 88
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 90
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 91
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 92
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 93
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 94
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 97
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 98
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 99
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 101
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 102
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 103
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 105
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 106
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 107
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 109
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 110
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 111
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54
+	Empty data inequivalent to non-empty data 
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > > > > >]
+	With equivalent types:
+	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
+
+	  Number of elements
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	  Number of partitions
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55
+	Non-empty data inequivalent to empty data 
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > > > > >]
+	With equivalent types:
+	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
+
+	  Number of elements
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
+
+	  Partition 0: iterator
+
+	    Container size wrong
+	    [unsigned long long]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 0
+
+	  Partition 0: riterator
+
+	    Container size wrong
+	    [unsigned long long]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 0
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56
+	Single partitions holding different elements compare not equal
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > > > > >]
+	With equivalent types:
+	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
+
+	  Partition 0: iterator
+
+	    Element 0 of range incorrect
+	    [std::vector<double, std::allocator<double> >]
+	    operator== returned false
+
+	      Element 0 of range incorrect
+	      [double]
+	      operator== returned false
+	      Obtained : 2
+	      Predicted: 1
+
+	  Partition 0: riterator
+
+	    Element 0 of range incorrect
+	    [std::vector<double, std::allocator<double> >]
+	    operator== returned false
+
+	      Element 0 of range incorrect
+	      [double]
+	      operator== returned false
+	      Obtained : 2
+	      Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 57
+	Identical elements divided between different partitions compare notequal
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > > > > >]
+	With equivalent types:
+	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
+
+	  Number of partitions
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 58
+	Identical elements divided between different partitions compare notequal
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > > > > >]
+	With equivalent types:
+	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
+
+	  Number of partitions
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 60
+
+	[sequoia::data_structures::bucketed_storage<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > > > >]
+	operator== returned false
+
+	  Size different
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	  Number of partitions different
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61
+
+	[sequoia::data_structures::bucketed_storage<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > > > >]
+	operator== returned false
+
+	  Partition 0
+	  iterator (const)
+
+	    Element 0 of range incorrect
+	    [std::vector<double, std::allocator<double> >]
+	    operator== returned false
+
+	      Element 0 of range incorrect
+	      [double]
+	      operator== returned false
+	      Obtained : 1
+	      Predicted: 2
+
+	  Partition 0
+	  r_iterator (const)
+
+	    Element 0 of range incorrect
+	    [std::vector<double, std::allocator<double> >]
+	    operator== returned false
+
+	      Element 0 of range incorrect
+	      [double]
+	      operator== returned false
+	      Obtained : 1
+	      Predicted: 2
+
+	  Partition 0
+	  c_iterator
+
+	    Element 0 of range incorrect
+	    [std::vector<double, std::allocator<double> >]
+	    operator== returned false
+
+	      Element 0 of range incorrect
+	      [double]
+	      operator== returned false
+	      Obtained : 1
+	      Predicted: 2
+
+	  Partition 0
+	  cr_iterator
+
+	    Element 0 of range incorrect
+	    [std::vector<double, std::allocator<double> >]
+	    operator== returned false
+
+	      Element 0 of range incorrect
+	      [double]
+	      operator== returned false
+	      Obtained : 1
+	      Predicted: 2
+
+	  Partition 0
+	  iterator
+
+	    Element 0 of range incorrect
+	    [std::vector<double, std::allocator<double> >]
+	    operator== returned false
+
+	      Element 0 of range incorrect
+	      [double]
+	      operator== returned false
+	      Obtained : 1
+	      Predicted: 2
+
+	  Partition 0
+	  r_iterator
+
+	    Element 0 of range incorrect
+	    [std::vector<double, std::allocator<double> >]
+	    operator== returned false
+
+	      Element 0 of range incorrect
+	      [double]
+	      operator== returned false
+	      Obtained : 1
+	      Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 62
+
+	[sequoia::data_structures::bucketed_storage<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > > > >]
+	operator== returned false
+
+	  Number of partitions different
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 64
+	Size 0 should not compare equal to 1
+
+	[unsigned long]
+	operator== returned false
+	Obtained : 0
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 65
+	Size 1 should not compare equal to 0
+
+	[unsigned long]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 67
+
+	[unsigned long]
+	operator== returned false
+	Obtained : 0
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 68
+
+	[unsigned long]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 69
+
+	[unsigned long]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 70
+
+	[unsigned long]
+	operator== returned false
+	Obtained : 2
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 72
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 73
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 74
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 75
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 76
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 78
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 79
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 80
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 81
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 82
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 84
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 85
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 86
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 87
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 88
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 90
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 91
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 92
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 93
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 94
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 97
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 98
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 99
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 101
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 102
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 103
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 105
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 106
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 107
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 109
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 110
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 111
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54
+	Empty data inequivalent to non-empty data 
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > > > > >]
+	With equivalent types:
+	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
+
+	  Number of elements
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	  Number of partitions
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55
+	Non-empty data inequivalent to empty data 
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > > > > >]
+	With equivalent types:
+	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
+
+	  Number of elements
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
+
+	  Partition 0: iterator
+
+	    Container size wrong
+	    [unsigned long long]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 0
+
+	  Partition 0: riterator
+
+	    Container size wrong
+	    [unsigned long long]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 0
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56
+	Single partitions holding different elements compare not equal
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > > > > >]
+	With equivalent types:
+	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
+
+	  Partition 0: iterator
+
+	    Element 0 of range incorrect
+	    [std::vector<double, std::allocator<double> >]
+	    operator== returned false
+
+	      Element 0 of range incorrect
+	      [double]
+	      operator== returned false
+	      Obtained : 2
+	      Predicted: 1
+
+	  Partition 0: riterator
+
+	    Element 0 of range incorrect
+	    [std::vector<double, std::allocator<double> >]
+	    operator== returned false
+
+	      Element 0 of range incorrect
+	      [double]
+	      operator== returned false
+	      Obtained : 2
+	      Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 57
+	Identical elements divided between different partitions compare notequal
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > > > > >]
+	With equivalent types:
+	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
+
+	  Number of partitions
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 58
+	Identical elements divided between different partitions compare notequal
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > > > > >]
+	With equivalent types:
+	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
+
+	  Number of partitions
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 60
+
+	[sequoia::data_structures::partitioned_sequence<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > > > >]
+	operator== returned false
+
+	  Size different
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	  Number of partitions different
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61
+
+	[sequoia::data_structures::partitioned_sequence<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > > > >]
+	operator== returned false
+
+	  Partition 0
+	  iterator (const)
+
+	    Element 0 of range incorrect
+	    [std::vector<double, std::allocator<double> >]
+	    operator== returned false
+
+	      Element 0 of range incorrect
+	      [double]
+	      operator== returned false
+	      Obtained : 1
+	      Predicted: 2
+
+	  Partition 0
+	  r_iterator (const)
+
+	    Element 0 of range incorrect
+	    [std::vector<double, std::allocator<double> >]
+	    operator== returned false
+
+	      Element 0 of range incorrect
+	      [double]
+	      operator== returned false
+	      Obtained : 1
+	      Predicted: 2
+
+	  Partition 0
+	  c_iterator
+
+	    Element 0 of range incorrect
+	    [std::vector<double, std::allocator<double> >]
+	    operator== returned false
+
+	      Element 0 of range incorrect
+	      [double]
+	      operator== returned false
+	      Obtained : 1
+	      Predicted: 2
+
+	  Partition 0
+	  cr_iterator
+
+	    Element 0 of range incorrect
+	    [std::vector<double, std::allocator<double> >]
+	    operator== returned false
+
+	      Element 0 of range incorrect
+	      [double]
+	      operator== returned false
+	      Obtained : 1
+	      Predicted: 2
+
+	  Partition 0
+	  iterator
+
+	    Element 0 of range incorrect
+	    [std::vector<double, std::allocator<double> >]
+	    operator== returned false
+
+	      Element 0 of range incorrect
+	      [double]
+	      operator== returned false
+	      Obtained : 1
+	      Predicted: 2
+
+	  Partition 0
+	  r_iterator
+
+	    Element 0 of range incorrect
+	    [std::vector<double, std::allocator<double> >]
+	    operator== returned false
+
+	      Element 0 of range incorrect
+	      [double]
+	      operator== returned false
+	      Obtained : 1
+	      Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 62
+
+	[sequoia::data_structures::partitioned_sequence<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > > > >]
+	operator== returned false
+
+	  Number of partitions different
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 64
+	Size 0 should not compare equal to 1
+
+	[unsigned long]
+	operator== returned false
+	Obtained : 0
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 65
+	Size 1 should not compare equal to 0
+
+	[unsigned long]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 67
+
+	[unsigned long]
+	operator== returned false
+	Obtained : 0
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 68
+
+	[unsigned long]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 69
+
+	[unsigned long]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 70
+
+	[unsigned long]
+	operator== returned false
+	Obtained : 2
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 72
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 73
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 74
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 75
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 76
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 78
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 79
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 80
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 81
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 82
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 84
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 85
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 86
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 87
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 88
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 90
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 91
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 92
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 93
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 94
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 97
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 98
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 99
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 101
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 102
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 103
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 105
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 106
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 107
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 109
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 110
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 111
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54
+	Empty data inequivalent to non-empty data 
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > > > > >]
+	With equivalent types:
+	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
+
+	  Number of elements
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	  Number of partitions
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55
+	Non-empty data inequivalent to empty data 
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > > > > >]
+	With equivalent types:
+	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
+
+	  Number of elements
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
+
+	  Partition 0: iterator
+
+	    Container size wrong
+	    [unsigned long long]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 0
+
+	  Partition 0: riterator
+
+	    Container size wrong
+	    [unsigned long long]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 0
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56
+	Single partitions holding different elements compare not equal
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > > > > >]
+	With equivalent types:
+	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
+
+	  Partition 0: iterator
+
+	    Element 0 of range incorrect
+	    [std::vector<double, std::allocator<double> >]
+	    operator== returned false
+
+	      Element 0 of range incorrect
+	      [double]
+	      operator== returned false
+	      Obtained : 2
+	      Predicted: 1
+
+	  Partition 0: riterator
+
+	    Element 0 of range incorrect
+	    [std::vector<double, std::allocator<double> >]
+	    operator== returned false
+
+	      Element 0 of range incorrect
+	      [double]
+	      operator== returned false
+	      Obtained : 2
+	      Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 57
+	Identical elements divided between different partitions compare notequal
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > > > > >]
+	With equivalent types:
+	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
+
+	  Number of partitions
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 58
+	Identical elements divided between different partitions compare notequal
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > > > > >]
+	With equivalent types:
+	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
+
+	  Number of partitions
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 60
+
+	[sequoia::data_structures::partitioned_sequence<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > > > >]
+	operator== returned false
+
+	  Size different
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	  Number of partitions different
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61
+
+	[sequoia::data_structures::partitioned_sequence<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > > > >]
+	operator== returned false
+
+	  Partition 0
+	  iterator (const)
+
+	    Element 0 of range incorrect
+	    [std::vector<double, std::allocator<double> >]
+	    operator== returned false
+
+	      Element 0 of range incorrect
+	      [double]
+	      operator== returned false
+	      Obtained : 1
+	      Predicted: 2
+
+	  Partition 0
+	  r_iterator (const)
+
+	    Element 0 of range incorrect
+	    [std::vector<double, std::allocator<double> >]
+	    operator== returned false
+
+	      Element 0 of range incorrect
+	      [double]
+	      operator== returned false
+	      Obtained : 1
+	      Predicted: 2
+
+	  Partition 0
+	  c_iterator
+
+	    Element 0 of range incorrect
+	    [std::vector<double, std::allocator<double> >]
+	    operator== returned false
+
+	      Element 0 of range incorrect
+	      [double]
+	      operator== returned false
+	      Obtained : 1
+	      Predicted: 2
+
+	  Partition 0
+	  cr_iterator
+
+	    Element 0 of range incorrect
+	    [std::vector<double, std::allocator<double> >]
+	    operator== returned false
+
+	      Element 0 of range incorrect
+	      [double]
+	      operator== returned false
+	      Obtained : 1
+	      Predicted: 2
+
+	  Partition 0
+	  iterator
+
+	    Element 0 of range incorrect
+	    [std::vector<double, std::allocator<double> >]
+	    operator== returned false
+
+	      Element 0 of range incorrect
+	      [double]
+	      operator== returned false
+	      Obtained : 1
+	      Predicted: 2
+
+	  Partition 0
+	  r_iterator
+
+	    Element 0 of range incorrect
+	    [std::vector<double, std::allocator<double> >]
+	    operator== returned false
+
+	      Element 0 of range incorrect
+	      [double]
+	      operator== returned false
+	      Obtained : 1
+	      Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 62
+
+	[sequoia::data_structures::partitioned_sequence<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > > > >]
+	operator== returned false
+
+	  Number of partitions different
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 64
+	Size 0 should not compare equal to 1
+
+	[unsigned long]
+	operator== returned false
+	Obtained : 0
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 65
+	Size 1 should not compare equal to 0
+
+	[unsigned long]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 67
+
+	[unsigned long]
+	operator== returned false
+	Obtained : 0
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 68
+
+	[unsigned long]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 69
+
+	[unsigned long]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 70
+
+	[unsigned long]
+	operator== returned false
+	Obtained : 2
+	Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 72
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 73
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 74
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 75
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 76
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 78
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 79
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 80
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 81
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 82
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 84
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 85
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 86
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 87
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 88
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 90
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 91
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 92
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 93
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 94
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 97
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 98
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 99
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 101
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 102
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 103
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 105
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 106
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 107
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 109
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 110
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 111
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
+
+	=======================================
+

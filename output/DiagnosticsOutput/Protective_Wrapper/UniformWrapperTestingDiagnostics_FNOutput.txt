@@ -1,0 +1,72 @@
+	Tests/Core/Utilities/UniformWrapperTestingDiagnostics.cpp, Line 32
+
+	[sequoia::utilities::uniform_wrapper<int>]
+	operator== returned false
+
+	  [int]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
+
+	=======================================
+
+	Tests/Core/Utilities/UniformWrapperTestingDiagnostics.cpp, Line 40
+
+	[sequoia::utilities::uniform_wrapper<std::vector<int, std::allocator<int> > >]
+	operator== returned false
+
+	  [std::vector<int, std::allocator<int> >]
+	  operator== returned false
+
+	    Container size wrong
+	    [unsigned long long]
+	    operator== returned false
+	    Obtained : 0
+	    Predicted: 1
+
+	=======================================
+
+	Tests/Core/Utilities/UniformWrapperTestingDiagnostics.cpp, Line 43
+
+	[sequoia::utilities::uniform_wrapper<std::vector<int, std::allocator<int> > >]
+	operator== returned false
+
+	  [std::vector<int, std::allocator<int> >]
+	  operator== returned false
+
+	    Element 0 of range incorrect
+	    [int]
+	    operator== returned false
+	    Obtained : 2
+	    Predicted: 1
+
+	=======================================
+
+	Tests/Core/Utilities/UniformWrapperTestingDiagnostics.cpp, Line 46
+
+	[sequoia::utilities::uniform_wrapper<std::vector<int, std::allocator<int> > >]
+	operator== returned false
+
+	  [std::vector<int, std::allocator<int> >]
+	  operator== returned false
+
+	    Element 0 of range incorrect
+	    [int]
+	    operator== returned false
+	    Obtained : 0
+	    Predicted: 1
+
+	=======================================
+
+	Tests/Core/Utilities/UniformWrapperTestingDiagnostics.cpp, Line 54
+
+	[sequoia::utilities::uniform_wrapper<sequoia::testing::data>]
+	operator== returned false
+
+	  [sequoia::testing::data]
+	  operator== returned false
+	  Obtained : 00
+	  Predicted: 12
+
+	=======================================
+
