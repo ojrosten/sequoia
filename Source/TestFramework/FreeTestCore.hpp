@@ -192,7 +192,7 @@ namespace sequoia::testing
     }
 
   private:
-    void log_critical_failure(std::string_view tag, std::string_view what)
+    void log_critical_failure(std::string_view tag, std::string_view what) override
     {
       const auto message{
         exception_message(tag, source_filename(), Checker::top_level_message(), what, Checker::exceptions_detected_by_sentinel())
