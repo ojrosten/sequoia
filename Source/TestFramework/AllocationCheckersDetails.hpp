@@ -50,6 +50,9 @@ namespace sequoia::testing
   private:
     int m_Unshifted{}, m_Prediction{};
   };
+
+  template<class T>
+  struct allocation_count_shifter;
 }
 
 namespace sequoia::testing::impl
