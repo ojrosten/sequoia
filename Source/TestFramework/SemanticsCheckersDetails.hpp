@@ -69,6 +69,11 @@
 #include <compare>
 #include <optional>
 
+namespace sequoia::testing
+{
+  enum class comparison_flavour { equality, inequality, less_than, greater_than, leq, geq, threeway };
+}
+
 namespace sequoia::testing::impl
 {
   template<class...> struct do_swap;
@@ -83,20 +88,29 @@ namespace sequoia::testing::impl
     template<class T> constexpr void operator()(const T&) noexcept {}
   };
 
-  enum class comparison_flavour { equality, inequality, less_than, greater_than, leq, geq, spaceship };
+  template<comparison_flavour C>
+  using comparison_constant = std::integral_constant<comparison_flavour, C>;
+
+  using equality_type = comparison_constant<comparison_flavour::equality>;
+  using inequality_type = comparison_constant<comparison_flavour::inequality>;
+  using less_than_type = comparison_constant<comparison_flavour::less_than>;
+  using greater_than_type = comparison_constant<comparison_flavour::greater_than>;
+  using leq_type = comparison_constant<comparison_flavour::leq>;
+  using geq_type = comparison_constant<comparison_flavour::geq>;
+  using threeway_type = comparison_constant<comparison_flavour::threeway>;
 
   [[nodiscard]]
   std::string to_string(comparison_flavour f);
 
-  template<test_mode Mode, class Actions, movable_comparable T, invocable_r<bool, T> Fn, class... Args>
-  bool check_comparison_consistency(test_logger<Mode>& logger, comparison_flavour flavour, [[maybe_unused]] const Actions& actions, const T& x, [[maybe_unused]]const T& y, Fn fn, [[maybe_unused]] const Args&... args)
+  template<test_mode Mode, comparison_flavour C, class Actions, movable_comparable T, invocable_r<bool, T> Fn, class... Args>
+  bool check_comparison_consistency(test_logger<Mode>& logger, comparison_constant<C> comparison, [[maybe_unused]] const Actions& actions, const T& x, [[maybe_unused]]const T& y, Fn fn, [[maybe_unused]] const Args&... args)
   {
-    if(!check(std::string{"operator"}.append(to_string(flavour)).append(" is inconsistent"), logger, fn(x)))
+    if(!check(std::string{"operator"}.append(to_string(comparison.value)).append(" is inconsistent"), logger, fn(x)))
       return false;
 
     if constexpr (Actions::has_post_comparison_action)
     {
-      if(!actions.post_comparison_action(logger, flavour, x, y, args...))
+      if(!actions.post_comparison_action(logger, comparison, x, y, args...))
         return false;
     }
 
@@ -107,21 +121,21 @@ namespace sequoia::testing::impl
   [[nodiscard]]
   bool check_ordering_consistency(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const Args&... args)
   {
-    if(!check_comparison_consistency(logger, comparison_flavour::less_than, actions, x, y, [](const T& x) { return !(x < x); }, args...))
+    if(!check_comparison_consistency(logger, less_than_type{}, actions, x, y, [](const T& x) { return !(x < x); }, args...))
         return false;
 
-    if(!check_comparison_consistency(logger, comparison_flavour::leq, actions, x, y, [](const T& x) { return x <= x; }, args...))
+    if(!check_comparison_consistency(logger, leq_type{}, actions, x, y, [](const T& x) { return x <= x; }, args...))
       return false;
 
-    if(!check_comparison_consistency(logger, comparison_flavour::greater_than, actions, x, y, [](const T& x) { return !(x > x); }, args...))
+    if(!check_comparison_consistency(logger, greater_than_type{}, actions, x, y, [](const T& x) { return !(x > x); }, args...))
       return false;
 
-    if(!check_comparison_consistency(logger, comparison_flavour::geq, actions, x, y, [](const T& x) { return x >= x; }, args...))
+    if(!check_comparison_consistency(logger, geq_type{}, actions, x, y, [](const T& x) { return x >= x; }, args...))
       return false;
 
     if constexpr (three_way_comparable<T>)
     {
-      if(!check_comparison_consistency(logger, comparison_flavour::spaceship, actions, x, y, [](const T& x) { return (x <=> x) == 0; }, args...))
+      if(!check_comparison_consistency(logger, threeway_type{}, actions, x, y, [](const T& x) { return (x <=> x) == 0; }, args...))
         return false;
     }
     
@@ -149,10 +163,10 @@ namespace sequoia::testing::impl
   [[nodiscard]]
   bool check_equality_preconditions(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const Args&... args)
   {
-    if(!check_comparison_consistency(logger, comparison_flavour::equality, actions, x, y, [](const T& x) { return x == x; }, args...))
+    if(!check_comparison_consistency(logger, equality_type{}, actions, x, y, [](const T& x) { return x == x; }, args...))
       return false;
 
-    if(!check_comparison_consistency(logger, comparison_flavour::inequality, actions, x, y, [](const T& x) { return !(x != x); }, args...))
+    if(!check_comparison_consistency(logger, inequality_type{}, actions, x, y, [](const T& x) { return !(x != x); }, args...))
       return false;
 
     return check("Precondition - for checking semantics, x and y are assumed to be different", logger, x != y);

@@ -61,6 +61,22 @@ namespace sequoia::testing
     }
   };
 
+  template<class T, class Allocator>
+  struct allocation_count_shifter<inefficient_equality<T, Allocator>> : allocation_count_shifter<int>
+  {
+    using allocation_count_shifter<int>::shift;
+
+    static int shift(int count, const alloc_prediction<comparison_flavour::equality>&)
+    {
+      if constexpr(has_msvc_v && (iterator_debug_level() > 0))
+      {
+        if(count > 1) return count + 2;
+      }
+
+      return count;
+    }
+  };
+
   template<class T=int, class Allocator=std::allocator<int>>
   struct inefficient_inequality
   {
@@ -106,6 +122,22 @@ namespace sequoia::testing
     {
       for(auto i : b.x) s << i << ' ';
       return s;
+    }
+  };
+
+  template<class T, class Allocator>
+  struct allocation_count_shifter<inefficient_inequality<T, Allocator>> : allocation_count_shifter<int>
+  {
+    using allocation_count_shifter<int>::shift;
+
+    static int shift(int count, const alloc_prediction<comparison_flavour::inequality>&)
+    {
+      if constexpr(has_msvc_v && (iterator_debug_level() > 0))
+      {
+        if(count > 1) return count + 2;
+      }
+
+      return count;
     }
   };
 
@@ -388,6 +420,22 @@ namespace sequoia::testing
       }
 
       return s;
+    }
+  };
+
+  template<class T, class Allocator>
+  struct allocation_count_shifter<inefficient_serialization<T, Allocator>> : allocation_count_shifter<int>
+  {
+    using allocation_count_shifter<int>::shift;
+
+    static int shift(int count, const alloc_prediction<null_allocation_event::serialization>&)
+    {
+      if constexpr(has_msvc_v && (iterator_debug_level() > 0))
+      {
+        if(count) return count + 1;
+      }
+
+      return count;
     }
   };
 }

@@ -26,7 +26,7 @@ namespace sequoia::testing::impl
       return "<=";
     case comparison_flavour::geq:
       return ">=";
-    case comparison_flavour::spaceship:
+    case comparison_flavour::threeway:
       return "<=>";
     };
 

@@ -208,6 +208,16 @@ namespace sequoia::testing
     }
   }
 
+  template<class T>
+  struct allocation_count_shifter
+  {
+    template<auto NullAllocEvent>
+    static int shift(int count, const alloc_prediction<NullAllocEvent>&)
+    {
+      return count;
+    }
+  };
+
   /*! \brief class template for shifting allocation predictions, especially for MSVC debug builds.
 
       \anchor alloc_prediction_shifter_primary

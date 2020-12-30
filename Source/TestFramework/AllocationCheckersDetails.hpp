@@ -22,7 +22,7 @@ namespace sequoia::testing
   template<movable_comparable T, alloc_getter<T> Getter, class Predictions>
   class basic_allocation_info;
 
-  enum class null_allocation_event { comparison, spectator, serialization };
+  enum class null_allocation_event { comparison, spectator, serialization, swap };
   
   /*! Type-safe wrapper for allocation predictions, to avoid mixing different allocation events */
   template<auto Event>
@@ -134,12 +134,15 @@ namespace sequoia::testing::impl
       return m_SecondCount;
     }
 
-    template<test_mode Mode>
+    template<auto AllocEvent, test_mode Mode>
     void check_no_allocation(std::string_view detail, test_logger<Mode>& logger, const T& x, const T& y) const
     {
-      const alloc_prediction<null_allocation_event::comparison> prediction{};
-      check_allocation(append_lines(detail, "Unexpected allocation detected (x)"), logger, x, info(), first_count(), prediction);
-      check_allocation(append_lines(detail, "Unexpected allocation detected (y)"), logger, y, info(), second_count(), prediction);
+      const alloc_prediction<AllocEvent> prediction{};
+      const auto xCount{allocation_count_shifter<T>::shift(first_count(), prediction)};
+      const auto yCount{second_count()};
+
+      check_allocation(append_lines(detail, "Unexpected allocation detected (x)"), logger, x, info(), xCount, prediction);
+      check_allocation(append_lines(detail, "Unexpected allocation detected (y)"), logger, y, info(), yCount, prediction);
     }
 
     template<test_mode Mode>
@@ -241,7 +244,8 @@ namespace sequoia::testing::impl
     template<test_mode Mode, auto Event>
     bool check(std::string_view detail, test_logger<Mode>& logger, const T& container, const alloc_prediction<Event> prediction) const
     {
-      return check_allocation(detail, logger, container, info(), m_PriorCount, prediction);
+      const auto count{allocation_count_shifter<T>::shift(m_PriorCount, prediction)};
+      return check_allocation(detail, logger, container, info(), count, prediction);
     }
 
     [[nodiscard]]
@@ -369,12 +373,12 @@ namespace sequoia::testing::impl
 
   //================================ checks using dual_allocation_checker ================================//
 
-  template<test_mode Mode, movable_comparable T, alloc_getter<T> Getter, class Prediction, alloc_getter<T>... Getters, class... Predictions>
+  template<auto AllocEvent, test_mode Mode, movable_comparable T, alloc_getter<T> Getter, class Prediction, alloc_getter<T>... Getters, class... Predictions>
   void check_no_allocation(std::string_view detail, test_logger<Mode>& logger, const T& x, const T& y, const dual_allocation_checker<T, Getter, Prediction>& checker, const dual_allocation_checker<T, Getters, Predictions>&... moreCheckers)
   {
     auto checkFn{
         [detail, &logger, &x, &y](const auto& checker){
-        checker.check_no_allocation(detail, logger, x, y);
+        checker.template check_no_allocation<AllocEvent>(detail, logger, x, y);
       }
     };
 
@@ -570,12 +574,12 @@ namespace sequoia::testing::impl
 
     using precondition_actions<T>::precondition_actions;
 
-    template<test_mode Mode, alloc_getter<T>... Getters, class... Predictions>
-    static bool post_comparison_action(test_logger<Mode>& logger, comparison_flavour flavour, const T& x, const T& y, const dual_allocation_checker<T, Getters, Predictions>&... checkers)
+    template<test_mode Mode, comparison_flavour C, alloc_getter<T>... Getters, class... Predictions>
+    static bool post_comparison_action(test_logger<Mode>& logger, comparison_constant<C> comparison, const T& x, const T& y, const dual_allocation_checker<T, Getters, Predictions>&... checkers)
     {
       sentinel<Mode> s{logger, ""};
 
-      check_no_allocation(std::string{"Unexpected allocation detected for operator"}.append(to_string(flavour)), logger, x, y, checkers...);
+      check_no_allocation<C>(std::string{"Unexpected allocation detected for operator"}.append(to_string(comparison.value)), logger, x, y, checkers...);
       
       return !s.failure_detected();
     }
@@ -602,7 +606,7 @@ namespace sequoia::testing::impl
     {
       if constexpr (do_check_swap<dual_allocation_checker<T, Getters, Predictions>...>())
       {
-        check_no_allocation("Unexpected allocation detected for swap", logger, y, x, checkers...);
+        check_no_allocation<null_allocation_event::swap>("Unexpected allocation detected for swap", logger, y, x, checkers...);
       }
     }
 
