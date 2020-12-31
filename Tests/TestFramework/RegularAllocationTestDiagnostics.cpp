@@ -47,7 +47,7 @@ namespace sequoia::testing
         auto allocGetter{
           [](const beast& b){ return b.x.get_allocator(); }
         };
-        
+
         check_semantics(LINE("Broken equality"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,1_mu}, {1_awp,1_anp}}});
       }
 
@@ -58,7 +58,7 @@ namespace sequoia::testing
         auto allocGetter{
           [](const beast& b){ return b.x.get_allocator(); }
         };
-        
+
         check_semantics(LINE("Broken inequality"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,1_mu}, {1_awp,1_anp}}});
       }
 
@@ -79,10 +79,10 @@ namespace sequoia::testing
 
         auto allocGetter{
           [](const beast& b){ return b.x.get_allocator(); }
-        };        
+        };
         
         check_semantics(LINE("Inefficient inequality"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,1_mu}, {1_awp,1_anp}}});
-      }      
+      }
 
       {
         using beast = broken_copy<int, shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
@@ -90,8 +90,8 @@ namespace sequoia::testing
 
         auto allocGetter{
          [](const beast& b){ return b.x.get_allocator(); }
-        };        
-        
+        };
+
         check_semantics(LINE("Broken copy"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,1_mu}, {1_awp,1_anp}}});
       }
 
@@ -102,18 +102,18 @@ namespace sequoia::testing
         auto allocGetter{
           [](const beast& b){ return b.x.get_allocator(); }
         };
-        
+
         check_semantics(LINE("Broken para-copy"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,1_mu}, {1_awp,1_anp}}});
       }
 
       {
         using beast = broken_move<int, shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
         using allocator = typename beast::allocator_type;
-        
+
         auto allocGetter{
           [](const beast& b){ return b.x.get_allocator(); }
         };
-        
+
         check_semantics(LINE("Broken move"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,1_mu}, {1_awp,1_anp}}});
       }
 
@@ -131,18 +131,18 @@ namespace sequoia::testing
       {
         using beast = broken_copy_assignment<int, shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
         using allocator = typename beast::allocator_type;
-        
+
         auto allocGetter{
           [](const beast& b){ return b.x.get_allocator(); }
         };
-        
+
         check_semantics(LINE("Broken copy assignment"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,1_mu}, {1_awp,1_anp}}});
       }
 
       {
         using beast = broken_move_assignment<int, shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
         using allocator = typename beast::allocator_type;
-        
+
         auto allocGetter{
           [](const beast& b){ return b.x.get_allocator(); }
         };
@@ -156,15 +156,12 @@ namespace sequoia::testing
         using allocator = typename beast::allocator_type;
         using getter = typename beast::alloc_acquirer;
 
-
-
-
         auto m{
           [](beast& b) {
             *b.x.front() = 9;
           }
         };
-        
+
         check_semantics(LINE("Broken copy value semantics"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, m, allocation_info{getter{}, {1_c, {1_c,0_mu}, {1_awp,1_anp}}});
       }
 
@@ -182,8 +179,7 @@ namespace sequoia::testing
             *b.x.front() = 9;
           }
         };
-        
-        
+
         check_semantics(LINE("Broken copy assignment value semantics"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, m, allocation_info{allocGetter, {1_c, {1_c,0_mu}, {1_awp,1_anp}}});
       }
 
@@ -202,7 +198,6 @@ namespace sequoia::testing
           }
         };
 
-        
         check_semantics(LINE("Inefficient copy"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator2, allocation_info{allocGetter, {2_c, {3_c,1_mu,1_pc,1_pm}, {1_awp,1_anp}}});
         check_semantics(LINE("Inefficient copy"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator2, allocation_info{allocGetter, {3_c, {2_c,1_mu,1_pc,1_pm}, {1_awp,1_anp}}});
       }
@@ -276,7 +271,7 @@ namespace sequoia::testing
         check_semantics(LINE("Incorrect copy x allocs"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {0_c, {1_c,1_mu}, {1_awp,1_anp}}});
 
         check_semantics(LINE("Incorrect copy y allocs"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {0_c,1_mu}, {1_awp,1_anp}}});
-          
+
         check_semantics(LINE("Incorrect mutation allocs"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,0_mu}, {1_awp,1_anp}}});
 
         auto predictions{
@@ -291,7 +286,7 @@ namespace sequoia::testing
             }
           }
         };
-          
+
         check_semantics(LINE("Incorrect copy assign y to x allocs"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, predictions()});
       }
 
@@ -308,9 +303,9 @@ namespace sequoia::testing
         };
 
         check_semantics(LINE("Incorrect copy x allocs"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, m, allocation_info{getter{}, {0_c, {1_c,0_mu}, {1_awp,1_anp}}});
-          
+
         check_semantics(LINE("Incorrect copy y allocs"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, m, allocation_info{getter{}, {1_c, {0_c,0_mu}, {1_awp,1_anp}}});
-        
+
         check_semantics(LINE("Incorrect mutation allocs"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, m, allocation_info{getter{}, {1_c, {1_c,1_mu}, {1_awp,1_anp}}});
 
         auto predictions{
@@ -335,7 +330,7 @@ namespace sequoia::testing
         using allocator = typename beast::allocator_type;
 
         auto allocGetter{ [](const beast& b){ return b.x.get_allocator(); } };
-        
+
         check_semantics(LINE("Inefficient equality"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,1_mu}, {1_awp,1_anp}}});
       }
   }
@@ -359,7 +354,7 @@ namespace sequoia::testing
 
   template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
   void allocation_false_negative_diagnostics::test_regular_semantics()
-  {    
+  {
     {
       using beast = perfectly_normal_beast<int, shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
       using allocator = typename beast::allocator_type;
@@ -487,14 +482,14 @@ namespace sequoia::testing
           return beast.y.get_allocator();
         }
       };
-      
+
       auto mutator{
         [](beast& b) {
           b.x.push_back(1);
           b.y.push_back(1);
         }
       };
-      
+
       check_semantics(LINE("")
                               , beast{{1}, {1}, xAllocator{}, yAllocator{}}
                               , beast{{5,6}, {5,6}, xAllocator{}, yAllocator{}}
