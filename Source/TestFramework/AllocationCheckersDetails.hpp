@@ -161,7 +161,8 @@ namespace sequoia::testing::impl
         check_allocation("Unexpected allocation detected for copy assignment (x)", logger, x, info(), first_count(), xPrediction);
 
         const alloc_prediction<null_allocation_event::spectator> yPrediction{};
-        check_allocation("Unexpected allocation detected for copy assignment (y)", logger, y, info(), second_count(), yPrediction);
+        const auto yCount{allocation_count_shifter<T>::shift(second_count(), yPrediction)};
+        check_allocation("Unexpected allocation detected for copy assignment (y)", logger, y, info(), yCount, yPrediction);
       }
     }
 

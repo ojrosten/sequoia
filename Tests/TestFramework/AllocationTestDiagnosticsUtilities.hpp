@@ -13,6 +13,30 @@
 
 namespace sequoia::testing
 {
+
+  template<class T, class Handle, class Allocator>
+  struct allocation_count_shifter<broken_copy_value_semantics<T, Handle, Allocator>> : allocation_count_shifter<int>
+  {
+    using allocation_count_shifter<int>::shift;
+
+    static int shift(int count, const alloc_prediction<null_allocation_event::spectator>&)
+    {
+      if constexpr(has_msvc_v && (iterator_debug_level() > 0))
+      {
+        if constexpr(!std::allocator_traits<Allocator>::propagate_on_container_move_assignment::value)
+        {
+          if(count > 0) return count + 1;
+        }
+        else
+        {
+          if(count > 1) return count + 2;
+        }
+      }
+
+      return count;
+    }
+  };
+
   template<class T=int, class Allocator=std::allocator<int>>
   struct inefficient_equality
   {
