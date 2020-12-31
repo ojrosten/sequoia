@@ -69,7 +69,7 @@ namespace sequoia::testing
         auto allocGetter{
           [](const beast& b){ return b.x.get_allocator(); }
         };
-        
+        // TO DO: add advice reminding the since comparison consistency uses x == x, y allocations are unaffected
         check_semantics(LINE("Inefficient equality"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,1_mu}, {1_awp,1_anp}}});
       }
 
@@ -154,10 +154,10 @@ namespace sequoia::testing
         using handle = std::shared_ptr<int>;
         using beast = broken_copy_value_semantics<int, handle, shared_counting_allocator<handle, PropagateCopy, PropagateMove, PropagateSwap>>;
         using allocator = typename beast::allocator_type;
+        using getter = typename beast::alloc_acquirer;
 
-        auto allocGetter{
-          [](const beast& b){ return b.x.get_allocator(); }
-        };
+
+
 
         auto m{
           [](beast& b) {
@@ -165,7 +165,7 @@ namespace sequoia::testing
           }
         };
         
-        check_semantics(LINE("Broken copy value semantics"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, m, allocation_info{allocGetter, {1_c, {1_c,0_mu}, {1_awp,1_anp}}});
+        check_semantics(LINE("Broken copy value semantics"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, m, allocation_info{getter{}, {1_c, {1_c,0_mu}, {1_awp,1_anp}}});
       }
 
       {

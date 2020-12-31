@@ -13,7 +13,6 @@
 
 namespace sequoia::testing
 {
-
   template<class T, class Handle, class Allocator>
   struct allocation_count_shifter<broken_copy_value_semantics<T, Handle, Allocator>> : allocation_count_shifter<int>
   {

@@ -875,6 +875,17 @@ namespace sequoia::testing
     using handle_type = Handle;
     using allocator_type = Allocator;
 
+    struct alloc_acquirer
+    {
+      using alloc_equivalence_class = allocation_equivalence_classes::container_of_pointers<allocator_type>;
+
+      [[nodiscard]]
+      allocator_type operator()(const broken_copy_value_semantics& beast) const
+      {
+        return beast.x.get_allocator();
+      }
+    };
+
     broken_copy_value_semantics(std::initializer_list<T> list, const allocator_type& a = allocator_type{})
       : x(a)
     {
@@ -902,17 +913,34 @@ namespace sequoia::testing
 
     broken_copy_value_semantics& operator=(const broken_copy_value_semantics& other)
     {
-      auto tmp{other};
-      *this = std::move(tmp);
+      auto allocGetter{
+        [](const broken_copy_value_semantics& psb) {
+          return psb.x.get_allocator();
+        }
+      };
+
+      sequoia::impl::assignment_helper::assign(*this, other, allocGetter);
 
       return *this;
     }
 
     broken_copy_value_semantics& operator=(broken_copy_value_semantics&&) = default;
 
-    friend void swap(broken_copy_value_semantics& lhs, broken_copy_value_semantics& rhs)
+    void swap(broken_copy_value_semantics& other) noexcept(noexcept(std::swap(this->x, other.x)))
     {
-      std::swap(lhs.x, rhs.x);
+      std::swap(x, other.x);
+    }
+
+    friend void swap(broken_copy_value_semantics& lhs, broken_copy_value_semantics& rhs)
+      noexcept(noexcept(lhs.swap(rhs)))
+    {
+      lhs.swap(rhs);
+    }
+
+    void reset(const allocator_type& a)
+    {
+      const std::vector<handle_type, allocator_type> v(a);
+      x = v;
     }
 
     std::vector<handle_type, allocator_type> x{};
@@ -942,7 +970,7 @@ namespace sequoia::testing
   template<class T=int, class Handle=std::shared_ptr<T>, class Allocator=std::allocator<Handle>>
   struct broken_copy_assignment_value_semantics
   {
-    using handle_type = Handle;      
+    using handle_type = Handle;
     using allocator_type = Allocator;
 
     broken_copy_assignment_value_semantics(std::initializer_list<T> list, const allocator_type& a = allocator_type{})
