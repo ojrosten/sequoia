@@ -154,18 +154,6 @@
 	--Regular Semantics--
 	[sequoia::testing::broken_copy_value_semantics<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 0> >]
 
-	  [shared_counting_allocator<
-	  		std::shared_ptr<int>,
-	  		Propagate on copy assignment = false,
-	  		Propagate on move assignment = false,
-	  		Propagate on swap = false
-	   >]
-	  Unexpected allocation detected for copy assignment (y)
-	  [int]
-	  operator== returned false
-	  Obtained : 1
-	  Predicted: 0
-
 	  Mutation is not doing anything following move assignment
 	  [bool]
 	  check failed
@@ -659,18 +647,6 @@
 
 	--Regular Semantics--
 	[sequoia::testing::broken_copy_value_semantics<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 1> >]
-
-	  [shared_counting_allocator<
-	  		std::shared_ptr<int>,
-	  		Propagate on copy assignment = false,
-	  		Propagate on move assignment = false,
-	  		Propagate on swap = true
-	   >]
-	  Unexpected allocation detected for copy assignment (y)
-	  [int]
-	  operator== returned false
-	  Obtained : 1
-	  Predicted: 0
 
 	  Mutation is not doing anything following move assignment
 	  [bool]
@@ -1194,18 +1170,6 @@
 	--Regular Semantics--
 	[sequoia::testing::broken_copy_value_semantics<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 0> >]
 
-	  [shared_counting_allocator<
-	  		std::shared_ptr<int>,
-	  		Propagate on copy assignment = false,
-	  		Propagate on move assignment = true,
-	  		Propagate on swap = false
-	   >]
-	  Unexpected allocation detected for copy assignment (y)
-	  [int]
-	  operator== returned false
-	  Obtained : 1
-	  Predicted: 0
-
 	  Mutation is not doing anything following move assignment
 	  [bool]
 	  check failed
@@ -1675,18 +1639,6 @@
 
 	--Regular Semantics--
 	[sequoia::testing::broken_copy_value_semantics<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 1> >]
-
-	  [shared_counting_allocator<
-	  		std::shared_ptr<int>,
-	  		Propagate on copy assignment = false,
-	  		Propagate on move assignment = true,
-	  		Propagate on swap = true
-	   >]
-	  Unexpected allocation detected for copy assignment (y)
-	  [int]
-	  operator== returned false
-	  Obtained : 1
-	  Predicted: 0
 
 	  Mutation is not doing anything following move assignment
 	  [bool]
