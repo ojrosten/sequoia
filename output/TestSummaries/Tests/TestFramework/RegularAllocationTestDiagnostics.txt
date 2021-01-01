@@ -1,4 +1,4 @@
 Alloction False Positive Diagnostics
-False Positive Checks:                   216;  Failures:  0
+False Positive Checks:                   220;  Failures:  0
 Allocation False Negative Diagnostics
-False Negative Checks:                    64;  Failures:  0
+False Negative Checks:                    72;  Failures:  0

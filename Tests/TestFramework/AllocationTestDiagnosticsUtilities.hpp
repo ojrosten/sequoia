@@ -438,4 +438,75 @@ namespace sequoia::testing
       return count;
     }
   };
+
+  template<class T = int, class Allocator = std::allocator<int>>
+  struct broken_copy_assignment_propagation
+  {
+    using allocator_type = Allocator;
+
+    broken_copy_assignment_propagation(std::initializer_list<T> list) : x{list} {}
+
+    broken_copy_assignment_propagation(std::initializer_list<T> list, const allocator_type& a) : x{list, a} {}
+
+    broken_copy_assignment_propagation(const allocator_type& a) : x(a) {}
+
+    broken_copy_assignment_propagation(const broken_copy_assignment_propagation& other) = default;
+
+    broken_copy_assignment_propagation(const broken_copy_assignment_propagation& other, const allocator_type& a) : x(other.x, a) {}
+
+    broken_copy_assignment_propagation(broken_copy_assignment_propagation&&) noexcept = default;
+
+    broken_copy_assignment_propagation(broken_copy_assignment_propagation&& other, const allocator_type& a) : x(std::move(other.x), a) {}
+
+    // Broken if propagation on copy assignment is not the same as for move
+    broken_copy_assignment_propagation& operator=(const broken_copy_assignment_propagation& other)
+    {
+      auto tmp{other};
+      *this = std::move(tmp);
+
+      return *this;
+    }
+
+    broken_copy_assignment_propagation& operator=(broken_copy_assignment_propagation&&) = default;
+
+    void swap(broken_copy_assignment_propagation& other) noexcept(noexcept(std::swap(this->x, other.x)))
+    {
+      std::swap(x, other.x);
+    }
+
+    friend void swap(broken_copy_assignment_propagation& lhs, broken_copy_assignment_propagation& rhs)
+      noexcept(noexcept(lhs.swap(rhs)))
+    {
+      lhs.swap(rhs);
+    }
+
+    std::vector<T, Allocator> x{};
+
+    [[nodiscard]]
+    friend bool operator==(const broken_copy_assignment_propagation&, const broken_copy_assignment_propagation&) noexcept = default;
+
+    [[nodiscard]]
+    friend bool operator!=(const broken_copy_assignment_propagation&, const broken_copy_assignment_propagation&) noexcept = default;
+
+    template<class Stream>
+    friend Stream& operator<<(Stream& s, const broken_copy_assignment_propagation& b)
+    {
+      for(auto i : b.x) s << i << ' ';
+      return s;
+    }
+
+    template<class Stream>
+    friend Stream& operator>>(Stream& s, broken_copy_assignment_propagation& b)
+    {
+      b.x.clear();
+
+      int i{};
+      while(s >> i)
+      {
+        b.x.push_back(i);
+      }
+
+      return s;
+    }
+  };
 }

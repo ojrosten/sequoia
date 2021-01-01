@@ -331,7 +331,19 @@ namespace sequoia::testing
 
         auto allocGetter{ [](const beast& b){ return b.x.get_allocator(); } };
 
-        check_semantics(LINE("Inefficient equality"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,1_mu}, {1_awp,1_anp}}});
+        check_semantics(LINE("Inefficient serialization"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,1_mu}, {1_awp,1_anp}}});
+      }
+
+      {
+        if constexpr(PropagateCopy != PropagateMove)
+        {
+          using beast = broken_copy_assignment_propagation<int, shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
+          using allocator = typename beast::allocator_type;
+
+          auto allocGetter{[](const beast& b) { return b.x.get_allocator(); }};
+
+          check_semantics(LINE("Broken copy assignment propagation"), beast{{1,2}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,1_mu}, {1_awp,0_anp}}});
+        }
       }
   }
 
@@ -368,9 +380,9 @@ namespace sequoia::testing
           b.x.push_back(1);
         }
       };
-     
-      check_semantics(LINE(""), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,1_mu}, {1_awp,1_anp}}});
 
+      check_semantics(LINE(""), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,1_mu}, {1_awp,1_anp}}});
+      check_semantics(LINE(""), beast{{1,2}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,1_mu}, {1_awp,0_anp}}});
       check_semantics(LINE(""), beast(allocator{}), beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {0_c, {1_c,1_mu}, {1_awp,1_anp}}});
     }
 
