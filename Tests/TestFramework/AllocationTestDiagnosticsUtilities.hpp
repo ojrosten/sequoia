@@ -509,4 +509,47 @@ namespace sequoia::testing
       return s;
     }
   };
+
+  template<class T, bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
+  struct allocation_count_shifter<broken_copy_assignment_propagation<T, shared_counting_allocator<T, PropagateCopy, PropagateMove, PropagateSwap>>>
+    : allocation_count_shifter<int>
+  {
+    using allocation_count_shifter<int>::shift;
+
+    static int shift(int count, const alloc_prediction<null_allocation_event::spectator>&)
+    {
+      if constexpr(has_msvc_v && (iterator_debug_level() > 0))
+      {
+        if constexpr(!PropagateCopy)
+        {
+          if(count) return count + 2;
+        }
+      }
+
+      return count;
+    }
+
+    static int shift(int count, const alloc_prediction<assignment_allocation_event::assign>&)
+    {
+      if constexpr(has_msvc_v && (iterator_debug_level() > 0))
+      {
+        if constexpr(!PropagateCopy)
+        {
+          if(count) return count + 2;
+        }
+      }
+
+      return count;
+    }
+
+    static int shift(int count, const alloc_prediction<assignment_allocation_event::assign_prop>&)
+    {
+      if constexpr(has_msvc_v && (iterator_debug_level() > 0))
+      {
+        if(count) return count - 1;
+      }
+
+      return count;
+    }
+  };
 }

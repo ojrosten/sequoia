@@ -76,7 +76,7 @@ namespace sequoia::testing
   using para_copy_prediction             = alloc_prediction<individual_allocation_event::para_copy>;
   using para_move_prediction             = alloc_prediction<individual_allocation_event::para_move>;
   using assign_prop_prediction           = alloc_prediction<assignment_allocation_event::assign_prop>;
-  using assign_prediction                = alloc_prediction<assignment_allocation_event::assign>;  
+  using assign_prediction                = alloc_prediction<assignment_allocation_event::assign>;
   using move_assign_prediction           = alloc_prediction<assignment_allocation_event::move_assign>;
   using copy_like_move_assign_prediction = alloc_prediction<assignment_allocation_event::copy_like_move_assign>;
 

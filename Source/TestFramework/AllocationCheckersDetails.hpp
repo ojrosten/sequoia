@@ -155,7 +155,8 @@ namespace sequoia::testing::impl
       if constexpr(propagate)
       {
         const auto xPrediction{info().get_predictions().assign_y_to_x.with_propagation};
-        check_allocation("Unexpected allocation detected for propagating copy assignment (x)", logger, x, info(), second_count(), xPrediction);
+        const auto xCount{allocation_count_shifter<T>::shift(second_count(), xPrediction)};
+        check_allocation("Unexpected allocation detected for propagating copy assignment (x)", logger, x, info(), xCount, xPrediction);
 
         const alloc_prediction<null_allocation_event::spectator> yPrediction{xPrediction.unshifted(), xPrediction.value() - xPrediction.unshifted()};
         const auto yCount{allocation_count_shifter<T>::shift(second_count(), yPrediction)};
@@ -164,7 +165,8 @@ namespace sequoia::testing::impl
       else
       {
         const auto xPrediction{info().get_predictions().assign_y_to_x.without_propagation};
-        check_allocation("Unexpected allocation detected for copy assignment (x)", logger, x, info(), first_count(), xPrediction);
+        const auto xCount{allocation_count_shifter<T>::shift(first_count(), xPrediction)};
+        check_allocation("Unexpected allocation detected for copy assignment (x)", logger, x, info(), xCount, xPrediction);
 
         const alloc_prediction<null_allocation_event::spectator> yPrediction{};
         const auto yCount{allocation_count_shifter<T>::shift(second_count(), yPrediction)};
