@@ -154,9 +154,12 @@ namespace sequoia::testing::impl
       constexpr bool propagate{std::allocator_traits<allocator_type>::propagate_on_container_copy_assignment::value};
       if constexpr(propagate)
       {
-        const auto yPrediction{info().get_predictions().assign_y_to_x.with_propagation};
-        check_allocation("Unexpected allocation detected for propagating copy assignment (x)", logger, x, info(), second_count(), yPrediction);
-        check_allocation("Unexpected allocation detected for propagating copy assignment (y)", logger, y, info(), second_count(), yPrediction);
+        const auto xPrediction{info().get_predictions().assign_y_to_x.with_propagation};
+        check_allocation("Unexpected allocation detected for propagating copy assignment (x)", logger, x, info(), second_count(), xPrediction);
+
+        const alloc_prediction<null_allocation_event::spectator> yPrediction{xPrediction.value()};
+        const auto yCount{allocation_count_shifter<T>::shift(second_count(), yPrediction)};
+        check_allocation("Unexpected allocation detected for propagating copy assignment (y)", logger, y, info(), yCount, yPrediction);
       }
       else
       {
