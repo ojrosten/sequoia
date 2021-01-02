@@ -16,7 +16,8 @@ namespace sequoia::testing::impl
   std::string allocation_advice::operator()(int count, int) const
   {
     return (count < 0)
-      ? "A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should."
+      ? "A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.\n"
+        "Alternatively, for scoped allocator adaptors, it may be that the predicted number of (inner) containers is incorrect."
       : "";
   }
 }

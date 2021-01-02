@@ -1534,6 +1534,7 @@
 	  Obtained : -2
 	  Predicted: 0
 	  Advice: A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
+	  Alternatively, for scoped allocator adaptors, it may be that the predicted number of (inner) containers is incorrect.
 
 	=======================================
 
@@ -2085,6 +2086,7 @@
 	  Obtained : -2
 	  Predicted: 0
 	  Advice: A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
+	  Alternatively, for scoped allocator adaptors, it may be that the predicted number of (inner) containers is incorrect.
 
 	=======================================
 
