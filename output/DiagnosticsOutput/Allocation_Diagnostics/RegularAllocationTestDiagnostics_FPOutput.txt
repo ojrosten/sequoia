@@ -1516,6 +1516,27 @@
 
 	=======================================
 
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 346
+	Broken copy assignment propagation
+
+	--Regular Semantics--
+	[sequoia::testing::broken_copy_assignment_propagation<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
+
+	  [shared_counting_allocator<
+	  		int,
+	  		Propagate on copy assignment = false,
+	  		Propagate on move assignment = true,
+	  		Propagate on swap = false
+	   >]
+	  Unexpected allocation detected for copy assignment (x)
+	  [int]
+	  operator== returned false
+	  Obtained : -2
+	  Predicted: 0
+	  Advice: A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
+
+	=======================================
+
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 51
 	Broken equality
 
@@ -2046,6 +2067,27 @@
 
 	=======================================
 
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 346
+	Broken copy assignment propagation
+
+	--Regular Semantics--
+	[sequoia::testing::broken_copy_assignment_propagation<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
+
+	  [shared_counting_allocator<
+	  		int,
+	  		Propagate on copy assignment = false,
+	  		Propagate on move assignment = true,
+	  		Propagate on swap = true
+	   >]
+	  Unexpected allocation detected for copy assignment (x)
+	  [int]
+	  operator== returned false
+	  Obtained : -2
+	  Predicted: 0
+	  Advice: A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
+
+	=======================================
+
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 51
 	Broken equality
 
@@ -2553,6 +2595,38 @@
 	  		Propagate on swap = false
 	   >]
 	  Unexpected allocation detected for propagating copy assignment (x)
+	  [int]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	=======================================
+
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 346
+	Broken copy assignment propagation
+
+	--Regular Semantics--
+	[sequoia::testing::broken_copy_assignment_propagation<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
+
+	  [shared_counting_allocator<
+	  		int,
+	  		Propagate on copy assignment = true,
+	  		Propagate on move assignment = false,
+	  		Propagate on swap = false
+	   >]
+	  Unexpected allocation detected for propagating copy assignment (x)
+	  [int]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 0
+
+	  [shared_counting_allocator<
+	  		int,
+	  		Propagate on copy assignment = true,
+	  		Propagate on move assignment = false,
+	  		Propagate on swap = false
+	   >]
+	  Unexpected allocation detected following mutation after assignment
 	  [int]
 	  operator== returned false
 	  Obtained : 0
@@ -3095,6 +3169,38 @@
 	  		Propagate on swap = true
 	   >]
 	  Unexpected allocation detected for propagating copy assignment (x)
+	  [int]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	=======================================
+
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 346
+	Broken copy assignment propagation
+
+	--Regular Semantics--
+	[sequoia::testing::broken_copy_assignment_propagation<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
+
+	  [shared_counting_allocator<
+	  		int,
+	  		Propagate on copy assignment = true,
+	  		Propagate on move assignment = false,
+	  		Propagate on swap = true
+	   >]
+	  Unexpected allocation detected for propagating copy assignment (x)
+	  [int]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 0
+
+	  [shared_counting_allocator<
+	  		int,
+	  		Propagate on copy assignment = true,
+	  		Propagate on move assignment = false,
+	  		Propagate on swap = true
+	   >]
+	  Unexpected allocation detected following mutation after assignment
 	  [int]
 	  operator== returned false
 	  Obtained : 0
