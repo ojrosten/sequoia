@@ -84,6 +84,18 @@ namespace sequoia::testing
           }
         }
       );
+
+      check_semantics(LINE(""),
+        beast{{2}},
+        beast{{1}},
+        mutator,
+        allocation_info{
+          getter{},
+          { {1_c, {1_c,1_mu}, {1_awp,0_anp}},
+            {1_c, {1_c,0_mu}, {1_awp,1_anp,0_clm,0_ma}, {1_containers, 1_containers, 2_containers}}
+          }
+        }
+      );
     }
   }
 

@@ -197,13 +197,7 @@ namespace sequoia::testing
 
     perfectly_sharing_beast& operator=(const perfectly_sharing_beast& other)
     {
-      auto allocGetter{
-        [](const  perfectly_sharing_beast& psb){
-          return psb.x.get_allocator();
-        }
-      };
-
-      sequoia::impl::assignment_helper::assign(*this, other, allocGetter);
+      sequoia::impl::assignment_helper::assign(*this, other, alloc_acquirer{});
 
       return *this;
     }

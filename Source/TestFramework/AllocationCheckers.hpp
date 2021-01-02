@@ -124,6 +124,13 @@ namespace sequoia::testing
 
   [[nodiscard]]
   SPECULATIVE_CONSTEVAL
+    move_assign_prediction operator "" _ma(unsigned long long int n) noexcept
+  {
+    return move_assign_prediction{static_cast<int>(n)};
+  }
+
+  [[nodiscard]]
+  SPECULATIVE_CONSTEVAL
   copy_like_move_assign_prediction operator "" _clm(unsigned long long int n) noexcept
   {
     return copy_like_move_assign_prediction{ static_cast<int>(n) };

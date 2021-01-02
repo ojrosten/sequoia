@@ -85,10 +85,10 @@ namespace sequoia::testing
 
     struct alloc_acquirer
     {
-      using outer_equiv_class = allocation_equivalence_classes::container_of_values<outer_allocator_type>;
-      using inner_equiv_class = allocation_equivalence_classes::container_of_pointers<inner_allocator_type>;
+      //using outer_equiv_class = allocation_equivalence_classes::container_of_values<outer_allocator_type>;
+      //using inner_equiv_class = allocation_equivalence_classes::container_of_pointers<inner_allocator_type>;
 
-      using alloc_equivalence_class = std::tuple<outer_equiv_class, inner_equiv_class>;
+      //using alloc_equivalence_class = std::tuple<outer_equiv_class, inner_equiv_class>;
 
       [[nodiscard]]
       allocator_type operator()(const perfectly_mixed_beast& beast) const
