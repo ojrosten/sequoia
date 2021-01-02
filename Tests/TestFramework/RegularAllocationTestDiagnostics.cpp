@@ -69,7 +69,7 @@ namespace sequoia::testing
         auto allocGetter{
           [](const beast& b){ return b.x.get_allocator(); }
         };
-        // TO DO: add advice reminding the since comparison consistency uses x == x, y allocations are unaffected
+
         check_semantics(LINE("Inefficient equality"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,1_mu}, {1_awp,1_anp}}});
       }
 

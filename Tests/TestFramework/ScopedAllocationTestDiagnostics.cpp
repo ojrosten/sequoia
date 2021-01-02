@@ -30,34 +30,61 @@ namespace sequoia::testing
   template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
   void scoped_allocation_false_negative_diagnostics::test_regular_semantics()
   {
-    using beast
-      = perfectly_scoped_beast<shared_counting_allocator<char, PropagateCopy, PropagateMove, PropagateSwap>>;
+    {
+      using beast
+        = perfectly_scoped_beast<shared_counting_allocator<char, PropagateCopy, PropagateMove, PropagateSwap>>;
 
-    auto mutator{
-      [](beast& b) {
-        b.x.push_back("baz");
-      }
-    };
+      auto mutator{
+        [](beast& b) {
+          b.x.push_back("baz");
+        }
+      };
 
-    auto allocGetter{
-      [](const beast& b) {
-        return b.x.get_allocator();
-      }
-    };
+      auto allocGetter{
+        [](const beast& b) {
+          return b.x.get_allocator();
+        }
+      };
 
-    check_semantics(LINE(""),
-                    beast{},
-                    beast{ {"something too long for small string optimization"},
-                           {"something else too long for small string optimization"}
-                    },
-                    mutator,
-                    allocation_info{
-                      allocGetter,
-                      { {0_c, {1_c,1_mu}, {1_awp,1_anp}},
-                        {0_c, {2_c,0_mu}, {2_awp,2_anp}, {0_containers, 2_containers, 3_containers}}
+      check_semantics(LINE(""),
+                      beast{},
+                      beast{ {"something too long for small string optimization"},
+                             {"something else too long for small string optimization"}
+                      },
+                      mutator,
+                      allocation_info{
+                        allocGetter,
+                        { {0_c, {1_c,1_mu}, {1_awp,1_anp}},
+                          {0_c, {2_c,0_mu}, {2_awp,2_anp}, {0_containers, 2_containers, 3_containers}}
+                        }
                       }
-                    }
-    );
+      );
+    }
+
+    {
+      using beast
+        = perfectly_mixed_beast<shared_counting_allocator<std::shared_ptr<int>, PropagateCopy, PropagateMove, PropagateSwap>>;
+
+      using getter = typename beast::alloc_acquirer;
+
+      auto mutator{
+        [](beast& b) {
+          b.x.push_back({});
+        }
+      };
+
+      check_semantics(LINE(""),
+        beast{},
+        beast{{1}, {2, 3}},
+        mutator,
+        allocation_info{
+          getter{},
+          { {0_c, {1_c,1_mu}, {1_awp,1_anp}},
+            {0_c, {2_c,0_mu}, {2_awp,2_anp}, {0_containers, 2_containers, 3_containers}}
+          }
+        }
+      );
+    }
   }
 
 
