@@ -62,22 +62,6 @@ namespace sequoia::testing::impl
     std::string operator()(int count, int) const;
   };
 
-  template<test_mode Mode, movable_comparable T, alloc_getter<T> Getter, class Predictions>
-  bool check_allocation(std::string_view detail,
-                               test_logger<Mode>& logger,
-                               const T& container,
-                               const basic_allocation_info<T, Getter, Predictions>& info,
-                               const int previous,
-                               const int prediction)
-  {
-    const auto current{info.count(container)};
-
-    using allocator = decltype(std::declval<Getter>()(container));
-    const auto message{ append_lines(make_type_info<allocator>(), detail) };
-
-    return check_equality(message, logger, current - previous, prediction, tutor{allocation_advice{}});
-  }
-
   template<test_mode Mode, movable_comparable T, alloc_getter<T> Getter, class Predictions, auto Event>
   bool check_allocation(std::string_view detail,
     test_logger<Mode>& logger,
@@ -86,9 +70,14 @@ namespace sequoia::testing::impl
     const int previous,
     const alloc_prediction<Event> prediction)
   {
+    const auto current{info.count(container)};
     const auto unshifted{prediction.unshifted()};
     const auto delta{prediction.value() - unshifted};
-    return check_allocation(detail, logger, container, info, previous + delta, unshifted);
+
+    using allocator = decltype(std::declval<Getter>()(container));
+    const auto message{append_lines(make_type_info<allocator>(), detail)};
+
+    return check_equality(message, logger, current - previous - delta, unshifted, tutor{allocation_advice{}});
   }
 
   /*! \brief Wraps basic_allocation_info, together with two prior allocation counts.
