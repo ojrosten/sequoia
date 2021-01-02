@@ -343,7 +343,8 @@ namespace sequoia::testing
           auto allocGetter{[](const beast& b) { return b.x.get_allocator(); }};
 
           check_semantics(LINE("Broken copy assignment propagation"), beast{{1,2}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,1_mu}, {1_awp,0_anp}}});
-          check_semantics(LINE("Broken copy assignment propagation"), beast{{1,2}, allocator{}}, beast{}, mutator, allocation_info{allocGetter, {1_c, {0_c,1_mu}, {0_awp,0_anp}}});
+          check_semantics(LINE("Broken copy assignment propagation; 'negative' allocation counts"),
+                          beast{{1,2}, allocator{}}, beast{}, mutator, allocation_info{allocGetter, {1_c, {0_c,1_mu}, {0_awp,0_anp}}});
         }
       }
   }

@@ -1517,7 +1517,7 @@
 	=======================================
 
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 346
-	Broken copy assignment propagation
+	Broken copy assignment propagation; 'negative' allocation counts
 
 	--Regular Semantics--
 	[sequoia::testing::broken_copy_assignment_propagation<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
@@ -2068,7 +2068,7 @@
 	=======================================
 
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 346
-	Broken copy assignment propagation
+	Broken copy assignment propagation; 'negative' allocation counts
 
 	--Regular Semantics--
 	[sequoia::testing::broken_copy_assignment_propagation<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
@@ -2603,7 +2603,7 @@
 	=======================================
 
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 346
-	Broken copy assignment propagation
+	Broken copy assignment propagation; 'negative' allocation counts
 
 	--Regular Semantics--
 	[sequoia::testing::broken_copy_assignment_propagation<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
@@ -3177,7 +3177,7 @@
 	=======================================
 
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 346
-	Broken copy assignment propagation
+	Broken copy assignment propagation; 'negative' allocation counts
 
 	--Regular Semantics--
 	[sequoia::testing::broken_copy_assignment_propagation<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
