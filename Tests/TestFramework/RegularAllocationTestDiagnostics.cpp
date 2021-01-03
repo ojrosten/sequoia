@@ -379,6 +379,7 @@ namespace sequoia::testing
 
       auto mutator{
         [](beast& b) {
+          b.x.reserve(10);
           b.x.push_back(1);
         }
       };
@@ -386,6 +387,8 @@ namespace sequoia::testing
       check_semantics(LINE(""), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,1_mu}, {1_awp,1_anp}}});
       check_semantics(LINE(""), beast{{1,2}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,1_mu}, {1_awp,0_anp}}});
       check_semantics(LINE(""), beast(allocator{}), beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {0_c, {1_c,1_mu}, {1_awp,1_anp}}});
+      check_semantics(LINE(""), beast{{1,2}}, beast(allocator{}), mutator, allocation_info{allocGetter, {1_c, {0_c,1_mu}, {0_awp,0_anp}}});
+      check_semantics(LINE(""), beast{{1,2}}, beast{{5}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,1_mu}, {1_awp,0_anp}}});
     }
 
     {
@@ -396,13 +399,16 @@ namespace sequoia::testing
 
       auto mutator{
         [](beast& b) {
-          *b.x.front() = 9;
+          if(!b.x.empty()) *b.x.front() = 9;
+          else { b.x.reserve(10); b.x.push_back(std::make_shared<int>(1)); }
         }
       };
 
       check_semantics(LINE(""), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{getter{}, {1_c, {1_c,0_mu}, {1_awp, 1_anp}}});
-
+      check_semantics(LINE(""), beast{{1,2}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{getter{}, {1_c, {1_c,0_mu}, {1_awp,1_anp,0_clm,0_ma}}});
       check_semantics(LINE(""), beast(allocator{}), beast{{5,6}, allocator{}}, mutator, allocation_info{getter{}, {0_c, {1_c,0_mu}, {1_awp, 1_anp}}});
+      check_semantics(LINE(""), beast{{1,2}}, beast(allocator{}), mutator, allocation_info{getter{}, {1_c, {0_c,1_mu}, {0_awp,0_anp}}});
+      check_semantics(LINE(""), beast{{1,2}}, beast{{5}, allocator{}}, mutator, allocation_info{getter{}, {1_c, {1_c,0_mu}, {1_awp,1_anp,0_clm,0_ma}}});
     }
 
     /* TO DO: enable test once there's a fix for this libc++ bug https://bugs.llvm.org/show_bug.cgi?id=48439 {
