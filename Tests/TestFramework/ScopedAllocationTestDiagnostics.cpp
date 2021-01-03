@@ -69,9 +69,22 @@ namespace sequoia::testing
 
       auto mutator{
         [](beast& b) {
+          b.x.reserve(10);
           b.x.push_back({});
         }
       };
+
+      check_semantics(LINE(""),
+        beast{},
+        beast{{1}},
+        mutator,
+        allocation_info{
+          getter{},
+          { {0_c, {1_c,1_mu}, {1_awp,1_anp}},
+            {0_c, {1_c,0_mu}, {1_awp,1_anp}, {0_containers, 1_containers, 2_containers}}
+          }
+        }
+      );
 
       check_semantics(LINE(""),
         beast{},
@@ -86,6 +99,18 @@ namespace sequoia::testing
       );
 
       check_semantics(LINE(""),
+        beast{{1}},
+        beast{},
+        mutator,
+        allocation_info{
+          getter{},
+          { {1_c, {0_c,1_mu}, {0_awp,0_anp}},
+            {1_c, {0_c,0_mu}, {0_awp,0_anp}, {1_containers, 0_containers, 1_containers}}
+          }
+        }
+      );
+
+      check_semantics(LINE(""),
         beast{{2}},
         beast{{1}},
         mutator,
@@ -93,6 +118,42 @@ namespace sequoia::testing
           getter{},
           { {1_c, {1_c,1_mu}, {1_awp,0_anp}},
             {1_c, {1_c,0_mu}, {1_awp,1_anp,0_clm,0_ma}, {1_containers, 1_containers, 2_containers}}
+          }
+        }
+      );
+
+      check_semantics(LINE(""),
+        beast{{2}},
+        beast{{1}, {5,6}},
+        mutator,
+        allocation_info{
+          getter{},
+          { {1_c, {1_c,1_mu}, {1_awp,1_anp}},
+            {1_c, {2_c,0_mu}, {2_awp,2_anp}, {1_containers, 2_containers, 3_containers}}
+          }
+        }
+      );
+
+      check_semantics(LINE(""),
+        beast{{2}, {7,8}},
+        beast{{1}},
+        mutator,
+        allocation_info{
+          getter{},
+          { {1_c, {1_c,1_mu}, {1_awp,0_anp}},
+            {2_c, {1_c,0_mu}, {1_awp,1_anp,0_clm,0_ma}, {2_containers, 1_containers, 2_containers}}
+          }
+        }
+      );
+
+      check_semantics(LINE(""),
+        beast{{2}, {7,8}},
+        beast{{1}, {5,6}},
+        mutator,
+        allocation_info{
+          getter{},
+          { {1_c, {1_c,1_mu}, {1_awp,0_anp}},
+            {2_c, {2_c,0_mu}, {2_awp,2_anp,0_clm,0_ma}, {2_containers, 2_containers, 3_containers}}
           }
         }
       );
