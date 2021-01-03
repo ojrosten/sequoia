@@ -16,61 +16,24 @@
 
 namespace sequoia::testing
 {
-  template<class InnerAllocator>
-  struct perfectly_scoped_beast
+  struct scoped_beast_builder
   {
-    using string = std::basic_string<char, std::char_traits<char>, InnerAllocator>;
+    template<class InnerAllocator>
+    using inner_type = std::basic_string<char, std::char_traits<char>, InnerAllocator>;
 
-    using inner_allocator_type = InnerAllocator;
-    using outer_allocator_type = typename InnerAllocator::template rebind<string>::other;
-    
-    using allocator_type
-      = std::scoped_allocator_adaptor<outer_allocator_type, InnerAllocator>;
+    template<class InnerAllocator>
+    using outer_allocator_type = typename InnerAllocator::template rebind<inner_type<InnerAllocator>>::other;
 
-    perfectly_scoped_beast(std::initializer_list<string> list) : x{list} {}
+    template<class InnerAllocator>
+    using allocator_type = std::scoped_allocator_adaptor<scoped_beast_builder::outer_allocator_type<InnerAllocator>, InnerAllocator>;
 
-    perfectly_scoped_beast(std::initializer_list<string> list, const allocator_type& a) : x(list, a) {}
-
-    perfectly_scoped_beast(const allocator_type& a) : x(a) {}
-
-    perfectly_scoped_beast(const perfectly_scoped_beast&) = default;
-
-    perfectly_scoped_beast(const perfectly_scoped_beast& other, const allocator_type& a) : x(other.x, a) {}
-
-    perfectly_scoped_beast(perfectly_scoped_beast&&) noexcept = default;
-
-    perfectly_scoped_beast(perfectly_scoped_beast&& other, const allocator_type& a) : x(std::move(other.x), a) {}
-
-    perfectly_scoped_beast& operator=(const perfectly_scoped_beast&) = default;
-
-    perfectly_scoped_beast& operator=(perfectly_scoped_beast&&) = default;
-
-    void swap(perfectly_scoped_beast& other) noexcept(noexcept(std::swap(this->x, other.x)))
-    {
-      std::swap(x, other.x);
-    }
-
-    friend void swap(perfectly_scoped_beast& lhs, perfectly_scoped_beast& rhs)
-      noexcept(noexcept(lhs.swap(rhs)))
-    {
-      lhs.swap(rhs);
-    }
-
-    std::vector<string, allocator_type> x;
-
-    [[nodiscard]]
-    friend bool operator==(const perfectly_scoped_beast& lhs, const perfectly_scoped_beast& rhs) noexcept = default;
-
-    [[nodiscard]]
-    friend bool operator!=(const perfectly_scoped_beast& lhs, const perfectly_scoped_beast& rhs) noexcept = default;
-
-    template<class Stream>
-    friend Stream& operator<<(Stream& s, const perfectly_scoped_beast& b)
-    {
-      for(auto i : b.x) s << i << '\n';
-      return s;
-    }
+    template<class InnerAllocator>
+    using beast = perfectly_normal_beast<inner_type<InnerAllocator>, allocator_type<InnerAllocator>>;
   };
+
+  template<class InnerAllocator>
+  using perfectly_scoped_beast = scoped_beast_builder::beast<InnerAllocator>;
+
 
   template<class InnerAllocator>
   struct perfectly_mixed_beast

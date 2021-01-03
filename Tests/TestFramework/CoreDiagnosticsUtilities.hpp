@@ -59,11 +59,13 @@ namespace sequoia::testing
     template<class Stream>
     friend Stream& operator<<(Stream& s, const perfectly_normal_beast& b)
     {
-      for(auto i : b.x) s << i << ' ';
+      for(const auto& i : b.x) s << i << '\n';
       return s;
     }
 
+    // Only provide de-serialization in simple cases to keep life easy!
     template<class Stream>
+      requires std::is_arithmetic_v<T>
     friend Stream& operator>>(Stream& s, perfectly_normal_beast& b)
     {
       b.x.clear();
