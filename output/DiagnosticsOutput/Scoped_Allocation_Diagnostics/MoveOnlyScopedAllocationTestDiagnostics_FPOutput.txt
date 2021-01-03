@@ -1,8 +1,8 @@
-	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 99
+	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 103
 	Incorrect assigment outer allocs
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >]
+	[sequoia::testing::move_only_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >, 1, 0, 0>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> > >]
 
 	  [shared_counting_allocator<
 	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >,
@@ -18,11 +18,11 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 109
+	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 113
 	Incorrect mutation outer allocs
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >]
+	[sequoia::testing::move_only_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >, 1, 0, 0>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> > >]
 
 	  [shared_counting_allocator<
 	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >,
@@ -38,11 +38,11 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 118
+	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 122
 	Incorrect para move outer allocs
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >]
+	[sequoia::testing::move_only_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >, 1, 0, 0>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> > >]
 
 	  [shared_counting_allocator<
 	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >,
@@ -58,11 +58,11 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 129
+	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 133
 	Incorrect assigment inner allocs
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >]
+	[sequoia::testing::move_only_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >, 1, 0, 0>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> > >]
 
 	  [shared_counting_allocator<
 	  		char,
@@ -78,11 +78,11 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 139
+	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 143
 	Incorrect mutation inner allocs
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >]
+	[sequoia::testing::move_only_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >, 1, 0, 0>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> > >]
 
 	  [shared_counting_allocator<
 	  		char,
@@ -98,11 +98,11 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 147
+	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 151
 	Incorrect para move inner allocs
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >]
+	[sequoia::testing::move_only_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >, 1, 0, 0>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> > >]
 
 	  [shared_counting_allocator<
 	  		char,
@@ -118,11 +118,11 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 99
+	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 103
 	Incorrect assigment outer allocs
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >]
+	[sequoia::testing::move_only_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >, 1, 0, 1>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> > >]
 
 	  [shared_counting_allocator<
 	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >,
@@ -138,11 +138,11 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 109
+	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 113
 	Incorrect mutation outer allocs
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >]
+	[sequoia::testing::move_only_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >, 1, 0, 1>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> > >]
 
 	  [shared_counting_allocator<
 	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >,
@@ -158,11 +158,11 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 118
+	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 122
 	Incorrect para move outer allocs
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >]
+	[sequoia::testing::move_only_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >, 1, 0, 1>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> > >]
 
 	  [shared_counting_allocator<
 	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >,
@@ -178,11 +178,11 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 129
+	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 133
 	Incorrect assigment inner allocs
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >]
+	[sequoia::testing::move_only_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >, 1, 0, 1>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> > >]
 
 	  [shared_counting_allocator<
 	  		char,
@@ -198,11 +198,11 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 139
+	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 143
 	Incorrect mutation inner allocs
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >]
+	[sequoia::testing::move_only_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >, 1, 0, 1>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> > >]
 
 	  [shared_counting_allocator<
 	  		char,
@@ -218,11 +218,11 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 147
+	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 151
 	Incorrect para move inner allocs
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >]
+	[sequoia::testing::move_only_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >, 1, 0, 1>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> > >]
 
 	  [shared_counting_allocator<
 	  		char,
@@ -238,11 +238,11 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 109
+	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 113
 	Incorrect mutation outer allocs
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >]
+	[sequoia::testing::move_only_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >, 1, 1, 0>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0> > >]
 
 	  [shared_counting_allocator<
 	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >,
@@ -258,11 +258,11 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 118
+	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 122
 	Incorrect para move outer allocs
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >]
+	[sequoia::testing::move_only_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >, 1, 1, 0>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0> > >]
 
 	  [shared_counting_allocator<
 	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >,
@@ -278,11 +278,11 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 139
+	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 143
 	Incorrect mutation inner allocs
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >]
+	[sequoia::testing::move_only_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >, 1, 1, 0>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0> > >]
 
 	  [shared_counting_allocator<
 	  		char,
@@ -298,11 +298,11 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 147
+	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 151
 	Incorrect para move inner allocs
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >]
+	[sequoia::testing::move_only_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >, 1, 1, 0>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0> > >]
 
 	  [shared_counting_allocator<
 	  		char,
@@ -318,11 +318,11 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 109
+	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 113
 	Incorrect mutation outer allocs
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >]
+	[sequoia::testing::move_only_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >, 1, 1, 1>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1> > >]
 
 	  [shared_counting_allocator<
 	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >,
@@ -338,11 +338,11 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 118
+	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 122
 	Incorrect para move outer allocs
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >]
+	[sequoia::testing::move_only_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >, 1, 1, 1>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1> > >]
 
 	  [shared_counting_allocator<
 	  		std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >,
@@ -358,11 +358,11 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 139
+	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 143
 	Incorrect mutation inner allocs
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >]
+	[sequoia::testing::move_only_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >, 1, 1, 1>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1> > >]
 
 	  [shared_counting_allocator<
 	  		char,
@@ -378,11 +378,11 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 147
+	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 151
 	Incorrect para move inner allocs
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >]
+	[sequoia::testing::move_only_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >, 1, 1, 1>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1> > >]
 
 	  [shared_counting_allocator<
 	  		char,

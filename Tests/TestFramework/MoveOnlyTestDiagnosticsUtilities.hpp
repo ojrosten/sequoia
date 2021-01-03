@@ -56,7 +56,7 @@ namespace sequoia::testing
     template<class Stream>
     friend Stream& operator<<(Stream& s, const move_only_beast& b)
     {
-      for(auto i : b.x) s << i << ' ';
+      for(const auto& i : b.x) s << i << '\n';
       return s;
     }
   };

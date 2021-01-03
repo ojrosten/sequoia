@@ -29,16 +29,4 @@ namespace sequoia::testing
 
     using beast = OuterType<inner_type, allocator_type>;
   };
-
-  template<class InnerAllocator>
-  using perfectly_scoped_beast
-    = typename scoped_beast_builder<perfectly_normal_beast, std::basic_string<char, std::char_traits<char>, InnerAllocator>>::beast;
-
-  template<class InnerAllocator>
-  using perfectly_mixed_beast
-    = typename scoped_beast_builder<perfectly_normal_beast, perfectly_sharing_beast<int, std::shared_ptr<int>, InnerAllocator>>::beast;
-
-  template<class InnerAllocator>
-  using perfectly_inverted_beast
-    = typename scoped_beast_builder<perfectly_sharing_beast, perfectly_normal_beast<int, InnerAllocator>>::beast;
 }

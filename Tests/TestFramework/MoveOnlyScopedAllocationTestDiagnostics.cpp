@@ -6,10 +6,15 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "MoveOnlyScopedAllocationTestDiagnostics.hpp"
-#include "MoveOnlyScopedAllocationTestDiagnosticsUtilities.hpp"
+#include "MoveOnlyTestDiagnosticsUtilities.hpp"
+#include "ScopedAllocationTestDiagnosticsUtilities.hpp"
 
 namespace sequoia::testing
 {
+  template<class InnerAllocator>
+  using move_only_scoped_beast
+    = typename scoped_beast_builder<move_only_beast, std::basic_string<char, std::char_traits<char>, InnerAllocator>>::beast;
+
   [[nodiscard]]
   std::string_view move_only_scoped_allocation_false_negative_diagnostics::source_file() const noexcept
   {
@@ -30,8 +35,7 @@ namespace sequoia::testing
   template<bool PropagateMove, bool PropagateSwap>
   void move_only_scoped_allocation_false_negative_diagnostics::test_regular_semantics()
   {
-    using beast
-      = move_only_scoped_beast<shared_counting_allocator<char, true, PropagateMove, PropagateSwap>>;
+    using beast = move_only_scoped_beast<shared_counting_allocator<char, true, PropagateMove, PropagateSwap>>;
 
     auto mutator{
       [](beast& b) {
