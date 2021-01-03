@@ -65,7 +65,7 @@ namespace sequoia::testing
       using beast
         = perfectly_mixed_beast<shared_counting_allocator<std::shared_ptr<int>, PropagateCopy, PropagateMove, PropagateSwap>>;
 
-      using getter = typename beast::alloc_acquirer;
+      auto getter{[](const beast& b) { return b.x.get_allocator(); }};
 
       auto mutator{
         [](beast& b) {
@@ -79,7 +79,7 @@ namespace sequoia::testing
         beast{{1}},
         mutator,
         allocation_info{
-          getter{},
+          getter,
           { {0_c, {1_c,1_mu}, {1_awp,1_anp}},
             {0_c, {1_c,0_mu}, {1_awp,1_anp}, {0_containers, 1_containers, 2_containers}}
           }
@@ -91,7 +91,7 @@ namespace sequoia::testing
         beast{{1}, {2, 3}},
         mutator,
         allocation_info{
-          getter{},
+          getter,
           { {0_c, {1_c,1_mu}, {1_awp,1_anp}},
             {0_c, {2_c,0_mu}, {2_awp,2_anp}, {0_containers, 2_containers, 3_containers}}
           }
@@ -103,7 +103,7 @@ namespace sequoia::testing
         beast{},
         mutator,
         allocation_info{
-          getter{},
+          getter,
           { {1_c, {0_c,1_mu}, {0_awp,0_anp}},
             {1_c, {0_c,0_mu}, {0_awp,0_anp}, {1_containers, 0_containers, 1_containers}}
           }
@@ -115,7 +115,7 @@ namespace sequoia::testing
         beast{{1}},
         mutator,
         allocation_info{
-          getter{},
+          getter,
           { {1_c, {1_c,1_mu}, {1_awp,0_anp}},
             {1_c, {1_c,0_mu}, {1_awp,1_anp,0_clm,0_ma}, {1_containers, 1_containers, 2_containers}}
           }
@@ -127,7 +127,7 @@ namespace sequoia::testing
         beast{{1}, {5,6}},
         mutator,
         allocation_info{
-          getter{},
+          getter,
           { {1_c, {1_c,1_mu}, {1_awp,1_anp}},
             {1_c, {2_c,0_mu}, {2_awp,2_anp}, {1_containers, 2_containers, 3_containers}}
           }
@@ -139,7 +139,7 @@ namespace sequoia::testing
         beast{{1}},
         mutator,
         allocation_info{
-          getter{},
+          getter,
           { {1_c, {1_c,1_mu}, {1_awp,0_anp}},
             {2_c, {1_c,0_mu}, {1_awp,1_anp,0_clm,0_ma}, {2_containers, 1_containers, 2_containers}}
           }
@@ -151,7 +151,7 @@ namespace sequoia::testing
         beast{{1}, {5,6}},
         mutator,
         allocation_info{
-          getter{},
+          getter,
           { {1_c, {1_c,1_mu}, {1_awp,0_anp}},
             {2_c, {2_c,0_mu}, {2_awp,2_anp,0_clm,0_ma}, {2_containers, 2_containers, 3_containers}}
           }
