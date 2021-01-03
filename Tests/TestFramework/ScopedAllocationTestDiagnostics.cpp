@@ -24,140 +24,140 @@ namespace sequoia::testing
   template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
   void scoped_allocation_false_negative_diagnostics::test_allocation()
   {
-    test_regular_semantics<PropagateCopy, PropagateMove, PropagateSwap>();
+    test_perfectly_scoped<PropagateCopy, PropagateMove, PropagateSwap>();
+    test_perfectly_mixed<PropagateCopy, PropagateMove, PropagateSwap>();
   }
 
   template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
-  void scoped_allocation_false_negative_diagnostics::test_regular_semantics()
+  void scoped_allocation_false_negative_diagnostics::test_perfectly_scoped()
   {
-    {
-      using beast
-        = perfectly_scoped_beast<shared_counting_allocator<char, PropagateCopy, PropagateMove, PropagateSwap>>;
+    using beast = perfectly_scoped_beast<shared_counting_allocator<char, PropagateCopy, PropagateMove, PropagateSwap>>;
 
-      auto mutator{
-        [](beast& b) {
-          b.x.push_back("baz");
-        }
-      };
+    auto mutator{
+      [](beast& b) {
+        b.x.push_back("baz");
+      }
+    };
 
-      auto allocGetter{
-        [](const beast& b) {
-          return b.x.get_allocator();
-        }
-      };
+    auto allocGetter{
+      [](const beast& b) {
+        return b.x.get_allocator();
+      }
+    };
 
-      check_semantics(LINE(""),
-                      beast{},
-                      beast{ {"something too long for small string optimization"},
-                             {"something else too long for small string optimization"}
-                      },
-                      mutator,
-                      allocation_info{
-                        allocGetter,
-                        { {0_c, {1_c,1_mu}, {1_awp,1_anp}},
-                          {0_c, {2_c,0_mu}, {2_awp,2_anp}, {0_containers, 2_containers, 3_containers}}
-                        }
+    check_semantics(LINE(""),
+                    beast{},
+                    beast{ {"something too long for small string optimization"},
+                           {"something else too long for small string optimization"}
+                    },
+                    mutator,
+                    allocation_info{
+                      allocGetter,
+                      { {0_c, {1_c,1_mu}, {1_awp,1_anp}},
+                        {0_c, {2_c,0_mu}, {2_awp,2_anp}, {0_containers, 2_containers, 3_containers}}
                       }
-      );
-    }
+                    }
+    );
+  }
 
-    {
-      using beast
-        = perfectly_mixed_beast<shared_counting_allocator<std::shared_ptr<int>, PropagateCopy, PropagateMove, PropagateSwap>>;
+  template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
+  void scoped_allocation_false_negative_diagnostics::test_perfectly_mixed()
+  {
+    using inner_allocator = shared_counting_allocator<std::shared_ptr<int>, PropagateCopy, PropagateMove, PropagateSwap>;
+    using beast = perfectly_mixed_beast<inner_allocator>;
 
-      auto getter{[](const beast& b) { return b.x.get_allocator(); }};
+    auto getter{[](const beast& b) { return b.x.get_allocator(); }};
 
-      auto mutator{
-        [](beast& b) {
-          b.x.reserve(10);
-          b.x.push_back({});
+    auto mutator{
+      [](beast& b) {
+        b.x.reserve(10);
+        b.x.push_back({});
+      }
+    };
+
+    check_semantics(LINE(""),
+      beast{},
+      beast{{1}},
+      mutator,
+      allocation_info{
+        getter,
+        { {0_c, {1_c,1_mu}, {1_awp,1_anp}},
+          {0_c, {1_c,0_mu}, {1_awp,1_anp}, {0_containers, 1_containers, 2_containers}}
         }
-      };
+      }
+    );
 
-      check_semantics(LINE(""),
-        beast{},
-        beast{{1}},
-        mutator,
-        allocation_info{
-          getter,
-          { {0_c, {1_c,1_mu}, {1_awp,1_anp}},
-            {0_c, {1_c,0_mu}, {1_awp,1_anp}, {0_containers, 1_containers, 2_containers}}
-          }
+    check_semantics(LINE(""),
+      beast{},
+      beast{{1}, {2, 3}},
+      mutator,
+      allocation_info{
+        getter,
+        { {0_c, {1_c,1_mu}, {1_awp,1_anp}},
+          {0_c, {2_c,0_mu}, {2_awp,2_anp}, {0_containers, 2_containers, 3_containers}}
         }
-      );
+      }
+    );
 
-      check_semantics(LINE(""),
-        beast{},
-        beast{{1}, {2, 3}},
-        mutator,
-        allocation_info{
-          getter,
-          { {0_c, {1_c,1_mu}, {1_awp,1_anp}},
-            {0_c, {2_c,0_mu}, {2_awp,2_anp}, {0_containers, 2_containers, 3_containers}}
-          }
+    check_semantics(LINE(""),
+      beast{{1}},
+      beast{},
+      mutator,
+      allocation_info{
+        getter,
+        { {1_c, {0_c,1_mu}, {0_awp,0_anp}},
+          {1_c, {0_c,0_mu}, {0_awp,0_anp}, {1_containers, 0_containers, 1_containers}}
         }
-      );
+      }
+    );
 
-      check_semantics(LINE(""),
-        beast{{1}},
-        beast{},
-        mutator,
-        allocation_info{
-          getter,
-          { {1_c, {0_c,1_mu}, {0_awp,0_anp}},
-            {1_c, {0_c,0_mu}, {0_awp,0_anp}, {1_containers, 0_containers, 1_containers}}
-          }
+    check_semantics(LINE(""),
+      beast{{2}},
+      beast{{1}},
+      mutator,
+      allocation_info{
+        getter,
+        { {1_c, {1_c,1_mu}, {1_awp,0_anp}},
+          {1_c, {1_c,0_mu}, {1_awp,1_anp,0_clm,0_ma}, {1_containers, 1_containers, 2_containers}}
         }
-      );
+      }
+    );
 
-      check_semantics(LINE(""),
-        beast{{2}},
-        beast{{1}},
-        mutator,
-        allocation_info{
-          getter,
-          { {1_c, {1_c,1_mu}, {1_awp,0_anp}},
-            {1_c, {1_c,0_mu}, {1_awp,1_anp,0_clm,0_ma}, {1_containers, 1_containers, 2_containers}}
-          }
+    check_semantics(LINE(""),
+      beast{{2}},
+      beast{{1}, {5,6}},
+      mutator,
+      allocation_info{
+        getter,
+        { {1_c, {1_c,1_mu}, {1_awp,1_anp}},
+          {1_c, {2_c,0_mu}, {2_awp,2_anp}, {1_containers, 2_containers, 3_containers}}
         }
-      );
+      }
+    );
 
-      check_semantics(LINE(""),
-        beast{{2}},
-        beast{{1}, {5,6}},
-        mutator,
-        allocation_info{
-          getter,
-          { {1_c, {1_c,1_mu}, {1_awp,1_anp}},
-            {1_c, {2_c,0_mu}, {2_awp,2_anp}, {1_containers, 2_containers, 3_containers}}
-          }
+    check_semantics(LINE(""),
+      beast{{2}, {7,8}},
+      beast{{1}},
+      mutator,
+      allocation_info{
+        getter,
+        { {1_c, {1_c,1_mu}, {1_awp,0_anp}},
+          {2_c, {1_c,0_mu}, {1_awp,1_anp,0_clm,0_ma}, {2_containers, 1_containers, 2_containers}}
         }
-      );
+      }
+    );
 
-      check_semantics(LINE(""),
-        beast{{2}, {7,8}},
-        beast{{1}},
-        mutator,
-        allocation_info{
-          getter,
-          { {1_c, {1_c,1_mu}, {1_awp,0_anp}},
-            {2_c, {1_c,0_mu}, {1_awp,1_anp,0_clm,0_ma}, {2_containers, 1_containers, 2_containers}}
-          }
+    check_semantics(LINE(""),
+      beast{{2}, {7,8}},
+      beast{{1}, {5,6}},
+      mutator,
+      allocation_info{
+        getter,
+        { {1_c, {1_c,1_mu}, {1_awp,0_anp}},
+          {2_c, {2_c,0_mu}, {2_awp,2_anp,0_clm,0_ma}, {2_containers, 2_containers, 3_containers}}
         }
-      );
-
-      check_semantics(LINE(""),
-        beast{{2}, {7,8}},
-        beast{{1}, {5,6}},
-        mutator,
-        allocation_info{
-          getter,
-          { {1_c, {1_c,1_mu}, {1_awp,0_anp}},
-            {2_c, {2_c,0_mu}, {2_awp,2_anp,0_clm,0_ma}, {2_containers, 2_containers, 3_containers}}
-          }
-        }
-      );
-    }
+      }
+    );
   }
 
 

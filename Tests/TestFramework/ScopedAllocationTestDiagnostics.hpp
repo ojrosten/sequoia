@@ -22,11 +22,14 @@ namespace sequoia::testing
 
     template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
     void test_allocation();
-  private: 
+  private:
     void run_tests() final;
-    
+
     template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
-    void test_regular_semantics();
+    void test_perfectly_scoped();
+
+    template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
+    void test_perfectly_mixed();
   };
 
   class scoped_allocation_false_positive_diagnostics final
