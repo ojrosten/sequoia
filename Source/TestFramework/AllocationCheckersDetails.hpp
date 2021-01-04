@@ -147,7 +147,7 @@ namespace sequoia::testing::impl
         const auto xCount{allocation_count_shifter<T>::shift(second_count(), xPrediction)};
         check_allocation("Unexpected allocation detected for propagating copy assignment (x)", logger, x, info(), xCount, xPrediction);
 
-        const alloc_prediction<null_allocation_event::spectator> yPrediction{xPrediction.unshifted(), xPrediction.value() - xPrediction.unshifted()};
+        const auto yPrediction{convert<null_allocation_event::spectator>(xPrediction)};
         const auto yCount{allocation_count_shifter<T>::shift(second_count(), yPrediction)};
         check_allocation("Unexpected allocation detected for propagating copy assignment (y)", logger, y, info(), yCount, yPrediction);
       }
