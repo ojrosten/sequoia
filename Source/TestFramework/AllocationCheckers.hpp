@@ -330,30 +330,22 @@ namespace sequoia::testing
     }
   };
 
-  template<movable_comparable T, alloc_getter<T> Getter, std::size_t I>
+  template<movable_comparable T, alloc_getter<T> Getter>
   struct alloc_equivalence_class_generator
   {
     using allocator = std::remove_cvref_t<std::invoke_result_t<Getter, T>>;
     using type = allocation_equivalence_classes::container_of_values<allocator>;
   };
 
-  template<movable_comparable T, alloc_getter<T> Getter, std::size_t I>
+  template<movable_comparable T, alloc_getter<T> Getter>
     requires (defines_alloc_equivalence_class<Getter>)
-  struct alloc_equivalence_class_generator<T, Getter, I>
+  struct alloc_equivalence_class_generator<T, Getter>
   {
     using type = typename Getter::alloc_equivalence_class;
   };
 
-  template<movable_comparable T, alloc_getter<T> Getter, std::size_t I>
-    requires (defines_scoped_alloc_equivalence_class<Getter>)
-  struct alloc_equivalence_class_generator<T, Getter, I>
-  {
-    using allocClass = typename Getter::alloc_equivalence_class;
-    using type = std::remove_cvref_t<decltype(std::get<I>(std::declval<allocClass>()))>;
-  };
-
-  template<movable_comparable T, alloc_getter<T> Getter, std::size_t I>
-  using alloc_equivalence_class_generator_t = typename alloc_equivalence_class_generator<T, Getter, I>::type;
+  template<movable_comparable T, alloc_getter<T> Getter>
+  using alloc_equivalence_class_generator_t = typename alloc_equivalence_class_generator<T, Getter>::type;
 
 
   /*! \brief Base class for use with both plain (shared counting) allocators and std::scoped_allocator_adaptor
@@ -430,19 +422,9 @@ namespace sequoia::testing
     using allocator_type   = typename base_t::allocator_type;
     using predictions_type = Predictions;
 
-    struct prediction_shifter
-    {
-      constexpr Predictions operator()(const Predictions& predictions) const
-      {
-        using allocClass = alloc_equivalence_class_generator_t<T, Getter, 0>;
-        return shift<allocClass>(predictions);
-      }
-    };
-
-    template<class Shifter=prediction_shifter>
-    constexpr basic_allocation_info(Getter allocGetter, const Predictions& predictions, Shifter shifter=Shifter{})
+    constexpr basic_allocation_info(Getter allocGetter, const Predictions& predictions)
       : base_t{std::move(allocGetter)}
-      , m_Predictions{shifter(predictions)}
+      , m_Predictions{prediction_shifter{}(predictions)}
     {}
 
     [[nodiscard]]
@@ -452,6 +434,15 @@ namespace sequoia::testing
     }
   private:
     Predictions m_Predictions;
+
+    struct prediction_shifter
+    {
+      constexpr Predictions operator()(const Predictions& predictions) const
+      {
+        using allocClass = alloc_equivalence_class_generator_t<T, Getter>;
+        return shift<allocClass>(predictions);
+      }
+    };
   };
 
 
@@ -491,14 +482,7 @@ namespace sequoia::testing
         }
       };
 
-      auto scopedShifter{
-        [](const Predictions& predictions) {
-          using allocClass = alloc_equivalence_class_generator_t<T, Getter, I>;
-          return shift<allocClass>(predictions);
-        }
-      };
-
-      return basic_allocation_info<T, decltype(scopedGetter), Predictions>{scopedGetter, m_Predictions[I], scopedShifter};
+      return basic_allocation_info<T, decltype(scopedGetter), Predictions>{scopedGetter, m_Predictions[I]};
     }
 
   private:

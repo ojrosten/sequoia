@@ -29,9 +29,4 @@ namespace sequoia::testing
   concept defines_alloc_equivalence_class = requires {
     typename Fn::alloc_equivalence_class;
   };
-
-  template<class Fn>
-  concept defines_scoped_alloc_equivalence_class = defines_alloc_equivalence_class<Fn> && requires {
-    requires is_tuple_v<typename Fn::alloc_equivalence_class>;
-  };
 }
