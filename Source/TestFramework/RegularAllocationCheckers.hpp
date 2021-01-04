@@ -132,8 +132,8 @@ namespace sequoia::testing
   constexpr assignment_allocation_predictions shift(const assignment_allocation_predictions& predictions, const container_counts& containers)
   {
     using shifter = alloc_prediction_shifter<T>;
-    return {shifter::shift(predictions.with_propagation,    containers.num_x, containers.num_y),
-            shifter::shift(predictions.without_propagation, containers.num_x, containers.num_y),
+    return {shifter::shift(predictions.with_propagation,    containers.num_y),
+            shifter::shift(predictions.without_propagation, containers.num_y),
             shifter::shift(predictions.copy_like_move,      containers.num_x, containers.num_y),
             shifter::shift(predictions.move, containers.num_y)};
   }

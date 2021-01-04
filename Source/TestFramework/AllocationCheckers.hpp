@@ -274,9 +274,9 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    constexpr static assign_prop_prediction shift(assign_prop_prediction p, number_of_containers numContainersX, number_of_containers numContainersY) noexcept
+    constexpr static assign_prop_prediction shift(assign_prop_prediction p, number_of_containers numContainersY) noexcept
     {
-      return increment_msvc_debug_count(p, diff(numContainersX, numContainersY));
+      return increment_msvc_debug_count(p, numContainersY);
     }
 
     [[nodiscard]]
@@ -286,20 +286,17 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    constexpr static assign_prediction shift(assign_prediction p, number_of_containers numContainersX, number_of_containers numContainersY) noexcept
+    constexpr static assign_prediction shift(assign_prediction p, number_of_containers numContainersY) noexcept
     {
-      return (numContainersX.valid() && numContainersY.valid()) ? increment_msvc_debug_count(p, diff(numContainersX, numContainersY)) : p;
+      return numContainersY.valid() ? increment_msvc_debug_count(p, numContainersY) : p;
     }
 
     [[nodiscard]]
     constexpr static copy_like_move_assign_prediction shift(copy_like_move_assign_prediction p, number_of_containers numContainersX, number_of_containers numContainersY) noexcept
     {
-      return (numContainersX.valid() && numContainersY.valid()) ? increment_msvc_debug_count(p, diff(numContainersX, numContainersY)) : p;
-    }
-  protected:
-    constexpr static number_of_containers diff(number_of_containers numContainersX, number_of_containers numContainersY)
-    {
-      return number_of_containers{(numContainersX.valid() && numContainersY.valid()) ? std::max(numContainersY.value() - numContainersX.value(), 0) : -1};
+      const auto effective{numContainersX >= numContainersY ? number_of_containers{0} : numContainersY};
+
+      return (numContainersX.valid() && numContainersY.valid()) ? increment_msvc_debug_count(p, effective) : p;
     }
   };
 
@@ -310,13 +307,13 @@ namespace sequoia::testing
     using alloc_prediction_shifter<allocation_equivalence_classes::container_of_values<Allocator>>::shift;
 
     [[nodiscard]]
-    constexpr static assign_prediction shift(assign_prediction p, number_of_containers numContainersX, number_of_containers numContainersY) noexcept
+    constexpr static assign_prediction shift(assign_prediction p, number_of_containers numContainersY) noexcept
     {
-      return increment_msvc_debug_count(p, diff(numContainersX, numContainersY));
+      return increment_msvc_debug_count(p, numContainersY);
     }
 
     [[nodiscard]]
-    constexpr static assign_prop_prediction shift(assign_prop_prediction p, number_of_containers numContainersX, number_of_containers numContainersY) noexcept
+    constexpr static assign_prop_prediction shift(assign_prop_prediction p, number_of_containers numContainersY) noexcept
     {
       const auto num{
         []() {
@@ -329,10 +326,8 @@ namespace sequoia::testing
         }()
       };
 
-      return increment_msvc_debug_count(p, diff(numContainersX, numContainersY), num);
+      return increment_msvc_debug_count(p, numContainersY, num);
     }
-  protected:
-    using alloc_prediction_shifter<allocation_equivalence_classes::container_of_values<Allocator>>::diff;
   };
 
   template<movable_comparable T, alloc_getter<T> Getter, std::size_t I>
