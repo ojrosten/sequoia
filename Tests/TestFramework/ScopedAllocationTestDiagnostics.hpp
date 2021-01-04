@@ -30,6 +30,9 @@ namespace sequoia::testing
 
     template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
     void test_perfectly_mixed();
+
+    template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
+    void test_weirdly_mixed();
   };
 
   class scoped_allocation_false_positive_diagnostics final

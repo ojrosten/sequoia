@@ -7,6 +7,7 @@
 
 #include "ScopedAllocationTestDiagnostics.hpp"
 #include "ScopedAllocationTestDiagnosticsUtilities.hpp"
+#include "AllocationTestDiagnosticsUtilities.hpp"
 
 namespace sequoia::testing
 {
@@ -19,8 +20,8 @@ namespace sequoia::testing
     = typename scoped_beast_builder<perfectly_normal_beast, perfectly_sharing_beast<int, std::shared_ptr<int>, InnerAllocator>>::beast;
 
   template<class InnerAllocator>
-  using perfectly_inverted_beast
-    = typename scoped_beast_builder<perfectly_sharing_beast, perfectly_normal_beast<int, InnerAllocator>>::beast;
+  using weirdly_mixed_beast
+    = typename scoped_beast_builder<perfectly_normal_beast, inefficient_para_copy<int, InnerAllocator>>::beast;
 
   [[nodiscard]]
   std::string_view scoped_allocation_false_negative_diagnostics::source_file() const noexcept
@@ -38,6 +39,7 @@ namespace sequoia::testing
   {
     test_perfectly_scoped<PropagateCopy, PropagateMove, PropagateSwap>();
     test_perfectly_mixed<PropagateCopy, PropagateMove, PropagateSwap>();
+    test_weirdly_mixed<PropagateCopy, PropagateMove, PropagateSwap>();
   }
 
   template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
@@ -172,6 +174,33 @@ namespace sequoia::testing
     );
   }
 
+  template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
+  void scoped_allocation_false_negative_diagnostics::test_weirdly_mixed()
+  {
+    using inner_allocator = shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>;
+    using beast = weirdly_mixed_beast<inner_allocator>;
+
+    auto getter{[](const beast& b) { return b.x.get_allocator(); }};
+
+    auto mutator{
+      [](beast& b) {
+        b.x.reserve(10);
+        b.x.push_back({});
+      }
+    };
+
+    check_semantics(LINE(""),
+      beast{},
+      beast{{1}},
+      mutator,
+      allocation_info{
+        getter,
+        { {0_c, {1_c,1_mu}, {1_awp,1_anp}},
+          {0_c, {2_c,0_mu,2_pc,1_pm}, {2_awp,2_anp,1_clm,0_ma}, {0_containers, 1_containers, 2_containers}}
+        }
+      }
+    );
+  }
 
   [[nodiscard]]
   std::string_view scoped_allocation_false_positive_diagnostics::source_file() const noexcept
