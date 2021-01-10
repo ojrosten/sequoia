@@ -370,7 +370,7 @@ namespace sequoia::testing
   };
 
   template<movable_comparable T, alloc_getter<T> Getter>
-    requires defines_alloc_equivalence_class<Getter>
+    requires requires { Getter::alloc_equivalence_class; }
   struct alloc_equivalence_class_generator<T, Getter>
   {
     using type = typename Getter::alloc_equivalence_class;

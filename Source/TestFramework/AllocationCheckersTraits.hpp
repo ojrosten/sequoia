@@ -24,6 +24,4 @@ namespace sequoia::testing
   concept alloc_getter = requires(Fn fn, const std::remove_reference_t<T>& t) {
     { fn(t) } -> counting_alloc;
   };
-
-  template<class Fn> concept defines_alloc_equivalence_class = requires { Fn::alloc_equivalence_class; };
 }
