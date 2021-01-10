@@ -54,7 +54,7 @@ namespace sequoia::testing::impl
 
     if(!actions.check_preconditions(logger, x, y, args...))
       return false;
-        
+
     T z{x};
     const bool consistentCopy{
       check_equality("Inconsistent copy constructor (x)", logger, z, x)

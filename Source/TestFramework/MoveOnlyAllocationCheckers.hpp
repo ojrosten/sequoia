@@ -18,63 +18,78 @@ namespace sequoia::testing
 {
   struct move_only_allocation_predictions
   {
+  public:
     constexpr move_only_allocation_predictions(copy_like_move_assign_prediction copyLikeMove,
                                                mutation_prediction yMutation,
                                                para_move_prediction paraMove,
                                                move_prediction m,
                                                move_assign_prediction moveAssign,
-                                               container_counts containerCounts={})
-      : copy_like_move_assign{copyLikeMove}
-      , mutation{yMutation}
-      , para_move{paraMove}
-      , move{m}
-      , move_assign{moveAssign}
-      , containers{containerCounts}
+                                               combined_container_data data = top_level_spec)
+      : m_CopyLikeMoveAssign{copyLikeMove}
+      , m_Mutation{yMutation}
+      , m_ParaMove{paraMove}
+      , m_Move{m}
+      , m_MoveAssign{moveAssign}
+      , m_Containers{data}
     {}
 
     constexpr move_only_allocation_predictions(copy_like_move_assign_prediction copyLikeMove,
                                                mutation_prediction yMutation,
                                                para_move_prediction paraMove,
-                                               container_counts containerCounts={})
-      : copy_like_move_assign{copyLikeMove}
-      , mutation{yMutation}
-      , para_move{paraMove}
-      , containers{containerCounts}
+                                               combined_container_data data = top_level_spec)
+      : m_CopyLikeMoveAssign{copyLikeMove}
+      , m_Mutation{yMutation}
+      , m_ParaMove{paraMove}
+      , m_Containers{data}
+    {}
+
+    constexpr move_only_allocation_predictions(copy_like_move_assign_prediction copyLikeMove,
+                                               mutation_prediction yMutation,
+                                               para_move_prediction paraMove,
+                                               container_counts counts)
+      : m_CopyLikeMoveAssign{copyLikeMove}
+      , m_Mutation{yMutation}
+      , m_ParaMove{paraMove}
+      , m_Containers{counts, top_level::no}
     {}
 
     [[nodiscard]]
-    constexpr para_move_prediction para_move_allocs() const noexcept { return para_move; }
+    constexpr para_move_prediction para_move_allocs() const noexcept { return m_ParaMove; }
 
     [[nodiscard]]
-    constexpr copy_like_move_assign_prediction copy_like_move_assign_allocs() const noexcept { return copy_like_move_assign; }
+    constexpr copy_like_move_assign_prediction copy_like_move_assign_allocs() const noexcept { return m_CopyLikeMoveAssign; }
 
     [[nodiscard]]
-    constexpr move_assign_prediction move_assign_allocs() const noexcept { return move_assign; }
+    constexpr move_assign_prediction move_assign_allocs() const noexcept { return m_MoveAssign; }
 
     [[nodiscard]]
-    constexpr mutation_prediction mutation_allocs() const noexcept { return mutation; }
+    constexpr mutation_prediction mutation_allocs() const noexcept { return m_Mutation; }
 
     [[nodiscard]]
-    constexpr move_prediction move_allocs() const noexcept { return move; }
+    constexpr move_prediction move_allocs() const noexcept { return m_Move; }
 
-    copy_like_move_assign_prediction copy_like_move_assign{};
-    mutation_prediction mutation{};
-    para_move_prediction para_move{};
-    move_prediction move{};
-    move_assign_prediction move_assign{};
-    container_counts containers;
+    [[nodiscard]]
+    constexpr combined_container_data containers() const noexcept { return  m_Containers; }
+  private:
+    copy_like_move_assign_prediction m_CopyLikeMoveAssign{};
+    mutation_prediction m_Mutation{};
+    para_move_prediction m_ParaMove{};
+    move_prediction m_Move{};
+    move_assign_prediction m_MoveAssign{};
+    combined_container_data m_Containers;
   };
 
   template<class T>
   constexpr move_only_allocation_predictions shift(const move_only_allocation_predictions& predictions)
   {
     using shifter = alloc_prediction_shifter<T>;
-    const auto& containers{predictions.containers};
-    return {shifter::shift(predictions.copy_like_move_assign, containers.num_x, containers.num_y),
-            shifter::shift(predictions.mutation,    containers.post_mutation_correction()),
-            shifter::shift(predictions.para_move,   containers.num_y),
-            shifter::shift(predictions.move,        containers.num_y),
-            shifter::shift(predictions.move_assign, containers.num_y)};
+    const auto& containers{predictions.containers()};
+    return {shifter::shift(predictions.copy_like_move_assign_allocs(), containers.x, containers.y),
+            shifter::shift(predictions.mutation_allocs(),    containers.y, containers.y_post_mutation),
+            shifter::shift(predictions.para_move_allocs(),   containers.y),
+            shifter::shift(predictions.move_allocs(),        containers.y),
+            shifter::shift(predictions.move_assign_allocs(), containers.y),
+            containers};
   }
 
   // Done through inheritance rather than a using declaration

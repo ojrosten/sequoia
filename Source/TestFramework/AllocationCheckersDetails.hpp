@@ -143,7 +143,7 @@ namespace sequoia::testing::impl
       constexpr bool propagate{std::allocator_traits<allocator_type>::propagate_on_container_copy_assignment::value};
       if constexpr(propagate)
       {
-        const auto xPrediction{info().get_predictions().assign_y_to_x.with_propagation};
+        const auto xPrediction{info().get_predictions().assign_y_to_x().with_propagation};
         const auto xCount{allocation_count_shifter<T>::shift(second_count(), xPrediction)};
         check_allocation("Unexpected allocation detected for propagating copy assignment (x)", logger, x, info(), xCount, xPrediction);
 
@@ -153,7 +153,7 @@ namespace sequoia::testing::impl
       }
       else
       {
-        const auto xPrediction{info().get_predictions().assign_y_to_x.without_propagation};
+        const auto xPrediction{info().get_predictions().assign_y_to_x().without_propagation};
         const auto xCount{allocation_count_shifter<T>::shift(first_count(), xPrediction)};
         check_allocation("Unexpected allocation detected for copy assignment (x)", logger, x, info(), xCount, xPrediction);
 
@@ -438,7 +438,7 @@ namespace sequoia::testing::impl
   {
     auto checkFn{
       [&logger, &container](const auto& checker){
-        const auto prediction{checker.info().get_predictions().copy_x};
+        const auto prediction{checker.info().get_predictions().x()};
         checker.check("Unexpected allocation detected for copy construction (x)", logger, container, prediction);
       }
     };
@@ -451,7 +451,7 @@ namespace sequoia::testing::impl
   {
     auto checkFn{
       [&logger, &container](const auto& checker){
-        const auto prediction{checker.info().get_predictions().y.copy};
+        const auto prediction{checker.info().get_predictions().y().copy};
         checker.check("Unexpected allocation detected for copy construction (y)", logger, container, prediction);
       }
     };
@@ -494,7 +494,7 @@ namespace sequoia::testing::impl
   {
     auto checkFn{
       [&logger, &container](const auto& checker){
-        const auto prediction{checker.info().get_predictions().y.para_copy};
+        const auto prediction{checker.info().get_predictions().y().para_copy};
         checker.check("Unexpected allocation detected for para-copy construction (y)", logger, container, prediction);
       }
     };

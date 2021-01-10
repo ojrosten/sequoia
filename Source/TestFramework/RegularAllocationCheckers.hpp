@@ -80,72 +80,95 @@ namespace sequoia::testing
  
   struct allocation_predictions
   {
-    constexpr allocation_predictions(copy_prediction copyX,
-                                     individual_allocation_predictions yPredictions,
+    constexpr allocation_predictions(copy_prediction x,
+                                     individual_allocation_predictions y,
                                      assignment_allocation_predictions assignYtoX,
-                                     container_counts containerCounts={})
-      : copy_x{copyX}
-      , y{yPredictions}
-      , assign_y_to_x{assignYtoX}
-      , containers{containerCounts}
+                                     combined_container_data data = top_level_spec)
+      : m_x{x}
+      , m_y{y}
+      , m_Assign_y_to_x{assignYtoX}
+      , m_Containers{data}
+    {}
+
+    constexpr allocation_predictions(copy_prediction x,
+                                     individual_allocation_predictions y,
+                                     assignment_allocation_predictions assignYtoX,
+                                     container_counts counts)
+      : m_x{x}
+      , m_y{y}
+      , m_Assign_y_to_x{assignYtoX}
+      , m_Containers{counts, top_level::no}
     {}
 
     [[nodiscard]]
-    constexpr para_move_prediction para_move_allocs() const noexcept { return y.para_move; }
+    constexpr para_move_prediction para_move_allocs() const noexcept { return y().para_move; }
 
     [[nodiscard]]
     constexpr copy_like_move_assign_prediction copy_like_move_assign_allocs() const noexcept
     {
-      return assign_y_to_x.copy_like_move;
+      return assign_y_to_x().copy_like_move;
     }
 
     [[nodiscard]]
     constexpr move_assign_prediction move_assign_allocs() const noexcept
     {
-      return assign_y_to_x.move;
+      return assign_y_to_x().move;
     }
 
     [[nodiscard]]
-    constexpr mutation_prediction mutation_allocs() const noexcept { return y.mutation; }
+    constexpr mutation_prediction mutation_allocs() const noexcept { return y().mutation; }
 
     [[nodiscard]]
-    constexpr move_prediction move_allocs() const noexcept { return y.move; }
+    constexpr move_prediction move_allocs() const noexcept { return y().move; }
 
-    copy_prediction copy_x{};
-    individual_allocation_predictions y;
-    assignment_allocation_predictions assign_y_to_x;
-    container_counts containers;
+    [[nodiscard]]
+    constexpr copy_prediction x() const noexcept { return m_x; }
+
+    [[nodiscard]]
+    constexpr individual_allocation_predictions y() const noexcept { return m_y; }
+
+    [[nodiscard]]
+    constexpr assignment_allocation_predictions assign_y_to_x() const noexcept { return m_Assign_y_to_x; }
+
+    [[nodiscard]]
+    constexpr combined_container_data containers() const noexcept { return  m_Containers; }
+  private:
+    copy_prediction m_x{};
+    individual_allocation_predictions m_y;
+    assignment_allocation_predictions m_Assign_y_to_x;
+    combined_container_data m_Containers;
   };
 
   template<class T>
-  constexpr individual_allocation_predictions shift(const individual_allocation_predictions& predictions, const container_counts& containers)
+  constexpr individual_allocation_predictions shift(const individual_allocation_predictions& predictions, const combined_container_data& containers)
   {
     using shifter = alloc_prediction_shifter<T>;
-    return {shifter::shift(predictions.copy,      containers.num_y),
-            shifter::shift(predictions.mutation,  containers.post_mutation_correction()),
-            shifter::shift(predictions.para_copy, containers.num_y),
-            shifter::shift(predictions.para_move, containers.num_y),
-            shifter::shift(predictions.move,      containers.num_y)};
+    return {shifter::shift(predictions.copy,      containers.y),
+            shifter::shift(predictions.mutation,  containers.y, containers.y_post_mutation),
+            shifter::shift(predictions.para_copy, containers.y),
+            shifter::shift(predictions.para_move, containers.y),
+            shifter::shift(predictions.move,      containers.y)};
   }
 
   template<class T>
-  constexpr assignment_allocation_predictions shift(const assignment_allocation_predictions& predictions, const container_counts& containers)
+  constexpr assignment_allocation_predictions shift(const assignment_allocation_predictions& predictions, const combined_container_data& containers)
   {
     using shifter = alloc_prediction_shifter<T>;
-    return {shifter::shift(predictions.with_propagation,    containers.num_y),
-            shifter::shift(predictions.without_propagation, containers.num_y),
-            shifter::shift(predictions.copy_like_move,      containers.num_x, containers.num_y),
-            shifter::shift(predictions.move, containers.num_y)};
+    return {shifter::shift(predictions.with_propagation,    containers.y),
+            shifter::shift(predictions.without_propagation, containers.y),
+            shifter::shift(predictions.copy_like_move,      containers.x, containers.y),
+            shifter::shift(predictions.move, containers.y)};
   }
 
   template<class T>
   constexpr allocation_predictions shift(const allocation_predictions& predictions)
   {
     using shifter = alloc_prediction_shifter<T>;
-    const auto& containers{predictions.containers};
-    return {shifter::shift(predictions.copy_x, containers.num_x),
-            shift<T>(predictions.y, containers),
-            shift<T>(predictions.assign_y_to_x, containers)};
+    const auto containers{predictions.containers()};
+    return {shifter::shift(predictions.x(), containers.x),
+            shift<T>(predictions.y(), containers),
+            shift<T>(predictions.assign_y_to_x(),
+            containers)};
   }
 
   // TO DO: revert to 'using' in C++20; presently this is done through inheritance
@@ -172,9 +195,9 @@ namespace sequoia::testing
     class Fn,
     class Signature=function_signature<decltype(&std::remove_cvref_t<Fn>::operator())>
   >
-  allocation_info(Fn allocGetter, std::initializer_list<allocation_predictions> predictions)
+  allocation_info(Fn, std::initializer_list<allocation_predictions>)
     -> allocation_info<std::remove_cvref_t<typename Signature::arg>, Fn>;
-    
+
   template<test_mode Mode, pseudoregular T, invocable<T&> Mutator, alloc_getter<T>... Getters>
   void check_semantics(std::string_view description, test_logger<Mode>& logger, const T& x, const T& y, Mutator yMutator, const allocation_info<T, Getters>&... info)
   {

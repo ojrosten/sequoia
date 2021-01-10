@@ -25,8 +25,5 @@ namespace sequoia::testing
     { fn(t) } -> counting_alloc;
   };
 
-  template<class Fn>
-  concept defines_alloc_equivalence_class = requires {
-    typename Fn::alloc_equivalence_class;
-  };
+  template<class Fn> concept defines_alloc_equivalence_class = requires { Fn::alloc_equivalence_class; };
 }
