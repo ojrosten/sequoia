@@ -25,8 +25,22 @@ namespace sequoia::testing
 
     using outer_allocator_type = typename inner_allocator_type::template rebind<inner_type>::other;
 
-    using allocator_type = std::scoped_allocator_adaptor<scoped_beast_builder::outer_allocator_type, inner_allocator_type>;
+    using allocator_type = std::scoped_allocator_adaptor<outer_allocator_type, inner_allocator_type>;
 
     using beast = OuterType<inner_type, allocator_type>;
+  };
+
+  template<template<class...> class OuterType, class InnerType>
+  struct scoped_branched_beast_builder
+  {
+    using inner_type = InnerType;
+
+    using inner_allocator_type = typename InnerType::allocator_type;
+
+    using outer_allocator_type = typename inner_allocator_type::template rebind<std::pair<inner_type, inner_type>>::other;
+
+    using allocator_type = std::scoped_allocator_adaptor<outer_allocator_type, inner_allocator_type>;
+
+    using beast = OuterType<std::pair<inner_type, inner_type>, allocator_type>;
   };
 }

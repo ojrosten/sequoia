@@ -47,8 +47,10 @@ namespace sequoia::testing
     {
       lhs.swap(rhs);
     }
-      
-    std::vector<T, Allocator> x{};
+
+    using container_type = std::vector<T, Allocator>;
+    
+    container_type x{};
 
     [[nodiscard]]
     friend bool operator==(const perfectly_normal_beast&, const perfectly_normal_beast&) noexcept = default;
@@ -57,6 +59,7 @@ namespace sequoia::testing
     friend bool operator!=(const perfectly_normal_beast&, const perfectly_normal_beast&) noexcept = default;
 
     template<class Stream>
+      requires serializable<T>
     friend Stream& operator<<(Stream& s, const perfectly_normal_beast& b)
     {
       for(const auto& i : b.x) s << i << '\n';
@@ -77,6 +80,16 @@ namespace sequoia::testing
       }
 
       return s;
+    }
+  };
+
+  template<class T, class Allocator>
+  struct detailed_equality_checker<perfectly_normal_beast<T, Allocator>>
+  {
+    template<test_mode Mode>
+    static void check(test_logger<Mode>& logger, const perfectly_normal_beast<T, Allocator>& obtained, const perfectly_normal_beast<T, Allocator>& prediction)
+    {
+      check_equality("", logger, obtained.x, prediction.x);
     }
   };
 
