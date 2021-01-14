@@ -423,7 +423,7 @@ namespace sequoia::testing::impl
   void check_mutation_after_swap(test_logger<Mode>& logger, T& lhs, const T& rhs, const T& y, Mutator yMutator, dual_allocation_checker<T, Getters, Predictions>... checkers)
   {
     if(check("Mutation after swap pre-condition violated", logger, lhs == y))
-    {    
+    {
       yMutator(lhs);
       check_mutation_after_swap(logger, lhs, rhs, checkers...);
 
@@ -643,7 +643,7 @@ namespace sequoia::testing::impl
     const auto mess{
       std::string{"Mutation is not doing anything following move "}.append(moveType)
     };
-    check(mess, logger, u != y);    
+    check(mess, logger, u != y);
   }
 
   template<test_mode Mode, movable_comparable T, invocable<T&> Mutator, class... Checkers, std::size_t... I>

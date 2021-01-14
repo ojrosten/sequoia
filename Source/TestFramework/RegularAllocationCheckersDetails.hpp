@@ -40,7 +40,6 @@ namespace sequoia::testing::impl
     template<test_mode Mode, alloc_getter<T>... Getters, class... Predictions>
     static void post_copy_action(test_logger<Mode>& logger, const T& xCopy, const T& yCopy, const dual_allocation_checker<T, Getters, Predictions>&... checkers)
     {
-      
       check_copy_x_allocation(logger, xCopy, allocation_checker{checkers.info(), checkers.first_count()}...);
 
       check_copy_y_allocation(logger, yCopy, allocation_checker{checkers.info(), checkers.second_count()}...);
@@ -71,7 +70,7 @@ namespace sequoia::testing::impl
 
   template<test_mode Mode, pseudoregular T, invocable<T&> Mutator, alloc_getter<T>... Getters, class... Predictions>
   void check_para_constructor_allocations(test_logger<Mode>& logger, const T& y, Mutator yMutator, const basic_allocation_info<T, Getters, Predictions>&... info)
-  {    
+  {
     if constexpr(sizeof...(Getters) > 0)
     {
       auto make{

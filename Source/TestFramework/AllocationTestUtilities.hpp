@@ -52,12 +52,12 @@ namespace sequoia::testing
     template< class U > struct rebind
     {
       using other = shared_counting_allocator<U, PropagateCopy, PropagateMove, PropagateSwap>;
-    };    
+    };
 
     shared_counting_allocator()
       : m_pAllocs{std::make_shared<int>()}, m_pDeallocs{std::make_shared<int>()}
     {}
-    
+
     shared_counting_allocator(const shared_counting_allocator&) = default;
 
     [[nodiscard]] T* allocate(std::size_t n)
@@ -134,5 +134,5 @@ namespace sequoia::testing
 
       return info;
     }
-  };  
+  };
 }
