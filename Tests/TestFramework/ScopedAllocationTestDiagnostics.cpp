@@ -209,7 +209,7 @@ namespace sequoia::testing
   {
     using inner_allocator = shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>;
     using inner_beast = perfectly_normal_beast<int, inner_allocator>;
-    using inner_type = std::pair<inner_beast, inner_beast>;
+    using inner_type = std::tuple<inner_beast, inner_beast>;
 
     using outer_allocator = shared_counting_allocator<inner_type, PropagateCopy, PropagateMove, PropagateSwap>;
     using beast = perfectly_normal_beast<inner_type, std::scoped_allocator_adaptor<outer_allocator, inner_allocator>>;
