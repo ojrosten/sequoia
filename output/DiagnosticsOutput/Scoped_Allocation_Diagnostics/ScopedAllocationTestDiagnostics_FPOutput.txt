@@ -1,4 +1,4 @@
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 273
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 309
 	Incorrect copy x outer allocs
 
 	--Regular Semantics--
@@ -18,7 +18,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 278
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 314
 	Incorrect copy y outer allocs
 
 	--Regular Semantics--
@@ -38,7 +38,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 283
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 319
 	Incorrect mutation outer allocs
 
 	--Regular Semantics--
@@ -58,7 +58,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 288
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 324
 	Incorrect assignment outer allocs
 
 	--Regular Semantics--
@@ -90,7 +90,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 293
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 329
 	Incorrect para copy x outer allocs
 
 	--Regular Semantics--
@@ -110,7 +110,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 298
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 334
 	Incorrect para move x outer allocs
 
 	--Regular Semantics--
@@ -130,7 +130,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 303
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 339
 	Incorrect copy x inner allocs
 
 	--Regular Semantics--
@@ -150,7 +150,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 308
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 344
 	Incorrect copy y inner allocs
 
 	--Regular Semantics--
@@ -170,7 +170,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 313
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 349
 	Incorrect mutation inner allocs
 
 	--Regular Semantics--
@@ -190,7 +190,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 318
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 354
 	Incorrect assignment inner allocs
 
 	--Regular Semantics--
@@ -222,7 +222,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 323
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 359
 	Incorrect para copy x inner allocs
 
 	--Regular Semantics--
@@ -242,7 +242,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 328
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 364
 	Incorrect para move x inener allocs
 
 	--Regular Semantics--
@@ -262,7 +262,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 273
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 309
 	Incorrect copy x outer allocs
 
 	--Regular Semantics--
@@ -282,7 +282,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 278
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 314
 	Incorrect copy y outer allocs
 
 	--Regular Semantics--
@@ -302,7 +302,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 283
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 319
 	Incorrect mutation outer allocs
 
 	--Regular Semantics--
@@ -334,7 +334,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 288
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 324
 	Incorrect assignment outer allocs
 
 	--Regular Semantics--
@@ -366,7 +366,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 293
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 329
 	Incorrect para copy x outer allocs
 
 	--Regular Semantics--
@@ -386,7 +386,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 298
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 334
 	Incorrect para move x outer allocs
 
 	--Regular Semantics--
@@ -406,7 +406,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 303
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 339
 	Incorrect copy x inner allocs
 
 	--Regular Semantics--
@@ -426,7 +426,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 308
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 344
 	Incorrect copy y inner allocs
 
 	--Regular Semantics--
@@ -446,7 +446,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 313
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 349
 	Incorrect mutation inner allocs
 
 	--Regular Semantics--
@@ -478,7 +478,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 318
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 354
 	Incorrect assignment inner allocs
 
 	--Regular Semantics--
@@ -510,7 +510,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 323
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 359
 	Incorrect para copy x inner allocs
 
 	--Regular Semantics--
@@ -530,7 +530,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 328
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 364
 	Incorrect para move x inener allocs
 
 	--Regular Semantics--
@@ -550,7 +550,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 273
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 309
 	Incorrect copy x outer allocs
 
 	--Regular Semantics--
@@ -570,7 +570,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 278
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 314
 	Incorrect copy y outer allocs
 
 	--Regular Semantics--
@@ -590,7 +590,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 283
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 319
 	Incorrect mutation outer allocs
 
 	--Regular Semantics--
@@ -610,7 +610,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 288
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 324
 	Incorrect assignment outer allocs
 
 	--Regular Semantics--
@@ -630,7 +630,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 293
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 329
 	Incorrect para copy x outer allocs
 
 	--Regular Semantics--
@@ -650,7 +650,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 298
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 334
 	Incorrect para move x outer allocs
 
 	--Regular Semantics--
@@ -670,7 +670,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 303
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 339
 	Incorrect copy x inner allocs
 
 	--Regular Semantics--
@@ -690,7 +690,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 308
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 344
 	Incorrect copy y inner allocs
 
 	--Regular Semantics--
@@ -710,7 +710,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 313
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 349
 	Incorrect mutation inner allocs
 
 	--Regular Semantics--
@@ -730,7 +730,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 318
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 354
 	Incorrect assignment inner allocs
 
 	--Regular Semantics--
@@ -750,7 +750,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 323
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 359
 	Incorrect para copy x inner allocs
 
 	--Regular Semantics--
@@ -770,7 +770,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 328
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 364
 	Incorrect para move x inener allocs
 
 	--Regular Semantics--
@@ -790,7 +790,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 273
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 309
 	Incorrect copy x outer allocs
 
 	--Regular Semantics--
@@ -810,7 +810,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 278
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 314
 	Incorrect copy y outer allocs
 
 	--Regular Semantics--
@@ -830,7 +830,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 283
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 319
 	Incorrect mutation outer allocs
 
 	--Regular Semantics--
@@ -862,7 +862,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 288
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 324
 	Incorrect assignment outer allocs
 
 	--Regular Semantics--
@@ -882,7 +882,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 293
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 329
 	Incorrect para copy x outer allocs
 
 	--Regular Semantics--
@@ -902,7 +902,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 298
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 334
 	Incorrect para move x outer allocs
 
 	--Regular Semantics--
@@ -922,7 +922,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 303
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 339
 	Incorrect copy x inner allocs
 
 	--Regular Semantics--
@@ -942,7 +942,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 308
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 344
 	Incorrect copy y inner allocs
 
 	--Regular Semantics--
@@ -962,7 +962,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 313
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 349
 	Incorrect mutation inner allocs
 
 	--Regular Semantics--
@@ -994,7 +994,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 318
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 354
 	Incorrect assignment inner allocs
 
 	--Regular Semantics--
@@ -1014,7 +1014,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 323
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 359
 	Incorrect para copy x inner allocs
 
 	--Regular Semantics--
@@ -1034,7 +1034,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 328
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 364
 	Incorrect para move x inener allocs
 
 	--Regular Semantics--
@@ -1054,7 +1054,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 273
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 309
 	Incorrect copy x outer allocs
 
 	--Regular Semantics--
@@ -1074,7 +1074,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 278
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 314
 	Incorrect copy y outer allocs
 
 	--Regular Semantics--
@@ -1094,7 +1094,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 283
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 319
 	Incorrect mutation outer allocs
 
 	--Regular Semantics--
@@ -1114,7 +1114,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 288
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 324
 	Incorrect assignment outer allocs
 
 	--Regular Semantics--
@@ -1158,7 +1158,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 293
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 329
 	Incorrect para copy x outer allocs
 
 	--Regular Semantics--
@@ -1178,7 +1178,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 298
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 334
 	Incorrect para move x outer allocs
 
 	--Regular Semantics--
@@ -1198,7 +1198,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 303
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 339
 	Incorrect copy x inner allocs
 
 	--Regular Semantics--
@@ -1218,7 +1218,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 308
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 344
 	Incorrect copy y inner allocs
 
 	--Regular Semantics--
@@ -1238,7 +1238,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 313
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 349
 	Incorrect mutation inner allocs
 
 	--Regular Semantics--
@@ -1258,7 +1258,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 318
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 354
 	Incorrect assignment inner allocs
 
 	--Regular Semantics--
@@ -1302,7 +1302,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 323
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 359
 	Incorrect para copy x inner allocs
 
 	--Regular Semantics--
@@ -1322,7 +1322,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 328
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 364
 	Incorrect para move x inener allocs
 
 	--Regular Semantics--
@@ -1342,7 +1342,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 273
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 309
 	Incorrect copy x outer allocs
 
 	--Regular Semantics--
@@ -1362,7 +1362,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 278
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 314
 	Incorrect copy y outer allocs
 
 	--Regular Semantics--
@@ -1382,7 +1382,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 283
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 319
 	Incorrect mutation outer allocs
 
 	--Regular Semantics--
@@ -1414,7 +1414,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 288
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 324
 	Incorrect assignment outer allocs
 
 	--Regular Semantics--
@@ -1458,7 +1458,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 293
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 329
 	Incorrect para copy x outer allocs
 
 	--Regular Semantics--
@@ -1478,7 +1478,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 298
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 334
 	Incorrect para move x outer allocs
 
 	--Regular Semantics--
@@ -1498,7 +1498,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 303
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 339
 	Incorrect copy x inner allocs
 
 	--Regular Semantics--
@@ -1518,7 +1518,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 308
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 344
 	Incorrect copy y inner allocs
 
 	--Regular Semantics--
@@ -1538,7 +1538,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 313
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 349
 	Incorrect mutation inner allocs
 
 	--Regular Semantics--
@@ -1570,7 +1570,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 318
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 354
 	Incorrect assignment inner allocs
 
 	--Regular Semantics--
@@ -1614,7 +1614,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 323
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 359
 	Incorrect para copy x inner allocs
 
 	--Regular Semantics--
@@ -1634,7 +1634,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 328
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 364
 	Incorrect para move x inener allocs
 
 	--Regular Semantics--
@@ -1654,7 +1654,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 273
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 309
 	Incorrect copy x outer allocs
 
 	--Regular Semantics--
@@ -1674,7 +1674,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 278
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 314
 	Incorrect copy y outer allocs
 
 	--Regular Semantics--
@@ -1694,7 +1694,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 283
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 319
 	Incorrect mutation outer allocs
 
 	--Regular Semantics--
@@ -1714,7 +1714,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 288
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 324
 	Incorrect assignment outer allocs
 
 	--Regular Semantics--
@@ -1746,7 +1746,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 293
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 329
 	Incorrect para copy x outer allocs
 
 	--Regular Semantics--
@@ -1766,7 +1766,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 298
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 334
 	Incorrect para move x outer allocs
 
 	--Regular Semantics--
@@ -1786,7 +1786,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 303
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 339
 	Incorrect copy x inner allocs
 
 	--Regular Semantics--
@@ -1806,7 +1806,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 308
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 344
 	Incorrect copy y inner allocs
 
 	--Regular Semantics--
@@ -1826,7 +1826,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 313
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 349
 	Incorrect mutation inner allocs
 
 	--Regular Semantics--
@@ -1846,7 +1846,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 318
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 354
 	Incorrect assignment inner allocs
 
 	--Regular Semantics--
@@ -1878,7 +1878,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 323
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 359
 	Incorrect para copy x inner allocs
 
 	--Regular Semantics--
@@ -1898,7 +1898,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 328
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 364
 	Incorrect para move x inener allocs
 
 	--Regular Semantics--
@@ -1918,7 +1918,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 273
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 309
 	Incorrect copy x outer allocs
 
 	--Regular Semantics--
@@ -1938,7 +1938,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 278
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 314
 	Incorrect copy y outer allocs
 
 	--Regular Semantics--
@@ -1958,7 +1958,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 283
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 319
 	Incorrect mutation outer allocs
 
 	--Regular Semantics--
@@ -1990,7 +1990,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 288
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 324
 	Incorrect assignment outer allocs
 
 	--Regular Semantics--
@@ -2022,7 +2022,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 293
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 329
 	Incorrect para copy x outer allocs
 
 	--Regular Semantics--
@@ -2042,7 +2042,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 298
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 334
 	Incorrect para move x outer allocs
 
 	--Regular Semantics--
@@ -2062,7 +2062,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 303
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 339
 	Incorrect copy x inner allocs
 
 	--Regular Semantics--
@@ -2082,7 +2082,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 308
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 344
 	Incorrect copy y inner allocs
 
 	--Regular Semantics--
@@ -2102,7 +2102,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 313
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 349
 	Incorrect mutation inner allocs
 
 	--Regular Semantics--
@@ -2134,7 +2134,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 318
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 354
 	Incorrect assignment inner allocs
 
 	--Regular Semantics--
@@ -2166,7 +2166,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 323
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 359
 	Incorrect para copy x inner allocs
 
 	--Regular Semantics--
@@ -2186,7 +2186,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 328
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 364
 	Incorrect para move x inener allocs
 
 	--Regular Semantics--

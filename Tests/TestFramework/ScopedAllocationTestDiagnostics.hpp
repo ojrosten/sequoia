@@ -36,6 +36,9 @@ namespace sequoia::testing
 
     template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
     void test_perfectly_branched();
+
+    template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
+    void test_three_level_scoped();
   };
 
   class scoped_allocation_false_positive_diagnostics final
