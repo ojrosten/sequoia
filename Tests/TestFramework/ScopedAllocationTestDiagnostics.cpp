@@ -23,10 +23,6 @@ namespace sequoia::testing
   using weirdly_mixed_beast
     = typename scoped_beast_builder<perfectly_normal_beast, inefficient_para_copy<int, InnerAllocator>>::beast;
 
-  template<class InnerAllocator>
-  using perfectly_branched_beast
-    = typename scoped_branched_beast_builder<perfectly_normal_beast, perfectly_normal_beast<int, InnerAllocator>>::beast;
-
   [[nodiscard]]
   std::string_view scoped_allocation_false_negative_diagnostics::source_file() const noexcept
   {
@@ -212,7 +208,11 @@ namespace sequoia::testing
   void scoped_allocation_false_negative_diagnostics::test_perfectly_branched()
   {
     using inner_allocator = shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>;
-    using beast = perfectly_branched_beast<inner_allocator>;
+    using inner_beast = perfectly_normal_beast<int, inner_allocator>;
+    using inner_type = std::pair<inner_beast, inner_beast>;
+
+    using outer_allocator = shared_counting_allocator<inner_type, PropagateCopy, PropagateMove, PropagateSwap>;
+    using beast = perfectly_normal_beast<inner_type, std::scoped_allocator_adaptor<outer_allocator, inner_allocator>>;
 
     auto getter{[](const beast& b) { return b.x.get_allocator(); }};
 
