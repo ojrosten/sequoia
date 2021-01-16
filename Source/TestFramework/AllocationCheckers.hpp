@@ -161,9 +161,6 @@ namespace sequoia::testing
     return number_of_containers{ static_cast<std::size_t>(n) };
   }
 
-  enum class allocator_depth { outer, inner };
-
-  // Retire this?
   enum class top_level { yes, no };
 
   class container_level_data
