@@ -167,8 +167,8 @@ namespace sequoia::testing
     const auto containers{predictions.containers()};
     return {shifter::shift(predictions.x(), containers.x),
             shift<T>(predictions.y(), containers),
-            shift<T>(predictions.assign_y_to_x(),
-            containers)};
+            shift<T>(predictions.assign_y_to_x(), containers),
+            containers};
   }
 
   template<test_mode Mode, pseudoregular T, invocable<T&> Mutator, alloc_getter<T>... Getters>
