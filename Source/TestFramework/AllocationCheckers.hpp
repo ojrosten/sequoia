@@ -161,7 +161,10 @@ namespace sequoia::testing
     return number_of_containers{ static_cast<std::size_t>(n) };
   }
 
-  enum class top_level { yes, no};
+  enum class allocator_depth { outer, inner };
+
+  // Retire this?
+  enum class top_level { yes, no };
 
   class container_level_data
   {
@@ -444,32 +447,32 @@ namespace sequoia::testing
       of an allocator from a container. On top of this, the class holds predictions
       for the various allocation events.
    */
-  template<movable_comparable T, alloc_getter<T> Getter, class Predictions>
-  class basic_allocation_info : public allocation_info_base<T, Getter>
+  template<movable_comparable T, alloc_getter<T> Getter>
+  class allocation_info : public allocation_info_base<T, Getter>
   {
   private:
     using base_t = allocation_info_base<T, Getter>;
   public:
     using value_type       = T;
     using allocator_type   = typename base_t::allocator_type;
-    using predictions_type = Predictions;
+    using predictions_type = type_to_allocation_predictions_t<T>;
 
-    constexpr basic_allocation_info(Getter allocGetter, const Predictions& predictions)
+    constexpr allocation_info(Getter allocGetter, const predictions_type& predictions)
       : base_t{std::move(allocGetter)}
       , m_Predictions{prediction_shifter{}(predictions)}
     {}
 
     [[nodiscard]]
-    constexpr const Predictions& get_predictions() const noexcept
+    constexpr const predictions_type& get_predictions() const noexcept
     {
       return m_Predictions;
     }
   private:
-    Predictions m_Predictions;
+    predictions_type m_Predictions;
 
     struct prediction_shifter
     {
-      constexpr Predictions operator()(const Predictions& predictions) const
+      constexpr predictions_type operator()(const predictions_type& predictions) const
       {
         using allocClass = alloc_equivalence_class_generator_t<T, Getter>;
         return shift<allocClass>(predictions);
@@ -477,32 +480,41 @@ namespace sequoia::testing
     };
   };
 
-  /*! \brief A specialization of basic_allocation_info appropriate for std::scoped_allocator_adaptor
+  template
+  <
+    class Fn,
+    class T = std::remove_cvref_t<typename function_signature<decltype(&std::remove_cvref_t<Fn>::operator())>::arg>,
+    class Predictions = type_to_allocation_predictions_t<T>
+  >
+  allocation_info(Fn, const Predictions&)
+    -> allocation_info<T, Fn>;
+
+  /*! \brief A specialization of allocation_info appropriate for std::scoped_allocator_adaptor
 
       The essential difference to the primary template is that multiple sets of predictions must
       be supplied, one for each level within the scoped_allocator_adaptor.
    */
-  template<movable_comparable T, alloc_getter<T> Getter, class Predictions>
+  template<movable_comparable T, alloc_getter<T> Getter>
     requires scoped_alloc<std::invoke_result_t<Getter, T>>
-  class basic_allocation_info<T, Getter, Predictions>
+  class allocation_info<T, Getter>
     : public allocation_info_base<T, Getter>
   {
   private:
     using base_t = allocation_info_base<T, Getter>;
   public:
-    using value_type             = T;
-    using allocator_type         = typename base_t::allocator_type;
-    using predictions_type       = Predictions;
+    using value_type       = T;
+    using allocator_type   = typename base_t::allocator_type;
+    using predictions_type = type_to_allocation_predictions_t<T>;
 
     constexpr static std::size_t size{alloc_count<allocator_type>::size};
 
-    constexpr basic_allocation_info(Getter allocGetter,
-                                    std::initializer_list<Predictions> predictions)
+    constexpr allocation_info(Getter allocGetter,
+                                    std::initializer_list<predictions_type> predictions)
       : base_t{std::move(allocGetter)}
-      , m_Predictions{utilities::to_array<Predictions, size>(predictions)}
+      , m_Predictions{utilities::to_array<predictions_type, size>(predictions)}
     {}
 
-    /// unpacks the scoped_allocator_adaptor, returning basic_allocation_info for the
+    /// unpacks the scoped_allocator_adaptor, returning allocation_info for the
     /// allocator at the ith level.
     template<std::size_t I>
     [[nodiscard]]
@@ -513,7 +525,7 @@ namespace sequoia::testing
         }
       };
 
-      return basic_allocation_info<T, decltype(scopedGetter), Predictions>{scopedGetter, m_Predictions[I]};
+      return allocation_info<T, decltype(scopedGetter)>{scopedGetter, m_Predictions[I]};
     }
 
   private:
@@ -531,6 +543,15 @@ namespace sequoia::testing
       }
     }
 
-    std::array<Predictions, size> m_Predictions;
+    std::array<predictions_type, size> m_Predictions;
   };
+
+  template
+  <
+    class Fn,
+    class T = std::remove_cvref_t<typename function_signature<decltype(&std::remove_cvref_t<Fn>::operator())>::arg>,
+    class Predictions = type_to_allocation_predictions_t<T>
+  >
+  allocation_info(Fn, std::initializer_list<Predictions>)
+    -> allocation_info<T, Fn>;
 }

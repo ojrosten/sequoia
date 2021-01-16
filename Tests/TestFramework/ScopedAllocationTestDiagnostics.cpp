@@ -250,22 +250,15 @@ namespace sequoia::testing
 
     auto getter{[](const beast& b) { return b.x.get_allocator(); }};
 
-    auto mutator{
-      [](beast& b) {
-        b.x.reserve(10);
-        b.x.push_back({{2}});
-      }
-    };
-
     check_semantics(LINE(""),
       beast{},
-      beast{middle_type{innermost_type{1}}},
-      mutator,
+      beast{{{1}}},
+      [](beast& b) { b.x.push_back({{2}}); },
       allocation_info{
         getter,
         { {0_c, {1_c,1_mu}, {1_awp,1_anp}},
           {0_c, {1_c,1_mu}, {1_awp,1_anp}, {0_containers, 1_containers, 2_containers}},
-          {0_c, {1_c,1_mu}, {1_awp,1_anp}, {0_containers, 1_containers, 2_containers}}
+          {0_c, {1_c,1_mu}, {1_awp,1_anp}, {0_containers, 1_containers, 1_containers}}
         }
       }
     );

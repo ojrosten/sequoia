@@ -510,12 +510,12 @@ namespace sequoia::testing
         }
       };
 
-      check_semantics(LINE("")
-                              , beast{{1}, {1}, xAllocator{}, yAllocator{}}
-                              , beast{{5,6}, {5,6}, xAllocator{}, yAllocator{}}
-                              , mutator
-                              , allocation_info{xAllocGetter, {1_c, {1_c,1_mu}, {1_awp,1_anp}}}
-                              , allocation_info{yAllocGetter, {1_c, {1_c,1_mu}, {1_awp,1_anp}}});
+      check_semantics(LINE(""),
+                      beast{{1}, {1}, xAllocator{}, yAllocator{}},
+                      beast{{5,6}, {5,6}, xAllocator{}, yAllocator{}},
+                      mutator,
+                      allocation_info{xAllocGetter, {1_c, {1_c,1_mu}, {1_awp,1_anp}}},
+                      allocation_info{yAllocGetter, {1_c, {1_c,1_mu}, {1_awp,1_anp}}});
     }
   }
 

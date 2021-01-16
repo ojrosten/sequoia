@@ -16,7 +16,7 @@
 #include "RegularAllocationCheckersDetails.hpp"
 
 namespace sequoia::testing
-{  
+{
   struct individual_allocation_predictions
   {
     constexpr individual_allocation_predictions(copy_prediction copyPrediction, mutation_prediction mutationPrediction)
@@ -170,33 +170,6 @@ namespace sequoia::testing
             shift<T>(predictions.assign_y_to_x(),
             containers)};
   }
-
-  // TO DO: revert to 'using' in C++20; presently this is done through inheritance
-  // in order to make use of CTAD.
-
-  template<class T, alloc_getter<T> Getter>
-  class allocation_info
-    : public basic_allocation_info<T, Getter, allocation_predictions>
-  {
-  public:
-    using basic_allocation_info<T, Getter, allocation_predictions>::basic_allocation_info;
-  };
-
-  template
-  <
-    class Fn,
-    class Signature=function_signature<decltype(&std::remove_cvref_t<Fn>::operator())>
-  >
-  allocation_info(Fn allocGetter, allocation_predictions predictions)
-    -> allocation_info<std::remove_cvref_t<typename Signature::arg>, Fn>;
-
-  template
-  <
-    class Fn,
-    class Signature=function_signature<decltype(&std::remove_cvref_t<Fn>::operator())>
-  >
-  allocation_info(Fn, std::initializer_list<allocation_predictions>)
-    -> allocation_info<std::remove_cvref_t<typename Signature::arg>, Fn>;
 
   template<test_mode Mode, pseudoregular T, invocable<T&> Mutator, alloc_getter<T>... Getters>
   void check_semantics(std::string_view description, test_logger<Mode>& logger, const T& x, const T& y, Mutator yMutator, const allocation_info<T, Getters>&... info)

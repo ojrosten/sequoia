@@ -49,15 +49,15 @@ namespace sequoia::testing
       };
 
       check_semantics(LINE("Incorrect para-move allocs"), beast{}, beast{2}, beast{}, beast{2}, mutator,
-                              move_only_allocation_info{allocGetter, move_only_allocation_predictions{1_clm, 1_mu, 0_pm}});
+                              allocation_info{allocGetter, {1_clm, 1_mu, 0_pm}});
 
       check_semantics(LINE("Incorrect mutation allocs"), beast{}, beast{2}, beast{}, beast{2}, mutator,
-                              move_only_allocation_info{allocGetter, move_only_allocation_predictions{1_clm, 0_mu, 1_pm}});
+                              allocation_info{allocGetter, {1_clm, 0_mu, 1_pm}});
 
       if constexpr(!PropagateMove)
       {
         check_semantics(LINE("Incorrect assignment allocs"), beast{}, beast{2}, beast{}, beast{2}, mutator,
-                                move_only_allocation_info{allocGetter, move_only_allocation_predictions{0_clm, 1_mu, 1_pm}});
+                                allocation_info{allocGetter, {0_clm, 1_mu, 1_pm}});
       }
     }
 
@@ -70,7 +70,7 @@ namespace sequoia::testing
       };
       
       check_semantics(LINE("Broken move"), beast{1}, beast{2}, beast{1}, beast{2}, mutator,
-                              move_only_allocation_info{allocGetter, move_only_allocation_predictions{0_clm, 1_mu, 1_pm}});
+                              allocation_info{allocGetter, {0_clm, 1_mu, 1_pm}});
     }
 
     {
@@ -82,7 +82,7 @@ namespace sequoia::testing
       };
       
       check_semantics(LINE("Broken move assignment"), beast{1}, beast{2}, beast{1}, beast{2}, mutator,
-                              move_only_allocation_info{allocGetter, move_only_allocation_predictions{0_clm, 1_mu, 1_pm}});
+                              allocation_info{allocGetter, {0_clm, 1_mu, 1_pm}});
     }
 
     
@@ -96,7 +96,7 @@ namespace sequoia::testing
       };
       
       check_semantics(LINE("Broken swap"), beast{1}, beast{2}, beast{1}, beast{2}, mutator,
-                              move_only_allocation_info{allocGetter, move_only_allocation_predictions{0_clm, 1_mu, 1_pm}});
+                              allocation_info{allocGetter, {0_clm, 1_mu, 1_pm}});
     }
 
     {
@@ -108,7 +108,7 @@ namespace sequoia::testing
       };
       
       check_semantics(LINE("Inefficient move"), beast{1}, beast{2}, beast{1}, beast{2}, mutator,
-                              move_only_allocation_info{allocGetter, move_only_allocation_predictions{0_clm, 1_mu, 1_pm}});
+                              allocation_info{allocGetter, {0_clm, 1_mu, 1_pm}});
     }
 
     {
@@ -120,7 +120,7 @@ namespace sequoia::testing
       };
       
       check_semantics(LINE("Inefficient move assignment"), beast{1}, beast{2}, beast{1}, beast{2}, mutator,
-                              move_only_allocation_info{allocGetter, move_only_allocation_predictions{0_clm, 1_mu, 1_pm}});
+                              allocation_info{allocGetter, {0_clm, 1_mu, 1_pm}});
     }
     
     {
@@ -133,13 +133,13 @@ namespace sequoia::testing
       };
 
       check_semantics(LINE("Invariant violated: x != xClone"), beast{1}, beast{2}, beast{3}, beast{2}, mutator,
-                              move_only_allocation_info{allocGetter, move_only_allocation_predictions{0_clm, 1_mu, 1_pm}});
+                              allocation_info{allocGetter, {0_clm, 1_mu, 1_pm}});
 
       check_semantics(LINE("Invariant violated: y != YClone"), beast{1}, beast{2}, beast{1}, beast{3}, mutator,
-                              move_only_allocation_info{allocGetter, move_only_allocation_predictions{0_clm, 1_mu, 1_pm}});
+                              allocation_info{allocGetter, {0_clm, 1_mu, 1_pm}});
 
       check_semantics(LINE("Invariant violated: x == y"), beast{1}, beast{1}, beast{1}, beast{1}, mutator,
-                              move_only_allocation_info{allocGetter, move_only_allocation_predictions{0_clm, 1_mu, 1_pm}});
+                              allocation_info{allocGetter, {0_clm, 1_mu, 1_pm}});
     }
   }
 
@@ -179,10 +179,10 @@ namespace sequoia::testing
       };
 
       check_semantics(LINE("Move-only beast"), beast{1}, beast{2}, beast{1}, beast{2}, mutator,
-                              move_only_allocation_info{allocGetter, move_only_allocation_predictions{0_clm, 1_mu, 1_pm}});
+                              allocation_info{allocGetter, {0_clm, 1_mu, 1_pm}});
 
       check_semantics(LINE("Move-only beast"), beast{}, beast{2}, beast{}, beast{2}, mutator,
-                              move_only_allocation_info{allocGetter, move_only_allocation_predictions{1_clm, 1_mu, 1_pm}});
+                              allocation_info{allocGetter, {1_clm, 1_mu, 1_pm}});
     }
   }
 }

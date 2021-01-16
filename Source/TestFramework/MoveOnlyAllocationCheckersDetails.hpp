@@ -19,6 +19,12 @@
 namespace sequoia::testing
 {
   struct move_only_allocation_predictions;
+
+  template<moveonly T>
+  struct type_to_allocation_predictions<T>
+  {
+    using predictions_type = move_only_allocation_predictions;
+  };
 }
 
 namespace sequoia::testing::impl
@@ -28,22 +34,22 @@ namespace sequoia::testing::impl
   {
     using allocation_actions<T>::allocation_actions;
     
-    template<test_mode Mode, alloc_getter<T>... Getters, class... Predictions>
+    template<test_mode Mode, alloc_getter<T>... Getters>
     [[nodiscard]]
-    bool check_preconditions(test_logger<Mode>& logger, const T& x, const T& y, const T& xClone, const T& yClone, const dual_allocation_checker<T, Getters, Predictions>&... checkers) const
+    bool check_preconditions(test_logger<Mode>& logger, const T& x, const T& y, const T& xClone, const T& yClone, const dual_allocation_checker<T, Getters>&... checkers) const
     {
-      return allocation_actions<T>::check_preconditions(logger, *this, x, y, xClone, yClone, dual_allocation_checker<T, Getters, Predictions>{checkers.info(), x, y}...);
+      return allocation_actions<T>::check_preconditions(logger, *this, x, y, xClone, yClone, dual_allocation_checker{checkers.info(), x, y}...);
     }
   };
 
-  template<test_mode Mode, class Actions, moveonly T, alloc_getter<T>... Getters, class... Predictions>
-  bool check_swap(test_logger<Mode>& logger, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, const dual_allocation_checker<T, Getters, Predictions>&... checkers)
+  template<test_mode Mode, class Actions, moveonly T, alloc_getter<T>... Getters>
+  bool check_swap(test_logger<Mode>& logger, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, const dual_allocation_checker<T, Getters>&... checkers)
   {
     return do_check_swap(logger, actions, std::move(x), std::move(y), xClone, yClone, dual_allocation_checker{checkers.info(), x, y}...);
   }
 
-  template<test_mode Mode, moveonly T, alloc_getter<T>... Getters, class... Predictions>
-  std::optional<T> check_para_constructor_allocations(test_logger<Mode>& logger, T&& y, const T& yClone, const basic_allocation_info<T, Getters, Predictions>&... info)
+  template<test_mode Mode, moveonly T, alloc_getter<T>... Getters>
+  std::optional<T> check_para_constructor_allocations(test_logger<Mode>& logger, T&& y, const T& yClone, const allocation_info<T, Getters>&... info)
   {
     if(!check("Precondition - for checking move-only semantics, y and yClone are assumed to be equal", logger, y == yClone)) return{};
     
@@ -63,7 +69,7 @@ namespace sequoia::testing::impl
 
   /// Unpacks the tuple and feeds to the overload of check_semantics defined in MoveOnlyCheckersDetails.hpp
   template<test_mode Mode, class Actions, moveonly T, invocable<T&> Mutator, alloc_getter<T>... Getters>
-  void check_semantics(test_logger<Mode>& logger, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, Mutator m, std::tuple<dual_allocation_checker<T, Getters, move_only_allocation_predictions>...> checkers)
+  void check_semantics(test_logger<Mode>& logger, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, Mutator m, std::tuple<dual_allocation_checker<T, Getters>...> checkers)
   {
     auto fn{
       [&logger, &actions, &x, &y, &xClone, &yClone, m{std::move(m)}](auto&&... checkers){
