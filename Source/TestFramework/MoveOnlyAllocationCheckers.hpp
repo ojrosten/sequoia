@@ -70,6 +70,20 @@ namespace sequoia::testing
 
     [[nodiscard]]
     constexpr combined_container_data containers() const noexcept { return  m_Containers; }
+
+    template<class T>
+    constexpr move_only_allocation_predictions shift(const alloc_prediction_shifter<T>& shifter) const
+    {
+      auto shifted{*this};
+
+      shifted.m_CopyLikeMoveAssign = shifter.shift(m_CopyLikeMoveAssign);
+      shifted.m_Mutation           = shifter.shift(m_Mutation);
+      shifted.m_ParaMove           = shifter.shift(m_ParaMove);
+      shifted.m_Move               = shifter.shift(m_Move);
+      shifted.m_MoveAssign         = shifter.shift(m_MoveAssign);
+
+      return shifted;
+    }
   private:
     copy_like_move_assign_prediction m_CopyLikeMoveAssign{};
     mutation_prediction m_Mutation{};
@@ -80,16 +94,10 @@ namespace sequoia::testing
   };
 
   template<class T>
-  constexpr move_only_allocation_predictions shift(const move_only_allocation_predictions& predictions)
+  constexpr move_only_allocation_predictions shift(move_only_allocation_predictions predictions)
   {
-    const auto& containers{predictions.containers()};
-    const alloc_prediction_shifter<T> shifter{containers};
-    return {shifter.shift(predictions.copy_like_move_assign_allocs()),
-            shifter.shift(predictions.mutation_allocs()),
-            shifter.shift(predictions.para_move_allocs()),
-            shifter.shift(predictions.move_allocs()),
-            shifter.shift(predictions.move_assign_allocs()),
-            containers};
+    const alloc_prediction_shifter<T> shifter{predictions.containers()};
+    return predictions.shift(shifter);
   }
 
   template<test_mode Mode, moveonly T, invocable<T&> Mutator, alloc_getter<T>... Getters>

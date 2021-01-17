@@ -78,6 +78,28 @@ namespace sequoia::testing
     move_assign_prediction move{};
   };
 
+  
+  template<class T>
+  constexpr individual_allocation_predictions shift(const individual_allocation_predictions& predictions,
+                                                    const alloc_prediction_shifter<T>& shifter)
+  {
+    return {shifter.shift(predictions.copy, container_tag::y),
+            shifter.shift(predictions.mutation),
+            shifter.shift(predictions.para_copy),
+            shifter.shift(predictions.para_move),
+            shifter.shift(predictions.move)};
+  }
+
+  template<class T>
+  constexpr assignment_allocation_predictions shift(const assignment_allocation_predictions& predictions,
+                                                    const alloc_prediction_shifter<T>& shifter)
+  {
+    return {shifter.shift(predictions.with_propagation),
+            shifter.shift(predictions.without_propagation),
+            shifter.shift(predictions.copy_like_move),
+            shifter.shift(predictions.move)};
+  }
+
   struct allocation_predictions
   {
     constexpr allocation_predictions(copy_prediction x,
@@ -133,44 +155,30 @@ namespace sequoia::testing
     [[nodiscard]]
     constexpr combined_container_data containers() const noexcept { return  m_Containers; }
 
+    template<class T>
+    constexpr allocation_predictions shift(const alloc_prediction_shifter<T>& shifter) const
+    {
+      auto shifted{*this};
+
+      shifted.m_x             = shifter.shift(m_x, container_tag::x);
+      shifted.m_y             = testing::shift(m_y, shifter);
+      shifted.m_Assign_y_to_x = testing::shift(m_Assign_y_to_x, shifter);
+
+      return shifted;
+    }
+
   private:
     copy_prediction m_x{};
     individual_allocation_predictions m_y;
     assignment_allocation_predictions m_Assign_y_to_x;
     combined_container_data m_Containers;
-  };
+  }; 
 
   template<class T>
-  constexpr individual_allocation_predictions shift(const individual_allocation_predictions& predictions,
-                                                    const alloc_prediction_shifter<T>& shifter)
+  constexpr allocation_predictions shift(allocation_predictions predictions)
   {
-    return {shifter.shift(predictions.copy, container_tag::y),
-            shifter.shift(predictions.mutation),
-            shifter.shift(predictions.para_copy),
-            shifter.shift(predictions.para_move),
-            shifter.shift(predictions.move)};
-  }
-
-  template<class T>
-  constexpr assignment_allocation_predictions shift(const assignment_allocation_predictions& predictions,
-                                                    const alloc_prediction_shifter<T>& shifter)
-  {
-    return {shifter.shift(predictions.with_propagation),
-            shifter.shift(predictions.without_propagation),
-            shifter.shift(predictions.copy_like_move),
-            shifter.shift(predictions.move)};
-  }
- 
-
-  template<class T>
-  constexpr allocation_predictions shift(const allocation_predictions& predictions)
-  {
-    const auto& containers{predictions.containers()};
-    const alloc_prediction_shifter<T> shifter{containers};
-    return {shifter.shift(predictions.x(), container_tag::x),
-            shift(predictions.y(), shifter),
-            shift(predictions.assign_y_to_x(), shifter),
-            containers};
+    const alloc_prediction_shifter<T> shifter{predictions.containers()};
+    return predictions.shift(shifter);
   }
 
   template<test_mode Mode, pseudoregular T, invocable<T&> Mutator, alloc_getter<T>... Getters>
