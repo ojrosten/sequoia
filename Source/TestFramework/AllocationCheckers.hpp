@@ -210,9 +210,17 @@ namespace sequoia::testing
       : x{counts.num_x, topLevel}
       , y{counts.num_y, topLevel}
       , y_post_mutation{counts.num_post_mutation, topLevel}
+      , m_TopLevel{topLevel}
     {}
 
+    [[nodiscard]]
+    constexpr bool is_top_level() const noexcept
+    {
+      return m_TopLevel == top_level::yes;
+    }
+
     container_level_data x, y, y_post_mutation;
+    top_level m_TopLevel;
   };
 
   inline constexpr combined_container_data top_level_spec{{1_containers, 1_containers, 1_containers}, top_level::yes};
@@ -252,54 +260,54 @@ namespace sequoia::testing
     }
   };
 
+  enum class container_tag { x, y };
+
   /*! \brief class template for shifting allocation predictions, especially for MSVC debug builds.
 
       \anchor alloc_prediction_shifter_primary
    */
 
   template<class T>
-  struct alloc_prediction_shifter
-  {
-    template<auto AllocEvent, class... Ts>
-    [[nodiscard]]
-    constexpr static alloc_prediction<AllocEvent> shift(alloc_prediction<AllocEvent> p, Ts...) noexcept
-    {
-      return p;
-    }
-  };
+  class alloc_prediction_shifter;
 
   template<class Allocator>
-  struct alloc_prediction_shifter<allocation_equivalence_classes::container_of_values<Allocator>>
+  class alloc_prediction_shifter<allocation_equivalence_classes::container_of_values<Allocator>>
   {
+  public:
+    alloc_prediction_shifter(const combined_container_data& data)
+      : m_CombinedData{data}
+    {}
+
     [[nodiscard]]
-    constexpr static copy_prediction shift(copy_prediction p, container_level_data data) noexcept
+    constexpr copy_prediction shift(copy_prediction p, container_tag tag) const noexcept
     {
-      return increment_msvc_debug_count(p, data.raw_num());
+      const auto& c{tag == container_tag::x ? m_CombinedData.x : m_CombinedData.y};
+      return increment_msvc_debug_count(p, c.raw_num());
     }
 
     [[nodiscard]]
-    constexpr static move_prediction shift(move_prediction p, container_level_data data) noexcept
+    constexpr move_prediction shift(move_prediction p) const noexcept
     {
-      return increment_msvc_debug_count(p, data.is_top_level() ? 1 : 0);
+      return increment_msvc_debug_count(p, m_CombinedData.is_top_level() ? 1 : 0);
     }
 
     [[nodiscard]]
-    constexpr static para_copy_prediction shift(para_copy_prediction p, container_level_data data) noexcept
+    constexpr para_copy_prediction shift(para_copy_prediction p) const noexcept
     {
-      return increment_msvc_debug_count(p, data.raw_num());
+      return increment_msvc_debug_count(p, m_CombinedData.y.raw_num());
     }
 
     [[nodiscard]]
-    constexpr static para_move_prediction shift(para_move_prediction p, container_level_data data) noexcept
+    constexpr para_move_prediction shift(para_move_prediction p) const noexcept
     {
-      return increment_msvc_debug_count(p, data.raw_num());
+      return increment_msvc_debug_count(p, m_CombinedData.y.raw_num());
     }
 
     [[nodiscard]]
-    constexpr static mutation_prediction shift(mutation_prediction p, container_level_data dataY, container_level_data dataPostMutation) noexcept
+    constexpr mutation_prediction shift(mutation_prediction p) const noexcept
     {
-      const auto topLevel{dataPostMutation.is_top_level()};
-      const auto before{dataY.raw_num()}, after{dataPostMutation.raw_num()};
+      const auto topLevel{m_CombinedData.is_top_level()};
+      const auto before{m_CombinedData.y.raw_num()}, after{m_CombinedData.y_post_mutation.raw_num()};
 
       const int increment{(topLevel && (after <= before)) ? 0 : after};
 
@@ -307,45 +315,55 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    constexpr static assign_prop_prediction shift(assign_prop_prediction p, container_level_data dataY) noexcept
+    constexpr assign_prop_prediction shift(assign_prop_prediction p) const noexcept
     {
-      return increment_msvc_debug_count(p, dataY.raw_num());
+      return increment_msvc_debug_count(p, m_CombinedData.y.raw_num());
     }
 
     [[nodiscard]]
-    constexpr static move_assign_prediction shift(move_assign_prediction p, container_level_data dataY) noexcept
+    constexpr move_assign_prediction shift(move_assign_prediction p) const noexcept
     {
-      return increment_msvc_debug_count(p, dataY.is_top_level() ? 1 : 0);
+      return increment_msvc_debug_count(p, m_CombinedData.is_top_level() ? 1 : 0);
     }
 
     [[nodiscard]]
-    constexpr static assign_prediction shift(assign_prediction p, container_level_data dataY) noexcept
+    constexpr assign_prediction shift(assign_prediction p) const noexcept
     {
-      return increment_msvc_debug_count(p, dataY.is_top_level() ? 0 : dataY.raw_num());
+      return increment_msvc_debug_count(p, m_CombinedData.is_top_level() ? 0 : m_CombinedData.y.raw_num());
     }
 
     [[nodiscard]]
-    constexpr static copy_like_move_assign_prediction shift(copy_like_move_assign_prediction p, container_level_data dataX, container_level_data dataY) noexcept
+    constexpr copy_like_move_assign_prediction shift(copy_like_move_assign_prediction p) const noexcept
     {
-      const bool doIncrement{!dataX.is_top_level() && (dataY.raw_num() > dataX.raw_num())};
-      return increment_msvc_debug_count(p, doIncrement ? dataY.raw_num() : 0);
+      const bool doIncrement{!m_CombinedData.is_top_level() && (m_CombinedData.y.raw_num() > m_CombinedData.x.raw_num())};
+      return increment_msvc_debug_count(p, doIncrement ? m_CombinedData.y.raw_num() : 0);
     }
+
+    [[nodiscard]]
+    constexpr const combined_container_data& combined_data() const noexcept
+    {
+      return m_CombinedData;
+    }
+  private:
+    combined_container_data m_CombinedData;
   };
 
   template<class Allocator>
-  struct alloc_prediction_shifter<allocation_equivalence_classes::container_of_pointers<Allocator>>
-    : alloc_prediction_shifter<allocation_equivalence_classes::container_of_values<Allocator>>
+  class alloc_prediction_shifter<allocation_equivalence_classes::container_of_pointers<Allocator>>
+    : public alloc_prediction_shifter<allocation_equivalence_classes::container_of_values<Allocator>>
   {
+  public:
+    using alloc_prediction_shifter<allocation_equivalence_classes::container_of_values<Allocator>>::alloc_prediction_shifter;
     using alloc_prediction_shifter<allocation_equivalence_classes::container_of_values<Allocator>>::shift;
 
     [[nodiscard]]
-    constexpr static assign_prediction shift(assign_prediction p, container_level_data dataY) noexcept
+    constexpr assign_prediction shift(assign_prediction p) const noexcept
     {
-      return increment_msvc_debug_count(p, dataY.raw_num());
+      return increment_msvc_debug_count(p, this->combined_data().y.raw_num());
     }
 
     [[nodiscard]]
-    constexpr static assign_prop_prediction shift(assign_prop_prediction p, container_level_data dataY) noexcept
+    constexpr assign_prop_prediction shift(assign_prop_prediction p) const noexcept
     {
       const auto val{
         []() {
@@ -358,7 +376,7 @@ namespace sequoia::testing
         }()
       };
 
-      return increment_msvc_debug_count(p, dataY.raw_num()*val);
+      return increment_msvc_debug_count(p, this->combined_data().y.raw_num()*val);
     }
   };
 
