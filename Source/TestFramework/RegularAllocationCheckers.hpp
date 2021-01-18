@@ -100,26 +100,30 @@ namespace sequoia::testing
             shifter.shift(predictions.move)};
   }
 
-  struct allocation_predictions
+  template<top_level TopLevel>
+  class basic_allocation_predictions : public container_predictions_extension_policy<TopLevel>
   {
-    constexpr allocation_predictions(copy_prediction x,
-                                     individual_allocation_predictions y,
-                                     assignment_allocation_predictions assignYtoX,
-                                     combined_container_data data = top_level_spec)
+  public:
+    template<top_level Level=TopLevel>
+      requires (Level == top_level::yes)
+    constexpr basic_allocation_predictions(copy_prediction x,
+                                           individual_allocation_predictions y,
+                                           assignment_allocation_predictions assignYtoX)
       : m_x{x}
       , m_y{y}
       , m_Assign_y_to_x{assignYtoX}
-      , m_Containers{data}
     {}
 
-    constexpr allocation_predictions(copy_prediction x,
-                                     individual_allocation_predictions y,
-                                     assignment_allocation_predictions assignYtoX,
-                                     container_counts counts)
-      : m_x{x}
+    template<top_level Level=TopLevel>
+      requires (Level == top_level::no)
+    constexpr basic_allocation_predictions(copy_prediction x,
+                                           individual_allocation_predictions y,
+                                           assignment_allocation_predictions assignYtoX,
+                                           container_counts counts)
+      : container_predictions_extension_policy<TopLevel>{counts}
+      , m_x{x}
       , m_y{y}
       , m_Assign_y_to_x{assignYtoX}
-      , m_Containers{counts, top_level::no}
     {}
 
     [[nodiscard]]
@@ -152,11 +156,8 @@ namespace sequoia::testing
     [[nodiscard]]
     constexpr individual_allocation_predictions y() const noexcept { return m_y; }
 
-    [[nodiscard]]
-    constexpr combined_container_data containers() const noexcept { return  m_Containers; }
-
     template<class T>
-    constexpr allocation_predictions shift(const alloc_prediction_shifter<T>& shifter) const
+    constexpr basic_allocation_predictions shift(const alloc_prediction_shifter<T>& shifter) const
     {
       auto shifted{*this};
 
@@ -171,15 +172,37 @@ namespace sequoia::testing
     copy_prediction m_x{};
     individual_allocation_predictions m_y;
     assignment_allocation_predictions m_Assign_y_to_x;
-    combined_container_data m_Containers;
-  }; 
+  };
+
+  using allocation_predictions       = basic_allocation_predictions<top_level::yes>;
+  using inner_allocation_predictions = basic_allocation_predictions<top_level::no>;
 
   template<class T>
-  constexpr allocation_predictions shift(allocation_predictions predictions)
+  constexpr allocation_predictions shift(const allocation_predictions& predictions)
   {
-    const alloc_prediction_shifter<T> shifter{predictions.containers()};
+    const alloc_prediction_shifter<T> shifter{{1_containers, 1_containers, 1_containers}, top_level::yes};
     return predictions.shift(shifter);
   }
+
+  template<class T>
+  constexpr allocation_predictions shift(const inner_allocation_predictions& predictions)
+  {
+    const alloc_prediction_shifter<T> shifter{predictions.containers(), top_level::no};
+    const auto shifted{predictions.shift(shifter)};
+    return {shifted.x(), shifted.y(), shifted.assign_y_to_x()};
+  }
+
+  template<pseudoregular T>
+  struct type_to_allocation_predictions<T>
+  {
+    using predictions_type = allocation_predictions;
+  };
+
+  template<pseudoregular T>
+  struct type_to_inner_allocation_predictions<T>
+  {
+    using predictions_type = inner_allocation_predictions;
+  };
 
   template<test_mode Mode, pseudoregular T, invocable<T&> Mutator, alloc_getter<T>... Getters>
   void check_semantics(std::string_view description, test_logger<Mode>& logger, const T& x, const T& y, Mutator yMutator, const allocation_info<T, Getters>&... info)

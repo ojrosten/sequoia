@@ -28,6 +28,13 @@ namespace sequoia::testing
   template<class T>
   using type_to_allocation_predictions_t = typename type_to_allocation_predictions<T>::predictions_type;
 
+  template<class T>
+  struct type_to_inner_allocation_predictions;
+
+  template<class T>
+  using type_to_inner_allocation_predictions_t = typename type_to_inner_allocation_predictions<T>::predictions_type;
+
+
   enum class null_allocation_event { comparison, spectator, serialization, swap };
   
   /*! Type-safe wrapper for allocation predictions, to avoid mixing different allocation events */

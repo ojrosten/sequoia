@@ -16,17 +16,6 @@
 
 #include <optional>
 
-namespace sequoia::testing
-{
-  struct move_only_allocation_predictions;
-
-  template<moveonly T>
-  struct type_to_allocation_predictions<T>
-  {
-    using predictions_type = move_only_allocation_predictions;
-  };
-}
-
 namespace sequoia::testing::impl
 {
   template<moveonly T>

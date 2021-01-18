@@ -14,17 +14,6 @@
 #include "AllocationCheckersDetails.hpp"
 #include "RegularCheckersDetails.hpp"
 
-namespace sequoia::testing
-{
-  struct allocation_predictions;
-
-  template<pseudoregular T>
-  struct type_to_allocation_predictions<T>
-  {
-    using predictions_type = allocation_predictions;
-  };
-}
-
 namespace sequoia::testing::impl
 {
   /*! \brief Extends allocation_actions for types with copy semantics. */

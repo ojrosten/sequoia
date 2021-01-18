@@ -16,63 +16,79 @@
 
 namespace sequoia::testing
 {
-  struct move_only_allocation_predictions
+  template<top_level TopLevel>
+  class basic_move_only_allocation_predictions : public container_predictions_extension_policy<TopLevel>
   {
   public:
-    constexpr move_only_allocation_predictions(copy_like_move_assign_prediction copyLikeMove,
+    template<top_level Level = TopLevel>
+      requires (Level == top_level::yes)
+    constexpr basic_move_only_allocation_predictions(copy_like_move_assign_prediction copyLikeMove,
                                                mutation_prediction yMutation,
                                                para_move_prediction paraMove,
                                                move_prediction m,
-                                               move_assign_prediction moveAssign,
-                                               combined_container_data data = top_level_spec)
+                                               move_assign_prediction moveAssign)
       : m_CopyLikeMoveAssign{copyLikeMove}
       , m_Mutation{yMutation}
       , m_ParaMove{paraMove}
       , m_Move{m}
       , m_MoveAssign{moveAssign}
-      , m_Containers{data}
     {}
 
-    constexpr move_only_allocation_predictions(copy_like_move_assign_prediction copyLikeMove,
+    template<top_level Level = TopLevel>
+      requires (Level == top_level::yes)
+    constexpr basic_move_only_allocation_predictions(copy_like_move_assign_prediction copyLikeMove,
                                                mutation_prediction yMutation,
-                                               para_move_prediction paraMove,
-                                               combined_container_data data = top_level_spec)
+                                               para_move_prediction paraMove)
       : m_CopyLikeMoveAssign{copyLikeMove}
       , m_Mutation{yMutation}
       , m_ParaMove{paraMove}
-      , m_Containers{data}
     {}
 
-    constexpr move_only_allocation_predictions(copy_like_move_assign_prediction copyLikeMove,
+    template<top_level Level = TopLevel>
+      requires (Level == top_level::no)
+    constexpr basic_move_only_allocation_predictions(copy_like_move_assign_prediction copyLikeMove,
                                                mutation_prediction yMutation,
                                                para_move_prediction paraMove,
+                                               move_prediction m,
+                                               move_assign_prediction moveAssign,
                                                container_counts counts)
-      : m_CopyLikeMoveAssign{copyLikeMove}
+      : container_predictions_extension_policy<TopLevel>{counts}
+      , m_CopyLikeMoveAssign{copyLikeMove}
       , m_Mutation{yMutation}
       , m_ParaMove{paraMove}
-      , m_Containers{counts, top_level::no}
+      , m_Move{m}
+      , m_MoveAssign{moveAssign}
     {}
 
-    [[nodiscard]]
-    constexpr para_move_prediction para_move_allocs() const noexcept { return m_ParaMove; }
+    template<top_level Level = TopLevel>
+      requires (Level == top_level::no)
+    constexpr basic_move_only_allocation_predictions(copy_like_move_assign_prediction copyLikeMove,
+                                                     mutation_prediction yMutation,
+                                                     para_move_prediction paraMove,
+                                                     container_counts counts)
+      : container_predictions_extension_policy<TopLevel>{counts}
+      , m_CopyLikeMoveAssign{copyLikeMove}
+      , m_Mutation{yMutation}
+      , m_ParaMove{paraMove}
+    {}
 
     [[nodiscard]]
     constexpr copy_like_move_assign_prediction copy_like_move_assign_allocs() const noexcept { return m_CopyLikeMoveAssign; }
 
     [[nodiscard]]
-    constexpr move_assign_prediction move_assign_allocs() const noexcept { return m_MoveAssign; }
+    constexpr mutation_prediction mutation_allocs() const noexcept { return m_Mutation; }
 
     [[nodiscard]]
-    constexpr mutation_prediction mutation_allocs() const noexcept { return m_Mutation; }
+    constexpr para_move_prediction para_move_allocs() const noexcept { return m_ParaMove; }
 
     [[nodiscard]]
     constexpr move_prediction move_allocs() const noexcept { return m_Move; }
 
     [[nodiscard]]
-    constexpr combined_container_data containers() const noexcept { return  m_Containers; }
+    constexpr move_assign_prediction move_assign_allocs() const noexcept { return m_MoveAssign; }
 
     template<class T>
-    constexpr move_only_allocation_predictions shift(const alloc_prediction_shifter<T>& shifter) const
+    constexpr basic_move_only_allocation_predictions shift(const alloc_prediction_shifter<T>& shifter) const
     {
       auto shifted{*this};
 
@@ -90,15 +106,42 @@ namespace sequoia::testing
     para_move_prediction m_ParaMove{};
     move_prediction m_Move{};
     move_assign_prediction m_MoveAssign{};
-    combined_container_data m_Containers;
   };
 
+  using move_only_allocation_predictions       = basic_move_only_allocation_predictions<top_level::yes>;
+  using move_only_inner_allocation_predictions = basic_move_only_allocation_predictions<top_level::no>;
+
   template<class T>
-  constexpr move_only_allocation_predictions shift(move_only_allocation_predictions predictions)
+  constexpr move_only_allocation_predictions shift(const move_only_allocation_predictions& predictions)
   {
-    const alloc_prediction_shifter<T> shifter{predictions.containers()};
+    const alloc_prediction_shifter<T> shifter{{1_containers, 1_containers, 1_containers}, top_level::yes};
     return predictions.shift(shifter);
   }
+
+  template<class T>
+  constexpr move_only_allocation_predictions shift(const move_only_inner_allocation_predictions& predictions)
+  {
+    const alloc_prediction_shifter<T> shifter{predictions.containers(), top_level::no};
+    const auto shifted{predictions.shift(shifter)};
+
+    return {shifted.copy_like_move_assign_allocs(),
+            shifted.mutation_allocs(),
+            shifted.para_move_allocs(),
+            shifted.move_allocs(),
+            shifted.move_assign_allocs()};
+  }
+
+  template<moveonly T>
+  struct type_to_allocation_predictions<T>
+  {
+    using predictions_type = move_only_allocation_predictions;
+  };
+
+  template<moveonly T>
+  struct type_to_inner_allocation_predictions<T>
+  {
+    using predictions_type = move_only_inner_allocation_predictions;
+  };
 
   template<test_mode Mode, moveonly T, invocable<T&> Mutator, alloc_getter<T>... Getters>
   void check_semantics(std::string_view description, test_logger<Mode>& logger, T&& x, T&& y, const T& xClone, const T& yClone, Mutator m, const allocation_info<T, Getters>&... info)

@@ -161,38 +161,6 @@ namespace sequoia::testing
     return number_of_containers{ static_cast<std::size_t>(n) };
   }
 
-  enum class top_level { yes, no };
-
-  class container_level_data
-  {
-  public:
-    constexpr container_level_data(number_of_containers num, top_level topLevel)
-      : m_Num{num}
-      , m_TopLevel{topLevel}
-    {}
-
-    [[nodiscard]]
-    constexpr number_of_containers num() const noexcept
-    {
-      return m_Num;
-    }
-
-    [[nodiscard]]
-    constexpr int raw_num() const noexcept
-    {
-      return m_Num.value();
-    }
-
-    [[nodiscard]]
-    constexpr bool is_top_level() const noexcept
-    {
-      return m_TopLevel == top_level::yes;
-    }
-  private:
-    number_of_containers m_Num;
-    top_level m_TopLevel;
-  };
-
   struct container_counts
   {
     constexpr container_counts(number_of_containers x, number_of_containers y, number_of_containers postMutation) noexcept
@@ -203,27 +171,6 @@ namespace sequoia::testing
 
     number_of_containers num_x, num_y, num_post_mutation;
   };
-
-  struct combined_container_data
-  {
-    constexpr combined_container_data(const container_counts& counts, top_level topLevel)
-      : x{counts.num_x, topLevel}
-      , y{counts.num_y, topLevel}
-      , y_post_mutation{counts.num_post_mutation, topLevel}
-      , m_TopLevel{topLevel}
-    {}
-
-    [[nodiscard]]
-    constexpr bool is_top_level() const noexcept
-    {
-      return m_TopLevel == top_level::yes;
-    }
-
-    container_level_data x, y, y_post_mutation;
-    top_level m_TopLevel;
-  };
-
-  inline constexpr combined_container_data top_level_spec{{1_containers, 1_containers, 1_containers}, top_level::yes};
 
   namespace allocation_equivalence_classes
   {
@@ -261,6 +208,7 @@ namespace sequoia::testing
   };
 
   enum class container_tag { x, y };
+  enum class top_level { yes, no };
 
   /*! \brief class template for shifting allocation predictions, especially for MSVC debug builds.
 
@@ -274,42 +222,41 @@ namespace sequoia::testing
   class alloc_prediction_shifter<allocation_equivalence_classes::container_of_values<Allocator>>
   {
   public:
-    alloc_prediction_shifter(const combined_container_data& data)
-      : m_CombinedData{data}
+    alloc_prediction_shifter(const container_counts& data, top_level level)
+      : m_Counts{data}
+      , m_TopLevel{level}
     {}
 
     [[nodiscard]]
     constexpr copy_prediction shift(copy_prediction p, container_tag tag) const noexcept
     {
-      const auto& c{tag == container_tag::x ? m_CombinedData.x : m_CombinedData.y};
-      return increment_msvc_debug_count(p, c.raw_num());
+      const auto& c{tag == container_tag::x ? m_Counts.num_x : m_Counts.num_y};
+      return increment_msvc_debug_count(p, c.value());
     }
 
     [[nodiscard]]
     constexpr move_prediction shift(move_prediction p) const noexcept
     {
-      return increment_msvc_debug_count(p, m_CombinedData.is_top_level() ? 1 : 0);
+      return increment_msvc_debug_count(p, is_top_level() ? 1 : 0);
     }
 
     [[nodiscard]]
     constexpr para_copy_prediction shift(para_copy_prediction p) const noexcept
     {
-      return increment_msvc_debug_count(p, m_CombinedData.y.raw_num());
+      return increment_msvc_debug_count(p, m_Counts.num_y.value());
     }
 
     [[nodiscard]]
     constexpr para_move_prediction shift(para_move_prediction p) const noexcept
     {
-      return increment_msvc_debug_count(p, m_CombinedData.y.raw_num());
+      return increment_msvc_debug_count(p, m_Counts.num_y.value());
     }
 
     [[nodiscard]]
     constexpr mutation_prediction shift(mutation_prediction p) const noexcept
     {
-      const auto topLevel{m_CombinedData.is_top_level()};
-      const auto before{m_CombinedData.y.raw_num()}, after{m_CombinedData.y_post_mutation.raw_num()};
-
-      const int increment{(topLevel && (after <= before)) ? 0 : after};
+      const auto before{m_Counts.num_y.value()}, after{m_Counts.num_post_mutation.value()};
+      const int increment{(is_top_level() && (after <= before)) ? 0 : after};
 
       return increment_msvc_debug_count(p, increment);
     }
@@ -317,35 +264,42 @@ namespace sequoia::testing
     [[nodiscard]]
     constexpr assign_prop_prediction shift(assign_prop_prediction p) const noexcept
     {
-      return increment_msvc_debug_count(p, m_CombinedData.y.raw_num());
+      return increment_msvc_debug_count(p, m_Counts.num_y.value());
     }
 
     [[nodiscard]]
     constexpr move_assign_prediction shift(move_assign_prediction p) const noexcept
     {
-      return increment_msvc_debug_count(p, m_CombinedData.is_top_level() ? 1 : 0);
+      return increment_msvc_debug_count(p, is_top_level() ? 1 : 0);
     }
 
     [[nodiscard]]
     constexpr assign_prediction shift(assign_prediction p) const noexcept
     {
-      return increment_msvc_debug_count(p, m_CombinedData.is_top_level() ? 0 : m_CombinedData.y.raw_num());
+      return increment_msvc_debug_count(p, is_top_level() ? 0 : m_Counts.num_y.value());
     }
 
     [[nodiscard]]
     constexpr copy_like_move_assign_prediction shift(copy_like_move_assign_prediction p) const noexcept
     {
-      const bool doIncrement{!m_CombinedData.is_top_level() && (m_CombinedData.y.raw_num() > m_CombinedData.x.raw_num())};
-      return increment_msvc_debug_count(p, doIncrement ? m_CombinedData.y.raw_num() : 0);
+      const bool doIncrement{!is_top_level() && (m_Counts.num_y.value() > m_Counts.num_x.value())};
+      return increment_msvc_debug_count(p, doIncrement ? m_Counts.num_y.value() : 0);
     }
 
     [[nodiscard]]
-    constexpr const combined_container_data& combined_data() const noexcept
+    constexpr const container_counts& counts() const noexcept
     {
-      return m_CombinedData;
+      return m_Counts;
+    }
+
+    [[nodiscard]]
+    constexpr bool is_top_level() const noexcept
+    {
+      return m_TopLevel == top_level::yes;
     }
   private:
-    combined_container_data m_CombinedData;
+    container_counts m_Counts;
+    top_level m_TopLevel;
   };
 
   template<class Allocator>
@@ -359,7 +313,7 @@ namespace sequoia::testing
     [[nodiscard]]
     constexpr assign_prediction shift(assign_prediction p) const noexcept
     {
-      return increment_msvc_debug_count(p, this->combined_data().y.raw_num());
+      return increment_msvc_debug_count(p, this->counts().num_y.value());
     }
 
     [[nodiscard]]
@@ -376,7 +330,7 @@ namespace sequoia::testing
         }()
       };
 
-      return increment_msvc_debug_count(p, this->combined_data().y.raw_num()*val);
+      return increment_msvc_debug_count(p, this->counts().num_y.value()*val);
     }
   };
 
@@ -468,11 +422,17 @@ namespace sequoia::testing
   private:
     using base_t = allocation_info_base<T, Getter>;
   public:
-    using value_type       = T;
-    using allocator_type   = typename base_t::allocator_type;
-    using predictions_type = type_to_allocation_predictions_t<T>;
+    using value_type             = T;
+    using allocator_type         = typename base_t::allocator_type;
+    using predictions_type       = type_to_allocation_predictions_t<T>;
+    using inner_predictions_type = type_to_inner_allocation_predictions_t<T>;
 
     constexpr allocation_info(Getter allocGetter, const predictions_type& predictions)
+      : base_t{std::move(allocGetter)}
+      , m_Predictions{prediction_shifter{}(predictions)}
+    {}
+
+    constexpr allocation_info(Getter allocGetter, const inner_predictions_type& predictions)
       : base_t{std::move(allocGetter)}
       , m_Predictions{prediction_shifter{}(predictions)}
     {}
@@ -487,7 +447,8 @@ namespace sequoia::testing
 
     struct prediction_shifter
     {
-      constexpr predictions_type operator()(const predictions_type& predictions) const
+      template<class Predictions>
+      constexpr predictions_type operator()(const Predictions& predictions) const
       {
         using allocClass = alloc_equivalence_class_generator_t<T, Getter>;
         return shift<allocClass>(predictions);
@@ -498,10 +459,9 @@ namespace sequoia::testing
   template
   <
     class Fn,
-    class T = std::remove_cvref_t<typename function_signature<decltype(&std::remove_cvref_t<Fn>::operator())>::arg>,
-    class Predictions = type_to_allocation_predictions_t<T>
+    class T = std::remove_cvref_t<typename function_signature<decltype(&std::remove_cvref_t<Fn>::operator())>::arg>
   >
-  allocation_info(Fn, const Predictions&)
+  allocation_info(Fn, const type_to_allocation_predictions_t<T>&)
     -> allocation_info<T, Fn>;
 
   /*! \brief A specialization of allocation_info appropriate for std::scoped_allocator_adaptor
@@ -517,16 +477,20 @@ namespace sequoia::testing
   private:
     using base_t = allocation_info_base<T, Getter>;
   public:
-    using value_type       = T;
-    using allocator_type   = typename base_t::allocator_type;
-    using predictions_type = type_to_allocation_predictions_t<T>;
+    using value_type             = T;
+    using allocator_type         = typename base_t::allocator_type;
+    using predictions_type       = type_to_allocation_predictions_t<T>;
+    using inner_predictions_type = type_to_inner_allocation_predictions_t<T>;
 
     constexpr static std::size_t size{alloc_count<allocator_type>::size};
+    static_assert(size > 0);
 
     constexpr allocation_info(Getter allocGetter,
-                                    std::initializer_list<predictions_type> predictions)
+                              predictions_type predictions,
+                              std::initializer_list<inner_predictions_type> innerPredictions)
       : base_t{std::move(allocGetter)}
-      , m_Predictions{utilities::to_array<predictions_type, size>(predictions)}
+      , m_Predictions{predictions}
+      , m_InnerPredictions{utilities::to_array<inner_predictions_type, size-1>(innerPredictions)}
     {}
 
     /// unpacks the scoped_allocator_adaptor, returning allocation_info for the
@@ -540,7 +504,14 @@ namespace sequoia::testing
         }
       };
 
-      return allocation_info<T, decltype(scopedGetter)>{scopedGetter, m_Predictions[I]};
+      if constexpr(I == 0)
+      {
+        return allocation_info<T, decltype(scopedGetter)>{scopedGetter, m_Predictions};
+      }
+      else
+      {
+        return allocation_info<T, decltype(scopedGetter)>{scopedGetter, m_InnerPredictions[I-1]};
+      }
     }
 
   private:
@@ -558,15 +529,47 @@ namespace sequoia::testing
       }
     }
 
-    std::array<predictions_type, size> m_Predictions;
+    predictions_type m_Predictions;
+    std::array<inner_predictions_type, size-1> m_InnerPredictions;
   };
 
   template
   <
     class Fn,
     class T = std::remove_cvref_t<typename function_signature<decltype(&std::remove_cvref_t<Fn>::operator())>::arg>,
-    class Predictions = type_to_allocation_predictions_t<T>
+    class Predictions = type_to_allocation_predictions_t<T>,
+    class InnerPredictions = type_to_inner_allocation_predictions_t<T>
   >
-  allocation_info(Fn, std::initializer_list<Predictions>)
+  allocation_info(Fn, Predictions, std::initializer_list<InnerPredictions>)
     -> allocation_info<T, Fn>;
+
+  template<top_level TopLevel>
+  class container_predictions_extension_policy
+  {
+  public:
+    [[nodiscard]]
+    constexpr container_counts containers() const noexcept { return m_Containers; }
+  protected:
+    container_predictions_extension_policy(const container_counts& counts)
+      : m_Containers{counts}
+    {}
+
+    container_predictions_extension_policy(const container_predictions_extension_policy&) = default;
+    container_predictions_extension_policy& operator=(const container_predictions_extension_policy&) = default;
+
+    ~container_predictions_extension_policy() = default;
+  private:
+    container_counts m_Containers;
+  };
+
+  template<>
+  class container_predictions_extension_policy<top_level::yes>
+  {
+  protected:
+    container_predictions_extension_policy() = default;
+    container_predictions_extension_policy(const container_predictions_extension_policy&) = default;
+    container_predictions_extension_policy& operator=(const container_predictions_extension_policy&) = default;
+
+    ~container_predictions_extension_policy() = default;
+  };
 }
