@@ -196,12 +196,7 @@ namespace sequoia::testing
   struct type_to_allocation_predictions<T>
   {
     using predictions_type = allocation_predictions;
-  };
-
-  template<pseudoregular T>
-  struct type_to_inner_allocation_predictions<T>
-  {
-    using predictions_type = inner_allocation_predictions;
+    using inner_predictions_type = inner_allocation_predictions;
   };
 
   template<test_mode Mode, pseudoregular T, invocable<T&> Mutator, alloc_getter<T>... Getters>

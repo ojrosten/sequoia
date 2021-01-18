@@ -135,12 +135,7 @@ namespace sequoia::testing
   struct type_to_allocation_predictions<T>
   {
     using predictions_type = move_only_allocation_predictions;
-  };
-
-  template<moveonly T>
-  struct type_to_inner_allocation_predictions<T>
-  {
-    using predictions_type = move_only_inner_allocation_predictions;
+    using inner_predictions_type = move_only_inner_allocation_predictions;
   };
 
   template<test_mode Mode, moveonly T, invocable<T&> Mutator, alloc_getter<T>... Getters>
@@ -149,7 +144,7 @@ namespace sequoia::testing
     sentinel<Mode> sentry{logger, add_type_info<T>(description).append("\n")};
 
     if(auto opt{impl::check_para_constructor_allocations(logger, std::forward<T>(y), yClone, info...)})
-    {    
+    {
       check_semantics(logger, impl::move_only_allocation_actions<T>{}, std::forward<T>(x), std::move(*opt), xClone, yClone, std::move(m), std::tuple_cat(impl::make_dual_allocation_checkers(info, x, y)...));
     }
   }
