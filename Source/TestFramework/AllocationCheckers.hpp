@@ -451,7 +451,7 @@ namespace sequoia::testing
       constexpr predictions_type operator()(const Predictions& predictions) const
       {
         using allocClass = alloc_equivalence_class_generator_t<T, Getter>;
-        return shift<allocClass>(predictions);
+        return static_cast<predictions_type>(shift<allocClass>(predictions));
       }
     };
   };

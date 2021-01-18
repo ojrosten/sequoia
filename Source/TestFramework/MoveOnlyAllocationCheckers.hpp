@@ -100,6 +100,11 @@ namespace sequoia::testing
 
       return shifted;
     }
+
+    constexpr explicit operator basic_move_only_allocation_predictions<top_level::yes>() const noexcept
+    {
+      return {copy_like_move_assign_allocs(), mutation_allocs(), para_move_allocs(), move_allocs(), move_assign_allocs()};
+    }
   private:
     copy_like_move_assign_prediction m_CopyLikeMoveAssign{};
     mutation_prediction m_Mutation{};
@@ -119,16 +124,10 @@ namespace sequoia::testing
   }
 
   template<class T>
-  constexpr move_only_allocation_predictions shift(const move_only_inner_allocation_predictions& predictions)
+  constexpr move_only_inner_allocation_predictions shift(const move_only_inner_allocation_predictions& predictions)
   {
     const alloc_prediction_shifter<T> shifter{predictions.containers(), top_level::no};
-    const auto shifted{predictions.shift(shifter)};
-
-    return {shifted.copy_like_move_assign_allocs(),
-            shifted.mutation_allocs(),
-            shifted.para_move_allocs(),
-            shifted.move_allocs(),
-            shifted.move_assign_allocs()};
+    return predictions.shift(shifter);
   }
 
   template<moveonly T>

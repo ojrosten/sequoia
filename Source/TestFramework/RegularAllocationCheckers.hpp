@@ -168,6 +168,11 @@ namespace sequoia::testing
       return shifted;
     }
 
+    constexpr explicit operator basic_allocation_predictions<top_level::yes>() const noexcept
+    {
+      return {x(), y(), assign_y_to_x()};
+    }
+
   private:
     copy_prediction m_x{};
     individual_allocation_predictions m_y;
@@ -185,11 +190,10 @@ namespace sequoia::testing
   }
 
   template<class T>
-  constexpr allocation_predictions shift(const inner_allocation_predictions& predictions)
+  constexpr inner_allocation_predictions shift(const inner_allocation_predictions& predictions)
   {
     const alloc_prediction_shifter<T> shifter{predictions.containers(), top_level::no};
-    const auto shifted{predictions.shift(shifter)};
-    return {shifted.x(), shifted.y(), shifted.assign_y_to_x()};
+    return predictions.shift(shifter);
   }
 
   template<pseudoregular T>
