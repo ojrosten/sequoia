@@ -447,10 +447,15 @@ namespace sequoia::testing
 
     struct prediction_shifter
     {
-      template<class Predictions>
-      constexpr predictions_type operator()(const Predictions& predictions) const
+      using allocClass = alloc_equivalence_class_generator_t<T, Getter>;
+
+      constexpr predictions_type operator()(const predictions_type& predictions) const
       {
-        using allocClass = alloc_equivalence_class_generator_t<T, Getter>;
+        return shift<allocClass>(predictions);
+      }
+
+      constexpr predictions_type operator()(const inner_predictions_type& predictions) const
+      {
         return static_cast<predictions_type>(shift<allocClass>(predictions));
       }
     };
