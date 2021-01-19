@@ -269,10 +269,7 @@ namespace sequoia::testing
     [[nodiscard]]
     constexpr mutation_prediction shift(mutation_prediction p) const noexcept
     {
-      const auto before{m_Counts.num_y.value()}, after{m_Counts.mutation_correction.value()};
-      const int increment{(is_top_level() && (after <= before)) ? 0 : after};
-
-      return increment_msvc_debug_count(p, increment);
+      return increment_msvc_debug_count(p, m_Counts.mutation_correction.value());
     }
 
     [[nodiscard]]
