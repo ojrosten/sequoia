@@ -136,10 +136,13 @@ namespace sequoia::testing
     return copy_like_move_assign_prediction{ static_cast<int>(n) };
   }
 
-  class number_of_containers
+  enum class scoped_prediction_corrections { num_containers, post_mutation };
+
+  template<scoped_prediction_corrections CorrectionFlavour>
+  class corrections
   {
   public:
-    constexpr explicit number_of_containers(std::size_t n) : m_Num{n} {}
+    constexpr explicit corrections(std::size_t n) : m_Num{n} {}
 
     [[nodiscard]]
     constexpr int value() const noexcept
@@ -148,11 +151,14 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    friend auto operator<=>(const number_of_containers&, const number_of_containers&) noexcept = default;
+    friend auto operator<=>(const corrections&, const corrections&) noexcept = default;
 
   private:
     std::size_t m_Num{};
   };
+
+  using number_of_containers     = corrections<scoped_prediction_corrections::num_containers>;
+  using post_mutation_correction = corrections<scoped_prediction_corrections::post_mutation>;
 
   [[nodiscard]]
   SPECULATIVE_CONSTEVAL
@@ -161,15 +167,23 @@ namespace sequoia::testing
     return number_of_containers{ static_cast<std::size_t>(n) };
   }
 
+  [[nodiscard]]
+  SPECULATIVE_CONSTEVAL
+  post_mutation_correction operator "" _postmutation(unsigned long long int n) noexcept
+  {
+    return post_mutation_correction{static_cast<std::size_t>(n)};
+  }
+
   struct container_counts
   {
-    constexpr container_counts(number_of_containers x, number_of_containers y, number_of_containers postMutation) noexcept
+    constexpr container_counts(number_of_containers x, number_of_containers y, post_mutation_correction postMutation) noexcept
       : num_x{x}
       , num_y{y}
-      , num_post_mutation{postMutation}
+      , mutation_correction{postMutation}
     {}
 
-    number_of_containers num_x, num_y, num_post_mutation;
+    number_of_containers num_x, num_y;
+    post_mutation_correction mutation_correction;
   };
 
   namespace allocation_equivalence_classes
@@ -255,7 +269,7 @@ namespace sequoia::testing
     [[nodiscard]]
     constexpr mutation_prediction shift(mutation_prediction p) const noexcept
     {
-      const auto before{m_Counts.num_y.value()}, after{m_Counts.num_post_mutation.value()};
+      const auto before{m_Counts.num_y.value()}, after{m_Counts.mutation_correction.value()};
       const int increment{(is_top_level() && (after <= before)) ? 0 : after};
 
       return increment_msvc_debug_count(p, increment);
@@ -351,6 +365,14 @@ namespace sequoia::testing
   template<movable_comparable T, alloc_getter<T> Getter>
   using alloc_equivalence_class_generator_t = typename alloc_equivalence_class_generator<T, Getter>::type;
 
+  template<class T>
+  struct type_to_allocation_predictions;
+
+  template<class T>
+  using type_to_allocation_predictions_t = typename type_to_allocation_predictions<T>::predictions_type;
+
+  template<class T>
+  using type_to_inner_allocation_predictions_t = typename type_to_allocation_predictions<T>::inner_predictions_type;
 
   /*! \brief Base class for use with both plain (shared counting) allocators and std::scoped_allocator_adaptor
 

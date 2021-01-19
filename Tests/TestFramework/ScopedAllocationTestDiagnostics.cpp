@@ -70,7 +70,7 @@ namespace sequoia::testing
                     allocation_info{
                       allocGetter,
                       {0_c, {1_c,1_mu}, {1_awp,1_anp}},
-                      { {0_c, {2_c,0_mu}, {2_awp,2_anp}, {0_containers, 2_containers, 3_containers}} }
+                      { {0_c, {2_c,0_mu}, {2_awp,2_anp}, {0_containers, 2_containers, 3_postmutation}} }
                     }
     );
   }
@@ -97,7 +97,7 @@ namespace sequoia::testing
       allocation_info{
         getter,
         {0_c, {1_c,1_mu}, {1_awp,1_anp}},
-        { {0_c, {1_c,0_mu}, {1_awp,1_anp}, {0_containers, 1_containers, 2_containers}} }
+        { {0_c, {1_c,0_mu}, {1_awp,1_anp}, {0_containers, 1_containers, 2_postmutation}} }
       }
     );
 
@@ -108,7 +108,7 @@ namespace sequoia::testing
       allocation_info{
         getter,
         {0_c, {1_c,1_mu}, {1_awp,1_anp}},
-        { {0_c, {2_c,0_mu}, {2_awp,2_anp}, {0_containers, 2_containers, 3_containers}} }
+        { {0_c, {2_c,0_mu}, {2_awp,2_anp}, {0_containers, 2_containers, 3_postmutation}} }
       }
     );
 
@@ -119,7 +119,7 @@ namespace sequoia::testing
       allocation_info{
         getter,
         {1_c, {0_c,1_mu}, {0_awp,0_anp}},
-        { {1_c, {0_c,0_mu}, {0_awp,0_anp}, {1_containers, 0_containers, 1_containers}} }
+        { {1_c, {0_c,0_mu}, {0_awp,0_anp}, {1_containers, 0_containers, 1_postmutation}} }
       }
     );
 
@@ -130,7 +130,7 @@ namespace sequoia::testing
       allocation_info{
         getter,
         {1_c, {1_c,1_mu}, {1_awp,0_anp}},
-        { {1_c, {1_c,0_mu}, {1_awp,1_anp,0_clm,0_ma}, {1_containers, 1_containers, 2_containers}} }
+        { {1_c, {1_c,0_mu}, {1_awp,1_anp,0_clm,0_ma}, {1_containers, 1_containers, 2_postmutation}} }
       }
     );
 
@@ -141,7 +141,7 @@ namespace sequoia::testing
       allocation_info{
         getter,
         {1_c, {1_c,1_mu}, {1_awp,1_anp}},
-        { {1_c, {2_c,0_mu}, {2_awp,2_anp}, {1_containers, 2_containers, 3_containers}} }
+        { {1_c, {2_c,0_mu}, {2_awp,2_anp}, {1_containers, 2_containers, 3_postmutation}} }
       }
     );
 
@@ -152,7 +152,7 @@ namespace sequoia::testing
       allocation_info{
         getter,
         {1_c, {1_c,1_mu}, {1_awp,0_anp}},
-        { {2_c, {1_c,0_mu}, {1_awp,1_anp,0_clm,0_ma}, {2_containers, 1_containers, 2_containers}} }
+        { {2_c, {1_c,0_mu}, {1_awp,1_anp,0_clm,0_ma}, {2_containers, 1_containers, 2_postmutation}} }
       }
     );
 
@@ -163,7 +163,7 @@ namespace sequoia::testing
       allocation_info{
         getter,
         {1_c, {1_c,1_mu}, {1_awp,0_anp}},
-        { {2_c, {2_c,0_mu}, {2_awp,2_anp,0_clm,0_ma}, {2_containers, 2_containers, 3_containers}} }
+        { {2_c, {2_c,0_mu}, {2_awp,2_anp,0_clm,0_ma}, {2_containers, 2_containers, 3_postmutation}} }
       }
     );
   }
@@ -190,7 +190,7 @@ namespace sequoia::testing
       allocation_info{
         getter,
         {0_c, {1_c,1_mu}, {1_awp,1_anp}},
-        { {0_c, {2_c,0_mu,2_pc,1_pm}, {2_awp,2_anp,1_clm,0_ma}, {0_containers, 1_containers, 2_containers}} }
+        { {0_c, {2_c,0_mu,2_pc,1_pm}, {2_awp,2_anp,1_clm,0_ma}, {0_containers, 1_containers, 2_postmutation}} }
       }
     );
   }
@@ -221,7 +221,7 @@ namespace sequoia::testing
       allocation_info{
         getter,
         {0_c, {1_c,1_mu}, {1_awp,1_anp}},
-        { {0_c, {2_c,0_mu}, {2_awp,2_anp}, {0_containers, 2_containers, 4_containers}} }
+        { {0_c, {2_c,0_mu}, {2_awp,2_anp}, {0_containers, 2_containers, 4_postmutation}} }
       }
     );
   }
@@ -247,8 +247,8 @@ namespace sequoia::testing
       allocation_info{
         getter,
         {0_c, {1_c,1_mu}, {1_awp,1_anp}},
-        { {0_c, {1_c,1_mu}, {1_awp,1_anp}, {0_containers, 1_containers, 2_containers}},
-          {0_c, {1_c,1_mu}, {1_awp,1_anp}, {0_containers, 1_containers, 1_containers}}
+        { {0_c, {1_c,1_mu}, {1_awp,1_anp}, {0_containers, 1_containers, 2_postmutation}},
+          {0_c, {1_c,1_mu}, {1_awp,1_anp}, {0_containers, 1_containers, 1_postmutation}}
         }
       }
     );
@@ -290,62 +290,62 @@ namespace sequoia::testing
     };
 
     check_semantics(LINE("Incorrect copy x outer allocs"), beast{}, beast{{"something too long for small string optimization"}, {"something else too long for small string optimization"}}, mutator, allocation_info{
-        allocGetter, {1_c, {1_c,1_mu}, {1_awp,1_anp}}, {{0_c, {2_c,0_mu}, {2_awp,2_anp}, {0_containers, 2_containers, 3_containers}}}
+        allocGetter, {1_c, {1_c,1_mu}, {1_awp,1_anp}}, {{0_c, {2_c,0_mu}, {2_awp,2_anp}, {0_containers, 2_containers, 3_postmutation}}}
       }
     );
 
     check_semantics(LINE("Incorrect copy y outer allocs"), beast{}, beast{{"something too long for small string optimization"}, {"something else too long for small string optimization"}}, mutator, allocation_info{
-        allocGetter, {0_c, {0_c,1_mu}, {1_awp,1_anp}}, {{0_c, {2_c,0_mu}, {2_awp,2_anp}, {0_containers, 2_containers, 3_containers}}}
+        allocGetter, {0_c, {0_c,1_mu}, {1_awp,1_anp}}, {{0_c, {2_c,0_mu}, {2_awp,2_anp}, {0_containers, 2_containers, 3_postmutation}}}
       }
     );
 
     check_semantics(LINE("Incorrect mutation outer allocs"), beast{}, beast{{"something too long for small string optimization"}, {"something else too long for small string optimization"}}, mutator, allocation_info{
-        allocGetter, {0_c, {1_c,2_mu}, {1_awp,1_anp}}, {{0_c, {2_c,0_mu}, {2_awp,2_anp}, {0_containers, 2_containers, 3_containers}}}
+        allocGetter, {0_c, {1_c,2_mu}, {1_awp,1_anp}}, {{0_c, {2_c,0_mu}, {2_awp,2_anp}, {0_containers, 2_containers, 3_postmutation}}}
       }
     );
 
     check_semantics(LINE("Incorrect assignment outer allocs"), beast{}, beast{{"something too long for small string optimization"}, {"something else too long for small string optimization"}}, mutator, allocation_info{
-        allocGetter, {0_c, {1_c,1_mu}, {2_awp,3_anp}}, {{0_c, {2_c,0_mu}, {2_awp,2_anp}, {0_containers, 2_containers, 3_containers}}}
+        allocGetter, {0_c, {1_c,1_mu}, {2_awp,3_anp}}, {{0_c, {2_c,0_mu}, {2_awp,2_anp}, {0_containers, 2_containers, 3_postmutation}}}
       }
     );
 
     check_semantics(LINE("Incorrect para copy x outer allocs"), beast{}, beast{{"something too long for small string optimization"}, {"something else too long for small string optimization"}}, mutator, allocation_info{
-        allocGetter, {0_c, {1_c,1_mu, 2_pc}, {1_awp,1_anp}}, {{0_c, {2_c,0_mu}, {2_awp,2_anp}, {0_containers, 2_containers, 3_containers}}}
+        allocGetter, {0_c, {1_c,1_mu, 2_pc}, {1_awp,1_anp}}, {{0_c, {2_c,0_mu}, {2_awp,2_anp}, {0_containers, 2_containers, 3_postmutation}}}
       }
     );
 
     check_semantics(LINE("Incorrect para move x outer allocs"), beast{}, beast{{"something too long for small string optimization"}, {"something else too long for small string optimization"}}, mutator, allocation_info{
-        allocGetter, {0_c, {1_c,1_mu, 1_pc, 0_pm}, {1_awp,1_anp}}, {{0_c, {2_c,0_mu}, {2_awp,2_anp}, {0_containers, 2_containers, 3_containers}}}
+        allocGetter, {0_c, {1_c,1_mu, 1_pc, 0_pm}, {1_awp,1_anp}}, {{0_c, {2_c,0_mu}, {2_awp,2_anp}, {0_containers, 2_containers, 3_postmutation}}}
       }
     );
 
     check_semantics(LINE("Incorrect copy x inner allocs"), beast{}, beast{{"something too long for small string optimization"}, {"something else too long for small string optimization"}}, mutator, allocation_info{
-        allocGetter, {0_c, {1_c,1_mu}, {1_awp,1_anp}}, {{4_c, {2_c,0_mu}, {2_awp,2_anp}, {0_containers, 2_containers, 3_containers}}}
+        allocGetter, {0_c, {1_c,1_mu}, {1_awp,1_anp}}, {{4_c, {2_c,0_mu}, {2_awp,2_anp}, {0_containers, 2_containers, 3_postmutation}}}
       }
     );
 
     check_semantics(LINE("Incorrect copy y inner allocs"), beast{}, beast{{"something too long for small string optimization"}, {"something else too long for small string optimization"}}, mutator, allocation_info{
-        allocGetter, {0_c, {1_c,1_mu}, {1_awp,1_anp}}, {{0_c, {0_c,0_mu}, {2_awp,2_anp}, {0_containers, 2_containers, 3_containers}}}
+        allocGetter, {0_c, {1_c,1_mu}, {1_awp,1_anp}}, {{0_c, {0_c,0_mu}, {2_awp,2_anp}, {0_containers, 2_containers, 3_postmutation}}}
       }
     );
 
     check_semantics(LINE("Incorrect mutation inner allocs"), beast{}, beast{{"something too long for small string optimization"}, {"something else too long for small string optimization"}}, mutator, allocation_info{
-        allocGetter, {0_c, {1_c,1_mu}, {1_awp,1_anp}}, {{0_c, {2_c,3_mu}, {2_awp,2_anp}, {0_containers, 2_containers, 3_containers}}}
+        allocGetter, {0_c, {1_c,1_mu}, {1_awp,1_anp}}, {{0_c, {2_c,3_mu}, {2_awp,2_anp}, {0_containers, 2_containers, 3_postmutation}}}
       }
     );
 
     check_semantics(LINE("Incorrect assignment inner allocs"), beast{}, beast{{"something too long for small string optimization"}, {"something else too long for small string optimization"}}, mutator, allocation_info{
-        allocGetter, {0_c, {1_c,1_mu}, {1_awp,1_anp}}, {{0_c, {2_c,0_mu}, {1_awp,0_anp}, {0_containers, 2_containers, 3_containers}}}
+        allocGetter, {0_c, {1_c,1_mu}, {1_awp,1_anp}}, {{0_c, {2_c,0_mu}, {1_awp,0_anp}, {0_containers, 2_containers, 3_postmutation}}}
       }
     );
 
     check_semantics(LINE("Incorrect para copy x inner allocs"), beast{}, beast{{"something too long for small string optimization"}, {"something else too long for small string optimization"}}, mutator, allocation_info{
-        allocGetter, {0_c, {1_c,1_mu}, {1_awp,1_anp}}, {{0_c, {2_c,0_mu,4_pc}, {2_awp,2_anp}, {0_containers, 2_containers, 3_containers}}}
+        allocGetter, {0_c, {1_c,1_mu}, {1_awp,1_anp}}, {{0_c, {2_c,0_mu,4_pc}, {2_awp,2_anp}, {0_containers, 2_containers, 3_postmutation}}}
       }
     );
 
     check_semantics(LINE("Incorrect para move x inener allocs"), beast{}, beast{{"something too long for small string optimization"}, {"something else too long for small string optimization"}}, mutator, allocation_info{
-        allocGetter, {0_c, {1_c,1_mu}, {1_awp,1_anp}}, {{0_c, {2_c,0_mu,2_pc,0_pm}, {2_awp,2_anp}, {0_containers, 2_containers, 3_containers}}}
+        allocGetter, {0_c, {1_c,1_mu}, {1_awp,1_anp}}, {{0_c, {2_c,0_mu,2_pc,0_pm}, {2_awp,2_anp}, {0_containers, 2_containers, 3_postmutation}}}
       }
     );
   }

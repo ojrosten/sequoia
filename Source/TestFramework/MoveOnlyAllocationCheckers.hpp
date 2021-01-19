@@ -119,7 +119,7 @@ namespace sequoia::testing
   template<class T>
   constexpr move_only_allocation_predictions shift(const move_only_allocation_predictions& predictions)
   {
-    const alloc_prediction_shifter<T> shifter{{1_containers, 1_containers, 1_containers}, top_level::yes};
+    const alloc_prediction_shifter<T> shifter{{1_containers, 1_containers, 1_postmutation}, top_level::yes};
     return predictions.shift(shifter);
   }
 
