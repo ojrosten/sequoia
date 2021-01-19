@@ -555,12 +555,12 @@ namespace sequoia::testing
     [[nodiscard]]
     constexpr container_counts containers() const noexcept { return m_Containers; }
   protected:
-    container_predictions_extension_policy(const container_counts& counts)
+    constexpr container_predictions_extension_policy(const container_counts& counts)
       : m_Containers{counts}
     {}
 
-    container_predictions_extension_policy(const container_predictions_extension_policy&) = default;
-    container_predictions_extension_policy& operator=(const container_predictions_extension_policy&) = default;
+    constexpr container_predictions_extension_policy(const container_predictions_extension_policy&) = default;
+    constexpr container_predictions_extension_policy& operator=(const container_predictions_extension_policy&) = default;
 
     ~container_predictions_extension_policy() = default;
   private:
@@ -571,9 +571,9 @@ namespace sequoia::testing
   class container_predictions_extension_policy<top_level::yes>
   {
   protected:
-    container_predictions_extension_policy() = default;
-    container_predictions_extension_policy(const container_predictions_extension_policy&) = default;
-    container_predictions_extension_policy& operator=(const container_predictions_extension_policy&) = default;
+    constexpr container_predictions_extension_policy() = default;
+    constexpr container_predictions_extension_policy(const container_predictions_extension_policy&) = default;
+    constexpr container_predictions_extension_policy& operator=(const container_predictions_extension_policy&) = default;
 
     ~container_predictions_extension_policy() = default;
   };
