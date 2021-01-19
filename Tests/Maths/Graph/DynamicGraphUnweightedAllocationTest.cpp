@@ -174,7 +174,10 @@ namespace sequoia::testing
                     g2,
                     graph_t{{{}}, edge_allocator{}},
                     nodeMaker,
-                    allocation_info{allocGetter, {{0_c, {1_c, 1_mu}, {1_awp, 1_anp}}, {0_c, {0_c, 0_mu}, {0_awp, 0_anp}}}});
+                    allocation_info{allocGetter,
+                                    {0_c, {1_c, 1_mu}, {1_awp, 1_anp}},
+                                    { {0_c, {0_c, 0_mu}, {0_awp, 0_anp}, {0_containers, 1_containers, 2_postmutation}} }
+                    });
 
     if constexpr (GraphFlavour == graph_flavour::directed)
     {
@@ -182,7 +185,10 @@ namespace sequoia::testing
                       g2,
                       graph_t{{edge_init_t{1}}, {}},
                       nodeMaker,
-                      allocation_info{allocGetter, {{0_c, {1_c, 1_mu}, {1_awp, 1_anp}}, {0_c, {1_c, 0_mu}, {1_awp, 1_anp}}}});
+                      allocation_info{allocGetter,
+                                      {0_c, {1_c, 1_mu}, {1_awp, 1_anp}},
+                                      { {0_c, {1_c, 0_mu}, {1_awp, 1_anp}, {0_containers, 2_containers, 3_postmutation}} }
+                      });
     }
     else if constexpr(GraphFlavour == graph_flavour::undirected)
     {
@@ -190,7 +196,10 @@ namespace sequoia::testing
                       g2,
                       graph_t{{edge_init_t{1}}, {edge_init_t{0}}},
                       nodeMaker,
-                      allocation_info{allocGetter, {{0_c, {1_c, 1_mu}, {1_awp, 1_anp}}, {0_c, {2_c, 0_mu}, {2_awp, 2_anp}}}});
+                      allocation_info{allocGetter,
+                                      {0_c, {1_c, 1_mu}, {1_awp, 1_anp}},
+                                      { {0_c, {2_c, 0_mu}, {2_awp, 2_anp}, {0_containers, 2_containers, 3_postmutation}} }
+                      });
     }
     else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
     {
@@ -198,7 +207,10 @@ namespace sequoia::testing
                       g2,
                       graph_t{{edge_init_t{0,1,0}}, {edge_init_t{0,1,0}}},
                       nodeMaker,
-                      allocation_info{allocGetter, {{0_c, {1_c, 1_mu}, {1_awp, 1_anp}}, {0_c, {2_c, 0_mu}, {2_awp, 2_anp}}}});
+                      allocation_info{allocGetter,
+                                      {0_c, {1_c, 1_mu}, {1_awp, 1_anp}},
+                                      { {0_c, {2_c, 0_mu}, {2_awp, 2_anp}, {0_containers, 2_containers, 3_postmutation}} }
+                      });
     }      
   }
 }

@@ -78,8 +78,14 @@ namespace sequoia::testing
       }
     };
 
-    check_semantics(LINE(""), s, t, partitionMaker,
-                            allocation_info{allocGetter, {{0_c, {1_c,1_mu}, {1_awp,1_anp}}, {0_c, {2_c,0_mu}, {2_awp,2_anp}}}});
+    check_semantics(LINE(""),
+                    s,
+                    t,
+                    partitionMaker,
+                    allocation_info{allocGetter,
+                                    {0_c, {1_c,1_mu}, {1_awp,1_anp}},
+                                    { {0_c, {2_c,0_mu}, {2_awp,2_anp}, {0_containers, 2_containers, 3_postmutation}} }
+                    });
       
     s.add_slot();
     // []
@@ -93,8 +99,14 @@ namespace sequoia::testing
       }
     };
 
-    check_semantics(LINE(""), s, t, mutator,
-                    allocation_info{allocGetter, {{1_c, {1_c,1_mu}, {1_awp,1_anp}}, {0_c, {2_c,1_mu}, {2_awp,2_anp}}}});
+    check_semantics(LINE(""),
+                    s,
+                    t,
+                    mutator,
+                    allocation_info{allocGetter,
+                                    {1_c, {1_c,1_mu}, {1_awp,1_anp}},
+                                    { {0_c, {2_c,1_mu}, {2_awp,2_anp}, {1_containers, 2_containers, 3_postmutation}} }
+                    });
   }
   
   template<class T, class Handler, bool PropagateCopy, bool PropagateMove, bool PropagateSwap>

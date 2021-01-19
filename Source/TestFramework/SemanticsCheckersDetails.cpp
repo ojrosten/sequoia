@@ -7,7 +7,7 @@
 
 #include "SemanticsCheckersDetails.hpp"
 
-namespace sequoia::testing::impl
+namespace sequoia::testing
 {
   [[nodiscard]]
   std::string to_string(const comparison_flavour f)

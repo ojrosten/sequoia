@@ -51,6 +51,6 @@ namespace sequoia::testing
     };
 
     check_semantics(LINE(""), pool_t{}, std::move(clonePool), pool_t{}, pool, mutator,
-                            move_only_allocation_info{allocGetter, move_only_allocation_predictions{1_clm, 1_mu, 1_pm}});
+                            allocation_info{allocGetter, {1_clm, 1_mu, 1_pm}});
   }
 }

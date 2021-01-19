@@ -72,6 +72,20 @@
 namespace sequoia::testing
 {
   enum class comparison_flavour { equality, inequality, less_than, greater_than, leq, geq, threeway };
+  
+  template<comparison_flavour C>
+  using comparison_constant = std::integral_constant<comparison_flavour, C>;
+
+  using equality_type     = comparison_constant<comparison_flavour::equality>;
+  using inequality_type   = comparison_constant<comparison_flavour::inequality>;
+  using less_than_type    = comparison_constant<comparison_flavour::less_than>;
+  using greater_than_type = comparison_constant<comparison_flavour::greater_than>;
+  using leq_type          = comparison_constant<comparison_flavour::leq>;
+  using geq_type          = comparison_constant<comparison_flavour::geq>;
+  using threeway_type     = comparison_constant<comparison_flavour::threeway>;
+
+  [[nodiscard]]
+  std::string to_string(comparison_flavour f);
 }
 
 namespace sequoia::testing::impl
@@ -87,20 +101,6 @@ namespace sequoia::testing::impl
   {
     template<class T> constexpr void operator()(const T&) noexcept {}
   };
-
-  template<comparison_flavour C>
-  using comparison_constant = std::integral_constant<comparison_flavour, C>;
-
-  using equality_type = comparison_constant<comparison_flavour::equality>;
-  using inequality_type = comparison_constant<comparison_flavour::inequality>;
-  using less_than_type = comparison_constant<comparison_flavour::less_than>;
-  using greater_than_type = comparison_constant<comparison_flavour::greater_than>;
-  using leq_type = comparison_constant<comparison_flavour::leq>;
-  using geq_type = comparison_constant<comparison_flavour::geq>;
-  using threeway_type = comparison_constant<comparison_flavour::threeway>;
-
-  [[nodiscard]]
-  std::string to_string(comparison_flavour f);
 
   template<test_mode Mode, comparison_flavour C, class Actions, movable_comparable T, invocable_r<bool, T> Fn, class... Args>
   bool check_comparison_consistency(test_logger<Mode>& logger, comparison_constant<C> comparison, [[maybe_unused]] const Actions& actions, const T& x, [[maybe_unused]]const T& y, Fn fn, [[maybe_unused]] const Args&... args)
