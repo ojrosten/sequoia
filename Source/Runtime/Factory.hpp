@@ -9,27 +9,22 @@
 
 #include <variant>
 #include <array>
+#include <tuple>
 
 namespace sequoia::runtime
-{
-  template<class>
-  struct type_to_string
-  {
-    std::string make() = delete;
-  };
-  
+{  
   template<class... Products>
-    requires (std::is_default_constructible_v<Products> && ...)
+    requires (sizeof...(Products) > 0) && (std::is_default_constructible_v<Products> && ...)
   class factory
   {
   public:
-    constexpr static std::size_t num_products() noexcept
+    constexpr static std::size_t size() noexcept
     {
       return sizeof...(Products);
     }
 
-    factory()
-      : m_Creators{std::make_pair(type_to_string<Products>(), std::variant<Products...>{Products{}})...}
+    factory(const std::array<std::string_view, size()>& names)
+      : m_Creators{make_array(names, std::make_index_sequence<size()>{})}
     {
       std::sort(m_Creators.begin(), m_Creators.end(), [](const element& lhs, const element& rhs){ return lhs.first < rhs.first; });
     }
@@ -40,15 +35,40 @@ namespace sequoia::runtime
       auto found{std::lower_bound(m_Creators.begin(), m_Creators.end(), name,
                                   [](const element& e, std::string_view n) { return e.first < n; } )};
 
-      if((found == m_Creators.end()) || (*found != name))
+      if((found == m_Creators.end()) || (found->first != name))
         throw std::runtime_error{std::string{"Factory unable to create product of name '"}.append(name).append("'")};
 
-      return found->second();
+      return found->second;
     };
+
+    [[nodiscard]]
+    friend bool operator==(const factory&, const factory&) noexcept
+    {
+      return true;
+    }
+
+    friend bool operator!=(const factory& lhs, const factory& rhs) noexcept
+    {
+      return !(lhs == rhs);
+    }
   private:
     using element = std::pair<std::string, std::variant<Products...>>;
     
-    std::array<element, num_products()> m_Creators{};
+    std::array<element, size()> m_Creators{};
+
+    template<std::size_t... I>
+    [[nodiscard]]
+    std::array<element, size()> make_array(const std::array<std::string_view, size()>& names, std::index_sequence<I...>)
+    {
+      return {make_element<I, Products>(names)...};
+    }
+
+    template<std::size_t I, class Product>
+    [[nodiscard]]
+    static element make_element(const std::array<std::string_view, size()>& names)
+    {
+      return {std::string{names[I]}, Product{}};
+    }
   };
 }
 

@@ -89,3 +89,5 @@
 #include "TestRunnerDiagnostics.hpp"
 #include "TestRunnerTest.hpp"
 #include "TestRunner.hpp"
+#include "FactoryTestingDiagnostics.hpp"
+#include "FactoryTest.hpp"

@@ -47,6 +47,8 @@ APP_DEP := $(TEST_BUILD_ROOT)/TestChamberMain.d
 
 TEST_SRCS += $(shell find $(TEST_DIR)/TestFramework -name '*.cpp')
 TEST_SRCS += $(shell find $(TEST_DIR)/Parsing -name '*.cpp')
+TEST_SRCS += $(shell find $(TEST_DIR)/Runtime -name '*.cpp')
+
 TEST_OBJS := $(addprefix $(TEST_BUILD_DIR)/, $(TEST_SRCS:%.cpp=%.o))
 TEST_DEPS := $(addprefix $(TEST_BUILD_DIR)/, $(TEST_SRCS:%.cpp=%.d))
 

@@ -36,6 +36,7 @@
 #include <filesystem>
 #include <optional>
 #include <regex>
+#include <variant>
 
 namespace sequoia::testing
 {  
@@ -468,6 +469,61 @@ namespace sequoia::testing
       using checker = detailed_equality_checker<std::basic_string_view<Char, Traits>>;
       
       checker::check(logger, std::string_view{obtained}, std::string_view{prediction}, std::move(advisor));
+    }
+  };
+
+  template<class... Ts>
+  struct detailed_equality_checker<std::variant<Ts...>>
+  {
+    using type = std::variant<Ts...>;
+
+    template<test_mode Mode, class Advisor>
+    static void check(test_logger<Mode>& logger, const type& obtained, const type& prediction, tutor<Advisor> advisor)
+    {
+      if(check_equality("Variant Index", logger, obtained.index(), prediction.index()))
+      {
+        check(logger, obtained, prediction, advisor, std::make_index_sequence<sizeof...(Ts)>());
+      }
+    }
+  private:
+    template<test_mode Mode, class Advisor, std::size_t... I>
+    static void check(test_logger<Mode>& logger, const type& obtained, const type& prediction, const tutor<Advisor>& advisor, std::index_sequence<I...>)
+    {
+      (check<I>(logger, obtained, prediction, advisor), ...);
+    }
+
+    template<std::size_t I, test_mode Mode, class Advisor>
+    static void check(test_logger<Mode>& logger, const type& obtained, const type& prediction, const tutor<Advisor>& advisor)
+    {
+      if(auto pObtained{std::get_if<I>(&obtained)})
+      {
+        if(auto pPrediction{std::get_if<I>(&prediction)})
+        {
+          check_equality("Variant Contents", logger, *pObtained, *pPrediction, advisor);
+        }
+        else
+        {
+          throw std::logic_error{"Inconsistant variant access"};
+        }
+      }
+    }
+  };
+
+  template<class T>
+  struct detailed_equality_checker<std::optional<T>>
+  {
+    using type = std::optional<T>;
+
+    template<test_mode Mode, class Advisor>
+    static void check(test_logger<Mode>& logger, const type& obtained, const type& prediction, tutor<Advisor> advisor)
+    {
+      if(check_equality("Has value", logger, obtained.has_value(), prediction.value()))
+      {
+        if(obtained && prediction)
+        {
+          check_equality("Contents of optional", logger, *obtained, *prediction, advisor);
+        }
+      }
     }
   };
 }
