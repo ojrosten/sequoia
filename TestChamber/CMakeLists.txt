@@ -24,7 +24,9 @@ add_executable(TestChamber TestChamberMain.cpp
                               ../Tests/TestFramework/TestRunnerDiagnostics.cpp
                               ../Tests/TestFramework/TestRunnerTest.cpp
                               ../Tests/Parsing/CommandLineArgumentsTest.cpp
-                              ../Tests/Parsing/CommandLineArgumentsDiagnostics.cpp)
+                              ../Tests/Parsing/CommandLineArgumentsDiagnostics.cpp
+                              ../Tests/Runtime/FactoryTestingDiagnostics.cpp
+                              ../Tests/Runtime/FactoryTest.cpp)
 
 target_include_directories(TestChamber PUBLIC ../TestCommon)
 target_include_directories(TestChamber PUBLIC ../Tests)
