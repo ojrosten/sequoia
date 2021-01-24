@@ -12,6 +12,8 @@
 #include <vector>
 #include <set>
 #include <filesystem>
+#include <variant>
+#include <optional>
 
 namespace sequoia::testing
 {
@@ -65,6 +67,10 @@ namespace sequoia::testing
   void false_positive_diagnostics::run_tests()
   {
     basic_tests();
+    test_exceptions();
+    test_heterogeneous();
+    test_variant();
+    test_optional();
     test_container_checks();
     test_strings();
     test_mixed();
@@ -87,7 +93,17 @@ namespace sequoia::testing
     check_equality(LINE(""), 6.5, 5.6, tutor{[](double, double){
         return std::string{"Double, double, toil and trouble"};
       }});
+  }
 
+  void false_positive_diagnostics::test_exceptions()
+  {
+    check_exception_thrown<std::runtime_error>(LINE("Exception expected but nothing thrown"), [](){});
+    check_exception_thrown<std::runtime_error>(LINE("Exception thrown but of wrong type"), [](){ throw std::logic_error("Error"); });
+    check_exception_thrown<std::runtime_error>(LINE("Exception thrown but of unknown type"), [](){ throw 1; });
+  }
+
+  void false_positive_diagnostics::test_heterogeneous()
+  {
     check_equality(LINE(""), std::pair<int, double>{5, 7.8}, std::pair<int, double>{5, -7.8});
     check_equality(LINE(""), std::pair<int, double>{5, 7.8}, std::pair<int, double>{-5, 7.8});
     check_equality(LINE(""), std::pair<int, double>{5, 7.8}, std::pair<int, double>{-5, 6.8}, tutor{bland{}});
@@ -95,10 +111,23 @@ namespace sequoia::testing
     check_equality(LINE(""), std::tuple<int, double, float>{4, 3.4, -9.2f}, std::tuple<int, double, float>{0, 3.4, -9.2f});
     check_equality(LINE(""), std::tuple<int, double, float>{4, 3.4, -9.2f}, std::tuple<int, double, float>{4, 0.0, -9.2f}, tutor{bland{}});
     check_equality(LINE(""), std::tuple<int, double, float>{4, 3.4, -9.2f}, std::tuple<int, double, float>{4, 3.4, -0.0f});
+  }
 
-    check_exception_thrown<std::runtime_error>(LINE("Exception expected but nothing thrown"), [](){});
-    check_exception_thrown<std::runtime_error>(LINE("Exception thrown but of wrong type"), [](){ throw std::logic_error("Error"); });
-    check_exception_thrown<std::runtime_error>(LINE("Exception thrown but of unknown type"), [](){ throw 1; });
+  void false_positive_diagnostics::test_variant()
+  {
+    using var = std::variant<int, double>;
+
+    check_equality(LINE(""), var{0}, var{0.0});
+    check_equality(LINE(""), var{1}, var{2});
+    check_equality(LINE(""), var{-0.1}, var{0.0});
+  }
+
+  void false_positive_diagnostics::test_optional()
+  {
+    using opt = std::optional<int>;
+    check_equality(LINE(""), opt{}, opt{0});
+    check_equality(LINE(""), opt{0}, opt{});
+    check_equality(LINE(""), opt{2}, opt{0});
   }
 
   void false_positive_diagnostics::test_container_checks()
@@ -280,6 +309,10 @@ namespace sequoia::testing
   void false_negative_diagnostics::run_tests()
   {
     basic_tests();
+    test_exceptions();
+    test_heterogeneous();
+    test_variant();
+    test_optional();
     test_container_checks();
     test_strings();
     test_mixed();
@@ -294,12 +327,36 @@ namespace sequoia::testing
 
     check_equality(LINE(""), 5, 5);
     check_equality(LINE(""), 5.0, 5.0);
+  }
 
+  void false_negative_diagnostics::test_exceptions()
+  {
+    check_exception_thrown<std::runtime_error>(LINE(""), [](){ throw std::runtime_error("Error");});      
+  }
+
+  void false_negative_diagnostics::test_heterogeneous()
+  {
     check_equality(LINE(""), std::pair<int, double>{5, 7.8}, std::pair<int, double>{5, 7.8});
 
-    check_equality(LINE(""), std::tuple<int, double, float>{4, 3.4, -9.2f}, std::tuple<int, double, float>{4, 3.4, -9.2f});
+    check_equality(LINE(""), std::tuple<int, double, float>{4, 3.4, -9.2f}, std::tuple<int, double, float>{4, 3.4, -9.2f});    
+  }
 
-    check_exception_thrown<std::runtime_error>(LINE(""), [](){ throw std::runtime_error("Error");});      
+  void false_negative_diagnostics::test_variant()
+  {
+    using var = std::variant<int, double>;
+
+    check_equality(LINE(""), var{0}, var{0});
+    check_equality(LINE(""), var{0.0}, var{0.0});
+    check_equality(LINE(""), var{3}, var{3});
+    check_equality(LINE(""), var{4.0}, var{4.0});
+  }
+
+  void false_negative_diagnostics::test_optional()
+  {
+    using opt = std::optional<int>;
+    check_equality(LINE(""), opt{}, opt{});
+    check_equality(LINE(""), opt{0}, opt{0});
+    check_equality(LINE(""), opt{-1}, opt{-1});
   }
 
   void false_negative_diagnostics::test_container_checks()

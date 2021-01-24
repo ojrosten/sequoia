@@ -31,6 +31,10 @@ namespace sequoia:: testing
     }
 
     void basic_tests();
+    void test_exceptions();
+    void test_heterogeneous();
+    void test_variant();
+    void test_optional();
     void test_container_checks();
     void test_strings();
     void test_mixed();
@@ -57,6 +61,10 @@ namespace sequoia:: testing
     }
 
     void basic_tests();
+    void test_exceptions();
+    void test_heterogeneous();
+    void test_variant();
+    void test_optional();
     void test_container_checks();
     void test_strings();
     void test_mixed();

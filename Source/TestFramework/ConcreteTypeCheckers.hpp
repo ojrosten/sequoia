@@ -517,7 +517,7 @@ namespace sequoia::testing
     template<test_mode Mode, class Advisor>
     static void check(test_logger<Mode>& logger, const type& obtained, const type& prediction, tutor<Advisor> advisor)
     {
-      if(check_equality("Has value", logger, obtained.has_value(), prediction.value()))
+      if(check_equality("Has value", logger, obtained.has_value(), prediction.has_value()))
       {
         if(obtained && prediction)
         {

@@ -42,15 +42,10 @@ namespace sequoia::runtime
     };
 
     [[nodiscard]]
-    friend bool operator==(const factory&, const factory&) noexcept
-    {
-      return true;
-    }
+    friend bool operator==(const factory&, const factory&) noexcept = default;
 
-    friend bool operator!=(const factory& lhs, const factory& rhs) noexcept
-    {
-      return !(lhs == rhs);
-    }
+    [[nodiscard]]
+    friend bool operator!=(const factory&, const factory&) noexcept = default;
   private:
     using element = std::pair<std::string, std::variant<Products...>>;
     
