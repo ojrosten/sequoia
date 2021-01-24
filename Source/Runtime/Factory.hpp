@@ -6,6 +6,7 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "Concepts.hpp"
+#include "Iterator.hpp"
 
 #include <variant>
 #include <array>
@@ -18,6 +19,9 @@ namespace sequoia::runtime
   class factory
   {
   public:
+    using key    = std::string;
+    using vessel = std::variant<Products...>;
+    
     constexpr static std::size_t size() noexcept
     {
       return sizeof...(Products);
@@ -30,7 +34,7 @@ namespace sequoia::runtime
     }
 
     [[nodiscard]]
-    std::variant<Products...> create(std::string_view name) const
+    vessel create(std::string_view name) const
     {
       auto found{std::lower_bound(m_Creators.begin(), m_Creators.end(), name,
                                   [](const element& e, std::string_view n) { return e.first < n; } )};
@@ -46,8 +50,20 @@ namespace sequoia::runtime
 
     [[nodiscard]]
     friend bool operator!=(const factory&, const factory&) noexcept = default;
+
+    [[nodiscard]]
+    auto begin() const noexcept
+    {
+      return m_Creators.begin(); 
+    }
+
+    [[nodiscard]]
+    auto end() const noexcept
+    {
+      return m_Creators.end(); 
+    }
   private:
-    using element = std::pair<std::string, std::variant<Products...>>;
+    using element = std::pair<key, vessel>;
     
     std::array<element, size()> m_Creators{};
 

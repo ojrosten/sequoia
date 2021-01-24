@@ -17,6 +17,9 @@ namespace sequoia::testing
 
   void factory_test::run_tests()
   {
-    // TO DO
+    using namespace runtime;
+
+    factory<int, double> f{{"int", "double"}}, g{{"foo", "bar"}};
+    check_semantics(LINE(""), f, g);
   }
 }

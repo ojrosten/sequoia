@@ -15,18 +15,6 @@
 namespace sequoia::testing
 {
   template<class... Products>
-  struct detailed_equality_checker<sequoia::runtime::factory<Products...>>
-  {
-    using type = sequoia::runtime::factory<Products...>;
-    
-    template<test_mode Mode>
-    static void check(test_logger<Mode>& logger, const type& actual, const type& prediction)
-    {
-      // TO DO
-    }
-  };
-
-  template<class... Products>
   struct equivalence_checker<sequoia::runtime::factory<Products...>>
   {
     using type = sequoia::runtime::factory<Products...>;
