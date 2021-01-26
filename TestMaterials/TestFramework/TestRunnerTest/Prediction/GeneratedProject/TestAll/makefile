@@ -76,13 +76,13 @@ $(PRJ_BUILD_DIR)/%.o : %.cpp
 	$(CC) $(CFLAGS) -MMD -c $< -o $@
 
 subdirs :
-	-mkdir $(BUILD_ROOT)
-	-mkdir $(TEST_BUILD_ROOT)
-	-mkdir $(PRJ_BUILD_ROOT)
-	-mkdir $(TEST_BUILD_DIR)
-	-mkdir $(PRJ_BUILD_DIR)
-	-mkdir $(TEST_BUILD_SUB_DIRS)
-	-mkdir $(PRJ_BUILD_SUB_DIRS)
+	mkdir -p $(BUILD_ROOT)
+	mkdir -p $(TEST_BUILD_ROOT)
+	mkdir -p $(PRJ_BUILD_ROOT)
+	mkdir -p $(TEST_BUILD_DIR)
+	mkdir -p $(PRJ_BUILD_DIR)
+	mkdir -p $(TEST_BUILD_SUB_DIRS)
+	mkdir -p $(PRJ_BUILD_SUB_DIRS)
 
 clean :
 	rm -r $(TEST_BUILD_ROOT)
