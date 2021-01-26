@@ -44,7 +44,7 @@ namespace sequoia::testing
 
   template<class T>
   inline constexpr bool has_detailed_equality_checker_v{class_template_is_default_instantiable<detailed_equality_checker, T>};
-  
+
   struct equality_tag{};
   struct equivalence_tag{};
   struct weak_equivalence_tag{};
@@ -56,13 +56,13 @@ namespace sequoia::testing
 
   template<class T>
   struct serializer;
-  
+
   template<serializable_to<std::stringstream> T>
   struct serializer<T>
   {
     [[nodiscard]]
     static std::string make(const T& val)
-    {        
+    {
       std::ostringstream os{};
       os << std::boolalpha << val;
       return os.str();
@@ -74,7 +74,7 @@ namespace sequoia::testing
   {
     [[nodiscard]]
     static std::string make(const std::filesystem::path& p)
-    {        
+    {
       return p.generic_string();
     }
   };
@@ -89,16 +89,15 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string to_string(const T& value)
   {
-    return serializer<T>::make(value);    
+    return serializer<T>::make(value);
   }
 
-  
   template<class T>
     requires std::is_integral_v<T>
   auto fixed_width_unsigned_cast(T x)
   {
     using U = std::make_unsigned_t<decltype(x)>;
-        
+
     if constexpr(sizeof(U) == sizeof(uint64_t))
     {
       return static_cast<uint64_t>(x);

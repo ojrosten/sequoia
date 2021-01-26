@@ -167,6 +167,25 @@ namespace sequoia::testing
     return text;
   }
 
+  std::string& replace_all(std::string& text, std::string_view anyOfLeft, std::string_view from, std::string_view anyOfRight, std::string_view to)
+  {
+    constexpr auto npos{std::string::npos};
+
+    auto left{
+      [anyOfLeft](char c){
+        return !anyOfLeft.size() || (anyOfLeft.find(c) < npos);
+      }
+    };
+
+    auto right{
+      [anyOfRight](char c) {
+        return !anyOfRight.size() || (anyOfRight.find(c) < npos);
+      }
+    };
+
+    return replace_all(text, left, from, right, to);
+  }
+
   [[nodiscard]]
   std::string report_line(const std::filesystem::path& file, const int line, std::string_view message, const std::filesystem::path& repository)
   {
@@ -237,8 +256,9 @@ namespace sequoia::testing
 
     // It is a pity to have to make these substitutions, but it appears
     // to be by far the easiest way to ensure compiler-independent de-mangling.
-    replace_all(name, {{" true,", " 1,"},  {" true>", " 1>"},  {"<true>", "<1>"}});
-    replace_all(name, {{" false,", " 0,"}, {" false>", " 0>"}, {"<false>", "<0>"}});
+    replace_all(name, " <", "true", ",>", "1");
+    replace_all(name, " <", "false", ",>", "0");
+    replace_all(name, [](char c) { return std::isdigit(c) > 0; }, "ul", [](char) { return true; }, "");
 
     return name;
   }
@@ -261,21 +281,22 @@ namespace sequoia::testing
     peel(name, "class ");
     peel(name, "enum ");
 
+    replace_all(name, "<,", "struct ", "", "");
+    replace_all(name, "<,", "class ", "", "");
+    replace_all(name, "<,", "enum ", "", "");
+
     replace_all(name, ",", ", ");
 
-    replace_all(name, {{"<struct ", "<"}, {", struct ", ", "},
-                       {"<class ", "<"},  {", class ", ", "},
-                       {"<enum ", "<"},   {", enum ", ", "},
-                       {" & __ptr64", "&"}});
+    replace_all(name, " & __ptr64", "&");
 
 #ifdef _MSC_VER
-    if constexpr(sizeof(__int64) == sizeof(long long))
-    {
-      replace_all(name, "__int64", "long long");
-    }
-    else if constexpr(sizeof(__int64) == sizeof(long))
+    if constexpr(sizeof(__int64) == sizeof(long))
     {
       replace_all(name, "__int64", "long");
+    }
+    else if constexpr(sizeof(__int64) == sizeof(long long))
+    {
+      replace_all(name, "__int64", "long long");
     }
 #endif
 

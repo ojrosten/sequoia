@@ -480,7 +480,7 @@ namespace sequoia::testing
     template<test_mode Mode, class Advisor>
     static void check(test_logger<Mode>& logger, const type& obtained, const type& prediction, tutor<Advisor> advisor)
     {
-      if(check_equality("Variant Index", logger, obtained.index(), prediction.index()))
+      if(check_equality("Variant Index", logger, fixed_width_unsigned_cast(obtained.index()), fixed_width_unsigned_cast(prediction.index())))
       {
         check(logger, obtained, prediction, advisor, std::make_index_sequence<sizeof...(Ts)>());
       }

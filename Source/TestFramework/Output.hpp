@@ -88,6 +88,31 @@ namespace sequoia::testing
 
   std::string& replace_all(std::string& text, std::initializer_list<replacement> data);
 
+  std::string& replace_all(std::string& text, std::string_view anyOfLeft, std::string_view from, std::string_view anyOfRight, std::string_view to);
+
+  template<invocable_r<bool, char> LeftPred, invocable_r<bool, char> RightPred>
+  std::string& replace_all(std::string& text, LeftPred lPred, std::string_view from, RightPred rPred, std::string_view to)
+  {
+    constexpr auto npos{std::string::npos};
+    std::string::size_type pos{};
+    while((pos = text.find(from, pos)) != npos)
+    {
+      if(    (pos > 0)                             && lPred(text[pos - 1])
+          && (pos + from.length() < text.length()) && rPred(text[pos + from.length()])
+        )
+      {
+        text.replace(pos, from.length(), to);
+        pos += to.length();
+      }
+      else
+      {
+        pos += text.length();
+      }
+    }
+
+    return text;
+  }
+
   [[nodiscard]]
   std::string report_line(const std::filesystem::path& file, int line, std::string_view message, const std::filesystem::path& repository={});
 
