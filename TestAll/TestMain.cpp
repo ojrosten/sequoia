@@ -79,6 +79,12 @@ int main(int argc, char** argv)
     );
 
     runner.add_test_family(
+      "Factory",
+      factory_false_positive_test("False Positive Test"),
+      factory_test("Unit Test")
+    );
+
+    runner.add_test_family(
       "Test Runner",      
       test_runner_false_positive_test{"False Positive Diagnostics"},
       test_runner_test{"Unit Test"}
