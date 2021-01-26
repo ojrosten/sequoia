@@ -59,6 +59,7 @@ namespace sequoia::testing
     return report_time(s.log, s.execution_time);
   }
 
+  [[nodiscard]]
   std::filesystem::path host_directory::get([[maybe_unused]] const std::filesystem::path& filename) const
   {
     namespace fs = std::filesystem;

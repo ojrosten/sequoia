@@ -22,8 +22,7 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string report_time(const test_family::summary& s);
 
-  template<class Fn>
-    requires invocable<Fn, std::filesystem::path>
+  template<invocable<std::filesystem::path> Fn>
   void create_file(const std::filesystem::path& source, const std::filesystem::path& target, Fn action)
   {
     namespace fs = std::filesystem;
@@ -49,6 +48,7 @@ namespace sequoia::testing
       fs::create_directories(std::get<generator>(m_Data).hostRepo);
     }
 
+    [[nodiscard]]
     std::filesystem::path get([[maybe_unused]] const std::filesystem::path& filename) const;
   private:
     struct generator
@@ -74,7 +74,7 @@ namespace sequoia::testing
       , defaultHost{host}
     {}
 
-    class sentinel
+    class [[nodiscard]] sentinel
     {
     public:
       sentinel(creation_data& creationData);
@@ -94,10 +94,10 @@ namespace sequoia::testing
   struct template_spec
   {
     [[nodiscard]]
-    friend bool operator==(const template_spec&, const template_spec&) = default;
+    friend bool operator==(const template_spec&, const template_spec&) noexcept = default;
 
     [[nodiscard]]
-    friend bool operator!=(const template_spec&, const template_spec&) = default;
+    friend bool operator!=(const template_spec&, const template_spec&) noexcept = default;
     
     std::string species, symbol;
   };
