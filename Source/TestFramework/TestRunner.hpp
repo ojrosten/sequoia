@@ -62,6 +62,25 @@ namespace sequoia::testing
 
   /*! \brief data supplied from the commandline for creating new tests */
 
+  struct behavioural_extension
+  {
+    [[nodiscard]]
+    constexpr static bool valid() noexcept { return true; }
+  };
+
+  struct semantic_extension
+  {
+    [[nodiscard]]
+    bool valid() const noexcept { return !qualifiedName.empty(); }
+    
+    std::vector<std::string> equivalentTypes{};
+    std::string qualifiedName{};
+  };
+
+  [[nodiscard]]
+  std::string creation_error();
+
+  template<class Extension>
   struct creation_data
   {
     explicit creation_data(host_directory hostDir)
@@ -77,19 +96,31 @@ namespace sequoia::testing
     class [[nodiscard]] sentinel
     {
     public:
-      sentinel(creation_data& creationData);
+      sentinel(creation_data& creationData)
+        : m_CreationData{creationData}
+      {
+        if(m_CreationData.testType.empty() || !m_CreationData.extension.valid())
+        {          
+          throw std::runtime_error{creation_error()};
+        }
+      }
 
-      ~sentinel();      
+      ~sentinel()
+      {
+        m_CreationData = creation_data{m_CreationData.defaultHost};
+      }
     private:
       creation_data& m_CreationData;
     };
-      
-    std::vector<std::string> equivalentTypes{};
+
     host_directory host, defaultHost;
-    std::string testType{}, qualifiedName{}, family{};
-    std::filesystem::path classHeader{};
+    std::string testType{}, family{};
+    std::filesystem::path header{};
+    [[no_unique_address]] Extension extension{};
   };
 
+  using behavioural_creation_data = creation_data<behavioural_extension>;
+  using semantic_creation_data    = creation_data<semantic_extension>;
   
   struct template_spec
   {
@@ -114,10 +145,10 @@ namespace sequoia::testing
   void set_top_copyright(std::string& text, std::string_view copyright);
 
   /*! \brief Holds data for the automated creation of new tests */
-  class nascent_test
+  class nascent_semantics_test
   {
   public:
-    explicit nascent_test(creation_data data);
+    explicit nascent_semantics_test(semantic_creation_data data);
 
     [[nodiscard]]
     std::filesystem::path create_file(std::string_view copyright, const std::filesystem::path& codeTemplatesDir, std::string_view partName, std::filesystem::copy_options options) const;
@@ -144,6 +175,19 @@ namespace sequoia::testing
     std::vector<std::string> m_EquivalentTypes{};
 
     void transform_file(const std::filesystem::path& file, std::string_view copyright) const;
+  };
+
+  class nascent_behavioural_test
+  {
+  public:
+    [[nodiscard]]
+    std::string_view family() const noexcept { return m_Family; }
+  private:
+    std::string m_Family{}, m_TestType{};
+    
+    std::filesystem::path
+      m_Header{},
+      m_HostDirectory{};
   };
 
   struct repositories
@@ -230,7 +274,7 @@ namespace sequoia::testing
     std::vector<test_family> m_Families{};
     family_map m_SelectedFamilies{};
     source_map m_SelectedSources{};
-    std::vector<nascent_test> m_NascentTests{};
+    std::vector<nascent_semantics_test> m_NascentTests{};
     std::string m_Copyright{};
     search_tree m_SourceSearchTree;
     std::filesystem::path
@@ -293,7 +337,7 @@ namespace sequoia::testing
 
     template<class Iter, class Fn>
     [[nodiscard]]
-    std::string process_nascent_tests(Iter beginNascentTests, Iter endNascentTests, Fn fn) const;
+    std::string process_nascent_semantics_tests(Iter beginNascentTests, Iter endNascentTests, Fn fn) const;
 
     template<class Iter>
     [[nodiscard]]

@@ -11,10 +11,10 @@
 
 namespace sequoia::testing
 {
-  class statistical_algorithms_test final : public regular_test
+  class statistical_algorithms_test final : public free_test
   {
   public:
-    using regular_test::regular_test;
+    using free_test::free_test;
 
     [[nodiscard]]
     std::string_view source_file() const noexcept final;

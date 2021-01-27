@@ -18,38 +18,32 @@ namespace sequoia::testing
 {
   using namespace parsing::commandline;
 
-  creation_data::sentinel::sentinel(creation_data& creationData)
-    : m_CreationData{creationData}
+  [[nodiscard]]
+  std::string creation_error()
   {
-    if(m_CreationData.testType.empty() || m_CreationData.qualifiedName.empty())
-    {
-      using namespace parsing::commandline;
-      throw std::runtime_error{error("Insufficient information provided to create a new test")};
-    }
+    return error("Insufficient information provided to create a new test");
   }
 
-  creation_data::sentinel::~sentinel()
-  {
-    m_CreationData = creation_data{m_CreationData.defaultHost};
-  }
-  
-  class creation_data_setter
+  class semantic_creation_data_setter
   {
   public:
-    creation_data_setter(creation_data& data, std::string testType)
+    semantic_creation_data_setter(semantic_creation_data& data, std::string testType)
       : m_Data{data}
       , m_TestType{std::move(testType)}
     {}
 
     void operator()(const param_list& args)
     {
+      if(args.size() < 2)
+        throw std::logic_error{"Too few commandline parameters"};
+      
       m_Data.testType = m_TestType;
-      m_Data.qualifiedName = args[0];
-      m_Data.equivalentTypes.push_back(args[1]);
-      std::reverse(m_Data.equivalentTypes.begin(), m_Data.equivalentTypes.end());
+      m_Data.extension.qualifiedName = args[0];
+      m_Data.extension.equivalentTypes.push_back(args[1]);
+      std::reverse(m_Data.extension.equivalentTypes.begin(), m_Data.extension.equivalentTypes.end());
     }
   private:
-    creation_data& m_Data;
+    semantic_creation_data& m_Data;
     std::string m_TestType;
   };
 
@@ -200,12 +194,12 @@ namespace sequoia::testing
     }
   }
 
-  //=========================================== nascent_test ===========================================//
+  //=========================================== nascent_semantics_test ===========================================//
 
-  nascent_test::nascent_test(creation_data data)
-    : m_QualifiedClassName{std::move(data.qualifiedName)}
+  nascent_semantics_test::nascent_semantics_test(semantic_creation_data data)
+    : m_QualifiedClassName{std::move(data.extension.qualifiedName)}
     , m_TestType{std::move(data.testType)}
-    , m_EquivalentTypes{std::move(data.equivalentTypes)}
+    , m_EquivalentTypes{std::move(data.extension.equivalentTypes)}
   {
     constexpr auto npos{std::string::npos};
 
@@ -262,12 +256,12 @@ namespace sequoia::testing
       replace_all(m_Family, "_", " ");
     }
 
-    m_ClassHeader = !data.classHeader.empty() ? std::move(data.classHeader) : std::filesystem::path{camelName + ".hpp"};
+    m_ClassHeader = !data.header.empty() ? std::move(data.header) : std::filesystem::path{camelName + ".hpp"};
     m_HostDirectory = data.host.get(m_ClassHeader);
   }
 
   [[nodiscard]]
-  std::filesystem::path nascent_test::create_file(std::string_view copyright, const std::filesystem::path& codeTemplatesDir, std::string_view partName, const std::filesystem::copy_options options) const
+  std::filesystem::path nascent_semantics_test::create_file(std::string_view copyright, const std::filesystem::path& codeTemplatesDir, std::string_view partName, const std::filesystem::copy_options options) const
   {
     namespace fs = std::filesystem;
     
@@ -288,7 +282,7 @@ namespace sequoia::testing
     return outputFile;
   }
 
-  void nascent_test::transform_file(const std::filesystem::path& file, std::string_view copyright) const
+  void nascent_semantics_test::transform_file(const std::filesystem::path& file, std::string_view copyright) const
   {
     std::string text{read_to_string(file)};
 
@@ -401,29 +395,33 @@ namespace sequoia::testing
 
   void test_runner::process_args(int argc, char** argv)
   {
-    creation_data data{m_TestRepo, m_SourceSearchTree};
+    semantic_creation_data data{m_TestRepo, m_SourceSearchTree};
 
     auto addTest{
       [this,&data] (const param_list&) {
-        creation_data::sentinel sentry{data};
-        m_NascentTests.push_back(nascent_test{data});
+        semantic_creation_data::sentinel sentry{data};
+        m_NascentTests.push_back(nascent_semantics_test{data});
       }
+    };
+
+    option hostOption{"--host-directory", {"-h"}, {"host_directory"},
+                      [&host{data.host}](const param_list& args){ host = host_directory{args[0]};}
+    };
+
+    option familyOption{"--family", {"-f"}, {"family"},
+                        [&family{data.family}](const param_list& args){ family = args[0]; }                       
     };
 
     const std::vector<option> createOptions{
       {"--equivalent-type", {"-e"}, {"equivalent_type"},
-        [&equivalentTypes{data.equivalentTypes}](const param_list& args){
+        [&equivalentTypes{data.extension.equivalentTypes}](const param_list& args){
            equivalentTypes.push_back(args[0]);
         }
       },
-      {"--host-directory", {"-h"}, {"host_directory"},
-        [&host{data.host}](const param_list& args){ host = host_directory{args[0]};}
-      },
-      {"--family", {"-f"}, {"family"},
-        [&family{data.family}](const param_list& args){ family = args[0]; }
-      },
+      hostOption,
+      familyOption,
       {"--class-header", {"-ch"}, {"class_header"},
-        [&classHeader{data.classHeader}](const param_list& args){ classHeader = args[0]; }
+        [&header{data.header}](const param_list& args){ header = args[0]; }
       }                                         
     };
     
@@ -437,10 +435,16 @@ namespace sequoia::testing
                   },
                   {"create", {"c"}, {}, addTest,
                    { {"regular_test", {"regular"}, {"qualified::class_name<class T>", "equivalent_type"},
-                      creation_data_setter{data, "regular"}, createOptions
+                      semantic_creation_data_setter{data, "regular"}, createOptions
                      },
                      {"move_only_test", {"move_only"}, {"qualified::class_name<class T>", "equivalent_type"},
-                      creation_data_setter{data, "move_only"}, createOptions
+                      semantic_creation_data_setter{data, "move_only"}, createOptions
+                     },
+                     {"free_test", {"free"}, {"header"},
+                      [this](const param_list& args) { /*TO DO*/ }, {hostOption, familyOption}
+                     },
+                     {"performance_test", {"performance"}, {"header"},
+                      [this](const param_list& args) { /*TO DO*/ }, {hostOption, familyOption}
                      }
                    }
                   },
@@ -613,7 +617,7 @@ namespace sequoia::testing
 
   template<class Iter, class Fn>
   [[nodiscard]]
-  std::string test_runner::process_nascent_tests(Iter beginNascentTests, Iter endNascentTests, Fn fn) const
+  std::string test_runner::process_nascent_semantics_tests(Iter beginNascentTests, Iter endNascentTests, Fn fn) const
   {
     if(std::distance(beginNascentTests, endNascentTests))
     {
@@ -645,7 +649,7 @@ namespace sequoia::testing
   std::string test_runner::create_files(Iter beginNascentTests, Iter endNascentTests, const std::filesystem::copy_options options) const
   {
     auto action{
-      [options,&root{m_ProjectRoot},&copyright{m_Copyright},&target{m_HashIncludeTarget}](const nascent_test& data, std::string_view stub){
+      [options,&root{m_ProjectRoot},&copyright{m_Copyright},&target{m_HashIncludeTarget}](const nascent_semantics_test& data, std::string_view stub){
         const auto filePath{data.create_file(copyright, code_templates_path(root), stub, options)};
 
         if(const auto filename{filePath.filename()};
@@ -658,7 +662,7 @@ namespace sequoia::testing
       }
     };
     
-    return process_nascent_tests(beginNascentTests, endNascentTests, action);
+    return process_nascent_semantics_tests(beginNascentTests, endNascentTests, action);
   }
 
   void test_runner::report(std::string_view prefix, std::string_view message)
