@@ -157,17 +157,17 @@ namespace sequoia::testing
     std::string_view family() const noexcept { return m_Family; }
 
     [[nodiscard]]
-    std::string_view class_name() const noexcept { return m_RawClassName; }
+    std::string_view forename() const noexcept { return m_Forename; }
   private:
 
     std::string
       m_Family{},
       m_QualifiedClassName{},
-      m_RawClassName{},
+      m_Forename{},
       m_TestType{};
     
     std::filesystem::path
-      m_ClassHeader{},
+      m_Header{},
       m_HostDirectory{};
 
     template_data m_TemplateData{};
@@ -182,8 +182,11 @@ namespace sequoia::testing
   public:
     [[nodiscard]]
     std::string_view family() const noexcept { return m_Family; }
+
+    [[nodiscard]]
+    std::string_view forename() const noexcept { return m_Forename; }
   private:
-    std::string m_Family{}, m_TestType{};
+    std::string m_Family{}, m_TestType{}, m_Forename{};
     
     std::filesystem::path
       m_Header{},

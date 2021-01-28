@@ -211,21 +211,21 @@ namespace sequoia::testing
       if(pos < m_QualifiedClassName.length() - 2)
       {
         start = pos+2;
-        m_RawClassName = m_QualifiedClassName.substr(start);
+        m_Forename = m_QualifiedClassName.substr(start);
       }
     }
     else
     {
-      m_RawClassName = m_QualifiedClassName;
+      m_Forename = m_QualifiedClassName;
       start = 0;
     }
 
-    m_TemplateData = generate_template_data(m_RawClassName);
+    m_TemplateData = generate_template_data(m_Forename);
     if(!m_TemplateData.empty())
     {
-      if(auto pos{m_RawClassName.find('<')}; pos != npos)
+      if(auto pos{m_Forename.find('<')}; pos != npos)
       {
-        m_RawClassName.erase(pos);
+        m_Forename.erase(pos);
 
         if(start != npos)
         {
@@ -244,7 +244,7 @@ namespace sequoia::testing
       }
     }
 
-    const auto camelName{to_camel_case(m_RawClassName)};
+    const auto camelName{to_camel_case(m_Forename)};
 
     if(!data.family.empty())
     {
@@ -256,8 +256,8 @@ namespace sequoia::testing
       replace_all(m_Family, "_", " ");
     }
 
-    m_ClassHeader = !data.header.empty() ? std::move(data.header) : std::filesystem::path{camelName + ".hpp"};
-    m_HostDirectory = data.host.get(m_ClassHeader);
+    m_Header = !data.header.empty() ? std::move(data.header) : std::filesystem::path{camelName + ".hpp"};
+    m_HostDirectory = data.host.get(m_Header);
   }
 
   [[nodiscard]]
@@ -265,7 +265,7 @@ namespace sequoia::testing
   {
     namespace fs = std::filesystem;
     
-    const auto outputFile{(m_HostDirectory / to_camel_case(m_RawClassName)) += partName};
+    const auto outputFile{(m_HostDirectory / to_camel_case(m_Forename)) += partName};
 
     if(((options & fs::copy_options::skip_existing) == fs::copy_options::skip_existing) && fs::exists(outputFile))
     {
@@ -346,12 +346,12 @@ namespace sequoia::testing
         replace_all(text, "template<?> ", "");
       }
 
-      const auto header{m_ClassHeader.generic_string()};
-      const auto rawCamel{to_camel_case(m_RawClassName)};
+      const auto header{m_Header.generic_string()};
+      const auto rawCamel{to_camel_case(m_Forename)};
 
       const auto testTypeRelacement{m_TestType + "_"};
       replace_all(text, {{"::?_class", m_QualifiedClassName},
-                         {"?_class", m_RawClassName},
+                         {"?_class", m_Forename},
                          {"?_", testTypeRelacement},
                          {"?Class", rawCamel},
                          {"?Test", to_camel_case(m_TestType).append("Test")},
@@ -631,8 +631,8 @@ namespace sequoia::testing
         }
 
         add_to_family(m_TestMain, data.family(),
-                      { {std::string{data.class_name()}.append("_false_positive_test(\"False Positive Test\")")},
-                        {std::string{data.class_name()}.append("_test(\"Unit Test\")")}
+                      { {std::string{data.forename()}.append("_false_positive_test(\"False Positive Test\")")},
+                        {std::string{data.forename()}.append("_test(\"Unit Test\")")}
                       });
 
         ++beginNascentTests;
