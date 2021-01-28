@@ -185,6 +185,19 @@ namespace sequoia::testing
 
     [[nodiscard]]
     std::string_view forename() const noexcept { return m_Forename; }
+  protected:
+    [[nodiscard]]
+    std::string_view test_type() const noexcept { return m_TestType; }
+
+    [[nodiscard]]
+    const std::filesystem::path& header() const noexcept { return m_Header; }
+
+    [[nodiscard]]
+    const std::filesystem::path& host_dir() const noexcept { return m_HostDirectory; }
+
+    void forename(std::string_view name) { m_Forename = name; }
+
+    void family(std::string_view name) { m_Family = name; }
   private:
     std::string m_Family{}, m_TestType{}, m_Forename{};
     

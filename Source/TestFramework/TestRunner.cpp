@@ -197,8 +197,10 @@ namespace sequoia::testing
   //=========================================== nascent_semantics_test ===========================================//
 
   nascent_semantics_test::nascent_semantics_test(semantic_creation_data data)
-    : m_QualifiedClassName{std::move(data.extension.qualifiedName)}
-    , m_TestType{std::move(data.testType)}
+    : m_Family{std::move(data.family)}
+    , m_QualifiedClassName{std::move(data.extension.qualifiedName)}
+    , m_TestType{std::move(data.testType)}    
+    , m_Header{std::move(data.header)}
     , m_EquivalentTypes{std::move(data.extension.equivalentTypes)}
   {
     constexpr auto npos{std::string::npos};
@@ -246,17 +248,13 @@ namespace sequoia::testing
 
     const auto camelName{to_camel_case(m_Forename)};
 
-    if(!data.family.empty())
-    {
-      m_Family = std::move(data.family);
-    }
-    else
+    if(m_Family.empty())
     {
       m_Family = camelName;
       replace_all(m_Family, "_", " ");
     }
 
-    m_Header = !data.header.empty() ? std::move(data.header) : std::filesystem::path{camelName + ".hpp"};
+    if(m_Header.empty()) m_Header = std::filesystem::path{camelName + ".hpp"};
     m_HostDirectory = data.host.get(m_Header);
   }
 
