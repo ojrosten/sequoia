@@ -144,44 +144,11 @@ namespace sequoia::testing
   
   void set_top_copyright(std::string& text, std::string_view copyright);
 
-  /*! \brief Holds data for the automated creation of new tests */
-  class nascent_semantics_test
+  class nascent_test_base
   {
   public:
-    explicit nascent_semantics_test(semantic_creation_data data);
-
-    [[nodiscard]]
-    std::filesystem::path create_file(std::string_view copyright, const std::filesystem::path& codeTemplatesDir, std::string_view partName, std::filesystem::copy_options options) const;
-
-    [[nodiscard]]
-    std::string_view family() const noexcept { return m_Family; }
-
-    [[nodiscard]]
-    std::string_view forename() const noexcept { return m_Forename; }
-  private:
-
-    std::string
-      m_Family{},
-      m_QualifiedClassName{},
-      m_Forename{},
-      m_TestType{};
+    nascent_test_base(semantic_creation_data data); // TEMPORARY!!
     
-    std::filesystem::path
-      m_Header{},
-      m_HostDirectory{};
-
-    template_data m_TemplateData{};
-
-    std::vector<std::string> m_EquivalentTypes{};
-
-    void set(const host_directory& host, std::string_view camelName);
-
-    void transform_file(const std::filesystem::path& file, std::string_view copyright) const;
-  };
-
-  class nascent_behavioural_test
-  {
-  public:
     [[nodiscard]]
     std::string_view family() const noexcept { return m_Family; }
 
@@ -197,15 +164,36 @@ namespace sequoia::testing
     [[nodiscard]]
     const std::filesystem::path& host_dir() const noexcept { return m_HostDirectory; }
 
-    void forename(std::string_view name) { m_Forename = name; }
+    void forename(std::string name) { m_Forename = std::move(name); }
+    
+    void set(const host_directory& host, std::string_view camelName);
 
-    void family(std::string_view name) { m_Family = name; }
   private:
     std::string m_Family{}, m_TestType{}, m_Forename{};
     
     std::filesystem::path
       m_Header{},
       m_HostDirectory{};
+  };
+
+  /*! \brief Holds data for the automated creation of new tests */
+  class nascent_semantics_test : public nascent_test_base
+  {
+  public:
+    explicit nascent_semantics_test(semantic_creation_data data);
+
+    [[nodiscard]]
+    std::filesystem::path create_file(std::string_view copyright, const std::filesystem::path& codeTemplatesDir, std::string_view partName, std::filesystem::copy_options options) const;
+
+  private:
+
+    std::string m_QualifiedClassName{};
+
+    template_data m_TemplateData{};
+
+    std::vector<std::string> m_EquivalentTypes{};
+
+    void transform_file(const std::filesystem::path& file, std::string_view copyright) const;
   };
 
   struct repositories

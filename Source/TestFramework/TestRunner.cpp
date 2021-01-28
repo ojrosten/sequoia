@@ -194,13 +194,29 @@ namespace sequoia::testing
     }
   }
 
+  nascent_test_base::nascent_test_base(semantic_creation_data data)
+    : m_Family{std::move(data.family)}
+    , m_TestType{std::move(data.testType)}    
+    , m_Header{std::move(data.header)}
+  {}
+
+  void nascent_test_base::set(const host_directory& host, std::string_view camelName)
+  {
+    if(m_Family.empty())
+    {
+      m_Family = camelName;
+      replace_all(m_Family, "_", " ");
+    }
+
+    if(m_Header.empty()) m_Header = std::filesystem::path{std::string{camelName}.append(".hpp")};
+    m_HostDirectory = host.get(m_Header);
+  }
+
   //=========================================== nascent_semantics_test ===========================================//
 
   nascent_semantics_test::nascent_semantics_test(semantic_creation_data data)
-    : m_Family{std::move(data.family)}
+    : nascent_test_base{data}
     , m_QualifiedClassName{std::move(data.extension.qualifiedName)}
-    , m_TestType{std::move(data.testType)}    
-    , m_Header{std::move(data.header)}
     , m_EquivalentTypes{std::move(data.extension.equivalentTypes)}
   {
     constexpr auto npos{std::string::npos};
@@ -213,21 +229,21 @@ namespace sequoia::testing
       if(pos < m_QualifiedClassName.length() - 2)
       {
         start = pos+2;
-        m_Forename = m_QualifiedClassName.substr(start);
+        forename(m_QualifiedClassName.substr(start));
       }
     }
     else
     {
-      m_Forename = m_QualifiedClassName;
+      forename(m_QualifiedClassName);
       start = 0;
     }
 
-    m_TemplateData = generate_template_data(m_Forename);
+    m_TemplateData = generate_template_data(forename());
     if(!m_TemplateData.empty())
     {
-      if(auto pos{m_Forename.find('<')}; pos != npos)
+      if(auto pos{forename().find('<')}; pos != npos)
       {
-        m_Forename.erase(pos);
+        forename(std::string{forename()}.erase(pos));
 
         if(start != npos)
         {
@@ -246,19 +262,7 @@ namespace sequoia::testing
       }
     }
 
-    set(data.host, to_camel_case(m_Forename));    
-  }
-
-  void nascent_semantics_test::set(const host_directory& host, std::string_view camelName)
-  {
-    if(m_Family.empty())
-    {
-      m_Family = camelName;
-      replace_all(m_Family, "_", " ");
-    }
-
-    if(m_Header.empty()) m_Header = std::filesystem::path{std::string{camelName}.append(".hpp")};
-    m_HostDirectory = host.get(m_Header);
+    set(data.host, to_camel_case(std::string{forename()}));    
   }
 
   [[nodiscard]]
@@ -266,7 +270,7 @@ namespace sequoia::testing
   {
     namespace fs = std::filesystem;
     
-    const auto outputFile{(m_HostDirectory / to_camel_case(m_Forename)) += partName};
+    const auto outputFile{(host_dir() / to_camel_case(std::string{forename()})) += partName};
 
     if(((options & fs::copy_options::skip_existing) == fs::copy_options::skip_existing) && fs::exists(outputFile))
     {
@@ -347,16 +351,15 @@ namespace sequoia::testing
         replace_all(text, "template<?> ", "");
       }
 
-      const auto header{m_Header.generic_string()};
-      const auto rawCamel{to_camel_case(m_Forename)};
+      const auto rawCamel{to_camel_case(std::string{forename()})};
 
-      const auto testTypeRelacement{m_TestType + "_"};
+      const auto testTypeRelacement{std::string{test_type()} + "_"};
       replace_all(text, {{"::?_class", m_QualifiedClassName},
-                         {"?_class", m_Forename},
+                         {"?_class", std::string{forename()}},
                          {"?_", testTypeRelacement},
                          {"?Class", rawCamel},
-                         {"?Test", to_camel_case(m_TestType).append("Test")},
-                         {"?Class.hpp", header}});
+                         {"?Test", to_camel_case(std::string{test_type()}).append("Test")},
+                         {"?Class.hpp", header().generic_string()}});
 
       if(std::ofstream ofile{file})
       {
