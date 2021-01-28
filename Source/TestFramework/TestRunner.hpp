@@ -174,6 +174,8 @@ namespace sequoia::testing
 
     std::vector<std::string> m_EquivalentTypes{};
 
+    void set(const host_directory& host, std::string_view camelName);
+
     void transform_file(const std::filesystem::path& file, std::string_view copyright) const;
   };
 

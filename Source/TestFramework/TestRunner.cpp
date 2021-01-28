@@ -246,16 +246,19 @@ namespace sequoia::testing
       }
     }
 
-    const auto camelName{to_camel_case(m_Forename)};
+    set(data.host, to_camel_case(m_Forename));    
+  }
 
+  void nascent_semantics_test::set(const host_directory& host, std::string_view camelName)
+  {
     if(m_Family.empty())
     {
       m_Family = camelName;
       replace_all(m_Family, "_", " ");
     }
 
-    if(m_Header.empty()) m_Header = std::filesystem::path{camelName + ".hpp"};
-    m_HostDirectory = data.host.get(m_Header);
+    if(m_Header.empty()) m_Header = std::filesystem::path{std::string{camelName}.append(".hpp")};
+    m_HostDirectory = host.get(m_Header);
   }
 
   [[nodiscard]]
