@@ -194,7 +194,7 @@ namespace sequoia::testing
     }
   }
 
-  nascent_test_base::nascent_test_base(semantic_creation_data data)
+  nascent_test_base::nascent_test_base(creation_data<null_extension> data)
     : m_Family{std::move(data.family)}
     , m_TestType{std::move(data.testType)}    
     , m_Header{std::move(data.header)}
@@ -215,7 +215,7 @@ namespace sequoia::testing
   //=========================================== nascent_semantics_test ===========================================//
 
   nascent_semantics_test::nascent_semantics_test(semantic_creation_data data)
-    : nascent_test_base{data}
+    : nascent_test_base{data.trim()}
     , m_QualifiedClassName{std::move(data.extension.qualifiedName)}
     , m_EquivalentTypes{std::move(data.extension.equivalentTypes)}
   {

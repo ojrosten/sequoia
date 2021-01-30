@@ -62,7 +62,7 @@ namespace sequoia::testing
 
   /*! \brief data supplied from the commandline for creating new tests */
 
-  struct behavioural_extension
+  struct null_extension
   {
     [[nodiscard]]
     constexpr static bool valid() noexcept { return true; }
@@ -93,6 +93,14 @@ namespace sequoia::testing
       , defaultHost{host}
     {}
 
+    creation_data(host_directory h, host_directory defHost, std::string type, std::string fam, std::filesystem::path head)
+      : host{std::move(h)}
+      , defaultHost{std::move(defHost)}
+      , testType{std::move(type)}
+      , family{std::move(fam)}
+      , header{std::move(head)}
+    {}
+
     class [[nodiscard]] sentinel
     {
     public:
@@ -113,13 +121,19 @@ namespace sequoia::testing
       creation_data& m_CreationData;
     };
 
+    [[nodiscard]]
+    creation_data<null_extension> trim() const
+    {
+      return {host, defaultHost, testType, family, header};
+    }
+
     host_directory host, defaultHost;
     std::string testType{}, family{};
     std::filesystem::path header{};
     [[no_unique_address]] Extension extension{};
   };
 
-  using behavioural_creation_data = creation_data<behavioural_extension>;
+  using behavioural_creation_data = creation_data<null_extension>;
   using semantic_creation_data    = creation_data<semantic_extension>;
   
   struct template_spec
@@ -146,15 +160,22 @@ namespace sequoia::testing
 
   class nascent_test_base
   {
-  public:
-    nascent_test_base(semantic_creation_data data); // TEMPORARY!!
-    
+  public:   
     [[nodiscard]]
     std::string_view family() const noexcept { return m_Family; }
 
     [[nodiscard]]
     std::string_view forename() const noexcept { return m_Forename; }
   protected:
+    nascent_test_base(creation_data<null_extension> data);
+
+    nascent_test_base(const nascent_test_base&)     = default;
+    nascent_test_base(nascent_test_base&&) noexcept = default;
+    nascent_test_base& operator=(const nascent_test_base&)     = default;
+    nascent_test_base& operator=(nascent_test_base&&) noexcept = default;
+
+    ~nascent_test_base() = default;
+    
     [[nodiscard]]
     std::string_view test_type() const noexcept { return m_TestType; }
 
