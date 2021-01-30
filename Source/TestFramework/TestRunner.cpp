@@ -34,10 +34,11 @@ namespace sequoia::testing
     std::reverse(equivalentTypes.begin(), equivalentTypes.end());
   }
 
-  class semantic_creation_data_setter
+  template<class Extension>
+  class creation_data_setter
   {
   public:
-    semantic_creation_data_setter(semantic_creation_data& data, std::string testType)
+    creation_data_setter(creation_data<Extension>& data, std::string testType)
       : m_Data{data}
       , m_TestType{std::move(testType)}
     {}
@@ -48,9 +49,12 @@ namespace sequoia::testing
       m_Data(args);
     }
   private:
-    semantic_creation_data& m_Data;
+    creation_data<Extension>& m_Data;
     std::string m_TestType;
   };
+
+  template<class Extension>
+  creation_data_setter(creation_data<Extension>&, std::string) -> creation_data_setter<Extension>;
 
   [[nodiscard]]
   std::string report_time(const test_family::summary& s)
@@ -444,16 +448,16 @@ namespace sequoia::testing
                   },
                   {"create", {"c"}, {}, addTest,
                    { {"regular_test", {"regular"}, {"qualified::class_name<class T>", "equivalent_type"},
-                      semantic_creation_data_setter{data, "regular"}, createOptions
+                       creation_data_setter{data, "regular"}, createOptions
                      },
                      {"move_only_test", {"move_only"}, {"qualified::class_name<class T>", "equivalent_type"},
-                      semantic_creation_data_setter{data, "move_only"}, createOptions
+                       creation_data_setter{data, "move_only"}, createOptions
                      },
                      {"free_test", {"free"}, {"header"},
-                      [this](const param_list& args) { /*TO DO*/ }, {hostOption, familyOption}
+                       [this](const param_list& args) { /*TO DO*/ }, {hostOption, familyOption}
                      },
                      {"performance_test", {"performance"}, {"header"},
-                      [this](const param_list& args) { /*TO DO*/ }, {hostOption, familyOption}
+                       [this](const param_list& args) { /*TO DO*/ }, {hostOption, familyOption}
                      }
                    }
                   },
