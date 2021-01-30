@@ -24,6 +24,16 @@ namespace sequoia::testing
     return error("Insufficient information provided to create a new test");
   }
 
+  void semantic_extension::operator()(const parsing::commandline::param_list& args)
+  {
+    if(args.size() < 2)
+      throw std::logic_error{"Too few commandline parameters"};
+
+    qualifiedName = args[0];
+    equivalentTypes.push_back(args[1]);
+    std::reverse(equivalentTypes.begin(), equivalentTypes.end());
+  }
+
   class semantic_creation_data_setter
   {
   public:
@@ -33,14 +43,9 @@ namespace sequoia::testing
     {}
 
     void operator()(const param_list& args)
-    {
-      if(args.size() < 2)
-        throw std::logic_error{"Too few commandline parameters"};
-      
+    {      
       m_Data.testType = m_TestType;
-      m_Data.extension.qualifiedName = args[0];
-      m_Data.extension.equivalentTypes.push_back(args[1]);
-      std::reverse(m_Data.extension.equivalentTypes.begin(), m_Data.extension.equivalentTypes.end());
+      m_Data(args);
     }
   private:
     semantic_creation_data& m_Data;

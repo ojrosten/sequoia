@@ -12,6 +12,7 @@
 */
 
 #include "TestFamily.hpp"
+#include "CommandLineArguments.hpp"
 
 #include <map>
 #include <variant>
@@ -66,15 +67,19 @@ namespace sequoia::testing
   {
     [[nodiscard]]
     constexpr static bool valid() noexcept { return true; }
+
+    void operator()(const parsing::commandline::param_list&) const {}
   };
 
   struct semantic_extension
   {
     [[nodiscard]]
     bool valid() const noexcept { return !qualifiedName.empty(); }
+
+    void operator()(const parsing::commandline::param_list& args);
     
+    std::string qualifiedName{};    
     std::vector<std::string> equivalentTypes{};
-    std::string qualifiedName{};
   };
 
   [[nodiscard]]
@@ -83,24 +88,6 @@ namespace sequoia::testing
   template<class Extension>
   struct creation_data
   {
-    explicit creation_data(host_directory hostDir)
-      : host{std::move(hostDir)}
-      , defaultHost{host}
-    {}
-      
-    creation_data(std::filesystem::path testRepo, search_tree sourceTree)
-      : host{std::move(testRepo), std::move(sourceTree)}
-      , defaultHost{host}
-    {}
-
-    creation_data(host_directory h, host_directory defHost, std::string type, std::string fam, std::filesystem::path head)
-      : host{std::move(h)}
-      , defaultHost{std::move(defHost)}
-      , testType{std::move(type)}
-      , family{std::move(fam)}
-      , header{std::move(head)}
-    {}
-
     class [[nodiscard]] sentinel
     {
     public:
@@ -120,6 +107,29 @@ namespace sequoia::testing
     private:
       creation_data& m_CreationData;
     };
+
+    explicit creation_data(host_directory hostDir)
+      : host{std::move(hostDir)}
+      , defaultHost{host}
+    {}
+      
+    creation_data(std::filesystem::path testRepo, search_tree sourceTree)
+      : host{std::move(testRepo), std::move(sourceTree)}
+      , defaultHost{host}
+    {}
+
+    creation_data(host_directory h, host_directory defHost, std::string type, std::string fam, std::filesystem::path head)
+      : host{std::move(h)}
+      , defaultHost{std::move(defHost)}
+      , testType{std::move(type)}
+      , family{std::move(fam)}
+      , header{std::move(head)}
+    {}
+
+    void operator()(const parsing::commandline::param_list& args)
+    {
+      extension(args);
+    }
 
     [[nodiscard]]
     creation_data<null_extension> trim() const
