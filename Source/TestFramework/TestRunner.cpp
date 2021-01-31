@@ -31,7 +31,6 @@ namespace sequoia::testing
 
     qualifiedName = args[0];
     equivalentTypes.push_back(args[1]);
-    //std::reverse(equivalentTypes.begin(), equivalentTypes.end());
   }
 
   template<class Extension>
@@ -446,19 +445,19 @@ namespace sequoia::testing
                   {"source", {"s"}, {"source_file_name"},
                     [this](const param_list& args) { m_SelectedSources.emplace(args.front(), false); }
                   },
-                  {"create", {"c"}, {}, [](const param_list& args) {},
+                  {"create", {"c"}, {}, [](const param_list&) {},
                    { {"regular_test", {"regular"}, {"qualified::class_name<class T>", "equivalent_type"},
                        creation_data_setter{data, "regular"}, createOptions
                      },
                      {"move_only_test", {"move_only"}, {"qualified::class_name<class T>", "equivalent_type"},
                        creation_data_setter{data, "move_only"}, createOptions
-                     },
+                     }/*,
                      {"free_test", {"free"}, {"header"},
-                       [this](const param_list& args) { /*TO DO*/ }, {hostOption, familyOption}
+                       [this](const param_list& args) {  }, {hostOption, familyOption}
                      },
                      {"performance_test", {"performance"}, {"header"},
-                       [this](const param_list& args) { /*TO DO*/ }, {hostOption, familyOption}
-                     }
+                       [this](const param_list& args) {  }, {hostOption, familyOption}
+                     }*/
                    },
                    addTest
                   },
