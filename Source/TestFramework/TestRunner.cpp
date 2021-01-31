@@ -223,7 +223,12 @@ namespace sequoia::testing
       }
     }
 
-    set(to_camel_case(std::string{forename()}));    
+    set(to_camel_case(std::string{forename()}));
+  }
+
+  void nascent_behavioural_test::finalize()
+  {
+    set(to_camel_case(std::string{forename()}));
   }
 
   [[nodiscard]]
@@ -339,7 +344,7 @@ namespace sequoia::testing
   {
     auto& nascent{runner.m_NascentTests};
 
-    nascent.emplace_back(std::move(testType), runner.m_TestRepo, runner.m_SourceSearchTree);
+    nascent.emplace_back(std::move(testType), runner.m_TestRepo, runner.m_SourceSearchTree);    
     nascent.back().qualified_name(args[0]);
     nascent.back().add_equivalent_type(args[1]);
   }

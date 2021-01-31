@@ -88,6 +88,11 @@ namespace sequoia::testing
   class nascent_test_base
   {
   public:    
+    nascent_test_base(std::string type, std::filesystem::path testRepo, search_tree sourceTree)
+      : m_TestType{std::move(type)}
+      , m_HostDirectory{std::move(testRepo), std::move(sourceTree)}
+    {}
+
     [[nodiscard]]
     std::string_view family() const noexcept { return m_Family; }
 
@@ -100,10 +105,6 @@ namespace sequoia::testing
 
     void header(std::string h) { m_Header = std::move(h); }
   protected:
-    explicit nascent_test_base(std::string type, std::filesystem::path testRepo, search_tree sourceTree)
-      : m_TestType{std::move(type)}
-      , m_HostDirectory{std::move(testRepo), std::move(sourceTree)}
-    {}
 
     nascent_test_base(const nascent_test_base&)     = default;
     nascent_test_base(nascent_test_base&&) noexcept = default;
@@ -133,13 +134,10 @@ namespace sequoia::testing
     std::filesystem::path m_Header{};
   };
 
-  /*! \brief Holds data for the automated creation of new tests */
   class nascent_semantics_test : public nascent_test_base
   {
   public:
-    explicit nascent_semantics_test(std::string type, std::filesystem::path testRepo, search_tree sourceTree)
-      : nascent_test_base{std::move(type), std::move(testRepo), std::move(sourceTree)}
-    {}
+    using nascent_test_base::nascent_test_base;
 
     void qualified_name(std::string name) { m_QualifiedName = std::move(name); }
 
@@ -159,6 +157,14 @@ namespace sequoia::testing
     std::vector<std::string> m_EquivalentTypes{};
 
     void transform_file(const std::filesystem::path& file, std::string_view copyright) const;
+  };
+
+  class nascent_behavioural_test : public nascent_test_base
+  {
+  public:
+    using nascent_test_base::nascent_test_base;
+
+    void finalize();
   };
 
   struct repositories
