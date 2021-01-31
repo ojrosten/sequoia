@@ -37,7 +37,7 @@ namespace sequoia::testing
       
       check_weak_equivalence(LINE("Early"), parse(a.size(), a.get(), { {"--async", {}, {}, fo{}} }), outcome{"foo", {{fo{}, nullptr, {}}}});
       check_weak_equivalence(LINE("Late"), parse(a.size(), a.get(), { {"--async", {}, {}, nullptr, {}, fo{}} }), outcome{"foo", {{nullptr, fo{}, {}}}});
-      check_weak_equivalence(LINE("Both"), parse(a.size(), a.get(), { {"--async", {}, {}, fo{}, {}, fo{}} }), outcome{"foo", {{fo{}, fo{}, {}}}});
+      check_weak_equivalence(LINE("Both"), parse(a.size(), a.get(), { {"--async", {}, {}, fo{"x"}, {}, fo{"y"}} }), outcome{"foo", {{fo{"x"}, fo{"y"}, {}}}});
     }
 
     {

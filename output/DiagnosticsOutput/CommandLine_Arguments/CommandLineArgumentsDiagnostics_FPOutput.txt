@@ -184,7 +184,54 @@
 
 	=======================================
 
-	Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 80
+	Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 76
+	Mixed-up function objects
+
+	Comparison performed using:
+	[sequoia::testing::weak_equivalence_checker<sequoia::parsing::commandline::outcome>]
+	With equivalent types:
+	[sequoia::parsing::commandline::outcome]
+
+	  Operations
+	  [std::vector<sequoia::parsing::commandline::operation, std::allocator<sequoia::parsing::commandline::operation> >]
+
+	    Element 0 of range incorrect
+	    Comparison performed using:
+	    [sequoia::testing::weak_equivalence_checker<sequoia::parsing::commandline::operation>]
+	    With equivalent types:
+	    [sequoia::parsing::commandline::operation]
+
+	      Function object tag
+	      [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
+	      operator== returned false
+
+	        First difference detected at character 0:
+	        [char]
+	        operator== returned false
+	        Obtained : x
+	        Predicted: y
+
+	        Full strings:
+	        Obtained : x
+	        Predicted: y
+
+	      Function object tag
+	      [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
+	      operator== returned false
+
+	        First difference detected at character 0:
+	        [char]
+	        operator== returned false
+	        Obtained : y
+	        Predicted: x
+
+	        Full strings:
+	        Obtained : y
+	        Predicted: x
+
+	=======================================
+
+	Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 82
 	Help not generated
 
 	Comparison performed using:

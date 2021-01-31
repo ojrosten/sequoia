@@ -72,6 +72,8 @@ namespace sequoia::testing
       check_weak_equivalence(LINE("Unexpected early function object"), parse(a.size(), a.get(), { {"--async", {}, {}, fo{}} }), outcome{"foo", {{fo{"x"}, nullptr, {}}}});
 
       check_weak_equivalence(LINE("Unexpected late function object"), parse(a.size(), a.get(), { {"--async", {}, {}, nullptr, {}, fo{}} }), outcome{"foo", {{nullptr, fo{"y"}, {}}}});
+
+      check_weak_equivalence(LINE("Mixed-up function objects"), parse(a.size(), a.get(), { {"--async", {}, {}, fo{"x"}, {}, fo{"y"}} }), outcome{"foo", {{fo{"y"}, fo{"x"}, {}}}});
     }
 
     {
