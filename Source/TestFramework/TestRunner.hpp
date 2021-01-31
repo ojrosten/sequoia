@@ -13,6 +13,7 @@
 
 #include "TestFamily.hpp"
 #include "CommandLineArguments.hpp"
+#include "Factory.hpp"
 
 #include <map>
 #include <variant>
@@ -262,9 +263,13 @@ namespace sequoia::testing
       std::filesystem::path location;
     };
 
+    using creation_factory = runtime::factory<nascent_semantics_test>;
+    using vessel = typename creation_factory::vessel;
+
     std::vector<test_family> m_Families{};
     family_map m_SelectedFamilies{};
     source_map m_SelectedSources{};
+    //    std::vector<vessel> m_NascentTests{};
     std::vector<nascent_semantics_test> m_NascentTests{};
     std::string m_Copyright{};
     search_tree m_SourceSearchTree;
