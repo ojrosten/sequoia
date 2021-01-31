@@ -68,6 +68,10 @@ namespace sequoia::testing
       check_weak_equivalence(LINE("Early function object not generated"), parse(a.size(), a.get(), { {"--async", {}, {}, fo{}} }), outcome{"foo", {{nullptr, nullptr, {}}}});
 
       check_weak_equivalence(LINE("Late function object not generated"), parse(a.size(), a.get(), { {"--async", {}, {}, nullptr, {}, fo{}} }), outcome{"foo", {{nullptr, nullptr, {}}}});
+
+      check_weak_equivalence(LINE("Unexpected early function object"), parse(a.size(), a.get(), { {"--async", {}, {}, fo{}} }), outcome{"foo", {{fo{"x"}, nullptr, {}}}});
+
+      check_weak_equivalence(LINE("Unexpected late function object"), parse(a.size(), a.get(), { {"--async", {}, {}, nullptr, {}, fo{}} }), outcome{"foo", {{nullptr, fo{"y"}, {}}}});
     }
 
     {

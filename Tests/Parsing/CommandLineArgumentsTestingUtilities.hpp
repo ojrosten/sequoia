@@ -12,6 +12,17 @@
 
 namespace sequoia::testing
 {
+  struct function_object
+  {
+    explicit function_object(std::string t="")
+      : tag{t}
+    {}
+
+    void operator()(const std::vector<std::string>&) const noexcept {}
+
+    std::string tag{};
+  };
+
   template<>
   struct weak_equivalence_checker<parsing::commandline::operation>
   {
@@ -33,6 +44,13 @@ namespace sequoia::testing
       const bool consistent{   ((operation != nullptr) && (prediction != nullptr))
                             || ((operation == nullptr) && (prediction == nullptr))};
       testing::check(std::string{"Existence of" }.append(tag).append(" function objects differs"), logger, consistent);
+
+      if(operation && prediction)
+      {
+        check_equality("Function object tag", logger,
+                       operation.target<function_object>()->tag,
+                       prediction.target<function_object>()->tag);
+      }
     }
   };
 
@@ -61,11 +79,6 @@ namespace sequoia::testing
     {
       check_weak_equivalence("", logger, obtained.get(), prediction);
     }
-  };
-
-  struct function_object
-  {
-    void operator()(const std::vector<std::string>&) const noexcept {}
   };
 
   class commandline_arguments
