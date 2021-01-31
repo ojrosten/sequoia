@@ -35,6 +35,8 @@ namespace sequoia::testing
   class host_directory
   {
   public:
+    host_directory() = default;
+
     host_directory(std::filesystem::path dir)
       : m_Data{std::move(dir)}
     {
@@ -61,91 +63,6 @@ namespace sequoia::testing
     std::variant<std::filesystem::path, generator> m_Data;
   };
 
-  /*! \brief data supplied from the commandline for creating new tests */
-
-  struct null_extension
-  {
-    [[nodiscard]]
-    constexpr static bool valid() noexcept { return true; }
-
-    void operator()(const parsing::commandline::param_list&) const {}
-  };
-
-  struct semantic_extension
-  {
-    [[nodiscard]]
-    bool valid() const noexcept { return !qualifiedName.empty(); }
-
-    void operator()(const parsing::commandline::param_list& args);
-    
-    std::string qualifiedName{};    
-    std::vector<std::string> equivalentTypes{};
-  };
-
-  [[nodiscard]]
-  std::string creation_error();
-
-  template<class Extension>
-  struct creation_data
-  {
-    class [[nodiscard]] sentinel
-    {
-    public:
-      sentinel(creation_data& creationData)
-        : m_CreationData{creationData}
-      {
-        if(m_CreationData.testType.empty() || !m_CreationData.extension.valid())
-        {          
-          throw std::runtime_error{creation_error()};
-        }
-      }
-
-      ~sentinel()
-      {
-        m_CreationData = creation_data{m_CreationData.defaultHost};
-      }
-    private:
-      creation_data& m_CreationData;
-    };
-
-    explicit creation_data(host_directory hostDir)
-      : host{std::move(hostDir)}
-      , defaultHost{host}
-    {}
-      
-    creation_data(std::filesystem::path testRepo, search_tree sourceTree)
-      : host{std::move(testRepo), std::move(sourceTree)}
-      , defaultHost{host}
-    {}
-
-    creation_data(host_directory h, host_directory defHost, std::string type, std::string fam, std::filesystem::path head)
-      : host{std::move(h)}
-      , defaultHost{std::move(defHost)}
-      , testType{std::move(type)}
-      , family{std::move(fam)}
-      , header{std::move(head)}
-    {}
-
-    void operator()(const parsing::commandline::param_list& args)
-    {
-      extension(args);
-    }
-
-    [[nodiscard]]
-    creation_data<null_extension> trim() const
-    {
-      return {host, defaultHost, testType, family, header};
-    }
-
-    host_directory host, defaultHost;
-    std::string testType{}, family{};
-    std::filesystem::path header{};
-    [[no_unique_address]] Extension extension{};
-  };
-
-  using behavioural_creation_data = creation_data<null_extension>;
-  using semantic_creation_data    = creation_data<semantic_extension>;
-  
   struct template_spec
   {
     [[nodiscard]]
@@ -170,14 +87,23 @@ namespace sequoia::testing
 
   class nascent_test_base
   {
-  public:   
+  public:    
     [[nodiscard]]
     std::string_view family() const noexcept { return m_Family; }
 
+    void family(std::string name) { m_Family = std::move(name); }
+
     [[nodiscard]]
     std::string_view forename() const noexcept { return m_Forename; }
+
+    void host_dir(std::filesystem::path dir) { m_HostDirectory = host_directory{std::move(dir)}; }
+
+    void header(std::string h) { m_Header = std::move(h); }
   protected:
-    nascent_test_base(creation_data<null_extension> data);
+    explicit nascent_test_base(std::string type, std::filesystem::path testRepo, search_tree sourceTree)
+      : m_TestType{std::move(type)}
+      , m_HostDirectory{std::move(testRepo), std::move(sourceTree)}
+    {}
 
     nascent_test_base(const nascent_test_base&)     = default;
     nascent_test_base(nascent_test_base&&) noexcept = default;
@@ -193,32 +119,40 @@ namespace sequoia::testing
     const std::filesystem::path& header() const noexcept { return m_Header; }
 
     [[nodiscard]]
-    const std::filesystem::path& host_dir() const noexcept { return m_HostDirectory; }
+    std::filesystem::path host_dir() const noexcept { return m_HostDirectory.get(m_Header); }
 
     void forename(std::string name) { m_Forename = std::move(name); }
     
-    void set(const host_directory& host, std::string_view camelName);
+    void set(std::string_view camelName);
 
   private:
     std::string m_Family{}, m_TestType{}, m_Forename{};
+
+    host_directory m_HostDirectory{};
     
-    std::filesystem::path
-      m_Header{},
-      m_HostDirectory{};
+    std::filesystem::path m_Header{};
   };
 
   /*! \brief Holds data for the automated creation of new tests */
   class nascent_semantics_test : public nascent_test_base
   {
   public:
-    explicit nascent_semantics_test(semantic_creation_data data);
+    explicit nascent_semantics_test(std::string type, std::filesystem::path testRepo, search_tree sourceTree)
+      : nascent_test_base{std::move(type), std::move(testRepo), std::move(sourceTree)}
+    {}
+
+    void qualified_name(std::string name) { m_QualifiedName = std::move(name); }
+
+    void add_equivalent_type(std::string name) { m_EquivalentTypes.emplace_back(std::move(name)); }
+
+    void finalize();
 
     [[nodiscard]]
     std::filesystem::path create_file(std::string_view copyright, const std::filesystem::path& codeTemplatesDir, std::string_view partName, std::filesystem::copy_options options) const;
 
   private:
 
-    std::string m_QualifiedClassName{};
+    std::string m_QualifiedName{};
 
     template_data m_TemplateData{};
 
@@ -298,6 +232,20 @@ namespace sequoia::testing
     concurrency_mode concurrency() const noexcept { return m_ConcurrencyMode; }
 
   private:
+    struct test_creator
+    {        
+      test_creator(std::string type, test_runner& r)
+        : testType{std::move(type)}
+        , runner{r}
+      {}
+
+      void operator()(const parsing::commandline::param_list& args);   
+        
+      std::string testType;
+      test_runner& runner;
+    };
+
+    friend test_creator;
     
     using family_map = std::map<std::string, bool, std::less<>>;
     using source_map = std::map<std::filesystem::path, bool>;

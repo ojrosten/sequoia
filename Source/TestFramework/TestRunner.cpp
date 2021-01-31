@@ -19,43 +19,6 @@ namespace sequoia::testing
   using namespace parsing::commandline;
 
   [[nodiscard]]
-  std::string creation_error()
-  {
-    return error("Insufficient information provided to create a new test");
-  }
-
-  void semantic_extension::operator()(const parsing::commandline::param_list& args)
-  {
-    if(args.size() < 2)
-      throw std::logic_error{"Too few commandline parameters"};
-
-    qualifiedName = args[0];
-    equivalentTypes.push_back(args[1]);
-  }
-
-  template<class Extension>
-  class creation_data_setter
-  {
-  public:
-    creation_data_setter(creation_data<Extension>& data, std::string testType)
-      : m_Data{data}
-      , m_TestType{std::move(testType)}
-    {}
-
-    void operator()(const param_list& args)
-    {      
-      m_Data.testType = m_TestType;
-      m_Data(args);
-    }
-  private:
-    creation_data<Extension>& m_Data;
-    std::string m_TestType;
-  };
-
-  template<class Extension>
-  creation_data_setter(creation_data<Extension>&, std::string) -> creation_data_setter<Extension>;
-
-  [[nodiscard]]
   std::string report_time(const test_family::summary& s)
   {
     return report_time(s.log, s.execution_time);
@@ -202,13 +165,9 @@ namespace sequoia::testing
     }
   }
 
-  nascent_test_base::nascent_test_base(creation_data<null_extension> data)
-    : m_Family{std::move(data.family)}
-    , m_TestType{std::move(data.testType)}    
-    , m_Header{std::move(data.header)}
-  {}
+  //=========================================== nascent_semantics_test ===========================================//
 
-  void nascent_test_base::set(const host_directory& host, std::string_view camelName)
+  void nascent_test_base::set(std::string_view camelName)
   {
     if(m_Family.empty())
     {
@@ -217,32 +176,26 @@ namespace sequoia::testing
     }
 
     if(m_Header.empty()) m_Header = std::filesystem::path{std::string{camelName}.append(".hpp")};
-    m_HostDirectory = host.get(m_Header);
   }
 
-  //=========================================== nascent_semantics_test ===========================================//
-
-  nascent_semantics_test::nascent_semantics_test(semantic_creation_data data)
-    : nascent_test_base{data.trim()}
-    , m_QualifiedClassName{std::move(data.extension.qualifiedName)}
-    , m_EquivalentTypes{std::move(data.extension.equivalentTypes)}
+  void nascent_semantics_test::finalize()
   {
     constexpr auto npos{std::string::npos};
 
     auto start{npos};
-    auto templatePos{m_QualifiedClassName.find('<')};
+    auto templatePos{m_QualifiedName.find('<')};
     
-    if(auto pos{m_QualifiedClassName.rfind("::", templatePos)}; pos != npos)
+    if(auto pos{m_QualifiedName.rfind("::", templatePos)}; pos != npos)
     {
-      if(pos < m_QualifiedClassName.length() - 2)
+      if(pos < m_QualifiedName.length() - 2)
       {
         start = pos+2;
-        forename(m_QualifiedClassName.substr(start));
+        forename(m_QualifiedName.substr(start));
       }
     }
     else
     {
-      forename(m_QualifiedClassName);
+      forename(m_QualifiedName);
       start = 0;
     }
 
@@ -255,7 +208,7 @@ namespace sequoia::testing
 
         if(start != npos)
         {
-          m_QualifiedClassName.erase(start + pos);
+          m_QualifiedName.erase(start + pos);
 
           std::string args{"<"};
           std::for_each(m_TemplateData.cbegin(), m_TemplateData.cend(),
@@ -265,12 +218,12 @@ namespace sequoia::testing
           args.erase(args.size() - 1);
           args.back() = '>';
 
-          m_QualifiedClassName.append(args);
+          m_QualifiedName.append(args);
         }
       }
     }
 
-    set(data.host, to_camel_case(std::string{forename()}));    
+    set(to_camel_case(std::string{forename()}));    
   }
 
   [[nodiscard]]
@@ -362,7 +315,7 @@ namespace sequoia::testing
       const auto rawCamel{to_camel_case(std::string{forename()})};
 
       const auto testTypeRelacement{std::string{test_type()} + "_"};
-      replace_all(text, {{"::?_class", m_QualifiedClassName},
+      replace_all(text, {{"::?_class", m_QualifiedName},
                          {"?_class", std::string{forename()}},
                          {"?_", testTypeRelacement},
                          {"?Class", rawCamel},
@@ -381,6 +334,15 @@ namespace sequoia::testing
   }
 
   //=========================================== test_runner ===========================================//
+
+  void test_runner::test_creator::operator()(const parsing::commandline::param_list& args)
+  {
+    auto& nascent{runner.m_NascentTests};
+
+    nascent.emplace_back(std::move(testType), runner.m_TestRepo, runner.m_SourceSearchTree);
+    nascent.back().qualified_name(args[0]);
+    nascent.back().add_equivalent_type(args[1]);
+  }
 
   test_runner::test_runner(int argc, char** argv, std::string_view copyright, std::filesystem::path testMain, std::filesystem::path hashIncludeTarget, repositories repos, std::ostream& stream)
     : m_Copyright{copyright}
@@ -407,33 +369,42 @@ namespace sequoia::testing
 
   void test_runner::process_args(int argc, char** argv)
   {
-    semantic_creation_data data{m_TestRepo, m_SourceSearchTree};
-
-    auto addTest{
-      [this,&data] (const param_list&) {
-        semantic_creation_data::sentinel sentry{data};
-        m_NascentTests.push_back(nascent_semantics_test{data});
-      }
-    };
-
     option hostOption{"--host-directory", {"-h"}, {"host_directory"},
-                      [&host{data.host}](const param_list& args){ host = host_directory{args[0]};}
+        [this](const param_list& args){
+          if(m_NascentTests.empty())
+            throw std::logic_error{"Unable to find nascent test"};
+
+          m_NascentTests.back().host_dir(args[0]);
+        } 
     };
 
     option familyOption{"--family", {"-f"}, {"family"},
-                        [&family{data.family}](const param_list& args){ family = args[0]; }                       
+        [this](const param_list& args){
+          if(m_NascentTests.empty())
+            throw std::logic_error{"Unable to find nascent test"};
+
+          m_NascentTests.back().family(args[0]);
+        }
     };
 
     const std::vector<option> createOptions{
       {"--equivalent-type", {"-e"}, {"equivalent_type"},
-        [&equivalentTypes{data.extension.equivalentTypes}](const param_list& args){
-           equivalentTypes.push_back(args[0]);
+        [this](const param_list& args){
+          if(m_NascentTests.empty())
+            throw std::logic_error{"Unable to find nascent test"};
+
+          m_NascentTests.back().add_equivalent_type(args[0]);
         }
       },
       hostOption,
       familyOption,
       {"--class-header", {"-ch"}, {"class_header"},
-        [&header{data.header}](const param_list& args){ header = args[0]; }
+        [this](const param_list& args){
+          if(m_NascentTests.empty())
+            throw std::logic_error{"Unable to find nascent test"};
+
+          m_NascentTests.back().header(args[0]);
+        }
       }                                         
     };
     
@@ -447,10 +418,10 @@ namespace sequoia::testing
                   },
                   {"create", {"c"}, {}, [](const param_list&) {},
                    { {"regular_test", {"regular"}, {"qualified::class_name<class T>", "equivalent_type"},
-                       creation_data_setter{data, "regular"}, createOptions
+                      test_creator{"regular", *this}, createOptions
                      },
                      {"move_only_test", {"move_only"}, {"qualified::class_name<class T>", "equivalent_type"},
-                       creation_data_setter{data, "move_only"}, createOptions
+                      test_creator{"move_only", *this}, createOptions
                      }/*,
                      {"free_test", {"free"}, {"header"},
                        [this](const param_list& args) {  }, {hostOption, familyOption}
@@ -459,7 +430,7 @@ namespace sequoia::testing
                        [this](const param_list& args) {  }, {hostOption, familyOption}
                      }*/
                    },
-                   addTest
+                   [this](const param_list&) { m_NascentTests.back().finalize(); }
                   },
                   {"init", {"-i"}, {"copyright", "path"},
                     [this](const param_list& args) {
