@@ -10,12 +10,46 @@
 #include <complex>
 
 namespace sequoia::testing
-{
+{  
   [[nodiscard]]
   std::string_view factory_test::source_file() const noexcept
   {
     return __FILE__;
   }
+
+  struct x
+  {
+    x(int j) : i{j} {}
+
+    [[nodiscard]]
+    friend auto operator<=>(const x&, const x&) = default;
+
+    template<class Stream>
+    friend Stream& operator<<(Stream& s, const x& val)
+    {
+      s << val.i;
+      return s;
+    }
+    
+    int i{};
+  };
+
+  struct y
+  {
+    y(int j) : i{j} {}
+
+    [[nodiscard]]
+    friend auto operator<=>(const y&, const y&) = default;
+
+    template<class Stream>
+    friend Stream& operator<<(Stream& s, const y& val)
+    {
+      s << val.i;
+      return s;
+    }
+
+    int i{};
+  };
 
   void factory_test::run_tests()
   {
@@ -44,6 +78,17 @@ namespace sequoia::testing
 
       check_equivalence(LINE(""), g,
                         prediction_type{{{"baz", std::vector<int>{}}, {"foo", 0}, {"bar", std::complex<float>{}}, {"huh", 0.0}}});
+
+      check_semantics(LINE(""), f, g);
+    }
+
+    {
+      using prediction_type = std::array<std::pair<std::string, std::variant<x, y>>, 2>;
+
+      factory<x, y> f{{"x", "y"}, 1}, g{{"x", "y"}, 2};
+
+      check_equivalence(LINE(""), f, prediction_type{{{"x", x{1}}, {"y", y{1}}}});
+      check_equivalence(LINE(""), g, prediction_type{{{"x", x{2}}, {"y", y{2}}}});
 
       check_semantics(LINE(""), f, g);
     }

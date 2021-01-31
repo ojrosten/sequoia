@@ -15,7 +15,7 @@
 namespace sequoia::runtime
 {  
   template<class... Products>
-    requires (sizeof...(Products) > 0) && (std::is_default_constructible_v<Products> && ...)
+    requires (sizeof...(Products) > 0)
   class factory
   {
   public:
@@ -27,8 +27,10 @@ namespace sequoia::runtime
       return sizeof...(Products);
     }
 
-    factory(const std::array<std::string_view, size()>& names)
-      : m_Creators{make_array(names, std::make_index_sequence<size()>{})}
+    template<class... Args>
+      requires (constructible_from<Products, Args...> && ...)
+    factory(const std::array<std::string_view, size()>& names, Args&&... args)
+      : m_Creators{make_array(names, std::make_index_sequence<size()>{}, std::forward<Args>(args)...)}
     {
       std::sort(m_Creators.begin(), m_Creators.end(), [](const element& lhs, const element& rhs){ return lhs.first < rhs.first; });
     }
@@ -67,18 +69,18 @@ namespace sequoia::runtime
     
     std::array<element, size()> m_Creators{};
 
-    template<std::size_t... I>
+    template<std::size_t... I, class... Args>
     [[nodiscard]]
-    std::array<element, size()> make_array(const std::array<std::string_view, size()>& names, std::index_sequence<I...>)
+    std::array<element, size()> make_array(const std::array<std::string_view, size()>& names, std::index_sequence<I...>, Args&&... args)
     {
-      return {make_element<I, Products>(names)...};
+      return {make_element<I, Products>(names, std::forward<Args>(args)...)...};
     }
 
-    template<std::size_t I, class Product>
+    template<std::size_t I, class Product, class... Args>
     [[nodiscard]]
-    static element make_element(const std::array<std::string_view, size()>& names)
+    static element make_element(const std::array<std::string_view, size()>& names, Args&&... args)
     {
-      return {std::string{names[I]}, Product{}};
+      return {std::string{names[I]}, Product{std::forward<Args>(args)...}};
     }
   };
 }
