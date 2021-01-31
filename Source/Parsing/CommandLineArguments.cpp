@@ -44,9 +44,11 @@ namespace sequoia::parsing::commandline
   {
     for(auto& op : operations)
     {
+      if(op.early) op.early(op.parameters);
+
       invoke_depth_first(op.nested_operations);
       
-      if(op.fn) op.fn(op.parameters);
+      if(op.late) op.late(op.parameters);
     }
   }
   
@@ -175,10 +177,10 @@ namespace sequoia::parsing::commandline
       return {};
     }
 
-    if(top_level(operations) && !optionsIter->fn)
+    if(top_level(operations) && !optionsIter->early &&  !optionsIter->late)
       throw std::logic_error{error("Commandline option not bound to a function object")};
 
-    operations.push_back(operation{optionsIter->fn, {}});
+    operations.push_back(operation{optionsIter->early, optionsIter->late, {}});
     if(optionsIter->parameters.empty())
     {
       if(!optionsIter->nested_options.empty())
@@ -232,7 +234,7 @@ namespace sequoia::parsing::commandline
         auto i{nestedOperations.begin()};
         while(i != nestedOperations.end())
         {
-          if(!i->fn)
+          if(!i->early && !i->late)
           {
             auto& params{currentOp.parameters};
             const auto& nestedParams{i->parameters};

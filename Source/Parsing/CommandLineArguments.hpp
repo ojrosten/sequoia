@@ -30,14 +30,16 @@ namespace sequoia::parsing::commandline
     std::string name;
     param_list aliases;
     param_list parameters;
-    executor fn{};
+    executor early{};
 
     std::vector<option> nested_options{};
+
+    executor late{};
   };
 
   struct operation
   {
-    executor fn;
+    executor early, late;
     param_list parameters;
 
     std::vector<operation> nested_operations{};
@@ -76,9 +78,11 @@ namespace sequoia::parsing::commandline
     
       for(auto& op : ops)
       {
+        if(op.early) op.early(op.parameters);
+
         invoke_depth_first(op.nested_operations);
 
-        if(op.fn) op.fn(op.parameters);
+        if(op.late) op.late(op.parameters);
       }
     }
 

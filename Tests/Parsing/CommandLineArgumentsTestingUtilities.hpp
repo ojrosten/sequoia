@@ -20,10 +20,19 @@ namespace sequoia::testing
     template<test_mode Mode>
     static void check(test_logger<Mode>& logger, const type& operation, const type& prediction)
     {
-      const bool consistent{   ((operation.fn != nullptr) && (prediction.fn != nullptr))
-                            || ((operation.fn == nullptr) && (prediction.fn == nullptr))};
-      testing::check("Existence of function objects differs", logger, consistent);
+      check(logger, operation.early, prediction.early, "early");
+      check(logger, operation.late, prediction.late, "late");
       check_equality("Operation Parameters differ", logger, operation.parameters, prediction.parameters);
+    }
+  private:
+    using executor = sequoia::parsing::commandline::executor;
+    
+    template<test_mode Mode>
+    static void check(test_logger<Mode>& logger, const executor& operation, const executor& prediction, std::string_view tag)
+    {
+      const bool consistent{   ((operation != nullptr) && (prediction != nullptr))
+                            || ((operation == nullptr) && (prediction == nullptr))};
+      testing::check(std::string{"Existence of" }.append(tag).append(" function objects differs"), logger, consistent);
     }
   };
 

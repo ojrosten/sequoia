@@ -35,19 +35,19 @@ namespace sequoia::testing
     {
       commandline_arguments a{"foo", "--async"};
       
-      check_weak_equivalence(LINE(""), parse(a.size(), a.get(), { {"--async", {}, {}, fo{}} }), outcome{"foo", {{fo{}, {}}}});
+      check_weak_equivalence(LINE(""), parse(a.size(), a.get(), { {"--async", {}, {}, fo{}} }), outcome{"foo", {{fo{}, nullptr, {}}}});
     }
 
     {
       commandline_arguments a{"bar", "-a"};
       
-      check_weak_equivalence(LINE(""), parse(a.size(), a.get(), { {"--async", {"-a"}, {}, fo{}} }), outcome{"bar", {{fo{}, {}}}});
+      check_weak_equivalence(LINE(""), parse(a.size(), a.get(), { {"--async", {"-a"}, {}, fo{}} }), outcome{"bar", {{fo{}, nullptr, {}}}});
     }
 
     {
       commandline_arguments a{"foo", "-a"};
       
-      check_weak_equivalence(LINE(""), parse(a.size(), a.get(), { {"--async", {"-as", "-a"}, {}, fo{}} }), outcome{"foo", {{fo{}, {}}}});
+      check_weak_equivalence(LINE(""), parse(a.size(), a.get(), { {"--async", {"-as", "-a"}, {}, fo{}} }), outcome{"foo", {{fo{}, nullptr, {}}}});
     }
 
     {
@@ -72,7 +72,7 @@ namespace sequoia::testing
       check_weak_equivalence(LINE(""),
                              parse(a.size(), a.get(), { {"--async", {"-a"}, {}, fo{}},
                                                       {"--verbose", {"-v"}, {}, fo{}} }),
-                             outcome{"foo", {{fo{}, {}}, {fo{}, {}}}});
+                             outcome{"foo", {{fo{}, nullptr, {}}, {fo{}, nullptr, {}}}});
     }
 
     {
@@ -81,7 +81,7 @@ namespace sequoia::testing
       check_weak_equivalence(LINE(""),
                              parse(a.size(), a.get(), { {"--async", {"-a"}, {}, fo{}},
                                                       {"--verbose", {"-v"}, {}, fo{}} }),
-                             outcome{"foo", {{fo{}, {}}, {fo{}, {}}}});
+                             outcome{"foo", {{fo{}, nullptr, {}}, {fo{}, nullptr, {}}}});
     }
 
     {
@@ -91,7 +91,7 @@ namespace sequoia::testing
                              parse(a.size(), a.get(), { {"--async",   {"-a"}, {}, fo{}},
                                                       {"--verbose", {"-v"}, {}, fo{}},
                                                       {"--pause",   {"-p"}, {}, fo{}} }),
-                             outcome{"foo", {{fo{}, {}}, {fo{}, {}}, {fo{}, {}}}});
+                             outcome{"foo", {{fo{}, nullptr, {}}, {fo{}, nullptr, {}}, {fo{}, nullptr, {}}}});
     }
 
     {
@@ -105,13 +105,13 @@ namespace sequoia::testing
     {
       commandline_arguments a{"foo", "test", "case"};
       
-      check_weak_equivalence(LINE(""), parse(a.size(), a.get(), { {"test", {}, {"case"}, fo{}} }), outcome{"foo", {{fo{}, {"case"}}}});
+      check_weak_equivalence(LINE(""), parse(a.size(), a.get(), { {"test", {}, {"case"}, fo{}} }), outcome{"foo", {{fo{}, nullptr, {"case"}}}});
     }
 
     {
       commandline_arguments a{"foo", "t", "case"};
       
-      check_weak_equivalence(LINE(""), parse(a.size(), a.get(), { {"test", {"t"}, {"case"}, fo{}} }), outcome{"foo", {{fo{}, {"case"}}}});
+      check_weak_equivalence(LINE(""), parse(a.size(), a.get(), { {"test", {"t"}, {"case"}, fo{}} }), outcome{"foo", {{fo{}, nullptr, {"case"}}}});
     }
 
     {
@@ -128,7 +128,7 @@ namespace sequoia::testing
       
       check_weak_equivalence(LINE(""),
                              parse(a.size(), a.get(), { {"create", {}, {"class_name", "directory"}, fo{}} }),
-                             outcome{"foo", {{fo{}, {"class", "dir"}}}});
+                             outcome{"foo", {{fo{}, nullptr, {"class", "dir"}}}});
     }
 
     {
@@ -137,7 +137,7 @@ namespace sequoia::testing
       check_weak_equivalence(LINE(""),
                              parse(a.size(), a.get(), { {"create",  {}, {"class_name", "directory"}, fo{}},
                                                         {"--async", {}, {}, fo{}} }),
-                             outcome{"foo", {{fo{}, {}}, {fo{}, {"class", "dir"}}}});
+                             outcome{"foo", {{fo{}, nullptr, {}}, {fo{}, nullptr, {"class", "dir"}}}});
     }
 
     {
@@ -146,7 +146,7 @@ namespace sequoia::testing
       check_weak_equivalence(LINE(""),
                              argument_parser(a.size(), a.get(), { {"create",  {}, {"class_name", "directory"}, fo{}},
                                                         {"--async", {}, {}, fo{}} }),
-                             outcome{"foo", {{fo{}, {}}, {fo{}, {"class", "dir"}}}});
+                             outcome{"foo", {{fo{}, nullptr, {}}, {fo{}, nullptr, {"class", "dir"}}}});
     }
   }
 
@@ -209,7 +209,7 @@ namespace sequoia::testing
                              parse(a.size(), a.get(), { {"create", {}, {"class_name", "directory"}, fo{},
                                                   { {"--equivalent-type", {}, {"type"}} }
                                                  } }),
-                             outcome{"", {{fo{}, {"class", "dir"}}}});
+                             outcome{"", {{fo{}, nullptr, {"class", "dir"}}}});
     }
 
     {
@@ -221,7 +221,7 @@ namespace sequoia::testing
                                         { {"--equivalent-type", {}, {"type"}} }
                                       }
                                    }),
-                             outcome{"bar", {{fo{}, {"class", "dir", "foo"}}}});
+                             outcome{"bar", {{fo{}, nullptr, {"class", "dir", "foo"}}}});
     }
 
     {
@@ -231,7 +231,7 @@ namespace sequoia::testing
                              parse(a.size(), a.get(), { {"create", {}, {"class_name", "directory"}, fo{},
                                                          { {"--equivalent-type", {}, {"type"}, fo{}} }
                                                  } }),
-                             outcome{"", {{ fo{}, {"class", "dir"}, { { fo{}, {"foo"}} } }}});
+                             outcome{"", {{ fo{}, nullptr, {"class", "dir"}, { { fo{}, nullptr, {"foo"}} } }}});
     }
 
     {
@@ -244,7 +244,7 @@ namespace sequoia::testing
                                           {"--generate",        {}, {"file"}, fo{}} }
                                       }
                                    }),
-                             outcome{"", {{ fo{}, {"class", "dir", "foo"}, { { fo{}, {"bar"}} } }}});
+                             outcome{"", {{ fo{}, nullptr, {"class", "dir", "foo"}, { { fo{}, nullptr, {"bar"}} } }}});
     }
 
     {
@@ -257,7 +257,7 @@ namespace sequoia::testing
                                       },
                                      {"--verbose", {"-v"}, {}, fo{}}
                                    }),
-                             outcome{"", {{fo{}, {"class", "dir", "foo"}}, {fo{}, {}}}});
+                             outcome{"", {{fo{}, nullptr, {"class", "dir", "foo"}}, {fo{}, nullptr, {}}}});
     }
 
     {
@@ -271,7 +271,7 @@ namespace sequoia::testing
                                      {"--verbose", {"-v"}, {}, fo{}},
                                      {"--async", {"-a"}, {}, fo{}}
                                    }),
-                             outcome{"", {{fo{}, {"class", "dir", "foo"}}, {fo{}, {}}, {fo{}, {}}}});
+                             outcome{"", {{fo{}, nullptr, {"class", "dir", "foo"}}, {fo{}, nullptr, {}}, {fo{}, nullptr, {}}}});
     }
 
     {
@@ -285,7 +285,7 @@ namespace sequoia::testing
                                      {"--verbose", {"-v"}, {}, fo{}},
                                      {"--async", {"-a"}, {}, fo{}}
                                    }),
-                             outcome{"", {{fo{}, {"class", "dir", "foo"}}, {fo{}, {}}, {fo{}, {}}}});
+                             outcome{"", {{fo{}, nullptr, {"class", "dir", "foo"}}, {fo{}, nullptr, {}}, {fo{}, nullptr, {}}}});
     }
 
     {
@@ -302,7 +302,7 @@ namespace sequoia::testing
                                         }
                                       }
                                    }),
-                             outcome{"", {{fo{}, {}, {{fo{}, {"maybe<class T>", "std::optional<T>"}}} }}});
+                             outcome{"", {{fo{}, nullptr, {}, {{fo{}, nullptr, {"maybe<class T>", "std::optional<T>"}}} }}});
     }
 
     {
@@ -319,7 +319,7 @@ namespace sequoia::testing
                                         }
                                       }
                                    }),
-                             outcome{"", {{fo{}, {}, {{fo{}, {"maybe<class T>", "std::optional<T>"}}} }}});
+                             outcome{"", {{fo{}, nullptr, {}, {{fo{}, nullptr, {"maybe<class T>", "std::optional<T>"}}} }}});
     }
 
     {
@@ -374,7 +374,7 @@ namespace sequoia::testing
                                         }
                                       }
                                    }),
-                             outcome{"", {{fo{}, {}}}, "regular_test | regular | "
+                             outcome{"", {{fo{}, nullptr, {}}}, "regular_test | regular | "
                                              "qualified::class_name<class T> equivalent_type\n"});
     }
   }
