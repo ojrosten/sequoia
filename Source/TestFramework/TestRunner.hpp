@@ -89,9 +89,8 @@ namespace sequoia::testing
   class nascent_test_base
   {
   public:    
-    nascent_test_base(std::string type, std::filesystem::path testRepo, search_tree sourceTree)
-      : m_TestType{std::move(type)}
-      , m_HostDirectory{std::move(testRepo), std::move(sourceTree)}
+    nascent_test_base(std::filesystem::path testRepo, search_tree sourceTree)
+      : m_HostDirectory{std::move(testRepo), std::move(sourceTree)}
     {}
 
     [[nodiscard]]
@@ -100,11 +99,22 @@ namespace sequoia::testing
     void family(std::string name) { m_Family = std::move(name); }
 
     [[nodiscard]]
-    std::string_view forename() const noexcept { return m_Forename; }
+    std::filesystem::path host_dir() const noexcept { return m_HostDirectory.get(m_Header); }
 
     void host_dir(std::filesystem::path dir) { m_HostDirectory = host_directory{std::move(dir)}; }
+    
+    [[nodiscard]]
+    const std::filesystem::path& header() const noexcept { return m_Header; }
 
     void header(std::string h) { m_Header = std::move(h); }
+
+    [[nodiscard]]
+    std::string_view test_type() const noexcept { return m_TestType; }
+
+    void test_type(std::string type) { m_TestType = std::move(type); }
+
+    [[nodiscard]]
+    std::string_view forename() const noexcept { return m_Forename; }
   protected:
 
     nascent_test_base(const nascent_test_base&)     = default;
@@ -113,16 +123,7 @@ namespace sequoia::testing
     nascent_test_base& operator=(nascent_test_base&&) noexcept = default;
 
     ~nascent_test_base() = default;
-    
-    [[nodiscard]]
-    std::string_view test_type() const noexcept { return m_TestType; }
-
-    [[nodiscard]]
-    const std::filesystem::path& header() const noexcept { return m_Header; }
-
-    [[nodiscard]]
-    std::filesystem::path host_dir() const noexcept { return m_HostDirectory.get(m_Header); }
-
+   
     void forename(std::string name) { m_Forename = std::move(name); }
     
     void set(std::string_view camelName);
@@ -241,14 +242,15 @@ namespace sequoia::testing
   private:
     struct test_creator
     {        
-      test_creator(std::string type, test_runner& r)
-        : testType{std::move(type)}
+      test_creator(std::string type, std::string subType, test_runner& r)
+        : genus{std::move(type)}
+        , species{std::move(subType)}
         , runner{r}
       {}
 
       void operator()(const parsing::commandline::param_list& args);   
         
-      std::string testType;
+      std::string genus, species;
       test_runner& runner;
     };
 
@@ -266,11 +268,14 @@ namespace sequoia::testing
     using creation_factory = runtime::factory<nascent_semantics_test>;
     using vessel = typename creation_factory::vessel;
 
+    static decltype(auto) get_family(const vessel& v);
+    static decltype(auto) get_forename(const vessel& v);
+
+
     std::vector<test_family> m_Families{};
     family_map m_SelectedFamilies{};
     source_map m_SelectedSources{};
-    //    std::vector<vessel> m_NascentTests{};
-    std::vector<nascent_semantics_test> m_NascentTests{};
+    std::vector<vessel> m_NascentTests{};
     std::string m_Copyright{};
     search_tree m_SourceSearchTree;
     std::filesystem::path

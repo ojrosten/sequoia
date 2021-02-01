@@ -15,7 +15,7 @@
 #include "FileEditors.hpp"
 
 namespace sequoia::testing
-{
+{ 
   using namespace parsing::commandline;
 
   [[nodiscard]]
@@ -342,11 +342,30 @@ namespace sequoia::testing
 
   void test_runner::test_creator::operator()(const parsing::commandline::param_list& args)
   {
-    auto& nascent{runner.m_NascentTests};
+    auto& nascentTests{runner.m_NascentTests};
 
-    nascent.emplace_back(std::move(testType), runner.m_TestRepo, runner.m_SourceSearchTree);    
-    nascent.back().qualified_name(args[0]);
-    nascent.back().add_equivalent_type(args[1]);
+    static creation_factory factory{{"semantic"}, runner.m_TestRepo, runner.m_SourceSearchTree};
+    auto nascent{factory.create(genus)};
+
+    std::visit(variant_visitor{
+        [&args,&species{species}](nascent_semantics_test& nascent){
+          nascent.test_type(species);
+          nascent.qualified_name(args[0]);
+          nascent.add_equivalent_type(args[1]);
+        }}
+      , nascent);
+
+    nascentTests.emplace_back(std::move(nascent));
+  }
+
+  decltype(auto) test_runner::get_family(const vessel& v)
+  {
+    return std::visit(variant_visitor{[](const auto& nascent){ return nascent.family(); }}, v);
+  }
+
+  decltype(auto) test_runner::get_forename(const vessel& v)
+  {
+    return std::visit(variant_visitor{[](const auto& nascent){ return nascent.forename(); }}, v);
   }
 
   test_runner::test_runner(int argc, char** argv, std::string_view copyright, std::filesystem::path testMain, std::filesystem::path hashIncludeTarget, repositories repos, std::ostream& stream)
@@ -379,7 +398,7 @@ namespace sequoia::testing
           if(m_NascentTests.empty())
             throw std::logic_error{"Unable to find nascent test"};
 
-          m_NascentTests.back().host_dir(args[0]);
+          std::visit(variant_visitor{[&args](auto& nascent){ nascent.host_dir(args[0]);}}, m_NascentTests.back());
         } 
     };
 
@@ -388,7 +407,7 @@ namespace sequoia::testing
           if(m_NascentTests.empty())
             throw std::logic_error{"Unable to find nascent test"};
 
-          m_NascentTests.back().family(args[0]);
+          std::visit(variant_visitor{[&args](auto& nascent){ nascent.family(args[0]);}}, m_NascentTests.back());
         }
     };
 
@@ -398,7 +417,7 @@ namespace sequoia::testing
           if(m_NascentTests.empty())
             throw std::logic_error{"Unable to find nascent test"};
 
-          m_NascentTests.back().add_equivalent_type(args[0]);
+          std::visit(variant_visitor{[&args](nascent_semantics_test& nascent){ nascent.add_equivalent_type(args[0]);}}, m_NascentTests.back());
         }
       },
       hostOption,
@@ -408,7 +427,7 @@ namespace sequoia::testing
           if(m_NascentTests.empty())
             throw std::logic_error{"Unable to find nascent test"};
 
-          m_NascentTests.back().header(args[0]);
+          std::visit(variant_visitor{[&args](nascent_semantics_test& nascent){ nascent.header(args[0]);}}, m_NascentTests.back());
         }
       }                                         
     };
@@ -423,10 +442,10 @@ namespace sequoia::testing
                   },
                   {"create", {"c"}, {}, [](const param_list&) {},
                    { {"regular_test", {"regular"}, {"qualified::class_name<class T>", "equivalent_type"},
-                      test_creator{"regular", *this}, createOptions
+                      test_creator{"semantic", "regular", *this}, createOptions
                      },
                      {"move_only_test", {"move_only"}, {"qualified::class_name<class T>", "equivalent_type"},
-                      test_creator{"move_only", *this}, createOptions
+                      test_creator{"semantic", "move_only", *this}, createOptions
                      }/*,
                      {"free_test", {"free"}, {"header"},
                        [this](const param_list& args) {  }, {hostOption, familyOption}
@@ -435,7 +454,7 @@ namespace sequoia::testing
                        [this](const param_list& args) {  }, {hostOption, familyOption}
                      }*/
                    },
-                   [this](const param_list&) { m_NascentTests.back().finalize(); }
+                   [this](const param_list&) { std::visit(variant_visitor{[](auto& nascent){ nascent.finalize();}}, m_NascentTests.back()); }
                   },
                   {"init", {"-i"}, {"copyright", "path"},
                     [this](const param_list& args) {
@@ -613,15 +632,15 @@ namespace sequoia::testing
       std::string mess{};
       while(beginNascentTests != endNascentTests)
       {
-        const auto& data{*beginNascentTests};
+        const auto& nascentVessel{*beginNascentTests};
         for(const auto& stub : st_TestNameStubs)
         {
-          append_lines(mess, fn(data, stub));
+          append_lines(mess, fn(nascentVessel, stub));
         }
 
-        add_to_family(m_TestMain, data.family(),
-                      { {std::string{data.forename()}.append("_false_positive_test(\"False Positive Test\")")},
-                        {std::string{data.forename()}.append("_test(\"Unit Test\")")}
+        add_to_family(m_TestMain, get_family(nascentVessel),
+                      { {std::string{get_forename(nascentVessel)}.append("_false_positive_test(\"False Positive Test\")")},
+                        {std::string{get_forename(nascentVessel)}.append("_test(\"Unit Test\")")}
                       });
 
         ++beginNascentTests;
@@ -638,8 +657,12 @@ namespace sequoia::testing
   std::string test_runner::create_files(Iter beginNascentTests, Iter endNascentTests, const std::filesystem::copy_options options) const
   {
     auto action{
-      [options,&root{m_ProjectRoot},&copyright{m_Copyright},&target{m_HashIncludeTarget}](const nascent_semantics_test& data, std::string_view stub){
-        const auto filePath{data.create_file(copyright, code_templates_path(root), stub, options)};
+      [options,&root{m_ProjectRoot},&copyright{m_Copyright},&target{m_HashIncludeTarget}](const vessel& nascentVessel, std::string_view stub){
+
+        auto visitor{variant_visitor{[=](const auto& nascent){
+                                       return nascent.create_file(copyright, code_templates_path(root), stub, options); }}};
+
+        const auto filePath{std::visit(visitor, nascentVessel)};
 
         if(const auto filename{filePath.filename()};
            (filename.extension() == ".hpp") && (filename.string().find("Utilities") == std::string::npos))
