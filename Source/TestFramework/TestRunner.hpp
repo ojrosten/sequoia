@@ -115,8 +115,9 @@ namespace sequoia::testing
 
     [[nodiscard]]
     std::string_view forename() const noexcept { return m_Forename; }
+    
+    void finalize(std::string_view camelName);
   protected:
-
     nascent_test_base(const nascent_test_base&)     = default;
     nascent_test_base(nascent_test_base&&) noexcept = default;
     nascent_test_base& operator=(const nascent_test_base&)     = default;
@@ -125,9 +126,6 @@ namespace sequoia::testing
     ~nascent_test_base() = default;
    
     void forename(std::string name) { m_Forename = std::move(name); }
-    
-    void set(std::string_view camelName);
-
   private:
     std::string m_Family{}, m_TestType{}, m_Forename{};
 

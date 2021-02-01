@@ -167,7 +167,7 @@ namespace sequoia::testing
 
   //=========================================== nascent_semantics_test ===========================================//
 
-  void nascent_test_base::set(std::string_view camelName)
+  void nascent_test_base::finalize(std::string_view camelName)
   {
     if(m_Family.empty())
     {
@@ -223,12 +223,7 @@ namespace sequoia::testing
       }
     }
 
-    set(to_camel_case(std::string{forename()}));
-  }
-
-  void nascent_behavioural_test::finalize()
-  {
-    set(to_camel_case(std::string{forename()}));
+    nascent_test_base::finalize(to_camel_case(std::string{forename()}));
   }
 
   [[nodiscard]]
