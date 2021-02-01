@@ -167,20 +167,16 @@ namespace sequoia::testing
 
   //=========================================== nascent_semantics_test ===========================================//
 
-  void nascent_test_base::finalize(std::string_view camelName)
+  void nascent_test_base::finalize()
   {
+    m_CamelName = to_camel_case(std::string{forename()});
     if(m_Family.empty())
     {
-      m_Family = camelName;
+      m_Family = m_CamelName;
       replace_all(m_Family, "_", " ");
     }
 
-    if(m_Header.empty()) m_Header = std::filesystem::path{std::string{camelName}.append(".hpp")};
-  }
-
-  void nascent_behavioural_test::finalize()
-  {
-    nascent_test_base::finalize(to_camel_case(std::string{forename()}));
+    if(m_Header.empty()) m_Header = std::filesystem::path{std::string{m_CamelName}.append(".hpp")};
   }
 
   void nascent_semantics_test::finalize()
@@ -228,7 +224,7 @@ namespace sequoia::testing
       }
     }
 
-    nascent_test_base::finalize(to_camel_case(std::string{forename()}));
+    nascent_test_base::finalize();
   }
 
   [[nodiscard]]
@@ -236,7 +232,7 @@ namespace sequoia::testing
   {
     namespace fs = std::filesystem;
     
-    const auto outputFile{(host_dir() / to_camel_case(std::string{forename()})) += partName};
+    const auto outputFile{(host_dir() / camel_name()) += partName};
 
     if(((options & fs::copy_options::skip_existing) == fs::copy_options::skip_existing) && fs::exists(outputFile))
     {
@@ -317,13 +313,11 @@ namespace sequoia::testing
         replace_all(text, "template<?> ", "");
       }
 
-      const auto rawCamel{to_camel_case(std::string{forename()})};
-
       const auto testTypeRelacement{std::string{test_type()} + "_"};
       replace_all(text, {{"::?_class", m_QualifiedName},
                          {"?_class", std::string{forename()}},
                          {"?_", testTypeRelacement},
-                         {"?Class", rawCamel},
+                         {"?Class", camel_name()},
                          {"?Test", to_camel_case(std::string{test_type()}).append("Test")},
                          {"?Class.hpp", header().generic_string()}});
 

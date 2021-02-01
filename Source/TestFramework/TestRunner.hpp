@@ -116,7 +116,7 @@ namespace sequoia::testing
     [[nodiscard]]
     std::string_view forename() const noexcept { return m_Forename; }
     
-    void finalize(std::string_view camelName);
+    void finalize();
   protected:
     nascent_test_base(const nascent_test_base&)     = default;
     nascent_test_base(nascent_test_base&&) noexcept = default;
@@ -126,8 +126,10 @@ namespace sequoia::testing
     ~nascent_test_base() = default;
    
     void forename(std::string name) { m_Forename = std::move(name); }
+
+    std::string_view camel_name() const noexcept { return m_CamelName; }
   private:
-    std::string m_Family{}, m_TestType{}, m_Forename{};
+    std::string m_Family{}, m_TestType{}, m_Forename{}, m_CamelName{};
 
     host_directory m_HostDirectory{};
     
@@ -163,8 +165,6 @@ namespace sequoia::testing
   {
   public:
     using nascent_test_base::nascent_test_base;
-
-    void finalize();
 
     [[nodiscard]]
     std::filesystem::path create_file(std::string_view copyright, const std::filesystem::path& codeTemplatesDir, std::string_view partName, std::filesystem::copy_options options) const;
