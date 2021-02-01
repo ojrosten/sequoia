@@ -178,6 +178,11 @@ namespace sequoia::testing
     if(m_Header.empty()) m_Header = std::filesystem::path{std::string{camelName}.append(".hpp")};
   }
 
+  void nascent_behavioural_test::finalize()
+  {
+    nascent_test_base::finalize(to_camel_case(std::string{forename()}));
+  }
+
   void nascent_semantics_test::finalize()
   {
     constexpr auto npos{std::string::npos};
@@ -333,6 +338,12 @@ namespace sequoia::testing
     }
   }
 
+  [[nodiscard]]
+  std::filesystem::path nascent_behavioural_test::create_file(std::string_view copyright, const std::filesystem::path& codeTemplatesDir, std::string_view partName, const std::filesystem::copy_options options) const
+  {
+    return {};
+  }
+
   //=========================================== test_runner ===========================================//
 
   void test_runner::test_creator::operator()(const parsing::commandline::param_list& args)
@@ -342,13 +353,19 @@ namespace sequoia::testing
     static creation_factory factory{{"semantic"}, runner.m_TestRepo, runner.m_SourceSearchTree};
     auto nascent{factory.create(genus)};
 
-    std::visit(variant_visitor{
-        [&args,&species{species}](nascent_semantics_test& nascent){
-          nascent.test_type(species);
-          nascent.qualified_name(args[0]);
-          nascent.add_equivalent_type(args[1]);
-        }}
-      , nascent);
+    std::visit(
+        variant_visitor{
+          [&args,&species{species}](nascent_semantics_test& nascent){
+            nascent.test_type(species);
+            nascent.qualified_name(args[0]);
+            nascent.add_equivalent_type(args[1]);
+          },
+          [&args,&species{species}](nascent_behavioural_test& nascent){
+            nascent.test_type(species);
+            nascent.header(args[0]);
+          }
+        },
+        nascent);
 
     nascentTests.emplace_back(std::move(nascent));
   }
@@ -412,7 +429,14 @@ namespace sequoia::testing
           if(m_NascentTests.empty())
             throw std::logic_error{"Unable to find nascent test"};
 
-          std::visit(variant_visitor{[&args](nascent_semantics_test& nascent){ nascent.add_equivalent_type(args[0]);}}, m_NascentTests.back());
+          auto visitor{
+            variant_visitor{
+              [&args](nascent_semantics_test& nascent){ nascent.add_equivalent_type(args[0]); },
+              [](nascent_behavioural_test&){}
+            }
+          };
+
+          std::visit(visitor, m_NascentTests.back());
         }
       },
       hostOption,
@@ -422,7 +446,7 @@ namespace sequoia::testing
           if(m_NascentTests.empty())
             throw std::logic_error{"Unable to find nascent test"};
 
-          std::visit(variant_visitor{[&args](nascent_semantics_test& nascent){ nascent.header(args[0]);}}, m_NascentTests.back());
+          std::visit(variant_visitor{[&args](auto& nascent){ nascent.header(args[0]);}}, m_NascentTests.back());
         }
       }                                         
     };
@@ -441,13 +465,13 @@ namespace sequoia::testing
                      },
                      {"move_only_test", {"move_only"}, {"qualified::class_name<class T>", "equivalent_type"},
                       test_creator{"semantic", "move_only", *this}, createOptions
-                     }/*,
+                     },
                      {"free_test", {"free"}, {"header"},
-                       [this](const param_list& args) {  }, {hostOption, familyOption}
+                       test_creator{"behavioural", "free", *this}, {hostOption, familyOption}
                      },
                      {"performance_test", {"performance"}, {"header"},
-                       [this](const param_list& args) {  }, {hostOption, familyOption}
-                     }*/
+                       test_creator{"behavioural", "performance", *this}, {hostOption, familyOption}
+                     }
                    },
                    [this](const param_list&) { std::visit(variant_visitor{[](auto& nascent){ nascent.finalize();}}, m_NascentTests.back()); }
                   },

@@ -165,6 +165,9 @@ namespace sequoia::testing
     using nascent_test_base::nascent_test_base;
 
     void finalize();
+
+    [[nodiscard]]
+    std::filesystem::path create_file(std::string_view copyright, const std::filesystem::path& codeTemplatesDir, std::string_view partName, std::filesystem::copy_options options) const;
   };
 
   struct repositories
@@ -263,7 +266,7 @@ namespace sequoia::testing
       std::filesystem::path location;
     };
 
-    using creation_factory = runtime::factory<nascent_semantics_test>;
+    using creation_factory = runtime::factory<nascent_semantics_test, nascent_behavioural_test>;
     using vessel = typename creation_factory::vessel;
 
     static decltype(auto) get_family(const vessel& v);
