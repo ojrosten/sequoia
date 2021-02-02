@@ -199,13 +199,15 @@ namespace sequoia::testing
     using nascent_test_base::nascent_test_base;
 
     [[nodiscard]]
-    auto create_file(std::string_view copyright, const std::filesystem::path& codeTemplatesDir, std::string_view partName, std::filesystem::copy_options options) const->file_data;
+    auto create_file(std::string_view copyright, const std::filesystem::path& codeTemplatesDir, std::string_view nameEnding, std::filesystem::copy_options options) const->file_data;
 
     [[nodiscard]]
     friend bool operator==(const nascent_behavioural_test&, const nascent_behavioural_test&) noexcept = default;
 
     [[nodiscard]]
     friend bool operator!=(const nascent_behavioural_test&, const nascent_behavioural_test&) noexcept = default;
+  private:
+    void transform_file(const std::filesystem::path& file, std::string_view copyright) const;
    };
 
   struct repositories

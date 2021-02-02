@@ -179,6 +179,25 @@ namespace sequoia::testing
     if(m_Header.empty()) m_Header = std::filesystem::path{std::string{m_CamelName}.append(".hpp")};
   }
 
+  template<invocable<std::filesystem::path> FileTransformer>
+  [[nodiscard]]
+  auto nascent_test_base::create_file(const std::filesystem::path& codeTemplatesDir, std::string_view inputNameStub, std::string_view nameEnding, const std::filesystem::copy_options options, FileTransformer transformer) const -> file_data
+  {
+    namespace fs = std::filesystem;
+
+    const auto outputFile{(host_dir() / camel_name()) += nameEnding};
+
+    if(((options & fs::copy_options::skip_existing) == fs::copy_options::skip_existing) && fs::exists(outputFile))
+    {
+      return {outputFile, false};
+    }
+
+    const auto inputFile{(codeTemplatesDir / inputNameStub).concat(nameEnding)};
+    testing::create_file(inputFile, outputFile, transformer);
+
+    return {outputFile, true};
+  }
+
   void nascent_semantics_test::finalize()
   {
     constexpr auto npos{std::string::npos};
@@ -225,25 +244,6 @@ namespace sequoia::testing
     }
 
     nascent_test_base::finalize();
-  }
-
-  template<invocable<std::filesystem::path> FileTransformer>
-  [[nodiscard]]
-  auto nascent_test_base::create_file(const std::filesystem::path& codeTemplatesDir, std::string_view inputNameStub, std::string_view nameEnding, const std::filesystem::copy_options options, FileTransformer transformer) const -> file_data
-  {
-    namespace fs = std::filesystem;
-    
-    const auto outputFile{(host_dir() / camel_name()) += nameEnding};
-
-    if(((options & fs::copy_options::skip_existing) == fs::copy_options::skip_existing) && fs::exists(outputFile))
-    {
-      return {outputFile, false};
-    }
-
-    const auto inputFile{(codeTemplatesDir / inputNameStub).concat(nameEnding)};
-    testing::create_file(inputFile, outputFile, transformer);
-
-    return {outputFile, true};
   }
   
   [[nodiscard]]
@@ -337,10 +337,32 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  auto nascent_behavioural_test::create_file(std::string_view copyright, const std::filesystem::path& codeTemplatesDir, std::string_view partName, const std::filesystem::copy_options options) const -> file_data
+  auto nascent_behavioural_test::create_file(std::string_view copyright, const std::filesystem::path& codeTemplatesDir, std::string_view nameEnding, const std::filesystem::copy_options options) const -> file_data
   {
-    // TO DO
-    return {};
+    auto transformer{[this, copyright](const std::filesystem::path& file) { transform_file(file, copyright); }};
+    return nascent_test_base::create_file(codeTemplatesDir, "MyBehavioural", nameEnding, options, transformer);
+  }
+
+  void nascent_behavioural_test::transform_file(const std::filesystem::path& file, std::string_view copyright) const
+  {
+    std::string text{read_to_string(file)};
+    if(text.empty()) return;
+
+    set_top_copyright(text, copyright);
+
+    const auto testTypeRelacement{std::string{test_type()} + "_"};
+    replace_all(text, {{"?_behavioural", std::string{forename()}},
+                       {"?_", testTypeRelacement},
+                       {"?Behavioural", camel_name()}});
+
+    if(std::ofstream ofile{file})
+    {
+      ofile << text;
+    }
+    else
+    {
+      throw std::runtime_error{report_failed_write(file)};
+    }
   }
 
   //=========================================== test_runner ===========================================//
