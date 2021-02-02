@@ -664,8 +664,9 @@ namespace sequoia::testing
   }
 
   template<class Iter, class Fn>
+    requires invocable<Fn, test_runner::vessel, std::string_view>
   [[nodiscard]]
-  std::string test_runner::process_nascent_semantics_tests(Iter beginNascentTests, Iter endNascentTests, Fn fn) const
+  std::string test_runner::process_semantics_tests(Iter beginNascentTests, Iter endNascentTests, Fn fn) const
   {
     if(std::distance(beginNascentTests, endNascentTests))
     {
@@ -723,7 +724,7 @@ namespace sequoia::testing
       }
     };
     
-    return process_nascent_semantics_tests(beginNascentTests, endNascentTests, action);
+    return process_semantics_tests(beginNascentTests, endNascentTests, action);
   }
 
   void test_runner::report(std::string_view prefix, std::string_view message)
