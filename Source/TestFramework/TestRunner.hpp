@@ -176,12 +176,23 @@ namespace sequoia::testing
 
     [[nodiscard]]
     auto create_file(std::string_view copyright, const std::filesystem::path& codeTemplatesDir, std::string_view nameEnding, std::filesystem::copy_options options) const -> file_data;
+    
+    [[nodiscard]]
+    std::vector<std::string> family_tests() const;
 
     [[nodiscard]]
     friend bool operator==(const nascent_semantics_test&, const nascent_semantics_test&) noexcept = default;
 
     [[nodiscard]]
     friend bool operator!=(const nascent_semantics_test&, const nascent_semantics_test&) noexcept = default;
+    constexpr static std::array<std::string_view, 5> stubs() noexcept
+    {
+      return {"TestingUtilities.hpp",
+              "TestingDiagnostics.hpp",
+              "TestingDiagnostics.cpp",
+              "Test.hpp",
+              "Test.cpp"};
+    };
   private:
 
     std::string m_QualifiedName{};
@@ -202,10 +213,19 @@ namespace sequoia::testing
     auto create_file(std::string_view copyright, const std::filesystem::path& codeTemplatesDir, std::string_view nameEnding, std::filesystem::copy_options options) const->file_data;
 
     [[nodiscard]]
+    std::vector<std::string> family_tests() const;
+
+    [[nodiscard]]
     friend bool operator==(const nascent_behavioural_test&, const nascent_behavioural_test&) noexcept = default;
 
     [[nodiscard]]
     friend bool operator!=(const nascent_behavioural_test&, const nascent_behavioural_test&) noexcept = default;
+
+    constexpr static std::array<std::string_view, 2> stubs() noexcept
+    {
+      return {"Test.hpp",
+              "Test.cpp"};
+    };
   private:
     void transform_file(const std::filesystem::path& file, std::string_view copyright) const;
    };
@@ -309,10 +329,6 @@ namespace sequoia::testing
     using creation_factory = runtime::factory<nascent_semantics_test, nascent_behavioural_test>;
     using vessel = typename creation_factory::vessel;
 
-    static decltype(auto) get_family(const vessel& v);
-    static decltype(auto) get_forename(const vessel& v);
-
-
     std::vector<test_family> m_Families{};
     family_map m_SelectedFamilies{};
     source_map m_SelectedSources{};
@@ -333,14 +349,6 @@ namespace sequoia::testing
     concurrency_mode m_ConcurrencyMode{concurrency_mode::serial};
     
     bool mark_family(std::string_view name);
-
-    constexpr static std::array<std::string_view, 5> st_TestNameStubs {
-      "TestingUtilities.hpp",
-      "TestingDiagnostics.hpp",
-      "TestingDiagnostics.cpp",
-      "Test.hpp",
-      "Test.cpp"
-    };
 
     void process_args(int argc, char** argv);
 

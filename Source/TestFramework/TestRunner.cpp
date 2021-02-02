@@ -252,6 +252,13 @@ namespace sequoia::testing
     auto transformer{[this, copyright](const std::filesystem::path& file) { transform_file(file, copyright); }};
     return nascent_test_base::create_file(codeTemplatesDir, "MyClass", nameEnding, options, transformer);
   }
+    
+  [[nodiscard]]
+  std::vector<std::string> nascent_semantics_test::family_tests() const
+  {
+    return { {std::string{forename()}.append("_false_positive_test(\"False Positive Test\")")},
+             {std::string{forename()}.append("_test(\"Unit Test\")")} };
+  }
 
   void nascent_semantics_test::transform_file(const std::filesystem::path& file, std::string_view copyright) const
   {
@@ -343,6 +350,12 @@ namespace sequoia::testing
     return nascent_test_base::create_file(codeTemplatesDir, "MyBehavioural", nameEnding, options, transformer);
   }
 
+  [[nodiscard]]
+  std::vector<std::string> nascent_behavioural_test::family_tests() const
+  {
+    return { {std::string{forename()}.append("_test(\"").append(to_camel_case(std::string{test_type()})).append(" Test\")")} };
+  }
+
   void nascent_behavioural_test::transform_file(const std::filesystem::path& file, std::string_view copyright) const
   {
     std::string text{read_to_string(file)};
@@ -389,16 +402,6 @@ namespace sequoia::testing
         nascent);
 
     nascentTests.emplace_back(std::move(nascent));
-  }
-
-  decltype(auto) test_runner::get_family(const vessel& v)
-  {
-    return std::visit(variant_visitor{[](const auto& nascent){ return nascent.family(); }}, v);
-  }
-
-  decltype(auto) test_runner::get_forename(const vessel& v)
-  {
-    return std::visit(variant_visitor{[](const auto& nascent){ return nascent.forename(); }}, v);
   }
 
   test_runner::test_runner(int argc, char** argv, std::string_view copyright, std::filesystem::path testMain, std::filesystem::path hashIncludeTarget, repositories repos, std::ostream& stream)
@@ -674,15 +677,19 @@ namespace sequoia::testing
       while(beginNascentTests != endNascentTests)
       {
         const auto& nascentVessel{*beginNascentTests};
-        for(const auto& stub : st_TestNameStubs)
-        {
-          append_lines(mess, fn(nascentVessel, stub));
-        }
+        variant_visitor visitor{
+                                // TO DO: sort out this minor mess!
+          [&mess,&nascentVessel,fn,this](const auto& nascent){
+            for(const auto& stub : nascent.stubs())
+            {
+              append_lines(mess, fn(nascentVessel, stub));
+            }
 
-        add_to_family(m_TestMain, get_family(nascentVessel),
-                      { {std::string{get_forename(nascentVessel)}.append("_false_positive_test(\"False Positive Test\")")},
-                        {std::string{get_forename(nascentVessel)}.append("_test(\"Unit Test\")")}
-                      });
+            add_to_family(m_TestMain, nascent.family(), nascent.family_tests());
+          }
+        };
+
+        std::visit(visitor, nascentVessel);
 
         ++beginNascentTests;
       }
