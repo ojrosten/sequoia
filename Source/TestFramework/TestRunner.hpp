@@ -128,6 +128,16 @@ namespace sequoia::testing
     void forename(std::string name) { m_Forename = std::move(name); }
 
     std::string_view camel_name() const noexcept { return m_CamelName; }
+
+    struct file_data
+    {
+      std::filesystem::path output_file{};
+      bool created{};
+    };
+
+    template<invocable<std::filesystem::path> FileTransformer>
+    [[nodiscard]]
+    auto create_file(const std::filesystem::path& codeTemplatesDir, std::string_view inputNameStub, std::string_view nameEnding, std::filesystem::copy_options options, FileTransformer transformer) const -> file_data;
   private:
     std::string m_Family{}, m_TestType{}, m_Forename{}, m_CamelName{};
 
@@ -148,7 +158,7 @@ namespace sequoia::testing
     void finalize();
 
     [[nodiscard]]
-    std::filesystem::path create_file(std::string_view copyright, const std::filesystem::path& codeTemplatesDir, std::string_view partName, std::filesystem::copy_options options) const;
+    auto create_file(std::string_view copyright, const std::filesystem::path& codeTemplatesDir, std::string_view nameEnding, std::filesystem::copy_options options) const -> file_data;
 
   private:
 
@@ -167,7 +177,7 @@ namespace sequoia::testing
     using nascent_test_base::nascent_test_base;
 
     [[nodiscard]]
-    std::filesystem::path create_file(std::string_view copyright, const std::filesystem::path& codeTemplatesDir, std::string_view partName, std::filesystem::copy_options options) const;
+    auto create_file(std::string_view copyright, const std::filesystem::path& codeTemplatesDir, std::string_view partName, std::filesystem::copy_options options) const -> file_data;
   };
 
   struct repositories

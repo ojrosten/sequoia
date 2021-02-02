@@ -227,26 +227,30 @@ namespace sequoia::testing
     nascent_test_base::finalize();
   }
 
+  template<invocable<std::filesystem::path> FileTransformer>
   [[nodiscard]]
-  std::filesystem::path nascent_semantics_test::create_file(std::string_view copyright, const std::filesystem::path& codeTemplatesDir, std::string_view partName, const std::filesystem::copy_options options) const
+  auto nascent_test_base::create_file(const std::filesystem::path& codeTemplatesDir, std::string_view inputNameStub, std::string_view nameEnding, const std::filesystem::copy_options options, FileTransformer transformer) const -> file_data
   {
     namespace fs = std::filesystem;
     
-    const auto outputFile{(host_dir() / camel_name()) += partName};
+    const auto outputFile{(host_dir() / camel_name()) += nameEnding};
 
     if(((options & fs::copy_options::skip_existing) == fs::copy_options::skip_existing) && fs::exists(outputFile))
     {
-      return warning(outputFile.string()).append(" already exists, so not created\n");
+      return {outputFile, false};
     }
 
-    auto makePath{
-      [dir{codeTemplatesDir},partName](){
-        return (dir/"MyClass").concat(partName);
-      }
-    };
+    const auto inputFile{(codeTemplatesDir / inputNameStub).concat(nameEnding)};
+    testing::create_file(inputFile, outputFile, transformer);
 
-    testing::create_file(makePath(), outputFile, [this, copyright](const fs::path& file) { transform_file(file, copyright); });
-    return outputFile;
+    return {outputFile, true};
+  }
+  
+  [[nodiscard]]
+  auto nascent_semantics_test::create_file(std::string_view copyright, const std::filesystem::path& codeTemplatesDir, std::string_view nameEnding, const std::filesystem::copy_options options) const -> file_data
+  {
+    auto transformer{[this, copyright](const std::filesystem::path& file) { transform_file(file, copyright); }};
+    return nascent_test_base::create_file(codeTemplatesDir, "MyClass", nameEnding, options, transformer);
   }
 
   void nascent_semantics_test::transform_file(const std::filesystem::path& file, std::string_view copyright) const
@@ -333,8 +337,9 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path nascent_behavioural_test::create_file(std::string_view copyright, const std::filesystem::path& codeTemplatesDir, std::string_view partName, const std::filesystem::copy_options options) const
+  auto nascent_behavioural_test::create_file(std::string_view copyright, const std::filesystem::path& codeTemplatesDir, std::string_view partName, const std::filesystem::copy_options options) const -> file_data
   {
+    // TO DO
     return {};
   }
 
@@ -675,15 +680,24 @@ namespace sequoia::testing
         auto visitor{variant_visitor{[=](const auto& nascent){
                                        return nascent.create_file(copyright, code_templates_path(root), stub, options); }}};
 
-        const auto filePath{std::visit(visitor, nascentVessel)};
+        const auto[outputFile, created]{std::visit(visitor, nascentVessel)};
 
-        if(const auto filename{filePath.filename()};
-           (filename.extension() == ".hpp") && (filename.string().find("Utilities") == std::string::npos))
+        if(created)
         {
-          add_include(target, filename.string());
+          if(const auto filename{outputFile.filename()}; outputFile.extension() == ".hpp")
+          {
+            if(const auto str{outputFile.string()}; str.find("Utilities.hpp") == std::string::npos)
+            {
+              add_include(target, filename.string());
+            }
+          }
+          
+          return std::string{"\""}.append(outputFile.generic_string()).append("\"");
         }
-        
-        return std::string{"\""}.append(filePath.generic_string()).append("\"");
+        else
+        {
+          return warning(outputFile.generic_string()).append(" already exists, so not created\n");
+        }
       }
     };
     
