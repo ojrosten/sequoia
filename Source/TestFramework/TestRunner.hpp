@@ -54,11 +54,23 @@ namespace sequoia::testing
 
     [[nodiscard]]
     std::filesystem::path get([[maybe_unused]] const std::filesystem::path& filename) const;
+
+    [[nodiscard]]
+    friend bool operator==(const host_directory&, const host_directory&) noexcept = default;
+
+    [[nodiscard]]
+    friend bool operator!=(const host_directory&, const host_directory&) noexcept = default;
   private:
     struct generator
     {
       std::filesystem::path hostRepo;
       search_tree sourceRepo;
+
+      [[nodiscard]]
+      friend bool operator==(const generator&, const generator&) noexcept = default;
+
+      [[nodiscard]]
+      friend bool operator!=(const generator&, const generator&) noexcept = default;
     };
 
     std::variant<std::filesystem::path, generator> m_Data;
@@ -88,7 +100,7 @@ namespace sequoia::testing
 
   class nascent_test_base
   {
-  public:    
+  public:
     nascent_test_base(std::filesystem::path testRepo, search_tree sourceTree)
       : m_HostDirectory{std::move(testRepo), std::move(sourceTree)}
     {}
@@ -115,7 +127,12 @@ namespace sequoia::testing
 
     [[nodiscard]]
     std::string_view forename() const noexcept { return m_Forename; }
-    
+    [[nodiscard]]
+    friend bool operator==(const nascent_test_base&, const nascent_test_base&) noexcept = default;
+
+    [[nodiscard]]
+    friend bool operator!=(const nascent_test_base&, const nascent_test_base&) noexcept = default;
+
     void finalize();
   protected:
     nascent_test_base(const nascent_test_base&)     = default;
@@ -160,6 +177,11 @@ namespace sequoia::testing
     [[nodiscard]]
     auto create_file(std::string_view copyright, const std::filesystem::path& codeTemplatesDir, std::string_view nameEnding, std::filesystem::copy_options options) const -> file_data;
 
+    [[nodiscard]]
+    friend bool operator==(const nascent_semantics_test&, const nascent_semantics_test&) noexcept = default;
+
+    [[nodiscard]]
+    friend bool operator!=(const nascent_semantics_test&, const nascent_semantics_test&) noexcept = default;
   private:
 
     std::string m_QualifiedName{};
@@ -177,8 +199,14 @@ namespace sequoia::testing
     using nascent_test_base::nascent_test_base;
 
     [[nodiscard]]
-    auto create_file(std::string_view copyright, const std::filesystem::path& codeTemplatesDir, std::string_view partName, std::filesystem::copy_options options) const -> file_data;
-  };
+    auto create_file(std::string_view copyright, const std::filesystem::path& codeTemplatesDir, std::string_view partName, std::filesystem::copy_options options) const->file_data;
+
+    [[nodiscard]]
+    friend bool operator==(const nascent_behavioural_test&, const nascent_behavioural_test&) noexcept = default;
+
+    [[nodiscard]]
+    friend bool operator!=(const nascent_behavioural_test&, const nascent_behavioural_test&) noexcept = default;
+   };
 
   struct repositories
   {

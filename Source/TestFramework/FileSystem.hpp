@@ -124,7 +124,13 @@ namespace sequoia::testing
       }
 
       return {};
-    }    
+    }
+
+    [[nodiscard]]
+    friend bool operator==(const search_tree&, const search_tree&) noexcept = default;
+
+    [[nodiscard]]
+    friend bool operator!=(const search_tree&, const search_tree&) noexcept = default;
   private:
     std::filesystem::path m_Root{};
   };
