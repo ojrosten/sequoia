@@ -198,7 +198,7 @@ namespace sequoia::testing
     return {outputFile, true};
   }
 
-  void nascent_semantics_test::finalize()
+  void nascent_semantics_test_base::finalize()
   {
     constexpr auto npos{std::string::npos};
 
@@ -247,20 +247,20 @@ namespace sequoia::testing
   }
   
   [[nodiscard]]
-  auto nascent_semantics_test::create_file(std::string_view copyright, const std::filesystem::path& codeTemplatesDir, std::string_view nameEnding, const std::filesystem::copy_options options) const -> file_data
+  auto nascent_semantics_test_base::create_file(std::string_view copyright, const std::filesystem::path& codeTemplatesDir, std::string_view nameEnding, const std::filesystem::copy_options options) const -> file_data
   {
     auto transformer{[this, copyright](const std::filesystem::path& file) { transform_file(file, copyright); }};
     return nascent_test_base::create_file(codeTemplatesDir, "MyClass", nameEnding, options, transformer);
   }
     
   [[nodiscard]]
-  std::vector<std::string> nascent_semantics_test::family_tests() const
+  std::vector<std::string> nascent_semantics_test_base::translation_units() const
   {
     return { {std::string{forename()}.append("_false_positive_test(\"False Positive Test\")")},
              {std::string{forename()}.append("_test(\"Unit Test\")")} };
   }
 
-  void nascent_semantics_test::transform_file(const std::filesystem::path& file, std::string_view copyright) const
+  void nascent_semantics_test_base::transform_file(const std::filesystem::path& file, std::string_view copyright) const
   {
     std::string text{read_to_string(file)};
 
@@ -350,7 +350,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::vector<std::string> nascent_behavioural_test::family_tests() const
+  std::vector<std::string> nascent_behavioural_test::translation_units() const
   {
     return { {std::string{forename()}.append("_test(\"").append(to_camel_case(std::string{test_type()})).append(" Test\")")} };
   }
@@ -678,7 +678,7 @@ namespace sequoia::testing
             append_lines(mess, create_file(nascent, stub, options));
           }
           
-          add_to_family(m_TestMain, nascent.family(), nascent.family_tests());
+          add_to_family(m_TestMain, nascent.family(), nascent.translation_units());
         }
       };
 

@@ -77,14 +77,14 @@ namespace sequoia::testing
   };
 
   struct template_spec
-  {
+  {    
+    std::string species, symbol;
+    
     [[nodiscard]]
     friend bool operator==(const template_spec&, const template_spec&) noexcept = default;
 
     [[nodiscard]]
     friend bool operator!=(const template_spec&, const template_spec&) noexcept = default;
-    
-    std::string species, symbol;
   };
 
 
@@ -163,11 +163,9 @@ namespace sequoia::testing
     std::filesystem::path m_Header{};
   };
 
-  class nascent_semantics_test : public nascent_test_base
+  class nascent_semantics_test_base : public nascent_test_base
   {
   public:
-    using nascent_test_base::nascent_test_base;
-
     void qualified_name(std::string name) { m_QualifiedName = std::move(name); }
 
     void add_equivalent_type(std::string name) { m_EquivalentTypes.emplace_back(std::move(name)); }
@@ -178,21 +176,16 @@ namespace sequoia::testing
     auto create_file(std::string_view copyright, const std::filesystem::path& codeTemplatesDir, std::string_view nameEnding, std::filesystem::copy_options options) const -> file_data;
     
     [[nodiscard]]
-    std::vector<std::string> family_tests() const;
+    std::vector<std::string> translation_units() const;
 
     [[nodiscard]]
-    friend bool operator==(const nascent_semantics_test&, const nascent_semantics_test&) noexcept = default;
+    friend bool operator==(const nascent_semantics_test_base&, const nascent_semantics_test_base&) noexcept = default;
 
     [[nodiscard]]
-    friend bool operator!=(const nascent_semantics_test&, const nascent_semantics_test&) noexcept = default;
-    constexpr static std::array<std::string_view, 5> stubs() noexcept
-    {
-      return {"TestingUtilities.hpp",
-              "TestingDiagnostics.hpp",
-              "TestingDiagnostics.cpp",
-              "Test.hpp",
-              "Test.cpp"};
-    };
+    friend bool operator!=(const nascent_semantics_test_base&, const nascent_semantics_test_base&) noexcept = default;
+  protected:
+    using nascent_test_base::nascent_test_base;
+
   private:
 
     std::string m_QualifiedName{};
@@ -204,6 +197,21 @@ namespace sequoia::testing
     void transform_file(const std::filesystem::path& file, std::string_view copyright) const;
   };
 
+  class nascent_semantics_test : public nascent_semantics_test_base
+  {
+  public:
+    using nascent_semantics_test_base::nascent_semantics_test_base;
+
+    constexpr static std::array<std::string_view, 5> stubs() noexcept
+    {
+      return {"TestingUtilities.hpp",
+              "TestingDiagnostics.hpp",
+              "TestingDiagnostics.cpp",
+              "Test.hpp",
+              "Test.cpp"};
+    };
+  };
+
   class nascent_behavioural_test : public nascent_test_base
   {
   public:
@@ -213,7 +221,7 @@ namespace sequoia::testing
     auto create_file(std::string_view copyright, const std::filesystem::path& codeTemplatesDir, std::string_view nameEnding, std::filesystem::copy_options options) const->file_data;
 
     [[nodiscard]]
-    std::vector<std::string> family_tests() const;
+    std::vector<std::string> translation_units() const;
 
     [[nodiscard]]
     friend bool operator==(const nascent_behavioural_test&, const nascent_behavioural_test&) noexcept = default;
