@@ -165,7 +165,7 @@ namespace sequoia::testing
     }
   }
 
-  //=========================================== nascent_semantics_test ===========================================//
+  //=========================================== nascent_test_base ===========================================//
 
   void nascent_test_base::finalize()
   {
@@ -198,7 +198,9 @@ namespace sequoia::testing
     return {outputFile, true};
   }
 
-  void nascent_semantics_test_base::finalize()
+  //=========================================== nascent_semantics_test ===========================================//
+
+  void nascent_semantics_test::finalize()
   {
     constexpr auto npos{std::string::npos};
 
@@ -247,20 +249,20 @@ namespace sequoia::testing
   }
   
   [[nodiscard]]
-  auto nascent_semantics_test_base::create_file(std::string_view copyright, const std::filesystem::path& codeTemplatesDir, std::string_view nameEnding, const std::filesystem::copy_options options) const -> file_data
+  auto nascent_semantics_test::create_file(std::string_view copyright, const std::filesystem::path& codeTemplatesDir, std::string_view nameEnding, const std::filesystem::copy_options options) const -> file_data
   {
     auto transformer{[this, copyright](const std::filesystem::path& file) { transform_file(file, copyright); }};
     return nascent_test_base::create_file(codeTemplatesDir, "MyClass", nameEnding, options, transformer);
   }
     
   [[nodiscard]]
-  std::vector<std::string> nascent_semantics_test_base::translation_units() const
+  std::vector<std::string> nascent_semantics_test::translation_units() const
   {
     return { {std::string{forename()}.append("_false_positive_test(\"False Positive Test\")")},
              {std::string{forename()}.append("_test(\"Unit Test\")")} };
   }
 
-  void nascent_semantics_test_base::transform_file(const std::filesystem::path& file, std::string_view copyright) const
+  void nascent_semantics_test::transform_file(const std::filesystem::path& file, std::string_view copyright) const
   {
     std::string text{read_to_string(file)};
 
@@ -342,6 +344,8 @@ namespace sequoia::testing
     }
   }
 
+  //=========================================== nascent_behavioural_test ===========================================//
+
   [[nodiscard]]
   auto nascent_behavioural_test::create_file(std::string_view copyright, const std::filesystem::path& codeTemplatesDir, std::string_view nameEnding, const std::filesystem::copy_options options) const -> file_data
   {
@@ -362,10 +366,45 @@ namespace sequoia::testing
 
     set_top_copyright(text, copyright);
 
-    const auto testTypeRelacement{std::string{test_type()} + "_"};
     replace_all(text, {{"?_behavioural", forename()},
-                       {"?_", testTypeRelacement},
-                       {"?Behavioural", camel_name()}});
+                       {"?Behavioural", camel_name()},
+                       {"?", test_type()}});
+
+    if(std::ofstream ofile{file})
+    {
+      ofile << text;
+    }
+    else
+    {
+      throw std::runtime_error{report_failed_write(file)};
+    }
+  }
+
+  //=========================================== nascent_allocation_test ===========================================//
+
+  [[nodiscard]]
+  auto nascent_allocation_test::create_file(std::string_view copyright, const std::filesystem::path& codeTemplatesDir, std::string_view nameEnding, const std::filesystem::copy_options options) const -> file_data
+  {
+    auto transformer{[this, copyright](const std::filesystem::path& file) { transform_file(file, copyright); }};
+    return nascent_test_base::create_file(codeTemplatesDir, "MyBehavioural", nameEnding, options, transformer);
+  }
+
+  [[nodiscard]]
+  std::vector<std::string> nascent_allocation_test::translation_units() const
+  {
+    return { {std::string{forename()}.append("_test(\"").append(to_camel_case(std::string{test_type()})).append(" Test\")")} };
+  }
+
+  void nascent_allocation_test::transform_file(const std::filesystem::path& file, std::string_view copyright) const
+  {
+    std::string text{read_to_string(file)};
+    if(text.empty()) return;
+
+    set_top_copyright(text, copyright);
+
+    replace_all(text, {{"?_class", forename()},
+                       {"?Class", camel_name()},
+                       {"?", test_type()}});
 
     if(std::ofstream ofile{file})
     {
@@ -383,7 +422,7 @@ namespace sequoia::testing
   {
     auto& nascentTests{runner.m_NascentTests};
 
-    static creation_factory factory{{"semantic"}, runner.m_TestRepo, runner.m_SourceSearchTree};
+    static creation_factory factory{{"semantic", "allocation", "behavioural"}, runner.m_TestRepo, runner.m_SourceSearchTree};
     auto nascent{factory.create(genus)};
 
     std::visit(
@@ -392,6 +431,10 @@ namespace sequoia::testing
             nascent.test_type(species);
             nascent.qualified_name(args[0]);
             nascent.add_equivalent_type(args[1]);
+          },
+          [&args,&species{species}](nascent_allocation_test& nascent){
+            nascent.test_type(species);
+            nascent.forename(args[0]);
           },
           [&args,&species{species}](nascent_behavioural_test& nascent){
             nascent.test_type(species);
@@ -428,7 +471,7 @@ namespace sequoia::testing
 
   void test_runner::process_args(int argc, char** argv)
   {
-    option hostOption{"--host-directory", {"-h"}, {"host_directory"},
+    const option hostOption{"--host-directory", {"-h"}, {"host_directory"},
         [this](const param_list& args){
           if(m_NascentTests.empty())
             throw std::logic_error{"Unable to find nascent test"};
@@ -437,7 +480,7 @@ namespace sequoia::testing
         } 
     };
 
-    option familyOption{"--family", {"-f"}, {"family"},
+    const option familyOption{"--family", {"-f"}, {"family"},
         [this](const param_list& args){
           if(m_NascentTests.empty())
             throw std::logic_error{"Unable to find nascent test"};
@@ -446,8 +489,7 @@ namespace sequoia::testing
         }
     };
 
-    const std::vector<option> createOptions{
-      {"--equivalent-type", {"-e"}, {"equivalent_type"},
+    const option equivOption{"--equivalent-type", {"-e"}, {"equivalent_type"},
         [this](const param_list& args){
           if(m_NascentTests.empty())
             throw std::logic_error{"Unable to find nascent test"};
@@ -455,24 +497,26 @@ namespace sequoia::testing
           auto visitor{
             variant_visitor{
               [&args](nascent_semantics_test& nascent){ nascent.add_equivalent_type(args[0]); },
-              [](nascent_behavioural_test&){}
+              [](auto&){}
             }
           };
 
           std::visit(visitor, m_NascentTests.back());
-        }
-      },
-      hostOption,
-      familyOption,
-      {"--class-header", {"-ch"}, {"class_header"},
+        }                       
+    };
+
+    const option headerOption{"--class-header", {"-ch"}, {"class_header"},
         [this](const param_list& args){
           if(m_NascentTests.empty())
             throw std::logic_error{"Unable to find nascent test"};
 
           std::visit(variant_visitor{[&args](auto& nascent){ nascent.header(args[0]);}}, m_NascentTests.back());
-        }
-      }                                         
+        }                              
     };
+
+    const std::vector<option> semanticsOptions{equivOption, hostOption, familyOption, headerOption};
+
+    const std::vector<option> allocationOptions{hostOption, familyOption, headerOption};
     
     const auto help{
       parse_invoke_depth_first(argc, argv,
@@ -484,10 +528,16 @@ namespace sequoia::testing
                   },
                   {"create", {"c"}, {}, [](const param_list&) {},
                    { {"regular_test", {"regular"}, {"qualified::class_name<class T>", "equivalent_type"},
-                      test_creator{"semantic", "regular", *this}, createOptions
+                      test_creator{"semantic", "regular", *this}, semanticsOptions
                      },
                      {"move_only_test", {"move_only"}, {"qualified::class_name<class T>", "equivalent_type"},
-                      test_creator{"semantic", "move_only", *this}, createOptions
+                      test_creator{"semantic", "move_only", *this}, semanticsOptions
+                     },
+                     {"regular_allocation_test", {"regular_allocation"}, {"raw_class_name"},
+                      test_creator{"allocation", "regular_allocation", *this}, allocationOptions
+                     },
+                     {"move_only_allocation_test", {"move_only_allocation"}, {"raw_class_name"},
+                      test_creator{"allocation", "move_only_allocation", *this}, allocationOptions
                      },
                      {"free_test", {"free"}, {"header"},
                        test_creator{"behavioural", "free", *this}, {hostOption, familyOption}

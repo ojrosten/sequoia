@@ -127,6 +127,9 @@ namespace sequoia::testing
 
     [[nodiscard]]
     const std::string& forename() const noexcept { return m_Forename; }
+
+    void forename(std::string name) { m_Forename = std::move(name); }
+
     [[nodiscard]]
     friend bool operator==(const nascent_test_base&, const nascent_test_base&) noexcept = default;
 
@@ -141,8 +144,6 @@ namespace sequoia::testing
     nascent_test_base& operator=(nascent_test_base&&) noexcept = default;
 
     ~nascent_test_base() = default;
-   
-    void forename(std::string name) { m_Forename = std::move(name); }
 
     const std::string& camel_name() const noexcept { return m_CamelName; }
 
@@ -163,9 +164,11 @@ namespace sequoia::testing
     std::filesystem::path m_Header{};
   };
 
-  class nascent_semantics_test_base : public nascent_test_base
+  class nascent_semantics_test : public nascent_test_base
   {
-  public:
+  public:    
+    using nascent_test_base::nascent_test_base;
+
     void qualified_name(std::string name) { m_QualifiedName = std::move(name); }
 
     void add_equivalent_type(std::string name) { m_EquivalentTypes.emplace_back(std::move(name)); }
@@ -179,13 +182,19 @@ namespace sequoia::testing
     std::vector<std::string> translation_units() const;
 
     [[nodiscard]]
-    friend bool operator==(const nascent_semantics_test_base&, const nascent_semantics_test_base&) noexcept = default;
+    friend bool operator==(const nascent_semantics_test&, const nascent_semantics_test&) noexcept = default;
 
     [[nodiscard]]
-    friend bool operator!=(const nascent_semantics_test_base&, const nascent_semantics_test_base&) noexcept = default;
-  protected:
-    using nascent_test_base::nascent_test_base;
-
+    friend bool operator!=(const nascent_semantics_test&, const nascent_semantics_test&) noexcept = default;
+    
+    constexpr static std::array<std::string_view, 5> stubs() noexcept
+    {
+      return {"TestingUtilities.hpp",
+              "TestingDiagnostics.hpp",
+              "TestingDiagnostics.cpp",
+              "Test.hpp",
+              "Test.cpp"};
+    };
   private:
 
     std::string m_QualifiedName{};
@@ -197,20 +206,25 @@ namespace sequoia::testing
     void transform_file(const std::filesystem::path& file, std::string_view copyright) const;
   };
 
-  class nascent_semantics_test : public nascent_semantics_test_base
+  class nascent_allocation_test : public nascent_test_base
   {
   public:
-    using nascent_semantics_test_base::nascent_semantics_test_base;
+    using nascent_test_base::nascent_test_base;
 
-    constexpr static std::array<std::string_view, 5> stubs() noexcept
+    constexpr static std::array<std::string_view, 2> stubs() noexcept
     {
-      return {"TestingUtilities.hpp",
-              "TestingDiagnostics.hpp",
-              "TestingDiagnostics.cpp",
-              "Test.hpp",
-              "Test.cpp"};
+      return {"AllocationTest.hpp",
+              "AllocationTest.cpp"};
     };
-  };
+
+    [[nodiscard]]
+    auto create_file(std::string_view copyright, const std::filesystem::path& codeTemplatesDir, std::string_view nameEnding, std::filesystem::copy_options options) const -> file_data;
+    
+    [[nodiscard]]
+    std::vector<std::string> translation_units() const;
+  private:
+    void transform_file(const std::filesystem::path& file, std::string_view copyright) const;
+  }; 
 
   class nascent_behavioural_test : public nascent_test_base
   {
@@ -334,7 +348,8 @@ namespace sequoia::testing
       std::filesystem::path location;
     };
 
-    using creation_factory = runtime::factory<nascent_semantics_test, nascent_behavioural_test>;
+    using creation_factory
+      = runtime::factory<nascent_semantics_test, nascent_allocation_test, nascent_behavioural_test>;
     using vessel = typename creation_factory::vessel;
 
     std::vector<test_family> m_Families{};
