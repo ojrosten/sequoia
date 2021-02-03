@@ -386,7 +386,6 @@ namespace sequoia::testing
     static std::string stringify(concurrency_mode mode);
 
     template<class Iter, class Fn>
-      requires invocable<Fn, vessel, std::string_view>
     [[nodiscard]]
     std::string process_semantics_tests(Iter beginNascentTests, Iter endNascentTests, Fn fn) const;
 

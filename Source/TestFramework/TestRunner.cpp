@@ -667,7 +667,6 @@ namespace sequoia::testing
   }
 
   template<class Iter, class Fn>
-    requires invocable<Fn, test_runner::vessel, std::string_view>
   [[nodiscard]]
   std::string test_runner::process_semantics_tests(Iter beginNascentTests, Iter endNascentTests, Fn fn) const
   {
@@ -678,11 +677,10 @@ namespace sequoia::testing
       {
         const auto& nascentVessel{*beginNascentTests};
         variant_visitor visitor{
-                                // TO DO: sort out this minor mess!
-          [&mess,&nascentVessel,fn,this](const auto& nascent){
+          [&mess,fn,this](const auto& nascent){
             for(const auto& stub : nascent.stubs())
             {
-              append_lines(mess, fn(nascentVessel, stub));
+              append_lines(mess, fn(nascent, stub));
             }
 
             add_to_family(m_TestMain, nascent.family(), nascent.family_tests());
@@ -705,12 +703,9 @@ namespace sequoia::testing
   std::string test_runner::create_files(Iter beginNascentTests, Iter endNascentTests, const std::filesystem::copy_options options) const
   {
     auto action{
-      [options,&root{m_ProjectRoot},&copyright{m_Copyright},&target{m_HashIncludeTarget}](const vessel& nascentVessel, std::string_view stub){
+      [options,&root{m_ProjectRoot},&copyright{m_Copyright},&target{m_HashIncludeTarget}](const auto& nascent, std::string_view stub){
 
-        auto visitor{variant_visitor{[=](const auto& nascent){
-                                       return nascent.create_file(copyright, code_templates_path(root), stub, options); }}};
-
-        const auto[outputFile, created]{std::visit(visitor, nascentVessel)};
+        const auto[outputFile, created]{nascent.create_file(copyright, code_templates_path(root), stub, options)};
 
         if(created)
         {
