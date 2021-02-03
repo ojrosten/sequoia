@@ -694,9 +694,8 @@ namespace sequoia::testing
   std::string test_runner::create_files(const std::filesystem::copy_options options) const
   {
     auto action{
-      [options,&root{m_ProjectRoot},&copyright{m_Copyright},&target{m_HashIncludeTarget}](const auto& nascent, std::string_view stub){
-
-        const auto[outputFile, created]{nascent.create_file(copyright, code_templates_path(root), stub, options)};
+      [options,this](const auto& nascent, std::string_view stub){
+        const auto[outputFile, created]{nascent.create_file(m_Copyright, code_templates_path(m_ProjectRoot), stub, options)};
 
         if(created)
         {
@@ -704,7 +703,7 @@ namespace sequoia::testing
           {
             if(const auto str{outputFile.string()}; str.find("Utilities.hpp") == std::string::npos)
             {
-              add_include(target, filename.string());
+              add_include(m_HashIncludeTarget, filename.string());
             }
           }
           
