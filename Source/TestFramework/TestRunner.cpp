@@ -660,22 +660,21 @@ namespace sequoia::testing
 
     if(!mode(output_mode::help))
     {
-      report("Creating files...\n", create_files(m_NascentTests.cbegin(), m_NascentTests.cend(), fs::copy_options::skip_existing));
+      report("Creating files...\n", create_files(fs::copy_options::skip_existing));
 
       run_tests();
     }
   }
 
-  template<class Iter, class Fn>
+  template<class Fn>
   [[nodiscard]]
-  std::string test_runner::process_semantics_tests(Iter beginNascentTests, Iter endNascentTests, Fn fn) const
+  std::string test_runner::process_semantics_tests(Fn fn) const
   {
-    if(std::distance(beginNascentTests, endNascentTests))
+    if(!m_NascentTests.empty())
     {
       std::string mess{};
-      while(beginNascentTests != endNascentTests)
+      for(const auto& nascentVessel : m_NascentTests)
       {
-        const auto& nascentVessel{*beginNascentTests};
         variant_visitor visitor{
           [&mess,fn,this](const auto& nascent){
             for(const auto& stub : nascent.stubs())
@@ -688,8 +687,6 @@ namespace sequoia::testing
         };
 
         std::visit(visitor, nascentVessel);
-
-        ++beginNascentTests;
       }
 
       return mess;
@@ -698,9 +695,8 @@ namespace sequoia::testing
     return "";
   }
 
-  template<class Iter>
   [[nodiscard]]
-  std::string test_runner::create_files(Iter beginNascentTests, Iter endNascentTests, const std::filesystem::copy_options options) const
+  std::string test_runner::create_files(const std::filesystem::copy_options options) const
   {
     auto action{
       [options,&root{m_ProjectRoot},&copyright{m_Copyright},&target{m_HashIncludeTarget}](const auto& nascent, std::string_view stub){
@@ -726,7 +722,7 @@ namespace sequoia::testing
       }
     };
     
-    return process_semantics_tests(beginNascentTests, endNascentTests, action);
+    return process_semantics_tests(action);
   }
 
   void test_runner::report(std::string_view prefix, std::string_view message)
