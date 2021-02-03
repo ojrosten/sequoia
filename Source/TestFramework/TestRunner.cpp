@@ -670,29 +670,24 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string test_runner::process_semantics_tests(Fn fn) const
   {
-    if(!m_NascentTests.empty())
+    std::string mess{};
+    for(const auto& nascentVessel : m_NascentTests)
     {
-      std::string mess{};
-      for(const auto& nascentVessel : m_NascentTests)
-      {
-        variant_visitor visitor{
-          [&mess,fn,this](const auto& nascent){
-            for(const auto& stub : nascent.stubs())
-            {
-              append_lines(mess, fn(nascent, stub));
-            }
-
-            add_to_family(m_TestMain, nascent.family(), nascent.family_tests());
+      variant_visitor visitor{
+        [&mess,fn,this](const auto& nascent){
+          for(const auto& stub : nascent.stubs())
+          {
+            append_lines(mess, fn(nascent, stub));
           }
-        };
+          
+          add_to_family(m_TestMain, nascent.family(), nascent.family_tests());
+        }
+      };
 
-        std::visit(visitor, nascentVessel);
-      }
-
-      return mess;
+      std::visit(visitor, nascentVessel);
     }
 
-    return "";
+    return mess;
   }
 
   [[nodiscard]]
