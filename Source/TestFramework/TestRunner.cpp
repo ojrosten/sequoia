@@ -666,18 +666,17 @@ namespace sequoia::testing
     }
   }
 
-  template<class Fn>
   [[nodiscard]]
-  std::string test_runner::process_semantics_tests(Fn fn) const
+  std::string test_runner::create_files(std::filesystem::copy_options options) const
   {
     std::string mess{};
     for(const auto& nascentVessel : m_NascentTests)
     {
       variant_visitor visitor{
-        [&mess,fn,this](const auto& nascent){
+        [&mess,this,options](const auto& nascent){
           for(const auto& stub : nascent.stubs())
           {
-            append_lines(mess, fn(nascent, stub));
+            append_lines(mess, create_file(nascent, stub, options));
           }
           
           add_to_family(m_TestMain, nascent.family(), nascent.family_tests());
@@ -690,33 +689,28 @@ namespace sequoia::testing
     return mess;
   }
 
+  template<class Nascent>
   [[nodiscard]]
-  std::string test_runner::create_files(const std::filesystem::copy_options options) const
+  std::string test_runner::create_file(const Nascent& nascent, std::string_view stub, const std::filesystem::copy_options options) const
   {
-    auto action{
-      [options,this](const auto& nascent, std::string_view stub){
-        const auto[outputFile, created]{nascent.create_file(m_Copyright, code_templates_path(m_ProjectRoot), stub, options)};
+    const auto[outputFile, created]{nascent.create_file(m_Copyright, code_templates_path(m_ProjectRoot), stub, options)};
 
-        if(created)
+    if(created)
+    {
+      if(const auto filename{outputFile.filename()}; outputFile.extension() == ".hpp")
+      {
+        if(const auto str{outputFile.string()}; str.find("Utilities.hpp") == std::string::npos)
         {
-          if(const auto filename{outputFile.filename()}; outputFile.extension() == ".hpp")
-          {
-            if(const auto str{outputFile.string()}; str.find("Utilities.hpp") == std::string::npos)
-            {
-              add_include(m_HashIncludeTarget, filename.string());
-            }
-          }
-          
-          return std::string{"\""}.append(outputFile.generic_string()).append("\"");
-        }
-        else
-        {
-          return warning(outputFile.generic_string()).append(" already exists, so not created\n");
+          add_include(m_HashIncludeTarget, filename.string());
         }
       }
-    };
-    
-    return process_semantics_tests(action);
+          
+      return std::string{"\""}.append(outputFile.generic_string()).append("\"");
+    }
+    else
+    {
+      return warning(outputFile.generic_string()).append(" already exists, so not created\n");
+    }
   }
 
   void test_runner::report(std::string_view prefix, std::string_view message)

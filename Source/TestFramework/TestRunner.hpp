@@ -385,12 +385,12 @@ namespace sequoia::testing
     [[nodiscard]]
     static std::string stringify(concurrency_mode mode);
 
-    template<class Fn>
+    template<class Nascent>
     [[nodiscard]]
-    std::string process_semantics_tests(Fn fn) const;
+    std::string create_file(const Nascent& nascent, std::string_view stub, std::filesystem::copy_options options) const;
 
     [[nodiscard]]
-    std::string create_files(const std::filesystem::copy_options options) const;
+    std::string create_files(std::filesystem::copy_options options) const;
 
     void init_project(std::string_view copyright, const std::filesystem::path& path) const;
 
