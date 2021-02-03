@@ -120,7 +120,7 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    std::string_view prefix() const noexcept
+    const std::string& prefix() const noexcept
     {
       return m_Prefix;
     }

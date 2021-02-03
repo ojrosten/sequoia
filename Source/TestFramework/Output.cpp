@@ -41,10 +41,10 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string end_block(std::string_view s, const std::size_t newlines, std::string_view footer)
   {
-    std::string str{s};
-    end_block(str, newlines, footer);
+    std::string text{s};
+    end_block(text, newlines, footer);
 
-    return str;
+    return text;
   }
 
   [[nodiscard]]
@@ -116,32 +116,31 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string to_camel_case(std::string text)
   {
-    if(!text.empty())
+    if(text.empty()) return "";
+
+    auto upper{
+      [](char c) {
+        return static_cast<char>(std::toupper(static_cast<unsigned char>(c)));
+      }
+    };
+
+    if(std::isalpha(text.front()))
     {
-      auto upper{
-        [](char c){
-          return static_cast<char>(std::toupper(static_cast<unsigned char>(c)));
-        }
-      };
+      text.front() = upper(text.front());
+    }
 
-      if(std::isalpha(text.front()))
+    using size_t = std::string::size_type;
+
+    size_t pos{};
+    while((pos = text.find("_", pos)) != std::string::npos)
+    {
+      text.erase(pos, 1);
+      if((pos < text.length()) && std::isalpha(text[pos]))
       {
-        text.front() = upper(text.front());
+        text[pos] = upper(text[pos]);
       }
 
-      using size_t = std::string::size_type;
-
-      size_t pos{};
-      while((pos = text.find("_", pos)) != std::string::npos)
-      {
-        text.erase(pos, 1);
-        if((pos < text.length()) && std::isalpha(text[pos]))
-        {
-          text[pos] = upper(text[pos]);
-        }
-
-        pos += 1;
-      }
+      pos += 1;
     }
 
     return text;

@@ -119,7 +119,7 @@ namespace sequoia::testing
     auto execute(const output_mode outputMode, const concurrency_mode concurrenyMode) -> results ;
 
     [[nodiscard]]
-    std::string_view name() const noexcept { return m_Name; }
+    const std::string& name() const noexcept { return m_Name; }
 
     [[nodiscard]]
     bool empty() const noexcept { return m_Tests.empty(); }

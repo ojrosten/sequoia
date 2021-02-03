@@ -260,16 +260,16 @@ namespace sequoia::testing
     std::size_t performance_checks() const noexcept { return m_PerformanceChecks; } 
 
     [[nodiscard]]
-    std::string_view failure_messages() const noexcept{ return m_FailureMessages; }
+    const std::string& failure_messages() const noexcept{ return m_FailureMessages; }
 
     [[nodiscard]]
-    std::string_view diagnostics_output() const noexcept { return m_DiagnosticsOutput; }
+    const std::string& diagnostics_output() const noexcept { return m_DiagnosticsOutput; }
 
     [[nodiscard]]
     int exceptions_detected_by_sentinel() const noexcept { return m_ExceptionsInFlight; }
 
     [[nodiscard]]
-    std::string_view top_level_message() const
+    const std::string& top_level_message() const
     {
       return m_TopLevelMessage;
     }
@@ -559,7 +559,7 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    std::string_view diagnostics_output() const noexcept { return m_DiagnosticsOutput; }
+    const std::string& diagnostics_output() const noexcept { return m_DiagnosticsOutput; }
 
     void diagnostics_output(std::string output)
     {
@@ -598,10 +598,10 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    std::string_view name() const noexcept { return m_Name; }
+    const std::string& name() const noexcept { return m_Name; }
 
     [[nodiscard]]
-    std::string_view failure_messages() const noexcept { return m_FailureMessages; }
+    const std::string& failure_messages() const noexcept { return m_FailureMessages; }
 
     [[nodiscard]]
     friend log_summary operator+(const log_summary& lhs, const log_summary& rhs)

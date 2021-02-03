@@ -506,7 +506,7 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    std::string_view top_level_message() const
+    const std::string& top_level_message() const
     {
       return logger().top_level_message();
     }

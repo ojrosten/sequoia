@@ -176,7 +176,7 @@ namespace sequoia::testing
       replace_all(m_Family, "_", " ");
     }
 
-    if(m_Header.empty()) m_Header = std::filesystem::path{std::string{m_CamelName}.append(".hpp")};
+    if(m_Header.empty()) m_Header = std::filesystem::path{m_CamelName}.concat(".hpp");
   }
 
   template<invocable<std::filesystem::path> FileTransformer>
@@ -324,13 +324,12 @@ namespace sequoia::testing
         replace_all(text, "template<?> ", "");
       }
 
-      const auto testTypeRelacement{std::string{test_type()} + "_"};
       replace_all(text, {{"::?_class", m_QualifiedName},
-                         {"?_class", std::string{forename()}},
-                         {"?_", testTypeRelacement},
+                         {"?_class", forename()},
                          {"?Class", camel_name()},
-                         {"?Test", to_camel_case(std::string{test_type()}).append("Test")},
-                         {"?Class.hpp", header().generic_string()}});
+                         {"?Test", to_camel_case(test_type()).append("Test")},
+                         {"?Class.hpp", header().string()},
+                         {"?", test_type()}});
 
       if(std::ofstream ofile{file})
       {
@@ -364,7 +363,7 @@ namespace sequoia::testing
     set_top_copyright(text, copyright);
 
     const auto testTypeRelacement{std::string{test_type()} + "_"};
-    replace_all(text, {{"?_behavioural", std::string{forename()}},
+    replace_all(text, {{"?_behavioural", forename()},
                        {"?_", testTypeRelacement},
                        {"?Behavioural", camel_name()}});
 

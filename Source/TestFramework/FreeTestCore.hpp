@@ -53,7 +53,7 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    std::string_view name() const noexcept
+    const std::string& name() const noexcept
     {
       return m_Name;
     }

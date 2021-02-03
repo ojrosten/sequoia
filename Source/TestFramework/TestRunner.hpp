@@ -106,7 +106,7 @@ namespace sequoia::testing
     {}
 
     [[nodiscard]]
-    std::string_view family() const noexcept { return m_Family; }
+    const std::string& family() const noexcept { return m_Family; }
 
     void family(std::string name) { m_Family = std::move(name); }
 
@@ -121,12 +121,12 @@ namespace sequoia::testing
     void header(std::string h) { m_Header = std::move(h); }
 
     [[nodiscard]]
-    std::string_view test_type() const noexcept { return m_TestType; }
+    const std::string& test_type() const noexcept { return m_TestType; }
 
     void test_type(std::string type) { m_TestType = std::move(type); }
 
     [[nodiscard]]
-    std::string_view forename() const noexcept { return m_Forename; }
+    const std::string& forename() const noexcept { return m_Forename; }
     [[nodiscard]]
     friend bool operator==(const nascent_test_base&, const nascent_test_base&) noexcept = default;
 
@@ -144,7 +144,7 @@ namespace sequoia::testing
    
     void forename(std::string name) { m_Forename = std::move(name); }
 
-    std::string_view camel_name() const noexcept { return m_CamelName; }
+    const std::string& camel_name() const noexcept { return m_CamelName; }
 
     struct file_data
     {
@@ -159,7 +159,7 @@ namespace sequoia::testing
     std::string m_Family{}, m_TestType{}, m_Forename{}, m_CamelName{};
 
     host_directory m_HostDirectory{};
-    
+
     std::filesystem::path m_Header{};
   };
 
@@ -302,14 +302,14 @@ namespace sequoia::testing
 
   private:
     struct test_creator
-    {        
+    {
       test_creator(std::string type, std::string subType, test_runner& r)
         : genus{std::move(type)}
         , species{std::move(subType)}
         , runner{r}
       {}
 
-      void operator()(const parsing::commandline::param_list& args);   
+      void operator()(const parsing::commandline::param_list& args);
         
       std::string genus, species;
       test_runner& runner;
