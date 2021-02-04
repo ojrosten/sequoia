@@ -76,7 +76,8 @@ namespace sequoia::testing
                                  , "create", "regular_test", "utilities::iterator", "int*"
                                  , "create", "move_only_test", "bar::baz::foo<maths::floating_point T>", "T", "--family", "Iterator"
                                  , "create", "regular_test", "other::couple<class S, class T>", "S", "-e", "T",
-                                      "-h", hostDir, "-f", "partners", "-ch", "Couple.hpp"};
+                                      "-h", hostDir, "-f", "partners", "-ch", "Couple.hpp"
+                                 , "create", "free_test", "Utilities.h"};
 
     std::stringstream outputStream{};
     test_runner tr{args.size(), args.get(), "Oliver J. Rosten", testMain, includeTarget, repos, outputStream};

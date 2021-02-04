@@ -118,7 +118,7 @@ namespace sequoia::testing
     [[nodiscard]]
     const std::filesystem::path& header() const noexcept { return m_Header; }
 
-    void header(std::string h) { m_Header = std::move(h); }
+    void header(std::filesystem::path h) { m_Header = std::move(h); }
 
     [[nodiscard]]
     const std::string& test_type() const noexcept { return m_TestType; }
@@ -135,8 +135,6 @@ namespace sequoia::testing
 
     [[nodiscard]]
     friend bool operator!=(const nascent_test_base&, const nascent_test_base&) noexcept = default;
-
-    void finalize();
   protected:
     nascent_test_base(const nascent_test_base&)     = default;
     nascent_test_base(nascent_test_base&&) noexcept = default;
@@ -145,7 +143,11 @@ namespace sequoia::testing
 
     ~nascent_test_base() = default;
 
+    void finalize_family();
+
     const std::string& camel_name() const noexcept { return m_CamelName; }
+
+    void camel_name(std::string name) { m_CamelName = to_camel_case(std::move(name)); }
 
     struct file_data
     {
@@ -166,7 +168,7 @@ namespace sequoia::testing
 
   class nascent_semantics_test : public nascent_test_base
   {
-  public:    
+  public:
     using nascent_test_base::nascent_test_base;
 
     void qualified_name(std::string name) { m_QualifiedName = std::move(name); }
@@ -217,6 +219,8 @@ namespace sequoia::testing
               "AllocationTest.cpp"};
     };
 
+    void finalize();
+
     [[nodiscard]]
     auto create_file(std::string_view copyright, const std::filesystem::path& codeTemplatesDir, std::string_view nameEnding, std::filesystem::copy_options options) const -> file_data;
     
@@ -230,6 +234,8 @@ namespace sequoia::testing
   {
   public:
     using nascent_test_base::nascent_test_base;
+
+    void finalize();
 
     [[nodiscard]]
     auto create_file(std::string_view copyright, const std::filesystem::path& codeTemplatesDir, std::string_view nameEnding, std::filesystem::copy_options options) const->file_data;

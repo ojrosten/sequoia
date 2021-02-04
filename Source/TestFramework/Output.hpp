@@ -79,6 +79,9 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string to_camel_case(std::string text);
 
+  [[nodiscard]]
+  std::string to_snake_case(std::string text);
+
   std::string& replace_all(std::string& text, std::string_view from, std::string_view to);
 
   struct replacement

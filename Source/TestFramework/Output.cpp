@@ -146,6 +146,26 @@ namespace sequoia::testing
     return text;
   }
 
+  [[nodiscard]]
+  std::string to_snake_case(std::string text)
+  {
+    auto i{text.begin()};
+    while(i != text.end())
+    {
+      auto& c{*i};
+      if(std::isupper(c))
+      {
+        c = static_cast<char>(std::tolower(static_cast<unsigned char>(c)));
+        if(std::distance(text.begin(), i) > 0)
+          text.insert(i + 1, '_');
+      }
+
+      ++i;
+    }
+
+    return text;
+  }
+
   std::string& replace_all(std::string& text, std::string_view from, std::string_view to)
   {
     std::string::size_type pos{};

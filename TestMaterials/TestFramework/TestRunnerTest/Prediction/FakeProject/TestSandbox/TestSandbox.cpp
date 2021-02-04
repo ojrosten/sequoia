@@ -49,6 +49,12 @@ int main(int argc, char** argv)
       couple_test("Unit Test")
     );
 
+
+    runner.add_test_family(
+      "Utilities",
+      utilities_test("Free Test")
+    );
+
     runner.execute();
   }
   catch(const std::exception& e)

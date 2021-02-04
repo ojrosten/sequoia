@@ -168,16 +168,13 @@ namespace sequoia::testing
 
   //=========================================== nascent_test_base ===========================================//
 
-  void nascent_test_base::finalize()
+  void nascent_test_base::finalize_family()
   {
-    m_CamelName = to_camel_case(std::string{forename()});
     if(m_Family.empty())
     {
       m_Family = m_CamelName;
       replace_all(m_Family, "_", " ");
     }
-
-    if(m_Header.empty()) m_Header = std::filesystem::path{m_CamelName}.concat(".hpp");
   }
 
   template<invocable<std::filesystem::path> FileTransformer>
@@ -246,7 +243,10 @@ namespace sequoia::testing
       }
     }
 
-    nascent_test_base::finalize();
+    camel_name(forename());
+    if(header().empty()) header(std::filesystem::path{camel_name()}.concat(".hpp"));
+
+    nascent_test_base::finalize_family();
   }
   
   [[nodiscard]]
@@ -347,6 +347,14 @@ namespace sequoia::testing
 
   //=========================================== nascent_behavioural_test ===========================================//
 
+  void nascent_behavioural_test::finalize()
+  {
+    camel_name(header().filename().replace_extension().string());
+    forename(to_snake_case(camel_name()));
+
+    nascent_test_base::finalize_family();
+  }
+
   [[nodiscard]]
   auto nascent_behavioural_test::create_file(std::string_view copyright, const std::filesystem::path& codeTemplatesDir, std::string_view nameEnding, const std::filesystem::copy_options options) const -> file_data
   {
@@ -382,6 +390,14 @@ namespace sequoia::testing
   }
 
   //=========================================== nascent_allocation_test ===========================================//
+
+  void nascent_allocation_test::finalize()
+  {
+    camel_name(forename());
+    if(header().empty()) header(std::filesystem::path{camel_name()}.concat(".hpp"));
+
+    nascent_test_base::finalize_family();
+  }
 
   [[nodiscard]]
   auto nascent_allocation_test::create_file(std::string_view copyright, const std::filesystem::path& codeTemplatesDir, std::string_view nameEnding, const std::filesystem::copy_options options) const -> file_data
@@ -511,7 +527,7 @@ namespace sequoia::testing
           if(m_NascentTests.empty())
             throw std::logic_error{"Unable to find nascent test"};
 
-          std::visit(variant_visitor{[&args](auto& nascent){ nascent.header(args[0]);}}, m_NascentTests.back());
+          std::visit(variant_visitor{[&args](auto& nascent){ nascent.header(args[0]); }}, m_NascentTests.back());
         }                              
     };
 
