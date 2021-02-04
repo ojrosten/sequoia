@@ -37,13 +37,14 @@ namespace sequoia::testing
             if(const auto path{data.sourceRepo.find(filename)}; !path.empty())
               return path;
 
-            const auto alternative{std::filesystem::path{filename}.replace_extension(".h")};
+            const auto ext{filename.extension()};
+            const auto alternative{std::filesystem::path{filename}.replace_extension(ext == ".hpp" ? ".h" : ".hpp")};
             if(const auto path{data.sourceRepo.find(alternative)}; !path.empty())
               return path;
 
             throw std::runtime_error{std::string{"Unable to locate file "}
-                                   .append(filename.generic_string())
-                                   .append(" or .h in the source repository\n")
+                                   .append(filename.generic_string()).append(" or ")
+                                   .append(alternative.generic_string()).append(" in the source repository\n")
                                    .append(data.sourceRepo.root().generic_string())};
           }()
         };

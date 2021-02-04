@@ -42,36 +42,36 @@ int main(int argc, char** argv)
     );
 
     runner.add_test_family(
-      "Allocation Diagnostics",            
-      allocation_false_positive_diagnostics{"Alloction False Positive Diagnostics"},      
-      move_only_allocation_false_positive_diagnostics{"Move-Only Alloction False Positive Diagnostics"},    
+      "Allocation Diagnostics",
+      allocation_false_positive_diagnostics{"Alloction False Positive Diagnostics"},
+      move_only_allocation_false_positive_diagnostics{"Move-Only Alloction False Positive Diagnostics"},
       allocation_false_negative_diagnostics{"Allocation False Negative Diagnostics"},
       move_only_allocation_false_negative_diagnostics{"Move-Only Allocation False Negative Diagnostics"}
     );
 
     runner.add_test_family(
-      "Scoped Allocation Diagnostics",   
+      "Scoped Allocation Diagnostics",
       scoped_allocation_false_positive_diagnostics{"Scoped Allocation False Positive Diagnostics"},
-      move_only_scoped_allocation_false_positive_diagnostics{"Move-Only Scoped Allocation False Positive Diagnostics"},    
+      move_only_scoped_allocation_false_positive_diagnostics{"Move-Only Scoped Allocation False Positive Diagnostics"},
       scoped_allocation_false_negative_diagnostics{"Scoped Allocation False Negative Diagnostics"},
       move_only_scoped_allocation_false_negative_diagnostics{"Move-Only Scoped Allocation False Negative Diagnostics"}
     );
 
     runner.add_test_family(
-      "Performance Diagnostics",      
-      performance_false_positive_diagnostics{"Performance False Positive Diagnostics"},      
+      "Performance Diagnostics",
+      performance_false_positive_diagnostics{"Performance False Positive Diagnostics"},
       performance_false_negative_diagnostics{"Performance False Negative Diagnostics"},
       performance_utilities_test{"Performance Utilities"}
     );
 
     runner.add_test_family(
-      "Fuzzy Diagnostics",            
-      fuzzy_false_positive_diagnostics{"Fuzzy False Positive Diagnostics"},     
+      "Fuzzy Diagnostics",
+      fuzzy_false_positive_diagnostics{"Fuzzy False Positive Diagnostics"},
       fuzzy_false_negative_diagnostics{"Fuzzy False Negative Diagnostics"}
     );
 
     runner.add_test_family(
-      "CommandLine Arguments",      
+      "CommandLine Arguments",
       commandline_arguments_false_positive_test{"False Positive Test"},
       commandline_arguments_test{"Unit Test"}
     );
@@ -83,7 +83,7 @@ int main(int argc, char** argv)
     );
 
     runner.add_test_family(
-      "Test Runner",      
+      "Test Runner",
       test_runner_false_positive_test{"False Positive Diagnostics"},
       test_runner_test{"Unit Test"}
     );
@@ -96,7 +96,7 @@ int main(int argc, char** argv)
   }
   catch(...)
   {
-    std::cout << "Unrecognized error\n"; 
+    std::cout << "Unrecognized error\n";
   }
   
   return 0;

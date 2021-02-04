@@ -111,7 +111,7 @@ namespace sequoia::testing
     void family(std::string name) { m_Family = std::move(name); }
 
     [[nodiscard]]
-    std::filesystem::path host_dir() const noexcept { return m_HostDirectory.get(m_Header); }
+    std::filesystem::path host_dir() const { return m_HostDirectory.get(m_Header); }
 
     void host_dir(std::filesystem::path dir) { m_HostDirectory = host_directory{std::move(dir)}; }
     
