@@ -166,6 +166,18 @@ namespace sequoia::testing
     return text;
   }
 
+  [[nodiscard]]
+  std::string capitalize(std::string text)
+  {
+    if(!text.empty())
+    {
+      auto& c{text.front()};
+      c = static_cast<char>(std::toupper(static_cast<unsigned char>(c)));
+    }
+
+    return text;
+  }
+
   std::string& replace_all(std::string& text, std::string_view from, std::string_view to)
   {
     std::string::size_type pos{};

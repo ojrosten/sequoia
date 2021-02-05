@@ -58,7 +58,7 @@ int main(int argc, char** argv)
 
     runner.add_test_family(
       "Foo",
-      foo_test("RegularAllocation Test")
+      foo_test("Allocation Test"
     );
 
     runner.execute();
