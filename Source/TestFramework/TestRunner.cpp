@@ -353,6 +353,8 @@ namespace sequoia::testing
     forename(to_snake_case(camel_name()));
 
     nascent_test_base::finalize_family();
+
+    camel_name(std::string{camel_name()}.append(capitalize(test_type())));
   }
 
   [[nodiscard]]

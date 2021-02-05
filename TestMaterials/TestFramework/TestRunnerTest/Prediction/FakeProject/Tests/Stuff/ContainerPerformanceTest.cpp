@@ -5,17 +5,17 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#include "UtilitiesTest.hpp"
+#include "ContainerPerformanceTest.hpp"
 
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::string_view free_class_test::source_file() const noexcept
+  std::string_view performance_class_test::source_file() const noexcept
   {
     return __FILE__;
   }
 
-  void free_class_test::run_tests()
+  void performance_class_test::run_tests()
   {
     // TO DO
   }

@@ -20,8 +20,8 @@ Creating files...
 "/Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Partners/CoupleTestingDiagnostics.cpp"
 "/Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Partners/CoupleTest.hpp"
 "/Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Partners/CoupleTest.cpp"
-"/Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Utilities/UtilitiesTest.hpp"
-"/Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Utilities/UtilitiesTest.cpp"
+"/Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Utilities/UtilitiesFreeTest.hpp"
+"/Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Utilities/UtilitiesFreeTest.cpp"
 "/Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Stuff/FooAllocationTest.hpp"
 "/Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Stuff/FooAllocationTest.cpp"
 "/Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Stuff/ContainerTestingUtilities.hpp"
@@ -31,10 +31,6 @@ Creating files...
 "/Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Stuff/ContainerTest.cpp"
 "/Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Stuff/ContainerAllocationTest.hpp"
 "/Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Stuff/ContainerAllocationTest.cpp"
-
-  Warning: /Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Stuff/ContainerTest.hpp already exists, so not created
-
-
-  Warning: /Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Stuff/ContainerTest.cpp already exists, so not created
-
+"/Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Stuff/ContainerPerformanceTest.hpp"
+"/Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Stuff/ContainerPerformanceTest.cpp"
 
