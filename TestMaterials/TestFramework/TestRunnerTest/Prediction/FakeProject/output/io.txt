@@ -33,4 +33,9 @@ Creating files...
 "/Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Stuff/ContainerAllocationTest.cpp"
 "/Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Stuff/ContainerPerformanceTest.hpp"
 "/Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Stuff/ContainerPerformanceTest.cpp"
+"/Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Utilities/VariadicTestingUtilities.hpp"
+"/Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Utilities/VariadicTestingDiagnostics.hpp"
+"/Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Utilities/VariadicTestingDiagnostics.cpp"
+"/Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Utilities/VariadicTest.hpp"
+"/Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Utilities/VariadicTest.cpp"
 

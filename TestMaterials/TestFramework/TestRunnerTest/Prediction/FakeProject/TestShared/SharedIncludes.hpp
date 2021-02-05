@@ -20,3 +20,5 @@
 #include "ContainerTest.hpp"
 #include "ContainerAllocationTest.hpp"
 #include "ContainerPerformanceTest.hpp"
+#include "VariadicTestingDiagnostics.hpp"
+#include "VariadicTest.hpp"

@@ -65,6 +65,13 @@ int main(int argc, char** argv)
       container_test("Unit Test")
     );
 
+
+    runner.add_test_family(
+      "Variadic",
+      variadic_false_positive_test("False Positive Test"),
+      variadic_test("Unit Test")
+    );
+
     runner.execute();
   }
   catch(const std::exception& e)
