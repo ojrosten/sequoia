@@ -7,14 +7,14 @@
 
 #pragma once
 
-#include "move_only_allocationAllocationTestCore.hpp"
+#include "regular_allocationAllocationTestCore.hpp"
 
 namespace sequoia::testing
 {
-  class foo_allocation_test final : public move_only_allocation_allocation_test
+  class container_allocation_test final : public regular_allocation_allocation_test
   {
   public:
-    using move_only_allocation_allocation_test::move_only_allocation_allocation_test;
+    using regular_allocation_allocation_test::regular_allocation_allocation_test;
 
     [[nodiscard]]
     std::string_view source_file() const noexcept final;

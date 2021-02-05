@@ -16,3 +16,6 @@
 #include "CoupleTest.hpp"
 #include "UtilitiesTest.hpp"
 #include "FooAllocationTest.hpp"
+#include "ContainerTestingDiagnostics.hpp"
+#include "ContainerTest.hpp"
+#include "ContainerAllocationTest.hpp"

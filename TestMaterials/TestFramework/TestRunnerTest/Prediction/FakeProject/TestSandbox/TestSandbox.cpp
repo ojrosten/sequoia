@@ -36,6 +36,7 @@ int main(int argc, char** argv)
 
     runner.add_test_family(
       "Iterator",
+      foo_test("Allocation Test"),
       foo_false_positive_test("False Positive Test"),
       foo_test("Unit Test"),
       iterator_false_positive_test("False Positive Test"),
@@ -57,8 +58,11 @@ int main(int argc, char** argv)
 
 
     runner.add_test_family(
-      "Foo",
-      foo_test("Allocation Test"
+      "Container",
+      container_test("Performance Test"),
+      container_test("Allocation Test"),
+      container_false_positive_test("False Positive Test"),
+      container_test("Unit Test")
     );
 
     runner.execute();
