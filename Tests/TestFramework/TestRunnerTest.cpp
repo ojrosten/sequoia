@@ -21,6 +21,7 @@ namespace sequoia::testing
   {
     test_template_data_generation();
     test_creation();
+    test_creation_failure();
     test_project_init();
   }
 
@@ -61,9 +62,7 @@ namespace sequoia::testing
   void test_runner_test::test_creation()
   {
     auto working{
-      [&mat{working_materials()}]() {
-        return mat / "FakeProject";
-      }
+      [&mat{working_materials()}]() { return mat / "FakeProject"; }
     };
     
     const auto testMain{working().append("TestSandbox").append("TestSandbox.cpp")};
@@ -95,6 +94,48 @@ namespace sequoia::testing
     }
 
     check_equivalence(LINE(""), working(), predictive_materials() / "FakeProject");
+  }
+
+  void test_runner_test::test_creation_failure()
+  {
+    auto working{
+      [&mat{working_materials()}]() { return mat / "FakeProject"; }
+    };
+
+    check_exception_thrown<std::runtime_error>(LINE(""),
+                                               [working](){
+                                                 std::stringstream outputStream{};
+                                                 const auto includeTarget{working().append("TestShared").append("SharedIncludes.hpp")};
+                                                 commandline_arguments args{"", "create", "free", "Plurgh.h"};
+                                                 test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "", includeTarget, repositories{working()}, outputStream};
+                                               });
+
+    check_exception_thrown<std::runtime_error>(LINE(""),
+                                               [working](){
+                                                 const auto testMain{working().append("TestSandbox").append("TestSandbox.cpp")};
+                                                 std::stringstream outputStream{};
+                                                 commandline_arguments args{"", "create", "free", "Plurgh.h"};
+                                                 test_runner tr{args.size(), args.get(), "Oliver J. Rosten", testMain, "", repositories{working()}, outputStream};
+                                               });
+
+     check_exception_thrown<std::runtime_error>(LINE(""),
+                                               [working](){
+                                                 const auto testMain{working().append("TestSandbox").append("TestSandbox.cpp")};
+                                                 const auto includeTarget{working().append("TestShared").append("SharedIncludes.hpp")};
+                                                 std::stringstream outputStream{};
+                                                 commandline_arguments args{"", "create", "free", "Plurgh.h"};
+                                                 test_runner tr{args.size(), args.get(), "Oliver J. Rosten", testMain, includeTarget, repositories{""}, outputStream};
+                                               });
+
+      check_exception_thrown<std::runtime_error>(LINE(""),
+                                               [working](){
+                                                 const auto testMain{working().append("TestSandbox").append("TestSandbox.cpp")};
+                                                 const auto includeTarget{working().append("TestShared").append("SharedIncludes.hpp")};
+                                                 std::stringstream outputStream{};
+                                                 commandline_arguments args{"", "create", "free", "Plurgh.h"};
+                                                 test_runner tr{args.size(), args.get(), "Oliver J. Rosten", testMain, includeTarget, repositories{working()}, outputStream};
+                                                 tr.execute();
+                                               });
   }
 
   void test_runner_test::test_project_init()

@@ -23,6 +23,8 @@ namespace sequoia::testing
 
     void test_creation();
 
+    void test_creation_failure();
+
     void test_project_init();
   };
 }
