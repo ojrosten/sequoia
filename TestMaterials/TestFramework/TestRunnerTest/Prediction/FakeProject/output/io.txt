@@ -1,0 +1,40 @@
+Creating files...
+
+"/Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Maybe/MaybeTestingUtilities.hpp"
+"/Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Maybe/MaybeTestingDiagnostics.hpp"
+"/Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Maybe/MaybeTestingDiagnostics.cpp"
+"/Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Maybe/MaybeTest.hpp"
+"/Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Maybe/MaybeTest.cpp"
+"/Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Utilities/IteratorTestingUtilities.hpp"
+"/Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Utilities/IteratorTestingDiagnostics.hpp"
+"/Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Utilities/IteratorTestingDiagnostics.cpp"
+"/Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Utilities/IteratorTest.hpp"
+"/Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Utilities/IteratorTest.cpp"
+"/Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Stuff/FooTestingUtilities.hpp"
+"/Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Stuff/FooTestingDiagnostics.hpp"
+"/Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Stuff/FooTestingDiagnostics.cpp"
+"/Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Stuff/FooTest.hpp"
+"/Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Stuff/FooTest.cpp"
+"/Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Partners/CoupleTestingUtilities.hpp"
+"/Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Partners/CoupleTestingDiagnostics.hpp"
+"/Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Partners/CoupleTestingDiagnostics.cpp"
+"/Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Partners/CoupleTest.hpp"
+"/Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Partners/CoupleTest.cpp"
+"/Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Utilities/UtilitiesTest.hpp"
+"/Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Utilities/UtilitiesTest.cpp"
+"/Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Stuff/FooAllocationTest.hpp"
+"/Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Stuff/FooAllocationTest.cpp"
+"/Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Stuff/ContainerTestingUtilities.hpp"
+"/Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Stuff/ContainerTestingDiagnostics.hpp"
+"/Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Stuff/ContainerTestingDiagnostics.cpp"
+"/Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Stuff/ContainerTest.hpp"
+"/Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Stuff/ContainerTest.cpp"
+"/Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Stuff/ContainerAllocationTest.hpp"
+"/Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Stuff/ContainerAllocationTest.cpp"
+
+  Warning: /Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Stuff/ContainerTest.hpp already exists, so not created
+
+
+  Warning: /Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Stuff/ContainerTest.cpp already exists, so not created
+
+
