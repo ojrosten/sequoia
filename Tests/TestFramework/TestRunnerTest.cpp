@@ -81,7 +81,7 @@ namespace sequoia::testing
                                  , "create", "regular_test", "container<class T>", "std::vector<T>"
                                  , "create", "regular_allocation_test", "container"
                                  , "create", "performance_test", "Container.hpp"
-                                 , "create" , "move_only", "variadic<class... T>", "std::tuple<T>"
+                                 , "create" , "move_only", "variadic<class... T>", "std::tuple<T...>"
     };
 
     std::stringstream outputStream{};

@@ -60,43 +60,6 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  template_data generate_template_data(std::string_view str)
-  {
-    std::vector<template_spec> decomposition{};
-
-    constexpr auto npos{std::string::npos};
-    if(auto openPos{str.find('<')}; openPos != npos)
-    {
-      if(auto closePos{str.rfind('>')}; closePos != npos)
-      {
-        if(closePos < openPos)
-          throw std::runtime_error{std::string{str}.append(": unable to parse template")};
-
-        auto start{openPos + 1};
-        auto next{npos};
-        while((next = str.find(',', start)) != npos)
-        {
-          std::string_view v{&str.data()[start], next - start};
-
-          decomposition.push_back(generate_template_spec(v));
-            
-          start = next + 1;
-        }
-
-        std::string_view v{&str.data()[start], closePos - start};
-        decomposition.push_back(generate_template_spec(v));
-      }
-      else
-      {
-        throw std::runtime_error{std::string{str}.append(": < not matched by >")};
-      }
-        
-    }
-
-    return decomposition;
-  }
-
-  [[nodiscard]]
   template_spec generate_template_spec(std::string_view str)
   {    
     constexpr auto npos{std::string::npos};
@@ -131,6 +94,42 @@ namespace sequoia::testing
     std::string::size_type pos{first == npos ? 0 : first + 1};
     
     return {std::string{str.substr(pos, endOfLastTemplateSpec + 1 - pos)}, std::string{str.substr(beforeLastToken + 1, lastTokenSize)}};
+  }
+
+  [[nodiscard]]
+  template_data generate_template_data(std::string_view str)
+  {
+    std::vector<template_spec> decomposition{};
+
+    constexpr auto npos{std::string::npos};
+    if(auto openPos{str.find('<')}; openPos != npos)
+    {
+      if(auto closePos{str.rfind('>')}; closePos != npos)
+      {
+        if(closePos < openPos)
+          throw std::runtime_error{std::string{str}.append(": unable to parse template")};
+
+        auto start{openPos + 1};
+        auto next{npos};
+        while((next = str.find(',', start)) != npos)
+        {
+          std::string_view v{&str.data()[start], next - start};
+
+          decomposition.push_back(generate_template_spec(v));
+
+          start = next + 1;
+        }
+
+        std::string_view v{&str.data()[start], closePos - start};
+        decomposition.push_back(generate_template_spec(v));
+      }
+      else
+      {
+        throw std::runtime_error{std::string{str}.append(": < not matched by >")};
+      }
+    }
+
+    return decomposition;
   }
 
   void set_top_copyright(std::string& text, std::string_view copyright)
@@ -232,7 +231,13 @@ namespace sequoia::testing
 
           std::string args{"<"};
           std::for_each(m_TemplateData.cbegin(), m_TemplateData.cend(),
-            [&args](const template_spec& d) { args.append(d.symbol).append(", "); }
+            [&args](const template_spec& d) {
+              args.append(d.symbol);
+              if(!d.species.empty() && (d.species.back() == '.'))
+                args.append("...");
+
+              args.append(", ");
+            }
           );
 
           args.erase(args.size() - 1);
