@@ -132,9 +132,9 @@ namespace sequoia::testing
 
     for(const auto& update : updateables)
     {
-      fs::remove_all(update.predictions);
+      //fs::remove_all(update.predictions);
       
-      fs::copy(update.workingMaterials, update.predictions, fs::copy_options::recursive);
+      fs::copy(update.workingMaterials, update.predictions, fs::copy_options::recursive | fs::copy_options::update_existing);
     }
 
     return {steady_clock::now() - time, std::move(summaries)};

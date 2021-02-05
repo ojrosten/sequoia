@@ -55,6 +55,12 @@ int main(int argc, char** argv)
       utilities_test("Free Test")
     );
 
+
+    runner.add_test_family(
+      "Foo",
+      foo_test("RegularAllocation Test")
+    );
+
     runner.execute();
   }
   catch(const std::exception& e)

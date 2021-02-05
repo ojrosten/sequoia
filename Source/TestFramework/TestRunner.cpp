@@ -403,7 +403,7 @@ namespace sequoia::testing
   auto nascent_allocation_test::create_file(std::string_view copyright, const std::filesystem::path& codeTemplatesDir, std::string_view nameEnding, const std::filesystem::copy_options options) const -> file_data
   {
     auto transformer{[this, copyright](const std::filesystem::path& file) { transform_file(file, copyright); }};
-    return nascent_test_base::create_file(codeTemplatesDir, "MyBehavioural", nameEnding, options, transformer);
+    return nascent_test_base::create_file(codeTemplatesDir, "MyClass", nameEnding, options, transformer);
   }
 
   [[nodiscard]]
@@ -550,7 +550,7 @@ namespace sequoia::testing
                      {"move_only_test", {"move_only"}, {"qualified::class_name<class T>", "equivalent_type"},
                       test_creator{"semantic", "move_only", *this}, semanticsOptions
                      },
-                     {"regular_allocation_test", {"regular_allocation"}, {"raw_class_name"},
+                     {"regular_allocation_test", {"regular_allocation", "allocation_test"}, {"raw_class_name"},
                       test_creator{"allocation", "regular_allocation", *this}, allocationOptions
                      },
                      {"move_only_allocation_test", {"move_only_allocation"}, {"raw_class_name"},

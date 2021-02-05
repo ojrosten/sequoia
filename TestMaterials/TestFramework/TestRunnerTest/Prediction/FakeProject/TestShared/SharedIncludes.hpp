@@ -15,3 +15,4 @@
 #include "CoupleTestingDiagnostics.hpp"
 #include "CoupleTest.hpp"
 #include "UtilitiesTest.hpp"
+#include "FooAllocationTest.hpp"

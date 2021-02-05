@@ -73,11 +73,13 @@ namespace sequoia::testing
     const auto hostDir{(repos.tests / "Partners").string()};
 
     commandline_arguments args{"", "create", "regular_test", "other::functional::maybe<class T>", "std::optional<T>"
-                                 , "create", "regular_test", "utilities::iterator", "int*"
+                                 , "create", "regular", "utilities::iterator", "int*"
                                  , "create", "move_only_test", "bar::baz::foo<maths::floating_point T>", "T", "--family", "Iterator"
                                  , "create", "regular_test", "other::couple<class S, class T>", "S", "-e", "T",
                                       "-h", hostDir, "-f", "partners", "-ch", "Couple.hpp"
-                                 , "create", "free_test", "Utilities.h"};
+                                 , "create", "free_test", "Utilities.h"
+                                 , "create", "regular_allocation_test", "foo"
+    };
 
     std::stringstream outputStream{};
     test_runner tr{args.size(), args.get(), "Oliver J. Rosten", testMain, includeTarget, repos, outputStream};
