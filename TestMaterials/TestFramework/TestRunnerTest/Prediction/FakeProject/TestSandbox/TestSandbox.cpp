@@ -26,23 +26,20 @@ int main(int argc, char** argv)
                        sibling_path("Source")
     };
 
-
     runner.add_test_family(
       "Maybe",
       maybe_false_positive_test("False Positive Test"),
       maybe_test("Unit Test")
     );
 
-
     runner.add_test_family(
       "Iterator",
       foo_test("Allocation Test"),
-      foo_false_positive_test("False Positive Test"),
       foo_test("Unit Test"),
+      foo_false_positive_test("False Positive Test"),
       iterator_false_positive_test("False Positive Test"),
       iterator_test("Unit Test")
     );
-
 
     runner.add_test_family(
       "partners",
@@ -50,12 +47,10 @@ int main(int argc, char** argv)
       couple_test("Unit Test")
     );
 
-
     runner.add_test_family(
       "Utilities",
       utilities_test("Free Test")
     );
-
 
     runner.add_test_family(
       "Container",
@@ -64,7 +59,6 @@ int main(int argc, char** argv)
       container_false_positive_test("False Positive Test"),
       container_test("Unit Test")
     );
-
 
     runner.add_test_family(
       "Variadic",

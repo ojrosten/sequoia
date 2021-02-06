@@ -69,69 +69,65 @@ namespace sequoia::testing
     if(tests.empty())
       throw std::logic_error{std::string{"No tests specified to be added to the test family \""}.append(familyName).append("\"")};
 
-    std::string text{};
+    std::string text{read_to_string(file)};
+    const auto pattern{std::string{"\""}.append(familyName).append("\",")};
     
-    if(std::ifstream ifile{file})
+    constexpr auto npos{std::string::npos};
+    if(auto pos{text.find(pattern)}; pos != npos)
     {
-      std::string line{};
-      bool inserted{};
-            
-      while(std::getline(ifile, line))
+      if(const auto linePos{text.rfind('\n', pos)}; linePos != npos)
       {
-        bool lineAdded{};
-        if(!inserted)
+        std::string_view preamble{"add_test_family("};
+        if((linePos > preamble.size()) && (text.find(preamble, linePos - preamble.size()) != npos))
         {
-          constexpr auto npos{std::string::npos};  
-
-          const auto pattern{std::string{"\""}.append(familyName).append("\",")};
-          if(auto pos{line.find(pattern)}; pos != npos)
-          {
-            const indentation indent{line.substr(0, pos)};
-            
-            text.reserve(line.size() + 1);
-            text.append(std::move(line));
-
+          if(const auto nextLinePos{text.find('\n', pos)}; nextLinePos != npos)
+          {          
+            const indentation indent{text.substr(linePos + 1, pos - linePos - 1)};
+            const auto endpos{text.find(");", pos)};
+            std::string_view subtext{text.substr(pos, endpos - pos)};
             for(const auto& t : tests)
             {
-              append_indented(text, std::string{t}.append(","), indent);
+              if(subtext.find(t) == npos)
+              {
+                text.insert(nextLinePos+1, std::string{indent}.append(t).append(",\n"));
+              }
             }
-            text.append("\n");
-
-            lineAdded = true;
-            inserted = true;
           }
-          else if(pos = line.find("runner.execute"); pos != npos)
-          {            
-            const indentation indent_0{line.substr(0, pos)};
-            const indentation indent_1{std::string{indent_0}.append("  ")};
-
-            append_indented(text, "runner.add_test_family(", indent_0);
-            append_indented(text, std::string{"\""}.append(familyName).append("\","), indent_1);
-            for(auto i{tests.cbegin()}; i != tests.cend() - 1; ++i)
-            {
-              append_indented(text, std::string{*i}.append(","), indent_1);
-            }
-
-            append_indented(text, tests.back(), indent_1);
-            append_indented(text, ");\n\n", indent_0);
-
-            inserted = true;
-          }
-        }
-
-        if(!lineAdded)
-        {
-          text.reserve(line.size() + 1);
-          text.append(std::move(line)).append("\n");
         }
       }
+    }
+    else if(pos = text.find("runner.execute"); pos != npos)
+    {
+      if(const auto linePos{text.rfind('\n', pos)}; linePos != npos)
+      {
+        auto builder{
+          [&text, &tests, pos, linePos, familyName](){
 
-      if(!inserted)
-        throw std::runtime_error{"Unable to find appropriate place to add test family"};
+            const indentation indent_0{text.substr(linePos + 1, pos - linePos - 1)};
+            const indentation indent_1{std::string{indent_0}.append("  ")};
+
+            auto str{std::string{"\n"}.append(indent_0).append("runner.add_test_family(")};
+
+            append_indented(str, std::string{"\""}.append(familyName).append("\","), indent_1);
+
+            for(auto i{tests.cbegin()}; i != tests.cend() - 1; ++i)
+            {
+              append_indented(str, std::string{*i}.append(","), indent_1);
+            }
+
+            append_indented(str, tests.back(), indent_1);
+            append_indented(str, ");\n", indent_0);
+
+            return str;
+          }
+        };
+        
+        text.insert(linePos, builder());
+      }
     }
     else
     {
-      throw std::runtime_error{report_failed_read(file)};
+      throw std::runtime_error{"Unable to find appropriate place to add test family"};
     }
 
     const auto tempPath{fs::path{file}.concat("x")};
