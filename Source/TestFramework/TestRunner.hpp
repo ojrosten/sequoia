@@ -148,7 +148,7 @@ namespace sequoia::testing
 
     template<invocable<std::string&> FileTransformer>
     [[nodiscard]]
-    auto create_file(const std::filesystem::path& codeTemplatesDir, std::string_view copyright, std::string_view inputNameStub, std::string_view nameEnding, std::filesystem::copy_options options, FileTransformer transformer) const -> file_data;
+    auto create_file(const std::filesystem::path& codeTemplatesDir, std::string_view copyright, std::string_view inputNameStub, std::string_view nameEnding, FileTransformer transformer) const -> file_data;
   private:
     std::string m_Family{}, m_TestType{}, m_Forename{}, m_CamelName{};
 
@@ -169,7 +169,7 @@ namespace sequoia::testing
     void finalize();
 
     [[nodiscard]]
-    auto create_file(std::string_view copyright, const std::filesystem::path& codeTemplatesDir, std::string_view nameEnding, std::filesystem::copy_options options) const -> file_data;
+    auto create_file(std::string_view copyright, const std::filesystem::path& codeTemplatesDir, std::string_view nameEnding) const -> file_data;
     
     [[nodiscard]]
     std::vector<std::string> translation_units() const;
@@ -213,7 +213,7 @@ namespace sequoia::testing
     void finalize();
 
     [[nodiscard]]
-    auto create_file(std::string_view copyright, const std::filesystem::path& codeTemplatesDir, std::string_view nameEnding, std::filesystem::copy_options options) const -> file_data;
+    auto create_file(std::string_view copyright, const std::filesystem::path& codeTemplatesDir, std::string_view nameEnding) const -> file_data;
     
     [[nodiscard]]
     std::vector<std::string> translation_units() const;
@@ -229,7 +229,7 @@ namespace sequoia::testing
     void finalize();
 
     [[nodiscard]]
-    auto create_file(std::string_view copyright, const std::filesystem::path& codeTemplatesDir, std::string_view nameEnding, std::filesystem::copy_options options) const->file_data;
+    auto create_file(std::string_view copyright, const std::filesystem::path& codeTemplatesDir, std::string_view nameEnding) const->file_data;
 
     [[nodiscard]]
     std::vector<std::string> translation_units() const;
@@ -407,10 +407,10 @@ namespace sequoia::testing
 
     template<class Nascent>
     [[nodiscard]]
-    std::string create_file(const Nascent& nascent, std::string_view stub, std::filesystem::copy_options options) const;
+    std::string create_file(const Nascent& nascent, std::string_view stub) const;
 
     [[nodiscard]]
-    std::string create_files(std::filesystem::copy_options options) const;
+    std::string create_files() const;
 
     void init_project(std::string_view copyright, const std::filesystem::path& path) const;
 

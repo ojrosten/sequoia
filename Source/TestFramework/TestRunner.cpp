@@ -178,13 +178,13 @@ namespace sequoia::testing
 
   template<invocable<std::string&> FileTransformer>
   [[nodiscard]]
-  auto nascent_test_base::create_file(const std::filesystem::path& codeTemplatesDir, std::string_view copyright, std::string_view inputNameStub, std::string_view nameEnding, const std::filesystem::copy_options options, FileTransformer transformer) const -> file_data
+  auto nascent_test_base::create_file(const std::filesystem::path& codeTemplatesDir, std::string_view copyright, std::string_view inputNameStub, std::string_view nameEnding, FileTransformer transformer) const -> file_data
   {
     namespace fs = std::filesystem;
 
     const auto outputFile{(host_dir() / camel_name()) += nameEnding};
 
-    if(((options & fs::copy_options::skip_existing) == fs::copy_options::skip_existing) && fs::exists(outputFile))
+    if(fs::exists(outputFile))
     {
       return {outputFile, false};
     }
@@ -270,10 +270,10 @@ namespace sequoia::testing
   }
   
   [[nodiscard]]
-  auto nascent_semantics_test::create_file(std::string_view copyright, const std::filesystem::path& codeTemplatesDir, std::string_view nameEnding, const std::filesystem::copy_options options) const -> file_data
+  auto nascent_semantics_test::create_file(std::string_view copyright, const std::filesystem::path& codeTemplatesDir, std::string_view nameEnding) const -> file_data
   {
     auto transformer{[this](std::string& text) { transform_file(text); }};
-    return nascent_test_base::create_file(codeTemplatesDir, copyright, "MyClass", nameEnding, options, transformer);
+    return nascent_test_base::create_file(codeTemplatesDir, copyright, "MyClass", nameEnding, transformer);
   }
     
   [[nodiscard]]
@@ -363,10 +363,10 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  auto nascent_behavioural_test::create_file(std::string_view copyright, const std::filesystem::path& codeTemplatesDir, std::string_view nameEnding, const std::filesystem::copy_options options) const -> file_data
+  auto nascent_behavioural_test::create_file(std::string_view copyright, const std::filesystem::path& codeTemplatesDir, std::string_view nameEnding) const -> file_data
   {
     auto transformer{[this](std::string& text) { transform_file(text); }};
-    return nascent_test_base::create_file(codeTemplatesDir, copyright, "MyBehavioural", nameEnding, options, transformer);
+    return nascent_test_base::create_file(codeTemplatesDir, copyright, "MyBehavioural", nameEnding, transformer);
   }
 
   [[nodiscard]]
@@ -393,10 +393,10 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  auto nascent_allocation_test::create_file(std::string_view copyright, const std::filesystem::path& codeTemplatesDir, std::string_view nameEnding, const std::filesystem::copy_options options) const -> file_data
+  auto nascent_allocation_test::create_file(std::string_view copyright, const std::filesystem::path& codeTemplatesDir, std::string_view nameEnding) const -> file_data
   {
     auto transformer{[this](std::string& text) { transform_file(text); }};
-    return nascent_test_base::create_file(codeTemplatesDir, copyright, "MyClass", nameEnding, options, transformer);
+    return nascent_test_base::create_file(codeTemplatesDir, copyright, "MyClass", nameEnding, transformer);
   }
 
   [[nodiscard]]
@@ -705,23 +705,23 @@ namespace sequoia::testing
 
     if(!mode(output_mode::help))
     {
-      report("Creating files...\n", create_files(fs::copy_options::skip_existing));
+      report("Creating files...\n", create_files());
 
       run_tests();
     }
   }
 
   [[nodiscard]]
-  std::string test_runner::create_files(std::filesystem::copy_options options) const
+  std::string test_runner::create_files() const
   {
     std::string mess{};
     for(const auto& nascentVessel : m_NascentTests)
     {
       variant_visitor visitor{
-        [&mess,this,options](const auto& nascent){
+        [&mess,this](const auto& nascent){
           for(const auto& stub : nascent.stubs())
           {
-            append_lines(mess, create_file(nascent, stub, options));
+            append_lines(mess, create_file(nascent, stub));
           }
           
           add_to_family(m_TestMain, nascent.family(), nascent.translation_units());
@@ -736,9 +736,9 @@ namespace sequoia::testing
 
   template<class Nascent>
   [[nodiscard]]
-  std::string test_runner::create_file(const Nascent& nascent, std::string_view stub, const std::filesystem::copy_options options) const
+  std::string test_runner::create_file(const Nascent& nascent, std::string_view stub) const
   {
-    const auto[outputFile, created]{nascent.create_file(m_Copyright, code_templates_path(m_ProjectRoot), stub, options)};
+    const auto[outputFile, created]{nascent.create_file(m_Copyright, code_templates_path(m_ProjectRoot), stub)};
 
     if(created)
     {
