@@ -402,7 +402,7 @@ namespace sequoia::testing
   [[nodiscard]]
   std::vector<std::string> nascent_allocation_test::translation_units() const
   {
-    return { {std::string{forename()}.append("_test(\"Allocation Test\")")} };
+    return { {std::string{forename()}.append("_allocation_test(\"Allocation Test\")")} };
   }
 
   void nascent_allocation_test::transform_file(std::string& text) const
