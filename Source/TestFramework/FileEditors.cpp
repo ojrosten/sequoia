@@ -71,7 +71,8 @@ namespace sequoia::testing
 
     std::string text{read_to_string(file)};
     const auto pattern{std::string{"\""}.append(familyName).append("\",")};
-    
+
+    bool correctStructure{};
     constexpr auto npos{std::string::npos};
     if(auto pos{text.find(pattern)}; pos != npos)
     {
@@ -85,6 +86,7 @@ namespace sequoia::testing
             const indentation indent{text.substr(linePos + 1, pos - linePos - 1)};
             const auto endpos{text.find(");", pos)};
             std::string_view subtext{text.substr(pos, endpos - pos)};
+            correctStructure = true;
             for(const auto& t : tests)
             {
               if(subtext.find(t) == npos)
@@ -100,6 +102,8 @@ namespace sequoia::testing
     {
       if(const auto linePos{text.rfind('\n', pos)}; linePos != npos)
       {
+        correctStructure = true;
+
         auto builder{
           [&text, &tests, pos, linePos, familyName](){
 
@@ -125,7 +129,8 @@ namespace sequoia::testing
         text.insert(linePos, builder());
       }
     }
-    else
+
+    if(!correctStructure)
     {
       throw std::runtime_error{"Unable to find appropriate place to add test family"};
     }
