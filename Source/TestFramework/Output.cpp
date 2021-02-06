@@ -157,7 +157,7 @@ namespace sequoia::testing
       {
         c = static_cast<char>(std::tolower(static_cast<unsigned char>(c)));
         if(std::distance(text.begin(), i) > 0)
-          text.insert(i + 1, '_');
+          text.insert(i, '_');
       }
 
       ++i;

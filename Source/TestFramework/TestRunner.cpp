@@ -355,11 +355,11 @@ namespace sequoia::testing
   void nascent_behavioural_test::finalize()
   {
     camel_name(header().filename().replace_extension().string());
-    forename(to_snake_case(camel_name()));
 
     nascent_test_base::finalize_family();
 
-    camel_name(std::string{camel_name()}.append(capitalize(test_type())));
+    camel_name(std::string{camel_name()}.append(capitalize(test_type())));    
+    forename(to_snake_case(camel_name()));
   }
 
   [[nodiscard]]

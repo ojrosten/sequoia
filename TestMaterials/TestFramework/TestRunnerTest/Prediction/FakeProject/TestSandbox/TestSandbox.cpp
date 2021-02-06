@@ -49,12 +49,12 @@ int main(int argc, char** argv)
 
     runner.add_test_family(
       "Utilities",
-      utilities_test("Free Test")
+      utilities_free_test("Free Test")
     );
 
     runner.add_test_family(
       "Container",
-      container_test("Performance Test"),
+      container_performance_test("Performance Test"),
       container_test("Allocation Test"),
       container_false_positive_test("False Positive Test"),
       container_test("Unit Test")

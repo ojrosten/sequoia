@@ -10,12 +10,12 @@
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::string_view free_class_test::source_file() const noexcept
+  std::string_view utilities_free_test::source_file() const noexcept
   {
     return __FILE__;
   }
 
-  void free_class_test::run_tests()
+  void utilities_free_test::run_tests()
   {
     // TO DO
   }
