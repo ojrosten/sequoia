@@ -190,7 +190,9 @@ namespace sequoia::testing
     }
 
     const auto inputFile{(codeTemplatesDir / inputNameStub).concat(nameEnding)};
-    testing::create_file(inputFile, outputFile, transformer);
+
+    fs::copy_file(inputFile, outputFile, fs::copy_options::overwrite_existing);
+    transformer(outputFile);
 
     return {outputFile, true};
   }

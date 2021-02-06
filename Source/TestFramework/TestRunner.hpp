@@ -24,15 +24,6 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string report_time(const test_family::summary& s);
 
-  template<invocable<std::filesystem::path> Fn>
-  void create_file(const std::filesystem::path& source, const std::filesystem::path& target, Fn action)
-  {
-    namespace fs = std::filesystem;
-
-    fs::copy_file(source, target, fs::copy_options::overwrite_existing);
-    action(target);
-  }
-
   class host_directory
   {
   public:
