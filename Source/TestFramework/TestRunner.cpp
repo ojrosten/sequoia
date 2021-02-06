@@ -176,9 +176,9 @@ namespace sequoia::testing
     }
   }
 
-  template<invocable<std::filesystem::path> FileTransformer>
+  template<invocable<std::string&> FileTransformer>
   [[nodiscard]]
-  auto nascent_test_base::create_file(const std::filesystem::path& codeTemplatesDir, std::string_view inputNameStub, std::string_view nameEnding, const std::filesystem::copy_options options, FileTransformer transformer) const -> file_data
+  auto nascent_test_base::create_file(const std::filesystem::path& codeTemplatesDir, std::string_view copyright, std::string_view inputNameStub, std::string_view nameEnding, const std::filesystem::copy_options options, FileTransformer transformer) const -> file_data
   {
     namespace fs = std::filesystem;
 
@@ -192,7 +192,20 @@ namespace sequoia::testing
     const auto inputFile{(codeTemplatesDir / inputNameStub).concat(nameEnding)};
 
     fs::copy_file(inputFile, outputFile, fs::copy_options::overwrite_existing);
-    transformer(outputFile);
+    if(std::string text{read_to_string(outputFile)}; !text.empty())
+    {
+      set_top_copyright(text, copyright);
+      transformer(text);
+
+      if(std::ofstream ofile{outputFile})
+      {
+        ofile << text;
+      }
+      else
+      {
+        throw std::runtime_error{report_failed_write(outputFile)};
+      }
+    }
 
     return {outputFile, true};
   }
@@ -259,8 +272,8 @@ namespace sequoia::testing
   [[nodiscard]]
   auto nascent_semantics_test::create_file(std::string_view copyright, const std::filesystem::path& codeTemplatesDir, std::string_view nameEnding, const std::filesystem::copy_options options) const -> file_data
   {
-    auto transformer{[this, copyright](const std::filesystem::path& file) { transform_file(file, copyright); }};
-    return nascent_test_base::create_file(codeTemplatesDir, "MyClass", nameEnding, options, transformer);
+    auto transformer{[this](std::string& text) { transform_file(text); }};
+    return nascent_test_base::create_file(codeTemplatesDir, copyright, "MyClass", nameEnding, options, transformer);
   }
     
   [[nodiscard]]
@@ -270,86 +283,71 @@ namespace sequoia::testing
              {std::string{forename()}.append("_test(\"Unit Test\")")} };
   }
 
-  void nascent_semantics_test::transform_file(const std::filesystem::path& file, std::string_view copyright) const
+  void nascent_semantics_test::transform_file(std::string& text) const
   {
-    std::string text{read_to_string(file)};
-
-    if(!text.empty())
+    if(!m_EquivalentTypes.empty())
     {
-      set_top_copyright(text, copyright);
+      std::string args{};
 
-      if(!m_EquivalentTypes.empty())
+      const auto num{m_EquivalentTypes.size()};
+      for(std::size_t i{}; i < num; ++i)
       {
-        std::string args{};
-
-        const auto num{m_EquivalentTypes.size()};
-        for(std::size_t i{}; i < num; ++i)
+        const auto& type{m_EquivalentTypes[i]};
+        if(!type.empty())
         {
-          const auto& type{m_EquivalentTypes[i]};
-          if(!type.empty())
-          {
-            const bool normal{(type.back() != '*') && (type.back() != '&')};
-            if(normal) args.append("const ");
+          const bool normal{(type.back() != '*') && (type.back() != '&')};
+          if(normal) args.append("const ");
 
-            args.append(type);
+          args.append(type);
 
-            if(normal) args.append("&");
+          if(normal) args.append("&");
             
-            args.append(" prediction");
+          args.append(" prediction");
 
-            if(num > 1) args.append("_").append(std::to_string(i));
-            if(i < num -1) args.append(", ");
-          }
-        }
-
-        replace_all(text, "?predictions", args);
-      }
-      else
-      {
-        constexpr auto npos{std::string::npos};
-        const auto start{text.rfind("template<?>")};
-        const auto finish{text.rfind("};")};
-        if((start != npos) && (finish != npos))
-        {
-          text.erase(start, finish + 2 - start);
+          if(num > 1) args.append("_").append(std::to_string(i));
+          if(i < num -1) args.append(", ");
         }
       }
 
-      if(!m_TemplateData.empty())
+      replace_all(text, "?predictions", args);
+    }
+    else
+    {
+      constexpr auto npos{std::string::npos};
+      const auto start{text.rfind("template<?>")};
+      const auto finish{text.rfind("};")};
+      if((start != npos) && (finish != npos))
       {
-        std::string spec{"<"};
-        for(const auto& d : m_TemplateData)
-        {
-          spec.append(d.species).append(" ").append(d.symbol).append(", ");
-        }
-
-        spec.erase(spec.size() - 1);
-        spec.back() = '>';
-        spec.append("\n ");
-
-        replace_all(text, "<?>", spec);
-      }
-      else
-      {
-        replace_all(text, "template<?> ", "");
-      }
-
-      replace_all(text, {{"::?_class", m_QualifiedName},
-                         {"?_class", forename()},
-                         {"?Class", camel_name()},
-                         {"?Test", to_camel_case(test_type()).append("Test")},
-                         {"?Class.hpp", header().string()},
-                         {"?", test_type()}});
-
-      if(std::ofstream ofile{file})
-      {
-        ofile << text;
-      }
-      else
-      {
-        throw std::runtime_error{report_failed_write(file)};
+        text.erase(start, finish + 2 - start);
       }
     }
+
+    if(!m_TemplateData.empty())
+    {
+      std::string spec{"<"};
+      for(const auto& d : m_TemplateData)
+      {
+        spec.append(d.species).append(" ").append(d.symbol).append(", ");
+      }
+
+      spec.erase(spec.size() - 1);
+      spec.back() = '>';
+      spec.append("\n ");
+
+      replace_all(text, "<?>", spec);
+    }
+    else
+    {
+      replace_all(text, "template<?> ", "");
+    }
+
+    replace_all(text, {{"::?_class", m_QualifiedName},
+                       {"?_class", forename()},
+                       {"?Class", camel_name()},
+                       {"?Test", to_camel_case(test_type()).append("Test")},
+                       {"?Class.hpp", header().string()},
+                       {"?", test_type()}});
+
   }
 
   //=========================================== nascent_behavioural_test ===========================================//
@@ -367,8 +365,8 @@ namespace sequoia::testing
   [[nodiscard]]
   auto nascent_behavioural_test::create_file(std::string_view copyright, const std::filesystem::path& codeTemplatesDir, std::string_view nameEnding, const std::filesystem::copy_options options) const -> file_data
   {
-    auto transformer{[this, copyright](const std::filesystem::path& file) { transform_file(file, copyright); }};
-    return nascent_test_base::create_file(codeTemplatesDir, "MyBehavioural", nameEnding, options, transformer);
+    auto transformer{[this](std::string& text) { transform_file(text); }};
+    return nascent_test_base::create_file(codeTemplatesDir, copyright, "MyBehavioural", nameEnding, options, transformer);
   }
 
   [[nodiscard]]
@@ -377,25 +375,11 @@ namespace sequoia::testing
     return { {std::string{forename()}.append("_test(\"").append(to_camel_case(test_type())).append(" Test\")")} };
   }
 
-  void nascent_behavioural_test::transform_file(const std::filesystem::path& file, std::string_view copyright) const
+  void nascent_behavioural_test::transform_file(std::string& text) const
   {
-    std::string text{read_to_string(file)};
-    if(text.empty()) return;
-
-    set_top_copyright(text, copyright);
-
     replace_all(text, {{"?_behavioural", forename()},
                        {"?Behavioural", camel_name()},
                        {"?", test_type()}});
-
-    if(std::ofstream ofile{file})
-    {
-      ofile << text;
-    }
-    else
-    {
-      throw std::runtime_error{report_failed_write(file)};
-    }
   }
 
   //=========================================== nascent_allocation_test ===========================================//
@@ -411,8 +395,8 @@ namespace sequoia::testing
   [[nodiscard]]
   auto nascent_allocation_test::create_file(std::string_view copyright, const std::filesystem::path& codeTemplatesDir, std::string_view nameEnding, const std::filesystem::copy_options options) const -> file_data
   {
-    auto transformer{[this, copyright](const std::filesystem::path& file) { transform_file(file, copyright); }};
-    return nascent_test_base::create_file(codeTemplatesDir, "MyClass", nameEnding, options, transformer);
+    auto transformer{[this](std::string& text) { transform_file(text); }};
+    return nascent_test_base::create_file(codeTemplatesDir, copyright, "MyClass", nameEnding, options, transformer);
   }
 
   [[nodiscard]]
@@ -421,25 +405,11 @@ namespace sequoia::testing
     return { {std::string{forename()}.append("_test(\"Allocation Test\")")} };
   }
 
-  void nascent_allocation_test::transform_file(const std::filesystem::path& file, std::string_view copyright) const
+  void nascent_allocation_test::transform_file(std::string& text) const
   {
-    std::string text{read_to_string(file)};
-    if(text.empty()) return;
-
-    set_top_copyright(text, copyright);
-
     replace_all(text, {{"?_class", forename()},
                        {"?Class", camel_name()},
                        {"?", test_type()}});
-
-    if(std::ofstream ofile{file})
-    {
-      ofile << text;
-    }
-    else
-    {
-      throw std::runtime_error{report_failed_write(file)};
-    }
   }
 
   //=========================================== test_runner ===========================================//

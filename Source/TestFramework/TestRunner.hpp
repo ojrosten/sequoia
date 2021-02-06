@@ -146,9 +146,9 @@ namespace sequoia::testing
       bool created{};
     };
 
-    template<invocable<std::filesystem::path> FileTransformer>
+    template<invocable<std::string&> FileTransformer>
     [[nodiscard]]
-    auto create_file(const std::filesystem::path& codeTemplatesDir, std::string_view inputNameStub, std::string_view nameEnding, std::filesystem::copy_options options, FileTransformer transformer) const -> file_data;
+    auto create_file(const std::filesystem::path& codeTemplatesDir, std::string_view copyright, std::string_view inputNameStub, std::string_view nameEnding, std::filesystem::copy_options options, FileTransformer transformer) const -> file_data;
   private:
     std::string m_Family{}, m_TestType{}, m_Forename{}, m_CamelName{};
 
@@ -196,7 +196,7 @@ namespace sequoia::testing
 
     std::vector<std::string> m_EquivalentTypes{};
 
-    void transform_file(const std::filesystem::path& file, std::string_view copyright) const;
+    void transform_file(std::string& text) const;
   };
 
   class nascent_allocation_test : public nascent_test_base
@@ -218,7 +218,7 @@ namespace sequoia::testing
     [[nodiscard]]
     std::vector<std::string> translation_units() const;
   private:
-    void transform_file(const std::filesystem::path& file, std::string_view copyright) const;
+    void transform_file(std::string& text) const;
   }; 
 
   class nascent_behavioural_test : public nascent_test_base
@@ -246,7 +246,7 @@ namespace sequoia::testing
               "Test.cpp"};
     };
   private:
-    void transform_file(const std::filesystem::path& file, std::string_view copyright) const;
+    void transform_file(std::string& text) const;
    };
 
   struct repositories
