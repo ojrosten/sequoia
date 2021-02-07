@@ -58,7 +58,11 @@ namespace sequoia::testing
     {
       using prediction_type = std::array<std::pair<std::string, std::variant<int, double>>, 2>;
 
-      factory<int, double> f{{"int", "double"}}, g{{"bar", "foo"}};
+      check_exception_thrown<std::logic_error>(LINE("Empty string"), [](){ factory<int, double> f{{"int", ""}}; });
+      check_exception_thrown<std::logic_error>(LINE("Empty string"), [](){ factory<int, double> f{{"", "bar"}}; });
+      check_exception_thrown<std::logic_error>(LINE("Duplicated names"), [](){ factory<int, double> f{{"bar", "bar"}}; });
+
+      factory<int, double> f{{"int", "double"}}, g{{"bar", std::string{"foo"}}};
 
       check_equivalence(LINE(""), f, prediction_type{{{"int", 0}, {"double", 0.0}}});
       check_equivalence(LINE(""), g, prediction_type{{{"bar", 0}, {"foo", 0.0}}});
@@ -70,8 +74,13 @@ namespace sequoia::testing
 
     {
       using prediction_type = std::array<std::pair<std::string, std::variant<std::vector<int>, int, std::complex<float>, double>>, 4>;
-      factory<std::vector<int>, int, std::complex<float>, double>
-        f{{"vec", "int", "complex", "double"}}, g{{"baz", "foo", "bar", "huh"}};
+
+      using factory_type = factory<std::vector<int>, int, std::complex<float>, double>;
+
+      check_exception_thrown<std::logic_error>(LINE("Duplicated names"),
+                                               [](){ factory_type f{{"baz", "foo", "baz", "huh"}}; });
+      
+      factory_type f{{"vec", "int", "complex", "double"}}, g{{"baz", "foo", "bar", "huh"}};
 
       check_equivalence(LINE(""), f,
                         prediction_type{{{"vec", std::vector<int>{}}, {"int", 0}, {"complex", std::complex<float>{}}, {"double", 0.0}}});
