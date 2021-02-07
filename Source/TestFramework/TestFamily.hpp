@@ -22,43 +22,12 @@
 
 namespace sequoia::testing
 {
-  enum class output_mode { none=0, update_materials=1, help=2, verbose=4 };
+  enum class output_mode { standard=0, help=1, verbose=2 };
+  enum class update_mode { none=0, hard, soft};
 
-  [[nodiscard]]
-  constexpr output_mode operator|(output_mode lhs, output_mode rhs) noexcept
-  {
-    return static_cast<output_mode>(static_cast<int>(lhs) | static_cast<int>(rhs));
-  }
-
-  constexpr output_mode& operator|=(output_mode& lhs, output_mode rhs) noexcept
-  {
-    lhs = lhs | rhs;
-    return lhs;
-  }
-
-  [[nodiscard]]
-  constexpr output_mode operator&(output_mode lhs, output_mode rhs) noexcept
-  {
-    return static_cast<output_mode>(static_cast<int>(lhs) & static_cast<int>(rhs));
-  }
-  
-  constexpr output_mode& operator&=(output_mode& lhs, output_mode rhs) noexcept
-  {
-    lhs = lhs & rhs;
-    return lhs;
-  }
-
-  [[nodiscard]]
-  constexpr output_mode operator~(output_mode om)
-  {
-    return static_cast<output_mode>(~static_cast<int>(om));
-  }
-
-  [[nodiscard]]
-  constexpr output_mode operator^(output_mode lhs, output_mode rhs) noexcept
-  {
-    return static_cast<output_mode>(static_cast<int>(lhs) ^ static_cast<int>(rhs));
-  }
+  template<>
+  struct as_bitmask<output_mode> : std::true_type
+  {};
 
   /*! \brief Allows tests to be grouped together into a family of related tests
 
@@ -116,7 +85,7 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    auto execute(const output_mode outputMode, const concurrency_mode concurrenyMode) -> results ;
+    auto execute(update_mode updateMode, concurrency_mode concurrenyMode) -> results ;
 
     [[nodiscard]]
     const std::string& name() const noexcept { return m_Name; }
@@ -160,9 +129,9 @@ namespace sequoia::testing
       paths() = default;
     #endif
       
-      paths(const test& t, output_mode outputMode, const std::filesystem::path& outputDir, const std::filesystem::path& testRepo);
+      paths(const test& t, update_mode updateMode, const std::filesystem::path& outputDir, const std::filesystem::path& testRepo);
 
-      output_mode mode{output_mode::none};
+      update_mode mode{update_mode::none};
       std::filesystem::path summary, workingMaterials, predictions;
     };
   };

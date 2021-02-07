@@ -20,17 +20,9 @@ namespace sequoia::testing
   /*! bit mask for the level of detail */
   enum class summary_detail { absent_checks=1, failure_messages=2, timings=4};
 
-  [[nodiscard]]
-  constexpr summary_detail operator&(summary_detail lhs, summary_detail rhs) noexcept
-  {
-    return static_cast<summary_detail>(static_cast<int>(lhs) & static_cast<int>(rhs));
-  }
-
-  [[nodiscard]]
-  constexpr summary_detail operator|(summary_detail lhs, summary_detail rhs) noexcept
-  {
-    return static_cast<summary_detail>(static_cast<int>(lhs) | static_cast<int>(rhs));
-  }
+  template<>
+  struct as_bitmask<summary_detail> : std::true_type
+  {};
   
   template<class Iter> void pad_right(Iter begin, Iter end, std::string_view suffix)
   {

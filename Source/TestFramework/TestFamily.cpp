@@ -64,7 +64,7 @@ namespace sequoia::testing
     }
   }
 
-  auto test_family::execute(const output_mode outputMode, const concurrency_mode concurrenyMode) -> results
+  auto test_family::execute(const update_mode updateMode, const concurrency_mode concurrenyMode) -> results
   {
     using namespace std::chrono;
     namespace fs = std::filesystem;
@@ -89,7 +89,7 @@ namespace sequoia::testing
 
         writer.to_file(files.summary, summaries.back());
 
-        if((files.mode & output_mode::update_materials) == output_mode::update_materials)
+        if(files.mode != update_mode::none)
         {
           if(summary.soft_failures())
           {
@@ -107,7 +107,7 @@ namespace sequoia::testing
       for(auto& pTest : m_Tests)
       {
         const auto summary{pTest->execute()};
-        process(summary, paths{*pTest, outputMode, m_OutputDir, m_TestRepo});
+        process(summary, paths{*pTest, updateMode, m_OutputDir, m_TestRepo});
       }
     }
     else
@@ -118,8 +118,8 @@ namespace sequoia::testing
       for(auto& pTest : m_Tests)
       {
         results.emplace_back(
-          std::async([&test{*pTest}, outputMode, outputDir{m_OutputDir}, testRepo{m_TestRepo}](){
-            return std::make_pair(test.execute(), paths{test, outputMode, outputDir, testRepo}); })
+          std::async([&test{*pTest}, updateMode, outputDir{m_OutputDir}, testRepo{m_TestRepo}](){
+            return std::make_pair(test.execute(), paths{test, updateMode, outputDir, testRepo}); })
         );
       }
 
@@ -132,8 +132,11 @@ namespace sequoia::testing
 
     for(const auto& update : updateables)
     {
-      //fs::remove_all(update.predictions);
-      
+      if(updateMode == update_mode::hard)
+      {
+        fs::remove_all(update.predictions);
+      }
+
       fs::copy(update.workingMaterials, update.predictions, fs::copy_options::recursive | fs::copy_options::update_existing);
     }
 
@@ -196,8 +199,8 @@ namespace sequoia::testing
     }
   }
 
-  test_family::paths::paths(const test& t, output_mode outputMode, const std::filesystem::path& outputDir, const std::filesystem::path& testRepo)
-    : mode{outputMode}
+  test_family::paths::paths(const test& t, update_mode updateMode, const std::filesystem::path& outputDir, const std::filesystem::path& testRepo)
+    : mode{updateMode}
     , summary{test_summary_filename(t, outputDir, testRepo)}
     , workingMaterials{t.working_materials()}
     , predictions{t.predictive_materials()}

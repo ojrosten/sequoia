@@ -365,7 +365,8 @@ namespace sequoia::testing
     
     std::ostream& m_Stream;
 
-    output_mode m_OutputMode{output_mode::none};
+    output_mode m_OutputMode{output_mode::standard};
+    update_mode m_UpdateMode{update_mode::none};
     concurrency_mode m_ConcurrencyMode{concurrency_mode::serial};
     
     bool mark_family(std::string_view name);

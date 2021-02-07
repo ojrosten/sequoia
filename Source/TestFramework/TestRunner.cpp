@@ -544,10 +544,17 @@ namespace sequoia::testing
                    },
                    [this](const param_list&) { std::visit(variant_visitor{[](auto& nascent){ nascent.finalize();}}, m_NascentTests.back()); }
                   },
-                  {"init", {"-i"}, {"copyright", "path"},
+                  {"init", {"i"}, {"copyright", "path"},
                     [this](const param_list& args) {
                       init_project(args[0], args[1]);
                     }
+                  },                  
+                  {"update-materials", {"um"}, {},
+                    [this](const param_list&) {
+                      if(m_UpdateMode != update_mode::hard)
+                        m_UpdateMode = update_mode::soft;
+                    },
+                   { {{"--hard"}, {}, {},  [this](const param_list&) { m_UpdateMode = update_mode::hard; }} }
                   },
                   {"--async", {"-a"}, {},
                     [this](const param_list&) {
@@ -562,9 +569,6 @@ namespace sequoia::testing
                     }
                   },
                   {"--verbose",  {"-v"}, {}, [this](const param_list&) { m_OutputMode |= output_mode::verbose; }},
-                  {"--correct-materials", {"-cm"}, {},
-                    [this](const param_list&) { m_OutputMode |= output_mode::update_materials; }
-                  },
                   {"--recovery", {"-r"}, {},
                     [recoveryDir{recovery_path(m_OutputDir)}] (const param_list&) {
                       std::filesystem::create_directory(recoveryDir);
@@ -781,7 +785,7 @@ namespace sequoia::testing
         for(auto& family : m_Families)
         {
           m_Stream << family.name() << ":\n";
-          summary += process_family(family.execute(m_OutputMode, m_ConcurrencyMode)).log;
+          summary += process_family(family.execute(m_UpdateMode, m_ConcurrencyMode)).log;
         }
       }
       else
@@ -793,8 +797,8 @@ namespace sequoia::testing
         for(auto& family : m_Families)
         {
           results.emplace_back(family.name(),
-            std::async([&family, omode{m_OutputMode}, cmode{m_ConcurrencyMode}](){
-                return family.execute(omode, cmode); }));
+            std::async([&family, umode{m_UpdateMode}, cmode{m_ConcurrencyMode}](){
+                         return family.execute(umode, cmode); }));
         }
 
         for(auto& res : results)

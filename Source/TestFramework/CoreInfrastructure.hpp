@@ -111,4 +111,65 @@ namespace sequoia::testing
       return x;
     }
   }
+
+  template<class T>
+    requires std::is_enum_v<T>
+  struct as_bitmask : std::false_type
+  {};
+
+  template<class T>
+    requires std::is_enum_v<T>
+  using as_bitmask_t = typename as_bitmask<T>::type;
+
+  template<class T>
+    requires std::is_enum_v<T>
+  constexpr bool as_bitmask_v{as_bitmask<T>::value};
+
+  template<class T>
+    requires as_bitmask_v<T>
+  [[nodiscard]]
+  constexpr T operator|(T lhs, T rhs) noexcept
+  {
+    return static_cast<T>(static_cast<int>(lhs) | static_cast<int>(rhs));
+  }
+
+  template<class T>
+    requires as_bitmask_v<T>
+  constexpr T& operator|=(T& lhs, T rhs) noexcept
+  {
+    lhs = lhs | rhs;
+    return lhs;
+  }
+
+  template<class T>
+    requires as_bitmask_v<T>
+  [[nodiscard]]
+  constexpr T operator&(T lhs, T rhs) noexcept
+  {
+    return static_cast<T>(static_cast<int>(lhs) & static_cast<int>(rhs));
+  }
+
+  template<class T>
+    requires as_bitmask_v<T>
+  constexpr T& operator&=(T& lhs, T rhs) noexcept
+  {
+    lhs = lhs & rhs;
+    return lhs;
+  }
+
+  template<class T>
+    requires as_bitmask_v<T>
+  [[nodiscard]]
+  constexpr T operator~(T om)
+  {
+    return static_cast<T>(~static_cast<int>(om));
+  }
+
+  template<class T>
+    requires as_bitmask_v<T>
+  [[nodiscard]]
+  constexpr T operator^(T lhs, T rhs) noexcept
+  {
+    return static_cast<T>(static_cast<int>(lhs) ^ static_cast<int>(rhs));
+  }
 }
