@@ -82,14 +82,15 @@ namespace sequoia::testing
         if((linePos > preamble.size()) && (text.find(preamble, linePos - preamble.size()) != npos))
         {
           if(const auto nextLinePos{text.find('\n', pos)}; nextLinePos != npos)
-          {          
+          {
             const indentation indent{text.substr(linePos + 1, pos - linePos - 1)};
             const auto endpos{text.find(");", pos)};
-            std::string_view subtext{text.substr(pos, endpos - pos)};
+            std::string_view textView{text};
+            std::string_view subtextView{textView.substr(pos, endpos - pos)};
             correctStructure = true;
             for(const auto& t : tests)
             {
-              if(subtext.find(t) == npos)
+              if(subtextView.find(t) == npos)
               {
                 text.insert(nextLinePos+1, std::string{indent}.append(t).append(",\n"));
               }

@@ -273,8 +273,8 @@ namespace sequoia::testing
    */
 
   class test_runner
-  {    
-  public:    
+  {
+  public:
     test_runner(int argc, char** argv, std::string_view copyright, std::filesystem::path testMain, std::filesystem::path hashIncludeTarget, repositories repos, std::ostream& stream=std::cout);
 
     test_runner(const test_runner&) = delete;

@@ -268,14 +268,14 @@ namespace sequoia::testing
 
     nascent_test_base::finalize_family();
   }
-  
+
   [[nodiscard]]
   auto nascent_semantics_test::create_file(std::string_view copyright, const std::filesystem::path& codeTemplatesDir, std::string_view nameEnding) const -> file_data
   {
     auto transformer{[this](std::string& text) { transform_file(text); }};
     return nascent_test_base::create_file(codeTemplatesDir, copyright, "MyClass", nameEnding, transformer);
   }
-    
+
   [[nodiscard]]
   std::vector<std::string> nascent_semantics_test::translation_units() const
   {
@@ -735,7 +735,7 @@ namespace sequoia::testing
           {
             append_lines(mess, create_file(nascent, stub));
           }
-          
+
           add_to_family(m_TestMain, nascent.family(), nascent.translation_units());
         }
       };
@@ -750,6 +750,9 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string test_runner::create_file(const Nascent& nascent, std::string_view stub) const
   {
+    namespace fs = std::filesystem;
+    auto stringify{[root{m_ProjectRoot}] (const fs::path file) { return fs::relative(file, root).generic_string();  }};
+
     const auto[outputFile, created]{nascent.create_file(m_Copyright, code_templates_path(m_ProjectRoot), stub)};
 
     if(created)
@@ -761,12 +764,12 @@ namespace sequoia::testing
           add_include(m_HashIncludeTarget, filename.string());
         }
       }
-          
-      return std::string{"\""}.append(outputFile.generic_string()).append("\"");
+
+      return std::string{"\""}.append(stringify(outputFile)).append("\"");
     }
     else
     {
-      return warning(outputFile.generic_string()).append(" already exists, so not created\n");
+      return warning(stringify(outputFile).append(" already exists, so not created\n"));
     }
   }
 
