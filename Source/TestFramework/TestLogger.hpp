@@ -40,6 +40,7 @@ namespace sequoia::testing
   class output_manager
   {
     inline static std::filesystem::path st_RecoveryFile{};
+    inline static std::filesystem::path st_DumpFile{};
   public:
     static void recovery_file(const std::filesystem::path& recoveryFile)
     {
@@ -47,9 +48,16 @@ namespace sequoia::testing
     }
 
     static const std::filesystem::path& recovery_file() noexcept { return st_RecoveryFile; }
+
+    static void dump_file(const std::filesystem::path& dumpFile)
+    {
+      st_DumpFile = dumpFile;
+    }
+
+    static const std::filesystem::path& dump_file() noexcept { return st_DumpFile; }
   };
 
-  /*! \brief Specifies whether tests are run as standard tests or in false postive/negative mode .
+  /*! \brief Specifies whether tests are run as standard tests or in false postive/negative mode.
       
       \anchor test_mode_enum
    */
@@ -109,6 +117,12 @@ namespace sequoia::testing
         }
       }
 
+      if(auto file{output_manager::dump_file()}; !file.empty())
+      {
+        if(std::ofstream of{file, std::ios_base::app})
+          of << message << "\n";
+      }
+
       logger.push_message(message);
       logger.increment_depth();
     }
@@ -157,6 +171,12 @@ namespace sequoia::testing
             if(std::ofstream of{file, std::ios_base::app})
               of << "Check ended\n";
           }
+        }
+        
+        if(auto file{output_manager::dump_file()}; !file.empty())
+        {
+          if(std::ofstream of{file, std::ios_base::app})
+            of << "\n\n";
         }
         
         logger.exceptions_detected_by_sentinel(std::uncaught_exceptions());

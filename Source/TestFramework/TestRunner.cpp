@@ -573,6 +573,14 @@ namespace sequoia::testing
                     [recoveryDir{recovery_path(m_OutputDir)}] (const param_list&) {
                       std::filesystem::create_directory(recoveryDir);
                       output_manager::recovery_file(recoveryDir / "Recovery.txt");
+                      std::filesystem::remove(output_manager::recovery_file());
+                    }
+                  },
+                  {"--dump", {}, {},
+                    [recoveryDir{recovery_path(m_OutputDir)}] (const param_list&) {
+                      std::filesystem::create_directory(recoveryDir);
+                      output_manager::dump_file(recoveryDir / "Dump.txt");
+                      std::filesystem::remove(output_manager::dump_file());
                     }
                   }
                 },
@@ -594,8 +602,8 @@ namespace sequoia::testing
   {
     using parsing::commandline::error;
 
-    if(concurrent_execution() && !output_manager::recovery_file().empty())
-      throw std::runtime_error{error("Can't run asynchronously in recovery mode\n")};
+    if(concurrent_execution() && (!output_manager::recovery_file().empty() || !output_manager::dump_file().empty()))
+      throw std::runtime_error{error("Can't run asynchronously in recovery/dump mode\n")};
   }
 
   [[nodiscard]]
