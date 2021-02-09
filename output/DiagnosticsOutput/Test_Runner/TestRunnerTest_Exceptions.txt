@@ -1,0 +1,79 @@
+Tests/TestFramework/TestRunnerTest.cpp, Line 31
+Unmatched <
+
+Expected Exception Type:
+[std::runtime_error]
+<: < not matched by >
+
+
+	=======================================
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 33
+Backwards delimiters
+
+Expected Exception Type:
+[std::runtime_error]
+><: unable to parse template
+
+
+	=======================================
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 35
+Missing symbol
+
+Expected Exception Type:
+[std::runtime_error]
+<class>:  Unable to locate species/symbol pair
+
+
+	=======================================
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 37
+Missing symbol
+
+Expected Exception Type:
+[std::runtime_error]
+< class>:  Unable to locate species/symbol pair
+
+
+	=======================================
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 107
+
+Expected Exception Type:
+[std::runtime_error]
+  does not exist
+
+Try ensuring that the application is run from the appropriate directory
+
+
+	=======================================
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 115
+
+Expected Exception Type:
+[std::runtime_error]
+  does not exist
+
+
+	=======================================
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 123
+
+Expected Exception Type:
+[std::runtime_error]
+Source  does not exist
+
+
+	=======================================
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 132
+
+Expected Exception Type:
+[std::runtime_error]
+Unable to locate file Plurgh.h or Plurgh.hpp in the source repository
+/Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Source
+
+
+	=======================================
+

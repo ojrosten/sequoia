@@ -61,7 +61,7 @@ namespace sequoia::runtime
 
       auto comp{[](const element& lhs, const element& rhs) { return lhs.first == rhs.first; }};
       if(std::adjacent_find(m_Creators.cbegin(), m_Creators.cend(), comp) != m_Creators.cend())
-        throw std::logic_error{"Factory product names must be unqiue!"};
+        throw std::logic_error{"Factory product names must be unique!"};
     }
 
     [[nodiscard]]

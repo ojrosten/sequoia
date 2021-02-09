@@ -1,0 +1,54 @@
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 58
+Unexpected argument
+
+Expected Exception Type:
+[std::runtime_error]
+
+  Error: unrecognized option '--asyng'
+
+
+	=======================================
+
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 66
+Unexpected argument
+
+Expected Exception Type:
+[std::runtime_error]
+
+  Error: unrecognized option '-a'
+
+
+	=======================================
+
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 102
+Unexpected argument
+
+Expected Exception Type:
+[std::runtime_error]
+
+  Error: unrecognized option '-ac'
+
+
+	=======================================
+
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 122
+Final argument missing
+
+Expected Exception Type:
+[std::runtime_error]
+
+  Error: expected 1 argument, [case], but found 0 arguments
+
+
+	=======================================
+
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 330
+
+Expected Exception Type:
+[std::runtime_error]
+
+  Error: unrecognized option 'blah'
+
+
+	=======================================
+

@@ -13,6 +13,7 @@
 
 #include "RegularTestCore.hpp"
 #include "StatisticalAlgorithms.hpp"
+#include "FileEditors.hpp"
 
 #include <chrono>
 #include <random>
@@ -247,15 +248,10 @@ namespace sequoia::testing
       if constexpr(mode != test_mode::standard)
       {
         const auto referenceOutput{
-          [filename{this->versioned_output_filename()}]() -> std::string {
+          [filename{this->diagnostics_output_filename()}]() -> std::string {
             if(std::filesystem::exists(filename))
             {
-              if(std::ifstream ifile{filename})
-              {
-                std::stringstream buf{};
-                buf << ifile.rdbuf();
-                return buf.str();
-              }
+              return read_to_string(filename);
             }
 
             return "";
