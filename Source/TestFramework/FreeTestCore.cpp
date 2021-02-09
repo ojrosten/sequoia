@@ -69,6 +69,14 @@ namespace sequoia::testing
     return diagnostics_output_path(outputDir) / makeDirName(familyName) / output_filename(suffix);
   }
 
+  const log_summary& test::write_versioned_output(const log_summary& summary) const
+  {
+    write(diagnostics_output_filename(), summary.diagnostics_output());     
+    write(caught_exceptions_output_filename(), summary.caught_exceptions_output());
+
+    return summary;
+  }
+
   void test::write(const std::filesystem::path& file, std::string_view text)
   {
     if(!text.empty() || std::filesystem::exists(file))

@@ -103,17 +103,18 @@ namespace sequoia::testing
     [[nodiscard]]
     virtual std::string_view source_file() const noexcept = 0;
 
-    virtual void log_critical_failure(std::string_view tag, std::string_view what) = 0;
-
     /// The override in a derived test should call the checks performed by the test.
     virtual void run_tests() = 0;
-
+    
     [[nodiscard]]
     virtual log_summary summarize(duration delta) const = 0;
 
-    virtual const log_summary& write_versioned_output(const log_summary& summary) const = 0;
+    virtual void log_critical_failure(std::string_view tag, std::string_view what) = 0;
 
+    [[nodiscard]]
     virtual std::filesystem::path output_filename(std::string_view suffix) const = 0;
+
+    const log_summary& write_versioned_output(const log_summary& summary) const;
 
     static void write(const std::filesystem::path& file, std::string_view text);
   private:
@@ -170,20 +171,6 @@ namespace sequoia::testing
   protected:
     basic_test(basic_test&&) noexcept = default;
 
-    std::filesystem::path output_filename(std::string_view suffix) const override
-    {
-      return test::output_filename(to_tag(mode).append(suffix));
-    }
-
-    const log_summary& write_versioned_output(const log_summary& summary) const override
-    {
-      test::write(diagnostics_output_filename(), summary.diagnostics_output());     
-      test::write(caught_exceptions_output_filename(), summary.caught_exceptions_output());
-
-      return summary;
-    }
-
-
     /// Any override of this is likely to call this first and potentially append to the log_summary
     [[nodiscard]]
     log_summary summarize(duration delta) const override
@@ -191,8 +178,7 @@ namespace sequoia::testing
       return Checker::summary(name(), delta);
     }
 
-  private:
-    void log_critical_failure(std::string_view tag, std::string_view what) override
+    void log_critical_failure(std::string_view tag, std::string_view what) final
     {
       const auto message{
         exception_message(tag, source_filename(), Checker::top_level_message(), what, Checker::exceptions_detected_by_sentinel())
@@ -201,6 +187,13 @@ namespace sequoia::testing
       auto sentry{Checker::make_sentinel("")};
       sentry.log_critical_failure(message);
     }
+
+    [[nodiscard]]
+    std::filesystem::path output_filename(std::string_view suffix) const final
+    {
+      return test::output_filename(to_tag(mode).append(suffix));
+    }
+  private:
   };
   
   template<test_mode Mode>
