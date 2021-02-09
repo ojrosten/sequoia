@@ -1,0 +1,9 @@
+Tests/TestFramework/CoreDiagnostics.cpp, Line 334
+
+Expected Exception Type:
+[std::runtime_error]
+Error
+
+
+	=======================================
+

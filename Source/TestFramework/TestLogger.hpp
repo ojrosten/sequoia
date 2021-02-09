@@ -216,6 +216,11 @@ namespace sequoia::testing
       m_Logger.get().log_critical_failure(message);
     }
 
+    void log_caught_exception_message(std::string_view message)
+    {
+      m_Logger.get().log_caught_exception_message(message);
+    }
+
     [[nodiscard]]
     bool critical_failure_detected() const noexcept
     {
@@ -289,10 +294,10 @@ namespace sequoia::testing
     int exceptions_detected_by_sentinel() const noexcept { return m_ExceptionsInFlight; }
 
     [[nodiscard]]
-    const std::string& top_level_message() const
-    {
-      return m_TopLevelMessage;
-    }
+    const std::string& top_level_message() const noexcept { return m_TopLevelMessage; }
+
+    [[nodiscard]]
+    const std::string& caught_exceptions_output() const noexcept { return m_CaughtExceptionMessages; }
   private:
     struct level_message
     {
@@ -309,7 +314,8 @@ namespace sequoia::testing
     std::string
       m_TopLevelMessage,
       m_FailureMessages,
-      m_DiagnosticsOutput;
+      m_DiagnosticsOutput,
+      m_CaughtExceptionMessages;
 
     std::vector<level_message> m_LevelMessages;
 
@@ -407,6 +413,12 @@ namespace sequoia::testing
     {
       ++m_TopLevelFailures;
       m_FailureMessages.append(message).append("\n");
+    }
+
+    void log_caught_exception_message(std::string_view message)
+    {
+      m_CaughtExceptionMessages.append(top_level_message()).append("\n").append(message);
+      end_block(m_CaughtExceptionMessages, 3, indent(footer(), tab));
     }
 
     void exceptions_detected_by_sentinel(const int n)
@@ -512,8 +524,9 @@ namespace sequoia::testing
         break;
       }
 
-      m_DiagnosticsOutput = logger.diagnostics_output();
-      m_CriticalFailures = logger.critical_failures();
+      m_CaughtExceptionMessages = logger.caught_exceptions_output();
+      m_DiagnosticsOutput       = logger.diagnostics_output();
+      m_CriticalFailures        = logger.critical_failures();
     }
 
     void clear()
@@ -587,6 +600,9 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
+    const std::string& caught_exceptions_output() const noexcept { return m_CaughtExceptionMessages; }
+
+    [[nodiscard]]
     duration execution_time() const noexcept { return m_Duration; }
       
     log_summary& operator+=(const log_summary& rhs)
@@ -631,7 +647,7 @@ namespace sequoia::testing
       return s;
     }
   private:
-    std::string m_Name, m_FailureMessages, m_DiagnosticsOutput;
+    std::string m_Name, m_FailureMessages, m_DiagnosticsOutput, m_CaughtExceptionMessages;
     std::size_t
       m_StandardTopLevelChecks{},
       m_StandardDeepChecks{},

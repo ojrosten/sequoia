@@ -77,9 +77,15 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    const std::filesystem::path& versioned_output_filename() const noexcept
+    const std::filesystem::path& diagnostics_output_filename() const noexcept
     {
-      return m_VersionedOutput;
+      return m_DiagnosticsOutput;
+    }
+
+    [[nodiscard]]
+    const std::filesystem::path& caught_exceptions_output_filename() const noexcept
+    {
+      return m_CaughtExceptionsOutput;
     }
 
     [[nodiscard]]
@@ -97,9 +103,6 @@ namespace sequoia::testing
     [[nodiscard]]
     virtual std::string_view source_file() const noexcept = 0;
 
-    [[nodiscard]]
-    virtual std::filesystem::path make_versioned_output_filename() const = 0;
-
     virtual void log_critical_failure(std::string_view tag, std::string_view what) = 0;
 
     /// The override in a derived test should call the checks performed by the test.
@@ -108,15 +111,17 @@ namespace sequoia::testing
     [[nodiscard]]
     virtual log_summary summarize(duration delta) const = 0;
 
-    virtual const log_summary& write_versioned_output(const log_summary& summary) const;
+    virtual const log_summary& write_versioned_output(const log_summary& summary) const = 0;
 
-    [[nodiscard]]
-    std::filesystem::path make_versioned_output_filepath(const std::filesystem::path& outputDir, std::string_view familyName) const;
+    virtual std::filesystem::path output_filename(std::string_view suffix) const = 0;
 
-    std::filesystem::path output_filename(std::string_view tag) const;
+    static void write(const std::filesystem::path& file, std::string_view text);
   private:
     std::string m_Name{};
-    std::filesystem::path m_WorkingMaterials{}, m_PredictiveMaterials{}, m_TestRepo{}, m_VersionedOutput{};
+    std::filesystem::path m_WorkingMaterials{}, m_PredictiveMaterials{}, m_TestRepo{}, m_DiagnosticsOutput{}, m_CaughtExceptionsOutput{};
+
+    [[nodiscard]]
+    std::filesystem::path make_output_filepath(const std::filesystem::path& outputDir, std::string_view familyName, std::string_view suffix) const;
   };
 
   template<class T>
@@ -165,22 +170,24 @@ namespace sequoia::testing
   protected:
     basic_test(basic_test&&) noexcept = default;
 
-    [[nodiscard]]
-    std::filesystem::path make_versioned_output_filename() const override
+    std::filesystem::path output_filename(std::string_view suffix) const override
     {
-      return test::output_filename(to_tag(mode));
+      return test::output_filename(to_tag(mode).append(suffix));
     }
 
     const log_summary& write_versioned_output(const log_summary& summary) const override
     {
       if constexpr(mode != test_mode::standard)
       {
-        return test::write_versioned_output(summary);
+        test::write(diagnostics_output_filename(), summary.diagnostics_output());
       }
-      else
+
+      if constexpr(mode != test_mode::false_positive)
       {
-        return summary;
+        test::write(caught_exceptions_output_filename(), summary.caught_exceptions_output());
       }
+
+      return summary;
     }
 
 

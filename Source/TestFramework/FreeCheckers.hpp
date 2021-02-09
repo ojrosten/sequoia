@@ -117,6 +117,23 @@ namespace sequoia::testing
     }
   };
 
+  template<class>
+  struct exception_message_extractor;
+
+  template<class E>
+    requires derived_from<E, std::exception>
+  struct exception_message_extractor<E>
+  {
+    static std::string get(const E& e) { return e.what(); }
+  };
+
+  template<class E>
+    requires (!derived_from<E, std::exception>) && serializable<E>
+  struct exception_message_extractor<E>
+  {
+    static std::string get(const E& e) { return to_string(e); }
+  };
+
   /*! \brief generic function that generates a check from any class providing a static check method.
 
       This employs a \ref test_logger_primary "sentinel" and so can be used naively.
@@ -338,8 +355,9 @@ namespace sequoia::testing
       sentry.log_failure("No exception thrown");
       return false;
     }
-    catch(const E&)
+    catch(const E& e)
     {
+      sentry.log_caught_exception_message(exception_message_extractor<E>::get(e));
       return true;
     }
     catch(const std::exception& e)

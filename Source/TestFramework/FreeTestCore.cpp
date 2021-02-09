@@ -12,10 +12,11 @@ namespace sequoia::testing
   void test::set_filesystem_data(std::filesystem::path testRepo, const std::filesystem::path& outputDir, std::string_view familyName)
   {
     m_TestRepo = std::move(testRepo);
-    m_VersionedOutput = make_versioned_output_filepath(outputDir, familyName);
+    m_DiagnosticsOutput = make_output_filepath(outputDir, familyName, "Output");
+    m_CaughtExceptionsOutput = make_output_filepath(outputDir, familyName, "Exceptions");
 
     namespace fs = std::filesystem;
-    fs::create_directories(m_VersionedOutput.parent_path());
+    fs::create_directories(m_DiagnosticsOutput.parent_path());
   }
 
   void test::set_materials(std::filesystem::path workingMaterials, std::filesystem::path predictiveMaterials)
@@ -49,12 +50,11 @@ namespace sequoia::testing
     }
 
     return write_versioned_output(summarize(steady_clock::now() - time));
-  }
+  };
 
   [[nodiscard]]
-  std::filesystem::path test::make_versioned_output_filepath(const std::filesystem::path& outputDir, std::string_view familyName) const
+  std::filesystem::path test::make_output_filepath(const std::filesystem::path& outputDir, std::string_view familyName, std::string_view suffix) const
   {
-
     namespace fs = std::filesystem;
 
     auto makeDirName{
@@ -66,29 +66,26 @@ namespace sequoia::testing
       }
     };
 
-    return diagnostics_output_path(outputDir) / makeDirName(familyName) / make_versioned_output_filename();
+    return diagnostics_output_path(outputDir) / makeDirName(familyName) / output_filename(suffix);
   }
 
-  const log_summary& test::write_versioned_output(const log_summary& summary) const
+  void test::write(const std::filesystem::path& file, std::string_view text)
   {
-    const auto filename{versioned_output_filename()};
-    if(std::ofstream ofile{filename})
+    if(std::ofstream ofile{file})
     {
-      ofile << summary.diagnostics_output();
+      ofile.write(text.data(), text.size());
     }
     else
     {
-      throw std::runtime_error{report_failed_write(filename)};
+      throw std::runtime_error{report_failed_write(file)};
     }
-
-    return summary;
   }
 
   [[nodiscard]]
-  std::filesystem::path test::output_filename(std::string_view tag) const
+  std::filesystem::path test::output_filename(std::string_view suffix) const
   {
     namespace fs = std::filesystem;
-    return fs::path{source_file()}.filename().replace_extension().concat("_").concat(tag).concat("Output.txt");
+    return fs::path{source_file()}.filename().replace_extension().concat("_").concat(suffix).concat(".txt");
   }
 
   [[nodiscard]]
