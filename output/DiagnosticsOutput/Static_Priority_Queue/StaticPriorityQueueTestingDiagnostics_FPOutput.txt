@@ -1,7 +1,7 @@
 	Tests/Core/DataStructures/StaticPriorityQueueTestingDiagnostics.cpp, Line 32
 	Empty queue versus populated queue
 
-	[sequoia::data_structures::static_priority_queue<int, 1ul, std::less<int> >]
+	[sequoia::data_structures::static_priority_queue<int, 1, std::less<int> >]
 	operator== returned false
 
 	  Inconsistent emptiness
@@ -27,7 +27,7 @@
 	Tests/Core/DataStructures/StaticPriorityQueueTestingDiagnostics.cpp, Line 35
 	Differing elements
 
-	[sequoia::data_structures::static_priority_queue<int, 1ul, std::less<int> >]
+	[sequoia::data_structures::static_priority_queue<int, 1, std::less<int> >]
 	operator== returned false
 
 	  Inconsistent top element
@@ -49,7 +49,7 @@
 	Tests/Core/DataStructures/StaticPriorityQueueTestingDiagnostics.cpp, Line 38
 	Empty queue versus populated queue
 
-	[sequoia::data_structures::static_priority_queue<int, 1ul, std::less<int> >]
+	[sequoia::data_structures::static_priority_queue<int, 1, std::less<int> >]
 	operator== returned false
 
 	  Inconsistent emptiness
@@ -75,7 +75,7 @@
 	Tests/Core/DataStructures/StaticPriorityQueueTestingDiagnostics.cpp, Line 46
 	Two element queue versus one element queue
 
-	[sequoia::data_structures::static_priority_queue<int, 2ul, std::less<int> >]
+	[sequoia::data_structures::static_priority_queue<int, 2, std::less<int> >]
 	operator== returned false
 
 	  Inconsistent size

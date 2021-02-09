@@ -19,7 +19,7 @@
 	Tests/Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 42
 	Empty queue versus populated queue
 
-	[sequoia::data_structures::static_queue<int, 1ul>]
+	[sequoia::data_structures::static_queue<int, 1>]
 	operator== returned false
 
 	  Inconsistent emptiness
@@ -45,7 +45,7 @@
 	Tests/Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 45
 	Differing elements
 
-	[sequoia::data_structures::static_queue<int, 1ul>]
+	[sequoia::data_structures::static_queue<int, 1>]
 	operator== returned false
 
 	  Inconsistent front element
@@ -73,7 +73,7 @@
 	Tests/Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 48
 	Empty queue versus populated queue
 
-	[sequoia::data_structures::static_queue<int, 1ul>]
+	[sequoia::data_structures::static_queue<int, 1>]
 	operator== returned false
 
 	  Inconsistent emptiness

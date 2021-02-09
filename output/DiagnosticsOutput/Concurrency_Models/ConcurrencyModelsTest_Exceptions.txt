@@ -1,0 +1,60 @@
+Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 25
+pool_2
+
+Expected Exception Type:
+[std::runtime_error]
+Error!
+
+
+	=======================================
+
+Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 26
+pool_2M
+
+Expected Exception Type:
+[std::runtime_error]
+Error!
+
+
+	=======================================
+
+Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 27
+async
+
+Expected Exception Type:
+[std::runtime_error]
+Error!
+
+
+	=======================================
+
+Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 29
+pool_2
+
+Expected Exception Type:
+[std::runtime_error]
+Error!
+
+
+	=======================================
+
+Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 30
+pool_2M
+
+Expected Exception Type:
+[std::runtime_error]
+Error!
+
+
+	=======================================
+
+Tests/Core/Concurrency/ConcurrencyModelsTest.cpp, Line 31
+async
+
+Expected Exception Type:
+[std::runtime_error]
+Error!
+
+
+	=======================================
+

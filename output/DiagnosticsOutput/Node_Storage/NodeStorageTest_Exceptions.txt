@@ -1,0 +1,36 @@
+Tests/Maths/Graph/NodeStorageTest.cpp, Line 108
+
+Expected Exception Type:
+[std::out_of_range]
+Attempting to erase a range of nodes with first > last
+
+
+	=======================================
+
+Tests/Maths/Graph/NodeStorageTest.cpp, Line 109
+
+Expected Exception Type:
+[std::out_of_range]
+Attempting to erase a node which does not exist
+
+
+	=======================================
+
+Tests/Maths/Graph/NodeStorageTest.cpp, Line 108
+
+Expected Exception Type:
+[std::out_of_range]
+Attempting to erase a range of nodes with first > last
+
+
+	=======================================
+
+Tests/Maths/Graph/NodeStorageTest.cpp, Line 109
+
+Expected Exception Type:
+[std::out_of_range]
+Attempting to erase a node which does not exist
+
+
+	=======================================
+
