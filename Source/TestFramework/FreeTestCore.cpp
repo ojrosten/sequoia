@@ -71,13 +71,16 @@ namespace sequoia::testing
 
   void test::write(const std::filesystem::path& file, std::string_view text)
   {
-    if(std::ofstream ofile{file})
+    if(!text.empty() || std::filesystem::exists(file))
     {
-      ofile.write(text.data(), text.size());
-    }
-    else
-    {
-      throw std::runtime_error{report_failed_write(file)};
+      if(std::ofstream ofile{file})
+      {
+        ofile.write(text.data(), text.size());
+      }
+      else
+      {
+        throw std::runtime_error{report_failed_write(file)};
+      }
     }
   }
 

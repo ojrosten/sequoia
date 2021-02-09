@@ -177,15 +177,8 @@ namespace sequoia::testing
 
     const log_summary& write_versioned_output(const log_summary& summary) const override
     {
-      if constexpr(mode != test_mode::standard)
-      {
-        test::write(diagnostics_output_filename(), summary.diagnostics_output());
-      }
-
-      if constexpr(mode != test_mode::false_positive)
-      {
-        test::write(caught_exceptions_output_filename(), summary.caught_exceptions_output());
-      }
+      test::write(diagnostics_output_filename(), summary.diagnostics_output());     
+      test::write(caught_exceptions_output_filename(), summary.caught_exceptions_output());
 
       return summary;
     }
