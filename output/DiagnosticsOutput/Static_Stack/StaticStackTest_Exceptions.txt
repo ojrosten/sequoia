@@ -13,7 +13,7 @@ Can't construct non-null null stack
 
 Expected Exception Type:
 [std::logic_error]
-intializer_list too big for array
+initializer_list too big for array
 
 
 	=======================================
@@ -33,7 +33,7 @@ Can't construct stack of depth 1 with 2 elements
 
 Expected Exception Type:
 [std::logic_error]
-intializer_list too big for array
+initializer_list too big for array
 
 
 	=======================================

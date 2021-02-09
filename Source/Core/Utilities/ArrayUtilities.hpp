@@ -60,7 +60,7 @@ namespace sequoia::utilities
   constexpr std::array<T, N> to_array(std::initializer_list<InitType> l, Fn fn = Fn{})
   {
     if(l.size() > N)
-      throw std::logic_error{"intializer_list too big for array"};
+      throw std::logic_error{"initializer_list too big for array"};
     
     return impl::to_array<T, N>(l, std::make_index_sequence<N>{}, fn);
   }
