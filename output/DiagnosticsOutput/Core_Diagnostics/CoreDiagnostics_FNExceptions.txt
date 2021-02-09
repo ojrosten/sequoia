@@ -7,3 +7,12 @@ Error
 
 	=======================================
 
+Tests/TestFramework/CoreDiagnostics.cpp, Line 336
+
+Expected Exception Type:
+[int]
+1
+
+
+	=======================================
+

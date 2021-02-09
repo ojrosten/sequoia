@@ -331,7 +331,9 @@ namespace sequoia::testing
 
   void false_negative_diagnostics::test_exceptions()
   {
-    check_exception_thrown<std::runtime_error>(LINE(""), [](){ throw std::runtime_error("Error");});      
+    check_exception_thrown<std::runtime_error>(LINE(""), [](){ throw std::runtime_error("Error");});
+
+    check_exception_thrown<int>(LINE(""), [](){ throw 1; });
   }
 
   void false_negative_diagnostics::test_heterogeneous()
