@@ -9,7 +9,7 @@
 
 namespace sequoia::testing
 {
-  class test_runner_test_creation final : public free_test
+  class test_runner_project_creation final : public free_test
   {
   public:
     using free_test::free_test;    
@@ -19,10 +19,6 @@ namespace sequoia::testing
   private:    
     void run_tests() final;
 
-    void test_template_data_generation();
-
-    void test_creation();
-
-    void test_creation_failure();
+    void test_project_creation();
   };
 }

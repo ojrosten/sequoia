@@ -88,6 +88,7 @@
 
 #include "TestRunnerDiagnostics.hpp"
 #include "TestRunnerTestCreation.hpp"
+#include "TestRunnerProjectCreation.hpp"
 #include "TestRunner.hpp"
 #include "FactoryTestingDiagnostics.hpp"
 #include "FactoryTest.hpp"

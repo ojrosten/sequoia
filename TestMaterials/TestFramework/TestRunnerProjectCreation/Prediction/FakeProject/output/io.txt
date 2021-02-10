@@ -1,0 +1,47 @@
+Creating files...
+
+"output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Maybe/MaybeTestingUtilities.hpp"
+"output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Maybe/MaybeTestingDiagnostics.hpp"
+"output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Maybe/MaybeTestingDiagnostics.cpp"
+"output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Maybe/MaybeTest.hpp"
+"output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Maybe/MaybeTest.cpp"
+"output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Utilities/IteratorTestingUtilities.hpp"
+"output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Utilities/IteratorTestingDiagnostics.hpp"
+"output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Utilities/IteratorTestingDiagnostics.cpp"
+"output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Utilities/IteratorTest.hpp"
+"output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Utilities/IteratorTest.cpp"
+"output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Stuff/FooTestingUtilities.hpp"
+"output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Stuff/FooTestingDiagnostics.hpp"
+"output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Stuff/FooTestingDiagnostics.cpp"
+"output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Stuff/FooTest.hpp"
+"output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Stuff/FooTest.cpp"
+"output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Partners/CoupleTestingUtilities.hpp"
+"output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Partners/CoupleTestingDiagnostics.hpp"
+"output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Partners/CoupleTestingDiagnostics.cpp"
+"output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Partners/CoupleTest.hpp"
+"output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Partners/CoupleTest.cpp"
+"output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Utilities/UtilitiesFreeTest.hpp"
+"output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Utilities/UtilitiesFreeTest.cpp"
+"output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Stuff/FooAllocationTest.hpp"
+"output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Stuff/FooAllocationTest.cpp"
+"output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Stuff/ContainerTestingUtilities.hpp"
+"output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Stuff/ContainerTestingDiagnostics.hpp"
+"output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Stuff/ContainerTestingDiagnostics.cpp"
+"output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Stuff/ContainerTest.hpp"
+"output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Stuff/ContainerTest.cpp"
+"output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Stuff/ContainerAllocationTest.hpp"
+"output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Stuff/ContainerAllocationTest.cpp"
+"output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Stuff/ContainerPerformanceTest.hpp"
+"output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Stuff/ContainerPerformanceTest.cpp"
+
+  Warning: output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Stuff/ContainerPerformanceTest.hpp already exists, so not created
+
+
+  Warning: output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Stuff/ContainerPerformanceTest.cpp already exists, so not created
+
+"output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Utilities/VariadicTestingUtilities.hpp"
+"output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Utilities/VariadicTestingDiagnostics.hpp"
+"output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Utilities/VariadicTestingDiagnostics.cpp"
+"output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Utilities/VariadicTest.hpp"
+"output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Tests/Utilities/VariadicTest.cpp"
+

@@ -1,4 +1,4 @@
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 31
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 30
 Unmatched <
 
 Expected Exception Type:
@@ -8,7 +8,7 @@ Expected Exception Type:
 
 	=======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 33
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 32
 Backwards delimiters
 
 Expected Exception Type:
@@ -18,7 +18,7 @@ Expected Exception Type:
 
 	=======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 35
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 34
 Missing symbol
 
 Expected Exception Type:
@@ -28,7 +28,7 @@ Expected Exception Type:
 
 	=======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 37
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 36
 Missing symbol
 
 Expected Exception Type:
@@ -38,7 +38,7 @@ Expected Exception Type:
 
 	=======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 107
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 106
 
 Expected Exception Type:
 [std::runtime_error]
@@ -49,7 +49,7 @@ Try ensuring that the application is run from the appropriate directory
 
 	=======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 115
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 114
 
 Expected Exception Type:
 [std::runtime_error]
@@ -58,7 +58,7 @@ Expected Exception Type:
 
 	=======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 123
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 122
 
 Expected Exception Type:
 [std::runtime_error]
@@ -67,7 +67,7 @@ Source  does not exist
 
 	=======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 132
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 131
 
 Expected Exception Type:
 [std::runtime_error]

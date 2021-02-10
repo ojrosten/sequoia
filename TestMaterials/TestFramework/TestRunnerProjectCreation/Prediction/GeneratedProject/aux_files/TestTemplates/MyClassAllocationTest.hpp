@@ -5,24 +5,23 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#include "FreeTestCore.hpp"
+#pragma once
+
+#include "?AllocationTestCore.hpp"
 
 namespace sequoia::testing
 {
-  class test_runner_test_creation final : public free_test
+  class ?_class_allocation_test final : public ?_allocation_test
   {
   public:
-    using free_test::free_test;    
+    using ?_allocation_test::?_allocation_test;
 
     [[nodiscard]]
     std::string_view source_file() const noexcept final;
-  private:    
+
+    template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
+    void test_allocation();
+  private:
     void run_tests() final;
-
-    void test_template_data_generation();
-
-    void test_creation();
-
-    void test_creation_failure();
   };
 }

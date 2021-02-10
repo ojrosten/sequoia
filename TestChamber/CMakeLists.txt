@@ -23,6 +23,7 @@ add_executable(TestChamber TestChamberMain.cpp
                               ../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp
                               ../Tests/TestFramework/TestRunnerDiagnostics.cpp
                               ../Tests/TestFramework/TestRunnerTestCreation.cpp
+                              ../Tests/TestFramework/TestRunnerProjectCreation.cpp
                               ../Tests/Parsing/CommandLineArgumentsTest.cpp
                               ../Tests/Parsing/CommandLineArgumentsDiagnostics.cpp
                               ../Tests/Runtime/FactoryTestingDiagnostics.cpp

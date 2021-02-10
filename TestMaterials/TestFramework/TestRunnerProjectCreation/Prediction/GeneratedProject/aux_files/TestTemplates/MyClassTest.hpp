@@ -5,24 +5,20 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#include "FreeTestCore.hpp"
+#pragma once
+
+#include "?ClassTestingUtilities.hpp"
 
 namespace sequoia::testing
 {
-  class test_runner_test_creation final : public free_test
+  class ?_class_test final : public ?_test
   {
   public:
-    using free_test::free_test;    
+    using ?_test::?_test;
 
     [[nodiscard]]
     std::string_view source_file() const noexcept final;
-  private:    
+  private:
     void run_tests() final;
-
-    void test_template_data_generation();
-
-    void test_creation();
-
-    void test_creation_failure();
   };
 }
