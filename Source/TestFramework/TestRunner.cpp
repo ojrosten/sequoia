@@ -45,7 +45,7 @@ namespace sequoia::testing
             throw std::runtime_error{std::string{"Unable to locate file "}
                                    .append(filename.generic_string()).append(" or ")
                                    .append(alternative.generic_string()).append(" in the source repository\n")
-                                   .append(data.sourceRepo.root().generic_string())};
+                                   .append(fs::relative(data.sourceRepo.root(), data.hostRepo).generic_string())};
           }()
         };
         

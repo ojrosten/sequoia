@@ -72,7 +72,7 @@ Tests/TestFramework/TestRunnerTest.cpp, Line 132
 Expected Exception Type:
 [std::runtime_error]
 Unable to locate file Plurgh.h or Plurgh.hpp in the source repository
-/Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FakeProject/Source
+../Source
 
 
 	=======================================

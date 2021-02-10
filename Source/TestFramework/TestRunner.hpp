@@ -179,7 +179,7 @@ namespace sequoia::testing
 
     [[nodiscard]]
     friend bool operator!=(const nascent_semantics_test&, const nascent_semantics_test&) noexcept = default;
-    
+
     constexpr static std::array<std::string_view, 5> stubs() noexcept
     {
       return {"TestingUtilities.hpp",
@@ -312,7 +312,7 @@ namespace sequoia::testing
                                   std::forward<Test>(test), std::forward<Tests>(tests)...);
         }
       }
-    } 
+    }
 
     void execute();
 
@@ -329,13 +329,13 @@ namespace sequoia::testing
       {}
 
       void operator()(const parsing::commandline::param_list& args);
-        
+
       std::string genus, species;
       test_runner& runner;
     };
 
     friend test_creator;
-    
+
     using family_map = std::map<std::string, bool, std::less<>>;
     using source_map = std::map<std::filesystem::path, bool>;
 
@@ -362,13 +362,13 @@ namespace sequoia::testing
       m_TestRepo{},
       m_TestMaterialsRepo{},
       m_OutputDir{};
-    
+
     std::ostream& m_Stream;
 
     output_mode m_OutputMode{output_mode::standard};
     update_mode m_UpdateMode{update_mode::none};
     concurrency_mode m_ConcurrencyMode{concurrency_mode::serial};
-    
+ 
     bool mark_family(std::string_view name);
 
     void process_args(int argc, char** argv);
@@ -397,7 +397,7 @@ namespace sequoia::testing
         f.add_test(std::forward<Test>(test));
         i->second = true;
       }
-      
+
       if constexpr(sizeof...(Tests) > 0) add_tests(f, std::forward<Tests>(tests)...);
     }
 
