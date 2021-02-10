@@ -87,7 +87,7 @@
 #include "OrderableRegularTestDiagnostics.hpp"
 
 #include "TestRunnerDiagnostics.hpp"
-#include "TestRunnerTest.hpp"
+#include "TestRunnerTestCreation.hpp"
 #include "TestRunner.hpp"
 #include "FactoryTestingDiagnostics.hpp"
 #include "FactoryTest.hpp"

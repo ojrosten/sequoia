@@ -5,19 +5,19 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#include "TestRunnerTest.hpp"
+#include "TestRunnerTestCreation.hpp"
 #include "TestRunnerDiagnosticsUtilities.hpp"
 #include "CommandLineArgumentsTestingUtilities.hpp"
 
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::string_view test_runner_test::source_file() const noexcept
+  std::string_view test_runner_test_creation::source_file() const noexcept
   {
     return __FILE__;
   }
 
-  void test_runner_test::run_tests()
+  void test_runner_test_creation::run_tests()
   {
     test_template_data_generation();
     test_creation();
@@ -25,7 +25,7 @@ namespace sequoia::testing
     test_project_init();
   }
 
-  void test_runner_test::test_template_data_generation()
+  void test_runner_test_creation::test_template_data_generation()
   {
     check(LINE(""), generate_template_data("").empty());
     check_exception_thrown<std::runtime_error>(LINE("Unmatched <"),
@@ -59,7 +59,7 @@ namespace sequoia::testing
                    generate_template_data("<class ... T>"), template_data{{"class ...", "T"}});
   }
 
-  void test_runner_test::test_creation()
+  void test_runner_test_creation::test_creation()
   {
     auto working{
       [&mat{working_materials()}]() { return mat / "FakeProject"; }
@@ -98,7 +98,7 @@ namespace sequoia::testing
     check_equivalence(LINE(""), working(), predictive_materials() / "FakeProject");
   }
 
-  void test_runner_test::test_creation_failure()
+  void test_runner_test_creation::test_creation_failure()
   {
     auto working{
       [&mat{working_materials()}]() { return mat / "FakeProject"; }
@@ -140,7 +140,7 @@ namespace sequoia::testing
                                                });
   }
 
-  void test_runner_test::test_project_init()
+  void test_runner_test_creation::test_project_init()
   {
     auto fake{
       [&mat{working_materials()}]() {
