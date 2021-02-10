@@ -413,7 +413,7 @@ namespace sequoia::testing
     [[nodiscard]]
     std::string create_files() const;
 
-    void init_project(std::string_view copyright, const std::filesystem::path& path) const;
+    void init_project(std::string_view copyright, const std::filesystem::path& path);
 
     [[nodiscard]]
     bool mode(output_mode m) const noexcept

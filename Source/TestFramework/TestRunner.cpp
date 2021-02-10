@@ -825,9 +825,11 @@ namespace sequoia::testing
     check_for_missing_tests();
   }
 
-  void test_runner::init_project(std::string_view copyright, const std::filesystem::path& path) const
+  void test_runner::init_project(std::string_view copyright, const std::filesystem::path& path)
   {
     namespace fs = std::filesystem;
+
+    report("Creating new project at location:", fs::relative(path, m_ProjectRoot).generic_string());
 
     fs::create_directories(path);
     fs::copy(project_template_path(m_ProjectRoot), path, fs::copy_options::recursive | fs::copy_options::skip_existing);
