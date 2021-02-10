@@ -51,6 +51,12 @@ namespace sequoia::testing
 
     tr.execute();
 
+    if(std::ofstream file{fake() / "output" / "io.txt"})
+    {
+      file << outputStream.str();
+    }
+
     check_equivalence(LINE(""), generated(), predictive_materials() / "GeneratedProject");
+    check_equivalence(LINE(""), fake(), predictive_materials() / "FakeProject");
   }
 }
