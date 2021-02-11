@@ -1,18 +1,19 @@
-Free Test
-Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 1]
+Unit Test
+Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 0]
 
 ******  Critical Failures:  1  ******
 
 
 	Error -- Unexpected Exception:
-	Throw after check
+	This is bad
 
-	Exception thrown after check completed
+	Exception thrown during last check
 	Last Recorded Message:
 
-	Tests/TestFramework/TestRunnerTest.cpp, Line 31
+	Tests/TestFramework/TestRunnerTest.cpp, Line 36
+	Throw during check
 
-	[int]
+	[sequoia::testing::(anonymous namespace)::foo]
 
 	=======================================
 

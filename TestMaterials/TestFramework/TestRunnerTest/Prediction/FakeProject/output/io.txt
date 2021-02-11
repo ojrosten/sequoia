@@ -1,8 +1,8 @@
 
 Running tests...
 
-Foo:
-[0 (0)ms]
+Bar:
+[1 (0)ms]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 1]
 
 ******  Critical Failures:  1  ******
@@ -14,21 +14,41 @@ Foo:
 	Exception thrown after check completed
 	Last Recorded Message:
 
-	Tests/TestFramework/TestRunnerTest.cpp, Line 31
+	Tests/TestFramework/TestRunnerTest.cpp, Line 53
 
 	[int]
 
 	=======================================
 
+Foo:
+[0 (0)ms]
+	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 0]
+
+******  Critical Failures:  1  ******
+
+
+	Error -- Unexpected Exception:
+	This is bad
+
+	Exception thrown during last check
+	Last Recorded Message:
+
+	Tests/TestFramework/TestRunnerTest.cpp, Line 36
+	Throw during check
+
+	[sequoia::testing::(anonymous namespace)::foo]
+
+	=======================================
+
 
 -----------Grand Totals-----------
-[1 (0)ms]
-	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 1]
+[2 (0)ms]
+	Standard Top Level Checks:                 4;  Failures:  0  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
 	False Negative Performance Checks:         0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
 	False Positive Performance Checks:         0;  Failures:  0
 
-******  Critical Failures:  1  ******
+******  Critical Failures:  2  ******
 

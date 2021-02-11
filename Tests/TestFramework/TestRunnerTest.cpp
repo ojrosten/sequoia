@@ -15,7 +15,29 @@ namespace sequoia::testing
 {
   namespace
   {
-    class foo_free_test final : public free_test
+    struct foo
+    {
+      int x{};
+    };
+
+    class foo_test final : public regular_test
+    {
+    public:
+      using regular_test::regular_test;
+
+      [[nodiscard]]
+      std::string_view source_file() const noexcept final
+      {
+        return __FILE__;
+      }
+    private:
+      void run_tests() final
+      {
+        check_equality(LINE("Throw during check"), foo{}, foo{});
+      }
+    };
+
+    class bar_free_test final : public free_test
     {
     public:
       using free_test::free_test;
@@ -33,6 +55,16 @@ namespace sequoia::testing
       }
     };
   }
+
+  template<>
+  struct detailed_equality_checker<foo>
+  {
+    template<test_mode Mode>
+    static void check(test_logger<Mode>&, const foo&, const foo&)
+    {
+      throw std::runtime_error{"This is bad"};
+    }
+  };
   
   [[nodiscard]]
   std::string_view test_runner_test::source_file() const noexcept
@@ -60,8 +92,13 @@ namespace sequoia::testing
     test_runner runner{args.size(), args.get(), "Oliver J. Rosten", testMain, includeTarget, repos, outputStream};
 
     runner.add_test_family(
+      "Bar",
+      bar_free_test{"Free Test"}
+    );
+
+    runner.add_test_family(
       "Foo",
-      foo_free_test("Free Test")
+      foo_test{"Unit Test"}
     );
 
     runner.execute();
