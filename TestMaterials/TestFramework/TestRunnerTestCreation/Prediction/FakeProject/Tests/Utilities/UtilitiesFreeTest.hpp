@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include "FreeTestCore.hpp"
+
 namespace sequoia::testing
 {
   class utilities_free_test final : public free_test

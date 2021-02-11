@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include "?TestCore.hpp"
+
 namespace sequoia::testing
 {
   class ?_behavioural_test final : public ?_test

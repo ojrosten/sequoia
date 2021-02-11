@@ -379,6 +379,7 @@ namespace sequoia::testing
   {
     replace_all(text, {{"?_behavioural", forename()},
                        {"?Behavioural", camel_name()},
+                       {"?Test", to_camel_case(test_type()).append("Test")},
                        {"?", test_type()}});
   }
 
@@ -409,6 +410,7 @@ namespace sequoia::testing
   {
     replace_all(text, {{"?_class", forename()},
                        {"?Class", camel_name()},
+                       {"?Allocation", to_camel_case(test_type())},
                        {"?", test_type()}});
   }
 
@@ -549,7 +551,7 @@ namespace sequoia::testing
                       init_project(args[0], args[1]);
                     }
                   },                  
-                  {"update-materials", {"um"}, {},
+                  {"update-materials", {"u"}, {},
                     [this](const param_list&) {
                       if(m_UpdateMode != update_mode::hard)
                         m_UpdateMode = update_mode::soft;

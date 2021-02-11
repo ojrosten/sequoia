@@ -84,7 +84,8 @@ int main(int argc, char** argv)
 
     runner.add_test_family(
       "Test Runner",
-      test_runner_false_positive_test{"False Positive Diagnostics"},
+      test_runner_false_positive_test{"False Positive Diagnostics"},      
+      test_runner_test("Functionality Test"),
       test_runner_test_creation{"Test Creation"},
       test_runner_project_creation{"Project Creation"}
     );

@@ -5,20 +5,18 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#pragma once
-
-#include "PerformanceTestCore.hpp"
+#include "TestRunnerTest.hpp"
 
 namespace sequoia::testing
 {
-  class container_performance_test final : public performance_test
+  [[nodiscard]]
+  std::string_view test_runner_test::source_file() const noexcept
   {
-  public:
-    using performance_test::performance_test;
+    return __FILE__;
+  }
 
-    [[nodiscard]]
-    std::string_view source_file() const noexcept final;
-  private:
-    void run_tests() final;
-  };
+  void test_runner_test::run_tests()
+  {
+    // TO DO
+  }
 }
