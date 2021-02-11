@@ -1,0 +1,18 @@
+Free Test
+Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 1]
+
+******  Critical Failures:  1  ******
+
+
+	Error -- Unexpected Exception:
+	Throw after check
+
+	Exception thrown after check completed
+	Last Recorded Message:
+
+	Tests/TestFramework/TestRunnerTest.cpp, Line 31
+
+	[int]
+
+	=======================================
+
