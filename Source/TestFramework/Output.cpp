@@ -320,6 +320,8 @@ namespace sequoia::testing
 
     replace_all(name, " & __ptr64", "&");
 
+    replace_all(name, "`anonymous namespace'", "(anonymous namespace)");
+
 #ifdef _MSC_VER
     if constexpr(sizeof(__int64) == sizeof(long))
     {

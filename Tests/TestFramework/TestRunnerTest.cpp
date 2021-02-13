@@ -33,7 +33,7 @@ namespace sequoia::testing
     private:
       void run_tests() final
       {
-        check_equality(LINE("Throw during check"), foo{}, foo{});
+        check_equality("Throw during check", foo{}, foo{});
       }
     };
 
@@ -50,7 +50,7 @@ namespace sequoia::testing
     private:
       void run_tests() final
       {
-        check_equality(LINE(""), 1, 1);
+        check_equality("Phoney equality check", 1, 1);
         throw std::runtime_error{"Throw after check"};
       }
     };

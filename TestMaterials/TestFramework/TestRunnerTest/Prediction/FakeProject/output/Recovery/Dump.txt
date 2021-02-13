@@ -1,14 +1,11 @@
-Tests/TestFramework/TestRunnerTest.cpp, Line 53
-
+Phoney equality check
 [int]
 
 
 
 
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 36
 Throw during check
-
 [sequoia::testing::(anonymous namespace)::foo]
 
 

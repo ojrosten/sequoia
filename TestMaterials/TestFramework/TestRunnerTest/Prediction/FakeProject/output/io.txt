@@ -2,9 +2,9 @@
 Running tests...
 
 Bar:
-[3 (2)ms]
+[3 (1)ms]
 	Free Test
-	[2ms]
+	[1ms]
 		Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 1]
 
 ******  Critical Failures:  1  ******
@@ -16,16 +16,15 @@ Bar:
 	Exception thrown after check completed
 	Last Recorded Message:
 
-	Tests/TestFramework/TestRunnerTest.cpp, Line 53
-
+	Phoney equality check
 	[int]
 
 	=======================================
 
 Foo:
-[2 (2)ms]
+[2 (1)ms]
 	Unit Test
-	[2ms]
+	[1ms]
 		Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 0]
 
 ******  Critical Failures:  1  ******
@@ -37,16 +36,14 @@ Foo:
 	Exception thrown during last check
 	Last Recorded Message:
 
-	Tests/TestFramework/TestRunnerTest.cpp, Line 36
 	Throw during check
-
 	[sequoia::testing::(anonymous namespace)::foo]
 
 	=======================================
 
 
 -----------Grand Totals-----------
-[6 (4)ms]
+[6 (3)ms]
 	Standard Top Level Checks:                 4;  Failures:  0  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
