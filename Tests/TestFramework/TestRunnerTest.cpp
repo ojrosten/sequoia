@@ -86,7 +86,7 @@ namespace sequoia::testing
     std::stringstream outputStream{};
 
     {
-      commandline_arguments args{"", "-v", "--recovery"};
+      commandline_arguments args{"", "-v", "--recovery", "--dump"};
       const auto testMain{working().append("TestSandbox").append("TestSandbox.cpp")};
       const auto includeTarget{working().append("TestShared").append("SharedIncludes.hpp")};
       const repositories repos{working()};
