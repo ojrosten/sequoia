@@ -2,8 +2,10 @@
 Running tests...
 
 Bar:
-[1 (0)ms]
-	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 1]
+[3 (1)ms]
+	Free Test
+	[1ms]
+		Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 1]
 
 ******  Critical Failures:  1  ******
 
@@ -21,8 +23,10 @@ Bar:
 	=======================================
 
 Foo:
-[0 (0)ms]
-	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 0]
+[1 (1)ms]
+	Unit Test
+	[1ms]
+		Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 0]
 
 ******  Critical Failures:  1  ******
 
@@ -42,7 +46,7 @@ Foo:
 
 
 -----------Grand Totals-----------
-[2 (0)ms]
+[5 (3)ms]
 	Standard Top Level Checks:                 4;  Failures:  0  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

@@ -19,6 +19,7 @@ namespace sequoia::testing
     namespace fs = std::filesystem;
 
     t.set_filesystem_data(m_TestRepo, m_OutputDir, name());
+    t.set_recovery_paths(m_Recovery);
 
     const auto rel{
       [&t, &testRepo{m_TestRepo}, &materialsRepo{m_TestMaterialsRepo}](){

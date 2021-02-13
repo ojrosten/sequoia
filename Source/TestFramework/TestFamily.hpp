@@ -58,11 +58,13 @@ namespace sequoia::testing
                 std::filesystem::path testRepo,
                 std::filesystem::path testMaterialsRepo,
                 std::filesystem::path outputDir,
+                recovery_paths recovery,
                 Tests&&... tests)
       : m_Name{name}
       , m_TestRepo{std::move(testRepo)}
       , m_TestMaterialsRepo{std::move(testMaterialsRepo)}
       , m_OutputDir{std::move(outputDir)}
+      , m_Recovery{std::move(recovery)}
     {
       if constexpr(sizeof...(Tests) > 0)
       {
@@ -96,6 +98,7 @@ namespace sequoia::testing
     std::vector<std::unique_ptr<test>> m_Tests{};
     std::string m_Name{};
     std::filesystem::path m_TestRepo{}, m_TestMaterialsRepo{}, m_OutputDir{};
+    recovery_paths m_Recovery;
     std::vector<std::filesystem::path> m_MaterialsPaths{};
 
     [[nodiscard]]

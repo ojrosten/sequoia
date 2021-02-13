@@ -83,25 +83,27 @@ namespace sequoia::testing
       [&mat{working_materials()}]() { return mat / "FakeProject"; }
     };
 
-    commandline_arguments args{""};
-    const auto testMain{working().append("TestSandbox").append("TestSandbox.cpp")};
-    const auto includeTarget{working().append("TestShared").append("SharedIncludes.hpp")};
-    const repositories repos{working()};
     std::stringstream outputStream{};
 
-    test_runner runner{args.size(), args.get(), "Oliver J. Rosten", testMain, includeTarget, repos, outputStream};
+    {
+      commandline_arguments args{"", "-v", "--recovery"};
+      const auto testMain{working().append("TestSandbox").append("TestSandbox.cpp")};
+      const auto includeTarget{working().append("TestShared").append("SharedIncludes.hpp")};
+      const repositories repos{working()};
+      test_runner runner{args.size(), args.get(), "Oliver J. Rosten", testMain, includeTarget, repos, outputStream};
 
-    runner.add_test_family(
-      "Bar",
-      bar_free_test{"Free Test"}
-    );
+      runner.add_test_family(
+        "Bar",
+        bar_free_test{"Free Test"}
+      );
 
-    runner.add_test_family(
-      "Foo",
-      foo_test{"Unit Test"}
-    );
+      runner.add_test_family(
+        "Foo",
+        foo_test{"Unit Test"}
+      );
 
-    runner.execute();
+      runner.execute();
+    }
 
     if(std::ofstream file{working() / "output" / "io.txt"})
     {

@@ -25,6 +25,11 @@ namespace sequoia::testing
     m_PredictiveMaterials = std::move(predictiveMaterials);
   }
 
+  void test::set_recovery_paths(recovery_paths paths)
+  {
+    do_set_recovery_paths(std::move(paths));
+  }
+
   [[nodiscard]]
   std::string test::report_line(const std::filesystem::path& file, int line, std::string_view message)
   {

@@ -37,24 +37,10 @@ namespace sequoia::testing
       If a check causes a crash, the recovery file may be used to provide a clue as to where this
       happened.
    */
-  class output_manager
+  struct recovery_paths
   {
-    inline static std::filesystem::path st_RecoveryFile{};
-    inline static std::filesystem::path st_DumpFile{};
-  public:
-    static void recovery_file(const std::filesystem::path& recoveryFile)
-    {
-      st_RecoveryFile = recoveryFile;
-    }
-
-    static const std::filesystem::path& recovery_file() noexcept { return st_RecoveryFile; }
-
-    static void dump_file(const std::filesystem::path& dumpFile)
-    {
-      st_DumpFile = dumpFile;
-    }
-
-    static const std::filesystem::path& dump_file() noexcept { return st_DumpFile; }
+    std::filesystem::path recovery_file{};
+    std::filesystem::path dump_file{};
   };
 
   /*! \brief Specifies whether tests are run as standard tests or in false postive/negative mode.
@@ -110,14 +96,14 @@ namespace sequoia::testing
       {
         logger.log_top_level_check();
 
-        if(auto file{output_manager::recovery_file()}; !file.empty())
+        if(auto file{m_Logger.get().recovery().recovery_file}; !file.empty())
         {
           if(std::ofstream of{file})
             of << "Check started:\n" << message << "\n";
         }
       }
 
-      if(auto file{output_manager::dump_file()}; !file.empty())
+      if(auto file{m_Logger.get().recovery().dump_file}; !file.empty())
       {
         if(std::ofstream of{file, std::ios_base::app})
           of << message << "\n";
@@ -166,14 +152,14 @@ namespace sequoia::testing
               logger.append_to_diagnostics_output(messageMaker());
           }
 
-          if(auto file{output_manager::recovery_file()}; !file.empty())
+          if(auto file{m_Logger.get().recovery().recovery_file}; !file.empty())
           {
             if(std::ofstream of{file, std::ios_base::app})
               of << "Check ended\n";
           }
         }
         
-        if(auto file{output_manager::dump_file()}; !file.empty())
+        if(auto file{m_Logger.get().recovery().dump_file}; !file.empty())
         {
           if(std::ofstream of{file, std::ios_base::app})
             of << "\n\n";
@@ -298,6 +284,14 @@ namespace sequoia::testing
 
     [[nodiscard]]
     const std::string& caught_exceptions_output() const noexcept { return m_CaughtExceptionMessages; }
+
+    [[nodiscard]]
+    const recovery_paths& recovery() const noexcept { return m_Recovery; }
+
+    void recovery(recovery_paths paths)
+    {
+      m_Recovery = std::move(paths);
+    }
   private:
     struct level_message
     {
@@ -330,7 +324,8 @@ namespace sequoia::testing
       m_Checks{},
       m_PerformanceChecks{},
       m_Depth{};
-    
+
+    recovery_paths m_Recovery{};
 
     [[nodiscard]]
     std::size_t depth() const noexcept { return m_Depth; }
@@ -402,7 +397,7 @@ namespace sequoia::testing
       ++m_CriticalFailures;
       failure_message(message, critical::yes);
 
-      if(auto file{output_manager::recovery_file()}; !file.empty())
+      if(auto file{m_Recovery.recovery_file}; !file.empty())
       {
         if(std::ofstream of{file, std::ios_base::app})
           of << "\nCritical Failure:\n" << message << "\n";

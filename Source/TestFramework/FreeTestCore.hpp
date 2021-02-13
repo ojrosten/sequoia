@@ -94,6 +94,8 @@ namespace sequoia::testing
     void set_filesystem_data(std::filesystem::path testRepo, const std::filesystem::path& outputDir, std::string_view familyName);
 
     void set_materials(std::filesystem::path workingMaterials, std::filesystem::path predictiveMaterials);
+
+    void set_recovery_paths(recovery_paths paths);
   protected:
     using duration = std::chrono::steady_clock::duration;
 
@@ -114,12 +116,19 @@ namespace sequoia::testing
     [[nodiscard]]
     virtual std::filesystem::path output_filename(std::string_view suffix) const = 0;
 
+    virtual void do_set_recovery_paths(recovery_paths paths) = 0;     
+
     const log_summary& write_versioned_output(const log_summary& summary) const;
 
     static void write(const std::filesystem::path& file, std::string_view text);
   private:
     std::string m_Name{};
-    std::filesystem::path m_WorkingMaterials{}, m_PredictiveMaterials{}, m_TestRepo{}, m_DiagnosticsOutput{}, m_CaughtExceptionsOutput{};
+    std::filesystem::path
+      m_WorkingMaterials{},
+      m_PredictiveMaterials{},
+      m_TestRepo{},
+      m_DiagnosticsOutput{},
+      m_CaughtExceptionsOutput{};
 
     [[nodiscard]]
     std::filesystem::path make_output_filepath(const std::filesystem::path& outputDir, std::string_view familyName, std::string_view suffix) const;
@@ -192,6 +201,11 @@ namespace sequoia::testing
     std::filesystem::path output_filename(std::string_view suffix) const final
     {
       return test::output_filename(to_tag(mode).append(suffix));
+    }
+
+    void do_set_recovery_paths(recovery_paths paths) final
+    {
+      Checker::recovery(std::move(paths));
     }
   private:
   };

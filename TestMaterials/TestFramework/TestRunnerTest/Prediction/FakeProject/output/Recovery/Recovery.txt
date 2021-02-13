@@ -1,0 +1,14 @@
+Check started:
+
+
+Critical Failure:
+Error -- Unexpected Exception:
+This is bad
+
+Exception thrown during last check
+Last Recorded Message:
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 36
+Throw during check
+
+[sequoia::testing::(anonymous namespace)::foo]

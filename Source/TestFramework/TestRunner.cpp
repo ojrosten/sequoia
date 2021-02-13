@@ -572,17 +572,17 @@ namespace sequoia::testing
                   },
                   {"--verbose",  {"-v"}, {}, [this](const param_list&) { m_OutputMode |= output_mode::verbose; }},
                   {"--recovery", {"-r"}, {},
-                    [recoveryDir{recovery_path(m_OutputDir)}] (const param_list&) {
+                    [this,recoveryDir{recovery_path(m_OutputDir)}] (const param_list&) {
                       std::filesystem::create_directory(recoveryDir);
-                      output_manager::recovery_file(recoveryDir / "Recovery.txt");
-                      std::filesystem::remove(output_manager::recovery_file());
+                      m_Recovery.recovery_file = recoveryDir / "Recovery.txt";
+                      std::filesystem::remove(m_Recovery.recovery_file);
                     }
                   },
                   {"--dump", {}, {},
-                    [recoveryDir{recovery_path(m_OutputDir)}] (const param_list&) {
+                    [this, recoveryDir{recovery_path(m_OutputDir)}] (const param_list&) {
                       std::filesystem::create_directory(recoveryDir);
-                      output_manager::dump_file(recoveryDir / "Dump.txt");
-                      std::filesystem::remove(output_manager::dump_file());
+                      m_Recovery.dump_file = recoveryDir / "Dump.txt";
+                      std::filesystem::remove(m_Recovery.dump_file);
                     }
                   }
                 },
@@ -604,7 +604,7 @@ namespace sequoia::testing
   {
     using parsing::commandline::error;
 
-    if(concurrent_execution() && (!output_manager::recovery_file().empty() || !output_manager::dump_file().empty()))
+    if(concurrent_execution() && (!m_Recovery.recovery_file.empty() || !m_Recovery.dump_file.empty()))
       throw std::runtime_error{error("Can't run asynchronously in recovery/dump mode\n")};
   }
 

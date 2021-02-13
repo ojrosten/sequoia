@@ -446,7 +446,9 @@ namespace sequoia::testing
     constexpr static test_mode mode{Mode};
     using logger_type = test_logger<Mode>;
 
-    checker() : Extenders{logger()}... {}
+    checker()
+      : Extenders{logger()}...
+    {}
 
     checker(const checker&)            = delete;
     checker& operator=(const checker&) = delete;
@@ -529,6 +531,10 @@ namespace sequoia::testing
       return logger().top_level_message();
     }
 
+    void recovery(recovery_paths paths)
+    {
+      test_logger<Mode>::recovery(std::move(paths));
+    }
   private:
     [[nodiscard]]
     test_logger<Mode>& logger() noexcept
