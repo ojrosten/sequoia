@@ -21,7 +21,7 @@ namespace sequoia::maths
   [[nodiscard]]
   std::optional<T> mean(InputIt first, InputIt last)
   {
-    using namespace std;
+    using std::distance;
 
     std::optional<T> m{};
 
@@ -38,7 +38,7 @@ namespace sequoia::maths
   std::pair<std::optional<T>, std::optional<T>>
     cummulative_square_diffs(InputIt first, InputIt last)
   {
-    using namespace std;
+    using std::distance;
 
     if(distance(first, last))
     {
@@ -61,7 +61,7 @@ namespace sequoia::maths
   std::pair<std::optional<T>, std::optional<T>>
     variance(InputIt first, InputIt last)
   {
-    using namespace std;
+    using std::distance;
 
     if(const auto dist{distance(first, last)})
     {
@@ -78,7 +78,7 @@ namespace sequoia::maths
   std::pair<std::optional<T>, std::optional<T>>
     sample_variance(InputIt first, InputIt last)
   {
-    using namespace std;
+    using std::distance;
 
     if(const auto dist{distance(first, last)}; !dist)
     {
@@ -101,6 +101,8 @@ namespace sequoia::maths
   std::pair<std::optional<T>, std::optional<T>>
     standard_deviation(InputIt first, InputIt last)
   {
+    using std::distance;
+
     if(const auto dist{distance(first, last)})
     {
       auto [var, mean]{variance(first, last)};
@@ -120,6 +122,8 @@ namespace sequoia::maths
       std::pair<std::optional<T>, std::optional<T>>
         operator()(InputIt first, InputIt last) const
       {
+        using std::distance;
+
         if(const auto dist{distance(first, last)}; !dist)
         {
           return {{}, {}};
