@@ -21,6 +21,18 @@
 
 namespace sequoia::testing
 {
+  template<invocable Task>
+  [[nodiscard]]
+  std::chrono::duration<double> profile(Task task)
+  {
+    using namespace std::chrono;
+    const auto start{steady_clock::now()};
+    task();
+    const auto end{steady_clock::now()};
+
+    return end - start;
+  }
+
   /*! \brief Function for comparing the performance of a fast task to a slow task.
 
        \param minSpeedUp  the minimum predicted speed up of fast over slow; must be > 1
@@ -63,7 +75,7 @@ namespace sequoia::testing
        && (m_s / minSpeedUp >= (m_f - num_sds * sig_f))
        
    */
-  template<test_mode Mode, class F, class S>
+  template<test_mode Mode, invocable F, invocable S>
   bool check_relative_performance(std::string_view description, test_logger<Mode>& logger, F fast, S slow, const double minSpeedUp, const double maxSpeedUp, const std::size_t trials, const double num_sds, const std::size_t maxAttempts)
   {
     if((minSpeedUp <= 1) || (maxSpeedUp <= 1))
@@ -84,18 +96,13 @@ namespace sequoia::testing
     using namespace std::chrono;
     using namespace maths;
 
-    std::string summary{};  
+    std::string summary{};
     std::size_t remainingAttempts{maxAttempts};
     bool passed{};
 
     auto timer{
        [](auto task, std::vector<double>& timings){
-         const auto start{steady_clock::now()};
-         task();
-         const auto end{steady_clock::now()};
-
-         const duration<double> duration = end - start;
-         timings.push_back(duration.count());
+         timings.push_back(profile(task).count());
        }
     };
 
@@ -106,7 +113,7 @@ namespace sequoia::testing
       std::vector<double> fastData, slowData;
       fastData.reserve(adjustedTrials);
       slowData.reserve(adjustedTrials);
-        
+
       std::random_device generator;
       for(std::size_t i{}; i < adjustedTrials; ++i)
       {
@@ -158,7 +165,7 @@ namespace sequoia::testing
 
       auto stats{
         [num_sds](std::string_view prefix, const auto mean, const auto sig){
-            
+
           std::ostringstream message{};
           message << mean << "s" << " +- " << num_sds << " * " << sig << "s";
 
@@ -174,14 +181,14 @@ namespace sequoia::testing
           return message.str();
         }
       };
-        
+
       summary = append_lines(stats("Fast", m_f, sig_f), stats("Slow", m_s, sig_s)).append(summarizer());
-          
+
       if((test_logger<Mode>::mode == test_mode::false_positive) ? !passed : passed)
       {
         break;
       }
-        
+
       --remainingAttempts;
     }
 
@@ -189,11 +196,37 @@ namespace sequoia::testing
     sentry.log_performance_check();
 
     if(!passed)
-    {        
+    {
       sentry.log_performance_failure("");
     }
 
     return passed;
+  }
+
+  template<class T, class Period>
+  [[nodiscard]]
+  std::chrono::duration<T, Period> calibrate(std::chrono::duration<T, Period> target)
+  {
+    using namespace std::chrono;
+
+    std::array<double, 7> timings{};
+    for (auto& t : timings)
+    {
+      t = profile([target]() { std::this_thread::sleep_for(target); }).count();
+    }
+
+    std::sort(timings.begin(), timings.end());
+    const auto [sig_f, m_f] {maths::sample_standard_deviation(timings.cbegin() + 1, timings.cend() - 1)};
+    if (sig_f && m_f)
+    {
+      if ((m_f.value() - sig_f.value()) > duration_cast<duration<double>>(target).count())
+      {
+        constexpr auto inverse{Period::den / Period::num};
+        return std::chrono::duration<T, Period>{static_cast<T>(std::ceil(inverse* (m_f.value() + 5* sig_f.value())))};
+      }
+    }
+
+    return target;
   }
 
   /*! \brief class template for plugging into the checker class template
@@ -213,7 +246,7 @@ namespace sequoia::testing
     performance_extender& operator=(const performance_extender&) = delete;
     performance_extender& operator=(performance_extender&&)      = delete;
  
-    template<class F, class S>
+    template<invocable F, invocable S>
     bool check_relative_performance(std::string_view description, F fast, S slow, const double minSpeedUp, const double maxSpeedUp, const std::size_t trials=5, const double num_sds=4)
     {
       return testing::check_relative_performance(description, m_Logger, fast, slow, minSpeedUp, maxSpeedUp, trials, num_sds, 3);

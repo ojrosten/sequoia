@@ -11,9 +11,11 @@ namespace sequoia::testing
 {
   namespace
   {
-    void wait(std::size_t millisecs)
+    const static auto delta_t{calibrate(std::chrono::milliseconds{5})};
+
+    void wait(const std::size_t multiplier)
     {
-      std::this_thread::sleep_for(std::chrono::milliseconds(millisecs));
+      std::this_thread::sleep_for(delta_t * multiplier);
     }
   }
 
@@ -31,16 +33,16 @@ namespace sequoia::testing
   void performance_false_positive_diagnostics::test_relative_performance()
   {
     check_relative_performance(LINE("Performance Test for which fast task is too slow, [1, (2.0, 2.0)"),
-                               []() { return wait(5); },
-                               []() { return wait(5); }, 2.0, 2.0);
-      
+                               []() { wait(1); },
+                               []() { wait(1); }, 2.0, 2.0);
+
     check_relative_performance(LINE("Performance Test for which fast task is too slow [1, (2.0, 3.0)"),
-                               []() { return wait(5); },
-                               []() { return wait(5); }, 2.0, 3.0);
-      
+                               []() { wait(1); },
+                               []() { wait(1); }, 2.0, 3.0);
+
     check_relative_performance(LINE("Performance Test for which fast task is too fast [4, (2.0, 2.5)]"),
-                               []() { return wait(5); },
-                               []() { return wait(20); }, 2.0, 2.5);
+                               []() { wait(1); },
+                               []() { wait(4); }, 2.0, 2.5);
   }
 
   [[nodiscard]]
@@ -56,10 +58,8 @@ namespace sequoia::testing
 
   void performance_false_negative_diagnostics::test_relative_performance()
   {
-    auto fast{[]() { return wait(5); } };
-
-    check_relative_performance(LINE("Performance Test which should pass"), fast, []() { return wait(10); }, 1.8, 2.1, 5);
-    check_relative_performance(LINE("Performance Test which should pass"), fast, []() { return wait(20); }, 3.4, 4.1, 5);
+    check_relative_performance(LINE("Performance Test which should pass"), []() { wait(1); }, []() { wait(2); }, 1.8, 2.1, 5);
+    check_relative_performance(LINE("Performance Test which should pass"), []() { wait(1); }, []() { wait(4); }, 3.4, 4.1, 5);
   }
 
   [[nodiscard]]
