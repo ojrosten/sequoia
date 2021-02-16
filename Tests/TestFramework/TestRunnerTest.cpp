@@ -67,7 +67,7 @@ namespace sequoia::testing
 
     {
       commandline_arguments args{"", "-v", "--recovery", "--dump",
-                                 "source", "../Tests/TestFramework/TestRunnerDiagnosticsUtilities.cpp",
+                                 "test", "Bar",
                                  "test", "Foo"};
 
       const auto testMain{working().append("TestSandbox").append("TestSandbox.cpp")};
