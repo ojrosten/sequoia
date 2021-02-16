@@ -6,10 +6,8 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "TestRunnerTest.hpp"
+#include "TestRunnerDiagnosticsUtilities.hpp"
 #include "CommandLineArgumentsTestingUtilities.hpp"
-
-#include "TestRunner.hpp"
-
 
 namespace sequoia::testing
 {
@@ -34,24 +32,6 @@ namespace sequoia::testing
       void run_tests() final
       {
         check_equality("Throw during check", foo{}, foo{});
-      }
-    };
-
-    class bar_free_test final : public free_test
-    {
-    public:
-      using free_test::free_test;
-
-      [[nodiscard]]
-      std::string_view source_file() const noexcept final
-      {
-        return __FILE__;
-      }
-    private:
-      void run_tests() final
-      {
-        check_equality("Phoney equality check", 1, 1);
-        throw std::runtime_error{"Throw after check"};
       }
     };
   }
@@ -86,7 +66,7 @@ namespace sequoia::testing
     std::stringstream outputStream{};
 
     {
-      commandline_arguments args{"", "-v", "--recovery", "--dump", "test", "Bar", "test", "Foo"};
+      commandline_arguments args{"", "-v", "--recovery", "--dump", "source", "../Tests/TestFramework/TestRunnerDiagnosticsUtilities.cpp", "test", "Foo"};
       const auto testMain{working().append("TestSandbox").append("TestSandbox.cpp")};
       const auto includeTarget{working().append("TestShared").append("SharedIncludes.hpp")};
       const repositories repos{working()};

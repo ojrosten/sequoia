@@ -23,4 +23,19 @@ namespace sequoia::testing
       check_equality("Symbol",  logger, obtained.symbol,  prediction.symbol);
     }
   };
+
+  class bar_free_test final : public free_test
+  {
+  public:
+    using free_test::free_test;
+
+    [[nodiscard]]
+    std::string_view source_file() const noexcept final;
+  private:
+    void run_tests() final
+    {
+      check_equality("Phoney equality check", 1, 1);
+      throw std::runtime_error{"Throw after check"};
+    }
+  };
 }
