@@ -1,19 +1,19 @@
 	False Positive Failure:
-	Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 63
+	Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 61
 	Performance Test which should pass
 
-	Fast Task duration: 0.0342711s +- 4 * 0.000156493s
-	Slow Task duration: 0.0683319s +- 4 * 0.000199665s [1.99386; (1.8, 2.1)]
+	Fast Task duration: 0.00723819s +- 4 * 0.000233218s
+	Slow Task duration: 0.0144884s +- 4 * 0.000137014s [2.00166; (1.8, 2.1)]
 
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 64
+	Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 62
 	Performance Test which should pass
 
-	Fast Task duration: 0.034153s +- 4 * 7.48005e-06s
-	Slow Task duration: 0.136155s +- 4 * 1.77754e-05s [3.98661; (3.4, 4.1)]
+	Fast Task duration: 0.00753796s +- 4 * 0.000291704s
+	Slow Task duration: 0.0301403s +- 4 * 0.00165163s [3.99847; (3.4, 4.1)]
 
 
 	=======================================

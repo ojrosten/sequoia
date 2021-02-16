@@ -7,8 +7,6 @@
 
 #include "PerformanceTestDiagnostics.hpp"
 
-#include "Windows.h"
-
 namespace sequoia::testing
 {
   namespace
