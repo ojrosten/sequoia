@@ -86,7 +86,7 @@ namespace sequoia::testing
     std::stringstream outputStream{};
 
     {
-      commandline_arguments args{"", "-v", "--recovery", "--dump"};
+      commandline_arguments args{"", "-v", "--recovery", "--dump", "test", "Bar", "test", "Foo"};
       const auto testMain{working().append("TestSandbox").append("TestSandbox.cpp")};
       const auto includeTarget{working().append("TestShared").append("SharedIncludes.hpp")};
       const repositories repos{working()};
@@ -99,6 +99,11 @@ namespace sequoia::testing
 
       runner.add_test_family(
         "Foo",
+        foo_test{"Unit Test"}
+      );
+
+      runner.add_test_family(
+        "Baz",
         foo_test{"Unit Test"}
       );
 
