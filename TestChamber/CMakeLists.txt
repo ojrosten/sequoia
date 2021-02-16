@@ -45,7 +45,8 @@ add_library(TestFramework STATIC ../Source/TestFramework/Advice.cpp
                                  ../Source/TestFramework/TestFamily.cpp
                                  ../Source/TestFramework/TestRunner.cpp
                                  ../Source/Formatting/Indent.cpp
-                                 ../Source/Parsing/CommandLineArguments.cpp)
+                                 ../Source/Parsing/CommandLineArguments.cpp
+                                 ../Source/PlatformSpecific/Preprocessor.cpp)
 
 include(${CMAKE_CURRENT_SOURCE_DIR}/../build_system/Globbing.cmake)
 
@@ -57,6 +58,10 @@ HEADER_DIRECTORIES(testHeaderList ../Tests/*.hpp)
 target_include_directories(TestChamber PUBLIC ${testHeaderList})
 
 target_link_libraries(TestChamber PUBLIC TestFramework)
+
+if(MSVC)
+    target_link_libraries(TestChamber PUBLIC winmm)
+endif()
 
 
 target_compile_features(TestChamber PUBLIC cxx_std_20)

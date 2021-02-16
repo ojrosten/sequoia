@@ -7,9 +7,11 @@
 
 #pragma once
 
-/*! \file macros for use within the testing framework */
+#include <vector>
 
-namespace sequoia::testing
+/*! \file Utilities dependent on platform-specific macros */
+
+namespace sequoia
 {
   #ifdef _MSC_VER
     inline constexpr bool has_msvc_v{true};
@@ -23,4 +25,19 @@ namespace sequoia::testing
     #define SPECULATIVE_CONSTEVAL consteval
     int iterator_debug_level() noexcept;
   #endif
+
+    class [[nodiscard]] timer_resolution
+    {
+      unsigned int m_Resolution{1};
+    public:
+      explicit timer_resolution(unsigned int millisecs);
+
+      ~timer_resolution();
+
+      [[nodiscard]]
+      unsigned int resolution() const noexcept
+      {
+        return m_Resolution;
+      }
+    };
 }

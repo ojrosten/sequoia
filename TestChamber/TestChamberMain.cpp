@@ -90,6 +90,7 @@ int main(int argc, char** argv)
       test_runner_project_creation{"Project Creation"}
     );
 
+    timer_resolution r{1};
     runner.execute();
   }
   catch(const std::exception& e)
