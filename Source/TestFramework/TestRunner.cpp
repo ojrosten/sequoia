@@ -699,7 +699,7 @@ namespace sequoia::testing
     auto found{m_SelectedSources.find(filename)};
     if(found != m_SelectedSources.end())
       return found;
-    
+
     if(!m_TestRepo.empty())
     {
       return std::find_if(m_SelectedSources.begin(), m_SelectedSources.end(),
@@ -709,7 +709,7 @@ namespace sequoia::testing
                      return rebase_from(source, repo) == rebase_from(filename, repo);
                    });
     }
-    
+
     return m_SelectedSources.end();
   }
 

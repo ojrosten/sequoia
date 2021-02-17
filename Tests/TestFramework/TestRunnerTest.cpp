@@ -65,6 +65,8 @@ namespace sequoia::testing
 
     std::stringstream outputStream{};
 
+    // This is scoped to ensure destruction of the runner - and therefore loggers -
+    // before dumping output to a file. The destructors are not trivial in recovert mode.
     {
       commandline_arguments args{"", "-v", "--recovery", "--dump",
                                  "test", "Bar",
