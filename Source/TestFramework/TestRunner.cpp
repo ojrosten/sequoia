@@ -515,14 +515,17 @@ namespace sequoia::testing
     const std::vector<option> semanticsOptions{equivOption, hostOption, familyOption, headerOption};
 
     const std::vector<option> allocationOptions{hostOption, familyOption, headerOption};
-    
+
+    namespace fs = std::filesystem;
     const auto help{
       parse_invoke_depth_first(argc, argv,
                 { {"test", {"t"}, {"test_family_name"},
                     [this](const param_list& args) { m_SelectedFamilies.emplace(args.front(), false); }
                   },
                   {"source", {"s"}, {"source_file_name"},
-                    [this](const param_list& args) { m_SelectedSources.emplace(args.front(), false); }
+                    [this](const param_list& args) {
+                      m_SelectedSources.emplace_back(fs::path{args.front()}.lexically_normal(), false);
+                    }
                   },
                   {"create", {"c"}, {}, [](const param_list&) {},
                    { {"regular_test", {"regular"}, {"qualified::class_name<class T>", "equivalent_type"},
@@ -694,21 +697,30 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  auto test_runner::find_filename(const std::filesystem::path& filename) -> source_map::iterator
+  auto test_runner::find_filename(const std::filesystem::path& filename) -> source_list::iterator
   {
-    auto found{m_SelectedSources.find(filename)};
-    if(found != m_SelectedSources.end())
-      return found;
+    return std::find_if(m_SelectedSources.begin(), m_SelectedSources.end(),
+                 [&filename, repo{m_TestRepo}](const auto& element){
+                   const auto& source{element.first};
 
-    if(!m_TestRepo.empty())
-    {
-      return std::find_if(m_SelectedSources.begin(), m_SelectedSources.end(),
-                          [&filename, repo{m_TestRepo}](const auto& element){
-                     const auto& source{element.first};
+                   if(filename == source) return true;
 
+                   if(filename.is_absolute() && source.is_relative())
+                   {
+                     return filename == rebase_from(source, working_path());
+                   }
+
+                   // filename is relative to where compilation was performed which
+                   // cannot be known here. Therefore fallback to assuming the 'selected sources'
+                   // live in the test repository
+
+                   if(!repo.empty())
+                   {
                      return rebase_from(source, repo) == rebase_from(filename, repo);
-                   });
-    }
+                   }
+
+                   return false;
+                 });
 
     return m_SelectedSources.end();
   }

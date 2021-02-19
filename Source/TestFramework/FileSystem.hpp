@@ -17,7 +17,7 @@
 
 namespace sequoia::testing
 {
-  const static auto working_path_v{std::filesystem::current_path()};
+  const static auto working_path_v{std::filesystem::current_path().lexically_normal()};
 
   [[nodiscard]]
   inline std::filesystem::path working_path()

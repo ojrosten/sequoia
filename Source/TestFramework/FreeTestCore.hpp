@@ -49,7 +49,7 @@ namespace sequoia::testing
     [[nodiscard]]
     std::filesystem::path source_filename() const noexcept
     {
-      return source_file();
+      return std::filesystem::path{source_file()}.lexically_normal();
     }
 
     [[nodiscard]]

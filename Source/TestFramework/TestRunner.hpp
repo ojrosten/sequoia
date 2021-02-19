@@ -337,7 +337,7 @@ namespace sequoia::testing
     friend test_creator;
 
     using family_map = std::map<std::string, bool, std::less<>>;
-    using source_map = std::map<std::filesystem::path, bool>;
+    using source_list = std::vector<std::pair<std::filesystem::path, bool>>;
 
     struct init_data
     {
@@ -351,7 +351,7 @@ namespace sequoia::testing
 
     std::vector<test_family> m_Families{};
     family_map m_SelectedFamilies{};
-    source_map m_SelectedSources{};
+    source_list m_SelectedSources{};
     std::vector<vessel> m_NascentTests{};
     std::string m_Copyright{};
     search_tree m_SourceSearchTree;
@@ -388,7 +388,7 @@ namespace sequoia::testing
     void check_for_missing_tests();
 
     [[nodiscard]]
-    auto find_filename(const std::filesystem::path& filename) -> source_map::iterator;
+    auto find_filename(const std::filesystem::path& filename) -> source_list::iterator;
 
     template<class Test, class... Tests>
     void add_tests(test_family& f, Test&& test, Tests&&... tests)

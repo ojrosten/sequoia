@@ -69,7 +69,7 @@ namespace sequoia::testing
     // before dumping output to a file. The destructors are not trivial in recovert mode.
     {
       commandline_arguments args{"", "-v", "--recovery", "--dump",
-                                 "test", "Bar",
+                                 "source", "../Tests/TestFramework/TestRunnerDiagnosticsUtilities.cpp",
                                  "test", "Foo"};
 
       const auto testMain{working().append("TestSandbox").append("TestSandbox.cpp")};
