@@ -721,8 +721,6 @@ namespace sequoia::testing
 
                    return false;
                  });
-
-    return m_SelectedSources.end();
   }
 
   void test_runner::execute()
