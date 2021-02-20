@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.15)
 
-project(SequioaMinimal DESCRIPTION "The Sequoia Library plus executable"
+project(SequioaTestChamber DESCRIPTION "The Sequoia Library plus a test chamber"
                        LANGUAGES CXX)
 
 if (MSVC)
@@ -10,9 +10,9 @@ else()
     add_compile_options(-Wall -Wextra -pedantic)
 endif()
 
-add_executable(SequoiaMinimal TestMinimalMain.cpp)
-target_include_directories(SequoiaMinimal PUBLIC ../TestCommon)
-target_include_directories(SequoiaMinimal PUBLIC ../Tests)
+add_executable(SequoiaTestChamber TestChamberMain.cpp)
+target_include_directories(SequoiaTestChamber PUBLIC ../TestCommon)
+target_include_directories(SequoiaTestChamber PUBLIC ../Tests)
 
 add_library(TestFramework STATIC ../Source/TestFramework/Advice.cpp
                                  ../Source/TestFramework/AllocationCheckersDetails.cpp
@@ -35,10 +35,10 @@ target_include_directories(TestFramework PUBLIC ${sequoiaHeaderList})
 
 
 HEADER_DIRECTORIES(testHeaderList ../Tests/*.hpp)
-target_include_directories(SequoiaMinimal PUBLIC ${testHeaderList})
+target_include_directories(SequoiaTestChamber PUBLIC ${testHeaderList})
 
-target_link_libraries(SequoiaMinimal PUBLIC TestFramework)
+target_link_libraries(SequoiaTestChamber PUBLIC TestFramework)
 
 
-target_compile_features(SequoiaMinimal PUBLIC cxx_std_20)
+target_compile_features(SequoiaTestChamber PUBLIC cxx_std_20)
 target_compile_features(TestFramework PUBLIC cxx_std_20)

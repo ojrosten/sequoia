@@ -2,10 +2,10 @@
 #BUILD_ROOT   := ../build/gcc
 BUILD_ROOT     := ../build/clang
 
-TEST_BUILD_ROOT := $(BUILD_ROOT)/TestMinimal
+TEST_BUILD_ROOT := $(BUILD_ROOT)/TestChamber
 SEQ_BUILD_ROOT  := $(BUILD_ROOT)/SequoiaLib
 
-TEST_BUILD_DIR  := $(BUILD_ROOT)/TestMinimal/Tests
+TEST_BUILD_DIR  := $(BUILD_ROOT)/TestChamber/Tests
 SEQ_BUILD_DIR   := $(BUILD_ROOT)/SequoiaLib/Source
 
 TEST_DIR  := ../Tests
@@ -38,14 +38,13 @@ CFLAGS += -I/usr/local/opt/llvm/include -I/usr/local/opt/llvm/include/c++/v1/
 CFLAGS +=  -ferror-limit=1 -Wno-missing-braces
 #CFLAGS += -fmax-errors=1 -Wno-comment
 
-EXE      := $(TEST_BUILD_ROOT)/TestMinimal.exe
+EXE      := $(TEST_BUILD_ROOT)/TestChamber.exe
 SEQ_LIB  := $(SEQ_BUILD_ROOT)/Sequoia.a
 
-APP_SRC := TestMinimalMain.cpp
-APP_OBJ := $(TEST_BUILD_ROOT)/TestMinimalMain.o
-APP_DEP := $(TEST_BUILD_ROOT)/TestMinimalMain.d
+APP_SRC := TestChamberMain.cpp
+APP_OBJ := $(TEST_BUILD_ROOT)/TestChamberMain.o
+APP_DEP := $(TEST_BUILD_ROOT)/TestChamberMain.d
 
-TEST_SRCS += $(shell find $(TEST_DIR)/Experimental -name '*.cpp')
 TEST_OBJS := $(addprefix $(TEST_BUILD_DIR)/, $(TEST_SRCS:%.cpp=%.o))
 TEST_DEPS := $(addprefix $(TEST_BUILD_DIR)/, $(TEST_SRCS:%.cpp=%.d))
 
