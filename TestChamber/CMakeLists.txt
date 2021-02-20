@@ -1,44 +1,22 @@
 cmake_minimum_required(VERSION 3.15)
 
 project(SequioaTestChamber DESCRIPTION "The Sequoia Library plus a test chamber"
-                       LANGUAGES CXX)
+                           LANGUAGES CXX)
 
-if (MSVC)
-    add_compile_options(/W4)
-    add_definitions(/bigobj)
-else()
-    add_compile_options(-Wall -Wextra -pedantic)
-endif()
+add_executable(TestChamber TestChamberMain.cpp)
 
-add_executable(SequoiaTestChamber TestChamberMain.cpp)
-target_include_directories(SequoiaTestChamber PUBLIC ../TestCommon)
-target_include_directories(SequoiaTestChamber PUBLIC ../Tests)
-
-add_library(TestFramework STATIC ../Source/TestFramework/Advice.cpp
-                                 ../Source/TestFramework/AllocationCheckersDetails.cpp
-                                 ../Source/TestFramework/FileEditors.cpp
-                                 ../Source/TestFramework/FileSystem.cpp
-								 ../Source/TestFramework/FreeTestCore.cpp
-                                 ../Source/TestFramework/Output.cpp
-								 ../Source/TestFramework/PerformanceTestCore.cpp
-								 ../Source/TestFramework/SemanticsCheckersDetails.cpp
-                                 ../Source/TestFramework/Summary.cpp
-                                 ../Source/TestFramework/TestFamily.cpp
-                                 ../Source/TestFramework/TestRunner.cpp
-                                 ../Source/Formatting/Indent.cpp
-                                 ../Source/Parsing/CommandLineArguments.cpp)
-
+include(${CMAKE_CURRENT_SOURCE_DIR}/../build_system/CompilerOptions.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/../build_system/TestFrameworkLibrary.cmake)
 include(${CMAKE_CURRENT_SOURCE_DIR}/../build_system/Globbing.cmake)
 
-HEADER_DIRECTORIES(sequoiaHeaderList ../Source/*.hpp)
-target_include_directories(TestFramework PUBLIC ${sequoiaHeaderList})
-
-
 HEADER_DIRECTORIES(testHeaderList ../Tests/*.hpp)
-target_include_directories(SequoiaTestChamber PUBLIC ${testHeaderList})
+target_include_directories(TestChamber PUBLIC ${testHeaderList})
+target_include_directories(TestChamber PUBLIC ../TestCommon)
 
-target_link_libraries(SequoiaTestChamber PUBLIC TestFramework)
+target_link_libraries(TestChamber PUBLIC TestFramework)
 
+if(MSVC)
+    target_link_libraries(TestFrameworkDiagnostics PUBLIC winmm)
+endif()
 
-target_compile_features(SequoiaTestChamber PUBLIC cxx_std_20)
-target_compile_features(TestFramework PUBLIC cxx_std_20)
+target_compile_features(TestChamber PUBLIC cxx_std_20)
