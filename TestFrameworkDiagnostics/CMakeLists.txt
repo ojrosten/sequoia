@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.15)
 
-project(SequioaTestChamber DESCRIPTION "The Sequoia Library plus a subset of tests"
+project(SequioaTestFrameworkDiagnostics DESCRIPTION "The Sequoia Library plus diagnostics for the testing framework"
                        LANGUAGES CXX)
 
 if (MSVC)
@@ -10,7 +10,7 @@ else()
     add_compile_options(-Wall -Wextra -pedantic)
 endif()
 
-add_executable(TestChamber TestChamberMain.cpp
+add_executable(TestFrameworkDiagnostics TestFrameworkDiagnosticsMain.cpp
                               ../Tests/TestFramework/CoreDiagnostics.cpp
                               ../Tests/TestFramework/FuzzyTestDiagnostics.cpp
                               ../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp
@@ -31,8 +31,8 @@ add_executable(TestChamber TestChamberMain.cpp
                               ../Tests/Runtime/FactoryTestingDiagnostics.cpp
                               ../Tests/Runtime/FactoryTest.cpp)
 
-target_include_directories(TestChamber PUBLIC ../TestCommon)
-target_include_directories(TestChamber PUBLIC ../Tests)
+target_include_directories(TestFrameworkDiagnostics PUBLIC ../TestCommon)
+target_include_directories(TestFrameworkDiagnostics PUBLIC ../Tests)
 
 add_library(TestFramework STATIC ../Source/TestFramework/Advice.cpp
                                  ../Source/TestFramework/AllocationCheckersDetails.cpp
@@ -56,14 +56,14 @@ target_include_directories(TestFramework PUBLIC ${sequoiaHeaderList})
 
 
 HEADER_DIRECTORIES(testHeaderList ../Tests/*.hpp)
-target_include_directories(TestChamber PUBLIC ${testHeaderList})
+target_include_directories(TestFrameworkDiagnostics PUBLIC ${testHeaderList})
 
-target_link_libraries(TestChamber PUBLIC TestFramework)
+target_link_libraries(TestFrameworkDiagnostics PUBLIC TestFramework)
 
 if(MSVC)
-    target_link_libraries(TestChamber PUBLIC winmm)
+    target_link_libraries(TestFrameworkDiagnostics PUBLIC winmm)
 endif()
 
 
-target_compile_features(TestChamber PUBLIC cxx_std_20)
+target_compile_features(TestFrameworkDiagnostics PUBLIC cxx_std_20)
 target_compile_features(TestFramework PUBLIC cxx_std_20)

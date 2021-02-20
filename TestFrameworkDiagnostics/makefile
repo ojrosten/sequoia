@@ -2,10 +2,10 @@
 #BUILD_ROOT   := ../build/gcc
 BUILD_ROOT     := ../build/clang
 
-TEST_BUILD_ROOT := $(BUILD_ROOT)/TestChamber
+TEST_BUILD_ROOT := $(BUILD_ROOT)/TestFrameworkDiagnostics
 SEQ_BUILD_ROOT  := $(BUILD_ROOT)/SequoiaLib
 
-TEST_BUILD_DIR  := $(BUILD_ROOT)/TestChamber/Tests
+TEST_BUILD_DIR  := $(BUILD_ROOT)/TestFrameworkDiagnostics/Tests
 SEQ_BUILD_DIR   := $(BUILD_ROOT)/SequoiaLib/Source
 
 TEST_DIR  := ../Tests
@@ -38,12 +38,12 @@ CFLAGS += -I/usr/local/opt/llvm/include -I/usr/local/opt/llvm/include/c++/v1/
 CFLAGS +=  -ferror-limit=1 -Wno-missing-braces
 #CFLAGS += -fmax-errors=1 -Wno-comment
 
-EXE      := $(TEST_BUILD_ROOT)/TestChamber.exe
+EXE      := $(TEST_BUILD_ROOT)/TestFrameworkDiagnostics.exe
 SEQ_LIB  := $(SEQ_BUILD_ROOT)/Sequoia.a
 
-APP_SRC := TestChamberMain.cpp
-APP_OBJ := $(TEST_BUILD_ROOT)/TestChamberMain.o
-APP_DEP := $(TEST_BUILD_ROOT)/TestChamberMain.d
+APP_SRC := TestFrameworkDiagnosticsMain.cpp
+APP_OBJ := $(TEST_BUILD_ROOT)/TestFrameworkDiagnosticsMain.o
+APP_DEP := $(TEST_BUILD_ROOT)/TestFrameworkDiagnosticsMain.d
 
 TEST_SRCS += $(shell find $(TEST_DIR)/TestFramework -name '*.cpp')
 TEST_SRCS += $(shell find $(TEST_DIR)/Parsing -name '*.cpp')
