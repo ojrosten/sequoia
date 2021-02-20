@@ -27,13 +27,9 @@ add_executable(TestFrameworkDiagnostics TestFrameworkDiagnosticsMain.cpp
 include(${CMAKE_CURRENT_SOURCE_DIR}/../build_system/CompilerOptions.cmake)
 include(${CMAKE_CURRENT_SOURCE_DIR}/../build_system/TestFrameworkLibrary.cmake)
 include(${CMAKE_CURRENT_SOURCE_DIR}/../build_system/TestIncludeDirectories.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/../build_system/LinkToLibraries.cmake)
 
 ADD_TEST_INCLUDE_DIRS(TestFrameworkDiagnostics)
-
-target_link_libraries(TestFrameworkDiagnostics PUBLIC TestFramework)
-
-if(MSVC)
-    target_link_libraries(TestFrameworkDiagnostics PUBLIC winmm)
-endif()
+LINK_LIBRARIES(TestFrameworkDiagnostics)
 
 target_compile_features(TestFrameworkDiagnostics PUBLIC cxx_std_20)
