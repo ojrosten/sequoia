@@ -16,7 +16,7 @@ target_include_directories(TestChamber PUBLIC ../TestCommon)
 target_link_libraries(TestChamber PUBLIC TestFramework)
 
 if(MSVC)
-    target_link_libraries(TestFrameworkDiagnostics PUBLIC winmm)
+    target_link_libraries(TestChamber PUBLIC winmm)
 endif()
 
 target_compile_features(TestChamber PUBLIC cxx_std_20)
