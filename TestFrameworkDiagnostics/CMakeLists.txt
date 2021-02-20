@@ -24,10 +24,12 @@ add_executable(TestFrameworkDiagnostics TestFrameworkDiagnosticsMain.cpp
                               ../Tests/Runtime/FactoryTestingDiagnostics.cpp
                               ../Tests/Runtime/FactoryTest.cpp)
 
-include(${CMAKE_CURRENT_SOURCE_DIR}/../build_system/CompilerOptions.cmake)
-include(${CMAKE_CURRENT_SOURCE_DIR}/../build_system/TestFrameworkLibrary.cmake)
-include(${CMAKE_CURRENT_SOURCE_DIR}/../build_system/TestIncludeDirectories.cmake)
-include(${CMAKE_CURRENT_SOURCE_DIR}/../build_system/LinkToLibraries.cmake)
+SET(BUILD_SYS ${CMAKE_CURRENT_SOURCE_DIR}/../build_system)
+
+include(${BUILD_SYS}/CompilerOptions.cmake)
+include(${BUILD_SYS}/TestFrameworkLibrary.cmake)
+include(${BUILD_SYS}/TestIncludeDirectories.cmake)
+include(${BUILD_SYS}/LinkToLibraries.cmake)
 
 ADD_TEST_INCLUDE_DIRS(TestFrameworkDiagnostics)
 LINK_LIBRARIES(TestFrameworkDiagnostics)
