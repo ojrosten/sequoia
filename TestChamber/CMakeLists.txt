@@ -7,11 +7,9 @@ add_executable(TestChamber TestChamberMain.cpp)
 
 include(${CMAKE_CURRENT_SOURCE_DIR}/../build_system/CompilerOptions.cmake)
 include(${CMAKE_CURRENT_SOURCE_DIR}/../build_system/TestFrameworkLibrary.cmake)
-include(${CMAKE_CURRENT_SOURCE_DIR}/../build_system/Globbing.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/../build_system/TestIncludeDirectories.cmake)
 
-HEADER_DIRECTORIES(testHeaderList ../Tests/*.hpp)
-target_include_directories(TestChamber PUBLIC ${testHeaderList})
-target_include_directories(TestChamber PUBLIC ../TestCommon)
+ADD_TEST_INCLUDE_DIRS(TestChamber)
 
 target_link_libraries(TestChamber PUBLIC TestFramework)
 
