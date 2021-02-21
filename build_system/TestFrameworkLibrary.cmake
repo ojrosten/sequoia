@@ -13,7 +13,9 @@ add_library(TestFramework STATIC ../Source/TestFramework/Advice.cpp
                                  ../Source/Parsing/CommandLineArguments.cpp
                                  ../Source/PlatformSpecific/Preprocessor.cpp)
 
-include(${CMAKE_CURRENT_SOURCE_DIR}/../build_system/Globbing.cmake)
+set(CURRENT_DIR ${CMAKE_CURRENT_LIST_DIR}) 
+
+include(${CURRENT_DIR}/../build_system/Globbing.cmake)
 
 HEADER_DIRECTORIES(sequoiaHeaderList ../Source/*.hpp)
 target_include_directories(TestFramework PUBLIC ${sequoiaHeaderList})

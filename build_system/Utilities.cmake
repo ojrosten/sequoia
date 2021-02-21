@@ -1,4 +1,6 @@
-include(${CMAKE_CURRENT_SOURCE_DIR}/../build_system/Globbing.cmake)
+set(CURRENT_DIR ${CMAKE_CURRENT_LIST_DIR})
+
+include(${CURRENT_DIR}/Globbing.cmake)
 
 FUNCTION(ADD_TEST_INCLUDE_DIRS target)
     HEADER_DIRECTORIES(testHeaderList ../Tests/*.hpp)
@@ -10,11 +12,14 @@ FUNCTION(LINK_LIBRARIES target)
     target_link_libraries(${target} PUBLIC TestFramework)
 
     if(MSVC)
-        target_link_libraries(${target} PUBLIC winmm)
+        target_link_libraries(${target} PRIVATE winmm)
     endif()
 ENDFUNCTION()
 
 FUNCTION(FINALIZE target)
+    include(${CURRENT_DIR}/CompilerOptions.cmake)
+    include(${CURRENT_DIR}/TestFrameworkLibrary.cmake)
+
     ADD_TEST_INCLUDE_DIRS(${target})
     LINK_LIBRARIES(${target})
     target_compile_features(${target} PUBLIC cxx_std_20)
