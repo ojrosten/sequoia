@@ -18,7 +18,7 @@ ENDFUNCTION()
 
 FUNCTION(FINALIZE target)
     include(${CURRENT_DIR}/CompilerOptions.cmake)
-    include(${CURRENT_DIR}/TestFrameworkLibrary.cmake)
+    add_subdirectory(${CURRENT_DIR}/TestFramework TestFramework)
 
     ADD_TEST_INCLUDE_DIRS(${target})
     LINK_LIBRARIES(${target})
