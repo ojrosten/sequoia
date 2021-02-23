@@ -855,17 +855,7 @@ namespace sequoia::testing
   void test_runner::generate_test_main(std::string_view copyright, const std::filesystem::path& path) const
   {
     const auto file{path/"TestAll"/"TestMain.cpp"}; 
-    std::string text{};
-    if(std::ifstream ifile{file})
-    {
-      std::stringstream buffer{};
-      buffer << ifile.rdbuf();
-      text = buffer.str();
-    }
-    else
-    {
-      throw std::runtime_error{report_failed_read(file)};
-    }
+    std::string text{read_to_string(file)};
 
     set_top_copyright(text, copyright);
 
@@ -888,17 +878,7 @@ namespace sequoia::testing
   void test_runner::generate_make_file(const std::filesystem::path& path) const
   {
     const auto file{path/"TestAll"/"makefile"}; 
-    std::string text{};
-    if(std::ifstream ifile{file})
-    {
-      std::stringstream buffer{};
-      buffer << ifile.rdbuf();
-      text = buffer.str();
-    }
-    else
-    {
-      throw std::runtime_error{report_failed_read(file)};
-    }
+    std::string text{read_to_string(file)};
 
     constexpr auto npos{std::string::npos};
     if(auto rootPos{text.find("???")}; rootPos != npos)
