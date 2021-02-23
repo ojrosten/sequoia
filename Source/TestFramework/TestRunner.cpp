@@ -197,14 +197,7 @@ namespace sequoia::testing
       set_top_copyright(text, copyright);
       transformer(text);
 
-      if(std::ofstream ofile{outputFile})
-      {
-        ofile << text;
-      }
-      else
-      {
-        throw std::runtime_error{report_failed_write(outputFile)};
-      }
+      write_to_file(outputFile, text);
     }
 
     return {outputFile, true};
@@ -850,6 +843,8 @@ namespace sequoia::testing
     generate_test_main(copyright, path);
     generate_make_file(path);
     generate_make_file(project_template_path(path));
+    generate_cmake_file(path);
+    generate_cmake_file(project_template_path(path));
   }
 
   void test_runner::generate_test_main(std::string_view copyright, const std::filesystem::path& path) const
@@ -865,14 +860,7 @@ namespace sequoia::testing
       text.replace(pos, myCopyright.size(), copyright);
     }
 
-    if(std::ofstream ofile{file})
-    {
-      ofile << text;
-    }
-    else
-    {
-      throw std::runtime_error{report_failed_write(file)};
-    }
+    write_to_file(file, text);
   }
 
   void test_runner::generate_make_file(const std::filesystem::path& path) const
@@ -891,13 +879,19 @@ namespace sequoia::testing
       throw std::runtime_error{"Unable to locate makefile root definition"};
     }
 
-    if(std::ofstream ofile{file})
+    write_to_file(file, text);
+  }
+
+  void test_runner::generate_cmake_file(const std::filesystem::path& path) const
+  {
+    const auto file{path/"TestAll"/"CMakeLists.txt"}; 
+    std::string text{read_to_string(file)};
+    constexpr std::string_view seqroot{"SEQUOIA_ROOT"};
+    if(auto pos{text.find(seqroot)}; pos != std::string::npos)
     {
-      ofile << text;
+      text.replace(pos, seqroot.size(), m_ProjectRoot.generic_string());
     }
-    else
-    {
-      throw std::runtime_error{report_failed_write(file)};
-    }
+
+    write_to_file(file, text);
   }
 }

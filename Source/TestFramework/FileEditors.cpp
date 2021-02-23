@@ -30,6 +30,18 @@ namespace sequoia::testing
     throw std::runtime_error{report_failed_read(file)};
   }
 
+  void write_to_file(const std::filesystem::path& file, std::string_view text)
+  {
+    if(std::ofstream ofile{file})
+    {
+      ofile << text;
+    }
+    else
+    {
+      throw std::runtime_error{report_failed_write(file)};
+    }
+  }
+
   void add_include(const std::filesystem::path& file, std::string_view include)
   {
     std::string text{read_to_string(file)};

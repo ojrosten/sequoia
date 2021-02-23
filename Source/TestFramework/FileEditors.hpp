@@ -18,6 +18,8 @@ namespace sequoia::testing
 {
   [[nodiscard]]
   std::string read_to_string(const std::filesystem::path& file);
+
+  void write_to_file(const std::filesystem::path& file, std::string_view text);
   
   void add_include(const std::filesystem::path& file, std::string_view include);
 
