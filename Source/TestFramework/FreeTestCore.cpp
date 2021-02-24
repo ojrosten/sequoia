@@ -40,7 +40,8 @@ namespace sequoia::testing
   log_summary test::execute()
   {
     using namespace std::chrono;
-    const auto time{steady_clock::now()};
+    const auto start{steady_clock::now()};
+
     try
     {
       run_tests();
@@ -54,7 +55,8 @@ namespace sequoia::testing
       log_critical_failure("Unknown", "");
     }
 
-    return write_versioned_output(summarize(steady_clock::now() - time));
+    const auto end{steady_clock::now()};
+    return write_versioned_output(summarize(end - start));
   };
 
   [[nodiscard]]
