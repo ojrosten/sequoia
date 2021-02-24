@@ -34,7 +34,6 @@ namespace sequoia::testing
 
     regular_extender(const regular_extender&)            = delete;
     regular_extender& operator=(const regular_extender&) = delete;
-    regular_extender& operator=(regular_extender&&)      = delete;
 
     /// Precondition: x!=y
     template<pseudoregular T>
@@ -67,7 +66,9 @@ namespace sequoia::testing
       testing::check_semantics(append_lines(description, emphasise("Regular Semantics")), m_Logger, x, y, order, std::move(m));
     }
   protected:
-    regular_extender(regular_extender&&) noexcept = default;
+    regular_extender(regular_extender&&)            noexcept = default;
+    regular_extender& operator=(regular_extender&&) noexcept = default;
+
     ~regular_extender() = default;
   private:
     test_logger<Mode>& m_Logger;

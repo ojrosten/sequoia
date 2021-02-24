@@ -446,7 +446,7 @@ namespace sequoia::testing
     , m_TestRepo{std::move(repos.tests)}
     , m_TestMaterialsRepo{std::move(repos.test_materials)}
     , m_OutputDir{std::move(repos.output)}
-    , m_Stream{stream}
+    , m_Stream{&stream}
   {
     throw_unless_regular_file(m_TestMain, "\nTry ensuring that the application is run from the appropriate directory");
     throw_unless_regular_file(m_HashIncludeTarget);
@@ -588,7 +588,7 @@ namespace sequoia::testing
     if(!help.empty())
     {
       m_OutputMode |= output_mode::help;
-      m_Stream << help;
+      stream() << help;
     }
     else
     {    
@@ -657,7 +657,7 @@ namespace sequoia::testing
       output += summarize(familySummary, detail, tab, no_indent);
     }
 
-    m_Stream << output;
+    stream() << output;
 
     return familySummary;
   }
@@ -671,7 +671,7 @@ namespace sequoia::testing
   void test_runner::check_for_missing_tests()
   {
     auto check{
-      [&stream{m_Stream}](const auto& tests, std::string_view type) {
+      [&stream{stream()}](const auto& tests, std::string_view type) {
         for(const auto& test : tests)
         {
           if(!test.second)
@@ -782,8 +782,8 @@ namespace sequoia::testing
   {
     if(!message.empty())
     {
-      m_Stream << prefix << '\n';
-      m_Stream << message << "\n\n";
+      stream() << prefix << '\n';
+      stream() << message << "\n\n";
     }
   }
 
@@ -794,19 +794,19 @@ namespace sequoia::testing
 
     if(!m_Families.empty() && (m_NascentTests.empty() || !m_SelectedFamilies.empty()))
     {
-      m_Stream << "\nRunning tests...\n\n";
+      stream() << "\nRunning tests...\n\n";
       log_summary summary{};
       if(!concurrent_execution())
       {
         for(auto& family : m_Families)
         {
-          m_Stream << family.name() << ":\n";
+          stream() << family.name() << ":\n";
           summary += process_family(family.execute(m_UpdateMode, m_ConcurrencyMode)).log;
         }
       }
       else
       {
-        m_Stream << "\n\t--Using asynchronous execution, level: " << stringify(m_ConcurrencyMode) << "\n\n";
+        stream() << "\n\t--Using asynchronous execution, level: " << stringify(m_ConcurrencyMode) << "\n\n";
         std::vector<std::pair<std::string, std::future<test_family::results>>> results{};
         results.reserve(m_Families.size());
 
@@ -819,12 +819,12 @@ namespace sequoia::testing
 
         for(auto& res : results)
         {
-          m_Stream << res.first << ":\n";
+          stream() << res.first << ":\n";
           summary += process_family(res.second.get()).log;
         }
       }
-      m_Stream <<  "\n-----------Grand Totals-----------\n";
-      m_Stream << summarize(summary, steady_clock::now() - time, summary_detail::absent_checks | summary_detail::timings, indentation{"\t"},  no_indent);
+      stream() <<  "\n-----------Grand Totals-----------\n";
+      stream() << summarize(summary, steady_clock::now() - time, summary_detail::absent_checks | summary_detail::timings, indentation{"\t"},  no_indent);
     }
 
     check_for_missing_tests();

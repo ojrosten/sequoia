@@ -35,7 +35,6 @@ namespace sequoia::testing
 
     move_only_extender(const move_only_extender&)            = delete;
     move_only_extender& operator=(const move_only_extender&) = delete;
-    move_only_extender& operator=(move_only_extender&&)      = delete;
 
     /// Preconditions: x!=y; x==xClone, y==yClone
     template<moveonly T>
@@ -53,7 +52,9 @@ namespace sequoia::testing
       testing::check_semantics(append_lines(description, emphasise("Move-only Semantics")), m_Logger, std::move(x), std::move(y), xClone, yClone, order);
     }
   protected:
-    move_only_extender(move_only_extender&&) noexcept = default;
+    move_only_extender(move_only_extender&&)            noexcept = default;
+    move_only_extender& operator=(move_only_extender&&) noexcept = default;
+
     ~move_only_extender() = default;
   private:
     test_logger<Mode>& m_Logger;

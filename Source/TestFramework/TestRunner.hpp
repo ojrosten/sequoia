@@ -277,11 +277,11 @@ namespace sequoia::testing
   public:
     test_runner(int argc, char** argv, std::string_view copyright, std::filesystem::path testMain, std::filesystem::path hashIncludeTarget, repositories repos, std::ostream& stream=std::cout);
 
-    test_runner(const test_runner&) = delete;
-    test_runner(test_runner&&)      = default;
+    test_runner(const test_runner&)     = delete;
+    test_runner(test_runner&&) noexcept = default;
 
-    test_runner& operator=(const test_runner&) = delete;
-    test_runner& operator=(test_runner&&)      = delete;
+    test_runner& operator=(const test_runner&)     = delete;
+    test_runner& operator=(test_runner&&) noexcept = default;
 
     template<class Test, class... Tests>
     void add_test_family(std::string_view name, Test&& test, Tests&&... tests)
@@ -365,11 +365,13 @@ namespace sequoia::testing
 
     recovery_paths m_Recovery;
 
-    std::ostream& m_Stream;
+    std::ostream* m_Stream;
 
     output_mode m_OutputMode{output_mode::standard};
     update_mode m_UpdateMode{update_mode::none};
     concurrency_mode m_ConcurrencyMode{concurrency_mode::serial};
+
+    std::ostream& stream() noexcept { return *m_Stream; }
  
     bool mark_family(std::string_view name);
 

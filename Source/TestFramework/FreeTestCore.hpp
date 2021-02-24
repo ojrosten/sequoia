@@ -28,8 +28,8 @@ namespace sequoia::testing
       This class allows for convenient, homogeneous treatment of all concrete tests.
 
       The semantics are such that, of the special member functions, only explicit construction from a
-      string_view and (virtual) destruction are publicly available. Move construction is protected;
-      all remaining special member functions are deleted to discourage multiple instantiations.
+      string_view and (virtual) destruction are publicly available. Moves are protected; copy
+      contruction / assignment are deleted.
    */
 
   class test
@@ -41,7 +41,6 @@ namespace sequoia::testing
 
     test(const test&)            = delete;
     test& operator=(const test&) = delete;
-    test& operator=(test&&)      = delete;
 
     [[nodiscard]]
     log_summary execute();
@@ -99,7 +98,8 @@ namespace sequoia::testing
   protected:
     using duration = std::chrono::steady_clock::duration;
 
-    test(test&&) noexcept = default;
+    test(test&&) noexcept            = default;
+    test& operator=(test&&) noexcept = default;
 
     /// Pure virtual method which should be overridden in a concrete test's cpp file in order to provide the correct __FILE__
     [[nodiscard]]
@@ -156,8 +156,8 @@ namespace sequoia::testing
       performed.
 
       The semantics are such that, of the special member functions, only explicit construction from a
-      string_view and (virtual) destruction are publicly available. Move construction is protected;
-      all remaining special member functions are deleted to discourage multiple instantiations.
+      string_view and (virtual) destruction are publicly available. Moves are protected; copy
+      contruction / assignment are deleted.
 
       \anchor basic_test_primary
    */
@@ -175,10 +175,10 @@ namespace sequoia::testing
     
     basic_test(const basic_test&)            = delete;
     basic_test& operator=(const basic_test&) = delete;
-    basic_test& operator=(basic_test&&)      = delete;
     
   protected:
-    basic_test(basic_test&&) noexcept = default;
+    basic_test(basic_test&&)            noexcept = default;
+    basic_test& operator=(basic_test&&) noexcept = default;
 
     /// Any override of this is likely to call this first and potentially append to the log_summary
     [[nodiscard]]

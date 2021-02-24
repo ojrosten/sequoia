@@ -452,7 +452,6 @@ namespace sequoia::testing
 
     checker(const checker&)            = delete;
     checker& operator=(const checker&) = delete;
-    checker& operator=(checker&&)      = delete;
 
     template<class T, class Advisor=null_advisor>
     bool check_equality(std::string_view description, const T& value, const T& prediction, tutor<Advisor> advisor=tutor<Advisor>{})
@@ -507,6 +506,8 @@ namespace sequoia::testing
       : logger_type{static_cast<logger_type&&>(other)}
       , Extenders{logger()}...
     {}
+    
+    checker& operator=(checker&&) noexcept = default;
 
     ~checker() = default;
 

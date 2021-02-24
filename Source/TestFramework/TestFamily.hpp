@@ -77,7 +77,7 @@ namespace sequoia::testing
     test_family(test_family&&) noexcept = default;
 
     test_family& operator=(const test_family&)     = delete;
-    test_family& operator=(test_family&&) noexcept = delete;
+    test_family& operator=(test_family&&) noexcept = default;
 
     template<class concrete_test>
     void add_test(concrete_test&& test)

@@ -121,10 +121,8 @@ namespace sequoia::testing
 
     explicit fuzzy_extender(test_logger<Mode>& logger) : m_Logger{logger} {}
 
-    fuzzy_extender(const fuzzy_extender&) = delete;
-
+    fuzzy_extender(const fuzzy_extender&)            = delete;
     fuzzy_extender& operator=(const fuzzy_extender&) = delete;
-    fuzzy_extender& operator=(fuzzy_extender&&)      = delete;
 
     template<class T, class Compare, class Advisor=null_advisor>
     bool check_approx_equality(std::string_view description, Compare compare, const T& obtained, const T& prediction, tutor<Advisor> advisor=tutor<Advisor>{})
@@ -138,8 +136,10 @@ namespace sequoia::testing
       return testing::check_range_approx(description, m_Logger, std::move(compare), first, last, predictionFirst, predictionLast, std::move(advisor));      
     }
 
-  protected:    
-    fuzzy_extender(fuzzy_extender&&) noexcept = default;
+  protected:
+    fuzzy_extender(fuzzy_extender&&)             noexcept = default;
+    fuzzy_extender& operator=(fuzzy_extender&&)  noexcept = default;
+
     ~fuzzy_extender() = default;
 
   private:
