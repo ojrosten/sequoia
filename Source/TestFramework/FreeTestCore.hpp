@@ -98,7 +98,7 @@ namespace sequoia::testing
   protected:
     using duration = std::chrono::steady_clock::duration;
 
-    test(test&&) noexcept            = default;
+    test(test&&)            noexcept = default;
     test& operator=(test&&) noexcept = default;
 
     /// Pure virtual method which should be overridden in a concrete test's cpp file in order to provide the correct __FILE__

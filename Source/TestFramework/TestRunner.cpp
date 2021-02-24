@@ -841,10 +841,8 @@ namespace sequoia::testing
     fs::copy(aux_files_path(m_ProjectRoot), aux_files_path(path), fs::copy_options::recursive | fs::copy_options::skip_existing);
 
     generate_test_main(copyright, path);
-    generate_make_file(path);
-    generate_make_file(project_template_path(path));
-    generate_cmake_file(path);
-    generate_cmake_file(project_template_path(path));
+    generate_build_system_files(path, "makefile", "???");
+    generate_build_system_files(path, "CMakeLists.txt", "SEQUOIA_ROOT");
   }
 
   void test_runner::generate_test_main(std::string_view copyright, const std::filesystem::path& path) const
@@ -863,35 +861,23 @@ namespace sequoia::testing
     write_to_file(file, text);
   }
 
-  void test_runner::generate_make_file(const std::filesystem::path& path) const
+  void test_runner::generate_build_system_files(const std::filesystem::path& path, std::string_view filename, std::string_view pattern) const
   {
-    const auto file{path/"TestAll"/"makefile"}; 
+    const auto destination{std::filesystem::path{"TestAll"}.append(filename)};
+    const auto file{path/destination}; 
     std::string text{read_to_string(file)};
 
     constexpr auto npos{std::string::npos};
-    if(auto rootPos{text.find("???")}; rootPos != npos)
+    if(auto rootPos{text.find(pattern)}; rootPos != npos)
     {
-      namespace fs = std::filesystem;
-      text.replace(rootPos, 3, m_ProjectRoot.generic_string());
+      text.replace(rootPos, pattern.size(), m_ProjectRoot.generic_string());
     }
     else
     {
-      throw std::runtime_error{"Unable to locate makefile root definition"};
+      throw std::runtime_error{std::string{"Unable to locate "}.append(filename).append(" root definition")};
     }
 
     write_to_file(file, text);
-  }
-
-  void test_runner::generate_cmake_file(const std::filesystem::path& path) const
-  {
-    const auto file{path/"TestAll"/"CMakeLists.txt"}; 
-    std::string text{read_to_string(file)};
-    constexpr std::string_view seqroot{"SEQUOIA_ROOT"};
-    if(auto pos{text.find(seqroot)}; pos != std::string::npos)
-    {
-      text.replace(pos, seqroot.size(), m_ProjectRoot.generic_string());
-    }
-
-    write_to_file(file, text);
+    write_to_file(project_template_path(path) / destination, text);
   }
 }
