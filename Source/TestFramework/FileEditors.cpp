@@ -34,7 +34,7 @@ namespace sequoia::testing
   {
     if(std::ofstream ofile{file})
     {
-      ofile << text;
+      ofile.write(text.data(), text.size());
     }
     else
     {
@@ -60,15 +60,8 @@ namespace sequoia::testing
     };
 
     text.insert(pos, std::string{"#include \""}.append(include).append("\"\n"));
-    
-    if(std::ofstream ofile{file})      
-    {
-      ofile << text;
-    }    
-    else
-    {
-      throw std::runtime_error{report_failed_write(file)};
-    }
+
+    write_to_file(file, text);
   }
 
   void add_to_family(const std::filesystem::path& file, std::string_view familyName, const std::vector<std::string>& tests)
@@ -149,14 +142,7 @@ namespace sequoia::testing
     }
 
     const auto tempPath{fs::path{file}.concat("x")};
-    if(std::ofstream ofile{tempPath})
-    {
-      ofile.write(text.data(), text.size());
-    }
-    else
-    {
-      throw std::runtime_error{report_failed_write(tempPath)};
-    }
+    write_to_file(tempPath, text);
 
     fs::copy_file(tempPath, file, fs::copy_options::overwrite_existing);
     fs::remove(tempPath);
