@@ -50,6 +50,48 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
+  std::filesystem::path aux_files_path(std::filesystem::path projectRoot)
+  {
+    return projectRoot/"aux_files";
+  }
+
+  [[nodiscard]]
+  std::filesystem::path code_templates_path(std::filesystem::path projectRoot)
+  {
+    return projectRoot/"aux_files"/"TestTemplates";
+  }
+
+  [[nodiscard]]
+  std::filesystem::path project_template_path(std::filesystem::path projectRoot)
+  {
+    return projectRoot/"aux_files"/"ProjectTemplate";
+  }
+
+  [[nodiscard]]
+  std::filesystem::path recovery_path(std::filesystem::path outputDir)
+  {
+    return outputDir /= "Recovery";
+  }
+
+  [[nodiscard]]
+  std::filesystem::path tests_temporary_data_path(std::filesystem::path outputDir)
+  {
+    return outputDir /= "TestsTemporaryData";
+  }
+
+  [[nodiscard]]
+  std::filesystem::path diagnostics_output_path(std::filesystem::path outputDir)
+  {
+    return outputDir /= "DiagnosticsOutput";
+  }
+
+  [[nodiscard]]
+  std::filesystem::path test_summaries_path(std::filesystem::path outputDir)
+  {
+    return outputDir /= "TestSummaries";
+  }
+
+  [[nodiscard]]
   std::string report_file_issue(const std::filesystem::path& file, std::string_view description)
   {
     auto mess{std::string{"Unable to open file "}.append(file.generic_string())};
@@ -93,6 +135,20 @@ namespace sequoia::testing
 
     throw_unless_exists(p, message);
     throw_if(p, append_lines(" is not a regular file", message), [](const fs::path& p){ return !fs::is_regular_file(p); });
+  }
+
+  [[nodiscard]]
+  std::filesystem::path search_tree::find(const std::filesystem::path& filename) const
+  {
+    using dir_iter = std::filesystem::recursive_directory_iterator;
+
+    for(const auto& i : dir_iter{m_Root})
+    {
+      if(auto p{i.path()}; p.filename() == filename)
+        return p;
+    }
+
+    return {};
   }
 
   [[nodiscard]]

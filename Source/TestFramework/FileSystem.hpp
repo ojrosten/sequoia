@@ -29,43 +29,25 @@ namespace sequoia::testing
   std::filesystem::path project_root(int argc, char** argv, const std::filesystem::path& fallback=working_path().parent_path());
 
   [[nodiscard]]
-  inline std::filesystem::path aux_files_path(std::filesystem::path projectRoot)
-  {
-    return projectRoot/"aux_files";
-  }
+  std::filesystem::path aux_files_path(std::filesystem::path projectRoot);
 
   [[nodiscard]]
-  inline std::filesystem::path code_templates_path(std::filesystem::path projectRoot)
-  {
-    return projectRoot/"aux_files"/"TestTemplates";
-  }
+  std::filesystem::path code_templates_path(std::filesystem::path projectRoot);
 
   [[nodiscard]]
-  inline std::filesystem::path project_template_path(std::filesystem::path projectRoot)
-  {
-    return projectRoot/"aux_files"/"ProjectTemplate";
-  }
+  std::filesystem::path project_template_path(std::filesystem::path projectRoot);
   
+  [[nodiscard]]
+  std::filesystem::path recovery_path(std::filesystem::path outputDir);
 
-  inline std::filesystem::path recovery_path(std::filesystem::path outputDir)
-  {
-    return outputDir /= "Recovery";
-  }
+  [[nodiscard]]
+  std::filesystem::path tests_temporary_data_path(std::filesystem::path outputDir);
 
-  inline std::filesystem::path tests_temporary_data_path(std::filesystem::path outputDir)
-  {
-    return outputDir /= "TestsTemporaryData";
-  }
+  [[nodiscard]]
+  std::filesystem::path diagnostics_output_path(std::filesystem::path outputDir);
 
-  inline std::filesystem::path diagnostics_output_path(std::filesystem::path outputDir)
-  {
-    return outputDir /= "DiagnosticsOutput";
-  }
-
-  inline std::filesystem::path test_summaries_path(std::filesystem::path outputDir)
-  {
-    return outputDir /= "TestSummaries";
-  }
+  [[nodiscard]]
+  std::filesystem::path test_summaries_path(std::filesystem::path outputDir);
   
 
   template<class Pred>
@@ -113,18 +95,7 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    std::filesystem::path find(const std::filesystem::path& filename) const
-    {
-      using dir_iter = std::filesystem::recursive_directory_iterator;
-
-      for(const auto& i : dir_iter{m_Root})
-      {
-        if(auto p{i.path()}; p.filename() == filename)
-          return p;
-      }
-
-      return {};
-    }
+    std::filesystem::path find(const std::filesystem::path& filename) const;
 
     [[nodiscard]]
     friend bool operator==(const search_tree&, const search_tree&) noexcept = default;
