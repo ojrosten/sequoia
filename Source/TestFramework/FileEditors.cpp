@@ -147,4 +147,39 @@ namespace sequoia::testing
     fs::copy_file(tempPath, file, fs::copy_options::overwrite_existing);
     fs::remove(tempPath);
   }
+
+  void add_to_cmake(const std::filesystem::path& cmakeDir, const std::filesystem::path& file)
+  {
+    const auto cmakeLists{cmakeDir / "CMakeLists.txt"};          
+    std::string text{read_to_string(cmakeLists)};
+
+    const auto correctStructure{
+      [&](){
+        constexpr auto npos{std::string::npos};
+        constexpr std::string_view pattern{"target_sources("};  
+        if(auto startPos{text.find(pattern)}; startPos != npos)
+        {
+          if(auto endPos{text.find(')', startPos + pattern.size())}; endPos != npos)
+          {
+            text.insert(endPos, std::string{"\n"}.append(pattern.size(), ' ').append(file.generic_string()));
+            return true;
+          }
+        }
+
+        return false;
+      }()
+    };
+
+    if(!correctStructure)
+    {
+      throw std::runtime_error{"Unable to find appropriate place to add source file to CMakeLists.txt"};
+    }
+
+    namespace fs = std::filesystem;
+    const auto tempPath{fs::path{cmakeLists}.concat("x")};
+    write_to_file(tempPath, text);
+
+    fs::copy_file(tempPath, cmakeLists, fs::copy_options::overwrite_existing);
+    fs::remove(tempPath);
+  }
 }

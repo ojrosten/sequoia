@@ -5,6 +5,8 @@ project(SequioaTestChamber DESCRIPTION "The Sequoia Library plus a test chamber"
 
 add_executable(TestChamber TestChamberMain.cpp)
 
+target_sources(TestChamber PRIVATE)
+
 SET(BUILD_SYS ${CMAKE_CURRENT_SOURCE_DIR}/../build_system)
 
 include(${BUILD_SYS}/Utilities.cmake)

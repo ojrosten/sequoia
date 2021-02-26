@@ -270,7 +270,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::vector<std::string> nascent_semantics_test::translation_units() const
+  std::vector<std::string> nascent_semantics_test::constructors() const
   {
     return { {std::string{forename()}.append("_false_positive_test(\"False Positive Test\")")},
              {std::string{forename()}.append("_test(\"Unit Test\")")} };
@@ -363,7 +363,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::vector<std::string> nascent_behavioural_test::translation_units() const
+  std::vector<std::string> nascent_behavioural_test::constructors() const
   {
     return { {std::string{forename()}.append("_test(\"").append(to_camel_case(test_type())).append(" Test\")")} };
   }
@@ -394,7 +394,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::vector<std::string> nascent_allocation_test::translation_units() const
+  std::vector<std::string> nascent_allocation_test::constructors() const
   {
     return { {std::string{forename()}.append("_allocation_test(\"Allocation Test\")")} };
   }
@@ -741,7 +741,7 @@ namespace sequoia::testing
             append_lines(mess, create_file(nascent, stub));
           }
 
-          add_to_family(m_TestMain, nascent.family(), nascent.translation_units());
+          add_to_family(m_TestMain, nascent.family(), nascent.constructors());
         }
       };
 
@@ -762,12 +762,16 @@ namespace sequoia::testing
 
     if(created)
     {
-      if(const auto filename{outputFile.filename()}; outputFile.extension() == ".hpp")
+      if(outputFile.extension() == ".hpp")
       {
         if(const auto str{outputFile.string()}; str.find("Utilities.hpp") == std::string::npos)
         {
-          add_include(m_HashIncludeTarget, filename.string());
+          add_include(m_HashIncludeTarget, outputFile.filename().string());
         }
+      }
+      else if(outputFile.extension() == ".cpp")
+      {
+        add_to_cmake(m_TestMain.parent_path(), outputFile);
       }
 
       return std::string{"\""}.append(stringify(outputFile)).append("\"");

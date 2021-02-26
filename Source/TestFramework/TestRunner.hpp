@@ -172,7 +172,7 @@ namespace sequoia::testing
     auto create_file(std::string_view copyright, const std::filesystem::path& codeTemplatesDir, std::string_view nameEnding) const -> file_data;
     
     [[nodiscard]]
-    std::vector<std::string> translation_units() const;
+    std::vector<std::string> constructors() const;
 
     [[nodiscard]]
     friend bool operator==(const nascent_semantics_test&, const nascent_semantics_test&) noexcept = default;
@@ -216,7 +216,7 @@ namespace sequoia::testing
     auto create_file(std::string_view copyright, const std::filesystem::path& codeTemplatesDir, std::string_view nameEnding) const -> file_data;
     
     [[nodiscard]]
-    std::vector<std::string> translation_units() const;
+    std::vector<std::string> constructors() const;
   private:
     void transform_file(std::string& text) const;
   }; 
@@ -232,7 +232,7 @@ namespace sequoia::testing
     auto create_file(std::string_view copyright, const std::filesystem::path& codeTemplatesDir, std::string_view nameEnding) const->file_data;
 
     [[nodiscard]]
-    std::vector<std::string> translation_units() const;
+    std::vector<std::string> constructors() const;
 
     [[nodiscard]]
     friend bool operator==(const nascent_behavioural_test&, const nascent_behavioural_test&) noexcept = default;
