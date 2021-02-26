@@ -16,7 +16,7 @@
 #include <fstream>
 
 namespace sequoia::testing
-{
+{ 
   [[nodiscard]]
   std::string read_to_string(const std::filesystem::path& file)
   {
@@ -142,11 +142,7 @@ namespace sequoia::testing
       throw std::runtime_error{"Unable to find appropriate place to add test family"};
     }
 
-    const auto tempPath{fs::path{file}.concat("x")};
-    write_to_file(tempPath, text);
-
-    fs::copy_file(tempPath, file, fs::copy_options::overwrite_existing);
-    fs::remove(tempPath);
+    write_to_file(file, text);
   }
 
   void add_to_cmake(const std::filesystem::path& cmakeDir, const std::filesystem::path& file)
@@ -177,11 +173,6 @@ namespace sequoia::testing
       throw std::runtime_error{"Unable to find appropriate place to add source file to CMakeLists.txt"};
     }
 
-    namespace fs = std::filesystem;
-    const auto tempPath{fs::path{cmakeLists}.concat("x")};
-    write_to_file(tempPath, text);
-
-    fs::copy_file(tempPath, cmakeLists, fs::copy_options::overwrite_existing);
-    fs::remove(tempPath);
+    write_to_file(cmakeLists, text);
   }
 }
