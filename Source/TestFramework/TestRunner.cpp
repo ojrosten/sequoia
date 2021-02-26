@@ -771,7 +771,9 @@ namespace sequoia::testing
       }
       else if(outputFile.extension() == ".cpp")
       {
-        add_to_cmake(m_TestMain.parent_path(), outputFile);
+        const auto mainDir{m_TestMain.parent_path()};
+        const auto relativeOutput{outputFile.lexically_relative(mainDir)};
+        add_to_cmake(mainDir, !relativeOutput.empty() ? relativeOutput : outputFile);
       }
 
       return std::string{"\""}.append(stringify(outputFile)).append("\"");
