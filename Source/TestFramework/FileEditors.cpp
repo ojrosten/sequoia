@@ -150,27 +150,28 @@ namespace sequoia::testing
 
   void add_to_cmake(const std::filesystem::path& cmakeDir, const std::filesystem::path& file)
   {
-    const auto cmakeLists{cmakeDir / "CMakeLists.txt"};          
-    std::string text{read_to_string(cmakeLists)};
+    const auto cmakeLists{cmakeDir / "CMakeLists.txt"};
 
-    const auto correctStructure{
-      [&](){
+    const auto text{
+      [&cmakeLists,&file]() -> std::string {
         constexpr auto npos{std::string::npos};
-        constexpr std::string_view pattern{"target_sources("};  
+        constexpr std::string_view pattern{"target_sources("};
+
+        std::string text{read_to_string(cmakeLists)};
         if(auto startPos{text.find(pattern)}; startPos != npos)
         {
           if(auto endPos{text.find(')', startPos + pattern.size())}; endPos != npos)
           {
             text.insert(endPos, std::string{"\n"}.append(pattern.size(), ' ').append(file.generic_string()));
-            return true;
+            return text;
           }
         }
 
-        return false;
+        return "";
       }()
     };
 
-    if(!correctStructure)
+    if(text.empty())
     {
       throw std::runtime_error{"Unable to find appropriate place to add source file to CMakeLists.txt"};
     }
