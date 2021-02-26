@@ -74,69 +74,73 @@ namespace sequoia::testing
     if(tests.empty())
       throw std::logic_error{std::string{"No tests specified to be added to the test family \""}.append(familyName).append("\"")};
 
-    std::string text{read_to_string(file)};
-    const auto pattern{std::string{"\""}.append(familyName).append("\",")};
-
-    bool correctStructure{};
-    constexpr auto npos{std::string::npos};
-    if(auto pos{text.find(pattern)}; pos != npos)
-    {
-      if(const auto linePos{text.rfind('\n', pos)}; linePos != npos)
-      {
-        std::string_view preamble{"add_test_family("};
-        if((linePos > preamble.size()) && (text.find(preamble, linePos - preamble.size()) != npos))
+    const auto text{
+      [&file, familyName, &tests]() -> std::string {
+        constexpr auto npos{std::string::npos};        
+        const auto pattern{std::string{"\""}.append(familyName).append("\",")};        
+        std::string text{read_to_string(file)};
+        if(auto pos{text.find(pattern)}; pos != npos)
         {
-          if(const auto nextLinePos{text.find('\n', pos)}; nextLinePos != npos)
+          if(const auto linePos{text.rfind('\n', pos)}; linePos != npos)
           {
-            const indentation indent{text.substr(linePos + 1, pos - linePos - 1)};
-            const auto endpos{text.find(");", pos)};
-            std::string_view textView{text};
-            std::string_view subtextView{textView.substr(pos, endpos - pos)};
-            correctStructure = true;
-            for(const auto& t : tests)
+            std::string_view preamble{"add_test_family("};
+            if((linePos > preamble.size()) && (text.find(preamble, linePos - preamble.size()) != npos))
             {
-              if(subtextView.find(t) == npos)
+              if(const auto nextLinePos{text.find('\n', pos)}; nextLinePos != npos)
               {
-                text.insert(nextLinePos+1, std::string{indent}.append(t).append(",\n"));
+                const indentation indent{text.substr(linePos + 1, pos - linePos - 1)};
+                const auto endpos{text.find(");", pos)};
+                std::string_view textView{text};
+                std::string_view subtextView{textView.substr(pos, endpos - pos)};
+                for(const auto& t : tests)
+                {
+                  if(subtextView.find(t) == npos)
+                  {
+                    text.insert(nextLinePos+1, std::string{indent}.append(t).append(",\n"));
+                  }
+                }
+
+                return text;
               }
             }
           }
         }
-      }
-    }
-    else if(pos = text.find("runner.execute"); pos != npos)
-    {
-      if(const auto linePos{text.rfind('\n', pos)}; linePos != npos)
-      {
-        correctStructure = true;
+        else if(pos = text.find("runner.execute"); pos != npos)
+        {
+          if(const auto linePos{text.rfind('\n', pos)}; linePos != npos)
+          {
+            auto builder{
+              [&text, &tests, pos, linePos, familyName](){
 
-        auto builder{
-          [&text, &tests, pos, linePos, familyName](){
+                const indentation indent_0{text.substr(linePos + 1, pos - linePos - 1)};
+                const indentation indent_1{std::string{indent_0}.append("  ")};
 
-            const indentation indent_0{text.substr(linePos + 1, pos - linePos - 1)};
-            const indentation indent_1{std::string{indent_0}.append("  ")};
+                auto str{std::string{"\n"}.append(indent_0).append("runner.add_test_family(")};
 
-            auto str{std::string{"\n"}.append(indent_0).append("runner.add_test_family(")};
+                append_indented(str, std::string{"\""}.append(familyName).append("\","), indent_1);
 
-            append_indented(str, std::string{"\""}.append(familyName).append("\","), indent_1);
+                for(auto i{tests.cbegin()}; i != tests.cend() - 1; ++i)
+                {
+                  append_indented(str, std::string{*i}.append(","), indent_1);
+                }
 
-            for(auto i{tests.cbegin()}; i != tests.cend() - 1; ++i)
-            {
-              append_indented(str, std::string{*i}.append(","), indent_1);
-            }
+                append_indented(str, tests.back(), indent_1);
+                append_indented(str, ");\n", indent_0);
 
-            append_indented(str, tests.back(), indent_1);
-            append_indented(str, ");\n", indent_0);
-
-            return str;
-          }
-        };
+                return str;
+              }
+            };
         
-        text.insert(linePos, builder());
-      }
-    }
+            text.insert(linePos, builder());
+            return text;
+          }
+        }
 
-    if(!correctStructure)
+        return "";
+      }()
+    };
+
+    if(text.empty())
     {
       throw std::runtime_error{"Unable to find appropriate place to add test family"};
     }
