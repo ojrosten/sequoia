@@ -68,9 +68,6 @@ namespace sequoia::testing
   {
     namespace fs = std::filesystem;
 
-    if(!fs::exists(file))
-      throw fs::filesystem_error{"Unable to find file", file, std::error_code{}};
-
     if(tests.empty())
       throw std::logic_error{std::string{"No tests specified to be added to the test family \""}.append(familyName).append("\"")};
 
