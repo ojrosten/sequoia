@@ -73,8 +73,8 @@ namespace sequoia::testing
 
     const auto text{
       [&file, familyName, &tests]() -> std::string {
-        constexpr auto npos{std::string::npos};        
-        const auto pattern{std::string{"\""}.append(familyName).append("\",")};        
+        constexpr auto npos{std::string::npos};
+        const auto pattern{std::string{"\""}.append(familyName).append("\",")};
         std::string text{read_to_string(file)};
         if(auto pos{text.find(pattern)}; pos != npos)
         {
