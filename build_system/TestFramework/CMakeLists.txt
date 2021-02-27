@@ -25,6 +25,6 @@ HEADER_DIRECTORIES(SequoiaDirs ${SourceDir}/*.hpp)
 target_include_directories(TestFramework PUBLIC ${SequoiaDirs})
 
 file(GLOB_RECURSE HeaderFiles ${SourceDir}/*.hpp)
-add_custom_target(headers SOURCES ${HeaderFiles})
+target_sources(TestFramework PRIVATE ${HeaderFiles})
 
 target_compile_features(TestFramework PUBLIC cxx_std_20)
