@@ -87,10 +87,10 @@ namespace sequoia::testing
               {
                 const indentation indent{text.substr(linePos + 1, pos - linePos - 1)};
                 const auto endpos{text.find(");", pos)};
-                std::string_view textView{text};
-                std::string_view subtextView{textView.substr(pos, endpos - pos)};
                 for(const auto& t : tests)
                 {
+                  std::string_view textView{text};
+                  std::string_view subtextView{textView.substr(pos, endpos - pos)};
                   if(subtextView.find(t) == npos)
                   {
                     text.insert(nextLinePos+1, std::string{indent}.append(t).append(",\n"));
