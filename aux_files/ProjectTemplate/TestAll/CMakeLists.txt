@@ -6,9 +6,12 @@ add_executable(TestMain TestMain.cpp)
 
 target_sources(TestMain PRIVATE)
 
-SET(BUILD_SYS SEQUOIA_ROOT/build_system)
+set(BuildSystem SEQUOIA_ROOT/build_system)
 
-include(${BUILD_SYS}/Utilities.cmake)
+include(${BuildSystem}/Utilities.cmake)
+
+file(GLOB_RECURSE HeaderFiles ../Tests/TestFramework/*.hpp)
+target_sources(TestMain PRIVATE ${HeaderFiles})
 
 FINALIZE(TestMain)
 

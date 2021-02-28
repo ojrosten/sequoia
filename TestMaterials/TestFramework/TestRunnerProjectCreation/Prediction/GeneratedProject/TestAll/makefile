@@ -1,6 +1,6 @@
 #BUILD_ROOT   := ../build/native
 #BUILD_ROOT   := ../build/gcc
-SEQUOIA_ROOT := /Users/Claire/Dropbox/Sequoia
+SEQUOIA_ROOT := C:/Users/Oliver/sequoia
 BUILD_ROOT   := ../build/clang
 
 TEST_BUILD_ROOT := $(BUILD_ROOT)/TestAll
