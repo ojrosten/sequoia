@@ -6,6 +6,7 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "ContainerPerformanceTest.hpp"
+#include "Container.hpp"
 
 namespace sequoia::testing
 {

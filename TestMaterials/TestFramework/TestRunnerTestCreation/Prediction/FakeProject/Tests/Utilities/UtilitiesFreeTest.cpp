@@ -6,6 +6,7 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "UtilitiesFreeTest.hpp"
+#include "Utilities.h"
 
 namespace sequoia::testing
 {

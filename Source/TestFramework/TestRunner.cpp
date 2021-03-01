@@ -373,6 +373,7 @@ namespace sequoia::testing
     replace_all(text, {{"?_behavioural", forename()},
                        {"?Behavioural", camel_name()},
                        {"?Test", to_camel_case(test_type()).append("Test")},
+                       {"?Header.hpp", header().filename().string()},
                        {"?", test_type()}});
   }
 

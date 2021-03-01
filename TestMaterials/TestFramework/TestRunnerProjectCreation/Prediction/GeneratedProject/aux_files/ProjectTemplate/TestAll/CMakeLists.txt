@@ -6,7 +6,7 @@ add_executable(TestMain TestMain.cpp)
 
 target_sources(TestMain PRIVATE)
 
-set(BuildSystem C:/Users/Oliver/sequoia/build_system)
+set(BuildSystem /Users/Claire/Dropbox/Sequoia/build_system)
 
 include(${BuildSystem}/Utilities.cmake)
 

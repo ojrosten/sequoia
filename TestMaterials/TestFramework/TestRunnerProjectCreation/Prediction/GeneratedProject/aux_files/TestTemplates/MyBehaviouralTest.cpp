@@ -6,6 +6,7 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "?BehaviouralTest.hpp"
+#include "?Header.hpp"
 
 namespace sequoia::testing
 {
