@@ -347,12 +347,14 @@ namespace sequoia::testing
 
   void nascent_behavioural_test::finalize()
   {
-    camel_name(header().filename().replace_extension().string());
+    camel_name(forename().empty() ? header().filename().replace_extension().string() : forename());
 
     nascent_test_base::finalize_family();
 
-    camel_name(std::string{camel_name()}.append(capitalize(test_type())));    
-    forename(to_snake_case(camel_name()));
+    camel_name(std::string{camel_name()}.append(capitalize(test_type())));
+
+    if(forename().empty())
+      forename(to_snake_case(camel_name()));
   }
 
   [[nodiscard]]
@@ -506,6 +508,15 @@ namespace sequoia::testing
         }                              
     };
 
+    const option nameOption{"--forename", {"-name"}, {"forename"},
+        [this](const param_list& args){
+          if(m_NascentTests.empty())
+            throw std::logic_error{"Unable to find nascent test"};
+
+          std::visit(variant_visitor{[&args](auto& nascent){ nascent.forename(args[0]); }}, m_NascentTests.back());
+        }
+    };
+
     const std::vector<option> semanticsOptions{equivOption, hostOption, familyOption, headerOption};
 
     const std::vector<option> allocationOptions{hostOption, familyOption, headerOption};
@@ -535,7 +546,7 @@ namespace sequoia::testing
                       test_creator{"allocation", "move_only_allocation", *this}, allocationOptions
                      },
                      {"free_test", {"free"}, {"header"},
-                       test_creator{"behavioural", "free", *this}, {hostOption, familyOption}
+                      test_creator{"behavioural", "free", *this}, {hostOption, familyOption, nameOption}
                      },
                      {"performance_test", {"performance"}, {"header"},
                        test_creator{"behavioural", "performance", *this}, {hostOption, familyOption}
