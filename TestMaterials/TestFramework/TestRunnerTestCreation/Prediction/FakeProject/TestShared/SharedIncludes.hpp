@@ -15,6 +15,7 @@
 #include "CoupleTestingDiagnostics.hpp"
 #include "CoupleTest.hpp"
 #include "UtilitiesFreeTest.hpp"
+#include "BazzerFreeTest.hpp"
 #include "FooAllocationTest.hpp"
 #include "ContainerTestingDiagnostics.hpp"
 #include "ContainerTest.hpp"

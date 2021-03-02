@@ -76,6 +76,7 @@ namespace sequoia::testing
                                  , "create", "regular_test", "other::couple<class S, class T>", "S", "-e", "T",
                                                 "-h", hostDir, "-f", "partners", "-ch", "Couple.hpp"
                                  , "create", "free_test", "Utilities.h"
+                                 , "create", "free_test", "Baz.h", "--forename", "bazzer"
                                  , "create", "move_only_allocation_test", "foo", "--family", "Iterator"
                                  , "create", "regular_test", "container<class T>", "std::vector<T>"
                                  , "create", "regular_allocation_test", "container"

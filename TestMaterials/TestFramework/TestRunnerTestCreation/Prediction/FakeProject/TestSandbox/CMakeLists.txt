@@ -14,6 +14,7 @@ target_sources(TestMain PRIVATE
                ../Tests/Partners/CoupleTestingDiagnostics.cpp
                ../Tests/Partners/CoupleTest.cpp
                ../Tests/Utilities/UtilitiesFreeTest.cpp
+               ../Tests/Stuff/BazzerFreeTest.cpp
                ../Tests/Stuff/FooAllocationTest.cpp
                ../Tests/Stuff/ContainerTestingDiagnostics.cpp
                ../Tests/Stuff/ContainerTest.cpp

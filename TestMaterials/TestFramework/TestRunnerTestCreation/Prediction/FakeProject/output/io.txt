@@ -22,6 +22,8 @@ Creating files...
 "output/TestsTemporaryData/TestFramework/TestRunnerTestCreation/WorkingCopy/FakeProject/Tests/Partners/CoupleTest.cpp"
 "output/TestsTemporaryData/TestFramework/TestRunnerTestCreation/WorkingCopy/FakeProject/Tests/Utilities/UtilitiesFreeTest.hpp"
 "output/TestsTemporaryData/TestFramework/TestRunnerTestCreation/WorkingCopy/FakeProject/Tests/Utilities/UtilitiesFreeTest.cpp"
+"output/TestsTemporaryData/TestFramework/TestRunnerTestCreation/WorkingCopy/FakeProject/Tests/Stuff/BazzerFreeTest.hpp"
+"output/TestsTemporaryData/TestFramework/TestRunnerTestCreation/WorkingCopy/FakeProject/Tests/Stuff/BazzerFreeTest.cpp"
 "output/TestsTemporaryData/TestFramework/TestRunnerTestCreation/WorkingCopy/FakeProject/Tests/Stuff/FooAllocationTest.hpp"
 "output/TestsTemporaryData/TestFramework/TestRunnerTestCreation/WorkingCopy/FakeProject/Tests/Stuff/FooAllocationTest.cpp"
 "output/TestsTemporaryData/TestFramework/TestRunnerTestCreation/WorkingCopy/FakeProject/Tests/Stuff/ContainerTestingUtilities.hpp"

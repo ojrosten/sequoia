@@ -53,6 +53,11 @@ int main(int argc, char** argv)
     );
 
     runner.add_test_family(
+      "Bazzer",
+      bazzer_test("Free Test")
+    );
+
+    runner.add_test_family(
       "Container",
       container_performance_test("Performance Test"),
       container_allocation_test("Allocation Test"),
