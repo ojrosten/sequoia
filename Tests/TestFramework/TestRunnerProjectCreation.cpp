@@ -13,6 +13,27 @@
 
 namespace sequoia::testing
 {
+  namespace
+  {
+    std::string& operator&&(std::string& lhs, std::string_view rhs)
+    {
+      return lhs.append(" && ").append(rhs);
+    }
+
+    [[nodiscard]]
+    std::string operator&&(std::string_view lhs, std::string_view rhs)
+    {
+      std::string left{lhs};
+      return left && rhs;
+    }
+
+    [[nodiscard]]
+    std::string cd(const std::filesystem::path& dir)
+    {
+      return std::string{"cd "}.append(dir.string());
+    }
+  }
+
   [[nodiscard]]
   std::string_view test_runner_project_creation::source_file() const noexcept
   {
@@ -61,11 +82,50 @@ namespace sequoia::testing
     check_equivalence(LINE(""), generated(), predictive_materials() / "GeneratedProject");
     check_equivalence(LINE(""), fake(), predictive_materials() / "FakeProject");
 
-    /*const auto cd{std::string{"cd "}.append((generated() / "TestAll").string()).append("\n")};
-    const auto cmake{"cmake -S . -B ../build/CMade/TestAll -D CMAKE_CXX_COMPILER=/usr/local/opt/llvm/bin/clang++ > CMakeOutput.txt\n"};
-    const auto make{std::string{"cd "}.append((generated() / "build" / "CMade" / "TestAll").string()).append("\nmake > BuildOutput.txt")};
+    const auto buildDir{generated() / "build/CMade/TestAll"};
+    const auto cmake{
+      [&buildDir]() {
+        auto cmd{std::string{"cmake -S ."}.append(" -B \"").append(buildDir.string()).append("\"")};
 
-    std::system((cd + cmake + make).c_str());
-    */
+        if constexpr (has_msvc_v)
+        {
+          cmd.append(" -G \"Visual Studio 16 2019\"");
+        }
+        else if constexpr (has_clang_v)
+        {
+          cmd.append("-D CMAKE_CXX_COMPILER=/usr/local/opt/llvm/bin/clang++");
+        }
+        else if constexpr (has_gcc_v)
+        {
+          cmd.append("-D CMAKE_CXX_COMPILER=/usr/bin/g++");
+        }
+        else
+        {
+          static_assert(dependent_false<int>::value, "Unrecognized compiler");
+        }
+
+        return cmd.append(" > CMakeOutput.txt");
+      }()
+    };
+
+    const auto build{
+      [&buildDir] () {
+        auto cmd{cd(buildDir.string())};
+        if constexpr (has_msvc_v)
+        {
+          cmd && "\"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\MSBuild\\Current\\Bin\\MSbuild.exe\" MyProject.sln";
+        }
+        else
+        {
+          cmd && "make";
+        }
+
+        return cmd.append("> BuildOutput.txt");
+      }()
+    };
+
+    check(LINE("Command processor existance"), std::system(nullptr) > 0);
+
+    std::system((cd(generated() / "TestAll") && cmake && build).c_str());
   }
 }

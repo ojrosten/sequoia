@@ -15,6 +15,9 @@ namespace sequoia
 {
   #ifdef _MSC_VER
     inline constexpr bool has_msvc_v{true};
+    inline constexpr bool has_clang_v{false};
+    inline constexpr bool has_gcc_v{false};
+
     #define SPECULATIVE_CONSTEVAL constexpr
     constexpr int iterator_debug_level() noexcept
     {
@@ -24,6 +27,13 @@ namespace sequoia
     inline constexpr bool has_msvc_v{false};
     #define SPECULATIVE_CONSTEVAL consteval
     int iterator_debug_level() noexcept;
+    #ifdef __clang__
+      inline constexpr bool has_clang_v{true};
+      inline constexpr bool has_gcc_v{false};
+    #elif defined(__GNUG__)
+      inline constexpr bool has_clang_v{false};
+      inline constexpr bool has_gcc_v{true};
+    #endif
   #endif
 
     class [[nodiscard]] timer_resolution
