@@ -9,6 +9,8 @@
 #include "TestRunnerDiagnosticsUtilities.hpp"
 #include "CommandLineArgumentsTestingUtilities.hpp"
 
+#include <cstdlib>
+
 namespace sequoia::testing
 {
   [[nodiscard]]
@@ -43,8 +45,8 @@ namespace sequoia::testing
 
     // The first argument is set to ensure that the project root is deduced as
     // Sequoia, in order that the aux_files are correctly located
-    const auto proj{generated().string()};
-    commandline_arguments args{"../../build/foo/bar", "init", "Oliver Jacob Rosten", proj};
+
+    commandline_arguments args{"../../build/foo/bar", "init", "Oliver Jacob Rosten", generated().string()};
 
     std::stringstream outputStream{};
     test_runner tr{args.size(), args.get(), "Oliver J. Rosten", testMain, includeTarget, repos, outputStream};
@@ -53,10 +55,17 @@ namespace sequoia::testing
 
     if(std::ofstream file{fake() / "output" / "io.txt"})
     {
-      file << outputStream.str();
+      file << outputStream.rdbuf();
     }
 
     check_equivalence(LINE(""), generated(), predictive_materials() / "GeneratedProject");
     check_equivalence(LINE(""), fake(), predictive_materials() / "FakeProject");
+
+    /*const auto cd{std::string{"cd "}.append((generated() / "TestAll").string()).append("\n")};
+    const auto cmake{"cmake -S . -B ../build/CMade/TestAll -D CMAKE_CXX_COMPILER=/usr/local/opt/llvm/bin/clang++ > CMakeOutput.txt\n"};
+    const auto make{std::string{"cd "}.append((generated() / "build" / "CMade" / "TestAll").string()).append("\nmake > BuildOutput.txt")};
+
+    std::system((cd + cmake + make).c_str());
+    */
   }
 }
