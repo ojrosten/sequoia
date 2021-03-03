@@ -85,11 +85,11 @@ namespace sequoia::testing
     const auto buildDir{generated() / "build/CMade/TestAll"};
     const auto cmake{
       [&buildDir]() {
-        auto cmd{std::string{"cmake -S ."}.append(" -B \"").append(buildDir.string()).append("\"")};
+        auto cmd{std::string{"cmake -S ."}.append(" -B \"").append(buildDir.string()).append("\" ")};
 
         if constexpr (has_msvc_v)
         {
-          cmd.append(" -G \"Visual Studio 16 2019\"");
+          cmd.append("-G \"Visual Studio 16 2019\"");
         }
         else if constexpr (has_clang_v)
         {
@@ -98,10 +98,6 @@ namespace sequoia::testing
         else if constexpr (has_gcc_v)
         {
           cmd.append("-D CMAKE_CXX_COMPILER=/usr/bin/g++");
-        }
-        else
-        {
-          static_assert(dependent_false<int>::value, "Unrecognized compiler");
         }
 
         return cmd.append(" > CMakeOutput.txt");
