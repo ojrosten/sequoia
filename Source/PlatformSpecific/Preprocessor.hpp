@@ -9,7 +9,7 @@
 
 #include <vector>
 
-/*! \file Utilities dependent on platform-specific macros */
+/*! \file Preprocessor logic for dealing with different platforms */
 
 namespace sequoia
 {
@@ -35,19 +35,4 @@ namespace sequoia
       inline constexpr bool has_gcc_v{true};
     #endif
   #endif
-
-    class [[nodiscard]] timer_resolution
-    {
-      unsigned int m_Resolution{1};
-    public:
-      explicit timer_resolution(unsigned int millisecs);
-
-      ~timer_resolution();
-
-      [[nodiscard]]
-      unsigned int resolution() const noexcept
-      {
-        return m_Resolution;
-      }
-    };
 }

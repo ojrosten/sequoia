@@ -5,6 +5,7 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
+#include "Helpers.hpp"
 #include "Preprocessor.hpp"
 #ifdef _MSC_VER
   #include "Windows.h"

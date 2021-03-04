@@ -15,7 +15,7 @@ set(SourceList ${SourceDir}/TestFramework/Advice.cpp
                ${SourceDir}/TestFramework/TestRunner.cpp
                ${SourceDir}/Formatting/Indent.cpp
                ${SourceDir}/Parsing/CommandLineArguments.cpp
-               ${SourceDir}/PlatformSpecific/Preprocessor.cpp)
+               ${SourceDir}/PlatformSpecific/Helpers.cpp)
 
 add_library(TestFramework STATIC ${SourceList})
 
