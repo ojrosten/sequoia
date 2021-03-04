@@ -64,10 +64,7 @@ namespace sequoia::testing
       }
     };
 
-    // The first argument is set to ensure that the project root is deduced as
-    // Sequoia, in order that the aux_files are correctly located
-
-    commandline_arguments args{"../../build/foo/bar", "init", "Oliver Jacob Rosten", generated().string()};
+    commandline_arguments args{"", "init", "Oliver Jacob Rosten", generated().string()};
 
     std::stringstream outputStream{};
     test_runner tr{args.size(), args.get(), "Oliver J. Rosten", testMain, includeTarget, repos, outputStream};
