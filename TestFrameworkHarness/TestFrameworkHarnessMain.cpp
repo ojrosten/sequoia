@@ -20,11 +20,11 @@ int main(int argc, char** argv)
     test_runner runner{argc,
                        argv,
                        "Oliver J. Rosten",
-                       root/"TestChamber"/"TestChamberMain.cpp",
+                       root/"TestFrameworkHarness"/"TestFrameworkHarnessMain.cpp",
                        root/"TestCommon" /"TestIncludes.hpp",
                        repositories(root)
     };
-      
+
     runner.execute();
   }
   catch(const std::exception& e)
