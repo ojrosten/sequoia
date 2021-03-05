@@ -5,7 +5,8 @@ project(SequioaTestFrameworkHarness DESCRIPTION "End-to-end testing of the Sequo
 
 add_executable(TestFrameworkHarness TestFrameworkHarnessMain.cpp)
 
-target_sources(TestFrameworkHarness PRIVATE)
+target_sources(TestFrameworkHarness PRIVATE
+               ../Tests/TestFramework/TestRunnerEndToEndFreeTest.cpp)
 
 SET(BUILD_SYS ${CMAKE_CURRENT_SOURCE_DIR}/../build_system)
 

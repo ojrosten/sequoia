@@ -93,3 +93,4 @@
 #include "TestRunner.hpp"
 #include "FactoryTestingDiagnostics.hpp"
 #include "FactoryTest.hpp"
+#include "TestRunnerEndToEndFreeTest.hpp"

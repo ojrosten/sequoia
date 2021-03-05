@@ -25,6 +25,11 @@ int main(int argc, char** argv)
                        repositories(root)
     };
 
+    runner.add_test_family(
+      "Test Runner",
+      test_runner_end_to_end_test("Free Test")
+    );
+
     runner.execute();
   }
   catch(const std::exception& e)
