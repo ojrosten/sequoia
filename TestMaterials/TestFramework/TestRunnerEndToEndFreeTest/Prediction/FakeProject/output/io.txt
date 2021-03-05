@@ -1,0 +1,3 @@
+Creating new project at location:
+output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/WorkingCopy/GeneratedProject
+
