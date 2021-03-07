@@ -68,6 +68,29 @@ namespace sequoia::testing
 
       return cmd.append("> BuildOutput.txt");
     }
+
+    [[nodiscard]]
+    std::string create_cmd()
+    {
+      std::string cmd{
+        []() {
+          if constexpr (has_msvc_v)
+          {
+#ifdef CMAKE_INTDIR
+            return std::string{CMAKE_INTDIR}.append("\\TestMain.exe");
+#elif
+            throw std::logic_error{"Unable to find preprocessor definition for CMAKE_INTDIR"};
+#endif
+          }
+          else
+          {
+            return "./TestMain";
+          }
+        }()
+      };
+
+      return cmd.append(" > CreateOutput.txt");
+    }
   }
 
   [[nodiscard]]
@@ -117,7 +140,10 @@ namespace sequoia::testing
 
     check(LINE("Command processor existance"), std::system(nullptr) > 0);
 
-    const auto buildDir{generated() / "build/CMade/TestAll"};    
-    std::system((cd(generated() / "TestAll") && cmake_cmd(buildDir) && build_cmd(buildDir)).c_str());
+    const auto buildDir{generated() / "build/CMade/TestAll"};
+    std::system(     (cd(generated() / "TestAll")
+                  && cmake_cmd(buildDir)
+                  && build_cmd(buildDir)
+                  && create_cmd()).c_str());
   }
 }
