@@ -6,12 +6,16 @@ add_executable(TestMain TestMain.cpp)
 
 target_sources(TestMain PRIVATE)
 
-set(BuildSystem /Users/Claire/Dropbox/Sequoia/build_system)
+file(GLOB_RECURSE HeaderFiles ../Tests/TestFramework/*.hpp)
+target_sources(TestMain PRIVATE ${HeaderFiles})
+
+set(BuildSystem C:/Users/Oliver/sequoia/build_system)
+set(SourceDir ../Source)
 
 include(${BuildSystem}/Utilities.cmake)
 
-file(GLOB_RECURSE HeaderFiles ../Tests/TestFramework/*.hpp)
-target_sources(TestMain PRIVATE ${HeaderFiles})
+HEADER_DIRECTORIES(AllSourceDirs ${SourceDir}/*.hpp)
+target_include_directories(TestMain PRIVATE ${AllSourceDirs})
 
 FINALIZE(TestMain)
 
