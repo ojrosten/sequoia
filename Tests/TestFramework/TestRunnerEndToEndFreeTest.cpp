@@ -30,7 +30,7 @@ namespace sequoia::testing
     std::string cd(const std::filesystem::path& dir)
     {
       return std::string{"cd "}.append(dir.string());
-    }    
+    }
 
     [[nodiscard]]
     std::string cmake_cmd(const std::filesystem::path& buildDir)
@@ -50,13 +50,13 @@ namespace sequoia::testing
         cmd.append("-D CMAKE_CXX_COMPILER=/usr/bin/g++");
       }
 
-      return cmd.append(" > CMakeOutput.txt");
+      return cmd;
     }
 
     [[nodiscard]]
     std::string build_cmd(const std::filesystem::path& buildDir)
     {
-      auto cmd{cd(buildDir.string())};
+      auto cmd{cd(buildDir)};
       if constexpr (has_msvc_v)
       {
         cmd && "\"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\MSBuild\\Current\\Bin\\MSbuild.exe\" MyProject.sln";
@@ -66,30 +66,36 @@ namespace sequoia::testing
         cmd && "make";
       }
 
-      return cmd.append("> BuildOutput.txt");
+      return cmd;
+    }
+
+    [[nodiscard]]
+    std::string run_cmd()
+    {
+      if constexpr (has_msvc_v)
+      {
+#ifdef CMAKE_INTDIR
+        return std::string{CMAKE_INTDIR}.append("\\TestMain.exe");
+#elif
+        throw std::logic_error{"Unable to find preprocessor definition for CMAKE_INTDIR"};
+#endif
+      }
+      else
+      {
+        return "./TestMain";
+      }
+    }
+
+    [[nodiscard]]
+    std::string add_output_file(std::string cmd, const std::filesystem::path& file)
+    {
+      return cmd.append(" > ").append(file.string());
     }
 
     [[nodiscard]]
     std::string create_cmd()
     {
-      std::string cmd{
-        []() {
-          if constexpr (has_msvc_v)
-          {
-#ifdef CMAKE_INTDIR
-            return std::string{CMAKE_INTDIR}.append("\\TestMain.exe");
-#elif
-            throw std::logic_error{"Unable to find preprocessor definition for CMAKE_INTDIR"};
-#endif
-          }
-          else
-          {
-            return "./TestMain";
-          }
-        }()
-      };
-
-      return cmd.append(" > CreateOutput.txt");
+      return run_cmd().append(" create free_test Utilities.hpp");
     }
   }
 
@@ -119,7 +125,7 @@ namespace sequoia::testing
 
     auto generated{
       [&mat{working_materials()}]() {
-        return mat / "GeneratedProject";
+        return mat.parent_path() / "GeneratedProject";
       }
     };
 
@@ -135,15 +141,37 @@ namespace sequoia::testing
       file << outputStream.rdbuf();
     }
 
-    check_equivalence(LINE(""), generated(), predictive_materials() / "GeneratedProject");
-    check_equivalence(LINE(""), fake(), predictive_materials() / "FakeProject");
+    check_equivalence(LINE(""), working_materials() / "FakeProject", predictive_materials() / "FakeProject");
 
     check(LINE("Command processor existance"), std::system(nullptr) > 0);
 
-    const auto buildDir{generated() / "build/CMade/TestAll"};
-    std::system(     (cd(generated() / "TestAll")
-                  && cmake_cmd(buildDir)
-                  && build_cmd(buildDir)
-                  && create_cmd()).c_str());
+    const auto mainDir{generated() / "TestAll"};
+    const auto buildDir{generated() / "build"/ "CMade" / "TestAll"};
+
+    auto cmake_and_build{
+      [mainDir,buildDir](std::string_view cmakeOut, std::string_view buildOut) {
+        return    cd(mainDir)
+               && add_output_file(cmake_cmd(buildDir), cmakeOut)
+               && add_output_file(build_cmd(buildDir), buildOut);
+      }
+    };
+
+    namespace fs = std::filesystem;
+
+    std::system(cmake_and_build("CMakeOutput.txt", "BuildOutput.txt").c_str());
+    check(LINE("First CMake output existance"), fs::exists(mainDir / "CMakeOutput.txt"));
+    check(LINE("First build output existance"), fs::exists(buildDir / "BuildOutput.txt"));
+
+    fs::copy(fake() / "Source", generated() / "Source", fs::copy_options::recursive | fs::copy_options::skip_existing);
+    fs::create_directory(working_materials() / "Output");
+
+    std::system((cd(buildDir) && add_output_file(create_cmd(), working_materials() / "Output" / "CreationOutput.txt")
+                              && cmake_and_build("CMakeOutput2.txt", "BuildOutput2.txt")
+                              && add_output_file(run_cmd(), working_materials() / "Output" / "TestRunOutput.txt")).c_str());
+
+    check(LINE("First CMake output existance"), fs::exists(mainDir / "CMakeOutput2.txt"));
+    check(LINE("First build output existance"), fs::exists(buildDir / "BuildOutput2.txt"));
+
+    check_equivalence(LINE(""), working_materials() / "Output", predictive_materials() / "Output");
   }
 }
