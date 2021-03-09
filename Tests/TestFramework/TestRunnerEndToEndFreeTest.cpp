@@ -76,7 +76,7 @@ namespace sequoia::testing
       {
 #ifdef CMAKE_INTDIR
         return std::string{CMAKE_INTDIR}.append("\\TestMain.exe");
-#elif
+#else
         throw std::logic_error{"Unable to find preprocessor definition for CMAKE_INTDIR"};
 #endif
       }
