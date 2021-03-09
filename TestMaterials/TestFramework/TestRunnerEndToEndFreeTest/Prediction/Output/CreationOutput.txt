@@ -7,4 +7,9 @@ Creating files...
 "Tests/Maybe/MaybeTestingDiagnostics.cpp"
 "Tests/Maybe/MaybeTest.hpp"
 "Tests/Maybe/MaybeTest.cpp"
+"Tests/Stuff/FooTestingUtilities.hpp"
+"Tests/Stuff/FooTestingDiagnostics.hpp"
+"Tests/Stuff/FooTestingDiagnostics.cpp"
+"Tests/Stuff/FooTest.hpp"
+"Tests/Stuff/FooTest.cpp"
 
