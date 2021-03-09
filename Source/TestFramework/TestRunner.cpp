@@ -407,7 +407,7 @@ namespace sequoia::testing
     replace_all(text, {{"?_class", forename()},
                        {"?Class", camel_name()},
                        {"?Allocation", to_camel_case(test_type())},
-                       {"?", test_type()}});
+                       {"?_allocation", test_type()}});
   }
 
   //=========================================== test_runner ===========================================//

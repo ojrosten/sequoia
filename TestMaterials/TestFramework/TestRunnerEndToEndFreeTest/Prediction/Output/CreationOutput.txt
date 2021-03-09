@@ -12,4 +12,6 @@ Creating files...
 "Tests/Stuff/FooTestingDiagnostics.cpp"
 "Tests/Stuff/FooTest.hpp"
 "Tests/Stuff/FooTest.cpp"
+"Tests/Utilities/ContainerAllocationTest.hpp"
+"Tests/Utilities/ContainerAllocationTest.cpp"
 
