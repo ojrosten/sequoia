@@ -98,7 +98,8 @@ namespace sequoia::testing
       return run_cmd().append(" create free_test Utilities.hpp"
                               " create regular_test \"other::functional::maybe<class T>\" \"std::optional<T>\""
                               " create move_only_test \"bar::baz::foo<maths::floating_point T>\" T"
-                              " create regular_allocation_test container");
+                              " create regular_allocation_test container"
+                              " create performance_test Container.hpp");
     }
   }
 

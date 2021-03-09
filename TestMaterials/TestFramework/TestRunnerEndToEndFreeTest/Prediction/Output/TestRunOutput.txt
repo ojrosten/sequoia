@@ -8,10 +8,10 @@ Maybe:
 Foo:
 [2 (0)ms]
 Container:
-[1 (0)ms]
+[2 (0)ms]
 
 -----------Grand Totals-----------
-[7 (0)ms]
+[8 (0)ms]
 	Standard Top Level Checks:                 0;  Failures:  0
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
