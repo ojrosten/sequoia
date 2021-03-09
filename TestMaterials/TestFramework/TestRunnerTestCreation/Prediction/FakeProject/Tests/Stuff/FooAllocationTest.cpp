@@ -20,7 +20,7 @@ namespace sequoia::testing
     do_allocation_tests(*this);
   }
 
-  template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
+  template<bool PropagateMove, bool PropagateSwap>
   void foo_allocation_test::test_allocation()
   {
 

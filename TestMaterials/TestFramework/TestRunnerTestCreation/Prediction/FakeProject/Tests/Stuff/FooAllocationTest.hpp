@@ -19,7 +19,7 @@ namespace sequoia::testing
     [[nodiscard]]
     std::string_view source_file() const noexcept final;
 
-    template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
+    template<bool PropagateMove, bool PropagateSwap>
     void test_allocation();
   private:
     void run_tests() final;
