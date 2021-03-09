@@ -6,7 +6,6 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "FooAllocationTest.hpp"
-#include "FooAllocationTestingUtilities.hpp"
 
 namespace sequoia::testing
 {

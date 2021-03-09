@@ -6,7 +6,6 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "ContainerAllocationTest.hpp"
-#include "ContainerAllocationTestingUtilities.hpp"
 
 namespace sequoia::testing
 {

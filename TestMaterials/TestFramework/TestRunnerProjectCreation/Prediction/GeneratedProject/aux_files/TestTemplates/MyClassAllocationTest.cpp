@@ -6,7 +6,6 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "?ClassAllocationTest.hpp"
-#include "?ClassAllocationTestingUtilities.hpp"
 
 namespace sequoia::testing
 {
