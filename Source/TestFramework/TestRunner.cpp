@@ -408,6 +408,11 @@ namespace sequoia::testing
                        {"?Class", camel_name()},
                        {"?Allocation", to_camel_case(test_type())},
                        {"?_allocation", test_type()}});
+
+    if (test_type() == "move_only_allocation")
+    {
+      replace_all(text, "bool PropagateCopy, ", "");
+    }
   }
 
   //=========================================== test_runner ===========================================//

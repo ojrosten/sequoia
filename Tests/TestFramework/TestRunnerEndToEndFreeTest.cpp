@@ -99,6 +99,7 @@ namespace sequoia::testing
                               " create regular_test \"other::functional::maybe<class T>\" \"std::optional<T>\""
                               " create move_only_test \"bar::baz::foo<maths::floating_point T>\" T"
                               " create regular_allocation_test container"
+                              " create move_only_allocation_test house"
                               " create performance_test Container.hpp");
     }
   }
