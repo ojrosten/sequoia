@@ -406,11 +406,17 @@ namespace sequoia::testing
               while(pos < expressions->size())
               {
                 const auto next{std::min(expressions->find("\n", pos), expressions->size())};
-                const auto count{next - pos};
-                std::basic_regex rgx{expressions->data() + pos, count};
-                fileContents = std::regex_replace(fileContents.value(), rgx, std::string{});
-                predictionContents = std::regex_replace(predictionContents.value(), rgx, std::string{});
-                pos = next;
+                if(const auto count{next - pos})
+                {
+                  std::basic_regex rgx{expressions->data() + pos, count};
+                  fileContents = std::regex_replace(fileContents.value(), rgx, std::string{});
+                  predictionContents = std::regex_replace(predictionContents.value(), rgx, std::string{});
+                  pos = next;
+                }
+                else
+                {
+                  break;
+                }
               }
             }
           }

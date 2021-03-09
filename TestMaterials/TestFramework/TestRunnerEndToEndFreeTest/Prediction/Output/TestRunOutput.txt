@@ -3,9 +3,11 @@ Running tests...
 
 Utilities:
 [1 (0)ms]
+Maybe:
+[2 (0)ms]
 
 -----------Grand Totals-----------
-[1 (0)ms]
+[3 (0)ms]
 	Standard Top Level Checks:                 0;  Failures:  0
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

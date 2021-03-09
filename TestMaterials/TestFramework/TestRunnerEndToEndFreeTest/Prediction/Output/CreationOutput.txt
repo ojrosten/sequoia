@@ -2,4 +2,9 @@ Creating files...
 
 "Tests/Utilities/UtilitiesFreeTest.hpp"
 "Tests/Utilities/UtilitiesFreeTest.cpp"
+"Tests/Maybe/MaybeTestingUtilities.hpp"
+"Tests/Maybe/MaybeTestingDiagnostics.hpp"
+"Tests/Maybe/MaybeTestingDiagnostics.cpp"
+"Tests/Maybe/MaybeTest.hpp"
+"Tests/Maybe/MaybeTest.cpp"
 

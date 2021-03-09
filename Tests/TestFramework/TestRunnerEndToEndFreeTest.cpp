@@ -89,13 +89,14 @@ namespace sequoia::testing
     [[nodiscard]]
     std::string add_output_file(std::string cmd, const std::filesystem::path& file)
     {
-      return cmd.append(" > ").append(file.string());
+      return !file.empty() ? cmd.append(" > ").append(file.string()) : cmd;
     }
 
     [[nodiscard]]
     std::string create_cmd()
     {
-      return run_cmd().append(" create free_test Utilities.hpp");
+      return run_cmd().append(" create free_test Utilities.hpp"
+                              " create regular_test \"other::functional::maybe<class T>\" \"std::optional<T>\"");
     }
   }
 
@@ -165,12 +166,14 @@ namespace sequoia::testing
     fs::copy(fake() / "Source", generated() / "Source", fs::copy_options::recursive | fs::copy_options::skip_existing);
     fs::create_directory(working_materials() / "Output");
 
-    std::system((cd(buildDir) && add_output_file(create_cmd(), working_materials() / "Output" / "CreationOutput.txt")
-                              && cmake_and_build("CMakeOutput2.txt", "BuildOutput2.txt")
-                              && add_output_file(run_cmd(), working_materials() / "Output" / "TestRunOutput.txt")).c_str());
+    const auto cmd{cd(buildDir) && add_output_file(create_cmd(), working_materials() / "Output" / "CreationOutput.txt")
+                                && cmake_and_build("CMakeOutput2.txt", "BuildOutput2.txt")
+                                && add_output_file(run_cmd(), working_materials() / "Output" / "TestRunOutput.txt")};
 
-    check(LINE("First CMake output existance"), fs::exists(mainDir / "CMakeOutput2.txt"));
-    check(LINE("First build output existance"), fs::exists(buildDir / "BuildOutput2.txt"));
+    std::system(cmd.c_str());
+
+    check(LINE("Second CMake output existance"), fs::exists(mainDir / "CMakeOutput2.txt"));
+    check(LINE("Second build output existance"), fs::exists(buildDir / "BuildOutput2.txt"));
 
     check_equivalence(LINE(""), working_materials() / "Output", predictive_materials() / "Output");
   }
