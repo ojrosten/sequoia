@@ -9,7 +9,7 @@ TEST_BUILD_DIR  := $(BUILD_ROOT)/TestChamber/Tests
 SEQ_BUILD_DIR   := $(BUILD_ROOT)/SequoiaLib/Source
 
 TEST_DIR  := ../Tests
-SEQ_DIR   := ../Source
+SEQ_DIR   := ../Source/sequoia
 
 TEST_SUB_DIRS := $(filter-out $(TEST_DIR), $(shell find $(TEST_DIR) -type d))
 SEQ_SUB_DIRS  := $(filter-out $(SEQ_DIR),  $(shell find $(SEQ_DIR) -type d))
