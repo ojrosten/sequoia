@@ -7,13 +7,13 @@
 
 #pragma once
 
-#include "TestPreprocessorDefinitions.hpp"
+#include "sequoia/TestFramework/TestPreprocessorDefinitions.hpp"
 
 #include "GraphTestingUtilities.hpp"
 #include "NodeStorageTestingUtilities.hpp"
 #include "PartitionedDataTestingUtilities.hpp"
 
-#include "DynamicGraph.hpp"
+#include "sequoia/Maths/Graph/DynamicGraph.hpp"
 
 #include <variant>
 

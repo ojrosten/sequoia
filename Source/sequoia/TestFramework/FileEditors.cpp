@@ -9,9 +9,9 @@
     \brief Definitions for FileEditors.hpp
  */
 
-#include "FileEditors.hpp"
-#include "FileSystem.hpp"
-#include "Output.hpp"
+#include "sequoia/TestFramework/FileEditors.hpp"
+#include "sequoia/TestFramework/FileSystem.hpp"
+#include "sequoia/TestFramework/Output.hpp"
 
 #include <fstream>
 

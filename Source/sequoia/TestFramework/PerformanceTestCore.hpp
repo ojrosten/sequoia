@@ -11,9 +11,9 @@
     \brief Extension of the testing framework for perfomance testing.
 */
 
-#include "RegularTestCore.hpp"
-#include "StatisticalAlgorithms.hpp"
-#include "FileEditors.hpp"
+#include "sequoia/TestFramework/RegularTestCore.hpp"
+#include "sequoia/Maths/Statistics/StatisticalAlgorithms.hpp"
+#include "sequoia/TestFramework/FileEditors.hpp"
 
 #include <chrono>
 #include <random>

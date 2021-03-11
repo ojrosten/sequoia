@@ -12,7 +12,7 @@
 
  */
 
-#include "NodeStorage.hpp"
+#include "sequoia/Maths/Graph/NodeStorage.hpp"
 
 namespace sequoia::maths::graph_impl
 {

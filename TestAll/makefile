@@ -9,7 +9,7 @@ TEST_BUILD_DIR  := $(BUILD_ROOT)/TestAll/Tests
 SEQ_BUILD_DIR   := $(BUILD_ROOT)/SequoiaLib/Source
 
 TEST_DIR  := ../Tests
-SEQ_DIR   := ../Source
+SEQ_DIR   := ../Source/sequoia
 
 TEST_SUB_DIRS := $(filter-out $(TEST_DIR), $(shell find $(TEST_DIR) -type d))
 SEQ_SUB_DIRS  := $(filter-out $(SEQ_DIR),  $(shell find $(SEQ_DIR) -type d))
@@ -30,9 +30,8 @@ CFLAGS := -Wall -Wextra -Wpedantic -std=c++2a -O0 \
 	-ftemplate-backtrace-limit=0	       \
 	$(PREPROP)						       \
 	$(patsubst %,-I%, $(TEST_SUB_DIRS))    \
-	$(patsubst %,-I%, $(SEQ_SUB_DIRS))     \
 
-CFLAGS += -I../TestCommon
+CFLAGS += -I../TestCommon -I../Source
 CFLAGS += -I/usr/local/opt/llvm/include -I/usr/local/opt/llvm/include/c++/v1/
 
 CFLAGS +=  -ferror-limit=1 -Wno-missing-braces

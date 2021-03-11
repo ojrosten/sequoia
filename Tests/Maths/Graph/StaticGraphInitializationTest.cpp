@@ -8,7 +8,7 @@
 #include "StaticGraphInitializationTest.hpp"
 #include "GraphInitializationTestingUtilities.hpp"
 
-#include "StaticGraph.hpp"
+#include "sequoia/Maths/Graph/StaticGraph.hpp"
 
 namespace sequoia::testing
 {

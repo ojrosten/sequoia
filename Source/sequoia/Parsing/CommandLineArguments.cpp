@@ -5,8 +5,8 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#include "CommandLineArguments.hpp"
-#include "Indent.hpp"
+#include "sequoia/Parsing/CommandLineArguments.hpp"
+#include "sequoia/Formatting/Indent.hpp"
 
 #include <stdexcept>
 #include <iterator>

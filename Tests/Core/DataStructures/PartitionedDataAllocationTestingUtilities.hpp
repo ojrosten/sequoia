@@ -8,7 +8,7 @@
 #pragma once
 
 #include "PartitionedDataTestingUtilities.hpp"
-#include "RegularAllocationTestCore.hpp"
+#include "sequoia/TestFramework/RegularAllocationTestCore.hpp"
 
 namespace sequoia::testing
 {

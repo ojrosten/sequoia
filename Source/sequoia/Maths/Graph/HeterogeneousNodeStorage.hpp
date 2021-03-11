@@ -12,7 +12,7 @@
 
  */
 
-#include "HeterogeneousNodeDetails.hpp"
+#include "sequoia/Maths/Graph/HeterogeneousNodeDetails.hpp"
 #include <tuple>
 
 namespace sequoia::maths::graph_impl

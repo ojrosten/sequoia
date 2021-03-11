@@ -11,8 +11,8 @@
     \brief Utilities for performing allocation checks of move-only types.
 */
 
-#include "AllocationCheckers.hpp"
-#include "MoveOnlyAllocationCheckersDetails.hpp"
+#include "sequoia/TestFramework/AllocationCheckers.hpp"
+#include "sequoia/TestFramework/MoveOnlyAllocationCheckersDetails.hpp"
 
 namespace sequoia::testing
 {

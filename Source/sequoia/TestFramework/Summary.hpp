@@ -11,7 +11,7 @@
     \brief Utilities for summarizing results of tests.
 */
 
-#include "TestLogger.hpp"
+#include "sequoia/TestFramework/TestLogger.hpp"
 
 #include <optional>
 

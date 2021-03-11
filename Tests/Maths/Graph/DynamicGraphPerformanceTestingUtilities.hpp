@@ -9,7 +9,7 @@
 
 #include "DynamicGraphTestingUtilities.hpp"
 
-#include "PerformanceTestCore.hpp"
+#include "sequoia/TestFramework/PerformanceTestCore.hpp"
 
 namespace sequoia::testing
 {

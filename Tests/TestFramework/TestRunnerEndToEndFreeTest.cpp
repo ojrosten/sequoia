@@ -6,7 +6,7 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "TestRunnerEndToEndFreeTest.hpp"
-#include "TestRunner.hpp"
+#include "sequoia/TestFramework/TestRunner.hpp"
 
 #include "CommandLineArgumentsTestingUtilities.hpp"
 

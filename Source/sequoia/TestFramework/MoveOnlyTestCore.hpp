@@ -14,8 +14,8 @@
     its functionality. See MoveOnlyCheckers.hpp for further information.
 */
 
-#include "FreeTestCore.hpp"
-#include "MoveOnlyCheckers.hpp"
+#include "sequoia/TestFramework/FreeTestCore.hpp"
+#include "sequoia/TestFramework/MoveOnlyCheckers.hpp"
 
 namespace sequoia::testing
 {

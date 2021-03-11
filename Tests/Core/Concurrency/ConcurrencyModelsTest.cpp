@@ -6,7 +6,7 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "ConcurrencyModelsTest.hpp"
-#include "ConcurrencyModels.hpp"
+#include "sequoia/Core/Concurrency/ConcurrencyModels.hpp"
 
 namespace sequoia::testing
 {

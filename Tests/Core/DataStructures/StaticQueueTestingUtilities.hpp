@@ -7,9 +7,9 @@
 
 #pragma once
 
-#include "RegularTestCore.hpp"
+#include "sequoia/TestFramework/RegularTestCore.hpp"
 
-#include "StaticQueue.hpp"
+#include "sequoia/Core/DataStructures/StaticQueue.hpp"
 
 namespace sequoia::testing
 {  

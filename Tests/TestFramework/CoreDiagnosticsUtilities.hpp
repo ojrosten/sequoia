@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include "AssignmentUtilities.hpp"
-#include "AllocationCheckers.hpp"
+#include "sequoia/Core/Utilities/AssignmentUtilities.hpp"
+#include "sequoia/TestFramework/AllocationCheckers.hpp"
 
 #include <vector>
 

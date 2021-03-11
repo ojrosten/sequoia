@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "PerformanceTestCore.hpp"
+#include "sequoia/TestFramework/PerformanceTestCore.hpp"
 
 namespace sequoia::testing
 {

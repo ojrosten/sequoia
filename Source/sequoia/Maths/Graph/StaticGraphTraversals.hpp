@@ -11,5 +11,5 @@
     \brief Headers for traversals of static graphs.
  */
 
-#include "GraphTraversalFunctions.hpp"
-#include "StaticGraphTraversalDetails.hpp"
+#include "sequoia/Maths/Graph/GraphTraversalFunctions.hpp"
+#include "sequoia/Maths/Graph/StaticGraphTraversalDetails.hpp"

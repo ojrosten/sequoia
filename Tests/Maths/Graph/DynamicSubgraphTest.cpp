@@ -7,7 +7,7 @@
 
 #include "DynamicSubgraphTest.hpp"
 
-#include "GraphAlgorithms.hpp"
+#include "sequoia/Maths/Graph/GraphAlgorithms.hpp"
 
 #include <complex>
 

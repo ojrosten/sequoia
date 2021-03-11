@@ -14,7 +14,7 @@
     parts of the library; many will be retired once C++20 arrives.
 */
 
-#include "Concepts.hpp"
+#include "sequoia/Core/Meta/Concepts.hpp"
 
 #include <functional>
 

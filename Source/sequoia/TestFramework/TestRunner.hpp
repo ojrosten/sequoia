@@ -11,9 +11,9 @@
     \brief Utilities for running tests from the command line.
 */
 
-#include "TestFamily.hpp"
-#include "CommandLineArguments.hpp"
-#include "Factory.hpp"
+#include "sequoia/TestFramework/TestFamily.hpp"
+#include "sequoia/Parsing/CommandLineArguments.hpp"
+#include "sequoia/Runtime/Factory.hpp"
 
 #include <map>
 #include <variant>

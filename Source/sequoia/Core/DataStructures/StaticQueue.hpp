@@ -12,8 +12,8 @@
 
  */
 
-#include "ArrayUtilities.hpp"
-#include "Algorithms.hpp"
+#include "sequoia/Core/Utilities/ArrayUtilities.hpp"
+#include "sequoia/Algorithms/Algorithms.hpp"
 
 namespace sequoia::data_structures
 {

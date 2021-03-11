@@ -8,7 +8,7 @@
 #pragma once
 
 
-#include "RegularTestCore.hpp"
+#include "sequoia/TestFramework/RegularTestCore.hpp"
 #include "CoreDiagnosticsUtilities.hpp"
 
 #include <vector>

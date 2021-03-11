@@ -11,7 +11,7 @@
     \brief Implementation details for checking move-only semantics.
 */
 
-#include "SemanticsCheckersDetails.hpp"
+#include "sequoia/TestFramework/SemanticsCheckersDetails.hpp"
 
 namespace sequoia::testing::impl
 {

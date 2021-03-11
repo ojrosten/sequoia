@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include "CommandLineArguments.hpp"
-#include "RegularTestCore.hpp"
+#include "sequoia/Parsing/CommandLineArguments.hpp"
+#include "sequoia/TestFramework/RegularTestCore.hpp"
 
 namespace sequoia::testing
 {

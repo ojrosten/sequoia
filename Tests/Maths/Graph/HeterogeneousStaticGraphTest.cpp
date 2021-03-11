@@ -7,7 +7,7 @@
 
 #include "HeterogeneousStaticGraphTest.hpp"
 
-#include "HeterogeneousStaticGraph.hpp"
+#include "sequoia/Maths/Graph/HeterogeneousStaticGraph.hpp"
 
 namespace sequoia::testing
 {

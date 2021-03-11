@@ -9,7 +9,7 @@
     \brief Definitions for AllocationCheckersDetails.hpp
 */
 
-#include "AllocationCheckersDetails.hpp"
+#include "sequoia/TestFramework/AllocationCheckersDetails.hpp"
 
 namespace sequoia::testing::impl
 {

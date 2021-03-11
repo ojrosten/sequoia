@@ -6,9 +6,9 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "NodeStorageTest.hpp"
-#include "UniformWrapper.hpp"
-#include "DataPool.hpp"
-#include "GraphDetails.hpp"
+#include "sequoia/Core/Utilities/UniformWrapper.hpp"
+#include "sequoia/Core/Ownership/DataPool.hpp"
+#include "sequoia/Maths/Graph/GraphDetails.hpp"
 
 #include <complex>
 #include <list>

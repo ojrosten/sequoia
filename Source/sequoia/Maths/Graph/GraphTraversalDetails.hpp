@@ -12,7 +12,7 @@
 
  */
 
-#include "GraphTraits.hpp"
+#include "sequoia/Maths/Graph/GraphTraits.hpp"
 
 namespace sequoia::maths
 {

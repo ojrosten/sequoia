@@ -11,9 +11,9 @@
     \brief Underlying class for the various different graph species.
  */
 
-#include "Connectivity.hpp"
-#include "HeterogeneousNodeDetails.hpp"
-#include "AssignmentUtilities.hpp"
+#include "sequoia/Maths/Graph/Connectivity.hpp"
+#include "sequoia/Maths/Graph/HeterogeneousNodeDetails.hpp"
+#include "sequoia/Core/Utilities/AssignmentUtilities.hpp"
 
 namespace sequoia
 {

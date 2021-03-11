@@ -12,8 +12,8 @@
     see \ref regular_semantics_definition "here".
 */
 
-#include "AllocationCheckers.hpp"
-#include "RegularAllocationCheckersDetails.hpp"
+#include "sequoia/TestFramework/AllocationCheckers.hpp"
+#include "sequoia/TestFramework/RegularAllocationCheckersDetails.hpp"
 
 namespace sequoia::testing
 {

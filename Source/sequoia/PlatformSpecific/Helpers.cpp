@@ -5,8 +5,8 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#include "Helpers.hpp"
-#include "Preprocessor.hpp"
+#include "sequoia/PlatformSpecific/Helpers.hpp"
+#include "sequoia/PlatformSpecific/Preprocessor.hpp"
 #ifdef _MSC_VER
   #include "Windows.h"
 #endif

@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "TypeTraits.hpp"
+#include "sequoia/Core/Meta/TypeTraits.hpp"
 
 /*! \file
     \brief Implementation details for iterator.

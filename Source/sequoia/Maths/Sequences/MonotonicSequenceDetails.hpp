@@ -11,7 +11,7 @@
     \brief Implementation details for monotonic sequences.
  */
 
-#include "Concepts.hpp"
+#include "sequoia/Core/Meta/Concepts.hpp"
 
 namespace sequoia::maths::impl
 {

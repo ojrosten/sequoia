@@ -11,8 +11,8 @@
     \brief Implementation details specific to allocation checks for move-only types.
 */
 
-#include "AllocationCheckersDetails.hpp"
-#include "MoveOnlyCheckersDetails.hpp"
+#include "sequoia/TestFramework/AllocationCheckersDetails.hpp"
+#include "sequoia/TestFramework/MoveOnlyCheckersDetails.hpp"
 
 #include <optional>
 

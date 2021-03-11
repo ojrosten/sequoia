@@ -7,9 +7,9 @@
 
 #include "ConceptsTest.hpp"
 
-#include "Concepts.hpp"
+#include "sequoia/Core/Meta/Concepts.hpp"
 
-#include "AllocationTestUtilities.hpp"
+#include "sequoia/TestFramework/AllocationTestUtilities.hpp"
 
 #include <complex>
 #include <set>

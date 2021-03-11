@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "MoveOnlyAllocationTestCore.hpp"
+#include "sequoia/TestFramework/MoveOnlyAllocationTestCore.hpp"
 
 namespace sequoia::testing
 {

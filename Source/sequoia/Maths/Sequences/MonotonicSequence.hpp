@@ -11,9 +11,9 @@
     \brief Classes implementing the concept of a monotonic sequence.
  */
 
-#include "MonotonicSequenceDetails.hpp"
-#include "ArrayUtilities.hpp"
-#include "Algorithms.hpp"
+#include "sequoia/Maths/Sequences/MonotonicSequenceDetails.hpp"
+#include "sequoia/Core/Utilities/ArrayUtilities.hpp"
+#include "sequoia/Algorithms/Algorithms.hpp"
 
 #include <vector>
 

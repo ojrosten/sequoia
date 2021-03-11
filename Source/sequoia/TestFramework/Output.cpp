@@ -9,7 +9,7 @@
     \brief Definitions for Output.hpp.
  */
 
-#include "Output.hpp"
+#include "sequoia/TestFramework/Output.hpp"
 
 namespace sequoia::testing
 {

@@ -7,7 +7,7 @@
 
 #include "GraphMetaTest.hpp"
 
-#include "DynamicGraph.hpp"
+#include "sequoia/Maths/Graph/DynamicGraph.hpp"
 
 namespace sequoia::testing
 {

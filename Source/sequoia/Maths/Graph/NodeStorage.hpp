@@ -17,12 +17,12 @@
 
  */
 
-#include "ArrayUtilities.hpp"
-#include "AssignmentUtilities.hpp"
-#include "Iterator.hpp"
-#include "UniformWrapper.hpp"
-#include "Algorithms.hpp"
-#include "DataPoolTraits.hpp"
+#include "sequoia/Core/Utilities/ArrayUtilities.hpp"
+#include "sequoia/Core/Utilities/AssignmentUtilities.hpp"
+#include "sequoia/Core/Utilities/Iterator.hpp"
+#include "sequoia/Core/Utilities/UniformWrapper.hpp"
+#include "sequoia/Algorithms/Algorithms.hpp"
+#include "sequoia/Core/Ownership/DataPoolTraits.hpp"
 
 #include <type_traits>
 

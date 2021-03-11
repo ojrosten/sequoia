@@ -12,7 +12,7 @@
  
  */
 
-#include "SemanticsCheckersDetails.hpp"
+#include "sequoia/TestFramework/SemanticsCheckersDetails.hpp"
 
 namespace sequoia::testing::impl
 {

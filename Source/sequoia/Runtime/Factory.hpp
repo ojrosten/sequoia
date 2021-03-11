@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include "Concepts.hpp"
-#include "Iterator.hpp"
+#include "sequoia/Core/Meta/Concepts.hpp"
+#include "sequoia/Core/Utilities/Iterator.hpp"
 
 #include <variant>
 #include <array>

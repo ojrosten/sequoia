@@ -11,7 +11,7 @@
     \brief File paths and related utilities.
  */
 
-#include "Concepts.hpp"
+#include "sequoia/Core/Meta/Concepts.hpp"
 
 #include <filesystem>
 

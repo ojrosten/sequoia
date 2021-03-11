@@ -12,10 +12,10 @@
 
  */
 
-#include "Handlers.hpp"
+#include "sequoia/Core/Ownership/Handlers.hpp"
 
-#include "UniformWrapper.hpp"
-#include "Iterator.hpp"
+#include "sequoia/Core/Utilities/UniformWrapper.hpp"
+#include "sequoia/Core/Utilities/Iterator.hpp"
 
 #include <vector>
 #include <memory>

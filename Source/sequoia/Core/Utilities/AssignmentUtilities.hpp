@@ -11,7 +11,7 @@
     \brief Helper for dealing with allocator propagation during copy assignment.
  */
 
-#include "Utilities.hpp"
+#include "sequoia/Core/Meta/Utilities.hpp"
 
 #include <memory>
 

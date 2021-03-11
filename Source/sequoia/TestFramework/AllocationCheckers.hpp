@@ -40,11 +40,11 @@
     and/or with containers containing multiple allocators, scoped or otherwise.
 */
 
-#include "FreeCheckers.hpp"
-#include "AllocationCheckersDetails.hpp"
+#include "sequoia/TestFramework/FreeCheckers.hpp"
+#include "sequoia/TestFramework/AllocationCheckersDetails.hpp"
 
-#include "ArrayUtilities.hpp"
-#include "Utilities.hpp"
+#include "sequoia/Core/Utilities/ArrayUtilities.hpp"
+#include "sequoia/Core/Meta/Utilities.hpp"
 
 namespace sequoia::testing
 {  

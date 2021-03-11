@@ -12,8 +12,8 @@
 
  */
 
-#include "Edge.hpp"
-#include "DataPoolTraits.hpp"
+#include "sequoia/Maths/Graph/Edge.hpp"
+#include "sequoia/Core/Ownership/DataPoolTraits.hpp"
 
 namespace sequoia
 {

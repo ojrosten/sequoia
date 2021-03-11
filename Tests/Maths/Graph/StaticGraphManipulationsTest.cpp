@@ -8,7 +8,7 @@
 #include "StaticGraphManipulationsTest.hpp"
 #include "FixedTopologyTestingUtilities.hpp"
 
-#include "StaticGraph.hpp"
+#include "sequoia/Maths/Graph/StaticGraph.hpp"
 
 namespace sequoia::testing
 {

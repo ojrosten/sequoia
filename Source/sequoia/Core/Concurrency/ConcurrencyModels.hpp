@@ -19,13 +19,13 @@
 
  */
 
+#include "sequoia/Core/Meta/TypeTraits.hpp"
+
 #include <queue>
 #include <thread>
 #include <mutex>
 #include <condition_variable>
 #include <future>
-
-#include "TypeTraits.hpp"
 
 namespace sequoia::concurrency
 {

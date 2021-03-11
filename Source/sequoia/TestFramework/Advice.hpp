@@ -11,9 +11,9 @@
     \brief Contains utilities for the advice framework.
  */
 
-#include "Concepts.hpp"
-#include "TypeTraits.hpp"
-#include "Output.hpp"
+#include "sequoia/Core/Meta/Concepts.hpp"
+#include "sequoia/Core/Meta/TypeTraits.hpp"
+#include "sequoia/TestFramework/Output.hpp"
 
 #include <string>
 

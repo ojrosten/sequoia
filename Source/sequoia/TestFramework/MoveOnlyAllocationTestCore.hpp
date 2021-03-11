@@ -13,9 +13,9 @@
     Move-only semantics are defined \ref move_only_definition "here".
 */
 
-#include "MoveOnlyTestCore.hpp"
-#include "MoveOnlyAllocationCheckers.hpp"
-#include "AllocationTestUtilities.hpp"
+#include "sequoia/TestFramework/MoveOnlyTestCore.hpp"
+#include "sequoia/TestFramework/MoveOnlyAllocationCheckers.hpp"
+#include "sequoia/TestFramework/AllocationTestUtilities.hpp"
 
 namespace sequoia::testing
 {

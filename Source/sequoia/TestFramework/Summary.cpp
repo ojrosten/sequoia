@@ -9,7 +9,7 @@
     \brief Definitions for Summary.hpp.
 */
 
-#include "Summary.hpp"
+#include "sequoia/TestFramework/Summary.hpp"
 
 namespace sequoia::testing
 {

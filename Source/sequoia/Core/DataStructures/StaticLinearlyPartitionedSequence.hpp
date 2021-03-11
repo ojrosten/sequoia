@@ -11,8 +11,8 @@
     \brief Classes implementing the concept of a linearly partitioned sequence of data.
  */
 
-#include "PartitionedData.hpp"
-#include "LinearSequence.hpp"
+#include "sequoia/Core/DataStructures/PartitionedData.hpp"
+#include "sequoia/Maths/Sequences/LinearSequence.hpp"
 
 namespace sequoia::data_structures
 {

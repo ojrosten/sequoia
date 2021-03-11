@@ -9,9 +9,9 @@
     \brief Definitions for FileSystem.hpp
  */
 
-#include "FileSystem.hpp"
+#include "sequoia/TestFramework/FileSystem.hpp"
 
-#include "Output.hpp"
+#include "sequoia/TestFramework/Output.hpp"
 
 namespace sequoia::testing
 {

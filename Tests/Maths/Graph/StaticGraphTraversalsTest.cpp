@@ -7,8 +7,8 @@
 
 #include "StaticGraphTraversalsTest.hpp"
 
-#include "StaticGraph.hpp"
-#include "StaticGraphTraversals.hpp"
+#include "sequoia/Maths/Graph/StaticGraph.hpp"
+#include "sequoia/Maths/Graph/StaticGraphTraversals.hpp"
 
 namespace sequoia::testing
 {

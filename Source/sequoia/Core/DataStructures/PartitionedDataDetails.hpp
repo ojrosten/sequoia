@@ -11,7 +11,7 @@
     \brief Metaprogramming components for partitioned data.
  */
 
-#include "Handlers.hpp"
+#include "sequoia/Core/Ownership/Handlers.hpp"
 
 #include <map>
 

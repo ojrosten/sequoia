@@ -9,10 +9,10 @@
     \brief Definitions for TestRunner.hpp.
 */
 
-#include "TestRunner.hpp"
-#include "CommandLineArguments.hpp"
-#include "Summary.hpp"
-#include "FileEditors.hpp"
+#include "sequoia/TestFramework/TestRunner.hpp"
+#include "sequoia/Parsing/CommandLineArguments.hpp"
+#include "sequoia/TestFramework/Summary.hpp"
+#include "sequoia/TestFramework/FileEditors.hpp"
 
 namespace sequoia::testing
 { 

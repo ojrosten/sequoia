@@ -12,9 +12,9 @@
 
  */
 
-#include "GraphImpl.hpp"
-#include "StaticGraphImpl.hpp"
-#include "HeterogeneousNodeStorage.hpp"
+#include "sequoia/Maths/Graph/GraphImpl.hpp"
+#include "sequoia/Maths/Graph/StaticGraphImpl.hpp"
+#include "sequoia/Maths/Graph/HeterogeneousNodeStorage.hpp"
 
 #include <tuple>
 

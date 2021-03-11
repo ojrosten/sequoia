@@ -11,13 +11,13 @@
     \brief Implementation for the storage of graph edges.
  */
 
-#include "DataStructuresTypeTraits.hpp"
-#include "GraphDetails.hpp"
-#include "GraphTraits.hpp"
-#include "Algorithms.hpp"
-#include "TypeTraits.hpp"
-#include "AssignmentUtilities.hpp"
-#include "HandlerTraits.hpp"
+#include "sequoia/Core/DataStructures/DataStructuresTypeTraits.hpp"
+#include "sequoia/Maths/Graph/GraphDetails.hpp"
+#include "sequoia/Maths/Graph/GraphTraits.hpp"
+#include "sequoia/Algorithms/Algorithms.hpp"
+#include "sequoia/Core/Meta/TypeTraits.hpp"
+#include "sequoia/Core/Utilities/AssignmentUtilities.hpp"
+#include "sequoia/Core/Ownership/HandlerTraits.hpp"
 
 #include <limits>
 #include <set>

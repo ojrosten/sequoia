@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include "RegularTestCore.hpp"
-#include "StaticLinearlyPartitionedSequence.hpp"
+#include "sequoia/TestFramework/RegularTestCore.hpp"
+#include "sequoia/Core/DataStructures/StaticLinearlyPartitionedSequence.hpp"
 #include "PartitionedDataTestingUtilities.hpp"
 
 namespace sequoia::testing

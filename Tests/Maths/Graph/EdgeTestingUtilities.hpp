@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include "RegularTestCore.hpp"
-#include "Edge.hpp"
+#include "sequoia/TestFramework/RegularTestCore.hpp"
+#include "sequoia/Maths/Graph/Edge.hpp"
 
 namespace sequoia::testing
 {

@@ -7,9 +7,9 @@
 
 #pragma once
 
-#include "RegularTestCore.hpp"
+#include "sequoia/TestFramework/RegularTestCore.hpp"
 
-#include "UniformWrapper.hpp"
+#include "sequoia/Core/Utilities/UniformWrapper.hpp"
 
 namespace sequoia::testing
 {

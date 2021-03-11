@@ -7,7 +7,7 @@
 
 #include "StatisticalAlgorithmsTest.hpp"
 
-#include "StatisticalAlgorithms.hpp"
+#include "sequoia/Maths/Statistics/StatisticalAlgorithms.hpp"
 
 #include <vector>
 

@@ -11,7 +11,7 @@
     \brief Meta-programming utilities
  */
 
-#include "Concepts.hpp"
+#include "sequoia/Core/Meta/Concepts.hpp"
 
 #include <utility>
 #include <tuple>

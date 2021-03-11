@@ -5,10 +5,10 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#include "TestUtilities.hpp"
+#include "sequoia/TestFramework/TestUtilities.hpp"
 #include "ArrayUtilitiesTest.hpp"
 
-#include "ArrayUtilities.hpp"
+#include "sequoia/Core/Utilities/ArrayUtilities.hpp"
 
 namespace sequoia::testing
 {

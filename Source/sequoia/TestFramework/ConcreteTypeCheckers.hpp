@@ -29,8 +29,8 @@
     there exists a specialization of the detailed_equality_checker for U or U is serializable.
  */
 
-#include "FreeCheckers.hpp"
-#include "Concepts.hpp"
+#include "sequoia/TestFramework/FreeCheckers.hpp"
+#include "sequoia/Core/Meta/Concepts.hpp"
 
 #include <tuple>
 #include <filesystem>

@@ -12,10 +12,10 @@
 
  */
 
-#include "GraphImpl.hpp"
-#include "StaticGraphImpl.hpp"
+#include "sequoia/Maths/Graph/GraphImpl.hpp"
+#include "sequoia/Maths/Graph/StaticGraphImpl.hpp"
 
-#include "StaticNodeStorage.hpp"
+#include "sequoia/Maths/Graph/StaticNodeStorage.hpp"
 
 namespace sequoia::maths
 {  

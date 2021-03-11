@@ -39,8 +39,8 @@
     \anchor regular_semantics_definition
  */
 
-#include "FreeCheckers.hpp"
-#include "RegularCheckersDetails.hpp"
+#include "sequoia/TestFramework/FreeCheckers.hpp"
+#include "sequoia/TestFramework/RegularCheckersDetails.hpp"
 
 namespace sequoia::testing
 {

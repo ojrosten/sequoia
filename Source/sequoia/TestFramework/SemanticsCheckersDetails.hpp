@@ -60,11 +60,11 @@
     in RegularCheckersDetails.hpp and RegularAllocationCheckerDetails.hpp
 */
 
-#include "TestLogger.hpp"
-#include "Advice.hpp"
-#include "FreeCheckers.hpp"
+#include "sequoia/TestFramework/TestLogger.hpp"
+#include "sequoia/TestFramework/Advice.hpp"
+#include "sequoia/TestFramework/FreeCheckers.hpp"
 
-#include "Concepts.hpp"
+#include "sequoia/Core/Meta/Concepts.hpp"
 
 #include <compare>
 #include <optional>

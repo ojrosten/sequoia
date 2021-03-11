@@ -13,7 +13,7 @@
 
  */
 
-#include "HandlerTraits.hpp"
+#include "sequoia/Core/Ownership/HandlerTraits.hpp"
 
 #include <memory>
 

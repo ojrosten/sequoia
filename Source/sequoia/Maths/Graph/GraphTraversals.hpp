@@ -12,6 +12,6 @@
 
  */
 
-#include "GraphTraversalFunctions.hpp"
-#include "DynamicGraphTraversalDetails.hpp"
-#include "StaticGraphTraversalDetails.hpp"
+#include "sequoia/Maths/Graph/GraphTraversalFunctions.hpp"
+#include "sequoia/Maths/Graph/DynamicGraphTraversalDetails.hpp"
+#include "sequoia/Maths/Graph/StaticGraphTraversalDetails.hpp"

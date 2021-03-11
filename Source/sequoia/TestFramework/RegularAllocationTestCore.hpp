@@ -12,9 +12,9 @@
     see \ref regular_semantics_definition "here".
 */
 
-#include "RegularTestCore.hpp"
-#include "RegularAllocationCheckers.hpp"
-#include "AllocationTestUtilities.hpp"
+#include "sequoia/TestFramework/RegularTestCore.hpp"
+#include "sequoia/TestFramework/RegularAllocationCheckers.hpp"
+#include "sequoia/TestFramework/AllocationTestUtilities.hpp"
 
 namespace sequoia::testing
 {

@@ -11,8 +11,8 @@
     \brief Implementation details for allocation checks of regular types.
 */
 
-#include "AllocationCheckersDetails.hpp"
-#include "RegularCheckersDetails.hpp"
+#include "sequoia/TestFramework/AllocationCheckersDetails.hpp"
+#include "sequoia/TestFramework/RegularCheckersDetails.hpp"
 
 namespace sequoia::testing::impl
 {

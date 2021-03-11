@@ -75,10 +75,10 @@
     types representing these structures.
 */
 
-#include "CoreInfrastructure.hpp"
-#include "Advice.hpp"
-#include "TestLogger.hpp"
-#include "Utilities.hpp"
+#include "sequoia/TestFramework/CoreInfrastructure.hpp"
+#include "sequoia/TestFramework/Advice.hpp"
+#include "sequoia/TestFramework/TestLogger.hpp"
+#include "sequoia/Core/Meta/Utilities.hpp"
 
 namespace sequoia::testing
 {

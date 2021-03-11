@@ -19,8 +19,8 @@
     depend on the test_mode.
  */
 
-#include "TypeTraits.hpp"
-#include "Output.hpp"
+#include "sequoia/Core/Meta/TypeTraits.hpp"
+#include "sequoia/TestFramework/Output.hpp"
 
 #include <sstream>
 #include <fstream>

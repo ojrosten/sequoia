@@ -11,6 +11,6 @@
     \brief Includes for dynamic, static and heterogeneous graphs.
  */
 
-#include "DynamicGraph.hpp"
-#include "StaticGraph.hpp"
-#include "HeterogeneousStaticGraph.hpp"
+#include "sequoia/Maths/Graph/DynamicGraph.hpp"
+#include "sequoia/Maths/Graph/StaticGraph.hpp"
+#include "sequoia/Maths/Graph/HeterogeneousStaticGraph.hpp"

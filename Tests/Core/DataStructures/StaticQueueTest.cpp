@@ -8,7 +8,7 @@
 #include "StaticQueueTest.hpp"
 #include "StaticQueueTestingUtilities.hpp"
 
-#include "StaticQueue.hpp"
+#include "sequoia/Core/DataStructures/StaticQueue.hpp"
 
 namespace sequoia::testing
 {

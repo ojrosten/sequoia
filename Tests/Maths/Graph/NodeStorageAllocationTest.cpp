@@ -6,8 +6,8 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "NodeStorageAllocationTest.hpp"
-#include "DataPool.hpp"
-#include "GraphDetails.hpp"
+#include "sequoia/Core/Ownership/DataPool.hpp"
+#include "sequoia/Maths/Graph/GraphDetails.hpp"
 
 namespace sequoia:: testing
 {

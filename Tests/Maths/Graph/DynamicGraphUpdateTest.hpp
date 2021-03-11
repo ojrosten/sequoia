@@ -9,8 +9,8 @@
 
 #include "DynamicGraphTestingUtilities.hpp"
 
-#include "DynamicGraphTraversals.hpp"
-#include "ConcurrencyModels.hpp"
+#include "sequoia/Maths/Graph/DynamicGraphTraversals.hpp"
+#include "sequoia/Core/Concurrency/ConcurrencyModels.hpp"
 
 #include <functional>
 

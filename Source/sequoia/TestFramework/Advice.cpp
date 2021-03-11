@@ -9,7 +9,7 @@
     \brief Definitions for Advice.hpp
  */
 
-#include "Advice.hpp"
+#include "sequoia/TestFramework/Advice.hpp"
 
 namespace sequoia::testing
 {

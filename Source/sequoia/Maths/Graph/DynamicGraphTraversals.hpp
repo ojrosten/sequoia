@@ -12,5 +12,5 @@
     \brief Headers for traversals of dynamic graphs.
  */
 
-#include "GraphTraversalFunctions.hpp"
-#include "DynamicGraphTraversalDetails.hpp"
+#include "sequoia/Maths/Graph/GraphTraversalFunctions.hpp"
+#include "sequoia/Maths/Graph/DynamicGraphTraversalDetails.hpp"

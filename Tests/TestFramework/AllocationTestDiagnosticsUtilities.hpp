@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "AssignmentUtilities.hpp"
+#include "sequoia/Core/Utilities/AssignmentUtilities.hpp"
 
 #include <vector>
 

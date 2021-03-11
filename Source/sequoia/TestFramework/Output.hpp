@@ -11,9 +11,9 @@
     \brief A collection of functions for formatting test output. 
  */
 
-#include "CoreInfrastructure.hpp"
-#include "Indent.hpp"
-#include "Preprocessor.hpp"
+#include "sequoia/TestFramework/CoreInfrastructure.hpp"
+#include "sequoia/Formatting/Indent.hpp"
+#include "sequoia/PlatformSpecific/Preprocessor.hpp"
 
 #include <filesystem>
 #include <iostream>

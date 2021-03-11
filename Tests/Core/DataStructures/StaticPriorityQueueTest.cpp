@@ -8,7 +8,7 @@
 #include "StaticPriorityQueueTest.hpp"
 #include "StaticPriorityQueueTestingUtilities.hpp"
 
-#include "StaticPriorityQueue.hpp"
+#include "sequoia/Core/DataStructures/StaticPriorityQueue.hpp"
 
 namespace sequoia::testing
 {

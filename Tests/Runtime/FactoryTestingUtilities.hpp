@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include "RegularTestCore.hpp"
-#include "Factory.hpp"
+#include "sequoia/TestFramework/RegularTestCore.hpp"
+#include "sequoia/Runtime/Factory.hpp"
 
 #include <map>
 

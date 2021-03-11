@@ -5,6 +5,8 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
+#include "sequoia/TestFramework/TestRunner.hpp"
+
 #include "AlgorithmsTest.hpp"
 #include "StatisticalAlgorithmsTest.hpp"
 #include "MonotonicSequenceTestingDiagnostics.hpp"
@@ -90,7 +92,6 @@
 #include "TestRunnerTest.hpp"
 #include "TestRunnerTestCreation.hpp"
 #include "TestRunnerProjectCreation.hpp"
-#include "TestRunner.hpp"
 #include "FactoryTestingDiagnostics.hpp"
 #include "FactoryTest.hpp"
 #include "TestRunnerEndToEndFreeTest.hpp"

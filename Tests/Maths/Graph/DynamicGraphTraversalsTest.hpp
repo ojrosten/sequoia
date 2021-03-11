@@ -10,7 +10,7 @@
 #include "GraphTraversalTestingUtilities.hpp"
 #include "DynamicGraphPerformanceTestingUtilities.hpp"
 
-#include "ConcurrencyModels.hpp"
+#include "sequoia/Core/Concurrency/ConcurrencyModels.hpp"
 
 #include <functional>
 

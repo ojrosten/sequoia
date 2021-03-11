@@ -11,13 +11,13 @@
     \brief Classes implementing the concept of a sequence of data which is divided into partitions.
  */
 
-#include "PartitionedDataDetails.hpp"
-#include "TypeTraits.hpp"
-#include "ArrayUtilities.hpp"
-#include "Iterator.hpp"
-#include "Algorithms.hpp"
-#include "MonotonicSequence.hpp"
-#include "AssignmentUtilities.hpp"
+#include "sequoia/Core/DataStructures/PartitionedDataDetails.hpp"
+#include "sequoia/Core/Meta/TypeTraits.hpp"
+#include "sequoia/Core/Utilities/ArrayUtilities.hpp"
+#include "sequoia/Core/Utilities/Iterator.hpp"
+#include "sequoia/Algorithms/Algorithms.hpp"
+#include "sequoia/Maths/Sequences/MonotonicSequence.hpp"
+#include "sequoia/Core/Utilities/AssignmentUtilities.hpp"
 
 #include <string>
 #include <numeric>

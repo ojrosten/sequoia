@@ -7,7 +7,7 @@
 
 #include "UtilitiesTest.hpp"
 
-#include "Utilities.hpp"
+#include "sequoia/Core/Meta/Utilities.hpp"
 
 namespace sequoia::testing
 {

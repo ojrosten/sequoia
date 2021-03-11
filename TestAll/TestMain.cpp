@@ -6,6 +6,7 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "TestIncludes.hpp"
+#include "sequoia/PlatformSpecific/Helpers.hpp"
 
 #include <iostream>
 
@@ -222,7 +223,8 @@ int main(int argc, char** argv)
       "Experimental",
       experimental_test{"Unit Test"}
     );
- 
+
+    timer_resolution r{1};
     runner.execute();
   }
   catch(const std::exception& e)

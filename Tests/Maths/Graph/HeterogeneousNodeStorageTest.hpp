@@ -7,9 +7,9 @@
 
 #pragma once
 
-#include "RegularTestCore.hpp"
+#include "sequoia/TestFramework/RegularTestCore.hpp"
 
-#include "HeterogeneousNodeStorage.hpp"
+#include "sequoia/Maths/Graph/HeterogeneousNodeStorage.hpp"
 
 namespace sequoia::testing
 {

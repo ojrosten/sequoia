@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "FuzzyTestCore.hpp"
+#include "sequoia/TestFramework/FuzzyTestCore.hpp"
 
 namespace sequoia:: testing
 {

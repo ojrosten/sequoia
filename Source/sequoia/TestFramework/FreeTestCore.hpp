@@ -15,11 +15,11 @@
     An alias template, basic_free_test, is provided from which all tests of free functions should derive.
 */
 
-#include "ConcreteTypeCheckers.hpp"
-#include "Concepts.hpp"
+#include "sequoia/TestFramework/ConcreteTypeCheckers.hpp"
+#include "sequoia/Core/Meta/Concepts.hpp"
 
-#include "Output.hpp"
-#include "FileSystem.hpp"
+#include "sequoia/TestFramework/Output.hpp"
+#include "sequoia/TestFramework/FileSystem.hpp"
 
 namespace sequoia::testing
 {  

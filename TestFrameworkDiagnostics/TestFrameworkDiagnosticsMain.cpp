@@ -6,7 +6,7 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "TestIncludes.hpp"
-#include "Helpers.hpp"
+#include "sequoia/PlatformSpecific/Helpers.hpp"
 
 #include <iostream>
 

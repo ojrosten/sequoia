@@ -12,7 +12,7 @@
 
  */
 
-#include "GraphDetails.hpp"
+#include "sequoia/Maths/Graph/GraphDetails.hpp"
 
 namespace sequoia::maths::graph_impl
 {

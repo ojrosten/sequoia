@@ -12,9 +12,9 @@
 
  */
 
-#include "FreeTestCore.hpp"
-#include "FileSystem.hpp"
-#include "Summary.hpp"
+#include "sequoia/TestFramework/FreeTestCore.hpp"
+#include "sequoia/TestFramework/FileSystem.hpp"
+#include "sequoia/TestFramework/Summary.hpp"
 
 #include <vector>
 #include <future>

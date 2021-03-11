@@ -12,9 +12,9 @@
 
  */
 
-#include "StaticStack.hpp"
-#include "StaticQueue.hpp"
-#include "StaticPriorityQueue.hpp"
+#include "sequoia/Core/DataStructures/StaticStack.hpp"
+#include "sequoia/Core/DataStructures/StaticQueue.hpp"
+#include "sequoia/Core/DataStructures/StaticPriorityQueue.hpp"
 
 namespace sequoia::maths::graph_impl
 {

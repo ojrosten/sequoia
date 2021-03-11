@@ -8,7 +8,7 @@
 #pragma once
 
 #include "GraphTestingUtilities.hpp"
-#include "DynamicGraphTraversals.hpp"
+#include "sequoia/Maths/Graph/DynamicGraphTraversals.hpp"
 
 namespace sequoia::testing
 {

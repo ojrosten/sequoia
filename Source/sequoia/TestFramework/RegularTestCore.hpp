@@ -11,8 +11,8 @@
     \brief Utilities for checking regular semantics.
  */
 
-#include "FreeTestCore.hpp"
-#include "RegularCheckers.hpp"
+#include "sequoia/TestFramework/FreeTestCore.hpp"
+#include "sequoia/TestFramework/RegularCheckers.hpp"
 
 namespace sequoia::testing
 {

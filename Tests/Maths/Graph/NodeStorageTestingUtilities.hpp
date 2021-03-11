@@ -7,13 +7,13 @@
 
 #pragma once
 
-#include "RegularTestCore.hpp"
+#include "sequoia/TestFramework/RegularTestCore.hpp"
 
-#include "NodeStorage.hpp"
-#include "StaticNodeStorage.hpp"
-#include "HeterogeneousNodeStorage.hpp"
+#include "sequoia/Maths/Graph/NodeStorage.hpp"
+#include "sequoia/Maths/Graph/StaticNodeStorage.hpp"
+#include "sequoia/Maths/Graph/HeterogeneousNodeStorage.hpp"
 
-#include "AllocationTestUtilities.hpp"
+#include "sequoia/TestFramework/AllocationTestUtilities.hpp"
 
 namespace sequoia::testing
 {

@@ -11,9 +11,9 @@
     \brief Implementation details for allocation checks.
 */
 
-#include "SemanticsCheckersDetails.hpp"
-#include "AllocationCheckersTraits.hpp"
-#include "FreeCheckers.hpp"
+#include "sequoia/TestFramework/SemanticsCheckersDetails.hpp"
+#include "sequoia/TestFramework/AllocationCheckersTraits.hpp"
+#include "sequoia/TestFramework/FreeCheckers.hpp"
 
 #include <scoped_allocator>
 

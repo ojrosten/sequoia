@@ -8,7 +8,7 @@
 #include "StaticStackTest.hpp"
 #include "StaticStackTestingUtilities.hpp"
 
-#include "StaticStack.hpp"
+#include "sequoia/Core/DataStructures/StaticStack.hpp"
 
 namespace sequoia::testing
 {

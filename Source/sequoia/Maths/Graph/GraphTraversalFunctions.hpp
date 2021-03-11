@@ -12,8 +12,8 @@
 
  */
 
-#include "GraphTraversalDetails.hpp"
-#include "ConcurrencyModels.hpp"
+#include "sequoia/Maths/Graph/GraphTraversalDetails.hpp"
+#include "sequoia/Core/Concurrency/ConcurrencyModels.hpp"
 
 namespace sequoia::maths
 {  

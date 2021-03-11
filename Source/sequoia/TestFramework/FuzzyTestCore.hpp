@@ -23,7 +23,7 @@
     check_range overload set and everything works smoothly.
  */
 
-#include "RegularTestCore.hpp"
+#include "sequoia/TestFramework/RegularTestCore.hpp"
 
 #include <cmath>
 

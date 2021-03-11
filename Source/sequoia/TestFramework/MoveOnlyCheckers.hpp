@@ -35,8 +35,8 @@
     \anchor move_only_definition
 */
 
-#include "FreeCheckers.hpp"
-#include "MoveOnlyCheckersDetails.hpp"
+#include "sequoia/TestFramework/FreeCheckers.hpp"
+#include "sequoia/TestFramework/MoveOnlyCheckersDetails.hpp"
 
 namespace sequoia::testing
 {

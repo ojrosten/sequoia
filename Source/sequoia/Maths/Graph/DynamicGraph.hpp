@@ -12,10 +12,10 @@
   
 */
 
-#include "GraphImpl.hpp"
-#include "DynamicGraphImpl.hpp"
+#include "sequoia/Maths/Graph/GraphImpl.hpp"
+#include "sequoia/Maths/Graph/DynamicGraphImpl.hpp"
 
-#include "NodeStorage.hpp"
+#include "sequoia/Maths/Graph/NodeStorage.hpp"
 
 namespace sequoia::maths
 {

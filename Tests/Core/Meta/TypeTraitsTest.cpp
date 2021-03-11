@@ -7,7 +7,7 @@
 
 #include "TypeTraitsTest.hpp"
 
-#include "TypeTraits.hpp"
+#include "sequoia/Core/Meta/TypeTraits.hpp"
 
 
 #include <complex>

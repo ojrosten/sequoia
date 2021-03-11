@@ -10,13 +10,13 @@
 #include "EdgeTestingUtilities.hpp"
 #include "NodeStorageTestingUtilities.hpp"
 
-#include "UniformWrapper.hpp"
-#include "PartitionedData.hpp"
-#include "DataPool.hpp"
-#include "GraphImpl.hpp"
-#include "GraphTraits.hpp"
+#include "sequoia/Core/Utilities/UniformWrapper.hpp"
+#include "sequoia/Core/DataStructures/PartitionedData.hpp"
+#include "sequoia/Core/Ownership/DataPool.hpp"
+#include "sequoia/Maths/Graph/GraphImpl.hpp"
+#include "sequoia/Maths/Graph/GraphTraits.hpp"
 
-#include "PerformanceTestCore.hpp"
+#include "sequoia/TestFramework/PerformanceTestCore.hpp"
 
 namespace sequoia::testing
 {

@@ -7,9 +7,9 @@
 
 #pragma once
 
-#include "RegularTestCore.hpp"
+#include "sequoia/TestFramework/RegularTestCore.hpp"
 
-#include "PartitionedData.hpp"
+#include "sequoia/Core/DataStructures/PartitionedData.hpp"
 
 namespace sequoia::testing
 {  

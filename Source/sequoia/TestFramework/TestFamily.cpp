@@ -9,8 +9,8 @@
     \brief Definitions for TestFamily.hpp.
  */
 
-#include "TestFamily.hpp"
-#include "Summary.hpp"
+#include "sequoia/TestFramework/TestFamily.hpp"
+#include "sequoia/TestFramework/Summary.hpp"
 
 namespace sequoia::testing
 {

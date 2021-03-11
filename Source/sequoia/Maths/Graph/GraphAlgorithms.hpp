@@ -12,7 +12,7 @@
 
  */
 
-#include "DynamicGraph.hpp"
+#include "sequoia/Maths/Graph/DynamicGraph.hpp"
 
 namespace sequoia::maths
 {

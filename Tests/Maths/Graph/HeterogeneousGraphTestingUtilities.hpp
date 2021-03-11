@@ -8,7 +8,7 @@
 #pragma once
 
 #include "GraphTestingUtilities.hpp"
-#include "HeterogeneousStaticGraph.hpp"
+#include "sequoia/Maths/Graph/HeterogeneousStaticGraph.hpp"
 #include "NodeStorageTestingUtilities.hpp"
 
 namespace sequoia::testing

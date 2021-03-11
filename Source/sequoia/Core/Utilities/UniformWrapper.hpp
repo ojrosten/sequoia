@@ -12,7 +12,7 @@
     where at least one uses proxies to underlying data.
  */
 
-#include "Concepts.hpp"
+#include "sequoia/Core/Meta/Concepts.hpp"
 
 #include <compare>
 

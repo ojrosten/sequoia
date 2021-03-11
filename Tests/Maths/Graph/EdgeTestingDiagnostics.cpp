@@ -7,8 +7,8 @@
 
 #include "EdgeTestingDiagnostics.hpp"
 
-#include "Handlers.hpp"
-#include "UniformWrapper.hpp"
+#include "sequoia/Core/Ownership/Handlers.hpp"
+#include "sequoia/Core/Utilities/UniformWrapper.hpp"
 
 namespace sequoia::testing
 {

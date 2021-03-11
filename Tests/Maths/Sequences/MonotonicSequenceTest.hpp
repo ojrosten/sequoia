@@ -7,9 +7,9 @@
 
 #pragma once
 
-#include "RegularTestCore.hpp"
+#include "sequoia/TestFramework/RegularTestCore.hpp"
 
-#include "MonotonicSequence.hpp"
+#include "sequoia/Maths/Sequences/MonotonicSequence.hpp"
 
 namespace sequoia::testing
 {
