@@ -11,4 +11,4 @@ SET(BUILD_SYS ${CMAKE_CURRENT_SOURCE_DIR}/../build_system)
 
 include(${BUILD_SYS}/Utilities.cmake)
 
-FINALIZE(TestChamber)
+FINALIZE_SEQUOIA(TestChamber)

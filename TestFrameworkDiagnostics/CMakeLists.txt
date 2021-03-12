@@ -35,5 +35,5 @@ target_sources(TestFrameworkDiagnostics PRIVATE ${HeaderFiles})
 
 include(${BUILD_SYS}/Utilities.cmake)
 
-FINALIZE(TestFrameworkDiagnostics)
+FINALIZE_SEQUOIA(TestFrameworkDiagnostics)
 
