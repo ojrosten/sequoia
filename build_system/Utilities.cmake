@@ -8,8 +8,18 @@ FUNCTION(LINK_LIBRARIES target)
     endif()
 ENDFUNCTION()
 
+FUNCTION(COMPILE_OPTIONS)
+    if (MSVC)
+       add_compile_options(/W4)
+       add_definitions(/bigobj)
+    else()
+        add_compile_options(-Wall -Wextra -pedantic)
+    endif()
+ENDFUNCTION()
+
 FUNCTION(FINALIZE target)
-    include(${CURRENT_DIR}/CompilerOptions.cmake)
+    COMPILE_OPTIONS()
+
     add_subdirectory(../Source TestFramework)
 
     LINK_LIBRARIES(${target})
