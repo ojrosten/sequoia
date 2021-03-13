@@ -10,7 +10,7 @@ ENDFUNCTION()
 
 FUNCTION(FINALIZE target)
     include(${CURRENT_DIR}/CompilerOptions.cmake)
-    add_subdirectory(${CURRENT_DIR}/TestFramework TestFramework)
+    add_subdirectory(../Source TestFramework)
 
     LINK_LIBRARIES(${target})
     target_compile_features(${target} PUBLIC cxx_std_20)
