@@ -7,7 +7,7 @@
 
 #include "TestRunnerTestCreation.hpp"
 #include "TestRunnerDiagnosticsUtilities.hpp"
-#include "CommandLineArgumentsTestingUtilities.hpp"
+#include "Parsing/CommandLineArgumentsTestingUtilities.hpp"
 
 namespace sequoia::testing
 {

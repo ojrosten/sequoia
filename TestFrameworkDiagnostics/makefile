@@ -29,9 +29,8 @@ PREPROP :=
 CFLAGS := -Wall -Wextra -Wpedantic -std=c++2a -O0 \
 	-ftemplate-backtrace-limit=0	       \
 	$(PREPROP)						       \
-	$(patsubst %,-I%, $(TEST_SUB_DIRS))    \
 
-CFLAGS += -I../TestCommon -I../Source
+CFLAGS += -I../TestCommon -I../Source -I../Tests
 CFLAGS += -I/usr/local/opt/llvm/include -I/usr/local/opt/llvm/include/c++/v1/
 
 CFLAGS +=  -ferror-limit=1 -Wno-missing-braces -fsanitize=address

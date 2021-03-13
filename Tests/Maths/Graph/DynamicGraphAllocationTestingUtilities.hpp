@@ -8,7 +8,7 @@
 #pragma once
 
 #include "DynamicGraphTestingUtilities.hpp"
-#include "PartitionedDataAllocationTestingUtilities.hpp"
+#include "Core/DataStructures/PartitionedDataAllocationTestingUtilities.hpp"
 
 namespace sequoia::testing
 {

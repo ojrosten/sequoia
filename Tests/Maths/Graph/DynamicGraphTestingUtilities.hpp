@@ -11,7 +11,7 @@
 
 #include "GraphTestingUtilities.hpp"
 #include "NodeStorageTestingUtilities.hpp"
-#include "PartitionedDataTestingUtilities.hpp"
+#include "Core/DataStructures/PartitionedDataTestingUtilities.hpp"
 
 #include "sequoia/Maths/Graph/DynamicGraph.hpp"
 

@@ -20,7 +20,7 @@ set(SourceList ${SeqDir}/TestFramework/Advice.cpp
 
 add_library(TestFramework STATIC ${SourceList})
 
-target_include_directories(TestFramework PRIVATE ${SourceDir})
+target_include_directories(TestFramework PUBLIC ${SourceDir})
 
 file(GLOB_RECURSE HeaderFiles ${SeqDir}/*.hpp)
 target_sources(TestFramework PRIVATE ${HeaderFiles})

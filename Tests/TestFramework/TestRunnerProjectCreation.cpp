@@ -7,7 +7,7 @@
 
 #include "TestRunnerProjectCreation.hpp"
 #include "TestRunnerDiagnosticsUtilities.hpp"
-#include "CommandLineArgumentsTestingUtilities.hpp"
+#include "Parsing/CommandLineArgumentsTestingUtilities.hpp"
 
 #include <cstdlib>
 

@@ -8,7 +8,7 @@
 #include "TestRunnerEndToEndFreeTest.hpp"
 #include "sequoia/TestFramework/TestRunner.hpp"
 
-#include "CommandLineArgumentsTestingUtilities.hpp"
+#include "Parsing/CommandLineArgumentsTestingUtilities.hpp"
 
 namespace sequoia::testing
 {
