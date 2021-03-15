@@ -864,7 +864,6 @@ namespace sequoia::testing
     fs::copy(aux_files_path(m_ProjectRoot), aux_files_path(path), fs::copy_options::recursive | fs::copy_options::skip_existing);
 
     generate_test_main(copyright, path);
-    generate_build_system_files(path, "makefile", "???");
     generate_build_system_files(path, "CMakeLists.txt", "SEQUOIA_ROOT");
   }
 

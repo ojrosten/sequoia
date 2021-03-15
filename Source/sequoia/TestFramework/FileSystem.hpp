@@ -16,7 +16,8 @@
 #include <filesystem>
 
 namespace sequoia::testing
-{
+{  
+  inline constexpr std::string_view seqpat{".seqpat"};
   const static auto working_path_v{std::filesystem::current_path().lexically_normal()};
 
   [[nodiscard]]

@@ -9,7 +9,7 @@ target_sources(TestMain PRIVATE)
 file(GLOB_RECURSE HeaderFiles ../Tests/TestFramework/*.hpp)
 target_sources(TestMain PRIVATE ${HeaderFiles})
 
-set(BuildSystem C:/Users/Oliver/sequoia/build_system)
+set(BuildSystem /Users/Claire/Dropbox/Sequoia/build_system)
 set(SourceDir ../Source)
 
 include(${BuildSystem}/Utilities.cmake)

@@ -30,10 +30,10 @@
  */
 
 #include "sequoia/TestFramework/FreeCheckers.hpp"
+#include "sequoia/TestFramework/FileSystem.hpp"
 #include "sequoia/Core/Meta/Concepts.hpp"
 
 #include <tuple>
-#include <filesystem>
 #include <optional>
 #include <regex>
 #include <variant>
@@ -309,8 +309,6 @@ namespace sequoia::testing
     }
 
   private:
-    constexpr static std::string_view seqpat{".seqpat"};
-
     constexpr static std::array<std::string_view, 2>
       excluded_files{".DS_Store", ".keep"};
 

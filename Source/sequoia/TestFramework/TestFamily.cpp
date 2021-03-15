@@ -133,12 +133,36 @@ namespace sequoia::testing
 
     for(const auto& update : updateables)
     {
-      if(updateMode == update_mode::hard)
+      if(updateMode == update_mode::soft)
       {
-        fs::remove_all(update.predictions);
-      }
+        for(auto& p : fs::recursive_directory_iterator(update.predictions))
+        {          
+          if(fs::is_regular_file(p) && ((p.path().extension() == seqpat) || (p.path().filename() == ".keep")))
+          {
+            const auto predRelDir{fs::relative(p.path().parent_path(), update.predictions)};
+            const auto workingSubdir{update.workingMaterials / predRelDir};
 
-      fs::copy(update.workingMaterials, update.predictions, fs::copy_options::recursive | fs::copy_options::update_existing);
+            if(p.path().extension() == seqpat)
+            {
+              for(auto& w : fs::directory_iterator(workingSubdir))
+              {
+                if((w.path().stem() == p.path().stem()) && (w.path().extension() != seqpat))
+                {
+                  fs::copy(p, workingSubdir, fs::copy_options::overwrite_existing);
+                  break;
+                }
+              }
+            }
+            else if(p.path().filename() == ".keep")
+            {
+              fs::copy(p, workingSubdir, fs::copy_options::overwrite_existing);
+            }
+          }
+        }
+      }
+      
+      fs::remove_all(update.predictions);
+      fs::copy(update.workingMaterials, update.predictions, fs::copy_options::recursive);
     }
 
     return {steady_clock::now() - time, std::move(summaries)};
