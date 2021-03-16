@@ -7,7 +7,7 @@ add_executable(TestChamber TestChamberMain.cpp)
 
 target_sources(TestChamber PRIVATE)
 
-SET(BUILD_SYS ${CMAKE_CURRENT_SOURCE_DIR}/../build_system)
+set(BUILD_SYS ${CMAKE_CURRENT_SOURCE_DIR}/../build_system)
 
 include(${BUILD_SYS}/Utilities.cmake)
 

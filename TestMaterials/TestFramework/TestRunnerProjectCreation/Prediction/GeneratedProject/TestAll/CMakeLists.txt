@@ -14,8 +14,7 @@ set(SourceDir ../Source)
 
 include(${BuildSystem}/Utilities.cmake)
 
-HEADER_DIRECTORIES(AllSourceDirs ${SourceDir}/*.hpp)
-target_include_directories(TestMain PRIVATE ${AllSourceDirs})
+target_include_directories(TestMain PRIVATE ${SourceDir})
 
 FINALIZE(TestMain)
 

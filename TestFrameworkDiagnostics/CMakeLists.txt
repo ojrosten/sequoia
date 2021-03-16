@@ -28,7 +28,7 @@ target_sources(TestFrameworkDiagnostics PRIVATE
                ${TestDir}/Runtime/FactoryTestingDiagnostics.cpp
                ${TestDir}/Runtime/FactoryTest.cpp)
 
-SET(BUILD_SYS ${CMAKE_CURRENT_SOURCE_DIR}/../build_system)
+set(BUILD_SYS ${CMAKE_CURRENT_SOURCE_DIR}/../build_system)
 
 file(GLOB_RECURSE HeaderFiles ${TestDir}/TestFramework/*.hpp)
 target_sources(TestFrameworkDiagnostics PRIVATE ${HeaderFiles})
