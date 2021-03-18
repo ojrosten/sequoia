@@ -6,7 +6,7 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "BazzerFreeTest.hpp"
-#include "Baz.h"
+#include "Stuff/Baz.h"
 
 namespace sequoia::testing
 {

@@ -27,6 +27,11 @@ namespace sequoia::testing
   class host_directory
   {
   public:
+    struct paths
+    {
+      std::filesystem::path host_dir, header_path;
+    };
+    
     host_directory() = default;
 
     host_directory(std::filesystem::path dir)
@@ -44,7 +49,7 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    std::filesystem::path get([[maybe_unused]] const std::filesystem::path& filename) const;
+    auto get(const std::filesystem::path& filename) const -> paths;
 
     [[nodiscard]]
     friend bool operator==(const host_directory&, const host_directory&) noexcept = default;
@@ -101,9 +106,6 @@ namespace sequoia::testing
 
     void family(std::string name) { m_Family = std::move(name); }
 
-    [[nodiscard]]
-    std::filesystem::path host_dir() const { return m_HostDirectory.get(m_Header); }
-
     void host_dir(std::filesystem::path dir) { m_HostDirectory = host_directory{std::move(dir)}; }
     
     [[nodiscard]]
@@ -120,6 +122,12 @@ namespace sequoia::testing
     const std::string& forename() const noexcept { return m_Forename; }
 
     void forename(std::string name) { m_Forename = std::move(name); }
+    
+    [[nodiscard]]
+    const std::filesystem::path& host_dir() const { return m_HostDir; }
+
+    [[nodiscard]]
+    const std::filesystem::path& header_path() const { return m_HeaderPath; }
 
     [[nodiscard]]
     friend bool operator==(const nascent_test_base&, const nascent_test_base&) noexcept = default;
@@ -134,7 +142,7 @@ namespace sequoia::testing
 
     ~nascent_test_base() = default;
 
-    void finalize_family();
+    void finalize();
 
     const std::string& camel_name() const noexcept { return m_CamelName; }
 
@@ -154,7 +162,7 @@ namespace sequoia::testing
 
     host_directory m_HostDirectory{};
 
-    std::filesystem::path m_Header{};
+    std::filesystem::path m_Header{}, m_HostDir{}, m_HeaderPath{};
   };
 
   class nascent_semantics_test : public nascent_test_base

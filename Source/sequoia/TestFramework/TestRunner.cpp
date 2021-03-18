@@ -25,13 +25,13 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path host_directory::get([[maybe_unused]] const std::filesystem::path& filename) const
+  auto host_directory::get(const std::filesystem::path& filename) const -> paths
   {
     namespace fs = std::filesystem;
     
     variant_visitor visitor{
-      [](const fs::path& p) { return p; },
-      [&filename](const generator& data){
+      [&filename](const fs::path& p)     -> paths { return {p, filename}; },
+      [&filename](const generator& data) -> paths {
         const auto sourcePath{
           [&](){
             if(const auto path{data.sourceRepo.find(filename)}; !path.empty())
@@ -48,11 +48,12 @@ namespace sequoia::testing
                                    .append(fs::relative(data.sourceRepo.root(), data.hostRepo).generic_string())};
           }()
         };
-        
-        const auto dir{data.hostRepo / fs::relative(sourcePath, data.sourceRepo.root()).parent_path()};
+
+        const auto relSourcePath{fs::relative(sourcePath, data.sourceRepo.root())};
+        const auto dir{(data.hostRepo / relSourcePath).parent_path()};
         fs::create_directories(dir);
 
-        return dir;
+        return {dir, relSourcePath};
       }
     };
 
@@ -167,13 +168,17 @@ namespace sequoia::testing
 
   //=========================================== nascent_test_base ===========================================//
 
-  void nascent_test_base::finalize_family()
+  void nascent_test_base::finalize()
   {
     if(m_Family.empty())
     {
       m_Family = m_CamelName;
       replace_all(m_Family, "_", " ");
     }
+
+    auto paths{m_HostDirectory.get(m_Header)};
+    m_HostDir = std::move(paths.host_dir);
+    m_HeaderPath = std::move(paths.header_path);
   }
 
   template<invocable<std::string&> FileTransformer>
@@ -259,7 +264,7 @@ namespace sequoia::testing
     camel_name(forename());
     if(header().empty()) header(std::filesystem::path{camel_name()}.concat(".hpp"));
 
-    nascent_test_base::finalize_family();
+    nascent_test_base::finalize();
   }
 
   [[nodiscard]]
@@ -334,11 +339,12 @@ namespace sequoia::testing
       replace_all(text, "template<?> ", "");
     }
 
+    namespace fs = std::filesystem;
     replace_all(text, {{"::?_class", m_QualifiedName},
                        {"?_class", forename()},
                        {"?Class", camel_name()},
                        {"?Test", to_camel_case(test_type()).append("Test")},
-                       {"?Class.hpp", header().string()},
+                       {"?Class.hpp", header_path().generic_string()},
                        {"?", test_type()}});
 
   }
@@ -349,7 +355,7 @@ namespace sequoia::testing
   {
     camel_name(forename().empty() ? header().filename().replace_extension().string() : forename());
 
-    nascent_test_base::finalize_family();
+    nascent_test_base::finalize();
 
     camel_name(std::string{camel_name()}.append(capitalize(test_type())));
 
@@ -375,7 +381,7 @@ namespace sequoia::testing
     replace_all(text, {{"?_behavioural", forename()},
                        {"?Behavioural", camel_name()},
                        {"?Test", to_camel_case(test_type()).append("Test")},
-                       {"?Header.hpp", header().filename().string()},
+                       {"?Header.hpp", header_path().generic_string()},
                        {"?", test_type()}});
   }
 
@@ -386,7 +392,7 @@ namespace sequoia::testing
     camel_name(forename());
     if(header().empty()) header(std::filesystem::path{camel_name()}.concat(".hpp"));
 
-    nascent_test_base::finalize_family();
+    nascent_test_base::finalize();
   }
 
   [[nodiscard]]
