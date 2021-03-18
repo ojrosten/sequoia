@@ -20,15 +20,15 @@ ENDFUNCTION()
 FUNCTION(FINALIZE target)
     COMPILE_OPTIONS()
 
-    add_subdirectory(../Source TestFramework)
+    add_subdirectory(${CURRENT_DIR}/../Source TestFramework)
 
     LINK_LIBRARIES(${target})
     target_compile_features(${target} PUBLIC cxx_std_20)
 ENDFUNCTION()
 
 FUNCTION(FINALIZE_SEQUOIA target)
-    target_include_directories(${target} PRIVATE ../TestCommon)
-    target_include_directories(${target} PRIVATE ../Tests)
+    target_include_directories(${target} PRIVATE ${CURRENT_DIR}/../TestCommon)
+    target_include_directories(${target} PRIVATE ${CURRENT_DIR}/../Tests)
 
     FINALIZE(${target})
 ENDFUNCTION()
