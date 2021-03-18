@@ -17,6 +17,7 @@ target_sources(TestMain PRIVATE ${HeaderFiles})
 include(${BuildSystem}/Utilities.cmake)
 
 target_include_directories(TestMain PRIVATE ${SourceDir})
+target_include_directories(TestMain PRIVATE ${TestDir})
 
 FINALIZE(TestMain)
 

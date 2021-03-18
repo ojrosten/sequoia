@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "MoveOnlyTestCore.hpp"
+#include "sequoia/TestFramework/MoveOnlyTestCore.hpp"
 #include "Stuff/Foo.h"
 
 namespace sequoia::testing

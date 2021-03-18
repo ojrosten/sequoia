@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "?TestCore.hpp"
+#include "sequoia/TestFramework/?TestCore.hpp"
 
 namespace sequoia::testing
 {

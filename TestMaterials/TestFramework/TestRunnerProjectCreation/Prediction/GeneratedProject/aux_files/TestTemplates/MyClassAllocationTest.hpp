@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "?AllocationTestCore.hpp"
+#include "sequoia/TestFramework/?AllocationTestCore.hpp"
 
 namespace sequoia::testing
 {
