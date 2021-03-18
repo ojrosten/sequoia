@@ -124,10 +124,10 @@ namespace sequoia::testing
     void forename(std::string name) { m_Forename = std::move(name); }
     
     [[nodiscard]]
-    const std::filesystem::path& host_dir() const { return m_HostDir; }
+    const std::filesystem::path& host_dir() const noexcept { return m_HostDir; }
 
     [[nodiscard]]
-    const std::filesystem::path& header_path() const { return m_HeaderPath; }
+    const std::filesystem::path& header_path() const noexcept { return m_HeaderPath; }
 
     [[nodiscard]]
     friend bool operator==(const nascent_test_base&, const nascent_test_base&) noexcept = default;

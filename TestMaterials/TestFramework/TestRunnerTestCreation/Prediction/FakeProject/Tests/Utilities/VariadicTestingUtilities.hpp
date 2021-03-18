@@ -8,7 +8,7 @@
 #pragma once
 
 #include "MoveOnlyTestCore.hpp"
-#include "Variadic.hpp"
+#include "Utilities/Variadic.hpp"
 
 namespace sequoia::testing
 {

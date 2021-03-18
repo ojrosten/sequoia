@@ -342,9 +342,9 @@ namespace sequoia::testing
     namespace fs = std::filesystem;
     replace_all(text, {{"::?_class", m_QualifiedName},
                        {"?_class", forename()},
+                       {"?Class.hpp", header_path().generic_string()},
                        {"?Class", camel_name()},
                        {"?Test", to_camel_case(test_type()).append("Test")},
-                       {"?Class.hpp", header_path().generic_string()},
                        {"?", test_type()}});
 
   }
@@ -396,7 +396,8 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  auto nascent_allocation_test::create_file(std::string_view copyright, const std::filesystem::path& codeTemplatesDir, std::string_view nameEnding) const -> file_data
+  auto nascent_allocation_test::create_file(std::string_view copyright, const std::filesystem::path& codeTemplatesDir,
+                                            std::string_view nameEnding) const -> file_data
   {
     auto transformer{[this](std::string& text) { transform_file(text); }};
     return nascent_test_base::create_file(codeTemplatesDir, copyright, "MyClass", nameEnding, transformer);
