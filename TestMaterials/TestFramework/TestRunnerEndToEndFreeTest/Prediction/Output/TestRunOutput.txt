@@ -4,16 +4,16 @@ Running tests...
 Utilities:
 [1 (0)ms]
 Maybe:
-[2 (0)ms]
-Foo:
-[2 (0)ms]
-Container:
-[3 (0)ms]
-House:
 [1 (0)ms]
+Foo:
+[1 (0)ms]
+Container:
+[1 (0)ms]
+House:
+[0 (0)ms]
 
 -----------Grand Totals-----------
-[12 (0)ms]
+[5 (0)ms]
 	Standard Top Level Checks:                 0;  Failures:  0
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
