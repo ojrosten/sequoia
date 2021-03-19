@@ -178,7 +178,9 @@ namespace sequoia::testing
                                                             .append(" source Maybe/MaybeTest.cpp")
                                                             .append(" source FooTest.cpp"),
                                                    output / "SpecifiedSourceOutput.txt")
-                                && add_output_file(run_cmd().append(" source Plurgh.cpp"), output / "FailedSpecifiedSourceOutput.txt")};
+                                && add_output_file(run_cmd().append(" source Plurgh.cpp"), output / "FailedSpecifiedSourceOutput.txt")
+                                && add_output_file(run_cmd().append(" test Foo"), output / "SpecifiedFamilyOutput.txt")
+                                && add_output_file(run_cmd().append(" -v"), output / "VerboseOutput.txt")};
 
     std::system(cmd.c_str());
 
