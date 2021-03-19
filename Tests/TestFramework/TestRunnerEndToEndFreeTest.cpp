@@ -172,7 +172,8 @@ namespace sequoia::testing
 
     const auto cmd{cd(buildDir) && add_output_file(create_cmd(), working_materials() / "Output" / "CreationOutput.txt")
                                 && cmake_and_build("CMakeOutput2.txt", "BuildOutput2.txt")
-                                && add_output_file(run_cmd(), working_materials() / "Output" / "TestRunOutput.txt")};
+                                && add_output_file(run_cmd(), working_materials() / "Output" / "TestRunOutput.txt")
+                                && add_output_file(run_cmd().append(" source ../../../Tests/HouseAllocationTest.cpp"), working_materials() / "Output" / "SpecifiedSourceOutput.txt")};
 
     std::system(cmd.c_str());
 

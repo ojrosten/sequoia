@@ -159,7 +159,7 @@ namespace sequoia::testing
     if(!fs::is_directory(dir))
       return p;
 
-    if(!p.has_relative_path() && !dir.has_relative_path())
+    if(p.is_absolute() && dir.is_absolute())
       return fs::relative(p, dir);
 
     auto last{*(--dir.end())};

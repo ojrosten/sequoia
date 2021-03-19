@@ -717,14 +717,14 @@ namespace sequoia::testing
   auto test_runner::find_filename(const std::filesystem::path& filename) -> source_list::iterator
   {
     return std::find_if(m_SelectedSources.begin(), m_SelectedSources.end(),
-                 [&filename, repo{m_TestRepo}](const auto& element){
+                 [&filename, repo{m_TestRepo}, root{m_ProjectRoot}](const auto& element){
                    const auto& source{element.first};
 
                    if(filename == source) return true;
 
                    if(filename.is_absolute() && source.is_relative())
                    {
-                     return filename == rebase_from(source, working_path());
+                     return rebase_from(filename, root) == rebase_from(source, working_path());
                    }
 
                    // filename is relative to where compilation was performed which
