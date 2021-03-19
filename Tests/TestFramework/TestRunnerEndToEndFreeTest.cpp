@@ -170,10 +170,15 @@ namespace sequoia::testing
     fs::copy(fake() / "Source", generated() / "Source", fs::copy_options::recursive | fs::copy_options::skip_existing);
     fs::create_directory(working_materials() / "Output");
 
-    const auto cmd{cd(buildDir) && add_output_file(create_cmd(), working_materials() / "Output" / "CreationOutput.txt")
+    const auto output{working_materials() / "Output"};
+    const auto cmd{cd(buildDir) && add_output_file(create_cmd(), output / "CreationOutput.txt")
                                 && cmake_and_build("CMakeOutput2.txt", "BuildOutput2.txt")
-                                && add_output_file(run_cmd(), working_materials() / "Output" / "TestRunOutput.txt")
-                                && add_output_file(run_cmd().append(" source ../../../Tests/HouseAllocationTest.cpp"), working_materials() / "Output" / "SpecifiedSourceOutput.txt")};
+                                && add_output_file(run_cmd(), output / "TestRunOutput.txt")
+                                && add_output_file(run_cmd().append(" source ../../../Tests/HouseAllocationTest.cpp")
+                                                            .append(" source Maybe/MaybeTest.cpp")
+                                                            .append(" source FooTest.cpp"),
+                                                   output / "SpecifiedSourceOutput.txt")
+                                && add_output_file(run_cmd().append(" source Plurgh.cpp"), output / "FailedSpecifiedSourceOutput.txt")};
 
     std::system(cmd.c_str());
 

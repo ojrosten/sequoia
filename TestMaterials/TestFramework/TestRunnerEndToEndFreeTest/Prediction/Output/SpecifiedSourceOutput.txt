@@ -1,11 +1,15 @@
 
 Running tests...
 
+Maybe:
+[0 (0)ms]
+Foo:
+[0 (0)ms]
 House:
 [0 (0)ms]
 
 -----------Grand Totals-----------
-[0 (0)ms]
+[1 (0)ms]
 	Standard Top Level Checks:                 0;  Failures:  0
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
