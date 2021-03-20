@@ -1,0 +1,36 @@
+test | t | test_family_name
+source | s | source_file_name
+create | c |
+  regular_test | regular | qualified::class_name<class T> equivalent_type
+    --equivalent-type | -e | equivalent_type
+    --host-directory | -h | host_directory
+    --family | -f | family
+    --class-header | -ch | class_header
+  move_only_test | move_only | qualified::class_name<class T> equivalent_type
+    --equivalent-type | -e | equivalent_type
+    --host-directory | -h | host_directory
+    --family | -f | family
+    --class-header | -ch | class_header
+  regular_allocation_test | regular_allocation allocation_test | raw_class_name
+    --host-directory | -h | host_directory
+    --family | -f | family
+    --class-header | -ch | class_header
+  move_only_allocation_test | move_only_allocation | raw_class_name
+    --host-directory | -h | host_directory
+    --family | -f | family
+    --class-header | -ch | class_header
+  free_test | free | header
+    --host-directory | -h | host_directory
+    --family | -f | family
+    --forename | -name | forename
+  performance_test | performance | header
+    --host-directory | -h | host_directory
+    --family | -f | family
+init | i | copyright path
+update-materials | u |
+  --hard
+--async | -a |
+--async-depth | -ad | depth [0-2]
+--verbose | -v |
+--recovery | -r |
+--dump
