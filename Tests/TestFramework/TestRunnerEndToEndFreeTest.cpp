@@ -14,12 +14,6 @@ namespace sequoia::testing
 {
   namespace
   {
-    struct build_command
-    {
-      std::string cmd;
-      std::filesystem::path output;
-    };
-
     struct cmake_and_build_command
     {
       std::string cmd;
@@ -85,7 +79,7 @@ namespace sequoia::testing
       auto cmd{cd(buildDir)};
       if constexpr (has_msvc_v)
       {
-        cmd && "\"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\MSBuild\\Current\\Bin\\MSbuild.exe\" MyProject.sln";
+        cmd && "\"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\MSBuild\\Current\\Bin\\MSbuild.exe\" MyProject.sln -t:TestMain:Rebuild";
       }
       else
       {
@@ -157,10 +151,11 @@ namespace sequoia::testing
       }
 
       [[nodiscard]]
-      build_command rebuild() const
+      cmake_and_build_command rebuild_run(const std::filesystem::path& output) const
       {
-        const auto buildOutput{"BuildOutput3.txt"};
-        return {cd(buildDir) && add_output_file(build_cmd(buildDir), buildOutput), buildDir / buildOutput};
+        return {    cd(buildDir)
+                 && cmake_and_build("CMakeOutput3.txt", "BuildOutput3.txt")
+                 && add_output_file(run_cmd(), output / "TestRunOutput.txt")};
       }
     private:
       [[nodiscard]]
@@ -235,8 +230,7 @@ namespace sequoia::testing
     fs::copy(fake() / "Source", generated() / "Source", fs::copy_options::recursive | fs::copy_options::skip_existing);
     fs::create_directory(working_materials() / "Output");
 
-    const auto output{working_materials() / "Output"};
-    const auto cmakeBuildRun{b.create_cmake_build_run(output)};
+    const auto cmakeBuildRun{b.create_cmake_build_run(working_materials() / "Output")};
     std::system(cmakeBuildRun.cmd.c_str());
 
     check(LINE("Second CMake output existance"), fs::exists(cmakeBuildRun.cmake_output));
@@ -246,9 +240,14 @@ namespace sequoia::testing
 
     fs::copy(auxiliary_materials() / "TestMaterials", generated() / "TestMaterials", fs::copy_options::recursive | fs::copy_options::overwrite_existing);
     fs::copy(auxiliary_materials() / "FooTest.cpp", generated() / "Tests" / "Stuff", fs::copy_options::overwrite_existing);
+    fs::create_directory(working_materials() / "RebuiltOutput");
 
-    const auto rebuild{b.rebuild()};
-    std::system(rebuild.cmd.c_str());
-    check(LINE("Third build output existance"), fs::exists(rebuild.output));
+    const auto rebuildRun{b.rebuild_run(working_materials() / "RebuiltOutput")};
+    std::system(rebuildRun.cmd.c_str());
+    check(LINE("Third CMake output existance"), fs::exists(rebuildRun.cmake_output));
+    check(LINE("Third build output existance"), fs::exists(rebuildRun.build_output));
+
+    check_equivalence(LINE(""), working_materials() / "RebuiltOutput", predictive_materials() / "RebuiltOutput");
+
   }
 }
