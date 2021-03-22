@@ -102,6 +102,42 @@ namespace sequoia::testing
                               " create move_only_allocation_test house"
                               " create performance_test Container.hpp");
     }
+
+    struct cmd_builder
+    {
+      std::filesystem::path mainDir, buildDir;
+
+      [[nodiscard]]
+      std::string cmake_and_build(std::string_view cmakeOut, std::string_view buildOut) const
+      {
+        return cd(mainDir)
+            && add_output_file(cmake_cmd(buildDir), cmakeOut)
+            && add_output_file(build_cmd(buildDir), buildOut);
+      }
+
+      [[nodiscard]]
+      std::string create_cmake_build(const std::filesystem::path& output) const
+      {
+        return     cd(buildDir)
+               && add_output_file(create_cmd(), output / "CreationOutput.txt")
+               && cmake_and_build("CMakeOutput2.txt", "BuildOutput2.txt")
+               && add_output_file(run_cmd(), output / "TestRunOutput.txt")
+               && add_output_file(run_cmd().append(" source ../../../Tests/HouseAllocationTest.cpp")
+                                           .append(" source Maybe/MaybeTest.cpp")
+                                           .append(" source FooTest.cpp"),
+                                  output / "SpecifiedSourceOutput.txt")
+               && add_output_file(run_cmd().append(" source Plurgh.cpp"), output / "FailedSpecifiedSourceOutput.txt")
+               && add_output_file(run_cmd().append(" test Foo"), output / "SpecifiedFamilyOutput.txt")
+               && add_output_file(run_cmd().append(" -v"), output / "VerboseOutput.txt")
+               && add_output_file(run_cmd().append(" --help"), output / "HelpOutput.txt");
+      }
+
+      [[nodiscard]]
+      std::string rebuild(const std::filesystem::path& output) const
+      {
+        return cd(buildDir);
+      }
+    };
   }
 
   [[nodiscard]]
@@ -117,8 +153,10 @@ namespace sequoia::testing
 
   void test_runner_end_to_end_test::test_project_creation()
   {
+    namespace fs = std::filesystem;
+
     auto fake{
-      [&mat{working_materials()}]() {
+      [&mat{auxiliary_materials()}]() {
         return mat / "FakeProject";
       }
     };
@@ -141,56 +179,35 @@ namespace sequoia::testing
 
     tr.execute();
 
-    if(std::ofstream file{fake() / "output" / "io.txt"})
+    fs::create_directory(working_materials() / "InitOutput");
+    if(std::ofstream file{working_materials() / "InitOutput" / "io.txt"})
     {
       file << outputStream.rdbuf();
     }
 
-    check_equivalence(LINE(""), working_materials() / "FakeProject", predictive_materials() / "FakeProject");
+    check_equivalence(LINE(""), working_materials() / "InitOutput", predictive_materials() / "InitOutput");
 
     check(LINE("Command processor existance"), std::system(nullptr) > 0);
 
-    const auto mainDir{generated() / "TestAll"};
-    const auto buildDir{generated() / "build"/ "CMade" / "TestAll"};
+    const cmd_builder b{generated() / "TestAll", generated() / "build" / "CMade" / "TestAll"};
 
-    auto cmake_and_build{
-      [mainDir,buildDir](std::string_view cmakeOut, std::string_view buildOut) {
-        return    cd(mainDir)
-               && add_output_file(cmake_cmd(buildDir), cmakeOut)
-               && add_output_file(build_cmd(buildDir), buildOut);
-      }
-    };
-
-    namespace fs = std::filesystem;
-
-    std::system(cmake_and_build("CMakeOutput.txt", "BuildOutput.txt").c_str());
-    check(LINE("First CMake output existance"), fs::exists(mainDir / "CMakeOutput.txt"));
-    check(LINE("First build output existance"), fs::exists(buildDir / "BuildOutput.txt"));
+    std::system(b.cmake_and_build("CMakeOutput.txt", "BuildOutput.txt").c_str());
+    check(LINE("First CMake output existance"), fs::exists(b.mainDir / "CMakeOutput.txt"));
+    check(LINE("First build output existance"), fs::exists(b.buildDir / "BuildOutput.txt"));
 
     fs::copy(fake() / "Source", generated() / "Source", fs::copy_options::recursive | fs::copy_options::skip_existing);
     fs::create_directory(working_materials() / "Output");
 
     const auto output{working_materials() / "Output"};
-    const auto cmd{cd(buildDir) && add_output_file(create_cmd(), output / "CreationOutput.txt")
-                                && cmake_and_build("CMakeOutput2.txt", "BuildOutput2.txt")
-                                && add_output_file(run_cmd(), output / "TestRunOutput.txt")
-                                && add_output_file(run_cmd().append(" source ../../../Tests/HouseAllocationTest.cpp")
-                                                            .append(" source Maybe/MaybeTest.cpp")
-                                                            .append(" source FooTest.cpp"),
-                                                   output / "SpecifiedSourceOutput.txt")
-                                && add_output_file(run_cmd().append(" source Plurgh.cpp"), output / "FailedSpecifiedSourceOutput.txt")
-                                && add_output_file(run_cmd().append(" test Foo"), output / "SpecifiedFamilyOutput.txt")
-                                && add_output_file(run_cmd().append(" -v"), output / "VerboseOutput.txt")
-                                && add_output_file(run_cmd().append(" --help"), output / "HelpOutput.txt")};
+    std::system(b.create_cmake_build(output).c_str());
 
-    std::system(cmd.c_str());
-
-    check(LINE("Second CMake output existance"), fs::exists(mainDir / "CMakeOutput2.txt"));
-    check(LINE("Second build output existance"), fs::exists(buildDir / "BuildOutput2.txt"));
+    check(LINE("Second CMake output existance"), fs::exists(b.mainDir / "CMakeOutput2.txt"));
+    check(LINE("Second build output existance"), fs::exists(b.buildDir / "BuildOutput2.txt"));
 
     check_equivalence(LINE(""), working_materials() / "Output", predictive_materials() / "Output");
 
-    fs::copy(working_materials() / "TestMaterials", generated() / "TestMaterials", fs::copy_options::recursive | fs::copy_options::overwrite_existing);
-    fs::copy(working_materials() / "AuxiliaryMaterial" / "FooTest.cpp", generated() / "Tests" / "Stuff", fs::copy_options::overwrite_existing);
+    fs::copy(auxiliary_materials() / "TestMaterials", generated() / "TestMaterials", fs::copy_options::recursive | fs::copy_options::overwrite_existing);
+    fs::copy(auxiliary_materials() / "FooTest.cpp", generated() / "Tests" / "Stuff", fs::copy_options::overwrite_existing);
+
   }
 }
