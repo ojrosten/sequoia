@@ -19,10 +19,11 @@ namespace sequoia::testing
     fs::create_directories(m_DiagnosticsOutput.parent_path());
   }
 
-  void test::set_materials(std::filesystem::path workingMaterials, std::filesystem::path predictiveMaterials)
+  void test::set_materials(std::filesystem::path workingMaterials, std::filesystem::path predictiveMaterials, std::filesystem::path auxiliaryMaterials)
   {
-    m_WorkingMaterials = std::move(workingMaterials);
+    m_WorkingMaterials    = std::move(workingMaterials);
     m_PredictiveMaterials = std::move(predictiveMaterials);
+    m_AuxiliaryMaterials  = std::move(auxiliaryMaterials);
   }
 
   void test::set_recovery_paths(recovery_paths paths)
@@ -78,7 +79,7 @@ namespace sequoia::testing
 
   const log_summary& test::write_versioned_output(const log_summary& summary) const
   {
-    write(diagnostics_output_filename(), summary.diagnostics_output());     
+    write(diagnostics_output_filename(), summary.diagnostics_output());
     write(caught_exceptions_output_filename(), summary.caught_exceptions_output());
 
     return summary;

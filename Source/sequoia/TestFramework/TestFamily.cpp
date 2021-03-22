@@ -38,27 +38,33 @@ namespace sequoia::testing
     {
       const auto output{tests_temporary_data_path(m_OutputDir) /= rel};
 
-      const auto[original, workingCopy, prediction]{
-         [&output,&materials] () -> std::tuple<fs::path, fs::path, fs::path>{
-          const auto prediction{materials / "Prediction"};
+      const auto[original, workingCopy, prediction, originalAux, workingAux]{
+         [&output,&materials] () -> std::array<fs::path, 5>{
           const auto original{materials / "WorkingCopy"};
+          const auto prediction{materials / "Prediction"};
 
           if(fs::exists(original) && fs::exists(prediction))
           {
-            return {original, output / "WorkingCopy", prediction};
+            const auto auxiliary{materials / "Auxiliary"};
+            const auto origAux{fs::exists(auxiliary) ? auxiliary : ""};
+            const auto workAux{fs::exists(auxiliary) ? output / "Auxiliary" : ""};
+            return {original, output / "WorkingCopy", prediction, origAux, workAux};
           }
 
-          return {materials, output, ""};
+          return { materials, output};
         }()
       };
 
-      t.set_materials(workingCopy, prediction);
+      t.set_materials(workingCopy, prediction, workingAux);
 
       if(std::find(m_MaterialsPaths.cbegin(), m_MaterialsPaths.cend(), workingCopy) == m_MaterialsPaths.cend())
       {
         fs::remove_all(output);
         fs::create_directories(output);
         fs::copy(original, workingCopy, fs::copy_options::recursive | fs::copy_options::overwrite_existing);
+        
+        if(fs::exists(originalAux))
+          fs::copy(originalAux, workingAux, fs::copy_options::recursive | fs::copy_options::overwrite_existing);
 
         m_MaterialsPaths.emplace_back(workingCopy);
       }
@@ -136,7 +142,7 @@ namespace sequoia::testing
       if(updateMode == update_mode::soft)
       {
         for(auto& p : fs::recursive_directory_iterator(update.predictions))
-        {          
+        {
           if(fs::is_regular_file(p) && ((p.path().extension() == seqpat) || (p.path().filename() == ".keep")))
           {
             const auto predRelDir{fs::relative(p.path().parent_path(), update.predictions)};
@@ -160,7 +166,7 @@ namespace sequoia::testing
           }
         }
       }
-      
+
       fs::remove_all(update.predictions);
       fs::copy(update.workingMaterials, update.predictions, fs::copy_options::recursive);
     }

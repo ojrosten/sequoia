@@ -70,6 +70,12 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
+    const std::filesystem::path& auxiliary_materials() const noexcept
+    {
+      return m_AuxiliaryMaterials;
+    }
+
+    [[nodiscard]]
     const std::filesystem::path& test_repository() const noexcept
     {
       return m_TestRepo;
@@ -92,7 +98,7 @@ namespace sequoia::testing
 
     void set_filesystem_data(std::filesystem::path testRepo, const std::filesystem::path& outputDir, std::string_view familyName);
 
-    void set_materials(std::filesystem::path workingMaterials, std::filesystem::path predictiveMaterials);
+    void set_materials(std::filesystem::path workingMaterials, std::filesystem::path predictiveMaterials, std::filesystem::path auxiliaryMaterials);
 
     void set_recovery_paths(recovery_paths paths);
   protected:
@@ -116,7 +122,7 @@ namespace sequoia::testing
     [[nodiscard]]
     virtual std::filesystem::path output_filename(std::string_view suffix) const = 0;
 
-    virtual void do_set_recovery_paths(recovery_paths paths) = 0;     
+    virtual void do_set_recovery_paths(recovery_paths paths) = 0;
 
     const log_summary& write_versioned_output(const log_summary& summary) const;
 
@@ -126,6 +132,7 @@ namespace sequoia::testing
     std::filesystem::path
       m_WorkingMaterials{},
       m_PredictiveMaterials{},
+      m_AuxiliaryMaterials{},
       m_TestRepo{},
       m_DiagnosticsOutput{},
       m_CaughtExceptionsOutput{};

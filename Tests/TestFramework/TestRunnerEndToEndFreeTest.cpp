@@ -189,5 +189,8 @@ namespace sequoia::testing
     check(LINE("Second build output existance"), fs::exists(buildDir / "BuildOutput2.txt"));
 
     check_equivalence(LINE(""), working_materials() / "Output", predictive_materials() / "Output");
+
+    fs::copy(working_materials() / "TestMaterials", generated() / "TestMaterials", fs::copy_options::recursive | fs::copy_options::overwrite_existing);
+    fs::copy(working_materials() / "AuxiliaryMaterial" / "FooTest.cpp", generated() / "Tests" / "Stuff", fs::copy_options::overwrite_existing);
   }
 }
