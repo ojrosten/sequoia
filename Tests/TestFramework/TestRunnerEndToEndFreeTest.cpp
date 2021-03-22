@@ -14,6 +14,18 @@ namespace sequoia::testing
 {
   namespace
   {
+    struct build_command
+    {
+      std::string cmd;
+      std::filesystem::path output;
+    };
+
+    struct cmake_and_build_command
+    {
+      std::string cmd;
+      std::filesystem::path cmake_output, build_output;
+    };
+
     std::string& operator&&(std::string& lhs, std::string_view rhs)
     {
       return lhs.append(" && ").append(rhs);
@@ -24,6 +36,20 @@ namespace sequoia::testing
     {
       std::string left{lhs};
       return left && rhs;
+    }
+
+    [[nodiscard]]
+    cmake_and_build_command operator&&(std::string_view lhs, cmake_and_build_command rhs)
+    {
+      rhs.cmd = lhs && rhs.cmd;
+      return rhs;
+    }
+
+    [[nodiscard]]
+    cmake_and_build_command operator&&(cmake_and_build_command lhs, std::string_view rhs)
+    {
+      lhs.cmd = lhs.cmd && rhs;
+      return lhs;
     }
 
     [[nodiscard]]
@@ -108,17 +134,15 @@ namespace sequoia::testing
       std::filesystem::path mainDir, buildDir;
 
       [[nodiscard]]
-      std::string cmake_and_build(std::string_view cmakeOut, std::string_view buildOut) const
+      cmake_and_build_command cmake_and_build() const
       {
-        return cd(mainDir)
-            && add_output_file(cmake_cmd(buildDir), cmakeOut)
-            && add_output_file(build_cmd(buildDir), buildOut);
+        return cmake_and_build("CMakeOutput.txt", "BuildOutput.txt");
       }
 
       [[nodiscard]]
-      std::string create_cmake_build(const std::filesystem::path& output) const
+      cmake_and_build_command create_cmake_build_run(const std::filesystem::path& output) const
       {
-        return     cd(buildDir)
+        return    cd(buildDir)
                && add_output_file(create_cmd(), output / "CreationOutput.txt")
                && cmake_and_build("CMakeOutput2.txt", "BuildOutput2.txt")
                && add_output_file(run_cmd(), output / "TestRunOutput.txt")
@@ -133,9 +157,21 @@ namespace sequoia::testing
       }
 
       [[nodiscard]]
-      std::string rebuild(const std::filesystem::path& output) const
+      build_command rebuild() const
       {
-        return cd(buildDir);
+        const auto buildOutput{"BuildOutput3.txt"};
+        return {cd(buildDir) && add_output_file(build_cmd(buildDir), buildOutput), buildDir / buildOutput};
+      }
+    private:
+      [[nodiscard]]
+      cmake_and_build_command cmake_and_build(std::string_view cmakeOut, std::string_view buildOut) const
+      {
+        return {     cd(mainDir)
+                  && add_output_file(cmake_cmd(buildDir), cmakeOut)
+                  && add_output_file(build_cmd(buildDir), buildOut),
+                  mainDir / cmakeOut,
+                  buildDir / buildOut
+               };
       }
     };
   }
@@ -191,23 +227,28 @@ namespace sequoia::testing
 
     const cmd_builder b{generated() / "TestAll", generated() / "build" / "CMade" / "TestAll"};
 
-    std::system(b.cmake_and_build("CMakeOutput.txt", "BuildOutput.txt").c_str());
-    check(LINE("First CMake output existance"), fs::exists(b.mainDir / "CMakeOutput.txt"));
-    check(LINE("First build output existance"), fs::exists(b.buildDir / "BuildOutput.txt"));
+    const auto cmakeAndBuild{b.cmake_and_build()};
+    std::system(cmakeAndBuild.cmd.c_str());
+    check(LINE("First CMake output existance"), fs::exists(cmakeAndBuild.cmake_output));
+    check(LINE("First build output existance"), fs::exists(cmakeAndBuild.build_output));
 
     fs::copy(fake() / "Source", generated() / "Source", fs::copy_options::recursive | fs::copy_options::skip_existing);
     fs::create_directory(working_materials() / "Output");
 
     const auto output{working_materials() / "Output"};
-    std::system(b.create_cmake_build(output).c_str());
+    const auto cmakeBuildRun{b.create_cmake_build_run(output)};
+    std::system(cmakeBuildRun.cmd.c_str());
 
-    check(LINE("Second CMake output existance"), fs::exists(b.mainDir / "CMakeOutput2.txt"));
-    check(LINE("Second build output existance"), fs::exists(b.buildDir / "BuildOutput2.txt"));
+    check(LINE("Second CMake output existance"), fs::exists(cmakeBuildRun.cmake_output));
+    check(LINE("Second build output existance"), fs::exists(cmakeBuildRun.build_output));
 
     check_equivalence(LINE(""), working_materials() / "Output", predictive_materials() / "Output");
 
     fs::copy(auxiliary_materials() / "TestMaterials", generated() / "TestMaterials", fs::copy_options::recursive | fs::copy_options::overwrite_existing);
     fs::copy(auxiliary_materials() / "FooTest.cpp", generated() / "Tests" / "Stuff", fs::copy_options::overwrite_existing);
 
+    const auto rebuild{b.rebuild()};
+    std::system(rebuild.cmd.c_str());
+    check(LINE("Third build output existance"), fs::exists(rebuild.output));
   }
 }
