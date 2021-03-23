@@ -249,5 +249,7 @@ namespace sequoia::testing
 
     check_equivalence(LINE(""), working_materials() / "RebuiltOutput", predictive_materials() / "RebuiltOutput");
 
+    fs::copy(generated() / "TestMaterials", working_materials() / "OriginalTestMaterials", fs::copy_options::recursive);
+    check_equivalence(LINE(""), working_materials() / "OriginalTestMaterials", predictive_materials() / "OriginalTestMaterials");
   }
 }
