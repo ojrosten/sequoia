@@ -409,7 +409,7 @@ namespace sequoia::testing
                   std::basic_regex rgx{expressions->data() + pos, count};
                   fileContents = std::regex_replace(fileContents.value(), rgx, std::string{});
                   predictionContents = std::regex_replace(predictionContents.value(), rgx, std::string{});
-                  pos = next;
+                  pos = next+1;
                 }
                 else
                 {
