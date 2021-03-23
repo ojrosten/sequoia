@@ -2,11 +2,11 @@
 Running tests...
 
 Utilities:
-[1 (0)ms]
+[0 (0)ms]
 Maybe:
-[3 (0)ms]
+[1 (0)ms]
 Foo:
-[17 (13)ms]
+[12 (11)ms]
 	Standard Top Level Checks:                 3;  Failures:  3  [Deep checks: 40]
 
 	Tests/Stuff/FooTest.cpp, Line 40
@@ -17,9 +17,9 @@ Foo:
 	[std::filesystem::path]
 
 	  Contents of
-	  C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/NoSeqpat/baz.txt
+	  /Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/NoSeqpat/baz.txt
 	  vs
-	  C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/NoSeqpat/baz.txt
+	  /Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/NoSeqpat/baz.txt
 
 	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
 	  operator== returned false
@@ -35,37 +35,9 @@ Foo:
 	    Predicted: Old
 
 	  Contents of
-	  C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/NoSeqpat/baz2.txt
+	  /Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/NoSeqpat/baz2.txt
 	  vs
-	  C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/NoSeqpat/baz2.txt
-
-	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
-	  operator== returned false
-
-	    First difference detected at character 0:
-	    [char]
-	    operator== returned false
-	    Obtained : U
-	    Predicted: O
-
-	    Full strings:
-	    Obtained : Updated
-	    Predicted: Old
-
-	=======================================
-
-
-	Tests/Stuff/FooTest.cpp, Line 40
-
-	Comparison performed using:
-	[sequoia::testing::equivalence_checker<std::filesystem::path>]
-	With equivalent types:
-	[std::filesystem::path]
-
-	  Contents of
-	  C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RemovedSeqpat/bar2.txt
-	  vs
-	  C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RemovedSeqpat/bar2.txt
+	  /Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/NoSeqpat/baz2.txt
 
 	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
 	  operator== returned false
@@ -91,9 +63,9 @@ Foo:
 	[std::filesystem::path]
 
 	  Contents of
-	  C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RetainedSeqpat/foo.txt
+	  /Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RetainedSeqpat/foo.txt
 	  vs
-	  C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RetainedSeqpat/foo.txt
+	  /Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RetainedSeqpat/foo.txt
 
 	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
 	  operator== returned false
@@ -109,9 +81,37 @@ Foo:
 	    Predicted: Old
 
 	  Contents of
-	  C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RetainedSeqpat/foo2.txt
+	  /Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RetainedSeqpat/foo2.txt
 	  vs
-	  C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RetainedSeqpat/foo2.txt
+	  /Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RetainedSeqpat/foo2.txt
+
+	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
+	  operator== returned false
+
+	    First difference detected at character 0:
+	    [char]
+	    operator== returned false
+	    Obtained : U
+	    Predicted: O
+
+	    Full strings:
+	    Obtained : Updated
+	    Predicted: Old
+
+	=======================================
+
+
+	Tests/Stuff/FooTest.cpp, Line 40
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<std::filesystem::path>]
+	With equivalent types:
+	[std::filesystem::path]
+
+	  Contents of
+	  /Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RemovedSeqpat/bar2.txt
+	  vs
+	  /Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RemovedSeqpat/bar2.txt
 
 	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
 	  operator== returned false
@@ -130,12 +130,12 @@ Foo:
 
 
 Container:
-[3 (0)ms]
-House:
 [1 (0)ms]
+House:
+[0 (0)ms]
 
 -----------Grand Totals-----------
-[29 (13)ms]
+[16 (11)ms]
 	Standard Top Level Checks:                 3;  Failures:  3  [Deep checks: 40]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
