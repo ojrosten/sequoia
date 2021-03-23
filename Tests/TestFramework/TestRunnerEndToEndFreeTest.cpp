@@ -7,6 +7,7 @@
 
 #include "TestRunnerEndToEndFreeTest.hpp"
 #include "sequoia/TestFramework/TestRunner.hpp"
+#include "sequoia/TestFramework/FileEditors.hpp"
 
 #include "Parsing/CommandLineArgumentsTestingUtilities.hpp"
 
@@ -76,14 +77,10 @@ namespace sequoia::testing
     [[nodiscard]]
     std::string build_cmd(const std::filesystem::path& buildDir)
     {
-      auto cmd{cd(buildDir)};
+      auto cmd{cd(buildDir) && "cmake --build . --target TestMain"};
       if constexpr (has_msvc_v)
       {
-        cmd && "\"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\MSBuild\\Current\\Bin\\MSbuild.exe\" MyProject.sln -t:TestMain:Rebuild";
-      }
-      else
-      {
-        cmd && "make";
+        cmd.append(" --config Debug");
       }
 
       return cmd;
@@ -156,6 +153,12 @@ namespace sequoia::testing
         return {    cd(buildDir)
                  && cmake_and_build("CMakeOutput3.txt", "BuildOutput3.txt")
                  && add_output_file(run_cmd(), output / "TestRunOutput.txt")};
+      }
+
+      [[nodiscard]]
+      std::string materials_update(const std::filesystem::path& output) const
+      {
+        return cd(buildDir) && add_output_file(run_cmd().append(" u"), output / "TestRunOutput.txt");
       }
     private:
       [[nodiscard]]
@@ -239,7 +242,9 @@ namespace sequoia::testing
     check_equivalence(LINE(""), working_materials() / "Output", predictive_materials() / "Output");
 
     fs::copy(auxiliary_materials() / "TestMaterials", generated() / "TestMaterials", fs::copy_options::recursive | fs::copy_options::overwrite_existing);
+
     fs::copy(auxiliary_materials() / "FooTest.cpp", generated() / "Tests" / "Stuff", fs::copy_options::overwrite_existing);
+    fs::last_write_time(generated() / "Tests" / "Stuff" / "FooTest.cpp", fs::file_time_type::clock::now());
     fs::create_directory(working_materials() / "RebuiltOutput");
 
     const auto rebuildRun{b.rebuild_run(working_materials() / "RebuiltOutput")};
@@ -251,5 +256,10 @@ namespace sequoia::testing
 
     fs::copy(generated() / "TestMaterials", working_materials() / "OriginalTestMaterials", fs::copy_options::recursive);
     check_equivalence(LINE(""), working_materials() / "OriginalTestMaterials", predictive_materials() / "OriginalTestMaterials");
+    fs::create_directory(working_materials() / "RunWithUpdateOutput");
+
+    std::system(b.materials_update(working_materials() / "RunWithUpdateOutput").c_str());
+    fs::copy(generated() / "TestMaterials", working_materials() / "UpdatedTestMaterials", fs::copy_options::recursive);
+    check_equivalence(LINE(""), working_materials() / "UpdatedTestMaterials", predictive_materials() / "UpdatedTestMaterials");
   }
 }

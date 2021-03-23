@@ -20,8 +20,6 @@ namespace sequoia::testing
 
   void foo_test::run_tests()
   {
-    check(LINE(""), false);
-
     namespace fs = std::filesystem;
     for(auto& e : fs::recursive_directory_iterator(working_materials()))
     {
@@ -30,7 +28,16 @@ namespace sequoia::testing
         if(std::string text{read_to_string(e.path())}; !text.empty())
         {
           replace_all(text, "Old", "Updated");
+		  write_to_file(e.path(), text);
         }
+      }
+    }
+	
+	for(auto& e : fs::directory_iterator(working_materials()))
+    {
+      if(fs::is_directory(e))
+      {
+        check_equivalence(LINE(""), e.path(), predictive_materials() / *(--e.path().end()));
       }
     }
   }
