@@ -2,14 +2,14 @@
 Running tests...
 
 Utilities:
-[0 (0)ms]
+[2 (0)ms]
 Maybe:
-[1 (0)ms]
+[25 (0)ms]
 Foo:
-[18 (15)ms]
+[59 (12)ms]
 	Standard Top Level Checks:                 3;  Failures:  3  [Deep checks: 40]
 
-	Tests/Stuff/FooTest.cpp, Line 40
+	Tests/Stuff/FooTest.cpp, Line 46
 
 	Comparison performed using:
 	[sequoia::testing::equivalence_checker<std::filesystem::path>]
@@ -17,9 +17,9 @@ Foo:
 	[std::filesystem::path]
 
 	  Contents of
-	  /Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/NoSeqpat/baz.txt
+	  C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/NoSeqpat/baz.txt
 	  vs
-	  /Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/NoSeqpat/baz.txt
+	  C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/NoSeqpat/baz.txt
 
 	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
 	  operator== returned false
@@ -35,9 +35,9 @@ Foo:
 	    Predicted: Old
 
 	  Contents of
-	  /Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/NoSeqpat/baz2.txt
+	  C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/NoSeqpat/baz2.txt
 	  vs
-	  /Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/NoSeqpat/baz2.txt
+	  C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/NoSeqpat/baz2.txt
 
 	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
 	  operator== returned false
@@ -55,7 +55,7 @@ Foo:
 	=======================================
 
 
-	Tests/Stuff/FooTest.cpp, Line 40
+	Tests/Stuff/FooTest.cpp, Line 46
 
 	Comparison performed using:
 	[sequoia::testing::equivalence_checker<std::filesystem::path>]
@@ -63,27 +63,9 @@ Foo:
 	[std::filesystem::path]
 
 	  Contents of
-	  /Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RetainedSeqpat/foo.txt
+	  C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RemovedSeqpat/bar2.txt
 	  vs
-	  /Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RetainedSeqpat/foo.txt
-
-	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
-	  operator== returned false
-
-	    First difference detected at character 0:
-	    [char]
-	    operator== returned false
-	    Obtained : U
-	    Predicted: O
-
-	    Full strings:
-	    Obtained : Updated
-	    Predicted: Old
-
-	  Contents of
-	  /Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RetainedSeqpat/foo2.txt
-	  vs
-	  /Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RetainedSeqpat/foo2.txt
+	  C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RemovedSeqpat/bar2.txt
 
 	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
 	  operator== returned false
@@ -101,7 +83,7 @@ Foo:
 	=======================================
 
 
-	Tests/Stuff/FooTest.cpp, Line 40
+	Tests/Stuff/FooTest.cpp, Line 46
 
 	Comparison performed using:
 	[sequoia::testing::equivalence_checker<std::filesystem::path>]
@@ -109,9 +91,27 @@ Foo:
 	[std::filesystem::path]
 
 	  Contents of
-	  /Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RemovedSeqpat/bar2.txt
+	  C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RetainedSeqpat/foo.txt
 	  vs
-	  /Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RemovedSeqpat/bar2.txt
+	  C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RetainedSeqpat/foo.txt
+
+	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
+	  operator== returned false
+
+	    First difference detected at character 0:
+	    [char]
+	    operator== returned false
+	    Obtained : U
+	    Predicted: O
+
+	    Full strings:
+	    Obtained : Updated
+	    Predicted: Old
+
+	  Contents of
+	  C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RetainedSeqpat/foo2.txt
+	  vs
+	  C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RetainedSeqpat/foo2.txt
 
 	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
 	  operator== returned false
@@ -130,12 +130,12 @@ Foo:
 
 
 Container:
-[1 (0)ms]
+[4 (0)ms]
 House:
-[0 (0)ms]
+[1 (0)ms]
 
 -----------Grand Totals-----------
-[23 (15)ms]
+[94 (12)ms]
 	Standard Top Level Checks:                 3;  Failures:  3  [Deep checks: 40]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

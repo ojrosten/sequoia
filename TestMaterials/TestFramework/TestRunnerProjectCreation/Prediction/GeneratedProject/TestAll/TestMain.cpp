@@ -23,7 +23,7 @@ int main(int argc, char** argv)
                        root/"TestAll"/"TestMain.cpp",
                        root/"TestAll"/"TestMain.cpp",
                        repositories(root)
-    };    
+    };
  
     runner.execute();
   }
@@ -35,7 +35,7 @@ int main(int argc, char** argv)
   {
     std::cout << "Unrecognized error\n"; 
   }
-  
+
   return 0;
 }
 

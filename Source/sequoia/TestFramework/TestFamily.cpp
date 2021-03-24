@@ -139,30 +139,27 @@ namespace sequoia::testing
 
     for(const auto& update : updateables)
     {
-      if(updateMode == update_mode::soft)
+      for(auto& p : fs::recursive_directory_iterator(update.predictions))
       {
-        for(auto& p : fs::recursive_directory_iterator(update.predictions))
+        if(fs::is_regular_file(p) && ((p.path().extension() == seqpat) || (p.path().filename() == ".keep")))
         {
-          if(fs::is_regular_file(p) && ((p.path().extension() == seqpat) || (p.path().filename() == ".keep")))
-          {
-            const auto predRelDir{fs::relative(p.path().parent_path(), update.predictions)};
-            const auto workingSubdir{update.workingMaterials / predRelDir};
+          const auto predRelDir{fs::relative(p.path().parent_path(), update.predictions)};
+          const auto workingSubdir{update.workingMaterials / predRelDir};
 
-            if(p.path().extension() == seqpat)
+          if(p.path().extension() == seqpat)
+          {
+            for(auto& w : fs::directory_iterator(workingSubdir))
             {
-              for(auto& w : fs::directory_iterator(workingSubdir))
+              if((w.path().stem() == p.path().stem()) && (w.path().extension() != seqpat))
               {
-                if((w.path().stem() == p.path().stem()) && (w.path().extension() != seqpat))
-                {
-                  fs::copy(p, workingSubdir, fs::copy_options::overwrite_existing);
-                  break;
-                }
+                fs::copy(p, workingSubdir, fs::copy_options::overwrite_existing);
+                break;
               }
             }
-            else if(p.path().filename() == ".keep")
-            {
-              fs::copy(p, workingSubdir, fs::copy_options::overwrite_existing);
-            }
+          }
+          else if(p.path().filename() == ".keep")
+          {
+            fs::copy(p, workingSubdir, fs::copy_options::overwrite_existing);
           }
         }
       }

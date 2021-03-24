@@ -435,6 +435,6 @@ namespace sequoia::testing
 
     void generate_test_main(std::string_view copyright, const std::filesystem::path& path) const;
 
-    void generate_build_system_files(const std::filesystem::path& path, std::string_view filename, std::string_view pattern) const;
+    void generate_build_system_files(const std::filesystem::path& path) const;
  };
 }

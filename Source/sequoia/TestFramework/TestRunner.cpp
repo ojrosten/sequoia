@@ -539,7 +539,7 @@ namespace sequoia::testing
                 { {"test", {"t"}, {"test_family_name"},
                     [this](const param_list& args) { m_SelectedFamilies.emplace(args.front(), false); }
                   },
-                  {"source", {"s"}, {"source_file_name"},
+                  {"select", {"s"}, {"source_file_name"},
                     [this](const param_list& args) {
                       m_SelectedSources.emplace_back(fs::path{args.front()}.lexically_normal(), false);
                     }
@@ -570,13 +570,9 @@ namespace sequoia::testing
                     [this](const param_list& args) {
                       init_project(args[0], args[1]);
                     }
-                  },                  
+                  },
                   {"update-materials", {"u"}, {},
-                    [this](const param_list&) {
-                      if(m_UpdateMode != update_mode::hard)
-                        m_UpdateMode = update_mode::soft;
-                    },
-                   { {{"--hard"}, {}, {},  [this](const param_list&) { m_UpdateMode = update_mode::hard; }} }
+                    [this](const param_list&) { m_UpdateMode = update_mode::soft; }
                   },
                   {"--async", {"-a"}, {},
                     [this](const param_list&) {
@@ -879,7 +875,7 @@ namespace sequoia::testing
     fs::copy(aux_files_path(m_ProjectRoot), aux_files_path(path), fs::copy_options::recursive | fs::copy_options::skip_existing);
 
     generate_test_main(copyright, path);
-    generate_build_system_files(path, "CMakeLists.txt", "SEQUOIA_ROOT");
+    generate_build_system_files(path);
   }
 
   void test_runner::generate_test_main(std::string_view copyright, const std::filesystem::path& path) const
@@ -898,8 +894,9 @@ namespace sequoia::testing
     write_to_file(file, text);
   }
 
-  void test_runner::generate_build_system_files(const std::filesystem::path& path, std::string_view filename, std::string_view pattern) const
+  void test_runner::generate_build_system_files(const std::filesystem::path& path) const
   {
+    const std::string filename{"CMakeLists.txt"}, pattern{"SEQUOIA_ROOT"};
     const auto destination{std::filesystem::path{"TestAll"}.append(filename)};
     const auto file{path/destination}; 
     std::string text{read_to_string(file)};

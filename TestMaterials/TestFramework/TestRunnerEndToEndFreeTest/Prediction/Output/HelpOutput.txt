@@ -1,5 +1,5 @@
 test | t | test_family_name
-source | s | source_file_name
+select | s | source_file_name
 create | c |
   regular_test | regular | qualified::class_name<class T> equivalent_type
     --equivalent-type | -e | equivalent_type
@@ -28,7 +28,6 @@ create | c |
     --family | -f | family
 init | i | copyright path
 update-materials | u |
-  --hard
 --async | -a |
 --async-depth | -ad | depth [0-2]
 --verbose | -v |

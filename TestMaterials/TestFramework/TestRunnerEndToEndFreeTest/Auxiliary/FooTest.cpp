@@ -32,13 +32,18 @@ namespace sequoia::testing
         }
       }
     }
-	
+
+    std::vector<fs::path> dirs{};
     for(auto& e : fs::directory_iterator(working_materials()))
     {
-      if(fs::is_directory(e))
-      {
-        check_equivalence(LINE(""), e.path(), predictive_materials() / *(--e.path().end()));
-      }
+      if(fs::is_directory(e)) dirs.push_back(e);
+    }
+
+    std::sort(dirs.begin(), dirs.end());
+
+    for(const auto& dir : dirs)
+    {
+      check_equivalence(LINE(""), dir, predictive_materials() / *(--dir.end()));
     }
   }
 }
