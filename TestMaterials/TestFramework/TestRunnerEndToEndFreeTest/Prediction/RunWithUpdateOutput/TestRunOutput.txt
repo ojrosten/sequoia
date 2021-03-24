@@ -4,9 +4,9 @@ Running tests...
 Utilities:
 [0 (0)ms]
 Maybe:
-[1 (0)ms]
+[0 (0)ms]
 Foo:
-[12 (11)ms]
+[21 (11)ms]
 	Standard Top Level Checks:                 3;  Failures:  3  [Deep checks: 40]
 
 	Tests/Stuff/FooTest.cpp, Line 40
@@ -130,12 +130,12 @@ Foo:
 
 
 Container:
-[1 (0)ms]
+[0 (0)ms]
 House:
 [0 (0)ms]
 
 -----------Grand Totals-----------
-[16 (11)ms]
+[25 (11)ms]
 	Standard Top Level Checks:                 3;  Failures:  3  [Deep checks: 40]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

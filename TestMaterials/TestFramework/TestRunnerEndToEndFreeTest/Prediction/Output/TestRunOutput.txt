@@ -2,11 +2,11 @@
 Running tests...
 
 Utilities:
-[0 (0)ms]
+[1 (0)ms]
 Maybe:
 [1 (0)ms]
 Foo:
-[2 (0)ms]
+[1 (0)ms]
 Container:
 [1 (0)ms]
 House:
