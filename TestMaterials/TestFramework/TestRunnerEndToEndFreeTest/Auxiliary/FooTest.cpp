@@ -28,12 +28,12 @@ namespace sequoia::testing
         if(std::string text{read_to_string(e.path())}; !text.empty())
         {
           replace_all(text, "Old", "Updated");
-		  write_to_file(e.path(), text);
+          write_to_file(e.path(), text);
         }
       }
     }
 	
-	for(auto& e : fs::directory_iterator(working_materials()))
+    for(auto& e : fs::directory_iterator(working_materials()))
     {
       if(fs::is_directory(e))
       {
