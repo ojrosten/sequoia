@@ -206,7 +206,7 @@ namespace sequoia::testing
       }
     };
 
-    commandline_arguments args{"", "init", "Oliver Jacob Rosten", generated().string()};
+    commandline_arguments args{"", "init", "Oliver Jacob Rosten", "DummyProject", generated().string()};
 
     std::stringstream outputStream{};
     test_runner tr{args.size(), args.get(), "Oliver J. Rosten", testMain, includeTarget, repos, outputStream};

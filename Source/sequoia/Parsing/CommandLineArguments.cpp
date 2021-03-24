@@ -156,8 +156,11 @@ namespace sequoia::parsing::commandline
 
       for(const auto& p : opt.parameters)
       {
-        help.append(" ").append(p);
+        help.append(" ").append(p).append(",");
       }
+
+      if(!help.empty() && (help.back() == ','))
+        help.pop_back();
 
       help += "\n";
       help += indent(generate_help(opt.nested_options), indentation{"  "});

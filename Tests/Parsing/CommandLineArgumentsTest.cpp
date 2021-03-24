@@ -186,7 +186,7 @@ namespace sequoia::testing
       check_weak_equivalence(LINE("Multi-option help"),
                              parse(a.size(), a.get(), { {"create",  {"-c"}, {"class_name", "directory"}, fo{}},
                                                         {"--async", {}, {}, fo{}} }),
-                             outcome{"foo", {}, "create | -c | class_name directory\n--async\n"});
+                             outcome{"foo", {}, "create | -c | class_name, directory\n--async\n"});
     }
 
     {
@@ -195,7 +195,7 @@ namespace sequoia::testing
       check_weak_equivalence(LINE("Multi-option help"),
                              argument_parser(a.size(), a.get(), { {"create",  {"-c"}, {"class_name", "directory"}, fo{}},
                                                         {"--async", {}, {}, fo{}} }),
-                             outcome{"foo", {}, "create | -c | class_name directory\n--async\n"});
+                             outcome{"foo", {}, "create | -c | class_name, directory\n--async\n"});
     }
   }
 
@@ -359,7 +359,7 @@ namespace sequoia::testing
                                       }
                                    }),
                              outcome{"", {}, "create | c |\n  regular_test | regular | "
-                                               "qualified::class_name<class T> equivalent_type\n"});
+                                               "qualified::class_name<class T>, equivalent_type\n"});
     }
 
     {
@@ -377,7 +377,7 @@ namespace sequoia::testing
                                       }
                                    }),
                              outcome{"", {{fo{}, nullptr, {}}}, "regular_test | regular | "
-                                             "qualified::class_name<class T> equivalent_type\n"});
+                                             "qualified::class_name<class T>, equivalent_type\n"});
     }
   }
 }

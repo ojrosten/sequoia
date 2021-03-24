@@ -87,6 +87,9 @@ namespace sequoia::testing
 
   std::string& replace_all(std::string& text, std::string_view from, std::string_view to);
 
+  [[nodiscard]]
+  std::string replace_all(std::string_view text, std::string_view from, std::string_view to);
+
   struct replacement
   {
     std::string_view from, to;

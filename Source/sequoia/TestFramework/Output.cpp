@@ -190,6 +190,13 @@ namespace sequoia::testing
     return text;
   }
 
+  [[nodiscard]]
+  std::string replace_all(std::string_view text, std::string_view from, std::string_view to)
+  {
+    std::string str{text};
+    return replace_all(str, from, to);
+  }
+
   std::string& replace_all(std::string& text, std::initializer_list<replacement> data)
   {
     for(const auto& r : data)

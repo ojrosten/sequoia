@@ -566,9 +566,9 @@ namespace sequoia::testing
                    },
                    [this](const param_list&) { std::visit(variant_visitor{[](auto& nascent){ nascent.finalize();}}, m_NascentTests.back()); }
                   },
-                  {"init", {"i"}, {"copyright", "path"},
+                  {"init", {"i"}, {"copyright", "cmake project name", "path"},
                     [this](const param_list& args) {
-                      init_project(args[0], args[1]);
+                      init_project(args[0], args[1], args[2]);
                     }
                   },
                   {"update-materials", {"u"}, {},
@@ -864,7 +864,7 @@ namespace sequoia::testing
     check_for_missing_tests();
   }
 
-  void test_runner::init_project(std::string_view copyright, const std::filesystem::path& path)
+  void test_runner::init_project(std::string_view copyright, std::string_view name, const std::filesystem::path& path)
   {
     namespace fs = std::filesystem;
 
@@ -875,7 +875,7 @@ namespace sequoia::testing
     fs::copy(aux_files_path(m_ProjectRoot), aux_files_path(path), fs::copy_options::recursive | fs::copy_options::skip_existing);
 
     generate_test_main(copyright, path);
-    generate_build_system_files(path);
+    generate_build_system_files(name, path);
   }
 
   void test_runner::generate_test_main(std::string_view copyright, const std::filesystem::path& path) const
@@ -894,22 +894,33 @@ namespace sequoia::testing
     write_to_file(file, text);
   }
 
-  void test_runner::generate_build_system_files(const std::filesystem::path& path) const
+  void test_runner::generate_build_system_files(std::string_view name, const std::filesystem::path& path) const
   {
-    const std::string filename{"CMakeLists.txt"}, pattern{"SEQUOIA_ROOT"};
+    const std::string filename{"CMakeLists.txt"}, seqRoot{"SEQUOIA_ROOT"};
     const auto destination{std::filesystem::path{"TestAll"}.append(filename)};
     const auto file{path/destination}; 
     std::string text{read_to_string(file)};
 
     constexpr auto npos{std::string::npos};
-    if(auto rootPos{text.find(pattern)}; rootPos != npos)
-    {
-      text.replace(rootPos, pattern.size(), m_ProjectRoot.generic_string());
-    }
-    else
+    auto replace{
+      [](std::string& text, std::string_view pat, std::string_view replacement) -> bool {
+        if(auto pos{text.find(pat)}; pos != npos)
+        {
+          text.replace(pos, pat.size(), replacement);
+          return true;
+        }
+
+        return false;
+      }
+    };
+
+    if(!replace(text, seqRoot,  m_ProjectRoot.generic_string()))
     {
       throw std::runtime_error{std::string{"Unable to locate "}.append(filename).append(" root definition")};
     }
+
+    const std::string myProj{"MyProject"}, projName{replace_all(name, " ", "_")};
+    replace(text, myProj, projName);
 
     write_to_file(file, text);
     write_to_file(project_template_path(path) / destination, text);

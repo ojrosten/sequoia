@@ -1,12 +1,12 @@
 test | t | test_family_name
 select | s | source_file_name
 create | c |
-  regular_test | regular | qualified::class_name<class T> equivalent_type
+  regular_test | regular | qualified::class_name<class T>, equivalent_type
     --equivalent-type | -e | equivalent_type
     --host-directory | -h | host_directory
     --family | -f | family
     --class-header | -ch | class_header
-  move_only_test | move_only | qualified::class_name<class T> equivalent_type
+  move_only_test | move_only | qualified::class_name<class T>, equivalent_type
     --equivalent-type | -e | equivalent_type
     --host-directory | -h | host_directory
     --family | -f | family
@@ -26,7 +26,7 @@ create | c |
   performance_test | performance | header
     --host-directory | -h | host_directory
     --family | -f | family
-init | i | copyright path
+init | i | copyright, cmake project name, path
 update-materials | u |
 --async | -a |
 --async-depth | -ad | depth [0-2]
