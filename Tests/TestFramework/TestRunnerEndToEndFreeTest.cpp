@@ -242,13 +242,13 @@ namespace sequoia::testing
     check_equivalence(LINE(""), working_materials() / "Output", predictive_materials() / "Output");
 
     fs::copy(auxiliary_materials() / "TestMaterials", generated() / "TestMaterials", fs::copy_options::recursive | fs::copy_options::overwrite_existing);
-
     fs::copy(auxiliary_materials() / "FooTest.cpp", generated() / "Tests" / "Stuff", fs::copy_options::overwrite_existing);
     fs::last_write_time(generated() / "Tests" / "Stuff" / "FooTest.cpp", fs::file_time_type::clock::now());
     fs::create_directory(working_materials() / "RebuiltOutput");
 
     const auto rebuildRun{b.rebuild_run(working_materials() / "RebuiltOutput")};
     std::system(rebuildRun.cmd.c_str());
+
     check(LINE("Third CMake output existance"), fs::exists(rebuildRun.cmake_output));
     check(LINE("Third build output existance"), fs::exists(rebuildRun.build_output));
 
@@ -256,9 +256,12 @@ namespace sequoia::testing
 
     fs::copy(generated() / "TestMaterials", working_materials() / "OriginalTestMaterials", fs::copy_options::recursive);
     check_equivalence(LINE(""), working_materials() / "OriginalTestMaterials", predictive_materials() / "OriginalTestMaterials");
-    fs::create_directory(working_materials() / "RunWithUpdateOutput");
 
+    fs::create_directory(working_materials() / "RunWithUpdateOutput");
     std::system(b.materials_update(working_materials() / "RunWithUpdateOutput").c_str());
+
+    check_equivalence(LINE(""), working_materials() / "RunWithUpdateOutput", predictive_materials() / "RunWithUpdateOutput");
+
     fs::copy(generated() / "TestMaterials", working_materials() / "UpdatedTestMaterials", fs::copy_options::recursive);
     check_equivalence(LINE(""), working_materials() / "UpdatedTestMaterials", predictive_materials() / "UpdatedTestMaterials");
   }
