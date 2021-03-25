@@ -276,7 +276,7 @@ namespace sequoia::testing
     fs::create_directory(working_materials() / "RunWithUpdateOutput");
     std::system(b.materials_update(working_materials() / "RunWithUpdateOutput").c_str());
     check_equivalence(LINE("Test Runner Output"), working_materials() / "RunWithUpdateOutput", predictive_materials() / "RunWithUpdateOutput");
-    
+
     fs::copy(generated() / "TestMaterials", working_materials() / "UpdatedTestMaterials", fs::copy_options::recursive);
     check_equivalence(LINE("Updated Test Materials"), working_materials() / "UpdatedTestMaterials", predictive_materials() / "UpdatedTestMaterials");
 
@@ -284,7 +284,7 @@ namespace sequoia::testing
     fs::create_directory(working_materials() / "RunPostUpdate");
     std::system(b.dump(working_materials() / "RunPostUpdate").c_str());
     check_equivalence(LINE("Test Runner Output"), working_materials() / "RunPostUpdate", predictive_materials() / "RunPostUpdate");
-    
+
     fs::create_directory(working_materials() / "Dump");
     fs::copy(generated() / "output" / "Recovery" / "Dump.txt", working_materials() / "Dump");
     check_equivalence(LINE("Dump File"), working_materials() / "Dump", predictive_materials() / "Dump");
