@@ -1,0 +1,45 @@
+
+Running tests...
+
+Utilities:
+[4 (0)ms]
+Maybe:
+[7 (0)ms]
+Foo:
+[28 (21)ms]
+	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
+
+******  Critical Failures:  1  ******
+
+
+	Error -- Unexpected Exception:
+	Detailed equivalance check for paths of type not found not currently implemented
+
+	Exception thrown during last check
+	Last Recorded Message:
+
+	Tests/Stuff/FooTest.cpp, Line 37
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<std::filesystem::path>]
+	With equivalent types:
+	[std::filesystem::path]
+
+	=======================================
+
+Container:
+[7 (0)ms]
+House:
+[3 (0)ms]
+
+-----------Grand Totals-----------
+[53 (21)ms]
+	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
+	Standard Performance Checks:               0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
+	False Positive Checks:                     0;  Failures:  0
+	False Positive Performance Checks:         0;  Failures:  0
+
+******  Critical Failures:  1  ******
+

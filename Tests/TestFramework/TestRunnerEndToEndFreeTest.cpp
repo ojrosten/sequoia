@@ -304,5 +304,21 @@ namespace sequoia::testing
     fs::create_directory(working_materials() / "Recovery");
     fs::copy(generated() / "output" / "Recovery" / "Recovery.txt", working_materials() / "Recovery");
     check_equivalence(LINE("Recovery File"), working_materials() / "Recovery", predictive_materials() / "Recovery");
+
+    // Rename generated() / TestMaterials / Stuff / FooTest / Prediction / RepresentativeCases,
+    // in order to cause the check in FooTest.cpp to throw mid-check, thereby allowing the recovery
+    // mode to be tested.
+
+    const auto generatedPredictive{generated() / "TestMaterials" / "Stuff" / "FooTest" / "Prediction"};
+    fs::copy(generatedPredictive / "RepresentativeCases", generatedPredictive / "RepresentativeCasesTemp", fs::copy_options::recursive);
+    fs::remove_all(generatedPredictive / "RepresentativeCases");
+
+    fs::create_directory(working_materials() / "RunRecoveryMidCheck");
+    std::system(b.recovery(working_materials() / "RunRecoveryMidCheck").c_str());
+    check_equivalence(LINE("Test Runner Output"), working_materials() / "RunRecoveryMidCheck", predictive_materials() / "RunRecoveryMidCheck");
+
+    fs::create_directory(working_materials() / "RecoveryMidCheck");
+    fs::copy(generated() / "output" / "Recovery" / "Recovery.txt", working_materials() / "RecoveryMidCheck");
+    check_equivalence(LINE("Recovery File"), working_materials() / "RecoveryMidCheck", predictive_materials() / "RecoveryMidCheck");
   }
 }
