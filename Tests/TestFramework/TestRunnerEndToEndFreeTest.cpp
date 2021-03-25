@@ -166,6 +166,12 @@ namespace sequoia::testing
       {
         return cd(buildDir) && add_output_file(run_cmd().append(" --dump"), output / "TestRunOutput.txt");
       }
+
+      [[nodiscard]]
+      std::string recovery(const std::filesystem::path& output) const
+      {
+        return cd(buildDir) && add_output_file(run_cmd().append(" --recovery"), output / "TestRunOutput.txt");
+      }
     private:
       [[nodiscard]]
       cmake_and_build_command cmake_and_build(std::string_view cmakeOut, std::string_view buildOut) const
@@ -274,7 +280,7 @@ namespace sequoia::testing
     fs::copy(generated() / "TestMaterials", working_materials() / "UpdatedTestMaterials", fs::copy_options::recursive);
     check_equivalence(LINE("Updated Test Materials"), working_materials() / "UpdatedTestMaterials", predictive_materials() / "UpdatedTestMaterials");
 
-    // Rerun and do a dump 
+    // Rerun and do a dump
     fs::create_directory(working_materials() / "RunPostUpdate");
     std::system(b.dump(working_materials() / "RunPostUpdate").c_str());
     check_equivalence(LINE("Test Runner Output"), working_materials() / "RunPostUpdate", predictive_materials() / "RunPostUpdate");
@@ -283,5 +289,20 @@ namespace sequoia::testing
     fs::copy(generated() / "output" / "Recovery" / "Dump.txt", working_materials() / "Dump");
     check_equivalence(LINE("Dump File"), working_materials() / "Dump", predictive_materials() / "Dump");
 
+    // Rename generated() / TestMaterials / Stuff / FooTest / WorkingCopy / RepresentativeCases,
+    // in order to cause the check in FooTest.cpp to throw, thereby allowing the recovery
+    // mode to be tested.
+
+    const auto generatedWorkingCopy{generated() / "TestMaterials" / "Stuff" / "FooTest" / "WorkingCopy"};
+    fs::copy(generatedWorkingCopy / "RepresentativeCases", generatedWorkingCopy / "RepresentativeCasesTemp", fs::copy_options::recursive);
+    fs::remove_all(generatedWorkingCopy / "RepresentativeCases");
+
+    fs::create_directory(working_materials() / "RunRecovery");
+    std::system(b.recovery(working_materials() / "RunRecovery").c_str());
+    check_equivalence(LINE("Test Runner Output"), working_materials() / "RunRecovery", predictive_materials() / "RunRecovery");
+
+    fs::create_directory(working_materials() / "Recovery");
+    fs::copy(generated() / "output" / "Recovery" / "Recovery.txt", working_materials() / "Recovery");
+    check_equivalence(LINE("Recovery File"), working_materials() / "Recovery", predictive_materials() / "Recovery");
   }
 }

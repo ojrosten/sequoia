@@ -1,0 +1,9 @@
+Check started:
+Tests/Stuff/FooTest.cpp, Line 37
+
+Comparison performed using:
+[sequoia::testing::equivalence_checker<std::filesystem::path>]
+With equivalent types:
+[std::filesystem::path]
+
+Check ended

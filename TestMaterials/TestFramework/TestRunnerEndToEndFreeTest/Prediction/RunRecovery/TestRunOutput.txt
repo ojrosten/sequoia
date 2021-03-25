@@ -1,0 +1,44 @@
+
+Running tests...
+
+Utilities:
+[1 (0)ms]
+Maybe:
+[3 (0)ms]
+Foo:
+[26 (14)ms]
+	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
+
+	Tests/Stuff/FooTest.cpp, Line 37
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<std::filesystem::path>]
+	With equivalent types:
+	[std::filesystem::path]
+
+	  Path type
+	  C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases
+	  vs
+	  C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases
+
+	  [std::filesystem::file_type]
+	  operator== returned false
+	  Obtained : not found
+	  Predicted: directory
+
+	=======================================
+
+
+Container:
+[4 (0)ms]
+House:
+[2 (0)ms]
+
+-----------Grand Totals-----------
+[38 (14)ms]
+	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
+	Standard Performance Checks:               0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
+	False Positive Checks:                     0;  Failures:  0
+	False Positive Performance Checks:         0;  Failures:  0
