@@ -83,7 +83,7 @@ namespace sequoia::testing
 
     check_exception_thrown<std::logic_error>(LINE("Can't construct queue of depth 2 with 3 elements"), []() { static_queue<int, 2>{1, 2, 3}; });
 
-    check_equality(LINE(""), a.size(), 0ul);
+    check_equality(LINE(""), a.size(), 0_sz);
     check(LINE(""), a.empty());
     
     a.push(5);

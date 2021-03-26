@@ -29,7 +29,7 @@ namespace sequoia::testing
     static_queue<int, 0> s{};
 
     check(LINE("Empty queue must be empty"), !s.empty());
-    check_equality(LINE("Empty queue must have size zero"), s.size(), 1ul);
+    check_equality(LINE("Empty queue must have size zero"), s.size(), 1_sz);
   }
   
   void test_static_queue_false_positives::check_depth_1()

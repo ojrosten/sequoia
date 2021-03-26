@@ -219,7 +219,7 @@ namespace sequoia::testing
     using value_type = typename std::iterator_traits<Iter>::value_type;
     using deref_pol = typename CustomIter::dereference_policy;
 
-    if(!check_equality(LINE(append_lines(message, "Contract violated")), distance(begin, end), long{3}))
+    if(!check_equality(LINE(append_lines(message, "Contract violated")), distance(begin, end), ptrdiff_t{3}))
       return;
     
     CustomIter i{begin, args...};

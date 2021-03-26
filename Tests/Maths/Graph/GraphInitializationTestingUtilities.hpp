@@ -36,11 +36,11 @@ namespace sequoia
       {
         if constexpr(std::is_empty_v<NodeWeight>)
         {
-          m_Checker.template check_graph(description, g, connPrediction);
+          m_Checker.check_graph(description, g, connPrediction);
         }
         else
         {
-          m_Checker.template check_graph(description, g, connPrediction, nodePrediction);
+          m_Checker.check_graph(description, g, connPrediction, nodePrediction);
         }
       }
 

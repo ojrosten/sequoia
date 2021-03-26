@@ -61,13 +61,13 @@ namespace sequoia::testing
     check_equality(LINE(""), e, f);
     check_equality(LINE(""), g, h);
        
-    check_equality(LINE("Size 0 should not compare equal to 1"), d.size(), 1ul);
-    check_equality(LINE("Size 1 should not compare equal to 0"), e.size(), 0ul);
+    check_equality(LINE("Size 0 should not compare equal to 1"), d.size(), 1_sz);
+    check_equality(LINE("Size 1 should not compare equal to 0"), e.size(), 0_sz);
 
-    check_equality(LINE(""), d.num_partitions(), 1ul);
-    check_equality(LINE(""), e.num_partitions(), 0ul);
-    check_equality(LINE(""), g.num_partitions(), 2ul);
-    check_equality(LINE(""), h.num_partitions(), 1ul);
+    check_equality(LINE(""), d.num_partitions(), 1_sz);
+    check_equality(LINE(""), e.num_partitions(), 0_sz);
+    check_equality(LINE(""), g.num_partitions(), 2_sz);
+    check_equality(LINE(""), h.num_partitions(), 1_sz);
 
     check_equality(LINE(""), *e.begin_partition(0), value_type{2});
     check_equality(LINE(""), *e.cbegin_partition(0), value_type{2});

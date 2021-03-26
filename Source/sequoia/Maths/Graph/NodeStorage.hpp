@@ -32,7 +32,7 @@ namespace sequoia::maths::graph_impl
 
   template<class Iterator>
   struct proxy_dereference_policy
-  {        
+  {
     using proxy_reference = typename std::iterator_traits<Iterator>::reference;
     using proxy_pointer = typename std::iterator_traits<Iterator>::pointer;
 
@@ -63,10 +63,10 @@ namespace sequoia::maths::graph_impl
   class node_storage : private WeightMaker
   {
     friend struct sequoia::impl::assignment_helper;
-    
+
   private:
     template<class S> using Container = typename Traits::template container_type<S>;
-  public:    
+  public:
     using weight_proxy_type          = typename WeightMaker::proxy;
     using node_weight_container_type = Container<weight_proxy_type>;
     using weight_type                = typename weight_proxy_type::value_type;
@@ -394,7 +394,7 @@ namespace sequoia::maths::graph_impl
     constexpr node_weight_container_type make_default_array(std::index_sequence<Inds...>)
     {
       return { make_default_element(Inds)... };
-    }        
+    }
 
     [[nodiscard]]
     constexpr weight_proxy_type make_default_element(const std::size_t)
@@ -409,7 +409,7 @@ namespace sequoia::maths::graph_impl
       return WeightMaker::make(std::forward<Args>(args)...);
     }
   };
-  
+
   template<empty_proxy WeightMaker, class Traits>
   class node_storage<WeightMaker, Traits>
   {
@@ -433,5 +433,5 @@ namespace sequoia::maths::graph_impl
 
     constexpr node_storage& operator=(const node_storage&) noexcept = default;
     constexpr node_storage& operator=(node_storage&&)      noexcept = default;
-  };     
+  };
 }

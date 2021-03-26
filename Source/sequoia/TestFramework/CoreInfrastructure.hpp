@@ -13,6 +13,7 @@
  */
 
 #include "sequoia/Core/Meta/Concepts.hpp"
+#include "sequoia/PlatformSpecific/Preprocessor.hpp"
 
 #include <string>
 #include <sstream>
@@ -171,5 +172,12 @@ namespace sequoia::testing
   constexpr T operator^(T lhs, T rhs) noexcept
   {
     return static_cast<T>(static_cast<int>(lhs) ^ static_cast<int>(rhs));
+  }
+
+  [[nodiscard]]
+  SPECULATIVE_CONSTEVAL
+  std::size_t operator "" _sz(unsigned long long int n) noexcept
+  {
+    return static_cast<std::size_t>(n);
   }
 }

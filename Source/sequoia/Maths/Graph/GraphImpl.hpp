@@ -321,13 +321,13 @@ namespace sequoia
         : Connectivity{static_cast<Connectivity&&>(in), edgeAlloc}
         , Nodes{static_cast<Nodes&&>(in)}
       {}
-      
+
       ~graph_primitive() = default;
 
       constexpr graph_primitive& operator=(graph_primitive&&) noexcept = default;
-      
+
       constexpr graph_primitive& operator=(const graph_primitive& in)
-      {        
+      {
         if(&in != this)
         {
           using edge_storage = typename Connectivity::edge_storage_type;

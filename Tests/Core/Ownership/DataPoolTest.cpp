@@ -126,7 +126,7 @@ namespace sequoia::testing
     pool_t pool{};
     check_weak_equivalence(LINE(""), pool, prediction_t{});
 
-    check_equality(LINE(""), pool.size(), 0ul);
+    check_equality(LINE(""), pool.size(), 0_sz);
 
     auto elt = pool.make(3);
     // 3(1)

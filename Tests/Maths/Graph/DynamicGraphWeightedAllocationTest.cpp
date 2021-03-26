@@ -80,18 +80,18 @@ namespace sequoia::testing
     // null
     graph_t g{edge_allocator{}, edge_partitions_allocator{}, node_allocator{}};
 
-    check_equality(LINE(""), g.edges_capacity(), 0ul);
-    check_equality(LINE(""), g.node_capacity(), 0ul);
+    check_equality(LINE(""), g.edges_capacity(), 0_sz);
+    check_equality(LINE(""), g.node_capacity(), 0_sz);
 
     g.reserve_edges(4);
-    check_equality(LINE(""), g.edges_capacity(), 4ul);
+    check_equality(LINE(""), g.edges_capacity(), 4_sz);
 
     g.reserve_nodes(4);
-    check_equality(LINE(""), g.node_capacity(), 4ul);
+    check_equality(LINE(""), g.node_capacity(), 4_sz);
 
     g.shrink_to_fit();
-    check_equality(LINE("May fail if stl implementation doesn't actually shrink to fit!"), g.edges_capacity(), 0ul);
-    check_equality(LINE("May fail if stl implementation doesn't actually shrink to fit!"), g.node_capacity(), 0ul);
+    check_equality(LINE("May fail if stl implementation doesn't actually shrink to fit!"), g.edges_capacity(), 0_sz);
+    check_equality(LINE("May fail if stl implementation doesn't actually shrink to fit!"), g.node_capacity(), 0_sz);
       
     // x----x
     using edge_init_t = typename graph_t::edge_init_type;
@@ -176,22 +176,22 @@ namespace sequoia::testing
 
     this->template check_exception_thrown<std::out_of_range>(LINE(""), [&g](){ g.reserve_edges(0, 4);});
     this->template check_exception_thrown<std::out_of_range>(LINE(""), [&g](){ return g.edges_capacity(0);});
-    check_equality(LINE(""), g.node_capacity(), 0ul);
+    check_equality(LINE(""), g.node_capacity(), 0_sz);
 
     g.add_node();
     check_equality(LINE(""), g, graph_t{{{}}, edge_allocator{}, node_allocator{}});
 
-    check_equality(LINE(""), g.edges_capacity(0), 0ul);
-    check_equality(LINE(""), g.node_capacity(), 1ul);
+    check_equality(LINE(""), g.edges_capacity(0), 0_sz);
+    check_equality(LINE(""), g.node_capacity(), 1_sz);
     g.reserve_edges(0, 4);
-    check_equality(LINE(""), g.edges_capacity(0), 4ul);
+    check_equality(LINE(""), g.edges_capacity(0), 4_sz);
 
     g.reserve_nodes(4);
-    check_equality(LINE(""), g.node_capacity(), 4ul);
+    check_equality(LINE(""), g.node_capacity(), 4_sz);
 
     g.shrink_to_fit();
-    check_equality(LINE("May fail if stl implementation doesn't actually shrink to fit!"), g.edges_capacity(0), 0ul);
-    check_equality(LINE("May fail if stl implementation doesn't actually shrink to fit!"), g.node_capacity(), 1ul);
+    check_equality(LINE("May fail if stl implementation doesn't actually shrink to fit!"), g.edges_capacity(0), 0_sz);
+    check_equality(LINE("May fail if stl implementation doesn't actually shrink to fit!"), g.node_capacity(), 1_sz);
 
     g.insert_node(0u);
     check_equality(LINE(""), g, graph_t{{{}, {}}, edge_allocator{}, node_allocator{}});

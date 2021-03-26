@@ -53,6 +53,6 @@ namespace sequoia::testing
     
     
     constexpr auto val{s[2]};
-    check_equality(LINE(""), val, 7ul);
+    check_equality(LINE(""), val, 7_sz);
   }
 }

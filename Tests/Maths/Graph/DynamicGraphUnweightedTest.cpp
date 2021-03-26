@@ -54,7 +54,7 @@ namespace sequoia::testing
 
     check_exception_thrown<std::out_of_range>(LINE("swapping nodes throws for empty graph"), [&network]() { network.swap_nodes(0,0); });
           
-    check_equality(LINE("Index of added node is 0"), network.add_node(), 0ul);
+    check_equality(LINE("Index of added node is 0"), network.add_node(), 0_sz);
     //    0
     
     check_equality(LINE(""), network, graph_t{{}});
@@ -64,7 +64,7 @@ namespace sequoia::testing
 
     check_exception_thrown<std::out_of_range>(LINE("Index out of range for swapping nodes"), [&network]() { network.swap_nodes(0,1); });
     
-    check_equality(LINE("Index of added node is 1"), network.add_node(), 1ul);
+    check_equality(LINE("Index of added node is 1"), network.add_node(), 1_sz);
     //    0    1
 
     check_equality(LINE(""), network, graph_t{{}, {}});
@@ -135,7 +135,7 @@ namespace sequoia::testing
     }
     
     auto nodeNum{network.add_node()};
-    check_equality(LINE("Index of added node is 2"), nodeNum, 2ul);
+    check_equality(LINE("Index of added node is 2"), nodeNum, 2_sz);
     network.join(1, nodeNum);
     //    0----1----2
 
@@ -240,7 +240,7 @@ namespace sequoia::testing
     }
     
     nodeNum = network.add_node();
-    check_equality(LINE("Index of added node is 3"), nodeNum, 3ul);
+    check_equality(LINE("Index of added node is 3"), nodeNum, 3_sz);
     network.join(0, nodeNum);
     //    0----1----2
     //    |
@@ -813,7 +813,7 @@ namespace sequoia::testing
 
     check_equality(LINE(""), network, {});
 
-    check_equality(LINE("Node added back to graph"), network.add_node(), 0ul);
+    check_equality(LINE("Node added back to graph"), network.add_node(), 0_sz);
     // 0
     
     network.join(0, 0);
@@ -838,7 +838,7 @@ namespace sequoia::testing
       check_equality(LINE(""), network,  graph_t{{edge_init_t{0,1}, edge_init_t{0,0}}});
     }
 
-    check_equality(LINE("Prepend a node to the exising graph"), network.insert_node(0), 0ul);
+    check_equality(LINE("Prepend a node to the exising graph"), network.insert_node(0), 0_sz);
     //    /\
     //    \/
     // 0  0
@@ -914,10 +914,10 @@ namespace sequoia::testing
         
     graph_t network2;
       
-    check_equality(LINE("Node added to second network"), network2.add_node(), 0ul);
-    check_equality(LINE("Second node added to second network"), network2.add_node(), 1ul);
-    check_equality(LINE("Third node added to second network"), network2.add_node(), 2ul);
-    check_equality(LINE("Fourth node added to second network"), network2.add_node(), 3ul);
+    check_equality(LINE("Node added to second network"), network2.add_node(), 0_sz);
+    check_equality(LINE("Second node added to second network"), network2.add_node(), 1_sz);
+    check_equality(LINE("Third node added to second network"), network2.add_node(), 2_sz);
+    check_equality(LINE("Fourth node added to second network"), network2.add_node(), 3_sz);
 
     network2.join(0, 1);
     network2.join(3, 2);

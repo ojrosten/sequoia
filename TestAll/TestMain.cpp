@@ -45,15 +45,15 @@ int main(int argc, char** argv)
     );
 
     runner.add_test_family(
-      "Allocation Diagnostics",            
-      allocation_false_positive_diagnostics{"Alloction False Positive Diagnostics"},      
-      move_only_allocation_false_positive_diagnostics{"Move-Only Alloction False Positive Diagnostics"},   
+      "Allocation Diagnostics",
+      allocation_false_positive_diagnostics{"Alloction False Positive Diagnostics"},
+      move_only_allocation_false_positive_diagnostics{"Move-Only Alloction False Positive Diagnostics"},
       allocation_false_negative_diagnostics{"Allocation False Negative Diagnostics"},
       move_only_allocation_false_negative_diagnostics{"Move-Only Allocation False Negative Diagnostics"}
     );
 
     runner.add_test_family(
-      "Scoped Allocation Diagnostics",   
+      "Scoped Allocation Diagnostics",
       scoped_allocation_false_positive_diagnostics{"Scoped Allocation False Positive Diagnostics"},
       move_only_scoped_allocation_false_positive_diagnostics{"Move-Only Scoped Allocation False Positive Diagnostics"},    
       scoped_allocation_false_negative_diagnostics{"Scoped Allocation False Negative Diagnostics"},
@@ -61,20 +61,20 @@ int main(int argc, char** argv)
     );
 
     runner.add_test_family(
-      "Performance Diagnostics",      
-      performance_false_positive_diagnostics{"Performance False Positive Diagnostics"},      
+      "Performance Diagnostics",
+      performance_false_positive_diagnostics{"Performance False Positive Diagnostics"},
       performance_false_negative_diagnostics{"Performance False Negative Diagnostics"},
       performance_utilities_test{"Performance Utilities"}
     );
 
     runner.add_test_family(
-      "Fuzzy Diagnostics",            
-      fuzzy_false_positive_diagnostics{"Fuzzy False Positive Diagnostics"},     
+      "Fuzzy Diagnostics",
+      fuzzy_false_positive_diagnostics{"Fuzzy False Positive Diagnostics"},
       fuzzy_false_negative_diagnostics{"Fuzzy False Negative Diagnostics"}
     );
 
     runner.add_test_family(
-      "CommandLine Arguments",      
+      "CommandLine Arguments",
       commandline_arguments_false_positive_test{"False Positive Test"},
       commandline_arguments_test{"Unit Test"}
     );
@@ -86,11 +86,12 @@ int main(int argc, char** argv)
     );
 
     runner.add_test_family(
-      "Test Runner",      
+      "Test Runner",
       test_runner_false_positive_test{"False Positive Diagnostics"},
       test_runner_test("Functionality Test"),
       test_runner_test_creation{"Test Creation"},
-      test_runner_project_creation{"Project Creation"}
+      test_runner_project_creation{"Project Creation"},
+      test_runner_end_to_end_test{"End to End Test"}
     );
 
     runner.add_test_family(
@@ -137,7 +138,7 @@ int main(int argc, char** argv)
       "Protective Wrapper",
       uniform_wrapper_false_positive_test{"False Positive Diagnostics"},
       uniform_wrapper_test{"Unit Test"}
-    );    
+    );
 
     runner.add_test_family(
       "Data Pool",
@@ -199,7 +200,7 @@ int main(int argc, char** argv)
       "Graph",
       test_graph_false_positives{"Graph false positive diagnostics", mode},
       test_graph_meta("Meta Tests", mode),
-      test_graph_init("Dynamic Graph Init", mode),        
+      test_graph_init("Dynamic Graph Init", mode),
       test_static_graph{"Static Graph Init", mode},
       test_heterogeneous_static_graph{"Heterogeneous Static Graphs", mode},
       unweighted_graph_test{"Unweighted Graph Tests", mode},
@@ -208,7 +209,7 @@ int main(int argc, char** argv)
       weighted_graph_allocation_test{"Weighted Graph Allocation Tests", mode},
       test_fixed_topology{"Dynamic Graph Fixed Topology", mode},
       test_static_fixed_topology{"Static Graph Manipulations", mode},
-      test_edge_insertion{"Edge Insertions", mode}  
+      test_edge_insertion{"Edge Insertions", mode}
     );
 
     runner.add_test_family(

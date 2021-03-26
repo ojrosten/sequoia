@@ -70,9 +70,9 @@ namespace sequoia::testing
     graph_t graph;
 
     graph.reserve_nodes(4);
-    check_equality(LINE(""), graph.node_capacity(), 4ul);
+    check_equality(LINE(""), graph.node_capacity(), 4_sz);
     graph.shrink_to_fit();
-    check_equality(LINE("May fail if stl implementation doesn't actually shrink to fit!"), graph.node_capacity(), 0ul);
+    check_equality(LINE("May fail if stl implementation doesn't actually shrink to fit!"), graph.node_capacity(), 0_sz);
 
     // NULL
     check_exception_thrown<std::out_of_range>(LINE("No nodes to erase"), [&graph](){ graph.erase_node(0); });
@@ -82,7 +82,7 @@ namespace sequoia::testing
     
     check_equality(LINE(""), graph, graph_t{});
         
-    check_equality(LINE("Node added with weight i"), graph.add_node(0.0, 1.0), 0ul);
+    check_equality(LINE("Node added with weight i"), graph.add_node(0.0, 1.0), 0_sz);
     //   (i)
 
     check_equality(LINE(""), graph, graph_t{edge_init_list_t{{}}, {{0,1}}});
@@ -96,7 +96,7 @@ namespace sequoia::testing
 
     check_equality(LINE(""), graph, graph_t{});
 
-    check_equality(LINE("Node of weight i recreated"), graph.add_node(0.0, 1.0), 0ul);
+    check_equality(LINE("Node of weight i recreated"), graph.add_node(0.0, 1.0), 0_sz);
     //    (i)
 
     check_equality(LINE(""), graph, graph_t{edge_init_list_t{{}}, {{0,1}}});
@@ -308,7 +308,7 @@ namespace sequoia::testing
     }
 
 
-    check_equality(LINE(""), graph.add_node(), 1ul);
+    check_equality(LINE(""), graph.add_node(), 1_sz);
     //   /\ 1
     //   \/
     // (1.1-i4.3)   (0)
@@ -937,7 +937,7 @@ namespace sequoia::testing
       check_equality(LINE(""), graph, graph_t{{{edge_init_t{0,1,1}, edge_init_t{0,0,1}}}, {{}}});
     }
 
-    check_equality(LINE("Node with weight 1+i inserted into slot 0"), graph.insert_node(0, 1.0, 1.0), 0ul);
+    check_equality(LINE("Node with weight 1+i inserted into slot 0"), graph.insert_node(0, 1.0, 1.0), 0_sz);
     //       /\ 1
     //       \/
     // (1+i) (0)

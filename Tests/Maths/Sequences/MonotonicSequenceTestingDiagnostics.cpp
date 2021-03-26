@@ -30,8 +30,8 @@ namespace sequoia::testing
     check(LINE("Empty sequence should not report as non-empty"), !s.empty());
     check(LINE("Non-empty sequence should not report as empty"), t.empty());
 
-    check_equality(LINE("Empty sequence should not report non-zero size"), s.size(), 1ul);
-    check_equality(LINE("Non-Eepty sequence should not report zero size"), t.size(), 0ul);
+    check_equality(LINE("Empty sequence should not report non-zero size"), s.size(), 1_sz);
+    check_equality(LINE("Non-Eepty sequence should not report zero size"), t.size(), 0_sz);
 
     check_equality(LINE("Back element equal to 1 should not report as 2"), t.back(), 2);
     check_equality(LINE("Front element equal to 1 should not report as 2"), t.front(), 2);

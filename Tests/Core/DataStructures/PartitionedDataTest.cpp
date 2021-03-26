@@ -286,7 +286,7 @@ namespace sequoia
 
       check_equality(LINE(""), storage, Storage{{3}, {4}, {2, 9, -3}});
       check_equality(LINE(""), *iter, 2);
-      check_equality(LINE(""), iter.partition_index(), 2ul);
+      check_equality(LINE(""), iter.partition_index(), 2_sz);
 
       storage.swap_partitions(0,2);
       // [2, 9,-3][4][3]
@@ -303,14 +303,14 @@ namespace sequoia
 
       check_equality(LINE(""), storage, Storage{{3}, {4}, {2, 8, 9, -3}});
       check_equality(LINE(""), *iter, 8);
-      check_equality(LINE(""), iter.partition_index(), 2ul);
+      check_equality(LINE(""), iter.partition_index(), 2_sz);
 
       iter = storage.insert_to_partition(storage.begin_partition(2) + 4, 7);
       // [3][4][2, 8, 9,-3, 7]
 
       check_equality(LINE(""), storage, Storage{{3}, {4}, {2, 8, 9, -3, 7}});
       check_equality(LINE(""), *iter, 7);
-      check_equality(LINE(""), iter.partition_index(), 2ul);
+      check_equality(LINE(""), iter.partition_index(), 2_sz);
 
       storage.insert_to_partition(storage.cbegin_partition(2) + 5, 5);
       // [3][4][2, 8, 9,-3, 7, 5]
@@ -365,7 +365,7 @@ namespace sequoia
 
       check_equality(LINE(""), storage, Storage{{13, 3, -8}, {4}, {1, 2, 8, 9, -3, 7, 5}, {}});
       check_equality(LINE(""), *iter, 13);
-      check_equality(LINE(""), iter.partition_index(), 0ul);
+      check_equality(LINE(""), iter.partition_index(), 0_sz);
 
       storage.erase_from_partition(0, 2);
       // [13, 3][4][1, 2, 8, 9,-3, 7, 5][]
@@ -377,7 +377,7 @@ namespace sequoia
 
       check_equality(LINE(""), storage, Storage{{3}, {4}, {1, 2, 8, 9, -3, 7, 5}, {}});
       check_equality(LINE(""), *iter, 3);
-      check_equality(LINE(""), iter.partition_index(), 0ul);
+      check_equality(LINE(""), iter.partition_index(), 0_sz);
 
       storage.insert_to_partition(storage.cbegin_partition(2), -2);
       storage.insert_to_partition(storage.cbegin_partition(3), -2);
@@ -562,7 +562,7 @@ namespace sequoia
       };
       
       check(LINE(""), found2 == storage.cend_partition(0));
-      check_equality(LINE(""), storage.size(), 5ul);
+      check_equality(LINE(""), storage.size(), 5_sz);
 
       storage.push_back_to_partition(1, 7);
       storage.push_back_to_partition(1, --storage.cend_partition(1));
@@ -616,18 +616,18 @@ namespace sequoia
       
       
       check_equality(LINE(""), Handler<int>::get(vec[0]),*iter);
-      check_equality(LINE(""), iter.partition_index(), 4ul);
+      check_equality(LINE(""), iter.partition_index(), 4_sz);
 
       ++iter;
       check_equality(LINE(""), *iter, Handler<int>::get(vec[1]));
-      check_equality(LINE(""), iter.partition_index(), 4ul);
+      check_equality(LINE(""), iter.partition_index(), 4_sz);
 
       iter++;
       check_equality(LINE(""), *iter, Handler<int>::get(vec[2]));
 
       --iter;
       check_equality(LINE(""), *iter, Handler<int>::get(vec[1]));
-      check_equality(LINE(""), iter.partition_index(), 4ul);
+      check_equality(LINE(""), iter.partition_index(), 4_sz);
 
       iter--;
       check_equality(LINE(""), *iter, Handler<int>::get(vec[0]));
@@ -671,20 +671,20 @@ namespace sequoia
       using namespace data_structures;
        
       partitioned_sequence<T, Handler> s{};
-      check_equality(LINE(""), s.capacity(), 0ul);
-      check_equality(LINE(""), s.num_partitions_capacity(), 0ul);
+      check_equality(LINE(""), s.capacity(), 0_sz);
+      check_equality(LINE(""), s.num_partitions_capacity(), 0_sz);
 
       s.reserve(4);
-      check_equality(LINE(""), s.capacity(), 4ul);
-      check_equality(LINE(""), s.num_partitions_capacity(), 0ul);
+      check_equality(LINE(""), s.capacity(), 4_sz);
+      check_equality(LINE(""), s.num_partitions_capacity(), 0_sz);
 
       s.reserve_partitions(8);
-      check_equality(LINE(""), s.capacity(), 4ul);
-      check_equality(LINE(""), s.num_partitions_capacity(), 8ul);
+      check_equality(LINE(""), s.capacity(), 4_sz);
+      check_equality(LINE(""), s.num_partitions_capacity(), 8_sz);
 
       s.shrink_to_fit();
-      check_equality(LINE(""), s.capacity(), 0ul);
-      check_equality(LINE(""), s.num_partitions_capacity(), 0ul);
+      check_equality(LINE(""), s.capacity(), 0_sz);
+      check_equality(LINE(""), s.num_partitions_capacity(), 0_sz);
     }
 
     template<class T, class Handler, bool ThrowOnRangeError>
@@ -694,26 +694,26 @@ namespace sequoia
        
       bucketed_storage<T, Handler> s{};
 
-      check_equality(LINE(""), s.num_partitions_capacity(), 0ul);
+      check_equality(LINE(""), s.num_partitions_capacity(), 0_sz);
       if constexpr(ThrowOnRangeError) check_exception_thrown<std::out_of_range>(LINE(""), [&s](){ return s.partition_capacity(0); });
 
       s.reserve_partitions(4);
-      check_equality(LINE(""), s.num_partitions_capacity(), 4ul);
+      check_equality(LINE(""), s.num_partitions_capacity(), 4_sz);
       if constexpr(ThrowOnRangeError) check_exception_thrown<std::out_of_range>(LINE(""), [&s](){ return s.partition_capacity(0); });
 
       s.shrink_num_partitions_to_fit();
-      check_equality(LINE("May fail if shrink to fit impl does not reduce capacity"), s.num_partitions_capacity(), 0ul);
+      check_equality(LINE("May fail if shrink to fit impl does not reduce capacity"), s.num_partitions_capacity(), 0_sz);
       if constexpr(ThrowOnRangeError) check_exception_thrown<std::out_of_range>(LINE(""), [&s](){ return s.partition_capacity(0); });
 
       s.add_slot();
-      check_equality(LINE(""), s.partition_capacity(0), 0ul);
+      check_equality(LINE(""), s.partition_capacity(0), 0_sz);
       if constexpr(ThrowOnRangeError) check_exception_thrown<std::out_of_range>(LINE(""), [&s](){ return s.partition_capacity(1); });
 
       s.reserve_partition(0, 4);
-      check_equality(LINE(""), s.partition_capacity(0), 4ul);
+      check_equality(LINE(""), s.partition_capacity(0), 4_sz);
        
       s.shrink_to_fit(0);
-      check_equality(LINE("May fail if shrink to fit impl does not reduce capacity"), s.partition_capacity(0), 0ul);
+      check_equality(LINE("May fail if shrink to fit impl does not reduce capacity"), s.partition_capacity(0), 0_sz);
       if constexpr(ThrowOnRangeError) check_exception_thrown<std::out_of_range>(LINE(""), [&s](){ s.shrink_to_fit(1); });
     }
   }

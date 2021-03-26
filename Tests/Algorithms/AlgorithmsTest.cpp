@@ -148,47 +148,47 @@ namespace sequoia
     {
       {
         constexpr std::array<int, 0> a{};
-        auto i{lower_bound(a.begin(), a.end(), 1, [](int a, int b){ return a <b;})};
+        auto i{sequoia::lower_bound(a.begin(), a.end(), 1, [](int a, int b){ return a <b;})};
         check(LINE(""), i == a.end());
       }
       
       {
         constexpr std::array<int, 1> a{2};
-        constexpr auto i{*lower_bound(a.begin(), a.end(), 1)};
+        constexpr auto i{*sequoia::lower_bound(a.begin(), a.end(), 1)};
         check_equality(LINE(""), i, 2);
 
-        constexpr auto j{*lower_bound(a.begin(), a.end(), 2)};
+        constexpr auto j{*sequoia::lower_bound(a.begin(), a.end(), 2)};
         check_equality(LINE(""), j, 2);
 
-        auto iter{lower_bound(a.begin(), a.end(), 3)};
+        auto iter{sequoia::lower_bound(a.begin(), a.end(), 3)};
         check(LINE(""), iter == a.end());
       }
 
       {
         constexpr std::array<int, 2> a{1,2};
-        constexpr auto i{*lower_bound(a.begin(), a.end(), 0)};
+        constexpr auto i{*sequoia::lower_bound(a.begin(), a.end(), 0)};
         check_equality(LINE(""), i, 1);
         
-        constexpr auto j{*lower_bound(a.begin(), a.end(), 1)};
+        constexpr auto j{*sequoia::lower_bound(a.begin(), a.end(), 1)};
         check_equality(LINE(""), j, 1);
 
-        constexpr auto k{*lower_bound(a.begin(), a.end(), 2)};
+        constexpr auto k{*sequoia::lower_bound(a.begin(), a.end(), 2)};
         check_equality(LINE(""), k, 2);
 
-        auto iter{lower_bound(a.begin(), a.end(), 3)};
+        auto iter{sequoia::lower_bound(a.begin(), a.end(), 3)};
         check(LINE(""), iter == a.end());
       }
 
       {
         constexpr std::array<int, 2> a{1,1};
-        constexpr auto i{*lower_bound(a.begin(), a.end(), 0)};
+        constexpr auto i{*sequoia::lower_bound(a.begin(), a.end(), 0)};
         check_equality(LINE(""), i, 1);
         
-        auto iter{lower_bound(a.begin(), a.end(), 1)};
+        auto iter{sequoia::lower_bound(a.begin(), a.end(), 1)};
         check(LINE(""), iter == a.begin());
         check_equality(LINE(""), *iter, 1);
 
-        iter = lower_bound(a.begin(), a.end(), 2);
+        iter = sequoia::lower_bound(a.begin(), a.end(), 2);
         check(LINE(""), iter == a.end());
       }
 
@@ -196,68 +196,68 @@ namespace sequoia
 
       {
         constexpr std::array<int, 3> a{1,2,3};
-        constexpr auto i{*lower_bound(a.begin(), a.end(), 0)};
+        constexpr auto i{*sequoia::lower_bound(a.begin(), a.end(), 0)};
         check_equality(LINE(""), i, 1);
         
-        constexpr auto j{*lower_bound(a.begin(), a.end(), 1)};
+        constexpr auto j{*sequoia::lower_bound(a.begin(), a.end(), 1)};
         check_equality(LINE(""), j, 1);
 
-        constexpr auto k{*lower_bound(a.begin(), a.end(), 2)};
+        constexpr auto k{*sequoia::lower_bound(a.begin(), a.end(), 2)};
         check_equality(LINE(""), k, 2);
 
-        constexpr auto l{*lower_bound(a.begin(), a.end(), 3)};
+        constexpr auto l{*sequoia::lower_bound(a.begin(), a.end(), 3)};
         check_equality(LINE(""), l, 3);
 
-        auto iter{lower_bound(a.begin(), a.end(), 4)};
+        auto iter{sequoia::lower_bound(a.begin(), a.end(), 4)};
         check(LINE(""), iter == a.end());
       }
 
       {
         constexpr std::array<int, 3> a{1,1,2};
-        constexpr auto i{*lower_bound(a.begin(), a.end(), 0)};
+        constexpr auto i{*sequoia::lower_bound(a.begin(), a.end(), 0)};
         check_equality(LINE(""), i, 1);
         
-        auto iter{lower_bound(a.begin(), a.end(), 1)};
+        auto iter{sequoia::lower_bound(a.begin(), a.end(), 1)};
         check(LINE(""), iter == a.begin());
         check_equality(LINE(""), *iter, 1);
 
-        constexpr auto k{*lower_bound(a.begin(), a.end(), 2)};
+        constexpr auto k{*sequoia::lower_bound(a.begin(), a.end(), 2)};
         check_equality(LINE(""), k, 2);
 
-        iter = lower_bound(a.begin(), a.end(), 3);
+        iter = sequoia::lower_bound(a.begin(), a.end(), 3);
         check(LINE(""), iter == a.end());
       }
 
       {
         constexpr std::array<int, 3> a{1,2,2};
-        constexpr auto i{*lower_bound(a.begin(), a.end(), 0)};
+        constexpr auto i{*sequoia::lower_bound(a.begin(), a.end(), 0)};
         check_equality(LINE(""), i, 1);
         
-        constexpr auto j{*lower_bound(a.begin(), a.end(), 1)};
+        constexpr auto j{*sequoia::lower_bound(a.begin(), a.end(), 1)};
         check_equality(LINE(""), j, 1);
 
-        auto iter{lower_bound(a.begin(), a.end(), 2)};
+        auto iter{sequoia::lower_bound(a.begin(), a.end(), 2)};
         check(LINE(""), iter == a.begin()+1);
         check_equality(LINE(""), *iter, 2);
 
-        iter = lower_bound(a.begin(), a.end(), 3);
+        iter = sequoia::lower_bound(a.begin(), a.end(), 3);
         check(LINE(""), iter == a.end());
       }
 
       {
         constexpr std::array<int, 4> a{1,1,2,2};
-        auto iter{lower_bound(a.begin(), a.end(), 1)};
+        auto iter{sequoia::lower_bound(a.begin(), a.end(), 1)};
         check(LINE(""), iter == a.begin());
         check_equality(LINE(""), *iter, 1);
 
-        iter = lower_bound(a.begin(), a.end(), 2);
+        iter = sequoia::lower_bound(a.begin(), a.end(), 2);
         check(LINE(""), iter == a.begin()+2);
         check_equality(LINE(""), *iter, 2);
       }
 
       {
         constexpr std::array<int, 5> a{0,1,2,4,5};
-        constexpr auto i{*lower_bound(a.begin(), a.end(), 3)};
+        constexpr auto i{*sequoia::lower_bound(a.begin(), a.end(), 3)};
         check_equality(LINE(""), i, 4);
       }
     }
@@ -266,7 +266,7 @@ namespace sequoia
     {
       using wrapper = utilities::uniform_wrapper<int>;
       constexpr std::array<wrapper, 3> a{wrapper{-1}, wrapper{-1}, wrapper{1}};
-      constexpr auto w{*lower_bound(a.begin(), a.end(), wrapper{})};
+      constexpr auto w{*sequoia::lower_bound(a.begin(), a.end(), wrapper{})};
       check_equality(LINE(""), w.get(), 1);
         
     }
@@ -276,96 +276,96 @@ namespace sequoia
       struct null_weight{};
       using edge = maths::partial_edge<null_weight, ownership::independent, null_weight>;
       constexpr std::array<edge, 3> a{edge{0}, edge{2}, edge{3}};
-      constexpr auto e{*lower_bound(a.begin(), a.end(), edge{1}, [](const edge& lhs, const edge& rhs) {
+      constexpr auto e{*sequoia::lower_bound(a.begin(), a.end(), edge{1}, [](const edge& lhs, const edge& rhs) {
             return lhs.target_node() < rhs.target_node();
           })
       };
 
-      check_equality(LINE(""), 2ul, e.target_node());
+      check_equality(LINE(""), 2_sz, e.target_node());
     }
 
     void algorithms_test::upper_bound_basic_type()
     {
       {
         constexpr std::array<int, 0> a{};
-        auto i{upper_bound(a.begin(), a.end(), 1, [](int a, int b){ return a <b;})};
+        auto i{sequoia::upper_bound(a.begin(), a.end(), 1, [](int a, int b){ return a <b;})};
         check(LINE(""), i == a.end());
       }
 
       {
         constexpr std::array<int, 1> a{2};
-        constexpr auto i{*upper_bound(a.begin(), a.end(), 1)};
+        constexpr auto i{*sequoia::upper_bound(a.begin(), a.end(), 1)};
         check_equality(LINE(""), i, 2);
 
-        auto iter{upper_bound(a.begin(), a.end(), 2)};
+        auto iter{sequoia::upper_bound(a.begin(), a.end(), 2)};
         check(LINE(""), iter == a.end());
       }
 
       {
         constexpr std::array<int, 2> a{1,2};
-        constexpr auto i{*upper_bound(a.begin(), a.end(), 0)};
+        constexpr auto i{*sequoia::upper_bound(a.begin(), a.end(), 0)};
         check_equality(LINE(""), i, 1);
         
-        constexpr auto j{*upper_bound(a.begin(), a.end(), 1)};
+        constexpr auto j{*sequoia::upper_bound(a.begin(), a.end(), 1)};
         check_equality(LINE(""), j, 2);
 
-        auto iter{upper_bound(a.begin(), a.end(), 2)};
+        auto iter{sequoia::upper_bound(a.begin(), a.end(), 2)};
         check(LINE(""), iter == a.end());
       }
 
       {
         constexpr std::array<int, 2> a{1,1};
-        constexpr auto i{*upper_bound(a.begin(), a.end(), 0)};
+        constexpr auto i{*sequoia::upper_bound(a.begin(), a.end(), 0)};
         check_equality(LINE(""), i, 1);
         
-        auto iter{upper_bound(a.begin(), a.end(), 1)};
+        auto iter{sequoia::upper_bound(a.begin(), a.end(), 1)};
         check(LINE(""), iter == a.end());
       }
 
       {
         constexpr std::array<int, 3> a{1,1,2};
-        auto iter{upper_bound(a.begin(), a.end(), 0)};
+        auto iter{sequoia::upper_bound(a.begin(), a.end(), 0)};
         check(LINE(""), iter == a.begin());
         
         check_equality(LINE(""), *iter, 1);
         
-        iter = upper_bound(a.begin(), a.end(), 1);
+        iter = sequoia::upper_bound(a.begin(), a.end(), 1);
         check_equality(LINE(""), *iter, 2);
 
-        iter = upper_bound(a.begin(), a.end(), 2);
+        iter = sequoia::upper_bound(a.begin(), a.end(), 2);
         check(LINE(""), iter == a.end());
       }
 
       {
         constexpr std::array<int, 3> a{1,2,2};
-        constexpr auto i{*upper_bound(a.begin(), a.end(), 0)};
+        constexpr auto i{*sequoia::upper_bound(a.begin(), a.end(), 0)};
         check_equality(LINE(""), i, 1);
 
-        auto iter{upper_bound(a.begin(), a.end(), 1)};
+        auto iter{sequoia::upper_bound(a.begin(), a.end(), 1)};
         check(LINE(""), iter == a.begin()+1);
         check_equality(LINE(""), *iter, 2);
 
-        iter = upper_bound(a.begin(), a.end(), 2);
+        iter = sequoia::upper_bound(a.begin(), a.end(), 2);
         check(LINE(""), iter == a.end());
       }
 
       {
         constexpr std::array<int, 4> a{1,1,2,2};
-        auto iter{upper_bound(a.begin(), a.end(), 0)};
+        auto iter{sequoia::upper_bound(a.begin(), a.end(), 0)};
         check(LINE(""), iter == a.begin());
         check_equality(LINE(""), *iter, 1);
         
-        iter = upper_bound(a.begin(), a.end(), 1);
+        iter = sequoia::upper_bound(a.begin(), a.end(), 1);
         check(LINE(""), iter == a.begin() + 2);
         check_equality(LINE(""), *iter, 2);
 
-        iter = upper_bound(a.begin(), a.end(), 2);
+        iter = sequoia::upper_bound(a.begin(), a.end(), 2);
         check(LINE(""), iter == a.end());
       }
       
       {
         constexpr std::array<int, 5> a{0,1,2,4,5};
-        constexpr auto i{*upper_bound(a.begin(), a.end(), 4)};
+        constexpr auto i{*sequoia::upper_bound(a.begin(), a.end(), 4)};
         check_equality(LINE(""), i, 5);
       }
     }
@@ -374,18 +374,18 @@ namespace sequoia
     {
       {
         constexpr std::array<double, 0> a{};
-        auto iters{equal_range(a.begin(), a.end(), 0)};
+        auto iters{sequoia::equal_range(a.begin(), a.end(), 0)};
         check(LINE(""), iters.first == a.end());
         check(LINE(""), iters.second == a.end());
       }
 
       {
         constexpr std::array<double, 1> a{1};
-        auto iters{equal_range(a.begin(), a.end(), 0)};
+        auto iters{sequoia::equal_range(a.begin(), a.end(), 0)};
         check(LINE(""), iters.first == a.begin());
         check(LINE(""), iters.second == a.begin());
 
-        iters = equal_range(a.begin(), a.end(), 1);
+        iters = sequoia::equal_range(a.begin(), a.end(), 1);
         check(LINE(""), iters.first == a.begin());
         check(LINE(""), iters.second == a.end());
       }

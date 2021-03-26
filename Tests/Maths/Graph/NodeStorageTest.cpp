@@ -39,11 +39,11 @@ namespace sequoia:: testing
     storage store{};
     check_equivalence(LINE(""), store, std::initializer_list<double>{});
       
-    check_equality(LINE(""), store.capacity(), 0ul);
-    store.reserve(4ul);
-    check_equality(LINE(""), store.capacity(), 4ul);
+    check_equality(LINE(""), store.capacity(), 0_sz);
+    store.reserve(4_sz);
+    check_equality(LINE(""), store.capacity(), 4_sz);
     store.shrink_to_fit();
-    check_equality(LINE("Check may fail if stl implementation doesn't shrink to fit!"), store.capacity(), 0ul);
+    check_equality(LINE("Check may fail if stl implementation doesn't shrink to fit!"), store.capacity(), 0_sz);
       
     store.add_node(2.4);
     // 2.4
