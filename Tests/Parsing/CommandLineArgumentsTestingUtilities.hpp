@@ -41,8 +41,7 @@ namespace sequoia::testing
     template<test_mode Mode>
     static void check(test_logger<Mode>& logger, const executor& operation, const executor& prediction, std::string_view tag)
     {
-      const bool consistent{   ((operation != nullptr) && (prediction != nullptr))
-                            || ((operation == nullptr) && (prediction == nullptr))};
+      const bool consistent{(operation && prediction) || (!operation && !prediction)};
       testing::check(std::string{"Existence of" }.append(tag).append(" function objects differs"), logger, consistent);
 
       if(operation && prediction)

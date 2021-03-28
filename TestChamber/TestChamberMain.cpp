@@ -24,7 +24,12 @@ int main(int argc, char** argv)
                        root/"TestCommon" /"TestIncludes.hpp",
                        repositories(root)
     };
-      
+
+    runner.add_test_family(
+      "Experimental",
+      experimental_test{"Unit Test"}
+    );
+
     runner.execute();
   }
   catch(const std::exception& e)
