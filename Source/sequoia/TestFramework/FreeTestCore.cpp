@@ -6,6 +6,7 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "sequoia/TestFramework/FreeTestCore.hpp"
+#include "sequoia/TestFramework/FileEditors.hpp"
 
 namespace sequoia::testing
 {
@@ -89,14 +90,7 @@ namespace sequoia::testing
   {
     if(!text.empty() || std::filesystem::exists(file))
     {
-      if(std::ofstream ofile{file})
-      {
-        ofile.write(text.data(), text.size());
-      }
-      else
-      {
-        throw std::runtime_error{report_failed_write(file)};
-      }
+      write_to_file(file, text);
     }
   }
 
