@@ -27,7 +27,7 @@ int main(int argc, char** argv)
 
     runner.add_test_family(
       "Test Runner",
-      test_runner_end_to_end_test("Free Test")
+      test_runner_end_to_end_test("End to End Test")
     );
 
     runner.execute();
