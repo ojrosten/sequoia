@@ -119,18 +119,7 @@ namespace sequoia::testing
     [[nodiscard]]
     virtual log_summary summarize(duration delta) const = 0;
 
-    virtual void log_critical_failure(std::string_view tag, std::string_view what) = 0;
-
     virtual std::string mode_tag() const = 0;
-
-    virtual void do_set_recovery_paths(recovery_paths paths) = 0;
-    
-    [[nodiscard]]
-    std::filesystem::path output_filename(std::string_view suffix) const;
-
-    const log_summary& write_versioned_output(const log_summary& summary) const;
-
-    static void write(const std::filesystem::path& file, std::string_view text);
   private:
     std::string m_Name{};
     std::filesystem::path
@@ -140,9 +129,20 @@ namespace sequoia::testing
       m_TestRepo{},
       m_DiagnosticsOutput{},
       m_CaughtExceptionsOutput{};
+    
+    [[nodiscard]]
+    std::filesystem::path output_filename(std::string_view suffix) const;
 
     [[nodiscard]]
     std::filesystem::path make_output_filepath(const std::filesystem::path& outputDir, std::string_view familyName, std::string_view suffix) const;
+
+    const log_summary& write_versioned_output(const log_summary& summary) const;
+
+    static void write(const std::filesystem::path& file, std::string_view text);
+ 
+    virtual void log_critical_failure(std::string_view tag, std::string_view what) = 0;
+    
+    virtual void do_set_recovery_paths(recovery_paths paths) = 0;
   };
 
   template<class T>
@@ -203,7 +203,7 @@ namespace sequoia::testing
     {
       return to_tag(mode);
     }
-
+  private:
     void log_critical_failure(std::string_view tag, std::string_view what) final
     {
       const auto message{
@@ -218,7 +218,6 @@ namespace sequoia::testing
     {
       Checker::recovery(std::move(paths));
     }
-  private:
   };
   
   template<test_mode Mode>
