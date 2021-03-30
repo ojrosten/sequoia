@@ -16,9 +16,10 @@ namespace sequoia::testing
   public:
     using performance_test::performance_test;
 
+  private:
     [[nodiscard]]
     std::string_view source_file() const noexcept final;
-  private:
+
     void run_tests() final;
   };
 }

@@ -16,12 +16,13 @@ namespace sequoia::testing
   public:
     using ?_allocation_test::?_allocation_test;
 
+    template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
+    void test_allocation();
+
+  private:
     [[nodiscard]]
     std::string_view source_file() const noexcept final;
 
-    template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
-    void test_allocation();
-  private:
     void run_tests() final;
   };
 }

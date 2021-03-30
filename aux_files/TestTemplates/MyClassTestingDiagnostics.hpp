@@ -14,9 +14,10 @@ namespace sequoia::testing
   public:
     using ?_false_positive_test::?_false_positive_test;    
 
+  private:
     [[nodiscard]]
     std::string_view source_file() const noexcept final;
-  private:    
+
     void run_tests() final;
   };
 }
