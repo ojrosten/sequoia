@@ -59,7 +59,14 @@ namespace sequoia::testing
 
     const auto end{steady_clock::now()};
     return write_versioned_output(summarize(end - start));
-  };
+  }
+
+  [[nodiscard]]
+  std::filesystem::path test::output_filename(std::string_view suffix) const
+  {
+    namespace fs = std::filesystem;
+    return fs::path{source_file()}.filename().replace_extension().concat("_").concat(mode_tag()).concat(suffix).concat(".txt");
+  }
 
   [[nodiscard]]
   std::filesystem::path test::make_output_filepath(const std::filesystem::path& outputDir, std::string_view familyName, std::string_view suffix) const
@@ -92,13 +99,6 @@ namespace sequoia::testing
     {
       write_to_file(file, text);
     }
-  }
-
-  [[nodiscard]]
-  std::filesystem::path test::output_filename(std::string_view suffix) const
-  {
-    namespace fs = std::filesystem;
-    return fs::path{source_file()}.filename().replace_extension().concat("_").concat(suffix).concat(".txt");
   }
 
   [[nodiscard]]

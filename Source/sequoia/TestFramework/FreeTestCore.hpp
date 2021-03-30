@@ -21,6 +21,8 @@
 #include "sequoia/TestFramework/Output.hpp"
 #include "sequoia/TestFramework/FileSystem.hpp"
 
+#include <memory>
+
 namespace sequoia::testing
 {  
   /*! \brief Abstract base class used for type-erasure of the template class basic_test.
@@ -119,10 +121,12 @@ namespace sequoia::testing
 
     virtual void log_critical_failure(std::string_view tag, std::string_view what) = 0;
 
-    [[nodiscard]]
-    virtual std::filesystem::path output_filename(std::string_view suffix) const = 0;
+    virtual std::string mode_tag() const = 0;
 
     virtual void do_set_recovery_paths(recovery_paths paths) = 0;
+    
+    [[nodiscard]]
+    std::filesystem::path output_filename(std::string_view suffix) const;
 
     const log_summary& write_versioned_output(const log_summary& summary) const;
 
@@ -194,6 +198,12 @@ namespace sequoia::testing
       return Checker::summary(name(), delta);
     }
 
+    [[nodiscard]]
+    std::string mode_tag() const final
+    {
+      return to_tag(mode);
+    }
+
     void log_critical_failure(std::string_view tag, std::string_view what) final
     {
       const auto message{
@@ -202,12 +212,6 @@ namespace sequoia::testing
 
       auto sentry{Checker::make_sentinel("")};
       sentry.log_critical_failure(message);
-    }
-
-    [[nodiscard]]
-    std::filesystem::path output_filename(std::string_view suffix) const final
-    {
-      return test::output_filename(to_tag(mode).append(suffix));
     }
 
     void do_set_recovery_paths(recovery_paths paths) final
@@ -231,5 +235,35 @@ namespace sequoia::testing
     family,    /// families of tests are executed concurrently
     test,      /// tests are executed concurrently, independently of their families
     deep       /// concurrency-aware components of individual tests are executed concurrently
-  }; 
+  };
+
+  class test_vessel
+  {
+  public:
+    template<concrete_test T>
+    test_vessel(T&& t)
+      : m_pTest{std::make_unique<T>(std::forward<T>(t))}
+    {}
+
+    test_vessel(const test_vessel&)     = delete;
+    test_vessel(test_vessel&&) noexcept = default;
+
+    test_vessel& operator=(const test_vessel&)     = delete;
+    test_vessel& operator=(test_vessel&&) noexcept = default;
+
+    [[nodiscard]]
+    test* operator->() noexcept { return m_pTest.get(); }
+
+    [[nodiscard]]
+    const test* operator->() const noexcept { return m_pTest.get(); }
+
+    [[nodiscard]]
+    test& operator*() noexcept { return *m_pTest.get(); }
+
+    [[nodiscard]]
+    const test& operator*() const noexcept { return *m_pTest.get(); }
+  private:
+
+    std::unique_ptr<test> m_pTest{};
+  };
 }

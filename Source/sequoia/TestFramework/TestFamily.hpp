@@ -82,7 +82,7 @@ namespace sequoia::testing
     template<class concrete_test>
     void add_test(concrete_test&& test)
     {
-      m_Tests.emplace_back(std::make_unique<concrete_test>(std::forward<concrete_test>(test)));
+      m_Tests.emplace_back(std::forward<concrete_test>(test));
       set_materials(*m_Tests.back());
     }
 
@@ -95,7 +95,7 @@ namespace sequoia::testing
     [[nodiscard]]
     bool empty() const noexcept { return m_Tests.empty(); }
   private:
-    std::vector<std::unique_ptr<test>> m_Tests{};
+    std::vector<test_vessel> m_Tests{};
     std::string m_Name{};
     std::filesystem::path m_TestRepo{}, m_TestMaterialsRepo{}, m_OutputDir{};
     recovery_paths m_Recovery;
