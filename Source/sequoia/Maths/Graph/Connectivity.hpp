@@ -809,33 +809,30 @@ namespace sequoia
 
       void clear() noexcept
       {
-        m_Edges.clear(); 
+        m_Edges.clear();
       }
-    
+
       template<class Comparer>
       constexpr void sort_edges(const_edge_iterator begin, const_edge_iterator end, Comparer comp)
       {
         static_assert(edge_type::flavour == edge_flavour::partial, "Should not attempt to sort embedded graphs");
-        if(begin != end)
+        auto bsource{begin.partition_index()}, esource{end.partition_index()};
+        if(bsource == esource)
         {
-          auto bsource{begin.partition_index()}, esource{end.partition_index()};
-          if(bsource == esource)
+          sequoia::sort(begin_edges(bsource) + distance(cbegin_edges(bsource), begin), begin_edges(esource) + distance(cbegin_edges(esource), end), comp);
+        }
+        else
+        {
+          if(bsource > esource) std::swap(bsource, esource);
+          sequoia::sort(begin_edges(bsource) + distance(cbegin_edges(bsource), begin), end_edges(bsource), comp);
+          for(auto i{bsource + 1}; i < esource; ++i)
           {
-            sequoia::sort(begin_edges(bsource) + distance(cbegin_edges(bsource), begin), begin_edges(esource) + distance(cbegin_edges(esource), end), comp);
+            sequoia::sort(begin_edges(i), end_edges(i), comp);
           }
-          else
-          {
-            if(bsource > esource) std::swap(bsource, esource);
-            sequoia::sort(begin_edges(bsource) + distance(cbegin_edges(bsource), begin), end_edges(bsource), comp);
-            for(auto i{bsource+1}; i<esource; ++i)
-            {
-              sequoia::sort(begin_edges(i), end_edges(i), comp);
-            }
-            sequoia::sort(begin_edges(esource), begin_edges(esource) + distance(cbegin_edges(esource), end), comp);
-          }
+          sequoia::sort(begin_edges(esource), begin_edges(esource) + distance(cbegin_edges(esource), end), comp);
         }
       }
-      
+
     private:
       template<bool Direct>
       struct edge_init_constant : std::bool_constant<Direct>
