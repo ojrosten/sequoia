@@ -1271,7 +1271,7 @@ namespace sequoia
 
               if constexpr(clusterEdges)
               {
-                while((range.first->weight() != lowerIter->weight()) && (range.first != range.second)) ++range.first;
+                while((range.first != range.second) && (range.first->weight() != lowerIter->weight())) ++range.first;
 
                 range.second = find_cluster_end(range.first, range.second);
               }

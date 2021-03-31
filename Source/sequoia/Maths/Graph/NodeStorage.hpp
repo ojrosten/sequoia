@@ -64,7 +64,7 @@ namespace sequoia::maths::graph_impl
   auto get_allocator(const N&) {}
 
   template<class N>
-    requires requires (const N& n) { n.get_allocator; }
+    requires requires (const N& n) { n.get_allocator(); }
   auto get_allocator(const N& nodes)
   {
     return nodes.get_allocator();
