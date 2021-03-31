@@ -61,7 +61,7 @@ namespace sequoia::maths::graph_impl
 
   // TO DO: remove this weird indirection when MSVC no longer needs it!
   template<class N>
-  auto get_allocator(const N& nodes) {}
+  auto get_allocator(const N&) {}
 
   template<class N>
     requires requires (const N& n) { n.get_allocator; }
