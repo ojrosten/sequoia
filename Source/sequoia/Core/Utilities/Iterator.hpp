@@ -130,6 +130,8 @@ namespace sequoia::utilities
     [[nodiscard]]
     constexpr base_iterator_type base_iterator() const noexcept { return m_BaseIterator; }
 
+    template<class DerefPol = DereferencePolicy>
+      requires (!impl::provides_mutable_reference_v<DerefPol>)
     [[nodiscard]]
     constexpr const_dereference_type operator*() const
     {
@@ -139,7 +141,7 @@ namespace sequoia::utilities
     template<class DerefPol = DereferencePolicy>
       requires impl::provides_mutable_reference_v<DerefPol>
     [[nodiscard]]
-    constexpr reference operator*()
+    constexpr reference operator*() const
     {
       return DereferencePolicy::get(*m_BaseIterator);
     }

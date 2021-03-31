@@ -410,17 +410,17 @@ namespace sequoia
 
         auto i{sequoia::rotate(a.begin(), a.begin(), a.end())};
 
-        check_equality(LINE(""), a.end(), i);
+        check_equality(LINE("Distance to end"), std::distance(i, a.end()), std::ptrdiff_t{});
       }
 
       {
         std::array<int, 1> a{1};
 
         auto i{sequoia::rotate(a.begin(), a.begin(), a.end())};
-        check_equality(LINE(""), i, a.end());
+        check_equality(LINE("Distance to end"), std::distance(i, a.end()), std::ptrdiff_t{});
 
         i = sequoia::rotate(a.begin(), a.end(), a.end());
-        check_equality(LINE(""), i, a.begin());
+        check_equality(LINE("Distance from begin"), std::distance(a.begin(), i), std::ptrdiff_t{});
       }
 
       {
@@ -428,15 +428,15 @@ namespace sequoia
         array_t a{1, 2};
 
         auto i{sequoia::rotate(a.begin(), a.begin(), a.end())};
-        check_equality(LINE(""), i, a.end());
+        check_equality(LINE("Distance to end"), std::distance(i, a.end()), std::ptrdiff_t{});
         check_equality(LINE(""), a, array_t{1,2});
 
         i = sequoia::rotate(a.begin(), a.begin() + 1, a.end());
-        check_equality(LINE(""), i, a.begin() + 1);
+        check_equality(LINE("Distance from begin"), std::distance(a.begin(), i), std::ptrdiff_t{1});
         check_equality(LINE(""), a, array_t{2, 1});
 
         i = sequoia::rotate(a.begin(), a.begin() + 2, a.end());
-        check_equality(LINE(""), i, a.begin());
+        check_equality(LINE("Distance from begin"), std::distance(a.begin(), i), std::ptrdiff_t{});
         check_equality(LINE(""), a, array_t{2, 1});
       }
 
@@ -445,19 +445,19 @@ namespace sequoia
         array_t a{1, 2, 3};
 
         auto i{sequoia::rotate(a.begin(), a.begin(), a.end())};
-        check_equality(LINE(""), i, a.end());
+        check_equality(LINE("Distance to end"), std::distance(i, a.end()), std::ptrdiff_t{});
         check_equality(LINE(""), a, array_t{1,2,3});
 
         i = sequoia::rotate(a.begin(), a.begin() + 1, a.end());
-        check_equality(LINE(""), i, a.begin() + 2);
+        check_equality(LINE("Distance from begin"), std::distance(a.begin(), i), std::ptrdiff_t{2});
         check_equality(LINE(""), a, array_t{2, 3, 1});
 
         i = sequoia::rotate(a.begin(), a.begin() + 2, a.end());
-        check_equality(LINE(""), i, a.begin() + 1);
+        check_equality(LINE("Distance from begin"), std::distance(a.begin(), i), std::ptrdiff_t{1});
         check_equality(LINE(""), a, array_t{1, 2, 3});
 
         i = sequoia::rotate(a.begin(), a.begin() + 3, a.end());
-        check_equality(LINE(""), i, a.begin());
+        check_equality(LINE("Distance from begin"), std::distance(a.begin(), i), std::ptrdiff_t{});
         check_equality(LINE(""), a, array_t{1, 2, 3});
       }
 
@@ -466,23 +466,23 @@ namespace sequoia
         array_t a{1, 2, 3, 4};
 
         auto i{sequoia::rotate(a.begin(), a.begin(), a.end())};
-        check_equality(LINE(""), i, a.end());
+        check_equality(LINE("Distance to end"), std::distance(i, a.end()), std::ptrdiff_t{});
         check_equality(LINE(""), a, array_t{1,2,3,4});
 
         i = sequoia::rotate(a.begin(), a.begin() + 1, a.end());
-        check_equality(LINE(""), i, a.begin() + 3);
+        check_equality(LINE("Distance from begin"), std::distance(a.begin(), i), std::ptrdiff_t{3});
         check_equality(LINE(""), a, array_t{2, 3, 4, 1});
 
         i = sequoia::rotate(a.begin(), a.begin() + 2, a.end());
-        check_equality(LINE(""), i, a.begin() + 2);
+        check_equality(LINE("Distance from begin"), std::distance(a.begin(), i), std::ptrdiff_t{2});
         check_equality(LINE(""), a, array_t{4, 1, 2, 3});
 
         i = sequoia::rotate(a.begin(), a.begin() + 3, a.end());
-        check_equality(LINE(""), i, a.begin() + 1);
+        check_equality(LINE("Distance from begin"), std::distance(a.begin(), i), std::ptrdiff_t{1});
         check_equality(LINE(""), a, array_t{3, 4, 1, 2});
 
         i = sequoia::rotate(a.begin(), a.begin() + 4, a.end());
-        check_equality(LINE(""), i, a.begin());
+        check_equality(LINE("Distance from begin"), std::distance(a.begin(), i), std::ptrdiff_t{});
         check_equality(LINE(""), a, array_t{3, 4, 1, 2});
       }
 
@@ -491,27 +491,27 @@ namespace sequoia
         array_t a{1, 2, 3, 4, 5};
 
         auto i{sequoia::rotate(a.begin(), a.begin(), a.end())};
-        check_equality(LINE(""), i, a.end());
+        check_equality(LINE("Distance to end"), std::distance(i, a.end()), std::ptrdiff_t{});
         check_equality(LINE(""), a, array_t{1,2,3,4,5});
 
         i = sequoia::rotate(a.begin(), a.begin() + 1, a.end());
-        check_equality(LINE(""), i, a.begin() + 4);
+        check_equality(LINE("Distance from begin"), std::distance(a.begin(), i), std::ptrdiff_t{4});
         check_equality(LINE(""), a, array_t{2, 3, 4, 5, 1});
 
         i = sequoia::rotate(a.begin(), a.begin() + 2, a.end());
-        check_equality(LINE(""), i, a.begin() + 3);
+        check_equality(LINE("Distance from begin"), std::distance(a.begin(), i), std::ptrdiff_t{3});
         check_equality(LINE(""), a, array_t{4, 5, 1, 2, 3});
 
         i = sequoia::rotate(a.begin(), a.begin() + 3, a.end());
-        check_equality(LINE(""), i, a.begin() + 2);
+        check_equality(LINE("Distance from begin"), std::distance(a.begin(), i), std::ptrdiff_t{2});
         check_equality(LINE(""), a, array_t{2, 3, 4, 5, 1});
 
         i = sequoia::rotate(a.begin(), a.begin() + 4, a.end());
-        check_equality(LINE(""), i, a.begin() + 1);
+        check_equality(LINE("Distance from begin"), std::distance(a.begin(), i), std::ptrdiff_t{1});
         check_equality(LINE(""), a, array_t{1, 2, 3, 4, 5});
 
         i = sequoia::rotate(a.begin(), a.begin() + 5, a.end());
-        check_equality(LINE(""), i, a.begin());
+        check_equality(LINE("Distance from begin"), std::distance(a.begin(), i), std::ptrdiff_t{});
         check_equality(LINE(""), a, array_t{1, 2, 3, 4, 5});
       }
 

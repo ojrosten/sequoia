@@ -29,7 +29,8 @@ namespace sequoia::maths::graph_impl
     template<class S> using container_type = std::array<S, N>;
   };
 
-  template<empty_proxy WeightMaker, std::size_t N>
+  template<class WeightMaker, std::size_t N>
+    requires empty_proxy<WeightMaker>
   struct static_node_storage_traits<WeightMaker, N>
   {};
       
@@ -44,7 +45,8 @@ namespace sequoia::maths::graph_impl
     using node_storage<WeightMaker, static_node_storage_traits<WeightMaker, N>>::node_storage;
   };
 
-  template<empty_proxy WeightMaker, std::size_t N>
+  template<class WeightMaker, std::size_t N>
+    requires empty_proxy<WeightMaker>
   class static_node_storage<WeightMaker, N>
   {
   public:

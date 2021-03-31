@@ -176,9 +176,11 @@ namespace sequoia::ownership
 
     data_pool(const data_pool&) = delete;
 
-    data_pool(data_pool&& other) noexcept : data_pool()
+    data_pool(data_pool&& other) noexcept : m_Data{std::move(other.m_Data)}
     {
-      swap(other);
+      for(auto& pData : m_Data) pData->m_pPool = this;
+
+      other.m_Data.clear();
     }
 
     data_pool(data_pool&& other, const allocator_type& a) : m_Data(a)

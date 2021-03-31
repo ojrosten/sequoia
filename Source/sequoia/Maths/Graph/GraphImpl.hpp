@@ -19,6 +19,20 @@ namespace sequoia
 {
   namespace maths
   {
+    namespace graph_impl
+    {
+      // TO DO: trade below for adhoc if constexpr (requires ...) once supported by MSVC
+
+      template<class N>
+      struct nodes_allocate : std::false_type
+      {};
+
+      template<class N>
+      requires requires { has_allocator_type<typename N::node_weight_container_type>; }
+      struct nodes_allocate<N> : std::true_type
+      {};
+    }
+
     template<network Connectivity, class Nodes>
     class graph_primitive : public Connectivity, public Nodes
     {
@@ -354,8 +368,7 @@ namespace sequoia
             [](const graph_primitive& in){
               if constexpr(!heteroNodes && !emptyNodes)
               {
-                using node_storage = typename Nodes::node_weight_container_type;
-                if constexpr(has_allocator_type<node_storage>)
+                if constexpr(graph_impl::nodes_allocate<Nodes>::value)
                 {
                   return in.get_node_allocator();
                 }

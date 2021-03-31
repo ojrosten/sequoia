@@ -57,7 +57,18 @@ namespace sequoia::maths::graph_impl
   };
 
   template<class T>
-  concept empty_proxy = creator<T> && empty<typename T::proxy::value_type>;
+  constexpr bool empty_proxy = creator<T> && empty<typename T::proxy::value_type>;
+
+  // TO DO: remove this weird indirection when MSVC no longer needs it!
+  template<class N>
+  auto get_allocator(const N& nodes) {}
+
+  template<class N>
+    requires requires (const N& n) { n.get_allocator; }
+  auto get_allocator(const N& nodes)
+  {
+    return nodes.get_allocator();
+  }
 
   template<class WeightMaker, class Traits>
   class node_storage : private WeightMaker
@@ -220,9 +231,9 @@ namespace sequoia::maths::graph_impl
 
     auto get_node_allocator() const
     {
-      return m_NodeWeights.get_allocator();
+      return get_allocator(m_NodeWeights);
     }
-        
+
     void reserve(const size_type newCapacity)
     {
       m_NodeWeights.reserve(newCapacity);
@@ -410,7 +421,8 @@ namespace sequoia::maths::graph_impl
     }
   };
 
-  template<empty_proxy WeightMaker, class Traits>
+  template<class WeightMaker, class Traits>
+    requires empty_proxy<WeightMaker>
   class node_storage<WeightMaker, Traits>
   {
   public:

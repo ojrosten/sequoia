@@ -117,15 +117,15 @@ namespace sequoia::testing
 
     if constexpr (GraphFlavour == graph_flavour::directed)
     {
-      check_equality(LINE(""), graph, {{{edge_init_t{1, 4}}, {}}, {{1,1}, {1,0}}});
+      check_equality(LINE(""), graph, {edge_init_list_t{{edge_init_t{1, 4}}, {}}, {{1,1}, {1,0}}});
     }
     else if constexpr(GraphFlavour == graph_flavour::undirected)
     {
-      check_equality(LINE(""), graph, {{{edge_init_t{1,4}}, {edge_init_t{0,4}}}, {{1,1}, {1,0}}});
+      check_equality(LINE(""), graph, {edge_init_list_t{{edge_init_t{1,4}}, {edge_init_t{0,4}}}, {{1,1}, {1,0}}});
     }
     else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
     {
-      check_equality(LINE(""), graph, {{{edge_init_t{0,1,0,4}}, {edge_init_t{0,1,0,4}}}, {{1,1}, {1,0}}});
+      check_equality(LINE(""), graph, {edge_init_list_t{{edge_init_t{0,1,0,4}}, {edge_init_t{0,1,0,4}}}, {{1,1}, {1,0}}});
     }
     else
     {
@@ -191,19 +191,19 @@ namespace sequoia::testing
 
     if constexpr (GraphFlavour == graph_flavour::directed)
     {
-      check_equality(LINE(""), subgraph, {{{edge_init_t{0, 2}}}, {{1,1}}});
+      check_equality(LINE(""), subgraph, {edge_init_list_t{{edge_init_t{0, 2}}}, {{1,1}}});
     }
     else if constexpr(GraphFlavour == graph_flavour::undirected)
     {      
-      check_equality(LINE(""), subgraph, {{{edge_init_t{0, 2}, edge_init_t{0, 2}}}, {{1,1}}});
+      check_equality(LINE(""), subgraph, {edge_init_list_t{{edge_init_t{0, 2}, edge_init_t{0, 2}}}, {{1,1}}});
     }
     else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
     {
-      check_equality(LINE(""), subgraph, {{{edge_init_t{0,0,1,2}, edge_init_t{0,0,0,2}}}, {{1,1}}});
+      check_equality(LINE(""), subgraph, {edge_init_list_t{{edge_init_t{0,0,1,2}, edge_init_t{0,0,0,2}}}, {{1,1}}});
     }
     else
     {
-      check_equality(LINE(""), subgraph, {{{edge_init_t{0,1,2}, edge_init_t{0,0,2}}}, {{1,1}}});
+      check_equality(LINE(""), subgraph, {edge_init_list_t{{edge_init_t{0,1,2}, edge_init_t{0,0,2}}}, {{1,1}}});
     }
     
     subgraph = sub_graph(graph, [](auto&& wt) { return wt == NodeWeight(1, 0); });
