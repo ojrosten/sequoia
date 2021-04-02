@@ -38,9 +38,7 @@ namespace sequoia::testing
     check_equality(LINE(""), t.get_allocator().allocs(), 1);
 
     auto getter{
-      [](const sequence& s){
-        return s.get_allocator();
-      }
+      [](const sequence& s){ return s.get_allocator(); }
     };
 
     auto mutator{

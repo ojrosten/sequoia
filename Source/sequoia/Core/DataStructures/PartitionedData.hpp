@@ -58,13 +58,14 @@ namespace sequoia
         
     //===================================Storage using buckets===================================//
 
-    template<class T, handler Handler> struct bucketed_storage_traits
+    template<class T, handler Handler>
+    struct bucketed_storage_traits
     {
       constexpr static bool throw_on_range_error{true};
-      
+
       template<class S>
       using container_type = std::vector<S>;
-      
+
       template<class S>
       using buckets_type = std::vector<std::vector<S>>;
     };
@@ -78,11 +79,11 @@ namespace sequoia
       using held_type    = typename Handler::handle_type;
       using storage_type = typename Traits::template buckets_type<held_type>;
     public:
-      using value_type           = T;
-      using size_type            = typename storage_type::size_type;
-      using index_type           = size_type;
-      using allocator_type       = typename storage_type::allocator_type;
-      using handler_type  = Handler;
+      using value_type     = T;
+      using size_type      = typename storage_type::size_type;
+      using index_type     = size_type;
+      using allocator_type = typename storage_type::allocator_type;
+      using handler_type   = Handler;
 
       using partition_iterator               = data_structures::partition_iterator<Traits, Handler, size_type>;
       using const_partition_iterator         = data_structures::const_partition_iterator<Traits, Handler, size_type>;
@@ -94,7 +95,8 @@ namespace sequoia
       bucketed_storage() noexcept(noexcept(allocator_type{})) = default;
 
       explicit bucketed_storage(const allocator_type& allocator) noexcept
-        : m_Buckets(allocator) {}
+        : m_Buckets(allocator)
+      {}
 
       bucketed_storage(std::initializer_list<std::initializer_list<T>> list,
                        const allocator_type& allocator = allocator_type{})
@@ -104,7 +106,7 @@ namespace sequoia
         for(auto iter{list.begin()}; iter != list.end(); ++iter)
         { 
           add_slot();
-          const auto dist{std::distance(list.begin(), iter)};          
+          const auto dist{std::distance(list.begin(), iter)};
           m_Buckets[dist].reserve(iter->size());
           for(const auto& element : (*iter))
           {
@@ -661,15 +663,14 @@ namespace sequoia
       {
         if(&in != this)
         {
-          
           auto allocGetter{
-            [](const partitioned_sequence_base& in){
+            [](const partitioned_sequence_base& in) {
               if constexpr(has_allocator_type<container_type>)
               {
                 return in.m_Storage.get_allocator();
               }
             }
-          };          
+          };
 
           auto partitionsAllocGetter{
             [](const partitioned_sequence_base& in){
