@@ -488,6 +488,21 @@ namespace sequoia::testing
   allocation_info(Fn, const type_to_allocation_predictions_t<T>&)
     -> allocation_info<T, Fn>;
 
+  template<movable_comparable T, alloc_getter<T> Getter>
+  struct outer_alloc_getter
+  {
+    using alloc_equivalence_class = alloc_equivalence_class_generator_t<T, Getter>;
+
+    outer_alloc_getter(Getter g) : getter{std::move(g)} {}
+
+    auto operator()(const T& c) const
+    {
+      return getter(c).outer_allocator();
+    }
+
+    Getter getter;
+  };
+
   /*! \brief A specialization of allocation_info appropriate for std::scoped_allocator_adaptor
 
       The essential difference to the primary template is that multiple sets of predictions must
@@ -523,17 +538,17 @@ namespace sequoia::testing
     [[nodiscard]]
     auto unpack() const
     {
-      auto scopedGetter{[getter{this->make_getter()}](const T& c){
-          return get<I>(getter(c));
-        }
-      };
-
       if constexpr(I == 0)
       {
-        return allocation_info<T, decltype(scopedGetter)>{scopedGetter, m_Predictions};
+        using getter = outer_alloc_getter<T, Getter>;
+        return allocation_info<T, getter>{getter{this->make_getter()}, m_Predictions};
       }
       else
       {
+        auto scopedGetter{[getter{this->make_getter()}] (const T& c){
+            return get<I>(getter(c));
+          }
+        };
         return allocation_info<T, decltype(scopedGetter)>{scopedGetter, m_InnerPredictions[I-1]};
       }
     }

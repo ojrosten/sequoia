@@ -49,7 +49,7 @@ namespace sequoia::testing
     };
 
     // null; [0,2][1]
-      
+
     storage
       s(allocator{}),
       t{{{0,2}, {1}}, allocator{}};
@@ -78,18 +78,29 @@ namespace sequoia::testing
       }
     };
 
+    struct alloc_getter
+    {
+      using alloc_equivalence_class = allocation_equivalence_classes::container_of_pointers<allocator>;
+
+      [[nodiscard]]
+      allocator operator()(const storage& s) const
+      {
+        return s.get_allocator();
+      }
+    };
+
     check_semantics(LINE(""),
                     s,
                     t,
                     partitionMaker,
-                    allocation_info{allocGetter,
+                    allocation_info{alloc_getter{},
                                     {0_c, {1_c,1_mu}, {1_awp,1_anp}},
                                     { {0_c, {2_c,0_mu}, {2_awp,2_anp}, {0_containers, 2_containers, 3_postmutation}} }
                     });
-      
+
     s.add_slot();
     // []
-        
+
     check_equality(LINE(makeMessage("")), s, storage{{{}}, allocator{}});
 
     auto mutator{
@@ -103,12 +114,12 @@ namespace sequoia::testing
                     s,
                     t,
                     mutator,
-                    allocation_info{allocGetter,
+                    allocation_info{alloc_getter{},
                                     {1_c, {1_c,1_mu}, {1_awp,1_anp}},
                                     { {0_c, {2_c,1_mu}, {2_awp,2_anp}, {1_containers, 2_containers, 3_postmutation}} }
                     });
   }
-  
+
   template<class T, class Handler, bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
   void partitioned_data_allocation_test::test_contiguous_allocation()
   {
@@ -126,15 +137,11 @@ namespace sequoia::testing
     };
 
     auto partitionsAllocGetter{
-      [](const storage& s) {
-        return s.get_partitions_allocator();
-      }        
+      [](const storage& s) { return s.get_partitions_allocator(); }
     };
 
     auto allocGetter{
-      [](const storage& s){
-        return s.get_allocator();          
-      }
+      [](const storage& s){ return s.get_allocator(); }
     };
 
     // null; [0,2][1]
@@ -154,10 +161,32 @@ namespace sequoia::testing
           s.add_slot();
         }
       };
-        
+
+      struct alloc_getter
+      {
+        using alloc_equivalence_class = allocation_equivalence_classes::container_of_pointers<allocator>;
+
+        [[nodiscard]]
+        allocator operator()(const storage& s) const
+        {
+          return s.get_allocator();
+        }
+      };
+
+      struct partitions_alloc_getter
+      {
+        using alloc_equivalence_class = allocation_equivalence_classes::container_of_pointers<allocator>;
+
+        [[nodiscard]]
+        partitions_allocator operator()(const storage& s) const
+        {
+          return s.get_partitions_allocator();
+        }
+      };
+
       check_semantics(LINE(add_type_info<storage>("")), s, t, partitionMaker,
-                           allocation_info{allocGetter, {0_c, {1_c,0_mu}, {1_awp, 1_anp}}},
-                           allocation_info{partitionsAllocGetter, {0_c, {1_c,1_mu}, {1_awp, 1_anp}}});
+                           allocation_info{alloc_getter{}, {0_c, {1_c,0_mu}, {1_awp, 1_anp}}},
+                           allocation_info{partitions_alloc_getter{}, {0_c, {1_c,1_mu}, {1_awp, 1_anp}}});
 
       s.add_slot();
       // []

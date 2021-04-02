@@ -44,7 +44,7 @@ namespace sequoia::testing
   template
   <
     class T,
-    class Handler,    
+    class Handler,
     bool PropagateCopy=true,
     bool PropagateMove=true,
     bool PropagateSwap=true
