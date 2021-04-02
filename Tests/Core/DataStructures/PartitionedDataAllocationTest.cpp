@@ -72,28 +72,13 @@ namespace sequoia::testing
     check_equality(LINE(makeMessage("Only a single allocation necessary due to reservation")), allocGetter(t).allocs(), 1);
     check_equality(LINE(makeMessage("Only a single allocation per bucket due to reservation")), innerAllocGetter(t).allocs(), 2);
  
-    auto partitionMaker{
-      [](storage& s) {
-        s.add_slot();
-      }
-    };
-
-    struct alloc_getter
-    {
-      using alloc_equivalence_class = allocation_equivalence_classes::container_of_pointers<allocator>;
-
-      [[nodiscard]]
-      allocator operator()(const storage& s) const
-      {
-        return s.get_allocator();
-      }
-    };
+    auto partitionMaker{ [](storage& s) { s.add_slot(); } };
 
     check_semantics(LINE(""),
                     s,
                     t,
                     partitionMaker,
-                    allocation_info{alloc_getter{},
+                    allocation_info{bucket_alloc_getter<storage>{},
                                     {0_c, {1_c,1_mu}, {1_awp,1_anp}},
                                     { {0_c, {2_c,0_mu}, {2_awp,2_anp}, {0_containers, 2_containers, 3_postmutation}} }
                     });
@@ -114,7 +99,7 @@ namespace sequoia::testing
                     s,
                     t,
                     mutator,
-                    allocation_info{alloc_getter{},
+                    allocation_info{bucket_alloc_getter<storage>{},
                                     {1_c, {1_c,1_mu}, {1_awp,1_anp}},
                                     { {0_c, {2_c,1_mu}, {2_awp,2_anp}, {1_containers, 2_containers, 3_postmutation}} }
                     });
@@ -156,37 +141,14 @@ namespace sequoia::testing
       check_equality(LINE(makeMessage("Only a single allocation necessary due to reservation")), partitionsAllocGetter(t).allocs(), 1);
       check_equality(LINE(makeMessage("Only a single allocation necessary due to reservation")), allocGetter(t).allocs(), 1);
 
-      auto partitionMaker{
-        [](storage& s) {
-          s.add_slot();
-        }
-      };
+      auto partitionMaker{ [](storage& s) { s.add_slot(); } };
 
-      struct alloc_getter
-      {
-        using alloc_equivalence_class = allocation_equivalence_classes::container_of_pointers<allocator>;
-
-        [[nodiscard]]
-        allocator operator()(const storage& s) const
-        {
-          return s.get_allocator();
-        }
-      };
-
-      struct partitions_alloc_getter
-      {
-        using alloc_equivalence_class = allocation_equivalence_classes::container_of_pointers<allocator>;
-
-        [[nodiscard]]
-        partitions_allocator operator()(const storage& s) const
-        {
-          return s.get_partitions_allocator();
-        }
-      };
-
-      check_semantics(LINE(add_type_info<storage>("")), s, t, partitionMaker,
-                           allocation_info{alloc_getter{}, {0_c, {1_c,0_mu}, {1_awp, 1_anp}}},
-                           allocation_info{partitions_alloc_getter{}, {0_c, {1_c,1_mu}, {1_awp, 1_anp}}});
+      check_semantics(LINE(add_type_info<storage>("")),
+                      s,
+                      t,
+                      partitionMaker,
+                      allocation_info{contiguous_alloc_getter<storage>{}, {0_c, {1_c,0_mu}, {1_awp, 1_anp}}},
+                      allocation_info{partitions_alloc_getter<storage>{}, {0_c, {1_c,1_mu}, {1_awp, 1_anp}}});
 
       s.add_slot();
       // []
