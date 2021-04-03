@@ -67,4 +67,43 @@ namespace sequoia::testing
       
     template<class S> using container_type = std::vector<S, shared_counting_allocator<S, PropagateCopy, PropagateMove, PropagateSwap>>;
   };
+
+  template<class Storage>
+  struct bucket_alloc_getter
+  {
+    using allocator = typename Storage::allocator_type;
+    using alloc_equivalence_class = allocation_equivalence_classes::container_of_pointers<allocator>;
+
+    [[nodiscard]]
+    allocator operator()(const Storage& s) const
+    {
+      return s.get_allocator();
+    }
+  };
+
+  template<class Storage>
+  struct contiguous_alloc_getter
+  {
+    using allocator = typename Storage::allocator_type;
+    using alloc_equivalence_class = allocation_equivalence_classes::container_of_pointers<allocator>;
+
+    [[nodiscard]]
+    allocator operator()(const Storage& s) const
+    {
+      return s.get_allocator();
+    }
+  };
+
+  template<class Storage>
+  struct partitions_alloc_getter
+  {
+    using allocator = typename Storage::traits_type::partitions_allocator_type;
+    using alloc_equivalence_class = allocation_equivalence_classes::container_of_pointers<allocator>;
+
+    [[nodiscard]]
+    allocator operator()(const Storage& s) const
+    {
+      return s.get_partitions_allocator();
+    }
+  };
 }
