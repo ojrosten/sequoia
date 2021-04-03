@@ -46,9 +46,9 @@ namespace sequoia::testing
 
   template
   <
-    maths::graph_flavour GraphFlavour,      
+    maths::graph_flavour GraphFlavour,
     class EdgeWeight,
-    class NodeWeight,      
+    class NodeWeight,
     class EdgeWeightPooling,
     class NodeWeightPooling,
     class EdgeStorageTraits,
@@ -60,9 +60,9 @@ namespace sequoia::testing
 
   template
   <
-    maths::graph_flavour GraphFlavour,      
+    maths::graph_flavour GraphFlavour,
     class EdgeWeight,
-    class NodeWeight,      
+    class NodeWeight,
     class EdgeWeightPooling,
     class NodeWeightPooling,
     class EdgeStorageTraits,
@@ -70,4 +70,47 @@ namespace sequoia::testing
   >
   using graph_allocation_operations
     = canonical_graph_allocation_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits, test_mode::standard>;
+
+  template<class Graph>
+  struct edge_alloc_getter
+  {
+    using edge_allocator = typename Graph::edge_allocator_type;
+
+    using alloc_equivalence_class = allocation_equivalence_classes::container_of_pointers<edge_allocator>;
+
+    [[nodiscard]]
+    edge_allocator operator()(const Graph& g) const
+    {
+      return g.get_edge_allocator();
+    }
+  };
+
+  template<class Graph>
+  struct partitions_alloc_getter
+  {
+    using edge_partitions_allocator = decltype(Graph{}.get_edge_allocator(maths::partitions_allocator_tag{}));
+
+    using alloc_equivalence_class = allocation_equivalence_classes::container_of_pointers<edge_partitions_allocator>;
+
+    [[nodiscard]]
+    edge_partitions_allocator operator()(const Graph& g) const
+    {
+      return g.get_edge_allocator(maths::partitions_allocator_tag{});
+    }
+  };
+
+  template<class Graph>
+  struct node_alloc_getter
+  {
+    using node_allocator = typename Graph::node_weight_container_type::allocator_type;
+
+    using alloc_equivalence_class = allocation_equivalence_classes::container_of_pointers<node_allocator>;
+
+    [[nodiscard]]
+    node_allocator operator()(const Graph& g) const
+    {
+      return g.get_node_allocator();
+    }
+  };
+
 }
