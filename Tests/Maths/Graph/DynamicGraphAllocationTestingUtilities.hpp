@@ -86,7 +86,7 @@ namespace sequoia::testing
   };
 
   template<class Graph>
-  struct partitions_alloc_getter
+  struct edge_partitions_alloc_getter
   {
     using edge_partitions_allocator = decltype(Graph{}.get_edge_allocator(maths::partitions_allocator_tag{}));
 

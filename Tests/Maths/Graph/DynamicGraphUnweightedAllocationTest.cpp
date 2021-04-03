@@ -84,7 +84,7 @@ namespace sequoia::testing
                     edge_partitions_allocator{}},
                     nodeMaker,
                     allocation_info{edge_alloc_getter<graph_t>{}, {0_c, {0_c, 0_mu}, {0_awp, 0_anp}}},
-                    allocation_info{partitions_alloc_getter<graph_t>{}, {0_c, {1_c, 1_mu}, {1_awp, 1_anp}}});
+                    allocation_info{edge_partitions_alloc_getter<graph_t>{}, {0_c, {1_c, 1_mu}, {1_awp, 1_anp}}});
     graph_t g2{};
 
     if constexpr (GraphFlavour == graph_flavour::directed)
@@ -94,7 +94,7 @@ namespace sequoia::testing
                       graph_t{{edge_init_t{1}}, {}},
                       nodeMaker,
                       allocation_info{edge_alloc_getter<graph_t>{}, {0_c, {1_c, 0_mu}, {1_awp, 1_anp}}},
-                      allocation_info{partitions_alloc_getter<graph_t>{}, {0_c, {1_c, 1_mu}, {1_awp, 1_anp}}});
+                      allocation_info{edge_partitions_alloc_getter<graph_t>{}, {0_c, {1_c, 1_mu}, {1_awp, 1_anp}}});
     }
     else if constexpr(GraphFlavour == graph_flavour::undirected)
     {
@@ -103,7 +103,7 @@ namespace sequoia::testing
                       graph_t{{edge_init_t{1}}, {edge_init_t{0}}},
                       nodeMaker,
                       allocation_info{edge_alloc_getter<graph_t>{}, {0_c, {1_c, 0_mu}, {1_awp, 1_anp}}},
-                      allocation_info{partitions_alloc_getter<graph_t>{}, {0_c, {1_c, 1_mu}, {1_awp, 1_anp}}});
+                      allocation_info{edge_partitions_alloc_getter<graph_t>{}, {0_c, {1_c, 1_mu}, {1_awp, 1_anp}}});
     }
     else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
     {
@@ -111,7 +111,7 @@ namespace sequoia::testing
                       g2,
                       graph_t{{edge_init_t{0,1,0}}, {edge_init_t{0,1,0}}},
                       nodeMaker, allocation_info{edge_alloc_getter<graph_t>{}, {0_c, {1_c, 0_mu}, {1_awp, 1_anp}}},
-                      allocation_info{partitions_alloc_getter<graph_t>{}, {0_c, {1_c, 1_mu}, {1_awp, 1_anp}}});
+                      allocation_info{edge_partitions_alloc_getter<graph_t>{}, {0_c, {1_c, 1_mu}, {1_awp, 1_anp}}});
     }
     else
     {
@@ -119,7 +119,7 @@ namespace sequoia::testing
                       g2, graph_t{{edge_init_t{1,0}}, {edge_init_t{0,0}}},
                       nodeMaker,
                       allocation_info{edge_alloc_getter<graph_t>{}, {0_c, {1_c, 0_mu}, {1_awp, 1_anp}}},
-                      allocation_info{partitions_alloc_getter<graph_t>{}, {0_c, {1_c, 1_mu}, {1_awp, 1_anp}}});
+                      allocation_info{edge_partitions_alloc_getter<graph_t>{}, {0_c, {1_c, 1_mu}, {1_awp, 1_anp}}});
     }
   }
 
