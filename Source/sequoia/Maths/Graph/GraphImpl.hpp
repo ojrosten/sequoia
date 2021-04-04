@@ -382,11 +382,11 @@ namespace sequoia
         return *this;
       }
 
-      void swap(graph_primitive& other)
-        noexcept(noexcept(static_cast<Connectivity&>(*this).swap(other)) && noexcept(static_cast<Nodes&>(*this).swap(other)))        
+      void swap(graph_primitive& rhs)
+        noexcept(noexcept(Connectivity::swap(rhs)) && noexcept(Nodes::swap(rhs)))        
       {
-        static_cast<Connectivity&>(*this).swap(other);
-        static_cast<Nodes&>(*this).swap(other);
+        Connectivity::swap(rhs);
+        Nodes::swap(rhs);
       }
 
       constexpr void swap_nodes(size_type i, size_type j)

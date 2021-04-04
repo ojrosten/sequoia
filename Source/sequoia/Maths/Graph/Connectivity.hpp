@@ -258,10 +258,10 @@ namespace sequoia
         return *this;
       }
 
-      void swap(connectivity& other)
-        noexcept(noexcept(this->m_Edges, other.m_Edges))
+      void swap(connectivity& rhs)
+        noexcept(noexcept(this->m_Edges, rhs.m_Edges))
       {
-        sequoia::swap(m_Edges, other.m_Edges);
+        sequoia::swap(m_Edges, rhs.m_Edges);
       }
 
       constexpr void swap_edges(edge_index_type node, edge_index_type i, edge_index_type j)

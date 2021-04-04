@@ -205,9 +205,9 @@ namespace sequoia::maths::graph_impl
 
     constexpr node_storage& operator=(node_storage&&) = default;
 
-    constexpr void swap(node_storage& other) noexcept(noexcept(sequoia::swap(this->m_NodeWeights, other.m_NodeWeights)))
+    constexpr void swap(node_storage& rhs) noexcept(noexcept(sequoia::swap(this->m_NodeWeights, rhs.m_NodeWeights)))
     {
-      sequoia::swap(m_NodeWeights, other.m_NodeWeights);
+      sequoia::swap(m_NodeWeights, rhs.m_NodeWeights);
     }
 
     template<alloc Allocator>
@@ -445,5 +445,7 @@ namespace sequoia::maths::graph_impl
 
     constexpr node_storage& operator=(const node_storage&) noexcept = default;
     constexpr node_storage& operator=(node_storage&&)      noexcept = default;
+
+    void swap(node_storage&) noexcept {};
   };
 }
