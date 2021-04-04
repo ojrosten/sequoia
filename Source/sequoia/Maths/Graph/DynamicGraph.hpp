@@ -55,12 +55,12 @@ namespace sequoia::maths
     typename Traits::edge_storage_type;
     typename Traits::edge_storage_type::partitions_allocator_type;
   };
-  
+
   template
   <
-    graph_flavour GraphFlavour,      
+    graph_flavour GraphFlavour,
     class EdgeWeight,
-    class NodeWeight,      
+    class NodeWeight,
     creator EdgeWeightCreator,
     creator NodeWeightCreator,
     class EdgeStorageTraits,
@@ -76,7 +76,7 @@ namespace sequoia::maths
         EdgeWeightCreator
       >,
       graph_impl::node_storage
-      <     
+      <
         NodeWeightCreator,
         NodeWeightStorageTraits
       >
@@ -93,14 +93,14 @@ namespace sequoia::maths
           to_directedness(GraphFlavour),
           edge_traits_type,
           EdgeWeightCreator
-        >,      
+        >,
         graph_impl::node_storage
         <
           NodeWeightCreator,
           NodeWeightStorageTraits
         >
       >;
-    
+
     using node_weight_type    = NodeWeight;
     using size_type           = typename primitive_type::size_type;
     using edges_initializer   = typename primitive_type::edges_initializer;
@@ -129,8 +129,6 @@ namespace sequoia::maths
     graph_base(edges_initializer edges, const edge_allocator_type& edgeAllocator, const EdgePartitionsAllocator& edgePartitionsAllocator)
       : primitive_type{edges, edgeAllocator, edgePartitionsAllocator}
     {}
-
-    
 
     graph_base(const graph_base&) = default;
 
@@ -163,18 +161,13 @@ namespace sequoia::maths
     using primitive_type::swap;
     using primitive_type::swap_nodes;
 
-    friend void swap(graph_base& lhs, graph_base& rhs) noexcept(noexcept(lhs.swap(rhs)))
-    {
-      lhs.swap(rhs);
-    }
-
     using primitive_type::get_edge_allocator;
 
     using primitive_type::add_node;
     using primitive_type::insert_node;
     using primitive_type::erase_node;
 
-    using primitive_type::join;      
+    using primitive_type::join;
     using primitive_type::erase_edge;
 
     using primitive_type::clear;
@@ -192,9 +185,9 @@ namespace sequoia::maths
 
   template
   <
-    graph_flavour GraphFlavour,      
+    graph_flavour GraphFlavour,
     class EdgeWeight,
-    class NodeWeight,      
+    class NodeWeight,
     creator EdgeWeightCreator,
     creator NodeWeightCreator,
     class EdgeStorageTraits,
@@ -219,12 +212,12 @@ namespace sequoia::maths
         EdgeWeightCreator
       >,
       graph_impl::node_storage
-      <     
+      <
         NodeWeightCreator,
         NodeWeightStorageTraits
       >
     >
-  {    
+  {
     using edge_traits_type = graph_impl::dynamic_edge_traits<GraphFlavour, EdgeWeight, EdgeWeightCreator, EdgeStorageTraits, std::size_t>;
     using node_storage_type = graph_impl::node_storage<NodeWeightCreator, NodeWeightStorageTraits>; 
   public:
@@ -236,7 +229,7 @@ namespace sequoia::maths
           to_directedness(GraphFlavour),
           edge_traits_type,
           EdgeWeightCreator
-        >,      
+        >,
         graph_impl::node_storage
         <
           NodeWeightCreator,
@@ -249,7 +242,7 @@ namespace sequoia::maths
     using edges_initializer          = typename primitive_type::edges_initializer;
     using edge_allocator_type        = typename edge_traits_type::edge_allocator_type;
     using node_weight_allocator_type = typename graph_impl::node_allocator_generator<node_storage_type>::allocator_type;
-        
+
     graph_base() = default;
 
     graph_base(edges_initializer edges) : primitive_type{edges} {}
@@ -267,7 +260,7 @@ namespace sequoia::maths
     graph_base(edges_initializer edges, const edge_allocator_type& edgeAllocator, const node_weight_allocator_type& nodeWeightAllocator)
       : primitive_type{edges, edgeAllocator, nodeWeightAllocator}
     {}
-        
+
     template<alloc EdgePartitionsAllocator>
       requires allocatable_partitions<edge_traits_type>
     graph_base(edges_initializer edges, const edge_allocator_type& edgeAllocator, const EdgePartitionsAllocator& edgePartitionsAllocator, const node_weight_allocator_type& nodeWeightAllocator)
@@ -308,7 +301,7 @@ namespace sequoia::maths
     graph_base(graph_base&& in, const edge_allocator_type& edgeAllocator, const EdgePartitionsAllocator& edgePartitionsAllocator, const node_weight_allocator_type& nodeWeightAllocator)
       : primitive_type{std::move(in), edgeAllocator, edgePartitionsAllocator, nodeWeightAllocator}
     {}
-    
+
     graph_base(const graph_base&)     = default;
     graph_base(graph_base&&) noexcept = default;
 
@@ -317,19 +310,13 @@ namespace sequoia::maths
 
     using primitive_type::swap;
     using primitive_type::swap_nodes;
-
-    friend void swap(graph_base& lhs, graph_base& rhs) noexcept(noexcept(lhs.swap(rhs)))
-    {
-      lhs.swap(rhs);
-    }
-
     using primitive_type::get_edge_allocator;
 
     using primitive_type::add_node;
     using primitive_type::insert_node;
     using primitive_type::erase_node;
 
-    using primitive_type::join;      
+    using primitive_type::join;
     using primitive_type::erase_edge;
 
     using primitive_type::clear;
@@ -339,9 +326,9 @@ namespace sequoia::maths
     using primitive_type::reserve_nodes;
     using primitive_type::node_capacity;
     using primitive_type::shrink_to_fit;
-    
+
     using primitive_type::get_node_allocator;
-      
+
     constexpr static graph_flavour flavour{GraphFlavour};
   protected:
     ~graph_base() = default;
@@ -349,9 +336,9 @@ namespace sequoia::maths
 
   template
   <
-    directed_flavour Directedness,      
+    directed_flavour Directedness,
     class EdgeWeight,
-    class NodeWeight,      
+    class NodeWeight,
     creator EdgeWeightCreator=ownership::spawner<EdgeWeight>,
     creator NodeWeightCreator=ownership::spawner<NodeWeight>,
     class EdgeStorageTraits = bucketed_edge_storage_traits,
@@ -360,41 +347,41 @@ namespace sequoia::maths
   class graph final : public
     graph_base
     <
-      graph_impl::to_graph_flavour<Directedness>(),      
+      graph_impl::to_graph_flavour<Directedness>(),
       EdgeWeight,
-      NodeWeight,      
+      NodeWeight,
       EdgeWeightCreator,
       NodeWeightCreator,
       EdgeStorageTraits,
-      NodeWeightStorageTraits    
+      NodeWeightStorageTraits
     >
   {
-  private:
-    using base =
+  public:
+    using node_weight_type = NodeWeight;
+
+    using
       graph_base
       <
         graph_impl::to_graph_flavour<Directedness>(),
         EdgeWeight,
-        NodeWeight,     
-        EdgeWeightCreator,
-        NodeWeightCreator,
-        EdgeStorageTraits,
-        NodeWeightStorageTraits
-      >;
-  public:
-    using node_weight_type = NodeWeight;
-    
-    using
-      graph_base
-      <
-        graph_impl::to_graph_flavour<Directedness>(),      
-        EdgeWeight,
-        NodeWeight, 
+        NodeWeight,
         EdgeWeightCreator,
         NodeWeightCreator,
         EdgeStorageTraits,
         NodeWeightStorageTraits
       >::graph_base;
+
+    using base_type =
+      graph_base
+      <
+        graph_impl::to_graph_flavour<Directedness>(),
+        EdgeWeight,
+        NodeWeight,
+        EdgeWeightCreator,
+        NodeWeightCreator,
+        EdgeStorageTraits,
+        NodeWeightStorageTraits
+      >;
 
     graph(const graph&) = default;
     graph(graph&&) noexcept = default;
@@ -402,15 +389,25 @@ namespace sequoia::maths
     graph& operator=(const graph&) = default;
     graph& operator=(graph&&) = default;
 
-    using base::sort_edges;
-    using base::swap_edges;
+    using base_type::sort_edges;
+    using base_type::swap_edges;
+
+    void swap(graph& rhs) noexcept(noexcept(base_type::swap(rhs)))
+    {
+      base_type::swap(rhs);
+    }
+
+    friend void swap(graph& lhs, graph& rhs) noexcept(noexcept(lhs.swap(rhs)))
+    {
+      lhs.swap(rhs);
+    }
   };
 
   template
   <
-    directed_flavour Directedness,      
+    directed_flavour Directedness,
     class EdgeWeight,
-    class NodeWeight,      
+    class NodeWeight,
     creator EdgeWeightCreator=ownership::spawner<EdgeWeight>,
     creator NodeWeightCreator=ownership::spawner<NodeWeight>,
     class EdgeStorageTraits=bucketed_edge_storage_traits,
@@ -419,9 +416,9 @@ namespace sequoia::maths
   class embedded_graph final : public
     graph_base
     <
-      graph_impl::to_embedded_graph_flavour<Directedness>(),      
+      graph_impl::to_embedded_graph_flavour<Directedness>(),
       EdgeWeight,
-      NodeWeight,     
+      NodeWeight,
       EdgeWeightCreator,
       NodeWeightCreator,
       EdgeStorageTraits,
@@ -430,25 +427,25 @@ namespace sequoia::maths
     {
     public:
       using node_weight_type = NodeWeight;
-      
+
       using
         graph_base
         <
-          graph_impl::to_embedded_graph_flavour<Directedness>(),      
+          graph_impl::to_embedded_graph_flavour<Directedness>(),
           EdgeWeight,
-          NodeWeight,      
+          NodeWeight,
           EdgeWeightCreator,
           NodeWeightCreator,
           EdgeStorageTraits,
           NodeWeightStorageTraits
         >::graph_base;
-      
+
       using base_type =
         graph_base
         <
-          graph_impl::to_embedded_graph_flavour<Directedness>(),      
+          graph_impl::to_embedded_graph_flavour<Directedness>(),
           EdgeWeight,
-          NodeWeight,     
+          NodeWeight,
           EdgeWeightCreator,
           NodeWeightCreator,
           EdgeStorageTraits,
@@ -456,5 +453,15 @@ namespace sequoia::maths
         >;
 
       using base_type::primitive_type::insert_join;
-    };  
+
+      void swap(embedded_graph& rhs) noexcept(noexcept(base_type::swap(rhs)))
+      {
+        base_type::swap(rhs);
+      }
+
+      friend void swap(embedded_graph& lhs, embedded_graph& rhs) noexcept(noexcept(lhs.swap(rhs)))
+      {
+        lhs.swap(rhs);
+      }
+    };
 }
