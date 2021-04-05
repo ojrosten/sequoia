@@ -8,7 +8,6 @@
 #pragma once
 
 #include "DynamicGraphTestingUtilities.hpp"
-#include "NodeStorageAllocationTestingUtilities.hpp"
 #include "Core/DataStructures/PartitionedDataAllocationTestingUtilities.hpp"
 
 namespace sequoia::testing
@@ -99,13 +98,14 @@ namespace sequoia::testing
     }
   };
 
-  template<class Graph, alloc Allocator>
+  template<class Graph>
   struct node_alloc_getter
   {
-    using alloc_equivalence_class = equiv_class_generator_t<typename Graph::node_storage_type, Allocator>;
+    using node_allocator = typename Graph::node_weight_container_type::allocator_type;
+    using alloc_equivalence_class = allocation_equivalence_classes::container_of_pointers<node_allocator>;
 
     [[nodiscard]]
-    Allocator operator()(const Graph& g) const
+    node_allocator operator()(const Graph& g) const
     {
       return g.get_node_allocator();
     }

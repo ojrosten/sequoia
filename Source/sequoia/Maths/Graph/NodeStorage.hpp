@@ -25,6 +25,7 @@
 #include "sequoia/Core/Ownership/DataPoolTraits.hpp"
 
 #include <type_traits>
+#include <algorithm>
 
 namespace sequoia::maths::graph_impl
 {
@@ -341,13 +342,17 @@ namespace sequoia::maths::graph_impl
     {}
 
     constexpr node_storage(indirect_copy_type, const node_storage& in)
-      : m_NodeWeights{clone(in.m_NodeWeights, in.m_NodeWeights.get_allocator())}
-    {}
+      : m_NodeWeights{std::allocator_traits<decltype(in.m_NodeWeights.get_allocator())>::select_on_container_copy_construction(in.m_NodeWeights.get_allocator())}
+    {
+      clone(in.m_NodeWeights);
+    }
 
     template<alloc Allocator>
     constexpr node_storage(indirect_copy_type, const node_storage& in, const Allocator& allocator)
-      : m_NodeWeights{clone(in.m_NodeWeights, allocator)}
-    {}
+      : m_NodeWeights{std::allocator_traits<Allocator>::select_on_container_copy_construction(allocator)}
+    {
+      clone(in.m_NodeWeights);
+    }
   
     // helper methods
 
@@ -377,18 +382,11 @@ namespace sequoia::maths::graph_impl
       return nodeWeights;
     }
 
-    template<alloc Allocator>
-    [[nodiscard]]
-    node_weight_container_type clone(const node_weight_container_type& from, const Allocator& a)
+    void clone(const node_weight_container_type& from)
     {
-      node_weight_container_type nodeWeights(std::allocator_traits<Allocator>::select_on_container_copy_construction(a));
-      nodeWeights.reserve(from.size());
-      for(const auto& weight : from)
-      {
-        nodeWeights.emplace_back(make_node_weight(weight.get()));
-      }
-
-      return nodeWeights;
+      m_NodeWeights.reserve(from.size());
+      std::transform(from.cbegin(), from.cend(), std::back_inserter(m_NodeWeights),
+        [this](const auto& weight) { return make_node_weight(weight.get()); });
     }
 
     [[nodiscard]]
