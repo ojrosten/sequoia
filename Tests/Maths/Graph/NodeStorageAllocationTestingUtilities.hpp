@@ -30,7 +30,14 @@ namespace sequoia::testing
     template<auto Event>
     constexpr static alloc_prediction<Event> increment(alloc_prediction<Event> p) noexcept
     {
-      return {p.unshifted(), p.value() + 1 - p.unshifted()};
+      if constexpr (has_msvc_v && (iterator_debug_level() > 0))
+      {
+        return {p.unshifted(), p.value() + 1 - p.unshifted()};
+      }
+      else
+      {
+        return p;
+      }
     }
   public:
     using alloc_prediction_shifter<allocation_equivalence_classes::container_of_pointers<Allocator>>::alloc_prediction_shifter;
