@@ -36,12 +36,12 @@ namespace sequoia
   }
 
   namespace maths
-  {    
+  {
     struct partitions_allocator_tag{};
-    
+
     template
-    <      
-      directed_flavour Directedness,     
+    <
+      directed_flavour Directedness,
       class EdgeTraits,
       class WeightMaker
     >
@@ -52,11 +52,12 @@ namespace sequoia
       using edge_storage_type = typename EdgeTraits::edge_storage_type;
     public:
 
-      using edge_type        = typename EdgeTraits::edge_type;
-      using edge_weight_type = typename edge_type::weight_type;
-      using edge_index_type  = typename edge_type::index_type;
-      using edge_init_type   = typename EdgeTraits::edge_init_type;
-      using size_type        = typename edge_storage_type::size_type;
+      using edge_type         = typename EdgeTraits::edge_type;
+      using edge_weight_type  = typename edge_type::weight_type;
+      using edge_index_type   = typename edge_type::index_type;
+      using edge_init_type    = typename EdgeTraits::edge_init_type;
+      using size_type         = typename edge_storage_type::size_type;
+      using weight_maker_type = WeightMaker;
 
       static_assert(std::is_unsigned_v<edge_index_type>);
       

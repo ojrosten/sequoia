@@ -78,6 +78,8 @@ namespace sequoia::maths::graph_impl
   private:
     template<class S> using Container = typename Traits::template container_type<S>;
   public:
+    using weight_maker_type          = WeightMaker;
+    using traits_type                = Traits;
     using weight_proxy_type          = typename WeightMaker::proxy;
     using node_weight_container_type = Container<weight_proxy_type>;
     using weight_type                = typename weight_proxy_type::value_type;

@@ -82,9 +82,10 @@ namespace sequoia::maths
       >
     >
   {
+  public:
     using edge_traits_type = graph_impl::dynamic_edge_traits<GraphFlavour, EdgeWeight, EdgeWeightCreator, EdgeStorageTraits, std::size_t>;
     using node_storage_type = graph_impl::node_storage<NodeWeightCreator, NodeWeightStorageTraits>;
-  public:
+
     using primitive_type =
       graph_primitive
       <
@@ -94,11 +95,7 @@ namespace sequoia::maths
           edge_traits_type,
           EdgeWeightCreator
         >,
-        graph_impl::node_storage
-        <
-          NodeWeightCreator,
-          NodeWeightStorageTraits
-        >
+        node_storage_type
       >;
 
     using node_weight_type    = NodeWeight;
@@ -218,9 +215,10 @@ namespace sequoia::maths
       >
     >
   {
-    using edge_traits_type = graph_impl::dynamic_edge_traits<GraphFlavour, EdgeWeight, EdgeWeightCreator, EdgeStorageTraits, std::size_t>;
-    using node_storage_type = graph_impl::node_storage<NodeWeightCreator, NodeWeightStorageTraits>; 
   public:
+    using edge_traits_type = graph_impl::dynamic_edge_traits<GraphFlavour, EdgeWeight, EdgeWeightCreator, EdgeStorageTraits, std::size_t>;
+    using node_storage_type = graph_impl::node_storage<NodeWeightCreator, NodeWeightStorageTraits>;
+
     using primitive_type =
       graph_primitive
       <
@@ -230,13 +228,9 @@ namespace sequoia::maths
           edge_traits_type,
           EdgeWeightCreator
         >,
-        graph_impl::node_storage
-        <
-          NodeWeightCreator,
-          NodeWeightStorageTraits
-        >
+        node_storage_type
       >;
-    
+
     using node_weight_type           = NodeWeight;
     using size_type                  = typename primitive_type::size_type;
     using edges_initializer          = typename primitive_type::edges_initializer;

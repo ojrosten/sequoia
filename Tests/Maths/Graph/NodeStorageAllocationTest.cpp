@@ -36,7 +36,7 @@ namespace sequoia::testing
     using namespace maths::graph_impl;
 
     using storage = node_storage_tester<Sharing, PropagateCopy, PropagateMove, PropagateSwap>;
-    using allocator = typename storage::allocator_type; 
+    using allocator = typename storage::allocator_type;
 
     storage s(allocator{});
     check_equivalence(LINE(""), s, std::initializer_list<int>{});
@@ -54,6 +54,6 @@ namespace sequoia::testing
                     s,
                     t,
                     mutator,
-                    allocation_info{node_alloc_getter<storage>{}, {0_c, {1_c,1_mu}, {1_awp,1_anp}}});
+                    allocation_info{node_storage_alloc_getter<storage>{}, {0_c, {1_c,1_mu}, {1_awp,1_anp}}});
   }
 }

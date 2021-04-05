@@ -8,6 +8,7 @@
 #pragma once
 
 #include "DynamicGraphTestingUtilities.hpp"
+#include "NodeStorageAllocationTestingUtilities.hpp"
 #include "Core/DataStructures/PartitionedDataAllocationTestingUtilities.hpp"
 
 namespace sequoia::testing
@@ -89,7 +90,6 @@ namespace sequoia::testing
   struct edge_partitions_alloc_getter
   {
     using edge_partitions_allocator = decltype(Graph{}.get_edge_allocator(maths::partitions_allocator_tag{}));
-
     using alloc_equivalence_class = allocation_equivalence_classes::container_of_pointers<edge_partitions_allocator>;
 
     [[nodiscard]]
@@ -99,15 +99,13 @@ namespace sequoia::testing
     }
   };
 
-  template<class Graph>
+  template<class Graph, alloc Allocator>
   struct node_alloc_getter
   {
-    using node_allocator = typename Graph::node_weight_container_type::allocator_type;
-
-    using alloc_equivalence_class = allocation_equivalence_classes::container_of_pointers<node_allocator>;
+    using alloc_equivalence_class = equiv_class_generator_t<typename Graph::node_storage_type, Allocator>;
 
     [[nodiscard]]
-    node_allocator operator()(const Graph& g) const
+    Allocator operator()(const Graph& g) const
     {
       return g.get_node_allocator();
     }

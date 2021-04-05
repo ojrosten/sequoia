@@ -11,6 +11,7 @@
 
 #include "sequoia/TestFramework/AllocationCheckers.hpp"
 #include "sequoia/Core/Ownership/DataPool.hpp"
+#include "sequoia/Core/Meta/Concepts.hpp"
 
 namespace sequoia::testing
 {
@@ -60,35 +61,39 @@ namespace sequoia::testing
     }
   };
 
-  template<class Storage>
+  template<class Storage, class Allocator = typename Storage::allocator_type>
   struct equiv_class_generator;
 
-  template<class Storage>
-  using equiv_class_generator_t = typename equiv_class_generator<Storage>::type;
-
-  template<class Sharing, bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
-  struct equiv_class_generator<node_storage_tester<Sharing, PropagateCopy, PropagateMove, PropagateSwap>>
-  {
-    using node_allocator = typename node_storage_tester<Sharing, PropagateCopy, PropagateMove, PropagateSwap>::allocator_type;
-    using type = allocation_equivalence_classes::container_of_pointers<node_allocator>;
-  };
-
-  template<class T, bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
-  struct equiv_class_generator<node_storage_tester<ownership::data_pool<T>, PropagateCopy, PropagateMove, PropagateSwap>>
-  {
-    using node_allocator = typename node_storage_tester<ownership::data_pool<T>, PropagateCopy, PropagateMove, PropagateSwap>::allocator_type;
-    using type = allocation_equivalence_classes::container_of_clonables<node_allocator>;
-  };
+  template<class Storage, class Allocator = typename Storage::allocator_type>
+  using equiv_class_generator_t = typename equiv_class_generator<Storage, Allocator>::type;
 
   template<class Storage>
-  struct node_alloc_getter
-  {
-    using node_allocator = typename Storage::allocator_type;
+  concept has_weight_maker_v = requires { typename Storage::weight_maker_type; };
 
+  template<class Storage, class Allocator>
+    requires has_weight_maker_v<Storage>
+  struct equiv_class_generator<Storage, Allocator>
+  {
+    using allocator_type = Allocator;
+    using type = allocation_equivalence_classes::container_of_pointers<allocator_type>;
+  };
+
+  template<class Storage, class Allocator>
+    requires    has_weight_maker_v<Storage>
+             && same_as<typename Storage::weight_maker_type, ownership::data_pool<typename Storage::weight_type>>
+  struct equiv_class_generator<Storage, Allocator>
+  {
+    using allocator_type = Allocator;
+    using type = allocation_equivalence_classes::container_of_clonables<allocator_type>;
+  };
+
+  template<class Storage>
+  struct node_storage_alloc_getter
+  {
     using alloc_equivalence_class = equiv_class_generator_t<Storage>;
 
     [[nodiscard]]
-    node_allocator operator()(const Storage& s) const
+    auto operator()(const Storage& s) const
     {
       return s.get_node_allocator();
     }
