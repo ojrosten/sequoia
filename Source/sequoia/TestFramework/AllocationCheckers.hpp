@@ -49,6 +49,7 @@
 namespace sequoia::testing
 {  
   enum class individual_allocation_event {
+    initialization,
     copy,
     move,
     mutation,
@@ -70,6 +71,7 @@ namespace sequoia::testing
     return {p.unshifted(), p.value() - p.unshifted()};
   }
 
+  using initialization_prediction        = alloc_prediction<individual_allocation_event::initialization>;
   using copy_prediction                  = alloc_prediction<individual_allocation_event::copy>;
   using move_prediction                  = alloc_prediction<individual_allocation_event::move>;
   using mutation_prediction              = alloc_prediction<individual_allocation_event::mutation>;
@@ -79,6 +81,13 @@ namespace sequoia::testing
   using assign_prediction                = alloc_prediction<assignment_allocation_event::assign>;
   using move_assign_prediction           = alloc_prediction<assignment_allocation_event::move_assign>;
   using copy_like_move_assign_prediction = alloc_prediction<assignment_allocation_event::copy_like_move_assign>;
+
+  [[nodiscard]]
+  SPECULATIVE_CONSTEVAL
+  initialization_prediction operator "" _init(unsigned long long int n) noexcept
+  {
+    return initialization_prediction{static_cast<int>(n)};
+  }
 
   [[nodiscard]]
   SPECULATIVE_CONSTEVAL
@@ -197,7 +206,7 @@ namespace sequoia::testing
 
   template<auto AllocEvent>
   [[nodiscard]]
-  constexpr static alloc_prediction<AllocEvent> increment_msvc_debug_count(alloc_prediction<AllocEvent> p, int val) noexcept
+  constexpr alloc_prediction<AllocEvent> increment_msvc_debug_count(alloc_prediction<AllocEvent> p, int val) noexcept
   {
     if constexpr (has_msvc_v && (iterator_debug_level() > 0))
     {
