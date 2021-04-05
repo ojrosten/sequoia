@@ -386,7 +386,7 @@ namespace sequoia::maths::graph_impl
     {
       m_NodeWeights.reserve(from.size());
       std::transform(from.cbegin(), from.cend(), std::back_inserter(m_NodeWeights),
-        [this](const auto& weight) { return make_node_weight(weight.get()); });
+        [=](const auto& weight) { return make_node_weight(weight.get()); });
     }
 
     [[nodiscard]]
