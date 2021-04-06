@@ -18,7 +18,12 @@ namespace sequoia::testing
     template<test_mode Mode, class T>
     void check(test_logger<Mode>& logger, const T& sequence, const T& prediction)
     {
-      if(check_equality("Size incorrect", logger, sequence.size(), prediction.size()))
+      check_equality("Emptiness incorrect", logger, sequence.empty(), prediction.empty());
+      
+      if(check_equality("Size incorrect",
+                        logger,
+                        fixed_width_unsigned_cast(sequence.size()),
+                        fixed_width_unsigned_cast(prediction.size())))
       {
         if(!prediction.empty())
         {
