@@ -6,13 +6,13 @@
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<int> >]
 
-	  Number of elements
+	  Number of elements incorrect
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
 	  Predicted: 1
 
-	  Number of partitions
+	  Number of partitions incorrect
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
@@ -28,7 +28,7 @@
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<int> >]
 
-	  Number of elements
+	  Number of elements incorrect
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 1
@@ -86,7 +86,7 @@
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<int> >]
 
-	  Number of partitions
+	  Number of partitions incorrect
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 1
@@ -102,7 +102,7 @@
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<int> >]
 
-	  Number of partitions
+	  Number of partitions incorrect
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 2
@@ -125,7 +125,7 @@
 	  Obtained : 0
 	  Predicted: 1
 
-	  Number of partitions different
+	  Number of partitions incorrect
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
@@ -199,7 +199,7 @@
 	[sequoia::data_structures::bucketed_storage<int, sequoia::ownership::independent<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::ownership::independent<int> > >]
 	operator== returned false
 
-	  Number of partitions different
+	  Number of partitions incorrect
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 1
@@ -210,7 +210,7 @@
 	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 64
 	Size 0 should not compare equal to 1
 
-	[unsigned long]
+	[unsigned long long]
 	operator== returned false
 	Obtained : 0
 	Predicted: 1
@@ -220,7 +220,7 @@
 	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 65
 	Size 1 should not compare equal to 0
 
-	[unsigned long]
+	[unsigned long long]
 	operator== returned false
 	Obtained : 1
 	Predicted: 0
@@ -229,7 +229,7 @@
 
 	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 67
 
-	[unsigned long]
+	[unsigned long long]
 	operator== returned false
 	Obtained : 0
 	Predicted: 1
@@ -238,7 +238,7 @@
 
 	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 68
 
-	[unsigned long]
+	[unsigned long long]
 	operator== returned false
 	Obtained : 1
 	Predicted: 0
@@ -247,7 +247,7 @@
 
 	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 69
 
-	[unsigned long]
+	[unsigned long long]
 	operator== returned false
 	Obtained : 1
 	Predicted: 2
@@ -256,7 +256,7 @@
 
 	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 70
 
-	[unsigned long]
+	[unsigned long long]
 	operator== returned false
 	Obtained : 2
 	Predicted: 1
@@ -559,13 +559,13 @@
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<int> >]
 
-	  Number of elements
+	  Number of elements incorrect
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
 	  Predicted: 1
 
-	  Number of partitions
+	  Number of partitions incorrect
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
@@ -581,7 +581,7 @@
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<int> >]
 
-	  Number of elements
+	  Number of elements incorrect
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 1
@@ -639,7 +639,7 @@
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<int> >]
 
-	  Number of partitions
+	  Number of partitions incorrect
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 1
@@ -655,7 +655,7 @@
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<int> >]
 
-	  Number of partitions
+	  Number of partitions incorrect
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 2
@@ -678,7 +678,7 @@
 	  Obtained : 0
 	  Predicted: 1
 
-	  Number of partitions different
+	  Number of partitions incorrect
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
@@ -752,7 +752,7 @@
 	[sequoia::data_structures::bucketed_storage<int, sequoia::ownership::shared<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::ownership::shared<int> > >]
 	operator== returned false
 
-	  Number of partitions different
+	  Number of partitions incorrect
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 1
@@ -763,7 +763,7 @@
 	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 64
 	Size 0 should not compare equal to 1
 
-	[unsigned long]
+	[unsigned long long]
 	operator== returned false
 	Obtained : 0
 	Predicted: 1
@@ -773,7 +773,7 @@
 	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 65
 	Size 1 should not compare equal to 0
 
-	[unsigned long]
+	[unsigned long long]
 	operator== returned false
 	Obtained : 1
 	Predicted: 0
@@ -782,7 +782,7 @@
 
 	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 67
 
-	[unsigned long]
+	[unsigned long long]
 	operator== returned false
 	Obtained : 0
 	Predicted: 1
@@ -791,7 +791,7 @@
 
 	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 68
 
-	[unsigned long]
+	[unsigned long long]
 	operator== returned false
 	Obtained : 1
 	Predicted: 0
@@ -800,7 +800,7 @@
 
 	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 69
 
-	[unsigned long]
+	[unsigned long long]
 	operator== returned false
 	Obtained : 1
 	Predicted: 2
@@ -809,7 +809,7 @@
 
 	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 70
 
-	[unsigned long]
+	[unsigned long long]
 	operator== returned false
 	Obtained : 2
 	Predicted: 1
@@ -1112,13 +1112,13 @@
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<int> >]
 
-	  Number of elements
+	  Number of elements incorrect
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
 	  Predicted: 1
 
-	  Number of partitions
+	  Number of partitions incorrect
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
@@ -1134,7 +1134,7 @@
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<int> >]
 
-	  Number of elements
+	  Number of elements incorrect
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 1
@@ -1192,7 +1192,7 @@
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<int> >]
 
-	  Number of partitions
+	  Number of partitions incorrect
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 1
@@ -1208,7 +1208,7 @@
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<int> >]
 
-	  Number of partitions
+	  Number of partitions incorrect
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 2
@@ -1231,7 +1231,7 @@
 	  Obtained : 0
 	  Predicted: 1
 
-	  Number of partitions different
+	  Number of partitions incorrect
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
@@ -1305,7 +1305,7 @@
 	[sequoia::data_structures::partitioned_sequence<int, sequoia::ownership::independent<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::ownership::independent<int> > >]
 	operator== returned false
 
-	  Number of partitions different
+	  Number of partitions incorrect
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 1
@@ -1316,7 +1316,7 @@
 	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 64
 	Size 0 should not compare equal to 1
 
-	[unsigned long]
+	[unsigned long long]
 	operator== returned false
 	Obtained : 0
 	Predicted: 1
@@ -1326,7 +1326,7 @@
 	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 65
 	Size 1 should not compare equal to 0
 
-	[unsigned long]
+	[unsigned long long]
 	operator== returned false
 	Obtained : 1
 	Predicted: 0
@@ -1335,7 +1335,7 @@
 
 	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 67
 
-	[unsigned long]
+	[unsigned long long]
 	operator== returned false
 	Obtained : 0
 	Predicted: 1
@@ -1344,7 +1344,7 @@
 
 	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 68
 
-	[unsigned long]
+	[unsigned long long]
 	operator== returned false
 	Obtained : 1
 	Predicted: 0
@@ -1353,7 +1353,7 @@
 
 	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 69
 
-	[unsigned long]
+	[unsigned long long]
 	operator== returned false
 	Obtained : 1
 	Predicted: 2
@@ -1362,7 +1362,7 @@
 
 	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 70
 
-	[unsigned long]
+	[unsigned long long]
 	operator== returned false
 	Obtained : 2
 	Predicted: 1
@@ -1665,13 +1665,13 @@
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<int> >]
 
-	  Number of elements
+	  Number of elements incorrect
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
 	  Predicted: 1
 
-	  Number of partitions
+	  Number of partitions incorrect
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
@@ -1687,7 +1687,7 @@
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<int> >]
 
-	  Number of elements
+	  Number of elements incorrect
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 1
@@ -1745,7 +1745,7 @@
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<int> >]
 
-	  Number of partitions
+	  Number of partitions incorrect
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 1
@@ -1761,7 +1761,7 @@
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<int> >]
 
-	  Number of partitions
+	  Number of partitions incorrect
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 2
@@ -1784,7 +1784,7 @@
 	  Obtained : 0
 	  Predicted: 1
 
-	  Number of partitions different
+	  Number of partitions incorrect
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
@@ -1858,7 +1858,7 @@
 	[sequoia::data_structures::partitioned_sequence<int, sequoia::ownership::shared<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::ownership::shared<int> > >]
 	operator== returned false
 
-	  Number of partitions different
+	  Number of partitions incorrect
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 1
@@ -1869,7 +1869,7 @@
 	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 64
 	Size 0 should not compare equal to 1
 
-	[unsigned long]
+	[unsigned long long]
 	operator== returned false
 	Obtained : 0
 	Predicted: 1
@@ -1879,7 +1879,7 @@
 	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 65
 	Size 1 should not compare equal to 0
 
-	[unsigned long]
+	[unsigned long long]
 	operator== returned false
 	Obtained : 1
 	Predicted: 0
@@ -1888,7 +1888,7 @@
 
 	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 67
 
-	[unsigned long]
+	[unsigned long long]
 	operator== returned false
 	Obtained : 0
 	Predicted: 1
@@ -1897,7 +1897,7 @@
 
 	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 68
 
-	[unsigned long]
+	[unsigned long long]
 	operator== returned false
 	Obtained : 1
 	Predicted: 0
@@ -1906,7 +1906,7 @@
 
 	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 69
 
-	[unsigned long]
+	[unsigned long long]
 	operator== returned false
 	Obtained : 1
 	Predicted: 2
@@ -1915,7 +1915,7 @@
 
 	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 70
 
-	[unsigned long]
+	[unsigned long long]
 	operator== returned false
 	Obtained : 2
 	Predicted: 1
@@ -2218,13 +2218,13 @@
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
-	  Number of elements
+	  Number of elements incorrect
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
 	  Predicted: 1
 
-	  Number of partitions
+	  Number of partitions incorrect
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
@@ -2240,7 +2240,7 @@
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
-	  Number of elements
+	  Number of elements incorrect
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 1
@@ -2306,7 +2306,7 @@
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
-	  Number of partitions
+	  Number of partitions incorrect
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 1
@@ -2322,7 +2322,7 @@
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
-	  Number of partitions
+	  Number of partitions incorrect
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 2
@@ -2345,7 +2345,7 @@
 	  Obtained : 0
 	  Predicted: 1
 
-	  Number of partitions different
+	  Number of partitions incorrect
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
@@ -2443,7 +2443,7 @@
 	[sequoia::data_structures::bucketed_storage<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > > > >]
 	operator== returned false
 
-	  Number of partitions different
+	  Number of partitions incorrect
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 1
@@ -2454,7 +2454,7 @@
 	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 64
 	Size 0 should not compare equal to 1
 
-	[unsigned long]
+	[unsigned long long]
 	operator== returned false
 	Obtained : 0
 	Predicted: 1
@@ -2464,7 +2464,7 @@
 	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 65
 	Size 1 should not compare equal to 0
 
-	[unsigned long]
+	[unsigned long long]
 	operator== returned false
 	Obtained : 1
 	Predicted: 0
@@ -2473,7 +2473,7 @@
 
 	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 67
 
-	[unsigned long]
+	[unsigned long long]
 	operator== returned false
 	Obtained : 0
 	Predicted: 1
@@ -2482,7 +2482,7 @@
 
 	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 68
 
-	[unsigned long]
+	[unsigned long long]
 	operator== returned false
 	Obtained : 1
 	Predicted: 0
@@ -2491,7 +2491,7 @@
 
 	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 69
 
-	[unsigned long]
+	[unsigned long long]
 	operator== returned false
 	Obtained : 1
 	Predicted: 2
@@ -2500,7 +2500,7 @@
 
 	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 70
 
-	[unsigned long]
+	[unsigned long long]
 	operator== returned false
 	Obtained : 2
 	Predicted: 1
@@ -2931,13 +2931,13 @@
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
-	  Number of elements
+	  Number of elements incorrect
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
 	  Predicted: 1
 
-	  Number of partitions
+	  Number of partitions incorrect
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
@@ -2953,7 +2953,7 @@
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
-	  Number of elements
+	  Number of elements incorrect
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 1
@@ -3019,7 +3019,7 @@
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
-	  Number of partitions
+	  Number of partitions incorrect
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 1
@@ -3035,7 +3035,7 @@
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
-	  Number of partitions
+	  Number of partitions incorrect
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 2
@@ -3058,7 +3058,7 @@
 	  Obtained : 0
 	  Predicted: 1
 
-	  Number of partitions different
+	  Number of partitions incorrect
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
@@ -3156,7 +3156,7 @@
 	[sequoia::data_structures::bucketed_storage<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > > > >]
 	operator== returned false
 
-	  Number of partitions different
+	  Number of partitions incorrect
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 1
@@ -3167,7 +3167,7 @@
 	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 64
 	Size 0 should not compare equal to 1
 
-	[unsigned long]
+	[unsigned long long]
 	operator== returned false
 	Obtained : 0
 	Predicted: 1
@@ -3177,7 +3177,7 @@
 	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 65
 	Size 1 should not compare equal to 0
 
-	[unsigned long]
+	[unsigned long long]
 	operator== returned false
 	Obtained : 1
 	Predicted: 0
@@ -3186,7 +3186,7 @@
 
 	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 67
 
-	[unsigned long]
+	[unsigned long long]
 	operator== returned false
 	Obtained : 0
 	Predicted: 1
@@ -3195,7 +3195,7 @@
 
 	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 68
 
-	[unsigned long]
+	[unsigned long long]
 	operator== returned false
 	Obtained : 1
 	Predicted: 0
@@ -3204,7 +3204,7 @@
 
 	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 69
 
-	[unsigned long]
+	[unsigned long long]
 	operator== returned false
 	Obtained : 1
 	Predicted: 2
@@ -3213,7 +3213,7 @@
 
 	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 70
 
-	[unsigned long]
+	[unsigned long long]
 	operator== returned false
 	Obtained : 2
 	Predicted: 1
@@ -3644,13 +3644,13 @@
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
-	  Number of elements
+	  Number of elements incorrect
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
 	  Predicted: 1
 
-	  Number of partitions
+	  Number of partitions incorrect
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
@@ -3666,7 +3666,7 @@
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
-	  Number of elements
+	  Number of elements incorrect
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 1
@@ -3732,7 +3732,7 @@
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
-	  Number of partitions
+	  Number of partitions incorrect
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 1
@@ -3748,7 +3748,7 @@
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
-	  Number of partitions
+	  Number of partitions incorrect
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 2
@@ -3771,7 +3771,7 @@
 	  Obtained : 0
 	  Predicted: 1
 
-	  Number of partitions different
+	  Number of partitions incorrect
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
@@ -3869,7 +3869,7 @@
 	[sequoia::data_structures::partitioned_sequence<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > > > >]
 	operator== returned false
 
-	  Number of partitions different
+	  Number of partitions incorrect
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 1
@@ -3880,7 +3880,7 @@
 	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 64
 	Size 0 should not compare equal to 1
 
-	[unsigned long]
+	[unsigned long long]
 	operator== returned false
 	Obtained : 0
 	Predicted: 1
@@ -3890,7 +3890,7 @@
 	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 65
 	Size 1 should not compare equal to 0
 
-	[unsigned long]
+	[unsigned long long]
 	operator== returned false
 	Obtained : 1
 	Predicted: 0
@@ -3899,7 +3899,7 @@
 
 	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 67
 
-	[unsigned long]
+	[unsigned long long]
 	operator== returned false
 	Obtained : 0
 	Predicted: 1
@@ -3908,7 +3908,7 @@
 
 	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 68
 
-	[unsigned long]
+	[unsigned long long]
 	operator== returned false
 	Obtained : 1
 	Predicted: 0
@@ -3917,7 +3917,7 @@
 
 	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 69
 
-	[unsigned long]
+	[unsigned long long]
 	operator== returned false
 	Obtained : 1
 	Predicted: 2
@@ -3926,7 +3926,7 @@
 
 	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 70
 
-	[unsigned long]
+	[unsigned long long]
 	operator== returned false
 	Obtained : 2
 	Predicted: 1
@@ -4357,13 +4357,13 @@
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
-	  Number of elements
+	  Number of elements incorrect
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
 	  Predicted: 1
 
-	  Number of partitions
+	  Number of partitions incorrect
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
@@ -4379,7 +4379,7 @@
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
-	  Number of elements
+	  Number of elements incorrect
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 1
@@ -4445,7 +4445,7 @@
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
-	  Number of partitions
+	  Number of partitions incorrect
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 1
@@ -4461,7 +4461,7 @@
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
-	  Number of partitions
+	  Number of partitions incorrect
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 2
@@ -4484,7 +4484,7 @@
 	  Obtained : 0
 	  Predicted: 1
 
-	  Number of partitions different
+	  Number of partitions incorrect
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
@@ -4582,7 +4582,7 @@
 	[sequoia::data_structures::partitioned_sequence<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > > > >]
 	operator== returned false
 
-	  Number of partitions different
+	  Number of partitions incorrect
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 1
@@ -4593,7 +4593,7 @@
 	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 64
 	Size 0 should not compare equal to 1
 
-	[unsigned long]
+	[unsigned long long]
 	operator== returned false
 	Obtained : 0
 	Predicted: 1
@@ -4603,7 +4603,7 @@
 	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 65
 	Size 1 should not compare equal to 0
 
-	[unsigned long]
+	[unsigned long long]
 	operator== returned false
 	Obtained : 1
 	Predicted: 0
@@ -4612,7 +4612,7 @@
 
 	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 67
 
-	[unsigned long]
+	[unsigned long long]
 	operator== returned false
 	Obtained : 0
 	Predicted: 1
@@ -4621,7 +4621,7 @@
 
 	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 68
 
-	[unsigned long]
+	[unsigned long long]
 	operator== returned false
 	Obtained : 1
 	Predicted: 0
@@ -4630,7 +4630,7 @@
 
 	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 69
 
-	[unsigned long]
+	[unsigned long long]
 	operator== returned false
 	Obtained : 1
 	Predicted: 2
@@ -4639,7 +4639,7 @@
 
 	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 70
 
-	[unsigned long]
+	[unsigned long long]
 	operator== returned false
 	Obtained : 2
 	Predicted: 1

@@ -9,7 +9,7 @@
 	Tests/Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 32
 	Empty queue must have size zero
 
-	[unsigned long]
+	[unsigned long long]
 	operator== returned false
 	Obtained : 0
 	Predicted: 1

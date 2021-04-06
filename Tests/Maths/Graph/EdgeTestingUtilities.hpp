@@ -17,10 +17,7 @@ namespace sequoia::testing
     template<test_mode Mode, class Edge, class Prediction>
     void check_partial(test_logger<Mode>& logger, const Edge& edge, const Prediction& prediction)
     {
-      check_equality("Target node incorrect",
-                     logger,
-                     fixed_width_unsigned_cast(edge.target_node()),
-                     fixed_width_unsigned_cast(prediction.target_node()));
+      check_equality("Target node incorrect", logger, edge.target_node(), prediction.target_node());
     
       if constexpr (!std::is_empty_v<typename Edge::weight_type>)
       {
@@ -31,19 +28,13 @@ namespace sequoia::testing
     template<test_mode Mode, class Edge, class Prediction>
     void check_complementary(test_logger<Mode>& logger, const Edge& edge, const Prediction& prediction)
     {
-      check_equality("Complementary index incorrect",
-                     logger,
-                     fixed_width_unsigned_cast(edge.complementary_index()),
-                     fixed_width_unsigned_cast(prediction.complementary_index()));
+      check_equality("Complementary index incorrect", logger, edge.complementary_index(), prediction.complementary_index());
     }
   
     template<test_mode Mode, class Edge, class Prediction>
     void check_source(test_logger<Mode>& logger, const Edge& edge, const Prediction& prediction)
     {
-      check_equality("Host node incorrect",
-                     logger,
-                     fixed_width_unsigned_cast(edge.source_node()),
-                     fixed_width_unsigned_cast(prediction.source_node()));
+      check_equality("Host node incorrect", logger, edge.source_node(), prediction.source_node());
       check_equality("Inversion flag incorrect", logger, edge.inverted(), prediction.inverted()); 
 
     }

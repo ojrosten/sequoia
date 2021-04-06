@@ -22,7 +22,7 @@ namespace sequoia::testing
     static void check(test_logger<Mode>& logger, const type& stack, const type& prediction)
     {
       check_equality("Emptiness incorrect", logger, stack.empty(), prediction.empty());
-      check_equality("Size incorrect", logger, fixed_width_unsigned_cast(stack.size()), fixed_width_unsigned_cast(prediction.size()));
+      check_equality("Size incorrect", logger, stack.size(), prediction.size());
 
       if(!prediction.empty() && !stack.empty())
       {

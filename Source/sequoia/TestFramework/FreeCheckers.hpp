@@ -379,7 +379,16 @@ namespace sequoia::testing
   template<test_mode Mode, class T, class Advisor=null_advisor>
   bool check_equality(std::string_view description, test_logger<Mode>& logger, const T& value, const T& prediction, tutor<Advisor> advisor=tutor<Advisor>{})
   {
-    return dispatch_check(description, logger, equality_tag{}, value, prediction, std::move(advisor));
+    auto transformer{
+      [](const T& val) -> decltype(auto) {
+        if constexpr(!std::is_same_v<T, bool> && std::is_unsigned_v<T>)
+           return fixed_width_unsigned_cast(val);
+        else
+          return val;
+      }
+    };
+    
+    return dispatch_check(description, logger, equality_tag{}, transformer(value), transformer(prediction), std::move(advisor));
   }
 
   template<test_mode Mode, class T, class S, class... U>

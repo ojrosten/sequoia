@@ -20,10 +20,7 @@ namespace sequoia::testing
     {
       check_equality("Emptiness incorrect", logger, sequence.empty(), prediction.empty());
       
-      if(check_equality("Size incorrect",
-                        logger,
-                        fixed_width_unsigned_cast(sequence.size()),
-                        fixed_width_unsigned_cast(prediction.size())))
+      if(check_equality("Size incorrect", logger, sequence.size(), prediction.size()))
       {
         if(!prediction.empty())
         {

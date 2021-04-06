@@ -8,7 +8,7 @@
 	  operator== returned false
 
 	    Connectivity orders different
-	    [unsigned long]
+	    [unsigned long long]
 	    operator== returned false
 	    Obtained : 0
 	    Predicted: 1
@@ -25,13 +25,13 @@
 	  operator== returned false
 
 	    Connectivity sizes different
-	    [unsigned long]
+	    [unsigned long long]
 	    operator== returned false
 	    Obtained : 0
 	    Predicted: 1
 
 	    Connectivity orders different
-	    [unsigned long]
+	    [unsigned long long]
 	    operator== returned false
 	    Obtained : 0
 	    Predicted: 1
@@ -48,7 +48,7 @@
 	  operator== returned false
 
 	    Connectivity orders different
-	    [unsigned long]
+	    [unsigned long long]
 	    operator== returned false
 	    Obtained : 0
 	    Predicted: 1
@@ -65,13 +65,13 @@
 	  operator== returned false
 
 	    Connectivity sizes different
-	    [unsigned long]
+	    [unsigned long long]
 	    operator== returned false
 	    Obtained : 0
 	    Predicted: 1
 
 	    Connectivity orders different
-	    [unsigned long]
+	    [unsigned long long]
 	    operator== returned false
 	    Obtained : 0
 	    Predicted: 1
@@ -88,7 +88,7 @@
 	  operator== returned false
 
 	    Connectivity orders different
-	    [unsigned long]
+	    [unsigned long long]
 	    operator== returned false
 	    Obtained : 0
 	    Predicted: 1
@@ -105,13 +105,13 @@
 	  operator== returned false
 
 	    Connectivity sizes different
-	    [unsigned long]
+	    [unsigned long long]
 	    operator== returned false
 	    Obtained : 0
 	    Predicted: 1
 
 	    Connectivity orders different
-	    [unsigned long]
+	    [unsigned long long]
 	    operator== returned false
 	    Obtained : 0
 	    Predicted: 1
@@ -128,7 +128,7 @@
 	  operator== returned false
 
 	    Connectivity orders different
-	    [unsigned long]
+	    [unsigned long long]
 	    operator== returned false
 	    Obtained : 0
 	    Predicted: 1
@@ -145,13 +145,13 @@
 	  operator== returned false
 
 	    Connectivity sizes different
-	    [unsigned long]
+	    [unsigned long long]
 	    operator== returned false
 	    Obtained : 0
 	    Predicted: 1
 
 	    Connectivity orders different
-	    [unsigned long]
+	    [unsigned long long]
 	    operator== returned false
 	    Obtained : 0
 	    Predicted: 1
@@ -168,7 +168,7 @@
 	  operator== returned false
 
 	    Connectivity orders different
-	    [unsigned long]
+	    [unsigned long long]
 	    operator== returned false
 	    Obtained : 0
 	    Predicted: 1
@@ -185,13 +185,13 @@
 	  operator== returned false
 
 	    Connectivity sizes different
-	    [unsigned long]
+	    [unsigned long long]
 	    operator== returned false
 	    Obtained : 0
 	    Predicted: 1
 
 	    Connectivity orders different
-	    [unsigned long]
+	    [unsigned long long]
 	    operator== returned false
 	    Obtained : 0
 	    Predicted: 1
@@ -208,7 +208,7 @@
 	  operator== returned false
 
 	    Connectivity orders different
-	    [unsigned long]
+	    [unsigned long long]
 	    operator== returned false
 	    Obtained : 0
 	    Predicted: 1
@@ -225,13 +225,13 @@
 	  operator== returned false
 
 	    Connectivity sizes different
-	    [unsigned long]
+	    [unsigned long long]
 	    operator== returned false
 	    Obtained : 0
 	    Predicted: 1
 
 	    Connectivity orders different
-	    [unsigned long]
+	    [unsigned long long]
 	    operator== returned false
 	    Obtained : 0
 	    Predicted: 1
@@ -248,7 +248,7 @@
 	  operator== returned false
 
 	    Connectivity orders different
-	    [unsigned long]
+	    [unsigned long long]
 	    operator== returned false
 	    Obtained : 0
 	    Predicted: 1
@@ -265,13 +265,13 @@
 	  operator== returned false
 
 	    Connectivity sizes different
-	    [unsigned long]
+	    [unsigned long long]
 	    operator== returned false
 	    Obtained : 0
 	    Predicted: 1
 
 	    Connectivity orders different
-	    [unsigned long]
+	    [unsigned long long]
 	    operator== returned false
 	    Obtained : 0
 	    Predicted: 1
@@ -288,7 +288,7 @@
 	  operator== returned false
 
 	    Connectivity orders different
-	    [unsigned long]
+	    [unsigned long long]
 	    operator== returned false
 	    Obtained : 0
 	    Predicted: 1
@@ -305,13 +305,13 @@
 	  operator== returned false
 
 	    Connectivity sizes different
-	    [unsigned long]
+	    [unsigned long long]
 	    operator== returned false
 	    Obtained : 0
 	    Predicted: 1
 
 	    Connectivity orders different
-	    [unsigned long]
+	    [unsigned long long]
 	    operator== returned false
 	    Obtained : 0
 	    Predicted: 1
@@ -328,7 +328,7 @@
 	  operator== returned false
 
 	    Connectivity orders different
-	    [unsigned long]
+	    [unsigned long long]
 	    operator== returned false
 	    Obtained : 0
 	    Predicted: 1
@@ -345,13 +345,13 @@
 	  operator== returned false
 
 	    Connectivity sizes different
-	    [unsigned long]
+	    [unsigned long long]
 	    operator== returned false
 	    Obtained : 0
 	    Predicted: 1
 
 	    Connectivity orders different
-	    [unsigned long]
+	    [unsigned long long]
 	    operator== returned false
 	    Obtained : 0
 	    Predicted: 1
@@ -368,7 +368,7 @@
 	  operator== returned false
 
 	    Connectivity orders different
-	    [unsigned long]
+	    [unsigned long long]
 	    operator== returned false
 	    Obtained : 0
 	    Predicted: 1
@@ -385,13 +385,13 @@
 	  operator== returned false
 
 	    Connectivity sizes different
-	    [unsigned long]
+	    [unsigned long long]
 	    operator== returned false
 	    Obtained : 0
 	    Predicted: 1
 
 	    Connectivity orders different
-	    [unsigned long]
+	    [unsigned long long]
 	    operator== returned false
 	    Obtained : 0
 	    Predicted: 1

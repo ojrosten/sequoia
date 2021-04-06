@@ -138,10 +138,7 @@ namespace sequoia::testing
 
             const auto mess{append_lines("Lengths differ", std::string{"Obtained string is too "}.append(adjective))};
 
-            check_equality(mess,
-                           logger,
-                           fixed_width_unsigned_cast(obtained.size()),
-                           fixed_width_unsigned_cast(prediction.size()), adv);
+            check_equality(mess, logger, obtained.size(), prediction.size(), adv);
           }
         };
         
@@ -342,8 +339,8 @@ namespace sequoia::testing
 
       check_equality(std::string{"Number of directory entries for "}.append(dir.generic_string()),
                      logger,
-                     fixed_width_unsigned_cast(paths.size()),
-                     fixed_width_unsigned_cast(predictedPaths.size()));
+                     paths.size(),
+                     predictedPaths.size());
 
       const auto iters{std::mismatch(paths.begin(), paths.end(), predictedPaths.begin(), predictedPaths.end(),
           [&dir,&prediction](const fs::path& lhs, const fs::path& rhs){
@@ -484,7 +481,7 @@ namespace sequoia::testing
     template<test_mode Mode, class Advisor>
     static void check(test_logger<Mode>& logger, const type& obtained, const type& prediction, tutor<Advisor> advisor)
     {
-      if(check_equality("Variant Index", logger, fixed_width_unsigned_cast(obtained.index()), fixed_width_unsigned_cast(prediction.index())))
+      if(check_equality("Variant Index", logger, obtained.index(), prediction.index()))
       {
         check(logger, obtained, prediction, advisor, std::make_index_sequence<sizeof...(Ts)>());
       }
