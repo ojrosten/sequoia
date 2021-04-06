@@ -21,16 +21,16 @@ namespace sequoia::testing
     template<test_mode Mode>
     static void check(test_logger<Mode>& logger, const type& queue, const type& prediction)
     {
-      check_equality("Inconsistent emptiness", logger, queue.empty(), prediction.empty());
-      check_equality("Inconsistent size", logger, queue.size(), prediction.size());
+      check_equality("Emptiness incorrect", logger, queue.empty(), prediction.empty());
+      check_equality("Size incorrect", logger, fixed_width_unsigned_cast(queue.size()), fixed_width_unsigned_cast(prediction.size()));
 
       if(!prediction.empty() && !queue.empty())
       {
-        check_equality("Inconsistent top element", logger, queue.top(), prediction.top());
+        check_equality("Top element incorrect", logger, queue.top(), prediction.top());
       }
 
-      check_equality("Inconsistent Hidden state", logger, prediction == queue, true);
-      check_equality("Inconsistent Hidden state, symmetry of ==", logger, queue == prediction, true);
+      check_equality("Hidden state incorrect", logger, prediction == queue, true);
+      check_equality("Hidden state, symmetry of == incorrect", logger, queue == prediction, true);
     }
   };
 }

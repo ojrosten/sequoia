@@ -18,8 +18,17 @@ namespace sequoia::testing
     template<test_mode Mode, class PartitionedData>
     void check_details(test_logger<Mode>& logger, const PartitionedData& data, const PartitionedData& prediction)
     {
-      check_equality("Size different", logger, data.size(), prediction.size());
-      if(check_equality("Number of partitions different", logger, data.num_partitions(), prediction.num_partitions()))
+      check_equality("Emptiness incorrect", logger, data.empty(), prediction.empty());
+      
+      check_equality("Size incorrect",
+                     logger,
+                     fixed_width_unsigned_cast(data.size()),
+                     fixed_width_unsigned_cast(prediction.size()));
+
+      if(check_equality("Number of partitions different",
+                        logger,
+                        fixed_width_unsigned_cast(data.num_partitions()),
+                        fixed_width_unsigned_cast(prediction.num_partitions())))
       {
         for(std::size_t i{}; i<prediction.num_partitions(); ++i)
         {
@@ -57,9 +66,15 @@ namespace sequoia::testing
       const auto numElements{std::accumulate(prediction.begin(), prediction.end(), std::size_t{},
         [](std::size_t val, std::initializer_list<T> partition) { return val += partition.size();})};
 
-      check_equality("Number of elements", logger, data.size(), numElements);
+      check_equality("Number of elements",
+                     logger,
+                     fixed_width_unsigned_cast(data.size()),
+                     fixed_width_unsigned_cast(numElements));
 
-      if(check_equality("Number of partitions", logger, data.num_partitions(), prediction.size()))
+      if(check_equality("Number of partitions",
+                        logger,
+                        fixed_width_unsigned_cast(data.num_partitions()),
+                        fixed_width_unsigned_cast(prediction.size())))
       {
         for(std::size_t i{}; i<prediction.size(); ++i)
         {

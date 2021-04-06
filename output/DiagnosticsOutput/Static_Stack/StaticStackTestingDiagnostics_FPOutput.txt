@@ -37,17 +37,17 @@
 	[sequoia::data_structures::static_stack<int, 1>]
 	operator== returned false
 
-	  Inconsistent emptiness
+	  Emptiness incorrect
 	  [bool]
 	  check failed
 
-	  Inconsistent size
-	  [unsigned long]
+	  Size incorrect
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
 	  Predicted: 1
 
-	  Hidden state
+	  Hidden state incorrect
 	  [bool]
 	  check failed
 
@@ -59,13 +59,13 @@
 	[sequoia::data_structures::static_stack<int, 1>]
 	operator== returned false
 
-	  Inconsistent top element
+	  Top element incorrect
 	  [int]
 	  operator== returned false
 	  Obtained : 2
 	  Predicted: 1
 
-	  Hidden state
+	  Hidden state incorrect
 	  [bool]
 	  check failed
 
@@ -77,17 +77,17 @@
 	[sequoia::data_structures::static_stack<int, 1>]
 	operator== returned false
 
-	  Inconsistent emptiness
+	  Emptiness incorrect
 	  [bool]
 	  check failed
 
-	  Inconsistent size
-	  [unsigned long]
+	  Size incorrect
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
 	  Predicted: 1
 
-	  Hidden state
+	  Hidden state incorrect
 	  [bool]
 	  check failed
 

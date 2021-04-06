@@ -510,7 +510,10 @@ namespace sequoia
 
       constexpr partitioned_sequence_base(const partitioned_sequence_base& in)
         : partitioned_sequence_base(partition_impl::copy_constant<directCopy>{}, in)
-      {}    
+      {}
+
+      [[nodiscard]]
+      bool empty() const noexcept { return m_Storage.empty(); }
  
       [[nodiscard]]
       constexpr auto size() const noexcept { return m_Storage.size(); }

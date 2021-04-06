@@ -7,13 +7,13 @@
 	[std::initializer_list<std::initializer_list<int> >]
 
 	  Number of elements
-	  [unsigned long]
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
 	  Predicted: 1
 
 	  Number of partitions
-	  [unsigned long]
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
 	  Predicted: 1
@@ -29,7 +29,7 @@
 	[std::initializer_list<std::initializer_list<int> >]
 
 	  Number of elements
-	  [unsigned long]
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 1
 	  Predicted: 0
@@ -87,7 +87,7 @@
 	[std::initializer_list<std::initializer_list<int> >]
 
 	  Number of partitions
-	  [unsigned long]
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 1
 	  Predicted: 2
@@ -103,7 +103,7 @@
 	[std::initializer_list<std::initializer_list<int> >]
 
 	  Number of partitions
-	  [unsigned long]
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 2
 	  Predicted: 1
@@ -115,14 +115,18 @@
 	[sequoia::data_structures::bucketed_storage<int, sequoia::ownership::independent<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::ownership::independent<int> > >]
 	operator== returned false
 
-	  Size different
-	  [unsigned long]
+	  Emptiness incorrect
+	  [bool]
+	  check failed
+
+	  Size incorrect
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
 	  Predicted: 1
 
 	  Number of partitions different
-	  [unsigned long]
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
 	  Predicted: 1
@@ -196,7 +200,7 @@
 	operator== returned false
 
 	  Number of partitions different
-	  [unsigned long]
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 1
 	  Predicted: 2
@@ -556,13 +560,13 @@
 	[std::initializer_list<std::initializer_list<int> >]
 
 	  Number of elements
-	  [unsigned long]
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
 	  Predicted: 1
 
 	  Number of partitions
-	  [unsigned long]
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
 	  Predicted: 1
@@ -578,7 +582,7 @@
 	[std::initializer_list<std::initializer_list<int> >]
 
 	  Number of elements
-	  [unsigned long]
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 1
 	  Predicted: 0
@@ -636,7 +640,7 @@
 	[std::initializer_list<std::initializer_list<int> >]
 
 	  Number of partitions
-	  [unsigned long]
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 1
 	  Predicted: 2
@@ -652,7 +656,7 @@
 	[std::initializer_list<std::initializer_list<int> >]
 
 	  Number of partitions
-	  [unsigned long]
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 2
 	  Predicted: 1
@@ -664,14 +668,18 @@
 	[sequoia::data_structures::bucketed_storage<int, sequoia::ownership::shared<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::ownership::shared<int> > >]
 	operator== returned false
 
-	  Size different
-	  [unsigned long]
+	  Emptiness incorrect
+	  [bool]
+	  check failed
+
+	  Size incorrect
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
 	  Predicted: 1
 
 	  Number of partitions different
-	  [unsigned long]
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
 	  Predicted: 1
@@ -745,7 +753,7 @@
 	operator== returned false
 
 	  Number of partitions different
-	  [unsigned long]
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 1
 	  Predicted: 2
@@ -1105,13 +1113,13 @@
 	[std::initializer_list<std::initializer_list<int> >]
 
 	  Number of elements
-	  [unsigned long]
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
 	  Predicted: 1
 
 	  Number of partitions
-	  [unsigned long]
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
 	  Predicted: 1
@@ -1127,7 +1135,7 @@
 	[std::initializer_list<std::initializer_list<int> >]
 
 	  Number of elements
-	  [unsigned long]
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 1
 	  Predicted: 0
@@ -1185,7 +1193,7 @@
 	[std::initializer_list<std::initializer_list<int> >]
 
 	  Number of partitions
-	  [unsigned long]
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 1
 	  Predicted: 2
@@ -1201,7 +1209,7 @@
 	[std::initializer_list<std::initializer_list<int> >]
 
 	  Number of partitions
-	  [unsigned long]
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 2
 	  Predicted: 1
@@ -1213,14 +1221,18 @@
 	[sequoia::data_structures::partitioned_sequence<int, sequoia::ownership::independent<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::ownership::independent<int> > >]
 	operator== returned false
 
-	  Size different
-	  [unsigned long]
+	  Emptiness incorrect
+	  [bool]
+	  check failed
+
+	  Size incorrect
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
 	  Predicted: 1
 
 	  Number of partitions different
-	  [unsigned long]
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
 	  Predicted: 1
@@ -1294,7 +1306,7 @@
 	operator== returned false
 
 	  Number of partitions different
-	  [unsigned long]
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 1
 	  Predicted: 2
@@ -1654,13 +1666,13 @@
 	[std::initializer_list<std::initializer_list<int> >]
 
 	  Number of elements
-	  [unsigned long]
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
 	  Predicted: 1
 
 	  Number of partitions
-	  [unsigned long]
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
 	  Predicted: 1
@@ -1676,7 +1688,7 @@
 	[std::initializer_list<std::initializer_list<int> >]
 
 	  Number of elements
-	  [unsigned long]
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 1
 	  Predicted: 0
@@ -1734,7 +1746,7 @@
 	[std::initializer_list<std::initializer_list<int> >]
 
 	  Number of partitions
-	  [unsigned long]
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 1
 	  Predicted: 2
@@ -1750,7 +1762,7 @@
 	[std::initializer_list<std::initializer_list<int> >]
 
 	  Number of partitions
-	  [unsigned long]
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 2
 	  Predicted: 1
@@ -1762,14 +1774,18 @@
 	[sequoia::data_structures::partitioned_sequence<int, sequoia::ownership::shared<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::ownership::shared<int> > >]
 	operator== returned false
 
-	  Size different
-	  [unsigned long]
+	  Emptiness incorrect
+	  [bool]
+	  check failed
+
+	  Size incorrect
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
 	  Predicted: 1
 
 	  Number of partitions different
-	  [unsigned long]
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
 	  Predicted: 1
@@ -1843,7 +1859,7 @@
 	operator== returned false
 
 	  Number of partitions different
-	  [unsigned long]
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 1
 	  Predicted: 2
@@ -2203,13 +2219,13 @@
 	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
 	  Number of elements
-	  [unsigned long]
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
 	  Predicted: 1
 
 	  Number of partitions
-	  [unsigned long]
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
 	  Predicted: 1
@@ -2225,7 +2241,7 @@
 	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
 	  Number of elements
-	  [unsigned long]
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 1
 	  Predicted: 0
@@ -2291,7 +2307,7 @@
 	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
 	  Number of partitions
-	  [unsigned long]
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 1
 	  Predicted: 2
@@ -2307,7 +2323,7 @@
 	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
 	  Number of partitions
-	  [unsigned long]
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 2
 	  Predicted: 1
@@ -2319,14 +2335,18 @@
 	[sequoia::data_structures::bucketed_storage<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > > > >]
 	operator== returned false
 
-	  Size different
-	  [unsigned long]
+	  Emptiness incorrect
+	  [bool]
+	  check failed
+
+	  Size incorrect
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
 	  Predicted: 1
 
 	  Number of partitions different
-	  [unsigned long]
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
 	  Predicted: 1
@@ -2424,7 +2444,7 @@
 	operator== returned false
 
 	  Number of partitions different
-	  [unsigned long]
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 1
 	  Predicted: 2
@@ -2912,13 +2932,13 @@
 	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
 	  Number of elements
-	  [unsigned long]
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
 	  Predicted: 1
 
 	  Number of partitions
-	  [unsigned long]
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
 	  Predicted: 1
@@ -2934,7 +2954,7 @@
 	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
 	  Number of elements
-	  [unsigned long]
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 1
 	  Predicted: 0
@@ -3000,7 +3020,7 @@
 	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
 	  Number of partitions
-	  [unsigned long]
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 1
 	  Predicted: 2
@@ -3016,7 +3036,7 @@
 	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
 	  Number of partitions
-	  [unsigned long]
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 2
 	  Predicted: 1
@@ -3028,14 +3048,18 @@
 	[sequoia::data_structures::bucketed_storage<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > > > >]
 	operator== returned false
 
-	  Size different
-	  [unsigned long]
+	  Emptiness incorrect
+	  [bool]
+	  check failed
+
+	  Size incorrect
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
 	  Predicted: 1
 
 	  Number of partitions different
-	  [unsigned long]
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
 	  Predicted: 1
@@ -3133,7 +3157,7 @@
 	operator== returned false
 
 	  Number of partitions different
-	  [unsigned long]
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 1
 	  Predicted: 2
@@ -3621,13 +3645,13 @@
 	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
 	  Number of elements
-	  [unsigned long]
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
 	  Predicted: 1
 
 	  Number of partitions
-	  [unsigned long]
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
 	  Predicted: 1
@@ -3643,7 +3667,7 @@
 	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
 	  Number of elements
-	  [unsigned long]
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 1
 	  Predicted: 0
@@ -3709,7 +3733,7 @@
 	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
 	  Number of partitions
-	  [unsigned long]
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 1
 	  Predicted: 2
@@ -3725,7 +3749,7 @@
 	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
 	  Number of partitions
-	  [unsigned long]
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 2
 	  Predicted: 1
@@ -3737,14 +3761,18 @@
 	[sequoia::data_structures::partitioned_sequence<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > > > >]
 	operator== returned false
 
-	  Size different
-	  [unsigned long]
+	  Emptiness incorrect
+	  [bool]
+	  check failed
+
+	  Size incorrect
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
 	  Predicted: 1
 
 	  Number of partitions different
-	  [unsigned long]
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
 	  Predicted: 1
@@ -3842,7 +3870,7 @@
 	operator== returned false
 
 	  Number of partitions different
-	  [unsigned long]
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 1
 	  Predicted: 2
@@ -4330,13 +4358,13 @@
 	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
 	  Number of elements
-	  [unsigned long]
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
 	  Predicted: 1
 
 	  Number of partitions
-	  [unsigned long]
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
 	  Predicted: 1
@@ -4352,7 +4380,7 @@
 	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
 	  Number of elements
-	  [unsigned long]
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 1
 	  Predicted: 0
@@ -4418,7 +4446,7 @@
 	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
 	  Number of partitions
-	  [unsigned long]
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 1
 	  Predicted: 2
@@ -4434,7 +4462,7 @@
 	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
 	  Number of partitions
-	  [unsigned long]
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 2
 	  Predicted: 1
@@ -4446,14 +4474,18 @@
 	[sequoia::data_structures::partitioned_sequence<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > > > >]
 	operator== returned false
 
-	  Size different
-	  [unsigned long]
+	  Emptiness incorrect
+	  [bool]
+	  check failed
+
+	  Size incorrect
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
 	  Predicted: 1
 
 	  Number of partitions different
-	  [unsigned long]
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
 	  Predicted: 1
@@ -4551,7 +4583,7 @@
 	operator== returned false
 
 	  Number of partitions different
-	  [unsigned long]
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 1
 	  Predicted: 2
