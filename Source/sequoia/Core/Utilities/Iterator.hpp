@@ -17,17 +17,17 @@
 
 namespace sequoia::utilities
 {
-  
+
   struct null_data_policy
   {
   protected:
     constexpr null_data_policy() = default;
-      
+
     constexpr null_data_policy(const null_data_policy&)     = default;
     constexpr null_data_policy(null_data_policy&&) noexcept = default;
-    
+
     ~null_data_policy() = default;
-    
+
     constexpr null_data_policy& operator=(const null_data_policy&)     = default;
     constexpr null_data_policy& operator=(null_data_policy&&) noexcept = default;
 
@@ -37,13 +37,13 @@ namespace sequoia::utilities
     [[nodiscard]]
     friend constexpr bool operator!=(const null_data_policy&, const null_data_policy&) noexcept = default;
   };
-  
+
   template<class Iterator, class AuxiliaryDataPolicy=null_data_policy>
   struct identity_dereference_policy : public AuxiliaryDataPolicy
   {
-    using base_iterator_type    = Iterator;    
+    using base_iterator_type    = Iterator;
     using auxiliary_data_policy = AuxiliaryDataPolicy;
-    
+
     using value_type = typename std::iterator_traits<Iterator>::value_type;
     using reference  = typename std::iterator_traits<Iterator>::reference;
     using pointer    = typename std::iterator_traits<Iterator>::pointer;
@@ -70,12 +70,12 @@ namespace sequoia::utilities
     friend constexpr bool operator!=(const identity_dereference_policy&, const identity_dereference_policy&) noexcept = default;
   protected:
     constexpr identity_dereference_policy(identity_dereference_policy&&) noexcept = default;
-    
+
     ~identity_dereference_policy() = default;
 
     constexpr identity_dereference_policy& operator=(const identity_dereference_policy&)     = default;
     constexpr identity_dereference_policy& operator=(identity_dereference_policy&&) noexcept = default;
-  };  
+  };
 
   /*! \class iterator
       \brief An iterator with policies controlling dereferencing and auxiliary data.
@@ -89,12 +89,12 @@ namespace sequoia::utilities
   template<class Iterator, dereference_policy DereferencePolicy>
   class iterator : public DereferencePolicy
   {
-  public:    
+  public:
     using dereference_policy = DereferencePolicy;
     using base_iterator_type = Iterator;
-      
+
     using iterator_category      = typename std::iterator_traits<Iterator>::iterator_category;
-    using difference_type        = typename std::iterator_traits<Iterator>::difference_type;      
+    using difference_type        = typename std::iterator_traits<Iterator>::difference_type;
     using value_type             = typename DereferencePolicy::value_type;
     using pointer                = typename DereferencePolicy::pointer;
     using reference              = typename DereferencePolicy::reference;
@@ -116,12 +116,12 @@ namespace sequoia::utilities
                      std::remove_cvref_t<impl::type_generator_t<DerefPol>>>)
     constexpr iterator(iterator<Iter, DerefPol> iter)
       : DereferencePolicy{static_cast<DerefPol&>(iter)}
-      , m_BaseIterator{iter.base_iterator()} 
+      , m_BaseIterator{iter.base_iterator()}
     {
     }
-      
+
     ~iterator() = default;
-      
+
     constexpr iterator(const iterator&)                = default;
     constexpr iterator(iterator&&) noexcept            = default;
     constexpr iterator& operator=(const iterator&)     = default;
@@ -182,7 +182,7 @@ namespace sequoia::utilities
       iterator tmp(it);
       return tmp+=n;
     }
-      
+
     constexpr iterator operator++(int)
     {
       iterator tmp{*this};
@@ -206,7 +206,7 @@ namespace sequoia::utilities
     {
       return i.base_iterator() - j.base_iterator();
     }
-      
+
     constexpr iterator operator--(int)
     {
       iterator tmp{*this};

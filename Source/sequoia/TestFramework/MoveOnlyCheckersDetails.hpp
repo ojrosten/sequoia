@@ -19,13 +19,13 @@ namespace sequoia::testing::impl
   bool check_semantics(test_logger<Mode>& logger, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, Mutator m, const Args&... args)
   {
     sentinel<Mode> sentry{logger, ""};
-    
+
     if(!actions.check_preconditions(logger, x, y, xClone, yClone, args...))
       return false;
 
     auto opt{check_move_construction(logger, actions, std::move(x), xClone, args...)};
     if(!opt) return false;
-      
+
     if constexpr (do_swap<Args...>::value)
     {
       if(check_swap(logger, actions, std::move(*opt), std::move(y), xClone, yClone, args...))
@@ -34,7 +34,7 @@ namespace sequoia::testing::impl
       }
     }
     else
-    {      
+    {
       check_move_assign(logger, actions, *opt, std::move(y), yClone, std::move(m), args...);
     }
 

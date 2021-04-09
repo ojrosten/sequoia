@@ -34,12 +34,12 @@ namespace sequoia
       b = std::move(tmp);
     }
   }
-  
+
   template<class Iter> constexpr void iter_swap(Iter a, Iter b)
   {
     sequoia::swap(*a, *b);
   }
-  
+
   template<class FwdIter, class Comparer=std::less<std::decay_t<decltype(*FwdIter())>>>
   constexpr void bubble_up(FwdIter begin, FwdIter current, Comparer comp = Comparer{})
   {
@@ -53,7 +53,7 @@ namespace sequoia
       bubble_up(begin, parent, comp);
     }
   }
-  
+
   template<class FwdIter, class Comparer=std::less<std::decay_t<decltype(*FwdIter())>>>
   constexpr void bubble_down(FwdIter begin, FwdIter current, FwdIter end, Comparer comp = Comparer{})
   {
@@ -61,7 +61,7 @@ namespace sequoia
     if(distance(begin, end) <= 1) return;
 
     if(2*(distance(begin, current) + 1) < distance(begin, end))
-    {    
+    {
       auto rightChild{begin + 2*(distance(begin, current) + 1)};
       auto leftChild{rightChild - 1};
 
@@ -84,11 +84,11 @@ namespace sequoia
   {
     using namespace std;
     if(distance(begin, end) <= 1) return;
-    
+
     auto current{begin+1};
     while(current != end)
     {
-      bubble_up(begin, current, comp);        
+      bubble_up(begin, current, comp);
       ++current;
     }
   }
@@ -98,7 +98,7 @@ namespace sequoia
   {
     using namespace std;
     if(distance(begin, end) <= 1) return;
-    
+
     sequoia::make_heap(begin, end, comp);
     while(end != begin)
     {
@@ -119,7 +119,7 @@ namespace sequoia
     const auto distToEnd{distance(n_first, last)};
     const auto distFromBegin{distance(first, n_first)};
     const auto retIter{next(first, distToEnd)};
-    
+
     const auto dist{min(distToEnd, distFromBegin)};
 
     const auto unswapped{next(first, dist)};
@@ -141,12 +141,12 @@ namespace sequoia
   constexpr void cluster(FwdIter begin, FwdIter end, Comparer comp = Comparer{})
   {
     if(begin == end) return;
-    
+
     auto current{begin};
     while((current != end) && comp(*current, *begin)) ++current;
 
     auto endOfCluster{current};
-    
+
     while(current != end)
     {
       if(comp(*current, *begin))
@@ -154,7 +154,7 @@ namespace sequoia
         iter_swap(endOfCluster, current);
         ++endOfCluster;
       }
-      
+
       ++current;
     }
 
@@ -165,7 +165,7 @@ namespace sequoia
   constexpr FwdIter lower_bound(FwdIter begin, FwdIter end, const T& val, Comparer comp = Comparer{})
   {
     while(begin != end)
-    {        
+    {
       using namespace std;
       auto partition{begin + distance(begin, end)/2};
       if(comp(*partition, val))

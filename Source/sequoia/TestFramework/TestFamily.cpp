@@ -62,7 +62,7 @@ namespace sequoia::testing
         fs::remove_all(output);
         fs::create_directories(output);
         fs::copy(original, workingCopy, fs::copy_options::recursive | fs::copy_options::overwrite_existing);
-        
+
         if(fs::exists(originalAux))
           fs::copy(originalAux, workingAux, fs::copy_options::recursive | fs::copy_options::overwrite_existing);
 
@@ -204,7 +204,7 @@ namespace sequoia::testing
   void test_family::summary_writer::to_file(const std::filesystem::path& filename, const log_summary& summary)
   {
     if(filename.empty()) return;
-    
+
     auto mode{std::ios_base::out};
     if(auto found{m_Record.find(filename)}; found != m_Record.end())
     {

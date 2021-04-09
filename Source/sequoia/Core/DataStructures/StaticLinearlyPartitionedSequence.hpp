@@ -23,11 +23,11 @@ namespace sequoia::data_structures
     constexpr static bool throw_on_range_error{true};
     constexpr static std::size_t num_partitions_v{Npartitions};
     constexpr static std::size_t num_elements_v{Npartitions * NelementsPerPartition};
-      
+
     using index_type           = IndexType;
-    using partition_index_type = std::make_unsigned_t<IndexType>;      
+    using partition_index_type = std::make_unsigned_t<IndexType>;
     using partitions_type      = maths::static_linear_sequence<partition_index_type, NelementsPerPartition, NelementsPerPartition, Npartitions, partition_index_type>;
-      
+
     template<class S> using container_type = std::array<S, num_elements_v>;
 
     constexpr static partitions_type make_partitions(std::initializer_list<std::initializer_list<T>>)

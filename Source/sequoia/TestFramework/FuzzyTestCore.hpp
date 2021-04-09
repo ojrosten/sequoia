@@ -9,11 +9,11 @@
 
 /*! \file
     \brief Extension of testing framework for inexact comparisons.
- 
+
     This header provides utilities for performing a comparison between two instances of
     a type utilising a generic function object. A particular use-case is comparison
     within a tolerance, for which a concrete function object is supplied.
-    
+
     The pattern is to provide a new overload for
     \ref dispatch_check_free_overloads "dispatch_check". Internally, if no compare
     object is identified for the given type, an attempt it made to interpret the type as
@@ -36,11 +36,11 @@ namespace sequoia::testing
   struct fuzzy_compare
   {
     explicit fuzzy_compare(Compare c) : compare{std::move(c)} {}
-      
+
     Compare compare;
   };
 
-  
+
 
   /*! \brief Concept for wether an object of type Compare defines a function, report, which accepts
       two instance of a type, T.
@@ -59,7 +59,7 @@ namespace sequoia::testing
   /*! \brief Adds to the overload set dispatch_check_free_overloads */
   template<test_mode Mode, class Compare, class T, class Advisor>
   bool dispatch_check(std::string_view description, test_logger<Mode>& logger, fuzzy_compare<Compare> c, const T& obtained, const T& prediction, tutor<Advisor> advisor)
-  {  
+  {
     sentinel<Mode> sentry{logger, add_type_info<T>(description)};
 
     if constexpr(invocable<Compare, T, T>)
@@ -76,9 +76,9 @@ namespace sequoia::testing
         {
           message = append_lines("Fuzzy comparison failed", prediction_message(to_string(obtained), to_string(prediction)));
         }
-       
+
         append_advice(message, {advisor, obtained, prediction});
-          
+
         sentry.log_failure(message);
       }
 
@@ -127,13 +127,13 @@ namespace sequoia::testing
     template<class T, class Compare, class Advisor=null_advisor>
     bool check_approx_equality(std::string_view description, Compare compare, const T& obtained, const T& prediction, tutor<Advisor> advisor=tutor<Advisor>{})
     {
-      return testing::check_approx_equality(description, m_Logger, std::move(compare), obtained, prediction, std::move(advisor));      
+      return testing::check_approx_equality(description, m_Logger, std::move(compare), obtained, prediction, std::move(advisor));
     }
 
     template<class Iter, class PredictionIter, class Compare, class Advisor=null_advisor>
     bool check_range_approx(std::string_view description, Compare compare, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast, tutor<Advisor> advisor=tutor<Advisor>{})
     {
-      return testing::check_range_approx(description, m_Logger, std::move(compare), first, last, predictionFirst, predictionLast, std::move(advisor));      
+      return testing::check_range_approx(description, m_Logger, std::move(compare), first, last, predictionFirst, predictionLast, std::move(advisor));
     }
 
   protected:
@@ -148,7 +148,7 @@ namespace sequoia::testing
 
   template<test_mode mode>
   using fuzzy_checker = checker<mode, fuzzy_extender<mode>>;
-  
+
   template<test_mode mode>
   using basic_fuzzy_test = basic_test<fuzzy_checker<mode>>;
 
@@ -167,7 +167,7 @@ namespace sequoia::testing
     T m_Tol{};
   public:
     using value_type = T;
-    
+
     constexpr explicit within_tolerance(T tol) : m_Tol{std::move(tol)} {};
 
     [[nodiscard]]

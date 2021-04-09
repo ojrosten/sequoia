@@ -19,20 +19,20 @@ namespace sequoia::testing
   {
     using contig_edge_traits = custom_allocator_contiguous_edge_storage_traits;
     using bucket_edge_traits = custom_allocator_bucketed_edge_storage_traits;
-    
+
     struct null_weight {};
 
     graph_test_helper<null_weight, null_weight, unweighted_graph_allocation_test> helper{*this};
 
     helper.run_tests<contig_edge_traits, node_traits<null_weight>>();
-    helper.run_tests<bucket_edge_traits, node_traits<null_weight>>();      
+    helper.run_tests<bucket_edge_traits, node_traits<null_weight>>();
   }
 
   template
   <
-    maths::graph_flavour GraphFlavour,    
+    maths::graph_flavour GraphFlavour,
     class EdgeWeight,
-    class NodeWeight,    
+    class NodeWeight,
     class EdgeWeightCreator,
     class NodeWeightCreator,
     class EdgeStorageTraits,
@@ -77,10 +77,10 @@ namespace sequoia::testing
     g.shrink_to_fit();
     check_equality(LINE("May fail if stl implementation doesn't actually shrink to fit!"), g.edges_capacity(), 0_sz);
     check_equality(LINE("May fail if stl implementation doesn't actually shrink to fit!"), g.node_capacity(), 0_sz);
-      
+
     // x----x
     using edge_init_t = typename Graph::edge_init_type;
-    
+
     auto nodeMaker{ [](Graph& g) { g.add_node(); } };
 
     check_semantics(LINE(""),

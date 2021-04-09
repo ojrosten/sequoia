@@ -49,7 +49,7 @@ namespace sequoia::testing
     }
 
     using container_type = std::vector<T, Allocator>;
-    
+
     container_type x{};
 
     [[nodiscard]]
@@ -129,7 +129,7 @@ namespace sequoia::testing
     {
       lhs.swap(rhs);
     }
-      
+
     string_type x{};
 
     [[nodiscard]]
@@ -229,7 +229,7 @@ namespace sequoia::testing
     {
       lhs.swap(rhs);
     }
-      
+
     container_type x{};
 
     [[nodiscard]]
@@ -301,7 +301,7 @@ namespace sequoia::testing
     {
       lhs.swap(rhs);
     }
-      
+
     std::vector<T, xAllocator> x{};
     std::vector<U, yAllocator> y{};
 
@@ -332,7 +332,7 @@ namespace sequoia::testing
     using allocator_type = Allocator;
 
     broken_equality(std::initializer_list<T> list) : x{list} {}
-      
+
     broken_equality(std::initializer_list<T> list, const allocator_type& a) : x(list, a) {}
 
     broken_equality(const broken_equality&) = default;
@@ -351,7 +351,7 @@ namespace sequoia::testing
     {
       std::swap(lhs.x, rhs.x);
     }
-      
+
     std::vector<T, Allocator> x{};
 
     [[nodiscard]]
@@ -439,7 +439,7 @@ namespace sequoia::testing
     broken_copy(broken_copy&&) = default;
 
     broken_copy(broken_copy&& other, const allocator_type& a) : x(std::move(other.x), a) {}
-      
+
     broken_copy& operator=(const broken_copy&) = default;
 
     broken_copy& operator=(broken_copy&&) = default;
@@ -448,7 +448,7 @@ namespace sequoia::testing
     {
       std::swap(lhs.x, rhs.x);
     }
-      
+
     std::vector<T, Allocator> x{};
 
     [[nodiscard]]
@@ -490,7 +490,7 @@ namespace sequoia::testing
     broken_para_copy(broken_para_copy&&) = default;
 
     broken_para_copy(broken_para_copy&& other, const allocator_type& a) : x(std::move(other.x), a) {}
-      
+
     broken_para_copy& operator=(const broken_para_copy&) = default;
 
     broken_para_copy& operator=(broken_para_copy&&) = default;
@@ -499,7 +499,7 @@ namespace sequoia::testing
     {
       std::swap(lhs.x, rhs.x);
     }
-      
+
     std::vector<T, Allocator> x{};
 
     [[nodiscard]]
@@ -535,14 +535,14 @@ namespace sequoia::testing
 
     broken_move(const broken_move& other, const allocator_type& a) : x(other.x, a) {}
 
-    broken_move(broken_move&&) noexcept 
+    broken_move(broken_move&&) noexcept
     {
       // Do nothing
     }
 
     broken_move(broken_move&& other, const allocator_type& a) : x(std::move(other.x), a)
     {}
-      
+
     broken_move& operator=(const broken_move&) = default;
 
     broken_move& operator=(broken_move&&) = default;
@@ -551,7 +551,7 @@ namespace sequoia::testing
     {
       std::swap(lhs.x, rhs.x);
     }
-      
+
     std::vector<T, Allocator> x{};
 
     [[nodiscard]]
@@ -593,7 +593,7 @@ namespace sequoia::testing
     {
       // do nothing
     }
-      
+
     broken_para_move& operator=(const broken_para_move&) = default;
 
     broken_para_move& operator=(broken_para_move&&) = default;
@@ -602,7 +602,7 @@ namespace sequoia::testing
     {
       std::swap(lhs.x, rhs.x);
     }
-      
+
     std::vector<T, Allocator> x{};
 
     [[nodiscard]]
@@ -641,7 +641,7 @@ namespace sequoia::testing
     broken_copy_assignment(broken_copy_assignment&&) = default;
 
     broken_copy_assignment(broken_copy_assignment&& other, const allocator_type& a) : x(std::move(other.x), a) {}
-      
+
     broken_copy_assignment& operator=(const broken_copy_assignment&)
     {
       return *this;
@@ -653,7 +653,7 @@ namespace sequoia::testing
     {
       std::swap(lhs.x, rhs.x);
     }
-      
+
     std::vector<T, Allocator> x{};
 
     [[nodiscard]]
@@ -692,7 +692,7 @@ namespace sequoia::testing
     broken_self_copy_assignment(broken_self_copy_assignment&&) = default;
 
     broken_self_copy_assignment(broken_self_copy_assignment&& other, const allocator_type& a) : x(std::move(other.x), a) {}
-      
+
     broken_self_copy_assignment& operator=(const broken_self_copy_assignment& other)
     {
       if(&other == this)
@@ -703,7 +703,7 @@ namespace sequoia::testing
       {
         x = other.x;
       }
-      
+
       return *this;
     }
 
@@ -713,7 +713,7 @@ namespace sequoia::testing
     {
       std::swap(lhs.x, rhs.x);
     }
-      
+
     std::vector<T, Allocator> x{};
 
     [[nodiscard]]
@@ -746,9 +746,9 @@ namespace sequoia::testing
     broken_move_assignment(broken_move_assignment&&) = default;
 
     broken_move_assignment(broken_move_assignment&& other, const allocator_type& a) : x(std::move(other.x), a) {}
-      
+
     broken_move_assignment& operator=(const broken_move_assignment&) = default;
-      
+
     broken_move_assignment& operator=(broken_move_assignment&&) noexcept
     {
       return *this;
@@ -758,7 +758,7 @@ namespace sequoia::testing
     {
       std::swap(lhs.x, rhs.x);
     }
-      
+
     std::vector<T, Allocator> x{};
 
     [[nodiscard]]
@@ -806,7 +806,7 @@ namespace sequoia::testing
     {
       // do nothing
     }
-      
+
     std::vector<T, Allocator> x{};
 
     [[nodiscard]]
@@ -1017,7 +1017,7 @@ namespace sequoia::testing
     {
       std::swap(lhs.x, rhs.x);
     }
-      
+
     std::vector<handle_type, allocator_type> x{};
 
     [[nodiscard]]
@@ -1075,7 +1075,7 @@ namespace sequoia::testing
     {
       lhs.swap(rhs);
     }
-      
+
     std::vector<T, Allocator> x{};
 
     [[nodiscard]]
@@ -1138,7 +1138,7 @@ namespace sequoia::testing
     {
       lhs.swap(rhs);
     }
-      
+
     std::vector<T, Allocator> x{};
 
     [[nodiscard]]

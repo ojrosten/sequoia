@@ -30,11 +30,11 @@ namespace sequoia::testing
     template<class Edge> constexpr bool use_weak_equiv_v{use_weak_equiv<Edge>::value};
 
     // Details Checker
-    
+
     template<class Graph> struct graph_detailed_equality_checker
     {
       using type = Graph;
-      
+
       template<test_mode Mode>
       static void check(test_logger<Mode>& logger, const Graph& graph, const Graph& prediction)
       {
@@ -108,10 +108,10 @@ namespace sequoia::testing
       }
     };
   }
-  
+
   template
-  <      
-    maths::directed_flavour Directedness,     
+  <
+    maths::directed_flavour Directedness,
     class EdgeTraits,
     class WeightMaker
   >
@@ -123,7 +123,7 @@ namespace sequoia::testing
     static void check(test_logger<Mode>& logger, const type& connectivity, const type& prediction)
     {
       check_equality("Connectivity size incorrect", logger, connectivity.size(), prediction.size());
-      
+
       if(check_equality("Connectivity order incorrect", logger, connectivity.order(), prediction.order()))
       {
         for(std::size_t i{}; i<connectivity.order(); ++i)
@@ -134,12 +134,12 @@ namespace sequoia::testing
           check_range(append_lines(message, "credge_iterator"), logger, connectivity.crbegin_edges(i), connectivity.crend_edges(i), prediction.crbegin_edges(i), prediction.crend_edges(i));
         }
       }
-    } 
+    }
   };
-  
+
   template
-  <      
-    maths::directed_flavour Directedness,     
+  <
+    maths::directed_flavour Directedness,
     class EdgeTraits,
     class WeightMaker
   >
@@ -166,15 +166,15 @@ namespace sequoia::testing
           else
           {
             check_range_equivalence(append_lines(message, "cedge_iterator"), logger, connectivity.cbegin_edges(i), connectivity.cend_edges(i), (prediction.begin()+i)->begin(), (prediction.begin() + i)->end());
-          }                
+          }
         }
       }
-    }    
+    }
   };
 
   template
-  <      
-    maths::directed_flavour Directedness,     
+  <
+    maths::directed_flavour Directedness,
     class EdgeTraits,
     class WeightMaker
   >
@@ -196,10 +196,10 @@ namespace sequoia::testing
           check_range_weak_equivalence(append_lines(message, "cedge_iterator"), logger, connectivity.cbegin_edges(i), connectivity.cend_edges(i), (prediction.begin()+i)->begin(), (prediction.begin() + i)->end());
         }
       }
-    }    
+    }
   };
 
-  struct null_weight{};  
+  struct null_weight{};
 
   constexpr bool mutual_info(const maths::graph_flavour flavour) noexcept
   {
@@ -280,8 +280,8 @@ namespace sequoia::testing
   using regular_graph_test = graph_basic_test<mode, regular_extender<mode>>;
 
   using graph_unit_test = regular_graph_test<test_mode::standard>;
-  using graph_false_positive_test = regular_graph_test<test_mode::false_positive>;    
-       
+  using graph_false_positive_test = regular_graph_test<test_mode::false_positive>;
+
   struct unsortable
   {
     int x{};
@@ -291,7 +291,7 @@ namespace sequoia::testing
 
     [[nodiscard]]
     friend constexpr bool operator!=(const unsortable& lhs, const unsortable& rhs) noexcept = default;
-      
+
     template<class Stream> friend Stream& operator<<(Stream& s, const unsortable& u)
     {
       s << std::to_string(u.x);

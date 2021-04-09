@@ -15,7 +15,7 @@
 #include "sequoia/TestFramework/FileEditors.hpp"
 
 namespace sequoia::testing
-{ 
+{
   using namespace parsing::commandline;
 
   [[nodiscard]]
@@ -28,7 +28,7 @@ namespace sequoia::testing
   auto host_directory::get(const std::filesystem::path& filename) const -> paths
   {
     namespace fs = std::filesystem;
-    
+
     variant_visitor visitor{
       [&filename](const fs::path& p)     -> paths { return {p, filename}; },
       [&filename](const generator& data) -> paths {
@@ -62,7 +62,7 @@ namespace sequoia::testing
 
   [[nodiscard]]
   template_spec generate_template_spec(std::string_view str)
-  {    
+  {
     constexpr auto npos{std::string::npos};
     const auto endOfLastToken{str.find_last_not_of(" .")};
     if(endOfLastToken == npos) return {};
@@ -72,7 +72,7 @@ namespace sequoia::testing
         return std::string{"<"}.append(str).append(">: ").append(details);
       }
     };
-    
+
     const auto beforeLastToken{str.substr(0, endOfLastToken).rfind(' ')};
     if(beforeLastToken == npos)
       throw std::runtime_error{mess(" Unable to locate species/symbol pair")};
@@ -93,7 +93,7 @@ namespace sequoia::testing
     };
 
     std::string::size_type pos{first == npos ? 0 : first + 1};
-    
+
     return {std::string{str.substr(pos, endOfLastTemplateSpec + 1 - pos)}, std::string{str.substr(beforeLastToken + 1, lastTokenSize)}};
   }
 
@@ -158,7 +158,7 @@ namespace sequoia::testing
 
       const auto replacement{std::string(leftSpace, ' ').append(newCopyright).append(std::string(rightSpace, ' '))};
 
-      text.replace(left + 2, reservedSpace, replacement); 
+      text.replace(left + 2, reservedSpace, replacement);
     }
     else
     {
@@ -216,7 +216,7 @@ namespace sequoia::testing
 
     auto start{npos};
     auto templatePos{m_QualifiedName.find('<')};
-    
+
     if(auto pos{m_QualifiedName.rfind("::", templatePos)}; pos != npos)
     {
       if(pos < m_QualifiedName.length() - 2)
@@ -299,7 +299,7 @@ namespace sequoia::testing
           args.append(type);
 
           if(normal) args.append("&");
-            
+
           args.append(" prediction");
 
           if(num > 1) args.append("_").append(std::to_string(i));
@@ -483,7 +483,7 @@ namespace sequoia::testing
             throw std::logic_error{"Unable to find nascent test"};
 
           std::visit(variant_visitor{[&args](auto& nascent){ nascent.host_dir(args[0]);}}, m_NascentTests.back());
-        } 
+        }
     };
 
     const option familyOption{"--family", {"-f"}, {"family"},
@@ -508,7 +508,7 @@ namespace sequoia::testing
           };
 
           std::visit(visitor, m_NascentTests.back());
-        }                       
+        }
     };
 
     const option headerOption{"--class-header", {"-ch"}, {"class_header"},
@@ -517,7 +517,7 @@ namespace sequoia::testing
             throw std::logic_error{"Unable to find nascent test"};
 
           std::visit(variant_visitor{[&args](auto& nascent){ nascent.header(args[0]); }}, m_NascentTests.back());
-        }                              
+        }
     };
 
     const option nameOption{"--forename", {"-name"}, {"forename"},
@@ -611,7 +611,7 @@ namespace sequoia::testing
       stream() << help;
     }
     else
-    {    
+    {
       check_argument_consistency();
     }
   }
@@ -652,7 +652,7 @@ namespace sequoia::testing
     }
 
     return false;
-  }  
+  }
 
   [[nodiscard]]
   test_family::summary test_runner::process_family(const test_family::results& results)
@@ -878,7 +878,7 @@ namespace sequoia::testing
 
   void test_runner::generate_test_main(std::string_view copyright, const std::filesystem::path& path) const
   {
-    const auto file{path/"TestAll"/"TestMain.cpp"}; 
+    const auto file{path/"TestAll"/"TestMain.cpp"};
     std::string text{read_to_string(file)};
 
     set_top_copyright(text, copyright);
@@ -896,7 +896,7 @@ namespace sequoia::testing
   {
     const std::string filename{"CMakeLists.txt"}, seqRoot{"SEQUOIA_ROOT"};
     const auto destination{std::filesystem::path{"TestAll"}.append(filename)};
-    const auto file{path/destination}; 
+    const auto file{path/destination};
     std::string text{read_to_string(file)};
 
     constexpr auto npos{std::string::npos};

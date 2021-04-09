@@ -42,7 +42,7 @@ namespace sequoia::testing
     void test_allocation();
   private:
     void run_tests() final;
-    
+
     template<bool PropagateMove, bool PropagateSwap>
     void test_move_only_semantics_allocations();
   };

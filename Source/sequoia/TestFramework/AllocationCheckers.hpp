@@ -47,7 +47,7 @@
 #include "sequoia/Core/Meta/Utilities.hpp"
 
 namespace sequoia::testing
-{  
+{
   enum class individual_allocation_event {
     initialization,
     copy,
@@ -395,7 +395,7 @@ namespace sequoia::testing
   {
   public:
     using allocator_type = std::invoke_result_t<Getter, T>;
-    
+
     constexpr explicit allocation_info_base(Getter allocGetter)
       : m_AllocatorGetter{std::move(allocGetter)}
     {}

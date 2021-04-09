@@ -44,8 +44,8 @@ namespace sequoia::testing
   void concepts_test::run_tests()
   {
     test_is_range();
-    test_is_allocator();    
-    test_is_serializable();    
+    test_is_allocator();
+    test_is_serializable();
     test_is_class_template_instantiable();
     test_has_allocator_type();
   }
@@ -82,7 +82,7 @@ namespace sequoia::testing
 
   void concepts_test::test_is_serializable()
   {
-    
+
     check(LINE(""), []() {
         static_assert(serializable_to<int, std::stringstream>);
         static_assert(serializable_to<serializable_thing, std::stringstream>);

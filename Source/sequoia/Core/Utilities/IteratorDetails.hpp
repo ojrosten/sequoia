@@ -28,13 +28,13 @@ namespace sequoia::utilities
     concept has_proxy_type = requires() {
       typename Policy::proxy;
     };
-                                         
+
     template<dereference_policy DerefPolicy1, dereference_policy DerefPolicy2>
     inline constexpr bool are_compatible_v{
          (   (has_proxy_type<DerefPolicy1> && has_proxy_type<DerefPolicy2>)
           || (!has_proxy_type<DerefPolicy1> && !has_proxy_type<DerefPolicy2>))
-    };       
-    
+    };
+
     template<dereference_policy DereferencePolicy>
     struct type_generator
     {

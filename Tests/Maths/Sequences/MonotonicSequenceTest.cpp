@@ -31,7 +31,7 @@ namespace sequoia::testing
 
     monotonic_sequence<int> s{}, t{1};
     // - ; 1
-    
+
     check_equivalence(LINE(""), s, std::initializer_list<int>{});
     check_equivalence(LINE(""), t, std::initializer_list<int>{1});
     check_semantics(LINE(""), s, t);
@@ -67,7 +67,7 @@ namespace sequoia::testing
 
     t.erase(t.begin(), t.end());
     // 4 ; -
-    
+
     check_equivalence(LINE(""), t, std::initializer_list<int>{});
 
     s.erase(s.begin());
@@ -92,7 +92,7 @@ namespace sequoia::testing
 
     t.mutate(t.begin(), t.end(), [](const int i) { return i/2; });
     // -; 4, 2, 1
-    
+
     check_equivalence(LINE(""), t, std::initializer_list<int>{4, 2, 1});
   }
 
@@ -122,10 +122,10 @@ namespace sequoia::testing
     {
       s.mutate(unsafe_t{}, s.begin(), s.end(), [](const int i) { return i * 2; });
     }
-    
+
     return s;
   }
-  
+
   void monotonic_sequence_test::test_static_increasing_sequence()
   {
     using namespace maths;
@@ -135,13 +135,13 @@ namespace sequoia::testing
 
     constexpr auto s2{make_sequence<true>()};
     check_equivalence(LINE(""), s2, std::initializer_list<int>{-2,0,2,2,4,12});
-    
+
     check_equality(LINE(""), s, static_monotonic_sequence<int, 6, std::greater<int>>{-2,0,2,2,4,12});
 
     static_monotonic_sequence<int, 6, std::greater<int>> t{2,2,2,3,3,3};
     check_exception_thrown<std::logic_error>(LINE(""), [&t](){
         t.mutate(t.begin()+1, t.begin()+3,[](const int i){ return i*2;});});
-    
+
     check_equivalence(LINE(""), t, std::initializer_list<int>{2,2,2,3,3,3});
     check_semantics(LINE(""), s, t);
 
@@ -150,5 +150,5 @@ namespace sequoia::testing
         u.mutate(u.begin()+1, u.begin()+4,[](const int i){ return i*2;});});
 
     check_equivalence(LINE(""), u, std::initializer_list<int>{2,3,3,4,4,5});
-  }  
+  }
 }

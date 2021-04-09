@@ -54,7 +54,7 @@ namespace sequoia::testing
 
     t.pop();
     check_equality(LINE(""), t, stack_t{});
-    
+
     t.push(1);
     check_equality(LINE(""), t, stack_t{1});
   }
@@ -77,7 +77,7 @@ namespace sequoia::testing
   {
     using namespace data_structures;
     using stack_t = static_stack<int, 2>;
-    
+
     constexpr stack_t s{make_static_stack_2()};
     auto t{s};
 

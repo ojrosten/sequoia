@@ -10,7 +10,7 @@
 #include "HeterogeneousGraphTestingUtilities.hpp"
 
 namespace sequoia::testing
-{    
+{
   class test_heterogeneous_static_graph final : public graph_unit_test
   {
   public:
@@ -20,7 +20,7 @@ namespace sequoia::testing
     std::string_view source_file() const noexcept final;
   private:
     void run_tests() final;
-    
+
     constexpr static auto make_undirected_graph();
     constexpr static auto make_directed_graph();
     constexpr static auto make_undirected_embedded_graph();

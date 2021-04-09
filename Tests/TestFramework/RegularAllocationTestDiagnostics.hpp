@@ -33,16 +33,16 @@ namespace sequoia::testing
     : public regular_allocation_false_negative_test
   {
   public:
-    using regular_allocation_false_negative_test::regular_allocation_false_negative_test; 
+    using regular_allocation_false_negative_test::regular_allocation_false_negative_test;
 
     [[nodiscard]]
     std::string_view source_file() const noexcept final;
 
     template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
     void test_allocation();
-  private: 
+  private:
     void run_tests() final;
-    
+
     template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
     void test_regular_semantics();
   };

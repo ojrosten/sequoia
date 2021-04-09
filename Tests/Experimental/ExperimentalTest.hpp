@@ -10,9 +10,9 @@
 #include "sequoia/TestFramework/RegularTestCore.hpp"
 
 namespace sequoia::testing
-{    
+{
   class experimental_test final : public regular_test
-  {      
+  {
   public:
     using regular_test::regular_test;
 

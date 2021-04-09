@@ -131,7 +131,7 @@ namespace sequoia::testing
 
     {
       std::string_view latest{"Task duration: 1.45e-3s +- 3 * 0.0014\n"};
-      std::string_view reference{"Task duration: 1.47e-3s +- 3 * 0.0011\n"      
+      std::string_view reference{"Task duration: 1.47e-3s +- 3 * 0.0011\n"
                                  "bar Task duration: 1.50e-3s +- 3 * 0.0019\n"};
 
       check_equality(LINE(""), postprocess(latest, reference), latest);

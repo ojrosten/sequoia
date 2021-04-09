@@ -22,7 +22,7 @@ namespace sequoia::testing
     void run_tests() final;
 
     void test_storage();
-      
+
     template <class Storage> Storage test_generic_storage();
 
     void test_static_storage();
@@ -32,10 +32,10 @@ namespace sequoia::testing
 
     template<class T, class Handler, bool ThrowOnRangeError>
     void test_bucketed_capacity();
-      
+
     template<class Traits, template<class> class Handler, template<class> class ReferencePolicy>
     void test_generic_iterator_properties();
-      
+
     template<template<class> class Handler> void test_iterators();
 
     struct traits

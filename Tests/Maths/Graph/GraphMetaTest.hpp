@@ -31,9 +31,9 @@ namespace sequoia::testing
     void test_undirected();
 
     void test_directed();
-    
+
     void test_directed_embedded();
-        
+
     template
     <
       maths::graph_flavour GraphFlavour,

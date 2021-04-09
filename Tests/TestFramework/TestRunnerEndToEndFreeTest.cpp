@@ -206,7 +206,7 @@ namespace sequoia::testing
         return mat / "FakeProject";
       }
     };
-    
+
     const auto testMain{fake().append("TestSandbox").append("TestSandbox.cpp")};
     const auto includeTarget{fake().append("TestShared").append("SharedIncludes.hpp")};
 

@@ -9,7 +9,7 @@
 
 /*! \file
     \brief Edge & Node storage traits, base class and final classes for dynamic graphs.
-  
+
 */
 
 #include "sequoia/Maths/Graph/GraphImpl.hpp"
@@ -120,7 +120,7 @@ namespace sequoia::maths
     graph_base(edges_initializer edges, const edge_allocator_type& edgeAllocator)
       : primitive_type{edges, edgeAllocator}
     {}
-    
+
     template<alloc EdgePartitionsAllocator>
       requires allocatable_partitions<edge_traits_type>
     graph_base(edges_initializer edges, const edge_allocator_type& edgeAllocator, const EdgePartitionsAllocator& edgePartitionsAllocator)
@@ -138,13 +138,13 @@ namespace sequoia::maths
     graph_base(const graph_base& in, const edge_allocator_type& edgeAllocator, const EdgePartitionsAllocator& edgePartitionsAllocator)
       : primitive_type{in, edgeAllocator, edgePartitionsAllocator}
     {}
-    
+
     graph_base(graph_base&&) noexcept = default;
 
     graph_base(graph_base&& in, const edge_allocator_type& edgeAllocator)
       : primitive_type{std::move(in), edgeAllocator}
     {}
-    
+
     template<alloc EdgePartitionsAllocator>
       requires allocatable_partitions<edge_traits_type>
     graph_base(graph_base&& in, const edge_allocator_type& edgeAllocator, const EdgePartitionsAllocator& edgePartitionsAllocator)
@@ -174,7 +174,7 @@ namespace sequoia::maths
     using primitive_type::reserve_nodes;
     using primitive_type::node_capacity;
     using primitive_type::shrink_to_fit;
-      
+
     constexpr static graph_flavour flavour{GraphFlavour};
   protected:
     ~graph_base() = default;

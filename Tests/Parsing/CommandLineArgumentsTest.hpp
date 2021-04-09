@@ -10,7 +10,7 @@
 #include "CommandLineArgumentsTestingUtilities.hpp"
 
 namespace sequoia::testing
-{  
+{
   class commandline_arguments_test final : public regular_test
   {
   public:

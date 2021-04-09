@@ -22,7 +22,7 @@ namespace sequoia::testing
   {
     do_allocation_tests(*this);
   }
-  
+
   template<bool PropagateMove, bool PropagateSwap>
   void move_only_allocation_false_positive_diagnostics::test_allocation()
   {
@@ -39,7 +39,7 @@ namespace sequoia::testing
         b.x.push_back(1);
       }
     };
-    
+
     {
       using beast = move_only_beast<int, shared_counting_allocator<int, true, PropagateMove, PropagateSwap>>;
       auto allocGetter{
@@ -68,7 +68,7 @@ namespace sequoia::testing
           return beast.x.get_allocator();
         }
       };
-      
+
       check_semantics(LINE("Broken move"), beast{1}, beast{2}, beast{1}, beast{2}, mutator,
                               allocation_info{allocGetter, {0_clm, 1_mu, 1_pm}});
     }
@@ -80,12 +80,12 @@ namespace sequoia::testing
           return beast.x.get_allocator();
         }
       };
-      
+
       check_semantics(LINE("Broken move assignment"), beast{1}, beast{2}, beast{1}, beast{2}, mutator,
                               allocation_info{allocGetter, {0_clm, 1_mu, 1_pm}});
     }
 
-    
+
     if constexpr(PropagateSwap)
     {
       using beast = move_only_broken_swap<int, shared_counting_allocator<int, true, PropagateMove, PropagateSwap>>;
@@ -94,7 +94,7 @@ namespace sequoia::testing
           return beast.x.get_allocator();
         }
       };
-      
+
       check_semantics(LINE("Broken swap"), beast{1}, beast{2}, beast{1}, beast{2}, mutator,
                               allocation_info{allocGetter, {0_clm, 1_mu, 1_pm}});
     }
@@ -106,7 +106,7 @@ namespace sequoia::testing
           return beast.x.get_allocator();
         }
       };
-      
+
       check_semantics(LINE("Inefficient move"), beast{1}, beast{2}, beast{1}, beast{2}, mutator,
                               allocation_info{allocGetter, {0_clm, 1_mu, 1_pm}});
     }
@@ -118,11 +118,11 @@ namespace sequoia::testing
           return beast.x.get_allocator();
         }
       };
-      
+
       check_semantics(LINE("Inefficient move assignment"), beast{1}, beast{2}, beast{1}, beast{2}, mutator,
                               allocation_info{allocGetter, {0_clm, 1_mu, 1_pm}});
     }
-    
+
     {
       using beast = move_only_beast<int, shared_counting_allocator<int, true, PropagateMove, PropagateSwap>>;
 
@@ -169,7 +169,7 @@ namespace sequoia::testing
         b.x.push_back(1);
       }
     };
-    
+
     {
       using beast = move_only_beast<int, shared_counting_allocator<int, true, PropagateMove, PropagateSwap>>;
       auto allocGetter{

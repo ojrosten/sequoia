@@ -13,7 +13,7 @@
 namespace sequoia
 {
   namespace testing
-  {    
+  {
     class test_fixed_topology final : public graph_unit_test
     {
     public:
@@ -41,9 +41,9 @@ namespace sequoia
 
       template
       <
-        maths::graph_flavour GraphFlavour,      
+        maths::graph_flavour GraphFlavour,
         class EdgeWeight,
-        class NodeWeight,      
+        class NodeWeight,
         class EdgeWeightCreator,
         class NodeWeightCreator,
         class EdgeStorageTraits,

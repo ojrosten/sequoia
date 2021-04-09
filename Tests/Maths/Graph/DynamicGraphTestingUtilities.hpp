@@ -20,12 +20,12 @@
 namespace sequoia::testing
 {
   // Details Checkers
-  
+
   template
   <
-    maths::directed_flavour Directedness,      
+    maths::directed_flavour Directedness,
     class EdgeWeight,
-    class NodeWeight,      
+    class NodeWeight,
     class EdgeWeightPooling,
     class NodeWeightPooling,
     class EdgeStorageTraits,
@@ -37,9 +37,9 @@ namespace sequoia::testing
 
   template
   <
-    maths::directed_flavour Directedness,      
+    maths::directed_flavour Directedness,
     class EdgeWeight,
-    class NodeWeight,      
+    class NodeWeight,
     class EdgeWeightPooling,
     class NodeWeightPooling,
     class EdgeStorageTraits,
@@ -50,12 +50,12 @@ namespace sequoia::testing
   {};
 
   // Equivalence Checkers
-  
+
   template
   <
-    maths::directed_flavour Directedness,      
+    maths::directed_flavour Directedness,
     class EdgeWeight,
-    class NodeWeight,      
+    class NodeWeight,
     class EdgeWeightPooling,
     class NodeWeightPooling,
     class EdgeStorageTraits,
@@ -67,9 +67,9 @@ namespace sequoia::testing
 
   template
   <
-    maths::directed_flavour Directedness,      
+    maths::directed_flavour Directedness,
     class EdgeWeight,
-    class NodeWeight,      
+    class NodeWeight,
     class EdgeWeightPooling,
     class NodeWeightPooling,
     class EdgeStorageTraits,
@@ -83,9 +83,9 @@ namespace sequoia::testing
 
   template
   <
-    maths::directed_flavour Directedness,      
+    maths::directed_flavour Directedness,
     class EdgeWeight,
-    class NodeWeight,      
+    class NodeWeight,
     class EdgeWeightPooling,
     class NodeWeightPooling,
     class EdgeStorageTraits,
@@ -96,7 +96,7 @@ namespace sequoia::testing
   {};
 
   // Edge Storage Traits
-  
+
   struct independent_contiguous_edge_storage_traits
   {
     template <class T, class Sharing, class Traits> using storage_type = data_structures::partitioned_sequence<T, Sharing, Traits>;
@@ -140,9 +140,9 @@ namespace sequoia::testing
 
   template
   <
-    maths::graph_flavour GraphFlavour,      
+    maths::graph_flavour GraphFlavour,
     class EdgeWeight,
-    class NodeWeight,      
+    class NodeWeight,
     class EdgeWeightPooling,
     class NodeWeightStorage,
     class EdgeStorageTraits,
@@ -156,9 +156,9 @@ namespace sequoia::testing
 
   template
   <
-    maths::graph_flavour GraphFlavour,     
+    maths::graph_flavour GraphFlavour,
     class EdgeWeight,
-    class NodeWeight,      
+    class NodeWeight,
     class EdgeWeightPooling,
     class NodeWeightPooling,
     class EdgeStorageTraits,
@@ -167,20 +167,20 @@ namespace sequoia::testing
   struct graph_type_generator<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits, true>
   {
     using graph_type = maths::embedded_graph<maths::to_directedness(GraphFlavour), EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>;
-  };  
+  };
 
   template
   <
-    maths::graph_flavour GraphFlavour,     
+    maths::graph_flavour GraphFlavour,
     class EdgeWeight,
-    class NodeWeight,      
+    class NodeWeight,
     class EdgeWeightPooling,
     class NodeWeightPooling,
     class EdgeStorageTraits,
     class NodeWeightStorageTraits
   >
   using graph_type_generator_t = typename graph_type_generator<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>::graph_type;
-  
+
   template <class EdgeWeight, class NodeWeight, class Test>
   class graph_test_helper
   {
@@ -191,7 +191,7 @@ namespace sequoia::testing
     void run_tests()
     {
       using flavour = maths::graph_flavour;
-      
+
       run_tests<flavour::undirected>();
       if constexpr(!minimal_graph_tests())
       {
@@ -223,7 +223,7 @@ namespace sequoia::testing
     {
       using namespace data_structures;
       using NSTraits = maths::node_weight_storage_traits<NodeWeight>;
-      
+
       creation_permutations<GraphFlavour, maths::contiguous_edge_storage_traits, NSTraits>();
       creation_permutations<GraphFlavour, maths::bucketed_edge_storage_traits, NSTraits>();
     }
@@ -257,7 +257,7 @@ namespace sequoia::testing
         {
           run_tests<GraphFlavour, data_pool<EW>, spawner<NW>, ESTraits, NSTraits>();
         }
-        
+
         if constexpr(!std::is_empty_v<EdgeWeight> && !std::is_empty_v<NodeWeight>)
         {
           run_tests<GraphFlavour, data_pool<EW>, data_pool<NW>, ESTraits, NSTraits>();

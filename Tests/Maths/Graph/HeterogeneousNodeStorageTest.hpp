@@ -17,14 +17,14 @@ namespace sequoia::testing
   {
   public:
     using regular_test::regular_test;
-    
+
     [[nodiscard]]
     std::string_view source_file() const noexcept final;
   private:
     using regular_test::check_equality;
-    
+
     void run_tests() final;
-    
+
     template<class... Ts>
     class storage_tester : public maths::graph_impl::heterogeneous_node_storage<Ts...>
     {
@@ -35,7 +35,7 @@ namespace sequoia::testing
       {
       }
     };
-    
-    constexpr static auto make_storage() -> storage_tester<float, int>;  
+
+    constexpr static auto make_storage() -> storage_tester<float, int>;
   };
 }

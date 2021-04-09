@@ -131,7 +131,7 @@ namespace sequoia::testing
       // https://developercommunity.visualstudio.com/content/problem/60897/c-shared-state-futuresstate-default-constructs-the.html
       paths() = default;
     #endif
-      
+
       paths(const test& t, update_mode updateMode, const std::filesystem::path& outputDir, const std::filesystem::path& testRepo);
 
       update_mode mode{update_mode::none};

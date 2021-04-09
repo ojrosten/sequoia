@@ -82,10 +82,10 @@ namespace sequoia::ownership
     class data_wrapper
     {
       friend class data_pool;
-        
+
     public:
       using value_type = T;
-  
+
       template<class... Args>
       data_wrapper(data_pool& pool, Args&&... args) : m_pPool{&pool}, m_Data{std::forward<Args>(args)...} {}
 
@@ -98,7 +98,7 @@ namespace sequoia::ownership
         return m_pPool->make_data_wrapper(std::forward<Args>(args)...);
       }
 
-    private:        
+    private:
       data_pool* m_pPool{};
       T m_Data;
 
@@ -108,13 +108,13 @@ namespace sequoia::ownership
       data_wrapper& operator=(const data_wrapper&) = delete;
       data_wrapper& operator=(data_wrapper&&) noexcept = default;
     };
-      
+
     class proxy
     {
     public:
       friend class data_pool;
       using value_type = T;
-        
+
       proxy(const proxy&)     = default;
       proxy(proxy&&) noexcept = default;
       proxy& operator=(const proxy& in)
@@ -158,7 +158,7 @@ namespace sequoia::ownership
       proxy(const std::shared_ptr<data_wrapper>& ptr) : m_Handle{ptr} {}
     };
 
-  private:   
+  private:
     using wrapper_handle = std::shared_ptr<data_wrapper>;
   public:
     using allocator_type = typename std::allocator_traits<Allocator>::template rebind_alloc<wrapper_handle>;
@@ -295,7 +295,7 @@ namespace sequoia::ownership
         return {*found};
       }
     }
-      
+
     void tidy()
     {
       m_Data.erase(std::remove_if(m_Data.begin(), m_Data.end(), [](const auto& ptr) { ptr.use_count() == 1;}), m_Data.end());

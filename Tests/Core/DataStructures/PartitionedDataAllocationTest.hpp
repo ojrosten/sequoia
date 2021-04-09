@@ -18,10 +18,10 @@ namespace sequoia::testing
 
     [[nodiscard]]
     std::string_view source_file() const noexcept final;
-    
+
     template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
     void test_allocation();
-  private:    
+  private:
     template<class Test>
     friend void do_allocation_tests(Test&);
 

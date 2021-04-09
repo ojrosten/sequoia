@@ -16,7 +16,7 @@
 #include <fstream>
 
 namespace sequoia::testing
-{ 
+{
   [[nodiscard]]
   std::string read_to_string(const std::filesystem::path& file)
   {
@@ -127,7 +127,7 @@ namespace sequoia::testing
                 return str;
               }
             };
-        
+
             text.insert(linePos, builder());
             return text;
           }

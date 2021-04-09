@@ -8,7 +8,7 @@
 #pragma once
 
 /*! \file CommandLineArguments.hpp
-    \brief Parsing of commandline arguments 
+    \brief Parsing of commandline arguments
 */
 
 #include "sequoia/Core/Meta/Concepts.hpp"
@@ -51,7 +51,7 @@ namespace sequoia::parsing::commandline
     std::vector<operation> operations;
     std::string help{};
   };
-  
+
   [[nodiscard]]
   std::string error(std::string_view message, std::string_view prefix="\n  ");
 
@@ -75,7 +75,7 @@ namespace sequoia::parsing::commandline
     if(help.empty())
     {
       zerothArgProcessor(zerothArg);
-    
+
       for(auto& op : ops)
       {
         if(op.early) op.early(op.parameters);

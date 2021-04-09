@@ -29,20 +29,20 @@ namespace sequoia
 
     void test_edges::run_tests()
     {
-      test_plain_partial_edge();      
-      test_partial_edge_indep_weight(); 
+      test_plain_partial_edge();
+      test_partial_edge_indep_weight();
       test_partial_edge_shared_weight();
 
       test_plain_embedded_partial_edge();
       test_embedded_partial_edge_indep_weight();
       test_embedded_partial_edge_shared_weight();
-      
-      test_plain_edge();      
+
+      test_plain_edge();
       test_weighted_edge();
 
       test_plain_embedded_edge();
       test_embedded_edge_indep_weight();
-      test_embedded_edge_shared_weight();      
+      test_embedded_edge_shared_weight();
     }
 
     void test_edges::test_plain_partial_edge()
@@ -52,7 +52,7 @@ namespace sequoia
 
       using edge_t = partial_edge<null_weight, independent, utilities::uniform_wrapper<null_weight>>;
       static_assert(sizeof(std::size_t) == sizeof(edge_t));
-      
+
       using compact_edge_t = partial_edge<null_weight, independent, utilities::uniform_wrapper<null_weight>, unsigned char>;
       static_assert(sizeof(unsigned char) == sizeof(compact_edge_t));
 
@@ -61,13 +61,13 @@ namespace sequoia
 
       e1.target_node(1);
       check_equality(LINE("Changing target node"), e1, edge_t{1});
-  
+
       edge_t e2{3};
       check_equality(LINE(""), e2, edge_t{3});
-      
+
       check_semantics(LINE("Standard semantics"), e2, e1);
     }
-    
+
     void test_edges::test_partial_edge_shared_weight()
     {
       using namespace maths;
@@ -90,7 +90,7 @@ namespace sequoia
       edge_t edge1{2,-7};
       check_equality(LINE("Construction"), edge1, edge_t{2, -7});
 
-      check_semantics(LINE("Standard Semantics"), edge1, edge);      
+      check_semantics(LINE("Standard Semantics"), edge1, edge);
 
       edge_t edge2{6, edge};
       check_equality(LINE("Construction with shared weight"), edge2, edge_t{6, -1});
@@ -101,8 +101,8 @@ namespace sequoia
 
       edge2.target_node(5);
       check_equality(LINE("Change target node of edge with shared weight"), edge, edge_t{1, -1});
-      check_equality(LINE(""), edge2, edge_t{5, -1});      
-      
+      check_equality(LINE(""), edge2, edge_t{5, -1});
+
       edge2.weight(-3);
       check_equality(LINE("Implicit change of shared weight"), edge, edge_t{1, -3});
       check_equality(LINE("Explicit change of shared weight"), edge2, edge_t{5, -3});
@@ -113,7 +113,7 @@ namespace sequoia
       check_equality(LINE(""), edge3, edge_t{2, 8});
 
       check_semantics(LINE("Standard semantics with one having a shared weight"), edge2, edge);
- 
+
       std::swap(edge, edge2);
       std::swap(edge, edge3);
       check_equality(LINE("Swap edge with one of an edge sharing pair"), edge, edge_t{2, 8});
@@ -167,8 +167,8 @@ namespace sequoia
     void test_edges::test_plain_embedded_partial_edge()
     {
       using namespace maths;
-      using namespace ownership;     
-      
+      using namespace ownership;
+
       using edge_t = embedded_partial_edge<null_weight, independent, utilities::uniform_wrapper<null_weight>>;
       static_assert(2*sizeof(std::size_t) == sizeof(edge_t));
 
@@ -190,7 +190,7 @@ namespace sequoia
 
       check_semantics(LINE("Standard semantics"), e2, e1);
     }
-    
+
     void test_edges::test_embedded_partial_edge_indep_weight()
     {
       using namespace maths;
@@ -198,7 +198,7 @@ namespace sequoia
 
       using edge_t = embedded_partial_edge<double, independent, utilities::uniform_wrapper<double>>;
       static_assert(2*sizeof(std::size_t) + sizeof(double) == sizeof(edge_t));
-      
+
       constexpr edge_t edge1{1, 2, 5.0};
       check_equality(LINE("Construction"), edge1, edge_t{1, 2, 5.0});
 
@@ -214,7 +214,7 @@ namespace sequoia
       edge2.weight(5.6);
       check_equality(LINE("Change weight"), edge2, edge_t{13, 2, 5.6});
 
-      check_semantics(LINE("Standard semantics"), edge2, edge1); 
+      check_semantics(LINE("Standard semantics"), edge2, edge1);
     }
 
     void test_edges::test_embedded_partial_edge_shared_weight()
@@ -223,7 +223,7 @@ namespace sequoia
       using namespace ownership;
 
       using edge_t = embedded_partial_edge<double, shared, utilities::uniform_wrapper<double>>;
-      
+
       edge_t edge1{1, 2, 5.0};
       check_equality(LINE("Construction"), edge1, edge_t{1, 2, 5.0});
 
@@ -253,11 +253,11 @@ namespace sequoia
 
       using compact_edge_t = edge<null_weight, utilities::uniform_wrapper<null_weight>, unsigned char>;
       static_assert(2 * sizeof(unsigned char) == sizeof(compact_edge_t));
-      
-      edge_t  
+
+      edge_t
         e1(2, 3),
         e2(4, 6);
-      
+
       check_equality(LINE("Construction"), e1, edge_t{2, 3});
       check_equality(LINE("Construction"), e2, edge_t{4, 6});
 
@@ -265,10 +265,10 @@ namespace sequoia
       check_equality(LINE("Change target"), e2, edge_t{4, 1});
 
       e2.source_node(3);
-      check_equality(LINE("Change source"), e2, edge_t{3, 1});      
-      
+      check_equality(LINE("Change source"), e2, edge_t{3, 1});
+
       check_semantics(LINE("Standard semantics"), e2, e1);
-      
+
       edge_t e3{4, inversion_constant<false>{}}, e4{5, inversion_constant<true>{}};
       check_equality(LINE("Construction"), e3, edge_t{4, inversion_constant<false>{}});
       check_equality(LINE("Construction inverted edge"), e4, edge_t{5, inversion_constant<true>{}});
@@ -281,7 +281,7 @@ namespace sequoia
 
       e4.source_node(4);
       check_equality(LINE(""), e4, edge_t{4, inversion_constant<true>{}});
-    }    
+    }
 
     void test_edges::test_weighted_edge()
     {
@@ -297,7 +297,7 @@ namespace sequoia
 
         check_equality(LINE("Construction"), e1, edge_t{0, 1, 1.2});
         check_equality(LINE("Construction"), e2, edge_t{1, 0, -3.1});
-        
+
         e1.weight(2.3);
         check_equality(LINE("Change weight"), e1, edge_t{0, 1, 2.3});
 
@@ -314,7 +314,7 @@ namespace sequoia
         using std::complex;
         using edge_t = edge<complex<float>, utilities::uniform_wrapper<complex<float>>>;
         static_assert(sizeof(edge_t) == sizeof(std::complex<float>) + 2*sizeof(std::size_t));
-      
+
         edge_t
           e1(3, inversion_constant<true>{}, 1.2f),
           e2(4, inversion_constant<false>{}, -1.3f, -1.4f);
@@ -341,7 +341,7 @@ namespace sequoia
 
         e1.source_node(2);
         check_equality(LINE("Change source, no induced change in target"), e1, edge_t{2, 0, vector<int>{3, 2}});
-        
+
         check_semantics(LINE("Standard semantics"), e2, e1);
       }
     }
@@ -381,7 +381,7 @@ namespace sequoia
       check_semantics(LINE("Standard semantics"), e1, e);
 
     }
-    
+
     void test_edges::test_embedded_edge_indep_weight()
     {
       using namespace maths;

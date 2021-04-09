@@ -17,11 +17,11 @@ namespace sequoia::testing
 {
   [[nodiscard]]
   std::filesystem::path project_root(int argc, char** argv, const std::filesystem::path& fallback)
-  {    
+  {
     namespace fs = std::filesystem;
 
     static fs::path p{};
-    
+
     if(p.empty())
     {
       if(argc)
@@ -97,16 +97,16 @@ namespace sequoia::testing
     auto mess{std::string{"Unable to open file "}.append(file.generic_string())};
     if(!description.empty()) mess.append(" ").append(description);
     mess.append("\n");
- 
+
     return mess;
   }
- 
+
   [[nodiscard]]
   std::string report_failed_read(const std::filesystem::path& file)
   {
     return report_file_issue(file, " for reading");
   }
- 
+
   [[nodiscard]]
   std::string report_failed_write(const std::filesystem::path& file)
   {
@@ -120,7 +120,7 @@ namespace sequoia::testing
     throw_if(p, append_lines(" does not exist", message),
              [](const fs::path& p){ return !fs::exists(p); });
   }
-  
+
   void throw_unless_directory(const std::filesystem::path& p, std::string_view message)
   {
     namespace fs = std::filesystem;

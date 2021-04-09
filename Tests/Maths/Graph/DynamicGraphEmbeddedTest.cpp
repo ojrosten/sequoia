@@ -16,19 +16,19 @@ namespace sequoia
     {
       return __FILE__;
     }
-    
+
     void test_edge_insertion::run_tests()
     {
       using namespace maths;
 
       struct null_weight {};
-      
+
       {
         graph_test_helper<null_weight, null_weight, test_edge_insertion> helper{*this};
         helper.run_tests<graph_flavour::undirected_embedded>();
         helper.run_tests<graph_flavour::directed_embedded>();
       }
-      
+
       {
         graph_test_helper<null_weight, int, test_edge_insertion> helper{*this};
         helper.run_tests<graph_flavour::undirected_embedded>();
@@ -50,9 +50,9 @@ namespace sequoia
 
     template
     <
-      maths::graph_flavour GraphFlavour,      
+      maths::graph_flavour GraphFlavour,
       class EdgeWeight,
-      class NodeWeight,      
+      class NodeWeight,
       class EdgeWeightCreator,
       class NodeWeightCreator,
       class EdgeStorageTraits,
@@ -65,7 +65,7 @@ namespace sequoia
       using graph_type = graph_type_generator_t<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, ESTraits, NSTraits>;
 
       edge_insertions<graph_type>();
-      
+
       if constexpr(!std::is_empty_v<EdgeWeight>)
       {
         weighted_edge_insertions<graph_type>();
@@ -78,7 +78,7 @@ namespace sequoia
       using namespace maths;
 
       using inv_t = inversion_constant<true>;
-        
+
       Graph g{};
       constexpr bool ThrowOnError{Graph::connectivity_type::throw_on_range_error};
       constexpr auto GraphFlavour{Graph::flavour};
@@ -96,7 +96,7 @@ namespace sequoia
       //  /<\
       //  \ /
       //   X
-      
+
       if constexpr(GraphFlavour == graph_flavour::undirected_embedded)
       {
         check_equality(LINE(""), g, {{{0,1}, {0,0}}});
@@ -128,7 +128,7 @@ namespace sequoia
       // For loops created by a pair of iterators, the second
       // insertion point is defined to be distance(cbegin_edges(n), iter),
       // which in this case is 0.
-      
+
       //      /<\/>\
       // /<\ /  /\  \
       // \ / \ /  \  \
@@ -196,13 +196,13 @@ namespace sequoia
           {{{1,0,1}, {0,1,0}}, {{0,1,1}, {1,0,0}, {1,inv_t{},3}, {1,inv_t{},2}, {1,inv_t{},6}, {1,1,7}, {1,inv_t{},4}, {1,1,5}}});
       }
     }
-    
+
     template<class Graph>
     void test_edge_insertion::weighted_edge_insertions()
     {
       using namespace maths;
       constexpr auto GraphFlavour{Graph::flavour};
-        
+
       Graph g{};
 
       g.add_node();

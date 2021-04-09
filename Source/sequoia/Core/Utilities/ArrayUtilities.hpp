@@ -9,7 +9,7 @@
 
 /*! \file
     \brief Utility to convert an initializer_list into an array, potentially transforming
-    the inlitializer_list in the process 
+    the inlitializer_list in the process
  */
 
 #include <array>
@@ -36,7 +36,7 @@ namespace sequoia::utilities
         return fn(*(l.begin() + i));
       }
     }
-    
+
     template<class T, std::size_t N, class InitType, std::size_t... I, invocable<InitType> Fn>
     [[nodiscard]]
     constexpr std::array<T, N> to_array([[maybe_unused]] std::initializer_list<InitType> l, [[maybe_unused]] std::index_sequence<I...>, Fn&& fn)
@@ -53,15 +53,15 @@ namespace sequoia::utilities
       return t;
     }
   };
-  
-  
+
+
   template<class T, std::size_t N, class InitType=T, invocable<InitType> Fn=identity_transform<InitType>>
   [[nodiscard]]
   constexpr std::array<T, N> to_array(std::initializer_list<InitType> l, Fn fn = Fn{})
   {
     if(l.size() > N)
       throw std::logic_error{"initializer_list too big for array"};
-    
+
     return impl::to_array<T, N>(l, std::make_index_sequence<N>{}, fn);
   }
 }

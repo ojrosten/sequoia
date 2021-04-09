@@ -13,42 +13,42 @@
 namespace sequoia::testing
 {
   // Details Checkers
-  
+
   template
   <
-    maths::directed_flavour Directedness,      
+    maths::directed_flavour Directedness,
     std::size_t Size,
-    std::size_t Order,      
+    std::size_t Order,
     class EdgeWeight,
     class NodeWeight,
     class Traits
   >
   struct detailed_equality_checker<maths::static_graph<Directedness, Size, Order, EdgeWeight, NodeWeight, Traits>>
     : impl::graph_detailed_equality_checker<maths::static_graph<Directedness, Size, Order, EdgeWeight, NodeWeight, Traits>>
-  {   
+  {
   };
 
   template
   <
-    maths::directed_flavour Directedness,      
+    maths::directed_flavour Directedness,
     std::size_t Size,
-    std::size_t Order,      
+    std::size_t Order,
     class EdgeWeight,
     class NodeWeight,
     class Traits
   >
   struct detailed_equality_checker<maths::static_embedded_graph<Directedness, Size, Order, EdgeWeight, NodeWeight, Traits>>
     : impl::graph_detailed_equality_checker<maths::static_embedded_graph<Directedness, Size, Order, EdgeWeight, NodeWeight, Traits>>
-  {    
+  {
   };
 
   // Equivalence Checkers
 
   template
   <
-    maths::directed_flavour Directedness,      
+    maths::directed_flavour Directedness,
     std::size_t Size,
-    std::size_t Order,      
+    std::size_t Order,
     class EdgeWeight,
     class NodeWeight,
     class Traits
@@ -60,15 +60,15 @@ namespace sequoia::testing
 
   template
   <
-    maths::directed_flavour Directedness,      
+    maths::directed_flavour Directedness,
     std::size_t Size,
-    std::size_t Order,      
+    std::size_t Order,
     class EdgeWeight,
     class NodeWeight,
     class Traits
   >
   struct equivalence_checker<maths::static_embedded_graph<Directedness, Size, Order, EdgeWeight, NodeWeight, Traits>>
     : impl::graph_equivalence_checker<maths::static_embedded_graph<Directedness, Size, Order, EdgeWeight, NodeWeight, Traits>>
-  {    
+  {
   };
 }

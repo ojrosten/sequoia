@@ -16,9 +16,9 @@
 #include "sequoia/Core/Concurrency/ConcurrencyModels.hpp"
 
 namespace sequoia::maths
-{  
+{
   template
-  <    
+  <
     class TaskProcessingModel = concurrency::serial<void>,
     class G = void,
     class NFBE = null_functor,
@@ -49,7 +49,7 @@ namespace sequoia::maths
   }
 
   template
-  <    
+  <
     class TaskProcessingModel = concurrency::serial<void>,
     class G = void,
     class NFBE = null_functor,
@@ -78,7 +78,7 @@ namespace sequoia::maths
   }
 
   template
-  <    
+  <
     class TaskProcessingModel = concurrency::serial<void>,
     class G = void,
     class NFBE = null_functor,
@@ -109,7 +109,7 @@ namespace sequoia::maths
   }
 
   template
-  <    
+  <
     class TaskProcessingModel = concurrency::serial<void>,
     class G = void,
     class NFBE = null_functor,
@@ -138,7 +138,7 @@ namespace sequoia::maths
   }
 
   template
-  <    
+  <
     class TaskProcessingModel = concurrency::serial<void>,
     class G = void,
     class NFBE = null_functor,
@@ -170,7 +170,7 @@ namespace sequoia::maths
   }
 
   template
-  <    
+  <
     class TaskProcessingModel = concurrency::serial<void>,
     class G = void,
     class NFBE = null_functor,

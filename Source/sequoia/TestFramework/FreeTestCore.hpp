@@ -24,7 +24,7 @@
 #include <memory>
 
 namespace sequoia::testing
-{  
+{
   /*! \brief Abstract base class used for type-erasure of the template class basic_test.
 
       This class allows for convenient, homogeneous treatment of all concrete tests.
@@ -108,7 +108,7 @@ namespace sequoia::testing
 
     test(test&&)            noexcept = default;
     test& operator=(test&&) noexcept = default;
-    
+
     [[nodiscard]]
     virtual log_summary summarize(duration delta) const = 0;
 
@@ -121,7 +121,7 @@ namespace sequoia::testing
       m_TestRepo{},
       m_DiagnosticsOutput{},
       m_CaughtExceptionsOutput{};
-    
+
     [[nodiscard]]
     std::filesystem::path output_filename(std::string_view suffix) const;
 
@@ -131,9 +131,9 @@ namespace sequoia::testing
     const log_summary& write_versioned_output(const log_summary& summary) const;
 
     static void write(const std::filesystem::path& file, std::string_view text);
- 
+
     virtual void log_critical_failure(std::string_view tag, std::string_view what) = 0;
-    
+
     virtual void do_set_recovery_paths(recovery_paths paths) = 0;
 
     /// Pure virtual method which should be overridden in a concrete test's cpp file in order to provide the correct __FILE__
@@ -142,7 +142,7 @@ namespace sequoia::testing
 
     /// The override in a derived test should call the checks performed by the test.
     virtual void run_tests() = 0;
-    
+
     virtual std::string mode_tag() const = 0;
   };
 
@@ -173,7 +173,7 @@ namespace sequoia::testing
 
       \anchor basic_test_primary
    */
-  
+
   template<class Checker>
     requires requires() { Checker::mode; }
   class basic_test : public test, protected Checker
@@ -184,10 +184,10 @@ namespace sequoia::testing
     using test::test;
 
     ~basic_test() override = default;
-    
+
     basic_test(const basic_test&)            = delete;
     basic_test& operator=(const basic_test&) = delete;
-    
+
   protected:
     basic_test(basic_test&&)            noexcept = default;
     basic_test& operator=(basic_test&&) noexcept = default;
@@ -220,7 +220,7 @@ namespace sequoia::testing
       return to_tag(mode);
     }
   };
-  
+
   template<test_mode Mode>
   using basic_free_test = basic_test<checker<Mode>>;
 

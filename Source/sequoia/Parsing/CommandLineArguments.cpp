@@ -47,29 +47,29 @@ namespace sequoia::parsing::commandline
       if(op.early) op.early(op.parameters);
 
       invoke_depth_first(op.nested_operations);
-      
+
       if(op.late) op.late(op.parameters);
     }
   }
-  
+
   argument_parser::argument_parser(int argc, char** argv, const std::vector<option>& options)
     : m_ArgCount{argc}
     , m_Argv{argv}
     , m_ZerothArg{m_ArgCount ? m_Argv[0] : ""}
-  {      
+  {
     parse(options, m_Operations);
   }
 
   bool argument_parser::parse(const std::vector<option>& options, std::vector<operation>& operations)
-  {    
-    auto optionsIter{options.end()};        
+  {
+    auto optionsIter{options.end()};
     for(; m_Index < m_ArgCount; ++m_Index)
     {
       const std::string arg{m_Argv[m_Index]};
       if(!arg.empty())
-      {        
+      {
         if(optionsIter == options.end())
-        {          
+        {
           optionsIter = std::find_if(options.begin(), options.end(),
                                     [&arg](const auto& opt){ return opt.name == arg; });
 
@@ -79,12 +79,12 @@ namespace sequoia::parsing::commandline
                                       [&arg](const auto& opt) { return is_alias(opt, arg); });
 
             if(arg == "--help")
-            {              
+            {
               m_Help = generate_help(options);
               return true;
             }
 
-            
+
             if(process_concatenated_aliases(optionsIter, options.begin(), options.end(), arg, operations))
               continue;
 
@@ -130,7 +130,7 @@ namespace sequoia::parsing::commandline
 
       const auto actual{operations.back().parameters.size()};
       mess.append("], but found ").append(std::to_string(actual)).append(pluralize(actual, "argument"));
-      
+
       throw std::runtime_error{error(mess)};
     }
 
@@ -190,9 +190,9 @@ namespace sequoia::parsing::commandline
       {
         process_nested_options(optionsIter, optionsEnd, operations.back());
       }
-      
+
       optionsIter = optionsEnd;
-    } 
+    }
 
     return optionsIter;
   }
@@ -202,7 +202,7 @@ namespace sequoia::parsing::commandline
   bool argument_parser::process_concatenated_aliases(Iter optionsIter, Iter optionsBegin, Iter optionsEnd, std::string_view arg, std::vector<operation>& operations)
   {
     if(optionsIter != optionsEnd) return false;
-    
+
     if((arg.size() > 2) && (arg[0] == '-') && (arg[1] != ' '))
     {
       for(auto j{arg.cbegin() + 1}; j != arg.cend(); ++j)
@@ -232,7 +232,7 @@ namespace sequoia::parsing::commandline
       {
         ++m_Index;
         bool complete{parse(optionsIter->nested_options, currentOp.nested_operations)};
-        
+
         auto& nestedOperations{currentOp.nested_operations};
         auto i{nestedOperations.begin()};
         while(i != nestedOperations.end())

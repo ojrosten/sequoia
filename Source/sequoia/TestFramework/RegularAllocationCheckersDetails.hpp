@@ -49,7 +49,7 @@ namespace sequoia::testing::impl
     template<test_mode Mode, invocable<T&> Mutator, alloc_getter<T>... Getters>
     static void post_swap_action(test_logger<Mode>& logger, T& x, const T& y, const T& yClone, Mutator yMutator, const dual_allocation_checker<T, Getters>&... checkers)
     {
-      allocation_actions<T>::post_swap_action(logger, x, y, yClone, checkers...);      
+      allocation_actions<T>::post_swap_action(logger, x, y, yClone, checkers...);
       check_mutation_after_swap(logger, x, y, yClone, std::move(yMutator), checkers...);
     }
   };
@@ -60,7 +60,7 @@ namespace sequoia::testing::impl
   template<test_mode Mode, class Actions, pseudoregular T, alloc_getter<T>... Getters>
   bool check_copy_assign(test_logger<Mode>& logger, const Actions& actions, T& z, const T& y, const dual_allocation_checker<T, Getters>&... checkers)
   {
-    return do_check_copy_assign(logger, actions, z, y, dual_allocation_checker{checkers.info(), z, y}...);   
+    return do_check_copy_assign(logger, actions, z, y, dual_allocation_checker{checkers.info(), z, y}...);
   }
 
   template<test_mode Mode, pseudoregular T, invocable<T&> Mutator, alloc_getter<T>... Getters>
@@ -79,7 +79,7 @@ namespace sequoia::testing::impl
           return std::optional<T>{};
         }
       };
-      
+
       if(auto c{make(info...)}; c)
       {
         T v{std::move(*c), info.make_allocator()...};

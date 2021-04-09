@@ -10,7 +10,7 @@
 #include "GraphTestingUtilities.hpp"
 
 namespace sequoia::testing
-{    
+{
   class test_static_fixed_topology final : public graph_unit_test
   {
   public:
@@ -29,8 +29,8 @@ namespace sequoia::testing
     friend class e_undirected_fixed_topology_checker;
 
     template<class>
-    friend class e_directed_fixed_topology_checker;    
-    
+    friend class e_directed_fixed_topology_checker;
+
     void run_tests() final;
 
     template<class EdgeWeight, class NodeWeight> void test_undirected();

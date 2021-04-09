@@ -44,19 +44,19 @@ namespace sequoia
       using connectivity_type = Connectivity;
       using nodes_type        = Nodes;
       using edge_init_type    = typename Connectivity::edge_init_type;
-      using edge_index_type   = typename Connectivity::edge_index_type;      
+      using edge_index_type   = typename Connectivity::edge_index_type;
       using size_type         = std::common_type_t<typename Connectivity::size_type, typename Nodes::size_type>;
 
       using edges_initializer = std::initializer_list<std::initializer_list<edge_init_type>>;
 
       constexpr graph_primitive() = default;
-      
+
       constexpr graph_primitive(edges_initializer edges)
         : graph_primitive(get_init_type(), edges)
       {
         static_assert(std::is_empty_v<node_weight_type> || std::is_default_constructible_v<node_weight_type>);
       }
-      
+
       template<class N=node_weight_type>
         requires (!empty<N> && !same_as<N, graph_impl::heterogeneous_tag>)
       constexpr graph_primitive(edges_initializer edges, std::initializer_list<N> nodeWeights)
@@ -75,7 +75,7 @@ namespace sequoia
       constexpr graph_primitive(edges_initializer edges, NodeWeights&&... nodeWeights)
         : graph_primitive(hetero_init_type{}, edges, std::forward<NodeWeights>(nodeWeights)...)
       {}
-      
+
       constexpr graph_primitive(const graph_primitive& in)
         : Connectivity{static_cast<const Connectivity&>(in)}
         , Nodes{static_cast<const Nodes&>(in)}
@@ -86,7 +86,7 @@ namespace sequoia
       {
         return connectivity_type::size();
       }
-      
+
       //===============================equality (not isomorphism) operators================================//
 
       [[nodiscard]]
@@ -113,7 +113,7 @@ namespace sequoia
       {}
 
       template
-      <        
+      <
         alloc EdgeAllocator,
         alloc EdgePartitionsAllocator,
         alloc NodeAllocator,
@@ -147,7 +147,7 @@ namespace sequoia
       {}
 
       template
-      <        
+      <
         alloc EdgeAllocator,
         alloc NodeAllocator,
         class N=node_weight_type
@@ -159,7 +159,7 @@ namespace sequoia
       {}
 
       template
-      <        
+      <
         alloc EdgeAllocator,
         alloc EdgePartitionsAllocator,
         alloc NodeAllocator,
@@ -195,7 +195,7 @@ namespace sequoia
         : Connectivity{edges, edgeAlloc}
         , Nodes(edges.size(), nodeAlloc)
       {}
-      
+
       template
       <
         alloc EdgeAllocator,
@@ -236,7 +236,7 @@ namespace sequoia
 
       template
       <
-        alloc EdgeAllocator,        
+        alloc EdgeAllocator,
         alloc EdgePartitionsAllocator,
         alloc NodeAllocator,
         class N=node_weight_type
@@ -260,7 +260,7 @@ namespace sequoia
       {}
 
       template
-      <        
+      <
         alloc EdgeAllocator,
         alloc EdgePartitionsAllocator,
         class N=node_weight_type
@@ -287,7 +287,7 @@ namespace sequoia
       // Move-like constructors with allocators
 
       template
-      <        
+      <
         alloc EdgeAllocator,
         alloc EdgePartitionsAllocator,
         alloc NodeAllocator,
@@ -312,7 +312,7 @@ namespace sequoia
       {}
 
       template
-      <        
+      <
         alloc EdgeAllocator,
         alloc EdgePartitionsAllocator,
         alloc NodeAllocator,
@@ -375,15 +375,15 @@ namespace sequoia
               }
             }
           };
-      
+
           sequoia::impl::assignment_helper::assign(*this, in, edgeAllocGetter, edgePartitionsAllocGetter, nodeAllocGetter);
         }
-        
+
         return *this;
       }
 
       void swap(graph_primitive& rhs)
-        noexcept(noexcept(Connectivity::swap(rhs)) && noexcept(Nodes::swap(rhs)))        
+        noexcept(noexcept(Connectivity::swap(rhs)) && noexcept(Nodes::swap(rhs)))
       {
         Connectivity::swap(rhs);
         Nodes::swap(rhs);
@@ -405,7 +405,7 @@ namespace sequoia
         {
           Nodes::reserve(size);
         }
-       
+
         Connectivity::reserve_nodes(size);
       }
 
@@ -417,7 +417,7 @@ namespace sequoia
           return std::min(Connectivity::node_capacity(), Nodes::capacity());
         }
         else
-        {       
+        {
           return Connectivity::node_capacity();
         }
       }
@@ -436,7 +436,7 @@ namespace sequoia
       size_type add_node(Args&&... args)
       {
         reserve_nodes(this->order() + 1);
-        
+
         Connectivity::add_node();
         if constexpr (!emptyNodes) Nodes::add_node(std::forward<Args>(args)...);
         return (this->order()-1);
@@ -466,16 +466,16 @@ namespace sequoia
       void clear() noexcept
       {
         if constexpr (!emptyNodes) Nodes::clear();
-        Connectivity::clear(); 
+        Connectivity::clear();
       }
     private:
       constexpr static bool emptyNodes{std::is_empty_v<typename Nodes::weight_type>};
       constexpr static bool heteroNodes{std::is_same_v<node_weight_type, graph_impl::heterogeneous_tag>};
-      
+
       template<bool Hetero>
       struct node_init_constant : std::bool_constant<Hetero>
       {};
-      
+
       using hetero_init_type = node_init_constant<true>;
       using homo_init_type   = node_init_constant<false>;
 
@@ -488,7 +488,7 @@ namespace sequoia
         else
         {
           return homo_init_type{};
-        }    
+        }
       }
 
       template<class N=node_weight_type>
@@ -534,7 +534,7 @@ namespace sequoia
       size_type insert_node_impl(const size_type pos, Args&&... args)
       {
         reserve_nodes(this->order() + 1);
-        
+
         const auto node{(pos < this->order()) ? pos : (this->order() - 1)};
         if constexpr (!emptyNodes)
         {

@@ -14,7 +14,7 @@
 #include "sequoia/Core/Meta/TypeTraits.hpp"
 
 namespace sequoia::testing
-{  
+{
   /*! \brief Somewhat similar to std::allocator but logs (de)allocations via an counter
       which is shared upon copying.
 
@@ -26,7 +26,7 @@ namespace sequoia::testing
       allocator being taken between the measurement points. For example, the framework can
       (and has!) detected a typo in an overload of operator== in which one of the arguments
       was accidentally taken by value, leading to unexpected allocations.
-      
+
       There is also a more subtle difference to std:allocator<T>. Whereas the latter allows
       construction from std::allocator<U> this possibility is excluded to ensure that
       constructors of classes taking multiple allocators do not confuse them internally.
@@ -42,7 +42,7 @@ namespace sequoia::testing
   public:
     using value_type = T;
     using size_type = std::size_t;
-    using difference_type = std::ptrdiff_t;    
+    using difference_type = std::ptrdiff_t;
     using propagate_on_container_copy_assignment = std::bool_constant<PropagateCopy>;
     using propagate_on_container_move_assignment = std::bool_constant<PropagateMove>;
     using propagate_on_container_swap            = std::bool_constant<PropagateSwap>;

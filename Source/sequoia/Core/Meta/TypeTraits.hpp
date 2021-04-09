@@ -41,7 +41,7 @@ namespace sequoia
     using head = typename impl::variadic_traits_helper<T...>::head;
     using tail = typename impl::variadic_traits_helper<T...>::tail;
   };
-     
+
   template<>
   struct variadic_traits<>
   {
@@ -53,7 +53,7 @@ namespace sequoia
   using head_of_t = typename variadic_traits<T...>::head;
 
   // is_base_of_head
-  
+
   template<class T, class... Args>
   struct is_base_of_head
     : std::is_base_of<std::remove_cvref_t<T>, std::remove_cvref_t<head_of_t<Args...>>>
@@ -83,7 +83,7 @@ namespace sequoia
   using resolve_to_copy_t = typename resolve_to_copy<T, Args...>::type;
 
   // is_const_pointer
-  
+
   template<class T>
   struct is_const_pointer : std::false_type {};
 
@@ -100,7 +100,7 @@ namespace sequoia
   using is_const_pointer_t = typename is_const_pointer<T>::type;
 
   // is_const_reference
-  
+
   template<class T>
   struct is_const_reference
     : std::bool_constant<std::is_reference_v<T> && std::is_const_v<std::remove_reference_t<T>>>
@@ -111,12 +111,12 @@ namespace sequoia
 
   template<class T>
   using is_const_reference_t = typename is_const_reference<T>::type;
-  
+
   template<class T>
   std::add_lvalue_reference_t<T> makelval() noexcept;
 
   // is_tuple
-  
+
   template<class T>
   struct is_tuple : std::false_type{};
 
@@ -130,7 +130,7 @@ namespace sequoia
   inline constexpr bool is_tuple_v{is_tuple<Ts...>::value};
 
   // dependent_false
-  
+
   template<class T>
   struct dependent_false : std::false_type {};
 }

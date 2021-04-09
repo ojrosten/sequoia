@@ -23,7 +23,7 @@ namespace sequoia::testing
   template<>
   struct as_bitmask<summary_detail> : std::true_type
   {};
-  
+
   template<class Iter> void pad_right(Iter begin, Iter end, std::string_view suffix)
   {
     auto maxIter{
@@ -40,8 +40,8 @@ namespace sequoia::testing
       auto& s{*begin};
       s += std::string(maxChars - s.size(), ' ') += std::string{suffix};
     }
-  }  
-      
+  }
+
   template<class Iter> void pad_left(Iter begin, Iter end, const std::size_t minChars)
   {
     auto maxIter{std::max_element(begin, end, [](const std::string& lhs, const std::string& rhs) {
@@ -60,7 +60,7 @@ namespace sequoia::testing
   }
 
   using opt_duration = std::optional<log_summary::duration>;
-    
+
   [[nodiscard]]
   std::string stringify(const log_summary::duration& d);
 

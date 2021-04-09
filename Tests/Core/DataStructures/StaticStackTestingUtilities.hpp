@@ -12,12 +12,12 @@
 #include "sequoia/Core/DataStructures/StaticStack.hpp"
 
 namespace sequoia::testing
-{  
+{
   template<class T, std::size_t MaxDepth>
   struct detailed_equality_checker<data_structures::static_stack<T, MaxDepth>>
   {
     using type = data_structures::static_stack<T, MaxDepth>;
-    
+
     template<test_mode Mode>
     static void check(test_logger<Mode>& logger, const type& stack, const type& prediction)
     {

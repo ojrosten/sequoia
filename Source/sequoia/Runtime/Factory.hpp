@@ -15,7 +15,7 @@
 #include <tuple>
 
 namespace sequoia::runtime
-{  
+{
   template<class... Products>
     requires (sizeof...(Products) > 0)
   class factory
@@ -23,7 +23,7 @@ namespace sequoia::runtime
   public:
     using key    = std::string;
     using vessel = std::variant<Products...>;
-    
+
     constexpr static std::size_t size() noexcept
     {
       return sizeof...(Products);
@@ -85,17 +85,17 @@ namespace sequoia::runtime
     [[nodiscard]]
     auto begin() const noexcept
     {
-      return m_Creators.begin(); 
+      return m_Creators.begin();
     }
 
     [[nodiscard]]
     auto end() const noexcept
     {
-      return m_Creators.end(); 
+      return m_Creators.end();
     }
   private:
     using element = std::pair<key, vessel>;
-    
+
     std::array<element, size()> m_Creators{};
 
     template<std::size_t... I, class... Args>

@@ -32,7 +32,7 @@ namespace sequoia::testing
         ordering[index++] = nodeIndex;
       }
     };
-    
+
     constexpr g_type g{{edge_t{1}}, {}};
     pseudo_depth_first_search(g, true, 0, null_functor{}, lateNodeFn);
 
@@ -57,7 +57,7 @@ namespace sequoia::testing
         edge_t{0, 0, 1}
       },
     };
-    
+
     std::array<std::size_t, 2> edgeData{};
     std::size_t index{};
     auto edgeFn{
@@ -67,7 +67,7 @@ namespace sequoia::testing
     };
 
     breadth_first_search(g, true, 0, null_functor{}, null_functor{}, edgeFn);
-    
+
     return edgeData;
   }
 
@@ -81,7 +81,7 @@ namespace sequoia::testing
     //  \ | /
     //   \|/
     //    0
-    
+
     constexpr g_type g{
       {
         {edge_t{1}, edge_t{2}, edge_t{3}},
@@ -101,13 +101,13 @@ namespace sequoia::testing
         orderedNodeWeights[index++] = *(g.cbegin_node_weights() + node);
       }
     };
-    
+
     maths::priority_search(g, true, 0, nodeEarlyFn);
 
     return orderedNodeWeights;
   }
 
-  
+
   void test_static_graph_traversals::run_tests()
   {
     {

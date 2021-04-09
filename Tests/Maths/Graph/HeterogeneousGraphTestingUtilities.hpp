@@ -21,7 +21,7 @@ namespace sequoia::testing
       using type = Graph;
 
       using connectivity_equivalent_type = std::initializer_list<std::initializer_list<typename type::edge_init_type>>;
-      
+
       using nodes_equivalent_type = std::tuple<NodeWeights...>;
 
       template<test_mode Mode>
@@ -35,42 +35,42 @@ namespace sequoia::testing
       }
     };
   }
-  
+
   // Details Checkers
 
   template
   <
-    maths::directed_flavour Directedness,      
+    maths::directed_flavour Directedness,
     std::size_t Size,
-    std::size_t Order,      
+    std::size_t Order,
     class EdgeWeight,
     class... NodeWeights
   >
   struct detailed_equality_checker<maths::heterogeneous_static_graph<Directedness, Size, Order, EdgeWeight, NodeWeights...>>
     : impl::graph_detailed_equality_checker<maths::heterogeneous_static_graph<Directedness, Size, Order, EdgeWeight, NodeWeights...>>
-  {   
+  {
   };
 
   template
   <
-    maths::directed_flavour Directedness,      
+    maths::directed_flavour Directedness,
     std::size_t Size,
-    std::size_t Order,      
+    std::size_t Order,
     class EdgeWeight,
     class... NodeWeights
   >
   struct detailed_equality_checker<maths::heterogeneous_embedded_static_graph<Directedness, Size, Order, EdgeWeight, NodeWeights...>>
     : impl::graph_detailed_equality_checker<maths::heterogeneous_embedded_static_graph<Directedness, Size, Order, EdgeWeight, NodeWeights...>>
-  {   
+  {
   };
 
   // Equivalence Checkers
 
   template
   <
-    maths::directed_flavour Directedness,      
+    maths::directed_flavour Directedness,
     std::size_t Size,
-    std::size_t Order,      
+    std::size_t Order,
     class EdgeWeight,
     class... NodeWeights
   >
@@ -81,9 +81,9 @@ namespace sequoia::testing
 
   template
   <
-    maths::directed_flavour Directedness,      
+    maths::directed_flavour Directedness,
     std::size_t Size,
-    std::size_t Order,      
+    std::size_t Order,
     class EdgeWeight,
     class... NodeWeights
   >

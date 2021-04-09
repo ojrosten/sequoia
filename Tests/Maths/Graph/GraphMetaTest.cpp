@@ -23,11 +23,11 @@ namespace sequoia::testing
 
     test_method_detectors();
     test_static_edge_index_generator();
-    
+
     test_undirected<graph_flavour::undirected, partial_edge>();
     test_undirected<graph_flavour::undirected_embedded, embedded_partial_edge>();
     test_directed();
-    test_directed_embedded();        
+    test_directed_embedded();
   }
 
   void test_graph_meta::test_method_detectors()
@@ -59,7 +59,7 @@ namespace sequoia::testing
     static_assert(std::is_same_v<std::size_t, typename static_edge_index_type_generator<65535, 255, true>::index_type>);
     static_assert(std::is_same_v<std::size_t, typename static_edge_index_type_generator<255, 65535, true>::index_type>);
   }
-  
+
   template
   <
     maths::graph_flavour GraphFlavour,
@@ -72,10 +72,10 @@ namespace sequoia::testing
     using namespace maths;
     using namespace graph_impl;
     using namespace data_structures;
-    
+
     static_assert(!big_proxy<EdgeWeight, EdgeWeightPooling>());
     static_assert(!sharing_traits<GraphFlavour, edge_sharing_preference::independent, EdgeWeight, EdgeWeightPooling>::shared_weight_v);
-      
+
     using gen_t = dynamic_edge_traits<GraphFlavour, EdgeWeight, EdgeWeightPooling, contiguous_edge_storage_traits, std::size_t>;
     using edge_t = typename gen_t::edge_type;
     using proxy = typename EdgeWeightPooling::proxy;
@@ -94,10 +94,10 @@ namespace sequoia::testing
     using namespace maths;
     using namespace graph_impl;
     using namespace data_structures;
-    
+
     static_assert(big_proxy<EdgeWeight, EdgeWeightPooling>());
     static_assert(sharing_traits<GraphFlavour, edge_sharing_preference::agnostic, EdgeWeight, EdgeWeightPooling>::shared_weight_v);
-      
+
     using gen_t = dynamic_edge_traits<GraphFlavour, EdgeWeight, EdgeWeightPooling, contiguous_edge_storage_traits, std::size_t>;
     using edge_t = typename gen_t::edge_type;
     using proxy = typename EdgeWeightPooling::proxy;
@@ -111,7 +111,7 @@ namespace sequoia::testing
     template<class, template<class> class, class, class> class EdgeType
   >
   void test_graph_meta::test_undirected()
-  {    
+  {
     test_undirected_unshared<GraphFlavour, int, ownership::spawner<int>, EdgeType>();
     test_undirected_unshared<GraphFlavour, int, ownership::data_pool<int>, EdgeType>();
     test_undirected_unshared<GraphFlavour, wrapper<int>, ownership::spawner<wrapper<int>>, EdgeType>();
@@ -190,5 +190,5 @@ namespace sequoia::testing
 
     test_directed_embedded_impl<std::tuple<double,double,double>, ownership::spawner<std::tuple<double,double,double>>>();
     test_directed_embedded_impl<std::tuple<double,double,double>, ownership::data_pool<std::tuple<double,double,double>>>();
-  }  
+  }
 }

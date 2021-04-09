@@ -12,11 +12,11 @@ namespace sequoia::testing
   class factory_false_positive_test final : public regular_false_positive_test
   {
   public:
-    using regular_false_positive_test::regular_false_positive_test;    
+    using regular_false_positive_test::regular_false_positive_test;
 
     [[nodiscard]]
     std::string_view source_file() const noexcept final;
-  private:    
+  private:
     void run_tests() final;
   };
 }

@@ -21,7 +21,7 @@ namespace sequoia::testing
     using namespace concurrency;
 
     test_task_queue();
-    
+
     test_exceptions<thread_pool<void>, std::runtime_error>(LINE("pool_2"), 2u);
     test_exceptions<thread_pool<void, false>, std::runtime_error>(LINE("pool_2M"), 2u);
     test_exceptions<asynchronous<void>, std::runtime_error>(LINE("async"));
@@ -35,7 +35,7 @@ namespace sequoia::testing
     // serial does a modifiable functor make sense
     //update_vector_tests<thread_pool<void, std::deque>>();
     //update_vector_tests<asynchronous<void>>();
-  
+
     test_functor_update<serial<void>>();
   }
 
@@ -55,7 +55,7 @@ namespace sequoia::testing
 
       t();
       check_equality(LINE(""), a, 1);
-      
+
       q.push(task_t{[&a](){ a+= 2; }});
       t = q.pop();
 
@@ -64,7 +64,7 @@ namespace sequoia::testing
 
       q.finish();
     }
-    
+
     {
       using q_t = task_queue<int>;
       using task_t = q_t::task_t;
@@ -76,15 +76,15 @@ namespace sequoia::testing
 
       auto fut{t.get_future()};
       t();
-      
+
       check_equality(LINE(""), fut.get(), 1);
-      
+
       q.push(task_t{[](){ return 2;}});
       t = q.pop();
 
       fut = t.get_future();
       t();
-      
+
       check_equality(LINE(""), fut.get(), 2);
 
       q.finish();
@@ -96,7 +96,7 @@ namespace sequoia::testing
   {
     ThreadModel threadModel{std::forward<Args>(args)...};;
     using R = typename ThreadModel::return_type;
-    
+
     threadModel.push([]() -> R { throw Exception{"Error!"}; });
 
     check_exception_thrown<Exception>(std::string{message}, [&threadModel]() { return threadModel.get(); });
@@ -114,5 +114,5 @@ namespace sequoia::testing
     threadModel.get();
 	
     check_equality(LINE(""), u.get_data(), std::vector<int>{0});
-  }    
+  }
 }

@@ -20,7 +20,7 @@ namespace sequoia::testing
     std::string_view source_file() const noexcept final;
   private:
     void run_tests() final;
-    
+
     template<
       class CustomIter,
       class Iter,
@@ -41,7 +41,7 @@ namespace sequoia::testing
   template<class Iterator>
   class scaling_dereference_policy
   {
-  public:    
+  public:
     using value_type = typename std::iterator_traits<Iterator>::value_type;
     using proxy      = value_type;
     using pointer    = typename std::iterator_traits<Iterator>::pointer;
@@ -65,7 +65,7 @@ namespace sequoia::testing
 
     constexpr scaling_dereference_policy& operator=(const scaling_dereference_policy&) = default;
     constexpr scaling_dereference_policy& operator=(scaling_dereference_policy&&)      = default;
-    
+
     [[nodiscard]]
     constexpr proxy get(typename std::iterator_traits<Iterator>::reference ref) const noexcept
     {

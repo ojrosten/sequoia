@@ -25,19 +25,19 @@ namespace sequoia::testing
   {
     using namespace data_structures;
     using namespace ownership;
-    
+
     test<bucketed_storage<T, ownership::independent<T>>>();
     test<bucketed_storage<T, ownership::shared<T>>>();
 
     test<partitioned_sequence<T, ownership::independent<T>>>();
     test<partitioned_sequence<T, ownership::shared<T>>>();
   }
-  
+
   template<class PartitionedData> void partitioned_data_false_positive_test::test()
   {
     using value_type = typename PartitionedData::value_type;
     using expected_t = std::initializer_list<std::initializer_list<value_type>>;
-    
+
     PartitionedData
       d{},
       e{{value_type{1}}},
@@ -49,7 +49,7 @@ namespace sequoia::testing
       ce{{value_type{1}}},
       cg{{value_type{1}, value_type{2}}},
       ch{{value_type{1}}, {value_type{2}}};
-      
+
 
     check_equivalence(LINE("Empty data inequivalent to non-empty data "), d, expected_t{{value_type{1}}});
     check_equivalence(LINE("Non-empty data inequivalent to empty data "), e, expected_t{{}});
@@ -60,7 +60,7 @@ namespace sequoia::testing
     check_equality(LINE(""), d, e);
     check_equality(LINE(""), e, f);
     check_equality(LINE(""), g, h);
-       
+
     check_equality(LINE("Size 0 should not compare equal to 1"), d.size(), 1_sz);
     check_equality(LINE("Size 1 should not compare equal to 0"), e.size(), 0_sz);
 
@@ -93,7 +93,7 @@ namespace sequoia::testing
     check_equality(LINE(""), *h.crbegin_partition(1), value_type{1});
     check_equality(LINE(""), h[1][0], value_type{1});
 
-    
+
     check_equality(LINE(""), *ce.begin_partition(0), value_type{2});
     check_equality(LINE(""), *ce.rbegin_partition(0), value_type{2});
     check_equality(LINE(""), ce[0][0], value_type{2});

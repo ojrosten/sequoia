@@ -27,10 +27,10 @@ namespace sequoia::maths::graph_impl
 {
   template<bool Forward> struct iterator_getter
   {
-    template<class G>    
+    template<class G>
     [[nodiscard]]
     constexpr static auto begin(const G& graph, const std::size_t nodeIndex) { return graph.cbegin_edges(nodeIndex); }
-    
+
     template<class G>
     [[nodiscard]]
     constexpr static auto end(const G& graph, const std::size_t nodeIndex) { return graph.cend_edges(nodeIndex); }
@@ -41,7 +41,7 @@ namespace sequoia::maths::graph_impl
     template<class G>
     [[nodiscard]]
     constexpr static auto begin(const G& graph, const std::size_t nodeIndex) { return graph.crbegin_edges(nodeIndex); }
-    
+
     template<class G>
     [[nodiscard]]
     constexpr static auto end(const G& graph, const std::size_t nodeIndex) { return graph.crend_edges(nodeIndex); }
@@ -63,7 +63,7 @@ namespace sequoia::maths::graph_impl
     {
       return iterator_getter<traversal_traits_base<Q>::uses_forward_iterator()>::end(graph, nodeIndex);
     }
-    
+
     using bitset = std::array<bool, G::order()>;
 
     [[nodiscard]]
@@ -72,7 +72,7 @@ namespace sequoia::maths::graph_impl
       return bitset{};
     }
   };
-  
+
   template<dynamic_network G, class Q>
   struct traversal_traits<G, Q> : public traversal_traits_base<Q>
   {
@@ -96,8 +96,8 @@ namespace sequoia::maths::graph_impl
       return bitset(g.order(), false);
     }
   };
-  
-      
+
+
   template<class G, class Compare>
   class node_comparer
   {
@@ -105,7 +105,7 @@ namespace sequoia::maths::graph_impl
     using compare_type = Compare;
 
     constexpr node_comparer(const G& g) : m_Graph(g) {}
-    constexpr node_comparer(const node_comparer&) = default; 
+    constexpr node_comparer(const node_comparer&) = default;
 
     [[nodiscard]]
     constexpr bool operator()(const std::size_t index1, const std::size_t index2)
@@ -244,8 +244,8 @@ namespace sequoia::maths::graph_impl
   template<class G> struct queue_selector;
 
   template<class G, class Compare> struct priority_queue_selector;
-  
-  
+
+
   template<class G>
   class traversal_helper : private loop_processor<G>
   {
@@ -255,7 +255,7 @@ namespace sequoia::maths::graph_impl
       class NFBE,
       class NFAE,
       class EFTF,
-      class ESTF,    
+      class ESTF,
       class TaskProcessingModel
     >
     constexpr auto traverse(const G& graph,
@@ -296,12 +296,12 @@ namespace sequoia::maths::graph_impl
             nodeIndexQueue.pop();
 
             node_functor_processor<NFBE>::process(taskProcessingModel, std::forward<NFBE>(nodeFunctorBeforeEdges), nodeIndex);
-          
+
             this->reset();
             for(auto iter{traversal_traits<G, container_type>::begin(graph, nodeIndex)}; iter != traversal_traits<G, container_type>::end(graph, nodeIndex); ++iter)
             {
-              const auto nextNode{iter->target_node()}; 
-              
+              const auto nextNode{iter->target_node()};
+
               if constexpr(G::flavour != graph_flavour::directed)
               {
                 const bool loop{[iter]([[maybe_unused]] const std::size_t currentNodeIndex){
@@ -332,13 +332,13 @@ namespace sequoia::maths::graph_impl
                   const bool secondTraversal{processed[nextNode] || loopMatched};
                   if(secondTraversal) edge_functor_processor<ESTF>::process(taskProcessingModel, std::forward<ESTF>(edgeSecondTraversalFunctor), iter);
                   else                edge_functor_processor<EFTF>::process(taskProcessingModel, std::forward<EFTF>(edgeFirstTraversalFunctor), iter);
-                }  
+                }
               }
               else
               {
                 edge_functor_processor<EFTF>::process(taskProcessingModel, std::forward<EFTF>(edgeFirstTraversalFunctor), iter);
               }
-              
+
               if(!discovered[nextNode])
               {
                 nodeIndexQueue.push(nextNode);
@@ -346,10 +346,10 @@ namespace sequoia::maths::graph_impl
                 ++numDiscovered;
               }
             }
-            
+
             node_functor_processor<NFAE>::process(taskProcessingModel, std::forward<NFAE>(nodeFunctorAfterEdges), nodeIndex);
             processed[nodeIndex] = true;
-          }          
+          }
         } while(findDisconnectedPieces && (numDiscovered != graph.order()));
       }
 

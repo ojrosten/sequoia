@@ -36,7 +36,7 @@ namespace sequoia::data_structures::partition_impl
     using held_type      = typename Handler::handle_type;
     using container_type = typename Traits::template container_type<held_type>;
   };
-    
+
   template<class Traits, handler Handler, template<class> class ReferencePolicy, bool Reversed>
   struct partition_iterator_generator
   {
@@ -48,7 +48,7 @@ namespace sequoia::data_structures::partition_impl
   {
     using iterator = typename storage_type_generator<Traits,Handler>::container_type::reverse_iterator;
   };
-    
+
   template<class Traits, handler Handler>
   struct partition_iterator_generator<Traits, Handler, const_reference, false>
   {
@@ -60,7 +60,7 @@ namespace sequoia::data_structures::partition_impl
   {
     using iterator = typename storage_type_generator<Traits, Handler>::container_type::const_reverse_iterator;
   };
-  
+
   template<bool Reversed, class IndexType>
   class partition_index_policy
   {
@@ -83,11 +83,11 @@ namespace sequoia::data_structures::partition_impl
 
     [[nodiscard]]
     constexpr IndexType partition_index() const noexcept { return m_Partition; }
-  protected:          
+  protected:
     constexpr partition_index_policy(partition_index_policy&&) noexcept = default;
-    
+
     ~partition_index_policy() = default;
-    
+
     constexpr partition_index_policy& operator=(const partition_index_policy&)     = default;
     constexpr partition_index_policy& operator=(partition_index_policy&&) noexcept = default;
   private:
@@ -109,8 +109,8 @@ namespace sequoia::data_structures::partition_impl
     template<class... Args>
       requires (!resolve_to_copy_v<dereference_policy, Args...>)
     constexpr dereference_policy(Args&&... args) : AuxiliaryDataPolicy{std::forward<Args>(args)...} {}
-    
-    constexpr dereference_policy(const dereference_policy&) = default;    
+
+    constexpr dereference_policy(const dereference_policy&) = default;
   protected:
     constexpr dereference_policy(dereference_policy&&) noexcept = default;
 
@@ -153,9 +153,9 @@ namespace sequoia::data_structures::partition_impl
 
   template<handler Handler, class T>
   inline constexpr bool direct_copy_v{std::is_same_v<Handler, ownership::independent<T>>};
-  
+
   template<class T> class data_duplicator;
-    
+
   template<class T> class data_duplicator<ownership::independent<T>>
   {
   public:

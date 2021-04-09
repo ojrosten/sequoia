@@ -42,7 +42,7 @@ namespace sequoia::testing
 
     template<class Graph>
     void test_update();
-      
+
     template<class Graph>
     [[nodiscard]]
     Graph make_graph();
@@ -60,7 +60,7 @@ namespace sequoia::testing
     void check_pr_update(Graph graph);
 
     //============================= Breadth-first only tests ===========================//
-      
+
     template<class Graph>
     void test_bf_update();
 
@@ -80,7 +80,7 @@ namespace sequoia::testing
   {
   public:
     graph_updater(G& graph) : m_Graph(graph) {}
-      
+
     void firstNodeTraversal(const std::size_t index)
     {
       auto iter = m_Graph.cbegin_node_weights() + index;
@@ -116,7 +116,7 @@ namespace sequoia::testing
     }
   private:
     G& m_Graph;
-      
+
     std::size_t m_NodeTraversalIndex{},
       m_EdgeTraversalIndex{};
   };

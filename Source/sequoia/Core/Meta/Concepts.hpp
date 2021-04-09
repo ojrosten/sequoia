@@ -19,7 +19,7 @@ namespace sequoia
 {
   template <class T, class U>
   concept same_as = std::is_same_v<T, U>;
-  
+
   template <class T>
   concept destructible = std::is_nothrow_destructible_v<T>;
 
@@ -51,7 +51,7 @@ namespace sequoia
     && requires(LHS lhs, RHS&& rhs) {
          { lhs = std::forward<RHS>(rhs) } -> same_as<LHS>;
        };
-  
+
   template <class T>
   concept move_constructible =
     constructible_from<T, T> && convertible_to<T, T>;
@@ -61,7 +61,7 @@ namespace sequoia
     requires(T& a, T& b) {
       std::swap(a, b);
     };
-  
+
   template <class T>
   concept movable =
        std::is_object_v<T>
@@ -75,7 +75,7 @@ namespace sequoia
     && constructible_from<T, T&>       && convertible_to<T&, T>
     && constructible_from<T, const T&> && convertible_to<const T&, T>
     && constructible_from<T, const T>  && convertible_to<const T, T>;
-  
+
   template <class T>
   concept copyable =
        copy_constructible<T>
@@ -123,7 +123,7 @@ namespace sequoia
 
   template <class T>
   concept equality_comparable = weak_equality_comparable_with<T, T>;
-  
+
   template <class T>
   concept semiregular = copyable<T> && default_initializable<T>;
 
@@ -221,5 +221,5 @@ namespace sequoia
   template<template<class...> class T, class... Args>
   concept class_template_is_default_instantiable
    = requires() { T<Args...>{}; };
-             
+
 }

@@ -13,7 +13,7 @@
 namespace sequoia
 {
   using namespace maths;
-  
+
   namespace testing
   {
     template<class Checker>
@@ -23,8 +23,8 @@ namespace sequoia
       init_checker(Checker& checker) : m_Checker{checker} {}
 
     protected:
-      Checker& m_Checker;      
-      
+      Checker& m_Checker;
+
       ~init_checker() = default;
 
       template<
@@ -59,7 +59,7 @@ namespace sequoia
         else
         {
           const Graph g{};
-          check_0_0(g); 
+          check_0_0(g);
         }
       }
 
@@ -72,7 +72,7 @@ namespace sequoia
           // Remove restriction in C++20
           if constexpr(!static_nodes<Graph>)
                         m_Checker.template check_exception_thrown<std::logic_error>(LINE("Mismatched nodes and edges"), [](){ Graph{{{},{}}, {NodeWeight{}}}; });
-          
+
           if constexpr(static_nodes<Graph>)
           {
             // Should work in C++ 20;
@@ -85,9 +85,9 @@ namespace sequoia
           else
           {
             const Graph g{{{}}, {NodeWeight{}}};
-            check_1_0(g); 
+            check_1_0(g);
           }
-        }        
+        }
       }
 
       template<class Graph>
@@ -99,7 +99,7 @@ namespace sequoia
           // Remove restriction in C++20
           if constexpr(!static_nodes<Graph>)
                         m_Checker.template check_exception_thrown<std::logic_error>(LINE("Mismatched nodes and edges"), [](){ Graph{{{}}, {NodeWeight{}, NodeWeight{}}}; });
-          
+
           if constexpr(static_nodes<Graph>)
           {
             // Should work in C++ 20;
@@ -112,15 +112,15 @@ namespace sequoia
           else
           {
             const Graph g{{{},{}}, {NodeWeight{}, NodeWeight{}}};
-            check_2_0(g); 
+            check_2_0(g);
           }
-        }        
+        }
       }
-      
+
     private:
       template<class Graph>
       void check_0_0(const Graph& g)
-      {        
+      {
         check_graph(LINE(""), g, {}, {});
 
         //using conn_prediction_t = std::initializer_list<std::initializer_list<typename Graph::edge_init_type>>;
@@ -130,7 +130,7 @@ namespace sequoia
 
       template<class Graph>
       void check_1_0(const Graph& g)
-      {        
+      {
         using NodeWeight = typename Graph::node_weight_type;
 
         check_graph(LINE(""), g, {{}}, {NodeWeight{}});
@@ -138,13 +138,13 @@ namespace sequoia
 
       template<class Graph>
       void check_2_0(const Graph& g)
-      {        
+      {
         using NodeWeight = typename Graph::node_weight_type;
 
         check_graph(LINE(""), g, {{}, {}}, {NodeWeight{}, NodeWeight{}});
       }
     };
-    
+
     template<class Checker>
     class undirected_init_checker : protected init_checker<Checker>
     {
@@ -188,7 +188,7 @@ namespace sequoia
       void check_1_0()
       {
         // TO DO: add exception checks in C++20
-        
+
         init_checker<Checker>::template check_1_0<Graph>();
       }
 
@@ -196,7 +196,7 @@ namespace sequoia
       void check_2_0()
       {
         // TO DO: add exception checks in C++20
-        
+
         init_checker<Checker>::template check_2_0<Graph>();
       }
 
@@ -215,7 +215,7 @@ namespace sequoia
         {
           m_Checker.template check_exception_thrown<std::logic_error>(LINE("Mismatch between weights"), [](){ Graph{{edge{0,2}, edge{0,-2}}}; });
         }
-        
+
         //  /\
         //  \/
         //   x
@@ -244,16 +244,16 @@ namespace sequoia
           {
             const Graph g{{edge{0, -2}, edge{0, -2}}};
             check_1_1w(g);
-          }          
+          }
         }
 
-        using node_weight = typename Graph::node_weight_type;        
+        using node_weight = typename Graph::node_weight_type;
         if constexpr(!std::is_empty_v<node_weight>)
         {
           m_Checker.template check_exception_thrown<std::logic_error>(LINE("Mismatch between node and edge init"), [](){ Graph{{{edge{0}, edge{0}}, {}}, {node_weight{}}}; });
 
           m_Checker.template check_exception_thrown<std::logic_error>(LINE("Mismatch between node and edge init"), [](){ Graph{{{edge{0}, edge{0}}}, {node_weight{}, node_weight{}}}; });
-          
+
           if constexpr(static_nodes<Graph>)
           {
             {
@@ -278,7 +278,7 @@ namespace sequoia
             {
               const Graph g{{{edge{0, -2}, edge{0, -2}}}, {node_weight{}}};
               check_1_1w(g);
-            }          
+            }
           }
         }
       }
@@ -357,7 +357,7 @@ namespace sequoia
         {
           m_Checker.template check_exception_thrown<std::logic_error>(LINE("Mismatched weights"), [](){ Graph{{edge{1,5}}, {edge{0,-5}}}; });
         }
-            
+
 
         // x------x
         if constexpr(static_nodes<Graph>)
@@ -385,7 +385,7 @@ namespace sequoia
             const Graph g{{edge{1,-5}}, {edge{0,-5}}};
             check_2_1w(g);
           }
-          
+
         }
       }
 
@@ -403,7 +403,7 @@ namespace sequoia
           m_Checker.template check_exception_thrown<std::logic_error>(LINE("Mismatched weights"), [](){ Graph{{edge{1,1}}, {edge{0,8}, edge{2,1}}, {edge{1,8}}}; });
           m_Checker.template check_exception_thrown<std::logic_error>(LINE("Mismatched weight"), [](){ Graph{{edge{1,1}}, {edge{0,8}, edge{2,8}}, {edge{1,8}}}; });
         }
-      
+
         // x-----x-----x
         if constexpr(static_nodes<Graph>)
         {
@@ -456,9 +456,9 @@ namespace sequoia
 
           m_Checker.template check_exception_thrown<std::logic_error>(LINE("Mismatched weights"), [](){Graph{{edge{2,7}, edge{1,2}}, {edge{2,5}, edge{0,2}}, {edge{1,-7}, edge{0,5}}};});
         }
-        
+
         using edge = typename Graph::edge_init_type;
-        
+
         //      /\
         //      \/
         // x-----x-----x
@@ -580,8 +580,8 @@ namespace sequoia
       }
     private:
       using init_checker<Checker>::m_Checker;
-      using init_checker<Checker>::check_graph;      
-      
+      using init_checker<Checker>::check_graph;
+
       template<class Graph>
       void check_1_1(const Graph& g)
       {
@@ -595,7 +595,7 @@ namespace sequoia
       void check_1_1w(const Graph& g)
       {
         using edge = typename Graph::edge_init_type;
-        
+
         using NodeWeight = typename Graph::node_weight_type;
 
         check_graph(LINE(""), g, {{edge{0, -2}, edge{0, -2}}}, {NodeWeight{}});
@@ -605,7 +605,7 @@ namespace sequoia
       void check_1_2(const Graph& g)
       {
         using edge = typename Graph::edge_init_type;
-        
+
         using NodeWeight = typename Graph::node_weight_type;
 
         check_graph(LINE(""), g, {{edge{0}, edge{0}, edge{0}, edge{0}}}, {NodeWeight{}});
@@ -615,7 +615,7 @@ namespace sequoia
       void check_1_2w(const Graph& g, const Graph& g2)
       {
         using edge = typename Graph::edge_init_type;
-        
+
         using NodeWeight = typename Graph::node_weight_type;
 
         check_graph(LINE(""), g, {{edge{0, 0}, edge{0, 0}, edge{0, 1}, edge{0, 1}}}, {NodeWeight{}});
@@ -626,7 +626,7 @@ namespace sequoia
       void check_2_1(const Graph& g)
       {
         using edge = typename Graph::edge_init_type;
-        
+
         using NodeWeight = typename Graph::node_weight_type;
 
         check_graph(LINE(""), g, {{edge{1}}, {edge{0}}}, {NodeWeight{}, NodeWeight{}});
@@ -636,7 +636,7 @@ namespace sequoia
       void check_2_1w(const Graph& g)
       {
         using edge = typename Graph::edge_init_type;
-        
+
         using NodeWeight = typename Graph::node_weight_type;
 
         check_graph(LINE(""), g, {{edge{1,-5}}, {edge{0,-5}}}, {NodeWeight{}, NodeWeight{}});
@@ -646,7 +646,7 @@ namespace sequoia
       void check_3_2(const Graph& g, const Graph& g2)
       {
         using edge = typename Graph::edge_init_type;
-        
+
         using NodeWeight = typename Graph::node_weight_type;
 
         check_graph(LINE(""), g, {{edge{1}}, {edge{0}, edge{2}}, {edge{1}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}});
@@ -659,20 +659,20 @@ namespace sequoia
       void check_3_2w(const Graph& g, const Graph& g2)
       {
         using edge = typename Graph::edge_init_type;
-        
+
         using NodeWeight = typename Graph::node_weight_type;
 
         check_graph(LINE(""), g, {{edge{1,1}}, {edge{0,1}, edge{2,8}}, {edge{1,8}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}});
-        check_graph(LINE(""), g2, {{edge{1,2}}, {edge{0,2}, edge{2,-2}}, {edge{1,-2}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}});       
+        check_graph(LINE(""), g2, {{edge{1,2}}, {edge{0,2}, edge{2,-2}}, {edge{1,-2}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}});
       }
 
       template<class Graph>
       void check_3_3(const Graph& g, const Graph& g2)
       {
         using edge = typename Graph::edge_init_type;
-        
+
         using NodeWeight = typename Graph::node_weight_type;
-        
+
         check_graph(LINE(""), g, {{edge{1}}, {edge{0}, edge{1}, edge{1}, edge{2}}, {edge{1}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}});
         check_graph(LINE(""), g2, {{edge{1}}, {edge{0}, edge{1}, edge{1}, edge{2}}, {edge{1}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}});
       }
@@ -681,9 +681,9 @@ namespace sequoia
       void check_3_3w(const Graph& g, const Graph& g2)
       {
         using edge = typename Graph::edge_init_type;
-        
+
         using NodeWeight = typename Graph::node_weight_type;
-        
+
         check_graph(LINE(""), g,  {{edge{1,-2}}, {edge{0,-2}, edge{1,-2}, edge{1,-2}, edge{2,-2}}, {edge{1,-2}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}});
         check_graph(LINE(""), g2, {{edge{1,-2}}, {edge{0,-2}, edge{1,3}, edge{1,3}, edge{2,4}}, {edge{1,4}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}});
       }
@@ -692,9 +692,9 @@ namespace sequoia
       void check_3_3_equilateral(const Graph& g)
       {
         using edge = typename Graph::edge_init_type;
-        
+
         using NodeWeight = typename Graph::node_weight_type;
-        
+
         check_graph(LINE(""), g, {{edge{1}, edge{2}}, {edge{0}, edge{2}}, {edge{0}, edge{1}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}});
       }
 
@@ -702,9 +702,9 @@ namespace sequoia
       void check_3_3w_equilateral(const Graph& g)
       {
         using edge = typename Graph::edge_init_type;
-        
+
         using NodeWeight = typename Graph::node_weight_type;
-        
+
         check_graph(LINE(""), g, {{edge{1,2}, edge{2,7}}, {edge{0,2}, edge{2,0}}, {edge{0,7}, edge{1,0}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}});
       }
 
@@ -712,7 +712,7 @@ namespace sequoia
       void check_3_4(const Graph& g)
       {
         using edge = typename Graph::edge_init_type;
-        
+
         using NodeWeight = typename Graph::node_weight_type;
 
         check_graph(LINE(""), g, {{edge{1}, edge{1}, edge{2}}, {edge{0}, edge{0}, edge{2}}, {edge{0}, edge{1}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}});
@@ -723,7 +723,7 @@ namespace sequoia
       {
         using edge = typename Graph::edge_init_type;
         using edge_weight_type = typename edge::weight_type;
-        
+
         using NodeWeight = typename Graph::node_weight_type;
 
         if constexpr (!orderable<edge_weight_type>)
@@ -780,7 +780,7 @@ namespace sequoia
       void check_1_0()
       {
         // TO DO: add exception checks in C++20
-        
+
         init_checker<Checker>::template check_1_0<Graph>();
       }
 
@@ -788,15 +788,15 @@ namespace sequoia
       void check_2_0()
       {
         // TO DO: add exception checks in C++20
-        
+
         init_checker<Checker>::template check_2_0<Graph>();
       }
-    
+
       template<class Graph>
       void check_1_1()
       {
         using edge = typename Graph::edge_init_type;
-      
+
         m_Checker.template check_exception_thrown<std::logic_error>(LINE("Too few elements in initializer list"), [](){ Graph{{edge{0,1}}}; });
         m_Checker.template check_exception_thrown<std::logic_error>(LINE("First partial index of loop out of range"), [](){ Graph{{edge{1,1}, edge{0,1}}}; });
         m_Checker.template check_exception_thrown<std::logic_error>(LINE("Second partial index of loop out of range"), [](){ Graph{{edge{0,1}, edge{1,0}}}; });
@@ -822,7 +822,7 @@ namespace sequoia
             constexpr Graph g{{edge{0,1}, edge{0,0}}};
             check_1_1(g);
           }
-          
+
           if constexpr(!std::is_empty_v<edge_weight>)
           {
             constexpr Graph g{{edge{0,1,-1}, edge{0,0,-1}}};
@@ -851,14 +851,14 @@ namespace sequoia
           m_Checker.template check_exception_thrown<std::logic_error>(LINE("Mismatch between node and edge init"), [](){ Graph{{{edge{0,1}, edge{0,0}}, {}}, {node_weight{}}}; });
 
           m_Checker.template check_exception_thrown<std::logic_error>(LINE("Mismatch between node and edge init"), [](){ Graph{{{edge{0,1}, edge{0,0}}}, {node_weight{}, node_weight{}}}; });
-          
+
           if constexpr(static_nodes<Graph>)
           {
             {
               constexpr Graph g{{{edge{0,1}, edge{0,0}}}, {node_weight{}}};
               check_1_1(g);
             }
-          
+
             if constexpr(!std::is_empty_v<edge_weight>)
             {
               constexpr Graph g{{{edge{0,1,-1}, edge{0,0,-1}}}, {node_weight{}}};
@@ -897,20 +897,20 @@ namespace sequoia
         {
           m_Checker.template check_exception_thrown<std::logic_error>(LINE("Weight mismatch"), [](){ Graph{{edge{0,2,1}, edge{0,3,1}, edge{0,0,2}, edge{0,1,2}}}; });
         }
-      
+
         //  /\
         //  \/
         //   x
         //  /\
         //  \/
-      
+
         if constexpr(static_nodes<Graph>)
         {
           constexpr Graph g{{edge{0,2}, edge{0,3}, edge{0,0}, edge{0,1}}};
           check_1_2(g);
         }
         else
-        { 
+        {
           const Graph g{{edge{0,2}, edge{0,3}, edge{0,0}, edge{0,1}}};
           check_1_2(g);
         }
@@ -936,16 +936,16 @@ namespace sequoia
         {
           m_Checker.template check_exception_thrown<std::logic_error>(LINE("Weight mismatch"), [](){ Graph{{edge{1,0,1}, edge{0,0,0}}}; });
         }
-      
+
         // x------x
         if constexpr(static_nodes<Graph>)
         {
           {
-            constexpr Graph g{{edge{1,0}}, {edge{0,0}}};      
+            constexpr Graph g{{edge{1,0}}, {edge{0,0}}};
             check_2_1(g);
-            
+
             constexpr auto o{g.order()};
-            m_Checker.template check_equality<size_t>(LINE("Check constexpr order"), o, 2u); 
+            m_Checker.template check_equality<size_t>(LINE("Check constexpr order"), o, 2u);
 
             constexpr auto s{g.size()};
             m_Checker.template check_equality<size_t>(LINE("Check constexpr size"), s, 1u);
@@ -953,11 +953,11 @@ namespace sequoia
 
           if constexpr(!std::is_empty_v<edge_weight>)
           {
-            constexpr Graph g{{edge{1,0,-3}}, {edge{0,0,-3}}};      
+            constexpr Graph g{{edge{1,0,-3}}, {edge{0,0,-3}}};
             check_2_1w(g);
 
             constexpr auto o{g.order()};
-            m_Checker.template check_equality<size_t>(LINE("Check constexpr order"), o, 2u); 
+            m_Checker.template check_equality<size_t>(LINE("Check constexpr order"), o, 2u);
 
             constexpr auto s{g.size()};
             m_Checker.template check_equality<size_t>(LINE("Check constexpr size"), s, 1u);
@@ -966,16 +966,16 @@ namespace sequoia
         else
         {
           {
-            const Graph g{{edge{1,0}}, {edge{0,0}}};      
+            const Graph g{{edge{1,0}}, {edge{0,0}}};
             check_2_1(g);
           }
 
           if constexpr(!std::is_empty_v<edge_weight>)
           {
-            const Graph g{{edge{1,0,-3}}, {edge{0,0,-3}}};      
+            const Graph g{{edge{1,0,-3}}, {edge{0,0,-3}}};
             check_2_1w(g);
           }
-        }          
+        }
       }
 
       template<class Graph>
@@ -992,32 +992,32 @@ namespace sequoia
         {
           m_Checker.template check_exception_thrown<std::logic_error>(LINE("Weight mismatch"), [](){ Graph{{edge{1,0,0}}, {edge{0,0,1}, edge{2,0,0}}, {edge{1,1,0}}}; });
         }
-        
+
         // x-----x-----x
-        
+
         if constexpr(static_nodes<Graph>)
         {
           constexpr Graph
             g{{edge{1,0}}, {edge{0,0}, edge{2,0}}, {edge{1,1}}},
             g2{{edge{1,1}}, {edge{2,0}, edge{0,0}}, {edge{1,0}}};
-        
-            check_3_2(g, g2);            
+
+            check_3_2(g, g2);
         }
         else
         {
           const Graph
             g{{edge{1,0}}, {edge{0,0}, edge{2,0}}, {edge{1,1}}},
             g2{{edge{1,1}}, {edge{2,0}, edge{0,0}}, {edge{1,0}}};
-        
+
             check_3_2(g, g2);
         }
       }
 
       template<class Graph>
-      void check_3_3()    
+      void check_3_3()
       {
         using edge = typename Graph::edge_init_type;
-      
+
         m_Checker.template check_exception_thrown<std::logic_error>(LINE("Mismatched complementary index"), [](){ Graph{{edge{1,1}}, {edge{1,2}, edge{0,1}, edge{1,0}, edge{2,0}}, {edge{1,3}}}; });
 
         using edge_weight = typename edge::weight_type;
@@ -1026,17 +1026,17 @@ namespace sequoia
           m_Checker.template check_exception_thrown<std::logic_error>(LINE("Weight mismatch"), [](){ Graph{{edge{1,1,2}}, {edge{1,2,2}, edge{0,0,0}, edge{1,0,2}, edge{2,0,-3}}, {edge{1,3,-3}}}; });
         }
 
-      
+
         //      /\
         //      \/
         // x-----x-----x
-        
+
         if constexpr(static_nodes<Graph>)
         {
           constexpr Graph
             g{{edge{1,1}}, {edge{1,2}, edge{0,0}, edge{1,0}, edge{2,0}}, {edge{1,3}}},
             g2{{edge{1,3}}, {edge{2,0}, edge{1,2}, edge{1,1}, edge{0,0}}, {edge{1,0}}};
-        
+
             check_3_3(g, g2);
         }
         else
@@ -1044,7 +1044,7 @@ namespace sequoia
           const Graph
             g{{edge{1,1}}, {edge{1,2}, edge{0,0}, edge{1,0}, edge{2,0}}, {edge{1,3}}},
             g2{{edge{1,3}}, {edge{2,0}, edge{1,2}, edge{1,1}, edge{0,0}}, {edge{1,0}}};
-        
+
             check_3_3(g, g2);
         }
 
@@ -1066,74 +1066,74 @@ namespace sequoia
           check_3_3_equilateral(g);
         }
       }
-      
+
     private:
       using init_checker<Checker>::m_Checker;
       using init_checker<Checker>::check_graph;
-      
+
       template<class Graph>
       void check_1_1(const Graph& g)
       {
-        
+
         using edge = typename Graph::edge_init_type;
-        
+
         using NodeWeight = typename Graph::node_weight_type;
-        
+
         check_graph(LINE(""), g, {{edge{0,1}, edge{0,0}}}, {NodeWeight{}});
       }
 
       template<class Graph>
       void check_1_1w(const Graph& g)
       {
-        
+
         using edge = typename Graph::edge_init_type;
-        
+
         using NodeWeight = typename Graph::node_weight_type;
-        
+
         check_graph(LINE(""), g, {{edge{0,1, -1}, edge{0,0, -1}}}, {NodeWeight{}});
       }
 
       template<class Graph>
       void check_1_2(const Graph& g)
       {
-        
+
         using edge = typename Graph::edge_init_type;
-        
+
         using NodeWeight = typename Graph::node_weight_type;
-        
-        check_graph(LINE(""), g, {{edge{0,2}, edge{0,3}, edge{0,0}, edge{0,1}}}, {NodeWeight{}});        
+
+        check_graph(LINE(""), g, {{edge{0,2}, edge{0,3}, edge{0,0}, edge{0,1}}}, {NodeWeight{}});
       }
 
       template<class Graph>
       void check_2_1(const Graph& g)
       {
-        
+
         using edge = typename Graph::edge_init_type;
-        
+
         using NodeWeight = typename Graph::node_weight_type;
-        
+
         check_graph(LINE(""), g, {{edge{1,0}}, {edge{0,0}}}, {NodeWeight{}, NodeWeight{}});
       }
 
       template<class Graph>
       void check_2_1w(const Graph& g)
       {
-        
+
         using edge = typename Graph::edge_init_type;
-        
+
         using NodeWeight = typename Graph::node_weight_type;
-        
+
         check_graph(LINE(""), g, {{edge{1,0,-3}}, {edge{0,0,-3}}}, {NodeWeight{}, NodeWeight{}});
       }
 
       template<class Graph>
       void check_3_2(const Graph& g, const Graph& g2)
       {
-        
+
         using edge = typename Graph::edge_init_type;
-        
+
         using NodeWeight = typename Graph::node_weight_type;
-      
+
         check_graph(LINE(""), g, {{edge{1,0}}, {edge{0,0}, edge{2,0}}, {edge{1,1}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}});
         check_graph(LINE(""), g2, {{edge{1,1}}, {edge{2,0}, edge{0,0}}, {edge{1,0}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}});
 
@@ -1142,9 +1142,9 @@ namespace sequoia
 
       template<class Graph>
       void check_3_3(const Graph& g, const Graph& g2)
-      {       
+      {
         using edge = typename Graph::edge_init_type;
-        
+
         using NodeWeight = typename Graph::node_weight_type;
 
         check_graph(LINE(""), g, {{edge{1,1}}, {edge{1,2}, edge{0,0}, edge{1,0}, edge{2,0}}, {edge{1,3}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}});
@@ -1155,14 +1155,14 @@ namespace sequoia
       void check_3_3_equilateral(const Graph& g)
       {
         using edge = typename Graph::edge_init_type;
-        
+
         using NodeWeight = typename Graph::node_weight_type;
 
         check_graph(LINE(""), g, {{edge{2,1}, edge{1,1}}, {edge{2,0}, edge{0,1}}, {edge{1,0}, edge{0,0}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}});
       }
     };
 
-    
+
 
     template<class Checker>
     class directed_init_checker : protected init_checker<Checker>
@@ -1183,7 +1183,7 @@ namespace sequoia
         check_3_2<Graph>();
         check_4_2<Graph>();
       }
-      
+
       template<class Graph>
       void check_0_0()
       {
@@ -1206,7 +1206,7 @@ namespace sequoia
       void check_1_0()
       {
         // TO DO: add exception checks in C++20
-        
+
         init_checker<Checker>::template check_1_0<Graph>();
       }
 
@@ -1214,7 +1214,7 @@ namespace sequoia
       void check_2_0()
       {
         // TO DO: add exception checks in C++20
-        
+
         init_checker<Checker>::template check_2_0<Graph>();
       }
 
@@ -1263,7 +1263,7 @@ namespace sequoia
           m_Checker.template check_exception_thrown<std::logic_error>(LINE("Mismatch between node and edge init"), [](){ Graph{{{edge{0}}, {}}, {node_weight{}}}; });
 
           m_Checker.template check_exception_thrown<std::logic_error>(LINE("Mismatch between node and edge init"), [](){ Graph{{{edge{0}}}, {node_weight{}, node_weight{}}}; });
-          
+
           if constexpr(static_nodes<Graph>)
           {
             {
@@ -1304,7 +1304,7 @@ namespace sequoia
           m_Checker.template check_exception_thrown<std::logic_error>(LINE("Too many elements in initializer lists"), [](){ Graph{{edge{0}, edge{0}, edge{0}}}; });
         }
         m_Checker.template check_exception_thrown<std::logic_error>(LINE("Partial index out of range"), [](){ Graph{{edge{0}, edge{1}}}; });
-        
+
         //  />\
         //  \ /
         //   x
@@ -1317,7 +1317,7 @@ namespace sequoia
           check_1_2(g);
         }
         else
-        { 
+        {
           const Graph g{{edge{0}, edge{0}}};
           check_1_2(g);
         }
@@ -1338,15 +1338,15 @@ namespace sequoia
 
         // x-->---x
         if constexpr(static_nodes<Graph>)
-        {      
-          constexpr Graph g{{edge{1}}, {}};      
+        {
+          constexpr Graph g{{edge{1}}, {}};
           check_2_1(g);
         }
         else
         {
-          const Graph g{{edge{1}},{}};      
+          const Graph g{{edge{1}},{}};
           check_2_1(g);
-        }          
+        }
       }
 
       template<class Graph>
@@ -1405,12 +1405,12 @@ namespace sequoia
     private:
       using init_checker<Checker>::m_Checker;
       using init_checker<Checker>::check_graph;
-      
+
       template<class Graph>
       void check_1_1(const Graph& g)
       {
         using edge = typename Graph::edge_init_type;
-        
+
         using NodeWeight = typename Graph::node_weight_type;
 
         check_graph(LINE(""), g, {{edge{0}}}, {NodeWeight{}});
@@ -1420,7 +1420,7 @@ namespace sequoia
       void check_1_1w(const Graph& g)
       {
         using edge = typename Graph::edge_init_type;
-        
+
         using NodeWeight = typename Graph::node_weight_type;
 
         check_graph(LINE(""), g, {{edge{0,10}}}, {NodeWeight{}});
@@ -1430,7 +1430,7 @@ namespace sequoia
       void check_1_2(const Graph& g)
       {
         using edge = typename Graph::edge_init_type;
-        
+
         using NodeWeight = typename Graph::node_weight_type;
 
         check_graph(LINE(""), g, {{edge{0}, edge{0}}}, {NodeWeight{}});
@@ -1440,7 +1440,7 @@ namespace sequoia
       void check_2_1(const Graph& g)
       {
         using edge = typename Graph::edge_init_type;
-        
+
         using NodeWeight = typename Graph::node_weight_type;
 
         check_graph(LINE(""), g, {{edge{1}}, {}}, {NodeWeight{}, NodeWeight{}});
@@ -1450,7 +1450,7 @@ namespace sequoia
       void check_3_2(const Graph& g, const Graph& g2)
       {
         using edge = typename Graph::edge_init_type;
-        
+
         using NodeWeight = typename Graph::node_weight_type;
 
         check_graph(LINE(""), g, {{edge{1}}, {}, {edge{1}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}});
@@ -1463,7 +1463,7 @@ namespace sequoia
       void check_4_2(const Graph& g)
       {
         using edge = typename Graph::edge_init_type;
-        
+
         using NodeWeight = typename Graph::node_weight_type;
 
         check_graph(LINE(""), g, {{}, {}, {edge{2}, edge{3}}, {}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}, NodeWeight{}});
@@ -1489,7 +1489,7 @@ namespace sequoia
         check_3_1<Graph>();
         check_3_2<Graph>();
       }
-      
+
       template<class Graph>
       void check_0_0()
       {
@@ -1512,7 +1512,7 @@ namespace sequoia
       void check_1_0()
       {
         // TO DO: add exception checks in C++20
-        
+
         init_checker<Checker>::template check_1_0<Graph>();
       }
 
@@ -1520,7 +1520,7 @@ namespace sequoia
       void check_2_0()
       {
         // TO DO: add exception checks in C++20
-        
+
         init_checker<Checker>::template check_2_0<Graph>();
       }
 
@@ -1579,7 +1579,7 @@ namespace sequoia
           m_Checker.template check_exception_thrown<std::logic_error>(LINE("Mismatch between node and edge init"), [](){ Graph{{{edge{0,0,1}, edge{0,0,0}}, {}}, {node_weight{}}}; });
 
           m_Checker.template check_exception_thrown<std::logic_error>(LINE("Mismatch between node and edge init"), [](){ Graph{{{edge{0,0,1}, edge{0,0,0}}}, {node_weight{}, node_weight{}}}; });
-          
+
           if constexpr(static_nodes<Graph>)
           {
             {
@@ -1631,7 +1631,7 @@ namespace sequoia
           constexpr Graph
             g{{edge{0,1,0}}, {edge{0,1,0}}},
             g2{{edge{1,0,0}}, {edge{1,0,0}}};
-            
+
           check_2_1(g, g2);
         }
         else
@@ -1639,9 +1639,9 @@ namespace sequoia
           const Graph
             g{{edge{0,1,0}}, {edge{0,1,0}}},
             g2{{edge{1,0,0}}, {edge{1,0,0}}};
-            
+
           check_2_1(g, g2);
-        }        
+        }
       }
 
       template<class Graph>
@@ -1688,21 +1688,21 @@ namespace sequoia
           const Graph
             g{{edge{0,1,0}}, {edge{0,1,0}, edge{1,2,0}}, {edge{1,2,1}}},
             g2{{edge{1,0,1}}, {edge{2,1,0}, edge{1,0,0}}, {edge{2,1,0}}};
-            
+
           check_3_2(g, g2);
         }
       }
-        
+
     private:
       using init_checker<Checker>::m_Checker;
       using init_checker<Checker>::check_graph;
-      
+
       template<class Graph>
       void check_1_1(const Graph& g, const Graph& g2)
       {
         using maths::inversion_constant;
         using edge = typename Graph::edge_init_type;
-        
+
         using NodeWeight = typename Graph::node_weight_type;
 
         check_graph(LINE(""), g, {{edge{0,0,1}, edge{0,0,0}}}, {NodeWeight{}});
@@ -1716,7 +1716,7 @@ namespace sequoia
       {
         using maths::inversion_constant;
         using edge = typename Graph::edge_init_type;
-        
+
         using NodeWeight = typename Graph::node_weight_type;
 
         check_graph(LINE(""), g, {{edge{0,0,1,9}, edge{0,0,0,9}}}, {NodeWeight{}});
@@ -1727,7 +1727,7 @@ namespace sequoia
       void check_2_1(const Graph& g, const Graph& g2)
       {
         using edge = typename Graph::edge_init_type;
-        
+
         using NodeWeight = typename Graph::node_weight_type;
 
         check_graph(LINE(""), g, {{edge{0,1,0}}, {edge{0,1,0}}}, {NodeWeight{}, NodeWeight{}});
@@ -1738,7 +1738,7 @@ namespace sequoia
       void check_3_1(const Graph& g)
       {
         using edge = typename Graph::edge_init_type;
-        
+
         using NodeWeight = typename Graph::node_weight_type;
 
         check_graph(LINE(""), g, {{}, {edge{1,1,1}, edge{1,1,0}}, {}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}});
@@ -1748,7 +1748,7 @@ namespace sequoia
       void check_3_2(const Graph& g, const Graph& g2)
       {
         using edge = typename Graph::edge_init_type;
-        
+
         using NodeWeight = typename Graph::node_weight_type;
 
         check_graph(LINE(""), g, {{edge{0,1,0}}, {edge{0,1,0}, edge{1,2,0}}, {edge{1,2,1}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}});

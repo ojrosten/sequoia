@@ -21,7 +21,7 @@
 
 namespace sequoia::testing
 {
-  /*! \brief class template, specializations of which implement detailed comparison of two instantiations of T; 
+  /*! \brief class template, specializations of which implement detailed comparison of two instantiations of T;
       \anchor detailed_equality_checker_primary
    */
   template<class T> struct detailed_equality_checker;
@@ -50,7 +50,7 @@ namespace sequoia::testing
   struct equivalence_tag{};
   struct weak_equivalence_tag{};
 
-  
+
   /*! \brief Specialize this struct template to provide custom serialization of a given class.
       \anchor serializer_primary
    */

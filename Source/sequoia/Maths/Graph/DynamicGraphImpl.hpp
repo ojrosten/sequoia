@@ -29,7 +29,7 @@ namespace sequoia::maths::graph_impl
   {
     return F == directed_flavour::directed ? graph_flavour::directed_embedded : graph_flavour::undirected_embedded;
   }
-  
+
   template<class NodeStorage, bool=std::is_empty_v<typename NodeStorage::weight_type>>
   struct node_allocator_generator
   {
@@ -41,7 +41,7 @@ namespace sequoia::maths::graph_impl
   {};
 
   template
-  <        
+  <
     graph_flavour GraphFlavour,
     class EdgeWeight,
     creator EdgeWeightPooling,
@@ -67,10 +67,10 @@ namespace sequoia::maths::graph_impl
         IndexType,
         EdgeStorageTraits::edge_sharing
       >;
-    
+
     using edge_type = typename edge_type_gen::edge_type;
     constexpr static bool shared_edge_v{edge_type_gen::shared_edge_v};
-        
+
     using edge_storage_handler
       = typename shared_edge_v_to_policy<shared_edge_v>::template edge_storage_handler<edge_type>;
 
@@ -85,5 +85,5 @@ namespace sequoia::maths::graph_impl
     constexpr static bool mutual_info_v{GraphFlavour != graph_flavour::directed};
 
     constexpr static bool weight_setting_exception_guarantee_v{true};
-  };     
+  };
 }

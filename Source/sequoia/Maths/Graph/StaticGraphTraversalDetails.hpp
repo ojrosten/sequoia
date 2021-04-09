@@ -19,7 +19,7 @@
 namespace sequoia::maths::graph_impl
 {
   template<class Q> struct traversal_traits_base;
-  
+
   template<std::size_t MaxDepth, class Compare> struct traversal_traits_base<data_structures::static_priority_queue<std::size_t, MaxDepth, Compare>>
   {
     [[nodiscard]]
@@ -86,7 +86,7 @@ namespace sequoia::maths::graph_impl
       return data_structures::static_priority_queue<std::size_t, G::order(), Comparer>{Comparer{g}};
     }
   };
- 
+
   template<static_network G>
   struct stack_selector<G>
   {
@@ -104,5 +104,5 @@ namespace sequoia::maths::graph_impl
   {
     using queue_type = data_structures::static_priority_queue<std::size_t, G::order(), Compare>;
   };
-  
+
 }

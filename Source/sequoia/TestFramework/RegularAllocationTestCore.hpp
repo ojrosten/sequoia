@@ -28,7 +28,7 @@ namespace sequoia::testing
   {
   public:
     constexpr static test_mode mode{Mode};
-    
+
     explicit regular_allocation_extender(test_logger<Mode>& logger) : m_Logger{logger} {}
 
     regular_allocation_extender(const regular_allocation_extender&) = delete;
@@ -80,7 +80,7 @@ namespace sequoia::testing
 
        will ensure that all checks defined in the test_allocation function template are executed
        for each combination of the allocation propagation flags.
-   
+
        \anchor basic_regular_allocation_test_primary
    */
   template<test_mode Mode>
@@ -88,7 +88,7 @@ namespace sequoia::testing
   {
   public:
     using basic_test<checker<Mode, regular_allocation_extender<Mode>>>::basic_test;
-        
+
     basic_regular_allocation_test(const basic_regular_allocation_test&) = delete;
 
     basic_regular_allocation_test& operator=(const basic_regular_allocation_test&) = delete;

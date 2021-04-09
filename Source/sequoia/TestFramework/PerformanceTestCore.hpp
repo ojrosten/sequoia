@@ -56,11 +56,11 @@ namespace sequoia::testing
        then we mutliply m_f by both the min/max predicted speed-up and compare to the range of
        values around m_s defined by the number of standard deviations. In particular, the test
        is taken to pass if
-       
+
           (minSpeedUp * m_f <= (m_s + num_sds * sig_s))
        && (maxSpeedUp * m_f >= (m_s - num_sds * sig_s))
-       
-       which is essentially saying that the range of predicted speed-ups must fall within 
+
+       which is essentially saying that the range of predicted speed-ups must fall within
        the specified number of standard deviations of m_s.
 
        On the other hand
@@ -73,7 +73,7 @@ namespace sequoia::testing
 
           (m_s / maxSpeedUp <= (m_f + num_sds * sig_f))
        && (m_s / minSpeedUp >= (m_f - num_sds * sig_f))
-       
+
    */
   template<test_mode Mode, invocable F, invocable S>
   bool check_relative_performance(std::string_view description, test_logger<Mode>& logger, F fast, S slow, const double minSpeedUp, const double maxSpeedUp, const std::size_t trials, const double num_sds, const std::size_t maxAttempts)
@@ -141,7 +141,7 @@ namespace sequoia::testing
 
       std::sort(fastData.begin(), fastData.end());
       std::sort(slowData.begin(), slowData.end());
-      
+
       const auto [sig_f, m_f]{compute_stats(fastData.cbegin()+1, fastData.cend()-1)};
       const auto [sig_s, m_s]{compute_stats(slowData.cbegin()+1, slowData.cend()-1)};
 
@@ -242,13 +242,13 @@ namespace sequoia::testing
 
     performance_extender(const performance_extender&)            = delete;
     performance_extender& operator=(const performance_extender&) = delete;
- 
+
     template<invocable F, invocable S>
     bool check_relative_performance(std::string_view description, F fast, S slow, const double minSpeedUp, const double maxSpeedUp, const std::size_t trials=5, const double num_sds=4)
     {
       return testing::check_relative_performance(description, m_Logger, fast, slow, minSpeedUp, maxSpeedUp, trials, num_sds, 3);
     }
-  protected:    
+  protected:
     performance_extender(performance_extender&&)            noexcept = default;
     performance_extender& operator=(performance_extender&&) noexcept = default;
 

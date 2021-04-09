@@ -36,7 +36,7 @@ namespace sequoia::testing
   void iterator_test::test_iterator()
   {
     using namespace utilities;
-    
+
     using i_type = std::array<int, 3>::iterator;
     using custom_iter_t = iterator<i_type, identity_dereference_policy<i_type, null_data_policy>>;
 
@@ -46,13 +46,13 @@ namespace sequoia::testing
     static_assert(std::is_same_v<custom_iter_t::pointer, int*>);
     static_assert(std::is_same_v<custom_iter_t::reference, int&>);
     static_assert(std::is_same_v<custom_iter_t::const_dereference_type, const int&>);
-    
-    
+
+
     std::array<int, 3> a{3, 0, 1};
     basic_checks<custom_iter_t>(a.begin(), a.end(), &*a.begin(), "Custom iterator from iterator");
 
     custom_iter_t i{a.begin() + 1};
-    
+
     *i = 5;
     // 3 5 1
 
@@ -64,7 +64,7 @@ namespace sequoia::testing
 
     i[-1] = 7;
     // 7 5 1
-    
+
     check_equality(LINE("Check changing pointee via []"), a, {7, 5, 1});
     check_equality(LINE(""), *i, 5);
     check_equality(LINE(""), i[-1], 7);
@@ -73,7 +73,7 @@ namespace sequoia::testing
 
     std::sort(custom_iter_t{a.begin()}, custom_iter_t{a.end()});
     // 1 5 7
-    
+
     check_equality(LINE(""), i[-1], 1);
     check_equality(LINE(""), i[0], 5);
     check_equality(LINE(""), i[1], 7);
@@ -82,7 +82,7 @@ namespace sequoia::testing
   void iterator_test::test_const_iterator()
   {
     using namespace utilities;
-    
+
     using ci_type = std::array<int, 3>::const_iterator;
     using custom_citer_t = iterator<ci_type, identity_dereference_policy<ci_type, null_data_policy>>;
 
@@ -102,11 +102,11 @@ namespace sequoia::testing
 
     basic_checks<custom_citer_t>(custom_iter_t{a.begin()}, custom_iter_t{a.end()}, &*a.cbegin(), "Custom const_iterator from custom iterator");
   }
-  
+
   void iterator_test::test_reverse_iterator()
   {
     using namespace utilities;
-    
+
     using ri_type = std::array<int, 3>::reverse_iterator;
     using custom_riter_t = iterator<ri_type, identity_dereference_policy<ri_type, null_data_policy>>;
 
@@ -133,7 +133,7 @@ namespace sequoia::testing
 
     i[2] = 7;
     // 7 0 5
-    
+
     check_equality(LINE("Check changing pointee via []"), a, {7, 0, 5});
     check_equality(LINE(""), *i, 5);
     check_equality(LINE(""), i[0], 5);
@@ -144,7 +144,7 @@ namespace sequoia::testing
   void iterator_test::test_const_reverse_iterator()
   {
     using namespace utilities;
-    
+
     using cri_type = std::array<int, 3>::const_reverse_iterator;
     using custom_criter_t = iterator<cri_type, identity_dereference_policy<cri_type, null_data_policy>>;
 
@@ -164,11 +164,11 @@ namespace sequoia::testing
 
     basic_checks<custom_criter_t>(custom_riter_t{a.rbegin()}, custom_riter_t{a.rend()}, &*a.crbegin(), "Custom const_reverse_iterator from custom reverse_iterator");
   }
-  
+
   void iterator_test::test_const_scaling_iterator()
   {
     using namespace utilities;
-    
+
     using ci_type = std::array<int, 3>::const_iterator;
     using custom_citer_t = iterator<ci_type, scaling_dereference_policy<ci_type>>;
 
@@ -191,7 +191,7 @@ namespace sequoia::testing
   void iterator_test::test_const_reverse_scaling_iterator()
   {
     using namespace utilities;
-    
+
     using cri_type = std::array<int, 3>::const_reverse_iterator;
     using custom_criter_t = iterator<cri_type, scaling_dereference_policy<cri_type>>;
 
@@ -210,7 +210,7 @@ namespace sequoia::testing
     custom_criter_t i{a.crend(), 1}, j{a.crend(), 2};
     check(LINE("Custom reverse iterators should compare equal if they point to the same thing, irrespective of any other state"), i == j);
   }
-  
+
   template<class CustomIter, class Iter, class... Args, class Pointer>
   void iterator_test::basic_checks(Iter begin, Iter end, Pointer pBegin, std::string_view message, Args... args)
   {
@@ -221,7 +221,7 @@ namespace sequoia::testing
 
     if(!check_equality(LINE(append_lines(message, "Contract violated")), distance(begin, end), ptrdiff_t{3}))
       return;
-    
+
     CustomIter i{begin, args...};
 
     static_assert(orderable<CustomIter>);
@@ -244,9 +244,9 @@ namespace sequoia::testing
 
     check_equality(LINE(append_lines(message, "Operator ->")), i.operator->(), pBegin);
 
-    CustomIter j{end, args...};      
+    CustomIter j{end, args...};
     check_semantics(LINE(append_lines(message, "Regular semantics; one iterator at end")), i, j, std::weak_ordering::less);
-      
+
     check(LINE(message), i < j);
     check(LINE(message), j > i);
     check(LINE(message), i <= j);

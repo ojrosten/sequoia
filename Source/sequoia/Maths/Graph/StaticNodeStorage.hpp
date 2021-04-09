@@ -33,7 +33,7 @@ namespace sequoia::maths::graph_impl
     requires empty_proxy<WeightMaker>
   struct static_node_storage_traits<WeightMaker, N>
   {};
-      
+
   template
   <
     class WeightMaker,
@@ -53,7 +53,7 @@ namespace sequoia::maths::graph_impl
     using weight_proxy_type = typename WeightMaker::proxy;
     using weight_type       = typename weight_proxy_type::value_type;
     using size_type         = std::size_t;
-        
+
     constexpr static_node_storage() = default;
     constexpr static_node_storage(const std::size_t) {}
 
@@ -70,7 +70,7 @@ namespace sequoia::maths::graph_impl
     constexpr static_node_storage(static_node_storage&&) noexcept            = default;
     constexpr static_node_storage& operator=(const static_node_storage&)     = default;
     constexpr static_node_storage& operator=(static_node_storage&&) noexcept = default;
-        
+
     ~static_node_storage() = default;
   };
 }

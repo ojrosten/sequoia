@@ -18,10 +18,10 @@ namespace sequoia::testing
 
     [[nodiscard]]
     std::string_view source_file() const noexcept final;
-  private:    
+  private:
     void run_tests() final;
 
     void check_depth_1();
-    void check_depth_2();    
+    void check_depth_2();
   };
 }

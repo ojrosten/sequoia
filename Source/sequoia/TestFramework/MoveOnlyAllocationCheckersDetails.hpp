@@ -22,7 +22,7 @@ namespace sequoia::testing::impl
   struct move_only_allocation_actions : allocation_actions<T>
   {
     using allocation_actions<T>::allocation_actions;
-    
+
     template<test_mode Mode, alloc_getter<T>... Getters>
     [[nodiscard]]
     bool check_preconditions(test_logger<Mode>& logger, const T& x, const T& y, const T& xClone, const T& yClone, const dual_allocation_checker<T, Getters>&... checkers) const
@@ -41,7 +41,7 @@ namespace sequoia::testing::impl
   std::optional<T> check_para_constructor_allocations(test_logger<Mode>& logger, T&& y, const T& yClone, const allocation_info<T, Getters>&... info)
   {
     if(!check("Precondition - for checking move-only semantics, y and yClone are assumed to be equal", logger, y == yClone)) return{};
-    
+
     T u{std::move(y), info.make_allocator()...};
     check_para_move_y_allocation(logger, u, std::tuple_cat(make_allocation_checkers(info)...));
     if(check_equality("Inonsistent para-move constructor", logger, u, yClone))

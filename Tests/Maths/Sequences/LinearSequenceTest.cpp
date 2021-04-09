@@ -41,7 +41,7 @@ namespace sequoia::testing
     check_equality(LINE(""), t[-1], -2);
     check_equality(LINE(""), t[1], 2);
   }
-  
+
   void linear_sequence_test::test_static_linear_sequence()
   {
     using namespace maths;
@@ -50,8 +50,8 @@ namespace sequoia::testing
     static_assert(s.start() == 1);
     static_assert(s.step() == 3);
     static_assert(s.size() == 2);
-    
-    
+
+
     constexpr auto val{s[2]};
     check_equality(LINE(""), val, 7_sz);
   }

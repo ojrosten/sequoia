@@ -24,7 +24,7 @@ namespace sequoia::testing
     void check_depth_0();
     void check_depth_1();
     void check_depth_2();
-    
+
 
     constexpr static auto make_static_stack_2();
   };

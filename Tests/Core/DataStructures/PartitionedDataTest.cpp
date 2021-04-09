@@ -35,24 +35,24 @@ namespace sequoia
       test_contiguous_capacity<int, shared<int>, true>();
       test_contiguous_capacity<int, independent<int>, false>();
       test_contiguous_capacity<int, shared<int>, false>();
-      
+
       test_bucketed_capacity<int, independent<int>, true>();
       test_bucketed_capacity<int, shared<int>, true>();
       test_bucketed_capacity<int, independent<int>, false>();
       test_bucketed_capacity<int, shared<int>, false>();
     }
-    
+
     void partitioned_data_test::test_static_storage()
     {
       using namespace data_structures;
 
       {
         using prediction_t = std::initializer_list<std::initializer_list<int>>;
-        
+
         using storage_t = static_partitioned_sequence<int, 1, 1>;
         storage_t storage{{5}};
         check_equivalence(LINE(""), storage, prediction_t{{5}});
-        
+
         storage_t storage2{{3}};
         check_equivalence(LINE(""), storage2, prediction_t{{3}});
 
@@ -65,7 +65,7 @@ namespace sequoia
 
       {
         using prediction_t = std::initializer_list<std::initializer_list<double>>;
-        
+
         using storage_t = static_partitioned_sequence<double, 3, 6>;
         storage_t storage{{1.2, 1.1}, {2.6, -7.8}, {0.0, -9.3}};
         check_equivalence(LINE(""), storage, prediction_t{{1.2, 1.1}, {2.6, -7.8}, {0.0, -9.3}});
@@ -78,10 +78,10 @@ namespace sequoia
 
       {
         using prediction_t = std::initializer_list<std::initializer_list<double>>;
-        
-        using storage_t = static_partitioned_sequence<double, 2, 6>;   
+
+        using storage_t = static_partitioned_sequence<double, 2, 6>;
         storage_t storage{{0.2,0.3,-0.4}, {0.8,-1.1,-1.4}}, storage2{{0.2,0.3}, {-0.4, 0.8,-1.1,-1.4}};
-        
+
         check_equivalence(LINE(""), storage, prediction_t{{0.2,0.3,-0.4}, {0.8,-1.1,-1.4}});
         check_equivalence(LINE(""), storage2, prediction_t{{0.2,0.3}, {-0.4, 0.8,-1.1,-1.4}});
 
@@ -93,9 +93,9 @@ namespace sequoia
         using prediction_t = std::initializer_list<std::initializer_list<ndc>>;
 
         {
-          using storage_t = static_partitioned_sequence<no_default_constructor, 1, 1>;      
+          using storage_t = static_partitioned_sequence<no_default_constructor, 1, 1>;
           constexpr storage_t storage{{ndc{1}}};
-          
+
           check_equivalence(LINE(""), storage, prediction_t{{ndc{1}}});
         }
 
@@ -106,7 +106,7 @@ namespace sequoia
         }
       }
     }
-    
+
     void partitioned_data_test::test_storage()
     {
       using namespace data_structures;
@@ -125,7 +125,7 @@ namespace sequoia
         auto storage2 = test_generic_storage<partitioned_sequence<int, independent<int>>>();
 
         check(LINE(""), isomorphic(storage1, storage2));
-      }  
+      }
     }
 
     template <class Storage>
@@ -149,27 +149,27 @@ namespace sequoia
            storage.push_back_to_partition(0, 8);
          }
       );
-      
+
       check_exception_thrown<std::out_of_range>(
         LINE("No partition available to insert into"),
         [&storage]() {
           storage.insert_to_partition(storage.cbegin_partition(0), 1);
         }
       );
-      
+
       check_exception_thrown<std::out_of_range>(
         LINE("No partitions to swap"),
         [&storage]() {
           storage.swap_partitions(0,0);
         }
       );
-      
+
       storage.erase_slot(0);
       check_equivalence(LINE(""), storage, equivalent_type{});
 
       storage.add_slot();
       // []
-     
+
       check_equality(LINE(""), storage, Storage{{}});
       check_semantics(LINE("Regular semantics"), storage, Storage{});
 
@@ -184,16 +184,16 @@ namespace sequoia
         LINE("No partitions to swap"),
         [&storage]() {
           storage.swap_partitions(0,1);
-        } 
+        }
       );
-      
+
       storage.swap_partitions(0,0);
       check_equality(LINE(""), storage, Storage{{}});
-      
+
       storage.erase_slot(1);
       storage.erase_slot(0);
       // Null
-    
+
       check_equality(LINE(""), storage, Storage{});
 
       storage.add_slot();
@@ -204,10 +204,10 @@ namespace sequoia
       check_equality(LINE(""), storage, Storage{{}, {}});
       check_semantics(LINE(""), storage, Storage{});
       check_semantics(LINE(""), storage, Storage{{}});
-      
+
       storage.swap_partitions(0,1);
       check_equality(LINE(""), storage, Storage{{}, {}});
-      
+
       storage.push_back_to_partition(0, 2);
       // [2][]
 
@@ -224,26 +224,26 @@ namespace sequoia
 
       storage.swap_partitions(0,1);
       // [2][]
-      
+
       check_equality(LINE(""), storage, Storage{{2}, {}});
 
       storage.swap_partitions(1,0);
       // [][2]
-      
+
       check_equality(LINE(""), storage, Storage{{}, {2}});
- 
+
       storage.swap_partitions(1,0);
       // [2][]
-      
+
       check_equality(LINE(""), storage, Storage{{2}, {}});
-      
+
       auto iter = storage.begin_partition(0);
       check_equality(LINE(""), *iter, 2);
       *iter = 3;
       // [3][]
 
       check_equality(LINE(""), storage, Storage{{3}, {}});
-      
+
       storage.push_back_to_partition(1, 4);
       // [3][4]
 
@@ -259,7 +259,7 @@ namespace sequoia
 
       storage.swap_partitions(0,1);
       // [3]4]
-      
+
       check_equality(LINE(""), storage, Storage{{3}, {4}});
 
       storage.add_slot();
@@ -273,7 +273,7 @@ namespace sequoia
 
       storage.swap_partitions(1,2);
       // [3][9,-3][4]
-      
+
       check_equality(LINE(""), storage, Storage{{3}, {9, -3}, {4}});
 
       storage.swap_partitions(2,1);
@@ -349,7 +349,7 @@ namespace sequoia
       // [12, 3][4][1, 2, 8, 9,-3, 7, 5][]
 
       check_equality(LINE(""), storage, Storage{{12, 3}, {4}, {1, 2, 8, 9, -3, 7, 5}, {}});
-      
+
       storage.insert_to_partition(storage.begin_partition(0) + 1, 13);
       // [12, 13, 3][4][1, 2, 8, 9,-3, 7, 5][]
 
@@ -418,7 +418,7 @@ namespace sequoia
         // shared: [2][3][2][4], independent: [2][3][1][4]
         check_equality(LINE(""), storage, sharedData ? Storage{{2}, {3}, {2}, {4}} : Storage{{2}, {3}, {1}, {4}});
         check_semantics(LINE(""), storage, Storage{{1}, {3}, {1}, {4}});
-        
+
         *iter = 1;
         // [1][3][1][4]
         check_equality(LINE(""), storage, Storage{{1}, {3}, {1}, {4}});
@@ -453,7 +453,7 @@ namespace sequoia
 
       check_equality(LINE(""), storage, Storage{{3}, {4}});
 
-      storage.push_back_to_partition(0, -5);       
+      storage.push_back_to_partition(0, -5);
       storage.push_back_to_partition(1, --storage.cend_partition(0));
       // [3,-5][4,-5]
 
@@ -465,7 +465,7 @@ namespace sequoia
         // shared [3,2][4,2], independent: [3,2][4,-5]
         check_equality(LINE(""), storage, sharedData ? Storage{{3, 2}, {4, 2}} : Storage{{3, 2}, {4, -5}});
         check_semantics(LINE(""), storage, Storage{{3, -5}, {4, -5}});
-        
+
         *iter = -5;
         // [3,-5][4,-5]
         check_equality(LINE(""), storage, Storage{{3, -5}, {4, -5}});
@@ -548,7 +548,7 @@ namespace sequoia
       auto found{std::find_if(storage.begin_partition(0), storage.end_partition(0),
         [](const int& elt) { return elt == 6; }
       )};
-      
+
       if(check(LINE(""), found != storage.end_partition(0)))
         check_equality(LINE(""), *found, 6);
 
@@ -556,11 +556,11 @@ namespace sequoia
       // [-5,-2][4,6,-2]
 
       check_equality(LINE(""), storage, Storage{{-5, -2}, {4, 6, -2}});
-      
+
       auto found2{std::find_if(storage.cbegin_partition(0), storage.cend_partition(0),
         [](const int& elt) { return elt == 6; })
       };
-      
+
       check(LINE(""), found2 == storage.cend_partition(0));
       check_equality(LINE(""), storage.size(), 5_sz);
 
@@ -613,8 +613,8 @@ namespace sequoia
       {
         check_equality(LINE(""), iter.operator->(), &Handler<int>::get(*vec.cbegin()));
       }
-      
-      
+
+
       check_equality(LINE(""), Handler<int>::get(vec[0]),*iter);
       check_equality(LINE(""), iter.partition_index(), 4_sz);
 
@@ -669,7 +669,7 @@ namespace sequoia
     void partitioned_data_test::test_contiguous_capacity()
     {
       using namespace data_structures;
-       
+
       partitioned_sequence<T, Handler> s{};
       check_equality(LINE(""), s.capacity(), 0_sz);
       check_equality(LINE(""), s.num_partitions_capacity(), 0_sz);
@@ -691,7 +691,7 @@ namespace sequoia
     void partitioned_data_test::test_bucketed_capacity()
     {
       using namespace data_structures;
-       
+
       bucketed_storage<T, Handler> s{};
 
       check_equality(LINE(""), s.num_partitions_capacity(), 0_sz);
@@ -711,7 +711,7 @@ namespace sequoia
 
       s.reserve_partition(0, 4);
       check_equality(LINE(""), s.partition_capacity(0), 4_sz);
-       
+
       s.shrink_to_fit(0);
       check_equality(LINE("May fail if shrink to fit impl does not reduce capacity"), s.partition_capacity(0), 0_sz);
       if constexpr(ThrowOnRangeError) check_exception_thrown<std::out_of_range>(LINE(""), [&s](){ s.shrink_to_fit(1); });

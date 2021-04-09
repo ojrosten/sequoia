@@ -25,11 +25,11 @@ namespace sequoia::testing
     test_generic_embedded_directed();
   }
 
-  
+
   constexpr auto test_heterogeneous_static_graph::make_undirected_graph()
   {
     using namespace maths;
-    
+
     using graph_t = heterogeneous_static_graph<directed_flavour::undirected, 1, 3, float, float, int, double>;
     using edge = typename graph_t::edge_init_type;
 
@@ -47,7 +47,7 @@ namespace sequoia::testing
   constexpr auto test_heterogeneous_static_graph::make_undirected_embedded_graph()
   {
     using namespace maths;
-    
+
     using graph_t = heterogeneous_embedded_static_graph<directed_flavour::undirected, 1, 3, float, float, int, double>;
     using edge = typename graph_t::edge_init_type;
 
@@ -65,7 +65,7 @@ namespace sequoia::testing
   constexpr auto test_heterogeneous_static_graph::make_directed_graph()
   {
     using namespace maths;
-    
+
     using graph_t = heterogeneous_static_graph<directed_flavour::directed, 1, 3, float, float, int, double>;
     using edge = typename graph_t::edge_init_type;
 
@@ -83,7 +83,7 @@ namespace sequoia::testing
   constexpr auto test_heterogeneous_static_graph::make_directed_embedded_graph()
   {
     using namespace maths;
-    
+
     using graph_t = heterogeneous_embedded_static_graph<directed_flavour::directed, 1, 3, float, float, int, double>;
     using edge = typename graph_t::edge_init_type;
 
@@ -97,8 +97,8 @@ namespace sequoia::testing
 
     return g;
   }
-  
-  
+
+
   void test_heterogeneous_static_graph::test_generic_undirected()
   {
     using namespace maths;
@@ -106,7 +106,7 @@ namespace sequoia::testing
     {
       using graph_t = heterogeneous_static_graph<directed_flavour::undirected, 1, 2, float, int, double>;
       using edge = typename graph_t::edge_init_type;
-    
+
       constexpr graph_t g{{edge{1, 0.5f}}, {edge{0, 0.5f}}};
 
       check_graph(LINE(""), g, {{edge{1, 0.5f}}, {edge{0, 0.5f}}}, std::tuple<int, double>{0, 0.0});
@@ -121,7 +121,7 @@ namespace sequoia::testing
     {
       using graph_t = heterogeneous_static_graph<directed_flavour::undirected, 1, 1, float, function_object>;
       using edge = typename graph_t::edge_init_type;
-      
+
       constexpr graph_t g{ {{edge{0, 0.2f}, edge{0, 0.2f}}}, function_object{}};
       check_equality(LINE(""), 4, g.node_weight<0>()(2));
     }
@@ -130,11 +130,11 @@ namespace sequoia::testing
   void test_heterogeneous_static_graph::test_generic_embedded_undirected()
   {
     using namespace maths;
-    
+
     {
       using graph_t = heterogeneous_embedded_static_graph<directed_flavour::undirected, 1, 2, float, int, double>;
       using edge = typename graph_t::edge_init_type;
-    
+
       constexpr graph_t g{{edge{1, 0, 0.5f}}, {edge{0, 0, 0.5f}}};
 
       check_graph(LINE(""), g, {{edge{1, 0, 0.5f}}, {edge{0, 0, 0.5f}}}, std::tuple<int, double>{0, 0.0});

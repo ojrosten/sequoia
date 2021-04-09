@@ -14,7 +14,7 @@
     not two instances of T are, in some sense, the same. If the type implements operator== then it
     is natural to utilize this. However, there is much more to the story. First of all, if this check
     fails then, in order to be useful, there must be some way of serializing the state of T. This may
-    be done by specializing the class template 
+    be done by specializing the class template
     \ref string_maker_primary "string_maker" for cases where operator<< is not appropriately
     overloaded.
 
@@ -56,7 +56,7 @@
     false positives. Consequently, the testing framework also defines a pair of class templates that
     complement
     \ref detailed_equality_checker_primary "detailed_equality_checker":
-    \ref equivalence_checker_primary "equivalence_checker" and 
+    \ref equivalence_checker_primary "equivalence_checker" and
     \ref weak_equivalence_checker_primary "weak_equivalence_checker". We may
     consider a value for std::vector to be equivalent to an initializer_list in the sense that they hold (at
     the relevant point of the program) the same elements. Thus, a specialization
@@ -67,7 +67,7 @@
     sometimes is is useful to check the equivalence of the state of an instance of T to a proper subset of
     the logical state of an instance of some S. For this purpose, the class template
     \ref weak_equivalence_checker_primary "weak_equivalence_checker" is supplied.
-    
+
     Both the \ref equivalence_checker_primary "equivalence_checker" and its weak counterpart can be fed >=2
     template type arguments. While for
     a vector we would just feed in two types (vector and initializer_list), in some cases we may need more.
@@ -138,7 +138,7 @@ namespace sequoia::testing
 
       This employs a \ref test_logger_primary "sentinel" and so can be used naively.
    */
-  
+
   template<class EquivChecker, test_mode Mode, class T, class S, class... U>
   bool general_equivalence_check(std::string_view description, test_logger<Mode>& logger, const T& value, const S& s, const U&... u)
   {
@@ -150,7 +150,7 @@ namespace sequoia::testing
           .append("\n");
       }()
     };
- 
+
     sentinel<Mode> sentry{logger, msg};
 
     if constexpr(checker_for<EquivChecker, Mode, T, S, U...>)
@@ -193,13 +193,13 @@ namespace sequoia::testing
    */
 
   /*! \brief The workhorse of equality checking, which takes responsibility for reflecting upon types
-      and then dispatching, appropriately. 
+      and then dispatching, appropriately.
 
-      The input type, T, must either be equality comparable or possess a detailed_equality_checker, or both. 
-      Generally, it will be the case that T does indeed overload operator==; anything beyond 
+      The input type, T, must either be equality comparable or possess a detailed_equality_checker, or both.
+      Generally, it will be the case that T does indeed overload operator==; anything beyond
       the simplest user-defined types should be furnished with a detailed_equality_checker.
    */
-  
+
   template<test_mode Mode, class T, class Advisor=null_advisor>
   bool dispatch_check(std::string_view description, test_logger<Mode>& logger, equality_tag, const T& obtained, const T& prediction, [[maybe_unused]] tutor<Advisor> advisor=tutor<Advisor>{})
   {
@@ -257,7 +257,7 @@ namespace sequoia::testing
       then a static assertion will terminate compilation.
 
    */
-  
+
   template<test_mode Mode, class T, class S, class... U>
   bool dispatch_check(std::string_view description, test_logger<Mode>& logger, equivalence_tag, const T& value, S&& s, U&&... u)
   {
@@ -309,7 +309,7 @@ namespace sequoia::testing
           ? std::string{description} : std::string{description}.append("\n");
       }
     };
-    
+
     sentinel<Mode> sentry{logger, info()};
     bool equal{true};
 
@@ -334,7 +334,7 @@ namespace sequoia::testing
     {
       equal = false;
     }
-      
+
     return equal;
   }
 
@@ -363,7 +363,7 @@ namespace sequoia::testing
     catch(const std::exception& e)
     {
       std::string msg{append_lines("Unexpected exception thrown (caught by std::exception&):", "\"").append(e.what()).append("\"\n")};
-        
+
       sentry.log_failure(msg);
       return false;
     }
@@ -387,7 +387,7 @@ namespace sequoia::testing
           return val;
       }
     };
-    
+
     return dispatch_check(description, logger, equality_tag{}, transformer(value), transformer(prediction), std::move(advisor));
   }
 
@@ -433,7 +433,7 @@ namespace sequoia::testing
 
       In its unextended form, the class is appropriate for plugging into basic_test to generate a base class
       appropriate for testing free functions. Within the unit test framework various Extenders are defined.
-      For example, there are extensions to test types with regular semantics, types with move-only semantics, to do 
+      For example, there are extensions to test types with regular semantics, types with move-only semantics, to do
       performance tests, and more, besides. The template design allows extenders to be conveniently mixed and
       matched via using declarations.
 
@@ -515,7 +515,7 @@ namespace sequoia::testing
       : logger_type{static_cast<logger_type&&>(other)}
       , Extenders{logger()}...
     {}
-    
+
     checker& operator=(checker&&) noexcept = default;
 
     ~checker() = default;
@@ -553,7 +553,7 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    const test_logger<Mode>& logger() const noexcept 
+    const test_logger<Mode>& logger() const noexcept
     {
       return static_cast<const test_logger<Mode>&>(*this);
     }

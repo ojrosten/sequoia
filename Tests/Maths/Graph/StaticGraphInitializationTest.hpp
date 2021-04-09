@@ -10,7 +10,7 @@
 #include "GraphTestingUtilities.hpp"
 
 namespace sequoia:: testing
-{    
+{
   class test_static_graph final : public graph_unit_test
   {
   public:
@@ -33,7 +33,7 @@ namespace sequoia:: testing
 
     template<class>
     friend class directed_embedded_init_checker;
-    
+
     void run_tests() final;
 
     template<class NodeWeight, class EdgeWeight> void test_generic_undirected();

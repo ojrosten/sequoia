@@ -20,12 +20,12 @@ namespace sequoia::testing
 
     [[nodiscard]]
     std::string_view source_file() const noexcept final;
-  private:    
+  private:
     void run_tests() final;
 
     template<bool Check>
     constexpr static maths::static_monotonic_sequence<int, 6, std::greater<int>> make_sequence();
-    
+
     void test_decreasing_sequence();
 
     void test_static_decreasing_sequence();

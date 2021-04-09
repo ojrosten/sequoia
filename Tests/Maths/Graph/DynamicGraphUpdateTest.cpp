@@ -37,7 +37,7 @@ namespace sequoia::testing
   {
     return __FILE__;
   }
-  
+
   void test_graph_update::run_tests()
   {
     {
@@ -53,9 +53,9 @@ namespace sequoia::testing
 
   template
   <
-    maths::graph_flavour GraphFlavour,    
+    maths::graph_flavour GraphFlavour,
     class EdgeWeight,
-    class NodeWeight,    
+    class NodeWeight,
     class EdgeWeightCreator,
     class NodeWeightCreator,
     class EdgeStorageTraits,
@@ -108,7 +108,7 @@ namespace sequoia::testing
   }
 
   //============================= check_setup =============================//
-  
+
   template<class Graph>
   void test_graph_update::check_setup(const Graph& graph)
   {
@@ -125,7 +125,7 @@ namespace sequoia::testing
          {ei_t{1,3_sz}, ei_t{2,4_sz}}},
         {5_sz, 2_sz, 10_sz, 4_sz}
       };
-      
+
       expected.swap_edges(0, 1, 2);
       expected.swap_edges(2, 0, 2);
       check_equality(LINE(""), graph, expected);
@@ -139,7 +139,7 @@ namespace sequoia::testing
          {ei_t{2,4_sz}}},
         {5_sz, 2_sz, 10_sz, 4_sz}
       };
-      
+
       check_equality(LINE(""), graph, expected);
     }
     else if constexpr(GraphFlavour == flavour::undirected_embedded)
@@ -239,7 +239,7 @@ namespace sequoia::testing
          {ei_t{1,16_sz}, ei_t{2,18_sz}}},
         {5_sz, 2_sz, 10_sz, 4_sz}
       };
-      
+
       expected.swap_edges(0, 1, 2);
       expected.swap_edges(2, 0, 2);
       check_equality(LINE(""), graph, expected);
@@ -253,7 +253,7 @@ namespace sequoia::testing
          {ei_t{2,17_sz}}},
         {5_sz, 2_sz, 10_sz, 4_sz}
       };
-      
+
       check_equality(LINE(""), graph, expected);
     }
     else if constexpr(GraphFlavour == flavour::undirected_embedded)
@@ -315,7 +315,7 @@ namespace sequoia::testing
          {ei_t{1,5_sz}, ei_t{2,4_sz}}},
         {5_sz, 2_sz, 10_sz, 4_sz}
       };
-      
+
       expected.swap_edges(0, 1, 2);
       expected.swap_edges(2, 0, 2);
       check_equality(LINE(""), graph, expected);
@@ -329,7 +329,7 @@ namespace sequoia::testing
          {ei_t{2,4_sz}}},
         {5_sz, 2_sz, 10_sz, 4_sz}
       };
-      
+
       check_equality(LINE(""), graph, expected);
     }
     else if constexpr(GraphFlavour == flavour::undirected_embedded)
@@ -498,7 +498,7 @@ namespace sequoia::testing
   }
 
   //============================= check_pr_update =============================//
-  
+
   template<class Graph>
   void test_graph_update::check_pr_update(Graph graph)
   {
@@ -565,7 +565,7 @@ namespace sequoia::testing
          {ei_t{1,17_sz}, ei_t{2,17_sz}}},
         {5_sz, 2_sz, 10_sz, 4_sz}
       };
-      
+
       expected.swap_edges(0, 1, 2);
       expected.swap_edges(2, 0, 2);
       check_equality(LINE(""), graph, expected);
@@ -579,7 +579,7 @@ namespace sequoia::testing
          {ei_t{2,18_sz}}},
         {5_sz, 2_sz, 10_sz, 4_sz}
       };
-      
+
       check_equality(LINE(""), graph, expected);
     }
     else if constexpr(GraphFlavour == flavour::undirected_embedded)
@@ -631,7 +631,7 @@ namespace sequoia::testing
     //   |       |          |        |
     //(1)2-------4(3)    (1)2--------4(3)
     //       3                   3
-    
+
 
     if constexpr(GraphFlavour == flavour::undirected)
     {
@@ -643,7 +643,7 @@ namespace sequoia::testing
          {ei_t{1,3_sz}, ei_t{2,5_sz}}},
         {5_sz, 2_sz, 10_sz, 4_sz}
       };
-      
+
       expected.swap_edges(0, 1, 2);
       expected.swap_edges(2, 0, 2);
       check_equality(LINE(""), graph, expected);
@@ -657,7 +657,7 @@ namespace sequoia::testing
          {ei_t{2,4_sz}}},
         {5_sz, 2_sz, 10_sz, 4_sz}
       };
-      
+
       check_equality(LINE(""), graph, expected);
     }
     else if constexpr(GraphFlavour == flavour::undirected_embedded)
@@ -718,7 +718,7 @@ namespace sequoia::testing
   void test_graph_update::test_bf_update()
   {
     using maths::graph_flavour;
-    
+
     Graph graph;
     graph.add_node();
     graph.add_node();
@@ -731,7 +731,7 @@ namespace sequoia::testing
     graph.join(2, 2);
     graph.join(2, 2);
 
-    //    
+    //
     // /\    /\
     // --  0 --
     //    / \
@@ -740,7 +740,7 @@ namespace sequoia::testing
 
     using ei_t = typename Graph::edge_init_type;
     constexpr auto GraphFlavour{Graph::flavour};
-    
+
     if constexpr(GraphFlavour == graph_flavour::undirected)
     {
       Graph expected{
@@ -749,7 +749,7 @@ namespace sequoia::testing
         {ei_t{0}, ei_t{1}, ei_t{2}, ei_t{2}, ei_t{2}, ei_t{2}}},
         {std::vector<int>{}, std::vector<int>{}, std::vector<int>{}}
       };
-      
+
       expected.swap_edges(2, 0, 1);
       check_equality(LINE(""), graph, expected);
     }
@@ -761,7 +761,7 @@ namespace sequoia::testing
         {ei_t{0}, ei_t{2}, ei_t{2}}},
         {std::vector<int>{}, std::vector<int>{}, std::vector<int>{}}
       };
-      
+
       check_equality(LINE(""), graph, expected);
     }
     else if constexpr(GraphFlavour == graph_flavour::undirected_embedded)
@@ -801,7 +801,7 @@ namespace sequoia::testing
     maths::breadth_first_search(graph, false, 0, maths::null_functor(), nodeFn2);
 
     expectedNodeWeights = std::vector<std::vector<int>>{{3}, {2}, {1}};
-    check_range(LINE(""), graph.cbegin_node_weights(), graph.cend_node_weights(), expectedNodeWeights.cbegin(), expectedNodeWeights.cend());    
+    check_range(LINE(""), graph.cbegin_node_weights(), graph.cend_node_weights(), expectedNodeWeights.cbegin(), expectedNodeWeights.cend());
 
     auto edgeFn1 = [&graph](auto edgeIter) {
       const std::size_t node{edgeIter.partition_index()};
@@ -822,7 +822,7 @@ namespace sequoia::testing
          {ei_t{0, ew_t{0}}, ei_t{1, ew_t{0}}, ei_t{2, ew_t{0}}, ei_t{2, ew_t{0}}, ei_t{2, ew_t{2}}, ei_t{2, ew_t{2}}}},
         {std::vector<int>{3}, std::vector<int>{2}, std::vector<int>{1}}
       };
-      
+
       expected.swap_edges(2, 0, 1);
       check_equality(LINE(""), graph, expected);
     }
@@ -834,7 +834,7 @@ namespace sequoia::testing
          {ei_t{0, ew_t{0}}, ei_t{2, ew_t{0}}, ei_t{2, ew_t{1}}}},
         {std::vector<int>{3}, std::vector<int>{2}, std::vector<int>{1}}
       };
-      
+
       check_equality(LINE(""), graph, expected);
     }
     else if constexpr(GraphFlavour == graph_flavour::undirected_embedded)
@@ -873,8 +873,8 @@ namespace sequoia::testing
   template<class Graph>
   void test_graph_update::test_second_edge_traversal_update(Graph& graph)
   {
-    using maths::graph_flavour; 
-    
+    using maths::graph_flavour;
+
     auto edgeFn2 = [&graph](auto edgeIter) {
       const std::size_t node{edgeIter.partition_index()};
       const std::size_t index{static_cast<std::size_t>(distance(graph.cbegin_edges(node), edgeIter))};
@@ -900,7 +900,7 @@ namespace sequoia::testing
          {ei_t{0, ew_t{0,1}}, ei_t{1, ew_t{1,1}}, ei_t{2, ew_t{2,2}}, ei_t{2, ew_t{2,2}}, ei_t{2, ew_t{2,4}}, ei_t{2, ew_t{2,4}}}},
         {std::vector<int>{3}, std::vector<int>{2}, std::vector<int>{1}}
       };
-      
+
       expected.swap_edges(2, 0, 1);
       check_equality(LINE(""), graph, expected);
     }
@@ -918,6 +918,6 @@ namespace sequoia::testing
     else
     {
       static_assert(dependent_false<Graph>::value);
-    }    
+    }
   }
 }

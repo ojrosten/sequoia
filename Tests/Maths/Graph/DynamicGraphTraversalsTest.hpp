@@ -15,7 +15,7 @@ namespace sequoia::testing
   {
   public:
     void clear() noexcept { m_Order.clear(); }
-      
+
     void operator()(const std::size_t index) { m_Order.push_back(index); }
 
     [[nodiscard]]
@@ -29,9 +29,9 @@ namespace sequoia::testing
   {
   public:
     using result_type = std::vector<std::pair<std::size_t, std::size_t>>;
-      
+
     edge_tracker(const G& graph) : m_Graph(graph) {}
-      
+
     void clear() noexcept { m_Order.clear(); }
 
     template<class I> void operator()(I iter)
@@ -42,10 +42,10 @@ namespace sequoia::testing
 
     [[nodiscard]]
     const result_type& order() const noexcept { return m_Order; }
-  private:    
+  private:
     result_type m_Order;
     const G& m_Graph;
-    
+
     template<class I> [[nodiscard]] auto dist(std::true_type, I iter)
     {
       return distance(m_Graph.crbegin_edges(iter.partition_index()), iter);
@@ -59,11 +59,11 @@ namespace sequoia::testing
 
   template<class F> void clear(F& f)
   {
-    f.clear();     
+    f.clear();
   }
 
   inline void clear(maths::null_functor&) {}
-    
+
   template<class F, class... Fn>
   void clear(F& f, Fn&... fn)
   {
@@ -76,7 +76,7 @@ namespace sequoia::testing
   {
   public:
     using performance_test::performance_test;
-    
+
     [[nodiscard]]
     std::string_view source_file() const noexcept final;
   private:
@@ -152,7 +152,7 @@ namespace sequoia::testing
 
     template<class ProcessingModel, class Graph, class... Args>
     [[nodiscard]]
-    static std::vector<int> edge_first_traversal_task(Graph& graph, const int upper, Args&&... args);      
+    static std::vector<int> edge_first_traversal_task(Graph& graph, const int upper, Args&&... args);
 
     template<class ProcessingModel, class Graph, class... Args>
     [[nodiscard]]

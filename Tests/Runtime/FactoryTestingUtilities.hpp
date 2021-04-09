@@ -19,7 +19,7 @@ namespace sequoia::testing
   {
     using type = sequoia::runtime::factory<Products...>;
     using element = std::pair<std::string, std::variant<Products...>>;
-    
+
     template<test_mode Mode>
     static void check(test_logger<Mode>& logger, const type& actual, const std::array<element, sizeof...(Products)>& prediction)
     {

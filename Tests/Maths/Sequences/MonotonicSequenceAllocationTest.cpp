@@ -28,7 +28,7 @@ namespace sequoia::testing
 
     using allocator = shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>;
     using sequence = monotonic_sequence<int, std::less<int>, std::vector<int, allocator>>;
-  
+
     sequence s(allocator{});
     check_equivalence(LINE(""), s, std::initializer_list<int>{});
     check_equality(LINE(""), s.get_allocator().allocs(), 0);

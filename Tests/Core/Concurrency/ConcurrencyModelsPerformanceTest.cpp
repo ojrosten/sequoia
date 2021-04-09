@@ -110,7 +110,7 @@ namespace sequoia::testing
   void threading_models_performance_test::waiting_task(const std::size_t nTasks, const std::chrono::milliseconds millisecs, Args&&... args)
   {
     ThreadModel model{std::forward<Args>(args)...};
-    
+
     for(std::size_t i{}; i < nTasks; ++i)
     {
       model.push(wait{millisecs});
@@ -123,7 +123,7 @@ namespace sequoia::testing
   std::vector<int> threading_models_performance_test::waiting_task_return(const std::size_t nTasks, const std::chrono::milliseconds millisecs, Args&&... args)
   {
     ThreadModel model{std::forward<Args>(args)...};
-    
+
     for(std::size_t i{}; i < nTasks; ++i)
     {
       model.push([millisecs, i{static_cast<int>(i)}]() {

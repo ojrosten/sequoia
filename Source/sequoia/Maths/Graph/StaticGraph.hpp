@@ -18,18 +18,18 @@
 #include "sequoia/Maths/Graph/StaticNodeStorage.hpp"
 
 namespace sequoia::maths
-{  
+{
   template<std::size_t Size, std::size_t Order, class EdgeWeight, class NodeWeight>
   struct static_graph_traits
   {
     using edge_index_type = typename graph_impl::static_edge_index_type_generator<Size, Order, false>::index_type;
   };
-    
+
   template
   <
-    directed_flavour Directedness,      
+    directed_flavour Directedness,
     std::size_t Size,
-    std::size_t Order,      
+    std::size_t Order,
     class EdgeWeight,
     class NodeWeight,
     class Traits = static_graph_traits<Size, Order, EdgeWeight, NodeWeight>
@@ -58,19 +58,19 @@ namespace sequoia::maths
         >,
         graph_impl::static_node_storage<ownership::spawner<NodeWeight>, Order>
       >;
-      
+
   public:
     constexpr static graph_flavour flavour{(Directedness == directed_flavour::directed) ? graph_flavour::directed : graph_flavour::undirected};
 
     [[nodiscard]]
     constexpr static std::size_t order() noexcept { return Order; }
-    
+
     [[nodiscard]]
     constexpr static std::size_t size() noexcept { return Size; }
 
     using node_weight_type = NodeWeight;
     using edge_index_type = typename Traits::edge_index_type;
-      
+
     using
       graph_primitive
       <
@@ -96,9 +96,9 @@ namespace sequoia::maths
 
   template
   <
-    directed_flavour Directedness,      
+    directed_flavour Directedness,
     std::size_t Size,
-    std::size_t Order,      
+    std::size_t Order,
     class EdgeWeight,
     class NodeWeight,
     class Traits = static_embedded_graph_traits<Size, Order, EdgeWeight, NodeWeight>
@@ -127,7 +127,7 @@ namespace sequoia::maths
         >,
         graph_impl::static_node_storage<ownership::spawner<NodeWeight>, Order>
       >;
-      
+
   public:
     constexpr static graph_flavour flavour{(Directedness == directed_flavour::directed) ? graph_flavour::directed_embedded : graph_flavour::undirected_embedded};
 
@@ -139,7 +139,7 @@ namespace sequoia::maths
 
     using node_weight_type =  NodeWeight;
     using edge_index_type = typename Traits::edge_index_type;
-      
+
     using
       graph_primitive
       <

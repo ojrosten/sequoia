@@ -29,7 +29,7 @@ namespace sequoia::maths::graph_impl
     using edge_type = typename edge_type_generator<GraphFlavour, EdgeWeight, ownership::spawner<EdgeWeight>, IndexType, edge_sharing_preference::independent>::edge_type;
     using edge_storage_type = data_structures::static_partitioned_sequence<edge_type, Order, num_static_edges(GraphFlavour, Size), IndexType>;
 
-    constexpr static bool shared_edge_v{};       
+    constexpr static bool shared_edge_v{};
     constexpr static bool mutual_info_v{GraphFlavour != graph_flavour::directed};
     constexpr static bool weight_setting_exception_guarantee_v{};
   };

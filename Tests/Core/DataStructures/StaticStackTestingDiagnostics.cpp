@@ -18,8 +18,8 @@ namespace sequoia::testing
 
   void test_static_stack_false_positives::run_tests()
   {
-    check_depth_0(); 
-    check_depth_1(); 
+    check_depth_0();
+    check_depth_1();
   }
 
   void test_static_stack_false_positives::check_depth_0()
@@ -30,7 +30,7 @@ namespace sequoia::testing
     check(LINE("Empty stack"), !s.empty());
     check_equality(LINE(""), s.size(), 1_sz);
   }
-  
+
   void test_static_stack_false_positives::check_depth_1()
   {
     using namespace data_structures;
@@ -41,7 +41,7 @@ namespace sequoia::testing
     // check_equality for static_stack is not independently
     // sensitive to empty and size, so one of these needs
     // to be explicitly checked!
-    
+
     check(LINE("Empty stack"), !s.empty());
     check(LINE("Non-empty stack"), t.empty());
 

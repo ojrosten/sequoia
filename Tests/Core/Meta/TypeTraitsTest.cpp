@@ -153,7 +153,7 @@ namespace sequoia::testing
         static_assert(is_base_of_head_v<std::basic_iostream<char>, std::stringstream, double>);
         return true;
       }()
-    );    
+    );
 
     check(LINE(""), []() {
         static_assert(std::is_same_v<std::false_type, is_base_of_head_t<std::basic_iostream<char>, double, std::stringstream>>);
@@ -179,12 +179,12 @@ namespace sequoia::testing
       }()
     );
   }
-  
+
   void type_traits_test::test_resolve_to_copy()
   {
     {
       using d = resolve_to_copy<int>;
-      
+
       check(LINE(""), []() {
           static_assert(std::is_same_v<std::false_type, d::type>);
           return true;
@@ -206,7 +206,7 @@ namespace sequoia::testing
 
     {
       using d = resolve_to_copy<int, int>;
-      
+
       check(LINE(""), []() {
           static_assert(std::is_same_v<std::true_type, d::type>);
           return true;
@@ -228,7 +228,7 @@ namespace sequoia::testing
 
     {
       using d = resolve_to_copy<int&, int>;
-      
+
       check(LINE(""), []() {
           static_assert(std::is_same_v<std::true_type, d::type>);
           return true;
@@ -250,7 +250,7 @@ namespace sequoia::testing
 
     {
       using d = resolve_to_copy<int, int&>;
-      
+
       check(LINE(""), []() {
           static_assert(std::is_same_v<std::true_type, d::type>);
           return true;
@@ -272,7 +272,7 @@ namespace sequoia::testing
 
     {
       using d = resolve_to_copy<const int&, volatile int&>;
-      
+
       check(LINE(""), []() {
           static_assert(std::is_same_v<std::true_type, d::type>);
           return true;
@@ -294,7 +294,7 @@ namespace sequoia::testing
 
     {
       using d = resolve_to_copy<int, double>;
-      
+
       check(LINE(""), []() {
           static_assert(std::is_same_v<std::false_type, d::type>);
           return true;
@@ -316,7 +316,7 @@ namespace sequoia::testing
 
     {
       using d = resolve_to_copy<int, int, int>;
-      
+
       check(LINE(""), []() {
           static_assert(std::is_same_v<std::false_type, d::type>);
           return true;
@@ -337,7 +337,7 @@ namespace sequoia::testing
     }
   }
 
-  
+
 
   void type_traits_test::test_is_const_pointer()
   {

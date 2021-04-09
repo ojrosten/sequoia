@@ -13,10 +13,10 @@
 namespace sequoia::testing
 {
   namespace
-  {    
+  {
     using edge_results = std::vector<std::pair<std::size_t, std::size_t>>;
   }
-  
+
   [[nodiscard]]
   std::string_view test_graph_traversals::source_file() const noexcept
   {
@@ -40,9 +40,9 @@ namespace sequoia::testing
 
   template
   <
-    maths::graph_flavour GraphFlavour,      
+    maths::graph_flavour GraphFlavour,
     class EdgeWeight,
-    class NodeWeight,      
+    class NodeWeight,
     class EdgeWeightCreator,
     class NodeWeightCreator,
     class EdgeStorageTraits,
@@ -98,7 +98,7 @@ namespace sequoia::testing
   }
 
   //=============================== Tracker Test ===============================//
-  
+
   template<class Graph, class Traverser>
   void test_graph_traversals::tracker_test()
   {
@@ -108,9 +108,9 @@ namespace sequoia::testing
     constexpr bool isBFS{std::is_same<typename Traverser::type, BFS>::value};
     constexpr bool mutualInfo{mutual_info(GraphFlavour)};
     constexpr bool undirected{maths::undirected(GraphFlavour)};
-    
+
     using TraversalType = std::bool_constant<isBFS>;
-   
+
     const std::string iterDescription{Traverser::iterator_description()};
     constexpr bool forwardIter{Traverser::uses_forward_iterator()};
 
@@ -132,11 +132,11 @@ namespace sequoia::testing
     {
       traverse_graph<Traverser>(network, true, 0, discovery, discovery2, edgeDiscovery);
     }
-        
+
     auto order = discovery.order();
     auto order2 = discovery2.order();
     auto edgeOrder = edgeDiscovery.order();
-    
+
     check(LINE(make_message("No nodes to discover")), order.empty());
     check_equality(LINE(make_message("")), order, order2);
     check(LINE(make_message("No edges to discover")), edgeOrder.empty());
@@ -144,7 +144,7 @@ namespace sequoia::testing
     {
       check_equality(LINE(make_message("")), edgeDiscovery.order(), edge_results{});
     }
-    
+
     check_equality(LINE(make_message("First node added")), network.add_node(), 0_sz);
     // 0
 
@@ -170,7 +170,7 @@ namespace sequoia::testing
     if constexpr(undirected)
     {
       check_equality(LINE(make_message("")), edgeDiscovery.order(), edge_results{});
-    }  
+    }
 
     check_equality(LINE(make_message("Second node added")), network.add_node(), 1_sz);
     // 0 0
@@ -183,7 +183,7 @@ namespace sequoia::testing
     {
       traverse_graph<Traverser>(network, true, 0, discovery, discovery2, edgeDiscovery);
     }
- 
+
     order = discovery.order();
     order2 = discovery2.order();
     edgeOrder = edgeDiscovery.order();
@@ -195,14 +195,14 @@ namespace sequoia::testing
       check_equality(LINE(make_message("Node 0 discovered first")), *iter, 0_sz);
       check_equality(LINE(make_message("Node 1 discovered second")), *++iter, 1_sz);
     }
-    
+
     check_equality(LINE(make_message("")), order, order2);
     check(LINE(make_message("No edges to discover")), edgeOrder.empty());
     if constexpr(undirected)
     {
       check_equality(LINE(make_message("")), edgeDiscovery.order(), edge_results{});
     }
-    
+
     if constexpr(undirected)
     {
       traverse_graph<Traverser>(network, true, 1, discovery, discovery2, edgeDiscovery, edgeDiscovery2);
@@ -215,7 +215,7 @@ namespace sequoia::testing
     order = discovery.order();
     order2 = discovery2.order();
     edgeOrder = edgeDiscovery.order();
-    
+
     check_equality(LINE(make_message("Two nodes to discover but this time in reverse order")), order.size(), 2_sz);
 
     if(order.size() == 2)
@@ -230,7 +230,7 @@ namespace sequoia::testing
     {
       check_equality(LINE(make_message("")), edgeDiscovery.order(), edge_results{});
     }
-    
+
     if constexpr(undirected)
     {
       traverse_graph<Traverser>(network, false, 0, discovery, discovery2, edgeDiscovery, edgeDiscovery2);
@@ -255,7 +255,7 @@ namespace sequoia::testing
     {
       check_equality(LINE(make_message("")), edgeDiscovery.order(), edge_results{});
     }
-    
+
     check_equality(LINE(make_message("Third node added")), network.add_node(), 2_sz);
     network.join(0, 1);
     network.join(1, 2);
@@ -273,7 +273,7 @@ namespace sequoia::testing
     order = discovery.order();
     order2 = discovery2.order();
     edgeOrder = edgeDiscovery.order();
-    
+
     if(check_equality(LINE(make_message("Three nodes to discover")), order.size(), 3_sz))
     {
       auto iter = order.begin();
@@ -297,7 +297,7 @@ namespace sequoia::testing
     if constexpr(undirected)
     {
       check_equality(LINE(make_message("")), edgeDiscovery2.order(), isBFS ? edge_results{{1,0}, {2,0}} : edge_results{{1, 1}, {2, 0}});
-    }                 
+    }
 
     if constexpr(undirected)
     {
@@ -331,9 +331,9 @@ namespace sequoia::testing
         check_equality(LINE(make_message("Node 2 discovered next")), *++iter, 2_sz);
       }
     }
-    
+
     check_equality(LINE(make_message("")), order, order2);
-    
+
     if constexpr(undirected)
     {
       if(check_equality(LINE(make_message("Search from middle; two edges to discover")), edgeOrder.size(), 2_sz))
@@ -359,7 +359,7 @@ namespace sequoia::testing
         check_equality(LINE(make_message("Edge has " + iterDescription + " index " + std::to_string(expected))), iter->second, expected);
       }
     }
-                                              
+
     if constexpr(undirected)
     {
       traverse_graph<Traverser>(network, false, 2, discovery, discovery2, edgeDiscovery, edgeDiscovery2);
@@ -403,12 +403,12 @@ namespace sequoia::testing
         auto iter = order.begin();
         check_equality(LINE(make_message("End node 2 discovered first")), *iter, 2_sz);
       }
-      
+
       check_equality(LINE(make_message("Search from end; no edges to discover")), edgeOrder.size(), 0_sz);
     }
-        
+
     check_equality(LINE(make_message("")), order, order2);
-         
+
 
     check_equality(LINE(make_message("Fourth node added")), network.add_node(), 3_sz);
     network.join(2, 3);
@@ -426,7 +426,7 @@ namespace sequoia::testing
     {
       traverse_graph<Traverser>(network, false, 0, discovery, discovery2, edgeDiscovery);
     }
-    
+
     order = discovery.order();
     order2 = discovery2.order();
     edgeOrder = edgeDiscovery.order();
@@ -469,7 +469,7 @@ namespace sequoia::testing
         test_square_graph(discovery, edgeDiscovery, 2, mutualInfo, TraversalType{});
       }
     }
-    
+
     check_equality(LINE(make_message("")), order, order2);
   }
 
@@ -574,7 +574,7 @@ namespace sequoia::testing
   Graph test_graph_traversals::generate_priority_test_graph()
   {
     Graph graph;
-        
+
     graph.add_node(1);
     graph.add_node(5);
     graph.add_node(10);
@@ -607,7 +607,7 @@ namespace sequoia::testing
   void test_graph_traversals::test_weighted_BFS_tasks()
   {
     using UndirectedType = std::bool_constant<maths::undirected(Graph::flavour)>;
-    
+
     test_node_and_first_edge_traversal<Graph>();
     test_edge_second_traversal<Graph>(UndirectedType());
   }
@@ -626,7 +626,7 @@ namespace sequoia::testing
     auto asyncFn = [&graph](){
       return edge_second_traversal_task<concurrency::asynchronous<int>>(graph, upper);
     };
-    
+
     auto poolFn = [&graph](){
       return edge_second_traversal_task<concurrency::thread_pool<int>>(graph, upper, 4u);
     };
@@ -686,7 +686,7 @@ namespace sequoia::testing
 
     {
       upper = 6;
-          
+
       auto serialFn  = [&graph, upper](){
         return edge_first_traversal_task<concurrency::serial<int>>(graph, upper);
       };
@@ -694,7 +694,7 @@ namespace sequoia::testing
       auto asyncFn = [&graph, upper](){
         return edge_first_traversal_task<concurrency::asynchronous<int>>(graph, upper);
       };
-      
+
       auto poolFn  = [&graph, upper](){
         return edge_first_traversal_task<concurrency::thread_pool<int>>(graph, upper, 4u);
       };
@@ -718,19 +718,19 @@ namespace sequoia::testing
       upper = 10;
 
       const auto pause{std::chrono::microseconds(500)};
-          
+
       auto serialFn{
         [&graph, upper, pause]() {
           return task<concurrency::serial<int>>(graph, upper, true, pause);
         }
       };
-          
+
       auto asyncFn{
         [&graph, upper, pause](){
           return task<concurrency::asynchronous<int>>(graph, upper, true, pause);
         }
       };
-          
+
       auto poolFn{
         [&graph, upper, pause](){
           return task<concurrency::thread_pool<int>>(graph, upper, true, pause, 4u);
@@ -764,7 +764,7 @@ namespace sequoia::testing
       return early
         ? maths::breadth_first_search(graph, false, 0, fn, null_functor{}, null_functor{}, null_functor{}, ProcessingModel{std::forward<Args>(args)...})
         : maths::breadth_first_search(graph, false, 0, null_functor{}, fn, null_functor{}, null_functor{}, ProcessingModel{std::forward<Args>(args)...});
-    }  
+    }
   }
 
   template<class ProcessingModel, class Graph, class... Args>

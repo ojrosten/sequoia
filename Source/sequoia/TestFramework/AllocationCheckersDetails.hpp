@@ -23,7 +23,7 @@ namespace sequoia::testing
   class allocation_info;
 
   enum class null_allocation_event { comparison, spectator, serialization, swap };
-  
+
   /*! Type-safe wrapper for allocation predictions, to avoid mixing different allocation events */
   template<auto Event>
   class alloc_prediction
@@ -168,7 +168,7 @@ namespace sequoia::testing::impl
     {
       constexpr bool propagate{std::allocator_traits<allocator_type>::propagate_on_container_move_assignment::value};
       const auto& predictions{info().get_predictions()};
-      
+
       if (m_AllocatorsEqual || propagate)
       {
         const auto xPrediction{predictions.move_assign_allocs()};
@@ -185,7 +185,7 @@ namespace sequoia::testing::impl
     void check_mutation_after_swap(test_logger<Mode>& logger, const T& lhs, const T& rhs) const
     {
       auto lhCount{first_count()}, rhCount{second_count()};
-      
+
       if constexpr(std::allocator_traits<allocator_type>::propagate_on_container_swap::value)
       {
         using std::swap;
@@ -267,7 +267,7 @@ namespace sequoia::testing::impl
     -> allocation_checker<T, Getter>;
 
   //================================ Specializations of do_swap ================================//
-  
+
   template<class T, alloc_getter<T>... Getters>
   struct do_swap<dual_allocation_checker<T, Getters>...>
   {
@@ -363,7 +363,7 @@ namespace sequoia::testing::impl
 
     if constexpr (sizeof...(Checkers) > 0)
     {
-      check_allocation(logger, check, moreCheckers...); 
+      check_allocation(logger, check, moreCheckers...);
     }
   }
 
@@ -499,7 +499,7 @@ namespace sequoia::testing::impl
 
     check_allocation(logger, checkFn, checker, moreCheckers...);
   }
-  
+
   template<test_mode Mode, movable_comparable T, alloc_getter<T>... Getters>
   void check_para_copy_y_allocation(test_logger<Mode>& logger, const T& container, std::tuple<allocation_checker<T, Getters>...> checkers)
   {
@@ -523,7 +523,7 @@ namespace sequoia::testing::impl
 
     check_allocation(logger, checkFn, checker, moreCheckers...);
   }
-  
+
   template<test_mode Mode, movable_comparable T, alloc_getter<T>... Getters>
   void check_para_move_y_allocation(test_logger<Mode>& logger, const T& container, std::tuple<allocation_checker<T, Getters>...> checkers)
   {
@@ -548,7 +548,7 @@ namespace sequoia::testing::impl
     check_allocation(logger, checkFn, checker, moreCheckers...);
   }
 
-  
+
   /*! \brief actions common to both move-only and regular types. */
   template<movable_comparable T>
   struct allocation_actions : precondition_actions<T>
@@ -576,7 +576,7 @@ namespace sequoia::testing::impl
       sentinel<Mode> s{logger, ""};
 
       check_no_allocation<C>(std::string{"Unexpected allocation detected for operator"}.append(to_string(comparison.value)), logger, x, y, checkers...);
-      
+
       return !s.failure_detected();
     }
 

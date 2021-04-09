@@ -22,11 +22,11 @@ namespace sequoia::testing
   void statistical_algorithms_test::run_tests()
   {
     using namespace sequoia::maths;
-    
+
     std::vector<double> data{};
 
     //
-    
+
     auto m{mean(data.begin(), data.end())};
     check(LINE(""), !m.has_value());
 
@@ -50,18 +50,18 @@ namespace sequoia::testing
     check(LINE(""), !ssd.first.has_value());
     check(LINE(""), !ssd.second.has_value());
 
-    // [2]    
+    // [2]
     data.push_back(2);
-    
+
     m = mean(data.begin(), data.end());
     sq = cummulative_square_diffs(data.begin(), data.end());
     var = variance(data.begin(), data.end());
     uvar = sample_variance(data.begin(), data.end());
     sd = standard_deviation(data.begin(), data.end());
     ssd = sample_standard_deviation(data.begin(), data.end());
-    
+
     check_equality(LINE(""), m.value(), 2.0);
-    
+
     check_equality(LINE(""), sq.first.value(), 0.0);
     check_equality(LINE(""), sq.second.value(), 2.0);
 
@@ -76,19 +76,19 @@ namespace sequoia::testing
 
     check(LINE(""), !ssd.first.has_value());
     check_equality(LINE(""), ssd.second.value(), 2.0);
-    
-    // [2][4]   
+
+    // [2][4]
     data.push_back(4);
-    
+
     m = mean(data.begin(), data.end());
     sq = cummulative_square_diffs(data.begin(), data.end());
     var = variance(data.begin(), data.end());
     uvar = sample_variance(data.begin(), data.end());
     sd = standard_deviation(data.begin(), data.end());
     ssd = sample_standard_deviation(data.begin(), data.end());
-    
+
     check_equality(LINE(""), m.value(), 3.0);
-    
+
     check_equality(LINE(""), sq.first.value(), 2.0);
     check_equality(LINE(""), sq.second.value(), 3.0);
 
@@ -104,7 +104,7 @@ namespace sequoia::testing
     check_equality(LINE(""), ssd.first.value(), 2.0);
     check_equality(LINE(""), ssd.second.value(), 3.0);
 
-    // [2][4][9]   
+    // [2][4][9]
     data.push_back(9);
 
     m = mean(data.begin(), data.end());

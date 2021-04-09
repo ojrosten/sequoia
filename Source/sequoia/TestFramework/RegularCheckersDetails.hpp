@@ -9,7 +9,7 @@
 
 /*! \file
     \brief Implementation details for checking regular semantics.
- 
+
  */
 
 #include "sequoia/TestFramework/SemanticsCheckersDetails.hpp"
@@ -34,13 +34,13 @@ namespace sequoia::testing::impl
 
     return false;
   }
-  
+
   template<test_mode Mode, class Actions, pseudoregular T>
   bool check_copy_assign(test_logger<Mode>& logger, const Actions& actions, T& z, const T& y)
   {
-    return do_check_copy_assign(logger, actions, z, y);   
+    return do_check_copy_assign(logger, actions, z, y);
   }
-  
+
   template<test_mode Mode, class Actions, pseudoregular T, invocable<T&> Mutator>
   bool check_swap(test_logger<Mode>& logger, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, Mutator yMutator)
   {

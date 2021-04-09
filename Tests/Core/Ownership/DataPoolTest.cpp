@@ -27,15 +27,15 @@ namespace sequoia::testing
   {
     using namespace ownership;
     using pool_t = data_pool<int>;
-    
+
     using prediction_t = typename weak_equivalence_checker<pool_t>::prediction_type;
-    
+
     pool_t pool{};
 
     auto elt = pool.make(val);
     //                   int: val
-    // proxy: elt  --->  handle -----> Pool 
-    //                      ^-----------               
+    // proxy: elt  --->  handle -----> Pool
+    //                      ^-----------
 
     check_weak_equivalence(LINE(""), pool, prediction_t{{val, 1}});
     check_equality(LINE(""), elt.get(), val);
@@ -47,9 +47,9 @@ namespace sequoia::testing
   {
     using namespace ownership;
     using pool_t = data_pool<int>;
-    
+
     using prediction_t = typename weak_equivalence_checker<pool_t>::prediction_type;
-    
+
     pool_t pool{make_int_pool(5)};
     check_weak_equivalence(LINE("Proxy created in function call goes out of scope, decreasing count to 0"), pool, prediction_t{{5, 0}});
 
@@ -78,7 +78,7 @@ namespace sequoia::testing
     check_equality(LINE(""), _2elt2.get(), 7);
 
     auto _2elt3 = pool2.make(-3);
-      
+
     check_weak_equivalence(LINE(""), pool2, prediction_t{{4, 1}, {7, 1}, {-3, 1}});
     check_equality(LINE(""), _2elt.get(), 4);
     check_equality(LINE(""), _2elt2.get(), 7);
@@ -107,7 +107,7 @@ namespace sequoia::testing
     check_weak_equivalence(LINE(""), pool2, prediction_t{{5, 0}, {6, 1}, {-6, 1}});
 
     auto elt3 = pool.make(1);
-      
+
     check_weak_equivalence(LINE("Will change if pool pointers haven't been swapped"), pool, prediction_t{{4, 1}, {7, 1}, {-3, 1}, {1, 1}});
     check_equality(LINE(""), elt3.get(), 1);
 
@@ -116,12 +116,12 @@ namespace sequoia::testing
     check_weak_equivalence(LINE(""), pool2, prediction_t{{5, 0}, {6, 1}, {-6, 1}, {10, 1}});
     check_equality(LINE(""), _2elt4.get(), 10);
   }
-    
+
   void data_pool_test::test_pooled()
   {
     using namespace ownership;
     using pool_t = data_pool<int>;
-    
+
     using prediction_t = typename weak_equivalence_checker<pool_t>::prediction_type;
     pool_t pool{};
     check_weak_equivalence(LINE(""), pool, prediction_t{});
@@ -144,7 +144,7 @@ namespace sequoia::testing
     // 3(0), 4(1)
     check_weak_equivalence(LINE(""), pool, prediction_t{{3, 0}, {4, 1}});
     check_equality(LINE(""), elt.get(), 4);
-    
+
 
     auto elt2 = pool.make(4);
     // 3(0), 4(2)
@@ -166,14 +166,14 @@ namespace sequoia::testing
     check_equality(LINE(""), elt2.get(), 5);
     check_equality(LINE(""), elt3.get(), 5);
 
-    elt3.set(6);      
+    elt3.set(6);
     // 3(0), 4(1), 5(1), 6(1)
     check_weak_equivalence(LINE(""), pool, prediction_t{{3, 0}, {4, 1}, {5, 1}, {6, 1}});
     check_equality(LINE(""), elt.get(), 4);
     check_equality(LINE(""), elt2.get(), 5);
     check_equality(LINE(""), elt3.get(), 6);
 
-    elt.mutate([](auto& e) { e = 3;});      
+    elt.mutate([](auto& e) { e = 3;});
     // 3(1), 4(0), 5(1), 6(1)
     check_weak_equivalence(LINE(""), pool, prediction_t{{3, 1}, {4, 0}, {5, 1}, {6, 1}});
     check_equality(LINE(""), elt.get(), 3);

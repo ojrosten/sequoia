@@ -12,7 +12,7 @@
 #include "sequoia/Core/DataStructures/StaticQueue.hpp"
 
 namespace sequoia::testing
-{  
+{
   template<class T, std::size_t MaxPushes>
   struct detailed_equality_checker<data_structures::static_queue<T, MaxPushes>>
   {
@@ -23,7 +23,7 @@ namespace sequoia::testing
     {
       check_equality("Emptiness incorrect", logger, queue.empty(), prediction.empty());
       check_equality("Size incorrect", logger, queue.size(), prediction.size());
-      
+
       if(!prediction.empty() && !queue.empty())
       {
         check_equality("Front element incorrect", logger, queue.front(), prediction.front());

@@ -41,13 +41,13 @@ namespace sequoia::concurrency
   {
   public:
     using task_t = Task;
-    
+
     task_queue() = default;
     task_queue(const task_queue&) = delete;
     task_queue(task_queue&&)      = delete;
 
     ~task_queue() = default;
-    
+
     task_queue& operator=(const task_queue&) = delete;
     task_queue& operator=(task_queue&&)      = delete;
 
@@ -78,7 +78,7 @@ namespace sequoia::concurrency
 
       m_Q.push(std::move(task));
       m_CV.notify_one();
-      
+
       return true;
     }
 
@@ -99,7 +99,7 @@ namespace sequoia::concurrency
 
       return get();
     }
-  private:    
+  private:
     Q m_Q;
     std::mutex m_Mutex;
     std::condition_variable m_CV;
@@ -109,11 +109,11 @@ namespace sequoia::concurrency
     {
       Task task{};
       if(!m_Q.empty())
-        {        
+        {
           task = std::move(m_Q.front());
           m_Q.pop();
         }
-        
+
       return task;
     }
   };
@@ -133,7 +133,7 @@ namespace sequoia::concurrency
         values.reserve(futures.size());
         std::transform(futures.begin(), futures.end(), std::back_inserter(values), [](std::future<R>& fut) { return fut.get(); });
         futures.clear();
-        
+
         return values;
       }
     }
@@ -154,16 +154,16 @@ namespace sequoia::concurrency
       using queue_type = Q_t;
     };
   }
-  
+
   //===================================Serial Execution Model===================================//
 
   /*! \class serial
-      \brief Tasks may be pushed, upon which they are immediately invoked; results may be 
+      \brief Tasks may be pushed, upon which they are immediately invoked; results may be
       acquired through get.
-   
+
       Results are acquired via a handle to the underlying container.
    */
-  
+
   template<class R=void>  class serial
   {
   public:
@@ -187,7 +187,7 @@ namespace sequoia::concurrency
 
       The dummy get method does nothing but serves to provide a uniform interface.
    */
-  
+
   template<> class serial<void>
   {
   public:
@@ -201,22 +201,22 @@ namespace sequoia::concurrency
     constexpr void get() const noexcept {}
   };
 
-  //==================================Asynchronous Execution==================================// 
+  //==================================Asynchronous Execution==================================//
 
   /*! \class asynchronous
-      \brief Tasks may be pushed, upon which they are fed to std::async; results may be 
+      \brief Tasks may be pushed, upon which they are fed to std::async; results may be
       acquired through get.
-   
-      Internally, the class holds a future for each pushed task. The get method extracts the 
+
+      Internally, the class holds a future for each pushed task. The get method extracts the
       associated return values of the tasks and, if they are no-void, returns them as a vector.
    */
-  
+
   template<class R>
   class asynchronous
   {
   public:
     using return_type = R;
-      
+
     asynchronous() = default;
     asynchronous(const asynchronous&)     = delete;
     asynchronous(asynchronous&&) noexcept = default;
@@ -246,16 +246,16 @@ namespace sequoia::concurrency
       \brief Supports either a single pipeline or a pipeline for each thread, together with task
       stealing.
    */
-  
+
   template<class R, bool MultiPipeline=true>
   class thread_pool : private impl::queue_details<R, MultiPipeline>
   {
   public:
     using return_type = R;
-      
+
     template<bool B=MultiPipeline>
       requires (!B)
-    explicit thread_pool(const std::size_t numThreads)        
+    explicit thread_pool(const std::size_t numThreads)
     {
       make_pool(numThreads);
     }
@@ -268,7 +268,7 @@ namespace sequoia::concurrency
     {
       make_pool(numThreads);
     }
-      
+
     thread_pool(const thread_pool&)= delete;
     thread_pool(thread_pool&&)     = delete;
 
@@ -276,7 +276,7 @@ namespace sequoia::concurrency
     {
       if(!joined) join_all();
     }
-    
+
     thread_pool& operator=(const thread_pool&) = delete;
     thread_pool& operator=(thread_pool&&)      = delete;
 
@@ -289,10 +289,10 @@ namespace sequoia::concurrency
       task_t task{[=](){ return fn(args...); }};
       m_Futures.push_back(task.get_future());
 
-                  
+
       if constexpr(MultiPipeline)
       {
-        const auto qIndex{m_QueueIndex++};        
+        const auto qIndex{m_QueueIndex++};
         const auto N{m_Threads.size()};
 
         if(qIndex >= N)
@@ -315,7 +315,7 @@ namespace sequoia::concurrency
     void join()
     {
       join_all();
-      joined = true;        
+      joined = true;
     }
 
     [[nodiscard]]
@@ -327,7 +327,7 @@ namespace sequoia::concurrency
   private:
     using task_t   = typename impl::queue_details<R, MultiPipeline>::task_t;
     using Queues_t = typename impl::queue_details<R, MultiPipeline>::queue_type;
-      
+
     Queues_t m_Queues;
     std::vector<std::thread> m_Threads;
     std::vector<std::future<R>> m_Futures;
@@ -350,11 +350,11 @@ namespace sequoia::concurrency
               else
                 return;
             }
-              
+
             while(true)
             {
               task_t task{};
-                
+
               if constexpr(MultiPipeline)
               {
                 const auto N{m_Threads.size()};
@@ -376,7 +376,7 @@ namespace sequoia::concurrency
                 task();
               else
                 break;
-                
+
             }
           }
         };
@@ -391,7 +391,7 @@ namespace sequoia::concurrency
         for(auto& q : m_Queues) q.finish();
       else
         m_Queues.finish();
-               
+
       for(auto& t : m_Threads) t.join();
     }
   };

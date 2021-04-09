@@ -28,7 +28,7 @@ namespace sequoia::testing
       graph_test_helper<int, complex<double>, weighted_graph_allocation_test>  helper{*this};
 
       using ntraits = node_traits<complex<double>>;
-      
+
       helper.run_tests<contig_edge_traits, ntraits>();
       helper.run_tests<bucket_edge_traits, ntraits>();
     }
@@ -37,7 +37,7 @@ namespace sequoia::testing
       graph_test_helper<complex<int>, complex<double>, weighted_graph_allocation_test>  helper{*this};
 
       using ntraits = node_traits<complex<double>>;
-      
+
       helper.run_tests<contig_edge_traits, ntraits>();
       helper.run_tests<bucket_edge_traits, ntraits>();
     }
@@ -46,7 +46,7 @@ namespace sequoia::testing
       graph_test_helper<std::vector<int>, std::vector<complex<double>>, weighted_graph_allocation_test>  helper{*this};
 
       using ntraits = node_traits<std::vector<complex<double>>>;
-      
+
       helper.run_tests<contig_edge_traits, ntraits>();
       helper.run_tests<bucket_edge_traits, ntraits>();
     }
@@ -54,9 +54,9 @@ namespace sequoia::testing
 
   template
   <
-    maths::graph_flavour GraphFlavour,    
+    maths::graph_flavour GraphFlavour,
     class EdgeWeight,
-    class NodeWeight,    
+    class NodeWeight,
     class EdgeWeightCreator,
     class NodeWeightCreator,
     class EdgeStorageTraits,
@@ -101,10 +101,10 @@ namespace sequoia::testing
     g.shrink_to_fit();
     check_equality(LINE("May fail if stl implementation doesn't actually shrink to fit!"), g.edges_capacity(), 0_sz);
     check_equality(LINE("May fail if stl implementation doesn't actually shrink to fit!"), g.node_capacity(), 0_sz);
-      
+
     // x----x
     using edge_init_t = typename Graph::edge_init_type;
-    
+
     auto nodeMaker{
       [](Graph& g) { g.add_node(); }
     };
@@ -154,7 +154,7 @@ namespace sequoia::testing
   {
     using edge_allocator = typename Graph::edge_allocator_type;
     using node_allocator = typename Graph::node_weight_container_type::allocator_type;
-    
+
     Graph g{edge_allocator{}, node_allocator{}};
 
     this->template check_exception_thrown<std::out_of_range>(LINE(""), [&g](){ g.reserve_edges(0, 4);});
@@ -203,7 +203,7 @@ namespace sequoia::testing
                                       { {0_c, {0_c, 0_mu}, {0_awp, 0_anp}, {0_containers, 1_containers, 2_postmutation}} }
                     },
                     allocation_info{node_alloc_getter<Graph>{}, {0_c, {1_c, 1_mu}, {1_awp, 1_anp}}});
-      
+
     check_semantics(LINE(""),
                     g2,
                     Graph{{{}}, edge_allocator{}, {{1.0, -1.0}}, node_allocator{}},

@@ -29,7 +29,7 @@ namespace sequoia::testing
       check_equality(LINE(""), a, {});
 
     }
-    
+
     {
       check_exception_thrown<std::logic_error>(LINE(""), [](){ return to_array<int,5>({0,1,2,3,4,5});});
 

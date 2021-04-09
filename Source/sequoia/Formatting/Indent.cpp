@@ -12,7 +12,7 @@
 #include "sequoia/Formatting/Indent.hpp"
 
 namespace sequoia
-{  
+{
   std::string indent(std::string_view s, indentation ind)
   {
     if(s.empty()) return {};
@@ -20,11 +20,11 @@ namespace sequoia
 
     std::string str{};
     str.reserve(s.size());
-    
+
     std::string::size_type current{};
-    
+
     while(current < s.size())
-    {      
+    {
       constexpr auto npos{std::string::npos};
       const auto dist{s.substr(current).find('\n')};
 
@@ -32,12 +32,12 @@ namespace sequoia
       auto line{s.substr(current, count == npos ? npos : count)};
       if(line.find_first_not_of('\n') != npos)
         str.append(ind);
-      
+
       str.append(line);
 
       current = (count == npos) ? npos : current + count;
-    }    
-    
+    }
+
     return str;
   }
 

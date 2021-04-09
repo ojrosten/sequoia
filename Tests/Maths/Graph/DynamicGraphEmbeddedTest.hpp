@@ -23,14 +23,14 @@ namespace sequoia
     private:
       template<class, class, class>
       friend class graph_test_helper;
-      
+
       void run_tests() final;
 
       template
       <
-        maths::graph_flavour GraphFlavour,      
+        maths::graph_flavour GraphFlavour,
         class EdgeWeight,
-        class NodeWeight,      
+        class NodeWeight,
         class EdgeWeightCreator,
         class NodeWeightCreator,
         class EdgeStorageTraits,

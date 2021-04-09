@@ -31,7 +31,7 @@ namespace sequoia::testing
     {
       std::filesystem::path host_dir, header_path;
     };
-    
+
     host_directory() = default;
 
     host_directory(std::filesystem::path dir)
@@ -73,9 +73,9 @@ namespace sequoia::testing
   };
 
   struct template_spec
-  {    
+  {
     std::string species, symbol;
-    
+
     [[nodiscard]]
     friend bool operator==(const template_spec&, const template_spec&) noexcept = default;
 
@@ -85,13 +85,13 @@ namespace sequoia::testing
 
 
   using template_data = std::vector<template_spec>;
-  
+
   [[nodiscard]]
   template_data generate_template_data(std::string_view str);
 
   [[nodiscard]]
   template_spec generate_template_spec(std::string_view str);
-  
+
   void set_top_copyright(std::string& text, std::string_view copyright);
 
   class nascent_test_base
@@ -107,7 +107,7 @@ namespace sequoia::testing
     void family(std::string name) { m_Family = std::move(name); }
 
     void host_dir(std::filesystem::path dir) { m_HostDirectory = host_directory{std::move(dir)}; }
-    
+
     [[nodiscard]]
     const std::filesystem::path& header() const noexcept { return m_Header; }
 
@@ -122,7 +122,7 @@ namespace sequoia::testing
     const std::string& forename() const noexcept { return m_Forename; }
 
     void forename(std::string name) { m_Forename = std::move(name); }
-    
+
     [[nodiscard]]
     const std::filesystem::path& host_dir() const noexcept { return m_HostDir; }
 
@@ -178,7 +178,7 @@ namespace sequoia::testing
 
     [[nodiscard]]
     auto create_file(std::string_view copyright, const std::filesystem::path& codeTemplatesDir, std::string_view nameEnding) const -> file_data;
-    
+
     [[nodiscard]]
     std::vector<std::string> constructors() const;
 
@@ -222,12 +222,12 @@ namespace sequoia::testing
 
     [[nodiscard]]
     auto create_file(std::string_view copyright, const std::filesystem::path& codeTemplatesDir, std::string_view nameEnding) const -> file_data;
-    
+
     [[nodiscard]]
     std::vector<std::string> constructors() const;
   private:
     void transform_file(std::string& text) const;
-  }; 
+  };
 
   class nascent_behavioural_test : public nascent_test_base
   {
@@ -265,7 +265,7 @@ namespace sequoia::testing
       , test_materials{projectRoot/"TestMaterials"}
       , output{projectRoot/"output"}
     {}
-    
+
     std::filesystem::path
       source{},
       tests{},
@@ -311,7 +311,7 @@ namespace sequoia::testing
           return false;
         }(std::forward<Test>(test), std::forward<Tests>(tests)...)
       };
-      
+
       if(!done && (m_SelectedSources.empty() || !m_SelectedFamilies.empty()))
       {
         if(mark_family(name))
@@ -380,7 +380,7 @@ namespace sequoia::testing
     concurrency_mode m_ConcurrencyMode{concurrency_mode::serial};
 
     std::ostream& stream() noexcept { return *m_Stream; }
- 
+
     bool mark_family(std::string_view name);
 
     void process_args(int argc, char** argv);

@@ -40,7 +40,7 @@ namespace sequoia::testing
     struct node_detailed_equality_checker<Nodes>
     {
       using type = Nodes;
-      
+
       template<test_mode Mode>
       static void check(test_logger<Mode>&, const Nodes&, const Nodes&)
       {
@@ -80,11 +80,11 @@ namespace sequoia::testing
   }
 
   // Details Checkers
-  
+
   template<class WeightMaker, class Traits>
   struct detailed_equality_checker<maths::graph_impl::node_storage<WeightMaker, Traits>>
     : impl::node_detailed_equality_checker<maths::graph_impl::node_storage<WeightMaker, Traits>>
-  {   
+  {
   };
 
   // Equivalence Checkers
@@ -180,12 +180,12 @@ namespace sequoia::testing
   {
   private:
     using base_t = maths::graph_impl::node_storage<WeightMaker, node_storage_traits<PropagateCopy, PropagateMove, PropagateSwap>>;
-    
+
   public:
     using allocator_type = typename base_t::node_weight_container_type::allocator_type;
     using size_type      = typename base_t::size_type;
     using weight_type    = typename base_t::weight_type;
-    
+
     node_storage_tester() = default;
 
     explicit node_storage_tester(const allocator_type& allocator)
@@ -219,9 +219,9 @@ namespace sequoia::testing
     node_storage_tester(node_storage_tester&& s, const allocator_type& allocator)
       : base_t{std::move(s), allocator}
     {}
-    
+
     ~node_storage_tester() = default;
-    
+
     node_storage_tester& operator=(const node_storage_tester&) = default;
 
     node_storage_tester& operator=(node_storage_tester&&) = default;
@@ -230,7 +230,7 @@ namespace sequoia::testing
     {
       lhs.swap(rhs);
     }
-    
+
     using base_t::reserve;
     using base_t::capacity;
     using base_t::shrink_to_fit;
@@ -249,7 +249,7 @@ namespace sequoia::testing
     using maths::graph_impl::static_node_storage<WeightMaker, N>::static_node_storage;
   };
 
-  
+
   template<class WeightMaker, bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
   struct detailed_equality_checker<node_storage_tester<WeightMaker, PropagateCopy, PropagateMove, PropagateSwap>>
     : public detailed_equality_checker<maths::graph_impl::node_storage<WeightMaker, node_storage_traits<PropagateCopy, PropagateMove, PropagateSwap>>>

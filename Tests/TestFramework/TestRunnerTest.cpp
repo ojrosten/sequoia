@@ -45,7 +45,7 @@ namespace sequoia::testing
       throw std::runtime_error{"This is bad"};
     }
   };
-  
+
   [[nodiscard]]
   std::string_view test_runner_test::source_file() const noexcept
   {

@@ -30,7 +30,7 @@ namespace sequoia::testing
     mess.append(stringify(log.execution_time()));
 
     if(duration) mess.append(")");
-      
+
     return mess.append("ms]\n");
   }
 
@@ -38,7 +38,7 @@ namespace sequoia::testing
   std::string summarize(const log_summary& log, const opt_duration duration, const summary_detail verbosity, indentation ind_0, indentation ind_1)
   {
     constexpr std::size_t entries{6};
-    
+
     auto indent{
       [ind_0, ind_1](){
         return std::string{ind_0}.append(ind_1);
@@ -69,7 +69,7 @@ namespace sequoia::testing
     pad_left(checkNums.begin(), checkNums.end(), minChars);
 
     const auto len{10u - std::min(std::size_t{minChars}, checkNums.front().size())};
-        
+
     for(std::size_t i{}; i<entries; ++i)
     {
       summaries[i].append(checkNums[i] + ";").append(len, ' ').append("Failures: ");
@@ -93,7 +93,7 @@ namespace sequoia::testing
 
     if(log.standard_top_level_checks())
       summaries.front().append("  [Deep checks: " + std::to_string(log.standard_deep_checks()) + "]");
-    
+
     std::string summary{sequoia::indent(log.name(), ind_0)};
 
     if((verbosity & summary_detail::timings) == summary_detail::timings)
@@ -124,7 +124,7 @@ namespace sequoia::testing
       };
 
       for(std::size_t i{}; i<entries; ++i)
-      {            
+      {
         if(checks[i]) summary += summaries[i] += "\n";
       }
     }

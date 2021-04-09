@@ -26,9 +26,9 @@ namespace sequoia::testing
 
     template
     <
-      maths::graph_flavour GraphFlavour,    
+      maths::graph_flavour GraphFlavour,
       class EdgeWeight,
-      class NodeWeight,    
+      class NodeWeight,
       class EdgeWeightCreator,
       class NodeWeightCreator,
       class EdgeStorageTraits,

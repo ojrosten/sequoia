@@ -11,8 +11,8 @@
     \brief Functions for checking semantics of types lacking copy semantics but which are otherwise regular.
 
     Within this library, a type is defined to have move-only semantics if possesses the following:
-        
-    move constructor 
+
+    move constructor
     move assignment
     swap
     operator==
@@ -23,7 +23,7 @@
     copy constructor
     copy assignment
 
-    Note that a default constructor is not a strict requirement. 
+    Note that a default constructor is not a strict requirement.
 
     This file adds one function to the check_semantics overload set, inside which consistency
     of the first list of operators above will be checked. There is an important difference
@@ -41,7 +41,7 @@
 namespace sequoia::testing
 {
   /*! Preconditions:
-    
+
       x == xClone
       y == yClone
       x != y
@@ -55,7 +55,7 @@ namespace sequoia::testing
   }
 
   /*! Preconditions:
-    
+
       x == xClone
       y == yClone
       x != y

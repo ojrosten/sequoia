@@ -20,7 +20,7 @@
 namespace sequoia::maths
 {
   struct unsafe_t {};
-  
+
   template<class T, class C, class Compare> class monotonic_sequence_base
   {
   public:
@@ -28,12 +28,12 @@ namespace sequoia::maths
     using container_type = C;
     using compare_type   = Compare;
     using size_type      = typename C::size_type;
-    
+
     using const_iterator         = typename C::const_iterator;
     using const_reverse_iterator = typename C::const_reverse_iterator;
 
     constexpr monotonic_sequence_base() = default;
-    
+
     constexpr monotonic_sequence_base(std::initializer_list<T> list) : monotonic_sequence_base{static_type{}, list}
     {}
 
@@ -43,7 +43,7 @@ namespace sequoia::maths
     }
 
     constexpr monotonic_sequence_base(const monotonic_sequence_base&) = default;
-      
+
     [[nodiscard]]
     constexpr size_type size() const noexcept { return m_Sequence.size(); }
 
@@ -92,7 +92,7 @@ namespace sequoia::maths
         auto tmp{m_Sequence};
         auto f{tmp.begin() + distance(cbegin(), first)};
         auto l{tmp.begin() + distance(cbegin(), last)};
-        
+
         for(auto i{f}; i != l; ++i)
         {
           *i = op(*i);
@@ -119,9 +119,9 @@ namespace sequoia::maths
       using std::distance;
       while(first != last)
       {
-        auto pos{m_Sequence.begin() + distance(cbegin(), first++)};                    
+        auto pos{m_Sequence.begin() + distance(cbegin(), first++)};
         *pos = op(*pos);
-      }      
+      }
     }
 
     [[nodiscard]]
@@ -131,7 +131,7 @@ namespace sequoia::maths
     [[nodiscard]]
     friend bool operator!=(const monotonic_sequence_base& lhs, const monotonic_sequence_base& rhs) noexcept
       = default;
-    
+
   protected:
     template<alloc Allocator>
     constexpr explicit monotonic_sequence_base(const Allocator& allocator) noexcept
@@ -144,7 +144,7 @@ namespace sequoia::maths
     {
       check();
     }
-    
+
     constexpr monotonic_sequence_base(monotonic_sequence_base&&) noexcept = default;
 
     template<alloc Allocator>
@@ -156,10 +156,10 @@ namespace sequoia::maths
     constexpr monotonic_sequence_base(monotonic_sequence_base&& s, const Allocator& allocator)
       : m_Sequence{std::move(s.m_Sequence), allocator}
     {}
-    
+
     ~monotonic_sequence_base() = default;
-    
-    constexpr monotonic_sequence_base& operator=(const monotonic_sequence_base&) = default;    
+
+    constexpr monotonic_sequence_base& operator=(const monotonic_sequence_base&) = default;
     constexpr monotonic_sequence_base& operator=(monotonic_sequence_base&&)      = default;
 
     constexpr void swap(monotonic_sequence_base& other) noexcept(impl::noexcept_spec_v<C>)
@@ -177,7 +177,7 @@ namespace sequoia::maths
     {
       if(!m_Sequence.empty() && Compare{}(m_Sequence.back(), v))
         throw std::logic_error{"monotonic_sequence_base::push_back - monotonicity violated"};
-        
+
       m_Sequence.push_back(std::move(v));
     }
 
@@ -185,9 +185,9 @@ namespace sequoia::maths
     {
       if(((pos != cend()) && Compare{}(v, *pos)) || ((pos != cbegin()) && Compare{}(*(pos-1), v)))
       {
-        throw std::logic_error{"monotonic_sequence_base::insert - monotonicity violated"};        
+        throw std::logic_error{"monotonic_sequence_base::insert - monotonicity violated"};
       }
-      
+
       return m_Sequence.insert(pos, std::move(v));
     }
 
@@ -220,7 +220,7 @@ namespace sequoia::maths
     {
       m_Sequence.clear();
     }
-    
+
   private:
     using static_type = impl::static_storage<C>;
 
@@ -230,7 +230,7 @@ namespace sequoia::maths
     {
       check();
     }
-    
+
     constexpr monotonic_sequence_base(std::true_type, std::initializer_list<T> list)
       : m_Sequence{utilities::to_array<T, static_type::size()>(list)}
     {
@@ -253,13 +253,13 @@ namespace sequoia::maths
 
   template<class T, class Compare=std::less<T>, class C=std::vector<T>>
   class monotonic_sequence : public monotonic_sequence_base<T, C, Compare>
-  {    
+  {
     using base_t = monotonic_sequence_base<T, C, Compare>;
   public:
     static_assert(has_allocator_type<C>);
-    
+
     using allocator_type = typename C::allocator_type;
-    
+
     monotonic_sequence() = default;
 
     explicit monotonic_sequence(const allocator_type& allocator)
@@ -275,7 +275,7 @@ namespace sequoia::maths
     monotonic_sequence(const monotonic_sequence& s, const allocator_type& allocator)
       : monotonic_sequence_base<T, C, Compare>{s, allocator}
     {}
-    
+
     monotonic_sequence(monotonic_sequence&&) noexcept = default;
 
     monotonic_sequence(monotonic_sequence&& s, const allocator_type& allocator)
@@ -296,7 +296,7 @@ namespace sequoia::maths
     {
       return base_t::get_allocator();
     }
-    
+
     using base_t::push_back;
     using base_t::insert;
     using base_t::erase;

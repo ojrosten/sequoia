@@ -32,10 +32,10 @@ namespace sequoia::testing
 
     explicit move_only_allocation_extender(test_logger<Mode>& logger) : m_Logger{logger} {}
 
-    move_only_allocation_extender(const move_only_allocation_extender&) = delete;    
+    move_only_allocation_extender(const move_only_allocation_extender&) = delete;
     move_only_allocation_extender(move_only_allocation_extender&&)      = delete;
 
-    move_only_allocation_extender& operator=(const move_only_allocation_extender&) = delete;  
+    move_only_allocation_extender& operator=(const move_only_allocation_extender&) = delete;
     move_only_allocation_extender& operator=(move_only_allocation_extender&&)      = delete;
 
     template<moveonly T, invocable<T&> Mutator, alloc_getter<T>... Getters>
@@ -82,16 +82,16 @@ namespace sequoia::testing
 
        will ensure that all checks defined in the test_allocation function template are executed
        for each combination of the allocation propagation flags.
-   
+
        \anchor basic_move_only_allocation_test_primary
    */
-  
+
   template<test_mode Mode>
   class basic_move_only_allocation_test : public basic_test<checker<Mode, move_only_allocation_extender<Mode>>>
   {
   public:
     using basic_test<checker<Mode, move_only_allocation_extender<Mode>>>::basic_test;
-        
+
     basic_move_only_allocation_test(const basic_move_only_allocation_test&) = delete;
 
     basic_move_only_allocation_test& operator=(const basic_move_only_allocation_test&) = delete;

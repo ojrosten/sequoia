@@ -34,7 +34,7 @@ namespace sequoia::testing
       , para_copy{paraCopyPrediction}
       , para_move{convert<individual_allocation_event::para_move>(copyPrediction)}
     {}
-      
+
     constexpr individual_allocation_predictions(copy_prediction copyPrediction,
                                                 mutation_prediction mutationPrediction,
                                                 para_copy_prediction paraCopyPrediction,
@@ -78,7 +78,7 @@ namespace sequoia::testing
     move_assign_prediction move{};
   };
 
-  
+
   template<class T>
   constexpr individual_allocation_predictions shift(const individual_allocation_predictions& predictions,
                                                     const alloc_prediction_shifter<T>& shifter)

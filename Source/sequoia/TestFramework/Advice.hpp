@@ -18,7 +18,7 @@
 #include <string>
 
 namespace sequoia::testing
-{  
+{
   template<class Advisor>
   struct advisor_invoke_type;
 
@@ -79,7 +79,7 @@ namespace sequoia::testing
 
   template<class Advisor, class T>
   constexpr bool use_advisor_v{advisor_analyser<Advisor, T>::utilize};
-  
+
   /// \brief Represents the absence of advice
   struct null_advisor
   {};
@@ -105,7 +105,7 @@ namespace sequoia::testing
   {
   public:
     using sequoia_advisor_type = Advisor;
-    
+
     tutor(Advisor a, std::string prefix="Advice: ")
       : m_Advisor{std::move(a)}
       , m_Prefix{std::move(prefix)}
@@ -168,7 +168,7 @@ namespace sequoia::testing
       }
     }
 
-    std::string& append_to(std::string& message) const;    
+    std::string& append_to(std::string& message) const;
   private:
     std::string m_Advice{}, m_Prefix{};
   };

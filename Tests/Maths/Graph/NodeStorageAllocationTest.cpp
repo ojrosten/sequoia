@@ -45,7 +45,7 @@ namespace sequoia::testing
     storage t{{1, 1, 0}, allocator{}};
     check_equivalence(LINE(""), t, std::initializer_list<int>{1, 1, 0});
     check_equality(LINE(""), t.get_node_allocator().allocs(), 1);
-    
+
     auto mutator{
       [](storage& s){ s.add_node(); }
     };

@@ -57,13 +57,13 @@ namespace sequoia::testing
     }
   };
 
-  
+
   [[nodiscard]]
   std::string_view false_positive_diagnostics::source_file() const noexcept
   {
     return __FILE__;
   }
-  
+
   void false_positive_diagnostics::run_tests()
   {
     basic_tests();
@@ -88,7 +88,7 @@ namespace sequoia::testing
     check(LINE("Advisor ignored"), false, tutor{[](const std::string&, const std::string&){
         return std::string{"I pity the fool who confuses the bool."};}
       });
-      
+
     check_equality(LINE("Integers which should compare different"), 5, 4);
     check_equality(LINE(""), 6.5, 5.6, tutor{[](double, double){
         return std::string{"Double, double, toil and trouble"};
@@ -138,7 +138,7 @@ namespace sequoia::testing
     check_equality(LINE("One element vector check which should fail due to differing sizes"), std::vector<double>{1}, std::vector<double>{1,2});
     check_equality(LINE("Multi-element vector comparison which should fail due to last element"), std::vector<double>{1,5}, std::vector<double>{1,4});
     check_equality(LINE("Multi-element vector comparison which should fail due to first element"), std::vector<double>{1,5}, std::vector<double>{0,5});
-    check_equality(LINE("Multi-element vector comparison which should fail due to middle element"), std::vector<double>{1,3.2,5}, std::vector<double>{1,3.3,5});      
+    check_equality(LINE("Multi-element vector comparison which should fail due to middle element"), std::vector<double>{1,3.2,5}, std::vector<double>{1,3.3,5});
     check_equality(LINE("Multi-element vector comparison which should fail due to different sizes"), std::vector<double>{1,5,3.2}, std::vector<double>{5,3.2});
 
     std::vector<float> refs{-4.3f, 2.8f, 6.2f, 7.3f}, ans{1.1f, -4.3f, 2.8f, 6.2f, 8.4f, 7.3f};
@@ -194,7 +194,7 @@ namespace sequoia::testing
     using t_1 = std::set<double>;
     using t_2 = std::complex<double>;
     using type = std::tuple<t_0, t_1, t_2>;
-      
+
     type a{t_0{{1, 2.1f}, {2, 2.8f}}, {3.3, -9.6, 3.2}, {1.1, 0.2}};
 
     {
@@ -211,7 +211,7 @@ namespace sequoia::testing
   }
 
   void false_positive_diagnostics::test_regular_semantics()
-  {    
+  {
     check_semantics(LINE("Broken check invariant"), perfectly_normal_beast{1}, perfectly_normal_beast{1});
     check_semantics(LINE("Broken equality"), broken_equality{1}, broken_equality{2});
     check_semantics(LINE("Broken inequality"), broken_inequality{1}, broken_inequality{2});
@@ -340,7 +340,7 @@ namespace sequoia::testing
   {
     check_equality(LINE(""), std::pair<int, double>{5, 7.8}, std::pair<int, double>{5, 7.8});
 
-    check_equality(LINE(""), std::tuple<int, double, float>{4, 3.4, -9.2f}, std::tuple<int, double, float>{4, 3.4, -9.2f});    
+    check_equality(LINE(""), std::tuple<int, double, float>{4, 3.4, -9.2f}, std::tuple<int, double, float>{4, 3.4, -9.2f});
   }
 
   void false_negative_diagnostics::test_variant()
@@ -368,11 +368,11 @@ namespace sequoia::testing
     check_equality(LINE("Multi-element vector comparison which should pass"), std::vector<double>{1,5}, std::vector<double>{1,5});
 
     std::vector<float> refs{-4.3f, 2.8f, 6.2f, 7.3f}, ans{1.1f, -4.3f, 2.8f, 6.2f, 8.4f, 7.3f};
-      
+
     check_range(LINE("Iterators demarcate identical elements"), refs.cbegin(), refs.cbegin()+3, ans.cbegin()+1, ans.cbegin()+4);
   }
 
-  
+
   void false_negative_diagnostics::test_strings()
   {
     check_equality(LINE("Differing strings"), std::string{"Hello, World!"}, std::string{"Hello, World!"});
@@ -384,7 +384,7 @@ namespace sequoia::testing
     using t_1 = std::set<double>;
     using t_2 = std::complex<double>;
     using type = std::tuple<t_0, t_1, t_2>;
-      
+
     type a{t_0{{1, 2.1f}, {2, 2.8f}}, {3.3, -9.6, 3.2}, {1.1, 0.2}};
     type b{t_0{{1, 2.1f}, {2, 2.8f}}, {3.3, -9.6, 3.2}, {1.1, 0.2}};
 
@@ -402,7 +402,7 @@ namespace sequoia::testing
     check_equivalence(LINE(""), std::string{"foo"}, "foo");
 
     check_equivalence(LINE(""), std::vector<std::string>{{"a"}, {"b"}}, std::initializer_list<std::string_view>{"a", "b"});
-    
+
     namespace fs = std::filesystem;
 
     check_equivalence(LINE("Equivalence of a file to itself"),

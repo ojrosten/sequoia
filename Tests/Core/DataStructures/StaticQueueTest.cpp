@@ -68,7 +68,7 @@ namespace sequoia::testing
 
     return s;
   }
-  
+
   void test_static_queue::check_depth_2()
   {
     using namespace data_structures;
@@ -85,13 +85,13 @@ namespace sequoia::testing
 
     check_equality(LINE(""), a.size(), 0_sz);
     check(LINE(""), a.empty());
-    
+
     a.push(5);
     a.push(7);
     check_equality(LINE(""), a, static_queue<int, 2>{5, 7});
-    
+
     check_exception_thrown<std::logic_error>(LINE("Trying to push 3 elements to a queue of depth 2"), [&a]() { a.push(0); });
-    
+
     a.pop();
     check_equality(LINE(""), a, static_queue<int, 2>{7});
 

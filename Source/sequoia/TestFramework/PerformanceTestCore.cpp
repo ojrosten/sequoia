@@ -10,7 +10,7 @@
 namespace sequoia::testing
 {
   namespace
-  {    
+  {
     [[nodiscard]]
     bool acceptable_mismatch(std::string_view testOutput, std::string_view referenceOutput)
     {
@@ -50,7 +50,7 @@ namespace sequoia::testing
 
             if(!acceptable("-", "*") || !acceptable("(", ")"))
               return false;
-            
+
             return acceptable_mismatch(testOutput.substr(endLine), referenceOutput.substr(refEndLine));
           }
         }
@@ -59,7 +59,7 @@ namespace sequoia::testing
       return (iters.first == testOutput.end()) && (iters.second == referenceOutput.end());
     }
   }
-  
+
   [[nodiscard]]
   std::string_view postprocess(std::string_view testOutput, std::string_view referenceOutput)
   {

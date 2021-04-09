@@ -64,9 +64,9 @@ namespace sequoia:: testing
 
   template
   <
-    maths::graph_flavour GraphFlavour,      
+    maths::graph_flavour GraphFlavour,
     class EdgeWeight,
-    class NodeWeight,      
+    class NodeWeight,
     class EdgeWeightCreator,
     class NodeWeightCreator,
     class EdgeStorageTraits,
@@ -76,9 +76,9 @@ namespace sequoia:: testing
   {
     using ESTraits = EdgeStorageTraits;
     using NSTraits = NodeWeightStorageTraits;
-    
+
     using graph_type = graph_type_generator_t<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, ESTraits, NSTraits>;
-    
+
     typename checker_selector<GraphFlavour>::template init_checker<test_graph_init> checker{*this};
     checker.template check_all<graph_type>();
   }

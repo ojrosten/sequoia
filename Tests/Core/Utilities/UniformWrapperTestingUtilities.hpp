@@ -17,7 +17,7 @@ namespace sequoia::testing
   struct detailed_equality_checker<utilities::uniform_wrapper<T>>
   {
     using type = utilities::uniform_wrapper<T>;
-    
+
     template<test_mode Mode>
     static void check(test_logger<Mode>& logger, const type& wrapper, const type& prediction)
     {
@@ -25,7 +25,7 @@ namespace sequoia::testing
     }
   };
 
-  
+
   struct data
   {
     int a;

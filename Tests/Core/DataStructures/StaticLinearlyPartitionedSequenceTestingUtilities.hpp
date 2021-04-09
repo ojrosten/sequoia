@@ -17,7 +17,7 @@ namespace sequoia::testing
   struct detailed_equality_checker<sequoia::data_structures::static_linearly_partitioned_sequence<T, Npartitions, NelementsPerPartition, IndexType>>
   {
     using type = sequoia::data_structures::static_linearly_partitioned_sequence<T, Npartitions, NelementsPerPartition, IndexType>;
-    
+
     template<test_mode Mode>
     static void check(test_logger<Mode>& logger, const type& actual, const type& prediction)
     {
@@ -29,7 +29,7 @@ namespace sequoia::testing
   struct equivalence_checker<sequoia::data_structures::static_linearly_partitioned_sequence<T, Npartitions, NelementsPerPartition, IndexType>>
   {
     using type = sequoia::data_structures::static_linearly_partitioned_sequence<T, Npartitions, NelementsPerPartition, IndexType>;
-    
+
     template<test_mode Mode>
     static void check(test_logger<Mode>& logger, const type& actual, const std::array<std::array<T, NelementsPerPartition>, Npartitions>& prediction)
     {

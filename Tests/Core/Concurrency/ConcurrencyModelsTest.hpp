@@ -14,7 +14,7 @@
 namespace sequoia::testing
 {
   class threading_models_test final : public regular_test
-  {      
+  {
   public:
     using regular_test::regular_test;
 
@@ -42,5 +42,5 @@ namespace sequoia::testing
     const auto& get_data() const { return m_Data; }
   private:
     std::vector<int> m_Data;
-  };  
+  };
 }

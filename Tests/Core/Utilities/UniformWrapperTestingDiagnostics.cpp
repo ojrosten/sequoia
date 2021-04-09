@@ -49,7 +49,7 @@ namespace sequoia::testing
   void uniform_wrapper_false_positive_test::test_aggregate_type()
   {
     using namespace utilities;
-    
+
     uniform_wrapper<data> w{}, v{1, 2.0};
     check_equality(LINE(""), w, v);
   }

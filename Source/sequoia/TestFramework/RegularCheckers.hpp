@@ -12,7 +12,7 @@
 
     Types exhibiting regular semantics are pleasant to reason about. Within this
     library, a type is regular if it exhibits the following:
-    
+
     copy constructor
     move constructor
     copy assignment
@@ -48,7 +48,7 @@ namespace sequoia::testing
   template<test_mode Mode, pseudoregular T>
   void check_semantics(std::string_view description, test_logger<Mode>& logger, const T& x, const T& y)
   {
-    sentinel<Mode> sentry{logger, add_type_info<T>(description).append("\n")};    
+    sentinel<Mode> sentry{logger, add_type_info<T>(description).append("\n")};
     impl::check_semantics(logger, impl::regular_actions<T>{}, x, y, impl::null_mutator{});
   }
 
@@ -57,10 +57,10 @@ namespace sequoia::testing
     requires orderable<T>
   void check_semantics(std::string_view description, test_logger<Mode>& logger, const T& x, const T& y, std::weak_ordering order)
   {
-    sentinel<Mode> sentry{logger, add_type_info<T>(description).append("\n")};    
+    sentinel<Mode> sentry{logger, add_type_info<T>(description).append("\n")};
     impl::check_semantics(logger, impl::regular_actions<T>{order}, x, y, impl::null_mutator{});
   }
-  
+
   /// Precondition: x!=y
   template<test_mode Mode, pseudoregular T, invocable<T&> Mutator>
   void check_semantics(std::string_view description, test_logger<Mode>& logger, const T& x, const T& y, Mutator yMutator)
@@ -68,7 +68,7 @@ namespace sequoia::testing
     sentinel<Mode> sentry{logger, add_type_info<T>(description).append("\n")};
     impl::check_semantics(logger, impl::regular_actions<T>{}, x, y, yMutator);
   }
-  
+
   /// Precondition: x!=y, with values consistent with order
   template<test_mode Mode, pseudoregular T, invocable<T&> Mutator>
     requires orderable<T>

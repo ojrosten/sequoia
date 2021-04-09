@@ -28,12 +28,12 @@ namespace sequoia::utilities
       necessarily use proxies but all of which are desired to have the same semantics in terms
       of getting/setting/mutating the underlying data.
    */
-  
+
   template <class T> class uniform_wrapper
   {
   public:
     using value_type = T;
-      
+
     template<class... Args>
       requires (!resolve_to_copy_v<uniform_wrapper, Args...>)
     constexpr explicit uniform_wrapper(Args&&... args) : m_Type{std::forward<Args>(args)...} {}

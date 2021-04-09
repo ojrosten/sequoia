@@ -8,7 +8,7 @@
 #include "FactoryTestingDiagnostics.hpp"
 
 namespace sequoia::testing
-{  
+{
   [[nodiscard]]
   std::string_view factory_false_positive_test::source_file() const noexcept
   {

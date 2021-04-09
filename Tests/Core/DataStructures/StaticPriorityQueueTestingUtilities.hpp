@@ -12,12 +12,12 @@
 #include "sequoia/Core/DataStructures/StaticPriorityQueue.hpp"
 
 namespace sequoia::testing
-{  
+{
   template<class T, std::size_t MaxDepth, class Compare>
   struct detailed_equality_checker<data_structures::static_priority_queue<T, MaxDepth, Compare>>
   {
     using type = data_structures::static_priority_queue<T, MaxDepth, Compare>;
-    
+
     template<test_mode Mode>
     static void check(test_logger<Mode>& logger, const type& queue, const type& prediction)
     {

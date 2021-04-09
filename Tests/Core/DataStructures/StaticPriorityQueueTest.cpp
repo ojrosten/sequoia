@@ -17,7 +17,7 @@ namespace sequoia::testing
   {
     return __FILE__;
   }
-  
+
   void test_static_priority_queue::run_tests()
   {
     check_depth_0();
@@ -39,7 +39,7 @@ namespace sequoia::testing
     check_exception_thrown<std::logic_error>(LINE("Can't construct non-null null queue"), []() { static_priority_queue<int, 0>{1}; });
 
   }
-  
+
   void test_static_priority_queue::check_depth_1()
   {
     using namespace data_structures;
@@ -56,7 +56,7 @@ namespace sequoia::testing
 
     t.pop();
     check_equality(LINE(""), t, queue_t{});
-    
+
     t.push(1);
     check_equality(LINE(""), t, queue_t{1});
   }
@@ -64,7 +64,7 @@ namespace sequoia::testing
   void test_static_priority_queue::check_depth_2()
   {
     using namespace data_structures;
-    
+
     {
       using queue_t = static_priority_queue<int, 2>;
       constexpr queue_t s{1, 2};
@@ -72,7 +72,7 @@ namespace sequoia::testing
 
       check_equality(LINE(""), s.top(), 2);
       check_equality(LINE(""), t.top(), 4);
-      
+
       check_semantics(LINE("Standard Semantics"), s, t);
 
       check_exception_thrown<std::logic_error>(LINE("Trying to push three elements to queue of depth 2"), [&t]() { t.push(1); });
@@ -83,14 +83,14 @@ namespace sequoia::testing
 
       t.push(5);
       check_equality(LINE(""), t, queue_t{5, 3});
-      
+
     }
 
     {
       struct comp
       {
         constexpr comp(const int mod) : m_mod{mod} {}
-        
+
         constexpr bool operator()(const int a, const int b) noexcept
         {
           return a%m_mod < b%m_mod;
@@ -98,7 +98,7 @@ namespace sequoia::testing
       private:
         int m_mod{};
       };
-      
+
       constexpr static_priority_queue<int, 2, comp> s{{3, 2}, comp{3}}, t{{4, 6}, comp{2}};
       check_equality(LINE(""), s.top(), 2);
 

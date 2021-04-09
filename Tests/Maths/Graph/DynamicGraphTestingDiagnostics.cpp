@@ -16,16 +16,16 @@ namespace sequoia::testing
   }
 
   void test_graph_false_positives::run_tests()
-  {    
+  {
     graph_test_helper<null_weight, null_weight, test_graph_false_positives> helper{*this};
     helper.run_tests();
   }
 
   template
   <
-    maths::graph_flavour GraphFlavour,    
+    maths::graph_flavour GraphFlavour,
     class EdgeWeight,
-    class NodeWeight,    
+    class NodeWeight,
     class EdgeWeightPooling,
     class NodeWeightPooling,
     class EdgeStorageTraits,
@@ -35,7 +35,7 @@ namespace sequoia::testing
   {
     using namespace maths;
     using graph_type = typename graph_type_generator<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>::graph_type;
-    
+
     using edge_init_t = typename graph_type::edge_init_type;
 
     graph_type network{};

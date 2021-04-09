@@ -8,7 +8,7 @@
 #pragma once
 
 /*! \file
-    \brief A collection of functions for formatting test output. 
+    \brief A collection of functions for formatting test output.
  */
 
 #include <string>
@@ -37,15 +37,15 @@ namespace sequoia
   private:
     std::string m_Data;
   };
-  
+
   inline const indentation tab{"\t"};
   inline const indentation no_indent{""};
-  
+
   /// For a non-empty string_view prepends with an indentation; otherwise returns an empty string
   [[nodiscard]]
   std::string indent(std::string_view s, indentation ind);
 
-  /*! \param s1 The target for appending 
+  /*! \param s1 The target for appending
       \param s2 The text to append
       \param indentation The absolute (not relative) indentation of s2
 
@@ -81,7 +81,7 @@ namespace sequoia
       return append_indented(s, strs);
     }
   }
-  
+
   template<class... Ts>
     requires (sizeof...(Ts) > 2)
   std::string& append_indented(std::string& s, Ts... strs)

@@ -44,7 +44,7 @@ namespace sequoia::testing
     {
       lhs.swap(rhs);
     }
-      
+
     std::vector<T, Allocator> x{};
 
     [[nodiscard]]
@@ -126,7 +126,7 @@ namespace sequoia::testing
     {
       lhs.swap(rhs);
     }
-      
+
     std::vector<T, Allocator> x{};
 
     [[nodiscard]]
@@ -208,7 +208,7 @@ namespace sequoia::testing
     {
       lhs.swap(rhs);
     }
-      
+
     std::vector<T, Allocator> x{};
 
     [[nodiscard]]
@@ -290,7 +290,7 @@ namespace sequoia::testing
     {
       lhs.swap(rhs);
     }
-      
+
     std::vector<T, Allocator> x{};
 
     [[nodiscard]]
@@ -372,7 +372,7 @@ namespace sequoia::testing
     {
       lhs.swap(rhs);
     }
-      
+
     std::vector<T, Allocator> x{};
 
     [[nodiscard]]
@@ -454,7 +454,7 @@ namespace sequoia::testing
     {
       lhs.swap(rhs);
     }
-      
+
     std::vector<T, Allocator> x{};
 
     [[nodiscard]]
@@ -536,7 +536,7 @@ namespace sequoia::testing
     {
       lhs.swap(rhs);
     }
-      
+
     std::vector<T, Allocator> x{};
 
     [[nodiscard]]

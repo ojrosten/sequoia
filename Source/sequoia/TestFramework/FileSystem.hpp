@@ -16,7 +16,7 @@
 #include <filesystem>
 
 namespace sequoia::testing
-{  
+{
   inline constexpr std::string_view seqpat{".seqpat"};
   const static auto working_path_v{std::filesystem::current_path().lexically_normal()};
 
@@ -37,7 +37,7 @@ namespace sequoia::testing
 
   [[nodiscard]]
   std::filesystem::path project_template_path(std::filesystem::path projectRoot);
-  
+
   [[nodiscard]]
   std::filesystem::path recovery_path(std::filesystem::path outputDir);
 
@@ -49,31 +49,31 @@ namespace sequoia::testing
 
   [[nodiscard]]
   std::filesystem::path test_summaries_path(std::filesystem::path outputDir);
-  
+
 
   template<class Pred>
     requires invocable<Pred, std::filesystem::path>
   void throw_if(const std::filesystem::path& p, std::string_view message, Pred pred)
   {
     if(pred(p))
-    {      
+    {
       throw std::runtime_error{p.generic_string().append(" ").append(message)};
     }
   }
 
   [[nodiscard]]
   std::string report_file_issue(const std::filesystem::path& file, std::string_view description);
- 
+
   [[nodiscard]]
   std::string report_failed_read(const std::filesystem::path& file);
- 
+
   [[nodiscard]]
   std::string report_failed_write(const std::filesystem::path& file);
 
-  void throw_unless_exists(const std::filesystem::path& p, std::string_view message="");  
+  void throw_unless_exists(const std::filesystem::path& p, std::string_view message="");
 
   void throw_unless_directory(const std::filesystem::path& p, std::string_view message="");
-  
+
   void throw_unless_regular_file(const std::filesystem::path& p, std::string_view message="");
 
 

@@ -21,11 +21,11 @@ namespace sequoia::data_structures
       \brief A stack suitable for constexpr contexts.
 
    */
-  
+
   template<class T, std::size_t MaxDepth>
   class static_stack
   {
-  public:    
+  public:
     constexpr static_stack(std::initializer_list<T> l)
     : m_Stack{utilities::to_array<T, MaxDepth>(l)}
       , m_End{l.size()}
@@ -38,12 +38,12 @@ namespace sequoia::data_structures
 
     constexpr static_stack& operator=(const static_stack&)    = default;
     constexpr static_stack& operator=(static_stack&) noexcept = default;
-    
+
     constexpr void push(const T& val)
     {
       if(m_End == MaxDepth)
         throw std::logic_error("Attempting to exceed max stack depth");
-      
+
       m_Stack[m_End] = val;
       ++m_End;
     }

@@ -22,6 +22,6 @@ namespace sequoia::testing
     void run_tests() final;
 
     void test_linear_sequence();
-    void test_static_linear_sequence();    
+    void test_static_linear_sequence();
   };
 }

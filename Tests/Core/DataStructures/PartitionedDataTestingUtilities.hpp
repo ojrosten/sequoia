@@ -12,14 +12,14 @@
 #include "sequoia/Core/DataStructures/PartitionedData.hpp"
 
 namespace sequoia::testing
-{  
+{
   namespace impl
   {
     template<test_mode Mode, class PartitionedData>
     void check_details(test_logger<Mode>& logger, const PartitionedData& data, const PartitionedData& prediction)
     {
       check_equality("Emptiness incorrect", logger, data.empty(), prediction.empty());
-      
+
       check_equality("Size incorrect", logger, data.size(), prediction.size());
 
       if(check_equality("Number of partitions incorrect", logger, data.num_partitions(), prediction.num_partitions()))
@@ -34,7 +34,7 @@ namespace sequoia::testing
               check_equality(append_lines(message,"[] (const)"), logger, data[i][j], prediction[i][j]);
             }
           }
-          
+
           check_range(append_lines(message, "r_iterator (const)"), logger, data.rbegin_partition(i), data.rend_partition(i), prediction.rbegin_partition(i), prediction.rend_partition(i));
           check_range(append_lines(message, "c_iterator"), logger, data.cbegin_partition(i), data.cend_partition(i), prediction.cbegin_partition(i), prediction.cend_partition(i));
           check_range(append_lines(message, "cr_iterator"), logger, data.crbegin_partition(i), data.crend_partition(i), prediction.crbegin_partition(i), prediction.crend_partition(i));
@@ -48,7 +48,7 @@ namespace sequoia::testing
               check_equality(append_lines(message,"[]"), logger, d[i][j], r[i][j]);
             }
           }
-          
+
           check_range(append_lines(message, "r_iterator"), logger, d.rbegin_partition(i), d.rend_partition(i), r.rbegin_partition(i), r.rend_partition(i));
         }
       }
@@ -74,12 +74,12 @@ namespace sequoia::testing
       }
     }
   }
-  
+
   template<class T, class Handler, class Traits>
   struct detailed_equality_checker<data_structures::bucketed_storage<T, Handler, Traits>>
   {
     using type = data_structures::bucketed_storage<T, Handler, Traits>;
-    
+
     template<test_mode Mode>
     static void check(test_logger<Mode>& logger, const type& data, const type& prediction)
     {
@@ -91,7 +91,7 @@ namespace sequoia::testing
   struct equivalence_checker<data_structures::bucketed_storage<T, Handler, Traits>>
   {
     using type = data_structures::bucketed_storage<T, Handler, Traits>;
-    
+
     template<test_mode Mode>
     static void check(test_logger<Mode>& logger, const type& data, std::initializer_list<std::initializer_list<T>> prediction)
     {
@@ -103,7 +103,7 @@ namespace sequoia::testing
   struct detailed_equality_checker<data_structures::partitioned_sequence<T, Handler, Traits>>
   {
     using type = data_structures::partitioned_sequence<T, Handler, Traits>;
-    
+
     template<test_mode Mode>
     static void check(test_logger<Mode>& logger, const type& data, const type& prediction)
     {
@@ -116,7 +116,7 @@ namespace sequoia::testing
   {
     using type = data_structures::partitioned_sequence<T, Handler, Traits>;
     using equivalent_type = std::initializer_list<std::initializer_list<T>>;
-    
+
     template<test_mode Mode>
     static void check(test_logger<Mode>& logger, const type& data, equivalent_type prediction)
     {
@@ -128,7 +128,7 @@ namespace sequoia::testing
   struct detailed_equality_checker<data_structures::static_partitioned_sequence<T, Npartitions, Nelements, IndexType>>
   {
     using type = data_structures::static_partitioned_sequence<T, Npartitions, Nelements, IndexType>;
-    
+
     template<test_mode Mode>
     static void check(test_logger<Mode>& logger, const type& data, const type& prediction)
     {
@@ -140,7 +140,7 @@ namespace sequoia::testing
   struct equivalence_checker<data_structures::static_partitioned_sequence<T, Npartitions, Nelements, IndexType>>
   {
     using type = data_structures::static_partitioned_sequence<T, Npartitions, Nelements, IndexType>;
-    
+
     template<test_mode Mode>
     static void check(test_logger<Mode>& logger, const type& data, std::initializer_list<std::initializer_list<T>> prediction)
     {

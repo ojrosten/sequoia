@@ -15,10 +15,10 @@ namespace sequoia::testing
   struct serializer<utilities::iterator<Iterator, DereferencePolicy>>
   {
     using iter_type = utilities::iterator<Iterator, DereferencePolicy>;
-    
+
     [[nodiscard]]
     static std::string make(const iter_type iter)
-    {        
+    {
       std::ostringstream os;
       os  << &*iter.base_iterator();
       return os.str();

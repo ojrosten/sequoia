@@ -12,11 +12,11 @@ namespace sequoia::testing
   class test_runner_test_creation final : public free_test
   {
   public:
-    using free_test::free_test;    
+    using free_test::free_test;
 
     [[nodiscard]]
     std::string_view source_file() const noexcept final;
-  private:    
+  private:
     void run_tests() final;
 
     void test_template_data_generation();

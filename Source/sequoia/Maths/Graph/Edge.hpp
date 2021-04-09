@@ -35,26 +35,26 @@ namespace sequoia
   {
     template<class> struct independent;
   }
-  
+
   namespace maths
   {
     /*! \class edge_base
         \brief The base class of all edges.
-        
+
         This class is designed for inheritance and has protected destructor
         and assignment operators.
 
         The private data comprises a single member of IndexType which is the
         'target node' to which the edge points.
     */
-    
+
     template<integral IndexType>
     class edge_base
-    {   
+    {
     public:
       using index_type = IndexType;
-      
-      explicit constexpr edge_base(const index_type target) noexcept : m_Target{target} {}      
+
+      explicit constexpr edge_base(const index_type target) noexcept : m_Target{target} {}
       constexpr edge_base(const edge_base&) noexcept = default;
       constexpr edge_base(edge_base&&)      noexcept = default;
 
@@ -74,18 +74,18 @@ namespace sequoia
       {
         return !(lhs == rhs);
       }
-    protected:      
+    protected:
       ~edge_base() = default;
-      
+
       constexpr edge_base& operator=(const edge_base&) noexcept = default;
-      constexpr edge_base& operator=(edge_base&&)      noexcept = default;   
+      constexpr edge_base& operator=(edge_base&&)      noexcept = default;
     private:
       IndexType m_Target;
     };
 
     /*! \class weighting
         \brief A class to store non-trivial edge weights.
-        
+
         This class is designed to wrap an edge but in a manner which is flexible
         enough to support the sharing of weights between edges. The latter is used
         for undirected graphs where two partial edges representing the pair of
@@ -106,7 +106,7 @@ namespace sequoia
     public:
       using weight_type = Weight;
       using weight_proxy_type = WeightProxy;
-      
+
       template<class Arg, class... Args>
       constexpr void weight(Arg&& arg, Args&&... args)
       {
@@ -138,7 +138,7 @@ namespace sequoia
       }
     protected:
       ~weighting() = default;
-      
+
       template<class... Args>
         requires (!resolve_to_copy_v<weighting, Args...> && !is_base_of_head_v<weighting, Args...>)
       constexpr explicit weighting(Args&&... args) : m_Weight{wrapped_weight::make(std::forward<Args>(args)...)}
@@ -148,22 +148,22 @@ namespace sequoia
       {
       }
 
-      constexpr weighting(const weighting& in, const IndexType) : m_Weight{in.m_Weight}        
+      constexpr weighting(const weighting& in, const IndexType) : m_Weight{in.m_Weight}
       {
       }
 
       constexpr weighting(weighting&&) noexcept = default;
 
-      constexpr weighting& operator=(const weighting& in) 
+      constexpr weighting& operator=(const weighting& in)
       {
         if(&in != this) m_Weight = wrapped_weight::make(wrapped_weight::get(in.m_Weight));
         return *this;
       }
 
-      constexpr weighting& operator=(weighting&&) noexcept = default;        
+      constexpr weighting& operator=(weighting&&) noexcept = default;
     private:
       using wrapped_weight = WeightHandler<WeightProxy>;
-      typename wrapped_weight::handle_type m_Weight; 
+      typename wrapped_weight::handle_type m_Weight;
     };
 
     /*! \class weighting<Weight, WeightHandler, WeightProxy, IndexType, true>
@@ -186,28 +186,28 @@ namespace sequoia
 
       [[nodiscard]]
       friend constexpr bool operator==(const weighting&, const weighting&) noexcept = default;
-      
+
       [[nodiscard]]
       friend constexpr bool operator!=(const weighting&, const weighting&) noexcept = default;
     protected:
-      constexpr weighting() = default;      
+      constexpr weighting() = default;
       ~weighting() = default;
 
       constexpr weighting(const weighting&)                  noexcept = default;
       constexpr weighting(weighting&&)                       noexcept = default;
       constexpr weighting& operator=(const weighting&)       noexcept = default;
-      constexpr weighting& operator=(weighting&&)            noexcept = default;      
+      constexpr weighting& operator=(weighting&&)            noexcept = default;
       constexpr weighting(const weighting&, const IndexType) noexcept {}
-      
+
     };
-    
+
     //===================================Partial Edge Base===================================//
 
     /*! \class partial_edge_base
         \brief Combines the edge_base and weighting class
 
      */
-    
+
     template
     <
       class Weight,
@@ -228,7 +228,7 @@ namespace sequoia
         : edge_base<IndexType>{target}
         , weighting<Weight, WeightHandler, WeightProxy, IndexType>{std::forward<Args>(args)...}
       {}
-      
+
       constexpr partial_edge_base(const index_type target, const partial_edge_base& in)
         : edge_base<IndexType>{target}
         , weighting<Weight, WeightHandler, WeightProxy, IndexType>{in, target}
@@ -242,17 +242,17 @@ namespace sequoia
       friend constexpr bool operator==(const partial_edge_base& lhs, const partial_edge_base& rhs) noexcept = default;
 
       friend constexpr bool operator!=(const partial_edge_base& lhs, const partial_edge_base& rhs) noexcept = default;
-    protected:      
+    protected:
       ~partial_edge_base() = default;
 
       constexpr partial_edge_base& operator=(const partial_edge_base& in)  = default;
-      constexpr partial_edge_base& operator=(partial_edge_base&&) noexcept = default;      
+      constexpr partial_edge_base& operator=(partial_edge_base&&) noexcept = default;
     };
 
     //===================================Helper Enum===================================//
 
     enum class edge_flavour{ partial, partial_embedded, full, full_embedded};
-    
+
     //===================================Partial Edge===================================//
 
     /*! \class partial_edge
@@ -280,7 +280,7 @@ namespace sequoia
         \brief A new base class which aggregates a partial_edge_base and an auxiliary index.
 
      */
-    
+
     template
     <
       class Weight,
@@ -316,17 +316,17 @@ namespace sequoia
 
       [[nodiscard]]
       friend constexpr bool operator!=(const decorated_edge_base& lhs, const decorated_edge_base& rhs) noexcept = default;
-    protected:      
+    protected:
       ~decorated_edge_base() = default;
 
       [[nodiscard]]
       constexpr index_type auxiliary_index() const noexcept { return m_AuxiliaryIndex; }
-      
+
       constexpr void auxiliary_index(const index_type auxIndex) noexcept { m_AuxiliaryIndex = auxIndex; }
     private:
       IndexType m_AuxiliaryIndex;
     };
-    
+
     //===================================Embedded Partial Edge===================================//
 
     /*! \class embedded_partial_edge
@@ -334,7 +334,7 @@ namespace sequoia
                which the edge is embedded.
 
      */
-    
+
     template
     <
       class Weight,
@@ -357,16 +357,16 @@ namespace sequoia
     };
 
     //===================================Full Edge===================================//
-    
+
     template<bool Inverted> struct inversion_constant : public std::bool_constant<Inverted> {};
 
     template<bool Inverted> constexpr bool inversion_v{inversion_constant<Inverted>::value};
 
     /*! \class edge
         \brief Stores the source node as well as the target node and an optional weight.
-      
+
      */
-    
+
     template
     <
       class Weight,
@@ -375,7 +375,7 @@ namespace sequoia
     >
     class edge : public decorated_edge_base<Weight, ownership::independent, WeightProxy, IndexType>
     {
-    public:      
+    public:
       constexpr static edge_flavour flavour{edge_flavour::full};
       using weight_type = typename decorated_edge_base<Weight, ownership::independent, WeightProxy, IndexType>::weight_type;
       using index_type = typename decorated_edge_base<Weight, ownership::independent, WeightProxy, IndexType>::index_type;
@@ -412,7 +412,7 @@ namespace sequoia
       {
         return this->auxiliary_index() < npos ? this->auxiliary_index() : this->target_node();
       }
-      
+
       constexpr void source_node(const index_type source) noexcept
       {
         if(!inverted()) this->auxiliary_index(source);
@@ -432,7 +432,7 @@ namespace sequoia
                which the edge is embedded.
 
      */
-    
+
     template
     <
       class Weight,
@@ -473,7 +473,7 @@ namespace sequoia
         , m_HostIndex{in.m_HostIndex}
       {
       }
-      
+
       constexpr embedded_edge(const embedded_edge& in)             = default;
       constexpr embedded_edge(embedded_edge&& in)                  = default;
       constexpr embedded_edge& operator=(const embedded_edge& in)  = default;
@@ -485,7 +485,7 @@ namespace sequoia
 
       [[nodiscard]]
       constexpr index_type source_node() const noexcept { return !inverted() ? m_HostIndex : this->target_node(); }
-      
+
       constexpr void source_node(const index_type source) noexcept
       {
         if(!inverted()) m_HostIndex = source;
@@ -511,7 +511,7 @@ namespace sequoia
       }
     private:
       static constexpr auto npos = std::numeric_limits<IndexType>::max();
-      
+
       IndexType m_HostIndex;
     };
   }

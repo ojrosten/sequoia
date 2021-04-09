@@ -54,9 +54,9 @@ namespace sequoia::testing
 
     return std::string{emph}.append(s).append(emph);
   }
-  
+
   [[nodiscard]]
-  std::string exception_message(std::string_view tag, const std::filesystem::path& filename, std::string_view currentMessage, std::string_view exceptionMessage, const bool exceptionsDetected)  
+  std::string exception_message(std::string_view tag, const std::filesystem::path& filename, std::string_view currentMessage, std::string_view exceptionMessage, const bool exceptionsDetected)
   {
     auto mess{append_lines(std::string{"Error -- "}.append(tag).append(" Exception:"), exceptionMessage).append("\n")};
 

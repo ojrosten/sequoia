@@ -15,7 +15,7 @@ namespace sequoia::testing
   {
   public:
     using free_test::free_test;
-    
+
     [[nodiscard]]
     std::string_view source_file() const noexcept final;
   private:

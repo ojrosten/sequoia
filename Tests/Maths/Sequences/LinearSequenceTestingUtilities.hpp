@@ -17,10 +17,10 @@ namespace sequoia::testing
   struct detailed_equality_checker<maths::linear_sequence<T, Index>>
   {
     using type = maths::linear_sequence<T, Index>;
-    
+
     template<test_mode Mode>
     static void check(test_logger<Mode>& logger, const type& sequence, const type& prediction)
-    {      
+    {
       check_equality("Start", logger, sequence.start(), prediction.start());
       check_equality("Step", logger, sequence.step(), prediction.step());
     }
@@ -30,10 +30,10 @@ namespace sequoia::testing
   struct equivalence_checker<maths::linear_sequence<T, Index>>
   {
     using type = maths::linear_sequence<T, Index>;
-    
+
     template<test_mode Mode>
     static void check(test_logger<Mode>& logger, const type& sequence, const T& start, const T& step)
-    {      
+    {
       check_equality("Start wrong", logger, sequence.start(), start);
       check_equality("Step wrong", logger, sequence.step(), step);
     }

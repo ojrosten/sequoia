@@ -15,7 +15,7 @@ namespace sequoia::testing
   template
   <
     class T,
-    class Handler,    
+    class Handler,
     bool PropagateCopy=true,
     bool PropagateMove=true,
     bool PropagateSwap=true
@@ -36,7 +36,7 @@ namespace sequoia::testing
 
     template<class S>
     using container_type = std::vector<S, allocator_template<S>>;
-    
+
     template<class S>
     using buckets_type = std::vector<container_type<S>, allocator_type<container_type<S>>>;
   };
@@ -62,9 +62,9 @@ namespace sequoia::testing
           std::greater<partition_index_type>,
           std::vector<partition_index_type, shared_counting_allocator<partition_index_type, PropagateCopy, PropagateMove, PropagateSwap>>
         >;
-    
+
     using partitions_allocator_type = typename partitions_type::allocator_type;
-      
+
     template<class S> using container_type = std::vector<S, shared_counting_allocator<S, PropagateCopy, PropagateMove, PropagateSwap>>;
   };
 

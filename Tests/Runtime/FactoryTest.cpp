@@ -10,7 +10,7 @@
 #include <complex>
 
 namespace sequoia::testing
-{  
+{
   [[nodiscard]]
   std::string_view factory_test::source_file() const noexcept
   {
@@ -30,7 +30,7 @@ namespace sequoia::testing
       s << val.i;
       return s;
     }
-    
+
     int i{};
   };
 
@@ -79,7 +79,7 @@ namespace sequoia::testing
 
       check_exception_thrown<std::logic_error>(LINE("Duplicated names"),
                                                [](){ factory_type f{{"baz", "foo", "baz", "huh"}}; });
-      
+
       factory_type f{{"vec", "int", "complex", "double"}}, g{{"baz", "foo", "bar", "huh"}};
 
       check_equivalence(LINE(""), f,

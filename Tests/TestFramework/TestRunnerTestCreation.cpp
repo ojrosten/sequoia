@@ -63,7 +63,7 @@ namespace sequoia::testing
     auto working{
       [&mat{working_materials()}]() { return mat / "FakeProject"; }
     };
-    
+
     const auto testMain{working().append("TestSandbox").append("TestSandbox.cpp")};
     const auto includeTarget{working().append("TestShared").append("SharedIncludes.hpp")};
 

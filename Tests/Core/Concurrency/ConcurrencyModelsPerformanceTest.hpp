@@ -12,7 +12,7 @@
 namespace sequoia::testing
 {
   class threading_models_performance_test final : public performance_test
-  {      
+  {
   public:
     using performance_test::performance_test;
 
@@ -28,15 +28,15 @@ namespace sequoia::testing
     void waiting_task(const std::size_t nTasks, const std::chrono::milliseconds millisecs, Args&&... args);
 
     template<class ThreadModel, class... Args>
-    std::vector<int> waiting_task_return(const std::size_t nTasks, const std::chrono::milliseconds millisecs, Args&&... args);    
+    std::vector<int> waiting_task_return(const std::size_t nTasks, const std::chrono::milliseconds millisecs, Args&&... args);
   };
 
   class wait
   {
     std::chrono::milliseconds m_Wait;
-  public:      
+  public:
     wait(const std::chrono::milliseconds millisecs) : m_Wait{millisecs} {}
-      
+
     void operator()() const
     {
       std::this_thread::sleep_for(m_Wait);

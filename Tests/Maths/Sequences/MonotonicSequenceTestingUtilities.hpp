@@ -19,7 +19,7 @@ namespace sequoia::testing
     void check(test_logger<Mode>& logger, const T& sequence, const T& prediction)
     {
       check_equality("Emptiness incorrect", logger, sequence.empty(), prediction.empty());
-      
+
       if(check_equality("Size incorrect", logger, sequence.size(), prediction.size()))
       {
         if(!prediction.empty())
@@ -27,28 +27,28 @@ namespace sequoia::testing
           check_equality("Back element wrong", logger, sequence.back(), prediction.back());
           check_equality("Front element wrong", logger, sequence.front(), prediction.front());
         }
-       
+
         auto i_prediction{prediction.begin()}, i{sequence.begin()};
         auto ci_prediction{prediction.cbegin()}, ci{sequence.cbegin()};
         auto ri_prediction{prediction.rbegin()}, ri{sequence.rbegin()};
         auto cri_prediction{prediction.crbegin()}, cri{sequence.crbegin()};
 
         for(;i_prediction != prediction.end(); ++i_prediction, ++i, ++ci_prediction, ++ci, ++ri_prediction, ++ri, ++cri_prediction, ++cri)
-        {          
+        {
           using std::distance;
           const auto d{distance(prediction.begin(), i_prediction)};
           const auto mess{std::string{" for index "}.append(std::to_string(d))};
-          
+
           check_equality(std::string{"Dereferenced iterator wrong"}.append(mess), logger, *i, *i_prediction);
           check_equality(std::string{"Dereferenced citerator wrong"}.append(mess), logger, *ci, *ci_prediction);
 
-          check_equality(std::string{"operator[] wrong"}.append(mess), logger, sequence[d], prediction[d]);  
+          check_equality(std::string{"operator[] wrong"}.append(mess), logger, sequence[d], prediction[d]);
 
           const auto shift{static_cast<int64_t>(prediction.size()) - d - 1};
           check_equality(std::string{"Dereferenced riterator wrong"}.append(mess), logger, *(ri + shift), *(ri_prediction + shift));
           check_equality(std::string{"Dereferenced criterator wrong"}.append(mess), logger, *(cri + shift), *(cri_prediction + shift));
         }
-          
+
         testing::check("iterator location wrong", logger, i_prediction == prediction.end());
         testing::check("citerator location wrong", logger, ci_prediction == prediction.cend());
         testing::check("riterator location wrong", logger, ri_prediction == prediction.rend());
@@ -56,12 +56,12 @@ namespace sequoia::testing
       }
     }
   }
-  
+
   template<class T, class C, class Compare>
   struct detailed_equality_checker<maths::monotonic_sequence<T, C, Compare>>
   {
     using type = maths::monotonic_sequence<T, C, Compare>;
-    
+
     template<test_mode Mode>
     static void check(test_logger<Mode>& logger, const type& sequence, const type& prediction)
     {
@@ -73,11 +73,11 @@ namespace sequoia::testing
   struct equivalence_checker<maths::monotonic_sequence<T, C, Compare>>
   {
     using type = maths::monotonic_sequence<T, C, Compare>;
-    
+
     template<test_mode Mode>
     static void check(test_logger<Mode>& logger, const type& sequence, std::initializer_list<T> prediction)
     {
-      check_range("", logger, sequence.begin(), sequence.end(), prediction.begin(), prediction.end());            
+      check_range("", logger, sequence.begin(), sequence.end(), prediction.begin(), prediction.end());
     }
   };
 
@@ -85,7 +85,7 @@ namespace sequoia::testing
   struct detailed_equality_checker<maths::static_monotonic_sequence<T, N, Compare>>
   {
     using type = maths::static_monotonic_sequence<T, N, Compare>;
-    
+
     template<test_mode Mode>
     static void check(test_logger<Mode>& logger, const type& sequence, const type& prediction)
     {
@@ -97,11 +97,11 @@ namespace sequoia::testing
   struct equivalence_checker<maths::static_monotonic_sequence<T, N, Compare>>
   {
     using type = maths::static_monotonic_sequence<T, N, Compare>;
-    
+
     template<test_mode Mode>
     static void check(test_logger<Mode>& logger, const type& sequence, std::initializer_list<T> prediction)
     {
-      check_range("", logger, sequence.begin(), sequence.end(), prediction.begin(), prediction.end());            
+      check_range("", logger, sequence.begin(), sequence.end(), prediction.begin(), prediction.end());
     }
   };
 }

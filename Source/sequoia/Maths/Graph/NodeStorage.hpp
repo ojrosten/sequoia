@@ -169,7 +169,7 @@ namespace sequoia::maths::graph_impl
     constexpr node_storage(std::initializer_list<weight_type> weights, const Allocator& allocator)
       : m_NodeWeights(init(weights), allocator)
     {}
-    
+
     constexpr node_storage(const node_storage& in)
       : node_storage{direct_copy(), in}
     {}
@@ -178,14 +178,14 @@ namespace sequoia::maths::graph_impl
     constexpr node_storage(const node_storage& in, const Allocator& allocator)
       : node_storage{direct_copy(), in, allocator}
     {}
-      
+
     constexpr node_storage(node_storage&&) noexcept = default;
 
     template<alloc Allocator>
     constexpr node_storage(node_storage&& s, const Allocator& allocator) noexcept
       : m_NodeWeights{std::move(s.m_NodeWeights), allocator}
     {}
-        
+
     ~node_storage() = default;
 
     constexpr node_storage& operator=(const node_storage& in)
@@ -202,7 +202,7 @@ namespace sequoia::maths::graph_impl
         };
         sequoia::impl::assignment_helper::assign(*this, in, allocGetter);
       }
- 
+
       return *this;
     }
 
@@ -251,7 +251,7 @@ namespace sequoia::maths::graph_impl
     {
       m_NodeWeights.shrink_to_fit();
     }
-        
+
     template<class... Args>
     void add_node(Args&&... args)
     {
@@ -285,13 +285,13 @@ namespace sequoia::maths::graph_impl
 
       return const_iterator{m_NodeWeights.erase(first.base_iterator(), last.base_iterator())};
     }
-        
+
     void clear() noexcept
     {
       m_NodeWeights.clear();
     }
-      
-  private:    
+
+  private:
     using StaticType = std::bool_constant<Traits::static_storage_v>;
 
     // copy meta
@@ -299,10 +299,10 @@ namespace sequoia::maths::graph_impl
     struct copy_constant : std::bool_constant<Direct>
     {
     };
-      
+
     using direct_copy_type   = copy_constant<true>;
     using indirect_copy_type = copy_constant<false>;
-      
+
     [[nodiscard]]
     static constexpr auto direct_copy() noexcept
     {
@@ -331,7 +331,7 @@ namespace sequoia::maths::graph_impl
     constexpr node_storage(std::false_type, std::initializer_list<weight_type> weights)
       : m_NodeWeights{init(weights)}
     {}
-  
+
     constexpr node_storage(direct_copy_type, const node_storage& in)
       : m_NodeWeights{in.m_NodeWeights}
     {}
@@ -353,7 +353,7 @@ namespace sequoia::maths::graph_impl
     {
       clone(in.m_NodeWeights);
     }
-  
+
     // helper methods
 
     [[nodiscard]]
@@ -394,7 +394,7 @@ namespace sequoia::maths::graph_impl
     {
       if(weights.size() != Traits::num_elements_v)
         throw std::logic_error("Initializer list of wrong size");
-          
+
       constexpr auto N{Traits::num_elements_v};
       return utilities::to_array<weight_proxy_type, N>(weights, [](const auto& weight) {
           return weight_proxy_type{weight}; });
@@ -429,7 +429,7 @@ namespace sequoia::maths::graph_impl
     using weight_proxy_type = typename WeightMaker::proxy;
     using weight_type       = typename weight_proxy_type::value_type;
     using size_type         = std::size_t;
-    
+
     constexpr node_storage() noexcept = default;
 
     [[nodiscard]]
@@ -440,7 +440,7 @@ namespace sequoia::maths::graph_impl
   protected:
     constexpr node_storage(const node_storage&) noexcept = default;
     constexpr node_storage(node_storage&&)      noexcept = default;
-        
+
     ~node_storage() = default;
 
     constexpr node_storage& operator=(const node_storage&) noexcept = default;

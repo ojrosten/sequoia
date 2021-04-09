@@ -22,7 +22,7 @@ namespace sequoia::impl
   template<class Sequence, class Next>
   struct append_to_sequence;
 
-  // X... can either be empty or contain a single element equal to the index desired 
+  // X... can either be empty or contain a single element equal to the index desired
   template<std::size_t... M, std::size_t... X>
   struct append_to_sequence<std::index_sequence<M...>, std::index_sequence<X...>>
   {
@@ -76,7 +76,7 @@ namespace sequoia
     using ret = R;
     using arg = T;
   };
-  
+
   template<class R, class L, class T>
   struct function_signature<R(L::*) (T) const>
   {

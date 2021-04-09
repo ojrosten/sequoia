@@ -8,7 +8,7 @@
 #pragma once
 
 /*! \file
-    \brief A collection of functions for formatting test output. 
+    \brief A collection of functions for formatting test output.
  */
 
 #include "sequoia/TestFramework/CoreInfrastructure.hpp"
@@ -171,7 +171,7 @@ namespace sequoia::testing
 
   /*! \brief Specialize this struct template to customize the way in which type info is generated for a given class.
       This is particularly useful for class templates where standard de-mangling may be hard to read!
-      
+
       \anchor type_demangler_primary
    */
 
@@ -185,7 +185,7 @@ namespace sequoia::testing
     }
   };
 
-  
+
   /// Demangles T; if U... is not empty, appends each demangled element of U on a new line
   template<class T, class... U>
   struct type_list_demangler

@@ -14,7 +14,7 @@ namespace sequoia::testing
   {
     return __FILE__;
   }
-  
+
   void commandline_arguments_test::run_tests()
   {
     test_flat_parsing();
@@ -27,14 +27,14 @@ namespace sequoia::testing
   {
     using namespace sequoia::parsing::commandline;
     using fo = function_object;
-    
+
     {
       check_weak_equivalence(LINE(""), parse(0, nullptr, {}), outcome{});
     }
 
     {
       commandline_arguments a{"foo", "--async"};
-      
+
       check_weak_equivalence(LINE("Early"), parse(a.size(), a.get(), { {"--async", {}, {}, fo{}} }), outcome{"foo", {{fo{}, nullptr, {}}}});
       check_weak_equivalence(LINE("Late"), parse(a.size(), a.get(), { {"--async", {}, {}, nullptr, {}, fo{}} }), outcome{"foo", {{nullptr, fo{}, {}}}});
       check_weak_equivalence(LINE("Both"), parse(a.size(), a.get(), { {"--async", {}, {}, fo{"x"}, {}, fo{"y"}} }), outcome{"foo", {{fo{"x"}, fo{"y"}, {}}}});
@@ -42,19 +42,19 @@ namespace sequoia::testing
 
     {
       commandline_arguments a{"bar", "-a"};
-      
+
       check_weak_equivalence(LINE(""), parse(a.size(), a.get(), { {"--async", {"-a"}, {}, fo{}} }), outcome{"bar", {{fo{}, nullptr, {}}}});
     }
 
     {
       commandline_arguments a{"foo", "-a"};
-      
+
       check_weak_equivalence(LINE(""), parse(a.size(), a.get(), { {"--async", {"-as", "-a"}, {}, fo{}} }), outcome{"foo", {{fo{}, nullptr, {}}}});
     }
 
     {
       commandline_arguments a{"foo", "--asyng"};
-      
+
       check_exception_thrown<std::runtime_error>(LINE("Unexpected argument"), [&a](){
           return parse(a.size(), a.get(), { {"--async", {}, {}, fo{}} });
         });
@@ -62,7 +62,7 @@ namespace sequoia::testing
 
     {
       commandline_arguments a{"foo", "-a"};
-      
+
       check_exception_thrown<std::runtime_error>(LINE("Unexpected argument"), [&a](){
           return parse(a.size(), a.get(), { {"--async", {"-as"}, {}, fo{}} });
         });
@@ -70,7 +70,7 @@ namespace sequoia::testing
 
     {
       commandline_arguments a{"foo", "-av"};
-      
+
       check_weak_equivalence(LINE(""),
                              parse(a.size(), a.get(), { {"--async", {"-a"}, {}, fo{}},
                                                       {"--verbose", {"-v"}, {}, fo{}} }),
@@ -79,7 +79,7 @@ namespace sequoia::testing
 
     {
       commandline_arguments a{"foo", "-a-v"};
-      
+
       check_weak_equivalence(LINE(""),
                              parse(a.size(), a.get(), { {"--async", {"-a"}, {}, fo{}},
                                                       {"--verbose", {"-v"}, {}, fo{}} }),
@@ -88,7 +88,7 @@ namespace sequoia::testing
 
     {
       commandline_arguments a{"foo", "-av", "-p"};
-      
+
       check_weak_equivalence(LINE(""),
                              parse(a.size(), a.get(), { {"--async",   {"-a"}, {}, fo{}},
                                                       {"--verbose", {"-v"}, {}, fo{}},
@@ -98,7 +98,7 @@ namespace sequoia::testing
 
     {
       commandline_arguments a{"foo", "-ac"};
-      
+
       check_exception_thrown<std::runtime_error>(LINE("Unexpected argument"), [&a](){
           return parse(a.size(), a.get(), { {"--async", {"-a"}, {}, fo{}} });
         });
@@ -106,13 +106,13 @@ namespace sequoia::testing
 
     {
       commandline_arguments a{"foo", "test", "case"};
-      
+
       check_weak_equivalence(LINE(""), parse(a.size(), a.get(), { {"test", {}, {"case"}, fo{}} }), outcome{"foo", {{fo{}, nullptr, {"case"}}}});
     }
 
     {
       commandline_arguments a{"foo", "t", "case"};
-      
+
       check_weak_equivalence(LINE(""), parse(a.size(), a.get(), { {"test", {"t"}, {"case"}, fo{}} }), outcome{"foo", {{fo{}, nullptr, {"case"}}}});
     }
 
@@ -127,7 +127,7 @@ namespace sequoia::testing
 
     {
       commandline_arguments a{"foo", "create", "class", "dir"};
-      
+
       check_weak_equivalence(LINE(""),
                              parse(a.size(), a.get(), { {"create", {}, {"class_name", "directory"}, fo{}} }),
                              outcome{"foo", {{fo{}, nullptr, {"class", "dir"}}}});
@@ -135,7 +135,7 @@ namespace sequoia::testing
 
     {
       commandline_arguments a{"foo", "--async", "create", "class", "dir"};
-      
+
       check_weak_equivalence(LINE(""),
                              parse(a.size(), a.get(), { {"create",  {}, {"class_name", "directory"}, fo{}},
                                                         {"--async", {}, {}, fo{}} }),
@@ -144,7 +144,7 @@ namespace sequoia::testing
 
     {
       commandline_arguments a{"foo", "--async", "create", "class", "dir"};
-      
+
       check_weak_equivalence(LINE(""),
                              argument_parser(a.size(), a.get(), { {"create",  {}, {"class_name", "directory"}, fo{}},
                                                         {"--async", {}, {}, fo{}} }),
@@ -159,14 +159,14 @@ namespace sequoia::testing
 
     {
       commandline_arguments a{"foo", "--help"};
-      
+
       check_weak_equivalence(LINE("Single option help"), parse(a.size(), a.get(), { {"--async", {}, {}, fo{}} }),
                              outcome{"foo", {}, "--async\n"});
     }
 
     {
       commandline_arguments a{"foo", "--help"};
-      
+
       check_weak_equivalence(LINE("Single option alias help"),
                              parse(a.size(), a.get(), { {"--async", {"-a"}, {}, fo{}} }),
                              outcome{"foo", {}, "--async | -a |\n"});
@@ -174,7 +174,7 @@ namespace sequoia::testing
 
     {
       commandline_arguments a{"foo", "--help"};
-      
+
       check_weak_equivalence(LINE("Single option multi-alias help"),
                              parse(a.size(), a.get(), { {"--async", {"-a","-as"}, {}, fo{}} }),
                              outcome{"foo", {}, "--async | -a -as |\n"});
@@ -182,7 +182,7 @@ namespace sequoia::testing
 
     {
       commandline_arguments a{"foo", "--help"};
-      
+
       check_weak_equivalence(LINE("Multi-option help"),
                              parse(a.size(), a.get(), { {"create",  {"-c"}, {"class_name", "directory"}, fo{}},
                                                         {"--async", {}, {}, fo{}} }),
@@ -191,7 +191,7 @@ namespace sequoia::testing
 
     {
       commandline_arguments a{"foo", "--help"};
-      
+
       check_weak_equivalence(LINE("Multi-option help"),
                              argument_parser(a.size(), a.get(), { {"create",  {"-c"}, {"class_name", "directory"}, fo{}},
                                                         {"--async", {}, {}, fo{}} }),
@@ -203,10 +203,10 @@ namespace sequoia::testing
   {
     using namespace sequoia::parsing::commandline;
     using fo = function_object;
-    
+
     {
       commandline_arguments a{"", "create", "class", "dir"};
-      
+
       check_weak_equivalence(LINE(""),
                              parse(a.size(), a.get(), { {"create", {}, {"class_name", "directory"}, fo{},
                                                   { {"--equivalent-type", {}, {"type"}} }
@@ -216,7 +216,7 @@ namespace sequoia::testing
 
     {
       commandline_arguments a{"bar", "create", "class", "dir", "--equivalent-type", "foo"};
-      
+
       check_weak_equivalence(LINE(""),
                              parse(a.size(), a.get(),
                                    { {"create", {}, {"class_name", "directory"}, fo{},
@@ -228,7 +228,7 @@ namespace sequoia::testing
 
     {
       commandline_arguments a{"", "create", "class", "dir", "--equivalent-type", "foo"};
-      
+
       check_weak_equivalence(LINE(""),
                              parse(a.size(), a.get(), { {"create", {}, {"class_name", "directory"}, fo{},
                                                          { {"--equivalent-type", {}, {"type"}, fo{}} }
@@ -238,7 +238,7 @@ namespace sequoia::testing
 
     {
       commandline_arguments a{"", "create", "class", "dir", "--equivalent-type", "foo", "--generate", "bar"};
-      
+
       check_weak_equivalence(LINE(""),
                              parse(a.size(), a.get(),
                                    { {"create", {}, {"class_name", "directory"}, fo{},
@@ -251,7 +251,7 @@ namespace sequoia::testing
 
     {
       commandline_arguments a{"", "create", "class", "dir", "--equivalent-type", "foo", "-v"};
-      
+
       check_weak_equivalence(LINE(""),
                              parse(a.size(), a.get(),
                                    { {"create", {}, {"class_name", "directory"}, fo{},
@@ -264,7 +264,7 @@ namespace sequoia::testing
 
     {
       commandline_arguments a{"", "create", "class", "dir", "--equivalent-type", "foo", "-v", "-a"};
-      
+
       check_weak_equivalence(LINE(""),
                              parse(a.size(), a.get(),
                                    { {"create", {}, {"class_name", "directory"}, fo{},
@@ -278,7 +278,7 @@ namespace sequoia::testing
 
     {
       commandline_arguments a{"", "create", "class", "dir", "--equivalent-type", "foo", "-va"};
-      
+
       check_weak_equivalence(LINE(""),
                              parse(a.size(), a.get(),
                                    { {"create", {}, {"class_name", "directory"}, fo{},

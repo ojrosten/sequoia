@@ -11,7 +11,7 @@
 
 namespace sequoia::testing
 {
-  
+
   template<class T>
   struct identity { using type = T;};
 
@@ -33,42 +33,42 @@ namespace sequoia::testing
   {
     check(LINE("One element which survives"), []() {
         static_assert(std::is_same_v<make_filtered_sequence<void, identity, int>, std::index_sequence<0>>);
-    
+
         return true;
       }()
     );
 
     check(LINE("One element which is filtered"), []() {
         static_assert(std::is_same_v<make_filtered_sequence<int, identity, int>, std::index_sequence<>>);
-    
+
         return true;
       }()
     );
-    
+
     check(LINE("Two elements, both of which survive"), []() {
         static_assert(std::is_same_v<make_filtered_sequence<void, identity, int, double>, std::index_sequence<0, 1>>);
-    
+
         return true;
       }()
     );
 
     check(LINE("Two elements, the zeroth of which survives"), []() {
         static_assert(std::is_same_v<make_filtered_sequence<double, identity, int, double>, std::index_sequence<0>>);
-    
+
         return true;
       }()
     );
 
     check(LINE("Two elements, the first of which survives"), []() {
         static_assert(std::is_same_v<make_filtered_sequence<int, identity, int, double>, std::index_sequence<1>>);
-    
+
         return true;
       }()
     );
 
     check(LINE("Two elements, both of which are filtered"), []() {
         static_assert(std::is_same_v<make_filtered_sequence<int, identity, int, int>, std::index_sequence<>>);
-    
+
         return true;
       }()
     );
@@ -82,7 +82,7 @@ namespace sequoia::testing
         using sig = function_signature<decltype(&clo::operator())>;
         static_assert(std::is_same_v<sig::arg, int>);
         static_assert(std::is_same_v<sig::ret, double>);
-    
+
         return true;
       }()
     );
@@ -96,7 +96,7 @@ namespace sequoia::testing
         using sig = function_signature<decltype(&foo::operator())>;
         static_assert(std::is_same_v<sig::arg, int>);
         static_assert(std::is_same_v<sig::ret, double>);
-    
+
         return true;
       }()
     );
@@ -110,7 +110,7 @@ namespace sequoia::testing
         using sig = function_signature<decltype(&foo::operator())>;
         static_assert(std::is_same_v<sig::arg, int>);
         static_assert(std::is_same_v<sig::ret, double>);
-    
+
         return true;
       }()
     );
@@ -124,7 +124,7 @@ namespace sequoia::testing
         using sig = function_signature<decltype(&foo::operator())>;
         static_assert(std::is_same_v<sig::arg, int>);
         static_assert(std::is_same_v<sig::ret, double>);
-    
+
         return true;
       }()
     );
@@ -138,7 +138,7 @@ namespace sequoia::testing
         using sig = function_signature<decltype(&foo::bar)>;
         static_assert(std::is_same_v<sig::arg, int>);
         static_assert(std::is_same_v<sig::ret, double>);
-    
+
         return true;
       }()
     );
@@ -147,7 +147,7 @@ namespace sequoia::testing
         using sig = function_signature<decltype(&f)>;
         static_assert(std::is_same_v<sig::arg, int>);
         static_assert(std::is_same_v<sig::ret, double>);
-    
+
         return true;
       }()
     );
@@ -156,7 +156,7 @@ namespace sequoia::testing
         using sig = function_signature<decltype(&g)>;
         static_assert(std::is_same_v<sig::arg, int>);
         static_assert(std::is_same_v<sig::ret, double>);
-    
+
         return true;
       }()
     );

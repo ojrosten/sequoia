@@ -13,6 +13,6 @@
  */
 
 namespace sequoia::maths::graph_impl
-{  
+{
   struct heterogeneous_tag{};
 }

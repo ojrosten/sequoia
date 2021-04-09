@@ -19,18 +19,18 @@
 #include <tuple>
 
 namespace sequoia::maths
-{  
+{
   template<std::size_t Size, std::size_t Order, class EdgeWeight>
   struct heterogeneous_graph_traits
   {
     using edge_index_type = typename graph_impl::static_edge_index_type_generator<Size, Order, false>::index_type;
   };
-  
+
   template
   <
-    directed_flavour Directedness,      
+    directed_flavour Directedness,
     std::size_t Size,
-    std::size_t Order,      
+    std::size_t Order,
     class EdgeWeight,
     class... NodeWeights
   >
@@ -75,7 +75,7 @@ namespace sequoia::maths
 
   public:
     static_assert(sizeof...(NodeWeights) == Order);
-    
+
     constexpr static graph_flavour flavour{(Directedness == directed_flavour::directed) ? graph_flavour::directed : graph_flavour::undirected};
 
     [[nodiscard]]
@@ -85,7 +85,7 @@ namespace sequoia::maths
     constexpr static std::size_t size() noexcept { return Size; }
 
     using edge_index_type = typename heterogeneous_graph_traits<Size, Order, EdgeWeight>::edge_index_type;
-      
+
     using
       graph_primitive
       <
@@ -116,12 +116,12 @@ namespace sequoia::maths
   {
     using edge_index_type = typename graph_impl::static_edge_index_type_generator<Size, Order, true>::index_type;
   };
-  
+
   template
   <
-    directed_flavour Directedness,      
+    directed_flavour Directedness,
     std::size_t Size,
-    std::size_t Order,      
+    std::size_t Order,
     class EdgeWeight,
     class... NodeWeights
   >
@@ -166,7 +166,7 @@ namespace sequoia::maths
 
   public:
     static_assert(sizeof...(NodeWeights) == Order);
-    
+
     constexpr static graph_flavour flavour{(Directedness == directed_flavour::directed) ? graph_flavour::directed_embedded : graph_flavour::undirected_embedded};
 
     constexpr static std::size_t order() noexcept { return Order; }
@@ -174,7 +174,7 @@ namespace sequoia::maths
     constexpr static std::size_t size() noexcept { return Size; }
 
     using edge_index_type = typename heterogeneous_embedded_graph_traits<Size, Order, EdgeWeight>::edge_index_type;
-      
+
     using
       graph_primitive
       <
@@ -195,6 +195,6 @@ namespace sequoia::maths
       >::graph_primitive;
 
     using primitive_type::set_edge_weight;
-    using primitive_type::mutate_edge_weight;   
+    using primitive_type::mutate_edge_weight;
   };
 }

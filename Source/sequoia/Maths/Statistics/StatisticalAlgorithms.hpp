@@ -95,7 +95,7 @@ namespace sequoia::maths
       return {sq.value()/(dist - 1), mean.value()};
     }
   }
-  
+
   template<class InputIt, class T = typename std::iterator_traits<InputIt>::value_type>
   [[nodiscard]]
   std::pair<std::optional<T>, std::optional<T>>
@@ -106,12 +106,12 @@ namespace sequoia::maths
     if(const auto dist{distance(first, last)})
     {
       auto [var, mean]{variance(first, last)};
-      
+
       return {std::sqrt(var.value()), mean.value()};
     }
 
     return {{}, {}};
-  } 
+  }
 
   namespace bias
   {
@@ -141,7 +141,7 @@ namespace sequoia::maths
       }
     };
   }
-    
+
   template<class InputIt, class Estimator = bias::gaussian_approx_estimator, class T = typename std::iterator_traits<InputIt>::value_type>
   [[nodiscard]]
   std::pair<std::optional<T>, std::optional<T>>

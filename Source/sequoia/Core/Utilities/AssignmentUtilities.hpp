@@ -22,7 +22,7 @@ namespace sequoia::impl
   {
     invoke_with_specified_args(f, make_filtered_sequence<Excluded, TypeToType, Ts...>{}, t...);
   }
-  
+
   template<class T>
   struct type_to_type
   {
@@ -53,12 +53,12 @@ namespace sequoia::impl
       else
       {
         static_assert(consistency<T, FilteredAllocGetters...>());
-        
+
         T tmp{from, get_allocator(to, from, allocGetters)...};
         constexpr bool
           copyPropagation{copy_propagation<T, FilteredAllocGetters...>()},
           movePropagation{move_propagation<T, FilteredAllocGetters...>()};
-        
+
         if constexpr (movePropagation || !copyPropagation)
         {
           to = std::move(tmp);
@@ -66,7 +66,7 @@ namespace sequoia::impl
         else
         {
           if constexpr(!swap_propagation<T, FilteredAllocGetters...>())
-          {          
+          {
             to.reset(allocGetters(tmp)...);
           }
 
@@ -74,7 +74,7 @@ namespace sequoia::impl
         }
       }
     }
-    
+
     template<class T, invocable<T> AllocGetter>
     constexpr static bool naive_treatment() noexcept
     {

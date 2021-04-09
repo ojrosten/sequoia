@@ -53,7 +53,7 @@
     But there is enough flexbility to allow for all the extra allocation checks that allocating types require.
 
     As such, the various check_foo functions in this header have overloads in AllocationCheckersDetails.hpp which
-    supply the extra argument(s) for the additional actions that comprise allocation checking. 
+    supply the extra argument(s) for the additional actions that comprise allocation checking.
 
     Note that check_foo / do_check_foo pairs in this file are common to both regular and move-only types.
     However, regular types additionally have copy semantics; the extra pieces necessary for this may be found
@@ -72,7 +72,7 @@
 namespace sequoia::testing
 {
   enum class comparison_flavour { equality, inequality, less_than, greater_than, leq, geq, threeway };
-  
+
   template<comparison_flavour C>
   using comparison_constant = std::integral_constant<comparison_flavour, C>;
 
@@ -138,7 +138,7 @@ namespace sequoia::testing::impl
       if(!check_comparison_consistency(logger, threeway_type{}, actions, x, y, [](const T& x) { return (x <=> x) == 0; }, args...))
         return false;
     }
-    
+
     auto comp{
       [&logger](const T& x, const T& y){
         sentinel sentry{logger, ""};
@@ -280,12 +280,12 @@ namespace sequoia::testing::impl
   private:
     std::weak_ordering m_Order;
   };
-  
+
   template<pseudoregular T>
   struct regular_actions : precondition_actions<T>
   {
     using precondition_actions<T>::precondition_actions;
-    
+
     constexpr static bool has_post_comparison_action{};
     constexpr static bool has_post_copy_action{};
     constexpr static bool has_post_copy_assign_action{};
@@ -307,7 +307,7 @@ namespace sequoia::testing::impl
   struct moveonly_actions : precondition_actions<T>
   {
     using precondition_actions<T>::precondition_actions;
-    
+
     constexpr static bool has_post_comparison_action{};
     constexpr static bool has_post_move_action{};
     constexpr static bool has_post_move_assign_action{};
@@ -321,7 +321,7 @@ namespace sequoia::testing::impl
     }
   };
 
-  
+
   //================================ move assign ================================//
 
   template<test_mode Mode, class Actions, movable_comparable T, invocable<T&> Mutator, class... Args>
@@ -336,7 +336,7 @@ namespace sequoia::testing::impl
       actions.post_move_assign_action(logger, z, yClone, std::move(yMutator), args...);
     }
   }
-  
+
   template<test_mode Mode, class Actions, movable_comparable T, invocable<T&> Mutator>
   void check_move_assign(test_logger<Mode>& logger, const Actions& actions, T& z, T&& y, const T& yClone, Mutator m)
   {
@@ -354,7 +354,7 @@ namespace sequoia::testing::impl
     const bool swapy{
       check_equality("Inconsistent Swap (y)", logger, y, xClone)
     };
-    
+
     const bool swapx{
       check_equality("Inconsistent Swap (x)", logger, x, yClone)
     };
@@ -362,7 +362,7 @@ namespace sequoia::testing::impl
     if(swapx && swapy)
     {
       if constexpr(Actions::has_post_swap_action)
-      {      
+      {
         actions.post_swap_action(logger, x, y, yClone, args...);
       }
 
@@ -419,7 +419,7 @@ namespace sequoia::testing::impl
     {
       actions.post_serialization_action(logger, y, args...);
     }
-  
+
     s >> u;
 
     return check_equality("Inconsistent (de)serialization", logger, u, y);

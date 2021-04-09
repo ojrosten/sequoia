@@ -22,7 +22,7 @@ namespace sequoia::testing
   void test_subgraph::run_tests()
   {
     using std::complex;
-    
+
     {
       graph_test_helper<int, complex<double>, test_subgraph>  helper{*this};
       helper.run_tests();
@@ -36,9 +36,9 @@ namespace sequoia::testing
 
   template
   <
-    maths::graph_flavour GraphFlavour,    
+    maths::graph_flavour GraphFlavour,
     class EdgeWeight,
-    class NodeWeight,    
+    class NodeWeight,
     class EdgeWeightCreator,
     class NodeWeightCreator,
     class EdgeStorageTraits,
@@ -57,7 +57,7 @@ namespace sequoia::testing
     graph_type graph{};
     graph.add_node(1.0, 1.0);
 
-    // Graph: 
+    // Graph:
     // (1,1)
     //   X
 
@@ -70,16 +70,16 @@ namespace sequoia::testing
     //   X
 
     check_equality(LINE("Subgraph same as parent"), subgraph, {edge_init_list_t{{}}, {{1,1}}});
-        
+
     subgraph = sub_graph(graph, [](auto&& wt) { return wt == NodeWeight(0, 1); });
     // Subgraph
     //   NULL
 
     check_equality(LINE("Null subgraph"), subgraph, {});
-        
+
     graph.add_node(1.0, 0.0);
 
-    // Graph: 
+    // Graph:
     // (1,1) (1,0)
     //   X     X
 
@@ -103,7 +103,7 @@ namespace sequoia::testing
 
     graph.join(0, 1, 4);
 
-    // Graph: 
+    // Graph:
     // (1,1)  4  (1,0)
     //   X---------X
 
@@ -143,7 +143,7 @@ namespace sequoia::testing
 
     graph.join(0, 0, 2);
 
-    // Graph: 
+    // Graph:
     // (1,1)  4  (1,0)
     //   X---------X
     //  /\
@@ -159,7 +159,7 @@ namespace sequoia::testing
               {edge_init_t{0,4}}}, {{1,1}, {1,0}}};
 
       g.swap_edges(0, 0, 2);
-      
+
       check_equality(LINE(""), graph, g);
     }
     else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
@@ -186,7 +186,7 @@ namespace sequoia::testing
       check_equality(LINE(""), subgraph, {edge_init_list_t{{edge_init_t{0, 2}}}, {{1,1}}});
     }
     else if constexpr(GraphFlavour == graph_flavour::undirected)
-    {      
+    {
       check_equality(LINE(""), subgraph, {edge_init_list_t{{edge_init_t{0, 2}, edge_init_t{0, 2}}}, {{1,1}}});
     }
     else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
@@ -197,7 +197,7 @@ namespace sequoia::testing
     {
       check_equality(LINE(""), subgraph, {edge_init_list_t{{edge_init_t{0,1,2}, edge_init_t{0,0,2}}}, {{1,1}}});
     }
-    
+
     subgraph = sub_graph(graph, [](auto&& wt) { return wt == NodeWeight(1, 0); });
 
     // Subgraph
@@ -210,7 +210,7 @@ namespace sequoia::testing
     graph.join(0, 2, 0);
     graph.join(1, 2, -3);
 
-    // Graph: 
+    // Graph:
     // (1,1)  4  (1,0)
     //   X---------X
     //  /\\       /
@@ -219,7 +219,7 @@ namespace sequoia::testing
     //       \ /
     //        X
     //       (1,1)
-        
+
     if constexpr (GraphFlavour == graph_flavour::directed)
     {
       check_equality(LINE(""), graph, {{{edge_init_t{1, 4}, edge_init_t{0, 2}, edge_init_t{2,0}},
@@ -233,7 +233,7 @@ namespace sequoia::testing
                 {edge_init_t{0,0}, edge_init_t{1,-3}}}, {{1,1}, {1,0}, {1,1}}};
 
       g.swap_edges(0, 0, 2);
-      
+
       check_equality(LINE(""), graph, g);
     }
     else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
@@ -248,9 +248,9 @@ namespace sequoia::testing
                               {edge_init_t{0,0,4}, edge_init_t{2,1,-3}},
                               {edge_init_t{0,3,0}, edge_init_t{1,1,-3}}}, {{1,1}, {1,0}, {1,1}}});
     }
-      
+
     subgraph = sub_graph(graph, [](auto&& wt) { return wt == NodeWeight(1, 1); });
-    // subgraph: 
+    // subgraph:
     // (1,1)
     //   X
     //  /\\
@@ -259,14 +259,14 @@ namespace sequoia::testing
     //       \
     //        X
     //       (1,1)
-        
+
     if constexpr (GraphFlavour == graph_flavour::directed)
     {
       check_equality(LINE(""), subgraph, {{{edge_init_t{0, 2}, edge_init_t{1,0}},
                                  {}}, {{1,1}, {1,1}}});
     }
     else if constexpr(GraphFlavour == graph_flavour::undirected)
-    {      
+    {
       check_equality(LINE(""),subgraph, {{{edge_init_t{0, 2}, edge_init_t{0, 2}, edge_init_t{1,0}},
                                  {edge_init_t{0,0}}}, {{1,1}, {1,1}}});
     }

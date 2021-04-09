@@ -59,15 +59,15 @@ namespace sequoia::testing
   private:
     test_logger<Mode>& m_Logger;
   };
-  
+
   template<test_mode mode>
   using move_only_checker = checker<mode, move_only_extender<mode>>;
-  
+
   template<test_mode mode>
   using canonical_move_only_test = basic_test<move_only_checker<mode>>;
 
   /*! \anchor move_only_test_alias */
   using move_only_test                = canonical_move_only_test<test_mode::standard>;
   using move_only_false_negative_test = canonical_move_only_test<test_mode::false_negative>;
-  using move_only_false_positive_test = canonical_move_only_test<test_mode::false_positive>;  
+  using move_only_false_positive_test = canonical_move_only_test<test_mode::false_positive>;
 }

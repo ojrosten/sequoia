@@ -23,7 +23,7 @@ namespace sequoia::data_structures
       \brief A priority_queue suitable for constexpr contexts.
 
    */
-  
+
   template<class T, std::size_t MaxDepth, class Compare=std::less<T>>
   class static_priority_queue : private Compare
   {
@@ -50,12 +50,12 @@ namespace sequoia::data_structures
 
     constexpr static_priority_queue& operator=(const static_priority_queue&)     = default;
     constexpr static_priority_queue& operator=(static_priority_queue&&) noexcept = default;
-    
+
     constexpr void push(const T& val)
     {
       if(m_End == MaxDepth)
         throw std::logic_error("Attempting to exceed max priority_queue depth");
-      
+
       m_Q[m_End++] = val;
 
       bubble_up(m_Q.begin(), m_Q.begin() + m_End - 1, static_cast<Compare&>(*this));

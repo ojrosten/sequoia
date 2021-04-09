@@ -21,7 +21,7 @@ namespace sequoia::data_structures
       \brief A queue suitable for constexpr contexts.
 
    */
-  
+
   template<class T, std::size_t MaxDepth>
   class static_queue
   {
@@ -39,11 +39,11 @@ namespace sequoia::data_structures
 
     constexpr static_queue& operator=(const static_queue&)    = default;
     constexpr static_queue& operator=(static_queue&) noexcept = default;
-    
+
     constexpr void push(const T& val)
     {
       if constexpr(MaxDepth > 0)
-      {   
+      {
         if(size() == MaxDepth)
         {
           throw std::logic_error("Attempting to exceed maximum queue depth");
@@ -53,7 +53,7 @@ namespace sequoia::data_structures
           m_Front = 0;
           m_Back  = 0;
         }
-        else 
+        else
         {
           m_Back = (m_Back + 1) % MaxDepth;
         }
@@ -118,7 +118,7 @@ namespace sequoia::data_structures
     friend constexpr bool operator==(const static_queue& lhs, const static_queue& rhs) noexcept
     {
       if constexpr(MaxDepth > 0)
-      {   
+      {
         const auto sz{lhs.size()};
         if(sz != rhs.size()) return false;
 
@@ -126,7 +126,7 @@ namespace sequoia::data_structures
         {
 
           if(lhs.m_Queue[l] != rhs.m_Queue[r]) return false;
-        
+
           l = (l+1) % MaxDepth;
           r = (r+1) % MaxDepth;
         }

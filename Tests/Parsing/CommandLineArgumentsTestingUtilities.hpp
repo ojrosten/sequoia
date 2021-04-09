@@ -37,7 +37,7 @@ namespace sequoia::testing
     }
   private:
     using executor = sequoia::parsing::commandline::executor;
-    
+
     template<test_mode Mode>
     static void check(test_logger<Mode>& logger, const executor& operation, const executor& prediction, std::string_view tag)
     {
@@ -87,7 +87,7 @@ namespace sequoia::testing
     {
       return static_cast<int>(m_Args.size());
     }
-    
+
     commandline_arguments(std::initializer_list<std::string_view> args)
       : m_Args(args.begin(), args.end())
     {

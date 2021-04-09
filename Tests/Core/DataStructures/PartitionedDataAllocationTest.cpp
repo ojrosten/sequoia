@@ -19,7 +19,7 @@ namespace sequoia::testing
   {
     do_allocation_tests(*this);
   }
-      
+
 
   template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
   void partitioned_data_allocation_test::test_allocation()
@@ -71,7 +71,7 @@ namespace sequoia::testing
     check_equality(LINE(makeMessage("")), allocGetter(s).allocs(), 0);
     check_equality(LINE(makeMessage("Only a single allocation necessary due to reservation")), allocGetter(t).allocs(), 1);
     check_equality(LINE(makeMessage("Only a single allocation per bucket due to reservation")), innerAllocGetter(t).allocs(), 2);
- 
+
     auto partitionMaker{ [](storage& s) { s.add_slot(); } };
 
     check_semantics(LINE(""),
@@ -109,7 +109,7 @@ namespace sequoia::testing
   void partitioned_data_allocation_test::test_contiguous_allocation()
   {
     using namespace data_structures;
-      
+
     using storage = partitioned_sequence<T, Handler, custom_partitioned_sequence_traits<T, Handler, PropagateCopy, PropagateMove, PropagateSwap>>;
     using allocator = typename storage::allocator_type;
     using partitions_allocator = typename storage::traits_type::partitions_allocator_type;
