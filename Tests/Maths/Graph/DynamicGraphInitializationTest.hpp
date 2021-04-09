@@ -22,7 +22,37 @@ namespace sequoia
       [[nodiscard]]
       std::string_view source_file() const noexcept final;
     private:
+      template<class, class, class>
+      friend class graph_test_helper;
+
+      template<class>
+      friend class init_checker;
+
+      template<class>
+      friend class undirected_init_checker;
+
+      template<class>
+      friend class undirected_embedded_init_checker;
+
+      template<class>
+      friend class directed_init_checker;
+
+      template<class>
+      friend class directed_embedded_init_checker;
+
       void run_tests() final;
+
+      template
+      <
+        maths::graph_flavour GraphFlavour,      
+        class EdgeWeight,
+        class NodeWeight,      
+        class EdgeWeightCreator,
+        class NodeWeightCreator,
+        class EdgeStorageTraits,
+        class NodeWeightStorageTraits
+      >
+      void execute_operations();
     };
 
     template<maths::graph_flavour GraphFlavour>
@@ -50,37 +80,6 @@ namespace sequoia
     struct checker_selector<maths::graph_flavour::directed_embedded>
     {
       template<class Checker> using init_checker = directed_embedded_init_checker<Checker>;
-    };
-
-    template
-    <
-      maths::graph_flavour GraphFlavour,      
-      class EdgeWeight,
-      class NodeWeight,      
-      class EdgeWeightPooling,
-      class NodeWeightPooling,
-      class EdgeStorageTraits,
-      class NodeWeightStorageTraits
-    >
-    class test_initialization
-      : public graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>
-    {    
-    private:
-      using base_t = graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>;
-      
-      using graph_t = typename base_t::graph_type;
-      
-      void execute_operations() override
-      {
-        typename checker_selector<GraphFlavour>::template init_checker<test_initialization> checker{*this};
-        checker.template check_all<graph_t>();
-      }
-    public:
-      using base_t::check_exception_thrown;
-      using base_t::check_equality;      
-      using base_t::check_graph;
-      using base_t::check_equivalence;
-      using base_t::check_semantics;
     };
   }
 }

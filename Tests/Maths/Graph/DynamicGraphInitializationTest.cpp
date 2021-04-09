@@ -22,43 +22,64 @@ namespace sequoia:: testing
     using namespace maths;
 
     {
-      graph_test_helper<null_weight, null_weight> helper{concurrent_execution()};
-      helper.run_tests<test_initialization>(*this);
+      graph_test_helper<null_weight, null_weight, test_graph_init> helper{*this};
+      helper.run_tests();
     }
 
     {
-      graph_test_helper<int, null_weight> helper{concurrent_execution()};
-      helper.run_tests<test_initialization>(*this);
+      graph_test_helper<int, null_weight, test_graph_init> helper{*this};
+      helper.run_tests();
     }
 
     {
-      graph_test_helper<unsortable, null_weight> helper{concurrent_execution()};
-      helper.run_tests<test_initialization>(*this);
+      graph_test_helper<unsortable, null_weight, test_graph_init> helper{*this};
+      helper.run_tests();
     }
 
     {
-      graph_test_helper<big_unsortable, null_weight> helper{concurrent_execution()};
-      helper.run_tests<test_initialization>(*this);
+      graph_test_helper<big_unsortable, null_weight, test_graph_init> helper{*this};
+      helper.run_tests();
     }
 
     {
-      graph_test_helper<null_weight, int> helper{concurrent_execution()};
-      helper.run_tests<test_initialization>(*this);
+      graph_test_helper<null_weight, int, test_graph_init> helper{*this};
+      helper.run_tests();
     }
 
     {
-      graph_test_helper<int, int> helper{concurrent_execution()};
-      helper.run_tests<test_initialization>(*this);
+      graph_test_helper<int, int, test_graph_init> helper{*this};
+      helper.run_tests();
     }
 
     {
-      graph_test_helper<unsortable, int> helper{concurrent_execution()};
-      helper.run_tests<test_initialization>(*this);
+      graph_test_helper<unsortable, int, test_graph_init> helper{*this};
+      helper.run_tests();
     }
 
     {
-      graph_test_helper<big_unsortable, int> helper{concurrent_execution()};
-      helper.run_tests<test_initialization>(*this);
+      graph_test_helper<big_unsortable, int, test_graph_init> helper{*this};
+      helper.run_tests();
     }
+  }
+
+  template
+  <
+    maths::graph_flavour GraphFlavour,      
+    class EdgeWeight,
+    class NodeWeight,      
+    class EdgeWeightCreator,
+    class NodeWeightCreator,
+    class EdgeStorageTraits,
+    class NodeWeightStorageTraits
+  >
+  void test_graph_init::execute_operations()
+  {
+    using ESTraits = EdgeStorageTraits;
+    using NSTraits = NodeWeightStorageTraits;
+    
+    using graph_type = graph_type_generator_t<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, ESTraits, NSTraits>;
+    
+    typename checker_selector<GraphFlavour>::template init_checker<test_graph_init> checker{*this};
+    checker.template check_all<graph_type>();
   }
 }

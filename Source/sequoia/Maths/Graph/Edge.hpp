@@ -26,6 +26,7 @@
     embedded.
 */
 
+#include "sequoia/Core/Meta/Concepts.hpp"
 #include "sequoia/Core/Meta/TypeTraits.hpp"
 
 namespace sequoia

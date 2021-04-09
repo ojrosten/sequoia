@@ -19,32 +19,27 @@ namespace sequoia::testing
   {
     struct null_weight {};
 
-    graph_test_helper<null_weight, null_weight> helper{concurrent_execution()};
+    graph_test_helper<null_weight, null_weight, unweighted_graph_test> helper{*this};
       
-    helper.run_tests<generic_graph_operations>(*this);
+    helper.run_tests();
   }
 
   template
   <
-    maths::graph_flavour GraphFlavour,
+    maths::graph_flavour GraphFlavour,    
     class EdgeWeight,
-    class NodeWeight,      
-    class EdgeWeightPooling,
-    class NodeWeightPooling,
+    class NodeWeight,    
+    class EdgeWeightCreator,
+    class NodeWeightCreator,
     class EdgeStorageTraits,
     class NodeWeightStorageTraits
   >
-  void generic_graph_operations<
-      GraphFlavour,    
-      EdgeWeight,
-      NodeWeight,
-      EdgeWeightPooling,
-      NodeWeightPooling,
-      EdgeStorageTraits,
-      NodeWeightStorageTraits
-  >::execute_operations()
+  void unweighted_graph_test::execute_operations()
   {
-    using namespace maths;    
+    using namespace maths;
+    using ESTraits = EdgeStorageTraits;
+    using NSTraits = NodeWeightStorageTraits;
+    using graph_t = graph_type_generator_t<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, ESTraits, NSTraits>;
     using edge_init_t = typename graph_t::edge_init_type;    
 
     graph_t network;

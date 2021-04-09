@@ -234,7 +234,6 @@ namespace sequoia::testing
     serial=-1, /// serial execution
     family,    /// families of tests are executed concurrently
     test,      /// tests are executed concurrently, independently of their families
-    deep       /// concurrency-aware components of individual tests are executed concurrently
   };
 
   class test_vessel

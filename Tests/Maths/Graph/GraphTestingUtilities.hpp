@@ -122,9 +122,9 @@ namespace sequoia::testing
     template<test_mode Mode>
     static void check(test_logger<Mode>& logger, const type& connectivity, const type& prediction)
     {
-      check_equality("Connectivity sizes different", logger, connectivity.size(), prediction.size());
+      check_equality("Connectivity size incorrect", logger, connectivity.size(), prediction.size());
       
-      if(check_equality("Connectivity orders different", logger, connectivity.order(), prediction.order()))
+      if(check_equality("Connectivity order incorrect", logger, connectivity.order(), prediction.order()))
       {
         for(std::size_t i{}; i<connectivity.order(); ++i)
         {
@@ -153,7 +153,7 @@ namespace sequoia::testing
     template<test_mode Mode>
     static void check(test_logger<Mode>& logger, const type& connectivity, equivalent_type prediction)
     {
-      if(check_equality("Connectivity order wrong", logger, connectivity.order(), prediction.size()))
+      if(check_equality("Connectivity order incorrect", logger, connectivity.order(), prediction.size()))
       {
         for(std::size_t i{}; i<connectivity.order(); ++i)
         {
@@ -188,7 +188,7 @@ namespace sequoia::testing
     template<test_mode Mode>
     static void check(test_logger<Mode>& logger, const type& connectivity, equivalent_type prediction)
     {
-      if(check_equality("Connectivity order wrong", logger, connectivity.order(), prediction.size()))
+      if(check_equality("Connectivity order incorrect", logger, connectivity.order(), prediction.size()))
       {
         for(std::size_t i{}; i<connectivity.order(); ++i)
         {
@@ -272,42 +272,8 @@ namespace sequoia::testing
   {
   public:
     using base_t = basic_test<graph_checker<Mode, Extenders...>>;
-    
-    using base_t::check_exception_thrown;
-    using base_t::check_equality;
-    using base_t::check_graph;
-    using base_t::check_semantics;
-    using base_t::check;
 
-    graph_basic_test(std::string_view name, concurrency_mode mode)
-      : basic_test<graph_checker<Mode, Extenders...>>{name}
-      , m_ConcurrencyMode{mode}
-    {}
-      
-    void merge(const log_summary& summary)
-    {
-      m_AccumulatedSummaries += summary;
-    }
-
-    void report_async_exception(std::string_view sv)
-    {
-      check(append_lines("Exception thrown during asynchronous execution of graph test:", sv), graph_checker<Mode, Extenders...>::mode == test_mode::false_positive);
-    }
-  protected:
-    using duration = typename base_t::duration;
-
-    [[nodiscard]]
-    log_summary summarize(duration delta) const override
-    {
-      return base_t::summarize(delta) += m_AccumulatedSummaries;
-    }
-
-    [[nodiscard]]
-    concurrency_mode concurrent_execution() const noexcept { return m_ConcurrencyMode; }
-  private:
-      
-    log_summary m_AccumulatedSummaries{};
-    concurrency_mode m_ConcurrencyMode{};
+    using base_t::base_t;
   };
 
   template<test_mode mode>

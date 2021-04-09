@@ -20,13 +20,34 @@ namespace sequoia::testing
     using namespace maths;
 
     {
-      graph_test_helper<int, null_weight> helper{concurrent_execution()};
-      helper.run_tests<generic_fixed_topology_tests>(*this);
+      graph_test_helper<int, null_weight, test_fixed_topology> helper{*this};
+      helper.run_tests();
     }
 
     {
-      graph_test_helper<int, int> helper{concurrent_execution()};
-      helper.run_tests<generic_fixed_topology_tests>(*this);
+      graph_test_helper<int, int, test_fixed_topology> helper{*this};
+      helper.run_tests();
     }
+  }
+
+  template
+  <
+    maths::graph_flavour GraphFlavour,      
+    class EdgeWeight,
+    class NodeWeight,      
+    class EdgeWeightCreator,
+    class NodeWeightCreator,
+    class EdgeStorageTraits,
+    class NodeWeightStorageTraits
+  >
+  void test_fixed_topology::execute_operations()
+  {
+    using ESTraits = EdgeStorageTraits;
+    using NSTraits = NodeWeightStorageTraits;
+    
+    using graph_type = graph_type_generator_t<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, ESTraits, NSTraits>;
+    
+    typename ft_checker_selector<GraphFlavour>::template ft_checker<test_fixed_topology> checker{*this};
+    checker.template check_all<graph_type>();
   }
 }

@@ -11,69 +11,35 @@
 
 namespace sequoia::testing
 {
-  class weighted_graph_allocation_test final : public graph_unit_test
+  class weighted_graph_allocation_test final : public graph_allocation_test
   {
   public:
-    using graph_unit_test::graph_unit_test;
+    using graph_allocation_test::graph_allocation_test;
 
     [[nodiscard]]
     std::string_view source_file() const noexcept final;
   private:
+    template <class, class, class>
+    friend class graph_test_helper;
+
     void run_tests() final;
-  };
 
-  template
-  <
-    maths::graph_flavour GraphFlavour,
-    class EdgeWeight,
-    class NodeWeight,      
-    class EdgeWeightPooling,
-    class NodeWeightPooling,
-    class EdgeStorageTraits,
-    class NodeWeightStorageTraits
-  >
-  class graph_contiguous_memory
-    : public graph_allocation_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>
-  {
-  public:
-      
-  private:
-    using base_t = graph_allocation_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>;
-      
-    using graph_t = typename base_t::graph_type;
-    using checker_t = typename base_t::checker_type;
-      
-    using checker_t::check_equality;
-    using checker_t::check_semantics;
-    using graph_checker<test_mode::standard, regular_allocation_extender<test_mode::standard>>::check_exception_thrown;
+    template
+    <
+      maths::graph_flavour GraphFlavour,    
+      class EdgeWeight,
+      class NodeWeight,    
+      class EdgeWeightCreator,
+      class NodeWeightCreator,
+      class EdgeStorageTraits,
+      class NodeWeightStorageTraits
+    >
+    void execute_operations();
 
+    template<class Graph>
+    void contiguous_memory();
 
-    void execute_operations() override;
-  };
-
-  template
-  <
-    maths::graph_flavour GraphFlavour,
-    class EdgeWeight,
-    class NodeWeight,      
-    class EdgeWeightPooling,
-    class NodeWeightPooling,
-    class EdgeStorageTraits,
-    class NodeWeightStorageTraits
-  >
-  class graph_bucketed_memory
-    : public graph_allocation_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>
-  {
-  private:
-    using base_t = graph_allocation_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>;
-      
-    using graph_t = typename base_t::graph_type;
-    using checker_t = typename base_t::checker_type;
-
-    using checker_t::check_equality;
-    using checker_t::check_semantics;
-    using graph_checker<test_mode::standard, regular_allocation_extender<test_mode::standard>>::check_exception_thrown;
-
-    void execute_operations() override;
+    template<class Graph>
+    void bucketed_memory();
   };
 }

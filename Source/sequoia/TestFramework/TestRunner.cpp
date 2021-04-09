@@ -580,9 +580,9 @@ namespace sequoia::testing
                         m_ConcurrencyMode = concurrency_mode::family;
                     }
                   },
-                  {"--async-depth", {"-ad"}, {"depth [0-2]"},
+                  {"--async-depth", {"-ad"}, {"depth [0,1]"},
                     [this](const param_list& args) {
-                      const int i{std::clamp(std::stoi(args.front()), 0, 2)};
+                      const int i{std::clamp(std::stoi(args.front()), 0, 1)};
                       m_ConcurrencyMode = static_cast<concurrency_mode>(i);
                     }
                   },
@@ -635,8 +635,6 @@ namespace sequoia::testing
       return "Family";
     case concurrency_mode::test:
       return "Test";
-    case concurrency_mode::deep:
-      return "Deep";
     }
 
     throw std::logic_error{"Unknown option for concurrency_mode"};

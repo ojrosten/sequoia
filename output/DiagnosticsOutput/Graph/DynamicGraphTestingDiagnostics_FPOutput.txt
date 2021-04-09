@@ -1,4 +1,4 @@
-	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 49
+	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 43
 	Check false positive: empty graph versus single node
 
 	[sequoia::maths::graph<(sequoia::maths::directed_flavour)0, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
@@ -7,7 +7,7 @@
 	  [sequoia::maths::connectivity<(sequoia::maths::directed_flavour)0, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)0, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
 	  operator== returned false
 
-	    Connectivity orders different
+	    Connectivity order incorrect
 	    [unsigned long long]
 	    operator== returned false
 	    Obtained : 0
@@ -15,7 +15,7 @@
 
 	=======================================
 
-	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 58
+	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 52
 	Check false positive: empty graph versus single node with loop
 
 	[sequoia::maths::graph<(sequoia::maths::directed_flavour)0, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
@@ -24,13 +24,13 @@
 	  [sequoia::maths::connectivity<(sequoia::maths::directed_flavour)0, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)0, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
 	  operator== returned false
 
-	    Connectivity sizes different
+	    Connectivity size incorrect
 	    [unsigned long long]
 	    operator== returned false
 	    Obtained : 0
 	    Predicted: 1
 
-	    Connectivity orders different
+	    Connectivity order incorrect
 	    [unsigned long long]
 	    operator== returned false
 	    Obtained : 0
@@ -38,7 +38,7 @@
 
 	=======================================
 
-	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 49
+	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 43
 	Check false positive: empty graph versus single node
 
 	[sequoia::maths::graph<(sequoia::maths::directed_flavour)0, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
@@ -47,7 +47,7 @@
 	  [sequoia::maths::connectivity<(sequoia::maths::directed_flavour)0, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)0, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
 	  operator== returned false
 
-	    Connectivity orders different
+	    Connectivity order incorrect
 	    [unsigned long long]
 	    operator== returned false
 	    Obtained : 0
@@ -55,7 +55,7 @@
 
 	=======================================
 
-	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 58
+	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 52
 	Check false positive: empty graph versus single node with loop
 
 	[sequoia::maths::graph<(sequoia::maths::directed_flavour)0, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
@@ -64,13 +64,13 @@
 	  [sequoia::maths::connectivity<(sequoia::maths::directed_flavour)0, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)0, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
 	  operator== returned false
 
-	    Connectivity sizes different
+	    Connectivity size incorrect
 	    [unsigned long long]
 	    operator== returned false
 	    Obtained : 0
 	    Predicted: 1
 
-	    Connectivity orders different
+	    Connectivity order incorrect
 	    [unsigned long long]
 	    operator== returned false
 	    Obtained : 0
@@ -78,7 +78,7 @@
 
 	=======================================
 
-	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 49
+	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 43
 	Check false positive: empty graph versus single node
 
 	[sequoia::maths::embedded_graph<(sequoia::maths::directed_flavour)0, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
@@ -87,7 +87,7 @@
 	  [sequoia::maths::connectivity<(sequoia::maths::directed_flavour)0, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)1, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
 	  operator== returned false
 
-	    Connectivity orders different
+	    Connectivity order incorrect
 	    [unsigned long long]
 	    operator== returned false
 	    Obtained : 0
@@ -95,7 +95,7 @@
 
 	=======================================
 
-	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 66
+	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 60
 	Check false positive: empty graph versus single node with loop
 
 	[sequoia::maths::embedded_graph<(sequoia::maths::directed_flavour)0, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
@@ -104,13 +104,13 @@
 	  [sequoia::maths::connectivity<(sequoia::maths::directed_flavour)0, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)1, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
 	  operator== returned false
 
-	    Connectivity sizes different
+	    Connectivity size incorrect
 	    [unsigned long long]
 	    operator== returned false
 	    Obtained : 0
 	    Predicted: 1
 
-	    Connectivity orders different
+	    Connectivity order incorrect
 	    [unsigned long long]
 	    operator== returned false
 	    Obtained : 0
@@ -118,7 +118,7 @@
 
 	=======================================
 
-	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 49
+	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 43
 	Check false positive: empty graph versus single node
 
 	[sequoia::maths::embedded_graph<(sequoia::maths::directed_flavour)0, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
@@ -127,7 +127,7 @@
 	  [sequoia::maths::connectivity<(sequoia::maths::directed_flavour)0, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)1, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
 	  operator== returned false
 
-	    Connectivity orders different
+	    Connectivity order incorrect
 	    [unsigned long long]
 	    operator== returned false
 	    Obtained : 0
@@ -135,7 +135,7 @@
 
 	=======================================
 
-	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 66
+	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 60
 	Check false positive: empty graph versus single node with loop
 
 	[sequoia::maths::embedded_graph<(sequoia::maths::directed_flavour)0, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
@@ -144,13 +144,13 @@
 	  [sequoia::maths::connectivity<(sequoia::maths::directed_flavour)0, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)1, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
 	  operator== returned false
 
-	    Connectivity sizes different
+	    Connectivity size incorrect
 	    [unsigned long long]
 	    operator== returned false
 	    Obtained : 0
 	    Predicted: 1
 
-	    Connectivity orders different
+	    Connectivity order incorrect
 	    [unsigned long long]
 	    operator== returned false
 	    Obtained : 0
@@ -158,7 +158,7 @@
 
 	=======================================
 
-	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 49
+	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 43
 	Check false positive: empty graph versus single node
 
 	[sequoia::maths::graph<(sequoia::maths::directed_flavour)1, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
@@ -167,7 +167,7 @@
 	  [sequoia::maths::connectivity<(sequoia::maths::directed_flavour)1, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)2, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
 	  operator== returned false
 
-	    Connectivity orders different
+	    Connectivity order incorrect
 	    [unsigned long long]
 	    operator== returned false
 	    Obtained : 0
@@ -175,7 +175,7 @@
 
 	=======================================
 
-	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 54
+	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 48
 	Check false positive: empty graph versus single node with loop
 
 	[sequoia::maths::graph<(sequoia::maths::directed_flavour)1, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
@@ -184,13 +184,13 @@
 	  [sequoia::maths::connectivity<(sequoia::maths::directed_flavour)1, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)2, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
 	  operator== returned false
 
-	    Connectivity sizes different
+	    Connectivity size incorrect
 	    [unsigned long long]
 	    operator== returned false
 	    Obtained : 0
 	    Predicted: 1
 
-	    Connectivity orders different
+	    Connectivity order incorrect
 	    [unsigned long long]
 	    operator== returned false
 	    Obtained : 0
@@ -198,7 +198,7 @@
 
 	=======================================
 
-	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 49
+	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 43
 	Check false positive: empty graph versus single node
 
 	[sequoia::maths::graph<(sequoia::maths::directed_flavour)1, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
@@ -207,7 +207,7 @@
 	  [sequoia::maths::connectivity<(sequoia::maths::directed_flavour)1, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)2, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
 	  operator== returned false
 
-	    Connectivity orders different
+	    Connectivity order incorrect
 	    [unsigned long long]
 	    operator== returned false
 	    Obtained : 0
@@ -215,7 +215,7 @@
 
 	=======================================
 
-	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 54
+	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 48
 	Check false positive: empty graph versus single node with loop
 
 	[sequoia::maths::graph<(sequoia::maths::directed_flavour)1, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
@@ -224,13 +224,13 @@
 	  [sequoia::maths::connectivity<(sequoia::maths::directed_flavour)1, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)2, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
 	  operator== returned false
 
-	    Connectivity sizes different
+	    Connectivity size incorrect
 	    [unsigned long long]
 	    operator== returned false
 	    Obtained : 0
 	    Predicted: 1
 
-	    Connectivity orders different
+	    Connectivity order incorrect
 	    [unsigned long long]
 	    operator== returned false
 	    Obtained : 0
@@ -238,7 +238,7 @@
 
 	=======================================
 
-	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 49
+	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 43
 	Check false positive: empty graph versus single node
 
 	[sequoia::maths::embedded_graph<(sequoia::maths::directed_flavour)1, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
@@ -247,7 +247,7 @@
 	  [sequoia::maths::connectivity<(sequoia::maths::directed_flavour)1, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)3, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
 	  operator== returned false
 
-	    Connectivity orders different
+	    Connectivity order incorrect
 	    [unsigned long long]
 	    operator== returned false
 	    Obtained : 0
@@ -255,7 +255,7 @@
 
 	=======================================
 
-	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 62
+	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 56
 	Check false positive: empty graph versus single node with loop
 
 	[sequoia::maths::embedded_graph<(sequoia::maths::directed_flavour)1, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
@@ -264,13 +264,13 @@
 	  [sequoia::maths::connectivity<(sequoia::maths::directed_flavour)1, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)3, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
 	  operator== returned false
 
-	    Connectivity sizes different
+	    Connectivity size incorrect
 	    [unsigned long long]
 	    operator== returned false
 	    Obtained : 0
 	    Predicted: 1
 
-	    Connectivity orders different
+	    Connectivity order incorrect
 	    [unsigned long long]
 	    operator== returned false
 	    Obtained : 0
@@ -278,7 +278,7 @@
 
 	=======================================
 
-	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 49
+	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 43
 	Check false positive: empty graph versus single node
 
 	[sequoia::maths::embedded_graph<(sequoia::maths::directed_flavour)1, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
@@ -287,7 +287,7 @@
 	  [sequoia::maths::connectivity<(sequoia::maths::directed_flavour)1, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)3, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
 	  operator== returned false
 
-	    Connectivity orders different
+	    Connectivity order incorrect
 	    [unsigned long long]
 	    operator== returned false
 	    Obtained : 0
@@ -295,7 +295,7 @@
 
 	=======================================
 
-	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 62
+	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 56
 	Check false positive: empty graph versus single node with loop
 
 	[sequoia::maths::embedded_graph<(sequoia::maths::directed_flavour)1, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
@@ -304,13 +304,13 @@
 	  [sequoia::maths::connectivity<(sequoia::maths::directed_flavour)1, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)3, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
 	  operator== returned false
 
-	    Connectivity sizes different
+	    Connectivity size incorrect
 	    [unsigned long long]
 	    operator== returned false
 	    Obtained : 0
 	    Predicted: 1
 
-	    Connectivity orders different
+	    Connectivity order incorrect
 	    [unsigned long long]
 	    operator== returned false
 	    Obtained : 0
@@ -318,7 +318,7 @@
 
 	=======================================
 
-	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 49
+	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 43
 	Check false positive: empty graph versus single node
 
 	[sequoia::maths::embedded_graph<(sequoia::maths::directed_flavour)1, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::testing::independent_contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
@@ -327,7 +327,7 @@
 	  [sequoia::maths::connectivity<(sequoia::maths::directed_flavour)1, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)3, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::testing::independent_contiguous_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
 	  operator== returned false
 
-	    Connectivity orders different
+	    Connectivity order incorrect
 	    [unsigned long long]
 	    operator== returned false
 	    Obtained : 0
@@ -335,7 +335,7 @@
 
 	=======================================
 
-	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 62
+	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 56
 	Check false positive: empty graph versus single node with loop
 
 	[sequoia::maths::embedded_graph<(sequoia::maths::directed_flavour)1, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::testing::independent_contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
@@ -344,13 +344,13 @@
 	  [sequoia::maths::connectivity<(sequoia::maths::directed_flavour)1, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)3, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::testing::independent_contiguous_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
 	  operator== returned false
 
-	    Connectivity sizes different
+	    Connectivity size incorrect
 	    [unsigned long long]
 	    operator== returned false
 	    Obtained : 0
 	    Predicted: 1
 
-	    Connectivity orders different
+	    Connectivity order incorrect
 	    [unsigned long long]
 	    operator== returned false
 	    Obtained : 0
@@ -358,7 +358,7 @@
 
 	=======================================
 
-	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 49
+	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 43
 	Check false positive: empty graph versus single node
 
 	[sequoia::maths::embedded_graph<(sequoia::maths::directed_flavour)1, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::testing::independent_bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
@@ -367,7 +367,7 @@
 	  [sequoia::maths::connectivity<(sequoia::maths::directed_flavour)1, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)3, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::testing::independent_bucketed_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
 	  operator== returned false
 
-	    Connectivity orders different
+	    Connectivity order incorrect
 	    [unsigned long long]
 	    operator== returned false
 	    Obtained : 0
@@ -375,7 +375,7 @@
 
 	=======================================
 
-	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 62
+	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 56
 	Check false positive: empty graph versus single node with loop
 
 	[sequoia::maths::embedded_graph<(sequoia::maths::directed_flavour)1, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::testing::independent_bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
@@ -384,13 +384,13 @@
 	  [sequoia::maths::connectivity<(sequoia::maths::directed_flavour)1, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)3, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::testing::independent_bucketed_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
 	  operator== returned false
 
-	    Connectivity sizes different
+	    Connectivity size incorrect
 	    [unsigned long long]
 	    operator== returned false
 	    Obtained : 0
 	    Predicted: 1
 
-	    Connectivity orders different
+	    Connectivity order incorrect
 	    [unsigned long long]
 	    operator== returned false
 	    Obtained : 0

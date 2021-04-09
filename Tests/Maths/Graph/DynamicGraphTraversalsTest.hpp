@@ -8,11 +8,6 @@
 #pragma once
 
 #include "GraphTraversalTestingUtilities.hpp"
-#include "DynamicGraphPerformanceTestingUtilities.hpp"
-
-#include "sequoia/Core/Concurrency/ConcurrencyModels.hpp"
-
-#include <functional>
 
 namespace sequoia::testing
 {
@@ -76,61 +71,52 @@ namespace sequoia::testing
     clear(fn...);
   }
 
-  class test_graph_traversals final : public graph_unit_test
+  // TO DO: separate out performance test
+  class test_graph_traversals final : public performance_test
   {
   public:
-    using graph_unit_test::graph_unit_test;
+    using performance_test::performance_test;
     
     [[nodiscard]]
     std::string_view source_file() const noexcept final;
-  private:      
+  private:
     struct null_weight {};
+
+    template<class, class, class>
+    friend class graph_test_helper;
 
     void run_tests() final;
 
     void test_prs_details();
-  };
 
-  template
-  <
-    maths::graph_flavour GraphFlavour,
-    class EdgeWeight,
-    class NodeWeight,      
-    class EdgeWeightPooling,
-    class NodeWeightPooling,
-    class EdgeStorageTraits,
-    class NodeWeightStorageTraits
-  >
-  class tracker_test
-    : public graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>
-  {
-  private:
-    using base_t = graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>;
-    
-    using graph_t   = typename base_t::graph_type;
-    using checker_t = typename base_t::checker_type;
+    template
+    <
+      maths::graph_flavour GraphFlavour,
+      class EdgeWeight,
+      class NodeWeight,
+      class EdgeWeightCreator,
+      class NodeWeightCreator,
+      class EdgeStorageTraits,
+      class NodeWeightStorageTraits
+    >
+    void execute_operations();
 
-    using edge_results = std::vector<std::pair<std::size_t, std::size_t>>;
+    template<class Graph, class Traverser>
+    void tracker_test();
 
-    using checker_t::check_equality;      
-    using checker_t::check_exception_thrown;
-    using checker_t::check;
-      
-    void execute_operations() override
-    {        
-      test_tracker_algorithm<Traverser<BFS>>();
-      test_tracker_algorithm<Traverser<DFS>>();        
-    }
+    template<class Graph>
+    void test_weighted_BFS_tasks();
 
+    template<class Graph>
+    void test_priority_traversal();
+
+    //=================== For tracker =================//
     template<class Traverser, class G, class... Fn>
     void traverse_graph(const G& g, const bool findDisconnected, const std::size_t start, Fn&&... fn)
     {
       clear(std::forward<Fn>(fn)...);
       Traverser::traverse(g, findDisconnected, start, std::forward<Fn>(fn)...);
     }
-
-    template<class Traverser>
-    void test_tracker_algorithm();
 
     // true_types correspond BFS
     template<class NTracker, class ETracker, class ETracker2>
@@ -144,121 +130,42 @@ namespace sequoia::testing
 
     template<class NTracker, class ETracker>
     void test_square_graph(const NTracker& tracker, const ETracker& eTracker, const std::size_t start, const bool mutualInfo, std::false_type);
+
+    //=================== For priority  =================//
+    template<class Graph>
+    Graph generate_priority_test_graph();
+
+    //=================== For weighted BFS  =================//
+
+    template<class Graph>
+    void test_edge_second_traversal(std::false_type) {}
+
+    template<class Graph>
+    void test_edge_second_traversal(std::true_type);
+
+    template<class Graph>
+    void test_node_and_first_edge_traversal();
+
+    template<class ProcessingModel, class Graph, class... Args>
+    [[nodiscard]]
+    static std::vector<int> task(Graph& graph, const int upper, const bool early, const std::chrono::microseconds pause, Args&&... args);
+
+    template<class ProcessingModel, class Graph, class... Args>
+    [[nodiscard]]
+    static std::vector<int> edge_first_traversal_task(Graph& graph, const int upper, Args&&... args);      
+
+    template<class ProcessingModel, class Graph, class... Args>
+    [[nodiscard]]
+    static std::vector<int> edge_second_traversal_task(Graph& graph, const int upper, Args&&... args);
+
+    [[nodiscard]]
+    static std::vector<int> node_task_answers(const int upper);
+
+    [[nodiscard]]
+    static std::vector<int> edge_task_answers(const int upper);
+
+    template<class Graph>
+    [[nodiscard]]
+    static Graph generate_weighted_bfs_test_graph();
   };
-
-    //=======================================================================================//
-    
-    template
-    <
-      maths::graph_flavour GraphFlavour,
-      class EdgeWeight,
-      class NodeWeight,      
-      class EdgeWeightPooling,
-      class NodeWeightPooling,
-      class EdgeStorageTraits,
-      class NodeWeightStorageTraits
-    >
-    class test_priority_traversal :
-      public graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>
-    {
-    private:
-      using UndirectedType = std::bool_constant<maths::undirected(GraphFlavour)>;
-
-      using base_t = graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>;
-      
-      using graph_t = typename base_t::graph_type;
-      using checker_t = typename base_t::checker_type;
-
-      using checker_t::check_equality;      
-      using checker_t::check_exception_thrown;
-      using checker_t::check;
-      
-      void execute_operations() override
-      {
-        test_prs();
-      }
-      
-      void test_prs();
-      
-      auto generate_test_graph() -> graph_t;
-    };
-    
-    
-    //=======================================================================================//
-
-    template
-    <
-      maths::graph_flavour GraphFlavour,
-      class EdgeWeight,
-      class NodeWeight,      
-      class EdgeWeightPooling,
-      class NodeWeightPooling,
-      class EdgeStorageTraits,
-      class NodeWeightStorageTraits
-    >
-    class test_weighted_BFS_tasks
-      : public graph_performance_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>
-    {
-    private:
-      using UndirectedType = std::bool_constant<maths::undirected(GraphFlavour)>;
-
-      using base_t = graph_performance_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>;
-
-      using graph_t   = typename base_t::graph_type;
-      using checker_t = typename base_t::checker_type;
-
-      using checker_t::check_equality;      
-      using checker_t::check_relative_performance;
-      using checker_t::check;
-      
-      void execute_operations() override
-      {
-        test_node_and_first_edge_traversal();
-        test_edge_second_traversal(UndirectedType());
-      }      
-      
-      void test_edge_second_traversal(std::false_type) {}
-
-      void test_edge_second_traversal(std::true_type);
-
-      void test_node_and_first_edge_traversal();
-
-      template<class ProcessingModel, class... Args>
-      static std::vector<int> task(graph_t& graph, const int upper, const bool early, const std::chrono::microseconds pause, Args&&... args);
-
-      template<class ProcessingModel, class... Args>
-      static std::vector<int> edge_first_traversal_task(graph_t& graph, const int upper, Args&&... args);      
-
-      template<class ProcessingModel, class... Args>
-      static std::vector<int> edge_second_traversal_task(graph_t& graph, const int upper, Args&&... args);
-
-      static std::vector<int> node_task_answers(const int upper)
-      {
-        std::vector<int> answers;
-        int shift = 0;
-        for(int i=0; i < 5; ++i)
-        {
-          answers.push_back((upper + shift)*(upper + shift + 1) / 2);
-          ++shift;
-        }
-
-        return answers;
-      }
-
-      static std::vector<int> edge_task_answers(const int upper)
-      {
-        std::vector<int> answers;
-
-        int shift = 0;
-        for(int i=0; i < 4; ++i)
-        {
-          if(i == 2) --shift;
-          answers.push_back((upper + shift)*(upper + shift + 1) / 2);
-        }
-
-        return answers;
-      }
-
-      static auto generate_test_graph() -> graph_t;
-    };
-  }
+}

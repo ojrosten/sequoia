@@ -19,36 +19,21 @@ namespace sequoia::testing
     [[nodiscard]]
     std::string_view source_file() const noexcept final;
   private:
+    template <class, class, class>
+    friend class graph_test_helper;
+
     void run_tests() final;
-  };
 
-  template
-  <
-    maths::graph_flavour GraphFlavour,
-    class EdgeWeight,
-    class NodeWeight,      
-    class EdgeWeightPooling,
-    class NodeWeightPooling,
-    class EdgeStorageTraits,
-    class NodeWeightStorageTraits
-  >
-  class generic_subgraph_tests
-    : public graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>
-  {
-  public:
-  private:
-    using base_t = graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>;
-    
-    using graph_t = typename base_t::graph_type;
-
-    using base_t::check_equality;      
-    using base_t::check_exception_thrown;
-      
-    void execute_operations() override
-    {
-      test_sub_graph();
-    }
-
-    void test_sub_graph();
+    template
+    <
+      maths::graph_flavour GraphFlavour,    
+      class EdgeWeight,
+      class NodeWeight,    
+      class EdgeWeightCreator,
+      class NodeWeightCreator,
+      class EdgeStorageTraits,
+      class NodeWeightStorageTraits
+    >
+    void execute_operations();
   };
 }

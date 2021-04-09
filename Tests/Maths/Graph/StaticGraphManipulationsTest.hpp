@@ -19,6 +19,18 @@ namespace sequoia::testing
     [[nodiscard]]
     std::string_view source_file() const noexcept final;
   private:
+    template<class>
+    friend class undirected_fixed_topology_checker;
+
+    template<class>
+    friend class directed_fixed_topology_checker;
+
+    template<class>
+    friend class e_undirected_fixed_topology_checker;
+
+    template<class>
+    friend class e_directed_fixed_topology_checker;    
+    
     void run_tests() final;
 
     template<class EdgeWeight, class NodeWeight> void test_undirected();

@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include "FixedTopologyTestingUtilities.hpp"
 #include "DynamicGraphTestingUtilities.hpp"
+#include "FixedTopologyTestingUtilities.hpp"
 
 namespace sequoia
 {
@@ -22,7 +22,34 @@ namespace sequoia
       [[nodiscard]]
       std::string_view source_file() const noexcept final;
     private:
+      template<class, class, class>
+      friend class graph_test_helper;
+
+      template<class>
+      friend class undirected_fixed_topology_checker;
+
+      template<class>
+      friend class directed_fixed_topology_checker;
+
+      template<class>
+      friend class e_undirected_fixed_topology_checker;
+
+      template<class>
+      friend class e_directed_fixed_topology_checker;
+
       void run_tests() final;
+
+      template
+      <
+        maths::graph_flavour GraphFlavour,      
+        class EdgeWeight,
+        class NodeWeight,      
+        class EdgeWeightCreator,
+        class NodeWeightCreator,
+        class EdgeStorageTraits,
+        class NodeWeightStorageTraits
+      >
+      void execute_operations();
     };
 
     template<maths::graph_flavour GraphFlavour>
@@ -50,43 +77,6 @@ namespace sequoia
     struct ft_checker_selector<maths::graph_flavour::directed_embedded>
     {
       template<class Checker> using ft_checker = e_directed_fixed_topology_checker<Checker>;
-    };
-
-    template
-    <
-      maths::graph_flavour GraphFlavour,
-      class EdgeWeight,
-      class NodeWeight,      
-      class EdgeWeightPooling,
-      class NodeWeightPooling,
-      class EdgeStorageTraits,
-      class NodeWeightStorageTraits
-    >
-    class generic_fixed_topology_tests
-      : public graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>
-    {
-    public:
-      using base_t = graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>;
-
-      using checker_t = typename base_t::checker_type;
-      
-      using checker_t::check_equality;      
-      using checker_t::check_graph;
-      using checker_t::check_semantics;
-
-    private:
-      using GGraph = typename
-        graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>::graph_type;
-
-      using node_weight_type = typename GGraph::node_weight_type;
-      using NodeWeights = std::vector<node_weight_type>;
-      using edge = typename GGraph::edge_init_type;
-      
-      void execute_operations() override
-      {
-        typename ft_checker_selector<GraphFlavour>::template ft_checker<decltype(*this)> checker{*this};
-        checker.template check_all<GGraph>();
-      }
     };
   }
 }

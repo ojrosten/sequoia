@@ -13,6 +13,9 @@
  */
 
 #include "sequoia/Maths/Graph/GraphTraits.hpp"
+#include "sequoia/Maths/Graph/GraphDetails.hpp"
+
+#include <vector>
 
 namespace sequoia::maths
 {

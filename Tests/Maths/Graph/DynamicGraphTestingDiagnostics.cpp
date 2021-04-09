@@ -17,8 +17,8 @@ namespace sequoia::testing
 
   void test_graph_false_positives::run_tests()
   {    
-    graph_test_helper<null_weight, null_weight> helper{concurrent_execution()};
-    helper.run_tests<dynamic_graph_false_positives>(*this);
+    graph_test_helper<null_weight, null_weight, test_graph_false_positives> helper{*this};
+    helper.run_tests();
   }
 
   template
@@ -31,39 +31,33 @@ namespace sequoia::testing
     class EdgeStorageTraits,
     class NodeWeightStorageTraits
   >
-  void dynamic_graph_false_positives<
-    GraphFlavour,
-    EdgeWeight,
-    NodeWeight,
-    EdgeWeightPooling,
-    NodeWeightPooling,
-    EdgeStorageTraits,
-    NodeWeightStorageTraits
-  >::execute_operations()
+  void test_graph_false_positives::execute_operations()
   {
     using namespace maths;
-    using edge_init_t = typename graph_t::edge_init_type;
+    using graph_type = typename graph_type_generator<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>::graph_type;
+    
+    using edge_init_t = typename graph_type::edge_init_type;
 
-    graph_t network{};
+    graph_type network{};
 
-    check_equality(LINE("Check false positive: empty graph versus single node"), network, graph_t{{}});
+    check_equality(LINE("Check false positive: empty graph versus single node"), network, graph_type{{}});
 
     std::string message{"Check false positive: empty graph versus single node with loop"};
     if constexpr (GraphFlavour == graph_flavour::directed)
     {
-      check_equality(LINE(message), network, graph_t{{edge_init_t{0}}});
+      check_equality(LINE(message), network, graph_type{{edge_init_t{0}}});
     }
     else if constexpr(GraphFlavour == graph_flavour::undirected)
     {
-      check_equality(LINE(message), network, graph_t{{edge_init_t{0}, edge_init_t{0}}});
+      check_equality(LINE(message), network, graph_type{{edge_init_t{0}, edge_init_t{0}}});
     }
     else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
     {
-      check_equality(LINE(message), network, graph_t{{edge_init_t{0,0,1}, edge_init_t{0,0,0}}});
+      check_equality(LINE(message), network, graph_type{{edge_init_t{0,0,1}, edge_init_t{0,0,0}}});
     }
     else
     {
-      check_equality(LINE(message), network, graph_t{{edge_init_t{0,1}, edge_init_t{0,0}}});
+      check_equality(LINE(message), network, graph_type{{edge_init_t{0,1}, edge_init_t{0,0}}});
     }
   }
 }

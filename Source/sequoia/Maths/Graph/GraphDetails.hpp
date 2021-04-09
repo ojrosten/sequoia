@@ -14,6 +14,7 @@
 
 #include "sequoia/Maths/Graph/Edge.hpp"
 #include "sequoia/Core/Ownership/DataPoolTraits.hpp"
+#include "sequoia/Core/Utilities/UniformWrapper.hpp"
 
 namespace sequoia
 {

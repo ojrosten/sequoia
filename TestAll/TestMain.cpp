@@ -26,8 +26,6 @@ int main(int argc, char** argv)
                        repositories(root)
     };
 
-    const auto mode{runner.concurrency()};
-
     runner.add_test_family(
       "Test Runner",
       test_runner_false_positive_test{"False Positive Diagnostics"},
@@ -198,26 +196,26 @@ int main(int argc, char** argv)
 
     runner.add_test_family(
       "Graph",
-      test_graph_false_positives{"Graph false positive diagnostics", mode},
-      test_graph_meta("Meta Tests", mode),
-      test_graph_init("Dynamic Graph Init", mode),
-      test_static_graph{"Static Graph Init", mode},
-      test_heterogeneous_static_graph{"Heterogeneous Static Graphs", mode},
-      unweighted_graph_test{"Unweighted Graph Tests", mode},
-      weighted_graph_test{"Weighted Graph Tests", mode},
-      unweighted_graph_allocation_test{"Unweighted Graph Allocation Tests", mode},
-      weighted_graph_allocation_test{"Weighted Graph Allocation Tests", mode},
-      test_fixed_topology{"Dynamic Graph Fixed Topology", mode},
-      test_static_fixed_topology{"Static Graph Manipulations", mode},
-      test_edge_insertion{"Edge Insertions", mode}
+      test_graph_false_positives{"Graph false positive diagnostics"},
+      test_graph_meta("Meta Tests"),
+      test_graph_init("Dynamic Graph Init"),
+      test_static_graph{"Static Graph Init"},
+      test_heterogeneous_static_graph{"Heterogeneous Static Graphs"},
+      unweighted_graph_test{"Unweighted Graph Tests"},
+      weighted_graph_test{"Weighted Graph Tests"},
+      unweighted_graph_allocation_test{"Unweighted Graph Allocation Tests"},
+      weighted_graph_allocation_test{"Weighted Graph Allocation Tests"},
+      test_fixed_topology{"Dynamic Graph Fixed Topology"},
+      test_static_fixed_topology{"Static Graph Manipulations"},
+      test_edge_insertion{"Edge Insertions"}
     );
 
     runner.add_test_family(
       "Graph Algorithms",
-      test_graph_traversals{"Traversals", mode},
-      test_static_graph_traversals{"Static Graph Traversals", mode},
-      test_graph_update{"Updates", mode},
-      test_subgraph{"Subgraph", mode}
+      test_graph_traversals{"Traversals"},
+      test_static_graph_traversals{"Static Graph Traversals"},
+      test_graph_update{"Updates"},
+      test_subgraph{"Subgraph"}
     );
 
     runner.add_test_family(

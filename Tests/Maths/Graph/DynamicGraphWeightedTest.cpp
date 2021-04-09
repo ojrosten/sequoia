@@ -23,49 +23,44 @@ namespace sequoia::testing
     using namespace maths;
       
     {
-      graph_test_helper<int, complex<double>>  helper{concurrent_execution()};     
-      helper.run_tests<generic_weighted_graph_tests>(*this);
+      graph_test_helper<int, complex<double>, weighted_graph_test> helper{*this};     
+      helper.run_tests();
     }
 
     {
-      graph_test_helper<complex<int>, complex<double>>  helper{concurrent_execution()};
-      helper.run_tests<generic_weighted_graph_tests>(*this);
+      graph_test_helper<complex<int>, complex<double>, weighted_graph_test> helper{*this};
+      helper.run_tests();
     }
 
     {
-      graph_test_helper<std::vector<int>, std::vector<complex<double>>>  helper{concurrent_execution()};      
-      helper.run_tests<generic_weighted_graph_tests>(*this);
+      graph_test_helper<std::vector<int>, std::vector<complex<double>>, weighted_graph_test> helper{*this};      
+      helper.run_tests();
     }
   }
 
   template
   <
-    maths::graph_flavour GraphFlavour,
+    maths::graph_flavour GraphFlavour,    
     class EdgeWeight,
-    class NodeWeight,      
-    class EdgeWeightPooling,
-    class NodeWeightPooling,
+    class NodeWeight,    
+    class EdgeWeightCreator,
+    class NodeWeightCreator,
     class EdgeStorageTraits,
     class NodeWeightStorageTraits
   >
-  void generic_weighted_graph_tests<
-      GraphFlavour,
-      EdgeWeight,
-      NodeWeight,
-      EdgeWeightPooling,
-      NodeWeightPooling,
-      EdgeStorageTraits,
-      NodeWeightStorageTraits
-  >::test_basic_operations()
+  void weighted_graph_test::execute_operations()
   {
     using namespace maths;
+    using ESTraits = EdgeStorageTraits;
+    using NSTraits = NodeWeightStorageTraits;
+    using graph_t = graph_type_generator_t<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, ESTraits, NSTraits>;
     using edge_init_t      = typename graph_t::edge_init_type;
     using edge_t           = typename graph_t::edge_type;
     using edge_init_list_t = std::initializer_list<std::initializer_list<edge_init_t>>;
     using edge_weight_t    = typename graph_t::edge_weight_type;
     using node_weight_t    = typename graph_t::node_weight_type;
 
-    constexpr bool edgeDataPool{std::is_same_v<EdgeWeightPooling, ownership::data_pool<EdgeWeight>>};
+    constexpr bool edgeDataPool{std::is_same_v<EdgeWeightCreator, ownership::data_pool<EdgeWeight>>};
     
     graph_t graph;
 

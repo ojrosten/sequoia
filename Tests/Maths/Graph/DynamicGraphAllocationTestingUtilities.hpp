@@ -44,33 +44,6 @@ namespace sequoia::testing
     constexpr static bool has_allocator{};
   };
 
-  template
-  <
-    maths::graph_flavour GraphFlavour,
-    class EdgeWeight,
-    class NodeWeight,
-    class EdgeWeightPooling,
-    class NodeWeightPooling,
-    class EdgeStorageTraits,
-    class NodeWeightStorageTraits,
-    test_mode Mode
-  >
-  using canonical_graph_allocation_operations
-    = basic_graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits, Mode, regular_allocation_extender<Mode>>;
-
-  template
-  <
-    maths::graph_flavour GraphFlavour,
-    class EdgeWeight,
-    class NodeWeight,
-    class EdgeWeightPooling,
-    class NodeWeightPooling,
-    class EdgeStorageTraits,
-    class NodeWeightStorageTraits
-  >
-  using graph_allocation_operations
-    = canonical_graph_allocation_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits, test_mode::standard>;
-
   template<class Graph>
   struct edge_alloc_getter
   {
@@ -110,5 +83,13 @@ namespace sequoia::testing
       return g.get_node_allocator();
     }
   };
+
+  // Treat this as a special case, at least for now. A fully-fledged allocation
+  // test treats all 8 permutations of the propagation traits and, for graph test,
+  // this makes compilation extremely expensive...
+  template<test_mode mode>
+  using regular_graph_allocation_test = graph_basic_test<mode, regular_allocation_extender<mode>>;
+
+  using graph_allocation_test = regular_graph_allocation_test<test_mode::standard>;
 
 }

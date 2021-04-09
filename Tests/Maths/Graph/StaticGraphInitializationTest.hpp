@@ -19,6 +19,21 @@ namespace sequoia:: testing
     [[nodiscard]]
     std::string_view source_file() const noexcept final;
   private:
+    template<class>
+    friend class init_checker;
+
+    template<class>
+    friend class undirected_init_checker;
+
+    template<class>
+    friend class undirected_embedded_init_checker;
+
+    template<class>
+    friend class directed_init_checker;
+
+    template<class>
+    friend class directed_embedded_init_checker;
+    
     void run_tests() final;
 
     template<class NodeWeight, class EdgeWeight> void test_generic_undirected();

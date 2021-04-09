@@ -6,6 +6,7 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "DynamicGraphUpdateTest.hpp"
+#include "DynamicGraphTestingUtilities.hpp"
 
 namespace sequoia::testing
 {
@@ -40,38 +41,49 @@ namespace sequoia::testing
   void test_graph_update::run_tests()
   {
     {
-      graph_test_helper<std::vector<double>, std::vector<int>> helper{concurrent_execution()};
-      helper.run_tests<test_bf_update>(*this);
+      graph_test_helper<std::vector<double>, std::vector<int>, test_graph_update> helper{*this};
+      helper.run_tests();
     }
 
     {
-      graph_test_helper<size_t, size_t> helper{concurrent_execution()};
-      helper.run_tests<test_update>(*this);
+      graph_test_helper<size_t, size_t, test_graph_update> helper{*this};
+      helper.run_tests();
+    }
+  }
+
+  template
+  <
+    maths::graph_flavour GraphFlavour,    
+    class EdgeWeight,
+    class NodeWeight,    
+    class EdgeWeightCreator,
+    class NodeWeightCreator,
+    class EdgeStorageTraits,
+    class NodeWeightStorageTraits
+  >
+  void test_graph_update::execute_operations()
+  {
+    using ESTraits = EdgeStorageTraits;
+    using NSTraits = NodeWeightStorageTraits;
+    using graph_type = graph_type_generator_t<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, ESTraits, NSTraits>;
+    if constexpr(std::is_same_v<EdgeWeight, std::vector<double>>)
+    {
+      test_bf_update<graph_type>();
+    }
+    else
+    {
+      test_update<graph_type>();
     }
   }
 
   //============================= General traversal tests ============================//
+  // Cyclic graph created and updated using all algorithms
 
-  template
-  <
-    maths::graph_flavour GraphFlavour,
-    class EdgeWeight,
-    class NodeWeight,      
-    class EdgeWeightPooling,
-    class NodeWeightPooling,
-    class EdgeStorageTraits,
-    class NodeWeightStorageTraits
-  >
-  auto test_update<
-    GraphFlavour,
-    EdgeWeight,
-    NodeWeight,
-    EdgeWeightPooling,
-    NodeWeightPooling,
-    EdgeStorageTraits,
-    NodeWeightStorageTraits>::make_graph() -> graph_t
+  template<class Graph>
+  [[nodiscard]]
+  Graph test_graph_update::make_graph()
   {
-    graph_t graph;
+    Graph graph;
 
     graph.add_node(5_sz);
     graph.add_node(2_sz);
@@ -97,28 +109,16 @@ namespace sequoia::testing
 
   //============================= check_setup =============================//
   
-  template
-  <
-    maths::graph_flavour GraphFlavour,
-    class EdgeWeight,
-    class NodeWeight,      
-    class EdgeWeightPooling,
-    class NodeWeightPooling,
-    class EdgeStorageTraits,
-    class NodeWeightStorageTraits
-  >
-  void test_update<
-    GraphFlavour,
-    EdgeWeight,
-    NodeWeight,
-    EdgeWeightPooling,
-    NodeWeightPooling,
-    EdgeStorageTraits,
-    NodeWeightStorageTraits>::check_setup(const graph_t& graph)
+  template<class Graph>
+  void test_graph_update::check_setup(const Graph& graph)
   {
+    using ei_t = typename Graph::edge_init_type;
+    using flavour = maths::graph_flavour;
+    constexpr auto GraphFlavour{Graph::flavour};
+
     if constexpr(GraphFlavour == flavour::undirected)
     {
-      graph_t expected{
+      Graph expected{
         {{ei_t{1,1_sz}, ei_t{2,7_sz}, ei_t{2,2_sz}},
          {ei_t{0,1_sz}, ei_t{3,3_sz}},
          {ei_t{3,4_sz}, ei_t{0,7_sz}, ei_t{0,2_sz}},
@@ -132,7 +132,7 @@ namespace sequoia::testing
     }
     else if constexpr(GraphFlavour == flavour::directed)
     {
-      graph_t expected{
+      Graph expected{
         {{ei_t{1,1_sz}, ei_t{2,7_sz}},
          {ei_t{3,3_sz}},
          {ei_t{0,2_sz}},
@@ -144,7 +144,7 @@ namespace sequoia::testing
     }
     else if constexpr(GraphFlavour == flavour::undirected_embedded)
     {
-      graph_t expected{
+      Graph expected{
         {{ei_t{1,0,1_sz}, ei_t{2,1,7_sz}, ei_t{2,2,2_sz}},
          {ei_t{0,0,1_sz}, ei_t{3,0,3_sz}},
          {ei_t{3,1,4_sz}, ei_t{0,1,7_sz}, ei_t{0,2,2_sz}},
@@ -156,7 +156,7 @@ namespace sequoia::testing
     }
     else if constexpr(GraphFlavour == flavour::directed_embedded)
     {
-      graph_t expected{
+      Graph expected{
         {{ei_t{0,1,0,1_sz}, ei_t{0,2,1,7_sz}, ei_t{2,0,2,2_sz}},
          {ei_t{0,1,0,1_sz}, ei_t{1,3,0,3_sz}},
          {ei_t{3,2,1,4_sz}, ei_t{0,2,1,7_sz}, ei_t{2,0,2,2_sz}},
@@ -168,32 +168,16 @@ namespace sequoia::testing
     }
     else
     {
-      static_assert(dependent_false<graph_t>::value);
+      static_assert(dependent_false<Graph>::value);
     }
   }
 
   //============================= check_df_update =============================//
 
-  template
-  <
-    maths::graph_flavour GraphFlavour,
-    class EdgeWeight,
-    class NodeWeight,      
-    class EdgeWeightPooling,
-    class NodeWeightPooling,
-    class EdgeStorageTraits,
-    class NodeWeightStorageTraits
-  >
-  void test_update<
-    GraphFlavour,
-    EdgeWeight,
-    NodeWeight,
-    EdgeWeightPooling,
-    NodeWeightPooling,
-    EdgeStorageTraits,
-    NodeWeightStorageTraits>::check_df_update(graph_t graph)
+  template<class Graph>
+  void test_graph_update::check_df_update(Graph graph)
   {
-    graph_updater<graph_t> updater(graph);
+    graph_updater<Graph> updater(graph);
     auto firstNodeFn = [&updater](const std::size_t index){ updater.firstNodeTraversal(index); };
     maths::pseudo_depth_first_search(graph, false, 0, firstNodeFn);
 
@@ -240,10 +224,15 @@ namespace sequoia::testing
     //(1)2-------4(3)    (1)2--------4(3)
     //      16                  15
 
+    using namespace maths;
+    using ei_t = typename Graph::edge_init_type;
+    using flavour = maths::graph_flavour;
+    constexpr auto GraphFlavour{Graph::flavour};
+    constexpr bool undirected{maths::undirected(GraphFlavour)};
 
     if constexpr(GraphFlavour == flavour::undirected)
     {
-      graph_t expected{
+      Graph expected{
         {{ei_t{1,13_sz}, ei_t{2,18_sz}, ei_t{2,12_sz}},
          {ei_t{0,13_sz}, ei_t{3,16_sz}},
          {ei_t{3,18_sz}, ei_t{0,18_sz}, ei_t{0,12_sz}},
@@ -257,7 +246,7 @@ namespace sequoia::testing
     }
     else if constexpr(GraphFlavour == flavour::directed)
     {
-      graph_t expected{
+      Graph expected{
         {{ei_t{1,12_sz}, ei_t{2,17_sz}},
          {ei_t{3,15_sz}},
          {ei_t{0,16_sz}},
@@ -269,7 +258,7 @@ namespace sequoia::testing
     }
     else if constexpr(GraphFlavour == flavour::undirected_embedded)
     {
-      graph_t expected{
+      Graph expected{
         {{ei_t{1,0,13_sz}, ei_t{2,1,18_sz}, ei_t{2,2,12_sz}},
          {ei_t{0,0,13_sz}, ei_t{3,0,16_sz}},
          {ei_t{3,1,18_sz}, ei_t{0,1,18_sz}, ei_t{0,2,12_sz}},
@@ -281,7 +270,7 @@ namespace sequoia::testing
     }
     else if constexpr(GraphFlavour == flavour::directed_embedded)
     {
-      graph_t expected{
+      Graph expected{
         {{ei_t{0,1,0,12_sz}, ei_t{0,2,1,17_sz}, ei_t{2,0,2,16_sz}},
          {ei_t{0,1,0,12_sz}, ei_t{1,3,0,15_sz}},
          {ei_t{3,2,1,17_sz}, ei_t{0,2,1,17_sz}, ei_t{2,0,2,16_sz}},
@@ -293,7 +282,7 @@ namespace sequoia::testing
     }
     else
     {
-      static_assert(dependent_false<graph_t>::value);
+      static_assert(dependent_false<Graph>::value);
     }
 
     auto secondEdgeFn = [&updater](auto citer) { updater.secondEdgeTraversal(citer); };
@@ -319,7 +308,7 @@ namespace sequoia::testing
 
     if constexpr(GraphFlavour == flavour::undirected)
     {
-      graph_t expected{
+      Graph expected{
         {{ei_t{1,3_sz}, ei_t{2,5_sz}, ei_t{2,0_sz}},
          {ei_t{0,3_sz}, ei_t{3,5_sz}},
          {ei_t{3,4_sz}, ei_t{0,5_sz}, ei_t{0,0_sz}},
@@ -333,7 +322,7 @@ namespace sequoia::testing
     }
     else if constexpr(GraphFlavour == flavour::directed)
     {
-      graph_t expected{
+      Graph expected{
         {{ei_t{1,1_sz}, ei_t{2,7_sz}},
          {ei_t{3,3_sz}},
          {ei_t{0,2_sz}},
@@ -345,7 +334,7 @@ namespace sequoia::testing
     }
     else if constexpr(GraphFlavour == flavour::undirected_embedded)
     {
-      graph_t expected{
+      Graph expected{
         {{ei_t{1,0,3_sz}, ei_t{2,1,5_sz}, ei_t{2,2,0_sz}},
          {ei_t{0,0,3_sz}, ei_t{3,0,5_sz}},
          {ei_t{3,1,4_sz}, ei_t{0,1,5_sz}, ei_t{0,2,0_sz}},
@@ -357,7 +346,7 @@ namespace sequoia::testing
     }
     else if constexpr(GraphFlavour == flavour::directed_embedded)
     {
-      graph_t expected{
+      Graph expected{
         {{ei_t{0,1,0,1_sz}, ei_t{0,2,1,7_sz}, ei_t{2,0,2,2_sz}},
          {ei_t{0,1,0,1_sz}, ei_t{1,3,0,3_sz}},
          {ei_t{3,2,1,4_sz}, ei_t{0,2,1,7_sz}, ei_t{2,0,2,2_sz}},
@@ -369,32 +358,16 @@ namespace sequoia::testing
     }
     else
     {
-      static_assert(dependent_false<graph_t>::value);
+      static_assert(dependent_false<Graph>::value);
     }
   }
 
   //============================= check_bf_update =============================//
-  
-  template
-  <
-    maths::graph_flavour GraphFlavour,
-    class EdgeWeight,
-    class NodeWeight,      
-    class EdgeWeightPooling,
-    class NodeWeightPooling,
-    class EdgeStorageTraits,
-    class NodeWeightStorageTraits
-  >
-  void test_update<
-    GraphFlavour,
-    EdgeWeight,
-    NodeWeight,
-    EdgeWeightPooling,
-    NodeWeightPooling,
-    EdgeStorageTraits,
-    NodeWeightStorageTraits>::check_bf_update(graph_t graph)
+
+  template<class Graph>
+  void test_graph_update::check_bf_update(Graph graph)
   {
-    graph_updater<graph_t> updater(graph);
+    graph_updater<Graph> updater(graph);
     auto firstNodeFn = [&updater](const std::size_t index){ updater.firstNodeTraversal(index); };
     maths::breadth_first_search(graph, false, 0, firstNodeFn);
 
@@ -441,9 +414,14 @@ namespace sequoia::testing
     //(1)2-------4(3)    (1)2--------4(3)
     //      16                  15
 
+    using ei_t = typename Graph::edge_init_type;
+    using flavour = maths::graph_flavour;
+    constexpr auto GraphFlavour{Graph::flavour};
+    constexpr bool undirected{maths::undirected(GraphFlavour)};
+
     if constexpr(GraphFlavour == flavour::undirected)
     {
-      graph_t expected{
+      Graph expected{
         {{ei_t{1,11_sz}, ei_t{2,18_sz}, ei_t{2,14_sz}},
          {ei_t{0,11_sz}, ei_t{3,16_sz}},
          {ei_t{3,18_sz}, ei_t{0,18_sz}, ei_t{0,14_sz}},
@@ -457,7 +435,7 @@ namespace sequoia::testing
     }
     else if constexpr(GraphFlavour == flavour::directed)
     {
-      graph_t expected{
+      Graph expected{
         {{ei_t{1,11_sz}, ei_t{2,18_sz}},
          {ei_t{3,15_sz}},
          {ei_t{0,15_sz}},
@@ -469,7 +447,7 @@ namespace sequoia::testing
     }
     else if constexpr(GraphFlavour == flavour::undirected_embedded)
     {
-      graph_t expected{
+      Graph expected{
         {{ei_t{1,0,11_sz}, ei_t{2,1,18_sz}, ei_t{2,2,14_sz}},
          {ei_t{0,0,11_sz}, ei_t{3,0,16_sz}},
          {ei_t{3,1,18_sz}, ei_t{0,1,18_sz}, ei_t{0,2,14_sz}},
@@ -481,7 +459,7 @@ namespace sequoia::testing
     }
     else if constexpr(GraphFlavour == flavour::directed_embedded)
     {
-      graph_t expected{
+      Graph expected{
         {{ei_t{0,1,0,11_sz}, ei_t{0,2,1,18_sz}, ei_t{2,0,2,15_sz}},
          {ei_t{0,1,0,11_sz}, ei_t{1,3,0,15_sz}},
          {ei_t{3,2,1,18_sz}, ei_t{0,2,1,18_sz}, ei_t{2,0,2,15_sz}},
@@ -493,7 +471,7 @@ namespace sequoia::testing
     }
     else
     {
-      static_assert(dependent_false<graph_t>::value);
+      static_assert(dependent_false<Graph>::value);
     }
 
     auto secondEdgeFn = [&updater](auto citer) { updater.secondEdgeTraversal(citer); };
@@ -521,28 +499,13 @@ namespace sequoia::testing
 
   //============================= check_pr_update =============================//
   
-  template
-  <
-    maths::graph_flavour GraphFlavour,
-    class EdgeWeight,
-    class NodeWeight,      
-    class EdgeWeightPooling,
-    class NodeWeightPooling,
-    class EdgeStorageTraits,
-    class NodeWeightStorageTraits
-  >
-  void test_update<
-    GraphFlavour,
-    EdgeWeight,
-    NodeWeight,
-    EdgeWeightPooling,
-    NodeWeightPooling,
-    EdgeStorageTraits,
-    NodeWeightStorageTraits>::check_pr_update(graph_t graph)
+  template<class Graph>
+  void test_graph_update::check_pr_update(Graph graph)
   {
-    graph_updater<graph_t> updater(graph);
+    graph_updater<Graph> updater(graph);
     auto firstNodeFn = [&updater](const std::size_t index){ updater.firstNodeTraversal(index); };
     maths::priority_search(graph, false, 0, firstNodeFn);
+    constexpr bool undirected{maths::undirected(Graph::flavour)};
 
     // node_weight *=  (2 + traversal index)
     //
@@ -589,10 +552,13 @@ namespace sequoia::testing
     //(1)2-------4(3)    (1)2--------4(3)
     //      17                  16
 
+    using ei_t = typename Graph::edge_init_type;
+    using flavour = maths::graph_flavour;
+    constexpr auto GraphFlavour{Graph::flavour};
 
     if constexpr(GraphFlavour == flavour::undirected)
     {
-      graph_t expected{
+      Graph expected{
         {{ei_t{1,11_sz}, ei_t{2,18_sz}, ei_t{2,14_sz}},
          {ei_t{0,11_sz}, ei_t{3,17_sz}},
          {ei_t{3,17_sz}, ei_t{0,18_sz}, ei_t{0,14_sz}},
@@ -606,7 +572,7 @@ namespace sequoia::testing
     }
     else if constexpr(GraphFlavour == flavour::directed)
     {
-      graph_t expected{
+      Graph expected{
         {{ei_t{1,11_sz}, ei_t{2,18_sz}},
          {ei_t{3,16_sz}},
          {ei_t{0,14_sz}},
@@ -618,7 +584,7 @@ namespace sequoia::testing
     }
     else if constexpr(GraphFlavour == flavour::undirected_embedded)
     {
-      graph_t expected{
+      Graph expected{
         {{ei_t{1,0,11_sz}, ei_t{2,1,18_sz}, ei_t{2,2,14_sz}},
          {ei_t{0,0,11_sz}, ei_t{3,0,17_sz}},
          {ei_t{3,1,17_sz}, ei_t{0,1,18_sz}, ei_t{0,2,14_sz}},
@@ -630,7 +596,7 @@ namespace sequoia::testing
     }
     else if constexpr(GraphFlavour == flavour::directed_embedded)
     {
-      graph_t expected{
+      Graph expected{
         {{ei_t{0,1,0,11_sz}, ei_t{0,2,1,18_sz}, ei_t{2,0,2,14_sz}},
          {ei_t{0,1,0,11_sz}, ei_t{1,3,0,16_sz}},
          {ei_t{3,2,1,18_sz}, ei_t{0,2,1,18_sz}, ei_t{2,0,2,14_sz}},
@@ -642,7 +608,7 @@ namespace sequoia::testing
     }
     else
     {
-      static_assert(dependent_false<graph_t>::value);
+      static_assert(dependent_false<Graph>::value);
     }
 
     auto secondEdgeFn = [&updater](auto citer) { updater.secondEdgeTraversal(citer); };
@@ -670,7 +636,7 @@ namespace sequoia::testing
     if constexpr(GraphFlavour == flavour::undirected)
     {
       const auto w{std::numeric_limits<std::size_t>::max() - 1_sz};
-      graph_t expected{
+      Graph expected{
         {{ei_t{1,w}, ei_t{2,8_sz}, ei_t{2,3_sz}},
          {ei_t{0,w}, ei_t{3,3_sz}},
          {ei_t{3,5_sz}, ei_t{0,8_sz}, ei_t{0,3_sz}},
@@ -684,7 +650,7 @@ namespace sequoia::testing
     }
     else if constexpr(GraphFlavour == flavour::directed)
     {
-      graph_t expected{
+      Graph expected{
         {{ei_t{1,1_sz}, ei_t{2,7_sz}},
          {ei_t{3,3_sz}},
          {ei_t{0,2_sz}},
@@ -697,7 +663,7 @@ namespace sequoia::testing
     else if constexpr(GraphFlavour == flavour::undirected_embedded)
     {
       const auto w{std::numeric_limits<std::size_t>::max() - 1_sz};
-      graph_t expected{
+      Graph expected{
         {{ei_t{1,0,w}, ei_t{2,1,8_sz}, ei_t{2,2,3_sz}},
          {ei_t{0,0,w}, ei_t{3,0,3_sz}},
          {ei_t{3,1,5_sz}, ei_t{0,1,8_sz}, ei_t{0,2,3_sz}},
@@ -709,7 +675,7 @@ namespace sequoia::testing
     }
     else if constexpr(GraphFlavour == flavour::directed_embedded)
     {
-      graph_t expected{
+      Graph expected{
         {{ei_t{0,1,0,1_sz}, ei_t{0,2,1,7_sz}, ei_t{2,0,2,2_sz}},
          {ei_t{0,1,0,1_sz}, ei_t{1,3,0,3_sz}},
          {ei_t{3,2,1,4_sz}, ei_t{0,2,1,7_sz}, ei_t{2,0,2,2_sz}},
@@ -721,32 +687,16 @@ namespace sequoia::testing
     }
     else
     {
-      static_assert(dependent_false<graph_t>::value);
+      static_assert(dependent_false<Graph>::value);
     }
   }
 
   //============================= execute_operations =============================//
-  
-  template
-  <
-    maths::graph_flavour GraphFlavour,
-    class EdgeWeight,
-    class NodeWeight,      
-    class EdgeWeightPooling,
-    class NodeWeightPooling,
-    class EdgeStorageTraits,
-    class NodeWeightStorageTraits
-  >
-  void test_update<
-    GraphFlavour,
-    EdgeWeight,
-    NodeWeight,
-    EdgeWeightPooling,
-    NodeWeightPooling,
-    EdgeStorageTraits,
-    NodeWeightStorageTraits>::execute_operations()
+
+  template<class Graph>
+  void test_graph_update::test_update()
   {
-    const graph_t graph{make_graph()};
+    const Graph graph{make_graph<Graph>()};
     check_setup(graph);
 
     //       7
@@ -764,28 +714,12 @@ namespace sequoia::testing
 
   //============================= Breadth-first only tests ===========================//
 
-  template
-  <
-    maths::graph_flavour GraphFlavour,
-    class EdgeWeight,
-    class NodeWeight,      
-    class EdgeWeightPooling,
-    class NodeWeightPooling,
-    class EdgeStorageTraits,
-    class NodeWeightStorageTraits
-  >
-  void test_bf_update<
-    GraphFlavour,
-    EdgeWeight,
-    NodeWeight,
-    EdgeWeightPooling,
-    NodeWeightPooling,
-    EdgeStorageTraits,
-    NodeWeightStorageTraits>::execute_operations()
+  template<class Graph>
+  void test_graph_update::test_bf_update()
   {
     using maths::graph_flavour;
     
-    graph_t graph;
+    Graph graph;
     graph.add_node();
     graph.add_node();
     graph.add_node();
@@ -802,11 +736,14 @@ namespace sequoia::testing
     // --  0 --
     //    / \
     //   /   \
-    //  0=====0    
+    //  0=====0
+
+    using ei_t = typename Graph::edge_init_type;
+    constexpr auto GraphFlavour{Graph::flavour};
     
     if constexpr(GraphFlavour == graph_flavour::undirected)
     {
-      graph_t expected{
+      Graph expected{
         {{ei_t{1}, ei_t{1}, ei_t{2}},
         {ei_t{0}, ei_t{0}, ei_t{2}},
         {ei_t{0}, ei_t{1}, ei_t{2}, ei_t{2}, ei_t{2}, ei_t{2}}},
@@ -818,7 +755,7 @@ namespace sequoia::testing
     }
     else if constexpr(GraphFlavour == graph_flavour::directed)
     {
-      graph_t expected{
+      Graph expected{
         {{ei_t{1}},
         {ei_t{0}, ei_t{2}},
         {ei_t{0}, ei_t{2}, ei_t{2}}},
@@ -829,7 +766,7 @@ namespace sequoia::testing
     }
     else if constexpr(GraphFlavour == graph_flavour::undirected_embedded)
     {
-      graph_t expected{
+      Graph expected{
         {{ei_t{1,0}, ei_t{1,1}, ei_t{2,1}},
          {ei_t{0,0}, ei_t{0,1}, ei_t{2,0}},
          {ei_t{1,2}, ei_t{0,2}, ei_t{2,3}, ei_t{2,2}, ei_t{2,5}, ei_t{2,4}}},
@@ -840,7 +777,7 @@ namespace sequoia::testing
     }
     else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
     {
-      graph_t expected{
+      Graph expected{
         {{ei_t{0,1,0}, ei_t{1,0,1}, ei_t{2,0,1}},
          {ei_t{0,1,0}, ei_t{1,0,1}, ei_t{1,2,0}},
          {ei_t{1,2,2}, ei_t{2,0,2}, ei_t{2,2,3}, ei_t{2,2,2}, ei_t{2,2,5}, ei_t{2,2,4}}},
@@ -851,7 +788,7 @@ namespace sequoia::testing
     }
     else
     {
-      static_assert(dependent_false<graph_t>::value);
+      static_assert(dependent_false<Graph>::value);
     }
 
     auto nodeFn1 = [&graph](const std::size_t index) { graph.node_weight(graph.cbegin_node_weights() + index, std::vector<int>{static_cast<int>(index)}); };
@@ -875,10 +812,11 @@ namespace sequoia::testing
     };
 
     maths::breadth_first_search(graph, false, 0, maths::null_functor(), maths::null_functor(), edgeFn1);
+    using ew_t = std::vector<double>;
 
     if constexpr(GraphFlavour == graph_flavour::undirected)
     {
-      graph_t expected{
+      Graph expected{
         {{ei_t{1, ew_t{0}}, ei_t{1, ew_t{1}}, ei_t{2, ew_t{0}}},
          {ei_t{0, ew_t{0}}, ei_t{0, ew_t{1}}, ei_t{2, ew_t{0}}},
          {ei_t{0, ew_t{0}}, ei_t{1, ew_t{0}}, ei_t{2, ew_t{0}}, ei_t{2, ew_t{0}}, ei_t{2, ew_t{2}}, ei_t{2, ew_t{2}}}},
@@ -890,7 +828,7 @@ namespace sequoia::testing
     }
     else if constexpr(GraphFlavour == graph_flavour::directed)
     {
-      graph_t expected{
+      Graph expected{
         {{ei_t{1, ew_t{0}}},
          {ei_t{0, ew_t{0}}, ei_t{2, ew_t{0}}},
          {ei_t{0, ew_t{0}}, ei_t{2, ew_t{0}}, ei_t{2, ew_t{1}}}},
@@ -901,7 +839,7 @@ namespace sequoia::testing
     }
     else if constexpr(GraphFlavour == graph_flavour::undirected_embedded)
     {
-      graph_t expected{
+      Graph expected{
         {{ei_t{1,0, ew_t{0}}, ei_t{1,1, ew_t{1}}, ei_t{2,1, ew_t{0}}},
          {ei_t{0,0, ew_t{0}}, ei_t{0,1, ew_t{1}}, ei_t{2,0, ew_t{0}}},
          {ei_t{1,2, ew_t{0}}, ei_t{0,2, ew_t{0}}, ei_t{2,3, ew_t{0}}, ei_t{2,2, ew_t{0}}, ei_t{2,5, ew_t{2}}, ei_t{2,4, ew_t{2}}}},
@@ -912,7 +850,7 @@ namespace sequoia::testing
     }
     else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
     {
-      graph_t expected{
+      Graph expected{
         {{ei_t{0,1,0,ew_t{0}}, ei_t{1,0,1,ew_t{0}}, ei_t{2,0,1,ew_t{0}}},
          {ei_t{0,1,0,ew_t{0}}, ei_t{1,0,1,ew_t{0}}, ei_t{1,2,0,ew_t{0}}},
            {ei_t{1,2,2,ew_t{0}}, ei_t{2,0,2,ew_t{0}}, ei_t{2,2,3,ew_t{1}}, ei_t{2,2,2,ew_t{1}}, ei_t{2,2,5,ew_t{3}}, ei_t{2,2,4,ew_t{3}}}},
@@ -923,7 +861,7 @@ namespace sequoia::testing
     }
     else
     {
-      static_assert(dependent_false<graph_t>::value);
+      static_assert(dependent_false<Graph>::value);
     }
 
     if constexpr(maths::undirected(GraphFlavour))
@@ -932,24 +870,8 @@ namespace sequoia::testing
     }
   }
 
-  template
-  <
-    maths::graph_flavour GraphFlavour,
-    class EdgeWeight,
-    class NodeWeight,      
-    class EdgeWeightPooling,
-    class NodeWeightPooling,
-    class EdgeStorageTraits,
-    class NodeWeightStorageTraits
-  >
-  void test_bf_update<
-    GraphFlavour,
-    EdgeWeight,
-    NodeWeight,
-    EdgeWeightPooling,
-    NodeWeightPooling,
-    EdgeStorageTraits,
-    NodeWeightStorageTraits>::test_second_edge_traversal_update(graph_t& graph)
+  template<class Graph>
+  void test_graph_update::test_second_edge_traversal_update(Graph& graph)
   {
     using maths::graph_flavour; 
     
@@ -966,9 +888,13 @@ namespace sequoia::testing
 
     maths::breadth_first_search(graph, false, 0, maths::null_functor(), maths::null_functor(), maths::null_functor(), edgeFn2);
 
+    using ei_t = typename Graph::edge_init_type;
+    using ew_t = std::vector<double>;
+    constexpr auto GraphFlavour{Graph::flavour};
+
     if constexpr(GraphFlavour == graph_flavour::undirected)
     {
-      graph_t expected{
+      Graph expected{
         {{ei_t{1, ew_t{0,1}}, ei_t{1, ew_t{0,2}}, ei_t{2, ew_t{0,1}}},
          {ei_t{0, ew_t{0,1}}, ei_t{0, ew_t{0,2}}, ei_t{2, ew_t{1,1}}},
          {ei_t{0, ew_t{0,1}}, ei_t{1, ew_t{1,1}}, ei_t{2, ew_t{2,2}}, ei_t{2, ew_t{2,2}}, ei_t{2, ew_t{2,4}}, ei_t{2, ew_t{2,4}}}},
@@ -980,7 +906,7 @@ namespace sequoia::testing
     }
     else if constexpr(GraphFlavour == graph_flavour::undirected_embedded)
     {
-      graph_t expected{
+      Graph expected{
         {{ei_t{1,0, ew_t{0,1}}, ei_t{1,1, ew_t{0,2}}, ei_t{2,1, ew_t{0,1}}},
          {ei_t{0,0, ew_t{0,1}}, ei_t{0,1, ew_t{0,2}}, ei_t{2,0, ew_t{1,1}}},
          {ei_t{1,2, ew_t{1,1}}, ei_t{0,2, ew_t{0,1}}, ei_t{2,3, ew_t{2,2}}, ei_t{2,2, ew_t{2,2}}, ei_t{2,5, ew_t{2,4}}, ei_t{2,4, ew_t{2,4}}}},
@@ -991,7 +917,7 @@ namespace sequoia::testing
     }
     else
     {
-      static_assert(dependent_false<graph_t>::value);
+      static_assert(dependent_false<Graph>::value);
     }    
   }
 }

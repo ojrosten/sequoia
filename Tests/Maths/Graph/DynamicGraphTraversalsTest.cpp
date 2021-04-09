@@ -6,9 +6,17 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "DynamicGraphTraversalsTest.hpp"
+#include "DynamicGraphTestingUtilities.hpp"
+
+#include "sequoia/Core/Concurrency/ConcurrencyModels.hpp"
 
 namespace sequoia::testing
 {
+  namespace
+  {    
+    using edge_results = std::vector<std::pair<std::size_t, std::size_t>>;
+  }
+  
   [[nodiscard]]
   std::string_view test_graph_traversals::source_file() const noexcept
   {
@@ -20,18 +28,41 @@ namespace sequoia::testing
     test_prs_details();
 
     {
-      graph_test_helper<null_weight, null_weight> helper{concurrent_execution()};
-      helper.run_tests<tracker_test>(*this);
+      graph_test_helper<null_weight, null_weight, test_graph_traversals> helper{*this};
+      helper.run_tests();
     }
 
     {
-      graph_test_helper<null_weight, int> helper{concurrent_execution()};
-      helper.run_tests<test_weighted_BFS_tasks>(*this);
+      graph_test_helper<null_weight, int, test_graph_traversals> helper{*this};
+      helper.run_tests();
     }
+  }
 
+  template
+  <
+    maths::graph_flavour GraphFlavour,      
+    class EdgeWeight,
+    class NodeWeight,      
+    class EdgeWeightCreator,
+    class NodeWeightCreator,
+    class EdgeStorageTraits,
+    class NodeWeightStorageTraits
+   >
+  void test_graph_traversals::execute_operations()
+  {
+    using ESTraits = EdgeStorageTraits;
+    using NSTraits = NodeWeightStorageTraits;
+    using graph_type = graph_type_generator_t<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, ESTraits, NSTraits>;
+
+    if constexpr(std::is_empty_v<NodeWeight>)
     {
-      graph_test_helper<null_weight, int> helper{concurrent_execution()};
-      helper.run_tests<test_priority_traversal>(*this);
+      tracker_test<graph_type, Traverser<BFS>>();
+      tracker_test<graph_type, Traverser<DFS>>();
+    }
+    else
+    {
+      test_weighted_BFS_tasks<graph_type>();
+      test_priority_traversal<graph_type>();
     }
   }
 
@@ -68,28 +99,12 @@ namespace sequoia::testing
 
   //=============================== Tracker Test ===============================//
   
-  template
-  <
-    maths::graph_flavour GraphFlavour,
-    class EdgeWeight,
-    class NodeWeight,      
-    class EdgeWeightPooling,
-    class NodeWeightPooling,
-    class EdgeStorageTraits,
-    class NodeWeightStorageTraits
-  >
-  template<class Traverser>
-  void tracker_test<
-    GraphFlavour,
-    EdgeWeight,
-    NodeWeight,
-    EdgeWeightPooling,
-    NodeWeightPooling,
-    EdgeStorageTraits,
-    NodeWeightStorageTraits>::test_tracker_algorithm()
+  template<class Graph, class Traverser>
+  void test_graph_traversals::tracker_test()
   {
     using namespace maths;
-        
+
+    constexpr auto GraphFlavour{Graph::flavour};
     constexpr bool isBFS{std::is_same<typename Traverser::type, BFS>::value};
     constexpr bool mutualInfo{mutual_info(GraphFlavour)};
     constexpr bool undirected{maths::undirected(GraphFlavour)};
@@ -105,9 +120,9 @@ namespace sequoia::testing
       }
     };
 
-    graph_t network;
+    Graph network;
     node_tracker discovery, discovery2;
-    edge_tracker<graph_t, Traverser> edgeDiscovery{network}, edgeDiscovery2{network};
+    edge_tracker<Graph, Traverser> edgeDiscovery{network}, edgeDiscovery2{network};
 
     if constexpr(undirected)
     {
@@ -458,25 +473,9 @@ namespace sequoia::testing
     check_equality(LINE(make_message("")), order, order2);
   }
 
-  template
-  <
-    maths::graph_flavour GraphFlavour,
-    class EdgeWeight,
-    class NodeWeight,      
-    class EdgeWeightPooling,
-    class NodeWeightPooling,
-    class EdgeStorageTraits,
-    class NodeWeightStorageTraits
-  >
+
   template<class NTracker, class ETracker, class ETracker2>
-  void tracker_test<
-    GraphFlavour,
-    EdgeWeight,
-    NodeWeight,
-    EdgeWeightPooling,
-    NodeWeightPooling,
-    EdgeStorageTraits,
-    NodeWeightStorageTraits>::test_square_graph(const NTracker& tracker, const ETracker& eTracker, const ETracker2& eTracker2, const std::size_t start, const bool, std::true_type)
+  void test_graph_traversals::test_square_graph(const NTracker& tracker, const ETracker& eTracker, const ETracker2& eTracker2, const std::size_t start, const bool, std::true_type)
   {
     std::vector<std::size_t> expected;
     edge_results edgeAnswers, edgeAnswers2;
@@ -497,25 +496,8 @@ namespace sequoia::testing
     check_equality(LINE("Second edge traversal"), eTracker2.order(), edgeAnswers2);
   }
 
-  template
-  <
-    maths::graph_flavour GraphFlavour,
-    class EdgeWeight,
-    class NodeWeight,      
-    class EdgeWeightPooling,
-    class NodeWeightPooling,
-    class EdgeStorageTraits,
-    class NodeWeightStorageTraits
-  >
   template<class NTracker, class ETracker>
-  void tracker_test<
-    GraphFlavour,
-    EdgeWeight,
-    NodeWeight,
-    EdgeWeightPooling,
-    NodeWeightPooling,
-    EdgeStorageTraits,
-    NodeWeightStorageTraits>::test_square_graph(const NTracker& tracker, const ETracker& eTracker, const std::size_t start, const bool mutualInfo, std::true_type)
+  void test_graph_traversals::test_square_graph(const NTracker& tracker, const ETracker& eTracker, const std::size_t start, const bool mutualInfo, std::true_type)
   {
     std::vector<std::size_t> expected;
     edge_results edgeAnswers;
@@ -533,25 +515,8 @@ namespace sequoia::testing
     check_equality(LINE("First edge traversal, start = " + std::to_string(start) + " "), eTracker.order(), edgeAnswers);
   }
 
-  template
-  <
-    maths::graph_flavour GraphFlavour,
-    class EdgeWeight,
-    class NodeWeight,      
-    class EdgeWeightPooling,
-    class NodeWeightPooling,
-    class EdgeStorageTraits,
-    class NodeWeightStorageTraits
-  >
   template<class NTracker, class ETracker, class ETracker2>
-  void tracker_test<
-    GraphFlavour,
-    EdgeWeight,
-    NodeWeight,
-    EdgeWeightPooling,
-    NodeWeightPooling,
-    EdgeStorageTraits,
-    NodeWeightStorageTraits>::test_square_graph(const NTracker& tracker, const ETracker& eTracker, const ETracker2& eTracker2, const std::size_t start, const bool, std::false_type)
+  void test_graph_traversals::test_square_graph(const NTracker& tracker, const ETracker& eTracker, const ETracker2& eTracker2, const std::size_t start, const bool, std::false_type)
   {
     std::vector<std::size_t> expected;
     edge_results edgeAnswers, edgeAnswers2;
@@ -572,25 +537,8 @@ namespace sequoia::testing
     check_equality(LINE("Second edge traversal"), eTracker2.order(), edgeAnswers2);
   }
 
-  template
-  <
-    maths::graph_flavour GraphFlavour,
-    class EdgeWeight,
-    class NodeWeight,      
-    class EdgeWeightPooling,
-    class NodeWeightPooling,
-    class EdgeStorageTraits,
-    class NodeWeightStorageTraits
-  >
   template<class NTracker, class ETracker>
-  void tracker_test<
-    GraphFlavour,
-    EdgeWeight,
-    NodeWeight,
-    EdgeWeightPooling,
-    NodeWeightPooling,
-    EdgeStorageTraits,
-    NodeWeightStorageTraits>::test_square_graph(const NTracker& tracker, const ETracker& eTracker, const std::size_t start, const bool mutualInfo, std::false_type)
+  void test_graph_traversals::test_square_graph(const NTracker& tracker, const ETracker& eTracker, const std::size_t start, const bool mutualInfo, std::false_type)
   {
     std::vector<std::size_t> expected;
     edge_results edgeAnswers;
@@ -610,26 +558,10 @@ namespace sequoia::testing
 
   //=============================== Priority Search  ===============================//
 
-  template
-  <
-    maths::graph_flavour GraphFlavour,
-    class EdgeWeight,
-    class NodeWeight,      
-    class EdgeWeightPooling,
-    class NodeWeightPooling,
-    class EdgeStorageTraits,
-    class NodeWeightStorageTraits
-  >
-  void test_priority_traversal<
-    GraphFlavour,
-    EdgeWeight,
-    NodeWeight,
-    EdgeWeightPooling,
-    NodeWeightPooling,
-    EdgeStorageTraits,
-    NodeWeightStorageTraits>::test_prs()
+  template<class Graph>
+  void test_graph_traversals::test_priority_traversal()
   {
-    auto graph{generate_test_graph()};
+    auto graph{generate_priority_test_graph<Graph>()};
 
     node_tracker tracker;
     maths::priority_search(graph, false, 0, tracker);
@@ -638,26 +570,10 @@ namespace sequoia::testing
     check_equality(LINE(""), order, std::vector<std::size_t>{0,2,4,3,6,1,5});
   }
 
-  template
-  <
-    maths::graph_flavour GraphFlavour,
-    class EdgeWeight,
-    class NodeWeight,      
-    class EdgeWeightPooling,
-    class NodeWeightPooling,
-    class EdgeStorageTraits,
-    class NodeWeightStorageTraits
-  >
-  auto test_priority_traversal<
-    GraphFlavour,
-    EdgeWeight,
-    NodeWeight,
-    EdgeWeightPooling,
-    NodeWeightPooling,
-    EdgeStorageTraits,
-    NodeWeightStorageTraits>::generate_test_graph() -> graph_t
+  template<class Graph>
+  Graph test_graph_traversals::generate_priority_test_graph()
   {
-    graph_t graph;
+    Graph graph;
         
     graph.add_node(1);
     graph.add_node(5);
@@ -687,26 +603,19 @@ namespace sequoia::testing
 
   //=============================== Weighted BFS  ===============================//
 
-  template
-  <
-    maths::graph_flavour GraphFlavour,
-    class EdgeWeight,
-    class NodeWeight,      
-    class EdgeWeightPooling,
-    class NodeWeightPooling,
-    class EdgeStorageTraits,
-    class NodeWeightStorageTraits
-  >
-  void test_weighted_BFS_tasks<
-    GraphFlavour,
-    EdgeWeight,
-    NodeWeight,
-    EdgeWeightPooling,
-    NodeWeightPooling,
-    EdgeStorageTraits,
-    NodeWeightStorageTraits>::test_edge_second_traversal(std::true_type)
+  template<class Graph>
+  void test_graph_traversals::test_weighted_BFS_tasks()
   {
-    graph_t graph{generate_test_graph()};
+    using UndirectedType = std::bool_constant<maths::undirected(Graph::flavour)>;
+    
+    test_node_and_first_edge_traversal<Graph>();
+    test_edge_second_traversal<Graph>(UndirectedType());
+  }
+
+  template<class Graph>
+  void test_graph_traversals::test_edge_second_traversal(std::true_type)
+  {
+    auto graph{generate_weighted_bfs_test_graph<Graph>()};
 
     constexpr int upper = 6;
 
@@ -747,26 +656,10 @@ namespace sequoia::testing
     check_equality(LINE("Pool edge first task expected"), poolResults, expected);
   }
 
-  template
-  <
-    maths::graph_flavour GraphFlavour,
-    class EdgeWeight,
-    class NodeWeight,      
-    class EdgeWeightPooling,
-    class NodeWeightPooling,
-    class EdgeStorageTraits,
-    class NodeWeightStorageTraits
-  >
-  void test_weighted_BFS_tasks<
-    GraphFlavour,
-    EdgeWeight,
-    NodeWeight,
-    EdgeWeightPooling,
-    NodeWeightPooling,
-    EdgeStorageTraits,
-    NodeWeightStorageTraits>::test_node_and_first_edge_traversal()
+  template<class Graph>
+  void test_graph_traversals::test_node_and_first_edge_traversal()
   {
-    graph_t graph{generate_test_graph()};
+    auto graph{generate_weighted_bfs_test_graph<Graph>()};
 
     //================================ Node functors =========================//
 
@@ -849,25 +742,9 @@ namespace sequoia::testing
     }
   }
 
-  template
-  <
-    maths::graph_flavour GraphFlavour,
-    class EdgeWeight,
-    class NodeWeight,      
-    class EdgeWeightPooling,
-    class NodeWeightPooling,
-    class EdgeStorageTraits,
-    class NodeWeightStorageTraits
-  >
-  template<class ProcessingModel, class... Args>
-  std::vector<int> test_weighted_BFS_tasks<
-    GraphFlavour,
-    EdgeWeight,
-    NodeWeight,
-    EdgeWeightPooling,
-    NodeWeightPooling,
-    EdgeStorageTraits,
-    NodeWeightStorageTraits>::task(graph_t& graph, const int upper, const bool early, const std::chrono::microseconds pause, Args&&... args)
+  template<class ProcessingModel, class Graph, class... Args>
+  [[nodiscard]]
+  std::vector<int> test_graph_traversals::task(Graph& graph, const int upper, const bool early, const std::chrono::microseconds pause, Args&&... args)
   {
     auto fn = [upper, pause](const std::size_t index) {
       std::this_thread::sleep_for(pause);
@@ -876,7 +753,7 @@ namespace sequoia::testing
     };
 
     using maths::null_functor;
-    if constexpr(graph_t::directedness == maths::directed_flavour::directed)
+    if constexpr(Graph::directedness == maths::directed_flavour::directed)
     {
       return early
         ? maths::breadth_first_search(graph, false, 0, fn, null_functor{}, null_functor{}, ProcessingModel{std::forward<Args>(args)...})
@@ -890,25 +767,9 @@ namespace sequoia::testing
     }  
   }
 
-  template
-  <
-    maths::graph_flavour GraphFlavour,
-    class EdgeWeight,
-    class NodeWeight,      
-    class EdgeWeightPooling,
-    class NodeWeightPooling,
-    class EdgeStorageTraits,
-    class NodeWeightStorageTraits
-  >
-  template<class ProcessingModel, class... Args>
-  std::vector<int> test_weighted_BFS_tasks<
-    GraphFlavour,
-    EdgeWeight,
-    NodeWeight,
-    EdgeWeightPooling,
-    NodeWeightPooling,
-    EdgeStorageTraits,
-    NodeWeightStorageTraits>::edge_first_traversal_task(graph_t& graph, const int upper, Args&&... args)
+  template<class ProcessingModel, class Graph, class... Args>
+  [[nodiscard]]
+  std::vector<int>test_graph_traversals::edge_first_traversal_task(Graph& graph, const int upper, Args&&... args)
   {
     auto fn = [upper](auto edgeIter) {
       const auto n{upper - static_cast<int>(edgeIter.partition_index())};
@@ -916,7 +777,7 @@ namespace sequoia::testing
     };
 
     using maths::null_functor;
-    if constexpr(graph_t::directedness == maths::directed_flavour::directed)
+    if constexpr(Graph::directedness == maths::directed_flavour::directed)
     {
       return maths::breadth_first_search(graph, false, 0, null_functor{}, null_functor{}, fn, ProcessingModel{std::forward<Args>(args)...});
     }
@@ -926,25 +787,9 @@ namespace sequoia::testing
     }
   }
 
-  template
-  <
-    maths::graph_flavour GraphFlavour,
-    class EdgeWeight,
-    class NodeWeight,      
-    class EdgeWeightPooling,
-    class NodeWeightPooling,
-    class EdgeStorageTraits,
-    class NodeWeightStorageTraits
-  >
-  template<class ProcessingModel, class... Args>
-  std::vector<int> test_weighted_BFS_tasks<
-    GraphFlavour,
-    EdgeWeight,
-    NodeWeight,
-    EdgeWeightPooling,
-    NodeWeightPooling,
-    EdgeStorageTraits,
-    NodeWeightStorageTraits>::edge_second_traversal_task(graph_t& graph, const int upper, Args&&... args)
+  template<class ProcessingModel, class Graph, class... Args>
+  [[nodiscard]]
+  std::vector<int> test_graph_traversals::edge_second_traversal_task(Graph& graph, const int upper, Args&&... args)
   {
     auto fn = [upper](auto edgeIter) {
       const auto n{upper - static_cast<int>(edgeIter.partition_index())};
@@ -955,26 +800,11 @@ namespace sequoia::testing
     return maths::breadth_first_search(graph, false, 0, null_functor{}, null_functor{}, null_functor{}, fn, ProcessingModel{std::forward<Args>(args)...});
   }
 
-  template
-  <
-    maths::graph_flavour GraphFlavour,
-    class EdgeWeight,
-    class NodeWeight,      
-    class EdgeWeightPooling,
-    class NodeWeightPooling,
-    class EdgeStorageTraits,
-    class NodeWeightStorageTraits
-  >
-  auto test_weighted_BFS_tasks<
-    GraphFlavour,
-    EdgeWeight,
-    NodeWeight,
-    EdgeWeightPooling,
-    NodeWeightPooling,
-    EdgeStorageTraits,
-    NodeWeightStorageTraits>::generate_test_graph() -> graph_t
+  template<class Graph>
+  [[nodiscard]]
+  Graph test_graph_traversals::generate_weighted_bfs_test_graph()
   {
-    graph_t graph;
+    Graph graph;
 
     std::size_t depth{};
     int value = 1;
@@ -1013,5 +843,34 @@ namespace sequoia::testing
     }
 
     return graph;
+  }
+
+  [[nodiscard]]
+  std::vector<int> test_graph_traversals::node_task_answers(const int upper)
+  {
+    std::vector<int> answers;
+    int shift = 0;
+    for(int i=0; i < 5; ++i)
+      {
+        answers.push_back((upper + shift)*(upper + shift + 1) / 2);
+        ++shift;
+      }
+
+    return answers;
+  }
+
+  [[nodiscard]]
+  std::vector<int> test_graph_traversals::edge_task_answers(const int upper)
+  {
+    std::vector<int> answers;
+
+    int shift = 0;
+    for(int i=0; i < 4; ++i)
+      {
+        if(i == 2) --shift;
+        answers.push_back((upper + shift)*(upper + shift + 1) / 2);
+      }
+
+    return answers;
   }
 }
