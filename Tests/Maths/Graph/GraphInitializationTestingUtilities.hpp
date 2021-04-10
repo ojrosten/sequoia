@@ -22,6 +22,12 @@ namespace sequoia
     public:
       init_checker(Checker& checker) : m_Checker{checker} {}
 
+      [[nodiscard]]
+      std::string report_line(const std::filesystem::path& file, int line, std::string_view message)
+      {
+        return m_Checker.report_line(file, line, message);
+      }
+
     protected:
       Checker& m_Checker;
 
@@ -150,6 +156,7 @@ namespace sequoia
     {
     public:
       using init_checker<Checker>::init_checker;
+      using init_checker<Checker>::report_line;
 
       template<class Graph>
       void check_all()
@@ -743,6 +750,7 @@ namespace sequoia
     {
     public:
       using init_checker<Checker>::init_checker;
+      using init_checker<Checker>::report_line;
 
       template<class Graph>
       void check_all()
@@ -1169,6 +1177,7 @@ namespace sequoia
     {
     public:
       using init_checker<Checker>::init_checker;
+      using init_checker<Checker>::report_line;
 
       template<class Graph>
       void check_all()
@@ -1476,6 +1485,7 @@ namespace sequoia
     {
     public:
       using init_checker<Checker>::init_checker;
+      using init_checker<Checker>::report_line;
 
       template<class Graph>
       void check_all()
