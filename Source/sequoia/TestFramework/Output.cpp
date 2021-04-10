@@ -275,18 +275,19 @@ namespace sequoia::testing
 
   std::string& tidy_name(std::string& name)
   {
+    constexpr auto npos{std::string::npos};
     auto pos{name.find("::__")};
-    while(pos != std::string::npos)
+    while(pos != npos)
     {
       const auto pos2{name.find("::", pos+4)};
-      if(pos2 == std::string::npos) break;
+      if(pos2 == npos) break;
 
       name.erase(pos, pos2 - pos);
       pos = name.find("::__", pos);
     }
 
     pos = name.find(">>");
-    while(pos != std::string::npos)
+    while(pos != npos)
     {
       name.insert(++pos, " ");
       pos = name.find(">>", pos + 1);
@@ -297,6 +298,26 @@ namespace sequoia::testing
     replace_all(name, " <", "true", ",>", "1");
     replace_all(name, " <", "false", ",>", "0");
     replace_all(name, [](char c) { return std::isdigit(c) > 0; }, "ul", [](char) { return true; }, "");
+
+    auto openPos{name.find('(')};
+    pos = openPos;
+    int64_t open{};
+    while(pos != npos)
+    {
+      if(name[pos] == '(')      ++open;
+      else if(name[pos] == ')') --open;
+
+      ++pos;
+
+      if(!open)
+      {
+        if((pos < name.size()) && std::isdigit(name[pos]))
+          name.erase(openPos, pos-openPos);
+
+        openPos = name.find('(', pos);
+        pos = openPos;
+      }
+    }
 
     return name;
   }
