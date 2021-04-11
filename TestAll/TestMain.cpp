@@ -23,7 +23,7 @@ int main(int argc, char** argv)
                        "Oliver J. Rosten",
                        root/"TestAll"/"TestMain.cpp",
                        root/"TestCommon"/"TestIncludes.hpp",
-                       repositories(root)
+                       repositories{root}
     };
 
     runner.add_test_family(
@@ -33,6 +33,11 @@ int main(int argc, char** argv)
       test_runner_test_creation{"Test Creation"},
       test_runner_project_creation{"Project Creation"},
       test_runner_end_to_end_test{"End to End Test"}
+    );
+
+    runner.add_test_family(
+      "Output",
+      output_free_test("Free Test")
     );
   
     runner.add_test_family(

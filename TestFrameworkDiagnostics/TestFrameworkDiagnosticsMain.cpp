@@ -23,7 +23,7 @@ int main(int argc, char** argv)
                        "Oliver J. Rosten",
                        root/"TestFrameworkDiagnostics"/"TestFrameworkDiagnosticsMain.cpp",
                        root/"TestCommon" /"TestIncludes.hpp",
-                       repositories(root)
+                       repositories{root}
     };
 
     runner.add_test_family(
@@ -81,6 +81,11 @@ int main(int argc, char** argv)
       "Factory",
       factory_false_positive_test("False Positive Test"),
       factory_test("Unit Test")
+    );
+
+    runner.add_test_family(
+      "Output",
+      output_free_test("Free Test")
     );
 
     runner.add_test_family(
