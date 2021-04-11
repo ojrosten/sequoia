@@ -62,22 +62,23 @@ target_sources(TestAll PRIVATE ${TestDir}/Experimental/ExperimentalTest.cpp
                                ${TestDir}/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp
                                ${TestDir}/Parsing/CommandLineArgumentsDiagnostics.cpp
                                ${TestDir}/Parsing/CommandLineArgumentsTest.cpp
-                               ${TestDir}/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp
-                               ${TestDir}/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp
-                               ${TestDir}/TestFramework/OrderableRegularTestDiagnostics.cpp
-                               ${TestDir}/TestFramework/PerformanceTestDiagnostics.cpp
-                               ${TestDir}/TestFramework/TestRunnerProjectCreation.cpp
-                               ${TestDir}/TestFramework/MoveOnlyTestDiagnostics.cpp
                                ${TestDir}/TestFramework/CoreDiagnostics.cpp
-                               ${TestDir}/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp
-                               ${TestDir}/TestFramework/TestRunnerDiagnostics.cpp
-                               ${TestDir}/TestFramework/TestRunnerTest.cpp
-                               ${TestDir}/TestFramework/RegularAllocationTestDiagnostics.cpp
-                               ${TestDir}/TestFramework/TestRunnerDiagnosticsUtilities.cpp
-                               ${TestDir}/TestFramework/TestRunnerTestCreation.cpp
                                ${TestDir}/TestFramework/FuzzyTestDiagnostics.cpp
-                               ${TestDir}/TestFramework/TestRunnerEndToEndFreeTest.cpp
-                               ${TestDir}/TestFramework/ScopedAllocationTestDiagnostics.cpp)
+                               ${TestDir}/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp
+                               ${TestDir}/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp
+                               ${TestDir}/TestFramework/MoveOnlyTestDiagnostics.cpp
+                               ${TestDir}/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp
+                               ${TestDir}/TestFramework/OrderableRegularTestDiagnostics.cpp
+                               ${TestDir}/TestFramework/OutputFreeTest.cpp
+                               ${TestDir}/TestFramework/PerformanceTestDiagnostics.cpp
+                               ${TestDir}/TestFramework/RegularAllocationTestDiagnostics.cpp
+                               ${TestDir}/TestFramework/ScopedAllocationTestDiagnostics.cpp
+                               ${TestDir}/TestFramework/TestRunnerDiagnostics.cpp
+                               ${TestDir}/TestFramework/TestRunnerDiagnosticsUtilities.cpp
+                               ${TestDir}/TestFramework/TestRunnerProjectCreation.cpp
+                               ${TestDir}/TestFramework/TestRunnerTest.cpp
+                               ${TestDir}/TestFramework/TestRunnerTestCreation.cpp
+                               ${TestDir}/TestFramework/TestRunnerEndToEndFreeTest.cpp)
 
 set(BUILD_SYS ${CMAKE_CURRENT_SOURCE_DIR}/../build_system)
 
