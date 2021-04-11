@@ -58,15 +58,15 @@ namespace sequoia::testing
     {
       auto cmd{std::string{"cmake -S ."}.append(" -B \"").append(buildDir.string()).append("\" ")};
 
-      if constexpr (has_msvc_v)
+      if constexpr (with_msvc_v)
       {
         cmd.append("-G \"Visual Studio 16 2019\"");
       }
-      else if constexpr (has_clang_v)
+      else if constexpr (with_clang_v)
       {
         cmd.append("-D CMAKE_CXX_COMPILER=/usr/local/opt/llvm/bin/clang++");
       }
-      else if constexpr (has_gcc_v)
+      else if constexpr (with_gcc_v)
       {
         cmd.append("-D CMAKE_CXX_COMPILER=/usr/bin/g++");
       }
@@ -78,7 +78,7 @@ namespace sequoia::testing
     std::string build_cmd(const std::filesystem::path& buildDir)
     {
       auto cmd{cd(buildDir) && "cmake --build . --target TestMain"};
-      if constexpr (has_msvc_v)
+      if constexpr (with_msvc_v)
       {
         cmd.append(" --config Debug");
       }
@@ -89,7 +89,7 @@ namespace sequoia::testing
     [[nodiscard]]
     std::string run_cmd()
     {
-      if constexpr (has_msvc_v)
+      if constexpr (with_msvc_v)
       {
 #ifdef CMAKE_INTDIR
         return std::string{CMAKE_INTDIR}.append("\\TestMain.exe");

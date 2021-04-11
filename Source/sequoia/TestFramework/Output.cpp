@@ -284,7 +284,7 @@ namespace sequoia::testing
     return append_lines(pathToString().append(", Line ").append(std::to_string(line)), message).append("\n");
   }
 
-  std::string& tidy_name(std::string& name)
+  std::string& tidy_name(std::string& name, clang_type)
   {
     constexpr auto npos{std::string::npos};
     auto pos{name.find("::__")};
@@ -306,8 +306,8 @@ namespace sequoia::testing
 
     if constexpr(sizeof(std::size_t) == sizeof(uint64_t))
     {
-      // CORRECT THIS!!!
-      replace_all(name, "", "unsigned long", ",>", "unsigned long long");
+      const auto replacement{demangle<uint64_t>([](std::string& name) -> std::string& { return name; })};
+      replace_all(name, "", "unsigned long", ",>", replacement);
     }
 
     // It is a pity to have to make the following substitutions, but it appears
@@ -340,7 +340,13 @@ namespace sequoia::testing
     return name;
   }
 
-  std::string& tidy_msc_name(std::string& name)
+  std::string& tidy_name(std::string& name, gcc_type)
+  {
+    // TO DO: improve this!
+    return tidy_name(name, clang_type{});
+  }
+
+  std::string& tidy_name(std::string& name, msvc_type)
   {
     auto peel{
       [](std::string& s, std::string_view prefix){
@@ -379,6 +385,11 @@ namespace sequoia::testing
     }
 #endif
 
+    return name;
+  }
+
+  std::string& tidy_name(std::string& name, other_compiler_type)
+  {
     return name;
   }
 }

@@ -142,26 +142,25 @@ namespace sequoia::testing
 
   #define LINE(message) report_line(__FILE__, __LINE__, message)
 
-  std::string& tidy_name(std::string& name);
+  std::string& tidy_name(std::string& name, clang_type);
 
-  std::string& tidy_msc_name(std::string& name);
+  std::string& tidy_name(std::string& name, gcc_type);
 
-  template<class T>
+  std::string& tidy_name(std::string& name, msvc_type);
+
+  std::string& tidy_name(std::string& name, other_compiler_type);
+
+  template<class T, invocable_r<std::string&, std::string&> Tidy>
   [[nodiscard]]
-  std::string demangle()
+  std::string demangle(Tidy tidy)
   {
-    if constexpr(has_msvc_v)
-    {
-      std::string name{typeid(T).name()};
-
-      return tidy_msc_name(name);
-    }
-    else
+    std::string mangled{typeid(T).name()};
+    if constexpr(with_clang_v || with_gcc_v)
     {
       struct cxa_demangler
       {
-        cxa_demangler(const char* name)
-          : data{abi::__cxa_demangle(name, 0, 0, &status)}
+        cxa_demangler(const std::string& name)
+          : data{abi::__cxa_demangle(name.data(), 0, 0, &status)}
         {}
 
         ~cxa_demangler() { std::free(data); }
@@ -170,18 +169,19 @@ namespace sequoia::testing
         char* data;
       };
 
-      const auto mangled{typeid(T).name()};
       cxa_demangler c{mangled};
 
-      if(!c.status)
-      {
-        std::string name{c.data};
-        tidy_name(name);
-        return name;
-      }
-
-      return mangled;
+      if(!c.status) mangled = c.data;
     }
+
+    return tidy(mangled);
+  }
+
+  template<class T>
+  [[nodiscard]]
+  std::string demangle()
+  {
+    return demangle<T>([](std::string& name) -> std::string& { return tidy_name(name, compiler_constant{}); });
   }
 
   /*! \brief Specialize this struct template to customize the way in which type info is generated for a given class.

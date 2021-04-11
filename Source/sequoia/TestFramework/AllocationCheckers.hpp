@@ -208,7 +208,7 @@ namespace sequoia::testing
   [[nodiscard]]
   constexpr alloc_prediction<AllocEvent> increment_msvc_debug_count(alloc_prediction<AllocEvent> p, int val) noexcept
   {
-    if constexpr (has_msvc_v && (iterator_debug_level() > 0))
+    if constexpr (with_msvc_v && (iterator_debug_level() > 0))
     {
       const int unshifted{p.unshifted()};
       return alloc_prediction<AllocEvent>{unshifted, val};
