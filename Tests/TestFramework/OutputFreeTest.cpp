@@ -68,5 +68,18 @@ namespace sequoia::testing
     check_equality(LINE("Multiple separated replacement"), replace_all("foo bar foo", "foo", "bar"), "bar bar bar"s);
 
     check_equality(LINE("Mutliple replacement patters"), replace_all("foobarbaz", {{"foo", "zoo"}, {"bar", "bfg"}, {"baz", "bat"}}), "zoobfgbat"s);
+
+    check_equality(LINE("LR Replace in empty string"), replace_all("", ",<", "foo", ",>", "bar"), ""s);
+    check_equality(LINE("LR single replacement"), replace_all(",foo,", ",<", "foo", ",>", "bar"), ",bar,"s);
+    check_equality(LINE("LR single replacement"), replace_all(",foo>", ",<", "foo", ",>", "bar"), ",bar>"s);
+    check_equality(LINE("LR single replacement"), replace_all("<foo,", ",<", "foo", ",>", "bar"), "<bar,"s);
+    check_equality(LINE("LR single replacement"), replace_all("<foo>", ",<", "foo", ",>", "bar"), "<bar>"s);
+    check_equality(LINE("LR failed replacement"), replace_all("foo,", ",<", "foo", ",>", "bar"), "foo,"s);
+    check_equality(LINE("LR failed replacement"), replace_all("pfoo,", ",<", "foo", ",>", "bar"), "pfoo,"s);
+    check_equality(LINE("LR failed replacement"), replace_all(",foo", ",<", "foo", ",>", "bar"), ",foo"s);
+    check_equality(LINE("LR failed replacement"), replace_all(",foop", ",<", "foo", ",>", "bar"), ",foop"s);
+    check_equality(LINE("LR multiple replacement"), replace_all(",foo,foo,", ",<", "foo", ",>", "bar"), ",bar,bar,"s);
+    check_equality(LINE("L single replacement"), replace_all(",foo", ",<", "foo", "", "baz"), ",baz"s);
+    check_equality(LINE("R single replacement"), replace_all("foo,", "", "foo", ",", "baz"), "baz,"s);
   }
 }

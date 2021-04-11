@@ -218,18 +218,21 @@ namespace sequoia::testing
     constexpr auto npos{std::string::npos};
 
     auto left{
-      [anyOfLeft](char c){
-        return !anyOfLeft.size() || (anyOfLeft.find(c) < npos);
-      }
+      [anyOfLeft](char c) { return !anyOfLeft.size() || (anyOfLeft.find(c) < npos); }
     };
 
     auto right{
-      [anyOfRight](char c) {
-        return !anyOfRight.size() || (anyOfRight.find(c) < npos);
-      }
+      [anyOfRight](char c) {return !anyOfRight.size() || (anyOfRight.find(c) < npos); }
     };
 
     return replace_all(text, left, from, right, to);
+  }
+
+  [[nodiscard]]
+  std::string replace_all(std::string_view text, std::string_view anyOfLeft, std::string_view from, std::string_view anyOfRight, std::string_view to)
+  {
+    std::string str{text};
+    return replace_all(str, anyOfLeft, from, anyOfRight, to);
   }
 
   [[nodiscard]]
