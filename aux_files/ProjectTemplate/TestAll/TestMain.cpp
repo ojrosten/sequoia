@@ -22,7 +22,7 @@ int main(int argc, char** argv)
                        "Oliver J. Rosten",
                        root/"TestAll"/"TestMain.cpp",
                        root/"TestAll"/"TestMain.cpp",
-                       repositories(root)
+                       repositories{root}
     };
  
     runner.execute();
