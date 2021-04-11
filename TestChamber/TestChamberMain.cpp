@@ -22,7 +22,7 @@ int main(int argc, char** argv)
                        "Oliver J. Rosten",
                        root/"TestChamber"/"TestChamberMain.cpp",
                        root/"TestCommon" /"TestIncludes.hpp",
-                       repositories(root)
+                       repositories{root}
     };
 
     runner.add_test_family(
