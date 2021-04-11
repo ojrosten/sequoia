@@ -4,7 +4,7 @@
 	[sequoia::maths::graph<0, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
 	operator== returned false
 
-	  [sequoia::maths::connectivity<0, sequoia::maths::graph_impl::dynamic_edge_traits<0, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
+	  [sequoia::maths::connectivity<0, sequoia::maths::graph_impl::dynamic_edge_traits<0, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, unsigned long long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
 	  operator== returned false
 
 	    Connectivity order incorrect
@@ -21,7 +21,7 @@
 	[sequoia::maths::graph<0, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
 	operator== returned false
 
-	  [sequoia::maths::connectivity<0, sequoia::maths::graph_impl::dynamic_edge_traits<0, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
+	  [sequoia::maths::connectivity<0, sequoia::maths::graph_impl::dynamic_edge_traits<0, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, unsigned long long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
 	  operator== returned false
 
 	    Connectivity size incorrect
@@ -44,7 +44,7 @@
 	[sequoia::maths::graph<0, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
 	operator== returned false
 
-	  [sequoia::maths::connectivity<0, sequoia::maths::graph_impl::dynamic_edge_traits<0, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
+	  [sequoia::maths::connectivity<0, sequoia::maths::graph_impl::dynamic_edge_traits<0, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, unsigned long long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
 	  operator== returned false
 
 	    Connectivity order incorrect
@@ -61,7 +61,7 @@
 	[sequoia::maths::graph<0, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
 	operator== returned false
 
-	  [sequoia::maths::connectivity<0, sequoia::maths::graph_impl::dynamic_edge_traits<0, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
+	  [sequoia::maths::connectivity<0, sequoia::maths::graph_impl::dynamic_edge_traits<0, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, unsigned long long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
 	  operator== returned false
 
 	    Connectivity size incorrect
@@ -84,7 +84,7 @@
 	[sequoia::maths::embedded_graph<0, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
 	operator== returned false
 
-	  [sequoia::maths::connectivity<0, sequoia::maths::graph_impl::dynamic_edge_traits<1, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
+	  [sequoia::maths::connectivity<0, sequoia::maths::graph_impl::dynamic_edge_traits<1, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, unsigned long long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
 	  operator== returned false
 
 	    Connectivity order incorrect
@@ -101,7 +101,7 @@
 	[sequoia::maths::embedded_graph<0, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
 	operator== returned false
 
-	  [sequoia::maths::connectivity<0, sequoia::maths::graph_impl::dynamic_edge_traits<1, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
+	  [sequoia::maths::connectivity<0, sequoia::maths::graph_impl::dynamic_edge_traits<1, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, unsigned long long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
 	  operator== returned false
 
 	    Connectivity size incorrect
@@ -124,7 +124,7 @@
 	[sequoia::maths::embedded_graph<0, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
 	operator== returned false
 
-	  [sequoia::maths::connectivity<0, sequoia::maths::graph_impl::dynamic_edge_traits<1, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
+	  [sequoia::maths::connectivity<0, sequoia::maths::graph_impl::dynamic_edge_traits<1, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, unsigned long long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
 	  operator== returned false
 
 	    Connectivity order incorrect
@@ -141,7 +141,7 @@
 	[sequoia::maths::embedded_graph<0, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
 	operator== returned false
 
-	  [sequoia::maths::connectivity<0, sequoia::maths::graph_impl::dynamic_edge_traits<1, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
+	  [sequoia::maths::connectivity<0, sequoia::maths::graph_impl::dynamic_edge_traits<1, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, unsigned long long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
 	  operator== returned false
 
 	    Connectivity size incorrect
@@ -164,7 +164,7 @@
 	[sequoia::maths::graph<1, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
 	operator== returned false
 
-	  [sequoia::maths::connectivity<1, sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
+	  [sequoia::maths::connectivity<1, sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, unsigned long long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
 	  operator== returned false
 
 	    Connectivity order incorrect
@@ -181,7 +181,7 @@
 	[sequoia::maths::graph<1, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
 	operator== returned false
 
-	  [sequoia::maths::connectivity<1, sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
+	  [sequoia::maths::connectivity<1, sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, unsigned long long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
 	  operator== returned false
 
 	    Connectivity size incorrect
@@ -204,7 +204,7 @@
 	[sequoia::maths::graph<1, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
 	operator== returned false
 
-	  [sequoia::maths::connectivity<1, sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
+	  [sequoia::maths::connectivity<1, sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, unsigned long long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
 	  operator== returned false
 
 	    Connectivity order incorrect
@@ -221,7 +221,7 @@
 	[sequoia::maths::graph<1, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
 	operator== returned false
 
-	  [sequoia::maths::connectivity<1, sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
+	  [sequoia::maths::connectivity<1, sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, unsigned long long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
 	  operator== returned false
 
 	    Connectivity size incorrect
@@ -244,7 +244,7 @@
 	[sequoia::maths::embedded_graph<1, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
 	operator== returned false
 
-	  [sequoia::maths::connectivity<1, sequoia::maths::graph_impl::dynamic_edge_traits<3, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
+	  [sequoia::maths::connectivity<1, sequoia::maths::graph_impl::dynamic_edge_traits<3, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, unsigned long long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
 	  operator== returned false
 
 	    Connectivity order incorrect
@@ -261,7 +261,7 @@
 	[sequoia::maths::embedded_graph<1, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
 	operator== returned false
 
-	  [sequoia::maths::connectivity<1, sequoia::maths::graph_impl::dynamic_edge_traits<3, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
+	  [sequoia::maths::connectivity<1, sequoia::maths::graph_impl::dynamic_edge_traits<3, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, unsigned long long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
 	  operator== returned false
 
 	    Connectivity size incorrect
@@ -284,7 +284,7 @@
 	[sequoia::maths::embedded_graph<1, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
 	operator== returned false
 
-	  [sequoia::maths::connectivity<1, sequoia::maths::graph_impl::dynamic_edge_traits<3, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
+	  [sequoia::maths::connectivity<1, sequoia::maths::graph_impl::dynamic_edge_traits<3, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, unsigned long long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
 	  operator== returned false
 
 	    Connectivity order incorrect
@@ -301,7 +301,7 @@
 	[sequoia::maths::embedded_graph<1, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
 	operator== returned false
 
-	  [sequoia::maths::connectivity<1, sequoia::maths::graph_impl::dynamic_edge_traits<3, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
+	  [sequoia::maths::connectivity<1, sequoia::maths::graph_impl::dynamic_edge_traits<3, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, unsigned long long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
 	  operator== returned false
 
 	    Connectivity size incorrect
@@ -324,7 +324,7 @@
 	[sequoia::maths::embedded_graph<1, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::testing::independent_contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
 	operator== returned false
 
-	  [sequoia::maths::connectivity<1, sequoia::maths::graph_impl::dynamic_edge_traits<3, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::testing::independent_contiguous_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
+	  [sequoia::maths::connectivity<1, sequoia::maths::graph_impl::dynamic_edge_traits<3, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::testing::independent_contiguous_edge_storage_traits, unsigned long long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
 	  operator== returned false
 
 	    Connectivity order incorrect
@@ -341,7 +341,7 @@
 	[sequoia::maths::embedded_graph<1, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::testing::independent_contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
 	operator== returned false
 
-	  [sequoia::maths::connectivity<1, sequoia::maths::graph_impl::dynamic_edge_traits<3, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::testing::independent_contiguous_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
+	  [sequoia::maths::connectivity<1, sequoia::maths::graph_impl::dynamic_edge_traits<3, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::testing::independent_contiguous_edge_storage_traits, unsigned long long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
 	  operator== returned false
 
 	    Connectivity size incorrect
@@ -364,7 +364,7 @@
 	[sequoia::maths::embedded_graph<1, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::testing::independent_bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
 	operator== returned false
 
-	  [sequoia::maths::connectivity<1, sequoia::maths::graph_impl::dynamic_edge_traits<3, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::testing::independent_bucketed_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
+	  [sequoia::maths::connectivity<1, sequoia::maths::graph_impl::dynamic_edge_traits<3, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::testing::independent_bucketed_edge_storage_traits, unsigned long long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
 	  operator== returned false
 
 	    Connectivity order incorrect
@@ -381,7 +381,7 @@
 	[sequoia::maths::embedded_graph<1, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::testing::independent_bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
 	operator== returned false
 
-	  [sequoia::maths::connectivity<1, sequoia::maths::graph_impl::dynamic_edge_traits<3, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::testing::independent_bucketed_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
+	  [sequoia::maths::connectivity<1, sequoia::maths::graph_impl::dynamic_edge_traits<3, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::testing::independent_bucketed_edge_storage_traits, unsigned long long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
 	  operator== returned false
 
 	    Connectivity size incorrect
