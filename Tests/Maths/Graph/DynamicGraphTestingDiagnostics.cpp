@@ -38,26 +38,26 @@ namespace sequoia::testing
 
     using edge_init_t = typename graph_type::edge_init_type;
 
-    graph_type network{};
+    graph_type g{};
 
-    check_equality(LINE("Check false positive: empty graph versus single node"), network, graph_type{{}});
+    check_equality(LINE("Check false positive: empty graph versus single node"), g, graph_type{{}});
 
     std::string message{"Check false positive: empty graph versus single node with loop"};
     if constexpr (GraphFlavour == graph_flavour::directed)
     {
-      check_equality(LINE(message), network, graph_type{{edge_init_t{0}}});
+      check_equality(LINE(message), g, graph_type{{edge_init_t{0}}});
     }
     else if constexpr(GraphFlavour == graph_flavour::undirected)
     {
-      check_equality(LINE(message), network, graph_type{{edge_init_t{0}, edge_init_t{0}}});
+      check_equality(LINE(message), g, graph_type{{edge_init_t{0}, edge_init_t{0}}});
     }
     else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
     {
-      check_equality(LINE(message), network, graph_type{{edge_init_t{0,0,1}, edge_init_t{0,0,0}}});
+      check_equality(LINE(message), g, graph_type{{edge_init_t{0,0,1}, edge_init_t{0,0,0}}});
     }
     else
     {
-      check_equality(LINE(message), network, graph_type{{edge_init_t{0,1}, edge_init_t{0,0}}});
+      check_equality(LINE(message), g, graph_type{{edge_init_t{0,1}, edge_init_t{0,0}}});
     }
   }
 }

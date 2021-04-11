@@ -347,7 +347,7 @@ namespace sequoia
           using edge_storage = typename Connectivity::edge_storage_type;
 
           auto edgeAllocGetter{
-            [](const graph_primitive& in){
+            []([[maybe_unused]] const graph_primitive& in){
               if constexpr(has_allocator_type<edge_storage>)
               {
                 return in.get_edge_allocator();
@@ -356,7 +356,7 @@ namespace sequoia
           };
 
           auto edgePartitionsAllocGetter{
-            [](const graph_primitive& in){
+            []([[maybe_unused]] const graph_primitive& in){
               if constexpr(has_partitions_allocator<edge_storage>)
               {
                 return in.get_edge_allocator(partitions_allocator_tag{});
@@ -365,7 +365,7 @@ namespace sequoia
           };
 
           auto nodeAllocGetter{
-            [](const graph_primitive& in){
+            []([[maybe_unused]] const graph_primitive& in){
               if constexpr(!heteroNodes && !emptyNodes)
               {
                 if constexpr(graph_impl::nodes_allocate<Nodes>::value)

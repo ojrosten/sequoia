@@ -120,17 +120,17 @@ namespace sequoia::testing
       }
     };
 
-    Graph network;
+    Graph g;
     node_tracker discovery, discovery2;
-    edge_tracker<Graph, Traverser> edgeDiscovery{network}, edgeDiscovery2{network};
+    edge_tracker<Graph, Traverser> edgeDiscovery{g}, edgeDiscovery2{g};
 
     if constexpr(undirected)
     {
-      traverse_graph<Traverser>(network, true, 0, discovery, discovery2, edgeDiscovery, edgeDiscovery2);
+      traverse_graph<Traverser>(g, true, 0, discovery, discovery2, edgeDiscovery, edgeDiscovery2);
     }
     else
     {
-      traverse_graph<Traverser>(network, true, 0, discovery, discovery2, edgeDiscovery);
+      traverse_graph<Traverser>(g, true, 0, discovery, discovery2, edgeDiscovery);
     }
 
     auto order = discovery.order();
@@ -145,16 +145,16 @@ namespace sequoia::testing
       check_equality(LINE(make_message("")), edgeDiscovery.order(), edge_results{});
     }
 
-    check_equality(LINE(make_message("First node added")), network.add_node(), 0_sz);
+    check_equality(LINE(make_message("First node added")), g.add_node(), 0_sz);
     // 0
 
     if constexpr(undirected)
     {
-      traverse_graph<Traverser>(network, true, 0, discovery, discovery2, edgeDiscovery, edgeDiscovery2);
+      traverse_graph<Traverser>(g, true, 0, discovery, discovery2, edgeDiscovery, edgeDiscovery2);
     }
     else
     {
-      traverse_graph<Traverser>(network, true, 0, discovery, discovery2, edgeDiscovery);
+      traverse_graph<Traverser>(g, true, 0, discovery, discovery2, edgeDiscovery);
     }
 
     order = discovery.order();
@@ -163,7 +163,7 @@ namespace sequoia::testing
 
     if(check_equality(LINE(make_message("One node to discover")), order.size(), 1_sz))
     {
-      check_equality(LINE(make_message("Node 0 must be discovered first in single node network")), order.front(), 0_sz);
+      check_equality(LINE(make_message("Node 0 must be discovered first in single node g")), order.front(), 0_sz);
     }
     check_equality(LINE(make_message("")), order, order2);
     check(LINE(make_message("No edges to discover")), edgeOrder.empty());
@@ -172,16 +172,16 @@ namespace sequoia::testing
       check_equality(LINE(make_message("")), edgeDiscovery.order(), edge_results{});
     }
 
-    check_equality(LINE(make_message("Second node added")), network.add_node(), 1_sz);
+    check_equality(LINE(make_message("Second node added")), g.add_node(), 1_sz);
     // 0 0
 
     if constexpr(undirected)
     {
-      traverse_graph<Traverser>(network, true, 0, discovery, discovery2, edgeDiscovery, edgeDiscovery2);
+      traverse_graph<Traverser>(g, true, 0, discovery, discovery2, edgeDiscovery, edgeDiscovery2);
     }
     else
     {
-      traverse_graph<Traverser>(network, true, 0, discovery, discovery2, edgeDiscovery);
+      traverse_graph<Traverser>(g, true, 0, discovery, discovery2, edgeDiscovery);
     }
 
     order = discovery.order();
@@ -205,11 +205,11 @@ namespace sequoia::testing
 
     if constexpr(undirected)
     {
-      traverse_graph<Traverser>(network, true, 1, discovery, discovery2, edgeDiscovery, edgeDiscovery2);
+      traverse_graph<Traverser>(g, true, 1, discovery, discovery2, edgeDiscovery, edgeDiscovery2);
     }
     else
     {
-      traverse_graph<Traverser>(network, true, 1, discovery, discovery2, edgeDiscovery);
+      traverse_graph<Traverser>(g, true, 1, discovery, discovery2, edgeDiscovery);
     }
 
     order = discovery.order();
@@ -233,11 +233,11 @@ namespace sequoia::testing
 
     if constexpr(undirected)
     {
-      traverse_graph<Traverser>(network, false, 0, discovery, discovery2, edgeDiscovery, edgeDiscovery2);
+      traverse_graph<Traverser>(g, false, 0, discovery, discovery2, edgeDiscovery, edgeDiscovery2);
     }
     else
     {
-      traverse_graph<Traverser>(network, false, 0, discovery, discovery2, edgeDiscovery);
+      traverse_graph<Traverser>(g, false, 0, discovery, discovery2, edgeDiscovery);
     }
 
     order = discovery.order();
@@ -256,18 +256,18 @@ namespace sequoia::testing
       check_equality(LINE(make_message("")), edgeDiscovery.order(), edge_results{});
     }
 
-    check_equality(LINE(make_message("Third node added")), network.add_node(), 2_sz);
-    network.join(0, 1);
-    network.join(1, 2);
+    check_equality(LINE(make_message("Third node added")), g.add_node(), 2_sz);
+    g.join(0, 1);
+    g.join(1, 2);
     // 0----0----0
 
     if constexpr(undirected)
     {
-      traverse_graph<Traverser>(network, true, 0, discovery, discovery2, edgeDiscovery, edgeDiscovery2);
+      traverse_graph<Traverser>(g, true, 0, discovery, discovery2, edgeDiscovery, edgeDiscovery2);
     }
     else
     {
-      traverse_graph<Traverser>(network, true, 0, discovery, discovery2, edgeDiscovery);
+      traverse_graph<Traverser>(g, true, 0, discovery, discovery2, edgeDiscovery);
     }
 
     order = discovery.order();
@@ -301,11 +301,11 @@ namespace sequoia::testing
 
     if constexpr(undirected)
     {
-      traverse_graph<Traverser>(network, false, 1, discovery, discovery2, edgeDiscovery, edgeDiscovery2);
+      traverse_graph<Traverser>(g, false, 1, discovery, discovery2, edgeDiscovery, edgeDiscovery2);
     }
     else
     {
-      traverse_graph<Traverser>(network, false, 1, discovery, discovery2, edgeDiscovery);
+      traverse_graph<Traverser>(g, false, 1, discovery, discovery2, edgeDiscovery);
     }
 
     order = discovery.order();
@@ -362,11 +362,11 @@ namespace sequoia::testing
 
     if constexpr(undirected)
     {
-      traverse_graph<Traverser>(network, false, 2, discovery, discovery2, edgeDiscovery, edgeDiscovery2);
+      traverse_graph<Traverser>(g, false, 2, discovery, discovery2, edgeDiscovery, edgeDiscovery2);
     }
     else
     {
-      traverse_graph<Traverser>(network, false, 2, discovery, discovery2, edgeDiscovery);
+      traverse_graph<Traverser>(g, false, 2, discovery, discovery2, edgeDiscovery);
     }
 
     order = discovery.order();
@@ -410,9 +410,9 @@ namespace sequoia::testing
     check_equality(LINE(make_message("")), order, order2);
 
 
-    check_equality(LINE(make_message("Fourth node added")), network.add_node(), 3_sz);
-    network.join(2, 3);
-    network.join(3, 0);
+    check_equality(LINE(make_message("Fourth node added")), g.add_node(), 3_sz);
+    g.join(2, 3);
+    g.join(3, 0);
     //  0----0
     //  |    |
     //  |    |
@@ -420,11 +420,11 @@ namespace sequoia::testing
 
     if constexpr(undirected)
     {
-      traverse_graph<Traverser>(network, false, 0, discovery, discovery2, edgeDiscovery, edgeDiscovery2);
+      traverse_graph<Traverser>(g, false, 0, discovery, discovery2, edgeDiscovery, edgeDiscovery2);
     }
     else
     {
-      traverse_graph<Traverser>(network, false, 0, discovery, discovery2, edgeDiscovery);
+      traverse_graph<Traverser>(g, false, 0, discovery, discovery2, edgeDiscovery);
     }
 
     order = discovery.order();
@@ -447,11 +447,11 @@ namespace sequoia::testing
 
     if constexpr(undirected)
     {
-      traverse_graph<Traverser>(network, false, 2, discovery, discovery2, edgeDiscovery, edgeDiscovery2);
+      traverse_graph<Traverser>(g, false, 2, discovery, discovery2, edgeDiscovery, edgeDiscovery2);
     }
     else
     {
-      traverse_graph<Traverser>(network, false, 2, discovery, discovery2, edgeDiscovery);
+      traverse_graph<Traverser>(g, false, 2, discovery, discovery2, edgeDiscovery);
     }
 
     order = discovery.order();

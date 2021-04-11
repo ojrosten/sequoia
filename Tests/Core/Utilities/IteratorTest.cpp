@@ -227,13 +227,15 @@ namespace sequoia::testing
     static_assert(orderable<CustomIter>);
 
     const auto scale{
-      [](CustomIter iter) -> value_type {
+      []([[maybe_unused]] CustomIter iter) -> value_type {
         if constexpr(scaling<deref_pol>)
         {
           return iter.scale();
         }
-
-        return {1};
+        else
+        {
+          return {1};
+        }
       }(i)
     };
 
