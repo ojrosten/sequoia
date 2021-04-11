@@ -413,7 +413,7 @@ namespace sequoia
 
       if(check_equality(LINE(""), storage, Storage{{1}, {3}, {1}, {4}}))
       {
-        auto iter = storage.begin_partition(0);
+        iter = storage.begin_partition(0);
         *iter = 2;
         // shared: [2][3][2][4], independent: [2][3][1][4]
         check_equality(LINE(""), storage, sharedData ? Storage{{2}, {3}, {2}, {4}} : Storage{{2}, {3}, {1}, {4}});
@@ -459,7 +459,7 @@ namespace sequoia
 
       if(check_equality(LINE(""), storage, Storage{{3, -5}, {4, -5}}))
       {
-        auto iter = storage.begin_partition(0);
+        iter = storage.begin_partition(0);
         ++iter;
         *iter = 2;
         // shared [3,2][4,2], independent: [3,2][4,-5]
@@ -506,7 +506,7 @@ namespace sequoia
       check_equality(LINE(""), storage, Storage{{8, 9}, {4, -5}});
 
       {
-        auto iter = storage.begin_partition(0);
+        iter = storage.begin_partition(0);
         iter++;
         *iter = -5;
         auto next = storage.erase_from_partition(0, 0);

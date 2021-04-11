@@ -155,7 +155,9 @@ namespace sequoia::testing
 
   private:
     template<test_mode Mode, std::size_t I=0>
-    static void check_elements(test_logger<Mode>& logger, const type& nodes, const equivalent_type& prediction)
+    static void check_elements([[maybe_unused]] test_logger<Mode>& logger,
+                               [[maybe_unused]] const type& nodes,
+                               [[maybe_unused]] const equivalent_type& prediction)
     {
       if constexpr(I < sizeof...(Ts))
       {

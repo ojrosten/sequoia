@@ -82,12 +82,16 @@ namespace sequoia
       constexpr size_type order() const noexcept { return m_Edges.num_partitions(); }
 
       [[nodiscard]]
-      constexpr size_type size()  const noexcept
+      constexpr size_type size() const noexcept
       {
-        auto size{m_Edges.size()};
-        if constexpr (EdgeTraits::mutual_info_v) return size /= 2;
-
-        return size;
+        if constexpr (EdgeTraits::mutual_info_v)
+        {
+          return m_Edges.size() / 2;
+        }
+        else
+        {
+          return m_Edges.size();
+        }
       }
 
       [[nodiscard]]
@@ -1260,21 +1264,21 @@ namespace sequoia
                 }()
               };
 
-              auto range{
+              auto eqrange{
                 sequoia::equal_range(orderedEdges.cbegin_partition(target), orderedEdges.cend_partition(target), comparisonEdge, edgeComparer)
               };
 
-              if(range.first == range.second)
+              if(eqrange.first == eqrange.second)
                 throw std::logic_error("Reciprocated partial edge does not exist");
 
               if constexpr(clusterEdges)
               {
-                while((range.first != range.second) && (range.first->weight() != lowerIter->weight())) ++range.first;
+                while((eqrange.first != eqrange.second) && (eqrange.first->weight() != lowerIter->weight())) ++eqrange.first;
 
-                range.second = find_cluster_end(range.first, range.second);
+                eqrange.second = find_cluster_end(eqrange.first, eqrange.second);
               }
 
-              if(distance(range.first, range.second) != count)
+              if(distance(eqrange.first, eqrange.second) != count)
                 throw std::logic_error("Reciprocated target indices do not match");
 
               if constexpr(!direct_edge_init())
@@ -1289,7 +1293,7 @@ namespace sequoia
                   {
                     static_assert(!EdgeTraits::shared_edge_v);
 
-                    const auto compIndex{static_cast<size_t>(distance(orderedEdges.cbegin_partition(target), range.second + distance(upperIter, lowerIter)))};
+                    const auto compIndex{static_cast<size_t>(distance(orderedEdges.cbegin_partition(target), eqrange.second + distance(upperIter, lowerIter)))};
 
                     m_Edges.push_back_to_partition(i, edge_type{target, *(cbegin_edges(target) + compIndex)});
                   }
@@ -1675,7 +1679,6 @@ namespace sequoia
           const auto compIndex{first->complementary_index()};
           if(source != other)
           {
-            const auto compIndex{first->complementary_index()};
             const auto edgeIter{m_Edges.begin_partition(other) + compIndex};
             edgeIter->complementary_index(fn(edgeIter->complementary_index()));
           }
