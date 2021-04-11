@@ -50,8 +50,9 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string emphasise(std::string_view s)
   {
-    std::string_view emph{"--"};
+    if(s.empty()) return "";
 
+    constexpr std::string_view emph{"--"};
     return std::string{emph}.append(s).append(emph);
   }
 
@@ -205,6 +206,13 @@ namespace sequoia::testing
     return text;
   }
 
+  [[nodiscard]]
+  std::string replace_all(std::string_view text, std::initializer_list<replacement> data)
+  {
+    std::string str{text};
+    return replace_all(str, data);
+  }
+
   std::string& replace_all(std::string& text, std::string_view anyOfLeft, std::string_view from, std::string_view anyOfRight, std::string_view to)
   {
     constexpr auto npos{std::string::npos};
@@ -293,8 +301,15 @@ namespace sequoia::testing
       pos = name.find(">>", pos + 1);
     }
 
-    // It is a pity to have to make these substitutions, but it appears
+    if constexpr(sizeof(std::size_t) == sizeof(uint64_t))
+    {
+      // CORRECT THIS!!!
+      replace_all(name, "", "unsigned long", ",>", "unsigned long long");
+    }
+
+    // It is a pity to have to make the following substitutions, but it appears
     // to be by far the easiest way to ensure compiler-independent de-mangling.
+
     replace_all(name, " <", "true", ",>", "1");
     replace_all(name, " <", "false", ",>", "0");
     replace_all(name, [](char c) { return std::isdigit(c) > 0; }, "ul", [](char) { return true; }, "");

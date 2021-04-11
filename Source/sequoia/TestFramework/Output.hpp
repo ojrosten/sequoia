@@ -97,6 +97,9 @@ namespace sequoia::testing
 
   std::string& replace_all(std::string& text, std::initializer_list<replacement> data);
 
+  [[nodiscard]]
+  std::string replace_all(std::string_view text, std::initializer_list<replacement> data);
+
   std::string& replace_all(std::string& text, std::string_view anyOfLeft, std::string_view from, std::string_view anyOfRight, std::string_view to);
 
   template<invocable_r<bool, char> LeftPred, invocable_r<bool, char> RightPred>
@@ -111,11 +114,11 @@ namespace sequoia::testing
         )
       {
         text.replace(pos, from.length(), to);
-        pos += to.length();
+        pos += (to.length() + 1);
       }
       else
       {
-        pos += text.length();
+        pos += (from.length() + 1) ;
       }
     }
 

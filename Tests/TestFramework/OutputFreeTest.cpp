@@ -61,5 +61,12 @@ namespace sequoia::testing
 
   void output_free_test::test_replace()
   {
+    using namespace std::string_literals;
+    check_equality(LINE("Replace in empty string"), replace_all("", "foo", "bar"), ""s);
+    check_equality(LINE("Single replacement"), replace_all("foo", "foo", "bar"), "bar"s);
+    check_equality(LINE("Multiple adjacent replacement"), replace_all("foofoo", "foo", "bar"), "barbar"s);
+    check_equality(LINE("Multiple separated replacement"), replace_all("foo bar foo", "foo", "bar"), "bar bar bar"s);
+
+    check_equality(LINE("Mutliple replacement patters"), replace_all("foobarbaz", {{"foo", "zoo"}, {"bar", "bfg"}, {"baz", "bat"}}), "zoobfgbat"s);
   }
 }
