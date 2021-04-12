@@ -12,6 +12,7 @@ set(SourceList sequoia/TestFramework/Advice.cpp
                sequoia/TestFramework/TestFamily.cpp
                sequoia/TestFramework/TestRunner.cpp
                sequoia/Parsing/CommandLineArguments.cpp
+               sequoia/PlatformSpecific/Helpers.cpp
                sequoia/TextProcessing/Indent.cpp)
 
 add_library(TestFramework STATIC ${SourceList})
