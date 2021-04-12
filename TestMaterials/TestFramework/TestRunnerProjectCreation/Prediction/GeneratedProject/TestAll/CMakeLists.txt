@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.19)
 
-project(My_Dummy_Project LANGUAGES CXX)
+project(GeneratedProject LANGUAGES CXX)
 
 add_executable(TestMain TestMain.cpp)
 

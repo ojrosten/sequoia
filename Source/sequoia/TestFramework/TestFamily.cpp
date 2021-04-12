@@ -43,7 +43,7 @@ namespace sequoia::testing
           const auto original{materials / "WorkingCopy"};
           const auto prediction{materials / "Prediction"};
 
-          if(fs::exists(original) && fs::exists(prediction))
+          if(fs::exists(prediction))
           {
             const auto auxiliary{materials / "Auxiliary"};
             const auto origAux{fs::exists(auxiliary) ? auxiliary : ""};
@@ -61,7 +61,14 @@ namespace sequoia::testing
       {
         fs::remove_all(output);
         fs::create_directories(output);
-        fs::copy(original, workingCopy, fs::copy_options::recursive | fs::copy_options::overwrite_existing);
+        if(fs::exists(original))
+        {
+          fs::copy(original, workingCopy, fs::copy_options::recursive | fs::copy_options::overwrite_existing);
+        }
+        else
+        {
+          fs::create_directory(workingCopy);
+        }
 
         if(fs::exists(originalAux))
           fs::copy(originalAux, workingAux, fs::copy_options::recursive | fs::copy_options::overwrite_existing);

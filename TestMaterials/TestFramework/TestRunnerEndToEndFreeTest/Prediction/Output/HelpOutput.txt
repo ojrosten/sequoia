@@ -26,7 +26,7 @@ create | c |
   performance_test | performance | header
     --host-directory | -h | host_directory
     --family | -f | family
-init | i | copyright, cmake project name, path
+init | i | copyright, path, ending with project name
 update-materials | u |
 --async | -a |
 --async-depth | -ad | depth [0,1]

@@ -53,11 +53,27 @@ namespace sequoia::testing
         const auto dir{(data.hostRepo / relSourcePath).parent_path()};
         fs::create_directories(dir);
 
-        return {dir, relSourcePath};
+        return {dir, fs::relative(sourcePath, data.sourceRepo.root().parent_path())};
       }
     };
 
     return std::visit(visitor, m_Data);
+  }
+
+  repositories::repositories(const std::filesystem::path& projectRoot)
+    : source{source_path(projectRoot)}
+    , tests{projectRoot/"Tests"}
+    , test_materials{projectRoot/"TestMaterials"}
+    , output{projectRoot/"output"}
+  {}
+
+  [[nodiscard]]
+  std::filesystem::path repositories::source_path(const std::filesystem::path& projectRoot)
+  {
+    if(projectRoot.empty())
+      throw std::runtime_error{"Project root should not be empty"};
+
+    return projectRoot / "Source" / uncapitalize((--projectRoot.end())->generic_string());
   }
 
   [[nodiscard]]
@@ -566,9 +582,9 @@ namespace sequoia::testing
                    },
                    [this](const param_list&) { std::visit(variant_visitor{[](auto& nascent){ nascent.finalize();}}, m_NascentTests.back()); }
                   },
-                  {"init", {"i"}, {"copyright", "cmake project name", "path"},
+                  {"init", {"i"}, {"copyright", "path, ending with project name"},
                     [this](const param_list& args) {
-                      init_project(args[0], args[1], args[2]);
+                      init_project(args[0], args[1]);
                     }
                   },
                   {"update-materials", {"u"}, {},
@@ -862,18 +878,26 @@ namespace sequoia::testing
     check_for_missing_tests();
   }
 
-  void test_runner::init_project(std::string_view copyright, std::string_view name, const std::filesystem::path& path)
+  void test_runner::init_project(std::string_view copyright, const std::filesystem::path& path)
   {
     namespace fs = std::filesystem;
+
+    if(path.empty())
+      throw std::runtime_error{"Project path should not be empty"};
+
+    const auto name{(--path.end())->generic_string()};
+    if(name.find(' ') != std::string::npos)
+      throw std::runtime_error{std::string{"Please remove spaces from the project name, '"}.append(name).append("'")};
 
     report("Creating new project at location:", fs::relative(path, m_ProjectRoot).generic_string());
 
     fs::create_directories(path);
     fs::copy(project_template_path(m_ProjectRoot), path, fs::copy_options::recursive | fs::copy_options::skip_existing);
+    fs::create_directory(repositories::source_path(path));
     fs::copy(aux_files_path(m_ProjectRoot), aux_files_path(path), fs::copy_options::recursive | fs::copy_options::skip_existing);
 
     generate_test_main(copyright, path);
-    generate_build_system_files(name, path);
+    generate_build_system_files(path);
   }
 
   void test_runner::generate_test_main(std::string_view copyright, const std::filesystem::path& path) const
@@ -892,8 +916,11 @@ namespace sequoia::testing
     write_to_file(file, text);
   }
 
-  void test_runner::generate_build_system_files(std::string_view name, const std::filesystem::path& path) const
+  void test_runner::generate_build_system_files(const std::filesystem::path& path) const
   {
+    if(path.empty())
+      throw std::logic_error{"Pre-condition violated: path should not be empty"};
+
     const std::string filename{"CMakeLists.txt"}, seqRoot{"SEQUOIA_ROOT"};
     const auto destination{std::filesystem::path{"TestAll"}.append(filename)};
     const auto file{path/destination};
@@ -912,11 +939,12 @@ namespace sequoia::testing
       }
     };
 
-    if(!replace(text, seqRoot,  m_ProjectRoot.generic_string()))
+    if(!replace(text, seqRoot, m_ProjectRoot.generic_string()))
     {
       throw std::runtime_error{std::string{"Unable to locate "}.append(filename).append(" root definition")};
     }
 
+    const auto name{(--path.end())->generic_string()};
     const std::string myProj{"MyProject"}, projName{replace_all(name, " ", "_")};
     replace(text, myProj, projName);
 

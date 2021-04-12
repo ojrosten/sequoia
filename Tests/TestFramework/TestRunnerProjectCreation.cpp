@@ -27,9 +27,7 @@ namespace sequoia::testing
   void test_runner_project_creation::test_project_creation()
   {
     auto fake{
-      [&mat{working_materials()}]() {
-        return mat / "FakeProject";
-      }
+      [&mat{working_materials()}]() { return mat / "FakeProject"; }
     };
 
     const auto testMain{fake().append("TestSandbox").append("TestSandbox.cpp")};
@@ -38,12 +36,21 @@ namespace sequoia::testing
     const repositories repos{fake()};
 
     auto generated{
-      [&mat{working_materials()}]() {
-        return mat / "GeneratedProject";
-      }
+      [&mat{working_materials()}]() { return mat / "GeneratedProject"; }
     };
 
-    commandline_arguments args{"", "init", "Oliver Jacob Rosten", "My Dummy Project", generated().string()};
+    check_exception_thrown<std::runtime_error>(
+      LINE(""),
+      [&](){
+        commandline_arguments args{"", "init", "Oliver Jacob Rosten", (working_materials() / "Generated Project").string()};
+
+        std::stringstream outputStream{};
+        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", testMain, includeTarget, repos, outputStream};
+
+        tr.execute();
+      });
+
+    commandline_arguments args{"", "init", "Oliver Jacob Rosten", generated().string()};
 
     std::stringstream outputStream{};
     test_runner tr{args.size(), args.get(), "Oliver J. Rosten", testMain, includeTarget, repos, outputStream};

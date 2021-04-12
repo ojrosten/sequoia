@@ -218,7 +218,7 @@ namespace sequoia::testing
       }
     };
 
-    commandline_arguments args{"", "init", "Oliver Jacob Rosten", "DummyProject", generated().string()};
+    commandline_arguments args{"", "init", "Oliver Jacob Rosten", generated().string()};
 
     std::stringstream outputStream{};
     test_runner tr{args.size(), args.get(), "Oliver J. Rosten", testMain, includeTarget, repos, outputStream};
@@ -244,7 +244,7 @@ namespace sequoia::testing
     check(LINE("First build output existance"), fs::exists(cmakeBuildRun.build_output));
 
     // Create tests, rerun cmake, build and run
-    fs::copy(fake() / "Source", generated() / "Source", fs::copy_options::recursive | fs::copy_options::skip_existing);
+    fs::copy(fake() / "Source" / "fakeProject", generated() / "Source" / "generatedProject", fs::copy_options::recursive | fs::copy_options::skip_existing);
     fs::create_directory(working_materials() / "Output");
 
     const auto createTestsCMakeBuildRun{b.create_cmake_build_run(working_materials() / "Output")};

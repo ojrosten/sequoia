@@ -72,6 +72,20 @@ namespace sequoia::testing
     std::variant<std::filesystem::path, generator> m_Data;
   };
 
+  struct repositories
+  {
+    explicit repositories(const std::filesystem::path& projectRoot);
+
+    [[nodiscard]]
+    static std::filesystem::path source_path(const std::filesystem::path& projectRoot);
+
+    std::filesystem::path
+      source{},
+      tests{},
+      test_materials{},
+      output{};
+  };
+
   struct template_spec
   {
     std::string species, symbol;
@@ -82,7 +96,6 @@ namespace sequoia::testing
     [[nodiscard]]
     friend bool operator!=(const template_spec&, const template_spec&) noexcept = default;
   };
-
 
   using template_data = std::vector<template_spec>;
 
@@ -250,28 +263,11 @@ namespace sequoia::testing
 
     constexpr static std::array<std::string_view, 2> stubs() noexcept
     {
-      return {"Test.hpp",
-              "Test.cpp"};
+      return {"Test.hpp", "Test.cpp"};
     };
   private:
     void transform_file(std::string& text) const;
    };
-
-  struct repositories
-  {
-    explicit repositories(const std::filesystem::path& projectRoot)
-      : source{projectRoot/"Source"}
-      , tests{projectRoot/"Tests"}
-      , test_materials{projectRoot/"TestMaterials"}
-      , output{projectRoot/"output"}
-    {}
-
-    std::filesystem::path
-      source{},
-      tests{},
-      test_materials{},
-      output{};
-  };
 
   /*! \brief Consumes command-line arguments and holds all test families
 
@@ -425,7 +421,7 @@ namespace sequoia::testing
     [[nodiscard]]
     std::string create_files() const;
 
-    void init_project(std::string_view copyright, std::string_view name, const std::filesystem::path& path);
+    void init_project(std::string_view copyright, const std::filesystem::path& path);
 
     [[nodiscard]]
     bool mode(output_mode m) const noexcept
@@ -435,6 +431,6 @@ namespace sequoia::testing
 
     void generate_test_main(std::string_view copyright, const std::filesystem::path& path) const;
 
-    void generate_build_system_files(std::string_view name, const std::filesystem::path& path) const;
+    void generate_build_system_files(const std::filesystem::path& path) const;
  };
 }

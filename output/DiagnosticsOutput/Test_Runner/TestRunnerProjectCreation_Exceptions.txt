@@ -1,0 +1,9 @@
+Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 43
+
+Expected Exception Type:
+[std::runtime_error]
+Please remove spaces from the project name, 'Generated Project'
+
+
+	=======================================
+
