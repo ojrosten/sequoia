@@ -30,6 +30,8 @@ namespace sequoia::testing
 
     void test_capitalize();
 
+    void test_uncapitalize();
+
     void test_replace();
   };
 }

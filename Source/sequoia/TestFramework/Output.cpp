@@ -156,10 +156,9 @@ namespace sequoia::testing
     return "check failed";
   }
 
-  [[nodiscard]]
-  std::string to_camel_case(std::string text)
+  std::string& to_camel_case(std::string& text)
   {
-    if(text.empty()) return "";
+    if(text.empty()) return text;
 
     auto upper{
       [](char c) {
@@ -190,7 +189,13 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string to_snake_case(std::string text)
+  std::string to_camel_case(std::string_view text)
+  {
+    std::string str{text};
+    return to_camel_case(str);
+  }
+
+  std::string& to_snake_case(std::string& text)
   {
     auto i{text.begin()};
     while(i != text.end())
@@ -210,7 +215,13 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string capitalize(std::string text)
+  std::string to_snake_case(std::string_view text)
+  {
+    std::string str{text};
+    return to_snake_case(str);
+  }
+
+  std::string& capitalize(std::string& text)
   {
     if(!text.empty())
     {
@@ -219,6 +230,31 @@ namespace sequoia::testing
     }
 
     return text;
+  }
+
+  [[nodiscard]]
+  std::string capitalize(std::string_view text)
+  {
+    std::string str{text};
+    return capitalize(str);
+  }
+
+  std::string& uncapitalize(std::string& text)
+  {
+    if(!text.empty())
+    {
+      auto& c{text.front()};
+      c = static_cast<char>(std::tolower(static_cast<unsigned char>(c)));
+    }
+
+    return text;
+  }
+
+  [[nodiscard]]
+  std::string uncapitalize(std::string_view text)
+  {
+    std::string str{text};
+    return uncapitalize(str);
   }
 
   std::string& replace_all(std::string& text, std::string_view from, std::string_view to)

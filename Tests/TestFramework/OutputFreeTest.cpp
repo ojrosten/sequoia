@@ -22,6 +22,7 @@ namespace sequoia::testing
     test_camel_case();
     test_snake_case();
     test_capitalize();
+    test_uncapitalize();
     test_replace();
   }
 
@@ -49,7 +50,6 @@ namespace sequoia::testing
     check_equality(LINE("Snake from minimal camel"), to_snake_case("AB"), "a_b"s);
     check_equality(LINE(""), to_snake_case("FooBarBaz"), "foo_bar_baz"s);
   }
-  
 
   void output_free_test::test_capitalize()
   {
@@ -57,6 +57,14 @@ namespace sequoia::testing
     check_equality(LINE("Capitalize empty string"), capitalize(""), ""s);
     check_equality(LINE("Capitalize letter"), capitalize("a"), "A"s);
     check_equality(LINE("Capitalize word"), capitalize("foo"), "Foo"s);
+  }
+
+  void output_free_test::test_uncapitalize()
+  {
+    using namespace std::string_literals;
+    check_equality(LINE("Uncapitalize empty string"), uncapitalize(""), ""s);
+    check_equality(LINE("Uncapitalize letter"), uncapitalize("A"), "a"s);
+    check_equality(LINE("Uncapitalize word"), uncapitalize("Foo"), "foo"s);
   }
 
   void output_free_test::test_replace()
