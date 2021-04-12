@@ -9,7 +9,7 @@
     \brief Definitions for Output.hpp.
  */
 
-#include "sequoia/Formatting/Indent.hpp"
+#include "sequoia/TextProcessing/Indent.hpp"
 
 namespace sequoia
 {

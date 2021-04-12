@@ -12,7 +12,7 @@
  */
 
 #include "sequoia/TestFramework/CoreInfrastructure.hpp"
-#include "sequoia/Formatting/Indent.hpp"
+#include "sequoia/TextProcessing/Indent.hpp"
 #include "sequoia/PlatformSpecific/Preprocessor.hpp"
 
 #include <filesystem>

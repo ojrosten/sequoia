@@ -6,7 +6,7 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "sequoia/Parsing/CommandLineArguments.hpp"
-#include "sequoia/Formatting/Indent.hpp"
+#include "sequoia/TextProcessing/Indent.hpp"
 
 #include <stdexcept>
 #include <iterator>
