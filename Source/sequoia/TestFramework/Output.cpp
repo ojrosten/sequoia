@@ -13,6 +13,48 @@
 
 namespace sequoia::testing
 {
+  namespace
+  {
+    std::string& tidy_name(std::string& name)
+    {
+      if constexpr(sizeof(std::size_t) == sizeof(uint64_t))
+      {
+        const auto replacement{demangle<uint64_t>([](std::string& name) -> std::string& { return name; })};
+        replace_all(name, "", "unsigned long", ",>", replacement);
+      }
+
+      // It is a pity to have to make the following substitutions, but it appears
+      // to be by far the easiest way to ensure compiler-independent de-mangling.
+
+      replace_all(name, " <", "true", ",>", "1");
+      replace_all(name, " <", "false", ",>", "0");
+      replace_all(name, [](char c) { return std::isdigit(c) > 0; }, "ul", [](char) { return true; }, "");
+
+      constexpr auto npos{std::string::npos};
+      auto openPos{name.find('(')};
+      auto pos{openPos};
+      int64_t open{};
+      while(pos != npos)
+      {
+        if(name[pos] == '(')      ++open;
+        else if(name[pos] == ')') --open;
+
+        ++pos;
+
+        if(!open)
+        {
+          if((pos < name.size()) && std::isdigit(name[pos]))
+            name.erase(openPos, pos-openPos);
+
+          openPos = name.find('(', pos);
+          pos = openPos;
+        }
+      }
+
+      return name;
+    }
+  }
+
   [[nodiscard]]
   std::string footer()
   {
@@ -198,6 +240,29 @@ namespace sequoia::testing
     return replace_all(str, from, to);
   }
 
+  std::string& replace_all(std::string& text, std::string_view fromBegin, std::string_view fromEnd, std::string_view to)
+  {
+    constexpr auto npos{std::string::npos};
+    std::string::size_type pos{};
+    while((pos = text.find(fromBegin, pos)) != npos)
+    {
+      const auto pos2{text.find(fromEnd, pos + fromBegin.length())};
+      if(pos2 == npos) break;
+
+      text.replace(pos, pos2-pos, to);
+      pos += to.length();
+    }
+
+    return text;
+  }
+
+  [[nodiscard]]
+  std::string replace_all(std::string_view text, std::string_view fromBegin, std::string_view fromEnd, std::string_view to)
+  {
+    std::string str{text};
+    return replace_all(str, fromBegin, fromEnd, to);
+  }
+
   std::string& replace_all(std::string& text, std::initializer_list<replacement> data)
   {
     for(const auto& r : data)
@@ -286,64 +351,14 @@ namespace sequoia::testing
 
   std::string& tidy_name(std::string& name, clang_type)
   {
-    constexpr auto npos{std::string::npos};
-    auto pos{name.find("::__")};
-    while(pos != npos)
-    {
-      const auto pos2{name.find("::", pos+4)};
-      if(pos2 == npos) break;
-
-      name.erase(pos, pos2 - pos);
-      pos = name.find("::__", pos);
-    }
-
-    pos = name.find(">>");
-    while(pos != npos)
-    {
-      name.insert(++pos, " ");
-      pos = name.find(">>", pos + 1);
-    }
-
-    if constexpr(sizeof(std::size_t) == sizeof(uint64_t))
-    {
-      const auto replacement{demangle<uint64_t>([](std::string& name) -> std::string& { return name; })};
-      replace_all(name, "", "unsigned long", ",>", replacement);
-    }
-
-    // It is a pity to have to make the following substitutions, but it appears
-    // to be by far the easiest way to ensure compiler-independent de-mangling.
-
-    replace_all(name, " <", "true", ",>", "1");
-    replace_all(name, " <", "false", ",>", "0");
-    replace_all(name, [](char c) { return std::isdigit(c) > 0; }, "ul", [](char) { return true; }, "");
-
-    auto openPos{name.find('(')};
-    pos = openPos;
-    int64_t open{};
-    while(pos != npos)
-    {
-      if(name[pos] == '(')      ++open;
-      else if(name[pos] == ')') --open;
-
-      ++pos;
-
-      if(!open)
-      {
-        if((pos < name.size()) && std::isdigit(name[pos]))
-          name.erase(openPos, pos-openPos);
-
-        openPos = name.find('(', pos);
-        pos = openPos;
-      }
-    }
-
-    return name;
+    replace_all(name, "::__", "::", "");
+    return tidy_name(name);
   }
 
   std::string& tidy_name(std::string& name, gcc_type)
   {
-    // TO DO: improve this!
-    return tidy_name(name, clang_type{});
+    replace_all(name, ">>", ">> ");
+    return tidy_name(name);
   }
 
   std::string& tidy_name(std::string& name, msvc_type)
