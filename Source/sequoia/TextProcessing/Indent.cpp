@@ -13,23 +13,23 @@
 
 namespace sequoia
 {
-  std::string indent(std::string_view s, indentation ind)
+  std::string indent(std::string_view sv, indentation ind)
   {
-    if(s.empty()) return {};
-    if(ind == no_indent) return std::string{s};
+    if(sv.empty()) return {};
+    if(ind == no_indent) return std::string{sv};
 
     std::string str{};
-    str.reserve(s.size());
+    str.reserve(sv.size());
 
     std::string::size_type current{};
 
-    while(current < s.size())
+    while(current < sv.size())
     {
       constexpr auto npos{std::string::npos};
-      const auto dist{s.substr(current).find('\n')};
+      const auto dist{sv.substr(current).find('\n')};
 
       const auto count{dist == npos ? npos : dist + 1};
-      auto line{s.substr(current, count == npos ? npos : count)};
+      auto line{sv.substr(current, count == npos ? npos : count)};
       if(line.find_first_not_of('\n') != npos)
         str.append(ind);
 
@@ -59,9 +59,9 @@ namespace sequoia
   }
 
   [[nodiscard]]
-  std::string append_indented(std::string_view s1, std::string_view s2, indentation ind)
+  std::string append_indented(std::string_view sv1, std::string_view sv2, indentation ind)
   {
-    std::string str{s1};
-    return append_indented(str, s2, std::move(ind));
+    std::string str{sv1};
+    return append_indented(str, sv2, std::move(ind));
   }
 }

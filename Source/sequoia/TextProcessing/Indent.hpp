@@ -43,7 +43,7 @@ namespace sequoia
 
   /// For a non-empty string_view prepends with an indentation; otherwise returns an empty string
   [[nodiscard]]
-  std::string indent(std::string_view s, indentation ind);
+  std::string indent(std::string_view sv, indentation ind);
 
   /*! \param s1 The target for appending
       \param s2 The text to append
@@ -59,7 +59,7 @@ namespace sequoia
   std::string& append_indented(std::string& s1, std::string_view s2, indentation ind);
 
   [[nodiscard]]
-  std::string append_indented(std::string_view s1, std::string_view s2, indentation ind);
+  std::string append_indented(std::string_view sv1, std::string_view sv2, indentation ind);
 
   namespace impl
   {
@@ -95,9 +95,9 @@ namespace sequoia
   template<class... Ts>
     requires (sizeof...(Ts) > 2)
   [[nodiscard]]
-  std::string append_indented(std::string_view s, Ts... strs)
+  std::string append_indented(std::string_view sv, Ts... strs)
   {
-    std::string str{s};
+    std::string str{sv};
     return append_indented(str, std::forward<Ts>(strs)...);
   }
 
@@ -121,6 +121,7 @@ namespace sequoia
   [[nodiscard]]
   std::string append_lines(std::string_view sv, Ts&&... strs)
   {
-    return indent(sv, std::forward<Ts>(strs)..., no_indent);
+    std::string str{sv};
+    return append_lines(str, std::forward<Ts>(strs)...);
   }
 }
