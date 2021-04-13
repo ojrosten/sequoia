@@ -96,3 +96,4 @@
 #include "Runtime/FactoryTest.hpp"
 #include "TestFramework/TestRunnerEndToEndFreeTest.hpp"
 #include "TestFramework/OutputFreeTest.hpp"
+#include "TextProcessing/IndentFreeTest.hpp"

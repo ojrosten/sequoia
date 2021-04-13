@@ -96,7 +96,13 @@ int main(int argc, char** argv)
       test_runner_project_creation{"Project Creation"}
     );
 
+    runner.add_test_family(
+      "Text Processing",
+      indent_free_test("Free Test")
+    );
+
     timer_resolution r{1};
+
     runner.execute();
   }
   catch(const std::exception& e)

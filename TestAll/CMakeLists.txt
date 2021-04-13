@@ -78,7 +78,8 @@ target_sources(TestAll PRIVATE ${TestDir}/Experimental/ExperimentalTest.cpp
                                ${TestDir}/TestFramework/TestRunnerProjectCreation.cpp
                                ${TestDir}/TestFramework/TestRunnerTest.cpp
                                ${TestDir}/TestFramework/TestRunnerTestCreation.cpp
-                               ${TestDir}/TestFramework/TestRunnerEndToEndFreeTest.cpp)
+                               ${TestDir}/TestFramework/TestRunnerEndToEndFreeTest.cpp
+                               ${TestDir}/TextProcessing/IndentFreeTest.cpp)
 
 set(BUILD_SYS ${CMAKE_CURRENT_SOURCE_DIR}/../build_system)
 

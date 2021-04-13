@@ -86,6 +86,11 @@ int main(int argc, char** argv)
     );
 
     runner.add_test_family(
+      "Text Processing",
+      indent_free_test("Free Test")
+    );
+
+    runner.add_test_family(
       "CommandLine Arguments",
       commandline_arguments_false_positive_test{"False Positive Test"},
       commandline_arguments_test{"Unit Test"}
