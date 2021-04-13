@@ -24,7 +24,7 @@ namespace sequoia
     {}
 
     [[nodiscard]]
-    operator std::string_view() const
+    operator std::string_view() const noexcept
     {
       return m_Data;
     }
@@ -58,6 +58,9 @@ namespace sequoia
    */
   std::string& append_indented(std::string& s1, std::string_view s2, indentation ind);
 
+  [[nodiscard]]
+  std::string append_indented(std::string_view s1, std::string_view s2, indentation ind);
+
   namespace impl
   {
     template<class... Ts, std::size_t... I>
@@ -87,6 +90,15 @@ namespace sequoia
   std::string& append_indented(std::string& s, Ts... strs)
   {
     return sequoia::impl::append_indented(s, std::tuple<Ts...>{strs...});
+  }
+
+  template<class... Ts>
+    requires (sizeof...(Ts) > 2)
+  [[nodiscard]]
+  std::string append_indented(std::string_view s, Ts... strs)
+  {
+    std::string str{s};
+    return append_indented(str, std::forward<Ts>(strs)...);
   }
 
   template<class... Ts>

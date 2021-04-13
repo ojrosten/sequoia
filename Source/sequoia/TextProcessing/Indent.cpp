@@ -57,4 +57,11 @@ namespace sequoia
 
     return s1;
   }
+
+  [[nodiscard]]
+  std::string append_indented(std::string_view s1, std::string_view s2, indentation ind)
+  {
+    std::string str{s1};
+    return append_indented(str, s2, std::move(ind));
+  }
 }

@@ -28,9 +28,18 @@ namespace sequoia::testing
     check_equality(LINE("Null indent of empty string"), indent("", indentation{"  "}), ""s);
     check_equality(LINE("Indent a letter"), indent("a", indentation{"  "}), "  a"s);
     check_equality(LINE("Indent a sententce"), indent("The quick brown fox...", indentation{"  "}), "  The quick brown fox..."s);
+
+    check_equality(LINE("Indent multiple strings"), indent("a", "b", indentation{"  "}), "  a\n  b"s);
   }
 
   void indent_free_test::test_append_indented()
   {
+    using namespace std::string_literals;
+    check_equality(LINE("Append empty to empty"), append_indented("", "", indentation{" "}), ""s);
+    check_equality(LINE("Append empty to non-empty"), append_indented("", "a", indentation{" "}), "a"s);
+    check_equality(LINE("Append non-empty to empty"), append_indented("", "a", indentation{" "}), "a"s);
+    check_equality(LINE("Append non-empty to non-empty"), append_indented("a", "b", indentation{" "}), "a\n b"s);
+
+    check_equality(LINE("Append lines"), append_lines("a", "b"), "a\nb"s);
   }
 }
