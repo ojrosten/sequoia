@@ -17,7 +17,9 @@ int main(int argc, char** argv)
 
   try
   {
+    const timer_resolution r{1};
     const auto root{project_root(argc, argv)};
+
     test_runner runner{argc,
                        argv,
                        "Oliver J. Rosten",
@@ -100,8 +102,6 @@ int main(int argc, char** argv)
       "Text Processing",
       indent_free_test("Free Test")
     );
-
-    timer_resolution r{1};
 
     runner.execute();
   }

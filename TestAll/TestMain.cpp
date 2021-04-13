@@ -17,7 +17,9 @@ int main(int argc, char** argv)
 
   try
   {
+    const timer_resolution r{1};
     const auto root{project_root(argc, argv)};
+
     test_runner runner{argc,
                        argv,
                        "Oliver J. Rosten",
@@ -233,7 +235,6 @@ int main(int argc, char** argv)
       experimental_test{"Unit Test"}
     );
 
-    timer_resolution r{1};
     runner.execute();
   }
   catch(const std::exception& e)
