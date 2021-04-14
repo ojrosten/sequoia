@@ -42,7 +42,7 @@ Expected Exception Type:
 
 	=======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 330
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 349
 
 Expected Exception Type:
 [std::runtime_error]
