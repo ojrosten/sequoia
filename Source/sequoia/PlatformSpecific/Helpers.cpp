@@ -19,14 +19,14 @@ namespace sequoia
     : m_Resolution{millisecs}
   {
     #ifdef _MSC_VER
-      if(m_Resoluton > 0) timeBeginPeriod(m_Resolution);
+      if(m_Resolution > 0) timeBeginPeriod(m_Resolution);
     #endif
   }
 
   timer_resolution::~timer_resolution()
   {
     #ifdef _MSC_VER
-      if(m_Resoluton > 0) timeEndPeriod(m_Resolution);
+      if(m_Resolution > 0) timeEndPeriod(m_Resolution);
     #endif
   }
 }
