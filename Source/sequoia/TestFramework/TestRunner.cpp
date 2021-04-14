@@ -580,7 +580,10 @@ namespace sequoia::testing
                        test_creator{"behavioural", "performance", *this}, {hostOption, familyOption}
                      }
                    },
-                   [this](const param_list&) { std::visit(variant_visitor{[](auto& nascent){ nascent.finalize();}}, m_NascentTests.back()); }
+                   [this](const param_list&) {
+                      if(!m_NascentTests.empty())
+                        std::visit(variant_visitor{[](auto& nascent){ nascent.finalize();}}, m_NascentTests.back());
+                    }
                   },
                   {"init", {"i"}, {"copyright", "path, ending with project name"},
                     [this](const param_list& args) {
