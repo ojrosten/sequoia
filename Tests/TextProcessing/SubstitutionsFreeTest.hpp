@@ -11,7 +11,7 @@
 
 namespace sequoia::testing
 {
-  class output_free_test final : public free_test
+  class substitutions_free_test final : public free_test
   {
   public:
     using free_test::free_test;
@@ -22,6 +22,14 @@ namespace sequoia::testing
 
     void run_tests() final;
 
-    void test_emphasise();
+    void test_camel_case();
+
+    void test_snake_case();
+
+    void test_capitalize();
+
+    void test_uncapitalize();
+
+    void test_replace();
   };
 }

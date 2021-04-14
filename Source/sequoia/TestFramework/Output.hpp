@@ -13,6 +13,7 @@
 
 #include "sequoia/TestFramework/CoreInfrastructure.hpp"
 #include "sequoia/TextProcessing/Indent.hpp"
+#include "sequoia/TextProcessing/Substitutions.hpp"
 #include "sequoia/PlatformSpecific/Preprocessor.hpp"
 
 #include <filesystem>
@@ -75,83 +76,6 @@ namespace sequoia::testing
 
   [[nodiscard]]
   std::string footer();
-
-  std::string& to_camel_case(std::string& text);
-
-  [[nodiscard]]
-  std::string to_camel_case(std::string_view text);
-
-  std::string& to_snake_case(std::string& text);
-
-  [[nodiscard]]
-  std::string to_snake_case(std::string_view text);
-
-  std::string& capitalize(std::string& text);
-
-  [[nodiscard]]
-  std::string capitalize(std::string_view text);
-
-  std::string& uncapitalize(std::string& text);
-
-  [[nodiscard]]
-  std::string uncapitalize(std::string_view text);
-
-  std::string& replace_all(std::string& text, std::string_view from, std::string_view to);
-
-  [[nodiscard]]
-  std::string replace_all(std::string_view text, std::string_view from, std::string_view to);
-
-  std::string& replace_all(std::string& text, std::string_view fromBegin, std::string_view fromEnd, std::string_view to);
-
-  [[nodiscard]]
-  std::string replace_all(std::string_view text, std::string_view fromBegin, std::string_view fromEnd, std::string_view to);
-
-  struct replacement
-  {
-    std::string_view from, to;
-  };
-
-  std::string& replace_all(std::string& text, std::initializer_list<replacement> data);
-
-  [[nodiscard]]
-  std::string replace_all(std::string_view text, std::initializer_list<replacement> data);
-
-  std::string& replace_all(std::string& text, std::string_view anyOfLeft, std::string_view from, std::string_view anyOfRight, std::string_view to);
-
-  [[nodiscard]]
-  std::string replace_all(std::string_view text, std::string_view anyOfLeft, std::string_view from, std::string_view anyOfRight, std::string_view to);
-
-  template<invocable_r<bool, char> LeftPred, invocable_r<bool, char> RightPred>
-  std::string& replace_all(std::string& text, LeftPred lPred, std::string_view from, RightPred rPred, std::string_view to)
-  {
-    constexpr auto npos{std::string::npos};
-    std::string::size_type pos{};
-    while((pos = text.find(from, pos)) != npos)
-    {
-      if(    (((pos > 0) && lPred(text[pos - 1])) || ((pos == 0) && lPred('\0')))
-          && (   ((pos + from.length() < text.length())  && rPred(text[pos + from.length()]))
-              || ((pos + from.length() == text.length()) && rPred('\0')))
-        )
-      {
-        text.replace(pos, from.length(), to);
-        pos += (to.length() + 1);
-      }
-      else
-      {
-        pos += (from.length() + 1) ;
-      }
-    }
-
-    return text;
-  }
-
-  template<invocable_r<bool, char> LeftPred, invocable_r<bool, char> RightPred>
-  [[nodiscard]]
-  std::string replace_all(std::string_view text, LeftPred lPred, std::string_view from, RightPred rPred, std::string_view to)
-  {
-    std::string str{text};
-    return replace_all(str, lPred, from, rPred, to);
-  }
 
   [[nodiscard]]
   std::string report_line(const std::filesystem::path& file, int line, std::string_view message, const std::filesystem::path& repository={});

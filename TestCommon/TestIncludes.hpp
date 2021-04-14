@@ -97,3 +97,4 @@
 #include "TestFramework/TestRunnerEndToEndFreeTest.hpp"
 #include "TestFramework/OutputFreeTest.hpp"
 #include "TextProcessing/IndentFreeTest.hpp"
+#include "TextProcessing/SubstitutionsFreeTest.hpp"
