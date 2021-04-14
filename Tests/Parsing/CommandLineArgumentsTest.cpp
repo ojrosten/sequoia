@@ -146,8 +146,8 @@ namespace sequoia::testing
       commandline_arguments a{"foo", "--async", "create", "class", "dir"};
 
       check_weak_equivalence(LINE(""),
-                             argument_parser(a.size(), a.get(), { {"create",  {}, {"class_name", "directory"}, fo{}},
-                                                        {"--async", {}, {}, fo{}} }),
+                             argument_parser{a.size(), a.get(), { {"create",  {}, {"class_name", "directory"}, fo{}},
+                                                        {"--async", {}, {}, fo{}} }},
                              outcome{"foo", {{fo{}, nullptr, {}}, {fo{}, nullptr, {"class", "dir"}}}});
     }
   }
@@ -193,8 +193,8 @@ namespace sequoia::testing
       commandline_arguments a{"foo", "--help"};
 
       check_weak_equivalence(LINE("Multi-option help"),
-                             argument_parser(a.size(), a.get(), { {"create",  {"-c"}, {"class_name", "directory"}, fo{}},
-                                                        {"--async", {}, {}, fo{}} }),
+                             argument_parser{a.size(), a.get(), { {"create",  {"-c"}, {"class_name", "directory"}, fo{}},
+                                                        {"--async", {}, {}, fo{}} }},
                              outcome{"foo", {}, "create | -c | class_name, directory\n--async\n"});
     }
   }
@@ -311,7 +311,7 @@ namespace sequoia::testing
       commandline_arguments a{"", "create", "regular_test", "maybe<class T>", "std::optional<T>"};
 
       check_weak_equivalence(LINE("Nested modes"),
-                             argument_parser(a.size(), a.get(),
+                             argument_parser{a.size(), a.get(),
                                    { {"create", {"c"}, {}, fo{},
                                         { { "regular_test",
                                             {"regular"},
@@ -320,8 +320,27 @@ namespace sequoia::testing
                                           }
                                         }
                                       }
-                                   }),
+                                   }},
                              outcome{"", {{fo{}, nullptr, {}, {{fo{}, nullptr, {"maybe<class T>", "std::optional<T>"}}} }}});
+    }
+
+    {
+      commandline_arguments a{"", "create", "create", "regular_test", "maybe<class T>", "std::optional<T>"};
+
+      // This is subtle! After the first 'create' is parsed, the second one is not
+      // recognized as a nested option and so it re-parsed as a top-level option.
+      check_weak_equivalence(LINE("Nested modes with duplicated command"),
+        parse(a.size(), a.get(),
+          {{"create", {"c"}, {}, fo{},
+               { { "regular_test",
+                   {"regular"},
+                   {"qualified::class_name<class T>", "equivalent type"},
+                   fo{}
+                 }
+               }
+             }
+          }),
+        outcome{"", {{fo{}, nullptr, {}}, {fo{}, nullptr, {}, {{fo{}, nullptr, {"maybe<class T>", "std::optional<T>"}}} }}});
     }
 
     {
