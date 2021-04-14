@@ -10,11 +10,33 @@
  */
 
 #include "sequoia/TestFramework/Output.hpp"
+#include "sequoia/TextProcessing/Patterns.hpp"
 
 namespace sequoia::testing
 {
   namespace
   {
+    std::string& remove_enum_spec(std::string& name)
+    {
+      std::string::size_type pos{};
+
+      while(pos != std::string::npos)
+      {
+        const auto[open, close]{find_matched_delimiters(name, pos)};
+        if((open != close) && (close < name.size()) && std::isdigit(name[close]))
+        {
+          name.erase(open, close - open);
+          pos = close;
+        }
+        else
+        {
+          break;
+        }
+      }
+
+      return name;
+    }
+
     std::string& tidy_name(std::string& name)
     {
       if constexpr(sizeof(std::size_t) == sizeof(uint64_t))
@@ -30,6 +52,7 @@ namespace sequoia::testing
       replace_all(name, " <", "false", ",>", "0");
       replace_all(name, [](char c) { return std::isdigit(c) > 0; }, "ul", [](char) { return true; }, "");
 
+      remove_enum_spec(name);
       constexpr auto npos{std::string::npos};
       auto openPos{name.find('(')};
       auto pos{openPos};

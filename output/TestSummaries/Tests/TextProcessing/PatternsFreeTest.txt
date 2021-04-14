@@ -1,2 +1,2 @@
 Patterns Free Test
-Standard Top Level Checks:                 8;  Failures:  0  [Deep checks: 24]
+Standard Top Level Checks:                10;  Failures:  0  [Deep checks: 30]

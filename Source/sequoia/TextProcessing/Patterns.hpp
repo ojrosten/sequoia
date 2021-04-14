@@ -19,5 +19,5 @@ namespace sequoia
   /// opening and one past closing.
   [[nodiscard]]
   std::pair<std::string::size_type, std::string::size_type>
-  find_matched_delimiters(std::string_view s, char open='(', char close=')');
+  find_matched_delimiters(std::string_view s, std::string::size_type pos={}, char open='(', char close=')');
 }

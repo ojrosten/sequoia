@@ -34,7 +34,9 @@ namespace sequoia::testing
     check_equality(LINE("Matched single parens"), find_matched_delimiters("()"), prediction{0, 2});
     check_equality(LINE("Matched separated parens"), find_matched_delimiters("a(b)"), prediction{1, 4});
     check_equality(LINE("Matched nested parens"), find_matched_delimiters("(())"), prediction{0, 4});
+    check_equality(LINE("Matched parens offest"), find_matched_delimiters("()()", 1), prediction{2, 4});
+    check_equality(LINE("Pos out of bounds"), find_matched_delimiters("()", 2), prediction{npos, npos});
 
-    check_equality(LINE("Matched nested []"), find_matched_delimiters("[[]]", '[', ']'), prediction{0, 4});
+    check_equality(LINE("Matched nested []"), find_matched_delimiters("[[]]", 0, '[', ']'), prediction{0, 4});
   }
 }
