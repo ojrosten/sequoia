@@ -758,7 +758,7 @@ namespace sequoia::testing
                  });
   }
 
-  void test_runner::execute()
+  void test_runner::execute([[maybe_unused]] timer_resolution r)
   {
     namespace fs = std::filesystem;
 

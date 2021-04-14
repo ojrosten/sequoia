@@ -6,7 +6,6 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "TestIncludes.hpp"
-#include "sequoia/PlatformSpecific/Helpers.hpp"
 
 #include <iostream>
 
@@ -17,7 +16,6 @@ int main(int argc, char** argv)
 
   try
   {
-    const timer_resolution r{1};
     const auto root{project_root(argc, argv)};
 
     test_runner runner{argc,

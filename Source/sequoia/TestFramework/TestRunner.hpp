@@ -13,6 +13,7 @@
 
 #include "sequoia/TestFramework/TestFamily.hpp"
 #include "sequoia/Parsing/CommandLineArguments.hpp"
+#include "sequoia/PlatformSpecific/Helpers.hpp"
 #include "sequoia/Runtime/Factory.hpp"
 
 #include <map>
@@ -318,7 +319,7 @@ namespace sequoia::testing
       }
     }
 
-    void execute();
+    void execute([[maybe_unused]] timer_resolution r=timer_resolution{1});
 
     [[nodiscard]]
     concurrency_mode concurrency() const noexcept { return m_ConcurrencyMode; }
