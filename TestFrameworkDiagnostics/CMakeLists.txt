@@ -29,7 +29,8 @@ target_sources(TestFrameworkDiagnostics PRIVATE
                ${TestDir}/Runtime/FactoryTestingDiagnostics.cpp
                ${TestDir}/Runtime/FactoryTest.cpp
                ${TestDir}/TextProcessing/IndentFreeTest.cpp
-               ../Tests/TextProcessing/SubstitutionsFreeTest.cpp)
+               ../Tests/TextProcessing/SubstitutionsFreeTest.cpp
+               ../Tests/TextProcessing/PatternsFreeTest.cpp)
 
 set(BUILD_SYS ${CMAKE_CURRENT_SOURCE_DIR}/../build_system)
 

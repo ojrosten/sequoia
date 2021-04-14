@@ -5,11 +5,15 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
+/*! \file
+    \brief Definitions for Substitutions.hpp
+ */
+
 #include "sequoia/TextProcessing/Substitutions.hpp"
 
 namespace sequoia
 {
-std::string& to_camel_case(std::string& text)
+  std::string& to_camel_case(std::string& text)
   {
     if(text.empty()) return text;
 

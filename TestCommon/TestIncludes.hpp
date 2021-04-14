@@ -98,3 +98,4 @@
 #include "TestFramework/OutputFreeTest.hpp"
 #include "TextProcessing/IndentFreeTest.hpp"
 #include "TextProcessing/SubstitutionsFreeTest.hpp"
+#include "TextProcessing/PatternsFreeTest.hpp"

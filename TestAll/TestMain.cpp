@@ -86,9 +86,10 @@ int main(int argc, char** argv)
     );
 
     runner.add_test_family(
-      "Text Processing",
-      indent_free_test("Free Test"),
-      substitutions_free_test("Free Test")
+      "Text Processing",      
+      indent_free_test("Indent Free Test"),
+      patterns_free_test("Patterns Free Test"),
+      substitutions_free_test("Substitutions Free Test")
     );
 
     runner.add_test_family(
