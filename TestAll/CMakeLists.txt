@@ -80,6 +80,7 @@ target_sources(TestAll PRIVATE ${TestDir}/Experimental/ExperimentalTest.cpp
                                ${TestDir}/TestFramework/TestRunnerTestCreation.cpp
                                ${TestDir}/TestFramework/TestRunnerEndToEndFreeTest.cpp
                                ${TestDir}/TextProcessing/IndentFreeTest.cpp
+                               ${TestDir}/TextProcessing/PatternsFreeTest.cpp
                                ${TestDir}/TextProcessing/SubstitutionsFreeTest.cpp)
 
 set(BUILD_SYS ${CMAKE_CURRENT_SOURCE_DIR}/../build_system)
