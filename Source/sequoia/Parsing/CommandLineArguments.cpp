@@ -231,7 +231,7 @@ namespace sequoia::parsing::commandline
       if(m_Index + 1 < m_ArgCount)
       {
         ++m_Index;
-        const bool complete{parse(optionsIter->nested_options, currentOp.nested_operations)};
+        const bool isNestedOption{parse(optionsIter->nested_options, currentOp.nested_operations)};
 
         auto& nestedOperations{currentOp.nested_operations};
         auto i{nestedOperations.begin()};
@@ -251,7 +251,7 @@ namespace sequoia::parsing::commandline
           }
         }
 
-        if(!complete)
+        if(!isNestedOption)
           --m_Index;
       }
     }
