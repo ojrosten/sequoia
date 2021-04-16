@@ -36,7 +36,7 @@ CFLAGS += -I/usr/local/opt/llvm/include -I/usr/local/opt/llvm/include/c++/v1/
 CFLAGS +=  -ferror-limit=1 -Wno-missing-braces -fsanitize=address
 #CFLAGS += -fmax-errors=1 -Wno-comment
 
-EXE      := $(TEST_BUILD_ROOT)/TestFrameworkDiagnostics.exe
+EXE      := $(TEST_BUILD_ROOT)/TestFrameworkDiagnostics
 SEQ_LIB  := $(SEQ_BUILD_ROOT)/Sequoia.a
 
 APP_SRC := TestFrameworkDiagnosticsMain.cpp
@@ -46,6 +46,7 @@ APP_DEP := $(TEST_BUILD_ROOT)/TestFrameworkDiagnosticsMain.d
 TEST_SRCS += $(shell find $(TEST_DIR)/TestFramework -name '*.cpp')
 TEST_SRCS += $(shell find $(TEST_DIR)/Parsing -name '*.cpp')
 TEST_SRCS += $(shell find $(TEST_DIR)/Runtime -name '*.cpp')
+TEST_SRCS += $(shell find $(TEST_DIR)/TextProcessing -name '*.cpp')
 
 TEST_OBJS := $(addprefix $(TEST_BUILD_DIR)/, $(TEST_SRCS:%.cpp=%.o))
 TEST_DEPS := $(addprefix $(TEST_BUILD_DIR)/, $(TEST_SRCS:%.cpp=%.d))

@@ -100,14 +100,14 @@ namespace sequoia::testing
             shifter.shift(predictions.move)};
   }
 
-  template<top_level TopLevel, has_alloc_init_predictions InitPredictionsFlavour=has_alloc_init_predictions::no>
+  template<top_level TopLevel, predicts_init_allocs InitPredictionsFlavour=predicts_init_allocs::no>
   class basic_allocation_predictions
     : public container_predictions_policy<TopLevel>
     , public initialization_predictions_policy<InitPredictionsFlavour>
   {
   public:
-    template<top_level Level=TopLevel, has_alloc_init_predictions InitFlavour=InitPredictionsFlavour>
-    requires ((Level == top_level::yes) && (InitFlavour == has_alloc_init_predictions::no))
+    template<top_level Level=TopLevel, predicts_init_allocs InitFlavour=InitPredictionsFlavour>
+    requires ((Level == top_level::yes) && (InitFlavour == predicts_init_allocs::no))
     constexpr basic_allocation_predictions(copy_prediction x,
                                            individual_allocation_predictions y,
                                            assignment_allocation_predictions assignYtoX)
@@ -116,8 +116,8 @@ namespace sequoia::testing
       , m_Assign_y_to_x{assignYtoX}
     {}
 
-    template<top_level Level=TopLevel, has_alloc_init_predictions InitFlavour=InitPredictionsFlavour>
-      requires ((Level == top_level::yes) && (InitFlavour == has_alloc_init_predictions::yes))
+    template<top_level Level=TopLevel, predicts_init_allocs InitFlavour=InitPredictionsFlavour>
+      requires ((Level == top_level::yes) && (InitFlavour == predicts_init_allocs::yes))
     constexpr basic_allocation_predictions(initialization_prediction xInit,
                                            initialization_prediction yInit,
                                            copy_prediction x,
@@ -129,8 +129,8 @@ namespace sequoia::testing
       , m_Assign_y_to_x{assignYtoX}
     {}
 
-    template<top_level Level=TopLevel, has_alloc_init_predictions InitFlavour=InitPredictionsFlavour>
-      requires ((Level == top_level::no) && (InitFlavour == has_alloc_init_predictions::no))
+    template<top_level Level=TopLevel, predicts_init_allocs InitFlavour=InitPredictionsFlavour>
+      requires ((Level == top_level::no) && (InitFlavour == predicts_init_allocs::no))
     constexpr basic_allocation_predictions(copy_prediction x,
                                            individual_allocation_predictions y,
                                            assignment_allocation_predictions assignYtoX,
@@ -141,8 +141,8 @@ namespace sequoia::testing
       , m_Assign_y_to_x{assignYtoX}
     {}
 
-    template<top_level Level=TopLevel, has_alloc_init_predictions InitFlavour=InitPredictionsFlavour>
-      requires ((Level == top_level::no) && (InitFlavour == has_alloc_init_predictions::yes))
+    template<top_level Level=TopLevel, predicts_init_allocs InitFlavour=InitPredictionsFlavour>
+      requires ((Level == top_level::no) && (InitFlavour == predicts_init_allocs::yes))
     constexpr basic_allocation_predictions(initialization_prediction xInit,
                                            initialization_prediction yInit,
                                            copy_prediction x,

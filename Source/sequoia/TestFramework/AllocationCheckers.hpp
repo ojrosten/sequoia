@@ -232,7 +232,7 @@ namespace sequoia::testing
 
   enum class container_tag { x, y };
   enum class top_level { yes, no };
-  enum class has_alloc_init_predictions { yes, no };
+  enum class predicts_init_allocs { yes, no };
 
   /*! \brief class template for shifting allocation predictions, especially for MSVC debug builds.
 
@@ -622,7 +622,7 @@ namespace sequoia::testing
     ~container_predictions_policy() = default;
   };
 
-  template<has_alloc_init_predictions>
+  template<predicts_init_allocs>
   class initialization_predictions_policy
   {
   public:
@@ -646,7 +646,7 @@ namespace sequoia::testing
   };
 
   template<>
-  class initialization_predictions_policy<has_alloc_init_predictions::no>
+  class initialization_predictions_policy<predicts_init_allocs::no>
   {
   protected:
     constexpr initialization_predictions_policy() = default;
