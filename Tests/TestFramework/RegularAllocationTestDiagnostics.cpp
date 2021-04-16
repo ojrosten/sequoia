@@ -389,6 +389,12 @@ namespace sequoia::testing
       check_semantics(LINE(""), beast(allocator{}), beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {0_c, {1_c,1_mu}, {1_awp,1_anp}}});
       check_semantics(LINE(""), beast{{1,2}}, beast(allocator{}), mutator, allocation_info{allocGetter, {1_c, {0_c,1_mu}, {0_awp,0_anp}}});
       check_semantics(LINE(""), beast{{1,2}}, beast{{5}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,1_mu}, {1_awp,0_anp}}});
+
+      check_semantics(LINE(""),
+                      [](){ return beast{{1,2}}; },
+                      [](){ return beast{{5}, allocator{}}; },
+                      mutator,
+                      allocation_info{allocGetter, {1_c, {1_c,1_mu}, {1_awp,0_anp}}});
     }
 
     {

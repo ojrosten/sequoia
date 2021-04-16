@@ -232,6 +232,7 @@ namespace sequoia::testing
 
   enum class container_tag { x, y };
   enum class top_level { yes, no };
+  enum class has_alloc_init_predictions { yes, no };
 
   /*! \brief class template for shifting allocation predictions, especially for MSVC debug builds.
 
@@ -592,32 +593,66 @@ namespace sequoia::testing
     -> allocation_info<T, Fn>;
 
   template<top_level TopLevel>
-  class container_predictions_extension_policy
+  class container_predictions_policy
   {
   public:
     [[nodiscard]]
     constexpr container_counts containers() const noexcept { return m_Containers; }
   protected:
-    constexpr container_predictions_extension_policy(const container_counts& counts)
-      : m_Containers{counts}
+    constexpr container_predictions_policy(container_counts counts)
+      : m_Containers{std::move(counts)}
     {}
 
-    constexpr container_predictions_extension_policy(const container_predictions_extension_policy&) = default;
-    constexpr container_predictions_extension_policy& operator=(const container_predictions_extension_policy&) = default;
+    constexpr container_predictions_policy(const container_predictions_policy&) = default;
+    constexpr container_predictions_policy& operator=(const container_predictions_policy&) = default;
 
-    ~container_predictions_extension_policy() = default;
+    ~container_predictions_policy() = default;
   private:
     container_counts m_Containers;
   };
 
   template<>
-  class container_predictions_extension_policy<top_level::yes>
+  class container_predictions_policy<top_level::yes>
   {
   protected:
-    constexpr container_predictions_extension_policy() = default;
-    constexpr container_predictions_extension_policy(const container_predictions_extension_policy&) = default;
-    constexpr container_predictions_extension_policy& operator=(const container_predictions_extension_policy&) = default;
+    constexpr container_predictions_policy() = default;
+    constexpr container_predictions_policy(const container_predictions_policy&) = default;
+    constexpr container_predictions_policy& operator=(const container_predictions_policy&) = default;
 
-    ~container_predictions_extension_policy() = default;
+    ~container_predictions_policy() = default;
+  };
+
+  template<has_alloc_init_predictions>
+  class initialization_predictions_policy
+  {
+  public:
+    [[nodiscard]]
+    constexpr initialization_prediction x_init_alloc() const noexcept { return m_xInit; }
+
+    [[nodiscard]]
+    constexpr initialization_prediction y_init_alloc() const noexcept { return m_yInit; }
+  protected:
+    constexpr initialization_predictions_policy(initialization_prediction x, initialization_prediction y)
+      : m_xInit{x},
+        m_yInit{y}
+    {}
+
+    constexpr initialization_predictions_policy(const initialization_predictions_policy&) = default;
+    constexpr initialization_predictions_policy& operator=(const initialization_predictions_policy& other) = default;
+
+    ~initialization_predictions_policy() = default;
+  private:
+    initialization_prediction m_xInit, m_yInit;
+  };
+
+  template<>
+  class initialization_predictions_policy<has_alloc_init_predictions::no>
+  {
+  protected:
+    constexpr initialization_predictions_policy() = default;
+    constexpr initialization_predictions_policy(const initialization_predictions_policy&) = default;
+    constexpr initialization_predictions_policy& operator=(const initialization_predictions_policy&) = default;
+
+    ~initialization_predictions_policy() = default;
   };
 }

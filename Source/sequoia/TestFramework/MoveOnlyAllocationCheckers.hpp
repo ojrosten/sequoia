@@ -17,7 +17,7 @@
 namespace sequoia::testing
 {
   template<top_level TopLevel>
-  class basic_move_only_allocation_predictions : public container_predictions_extension_policy<TopLevel>
+  class basic_move_only_allocation_predictions : public container_predictions_policy<TopLevel>
   {
   public:
     template<top_level Level = TopLevel>
@@ -52,7 +52,7 @@ namespace sequoia::testing
                                                move_prediction m,
                                                move_assign_prediction moveAssign,
                                                container_counts counts)
-      : container_predictions_extension_policy<TopLevel>{counts}
+      : container_predictions_policy<TopLevel>{counts}
       , m_CopyLikeMoveAssign{copyLikeMove}
       , m_Mutation{yMutation}
       , m_ParaMove{paraMove}
@@ -66,7 +66,7 @@ namespace sequoia::testing
                                                      mutation_prediction yMutation,
                                                      para_move_prediction paraMove,
                                                      container_counts counts)
-      : container_predictions_extension_policy<TopLevel>{counts}
+      : container_predictions_policy<TopLevel>{counts}
       , m_CopyLikeMoveAssign{copyLikeMove}
       , m_Mutation{yMutation}
       , m_ParaMove{paraMove}

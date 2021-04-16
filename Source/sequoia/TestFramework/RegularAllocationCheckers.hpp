@@ -100,12 +100,14 @@ namespace sequoia::testing
             shifter.shift(predictions.move)};
   }
 
-  template<top_level TopLevel>
-  class basic_allocation_predictions : public container_predictions_extension_policy<TopLevel>
+  template<top_level TopLevel, has_alloc_init_predictions InitPredictionsFlavour=has_alloc_init_predictions::no>
+  class basic_allocation_predictions
+    : public container_predictions_policy<TopLevel>
+    , public initialization_predictions_policy<InitPredictionsFlavour>
   {
   public:
-    template<top_level Level=TopLevel>
-      requires (Level == top_level::yes)
+    template<top_level Level=TopLevel, has_alloc_init_predictions InitFlavour=InitPredictionsFlavour>
+    requires ((Level == top_level::yes) && (InitFlavour == has_alloc_init_predictions::no))
     constexpr basic_allocation_predictions(copy_prediction x,
                                            individual_allocation_predictions y,
                                            assignment_allocation_predictions assignYtoX)
@@ -114,13 +116,41 @@ namespace sequoia::testing
       , m_Assign_y_to_x{assignYtoX}
     {}
 
-    template<top_level Level=TopLevel>
-      requires (Level == top_level::no)
+    template<top_level Level=TopLevel, has_alloc_init_predictions InitFlavour=InitPredictionsFlavour>
+      requires ((Level == top_level::yes) && (InitFlavour == has_alloc_init_predictions::yes))
+    constexpr basic_allocation_predictions(initialization_prediction xInit,
+                                           initialization_prediction yInit,
+                                           copy_prediction x,
+                                           individual_allocation_predictions y,
+                                           assignment_allocation_predictions assignYtoX)
+      : initialization_predictions_policy<InitPredictionsFlavour>{xInit, yInit}
+      , m_x{x}
+      , m_y{y}
+      , m_Assign_y_to_x{assignYtoX}
+    {}
+
+    template<top_level Level=TopLevel, has_alloc_init_predictions InitFlavour=InitPredictionsFlavour>
+      requires ((Level == top_level::no) && (InitFlavour == has_alloc_init_predictions::no))
     constexpr basic_allocation_predictions(copy_prediction x,
                                            individual_allocation_predictions y,
                                            assignment_allocation_predictions assignYtoX,
                                            container_counts counts)
-      : container_predictions_extension_policy<TopLevel>{counts}
+      : container_predictions_policy<TopLevel>{counts}
+      , m_x{x}
+      , m_y{y}
+      , m_Assign_y_to_x{assignYtoX}
+    {}
+
+    template<top_level Level=TopLevel, has_alloc_init_predictions InitFlavour=InitPredictionsFlavour>
+      requires ((Level == top_level::no) && (InitFlavour == has_alloc_init_predictions::yes))
+    constexpr basic_allocation_predictions(initialization_prediction xInit,
+                                           initialization_prediction yInit,
+                                           copy_prediction x,
+                                           individual_allocation_predictions y,
+                                           assignment_allocation_predictions assignYtoX,
+                                           container_counts counts)
+      : container_predictions_policy<TopLevel>{counts}
+      , initialization_predictions_policy<InitPredictionsFlavour>{xInit, yInit}
       , m_x{x}
       , m_y{y}
       , m_Assign_y_to_x{assignYtoX}
@@ -212,5 +242,24 @@ namespace sequoia::testing
     {
       impl::check_para_constructor_allocations(logger, y, yMutator, info...);
     }
+  }
+
+  template
+  <
+    test_mode Mode,
+    invocable<> xMaker,
+    pseudoregular T=typename function_signature<xMaker>::ret,    
+    invocable_r<T> yMaker,
+    invocable<T&> Mutator,
+    alloc_getter<T>... Getters
+  >
+  void check_semantics(std::string_view description, test_logger<Mode>& logger, xMaker xFn, yMaker yFn, Mutator yMutator, const allocation_info<T, Getters>&... info)
+  {
+    sentinel<Mode> sentry{logger, add_type_info<T>(description).append("\n")};
+
+    auto x{xFn()};
+    auto y{yFn()};
+
+    check_semantics(description, logger, x, y, std::move(yMutator), info...);
   }
 }
