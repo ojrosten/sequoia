@@ -197,17 +197,18 @@ namespace sequoia::testing
 
       return shifted;
     }
-
-    constexpr explicit operator basic_allocation_predictions<top_level::yes>() const noexcept
-    {
-      return {x(), y(), assign_y_to_x()};
-    }
-
   private:
     copy_prediction m_x{};
     individual_allocation_predictions m_y;
     assignment_allocation_predictions m_Assign_y_to_x;
   };
+
+  [[nodiscard]]
+  constexpr basic_allocation_predictions<top_level::yes>
+    to_top_level(const basic_allocation_predictions<top_level::no>& predictions) noexcept
+  {
+    return {predictions.x(), predictions.y(), predictions.assign_y_to_x()};
+  }
 
   using allocation_predictions       = basic_allocation_predictions<top_level::yes>;
   using inner_allocation_predictions = basic_allocation_predictions<top_level::no>;

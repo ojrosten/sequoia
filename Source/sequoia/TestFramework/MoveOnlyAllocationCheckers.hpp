@@ -113,6 +113,17 @@ namespace sequoia::testing
     move_assign_prediction m_MoveAssign{};
   };
 
+  [[nodiscard]]
+  constexpr basic_move_only_allocation_predictions<top_level::yes>
+    to_top_level(const basic_move_only_allocation_predictions<top_level::no>& predictions) noexcept
+  {
+    return {predictions.copy_like_move_assign_allocs(),
+            predictions.mutation_allocs(),
+            predictions.para_move_allocs(),
+            predictions.move_allocs(),
+            predictions.move_assign_allocs()};
+  }
+
   using move_only_allocation_predictions       = basic_move_only_allocation_predictions<top_level::yes>;
   using move_only_inner_allocation_predictions = basic_move_only_allocation_predictions<top_level::no>;
 

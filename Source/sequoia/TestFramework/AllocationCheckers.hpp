@@ -485,7 +485,7 @@ namespace sequoia::testing
 
       constexpr predictions_type operator()(const inner_predictions_type& predictions) const
       {
-        return static_cast<predictions_type>(shift<allocClass>(predictions));
+        return to_top_level(shift<allocClass>(predictions));
       }
     };
   };
