@@ -232,7 +232,6 @@ namespace sequoia::testing
 
   enum class container_tag { x, y };
   enum class top_level { yes, no };
-  enum class predicts_init_allocs { yes, no };
 
   /*! \brief class template for shifting allocation predictions, especially for MSVC debug builds.
 
@@ -620,39 +619,5 @@ namespace sequoia::testing
     constexpr container_predictions_policy& operator=(const container_predictions_policy&) = default;
 
     ~container_predictions_policy() = default;
-  };
-
-  template<predicts_init_allocs>
-  class initialization_predictions_policy
-  {
-  public:
-    [[nodiscard]]
-    constexpr initialization_prediction x_init_alloc() const noexcept { return m_xInit; }
-
-    [[nodiscard]]
-    constexpr initialization_prediction y_init_alloc() const noexcept { return m_yInit; }
-  protected:
-    constexpr initialization_predictions_policy(initialization_prediction x, initialization_prediction y)
-      : m_xInit{x},
-        m_yInit{y}
-    {}
-
-    constexpr initialization_predictions_policy(const initialization_predictions_policy&) = default;
-    constexpr initialization_predictions_policy& operator=(const initialization_predictions_policy& other) = default;
-
-    ~initialization_predictions_policy() = default;
-  private:
-    initialization_prediction m_xInit, m_yInit;
-  };
-
-  template<>
-  class initialization_predictions_policy<predicts_init_allocs::no>
-  {
-  protected:
-    constexpr initialization_predictions_policy() = default;
-    constexpr initialization_predictions_policy(const initialization_predictions_policy&) = default;
-    constexpr initialization_predictions_policy& operator=(const initialization_predictions_policy&) = default;
-
-    ~initialization_predictions_policy() = default;
   };
 }

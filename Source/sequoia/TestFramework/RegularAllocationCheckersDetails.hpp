@@ -66,29 +66,26 @@ namespace sequoia::testing::impl
   template<test_mode Mode, pseudoregular T, invocable<T&> Mutator, alloc_getter<T>... Getters>
   void check_para_constructor_allocations(test_logger<Mode>& logger, const T& y, Mutator yMutator, const allocation_info<T, Getters>&... info)
   {
-    if constexpr(sizeof...(Getters) > 0)
-    {
-      auto make{
-        [&logger, &y](auto&... info){
-          T u{y, info.make_allocator()...};
-          if(check_equality("Inconsistent para-copy construction", logger, u, y))
-          {
-            check_para_copy_y_allocation(logger, u, std::tuple_cat(make_allocation_checkers(info)...));
-            return std::optional<T>{u};
-          }
-          return std::optional<T>{};
-        }
-      };
-
-      if(auto c{make(info...)}; c)
-      {
-        T v{std::move(*c), info.make_allocator()...};
-
-        if(check_equality("Inconsistent para-move construction", logger, v, y))
+    auto make{
+      [&logger, &y](auto&... info){
+        T u{y, info.make_allocator()...};
+        if(check_equality("Inconsistent para-copy construction", logger, u, y))
         {
-          check_para_move_y_allocation(logger, v, std::tuple_cat(make_allocation_checkers(info)...));
-          check_mutation_after_move("para-move", logger, v, y, std::move(yMutator), std::tuple_cat(make_allocation_checkers(info, v)...));
+          check_para_copy_y_allocation(logger, u, std::tuple_cat(make_allocation_checkers(info)...));
+          return std::optional<T>{u};
         }
+        return std::optional<T>{};
+      }
+    };
+
+    if(auto c{make(info...)}; c)
+    {
+      T v{std::move(*c), info.make_allocator()...};
+
+      if(check_equality("Inconsistent para-move construction", logger, v, y))
+      {
+        check_para_move_y_allocation(logger, v, std::tuple_cat(make_allocation_checkers(info)...));
+        check_mutation_after_move("para-move", logger, v, y, std::move(yMutator), std::tuple_cat(make_allocation_checkers(info, v)...));
       }
     }
   }

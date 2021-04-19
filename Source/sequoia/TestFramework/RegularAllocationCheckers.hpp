@@ -100,14 +100,12 @@ namespace sequoia::testing
             shifter.shift(predictions.move)};
   }
 
-  template<top_level TopLevel, predicts_init_allocs InitPredictionsFlavour=predicts_init_allocs::no>
-  class basic_allocation_predictions
-    : public container_predictions_policy<TopLevel>
-    , public initialization_predictions_policy<InitPredictionsFlavour>
+  template<top_level TopLevel>
+  class basic_allocation_predictions : public container_predictions_policy<TopLevel>
   {
   public:
-    template<top_level Level=TopLevel, predicts_init_allocs InitFlavour=InitPredictionsFlavour>
-    requires ((Level == top_level::yes) && (InitFlavour == predicts_init_allocs::no))
+    template<top_level Level=TopLevel>
+      requires (Level == top_level::yes)
     constexpr basic_allocation_predictions(copy_prediction x,
                                            individual_allocation_predictions y,
                                            assignment_allocation_predictions assignYtoX)
@@ -116,41 +114,13 @@ namespace sequoia::testing
       , m_Assign_y_to_x{assignYtoX}
     {}
 
-    template<top_level Level=TopLevel, predicts_init_allocs InitFlavour=InitPredictionsFlavour>
-      requires ((Level == top_level::yes) && (InitFlavour == predicts_init_allocs::yes))
-    constexpr basic_allocation_predictions(initialization_prediction xInit,
-                                           initialization_prediction yInit,
-                                           copy_prediction x,
-                                           individual_allocation_predictions y,
-                                           assignment_allocation_predictions assignYtoX)
-      : initialization_predictions_policy<InitPredictionsFlavour>{xInit, yInit}
-      , m_x{x}
-      , m_y{y}
-      , m_Assign_y_to_x{assignYtoX}
-    {}
-
-    template<top_level Level=TopLevel, predicts_init_allocs InitFlavour=InitPredictionsFlavour>
-      requires ((Level == top_level::no) && (InitFlavour == predicts_init_allocs::no))
+    template<top_level Level=TopLevel>
+      requires (Level == top_level::no)
     constexpr basic_allocation_predictions(copy_prediction x,
                                            individual_allocation_predictions y,
                                            assignment_allocation_predictions assignYtoX,
                                            container_counts counts)
       : container_predictions_policy<TopLevel>{counts}
-      , m_x{x}
-      , m_y{y}
-      , m_Assign_y_to_x{assignYtoX}
-    {}
-
-    template<top_level Level=TopLevel, predicts_init_allocs InitFlavour=InitPredictionsFlavour>
-      requires ((Level == top_level::no) && (InitFlavour == predicts_init_allocs::yes))
-    constexpr basic_allocation_predictions(initialization_prediction xInit,
-                                           initialization_prediction yInit,
-                                           copy_prediction x,
-                                           individual_allocation_predictions y,
-                                           assignment_allocation_predictions assignYtoX,
-                                           container_counts counts)
-      : container_predictions_policy<TopLevel>{counts}
-      , initialization_predictions_policy<InitPredictionsFlavour>{xInit, yInit}
       , m_x{x}
       , m_y{y}
       , m_Assign_y_to_x{assignYtoX}
@@ -235,6 +205,7 @@ namespace sequoia::testing
   };
 
   template<test_mode Mode, pseudoregular T, invocable<T&> Mutator, alloc_getter<T>... Getters>
+    requires (sizeof...(Getters) > 0)
   void check_semantics(std::string_view description, test_logger<Mode>& logger, const T& x, const T& y, Mutator yMutator, const allocation_info<T, Getters>&... info)
   {
     sentinel<Mode> sentry{logger, add_type_info<T>(description).append("\n")};
@@ -249,17 +220,26 @@ namespace sequoia::testing
   <
     test_mode Mode,
     invocable<> xMaker,
-    pseudoregular T=typename function_signature<xMaker>::ret,    
+    pseudoregular T=typename function_signature<xMaker>::ret,
     invocable_r<T> yMaker,
     invocable<T&> Mutator,
     alloc_getter<T>... Getters
   >
+    requires (sizeof...(Getters) > 0)
   void check_semantics(std::string_view description, test_logger<Mode>& logger, xMaker xFn, yMaker yFn, Mutator yMutator, const allocation_info<T, Getters>&... info)
   {
     sentinel<Mode> sentry{logger, add_type_info<T>(description).append("\n")};
 
-    auto x{xFn()};
-    auto y{yFn()};
+    const auto x{xFn()};
+    const auto y{yFn()};
+
+    auto checkFn{
+      [&](const auto& info){
+        impl::check_allocation("Unexpected initialization allocation (x)", logger, x, info, 0, convert<individual_allocation_event::initialization>(info.get_predictions().x()));
+      }
+    };
+
+    impl::check_allocation(logger, checkFn, info...);
 
     check_semantics(description, logger, x, y, std::move(yMutator), info...);
   }
