@@ -231,15 +231,28 @@ namespace sequoia::testing
     sentinel<Mode> sentry{logger, add_type_info<T>(description).append("\n")};
 
     const auto x{xFn()};
+
+    {
+      auto checkFn{
+        [&logger,&x](const auto& info){
+          impl::check_allocation("Unexpected initialization allocation (x)", logger, x, info, 0, convert<individual_allocation_event::initialization>(info.get_predictions().x()));
+        }
+      };
+
+      impl::check_allocation(logger, checkFn, info...);
+    }
+
     const auto y{yFn()};
 
-    auto checkFn{
-      [&](const auto& info){
-        impl::check_allocation("Unexpected initialization allocation (x)", logger, x, info, 0, convert<individual_allocation_event::initialization>(info.get_predictions().x()));
-      }
-    };
+    {
+      auto checkFn{
+        [&logger,&y](const auto& info){
+          impl::check_allocation("Unexpected initialization allocation (y)", logger, y, info, 0, convert<individual_allocation_event::initialization>(info.get_predictions().y().copy));
+        }
+      };
 
-    impl::check_allocation(logger, checkFn, info...);
+      impl::check_allocation(logger, checkFn, info...);
+    }
 
     check_semantics(description, logger, x, y, std::move(yMutator), info...);
   }
