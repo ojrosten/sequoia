@@ -288,7 +288,81 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 271
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 262
+	Incorrect init allocs
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
+
+	  [shared_counting_allocator<
+	  		int,
+	  		Propagate on copy assignment = false,
+	  		Propagate on move assignment = false,
+	  		Propagate on swap = false
+	   >]
+	  Unexpected initialization allocation (x)
+	  [int]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	  [shared_counting_allocator<
+	  		int,
+	  		Propagate on copy assignment = false,
+	  		Propagate on move assignment = false,
+	  		Propagate on swap = false
+	   >]
+	  Unexpected initialization allocation (y)
+	  [int]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	  Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 262
+	  Incorrect init allocs
+
+	  --Regular Semantics--
+	  [sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
+
+	    [shared_counting_allocator<
+	    		int,
+	    		Propagate on copy assignment = false,
+	    		Propagate on move assignment = false,
+	    		Propagate on swap = false
+	     >]
+	    Unexpected allocation detected for copy construction (x)
+	    [int]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 2
+
+	    [shared_counting_allocator<
+	    		int,
+	    		Propagate on copy assignment = false,
+	    		Propagate on move assignment = false,
+	    		Propagate on swap = false
+	     >]
+	    Unexpected allocation detected for copy construction (y)
+	    [int]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 2
+
+	    [shared_counting_allocator<
+	    		int,
+	    		Propagate on copy assignment = false,
+	    		Propagate on move assignment = false,
+	    		Propagate on swap = false
+	     >]
+	    Unexpected allocation detected following mutation after assignment
+	    [int]
+	    operator== returned false
+	    Obtained : 0
+	    Predicted: 1
+
+	=======================================
+
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 277
 	Incorrect copy x allocs
 
 	--Regular Semantics--
@@ -308,7 +382,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 273
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 279
 	Incorrect copy y allocs
 
 	--Regular Semantics--
@@ -328,7 +402,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 275
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 281
 	Incorrect mutation allocs
 
 	--Regular Semantics--
@@ -348,7 +422,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 290
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 296
 	Incorrect copy assign y to x allocs
 
 	--Regular Semantics--
@@ -380,7 +454,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 305
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 311
 	Incorrect copy x allocs
 
 	--Regular Semantics--
@@ -400,7 +474,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 307
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 313
 	Incorrect copy y allocs
 
 	--Regular Semantics--
@@ -420,7 +494,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 309
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 315
 	Incorrect mutation allocs
 
 	--Regular Semantics--
@@ -440,7 +514,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 324
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 330
 	Incorrect copy assign y to x allocs
 
 	--Regular Semantics--
@@ -472,7 +546,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 334
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 340
 	Inefficient serialization
 
 	--Regular Semantics--
@@ -786,7 +860,81 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 271
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 262
+	Incorrect init allocs
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
+
+	  [shared_counting_allocator<
+	  		int,
+	  		Propagate on copy assignment = false,
+	  		Propagate on move assignment = false,
+	  		Propagate on swap = true
+	   >]
+	  Unexpected initialization allocation (x)
+	  [int]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	  [shared_counting_allocator<
+	  		int,
+	  		Propagate on copy assignment = false,
+	  		Propagate on move assignment = false,
+	  		Propagate on swap = true
+	   >]
+	  Unexpected initialization allocation (y)
+	  [int]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	  Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 262
+	  Incorrect init allocs
+
+	  --Regular Semantics--
+	  [sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
+
+	    [shared_counting_allocator<
+	    		int,
+	    		Propagate on copy assignment = false,
+	    		Propagate on move assignment = false,
+	    		Propagate on swap = true
+	     >]
+	    Unexpected allocation detected for copy construction (x)
+	    [int]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 2
+
+	    [shared_counting_allocator<
+	    		int,
+	    		Propagate on copy assignment = false,
+	    		Propagate on move assignment = false,
+	    		Propagate on swap = true
+	     >]
+	    Unexpected allocation detected for copy construction (y)
+	    [int]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 2
+
+	    [shared_counting_allocator<
+	    		int,
+	    		Propagate on copy assignment = false,
+	    		Propagate on move assignment = false,
+	    		Propagate on swap = true
+	     >]
+	    Unexpected allocation detected following mutation after assignment
+	    [int]
+	    operator== returned false
+	    Obtained : 0
+	    Predicted: 1
+
+	=======================================
+
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 277
 	Incorrect copy x allocs
 
 	--Regular Semantics--
@@ -806,7 +954,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 273
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 279
 	Incorrect copy y allocs
 
 	--Regular Semantics--
@@ -826,7 +974,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 275
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 281
 	Incorrect mutation allocs
 
 	--Regular Semantics--
@@ -858,7 +1006,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 290
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 296
 	Incorrect copy assign y to x allocs
 
 	--Regular Semantics--
@@ -890,7 +1038,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 305
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 311
 	Incorrect copy x allocs
 
 	--Regular Semantics--
@@ -910,7 +1058,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 307
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 313
 	Incorrect copy y allocs
 
 	--Regular Semantics--
@@ -930,7 +1078,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 309
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 315
 	Incorrect mutation allocs
 
 	--Regular Semantics--
@@ -962,7 +1110,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 324
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 330
 	Incorrect copy assign y to x allocs
 
 	--Regular Semantics--
@@ -994,7 +1142,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 334
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 340
 	Inefficient serialization
 
 	--Regular Semantics--
@@ -1304,7 +1452,69 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 271
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 262
+	Incorrect init allocs
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
+
+	  [shared_counting_allocator<
+	  		int,
+	  		Propagate on copy assignment = false,
+	  		Propagate on move assignment = true,
+	  		Propagate on swap = false
+	   >]
+	  Unexpected initialization allocation (x)
+	  [int]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	  [shared_counting_allocator<
+	  		int,
+	  		Propagate on copy assignment = false,
+	  		Propagate on move assignment = true,
+	  		Propagate on swap = false
+	   >]
+	  Unexpected initialization allocation (y)
+	  [int]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	  Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 262
+	  Incorrect init allocs
+
+	  --Regular Semantics--
+	  [sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
+
+	    [shared_counting_allocator<
+	    		int,
+	    		Propagate on copy assignment = false,
+	    		Propagate on move assignment = true,
+	    		Propagate on swap = false
+	     >]
+	    Unexpected allocation detected for copy construction (x)
+	    [int]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 2
+
+	    [shared_counting_allocator<
+	    		int,
+	    		Propagate on copy assignment = false,
+	    		Propagate on move assignment = true,
+	    		Propagate on swap = false
+	     >]
+	    Unexpected allocation detected for copy construction (y)
+	    [int]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 2
+
+	=======================================
+
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 277
 	Incorrect copy x allocs
 
 	--Regular Semantics--
@@ -1324,7 +1534,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 273
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 279
 	Incorrect copy y allocs
 
 	--Regular Semantics--
@@ -1344,7 +1554,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 275
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 281
 	Incorrect mutation allocs
 
 	--Regular Semantics--
@@ -1364,7 +1574,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 290
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 296
 	Incorrect copy assign y to x allocs
 
 	--Regular Semantics--
@@ -1384,7 +1594,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 305
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 311
 	Incorrect copy x allocs
 
 	--Regular Semantics--
@@ -1404,7 +1614,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 307
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 313
 	Incorrect copy y allocs
 
 	--Regular Semantics--
@@ -1424,7 +1634,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 309
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 315
 	Incorrect mutation allocs
 
 	--Regular Semantics--
@@ -1444,7 +1654,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 324
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 330
 	Incorrect copy assign y to x allocs
 
 	--Regular Semantics--
@@ -1464,7 +1674,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 334
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 340
 	Inefficient serialization
 
 	--Regular Semantics--
@@ -1484,7 +1694,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 345
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 351
 	Broken copy assignment propagation
 
 	--Regular Semantics--
@@ -1516,7 +1726,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 346
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 352
 	Broken copy assignment propagation; 'negative' allocation counts
 
 	--Regular Semantics--
@@ -1832,7 +2042,69 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 271
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 262
+	Incorrect init allocs
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
+
+	  [shared_counting_allocator<
+	  		int,
+	  		Propagate on copy assignment = false,
+	  		Propagate on move assignment = true,
+	  		Propagate on swap = true
+	   >]
+	  Unexpected initialization allocation (x)
+	  [int]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	  [shared_counting_allocator<
+	  		int,
+	  		Propagate on copy assignment = false,
+	  		Propagate on move assignment = true,
+	  		Propagate on swap = true
+	   >]
+	  Unexpected initialization allocation (y)
+	  [int]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	  Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 262
+	  Incorrect init allocs
+
+	  --Regular Semantics--
+	  [sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
+
+	    [shared_counting_allocator<
+	    		int,
+	    		Propagate on copy assignment = false,
+	    		Propagate on move assignment = true,
+	    		Propagate on swap = true
+	     >]
+	    Unexpected allocation detected for copy construction (x)
+	    [int]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 2
+
+	    [shared_counting_allocator<
+	    		int,
+	    		Propagate on copy assignment = false,
+	    		Propagate on move assignment = true,
+	    		Propagate on swap = true
+	     >]
+	    Unexpected allocation detected for copy construction (y)
+	    [int]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 2
+
+	=======================================
+
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 277
 	Incorrect copy x allocs
 
 	--Regular Semantics--
@@ -1852,7 +2124,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 273
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 279
 	Incorrect copy y allocs
 
 	--Regular Semantics--
@@ -1872,7 +2144,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 275
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 281
 	Incorrect mutation allocs
 
 	--Regular Semantics--
@@ -1904,7 +2176,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 290
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 296
 	Incorrect copy assign y to x allocs
 
 	--Regular Semantics--
@@ -1924,7 +2196,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 305
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 311
 	Incorrect copy x allocs
 
 	--Regular Semantics--
@@ -1944,7 +2216,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 307
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 313
 	Incorrect copy y allocs
 
 	--Regular Semantics--
@@ -1964,7 +2236,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 309
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 315
 	Incorrect mutation allocs
 
 	--Regular Semantics--
@@ -1996,7 +2268,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 324
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 330
 	Incorrect copy assign y to x allocs
 
 	--Regular Semantics--
@@ -2016,7 +2288,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 334
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 340
 	Inefficient serialization
 
 	--Regular Semantics--
@@ -2036,7 +2308,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 345
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 351
 	Broken copy assignment propagation
 
 	--Regular Semantics--
@@ -2068,7 +2340,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 346
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 352
 	Broken copy assignment propagation; 'negative' allocation counts
 
 	--Regular Semantics--
@@ -2380,7 +2652,81 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 271
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 262
+	Incorrect init allocs
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
+
+	  [shared_counting_allocator<
+	  		int,
+	  		Propagate on copy assignment = true,
+	  		Propagate on move assignment = false,
+	  		Propagate on swap = false
+	   >]
+	  Unexpected initialization allocation (x)
+	  [int]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	  [shared_counting_allocator<
+	  		int,
+	  		Propagate on copy assignment = true,
+	  		Propagate on move assignment = false,
+	  		Propagate on swap = false
+	   >]
+	  Unexpected initialization allocation (y)
+	  [int]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	  Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 262
+	  Incorrect init allocs
+
+	  --Regular Semantics--
+	  [sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
+
+	    [shared_counting_allocator<
+	    		int,
+	    		Propagate on copy assignment = true,
+	    		Propagate on move assignment = false,
+	    		Propagate on swap = false
+	     >]
+	    Unexpected allocation detected for copy construction (x)
+	    [int]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 2
+
+	    [shared_counting_allocator<
+	    		int,
+	    		Propagate on copy assignment = true,
+	    		Propagate on move assignment = false,
+	    		Propagate on swap = false
+	     >]
+	    Unexpected allocation detected for copy construction (y)
+	    [int]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 2
+
+	    [shared_counting_allocator<
+	    		int,
+	    		Propagate on copy assignment = true,
+	    		Propagate on move assignment = false,
+	    		Propagate on swap = false
+	     >]
+	    Unexpected allocation detected following mutation after assignment
+	    [int]
+	    operator== returned false
+	    Obtained : 0
+	    Predicted: 1
+
+	=======================================
+
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 277
 	Incorrect copy x allocs
 
 	--Regular Semantics--
@@ -2400,7 +2746,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 273
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 279
 	Incorrect copy y allocs
 
 	--Regular Semantics--
@@ -2420,7 +2766,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 275
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 281
 	Incorrect mutation allocs
 
 	--Regular Semantics--
@@ -2440,7 +2786,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 290
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 296
 	Incorrect copy assign y to x allocs
 
 	--Regular Semantics--
@@ -2472,7 +2818,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 305
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 311
 	Incorrect copy x allocs
 
 	--Regular Semantics--
@@ -2492,7 +2838,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 307
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 313
 	Incorrect copy y allocs
 
 	--Regular Semantics--
@@ -2512,7 +2858,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 309
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 315
 	Incorrect mutation allocs
 
 	--Regular Semantics--
@@ -2532,7 +2878,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 324
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 330
 	Incorrect copy assign y to x allocs
 
 	--Regular Semantics--
@@ -2564,7 +2910,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 334
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 340
 	Inefficient serialization
 
 	--Regular Semantics--
@@ -2584,7 +2930,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 345
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 351
 	Broken copy assignment propagation
 
 	--Regular Semantics--
@@ -2604,7 +2950,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 346
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 352
 	Broken copy assignment propagation; 'negative' allocation counts
 
 	--Regular Semantics--
@@ -2930,7 +3276,81 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 271
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 262
+	Incorrect init allocs
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
+
+	  [shared_counting_allocator<
+	  		int,
+	  		Propagate on copy assignment = true,
+	  		Propagate on move assignment = false,
+	  		Propagate on swap = true
+	   >]
+	  Unexpected initialization allocation (x)
+	  [int]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	  [shared_counting_allocator<
+	  		int,
+	  		Propagate on copy assignment = true,
+	  		Propagate on move assignment = false,
+	  		Propagate on swap = true
+	   >]
+	  Unexpected initialization allocation (y)
+	  [int]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	  Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 262
+	  Incorrect init allocs
+
+	  --Regular Semantics--
+	  [sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
+
+	    [shared_counting_allocator<
+	    		int,
+	    		Propagate on copy assignment = true,
+	    		Propagate on move assignment = false,
+	    		Propagate on swap = true
+	     >]
+	    Unexpected allocation detected for copy construction (x)
+	    [int]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 2
+
+	    [shared_counting_allocator<
+	    		int,
+	    		Propagate on copy assignment = true,
+	    		Propagate on move assignment = false,
+	    		Propagate on swap = true
+	     >]
+	    Unexpected allocation detected for copy construction (y)
+	    [int]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 2
+
+	    [shared_counting_allocator<
+	    		int,
+	    		Propagate on copy assignment = true,
+	    		Propagate on move assignment = false,
+	    		Propagate on swap = true
+	     >]
+	    Unexpected allocation detected following mutation after assignment
+	    [int]
+	    operator== returned false
+	    Obtained : 0
+	    Predicted: 1
+
+	=======================================
+
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 277
 	Incorrect copy x allocs
 
 	--Regular Semantics--
@@ -2950,7 +3370,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 273
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 279
 	Incorrect copy y allocs
 
 	--Regular Semantics--
@@ -2970,7 +3390,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 275
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 281
 	Incorrect mutation allocs
 
 	--Regular Semantics--
@@ -3002,7 +3422,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 290
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 296
 	Incorrect copy assign y to x allocs
 
 	--Regular Semantics--
@@ -3034,7 +3454,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 305
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 311
 	Incorrect copy x allocs
 
 	--Regular Semantics--
@@ -3054,7 +3474,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 307
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 313
 	Incorrect copy y allocs
 
 	--Regular Semantics--
@@ -3074,7 +3494,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 309
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 315
 	Incorrect mutation allocs
 
 	--Regular Semantics--
@@ -3106,7 +3526,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 324
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 330
 	Incorrect copy assign y to x allocs
 
 	--Regular Semantics--
@@ -3138,7 +3558,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 334
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 340
 	Inefficient serialization
 
 	--Regular Semantics--
@@ -3158,7 +3578,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 345
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 351
 	Broken copy assignment propagation
 
 	--Regular Semantics--
@@ -3178,7 +3598,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 346
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 352
 	Broken copy assignment propagation; 'negative' allocation counts
 
 	--Regular Semantics--
@@ -3500,7 +3920,69 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 271
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 262
+	Incorrect init allocs
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
+
+	  [shared_counting_allocator<
+	  		int,
+	  		Propagate on copy assignment = true,
+	  		Propagate on move assignment = true,
+	  		Propagate on swap = false
+	   >]
+	  Unexpected initialization allocation (x)
+	  [int]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	  [shared_counting_allocator<
+	  		int,
+	  		Propagate on copy assignment = true,
+	  		Propagate on move assignment = true,
+	  		Propagate on swap = false
+	   >]
+	  Unexpected initialization allocation (y)
+	  [int]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	  Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 262
+	  Incorrect init allocs
+
+	  --Regular Semantics--
+	  [sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
+
+	    [shared_counting_allocator<
+	    		int,
+	    		Propagate on copy assignment = true,
+	    		Propagate on move assignment = true,
+	    		Propagate on swap = false
+	     >]
+	    Unexpected allocation detected for copy construction (x)
+	    [int]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 2
+
+	    [shared_counting_allocator<
+	    		int,
+	    		Propagate on copy assignment = true,
+	    		Propagate on move assignment = true,
+	    		Propagate on swap = false
+	     >]
+	    Unexpected allocation detected for copy construction (y)
+	    [int]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 2
+
+	=======================================
+
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 277
 	Incorrect copy x allocs
 
 	--Regular Semantics--
@@ -3520,7 +4002,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 273
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 279
 	Incorrect copy y allocs
 
 	--Regular Semantics--
@@ -3540,7 +4022,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 275
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 281
 	Incorrect mutation allocs
 
 	--Regular Semantics--
@@ -3560,7 +4042,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 290
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 296
 	Incorrect copy assign y to x allocs
 
 	--Regular Semantics--
@@ -3592,7 +4074,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 305
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 311
 	Incorrect copy x allocs
 
 	--Regular Semantics--
@@ -3612,7 +4094,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 307
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 313
 	Incorrect copy y allocs
 
 	--Regular Semantics--
@@ -3632,7 +4114,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 309
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 315
 	Incorrect mutation allocs
 
 	--Regular Semantics--
@@ -3652,7 +4134,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 324
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 330
 	Incorrect copy assign y to x allocs
 
 	--Regular Semantics--
@@ -3684,7 +4166,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 334
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 340
 	Inefficient serialization
 
 	--Regular Semantics--
@@ -3998,7 +4480,69 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 271
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 262
+	Incorrect init allocs
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
+
+	  [shared_counting_allocator<
+	  		int,
+	  		Propagate on copy assignment = true,
+	  		Propagate on move assignment = true,
+	  		Propagate on swap = true
+	   >]
+	  Unexpected initialization allocation (x)
+	  [int]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	  [shared_counting_allocator<
+	  		int,
+	  		Propagate on copy assignment = true,
+	  		Propagate on move assignment = true,
+	  		Propagate on swap = true
+	   >]
+	  Unexpected initialization allocation (y)
+	  [int]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	  Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 262
+	  Incorrect init allocs
+
+	  --Regular Semantics--
+	  [sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
+
+	    [shared_counting_allocator<
+	    		int,
+	    		Propagate on copy assignment = true,
+	    		Propagate on move assignment = true,
+	    		Propagate on swap = true
+	     >]
+	    Unexpected allocation detected for copy construction (x)
+	    [int]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 2
+
+	    [shared_counting_allocator<
+	    		int,
+	    		Propagate on copy assignment = true,
+	    		Propagate on move assignment = true,
+	    		Propagate on swap = true
+	     >]
+	    Unexpected allocation detected for copy construction (y)
+	    [int]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 2
+
+	=======================================
+
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 277
 	Incorrect copy x allocs
 
 	--Regular Semantics--
@@ -4018,7 +4562,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 273
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 279
 	Incorrect copy y allocs
 
 	--Regular Semantics--
@@ -4038,7 +4582,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 275
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 281
 	Incorrect mutation allocs
 
 	--Regular Semantics--
@@ -4070,7 +4614,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 290
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 296
 	Incorrect copy assign y to x allocs
 
 	--Regular Semantics--
@@ -4102,7 +4646,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 305
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 311
 	Incorrect copy x allocs
 
 	--Regular Semantics--
@@ -4122,7 +4666,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 307
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 313
 	Incorrect copy y allocs
 
 	--Regular Semantics--
@@ -4142,7 +4686,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 309
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 315
 	Incorrect mutation allocs
 
 	--Regular Semantics--
@@ -4174,7 +4718,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 324
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 330
 	Incorrect copy assign y to x allocs
 
 	--Regular Semantics--
@@ -4206,7 +4750,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 334
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 340
 	Inefficient serialization
 
 	--Regular Semantics--

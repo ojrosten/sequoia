@@ -258,6 +258,12 @@ namespace sequoia::testing
         };
 
         check_semantics(LINE("Broken check invariant"), beast{{1}, allocator{}}, beast{{1}, allocator{}}, mutator, allocation_info{allocGetter, {0_c, {0_c,1_mu}, {0_awp,0_anp}}});
+
+        check_semantics(LINE("Incorrect init allocs"),
+                      [](){ return beast{{1,2}}; },
+                      [](){ return beast{{5}, allocator{}}; },
+                      mutator,
+                      allocation_info{allocGetter, {2_c, {2_c,1_mu}, {1_awp,0_anp}}});
       }
 
       {

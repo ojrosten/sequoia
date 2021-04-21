@@ -1,49 +1,4 @@
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 387
-
-	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
-
-
-	=======================================
-
-	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 388
-
-	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
-
-
-	=======================================
-
-	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 389
-
-	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
-
-
-	=======================================
-
-	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 390
-
-	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
-
-
-	=======================================
-
-	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 391
-
-	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
-
-
-	=======================================
-
-	False Positive Failure:
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 393
 
 	--Regular Semantics--
@@ -53,7 +8,52 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 413
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 394
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 395
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 396
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 397
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 399
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 419
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 0> >]
@@ -62,7 +62,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 414
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 420
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 0> >]
@@ -71,7 +71,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 415
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 421
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 0> >]
@@ -80,7 +80,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 416
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 422
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 0> >]
@@ -89,7 +89,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 417
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 423
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 0> >]
@@ -98,7 +98,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 455
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 461
 
 	--Regular Semantics--
 	[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
@@ -107,7 +107,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 474
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 480
 
 	--Regular Semantics--
 	[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
@@ -116,7 +116,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 493
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 499
 
 	--Regular Semantics--
 	[sequoia::testing::inefficient_para_move<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
@@ -125,7 +125,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 519
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 525
 
 	--Regular Semantics--
 	[sequoia::testing::doubly_normal_beast<int, double, sequoia::testing::shared_counting_allocator<int, 0, 0, 0>, sequoia::testing::shared_counting_allocator<double, 0, 0, 0> >]
@@ -134,51 +134,6 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 387
-
-	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
-
-
-	=======================================
-
-	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 388
-
-	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
-
-
-	=======================================
-
-	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 389
-
-	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
-
-
-	=======================================
-
-	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 390
-
-	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
-
-
-	=======================================
-
-	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 391
-
-	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
-
-
-	=======================================
-
-	False Positive Failure:
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 393
 
 	--Regular Semantics--
@@ -188,7 +143,52 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 413
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 394
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 395
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 396
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 397
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 399
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 419
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 1> >]
@@ -197,7 +197,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 414
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 420
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 1> >]
@@ -206,7 +206,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 415
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 421
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 1> >]
@@ -215,7 +215,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 416
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 422
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 1> >]
@@ -224,7 +224,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 417
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 423
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 1> >]
@@ -233,7 +233,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 455
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 461
 
 	--Regular Semantics--
 	[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
@@ -242,7 +242,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 474
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 480
 
 	--Regular Semantics--
 	[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
@@ -251,7 +251,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 493
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 499
 
 	--Regular Semantics--
 	[sequoia::testing::inefficient_para_move<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
@@ -260,7 +260,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 519
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 525
 
 	--Regular Semantics--
 	[sequoia::testing::doubly_normal_beast<int, double, sequoia::testing::shared_counting_allocator<int, 0, 0, 1>, sequoia::testing::shared_counting_allocator<double, 0, 0, 1> >]
@@ -269,51 +269,6 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 387
-
-	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
-
-
-	=======================================
-
-	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 388
-
-	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
-
-
-	=======================================
-
-	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 389
-
-	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
-
-
-	=======================================
-
-	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 390
-
-	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
-
-
-	=======================================
-
-	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 391
-
-	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
-
-
-	=======================================
-
-	False Positive Failure:
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 393
 
 	--Regular Semantics--
@@ -323,7 +278,52 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 413
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 394
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 395
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 396
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 397
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 399
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 419
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 0> >]
@@ -332,7 +332,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 414
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 420
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 0> >]
@@ -341,7 +341,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 415
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 421
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 0> >]
@@ -350,7 +350,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 416
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 422
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 0> >]
@@ -359,7 +359,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 417
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 423
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 0> >]
@@ -368,7 +368,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 455
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 461
 
 	--Regular Semantics--
 	[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
@@ -377,7 +377,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 474
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 480
 
 	--Regular Semantics--
 	[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
@@ -386,7 +386,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 493
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 499
 
 	--Regular Semantics--
 	[sequoia::testing::inefficient_para_move<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
@@ -395,7 +395,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 519
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 525
 
 	--Regular Semantics--
 	[sequoia::testing::doubly_normal_beast<int, double, sequoia::testing::shared_counting_allocator<int, 0, 1, 0>, sequoia::testing::shared_counting_allocator<double, 0, 1, 0> >]
@@ -404,51 +404,6 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 387
-
-	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
-
-
-	=======================================
-
-	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 388
-
-	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
-
-
-	=======================================
-
-	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 389
-
-	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
-
-
-	=======================================
-
-	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 390
-
-	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
-
-
-	=======================================
-
-	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 391
-
-	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
-
-
-	=======================================
-
-	False Positive Failure:
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 393
 
 	--Regular Semantics--
@@ -458,7 +413,52 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 413
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 394
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 395
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 396
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 397
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 399
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 419
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 1> >]
@@ -467,7 +467,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 414
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 420
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 1> >]
@@ -476,7 +476,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 415
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 421
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 1> >]
@@ -485,7 +485,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 416
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 422
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 1> >]
@@ -494,7 +494,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 417
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 423
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 1> >]
@@ -503,7 +503,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 455
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 461
 
 	--Regular Semantics--
 	[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
@@ -512,7 +512,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 474
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 480
 
 	--Regular Semantics--
 	[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
@@ -521,7 +521,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 493
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 499
 
 	--Regular Semantics--
 	[sequoia::testing::inefficient_para_move<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
@@ -530,7 +530,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 519
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 525
 
 	--Regular Semantics--
 	[sequoia::testing::doubly_normal_beast<int, double, sequoia::testing::shared_counting_allocator<int, 0, 1, 1>, sequoia::testing::shared_counting_allocator<double, 0, 1, 1> >]
@@ -539,51 +539,6 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 387
-
-	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
-
-
-	=======================================
-
-	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 388
-
-	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
-
-
-	=======================================
-
-	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 389
-
-	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
-
-
-	=======================================
-
-	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 390
-
-	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
-
-
-	=======================================
-
-	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 391
-
-	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
-
-
-	=======================================
-
-	False Positive Failure:
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 393
 
 	--Regular Semantics--
@@ -593,7 +548,52 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 413
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 394
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 395
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 396
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 397
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 399
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 419
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 0> >]
@@ -602,7 +602,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 414
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 420
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 0> >]
@@ -611,7 +611,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 415
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 421
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 0> >]
@@ -620,7 +620,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 416
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 422
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 0> >]
@@ -629,7 +629,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 417
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 423
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 0> >]
@@ -638,7 +638,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 455
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 461
 
 	--Regular Semantics--
 	[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
@@ -647,7 +647,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 474
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 480
 
 	--Regular Semantics--
 	[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
@@ -656,7 +656,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 493
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 499
 
 	--Regular Semantics--
 	[sequoia::testing::inefficient_para_move<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
@@ -665,7 +665,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 519
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 525
 
 	--Regular Semantics--
 	[sequoia::testing::doubly_normal_beast<int, double, sequoia::testing::shared_counting_allocator<int, 1, 0, 0>, sequoia::testing::shared_counting_allocator<double, 1, 0, 0> >]
@@ -674,51 +674,6 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 387
-
-	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
-
-
-	=======================================
-
-	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 388
-
-	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
-
-
-	=======================================
-
-	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 389
-
-	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
-
-
-	=======================================
-
-	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 390
-
-	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
-
-
-	=======================================
-
-	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 391
-
-	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
-
-
-	=======================================
-
-	False Positive Failure:
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 393
 
 	--Regular Semantics--
@@ -728,7 +683,52 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 413
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 394
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 395
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 396
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 397
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 399
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 419
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 1> >]
@@ -737,7 +737,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 414
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 420
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 1> >]
@@ -746,7 +746,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 415
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 421
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 1> >]
@@ -755,7 +755,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 416
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 422
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 1> >]
@@ -764,7 +764,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 417
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 423
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 1> >]
@@ -773,7 +773,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 455
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 461
 
 	--Regular Semantics--
 	[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
@@ -782,7 +782,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 474
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 480
 
 	--Regular Semantics--
 	[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
@@ -791,7 +791,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 493
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 499
 
 	--Regular Semantics--
 	[sequoia::testing::inefficient_para_move<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
@@ -800,7 +800,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 519
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 525
 
 	--Regular Semantics--
 	[sequoia::testing::doubly_normal_beast<int, double, sequoia::testing::shared_counting_allocator<int, 1, 0, 1>, sequoia::testing::shared_counting_allocator<double, 1, 0, 1> >]
@@ -809,51 +809,6 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 387
-
-	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
-
-
-	=======================================
-
-	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 388
-
-	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
-
-
-	=======================================
-
-	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 389
-
-	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
-
-
-	=======================================
-
-	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 390
-
-	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
-
-
-	=======================================
-
-	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 391
-
-	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
-
-
-	=======================================
-
-	False Positive Failure:
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 393
 
 	--Regular Semantics--
@@ -863,7 +818,52 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 413
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 394
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 395
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 396
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 397
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 399
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 419
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 0> >]
@@ -872,7 +872,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 414
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 420
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 0> >]
@@ -881,7 +881,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 415
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 421
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 0> >]
@@ -890,7 +890,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 416
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 422
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 0> >]
@@ -899,7 +899,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 417
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 423
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 0> >]
@@ -908,7 +908,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 455
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 461
 
 	--Regular Semantics--
 	[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
@@ -917,7 +917,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 474
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 480
 
 	--Regular Semantics--
 	[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
@@ -926,7 +926,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 493
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 499
 
 	--Regular Semantics--
 	[sequoia::testing::inefficient_para_move<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
@@ -935,55 +935,10 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 519
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 525
 
 	--Regular Semantics--
 	[sequoia::testing::doubly_normal_beast<int, double, sequoia::testing::shared_counting_allocator<int, 1, 1, 0>, sequoia::testing::shared_counting_allocator<double, 1, 1, 0> >]
-
-
-	=======================================
-
-	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 387
-
-	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
-
-
-	=======================================
-
-	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 388
-
-	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
-
-
-	=======================================
-
-	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 389
-
-	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
-
-
-	=======================================
-
-	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 390
-
-	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
-
-
-	=======================================
-
-	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 391
-
-	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 
 
 	=======================================
@@ -998,7 +953,52 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 413
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 394
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 395
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 396
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 397
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 399
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 419
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 1> >]
@@ -1007,7 +1007,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 414
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 420
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 1> >]
@@ -1016,7 +1016,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 415
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 421
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 1> >]
@@ -1025,7 +1025,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 416
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 422
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 1> >]
@@ -1034,7 +1034,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 417
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 423
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 1> >]
@@ -1043,7 +1043,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 455
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 461
 
 	--Regular Semantics--
 	[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
@@ -1052,7 +1052,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 474
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 480
 
 	--Regular Semantics--
 	[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
@@ -1061,7 +1061,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 493
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 499
 
 	--Regular Semantics--
 	[sequoia::testing::inefficient_para_move<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
@@ -1070,7 +1070,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 519
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 525
 
 	--Regular Semantics--
 	[sequoia::testing::doubly_normal_beast<int, double, sequoia::testing::shared_counting_allocator<int, 1, 1, 1>, sequoia::testing::shared_counting_allocator<double, 1, 1, 1> >]
