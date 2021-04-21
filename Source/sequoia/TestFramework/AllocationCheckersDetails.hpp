@@ -536,6 +536,38 @@ namespace sequoia::testing::impl
   }
 
   template<test_mode Mode, movable_comparable T, alloc_getter<T> Getter, alloc_getter<T>... Getters>
+  void check_init_allocations(test_logger<Mode>& logger, const T& x, const T& y, const allocation_checker<T, Getter>& checker, const allocation_checker<T, Getters>&... moreCheckers)
+  {
+    auto checkFn{
+      [&logger, &x, &y](const auto& checker){
+        {
+          const auto prediction{checker.info().get_predictions().x()};
+          checker.check("Unexpected allocation detected for initialization (x)", logger, x, prediction);
+        }
+
+        {
+          const auto prediction{checker.info().get_predictions().y().copy};
+          checker.check("Unexpected allocation detected for initialization (y)", logger, y, prediction);
+        }
+      }
+    };
+
+    check_allocation(logger, checkFn, checker, moreCheckers...);
+  }
+
+  template<test_mode Mode, movable_comparable T, alloc_getter<T>... Getters>
+  void check_init_allocations(test_logger<Mode>& logger, const T& x, const T& y, std::tuple<allocation_checker<T, Getters>...> checkers)
+  {
+    auto fn{
+       [&logger, &x, &y](auto&&... checkers){
+         check_init_allocations(logger, x, y, std::forward<decltype(checkers)>(checkers)...);
+      }
+    };
+
+    std::apply(fn, checkers);
+  }
+
+  template<test_mode Mode, movable_comparable T, alloc_getter<T> Getter, alloc_getter<T>... Getters>
   void check_serialization_allocation(test_logger<Mode>& logger, const T& container, const allocation_checker<T, Getter>& checker, const allocation_checker<T, Getters>&... moreCheckers)
   {
     auto checkFn{

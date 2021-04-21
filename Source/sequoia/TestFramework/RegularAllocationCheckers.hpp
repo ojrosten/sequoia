@@ -226,34 +226,16 @@ namespace sequoia::testing
     alloc_getter<T>... Getters
   >
     requires (sizeof...(Getters) > 0)
-  void check_semantics(std::string_view description, test_logger<Mode>& logger, xMaker xFn, yMaker yFn, Mutator yMutator, const allocation_info<T, Getters>&... info)
+  std::pair<T, T> check_semantics(std::string_view description, test_logger<Mode>& logger, xMaker xFn, yMaker yFn, Mutator yMutator, const allocation_info<T, Getters>&... info)
   {
     sentinel<Mode> sentry{logger, add_type_info<T>(description).append("\n")};
 
     const auto x{xFn()};
-
-    {
-      auto checkFn{
-        [&logger,&x](const auto& info){
-          impl::check_allocation("Unexpected initialization allocation (x)", logger, x, info, 0, convert<individual_allocation_event::initialization>(info.get_predictions().x()));
-        }
-      };
-
-      impl::check_allocation(logger, checkFn, info...);
-    }
-
     const auto y{yFn()};
 
-    {
-      auto checkFn{
-        [&logger,&y](const auto& info){
-          impl::check_allocation("Unexpected initialization allocation (y)", logger, y, info, 0, convert<individual_allocation_event::initialization>(info.get_predictions().y().copy));
-        }
-      };
-
-      impl::check_allocation(logger, checkFn, info...);
-    }
-
+    impl::check_initialization_allocations(logger, x, y, info...);
     check_semantics(description, logger, x, y, std::move(yMutator), info...);
+
+    return {x, y};
   }
 }
