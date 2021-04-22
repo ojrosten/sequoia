@@ -737,8 +737,8 @@ namespace sequoia::testing
         }
       };
 
-      check_relative_performance(LINE("Null versus async check"), asyncFn, serialFn, 2.0, 4.5);
-      check_relative_performance(LINE("Null versus pool check"), poolFn, serialFn, 2.0, 4.5);
+      check_relative_performance(LINE("Null versus async check"), asyncFn, serialFn, 2.0, 5.0);
+      check_relative_performance(LINE("Null versus pool check"), poolFn, serialFn, 2.0, 5.0);
     }
   }
 
