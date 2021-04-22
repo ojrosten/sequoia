@@ -13,8 +13,10 @@ namespace sequoia
 {
   class [[nodiscard]] timer_resolution
   {
-    unsigned int m_Resolution{1};
+    unsigned int m_Resolution{};
   public:
+    timer_resolution() = default;
+
     explicit timer_resolution(unsigned int millisecs);
 
     ~timer_resolution();

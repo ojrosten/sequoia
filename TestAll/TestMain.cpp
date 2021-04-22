@@ -235,7 +235,7 @@ int main(int argc, char** argv)
       experimental_test{"Unit Test"}
     );
 
-    runner.execute();
+    runner.execute(timer_resolution{1});
   }
   catch(const std::exception& e)
   {

@@ -717,7 +717,7 @@ namespace sequoia::testing
     {
       upper = 10;
 
-      const auto pause{std::chrono::microseconds(500)};
+      const auto pause{std::chrono::milliseconds(20)};
 
       auto serialFn{
         [&graph, upper, pause]() {
