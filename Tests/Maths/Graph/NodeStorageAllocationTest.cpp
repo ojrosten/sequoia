@@ -38,22 +38,17 @@ namespace sequoia::testing
     using storage = node_storage_tester<Sharing, PropagateCopy, PropagateMove, PropagateSwap>;
     using allocator = typename storage::allocator_type;
 
-    storage s(allocator{});
-    check_equivalence(LINE(""), s, std::initializer_list<int>{});
-    check_equality(LINE(""), s.get_node_allocator().allocs(), 0);
-
-    storage t{{1, 1, 0}, allocator{}};
-    check_equivalence(LINE(""), t, std::initializer_list<int>{1, 1, 0});
-    check_equality(LINE(""), t.get_node_allocator().allocs(), 1);
-
     auto mutator{
       [](storage& s){ s.add_node(); }
     };
 
-    check_semantics(LINE(""),
-                    s,
-                    t,
+    auto[s,t]{check_semantics(LINE(""),
+                    [](){ return storage(allocator{}); },
+                    [](){ return storage{{1, 1, 0}, allocator{}}; },
                     mutator,
-                    allocation_info{node_storage_alloc_getter<storage>{}, {0_c, {1_c,1_mu}, {1_awp,1_anp}}});
+                    allocation_info{node_storage_alloc_getter<storage>{}, {0_c, {1_c,1_mu}, {1_awp,1_anp}}})};
+
+    check_equivalence(LINE(""), s, std::initializer_list<int>{});
+    check_equivalence(LINE(""), t, std::initializer_list<int>{1, 1, 0});
   }
 }
