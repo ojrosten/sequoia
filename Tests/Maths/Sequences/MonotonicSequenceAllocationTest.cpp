@@ -29,14 +29,6 @@ namespace sequoia::testing
     using allocator = shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>;
     using sequence = monotonic_sequence<int, std::less<int>, std::vector<int, allocator>>;
 
-    sequence s(allocator{});
-    check_equivalence(LINE(""), s, std::initializer_list<int>{});
-    check_equality(LINE(""), s.get_allocator().allocs(), 0);
-
-    sequence t{{4, 3}, allocator{}};
-    check_equivalence(LINE(""), t, std::initializer_list<int>{4, 3});
-    check_equality(LINE(""), t.get_allocator().allocs(), 1);
-
     auto getter{
       [](const sequence& s){ return s.get_allocator(); }
     };
@@ -47,7 +39,15 @@ namespace sequoia::testing
         seq.push_back(val);
       }
     };
-    check_semantics(LINE(""), s, t, mutator, allocation_info{getter, {0_c, {1_c, 1_mu}, {1_awp, 1_anp}}});
+
+    auto[s,t]{check_semantics(LINE(""),
+                              [](){ return sequence(allocator{}); },
+                              [](){ return sequence{{4, 3}, allocator{}}; },
+                              mutator,
+                              allocation_info{getter, {0_c, {1_c, 1_mu}, {1_awp, 1_anp}}})};
+
+    check_equivalence(LINE(""), s, std::initializer_list<int>{});
+    check_equivalence(LINE(""), t, std::initializer_list<int>{4, 3});
   }
 
 }
