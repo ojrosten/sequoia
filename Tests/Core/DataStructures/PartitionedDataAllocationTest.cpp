@@ -48,12 +48,6 @@ namespace sequoia::testing
       }
     };
 
-    // null; [0,2][1]
-
-    storage
-      s(allocator{}),
-      t{{{0,2}, {1}}, allocator{}};
-
     auto allocGetter{
       [](const storage& s) {
         return s.get_allocator();
@@ -66,22 +60,20 @@ namespace sequoia::testing
       }
     };
 
-    check_equivalence(LINE(makeMessage("")), s, prediction{});
-    check_equivalence(LINE(makeMessage("")), t, prediction{{0,2}, {1}});
-    check_equality(LINE(makeMessage("")), allocGetter(s).allocs(), 0);
-    check_equality(LINE(makeMessage("Only a single allocation necessary due to reservation")), allocGetter(t).allocs(), 1);
-    check_equality(LINE(makeMessage("Only a single allocation per bucket due to reservation")), innerAllocGetter(t).allocs(), 2);
-
     auto partitionMaker{ [](storage& s) { s.add_slot(); } };
 
-    check_semantics(LINE(""),
-                    s,
-                    t,
+    // null; [0,2][1]
+    auto[s,t]{check_semantics(LINE(""),
+                    [](){ return storage(allocator{}); },
+                    [](){ return storage{{{0,2}, {1}}, allocator{}}; },
                     partitionMaker,
                     allocation_info{bucket_alloc_getter<storage>{},
                                     {0_c, {1_c,1_mu}, {1_awp,1_anp}},
                                     { {0_c, {2_c,0_mu}, {2_awp,2_anp}, {0_containers, 2_containers, 3_postmutation}} }
-                    });
+                    })};
+
+    check_equivalence(LINE(makeMessage("")), s, prediction{});
+    check_equivalence(LINE(makeMessage("")), t, prediction{{0,2}, {1}});
 
     s.add_slot();
     // []
