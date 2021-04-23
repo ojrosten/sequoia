@@ -193,7 +193,7 @@ namespace sequoia::maths::graph_impl
       if(&in != this)
       {
         auto allocGetter{
-          [](const node_storage& in){
+          []([[maybe_unused]] const node_storage& in){
             if constexpr(has_allocator_type<node_weight_container_type>)
             {
               return in.m_NodeWeights.get_allocator();
