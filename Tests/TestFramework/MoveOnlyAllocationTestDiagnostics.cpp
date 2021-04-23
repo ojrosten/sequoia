@@ -183,6 +183,15 @@ namespace sequoia::testing
 
       check_semantics(LINE("Move-only beast"), beast{}, beast{2}, beast{}, beast{2}, mutator,
                               allocation_info{allocGetter, {1_clm, 1_mu, 1_pm}});
+
+      const auto[x,y]{check_semantics(LINE("Move-only beast"),
+                                      []() { return beast{}; },
+                                      []() { return beast{2}; },
+                                      mutator,
+                                      allocation_info{allocGetter, {1_clm, 1_mu, 1_pm}})};
+
+      check_equality(LINE("check_semantics return value (x)"), x, beast{});
+      check_equality(LINE("check_semantics return value (y)"), y, beast{2});
     }
   }
 }

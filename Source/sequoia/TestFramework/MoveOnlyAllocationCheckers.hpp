@@ -158,4 +158,24 @@ namespace sequoia::testing
       check_semantics(logger, impl::move_only_allocation_actions<T>{}, std::forward<T>(x), std::move(*opt), xClone, yClone, std::move(m), std::tuple_cat(impl::make_dual_allocation_checkers(info, x, y)...));
     }
   }
+
+  template
+  <
+    test_mode Mode,
+    invocable<> xMaker,
+    moveonly T=typename function_signature<xMaker>::ret,
+    invocable_r<T> yMaker,
+    invocable<T&> Mutator,
+    alloc_getter<T>... Getters
+  >
+  std::pair<T,T> check_semantics(std::string_view description, test_logger<Mode>& logger, xMaker xFn, yMaker yFn, Mutator m, const allocation_info<T, Getters>&... info)
+  {
+    auto x{xFn()};
+    auto y{yFn()};
+
+    //impl::check_initialization_allocations(logger, x, y, info...);
+    check_semantics(description, logger, xFn(), yFn(), x, y, std::move(m), info...);
+
+    return {std::move(x), std::move(y)};
+  }
 }

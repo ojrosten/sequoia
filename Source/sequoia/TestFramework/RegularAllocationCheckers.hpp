@@ -230,12 +230,12 @@ namespace sequoia::testing
   {
     sentinel<Mode> sentry{logger, add_type_info<T>(description).append("\n")};
 
-    const auto x{xFn()};
-    const auto y{yFn()};
+    auto x{xFn()};
+    auto y{yFn()};
 
     impl::check_initialization_allocations(logger, x, y, info...);
     check_semantics(description, logger, x, y, std::move(yMutator), info...);
 
-    return {x, y};
+    return {std::move(x), std::move(y)};
   }
 }
