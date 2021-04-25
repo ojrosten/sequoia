@@ -57,7 +57,8 @@ namespace sequoia::testing
                     mutator,
                     allocation_info{
                         allocGetter,
-                        {1_clm, 1_mu, 1_pm}, {{1_clm, 1_mu, 1_pm, {0_containers, 1_containers, 2_postmutation}}}
+                        {0_pm, {1_mu, 1_pm}, {1_clm}},
+                        {{0_pm, {1_mu, 1_pm}, {1_clm}, {0_containers, 1_containers, 2_postmutation}}}
                     }
     );
   }
@@ -106,7 +107,10 @@ namespace sequoia::testing
                       beast{},
                       beast{{"something too long for small string optimization"}},
                       mutator,
-                      allocation_info{allocGetter, {0_clm, 1_mu, 1_pm}, {{1_clm, 1_mu, 1_pm, {0_containers, 1_containers, 2_postmutation}}}}
+                      allocation_info{allocGetter,
+                                     {0_pm, {1_mu, 1_pm}, {0_clm}},
+                                     {{0_pm, {1_mu, 1_pm}, {1_clm}, {0_containers, 1_containers, 2_postmutation}}}
+                      }
       );
     }
 
@@ -116,7 +120,10 @@ namespace sequoia::testing
                     beast{},
                     beast{{"something too long for small string optimization"}},
                     mutator,
-                    allocation_info{allocGetter, {1_clm, 0_mu, 1_pm}, {{1_clm, 1_mu, 1_pm, {0_containers, 1_containers, 2_postmutation}}}}
+                    allocation_info{allocGetter,
+                                    {0_pm, {0_mu, 1_pm}, {1_clm}},
+                                    {{0_pm, {1_mu, 1_pm}, {1_clm}, {0_containers, 1_containers, 2_postmutation}}}
+                    }
     );
 
     check_semantics(LINE("Incorrect para move outer allocs"),
@@ -125,7 +132,10 @@ namespace sequoia::testing
                     beast{},
                     beast{{"something too long for small string optimization"}},
                     mutator,
-                    allocation_info{allocGetter, {1_clm, 1_mu, 0_pm}, {{1_clm, 1_mu, 1_pm, {0_containers, 1_containers, 2_postmutation}}}}
+                    allocation_info{allocGetter,
+                                    {0_pm, {1_mu, 0_pm}, {1_clm}},
+                                    {{0_pm, {1_mu, 1_pm}, {1_clm}, {0_containers, 1_containers, 2_postmutation}}}
+                    }
     );
 
     if constexpr(!PropagateMove)
@@ -136,7 +146,10 @@ namespace sequoia::testing
                       beast{},
                       beast{{"something too long for small string optimization"}},
                       mutator,
-                      allocation_info{allocGetter, {1_clm, 1_mu, 1_pm}, {{0_clm, 1_mu, 1_pm, {0_containers, 1_containers, 2_postmutation}}}}
+                      allocation_info{allocGetter,
+                                      {0_pm, {1_mu, 1_pm}, {1_clm}},
+                                      {{0_pm, {1_mu, 1_pm}, {0_clm}, {0_containers, 1_containers, 2_postmutation}}}
+                      }
       );
     }
 
@@ -145,7 +158,10 @@ namespace sequoia::testing
                     beast{{"something too long for small string optimization"}},
                     beast{},
                     beast{{"something too long for small string optimization"}},
-                    mutator, allocation_info{allocGetter, {1_clm, 1_mu, 1_pm}, {{1_clm, 0_mu, 1_pm, {0_containers, 1_containers, 2_postmutation}}}}
+                    mutator, allocation_info{allocGetter,
+                                             {0_pm, {1_mu, 1_pm}, {1_clm}},
+                                             {{0_pm, {0_mu, 1_pm}, {1_clm}, {0_containers, 1_containers, 2_postmutation}}}
+                    }
     );
 
     check_semantics(LINE("Incorrect para move inner allocs"),
@@ -154,7 +170,10 @@ namespace sequoia::testing
                     beast{},
                     beast{{"something too long for small string optimization"}},
                     mutator,
-                    allocation_info{allocGetter, {1_clm, 1_mu, 1_pm}, {{1_clm, 1_mu, 0_pm, {0_containers, 1_containers, 2_postmutation}}}}
+                    allocation_info{allocGetter,
+                                    {0_pm, {1_mu, 1_pm}, {1_clm}}, 
+                                    {{0_pm, {1_mu, 0_pm}, {1_clm}, {0_containers, 1_containers, 2_postmutation}}}
+                    }
     );
   }
 }

@@ -16,112 +16,128 @@
 
 namespace sequoia::testing
 {
+  struct individual_move_only_allocation_predictions
+  {
+    constexpr individual_move_only_allocation_predictions(mutation_prediction mutationPrediction,
+                                                          para_move_prediction paraMovePrediction,
+                                                          move_prediction m={})
+      : para_move{paraMovePrediction}
+      , mutation{mutationPrediction}
+      , move{m}
+    {}
+
+    para_move_prediction para_move{};
+    mutation_prediction mutation{};
+    move_prediction move{};
+  };
+
+  struct assignment_move_only_allocation_predictions
+  {
+    constexpr assignment_move_only_allocation_predictions(copy_like_move_assign_prediction copyLikeMove,
+                                                          move_assign_prediction pureMove={})
+      : copy_like_move{copyLikeMove}
+      , move{pureMove}
+    {}
+
+    copy_like_move_assign_prediction copy_like_move{};
+    move_assign_prediction move{};
+  };
+
+  template<class T>
+  constexpr individual_move_only_allocation_predictions shift(const individual_move_only_allocation_predictions& predictions,
+                                                              const alloc_prediction_shifter<T>& shifter)
+  {
+    return {shifter.shift(predictions.mutation),
+            shifter.shift(predictions.para_move, container_tag::y),
+            shifter.shift(predictions.move)};
+  }
+
+  template<class T>
+  constexpr assignment_move_only_allocation_predictions shift(const assignment_move_only_allocation_predictions& predictions,
+                                                             const alloc_prediction_shifter<T>& shifter)
+  {
+    return {shifter.shift(predictions.copy_like_move),
+            shifter.shift(predictions.move)};
+  }
+
   template<top_level TopLevel>
   class basic_move_only_allocation_predictions : public container_predictions_policy<TopLevel>
   {
   public:
-    template<top_level Level = TopLevel>
+    template<top_level Level=TopLevel>
       requires (Level == top_level::yes)
-    constexpr basic_move_only_allocation_predictions(copy_like_move_assign_prediction copyLikeMove,
-                                               mutation_prediction yMutation,
-                                               para_move_prediction paraMove,
-                                               move_prediction m,
-                                               move_assign_prediction moveAssign)
-      : m_CopyLikeMoveAssign{copyLikeMove}
-      , m_Mutation{yMutation}
-      , m_ParaMove{paraMove}
-      , m_Move{m}
-      , m_MoveAssign{moveAssign}
+    constexpr basic_move_only_allocation_predictions(para_move_prediction x,
+                                                     individual_move_only_allocation_predictions y,
+                                                     assignment_move_only_allocation_predictions assignYtoX)
+      : m_x{x}
+      , m_y{y}
+      , m_Assign_y_to_x{assignYtoX}
     {}
 
-    template<top_level Level = TopLevel>
-      requires (Level == top_level::yes)
-    constexpr basic_move_only_allocation_predictions(copy_like_move_assign_prediction copyLikeMove,
-                                               mutation_prediction yMutation,
-                                               para_move_prediction paraMove)
-      : m_CopyLikeMoveAssign{copyLikeMove}
-      , m_Mutation{yMutation}
-      , m_ParaMove{paraMove}
-    {}
-
-    template<top_level Level = TopLevel>
+    template<top_level Level=TopLevel>
       requires (Level == top_level::no)
-    constexpr basic_move_only_allocation_predictions(copy_like_move_assign_prediction copyLikeMove,
-                                               mutation_prediction yMutation,
-                                               para_move_prediction paraMove,
-                                               move_prediction m,
-                                               move_assign_prediction moveAssign,
-                                               container_counts counts)
-      : container_predictions_policy<TopLevel>{counts}
-      , m_CopyLikeMoveAssign{copyLikeMove}
-      , m_Mutation{yMutation}
-      , m_ParaMove{paraMove}
-      , m_Move{m}
-      , m_MoveAssign{moveAssign}
-    {}
-
-    template<top_level Level = TopLevel>
-      requires (Level == top_level::no)
-    constexpr basic_move_only_allocation_predictions(copy_like_move_assign_prediction copyLikeMove,
-                                                     mutation_prediction yMutation,
-                                                     para_move_prediction paraMove,
+    constexpr basic_move_only_allocation_predictions(para_move_prediction x,
+                                                     individual_move_only_allocation_predictions y,
+                                                     assignment_move_only_allocation_predictions assignYtoX,
                                                      container_counts counts)
       : container_predictions_policy<TopLevel>{counts}
-      , m_CopyLikeMoveAssign{copyLikeMove}
-      , m_Mutation{yMutation}
-      , m_ParaMove{paraMove}
+      , m_x{x}
+      , m_y{y}
+      , m_Assign_y_to_x{assignYtoX}
     {}
 
     [[nodiscard]]
-    constexpr copy_like_move_assign_prediction copy_like_move_assign_allocs() const noexcept { return m_CopyLikeMoveAssign; }
+    constexpr mutation_prediction mutation_allocs() const noexcept { return m_y.mutation; }
 
     [[nodiscard]]
-    constexpr mutation_prediction mutation_allocs() const noexcept { return m_Mutation; }
+    constexpr para_move_prediction para_move_allocs() const noexcept { return m_y.para_move; }
 
     [[nodiscard]]
-    constexpr para_move_prediction para_move_allocs() const noexcept { return m_ParaMove; }
+    constexpr move_prediction move_allocs() const noexcept { return m_y.move; }
 
     [[nodiscard]]
-    constexpr move_prediction move_allocs() const noexcept { return m_Move; }
+    constexpr copy_like_move_assign_prediction copy_like_move_assign_allocs() const noexcept
+    {
+      return m_Assign_y_to_x.copy_like_move;
+    }
+    
+    [[nodiscard]]
+    constexpr move_assign_prediction move_assign_allocs() const noexcept
+    {
+      return m_Assign_y_to_x.move;
+    }
 
     [[nodiscard]]
-    constexpr move_assign_prediction move_assign_allocs() const noexcept { return m_MoveAssign; }
+    constexpr para_move_prediction x() const noexcept { return m_x; }
+
+    [[nodiscard]]
+    constexpr const individual_move_only_allocation_predictions& y() const noexcept { return m_y; }
+
+    [[nodiscard]]
+    constexpr const assignment_move_only_allocation_predictions& assign_y_to_x() const noexcept { return m_Assign_y_to_x; }
 
     template<class T>
     constexpr basic_move_only_allocation_predictions shift(const alloc_prediction_shifter<T>& shifter) const
     {
       auto shifted{*this};
 
-      shifted.m_CopyLikeMoveAssign = shifter.shift(m_CopyLikeMoveAssign);
-      shifted.m_Mutation           = shifter.shift(m_Mutation);
-      shifted.m_ParaMove           = shifter.shift(m_ParaMove);
-      shifted.m_Move               = shifter.shift(m_Move);
-      shifted.m_MoveAssign         = shifter.shift(m_MoveAssign);
+      shifted.m_x             = shifter.shift(m_x, container_tag::x);
+      shifted.m_y             = testing::shift(m_y, shifter);
+      shifted.m_Assign_y_to_x = testing::shift(m_Assign_y_to_x, shifter);
 
       return shifted;
     }
-
-    constexpr explicit operator basic_move_only_allocation_predictions<top_level::yes>() const noexcept
-    {
-      return {copy_like_move_assign_allocs(), mutation_allocs(), para_move_allocs(), move_allocs(), move_assign_allocs()};
-    }
   private:
-    copy_like_move_assign_prediction m_CopyLikeMoveAssign{};
-    mutation_prediction m_Mutation{};
-    para_move_prediction m_ParaMove{};
-    move_prediction m_Move{};
-    move_assign_prediction m_MoveAssign{};
+    para_move_prediction m_x{};
+    individual_move_only_allocation_predictions m_y;
+    assignment_move_only_allocation_predictions m_Assign_y_to_x;
   };
 
   [[nodiscard]]
   constexpr basic_move_only_allocation_predictions<top_level::yes>
     to_top_level(const basic_move_only_allocation_predictions<top_level::no>& predictions) noexcept
   {
-    return {predictions.copy_like_move_assign_allocs(),
-            predictions.mutation_allocs(),
-            predictions.para_move_allocs(),
-            predictions.move_allocs(),
-            predictions.move_assign_allocs()};
+    return {predictions.x(), predictions.y(), predictions.assign_y_to_x()};
   }
 
   using move_only_allocation_predictions       = basic_move_only_allocation_predictions<top_level::yes>;

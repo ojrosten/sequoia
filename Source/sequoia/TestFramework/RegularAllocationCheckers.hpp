@@ -86,7 +86,7 @@ namespace sequoia::testing
     return {shifter.shift(predictions.copy, container_tag::y),
             shifter.shift(predictions.mutation),
             shifter.shift(predictions.para_copy),
-            shifter.shift(predictions.para_move),
+            shifter.shift(predictions.para_move, container_tag::y),
             shifter.shift(predictions.move)};
   }
 
@@ -132,13 +132,13 @@ namespace sequoia::testing
     [[nodiscard]]
     constexpr copy_like_move_assign_prediction copy_like_move_assign_allocs() const noexcept
     {
-      return assign_y_to_x().copy_like_move;
+      return m_Assign_y_to_x.copy_like_move;
     }
 
     [[nodiscard]]
     constexpr move_assign_prediction move_assign_allocs() const noexcept
     {
-      return assign_y_to_x().move;
+      return m_Assign_y_to_x.move;
     }
 
     [[nodiscard]]
@@ -148,13 +148,13 @@ namespace sequoia::testing
     constexpr move_prediction move_allocs() const noexcept { return m_y.move; }
 
     [[nodiscard]]
-    constexpr assignment_allocation_predictions assign_y_to_x() const noexcept { return m_Assign_y_to_x; }
-
-    [[nodiscard]]
     constexpr copy_prediction x() const noexcept { return m_x; }
 
     [[nodiscard]]
-    constexpr individual_allocation_predictions y() const noexcept { return m_y; }
+    constexpr const individual_allocation_predictions& y() const noexcept { return m_y; }
+    
+    [[nodiscard]]
+    constexpr const assignment_allocation_predictions& assign_y_to_x() const noexcept { return m_Assign_y_to_x; }
 
     template<class T>
     constexpr basic_allocation_predictions shift(const alloc_prediction_shifter<T>& shifter) const

@@ -270,9 +270,10 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    constexpr para_move_prediction shift(para_move_prediction p) const noexcept
+    constexpr para_move_prediction shift(para_move_prediction p, container_tag tag) const noexcept
     {
-      return increment_msvc_debug_count(p, m_Counts.num_y.value());
+      const auto& c{tag == container_tag::x ? m_Counts.num_x : m_Counts.num_y}; 
+      return increment_msvc_debug_count(p, c.value());
     }
 
     [[nodiscard]]
