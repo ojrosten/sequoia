@@ -70,11 +70,29 @@
 	  		Propagate on move assignment = false,
 	  		Propagate on swap = false
 	   >]
-	  Unexpected allocation detected for para-move construction (y)
+	  Unexpected allocation detected for initialization (y)
 	  [int]
 	  operator== returned false
 	  Obtained : 1
 	  Predicted: 2
+
+	  Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 63
+	  Move-only beast
+
+	  --Move-only Semantics--
+	  [sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
+
+	    [shared_counting_allocator<
+	    		int,
+	    		Propagate on copy assignment = true,
+	    		Propagate on move assignment = false,
+	    		Propagate on swap = false
+	     >]
+	    Unexpected allocation detected for para-move construction (y)
+	    [int]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 2
 
 	=======================================
 
@@ -275,11 +293,29 @@
 	  		Propagate on move assignment = false,
 	  		Propagate on swap = true
 	   >]
-	  Unexpected allocation detected for para-move construction (y)
+	  Unexpected allocation detected for initialization (y)
 	  [int]
 	  operator== returned false
 	  Obtained : 1
 	  Predicted: 2
+
+	  Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 63
+	  Move-only beast
+
+	  --Move-only Semantics--
+	  [sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
+
+	    [shared_counting_allocator<
+	    		int,
+	    		Propagate on copy assignment = true,
+	    		Propagate on move assignment = false,
+	    		Propagate on swap = true
+	     >]
+	    Unexpected allocation detected for para-move construction (y)
+	    [int]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 2
 
 	=======================================
 
@@ -480,11 +516,29 @@
 	  		Propagate on move assignment = true,
 	  		Propagate on swap = false
 	   >]
-	  Unexpected allocation detected for para-move construction (y)
+	  Unexpected allocation detected for initialization (y)
 	  [int]
 	  operator== returned false
 	  Obtained : 1
 	  Predicted: 2
+
+	  Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 63
+	  Move-only beast
+
+	  --Move-only Semantics--
+	  [sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
+
+	    [shared_counting_allocator<
+	    		int,
+	    		Propagate on copy assignment = true,
+	    		Propagate on move assignment = true,
+	    		Propagate on swap = false
+	     >]
+	    Unexpected allocation detected for para-move construction (y)
+	    [int]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 2
 
 	=======================================
 
@@ -665,11 +719,29 @@
 	  		Propagate on move assignment = true,
 	  		Propagate on swap = true
 	   >]
-	  Unexpected allocation detected for para-move construction (y)
+	  Unexpected allocation detected for initialization (y)
 	  [int]
 	  operator== returned false
 	  Obtained : 1
 	  Predicted: 2
+
+	  Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 63
+	  Move-only beast
+
+	  --Move-only Semantics--
+	  [sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
+
+	    [shared_counting_allocator<
+	    		int,
+	    		Propagate on copy assignment = true,
+	    		Propagate on move assignment = true,
+	    		Propagate on swap = true
+	     >]
+	    Unexpected allocation detected for para-move construction (y)
+	    [int]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 2
 
 	=======================================
 

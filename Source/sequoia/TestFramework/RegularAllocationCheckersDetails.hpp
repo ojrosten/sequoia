@@ -90,12 +90,6 @@ namespace sequoia::testing::impl
     }
   }
 
-  template<test_mode Mode, pseudoregular T, alloc_getter<T>... Getters>
-  void check_initialization_allocations(test_logger<Mode>& logger, const T& x, const T& y, const allocation_info<T, Getters>&... info)
-  {
-    check_init_allocations(logger, x, y, std::tuple_cat(make_allocation_checkers(info, 0)...));
-  }
-
   template
   <
     test_mode Mode,

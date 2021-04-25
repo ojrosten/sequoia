@@ -535,6 +535,12 @@ namespace sequoia::testing::impl
     std::apply(fn, checkers);
   }
 
+  template<test_mode Mode, movable_comparable T, alloc_getter<T>... Getters>
+  void check_initialization_allocations(test_logger<Mode>& logger, const T& x, const T& y, const allocation_info<T, Getters>&... info)
+  {
+    check_init_allocations(logger, x, y, std::tuple_cat(make_allocation_checkers(info, 0)...));
+  }
+
   template<test_mode Mode, movable_comparable T, alloc_getter<T> Getter, alloc_getter<T>... Getters>
   void check_init_allocations(test_logger<Mode>& logger, const T& x, const T& y, const allocation_checker<T, Getter>& checker, const allocation_checker<T, Getters>&... moreCheckers)
   {
@@ -546,7 +552,19 @@ namespace sequoia::testing::impl
         }
 
         {
-          const auto prediction{checker.info().get_predictions().y().copy};
+          const auto prediction{
+            [&checker](){
+              if constexpr(pseudoregular<T>)
+              {
+                return checker.info().get_predictions().y().copy;
+              }
+              else
+              {
+                return checker.info().get_predictions().y().para_move;
+              }
+            }()
+          };
+
           checker.check("Unexpected allocation detected for initialization (y)", logger, y, prediction);
         }
       }

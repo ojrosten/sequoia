@@ -186,10 +186,12 @@ namespace sequoia::testing
   >
   std::pair<T,T> check_semantics(std::string_view description, test_logger<Mode>& logger, xMaker xFn, yMaker yFn, Mutator m, const allocation_info<T, Getters>&... info)
   {
+    sentinel<Mode> sentry{logger, add_type_info<T>(description).append("\n")};
+
     auto x{xFn()};
     auto y{yFn()};
 
-    //impl::check_initialization_allocations(logger, x, y, info...);
+    impl::check_initialization_allocations(logger, x, y, info...);
     check_semantics(description, logger, xFn(), yFn(), x, y, std::move(m), info...);
 
     return {std::move(x), std::move(y)};
