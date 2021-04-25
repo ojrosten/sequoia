@@ -54,7 +54,7 @@
 
 	False Positive Failure:
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 405
-	check_semantics return val (x)
+	check_semantics return value (x)
 
 	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
 
@@ -63,7 +63,7 @@
 
 	False Positive Failure:
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 406
-	check_semantics return val (y)
+	check_semantics return value (y)
 
 	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
 
@@ -207,7 +207,7 @@
 
 	False Positive Failure:
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 405
-	check_semantics return val (x)
+	check_semantics return value (x)
 
 	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
 
@@ -216,7 +216,7 @@
 
 	False Positive Failure:
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 406
-	check_semantics return val (y)
+	check_semantics return value (y)
 
 	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
 
@@ -360,7 +360,7 @@
 
 	False Positive Failure:
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 405
-	check_semantics return val (x)
+	check_semantics return value (x)
 
 	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
 
@@ -369,7 +369,7 @@
 
 	False Positive Failure:
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 406
-	check_semantics return val (y)
+	check_semantics return value (y)
 
 	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
 
@@ -513,7 +513,7 @@
 
 	False Positive Failure:
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 405
-	check_semantics return val (x)
+	check_semantics return value (x)
 
 	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
 
@@ -522,7 +522,7 @@
 
 	False Positive Failure:
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 406
-	check_semantics return val (y)
+	check_semantics return value (y)
 
 	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
 
@@ -666,7 +666,7 @@
 
 	False Positive Failure:
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 405
-	check_semantics return val (x)
+	check_semantics return value (x)
 
 	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 
@@ -675,7 +675,7 @@
 
 	False Positive Failure:
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 406
-	check_semantics return val (y)
+	check_semantics return value (y)
 
 	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 
@@ -819,7 +819,7 @@
 
 	False Positive Failure:
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 405
-	check_semantics return val (x)
+	check_semantics return value (x)
 
 	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 
@@ -828,7 +828,7 @@
 
 	False Positive Failure:
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 406
-	check_semantics return val (y)
+	check_semantics return value (y)
 
 	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 
@@ -972,7 +972,7 @@
 
 	False Positive Failure:
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 405
-	check_semantics return val (x)
+	check_semantics return value (x)
 
 	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 
@@ -981,7 +981,7 @@
 
 	False Positive Failure:
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 406
-	check_semantics return val (y)
+	check_semantics return value (y)
 
 	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 
@@ -1125,7 +1125,7 @@
 
 	False Positive Failure:
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 405
-	check_semantics return val (x)
+	check_semantics return value (x)
 
 	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 
@@ -1134,7 +1134,7 @@
 
 	False Positive Failure:
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 406
-	check_semantics return val (y)
+	check_semantics return value (y)
 
 	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 

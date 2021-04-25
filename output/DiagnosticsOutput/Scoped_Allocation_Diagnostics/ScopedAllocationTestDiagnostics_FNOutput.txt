@@ -17,7 +17,25 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 106
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 90
+	check_semantics return value (x)
+
+	[sequoia::testing::perfectly_normal_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 0, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 0, 0> >, 0, 0, 0>, sequoia::testing::shared_counting_allocator<char, 0, 0, 0> > >]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 91
+	check_semantics return value (y)
+
+	[sequoia::testing::perfectly_normal_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 0, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 0, 0> >, 0, 0, 0>, sequoia::testing::shared_counting_allocator<char, 0, 0, 0> > >]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 112
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 0> >, 0, 0, 0>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 0> > >]
@@ -26,7 +44,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 117
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 123
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 0> >, 0, 0, 0>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 0> > >]
@@ -35,7 +53,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 128
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 134
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 0> >, 0, 0, 0>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 0> > >]
@@ -44,7 +62,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 139
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 145
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 0> >, 0, 0, 0>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 0> > >]
@@ -53,7 +71,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 150
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 156
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 0> >, 0, 0, 0>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 0> > >]
@@ -62,7 +80,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 161
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 167
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 0> >, 0, 0, 0>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 0> > >]
@@ -71,7 +89,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 172
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 178
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 0> >, 0, 0, 0>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 0> > >]
@@ -80,7 +98,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 199
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 205
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >, 0, 0, 0>, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> > >]
@@ -89,7 +107,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 230
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 236
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<std::tuple<sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >, sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> > >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::tuple<sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >, sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> > >, 0, 0, 0>, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> > >]
@@ -98,7 +116,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 256
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 262
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >, 0, 0, 0>, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> > >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >, 0, 0, 0>, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> > >, 0, 0, 0>, sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >, 0, 0, 0>, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> > >]
@@ -125,7 +143,25 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 106
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 90
+	check_semantics return value (x)
+
+	[sequoia::testing::perfectly_normal_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 0, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 0, 1> >, 0, 0, 1>, sequoia::testing::shared_counting_allocator<char, 0, 0, 1> > >]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 91
+	check_semantics return value (y)
+
+	[sequoia::testing::perfectly_normal_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 0, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 0, 1> >, 0, 0, 1>, sequoia::testing::shared_counting_allocator<char, 0, 0, 1> > >]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 112
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 1> >, 0, 0, 1>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 1> > >]
@@ -134,7 +170,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 117
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 123
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 1> >, 0, 0, 1>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 1> > >]
@@ -143,7 +179,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 128
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 134
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 1> >, 0, 0, 1>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 1> > >]
@@ -152,7 +188,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 139
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 145
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 1> >, 0, 0, 1>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 1> > >]
@@ -161,7 +197,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 150
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 156
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 1> >, 0, 0, 1>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 1> > >]
@@ -170,7 +206,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 161
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 167
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 1> >, 0, 0, 1>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 1> > >]
@@ -179,7 +215,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 172
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 178
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 1> >, 0, 0, 1>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 1> > >]
@@ -188,7 +224,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 199
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 205
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >, 0, 0, 1>, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> > >]
@@ -197,7 +233,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 230
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 236
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<std::tuple<sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >, sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> > >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::tuple<sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >, sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> > >, 0, 0, 1>, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> > >]
@@ -206,7 +242,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 256
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 262
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >, 0, 0, 1>, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> > >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >, 0, 0, 1>, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> > >, 0, 0, 1>, sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >, 0, 0, 1>, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> > >]
@@ -233,7 +269,25 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 106
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 90
+	check_semantics return value (x)
+
+	[sequoia::testing::perfectly_normal_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 1, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 1, 0> >, 0, 1, 0>, sequoia::testing::shared_counting_allocator<char, 0, 1, 0> > >]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 91
+	check_semantics return value (y)
+
+	[sequoia::testing::perfectly_normal_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 1, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 1, 0> >, 0, 1, 0>, sequoia::testing::shared_counting_allocator<char, 0, 1, 0> > >]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 112
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 0> >, 0, 1, 0>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 0> > >]
@@ -242,7 +296,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 117
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 123
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 0> >, 0, 1, 0>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 0> > >]
@@ -251,7 +305,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 128
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 134
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 0> >, 0, 1, 0>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 0> > >]
@@ -260,7 +314,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 139
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 145
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 0> >, 0, 1, 0>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 0> > >]
@@ -269,7 +323,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 150
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 156
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 0> >, 0, 1, 0>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 0> > >]
@@ -278,7 +332,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 161
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 167
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 0> >, 0, 1, 0>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 0> > >]
@@ -287,7 +341,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 172
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 178
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 0> >, 0, 1, 0>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 0> > >]
@@ -296,7 +350,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 199
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 205
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >, 0, 1, 0>, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> > >]
@@ -305,7 +359,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 230
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 236
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<std::tuple<sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >, sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> > >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::tuple<sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >, sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> > >, 0, 1, 0>, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> > >]
@@ -314,7 +368,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 256
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 262
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >, 0, 1, 0>, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> > >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >, 0, 1, 0>, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> > >, 0, 1, 0>, sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >, 0, 1, 0>, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> > >]
@@ -341,7 +395,25 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 106
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 90
+	check_semantics return value (x)
+
+	[sequoia::testing::perfectly_normal_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 1, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 1, 1> >, 0, 1, 1>, sequoia::testing::shared_counting_allocator<char, 0, 1, 1> > >]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 91
+	check_semantics return value (y)
+
+	[sequoia::testing::perfectly_normal_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 1, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 1, 1> >, 0, 1, 1>, sequoia::testing::shared_counting_allocator<char, 0, 1, 1> > >]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 112
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 1> >, 0, 1, 1>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 1> > >]
@@ -350,7 +422,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 117
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 123
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 1> >, 0, 1, 1>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 1> > >]
@@ -359,7 +431,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 128
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 134
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 1> >, 0, 1, 1>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 1> > >]
@@ -368,7 +440,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 139
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 145
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 1> >, 0, 1, 1>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 1> > >]
@@ -377,7 +449,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 150
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 156
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 1> >, 0, 1, 1>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 1> > >]
@@ -386,7 +458,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 161
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 167
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 1> >, 0, 1, 1>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 1> > >]
@@ -395,7 +467,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 172
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 178
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 1> >, 0, 1, 1>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 1> > >]
@@ -404,7 +476,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 199
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 205
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >, 0, 1, 1>, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> > >]
@@ -413,7 +485,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 230
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 236
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<std::tuple<sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >, sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> > >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::tuple<sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >, sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> > >, 0, 1, 1>, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> > >]
@@ -422,7 +494,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 256
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 262
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >, 0, 1, 1>, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> > >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >, 0, 1, 1>, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> > >, 0, 1, 1>, sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >, 0, 1, 1>, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> > >]
@@ -449,7 +521,25 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 106
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 90
+	check_semantics return value (x)
+
+	[sequoia::testing::perfectly_normal_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >, 1, 0, 0>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> > >]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 91
+	check_semantics return value (y)
+
+	[sequoia::testing::perfectly_normal_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >, 1, 0, 0>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> > >]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 112
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 0> >, 1, 0, 0>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 0> > >]
@@ -458,7 +548,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 117
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 123
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 0> >, 1, 0, 0>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 0> > >]
@@ -467,7 +557,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 128
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 134
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 0> >, 1, 0, 0>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 0> > >]
@@ -476,7 +566,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 139
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 145
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 0> >, 1, 0, 0>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 0> > >]
@@ -485,7 +575,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 150
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 156
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 0> >, 1, 0, 0>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 0> > >]
@@ -494,7 +584,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 161
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 167
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 0> >, 1, 0, 0>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 0> > >]
@@ -503,7 +593,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 172
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 178
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 0> >, 1, 0, 0>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 0> > >]
@@ -512,7 +602,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 199
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 205
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >, 1, 0, 0>, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> > >]
@@ -521,7 +611,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 230
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 236
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<std::tuple<sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >, sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> > >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::tuple<sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >, sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> > >, 1, 0, 0>, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> > >]
@@ -530,7 +620,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 256
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 262
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >, 1, 0, 0>, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> > >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >, 1, 0, 0>, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> > >, 1, 0, 0>, sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >, 1, 0, 0>, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> > >]
@@ -557,7 +647,25 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 106
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 90
+	check_semantics return value (x)
+
+	[sequoia::testing::perfectly_normal_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >, 1, 0, 1>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> > >]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 91
+	check_semantics return value (y)
+
+	[sequoia::testing::perfectly_normal_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >, 1, 0, 1>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> > >]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 112
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 1> >, 1, 0, 1>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 1> > >]
@@ -566,7 +674,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 117
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 123
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 1> >, 1, 0, 1>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 1> > >]
@@ -575,7 +683,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 128
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 134
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 1> >, 1, 0, 1>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 1> > >]
@@ -584,7 +692,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 139
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 145
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 1> >, 1, 0, 1>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 1> > >]
@@ -593,7 +701,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 150
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 156
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 1> >, 1, 0, 1>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 1> > >]
@@ -602,7 +710,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 161
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 167
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 1> >, 1, 0, 1>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 1> > >]
@@ -611,7 +719,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 172
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 178
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 1> >, 1, 0, 1>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 1> > >]
@@ -620,7 +728,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 199
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 205
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >, 1, 0, 1>, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> > >]
@@ -629,7 +737,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 230
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 236
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<std::tuple<sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >, sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> > >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::tuple<sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >, sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> > >, 1, 0, 1>, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> > >]
@@ -638,7 +746,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 256
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 262
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >, 1, 0, 1>, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> > >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >, 1, 0, 1>, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> > >, 1, 0, 1>, sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >, 1, 0, 1>, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> > >]
@@ -665,7 +773,25 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 106
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 90
+	check_semantics return value (x)
+
+	[sequoia::testing::perfectly_normal_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >, 1, 1, 0>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0> > >]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 91
+	check_semantics return value (y)
+
+	[sequoia::testing::perfectly_normal_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >, 1, 1, 0>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0> > >]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 112
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 0> >, 1, 1, 0>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 0> > >]
@@ -674,7 +800,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 117
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 123
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 0> >, 1, 1, 0>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 0> > >]
@@ -683,7 +809,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 128
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 134
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 0> >, 1, 1, 0>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 0> > >]
@@ -692,7 +818,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 139
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 145
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 0> >, 1, 1, 0>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 0> > >]
@@ -701,7 +827,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 150
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 156
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 0> >, 1, 1, 0>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 0> > >]
@@ -710,7 +836,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 161
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 167
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 0> >, 1, 1, 0>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 0> > >]
@@ -719,7 +845,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 172
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 178
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 0> >, 1, 1, 0>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 0> > >]
@@ -728,7 +854,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 199
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 205
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >, 1, 1, 0>, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> > >]
@@ -737,7 +863,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 230
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 236
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<std::tuple<sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >, sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> > >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::tuple<sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >, sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> > >, 1, 1, 0>, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> > >]
@@ -746,7 +872,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 256
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 262
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >, 1, 1, 0>, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> > >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >, 1, 1, 0>, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> > >, 1, 1, 0>, sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >, 1, 1, 0>, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> > >]
@@ -773,7 +899,25 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 106
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 90
+	check_semantics return value (x)
+
+	[sequoia::testing::perfectly_normal_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >, 1, 1, 1>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1> > >]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 91
+	check_semantics return value (y)
+
+	[sequoia::testing::perfectly_normal_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >, 1, 1, 1>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1> > >]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 112
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 1> >, 1, 1, 1>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 1> > >]
@@ -782,7 +926,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 117
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 123
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 1> >, 1, 1, 1>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 1> > >]
@@ -791,7 +935,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 128
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 134
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 1> >, 1, 1, 1>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 1> > >]
@@ -800,7 +944,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 139
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 145
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 1> >, 1, 1, 1>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 1> > >]
@@ -809,7 +953,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 150
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 156
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 1> >, 1, 1, 1>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 1> > >]
@@ -818,7 +962,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 161
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 167
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 1> >, 1, 1, 1>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 1> > >]
@@ -827,7 +971,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 172
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 178
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 1> >, 1, 1, 1>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 1> > >]
@@ -836,7 +980,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 199
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 205
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >, 1, 1, 1>, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> > >]
@@ -845,7 +989,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 230
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 236
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<std::tuple<sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >, sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> > >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::tuple<sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >, sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> > >, 1, 1, 1>, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> > >]
@@ -854,7 +998,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 256
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 262
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >, 1, 1, 1>, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> > >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_normal_beast<sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >, 1, 1, 1>, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> > >, 1, 1, 1>, sequoia::testing::shared_counting_allocator<sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >, 1, 1, 1>, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> > >]

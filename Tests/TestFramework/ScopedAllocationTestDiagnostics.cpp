@@ -86,6 +86,12 @@ namespace sequoia::testing
                       { {0_c, {2_c,0_mu}, {2_awp,2_anp}, {0_containers, 2_containers, 3_postmutation}} }
                     }
     )};
+
+    check_equality(LINE("check_semantics return value (x)"), s, beast{});
+    check_equality(LINE("check_semantics return value (y)"),
+                   t,
+                   beast{{"something too long for small string optimization"},
+                                         {"something else too long for small string optimization"}});
   }
 
   template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>

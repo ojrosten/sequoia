@@ -61,6 +61,22 @@ namespace sequoia::testing
                         {{0_pm, {1_mu, 1_pm}, {1_clm}, {0_containers, 1_containers, 2_postmutation}}}
                     }
     );
+
+    auto[x,y]{check_semantics(LINE(""),
+                              [](){ return beast{}; },
+                              [](){ return beast{{"something too long for small string optimization"}}; },
+                              mutator,
+                              allocation_info{
+                                  allocGetter,
+                                  {0_pm, {1_mu, 1_pm}, {1_clm}},
+                                  {{0_pm, {1_mu, 1_pm}, {1_clm}, {0_containers, 1_containers, 2_postmutation}}
+                              }
+                    }
+              )
+    };
+
+    check_equality(LINE("check_semantics return value (x)"), x, beast{});
+    check_equality(LINE("check_semantics return value (y)"), y, beast{{"something too long for small string optimization"}});
   }
 
 
