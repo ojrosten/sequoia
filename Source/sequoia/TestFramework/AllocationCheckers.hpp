@@ -48,20 +48,23 @@
 
 namespace sequoia::testing
 {
-  enum class individual_allocation_event {
+  enum class construction_allocation_event {
     initialization,
     copy,
     move,
-    mutation,
     para_copy,
     para_move
   };
 
   enum class assignment_allocation_event {
-    assign_prop,
     assign,
+    assign_no_prop,
     move_assign,
-    copy_like_move_assign
+    move_assign_no_prop
+  };
+
+  enum class individual_allocation_event {                            
+    mutation
   };
 
   template<auto To, auto From>
@@ -71,16 +74,16 @@ namespace sequoia::testing
     return {p.unshifted(), p.value() - p.unshifted()};
   }
 
-  using initialization_prediction        = alloc_prediction<individual_allocation_event::initialization>;
-  using copy_prediction                  = alloc_prediction<individual_allocation_event::copy>;
-  using move_prediction                  = alloc_prediction<individual_allocation_event::move>;
-  using mutation_prediction              = alloc_prediction<individual_allocation_event::mutation>;
-  using para_copy_prediction             = alloc_prediction<individual_allocation_event::para_copy>;
-  using para_move_prediction             = alloc_prediction<individual_allocation_event::para_move>;
-  using assign_prop_prediction           = alloc_prediction<assignment_allocation_event::assign_prop>;
-  using assign_prediction                = alloc_prediction<assignment_allocation_event::assign>;
-  using move_assign_prediction           = alloc_prediction<assignment_allocation_event::move_assign>;
-  using copy_like_move_assign_prediction = alloc_prediction<assignment_allocation_event::copy_like_move_assign>;
+  using initialization_prediction      = alloc_prediction<construction_allocation_event::initialization>;
+  using copy_prediction                = alloc_prediction<construction_allocation_event::copy>;
+  using move_prediction                = alloc_prediction<construction_allocation_event::move>;
+  using para_copy_prediction           = alloc_prediction<construction_allocation_event::para_copy>;
+  using para_move_prediction           = alloc_prediction<construction_allocation_event::para_move>;
+  using assign_prediction              = alloc_prediction<assignment_allocation_event::assign>;
+  using assign_no_prop_prediction      = alloc_prediction<assignment_allocation_event::assign_no_prop>;
+  using move_assign_prediction         = alloc_prediction<assignment_allocation_event::move_assign>;
+  using move_assign_no_prop_prediction = alloc_prediction<assignment_allocation_event::move_assign_no_prop>;  
+  using mutation_prediction            = alloc_prediction<individual_allocation_event::mutation>;
 
   [[nodiscard]]
   SPECULATIVE_CONSTEVAL
@@ -119,30 +122,30 @@ namespace sequoia::testing
 
   [[nodiscard]]
   SPECULATIVE_CONSTEVAL
-  assign_prediction operator "" _anp(unsigned long long int n) noexcept
+  assign_no_prop_prediction operator "" _anp(unsigned long long int n) noexcept
+  {
+    return assign_no_prop_prediction{ static_cast<int>(n) };
+  }
+
+  [[nodiscard]]
+  SPECULATIVE_CONSTEVAL
+  assign_prediction operator "" _awp(unsigned long long int n) noexcept
   {
     return assign_prediction{ static_cast<int>(n) };
   }
 
   [[nodiscard]]
   SPECULATIVE_CONSTEVAL
-  assign_prop_prediction operator "" _awp(unsigned long long int n) noexcept
-  {
-    return assign_prop_prediction{ static_cast<int>(n) };
-  }
-
-  [[nodiscard]]
-  SPECULATIVE_CONSTEVAL
-    move_assign_prediction operator "" _ma(unsigned long long int n) noexcept
+  move_assign_prediction operator "" _ma(unsigned long long int n) noexcept
   {
     return move_assign_prediction{static_cast<int>(n)};
   }
 
   [[nodiscard]]
   SPECULATIVE_CONSTEVAL
-  copy_like_move_assign_prediction operator "" _clm(unsigned long long int n) noexcept
+  move_assign_no_prop_prediction operator "" _manp(unsigned long long int n) noexcept
   {
-    return copy_like_move_assign_prediction{ static_cast<int>(n) };
+    return move_assign_no_prop_prediction{ static_cast<int>(n) };
   }
 
   enum class scoped_prediction_corrections { num_containers, post_mutation };
@@ -282,7 +285,7 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    constexpr assign_prop_prediction shift(assign_prop_prediction p) const noexcept
+    constexpr assign_prediction shift(assign_prediction p) const noexcept
     {
       return increment_msvc_debug_count(p, m_Counts.num_y.value());
     }
@@ -294,13 +297,13 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    constexpr assign_prediction shift(assign_prediction p) const noexcept
+    constexpr assign_no_prop_prediction shift(assign_no_prop_prediction p) const noexcept
     {
       return increment_msvc_debug_count(p, is_top_level() ? 0 : m_Counts.num_y.value());
     }
 
     [[nodiscard]]
-    constexpr copy_like_move_assign_prediction shift(copy_like_move_assign_prediction p) const noexcept
+    constexpr move_assign_no_prop_prediction shift(move_assign_no_prop_prediction p) const noexcept
     {
       const bool doIncrement{!is_top_level() && (m_Counts.num_y.value() > m_Counts.num_x.value())};
       return increment_msvc_debug_count(p, doIncrement ? m_Counts.num_y.value() : 0);
@@ -333,12 +336,6 @@ namespace sequoia::testing
     [[nodiscard]]
     constexpr assign_prediction shift(assign_prediction p) const noexcept
     {
-      return increment_msvc_debug_count(p, this->counts().num_y.value());
-    }
-
-    [[nodiscard]]
-    constexpr assign_prop_prediction shift(assign_prop_prediction p) const noexcept
-    {
       const auto val{
         []() {
           constexpr bool copyProp{std::allocator_traits<Allocator>::propagate_on_container_copy_assignment::value};
@@ -351,6 +348,12 @@ namespace sequoia::testing
       };
 
       return increment_msvc_debug_count(p, this->counts().num_y.value()*val);
+    }
+
+    [[nodiscard]]
+    constexpr assign_no_prop_prediction shift(assign_no_prop_prediction p) const noexcept
+    {
+      return increment_msvc_debug_count(p, this->counts().num_y.value());
     }
   };
 

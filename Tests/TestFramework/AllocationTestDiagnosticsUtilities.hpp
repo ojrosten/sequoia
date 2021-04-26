@@ -529,7 +529,7 @@ namespace sequoia::testing
       return count;
     }
 
-    static int shift(int count, const alloc_prediction<assignment_allocation_event::assign>&)
+    static int shift(int count, const alloc_prediction<assignment_allocation_event::assign_no_prop>&)
     {
       if constexpr(with_msvc_v && (iterator_debug_level() > 0))
       {
@@ -542,7 +542,7 @@ namespace sequoia::testing
       return count;
     }
 
-    static int shift(int count, const alloc_prediction<assignment_allocation_event::assign_prop>&)
+    static int shift(int count, const alloc_prediction<assignment_allocation_event::assign>&)
     {
       if constexpr(with_msvc_v && (iterator_debug_level() > 0))
       {

@@ -149,7 +149,7 @@ namespace sequoia::testing
       allocation_info{
         getter,
         {1_c, {1_c,1_mu}, {1_awp,0_anp}},
-        { {1_c, {1_c,0_mu}, {1_awp,1_anp,0_clm,0_ma}, {1_containers, 1_containers, 2_postmutation}} }
+        { {1_c, {1_c,0_mu}, {1_awp,1_anp,0_manp,0_ma}, {1_containers, 1_containers, 2_postmutation}} }
       }
     );
 
@@ -171,7 +171,7 @@ namespace sequoia::testing
       allocation_info{
         getter,
         {1_c, {1_c,1_mu}, {1_awp,0_anp}},
-        { {2_c, {1_c,0_mu}, {1_awp,1_anp,0_clm,0_ma}, {2_containers, 1_containers, 2_postmutation}} }
+        { {2_c, {1_c,0_mu}, {1_awp,1_anp,0_manp,0_ma}, {2_containers, 1_containers, 2_postmutation}} }
       }
     );
 
@@ -182,7 +182,7 @@ namespace sequoia::testing
       allocation_info{
         getter,
         {1_c, {1_c,1_mu}, {1_awp,0_anp}},
-        { {2_c, {2_c,0_mu}, {2_awp,2_anp,0_clm,0_ma}, {2_containers, 2_containers, 3_postmutation}} }
+        { {2_c, {2_c,0_mu}, {2_awp,2_anp,0_manp,0_ma}, {2_containers, 2_containers, 3_postmutation}} }
       }
     );
   }
@@ -209,7 +209,7 @@ namespace sequoia::testing
       allocation_info{
         getter,
         {0_c, {1_c,1_mu}, {1_awp,1_anp}},
-        { {0_c, {2_c,0_mu,2_pc,1_pm}, {2_awp,2_anp,1_clm,0_ma}, {0_containers, 1_containers, 2_postmutation}} }
+        { {0_c, {2_c,0_mu,2_pc,1_pm}, {2_awp,2_anp,1_manp,0_ma}, {0_containers, 1_containers, 2_postmutation}} }
       }
     );
   }

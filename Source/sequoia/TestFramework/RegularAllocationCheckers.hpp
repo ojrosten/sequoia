@@ -22,8 +22,8 @@ namespace sequoia::testing
     constexpr individual_allocation_predictions(copy_prediction copyPrediction, mutation_prediction mutationPrediction)
       : copy{copyPrediction}
       , mutation{mutationPrediction}
-      , para_copy{convert<individual_allocation_event::para_copy>(copyPrediction)}
-      , para_move{convert<individual_allocation_event::para_move>(copyPrediction)}
+      , para_copy{convert<construction_allocation_event::para_copy>(copyPrediction)}
+      , para_move{convert<construction_allocation_event::para_move>(copyPrediction)}
     {}
 
     constexpr individual_allocation_predictions(copy_prediction copyPrediction,
@@ -32,7 +32,7 @@ namespace sequoia::testing
       : copy{copyPrediction}
       , mutation{mutationPrediction}
       , para_copy{paraCopyPrediction}
-      , para_move{convert<individual_allocation_event::para_move>(copyPrediction)}
+      , para_move{convert<construction_allocation_event::para_move>(copyPrediction)}
     {}
 
     constexpr individual_allocation_predictions(copy_prediction copyPrediction,
@@ -56,25 +56,25 @@ namespace sequoia::testing
 
   struct assignment_allocation_predictions
   {
-    constexpr assignment_allocation_predictions(assign_prop_prediction withPropagation, assign_prediction withoutPropagation)
+    constexpr assignment_allocation_predictions(assign_prediction withPropagation, assign_no_prop_prediction withoutPropagation)
       : with_propagation{withPropagation}
       , without_propagation{withoutPropagation}
-      , copy_like_move{convert<assignment_allocation_event::copy_like_move_assign>(without_propagation)}
+      , move_without_propagation{convert<assignment_allocation_event::move_assign_no_prop>(without_propagation)}
     {}
 
-    constexpr assignment_allocation_predictions(assign_prop_prediction withPropagation,
-                                                assign_prediction withoutPropagation,
-                                                copy_like_move_assign_prediction copyLikeMove,
+    constexpr assignment_allocation_predictions(assign_prediction withPropagation,
+                                                assign_no_prop_prediction withoutPropagation,
+                                                move_assign_no_prop_prediction moveWithoutPropagation,
                                                 move_assign_prediction pureMove)
       : with_propagation{withPropagation}
       , without_propagation{withoutPropagation}
-      , copy_like_move{copyLikeMove}
+      , move_without_propagation{moveWithoutPropagation}
       , move{pureMove}
     {}
 
-    assign_prop_prediction with_propagation{};
-    assign_prediction without_propagation{};
-    copy_like_move_assign_prediction copy_like_move{};
+    assign_prediction with_propagation{};
+    assign_no_prop_prediction without_propagation{};
+    move_assign_no_prop_prediction move_without_propagation{};
     move_assign_prediction move{};
   };
 
@@ -96,7 +96,7 @@ namespace sequoia::testing
   {
     return {shifter.shift(predictions.with_propagation),
             shifter.shift(predictions.without_propagation),
-            shifter.shift(predictions.copy_like_move),
+            shifter.shift(predictions.move_without_propagation),
             shifter.shift(predictions.move)};
   }
 
@@ -130,9 +130,9 @@ namespace sequoia::testing
     constexpr para_move_prediction para_move_y_allocs() const noexcept { return m_y.para_move; }
 
     [[nodiscard]]
-    constexpr copy_like_move_assign_prediction copy_like_move_assign_allocs() const noexcept
+    constexpr move_assign_no_prop_prediction move_assign_no_prop_allocs() const noexcept
     {
-      return m_Assign_y_to_x.copy_like_move;
+      return m_Assign_y_to_x.move_without_propagation;
     }
 
     [[nodiscard]]

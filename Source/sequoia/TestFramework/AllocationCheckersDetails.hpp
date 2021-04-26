@@ -185,7 +185,7 @@ namespace sequoia::testing::impl
       }
       else
       {
-        const auto xPrediction{predictions.copy_like_move_assign_allocs()};
+        const auto xPrediction{predictions.move_assign_no_prop_allocs()};
         check_allocation("Unexpected allocation detected for move assignment (x)", logger, x, info(), first_count(), xPrediction);
       }
     }
@@ -555,9 +555,10 @@ namespace sequoia::testing::impl
                                   const T& container,
                                   std::tuple<allocation_checker<T, Getters>...> checkers)
   {
-    auto fn{[&logger, &container](auto&&... checkers){
-              using ctag = container_tag_constant<tag>;
-              check_para_move_allocation(logger, ctag{}, container, std::forward<decltype(checkers)>(checkers)...);
+    auto fn{
+      [&logger, &container](auto&&... checkers){
+        using ctag = container_tag_constant<tag>;
+        check_para_move_allocation(logger, ctag{}, container, std::forward<decltype(checkers)>(checkers)...);
       }
     };
 
