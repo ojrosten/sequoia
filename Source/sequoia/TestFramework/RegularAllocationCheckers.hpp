@@ -80,6 +80,7 @@ namespace sequoia::testing
 
 
   template<class T>
+  [[nodiscard]]
   constexpr individual_allocation_predictions shift(const individual_allocation_predictions& predictions,
                                                     const alloc_prediction_shifter<T>& shifter)
   {
@@ -91,6 +92,7 @@ namespace sequoia::testing
   }
 
   template<class T>
+  [[nodiscard]]
   constexpr assignment_allocation_predictions shift(const assignment_allocation_predictions& predictions,
                                                     const alloc_prediction_shifter<T>& shifter)
   {
@@ -157,6 +159,7 @@ namespace sequoia::testing
     constexpr const assignment_allocation_predictions& assign_y_to_x() const noexcept { return m_Assign_y_to_x; }
 
     template<class T>
+    [[nodiscard]]
     constexpr basic_allocation_predictions shift(const alloc_prediction_shifter<T>& shifter) const
     {
       auto shifted{*this};
@@ -184,6 +187,7 @@ namespace sequoia::testing
   using inner_allocation_predictions = basic_allocation_predictions<top_level::no>;
 
   template<class T>
+  [[nodiscard]]
   constexpr allocation_predictions shift(const allocation_predictions& predictions)
   {
     const alloc_prediction_shifter<T> shifter{{1_containers, 1_containers, 0_postmutation}, top_level::yes};
@@ -191,6 +195,7 @@ namespace sequoia::testing
   }
 
   template<class T>
+  [[nodiscard]]
   constexpr inner_allocation_predictions shift(const inner_allocation_predictions& predictions)
   {
     const alloc_prediction_shifter<T> shifter{predictions.containers(), top_level::no};
