@@ -37,23 +37,48 @@ namespace sequoia::testing::impl
     return do_check_swap(logger, actions, std::move(x), std::move(y), xClone, yClone, dual_allocation_checker{checkers.info(), x, y}...);
   }
 
-  template<test_mode Mode, moveonly T, alloc_getter<T>... Getters>
-  std::optional<T> check_para_constructor_allocations(test_logger<Mode>& logger, T&& y, const T& yClone, const allocation_info<T, Getters>&... info)
+  template<test_mode Mode, container_tag tag, moveonly T, alloc_getter<T>... Getters>
+  std::optional<T>
+  check_para_constructor_allocations(test_logger<Mode>& logger,
+                                     container_tag_constant<tag>,
+                                     T&& z,
+                                     const T& zClone,
+                                     const allocation_info<T, Getters>&... info)
   {
-    if(!check("Precondition - for checking move-only semantics, y and yClone are assumed to be equal", logger, y == yClone)) return{};
+    const auto tagStr{to_string(container_tag_constant<tag>::value)};
 
-    T u{std::move(y), info.make_allocator()...};
-    check_para_move_y_allocation(logger, u, std::tuple_cat(make_allocation_checkers(info)...));
-    if(check_equality("Inonsistent para-move constructor", logger, u, yClone))
+    if(!check(std::string{"Precondition - for checking move-only semantics, "}.append(tagStr).append("and ").append(tagStr).append("Clone are assumed to be equal"),
+              logger,
+              z == zClone))
+      return{};
+
+    T v{std::move(z), info.make_allocator()...};
+
+    using ctag = container_tag_constant<tag>;
+    check_para_move_allocation(logger, ctag{}, v, std::tuple_cat(make_allocation_checkers(info)...));
+    if(check_equality("Inonsistent para-move constructor", logger, v, zClone))
     {
-      std::optional<T> v{std::move(u)};
-      if(check_equality("Inconsistent move construction", logger, *v, yClone))
+      std::optional<T> w{std::move(v)};
+      if(check_equality("Inconsistent move construction", logger, *w, zClone))
       {
-        return std::move(v);
+        return std::move(w);
       }
     }
 
     return std::nullopt;
+  }
+
+  template<test_mode Mode, moveonly T, alloc_getter<T>... Getters>
+  std::pair<std::optional<T>, std::optional<T>>
+  check_para_constructor_allocations(test_logger<Mode>& logger,
+                                     T&& x,
+                                     T&& y,
+                                     const T& xClone,
+                                     const T& yClone,
+                                     const allocation_info<T, Getters>&... info)
+  {
+    return {check_para_constructor_allocations(logger, container_tag_constant<container_tag::x>{}, std::forward<T>(x), xClone, info...),
+            check_para_constructor_allocations(logger, container_tag_constant<container_tag::y>{}, std::forward<T>(y), yClone, info...)};
   }
 
   /// Unpacks the tuple and feeds to the overload of check_semantics defined in MoveOnlyCheckersDetails.hpp

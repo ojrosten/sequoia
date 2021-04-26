@@ -90,7 +90,10 @@ namespace sequoia::testing
     constexpr mutation_prediction mutation_allocs() const noexcept { return m_y.mutation; }
 
     [[nodiscard]]
-    constexpr para_move_prediction para_move_allocs() const noexcept { return m_y.para_move; }
+    constexpr para_move_prediction para_move_x_allocs() const noexcept { return m_x; }
+
+    [[nodiscard]]
+    constexpr para_move_prediction para_move_y_allocs() const noexcept { return m_y.para_move; }
 
     [[nodiscard]]
     constexpr move_prediction move_allocs() const noexcept { return m_y.move; }
@@ -100,7 +103,7 @@ namespace sequoia::testing
     {
       return m_Assign_y_to_x.copy_like_move;
     }
-    
+
     [[nodiscard]]
     constexpr move_assign_prediction move_assign_allocs() const noexcept
     {
@@ -169,9 +172,9 @@ namespace sequoia::testing
   {
     sentinel<Mode> sentry{logger, add_type_info<T>(description).append("\n")};
 
-    if(auto opt{impl::check_para_constructor_allocations(logger, std::forward<T>(y), yClone, info...)})
+    if(auto[optx,opty]{impl::check_para_constructor_allocations(logger, std::forward<T>(x), std::forward<T>(y), xClone, yClone, info...)}; (optx != std::nullopt) && (opty != std::nullopt))
     {
-      check_semantics(logger, impl::move_only_allocation_actions<T>{}, std::forward<T>(x), std::move(*opt), xClone, yClone, std::move(m), std::tuple_cat(impl::make_dual_allocation_checkers(info, x, y)...));
+      check_semantics(logger, impl::move_only_allocation_actions<T>{}, std::move(*optx), std::move(*opty), xClone, yClone, std::move(m), std::tuple_cat(impl::make_dual_allocation_checkers(info, x, y)...));
     }
   }
 

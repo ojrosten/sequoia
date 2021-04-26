@@ -127,7 +127,7 @@ namespace sequoia::testing
     {}
 
     [[nodiscard]]
-    constexpr para_move_prediction para_move_allocs() const noexcept { return m_y.para_move; }
+    constexpr para_move_prediction para_move_y_allocs() const noexcept { return m_y.para_move; }
 
     [[nodiscard]]
     constexpr copy_like_move_assign_prediction copy_like_move_assign_allocs() const noexcept
@@ -152,7 +152,7 @@ namespace sequoia::testing
 
     [[nodiscard]]
     constexpr const individual_allocation_predictions& y() const noexcept { return m_y; }
-    
+
     [[nodiscard]]
     constexpr const assignment_allocation_predictions& assign_y_to_x() const noexcept { return m_Assign_y_to_x; }
 

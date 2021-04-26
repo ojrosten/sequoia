@@ -11,6 +11,23 @@
 
 #include "sequoia/TestFramework/AllocationCheckersDetails.hpp"
 
+namespace sequoia::testing
+{
+  [[nodiscard]]
+  std::string to_string(container_tag tag)
+  {
+    switch(tag)
+    {
+    case container_tag::x:
+      return "x";
+    case container_tag::y:
+      return "y";
+    }
+
+    throw std::logic_error{"Unrecognized option for container_tag"};
+  }
+}
+
 namespace sequoia::testing::impl
 {
   std::string allocation_advice::operator()(int count, int) const

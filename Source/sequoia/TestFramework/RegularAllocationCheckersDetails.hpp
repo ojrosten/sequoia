@@ -84,7 +84,8 @@ namespace sequoia::testing::impl
 
       if(check_equality("Inconsistent para-move construction", logger, v, y))
       {
-        check_para_move_y_allocation(logger, v, std::tuple_cat(make_allocation_checkers(info)...));
+        using ctag = container_tag_constant<container_tag::y>;
+        check_para_move_allocation(logger, ctag{}, v, std::tuple_cat(make_allocation_checkers(info)...));
         check_mutation_after_move("para-move", logger, v, y, std::move(yMutator), std::tuple_cat(make_allocation_checkers(info, v)...));
       }
     }

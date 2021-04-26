@@ -127,6 +127,12 @@
 	  [sequoia::testing::move_only_broken_move<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 	  operator== returned false
 	  Obtained : 
+	  Predicted: 1 
+
+	  Inconsistent move construction
+	  [sequoia::testing::move_only_broken_move<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
+	  operator== returned false
+	  Obtained : 
 	  Predicted: 2 
 
 	=======================================
@@ -191,7 +197,7 @@
 	--Move-only Semantics--
 	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 
-	  Precondition - for checking move-only semantics, x and xClone are assumed to be equal
+	  Precondition - for checking move-only semantics, xand xClone are assumed to be equal
 	  [bool]
 	  check failed
 
@@ -203,7 +209,7 @@
 	--Move-only Semantics--
 	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 
-	  Precondition - for checking move-only semantics, y and yClone are assumed to be equal
+	  Precondition - for checking move-only semantics, yand yClone are assumed to be equal
 	  [bool]
 	  check failed
 
@@ -350,6 +356,12 @@
 	  [sequoia::testing::move_only_broken_move<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 	  operator== returned false
 	  Obtained : 
+	  Predicted: 1 
+
+	  Inconsistent move construction
+	  [sequoia::testing::move_only_broken_move<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
+	  operator== returned false
+	  Obtained : 
 	  Predicted: 2 
 
 	=======================================
@@ -434,7 +446,7 @@
 	--Move-only Semantics--
 	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 
-	  Precondition - for checking move-only semantics, x and xClone are assumed to be equal
+	  Precondition - for checking move-only semantics, xand xClone are assumed to be equal
 	  [bool]
 	  check failed
 
@@ -446,7 +458,7 @@
 	--Move-only Semantics--
 	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 
-	  Precondition - for checking move-only semantics, y and yClone are assumed to be equal
+	  Precondition - for checking move-only semantics, yand yClone are assumed to be equal
 	  [bool]
 	  check failed
 
@@ -573,6 +585,12 @@
 	  [sequoia::testing::move_only_broken_move<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 	  operator== returned false
 	  Obtained : 
+	  Predicted: 1 
+
+	  Inconsistent move construction
+	  [sequoia::testing::move_only_broken_move<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
+	  operator== returned false
+	  Obtained : 
 	  Predicted: 2 
 
 	=======================================
@@ -637,7 +655,7 @@
 	--Move-only Semantics--
 	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 
-	  Precondition - for checking move-only semantics, x and xClone are assumed to be equal
+	  Precondition - for checking move-only semantics, xand xClone are assumed to be equal
 	  [bool]
 	  check failed
 
@@ -649,7 +667,7 @@
 	--Move-only Semantics--
 	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 
-	  Precondition - for checking move-only semantics, y and yClone are assumed to be equal
+	  Precondition - for checking move-only semantics, yand yClone are assumed to be equal
 	  [bool]
 	  check failed
 
@@ -776,6 +794,12 @@
 	  [sequoia::testing::move_only_broken_move<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 	  operator== returned false
 	  Obtained : 
+	  Predicted: 1 
+
+	  Inconsistent move construction
+	  [sequoia::testing::move_only_broken_move<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
+	  operator== returned false
+	  Obtained : 
 	  Predicted: 2 
 
 	=======================================
@@ -860,7 +884,7 @@
 	--Move-only Semantics--
 	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 
-	  Precondition - for checking move-only semantics, x and xClone are assumed to be equal
+	  Precondition - for checking move-only semantics, xand xClone are assumed to be equal
 	  [bool]
 	  check failed
 
@@ -872,7 +896,7 @@
 	--Move-only Semantics--
 	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 
-	  Precondition - for checking move-only semantics, y and yClone are assumed to be equal
+	  Precondition - for checking move-only semantics, yand yClone are assumed to be equal
 	  [bool]
 	  check failed
 

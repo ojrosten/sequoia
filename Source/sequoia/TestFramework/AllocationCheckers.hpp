@@ -230,7 +230,6 @@ namespace sequoia::testing
     }
   };
 
-  enum class container_tag { x, y };
   enum class top_level { yes, no };
 
   /*! \brief class template for shifting allocation predictions, especially for MSVC debug builds.
@@ -272,7 +271,7 @@ namespace sequoia::testing
     [[nodiscard]]
     constexpr para_move_prediction shift(para_move_prediction p, container_tag tag) const noexcept
     {
-      const auto& c{tag == container_tag::x ? m_Counts.num_x : m_Counts.num_y}; 
+      const auto& c{tag == container_tag::x ? m_Counts.num_x : m_Counts.num_y};
       return increment_msvc_debug_count(p, c.value());
     }
 

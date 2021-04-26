@@ -19,6 +19,15 @@
 
 namespace sequoia::testing
 {
+  enum class container_tag { x, y };
+
+  template<container_tag tag>
+  struct container_tag_constant : std::integral_constant<container_tag, tag>
+  {};
+
+  [[nodiscard]]
+  std::string to_string(container_tag tag);
+
   template<movable_comparable T, alloc_getter<T> Getter>
   class allocation_info;
 
@@ -192,7 +201,7 @@ namespace sequoia::testing::impl
         swap(lhCount, rhCount);
       }
 
-      const auto lhPrediction{ info().get_predictions().mutation_allocs() };
+      const auto lhPrediction{info().get_predictions().mutation_allocs()};
       check_allocation("Unexpected allocation detected following mutation after swap (y)", logger, lhs, info(), lhCount, lhPrediction);
 
       const alloc_prediction<null_allocation_event::spectator> rhPrediction{};
@@ -511,12 +520,28 @@ namespace sequoia::testing::impl
     std::apply(fn, checkers);
   }
 
-  template<test_mode Mode, movable_comparable T, alloc_getter<T> Getter, alloc_getter<T>... Getters>
-  void check_para_move_y_allocation(test_logger<Mode>& logger, const T& container, const allocation_checker<T, Getter>& checker, const allocation_checker<T, Getters>&... moreCheckers)
+  template<test_mode Mode, container_tag tag, movable_comparable T, alloc_getter<T> Getter, alloc_getter<T>... Getters>
+  void check_para_move_allocation(test_logger<Mode>& logger,
+                                  container_tag_constant<tag>,
+                                  const T& container,
+                                  const allocation_checker<T, Getter>& checker,
+                                  const allocation_checker<T, Getters>&... moreCheckers)
   {
     auto checkFn{
       [&logger, &container](const auto& checker){
-        const auto prediction{checker.info().get_predictions().para_move_allocs()};
+        const auto prediction{
+          [&checker](){
+            if constexpr(container_tag_constant<tag>::value == container_tag::x)
+            {
+              return checker.info().get_predictions().para_move_x_allocs();
+            }
+            else
+            {
+              return checker.info().get_predictions().para_move_y_allocs();
+            }
+          }()
+        };
+
         checker.check("Unexpected allocation detected for para-move construction (y)", logger, container, prediction);
       }
     };
@@ -524,11 +549,15 @@ namespace sequoia::testing::impl
     check_allocation(logger, checkFn, checker, moreCheckers...);
   }
 
-  template<test_mode Mode, movable_comparable T, alloc_getter<T>... Getters>
-  void check_para_move_y_allocation(test_logger<Mode>& logger, const T& container, std::tuple<allocation_checker<T, Getters>...> checkers)
+  template<test_mode Mode, container_tag tag, movable_comparable T, alloc_getter<T>... Getters>
+  void check_para_move_allocation(test_logger<Mode>& logger,
+                                  container_tag_constant<tag>,
+                                  const T& container,
+                                  std::tuple<allocation_checker<T, Getters>...> checkers)
   {
     auto fn{[&logger, &container](auto&&... checkers){
-        check_para_move_y_allocation(logger, container, std::forward<decltype(checkers)>(checkers)...);
+              using ctag = container_tag_constant<tag>;
+              check_para_move_allocation(logger, ctag{}, container, std::forward<decltype(checkers)>(checkers)...);
       }
     };
 
