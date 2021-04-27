@@ -21,13 +21,13 @@ namespace sequoia::testing
     constexpr individual_move_only_allocation_predictions(para_move_prediction paraMovePrediction,
                                                           mutation_prediction mutationPrediction,
                                                           move_prediction m={})
-      : mutation{mutationPrediction}
-      , para_move{paraMovePrediction}
+      : para_move{paraMovePrediction}
+      , mutation{mutationPrediction}
       , move{m}
     {}
 
-    mutation_prediction mutation{};
     para_move_prediction para_move{};
+    mutation_prediction mutation{};
     move_prediction move{};
   };
 
