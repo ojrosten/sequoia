@@ -84,6 +84,7 @@ namespace sequoia::testing
     using beast = orderable_move_only_beast<int>;
 
     check_semantics(LINE(""), beast{1}, beast{2}, beast{1}, beast{2}, std::weak_ordering::less);
+    check_semantics(LINE("Function object syntax"), [](){ return beast{1}; }, [](){ return beast{2}; }, std::weak_ordering::less);
     check_semantics(LINE(""), beast{2}, beast{1}, beast{2}, beast{1}, std::weak_ordering::greater);
   }
 }

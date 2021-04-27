@@ -17,6 +17,8 @@
 #include "sequoia/TestFramework/FreeTestCore.hpp"
 #include "sequoia/TestFramework/MoveOnlyCheckers.hpp"
 
+#include "sequoia/Core/Meta/Utilities.hpp"
+
 namespace sequoia::testing
 {
   /*! \brief class template for plugging into the \ref checker_primary "checker"
@@ -38,10 +40,20 @@ namespace sequoia::testing
 
     /// Preconditions: x!=y; x==xClone, y==yClone
     template<moveonly T>
-      requires (!orderable<T>)
     void check_semantics(std::string_view description, T&& x, T&& y, const T& xClone, const T& yClone)
     {
       testing::check_semantics(append_lines(description, emphasise("Move-only Semantics")), m_Logger, std::move(x), std::move(y), xClone, yClone);
+    }
+
+    template
+    <
+      invocable<> xMaker,
+      moveonly T=std::invoke_result_t<xMaker>,
+      invocable_r<T> yMaker
+    >
+    void check_semantics(std::string_view description, xMaker xFn, yMaker yFn)
+    {
+      check_semantics(description, xFn(), yFn(), xFn(), yFn());
     }
 
      /// Preconditions: x!=y, with values consistent with order; x==xClone, y==yClone
@@ -50,6 +62,18 @@ namespace sequoia::testing
     void check_semantics(std::string_view description, T&& x, T&& y, const T& xClone, const T& yClone, std::weak_ordering order)
     {
       testing::check_semantics(append_lines(description, emphasise("Move-only Semantics")), m_Logger, std::move(x), std::move(y), xClone, yClone, order);
+    }
+
+    template
+    <
+      invocable<> xMaker,
+      moveonly T=std::invoke_result_t<xMaker>,
+      invocable_r<T> yMaker
+    >
+      requires orderable<T>
+    void check_semantics(std::string_view description, xMaker xFn, yMaker yFn, std::weak_ordering order)
+    {
+      check_semantics(description, xFn(), yFn(), xFn(), yFn(), order);
     }
   protected:
     move_only_extender(move_only_extender&&)            noexcept = default;

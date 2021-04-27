@@ -186,7 +186,7 @@ namespace sequoia::testing
   <
     test_mode Mode,
     invocable<> xMaker,
-    moveonly T=typename function_signature<xMaker>::ret,
+    moveonly T=std::invoke_result_t<xMaker>,
     invocable_r<T> yMaker,
     invocable<T&> Mutator,
     alloc_getter<T>... Getters

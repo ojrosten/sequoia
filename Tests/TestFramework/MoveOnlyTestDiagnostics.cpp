@@ -47,6 +47,8 @@ namespace sequoia::testing
 
   void move_only_false_negative_diagnostics::test_regular_semantics()
   {
-    check_semantics(LINE(""), move_only_beast{1}, move_only_beast{2}, move_only_beast{1}, move_only_beast{2});
+    using beast = move_only_beast<int>;
+    check_semantics(LINE(""), beast{1}, beast{2}, beast{1}, beast{2});
+    check_semantics(LINE("Function object syntax"), [](){ return beast{1}; }, [](){ return beast{2}; });
   }
 }
