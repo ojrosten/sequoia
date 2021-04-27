@@ -68,8 +68,8 @@ namespace sequoia::testing
                     [](){ return storage{{{0,2}, {1}}, allocator{}}; },
                     partitionMaker,
                     allocation_info{bucket_alloc_getter<storage>{},
-                                    {0_c, {1_c,1_mu}, {1_awp,1_anp}},
-                                    { {0_c, {2_c,0_mu}, {2_awp,2_anp}, {0_containers, 2_containers, 3_postmutation}} }
+                                    {0_c, {1_c,1_mu}, {1_anp,1_awp}},
+                                    { {0_c, {2_c,0_mu}, {2_anp,2_awp}, {0_containers, 2_containers, 3_postmutation}} }
                     })};
 
     check_equivalence(LINE(makeMessage("")), s, prediction{});
@@ -92,8 +92,8 @@ namespace sequoia::testing
                     t,
                     mutator,
                     allocation_info{bucket_alloc_getter<storage>{},
-                                    {1_c, {1_c,1_mu}, {1_awp,1_anp}},
-                                    { {0_c, {2_c,1_mu}, {2_awp,2_anp}, {1_containers, 2_containers, 3_postmutation}} }
+                                    {1_c, {1_c,1_mu}, {1_anp,1_awp}},
+                                    { {0_c, {2_c,1_mu}, {2_anp,2_awp}, {1_containers, 2_containers, 3_postmutation}} }
                     });
   }
 
@@ -127,8 +127,8 @@ namespace sequoia::testing
                       [](){ return storage{allocator{}, partitions_allocator{}}; },
                       [](){ return storage{{{0,2}, {1}}, allocator{}, partitions_allocator{}}; },
                       partitionMaker,
-                      allocation_info{contiguous_alloc_getter<storage>{}, {0_c, {1_c,0_mu}, {1_awp, 1_anp}}},
-                      allocation_info{partitions_alloc_getter<storage>{}, {0_c, {1_c,1_mu}, {1_awp, 1_anp}}})};
+                      allocation_info{contiguous_alloc_getter<storage>{}, {0_c, {1_c,0_mu}, {1_anp, 1_awp}}},
+                      allocation_info{partitions_alloc_getter<storage>{}, {0_c, {1_c,1_mu}, {1_anp, 1_awp}}})};
 
       check_equivalence(LINE(makeMessage("")), s, prediction{});
       check_equivalence(LINE(makeMessage("")), t, prediction{{0,2}, {1}});

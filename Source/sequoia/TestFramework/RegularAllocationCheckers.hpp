@@ -56,24 +56,24 @@ namespace sequoia::testing
 
   struct assignment_allocation_predictions
   {
-    constexpr assignment_allocation_predictions(assign_prediction withPropagation, assign_no_prop_prediction withoutPropagation)
-      : with_propagation{withPropagation}
-      , without_propagation{withoutPropagation}
+    constexpr assignment_allocation_predictions(assign_no_prop_prediction withoutPropagation, assign_prediction withPropagation)
+      : without_propagation{withoutPropagation}
+      , with_propagation{withPropagation}
       , move_without_propagation{convert<assignment_allocation_event::move_assign_no_prop>(without_propagation)}
     {}
 
-    constexpr assignment_allocation_predictions(assign_prediction withPropagation,
-                                                assign_no_prop_prediction withoutPropagation,
+    constexpr assignment_allocation_predictions(assign_no_prop_prediction withoutPropagation,
+                                                assign_prediction withPropagation,
                                                 move_assign_no_prop_prediction moveWithoutPropagation,
                                                 move_assign_prediction pureMove)
-      : with_propagation{withPropagation}
-      , without_propagation{withoutPropagation}
+      : without_propagation{withoutPropagation}
+      , with_propagation{withPropagation}
       , move_without_propagation{moveWithoutPropagation}
       , move{pureMove}
     {}
 
-    assign_prediction with_propagation{};
     assign_no_prop_prediction without_propagation{};
+    assign_prediction with_propagation{};
     move_assign_no_prop_prediction move_without_propagation{};
     move_assign_prediction move{};
   };
@@ -96,8 +96,8 @@ namespace sequoia::testing
   constexpr assignment_allocation_predictions shift(const assignment_allocation_predictions& predictions,
                                                     const alloc_prediction_shifter<T>& shifter)
   {
-    return {shifter.shift(predictions.with_propagation),
-            shifter.shift(predictions.without_propagation),
+    return {shifter.shift(predictions.without_propagation),
+            shifter.shift(predictions.with_propagation),
             shifter.shift(predictions.move_without_propagation),
             shifter.shift(predictions.move)};
   }

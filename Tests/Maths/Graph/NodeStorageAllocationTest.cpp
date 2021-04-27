@@ -46,7 +46,7 @@ namespace sequoia::testing
                     [](){ return storage(allocator{}); },
                     [](){ return storage{{1, 1, 0}, allocator{}}; },
                     mutator,
-                    allocation_info{node_storage_alloc_getter<storage>{}, {0_c, {1_c,1_mu}, {1_awp,1_anp}}})};
+                    allocation_info{node_storage_alloc_getter<storage>{}, {0_c, {1_c,1_mu}, {1_anp,1_awp}}})};
 
     check_equivalence(LINE(""), s, std::initializer_list<int>{});
     check_equivalence(LINE(""), t, std::initializer_list<int>{1, 1, 0});

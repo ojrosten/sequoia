@@ -44,7 +44,7 @@ namespace sequoia::testing
                               [](){ return sequence(allocator{}); },
                               [](){ return sequence{{4, 3}, allocator{}}; },
                               mutator,
-                              allocation_info{getter, {0_c, {1_c, 1_mu}, {1_awp, 1_anp}}})};
+                              allocation_info{getter, {0_c, {1_c, 1_mu}, {1_anp, 1_awp}}})};
 
     check_equivalence(LINE(""), s, std::initializer_list<int>{});
     check_equivalence(LINE(""), t, std::initializer_list<int>{4, 3});

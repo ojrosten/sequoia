@@ -18,24 +18,24 @@ namespace sequoia::testing
 {
   struct individual_move_only_allocation_predictions
   {
-    constexpr individual_move_only_allocation_predictions(mutation_prediction mutationPrediction,
-                                                          para_move_prediction paraMovePrediction,
+    constexpr individual_move_only_allocation_predictions(para_move_prediction paraMovePrediction,
+                                                          mutation_prediction mutationPrediction,
                                                           move_prediction m={})
-      : para_move{paraMovePrediction}
-      , mutation{mutationPrediction}
+      : mutation{mutationPrediction}
+      , para_move{paraMovePrediction}
       , move{m}
     {}
 
-    para_move_prediction para_move{};
     mutation_prediction mutation{};
+    para_move_prediction para_move{};
     move_prediction move{};
   };
 
   struct assignment_move_only_allocation_predictions
   {
-    constexpr assignment_move_only_allocation_predictions(move_assign_no_prop_prediction copyLikeMove,
+    constexpr assignment_move_only_allocation_predictions(move_assign_no_prop_prediction moveWithoutPropagation,
                                                           move_assign_prediction pureMove={})
-      : move_without_propagation{copyLikeMove}
+      : move_without_propagation{moveWithoutPropagation}
       , move{pureMove}
     {}
 
@@ -48,8 +48,8 @@ namespace sequoia::testing
   constexpr individual_move_only_allocation_predictions shift(const individual_move_only_allocation_predictions& predictions,
                                                               const alloc_prediction_shifter<T>& shifter)
   {
-    return {shifter.shift(predictions.mutation),
-            shifter.shift(predictions.para_move, container_tag::y),
+    return {shifter.shift(predictions.para_move, container_tag::y),
+            shifter.shift(predictions.mutation),
             shifter.shift(predictions.move)};
   }
 

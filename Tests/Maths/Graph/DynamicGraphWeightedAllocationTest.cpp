@@ -117,35 +117,35 @@ namespace sequoia::testing
                     g,
                     Graph{{{}},edge_allocator{}, edge_partitions_allocator{}, node_allocator{}},
                     nodeMaker,
-                    allocation_info{edge_alloc_getter<Graph>{}, {0_c, {0_c, 0_mu}, {0_awp, 0_anp}}},
-                    allocation_info{edge_partitions_alloc_getter<Graph>{}, {0_c, {1_c, 1_mu}, {1_awp, 1_anp}}},
-                    allocation_info{node_alloc_getter<Graph>{}, {0_c, {1_c, 1_mu}, {1_awp, 1_anp}}});
+                    allocation_info{edge_alloc_getter<Graph>{}, {0_c, {0_c, 0_mu}, {0_anp, 0_awp}}},
+                    allocation_info{edge_partitions_alloc_getter<Graph>{}, {0_c, {1_c, 1_mu}, {1_anp, 1_awp}}},
+                    allocation_info{node_alloc_getter<Graph>{}, {0_c, {1_c, 1_mu}, {1_anp, 1_awp}}});
 
     check_semantics(LINE(""),
                     g,
                     Graph{{{}}, edge_allocator{}, edge_partitions_allocator{}, {{1.0, -1.0}}, node_allocator{}},
                     nodeMaker,
-                    allocation_info{edge_alloc_getter<Graph>{}, {0_c, {0_c, 0_mu}, {0_awp, 0_anp}}},
-                    allocation_info{edge_partitions_alloc_getter<Graph>{}, {0_c, {1_c, 1_mu}, {1_awp, 1_anp}}},
-                    allocation_info{node_alloc_getter<Graph>{}, {0_c, {1_c, 1_mu}, {1_awp, 1_anp}}});
+                    allocation_info{edge_alloc_getter<Graph>{}, {0_c, {0_c, 0_mu}, {0_anp, 0_awp}}},
+                    allocation_info{edge_partitions_alloc_getter<Graph>{}, {0_c, {1_c, 1_mu}, {1_anp, 1_awp}}},
+                    allocation_info{node_alloc_getter<Graph>{}, {0_c, {1_c, 1_mu}, {1_anp, 1_awp}}});
 
     Graph g2{};
 
     if constexpr (GraphFlavour == graph_flavour::directed)
     {
-      check_semantics(LINE(""), g2, Graph{{edge_init_t{1}}, {}}, nodeMaker, allocation_info{edge_alloc_getter<Graph>{}, {0_c, {1_c, 0_mu}, {1_awp, 1_anp}}}, allocation_info{edge_partitions_alloc_getter<Graph>{}, {0_c, {1_c, 1_mu}, {1_awp, 1_anp}}}, allocation_info{node_alloc_getter<Graph>{}, {0_c, {1_c, 1_mu}, {1_awp, 1_anp}}});
+      check_semantics(LINE(""), g2, Graph{{edge_init_t{1}}, {}}, nodeMaker, allocation_info{edge_alloc_getter<Graph>{}, {0_c, {1_c, 0_mu}, {1_anp, 1_awp}}}, allocation_info{edge_partitions_alloc_getter<Graph>{}, {0_c, {1_c, 1_mu}, {1_anp, 1_awp}}}, allocation_info{node_alloc_getter<Graph>{}, {0_c, {1_c, 1_mu}, {1_anp, 1_awp}}});
     }
     else if constexpr(GraphFlavour == graph_flavour::undirected)
     {
-      check_semantics(LINE(""), g2, Graph{{edge_init_t{1}}, {edge_init_t{0}}}, nodeMaker, allocation_info{edge_alloc_getter<Graph>{}, {0_c, {1_c, 0_mu}, {1_awp, 1_anp}}}, allocation_info{edge_partitions_alloc_getter<Graph>{}, {0_c, {1_c, 1_mu}, {1_awp, 1_anp}}}, allocation_info{node_alloc_getter<Graph>{}, {0_c, {1_c, 1_mu}, {1_awp, 1_anp}}});
+      check_semantics(LINE(""), g2, Graph{{edge_init_t{1}}, {edge_init_t{0}}}, nodeMaker, allocation_info{edge_alloc_getter<Graph>{}, {0_c, {1_c, 0_mu}, {1_anp, 1_awp}}}, allocation_info{edge_partitions_alloc_getter<Graph>{}, {0_c, {1_c, 1_mu}, {1_anp, 1_awp}}}, allocation_info{node_alloc_getter<Graph>{}, {0_c, {1_c, 1_mu}, {1_anp, 1_awp}}});
     }
     else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
     {
-      check_semantics(LINE(""), g2, Graph{{edge_init_t{0,1,0}}, {edge_init_t{0,1,0}}}, nodeMaker, allocation_info{edge_alloc_getter<Graph>{}, {0_c, {1_c, 0_mu}, {1_awp, 1_anp}}}, allocation_info{edge_partitions_alloc_getter<Graph>{}, {0_c, {1_c, 1_mu}, {1_awp, 1_anp}}}, allocation_info{node_alloc_getter<Graph>{}, {0_c, {1_c, 1_mu}, {1_awp, 1_anp}}});
+      check_semantics(LINE(""), g2, Graph{{edge_init_t{0,1,0}}, {edge_init_t{0,1,0}}}, nodeMaker, allocation_info{edge_alloc_getter<Graph>{}, {0_c, {1_c, 0_mu}, {1_anp, 1_awp}}}, allocation_info{edge_partitions_alloc_getter<Graph>{}, {0_c, {1_c, 1_mu}, {1_anp, 1_awp}}}, allocation_info{node_alloc_getter<Graph>{}, {0_c, {1_c, 1_mu}, {1_anp, 1_awp}}});
     }
     else
     {
-      check_semantics(LINE(""), g2, Graph{{edge_init_t{1,0}}, {edge_init_t{0,0}}}, nodeMaker, allocation_info{edge_alloc_getter<Graph>{}, {0_c, {1_c, 0_mu}, {1_awp, 1_anp}}}, allocation_info{edge_partitions_alloc_getter<Graph>{}, {0_c, {1_c, 1_mu}, {1_awp, 1_anp}}}, allocation_info{node_alloc_getter<Graph>{}, {0_c, {1_c, 1_mu}, {1_awp, 1_anp}}});
+      check_semantics(LINE(""), g2, Graph{{edge_init_t{1,0}}, {edge_init_t{0,0}}}, nodeMaker, allocation_info{edge_alloc_getter<Graph>{}, {0_c, {1_c, 0_mu}, {1_anp, 1_awp}}}, allocation_info{edge_partitions_alloc_getter<Graph>{}, {0_c, {1_c, 1_mu}, {1_anp, 1_awp}}}, allocation_info{node_alloc_getter<Graph>{}, {0_c, {1_c, 1_mu}, {1_anp, 1_awp}}});
     }
   }
 
@@ -199,21 +199,21 @@ namespace sequoia::testing
                     Graph{{{}}, edge_allocator{}, node_allocator{}},
                     nodeMaker,
                     allocation_info{edge_alloc_getter<Graph>{},
-                                      {0_c, {1_c, 1_mu}, {1_awp, 1_anp}},
-                                      { {0_c, {0_c, 0_mu}, {0_awp, 0_anp}, {0_containers, 1_containers, 2_postmutation}} }
+                                      {0_c, {1_c, 1_mu}, {1_anp, 1_awp}},
+                                      { {0_c, {0_c, 0_mu}, {0_anp, 0_awp}, {0_containers, 1_containers, 2_postmutation}} }
                     },
-                    allocation_info{node_alloc_getter<Graph>{}, {0_c, {1_c, 1_mu}, {1_awp, 1_anp}}});
+                    allocation_info{node_alloc_getter<Graph>{}, {0_c, {1_c, 1_mu}, {1_anp, 1_awp}}});
 
     check_semantics(LINE(""),
                     g2,
                     Graph{{{}}, edge_allocator{}, {{1.0, -1.0}}, node_allocator{}},
                     nodeMaker,
                     allocation_info{edge_alloc_getter<Graph>{},
-                                    {0_c, {1_c, 1_mu}, {1_awp, 1_anp}},
-                                    { {0_c, {0_c, 0_mu}, {0_awp, 0_anp}, {0_containers, 1_containers, 2_postmutation}} }
+                                    {0_c, {1_c, 1_mu}, {1_anp, 1_awp}},
+                                    { {0_c, {0_c, 0_mu}, {0_anp, 0_awp}, {0_containers, 1_containers, 2_postmutation}} }
 
                     },
-                    allocation_info{node_alloc_getter<Graph>{}, {0_c, {1_c, 1_mu}, {1_awp, 1_anp}}});
+                    allocation_info{node_alloc_getter<Graph>{}, {0_c, {1_c, 1_mu}, {1_anp, 1_awp}}});
 
     if constexpr (GraphFlavour == graph_flavour::directed)
     {
@@ -222,10 +222,10 @@ namespace sequoia::testing
                       Graph{{edge_init_t{1}}, {}},
                       nodeMaker,
                       allocation_info{edge_alloc_getter<Graph>{},
-                                      {0_c, {1_c, 1_mu}, {1_awp, 1_anp}},
-                                      { {0_c, {1_c, 0_mu}, {1_awp, 1_anp}, {0_containers, 2_containers, 3_postmutation}} }
+                                      {0_c, {1_c, 1_mu}, {1_anp, 1_awp}},
+                                      { {0_c, {1_c, 0_mu}, {1_anp, 1_awp}, {0_containers, 2_containers, 3_postmutation}} }
                       },
-                      allocation_info{node_alloc_getter<Graph>{}, {0_c, {1_c, 1_mu}, {1_awp, 1_anp}}});
+                      allocation_info{node_alloc_getter<Graph>{}, {0_c, {1_c, 1_mu}, {1_anp, 1_awp}}});
     }
     else if constexpr(GraphFlavour == graph_flavour::undirected)
     {
@@ -234,10 +234,10 @@ namespace sequoia::testing
                       Graph{{edge_init_t{1}}, {edge_init_t{0}}},
                       nodeMaker,
                       allocation_info{edge_alloc_getter<Graph>{},
-                                      {0_c, {1_c, 1_mu}, {1_awp, 1_anp}},
-                                      { {0_c, {2_c, 0_mu}, {2_awp, 2_anp}, {0_containers, 2_containers, 3_postmutation}} }
+                                      {0_c, {1_c, 1_mu}, {1_anp, 1_awp}},
+                                      { {0_c, {2_c, 0_mu}, {2_anp, 2_awp}, {0_containers, 2_containers, 3_postmutation}} }
                       },
-                      allocation_info{node_alloc_getter<Graph>{}, {0_c, {1_c, 1_mu}, {1_awp, 1_anp}}});
+                      allocation_info{node_alloc_getter<Graph>{}, {0_c, {1_c, 1_mu}, {1_anp, 1_awp}}});
     }
     else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
     {
@@ -246,10 +246,10 @@ namespace sequoia::testing
                       Graph{{edge_init_t{0,1,0}}, {edge_init_t{0,1,0}}},
                       nodeMaker,
                       allocation_info{edge_alloc_getter<Graph>{},
-                                      {0_c, {1_c, 1_mu}, {1_awp, 1_anp}},
-                                      { {0_c, {2_c, 0_mu}, {2_awp, 2_anp}, {0_containers, 2_containers, 3_postmutation}} }
+                                      {0_c, {1_c, 1_mu}, {1_anp, 1_awp}},
+                                      { {0_c, {2_c, 0_mu}, {2_anp, 2_awp}, {0_containers, 2_containers, 3_postmutation}} }
                       },
-                      allocation_info{node_alloc_getter<Graph>{}, {0_c, {1_c, 1_mu}, {1_awp, 1_anp}}});
+                      allocation_info{node_alloc_getter<Graph>{}, {0_c, {1_c, 1_mu}, {1_anp, 1_awp}}});
     }
     else
     {
@@ -258,10 +258,10 @@ namespace sequoia::testing
                       Graph{{edge_init_t{1,0}}, {edge_init_t{0,0}}},
                       nodeMaker,
                       allocation_info{edge_alloc_getter<Graph>{},
-                                      {0_c, {1_c, 1_mu}, {1_awp, 1_anp}},
-                                      { {0_c, {2_c, 0_mu}, {2_awp, 2_anp}, {0_containers, 2_containers, 3_postmutation}} }
+                                      {0_c, {1_c, 1_mu}, {1_anp, 1_awp}},
+                                      { {0_c, {2_c, 0_mu}, {2_anp, 2_awp}, {0_containers, 2_containers, 3_postmutation}} }
                       },
-                      allocation_info{node_alloc_getter<Graph>{}, {0_c, {1_c, 1_mu}, {1_awp, 1_anp}}});
+                      allocation_info{node_alloc_getter<Graph>{}, {0_c, {1_c, 1_mu}, {1_anp, 1_awp}}});
     }
   }
 }

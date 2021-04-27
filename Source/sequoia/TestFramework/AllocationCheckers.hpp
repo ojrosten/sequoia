@@ -63,7 +63,7 @@ namespace sequoia::testing
     move_assign_no_prop
   };
 
-  enum class individual_allocation_event {                            
+  enum class individual_allocation_event {
     mutation
   };
 
@@ -82,7 +82,7 @@ namespace sequoia::testing
   using assign_prediction              = alloc_prediction<assignment_allocation_event::assign>;
   using assign_no_prop_prediction      = alloc_prediction<assignment_allocation_event::assign_no_prop>;
   using move_assign_prediction         = alloc_prediction<assignment_allocation_event::move_assign>;
-  using move_assign_no_prop_prediction = alloc_prediction<assignment_allocation_event::move_assign_no_prop>;  
+  using move_assign_no_prop_prediction = alloc_prediction<assignment_allocation_event::move_assign_no_prop>;
   using mutation_prediction            = alloc_prediction<individual_allocation_event::mutation>;
 
   [[nodiscard]]
