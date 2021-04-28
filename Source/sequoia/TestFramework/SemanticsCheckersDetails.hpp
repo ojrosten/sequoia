@@ -159,6 +159,13 @@ namespace sequoia::testing::impl
     return x < y ? comp(x,y) : comp(y,x);
   }
 
+  template<test_mode Mode, class Actions, orderable T, class... Args>
+  [[nodiscard]]
+  bool check_ordering_consistency(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const T&, const T&, const Args&... args)
+  {
+    return check_ordering_consistency(logger, actions, x, y, args...);
+  }
+
   template<test_mode Mode, class Actions, equality_comparable T, class... Args>
   [[nodiscard]]
   bool check_equality_preconditions(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const Args&... args)

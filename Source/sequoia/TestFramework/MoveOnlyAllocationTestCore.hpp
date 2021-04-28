@@ -47,8 +47,8 @@ namespace sequoia::testing
 
     template
     <
-      invocable<> xMaker,
-      moveonly T=std::invoke_result_t<xMaker>,
+      moveonly T,
+      invocable_r<T> xMaker,
       invocable_r<T> yMaker,
       invocable<T&> Mutator,
       alloc_getter<T>... Getters
@@ -68,14 +68,14 @@ namespace sequoia::testing
 
     template
     <
-      invocable<> xMaker,
-      moveonly T=std::invoke_result_t<xMaker>,
+      moveonly T,
+      invocable_r<T> xMaker,
       invocable_r<T> yMaker,
       invocable<T&> Mutator,
       alloc_getter<T>... Getters
     >
       requires (orderable<T>  && (sizeof...(Getters) > 0))
-    std::pair<T,T> check_semantics(std::string_view description, xMaker xFn, yMaker yFn, Mutator yMutator, std::weak_ordering order, allocation_info<T, Getters>... info)
+    std::pair<T,T> check_semantics(std::string_view description, xMaker xFn, yMaker yFn, std::weak_ordering order, Mutator yMutator, allocation_info<T, Getters>... info)
     {
       return testing::check_semantics(append_lines(description, emphasise("Move-only Semantics")), m_Logger, std::move(xFn), std::move(yFn), order, std::move(yMutator), info...);
     }
