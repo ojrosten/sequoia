@@ -26,6 +26,8 @@ namespace sequoia::testing
 
     orderable_regular_beast(const orderable_regular_beast&) = default;
 
+    orderable_regular_beast(const orderable_regular_beast& other, const allocator_type& a) : x(other.x, a) {}
+
     orderable_regular_beast(orderable_regular_beast&&) noexcept = default;
 
     orderable_regular_beast(orderable_regular_beast&& other, const allocator_type& a) : x(std::move(other.x), a) {}

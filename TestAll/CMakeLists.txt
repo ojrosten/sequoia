@@ -70,6 +70,7 @@ target_sources(TestAll PRIVATE ${TestDir}/Experimental/ExperimentalTest.cpp
                                ${TestDir}/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp
                                ${TestDir}/TestFramework/OrderableMoveOnlyAllocationTestDiagnostics.cpp
                                ${TestDir}/TestFramework/OrderableRegularTestDiagnostics.cpp
+                               ${TestDir}/TestFramework/OrderableRegularAllocationTestDiagnostics.cpp
                                ${TestDir}/TestFramework/OutputFreeTest.cpp
                                ${TestDir}/TestFramework/PerformanceTestDiagnostics.cpp
                                ${TestDir}/TestFramework/RegularAllocationTestDiagnostics.cpp

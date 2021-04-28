@@ -60,7 +60,8 @@ int main(int argc, char** argv)
 
     runner.add_test_family(
       "Extended Allocation Diagnostics",
-      orderable_move_only_allocation_false_negative_diagnostics{"Orderable Move-Only Allocation False Negative Diagnostics"}
+      orderable_move_only_allocation_false_negative_diagnostics{"Orderable Move-Only Allocation False Negative Diagnostics"},
+      orderable_regular_allocation_false_negative_diagnostics{"Orderable Regular Allocation False Negative Diagnostics"}
     );
 
     runner.add_test_family(

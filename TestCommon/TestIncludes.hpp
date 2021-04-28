@@ -88,6 +88,7 @@
 #include "TestFramework/OrderableMoveOnlyTestDiagnostics.hpp"
 #include "TestFramework/OrderableMoveOnlyAllocationTestDiagnostics.hpp"
 #include "TestFramework/OrderableRegularTestDiagnostics.hpp"
+#include "TestFramework/OrderableRegularAllocationTestDiagnostics.hpp"
 
 #include "TestFramework/TestRunnerDiagnostics.hpp"
 #include "TestFramework/TestRunnerTest.hpp"

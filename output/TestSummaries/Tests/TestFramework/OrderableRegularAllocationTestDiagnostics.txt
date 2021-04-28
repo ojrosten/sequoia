@@ -1,0 +1,279 @@
+Orderable Regular Allocation False Negative Diagnostics
+False Negative Checks:                    16;  Failures:  8
+
+	Tests/TestFramework/OrderableRegularAllocationTestDiagnostics.cpp, Line 38
+
+	--Ordered Semantics--
+	[sequoia::testing::orderable_regular_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
+
+	  Tests/TestFramework/OrderableRegularAllocationTestDiagnostics.cpp, Line 38
+
+	  --Ordered Semantics--
+	  [sequoia::testing::orderable_regular_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
+
+	    [shared_counting_allocator<
+	    		int,
+	    		Propagate on copy assignment = true,
+	    		Propagate on move assignment = false,
+	    		Propagate on swap = false
+	     >]
+	    Unexpected allocation detected for propagating copy assignment (x)
+	    [int]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 0
+
+	    [shared_counting_allocator<
+	    		int,
+	    		Propagate on copy assignment = true,
+	    		Propagate on move assignment = false,
+	    		Propagate on swap = false
+	     >]
+	    Unexpected allocation detected for propagating copy assignment (y)
+	    [int]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 0
+
+	=======================================
+
+
+	Tests/TestFramework/OrderableRegularAllocationTestDiagnostics.cpp, Line 45
+
+	--Ordered Semantics--
+	[sequoia::testing::orderable_regular_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
+
+	  [shared_counting_allocator<
+	  		int,
+	  		Propagate on copy assignment = true,
+	  		Propagate on move assignment = false,
+	  		Propagate on swap = false
+	   >]
+	  Unexpected allocation detected for propagating copy assignment (x)
+	  [int]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
+
+	  [shared_counting_allocator<
+	  		int,
+	  		Propagate on copy assignment = true,
+	  		Propagate on move assignment = false,
+	  		Propagate on swap = false
+	   >]
+	  Unexpected allocation detected for propagating copy assignment (y)
+	  [int]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
+
+	=======================================
+
+
+	Tests/TestFramework/OrderableRegularAllocationTestDiagnostics.cpp, Line 38
+
+	--Ordered Semantics--
+	[sequoia::testing::orderable_regular_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
+
+	  Tests/TestFramework/OrderableRegularAllocationTestDiagnostics.cpp, Line 38
+
+	  --Ordered Semantics--
+	  [sequoia::testing::orderable_regular_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
+
+	    [shared_counting_allocator<
+	    		int,
+	    		Propagate on copy assignment = true,
+	    		Propagate on move assignment = false,
+	    		Propagate on swap = true
+	     >]
+	    Unexpected allocation detected for propagating copy assignment (x)
+	    [int]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 0
+
+	    [shared_counting_allocator<
+	    		int,
+	    		Propagate on copy assignment = true,
+	    		Propagate on move assignment = false,
+	    		Propagate on swap = true
+	     >]
+	    Unexpected allocation detected for propagating copy assignment (y)
+	    [int]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 0
+
+	=======================================
+
+
+	Tests/TestFramework/OrderableRegularAllocationTestDiagnostics.cpp, Line 45
+
+	--Ordered Semantics--
+	[sequoia::testing::orderable_regular_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
+
+	  [shared_counting_allocator<
+	  		int,
+	  		Propagate on copy assignment = true,
+	  		Propagate on move assignment = false,
+	  		Propagate on swap = true
+	   >]
+	  Unexpected allocation detected for propagating copy assignment (x)
+	  [int]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
+
+	  [shared_counting_allocator<
+	  		int,
+	  		Propagate on copy assignment = true,
+	  		Propagate on move assignment = false,
+	  		Propagate on swap = true
+	   >]
+	  Unexpected allocation detected for propagating copy assignment (y)
+	  [int]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
+
+	=======================================
+
+
+	Tests/TestFramework/OrderableRegularAllocationTestDiagnostics.cpp, Line 38
+
+	--Ordered Semantics--
+	[sequoia::testing::orderable_regular_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
+
+	  Tests/TestFramework/OrderableRegularAllocationTestDiagnostics.cpp, Line 38
+
+	  --Ordered Semantics--
+	  [sequoia::testing::orderable_regular_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
+
+	    [shared_counting_allocator<
+	    		int,
+	    		Propagate on copy assignment = true,
+	    		Propagate on move assignment = true,
+	    		Propagate on swap = false
+	     >]
+	    Unexpected allocation detected for propagating copy assignment (x)
+	    [int]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 0
+
+	    [shared_counting_allocator<
+	    		int,
+	    		Propagate on copy assignment = true,
+	    		Propagate on move assignment = true,
+	    		Propagate on swap = false
+	     >]
+	    Unexpected allocation detected for propagating copy assignment (y)
+	    [int]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 0
+
+	=======================================
+
+
+	Tests/TestFramework/OrderableRegularAllocationTestDiagnostics.cpp, Line 45
+
+	--Ordered Semantics--
+	[sequoia::testing::orderable_regular_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
+
+	  [shared_counting_allocator<
+	  		int,
+	  		Propagate on copy assignment = true,
+	  		Propagate on move assignment = true,
+	  		Propagate on swap = false
+	   >]
+	  Unexpected allocation detected for propagating copy assignment (x)
+	  [int]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
+
+	  [shared_counting_allocator<
+	  		int,
+	  		Propagate on copy assignment = true,
+	  		Propagate on move assignment = true,
+	  		Propagate on swap = false
+	   >]
+	  Unexpected allocation detected for propagating copy assignment (y)
+	  [int]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
+
+	=======================================
+
+
+	Tests/TestFramework/OrderableRegularAllocationTestDiagnostics.cpp, Line 38
+
+	--Ordered Semantics--
+	[sequoia::testing::orderable_regular_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
+
+	  Tests/TestFramework/OrderableRegularAllocationTestDiagnostics.cpp, Line 38
+
+	  --Ordered Semantics--
+	  [sequoia::testing::orderable_regular_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
+
+	    [shared_counting_allocator<
+	    		int,
+	    		Propagate on copy assignment = true,
+	    		Propagate on move assignment = true,
+	    		Propagate on swap = true
+	     >]
+	    Unexpected allocation detected for propagating copy assignment (x)
+	    [int]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 0
+
+	    [shared_counting_allocator<
+	    		int,
+	    		Propagate on copy assignment = true,
+	    		Propagate on move assignment = true,
+	    		Propagate on swap = true
+	     >]
+	    Unexpected allocation detected for propagating copy assignment (y)
+	    [int]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 0
+
+	=======================================
+
+
+	Tests/TestFramework/OrderableRegularAllocationTestDiagnostics.cpp, Line 45
+
+	--Ordered Semantics--
+	[sequoia::testing::orderable_regular_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
+
+	  [shared_counting_allocator<
+	  		int,
+	  		Propagate on copy assignment = true,
+	  		Propagate on move assignment = true,
+	  		Propagate on swap = true
+	   >]
+	  Unexpected allocation detected for propagating copy assignment (x)
+	  [int]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
+
+	  [shared_counting_allocator<
+	  		int,
+	  		Propagate on copy assignment = true,
+	  		Propagate on move assignment = true,
+	  		Propagate on swap = true
+	   >]
+	  Unexpected allocation detected for propagating copy assignment (y)
+	  [int]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
+
+	=======================================
+
+
