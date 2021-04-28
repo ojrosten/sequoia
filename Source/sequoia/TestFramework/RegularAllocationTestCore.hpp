@@ -46,8 +46,8 @@ namespace sequoia::testing
 
     template
     <
-      invocable<> xMaker,
-      pseudoregular T=std::invoke_result_t<xMaker>,
+      pseudoregular T,
+      invocable_r<T> xMaker,
       invocable_r<T> yMaker,
       invocable<T&> Mutator,
       alloc_getter<T>... Getters
@@ -67,8 +67,8 @@ namespace sequoia::testing
 
     template
     <
-      invocable<> xMaker,
-      pseudoregular T=std::invoke_result_t<xMaker>,
+      pseudoregular T,
+      invocable_r<T> xMaker,
       invocable_r<T> yMaker,
       invocable<T&> Mutator,
       alloc_getter<T>... Getters

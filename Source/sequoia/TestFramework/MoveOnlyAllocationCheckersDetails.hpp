@@ -95,9 +95,9 @@ namespace sequoia::testing::impl
   template
   <
     test_mode Mode,
-    class Actions,
-    invocable<> xMaker,
-    moveonly T=std::invoke_result_t<xMaker>,
+    class Actions,    
+    moveonly T,
+    invocable_r<T> xMaker,
     invocable_r<T> yMaker,
     invocable<T&> Mutator,
     alloc_getter<T>... Getters

@@ -41,5 +41,14 @@ namespace sequoia::testing
                     std::weak_ordering::less,
                     mutator,
                     allocation_info{getter, {0_pm, {1_pm, 1_mu}, {1_manp}}});
+
+    check_semantics(LINE(""),
+                    beast{},
+                    beast{2},
+                    beast{},
+                    beast{2},
+                    std::weak_ordering::less,
+                    mutator,
+                    allocation_info{getter, {0_pm, {1_pm, 1_mu}, {1_manp}}});
   }
 }
