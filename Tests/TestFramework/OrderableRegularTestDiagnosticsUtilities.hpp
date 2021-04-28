@@ -588,4 +588,94 @@ namespace sequoia::testing
       return s;
     }
   };
+
+  template<class T=int, class Allocator=std::allocator<int>>
+  struct orderable_regular_inefficient_comparisons
+  {
+    using allocator_type = Allocator;
+
+    orderable_regular_inefficient_comparisons(std::initializer_list<T> list) : x{list} {}
+
+    orderable_regular_inefficient_comparisons(std::initializer_list<T> list, const allocator_type& a) : x{list, a} {}
+
+    orderable_regular_inefficient_comparisons(const allocator_type& a) : x(a) {}
+
+    orderable_regular_inefficient_comparisons(const orderable_regular_inefficient_comparisons&) = default;
+
+    orderable_regular_inefficient_comparisons(const orderable_regular_inefficient_comparisons& other, const allocator_type& a) : x(other.x, a) {}
+
+    orderable_regular_inefficient_comparisons(orderable_regular_inefficient_comparisons&&) noexcept = default;
+
+    orderable_regular_inefficient_comparisons(orderable_regular_inefficient_comparisons&& other, const allocator_type& a) : x(std::move(other.x), a) {}
+
+    orderable_regular_inefficient_comparisons& operator=(const orderable_regular_inefficient_comparisons&) = default;
+
+    orderable_regular_inefficient_comparisons& operator=(orderable_regular_inefficient_comparisons&&) = default;
+
+    void swap(orderable_regular_inefficient_comparisons& other) noexcept(noexcept(std::swap(this->x, other.x)))
+    {
+      std::swap(x, other.x);
+    }
+
+    friend void swap(orderable_regular_inefficient_comparisons& lhs, orderable_regular_inefficient_comparisons& rhs)
+      noexcept(noexcept(lhs.swap(rhs)))
+    {
+      lhs.swap(rhs);
+    }
+
+    std::vector<T, Allocator> x{};
+
+    [[nodiscard]]
+    friend bool operator==(const orderable_regular_inefficient_comparisons lhs, const orderable_regular_inefficient_comparisons rhs) noexcept
+    {
+      return lhs.x == rhs.x;
+    }
+
+    [[nodiscard]]
+    friend bool operator!=(const orderable_regular_inefficient_comparisons lhs, const orderable_regular_inefficient_comparisons rhs) noexcept
+    {
+      return lhs.x != rhs.x;
+    }
+
+    [[nodiscard]]
+    friend bool operator<(const orderable_regular_inefficient_comparisons lhs, const orderable_regular_inefficient_comparisons rhs) noexcept
+    {
+      return lhs.x < rhs.x;
+    }
+
+    [[nodiscard]]
+    friend bool operator<=(const orderable_regular_inefficient_comparisons lhs, const orderable_regular_inefficient_comparisons rhs) noexcept
+    {
+      return lhs.x <= rhs.x;
+    }
+
+    [[nodiscard]]
+    friend bool operator>(const orderable_regular_inefficient_comparisons lhs, const orderable_regular_inefficient_comparisons rhs) noexcept
+    {
+      return lhs.x > rhs.x;
+    }
+
+    [[nodiscard]]
+    friend bool operator>=(const orderable_regular_inefficient_comparisons lhs, const orderable_regular_inefficient_comparisons rhs) noexcept
+    {
+      return lhs.x >= rhs.x;
+    }
+
+    // TO DO: default this and remove most of the above when libc++ rolls out <=> to std
+    friend std::weak_ordering operator<=>(const orderable_regular_inefficient_comparisons lhs, const orderable_regular_inefficient_comparisons rhs) noexcept
+    {
+      if(lhs < rhs) return std::weak_ordering::less;
+
+      if(rhs > lhs) return std::weak_ordering::greater;
+
+      return std::weak_ordering::equivalent;
+    }
+
+    template<class Stream>
+    friend Stream& operator<<(Stream& s, const orderable_regular_inefficient_comparisons& b)
+    {
+      for(auto i : b.x) s << i << ' ';
+      return s;
+    }
+  };
 }

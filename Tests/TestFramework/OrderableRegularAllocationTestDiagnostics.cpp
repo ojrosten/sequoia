@@ -40,6 +40,47 @@ namespace sequoia::testing
                     [](){ return beast{2}; },
                     std::weak_ordering::less,
                     mutator,
+                    allocation_info{getter, {0_c, {1_c, 1_mu}, {1_anp, 1_awp}}});
+
+    check_semantics(LINE(""),
+                    beast{},
+                    beast{2},
+                    std::weak_ordering::less,
+                    mutator,
+                    allocation_info{getter, {0_c, {1_c, 1_mu}, {1_anp, 1_awp}}});
+  }
+
+
+  [[nodiscard]]
+  std::string_view orderable_regular_allocation_false_positive_diagnostics::source_file() const noexcept
+  {
+    return __FILE__;
+  }
+
+  void orderable_regular_allocation_false_positive_diagnostics::run_tests()
+  {
+    do_allocation_tests(*this);
+  }
+
+  template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
+  void orderable_regular_allocation_false_positive_diagnostics::test_allocation()
+  {
+    test_semantics_allocations<PropagateCopy, PropagateMove, PropagateSwap>();
+  }
+
+  template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
+  void orderable_regular_allocation_false_positive_diagnostics::test_semantics_allocations()
+  {
+    using beast = orderable_regular_inefficient_comparisons<int, shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
+
+    auto getter{[](const beast& b){ return b.x.get_allocator(); }};
+    auto mutator{[](beast& b) { b.x.shrink_to_fit(); b.x.push_back(3); }};
+
+    check_semantics(LINE(""),
+                    [](){ return beast{}; },
+                    [](){ return beast{2}; },
+                    std::weak_ordering::less,
+                    mutator,
                     allocation_info{getter, {0_c, {1_c, 1_mu}, {1_anp, 0_awp}}});
 
     check_semantics(LINE(""),
