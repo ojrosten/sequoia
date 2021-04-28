@@ -104,6 +104,42 @@ namespace sequoia::testing::impl
     return do_check_swap(logger, actions, std::move(x), std::move(y), xClone, yClone, std::move(yMutator), dual_allocation_checker{checkers.info(), x, y}...);
   }
 
+  template<test_mode Mode, class Actions, pseudoregular T, invocable<T&> Mutator, alloc_getter<T>... Getters>
+    requires (sizeof...(Getters) > 0)
+  void check_semantics(std::string_view description, test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, Mutator yMutator, const allocation_info<T, Getters>&... info)
+  {
+    sentinel<Mode> sentry{logger, add_type_info<T>(description).append("\n")};
+
+    if(check_semantics(logger, actions, x, y, yMutator, std::tuple_cat(make_dual_allocation_checkers(info, x, y)...)))
+    {
+      check_para_constructor_allocations(logger, y, yMutator, info...);
+    }
+  }
+
+  template
+  <
+    test_mode Mode,
+    class Actions,
+    pseudoregular T,
+    invocable_r<T> xMaker,
+    invocable_r<T> yMaker,
+    invocable<T&> Mutator,
+    alloc_getter<T>... Getters
+  >
+    requires (sizeof...(Getters) > 0)
+  std::pair<T, T> check_semantics(std::string_view description, test_logger<Mode>& logger, const Actions& actions, xMaker xFn, yMaker yFn, Mutator yMutator, const allocation_info<T, Getters>&... info)
+  {
+    sentinel<Mode> sentry{logger, add_type_info<T>(description).append("\n")};
+
+    auto x{xFn()};
+    auto y{yFn()};
+
+    check_initialization_allocations(logger, x, y, info...);
+    check_semantics(description, logger, actions, x, y, std::move(yMutator), info...);
+
+    return {std::move(x), std::move(y)};
+  }
+
   /// Unpacks the tuple and feeds to the overload of check_semantics defined in RegularCheckersDetails.hpp
   template
   <

@@ -172,13 +172,14 @@ namespace sequoia::testing
   };
 
   template<test_mode Mode, moveonly T, invocable<T&> Mutator, alloc_getter<T>... Getters>
+    requires (!orderable<T> && (sizeof...(Getters) > 0))
   void check_semantics(std::string_view description, test_logger<Mode>& logger, T&& x, T&& y, const T& xClone, const T& yClone, Mutator m, const allocation_info<T, Getters>&... info)
   {
     impl::check_semantics(description, logger, impl::move_only_allocation_actions<T>{}, std::forward<T>(x), std::forward<T>(y), xClone, yClone, std::move(m), info...);
   }
 
   template<test_mode Mode, moveonly T, invocable<T&> Mutator, alloc_getter<T>... Getters>
-    requires orderable<T>
+    requires (orderable<T> && (sizeof...(Getters) > 0))
   void check_semantics(std::string_view description, test_logger<Mode>& logger, T&& x, T&& y, const T& xClone, const T& yClone, std::weak_ordering order, Mutator m, const allocation_info<T, Getters>&... info)
   {
     impl::check_semantics(description, logger, impl::move_only_allocation_actions<T>{order}, std::forward<T>(x), std::forward<T>(y), xClone, yClone, std::move(m), info...);
@@ -193,6 +194,7 @@ namespace sequoia::testing
     invocable<T&> Mutator,
     alloc_getter<T>... Getters
   >
+    requires (!orderable<T> && (sizeof...(Getters) > 0))
   std::pair<T,T> check_semantics(std::string_view description, test_logger<Mode>& logger, xMaker xFn, yMaker yFn, Mutator m, const allocation_info<T, Getters>&... info)
   {
     return impl::check_semantics(description, logger, impl::move_only_allocation_actions<T>{}, std::move(xFn), std::move(yFn), std::move(m), info...);
@@ -207,7 +209,7 @@ namespace sequoia::testing
     invocable<T&> Mutator,
     alloc_getter<T>... Getters
   >
-    requires orderable<T>
+    requires (orderable<T> && (sizeof...(Getters) > 0))
   std::pair<T,T> check_semantics(std::string_view description, test_logger<Mode>& logger, xMaker xFn, yMaker yFn, std::weak_ordering order, Mutator m, const allocation_info<T, Getters>&... info)
   {
     return impl::check_semantics(description, logger, impl::move_only_allocation_actions<T>{order}, std::move(xFn), std::move(yFn), std::move(m), info...);

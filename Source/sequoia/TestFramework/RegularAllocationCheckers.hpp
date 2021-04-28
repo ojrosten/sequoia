@@ -210,15 +210,17 @@ namespace sequoia::testing
   };
 
   template<test_mode Mode, pseudoregular T, invocable<T&> Mutator, alloc_getter<T>... Getters>
-    requires (sizeof...(Getters) > 0)
+    requires (!orderable<T> && (sizeof...(Getters) > 0))
   void check_semantics(std::string_view description, test_logger<Mode>& logger, const T& x, const T& y, Mutator yMutator, const allocation_info<T, Getters>&... info)
   {
-    sentinel<Mode> sentry{logger, add_type_info<T>(description).append("\n")};
+    impl::check_semantics(description, logger, impl::regular_allocation_actions<T>{}, x, y, std::move(yMutator), info...);
+  }
 
-    if(impl::check_semantics(logger, impl::regular_allocation_actions<T>{}, x, y, yMutator, std::tuple_cat(impl::make_dual_allocation_checkers(info, x, y)...)))
-    {
-      impl::check_para_constructor_allocations(logger, y, yMutator, info...);
-    }
+  template<test_mode Mode, pseudoregular T, invocable<T&> Mutator, alloc_getter<T>... Getters>
+    requires (orderable<T> && (sizeof...(Getters) > 0))
+  void check_semantics(std::string_view description, test_logger<Mode>& logger, const T& x, const T& y, std::weak_ordering order, Mutator yMutator, const allocation_info<T, Getters>&... info)
+  {
+    impl::check_semantics(description, logger, impl::regular_allocation_actions<T>{order}, x, y, std::move(yMutator), info...);
   }
 
   template
@@ -230,17 +232,24 @@ namespace sequoia::testing
     invocable<T&> Mutator,
     alloc_getter<T>... Getters
   >
-    requires (sizeof...(Getters) > 0)
+    requires (!orderable<T> && sizeof...(Getters) > 0)
   std::pair<T, T> check_semantics(std::string_view description, test_logger<Mode>& logger, xMaker xFn, yMaker yFn, Mutator yMutator, const allocation_info<T, Getters>&... info)
   {
-    sentinel<Mode> sentry{logger, add_type_info<T>(description).append("\n")};
+    return impl::check_semantics(description, logger, impl::regular_allocation_actions<T>{}, std::move(xFn), std::move(yFn), std::move(yMutator), info...);
+  }
 
-    auto x{xFn()};
-    auto y{yFn()};
-
-    impl::check_initialization_allocations(logger, x, y, info...);
-    check_semantics(description, logger, x, y, std::move(yMutator), info...);
-
-    return {std::move(x), std::move(y)};
+  template
+  <
+    test_mode Mode,
+    pseudoregular T,
+    invocable_r<T> xMaker,
+    invocable_r<T> yMaker,
+    invocable<T&> Mutator,
+    alloc_getter<T>... Getters
+  >
+    requires (orderable<T> && sizeof...(Getters) > 0)
+  std::pair<T, T> check_semantics(std::string_view description, test_logger<Mode>& logger, xMaker xFn, yMaker yFn, std::weak_ordering order, Mutator yMutator, const allocation_info<T, Getters>&... info)
+  {
+    return impl::check_semantics(description, logger, impl::regular_allocation_actions<T>{order}, std::move(xFn), std::move(yFn), std::move(yMutator), info...);
   }
 }
