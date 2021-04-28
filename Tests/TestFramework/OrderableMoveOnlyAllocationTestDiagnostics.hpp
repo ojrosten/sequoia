@@ -27,21 +27,4 @@ namespace sequoia::testing
     template<bool PropagateMove, bool PropagateSwap>
     void test_semantics_allocations();
   };
-
-  class orderable_move_only_allocation_false_positive_diagnostics final : public move_only_allocation_false_positive_test
-  {
-  public:
-    using move_only_allocation_false_positive_test::move_only_allocation_false_positive_test;
-
-    [[nodiscard]]
-    std::string_view source_file() const noexcept final;
-
-    template<bool PropagateMove, bool PropagateSwap>
-    void test_allocation();
-  private:
-    void run_tests() final;
-
-    template<bool PropagateMove, bool PropagateSwap>
-    void test_semantics_allocations();
-  };
 }

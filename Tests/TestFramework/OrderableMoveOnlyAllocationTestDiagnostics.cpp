@@ -42,27 +42,4 @@ namespace sequoia::testing
                     mutator,
                     allocation_info{getter, {0_pm, {1_pm, 1_mu}, {1_manp}}});
   }
-  
-  [[nodiscard]]
-  std::string_view orderable_move_only_allocation_false_positive_diagnostics::source_file() const noexcept
-  {
-    return __FILE__;
-  }
-
-  void orderable_move_only_allocation_false_positive_diagnostics::run_tests()
-  {
-    do_allocation_tests(*this);
-  }
-
-  template<bool PropagateMove, bool PropagateSwap>
-  void orderable_move_only_allocation_false_positive_diagnostics::test_allocation()
-  {
-    test_semantics_allocations<PropagateMove, PropagateSwap>();
-  }
-
-  template<bool PropagateMove, bool PropagateSwap>
-  void orderable_move_only_allocation_false_positive_diagnostics::test_semantics_allocations()
-  {
-
-  }
 }
