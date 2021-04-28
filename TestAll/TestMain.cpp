@@ -73,6 +73,11 @@ int main(int argc, char** argv)
     );
 
     runner.add_test_family(
+      "Extended Allocation Diagnostics",
+      orderable_move_only_allocation_false_negative_diagnostics{"Orderable Move-Only Allocation False Negative Diagnostics"}
+    );
+
+    runner.add_test_family(
       "Performance Diagnostics",
       performance_false_positive_diagnostics{"Performance False Positive Diagnostics"},
       performance_false_negative_diagnostics{"Performance False Negative Diagnostics"},

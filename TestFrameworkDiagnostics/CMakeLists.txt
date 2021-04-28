@@ -14,6 +14,7 @@ target_sources(TestFrameworkDiagnostics PRIVATE
                ${TestDir}/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp
                ${TestDir}/TestFramework/MoveOnlyTestDiagnostics.cpp
                ${TestDir}/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp
+               ${TestDir}/TestFramework/OrderableMoveOnlyAllocationTestDiagnostics.cpp
                ${TestDir}/TestFramework/OrderableRegularTestDiagnostics.cpp
                ${TestDir}/TestFramework/OutputFreeTest.cpp
                ${TestDir}/TestFramework/PerformanceTestDiagnostics.cpp

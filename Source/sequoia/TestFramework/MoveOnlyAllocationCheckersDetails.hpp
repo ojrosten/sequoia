@@ -81,6 +81,40 @@ namespace sequoia::testing::impl
             check_para_constructor_allocations(logger, container_tag_constant<container_tag::y>{}, std::forward<T>(y), yClone, info...)};
   }
 
+  template<test_mode Mode, class Actions, moveonly T, invocable<T&> Mutator, alloc_getter<T>... Getters>
+  void check_semantics(std::string_view description, test_logger<Mode>& logger, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, Mutator m, const allocation_info<T, Getters>&... info)
+  {
+    sentinel<Mode> sentry{logger, add_type_info<T>(description).append("\n")};
+
+    if(auto[optx,opty]{check_para_constructor_allocations(logger, std::forward<T>(x), std::forward<T>(y), xClone, yClone, info...)}; (optx != std::nullopt) && (opty != std::nullopt))
+    {
+      check_semantics(logger, actions, std::move(*optx), std::move(*opty), xClone, yClone, std::move(m), std::tuple_cat(make_dual_allocation_checkers(info, x, y)...));
+    }
+  }
+
+  template
+  <
+    test_mode Mode,
+    class Actions,
+    invocable<> xMaker,
+    moveonly T=std::invoke_result_t<xMaker>,
+    invocable_r<T> yMaker,
+    invocable<T&> Mutator,
+    alloc_getter<T>... Getters
+  >
+  std::pair<T,T> check_semantics(std::string_view description, test_logger<Mode>& logger, const Actions& actions, xMaker xFn, yMaker yFn, Mutator m, const allocation_info<T, Getters>&... info)
+  {
+    sentinel<Mode> sentry{logger, add_type_info<T>(description).append("\n")};
+
+    auto x{xFn()};
+    auto y{yFn()};
+
+    impl::check_initialization_allocations(logger, x, y, info...);
+    check_semantics(description, logger, actions, xFn(), yFn(), x, y, std::move(m), info...);
+
+    return {std::move(x), std::move(y)};
+  }
+
   /// Unpacks the tuple and feeds to the overload of check_semantics defined in MoveOnlyCheckersDetails.hpp
   template<test_mode Mode, class Actions, moveonly T, invocable<T&> Mutator, alloc_getter<T>... Getters>
   void check_semantics(test_logger<Mode>& logger, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, Mutator m, std::tuple<dual_allocation_checker<T, Getters>...> checkers)
