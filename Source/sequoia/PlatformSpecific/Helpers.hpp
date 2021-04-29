@@ -9,22 +9,21 @@
 
 /*! \file Platform-dependent utilities */
 
+#include <chrono>
+
 namespace sequoia
 {
   class [[nodiscard]] timer_resolution
   {
     unsigned int m_Resolution{};
+
+    [[nodiscard]]
+    static unsigned int resolution(std::chrono::milliseconds t) noexcept;
   public:
     timer_resolution() = default;
 
-    explicit timer_resolution(unsigned int millisecs);
+    explicit timer_resolution(std::chrono::milliseconds t);
 
     ~timer_resolution();
-
-    [[nodiscard]]
-    unsigned int resolution() const noexcept
-    {
-      return m_Resolution;
-    }
   };
 }

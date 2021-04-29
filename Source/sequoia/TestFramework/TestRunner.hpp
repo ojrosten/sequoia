@@ -319,7 +319,7 @@ namespace sequoia::testing
       }
     }
 
-    void execute([[maybe_unused]] timer_resolution r=timer_resolution{});
+    void execute([[maybe_unused]] timer_resolution r={});
 
     [[nodiscard]]
     concurrency_mode concurrency() const noexcept { return m_ConcurrencyMode; }

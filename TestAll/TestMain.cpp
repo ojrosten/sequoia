@@ -242,7 +242,8 @@ int main(int argc, char** argv)
       experimental_test{"Unit Test"}
     );
 
-    runner.execute(timer_resolution{1});
+    using namespace std::literals::chrono_literals;
+    runner.execute(timer_resolution{1ms});
   }
   catch(const std::exception& e)
   {

@@ -14,9 +14,8 @@
 
 namespace sequoia
 {
-
-  timer_resolution::timer_resolution(unsigned int millisecs)
-    : m_Resolution{millisecs}
+  timer_resolution::timer_resolution(std::chrono::milliseconds t)
+    : m_Resolution{resolution(t)}
   {
     #ifdef _MSC_VER
       if(m_Resolution > 0) timeBeginPeriod(m_Resolution);
@@ -28,5 +27,11 @@ namespace sequoia
     #ifdef _MSC_VER
       if(m_Resolution > 0) timeEndPeriod(m_Resolution);
     #endif
+  }
+
+  [[nodiscard]]
+  unsigned int timer_resolution::resolution(std::chrono::milliseconds t) noexcept
+  {
+    return t <= std::chrono::milliseconds{} ? 0u : static_cast<unsigned int>(t.count());
   }
 }
