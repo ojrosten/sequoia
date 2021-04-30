@@ -122,7 +122,6 @@ namespace sequoia::testing::impl
   }
 
   template<test_mode Mode, comparison_flavour C, class Actions, movable_comparable T, invocable_r<bool, T> Fn>
-  [[nodiscard]]
   bool check_comparison_consistency(test_logger<Mode>& logger, comparison_constant<C> comparison, const Actions& actions, const T& x, const T& y, Fn fn)
   {
     return do_check_comparison_consistency(logger, comparison, actions, x, y, std::move(fn));
@@ -130,25 +129,28 @@ namespace sequoia::testing::impl
 
   template<test_mode Mode, class Actions, orderable T, class... Args>
   [[nodiscard]]
-  bool check_ordering_consistency(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const Args&... args)
+  bool check_ordering_operators(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const Args&... args)
   {
-    if(!check_comparison_consistency(logger, less_than_type{}, actions, x, y, [](const T& x) { return !(x < x); }, args...))
-        return false;
+    sentinel sentry{logger, ""};
 
-    if(!check_comparison_consistency(logger, leq_type{}, actions, x, y, [](const T& x) { return x <= x; }, args...))
-      return false;
-
-    if(!check_comparison_consistency(logger, greater_than_type{}, actions, x, y, [](const T& x) { return !(x > x); }, args...))
-      return false;
-
-    if(!check_comparison_consistency(logger, geq_type{}, actions, x, y, [](const T& x) { return x >= x; }, args...))
-      return false;
+    check_comparison_consistency(logger, less_than_type{}, actions, x, y, [](const T& x) { return !(x < x); }, args...);
+    check_comparison_consistency(logger, leq_type{}, actions, x, y, [](const T& x) { return x <= x; }, args...);
+    check_comparison_consistency(logger, greater_than_type{}, actions, x, y, [](const T& x) { return !(x > x); }, args...);
+    check_comparison_consistency(logger, geq_type{}, actions, x, y, [](const T& x) { return x >= x; }, args...);
 
     if constexpr (three_way_comparable<T>)
     {
-      if(!check_comparison_consistency(logger, threeway_type{}, actions, x, y, [](const T& x) { return (x <=> x) == 0; }, args...))
-        return false;
+      check_comparison_consistency(logger, threeway_type{}, actions, x, y, [](const T& x) { return (x <=> x) == 0; }, args...);
     }
+
+    return !sentry.failure_detected();
+  }
+
+  template<test_mode Mode, class Actions, orderable T, class... Args>
+  [[nodiscard]]
+  bool check_ordering_consistency(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const Args&... args)
+  {
+    if(!check_ordering_operators(logger, actions, x, y, args...)) return false;
 
     auto comp{
       [&logger](const T& x, const T& y){
@@ -181,9 +183,10 @@ namespace sequoia::testing::impl
   [[nodiscard]]
   bool check_equality_preconditions(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const Args&... args)
   {
-    return check_comparison_consistency(logger, equality_type{}, actions, x, y, [](const T& x) { return x == x; }, args...)
-        && check_comparison_consistency(logger, inequality_type{}, actions, x, y, [](const T& x) { return !(x != x); }, args...)
-        && check("Precondition - for checking semantics, x and y are assumed to be different", logger, x != y);
+    const bool eq{check_comparison_consistency(logger, equality_type{}, actions, x, y, [](const T& x) { return x == x; }, args...)};
+    const bool neq{check_comparison_consistency(logger, inequality_type{}, actions, x, y, [](const T& x) { return !(x != x); }, args...)};
+
+    return eq && neq && check("Precondition - for checking semantics, x and y are assumed to be different", logger, x != y);
   }
 
   template<test_mode Mode, class Actions, equality_comparable T, class... Args>

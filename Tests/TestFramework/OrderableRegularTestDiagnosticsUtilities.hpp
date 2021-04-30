@@ -7,8 +7,6 @@
 
 #pragma once
 
-#include "sequoia/TestFramework/RegularTestCore.hpp"
-
 #include <vector>
 
 namespace sequoia::testing
@@ -626,16 +624,10 @@ namespace sequoia::testing
     std::vector<T, Allocator> x{};
 
     [[nodiscard]]
-    friend bool operator==(const orderable_regular_inefficient_comparisons lhs, const orderable_regular_inefficient_comparisons rhs) noexcept
-    {
-      return lhs.x == rhs.x;
-    }
+    friend bool operator==(const orderable_regular_inefficient_comparisons&, const orderable_regular_inefficient_comparisons&) noexcept = default;
 
     [[nodiscard]]
-    friend bool operator!=(const orderable_regular_inefficient_comparisons lhs, const orderable_regular_inefficient_comparisons rhs) noexcept
-    {
-      return lhs.x != rhs.x;
-    }
+    friend bool operator!=(const orderable_regular_inefficient_comparisons& lhs, const orderable_regular_inefficient_comparisons& rhs) noexcept = default;
 
     [[nodiscard]]
     friend bool operator<(const orderable_regular_inefficient_comparisons lhs, const orderable_regular_inefficient_comparisons rhs) noexcept

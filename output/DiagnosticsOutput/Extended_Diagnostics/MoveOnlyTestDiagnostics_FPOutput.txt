@@ -20,6 +20,10 @@
 	  [bool]
 	  check failed
 
+	  operator!= is inconsistent
+	  [bool]
+	  check failed
+
 	=======================================
 
 	Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 28

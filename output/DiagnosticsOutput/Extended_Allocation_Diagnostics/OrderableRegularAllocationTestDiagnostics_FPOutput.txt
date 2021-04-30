@@ -14,11 +14,63 @@
 	    		Propagate on move assignment = false,
 	    		Propagate on swap = false
 	     >]
-	    Unexpected allocation detected for operator==
+	    Unexpected allocation detected for operator<
 	    Unexpected allocation detected (y)
 	    [int]
 	    operator== returned false
 	    Obtained : 2
+	    Predicted: 0
+
+	    [shared_counting_allocator<
+	    		int,
+	    		Propagate on copy assignment = false,
+	    		Propagate on move assignment = false,
+	    		Propagate on swap = false
+	     >]
+	    Unexpected allocation detected for operator<=
+	    Unexpected allocation detected (y)
+	    [int]
+	    operator== returned false
+	    Obtained : 2
+	    Predicted: 0
+
+	    [shared_counting_allocator<
+	    		int,
+	    		Propagate on copy assignment = false,
+	    		Propagate on move assignment = false,
+	    		Propagate on swap = false
+	     >]
+	    Unexpected allocation detected for operator>
+	    Unexpected allocation detected (y)
+	    [int]
+	    operator== returned false
+	    Obtained : 2
+	    Predicted: 0
+
+	    [shared_counting_allocator<
+	    		int,
+	    		Propagate on copy assignment = false,
+	    		Propagate on move assignment = false,
+	    		Propagate on swap = false
+	     >]
+	    Unexpected allocation detected for operator>=
+	    Unexpected allocation detected (y)
+	    [int]
+	    operator== returned false
+	    Obtained : 2
+	    Predicted: 0
+
+	    [shared_counting_allocator<
+	    		int,
+	    		Propagate on copy assignment = false,
+	    		Propagate on move assignment = false,
+	    		Propagate on swap = false
+	     >]
+	    Unexpected allocation detected for operator<=>
+	    Unexpected allocation detected (y)
+	    [int]
+	    operator== returned false
+	    Obtained : 6
 	    Predicted: 0
 
 	=======================================
@@ -34,11 +86,63 @@
 	  		Propagate on move assignment = false,
 	  		Propagate on swap = false
 	   >]
-	  Unexpected allocation detected for operator==
+	  Unexpected allocation detected for operator<
 	  Unexpected allocation detected (y)
 	  [int]
 	  operator== returned false
 	  Obtained : 2
+	  Predicted: 0
+
+	  [shared_counting_allocator<
+	  		int,
+	  		Propagate on copy assignment = false,
+	  		Propagate on move assignment = false,
+	  		Propagate on swap = false
+	   >]
+	  Unexpected allocation detected for operator<=
+	  Unexpected allocation detected (y)
+	  [int]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 0
+
+	  [shared_counting_allocator<
+	  		int,
+	  		Propagate on copy assignment = false,
+	  		Propagate on move assignment = false,
+	  		Propagate on swap = false
+	   >]
+	  Unexpected allocation detected for operator>
+	  Unexpected allocation detected (y)
+	  [int]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 0
+
+	  [shared_counting_allocator<
+	  		int,
+	  		Propagate on copy assignment = false,
+	  		Propagate on move assignment = false,
+	  		Propagate on swap = false
+	   >]
+	  Unexpected allocation detected for operator>=
+	  Unexpected allocation detected (y)
+	  [int]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 0
+
+	  [shared_counting_allocator<
+	  		int,
+	  		Propagate on copy assignment = false,
+	  		Propagate on move assignment = false,
+	  		Propagate on swap = false
+	   >]
+	  Unexpected allocation detected for operator<=>
+	  Unexpected allocation detected (y)
+	  [int]
+	  operator== returned false
+	  Obtained : 6
 	  Predicted: 0
 
 	=======================================
@@ -59,11 +163,63 @@
 	    		Propagate on move assignment = false,
 	    		Propagate on swap = true
 	     >]
-	    Unexpected allocation detected for operator==
+	    Unexpected allocation detected for operator<
 	    Unexpected allocation detected (y)
 	    [int]
 	    operator== returned false
 	    Obtained : 2
+	    Predicted: 0
+
+	    [shared_counting_allocator<
+	    		int,
+	    		Propagate on copy assignment = false,
+	    		Propagate on move assignment = false,
+	    		Propagate on swap = true
+	     >]
+	    Unexpected allocation detected for operator<=
+	    Unexpected allocation detected (y)
+	    [int]
+	    operator== returned false
+	    Obtained : 2
+	    Predicted: 0
+
+	    [shared_counting_allocator<
+	    		int,
+	    		Propagate on copy assignment = false,
+	    		Propagate on move assignment = false,
+	    		Propagate on swap = true
+	     >]
+	    Unexpected allocation detected for operator>
+	    Unexpected allocation detected (y)
+	    [int]
+	    operator== returned false
+	    Obtained : 2
+	    Predicted: 0
+
+	    [shared_counting_allocator<
+	    		int,
+	    		Propagate on copy assignment = false,
+	    		Propagate on move assignment = false,
+	    		Propagate on swap = true
+	     >]
+	    Unexpected allocation detected for operator>=
+	    Unexpected allocation detected (y)
+	    [int]
+	    operator== returned false
+	    Obtained : 2
+	    Predicted: 0
+
+	    [shared_counting_allocator<
+	    		int,
+	    		Propagate on copy assignment = false,
+	    		Propagate on move assignment = false,
+	    		Propagate on swap = true
+	     >]
+	    Unexpected allocation detected for operator<=>
+	    Unexpected allocation detected (y)
+	    [int]
+	    operator== returned false
+	    Obtained : 6
 	    Predicted: 0
 
 	=======================================
@@ -79,11 +235,63 @@
 	  		Propagate on move assignment = false,
 	  		Propagate on swap = true
 	   >]
-	  Unexpected allocation detected for operator==
+	  Unexpected allocation detected for operator<
 	  Unexpected allocation detected (y)
 	  [int]
 	  operator== returned false
 	  Obtained : 2
+	  Predicted: 0
+
+	  [shared_counting_allocator<
+	  		int,
+	  		Propagate on copy assignment = false,
+	  		Propagate on move assignment = false,
+	  		Propagate on swap = true
+	   >]
+	  Unexpected allocation detected for operator<=
+	  Unexpected allocation detected (y)
+	  [int]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 0
+
+	  [shared_counting_allocator<
+	  		int,
+	  		Propagate on copy assignment = false,
+	  		Propagate on move assignment = false,
+	  		Propagate on swap = true
+	   >]
+	  Unexpected allocation detected for operator>
+	  Unexpected allocation detected (y)
+	  [int]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 0
+
+	  [shared_counting_allocator<
+	  		int,
+	  		Propagate on copy assignment = false,
+	  		Propagate on move assignment = false,
+	  		Propagate on swap = true
+	   >]
+	  Unexpected allocation detected for operator>=
+	  Unexpected allocation detected (y)
+	  [int]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 0
+
+	  [shared_counting_allocator<
+	  		int,
+	  		Propagate on copy assignment = false,
+	  		Propagate on move assignment = false,
+	  		Propagate on swap = true
+	   >]
+	  Unexpected allocation detected for operator<=>
+	  Unexpected allocation detected (y)
+	  [int]
+	  operator== returned false
+	  Obtained : 6
 	  Predicted: 0
 
 	=======================================
@@ -104,11 +312,63 @@
 	    		Propagate on move assignment = true,
 	    		Propagate on swap = false
 	     >]
-	    Unexpected allocation detected for operator==
+	    Unexpected allocation detected for operator<
 	    Unexpected allocation detected (y)
 	    [int]
 	    operator== returned false
 	    Obtained : 2
+	    Predicted: 0
+
+	    [shared_counting_allocator<
+	    		int,
+	    		Propagate on copy assignment = false,
+	    		Propagate on move assignment = true,
+	    		Propagate on swap = false
+	     >]
+	    Unexpected allocation detected for operator<=
+	    Unexpected allocation detected (y)
+	    [int]
+	    operator== returned false
+	    Obtained : 2
+	    Predicted: 0
+
+	    [shared_counting_allocator<
+	    		int,
+	    		Propagate on copy assignment = false,
+	    		Propagate on move assignment = true,
+	    		Propagate on swap = false
+	     >]
+	    Unexpected allocation detected for operator>
+	    Unexpected allocation detected (y)
+	    [int]
+	    operator== returned false
+	    Obtained : 2
+	    Predicted: 0
+
+	    [shared_counting_allocator<
+	    		int,
+	    		Propagate on copy assignment = false,
+	    		Propagate on move assignment = true,
+	    		Propagate on swap = false
+	     >]
+	    Unexpected allocation detected for operator>=
+	    Unexpected allocation detected (y)
+	    [int]
+	    operator== returned false
+	    Obtained : 2
+	    Predicted: 0
+
+	    [shared_counting_allocator<
+	    		int,
+	    		Propagate on copy assignment = false,
+	    		Propagate on move assignment = true,
+	    		Propagate on swap = false
+	     >]
+	    Unexpected allocation detected for operator<=>
+	    Unexpected allocation detected (y)
+	    [int]
+	    operator== returned false
+	    Obtained : 6
 	    Predicted: 0
 
 	=======================================
@@ -124,11 +384,63 @@
 	  		Propagate on move assignment = true,
 	  		Propagate on swap = false
 	   >]
-	  Unexpected allocation detected for operator==
+	  Unexpected allocation detected for operator<
 	  Unexpected allocation detected (y)
 	  [int]
 	  operator== returned false
 	  Obtained : 2
+	  Predicted: 0
+
+	  [shared_counting_allocator<
+	  		int,
+	  		Propagate on copy assignment = false,
+	  		Propagate on move assignment = true,
+	  		Propagate on swap = false
+	   >]
+	  Unexpected allocation detected for operator<=
+	  Unexpected allocation detected (y)
+	  [int]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 0
+
+	  [shared_counting_allocator<
+	  		int,
+	  		Propagate on copy assignment = false,
+	  		Propagate on move assignment = true,
+	  		Propagate on swap = false
+	   >]
+	  Unexpected allocation detected for operator>
+	  Unexpected allocation detected (y)
+	  [int]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 0
+
+	  [shared_counting_allocator<
+	  		int,
+	  		Propagate on copy assignment = false,
+	  		Propagate on move assignment = true,
+	  		Propagate on swap = false
+	   >]
+	  Unexpected allocation detected for operator>=
+	  Unexpected allocation detected (y)
+	  [int]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 0
+
+	  [shared_counting_allocator<
+	  		int,
+	  		Propagate on copy assignment = false,
+	  		Propagate on move assignment = true,
+	  		Propagate on swap = false
+	   >]
+	  Unexpected allocation detected for operator<=>
+	  Unexpected allocation detected (y)
+	  [int]
+	  operator== returned false
+	  Obtained : 6
 	  Predicted: 0
 
 	=======================================
@@ -149,11 +461,63 @@
 	    		Propagate on move assignment = true,
 	    		Propagate on swap = true
 	     >]
-	    Unexpected allocation detected for operator==
+	    Unexpected allocation detected for operator<
 	    Unexpected allocation detected (y)
 	    [int]
 	    operator== returned false
 	    Obtained : 2
+	    Predicted: 0
+
+	    [shared_counting_allocator<
+	    		int,
+	    		Propagate on copy assignment = false,
+	    		Propagate on move assignment = true,
+	    		Propagate on swap = true
+	     >]
+	    Unexpected allocation detected for operator<=
+	    Unexpected allocation detected (y)
+	    [int]
+	    operator== returned false
+	    Obtained : 2
+	    Predicted: 0
+
+	    [shared_counting_allocator<
+	    		int,
+	    		Propagate on copy assignment = false,
+	    		Propagate on move assignment = true,
+	    		Propagate on swap = true
+	     >]
+	    Unexpected allocation detected for operator>
+	    Unexpected allocation detected (y)
+	    [int]
+	    operator== returned false
+	    Obtained : 2
+	    Predicted: 0
+
+	    [shared_counting_allocator<
+	    		int,
+	    		Propagate on copy assignment = false,
+	    		Propagate on move assignment = true,
+	    		Propagate on swap = true
+	     >]
+	    Unexpected allocation detected for operator>=
+	    Unexpected allocation detected (y)
+	    [int]
+	    operator== returned false
+	    Obtained : 2
+	    Predicted: 0
+
+	    [shared_counting_allocator<
+	    		int,
+	    		Propagate on copy assignment = false,
+	    		Propagate on move assignment = true,
+	    		Propagate on swap = true
+	     >]
+	    Unexpected allocation detected for operator<=>
+	    Unexpected allocation detected (y)
+	    [int]
+	    operator== returned false
+	    Obtained : 6
 	    Predicted: 0
 
 	=======================================
@@ -169,11 +533,63 @@
 	  		Propagate on move assignment = true,
 	  		Propagate on swap = true
 	   >]
-	  Unexpected allocation detected for operator==
+	  Unexpected allocation detected for operator<
 	  Unexpected allocation detected (y)
 	  [int]
 	  operator== returned false
 	  Obtained : 2
+	  Predicted: 0
+
+	  [shared_counting_allocator<
+	  		int,
+	  		Propagate on copy assignment = false,
+	  		Propagate on move assignment = true,
+	  		Propagate on swap = true
+	   >]
+	  Unexpected allocation detected for operator<=
+	  Unexpected allocation detected (y)
+	  [int]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 0
+
+	  [shared_counting_allocator<
+	  		int,
+	  		Propagate on copy assignment = false,
+	  		Propagate on move assignment = true,
+	  		Propagate on swap = true
+	   >]
+	  Unexpected allocation detected for operator>
+	  Unexpected allocation detected (y)
+	  [int]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 0
+
+	  [shared_counting_allocator<
+	  		int,
+	  		Propagate on copy assignment = false,
+	  		Propagate on move assignment = true,
+	  		Propagate on swap = true
+	   >]
+	  Unexpected allocation detected for operator>=
+	  Unexpected allocation detected (y)
+	  [int]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 0
+
+	  [shared_counting_allocator<
+	  		int,
+	  		Propagate on copy assignment = false,
+	  		Propagate on move assignment = true,
+	  		Propagate on swap = true
+	   >]
+	  Unexpected allocation detected for operator<=>
+	  Unexpected allocation detected (y)
+	  [int]
+	  operator== returned false
+	  Obtained : 6
 	  Predicted: 0
 
 	=======================================
@@ -194,11 +610,63 @@
 	    		Propagate on move assignment = false,
 	    		Propagate on swap = false
 	     >]
-	    Unexpected allocation detected for operator==
+	    Unexpected allocation detected for operator<
 	    Unexpected allocation detected (y)
 	    [int]
 	    operator== returned false
 	    Obtained : 2
+	    Predicted: 0
+
+	    [shared_counting_allocator<
+	    		int,
+	    		Propagate on copy assignment = true,
+	    		Propagate on move assignment = false,
+	    		Propagate on swap = false
+	     >]
+	    Unexpected allocation detected for operator<=
+	    Unexpected allocation detected (y)
+	    [int]
+	    operator== returned false
+	    Obtained : 2
+	    Predicted: 0
+
+	    [shared_counting_allocator<
+	    		int,
+	    		Propagate on copy assignment = true,
+	    		Propagate on move assignment = false,
+	    		Propagate on swap = false
+	     >]
+	    Unexpected allocation detected for operator>
+	    Unexpected allocation detected (y)
+	    [int]
+	    operator== returned false
+	    Obtained : 2
+	    Predicted: 0
+
+	    [shared_counting_allocator<
+	    		int,
+	    		Propagate on copy assignment = true,
+	    		Propagate on move assignment = false,
+	    		Propagate on swap = false
+	     >]
+	    Unexpected allocation detected for operator>=
+	    Unexpected allocation detected (y)
+	    [int]
+	    operator== returned false
+	    Obtained : 2
+	    Predicted: 0
+
+	    [shared_counting_allocator<
+	    		int,
+	    		Propagate on copy assignment = true,
+	    		Propagate on move assignment = false,
+	    		Propagate on swap = false
+	     >]
+	    Unexpected allocation detected for operator<=>
+	    Unexpected allocation detected (y)
+	    [int]
+	    operator== returned false
+	    Obtained : 6
 	    Predicted: 0
 
 	=======================================
@@ -214,11 +682,63 @@
 	  		Propagate on move assignment = false,
 	  		Propagate on swap = false
 	   >]
-	  Unexpected allocation detected for operator==
+	  Unexpected allocation detected for operator<
 	  Unexpected allocation detected (y)
 	  [int]
 	  operator== returned false
 	  Obtained : 2
+	  Predicted: 0
+
+	  [shared_counting_allocator<
+	  		int,
+	  		Propagate on copy assignment = true,
+	  		Propagate on move assignment = false,
+	  		Propagate on swap = false
+	   >]
+	  Unexpected allocation detected for operator<=
+	  Unexpected allocation detected (y)
+	  [int]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 0
+
+	  [shared_counting_allocator<
+	  		int,
+	  		Propagate on copy assignment = true,
+	  		Propagate on move assignment = false,
+	  		Propagate on swap = false
+	   >]
+	  Unexpected allocation detected for operator>
+	  Unexpected allocation detected (y)
+	  [int]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 0
+
+	  [shared_counting_allocator<
+	  		int,
+	  		Propagate on copy assignment = true,
+	  		Propagate on move assignment = false,
+	  		Propagate on swap = false
+	   >]
+	  Unexpected allocation detected for operator>=
+	  Unexpected allocation detected (y)
+	  [int]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 0
+
+	  [shared_counting_allocator<
+	  		int,
+	  		Propagate on copy assignment = true,
+	  		Propagate on move assignment = false,
+	  		Propagate on swap = false
+	   >]
+	  Unexpected allocation detected for operator<=>
+	  Unexpected allocation detected (y)
+	  [int]
+	  operator== returned false
+	  Obtained : 6
 	  Predicted: 0
 
 	=======================================
@@ -239,11 +759,63 @@
 	    		Propagate on move assignment = false,
 	    		Propagate on swap = true
 	     >]
-	    Unexpected allocation detected for operator==
+	    Unexpected allocation detected for operator<
 	    Unexpected allocation detected (y)
 	    [int]
 	    operator== returned false
 	    Obtained : 2
+	    Predicted: 0
+
+	    [shared_counting_allocator<
+	    		int,
+	    		Propagate on copy assignment = true,
+	    		Propagate on move assignment = false,
+	    		Propagate on swap = true
+	     >]
+	    Unexpected allocation detected for operator<=
+	    Unexpected allocation detected (y)
+	    [int]
+	    operator== returned false
+	    Obtained : 2
+	    Predicted: 0
+
+	    [shared_counting_allocator<
+	    		int,
+	    		Propagate on copy assignment = true,
+	    		Propagate on move assignment = false,
+	    		Propagate on swap = true
+	     >]
+	    Unexpected allocation detected for operator>
+	    Unexpected allocation detected (y)
+	    [int]
+	    operator== returned false
+	    Obtained : 2
+	    Predicted: 0
+
+	    [shared_counting_allocator<
+	    		int,
+	    		Propagate on copy assignment = true,
+	    		Propagate on move assignment = false,
+	    		Propagate on swap = true
+	     >]
+	    Unexpected allocation detected for operator>=
+	    Unexpected allocation detected (y)
+	    [int]
+	    operator== returned false
+	    Obtained : 2
+	    Predicted: 0
+
+	    [shared_counting_allocator<
+	    		int,
+	    		Propagate on copy assignment = true,
+	    		Propagate on move assignment = false,
+	    		Propagate on swap = true
+	     >]
+	    Unexpected allocation detected for operator<=>
+	    Unexpected allocation detected (y)
+	    [int]
+	    operator== returned false
+	    Obtained : 6
 	    Predicted: 0
 
 	=======================================
@@ -259,11 +831,63 @@
 	  		Propagate on move assignment = false,
 	  		Propagate on swap = true
 	   >]
-	  Unexpected allocation detected for operator==
+	  Unexpected allocation detected for operator<
 	  Unexpected allocation detected (y)
 	  [int]
 	  operator== returned false
 	  Obtained : 2
+	  Predicted: 0
+
+	  [shared_counting_allocator<
+	  		int,
+	  		Propagate on copy assignment = true,
+	  		Propagate on move assignment = false,
+	  		Propagate on swap = true
+	   >]
+	  Unexpected allocation detected for operator<=
+	  Unexpected allocation detected (y)
+	  [int]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 0
+
+	  [shared_counting_allocator<
+	  		int,
+	  		Propagate on copy assignment = true,
+	  		Propagate on move assignment = false,
+	  		Propagate on swap = true
+	   >]
+	  Unexpected allocation detected for operator>
+	  Unexpected allocation detected (y)
+	  [int]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 0
+
+	  [shared_counting_allocator<
+	  		int,
+	  		Propagate on copy assignment = true,
+	  		Propagate on move assignment = false,
+	  		Propagate on swap = true
+	   >]
+	  Unexpected allocation detected for operator>=
+	  Unexpected allocation detected (y)
+	  [int]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 0
+
+	  [shared_counting_allocator<
+	  		int,
+	  		Propagate on copy assignment = true,
+	  		Propagate on move assignment = false,
+	  		Propagate on swap = true
+	   >]
+	  Unexpected allocation detected for operator<=>
+	  Unexpected allocation detected (y)
+	  [int]
+	  operator== returned false
+	  Obtained : 6
 	  Predicted: 0
 
 	=======================================
@@ -284,11 +908,63 @@
 	    		Propagate on move assignment = true,
 	    		Propagate on swap = false
 	     >]
-	    Unexpected allocation detected for operator==
+	    Unexpected allocation detected for operator<
 	    Unexpected allocation detected (y)
 	    [int]
 	    operator== returned false
 	    Obtained : 2
+	    Predicted: 0
+
+	    [shared_counting_allocator<
+	    		int,
+	    		Propagate on copy assignment = true,
+	    		Propagate on move assignment = true,
+	    		Propagate on swap = false
+	     >]
+	    Unexpected allocation detected for operator<=
+	    Unexpected allocation detected (y)
+	    [int]
+	    operator== returned false
+	    Obtained : 2
+	    Predicted: 0
+
+	    [shared_counting_allocator<
+	    		int,
+	    		Propagate on copy assignment = true,
+	    		Propagate on move assignment = true,
+	    		Propagate on swap = false
+	     >]
+	    Unexpected allocation detected for operator>
+	    Unexpected allocation detected (y)
+	    [int]
+	    operator== returned false
+	    Obtained : 2
+	    Predicted: 0
+
+	    [shared_counting_allocator<
+	    		int,
+	    		Propagate on copy assignment = true,
+	    		Propagate on move assignment = true,
+	    		Propagate on swap = false
+	     >]
+	    Unexpected allocation detected for operator>=
+	    Unexpected allocation detected (y)
+	    [int]
+	    operator== returned false
+	    Obtained : 2
+	    Predicted: 0
+
+	    [shared_counting_allocator<
+	    		int,
+	    		Propagate on copy assignment = true,
+	    		Propagate on move assignment = true,
+	    		Propagate on swap = false
+	     >]
+	    Unexpected allocation detected for operator<=>
+	    Unexpected allocation detected (y)
+	    [int]
+	    operator== returned false
+	    Obtained : 6
 	    Predicted: 0
 
 	=======================================
@@ -304,11 +980,63 @@
 	  		Propagate on move assignment = true,
 	  		Propagate on swap = false
 	   >]
-	  Unexpected allocation detected for operator==
+	  Unexpected allocation detected for operator<
 	  Unexpected allocation detected (y)
 	  [int]
 	  operator== returned false
 	  Obtained : 2
+	  Predicted: 0
+
+	  [shared_counting_allocator<
+	  		int,
+	  		Propagate on copy assignment = true,
+	  		Propagate on move assignment = true,
+	  		Propagate on swap = false
+	   >]
+	  Unexpected allocation detected for operator<=
+	  Unexpected allocation detected (y)
+	  [int]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 0
+
+	  [shared_counting_allocator<
+	  		int,
+	  		Propagate on copy assignment = true,
+	  		Propagate on move assignment = true,
+	  		Propagate on swap = false
+	   >]
+	  Unexpected allocation detected for operator>
+	  Unexpected allocation detected (y)
+	  [int]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 0
+
+	  [shared_counting_allocator<
+	  		int,
+	  		Propagate on copy assignment = true,
+	  		Propagate on move assignment = true,
+	  		Propagate on swap = false
+	   >]
+	  Unexpected allocation detected for operator>=
+	  Unexpected allocation detected (y)
+	  [int]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 0
+
+	  [shared_counting_allocator<
+	  		int,
+	  		Propagate on copy assignment = true,
+	  		Propagate on move assignment = true,
+	  		Propagate on swap = false
+	   >]
+	  Unexpected allocation detected for operator<=>
+	  Unexpected allocation detected (y)
+	  [int]
+	  operator== returned false
+	  Obtained : 6
 	  Predicted: 0
 
 	=======================================
@@ -329,11 +1057,63 @@
 	    		Propagate on move assignment = true,
 	    		Propagate on swap = true
 	     >]
-	    Unexpected allocation detected for operator==
+	    Unexpected allocation detected for operator<
 	    Unexpected allocation detected (y)
 	    [int]
 	    operator== returned false
 	    Obtained : 2
+	    Predicted: 0
+
+	    [shared_counting_allocator<
+	    		int,
+	    		Propagate on copy assignment = true,
+	    		Propagate on move assignment = true,
+	    		Propagate on swap = true
+	     >]
+	    Unexpected allocation detected for operator<=
+	    Unexpected allocation detected (y)
+	    [int]
+	    operator== returned false
+	    Obtained : 2
+	    Predicted: 0
+
+	    [shared_counting_allocator<
+	    		int,
+	    		Propagate on copy assignment = true,
+	    		Propagate on move assignment = true,
+	    		Propagate on swap = true
+	     >]
+	    Unexpected allocation detected for operator>
+	    Unexpected allocation detected (y)
+	    [int]
+	    operator== returned false
+	    Obtained : 2
+	    Predicted: 0
+
+	    [shared_counting_allocator<
+	    		int,
+	    		Propagate on copy assignment = true,
+	    		Propagate on move assignment = true,
+	    		Propagate on swap = true
+	     >]
+	    Unexpected allocation detected for operator>=
+	    Unexpected allocation detected (y)
+	    [int]
+	    operator== returned false
+	    Obtained : 2
+	    Predicted: 0
+
+	    [shared_counting_allocator<
+	    		int,
+	    		Propagate on copy assignment = true,
+	    		Propagate on move assignment = true,
+	    		Propagate on swap = true
+	     >]
+	    Unexpected allocation detected for operator<=>
+	    Unexpected allocation detected (y)
+	    [int]
+	    operator== returned false
+	    Obtained : 6
 	    Predicted: 0
 
 	=======================================
@@ -349,11 +1129,63 @@
 	  		Propagate on move assignment = true,
 	  		Propagate on swap = true
 	   >]
-	  Unexpected allocation detected for operator==
+	  Unexpected allocation detected for operator<
 	  Unexpected allocation detected (y)
 	  [int]
 	  operator== returned false
 	  Obtained : 2
+	  Predicted: 0
+
+	  [shared_counting_allocator<
+	  		int,
+	  		Propagate on copy assignment = true,
+	  		Propagate on move assignment = true,
+	  		Propagate on swap = true
+	   >]
+	  Unexpected allocation detected for operator<=
+	  Unexpected allocation detected (y)
+	  [int]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 0
+
+	  [shared_counting_allocator<
+	  		int,
+	  		Propagate on copy assignment = true,
+	  		Propagate on move assignment = true,
+	  		Propagate on swap = true
+	   >]
+	  Unexpected allocation detected for operator>
+	  Unexpected allocation detected (y)
+	  [int]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 0
+
+	  [shared_counting_allocator<
+	  		int,
+	  		Propagate on copy assignment = true,
+	  		Propagate on move assignment = true,
+	  		Propagate on swap = true
+	   >]
+	  Unexpected allocation detected for operator>=
+	  Unexpected allocation detected (y)
+	  [int]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 0
+
+	  [shared_counting_allocator<
+	  		int,
+	  		Propagate on copy assignment = true,
+	  		Propagate on move assignment = true,
+	  		Propagate on swap = true
+	   >]
+	  Unexpected allocation detected for operator<=>
+	  Unexpected allocation detected (y)
+	  [int]
+	  operator== returned false
+	  Obtained : 6
 	  Predicted: 0
 
 	=======================================

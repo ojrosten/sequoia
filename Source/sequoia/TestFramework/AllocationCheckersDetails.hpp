@@ -709,7 +709,6 @@ namespace sequoia::testing::impl
     invocable_r<bool, T> Fn,
     class... Getters
   >
-  [[nodiscard]]
   bool check_comparison_consistency(test_logger<Mode>& logger,
                                     comparison_constant<C> comparison,
                                     const Actions& actions,
