@@ -103,10 +103,14 @@ namespace sequoia::testing::impl
   };
 
   template<test_mode Mode, comparison_flavour C, class Actions, movable_comparable T, invocable_r<bool, T> Fn, class... Args>
-  bool check_comparison_consistency(test_logger<Mode>& logger, comparison_constant<C> comparison, [[maybe_unused]] const Actions& actions, const T& x, [[maybe_unused]]const T& y, Fn fn, [[maybe_unused]] const Args&... args)
+  [[nodiscard]]
+  bool do_check_comparison_consistency(test_logger<Mode>& logger, comparison_constant<C> comparison, [[maybe_unused]] const Actions& actions, const T& x, [[maybe_unused]]const T& y, Fn fn, [[maybe_unused]] const Args&... args)
   {
-    if(!check(std::string{"operator"}.append(to_string(comparison.value)).append(" is inconsistent"), logger, fn(x)))
+    if(   !check(std::string{"operator"}.append(to_string(comparison.value)).append(" is inconsistent"), logger, fn(x))
+       || !check(std::string{"operator"}.append(to_string(comparison.value)).append(" is inconsistent"), logger, fn(y)))
+    {
       return false;
+    }
 
     if constexpr (Actions::has_post_comparison_action)
     {
@@ -115,6 +119,13 @@ namespace sequoia::testing::impl
     }
 
     return true;
+  }
+
+  template<test_mode Mode, comparison_flavour C, class Actions, movable_comparable T, invocable_r<bool, T> Fn>
+  [[nodiscard]]
+  bool check_comparison_consistency(test_logger<Mode>& logger, comparison_constant<C> comparison, const Actions& actions, const T& x, const T& y, Fn fn)
+  {
+    return do_check_comparison_consistency(logger, comparison, actions, x, y, std::move(fn));
   }
 
   template<test_mode Mode, class Actions, orderable T, class... Args>
@@ -170,13 +181,9 @@ namespace sequoia::testing::impl
   [[nodiscard]]
   bool check_equality_preconditions(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const Args&... args)
   {
-    if(!check_comparison_consistency(logger, equality_type{}, actions, x, y, [](const T& x) { return x == x; }, args...))
-      return false;
-
-    if(!check_comparison_consistency(logger, inequality_type{}, actions, x, y, [](const T& x) { return !(x != x); }, args...))
-      return false;
-
-    return check("Precondition - for checking semantics, x and y are assumed to be different", logger, x != y);
+    return check_comparison_consistency(logger, equality_type{}, actions, x, y, [](const T& x) { return x == x; }, args...)
+        && check_comparison_consistency(logger, inequality_type{}, actions, x, y, [](const T& x) { return !(x != x); }, args...)
+        && check("Precondition - for checking semantics, x and y are assumed to be different", logger, x != y);
   }
 
   template<test_mode Mode, class Actions, equality_comparable T, class... Args>

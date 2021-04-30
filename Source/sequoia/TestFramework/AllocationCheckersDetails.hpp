@@ -700,6 +700,28 @@ namespace sequoia::testing::impl
       the current number of allocations may be acquired before proceeding
    */
 
+  template
+  <
+    test_mode Mode,
+    comparison_flavour C,
+    class Actions,
+    movable_comparable T,
+    invocable_r<bool, T> Fn,
+    class... Getters
+  >
+  [[nodiscard]]
+  bool check_comparison_consistency(test_logger<Mode>& logger,
+                                    comparison_constant<C> comparison,
+                                    const Actions& actions,
+                                    const T& x,
+                                    const T& y,
+                                    Fn fn,
+                                    const dual_allocation_checker<T, Getters>&... checkers)
+  {
+    return do_check_comparison_consistency(logger, comparison, actions, x, y, std::move(fn), dual_allocation_checker(checkers.info(), x, y)...);
+  }
+
+
   template<test_mode Mode, class Actions, movable_comparable T, alloc_getter<T>... Getters>
   std::optional<T> check_move_construction(test_logger<Mode>& logger, const Actions& actions, T&& z, const T& y, const dual_allocation_checker<T, Getters>&... checkers)
   {
