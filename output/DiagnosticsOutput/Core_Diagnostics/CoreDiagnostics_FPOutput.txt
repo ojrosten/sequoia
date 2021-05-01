@@ -857,7 +857,11 @@
 	--Regular Semantics--
 	[sequoia::testing::broken_equality<int, std::allocator<int> >]
 
-	  operator== is inconsistent
+	  operator== is inconsistent (x)
+	  [bool]
+	  check failed
+
+	  operator== is inconsistent (y)
 	  [bool]
 	  check failed
 
@@ -869,7 +873,11 @@
 	--Regular Semantics--
 	[sequoia::testing::broken_inequality<int, std::allocator<int> >]
 
-	  operator!= is inconsistent
+	  operator!= is inconsistent (x)
+	  [bool]
+	  check failed
+
+	  operator!= is inconsistent (y)
 	  [bool]
 	  check failed
 

@@ -440,6 +440,19 @@ namespace sequoia::testing::impl
 
   //================================ checks using allocation_checker ================================//
 
+  template<auto AllocEvent, test_mode Mode, movable_comparable T, alloc_getter<T> Getter, alloc_getter<T>... Getters>
+  void check_no_allocation(test_logger<Mode>& logger, const T& container, std::string_view tag, const allocation_checker<T, Getter>& checker, const allocation_checker<T, Getters>&... moreCheckers)
+  {
+    auto checkFn{
+        [tag, &logger, &container](const auto& checker){
+          const alloc_prediction<AllocEvent> prediction{};
+          checker.check(std::string{"Unexpected allocation detected "}.append(tag), logger, container, prediction);
+      }
+    };
+
+    check_allocation(logger, checkFn, checker, moreCheckers...);
+  }
+
   template<test_mode Mode, movable_comparable T, alloc_getter<T> Getter, alloc_getter<T>... Getters>
   void check_copy_x_allocation(test_logger<Mode>& logger, const T& container, const allocation_checker<T, Getter>& checker, const allocation_checker<T, Getters>&... moreCheckers)
   {
@@ -651,11 +664,12 @@ namespace sequoia::testing::impl
     using precondition_actions<T>::precondition_actions;
 
     template<test_mode Mode, comparison_flavour C, alloc_getter<T>... Getters>
-    static bool post_comparison_action(test_logger<Mode>& logger, comparison_constant<C> comparison, const T& x, const T& y, const dual_allocation_checker<T, Getters>&... checkers)
+    static bool post_comparison_action(test_logger<Mode>& logger, comparison_constant<C> comparison, const T& x, std::string_view tag, const allocation_checker<T, Getters>&... checkers)
     {
       sentinel<Mode> s{logger, ""};
 
-      check_no_allocation<C>(std::string{"Unexpected allocation detected for operator"}.append(to_string(comparison.value)), logger, x, y, checkers...);
+      const auto mess{std::string{"for operator"}.append(to_string(comparison.value)).append(" ").append(tag)};
+      check_no_allocation<C>(logger, x, mess, checkers...);
 
       return !s.failure_detected();
     }
@@ -717,7 +731,12 @@ namespace sequoia::testing::impl
                                     Fn fn,
                                     const dual_allocation_checker<T, Getters>&... checkers)
   {
-    return do_check_comparison_consistency(logger, comparison, actions, x, y, std::move(fn), dual_allocation_checker(checkers.info(), x, y)...);
+    sentinel sentry{logger, ""};
+
+    do_check_comparison_consistency(logger, comparison, actions, x, "(x)", fn, allocation_checker(checkers.info(), x)...);
+    do_check_comparison_consistency(logger, comparison, actions, y, "(y)", fn, allocation_checker(checkers.info(), y)...);
+
+    return !sentry.failure_detected();
   }
 
 

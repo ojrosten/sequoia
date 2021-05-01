@@ -4,7 +4,11 @@
 	--Move-only Semantics--
 	[sequoia::testing::move_only_broken_equality<int, std::allocator<int> >]
 
-	  operator== is inconsistent
+	  operator== is inconsistent (x)
+	  [bool]
+	  check failed
+
+	  operator== is inconsistent (y)
 	  [bool]
 	  check failed
 
@@ -16,11 +20,19 @@
 	--Move-only Semantics--
 	[sequoia::testing::move_only_broken_inequality<int, std::allocator<int> >]
 
-	  operator== is inconsistent
+	  operator== is inconsistent (x)
 	  [bool]
 	  check failed
 
-	  operator!= is inconsistent
+	  operator== is inconsistent (y)
+	  [bool]
+	  check failed
+
+	  operator!= is inconsistent (x)
+	  [bool]
+	  check failed
+
+	  operator!= is inconsistent (y)
 	  [bool]
 	  check failed
 
