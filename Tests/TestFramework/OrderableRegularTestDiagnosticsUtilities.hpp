@@ -701,14 +701,14 @@ namespace sequoia::testing
 
     static int shift(int count, const alloc_prediction<comparison_flavour::threeway>&) noexcept
     {
-      return shift_comparison(count);
+      return shift_comparison(count, 6);
     }
   private:
-    static int shift_comparison(int count) noexcept
+    static int shift_comparison(int count, [[maybe_unused]] int shift = 2) noexcept
     {
       if constexpr (with_msvc_v && (iterator_debug_level() > 0))
       {
-        return count + 2;
+        return count + shift;
       }
       else
       {
