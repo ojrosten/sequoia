@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include "sequoia/TestFramework/AllocationCheckers.hpp"
+
 #include <vector>
 
 namespace sequoia::testing
@@ -668,6 +670,50 @@ namespace sequoia::testing
     {
       for(auto i : b.x) s << i << ' ';
       return s;
+    }
+  };
+
+
+  template<class T, class Allocator>
+  struct allocation_count_shifter<orderable_regular_inefficient_comparisons<T, Allocator>> : allocation_count_shifter<int>
+  {
+    using allocation_count_shifter<int>::shift;
+
+    static int shift(int count, const alloc_prediction<comparison_flavour::greater_than>&) noexcept
+    {
+      return shift_comparison(count);
+    }
+
+    static int shift(int count, const alloc_prediction<comparison_flavour::geq>) noexcept
+    {
+      return shift_comparison(count);
+    }
+
+    static int shift(int count, const alloc_prediction<comparison_flavour::less_than>&) noexcept
+    {
+      return shift_comparison(count);
+    }
+
+    static int shift(int count, const alloc_prediction<comparison_flavour::leq>&) noexcept
+    {
+      return shift_comparison(count);
+    }
+
+    static int shift(int count, const alloc_prediction<comparison_flavour::threeway>&) noexcept
+    {
+      return shift_comparison(count);
+    }
+  private:
+    static int shift_comparison(int count) noexcept
+    {
+      if constexpr (with_msvc_v && (iterator_debug_level() > 0))
+      {
+        return count + 2;
+      }
+      else
+      {
+        return count;
+      }
     }
   };
 }
