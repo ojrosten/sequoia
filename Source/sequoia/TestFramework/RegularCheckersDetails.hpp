@@ -21,14 +21,6 @@ namespace sequoia::testing::impl
   {
     using precondition_actions<T>::precondition_actions;
 
-    constexpr static bool has_post_comparison_action{};
-    constexpr static bool has_post_copy_action{};
-    constexpr static bool has_post_copy_assign_action{};
-    constexpr static bool has_post_move_action{};
-    constexpr static bool has_post_move_assign_action{};
-    constexpr static bool has_post_swap_action{};
-    constexpr static bool has_post_serialization_action{};
-
     template<test_mode Mode, class... Args>
     [[nodiscard]]
     bool check_preconditions(test_logger<Mode>& logger, const T& x, const T& y, const Args&... args) const
@@ -37,13 +29,22 @@ namespace sequoia::testing::impl
     }
   };
 
+  // TO DO: convert these 'concepts' to constexpr bools once MSVC stops bellyaching
+
+  template<class Actions>
+  concept post_copy_action = requires { &Actions::post_copy_action; };
+
+  template<class Actions>
+  concept post_copy_assign_action = requires { &Actions::post_copy_assign_action; };
+
+
   template<test_mode Mode, class Actions, pseudoregular T, class... Args>
   bool do_check_copy_assign(test_logger<Mode>& logger, [[maybe_unused]] const Actions& actions, T& z, const T& y, const Args&... args)
   {
     z = y;
     if(check_equality("Inconsistent copy assignment (from y)", logger, z, y))
     {
-      if constexpr(Actions::has_post_copy_assign_action)
+      if constexpr(post_copy_assign_action<Actions>)
       {
         actions.post_copy_assign_action(logger, z, y, args...);
       }
@@ -81,7 +82,7 @@ namespace sequoia::testing::impl
       check_equality("Inconsistent copy constructor (x)", logger, z, x)
     };
 
-    if constexpr(Actions::has_post_copy_action)
+    if constexpr(post_copy_action<Actions>)
     {
       if(consistentCopy)
       {

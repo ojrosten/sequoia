@@ -160,30 +160,29 @@ namespace sequoia::testing::impl
   // TO DO: convert these 'concepts' to constexpr bools once MSVC stops bellyaching
   
   template<class Actions>
-  concept comparison_action = requires { Actions::has_post_comparison_action; };
+  concept post_comparison_action = requires { &Actions::post_comparison_action; };
 
   template<class Actions>
-  concept move_action = requires { Actions::has_post_move_action; };
+  concept post_move_action = requires { &Actions::post_move_action; };
 
   template<class Actions>
-  concept move_assign_action = requires { Actions::has_post_move_assign_action; };
+  concept post_move_assign_action = requires { &Actions::post_move_assign_action; };
 
   template<class Actions>
-  concept swap_action = requires { Actions::has_post_swap_action; };
+  concept post_swap_action = requires { &Actions::post_swap_action; };
 
   template<class Actions>
-  concept serialization_action = requires { Actions::has_post_serialization_action; };
+  concept post_serialization_action = requires { &Actions::post_serialization_action; };
 
   //================================ comparisons ================================//
 
   template<test_mode Mode, comparison_flavour C, class Actions, movable_comparable T, invocable_r<bool, T> Fn, class... Args>
-    requires comparison_action<Actions>
   bool do_check_comparison_consistency(test_logger<Mode>& logger, comparison_constant<C> comparison, [[maybe_unused]] const Actions& actions, const T& x, std::string_view tag, Fn fn, [[maybe_unused]] const Args&... args)
   {
     if(!check(std::string{"operator"}.append(to_string(comparison.value)).append(" is inconsistent ").append(tag), logger, fn(x)))
       return false;
 
-    if constexpr (Actions::has_post_comparison_action)
+    if constexpr (post_comparison_action<Actions>)
     {
       if(!actions.post_comparison_action(logger, comparison, x, tag, args...))
         return false;
@@ -193,7 +192,6 @@ namespace sequoia::testing::impl
   }
 
   template<test_mode Mode, comparison_flavour C, class Actions, movable_comparable T, invocable_r<bool, T> Fn>
-    requires comparison_action<Actions>
   bool check_comparison_consistency(test_logger<Mode>& logger, comparison_constant<C> comparison, const Actions& actions, const T& x, const T& y, Fn fn)
   {
     sentinel sentry{logger, ""};
@@ -205,7 +203,6 @@ namespace sequoia::testing::impl
   }
 
   template<test_mode Mode, class Actions, orderable T, class... Args>
-    requires comparison_action<Actions>
   [[nodiscard]]
   bool check_ordering_operators(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const Args&... args)
   {
@@ -225,7 +222,6 @@ namespace sequoia::testing::impl
   }
 
   template<test_mode Mode, class Actions, orderable T, class... Args>
-    requires comparison_action<Actions>
   [[nodiscard]]
   bool check_ordering_consistency(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const Args&... args)
   {
@@ -252,7 +248,6 @@ namespace sequoia::testing::impl
   }
 
   template<test_mode Mode, class Actions, orderable T, class... Args>
-    requires comparison_action<Actions>
   [[nodiscard]]
   bool check_ordering_consistency(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const T&, const T&, const Args&... args)
   {
@@ -260,7 +255,6 @@ namespace sequoia::testing::impl
   }
 
   template<test_mode Mode, class Actions, equality_comparable T, class... Args>
-    requires comparison_action<Actions>
   [[nodiscard]]
   bool check_equality_preconditions(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const Args&... args)
   {
@@ -271,7 +265,6 @@ namespace sequoia::testing::impl
   }
 
   template<test_mode Mode, class Actions, equality_comparable T, class... Args>
-    requires comparison_action<Actions>
   [[nodiscard]]
   bool check_equality_preconditions(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const T& xClone, const T& yClone, const Args&... args)
   {
@@ -289,7 +282,6 @@ namespace sequoia::testing::impl
   }
 
   template<test_mode Mode, class Actions, orderable T, class... Args>
-    requires comparison_action<Actions>
   [[nodiscard]]
   bool check_orderable_preconditions(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const Args&... args)
   {
@@ -329,14 +321,13 @@ namespace sequoia::testing::impl
   //================================  move construction ================================ //
 
   template<test_mode Mode, class Actions, movable_comparable T, class... Args>
-    requires move_action<Actions>
   std::optional<T> do_check_move_construction(test_logger<Mode>& logger, [[maybe_unused]] const Actions& actions, T&& z, const T& y, const Args&... args)
   {
     T w{std::move(z)};
     if(!check_equality("Inconsistent move construction", logger, w, y))
       return {};
 
-    if constexpr(Actions::has_post_move_action)
+    if constexpr(post_move_action<Actions>)
     {
       actions.post_move_action(logger, w, args...);
     }
@@ -345,7 +336,6 @@ namespace sequoia::testing::impl
   }
 
   template<test_mode Mode, class Actions, movable_comparable T>
-    requires move_action<Actions>
   std::optional<T> check_move_construction(test_logger<Mode>& logger, const Actions& actions, T&& z, const T& y)
   {
     return do_check_move_construction(logger, actions, std::forward<T>(z), y);
@@ -354,21 +344,19 @@ namespace sequoia::testing::impl
   //================================ move assign ================================//
 
   template<test_mode Mode, class Actions, movable_comparable T, invocable<T&> Mutator, class... Args>
-    requires move_assign_action<Actions>
   void do_check_move_assign(test_logger<Mode>& logger, [[maybe_unused]] const Actions& actions, T& z, T&& y, const T& yClone, [[maybe_unused]] Mutator&& yMutator, const Args&... args)
   {
     z = std::move(y);
     if(!check_equality("Inconsistent move assignment (from y)", logger, z, yClone))
        return;
 
-    if constexpr(Actions::has_post_move_assign_action)
+    if constexpr(post_move_assign_action<Actions>)
     {
       actions.post_move_assign_action(logger, z, yClone, std::move(yMutator), args...);
     }
   }
 
   template<test_mode Mode, class Actions, movable_comparable T, invocable<T&> Mutator>
-    requires move_assign_action<Actions>
   void check_move_assign(test_logger<Mode>& logger, const Actions& actions, T& z, T&& y, const T& yClone, Mutator m)
   {
     do_check_move_assign(logger, actions, z, std::forward<T>(y), yClone, std::move(m));
@@ -377,7 +365,6 @@ namespace sequoia::testing::impl
   //================================ swap ================================//
 
   template<test_mode Mode, class Actions, movable_comparable T, class... Args>
-    requires swap_action<Actions>
   bool do_check_swap(test_logger<Mode>& logger, [[maybe_unused]] const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, [[maybe_unused]] const Args&... args)
   {
     using std::swap;
@@ -393,7 +380,7 @@ namespace sequoia::testing::impl
 
     if(swapx && swapy)
     {
-      if constexpr(Actions::has_post_swap_action)
+      if constexpr(post_swap_action<Actions>)
       {
         actions.post_swap_action(logger, x, y, yClone, args...);
       }
@@ -406,7 +393,6 @@ namespace sequoia::testing::impl
   }
 
   template<test_mode Mode, class Actions, movable_comparable T>
-    requires swap_action<Actions>
   bool check_swap(test_logger<Mode>& logger, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone)
   {
     return do_check_swap(logger, actions, std::move(x), std::move(y), xClone, yClone);
@@ -415,7 +401,7 @@ namespace sequoia::testing::impl
   //================================  serialization  ================================ //
 
   template<test_mode Mode, class Actions, movable_comparable T, class... Args>
-    requires (serializable_to<T, std::stringstream> && deserializable_from<T, std::stringstream> && serialization_action<Actions>)
+    requires (serializable_to<T, std::stringstream> && deserializable_from<T, std::stringstream>)
   bool do_check_serialization(test_logger<Mode>& logger,
                               [[maybe_unused]] const Actions& actions,
                               T&& u,
@@ -425,7 +411,7 @@ namespace sequoia::testing::impl
     std::stringstream s{};
     s << y;
 
-    if constexpr(Actions::has_post_serialization_action)
+    if constexpr(post_serialization_action<Actions>)
     {
       actions.post_serialization_action(logger, y, args...);
     }
@@ -436,7 +422,7 @@ namespace sequoia::testing::impl
   }
 
   template<test_mode Mode, class Actions, movable_comparable T>
-    requires (serializable_to<T, std::stringstream> && deserializable_from<T, std::stringstream> && serialization_action<Actions>)
+    requires (serializable_to<T, std::stringstream> && deserializable_from<T, std::stringstream>)
   bool check_serialization(test_logger<Mode>& logger, const Actions& actions, T&& u, const T& y)
   {
     return do_check_serialization(logger, actions, std::forward<T>(u), y);

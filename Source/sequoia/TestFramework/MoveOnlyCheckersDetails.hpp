@@ -20,11 +20,6 @@ namespace sequoia::testing::impl
   {
     using precondition_actions<T>::precondition_actions;
 
-    constexpr static bool has_post_comparison_action{};
-    constexpr static bool has_post_move_action{};
-    constexpr static bool has_post_move_assign_action{};
-    constexpr static bool has_post_swap_action{};
-
     template<test_mode Mode, class... Args>
     [[nodiscard]]
     bool check_preconditions(test_logger<Mode>& logger, const T& x, const T& y, const T& xClone, const T& yClone, const Args&... args) const

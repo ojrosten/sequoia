@@ -655,12 +655,6 @@ namespace sequoia::testing::impl
     }
 
   public:
-    constexpr static bool has_post_comparison_action{true};
-    constexpr static bool has_post_move_action{true};
-    constexpr static bool has_post_move_assign_action{true};
-    constexpr static bool has_post_swap_action{true};
-    constexpr static bool has_post_serialization_action{true};
-
     using precondition_actions<T>::precondition_actions;
 
     template<test_mode Mode, comparison_flavour C, alloc_getter<T>... Getters>

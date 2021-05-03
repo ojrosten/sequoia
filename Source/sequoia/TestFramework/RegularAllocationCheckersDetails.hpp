@@ -20,9 +20,6 @@ namespace sequoia::testing::impl
   template<pseudoregular T>
   struct regular_allocation_actions : allocation_actions<T>
   {
-    constexpr static bool has_post_copy_action{true};
-    constexpr static bool has_post_copy_assign_action{true};
-
     using allocation_actions<T>::allocation_actions;
 
     template<test_mode Mode, alloc_getter<T>... Getters>
