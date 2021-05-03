@@ -103,18 +103,19 @@ namespace sequoia::testing::impl
   };
 
   template<class T>
-  struct precondition_actions;
+  struct auxiliary_data_policy;
 
   template<equality_comparable T>
-  struct precondition_actions<T>
+  struct auxiliary_data_policy<T>
   {
-    
+  protected:
+    ~auxiliary_data_policy() = default;
   };
 
   template<orderable T>
-  struct precondition_actions<T>
+  struct auxiliary_data_policy<T>
   {
-    constexpr explicit precondition_actions<T>(std::weak_ordering order)
+    constexpr explicit auxiliary_data_policy<T>(std::weak_ordering order)
       : m_Order{order}
     {}
 
@@ -123,8 +124,16 @@ namespace sequoia::testing::impl
     {
       return m_Order;
     }
+  protected:
+    ~auxiliary_data_policy() = default;
   private:
     std::weak_ordering m_Order;
+  };
+
+  template<class T>
+  struct auxiliary_data : auxiliary_data_policy<T>
+  {
+    using auxiliary_data_policy<T>::auxiliary_data_policy;
   };
 
   // TO DO: convert these 'concepts' to constexpr bools once MSVC stops bellyaching

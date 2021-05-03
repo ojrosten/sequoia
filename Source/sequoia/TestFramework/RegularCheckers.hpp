@@ -49,7 +49,7 @@ namespace sequoia::testing
   void check_semantics(std::string_view description, test_logger<Mode>& logger, const T& x, const T& y)
   {
     sentinel<Mode> sentry{logger, add_type_info<T>(description).append("\n")};
-    impl::check_semantics(logger, impl::regular_actions<T>{}, x, y, impl::null_mutator{});
+    impl::check_semantics(logger, impl::auxiliary_data<T>{}, x, y, impl::null_mutator{});
   }
 
   /// Precondition: x!=y with values consistent with order
@@ -58,7 +58,7 @@ namespace sequoia::testing
   void check_semantics(std::string_view description, test_logger<Mode>& logger, const T& x, const T& y, std::weak_ordering order)
   {
     sentinel<Mode> sentry{logger, add_type_info<T>(description).append("\n")};
-    impl::check_semantics(logger, impl::regular_actions<T>{order}, x, y, impl::null_mutator{});
+    impl::check_semantics(logger, impl::auxiliary_data<T>{order}, x, y, impl::null_mutator{});
   }
 
   /// Precondition: x!=y
@@ -66,7 +66,7 @@ namespace sequoia::testing
   void check_semantics(std::string_view description, test_logger<Mode>& logger, const T& x, const T& y, Mutator yMutator)
   {
     sentinel<Mode> sentry{logger, add_type_info<T>(description).append("\n")};
-    impl::check_semantics(logger, impl::regular_actions<T>{}, x, y, yMutator);
+    impl::check_semantics(logger, impl::auxiliary_data<T>{}, x, y, yMutator);
   }
 
   /// Precondition: x!=y, with values consistent with order
@@ -75,6 +75,6 @@ namespace sequoia::testing
   void check_semantics(std::string_view description, test_logger<Mode>& logger, const T& x, const T& y, std::weak_ordering order, Mutator yMutator)
   {
     sentinel<Mode> sentry{logger, add_type_info<T>(description).append("\n")};
-    impl::check_semantics(logger, impl::regular_actions<T>{order}, x, y, order, yMutator);
+    impl::check_semantics(logger, impl::auxiliary_data<T>{order}, x, y, order, yMutator);
   }
 }

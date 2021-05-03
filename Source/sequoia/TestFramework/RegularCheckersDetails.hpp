@@ -16,12 +16,6 @@
 
 namespace sequoia::testing::impl
 {
-  template<pseudoregular T>
-  struct regular_actions : precondition_actions<T>
-  {
-    using precondition_actions<T>::precondition_actions;
-  };
-
   // TO DO: convert these 'concepts' to constexpr bools once MSVC stops bellyaching
 
   template<class Actions>

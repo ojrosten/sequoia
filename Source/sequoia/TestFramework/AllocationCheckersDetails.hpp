@@ -644,7 +644,7 @@ namespace sequoia::testing::impl
 
   /*! \brief actions common to both move-only and regular types. */
   template<movable_comparable T>
-  struct allocation_actions : precondition_actions<T>
+  struct allocation_actions : auxiliary_data_policy<T>
   {
   private:
     template<class... Checkers>
@@ -655,7 +655,7 @@ namespace sequoia::testing::impl
     }
 
   public:
-    using precondition_actions<T>::precondition_actions;
+    using auxiliary_data_policy<T>::auxiliary_data_policy;
 
     template<test_mode Mode, comparison_flavour C, alloc_getter<T>... Getters>
     static bool post_comparison_action(test_logger<Mode>& logger, comparison_constant<C> comparison, const T& x, std::string_view tag, const allocation_checker<T, Getters>&... checkers)
