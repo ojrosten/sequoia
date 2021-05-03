@@ -102,148 +102,6 @@ namespace sequoia::testing::impl
     template<class T> constexpr void operator()(const T&) noexcept {}
   };
 
-  template<test_mode Mode, comparison_flavour C, class Actions, movable_comparable T, invocable_r<bool, T> Fn, class... Args>
-  bool do_check_comparison_consistency(test_logger<Mode>& logger, comparison_constant<C> comparison, [[maybe_unused]] const Actions& actions, const T& x, std::string_view tag, Fn fn, [[maybe_unused]] const Args&... args)
-  {
-    if(!check(std::string{"operator"}.append(to_string(comparison.value)).append(" is inconsistent ").append(tag), logger, fn(x)))
-      return false;
-
-    if constexpr (Actions::has_post_comparison_action)
-    {
-      if(!actions.post_comparison_action(logger, comparison, x, tag, args...))
-        return false;
-    }
-
-    return true;
-  }
-
-  template<test_mode Mode, comparison_flavour C, class Actions, movable_comparable T, invocable_r<bool, T> Fn>
-  bool check_comparison_consistency(test_logger<Mode>& logger, comparison_constant<C> comparison, const Actions& actions, const T& x, const T& y, Fn fn)
-  {
-    sentinel sentry{logger, ""};
-
-    do_check_comparison_consistency(logger, comparison, actions, x, "(x)", fn);
-    do_check_comparison_consistency(logger, comparison, actions, y, "(y)", fn);
-
-    return !sentry.failure_detected();
-  }
-
-  template<test_mode Mode, class Actions, orderable T, class... Args>
-  [[nodiscard]]
-  bool check_ordering_operators(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const Args&... args)
-  {
-    sentinel sentry{logger, ""};
-
-    check_comparison_consistency(logger, less_than_type{}, actions, x, y, [](const T& x) { return !(x < x); }, args...);
-    check_comparison_consistency(logger, leq_type{}, actions, x, y, [](const T& x) { return x <= x; }, args...);
-    check_comparison_consistency(logger, greater_than_type{}, actions, x, y, [](const T& x) { return !(x > x); }, args...);
-    check_comparison_consistency(logger, geq_type{}, actions, x, y, [](const T& x) { return x >= x; }, args...);
-
-    if constexpr (three_way_comparable<T>)
-    {
-      check_comparison_consistency(logger, threeway_type{}, actions, x, y, [](const T& x) { return (x <=> x) == 0; }, args...);
-    }
-
-    return !sentry.failure_detected();
-  }
-
-  template<test_mode Mode, class Actions, orderable T, class... Args>
-  [[nodiscard]]
-  bool check_ordering_consistency(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const Args&... args)
-  {
-    if(!check_ordering_operators(logger, actions, x, y, args...)) return false;
-
-    auto comp{
-      [&logger](const T& x, const T& y){
-        sentinel sentry{logger, ""};
-
-        check("operator> and operator< are inconsistent", logger, y > x);
-        check("operator< and operator<= are inconsistent", logger, x <= y);
-        check("operator< and operator>= are inconsistent", logger, y >= x);
-
-        if constexpr (three_way_comparable<T>)
-        {
-          check("operator< and operator<=> are inconsistent", logger, (x <=> y) < 0);
-        }
-
-        return !sentry.failure_detected();
-      }
-    };
-
-    return x < y ? comp(x,y) : comp(y,x);
-  }
-
-  template<test_mode Mode, class Actions, orderable T, class... Args>
-  [[nodiscard]]
-  bool check_ordering_consistency(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const T&, const T&, const Args&... args)
-  {
-    return check_ordering_consistency(logger, actions, x, y, args...);
-  }
-
-  template<test_mode Mode, class Actions, equality_comparable T, class... Args>
-  [[nodiscard]]
-  bool check_equality_preconditions(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const Args&... args)
-  {
-    const bool eq{check_comparison_consistency(logger, equality_type{}, actions, x, y, [](const T& x) { return x == x; }, args...)};
-    const bool neq{check_comparison_consistency(logger, inequality_type{}, actions, x, y, [](const T& x) { return !(x != x); }, args...)};
-
-    return eq && neq && check("Precondition - for checking semantics, x and y are assumed to be different", logger, x != y);
-  }
-
-  template<test_mode Mode, class Actions, equality_comparable T, class... Args>
-  [[nodiscard]]
-  bool check_equality_preconditions(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const T& xClone, const T& yClone, const Args&... args)
-  {
-    if(!check_equality_preconditions(logger, actions, x, y, args...))
-      return false;
-
-    auto mess{
-        [](std::string_view var){
-          return std::string{"Precondition - for checking move-only semantics, "}
-            .append(var).append(" and ").append(var).append("Clone are assumed to be equal");
-        }
-      };
-
-      return check(mess("x"), logger, x == xClone) && check(mess("y"), logger, y == yClone);
-  }
-
-  template<test_mode Mode, class Actions, orderable T, class... Args>
-  [[nodiscard]]
-  bool check_orderable_preconditions(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const Args&... args)
-  {
-    if(check_equality_preconditions(logger, actions, x, y, args...))
-    {
-      const auto order{actions.order()};
-      if(check("Precondition - for checking semantics, order must be weak_ordering::less or weak_ordering::greater",
-               logger, order != 0))
-      {
-        if(check_ordering_consistency(logger, actions, x, y, args...))
-        {
-          const bool cond{order < 0 ? x < y : x > y};
-          auto mess{
-            [order](){
-              std::string mess{"Precondition - for ordered semantics, it is assumed that "};
-              return order == 0 ? mess.append("x < y") : mess.append("y > x");
-            }
-          };
-
-          if constexpr(serializable<T>)
-          {
-            return check(mess(), logger, cond,
-                       tutor{[](const T& x, const T& y) {
-                               return prediction_message(to_string(x), to_string(y)); } });
-          }
-          else
-          {
-            return check(mess(), logger, cond);
-          }
-        }
-      }
-    }
-
-    return false;
-  }
-
   template<class T>
   struct precondition_actions;
 
@@ -299,9 +157,204 @@ namespace sequoia::testing::impl
     std::weak_ordering m_Order;
   };
 
+  // TO DO: convert these 'concepts' to constexpr bools once MSVC stops bellyaching
+  
+  template<class Actions>
+  concept comparison_action = requires { Actions::has_post_comparison_action; };
+
+  template<class Actions>
+  concept move_action = requires { Actions::has_post_move_action; };
+
+  template<class Actions>
+  concept move_assign_action = requires { Actions::has_post_move_assign_action; };
+
+  template<class Actions>
+  concept swap_action = requires { Actions::has_post_swap_action; };
+
+  template<class Actions>
+  concept serialization_action = requires { Actions::has_post_serialization_action; };
+
+  //================================ comparisons ================================//
+
+  template<test_mode Mode, comparison_flavour C, class Actions, movable_comparable T, invocable_r<bool, T> Fn, class... Args>
+    requires comparison_action<Actions>
+  bool do_check_comparison_consistency(test_logger<Mode>& logger, comparison_constant<C> comparison, [[maybe_unused]] const Actions& actions, const T& x, std::string_view tag, Fn fn, [[maybe_unused]] const Args&... args)
+  {
+    if(!check(std::string{"operator"}.append(to_string(comparison.value)).append(" is inconsistent ").append(tag), logger, fn(x)))
+      return false;
+
+    if constexpr (Actions::has_post_comparison_action)
+    {
+      if(!actions.post_comparison_action(logger, comparison, x, tag, args...))
+        return false;
+    }
+
+    return true;
+  }
+
+  template<test_mode Mode, comparison_flavour C, class Actions, movable_comparable T, invocable_r<bool, T> Fn>
+    requires comparison_action<Actions>
+  bool check_comparison_consistency(test_logger<Mode>& logger, comparison_constant<C> comparison, const Actions& actions, const T& x, const T& y, Fn fn)
+  {
+    sentinel sentry{logger, ""};
+
+    do_check_comparison_consistency(logger, comparison, actions, x, "(x)", fn);
+    do_check_comparison_consistency(logger, comparison, actions, y, "(y)", fn);
+
+    return !sentry.failure_detected();
+  }
+
+  template<test_mode Mode, class Actions, orderable T, class... Args>
+    requires comparison_action<Actions>
+  [[nodiscard]]
+  bool check_ordering_operators(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const Args&... args)
+  {
+    sentinel sentry{logger, ""};
+
+    check_comparison_consistency(logger, less_than_type{}, actions, x, y, [](const T& x) { return !(x < x); }, args...);
+    check_comparison_consistency(logger, leq_type{}, actions, x, y, [](const T& x) { return x <= x; }, args...);
+    check_comparison_consistency(logger, greater_than_type{}, actions, x, y, [](const T& x) { return !(x > x); }, args...);
+    check_comparison_consistency(logger, geq_type{}, actions, x, y, [](const T& x) { return x >= x; }, args...);
+
+    if constexpr (three_way_comparable<T>)
+    {
+      check_comparison_consistency(logger, threeway_type{}, actions, x, y, [](const T& x) { return (x <=> x) == 0; }, args...);
+    }
+
+    return !sentry.failure_detected();
+  }
+
+  template<test_mode Mode, class Actions, orderable T, class... Args>
+    requires comparison_action<Actions>
+  [[nodiscard]]
+  bool check_ordering_consistency(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const Args&... args)
+  {
+    if(!check_ordering_operators(logger, actions, x, y, args...)) return false;
+
+    auto comp{
+      [&logger](const T& x, const T& y){
+        sentinel sentry{logger, ""};
+
+        check("operator> and operator< are inconsistent", logger, y > x);
+        check("operator< and operator<= are inconsistent", logger, x <= y);
+        check("operator< and operator>= are inconsistent", logger, y >= x);
+
+        if constexpr (three_way_comparable<T>)
+        {
+          check("operator< and operator<=> are inconsistent", logger, (x <=> y) < 0);
+        }
+
+        return !sentry.failure_detected();
+      }
+    };
+
+    return x < y ? comp(x,y) : comp(y,x);
+  }
+
+  template<test_mode Mode, class Actions, orderable T, class... Args>
+    requires comparison_action<Actions>
+  [[nodiscard]]
+  bool check_ordering_consistency(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const T&, const T&, const Args&... args)
+  {
+    return check_ordering_consistency(logger, actions, x, y, args...);
+  }
+
+  template<test_mode Mode, class Actions, equality_comparable T, class... Args>
+    requires comparison_action<Actions>
+  [[nodiscard]]
+  bool check_equality_preconditions(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const Args&... args)
+  {
+    const bool eq{check_comparison_consistency(logger, equality_type{}, actions, x, y, [](const T& x) { return x == x; }, args...)};
+    const bool neq{check_comparison_consistency(logger, inequality_type{}, actions, x, y, [](const T& x) { return !(x != x); }, args...)};
+
+    return eq && neq && check("Precondition - for checking semantics, x and y are assumed to be different", logger, x != y);
+  }
+
+  template<test_mode Mode, class Actions, equality_comparable T, class... Args>
+    requires comparison_action<Actions>
+  [[nodiscard]]
+  bool check_equality_preconditions(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const T& xClone, const T& yClone, const Args&... args)
+  {
+    if(!check_equality_preconditions(logger, actions, x, y, args...))
+      return false;
+
+    auto mess{
+        [](std::string_view var){
+          return std::string{"Precondition - for checking move-only semantics, "}
+            .append(var).append(" and ").append(var).append("Clone are assumed to be equal");
+        }
+      };
+
+      return check(mess("x"), logger, x == xClone) && check(mess("y"), logger, y == yClone);
+  }
+
+  template<test_mode Mode, class Actions, orderable T, class... Args>
+    requires comparison_action<Actions>
+  [[nodiscard]]
+  bool check_orderable_preconditions(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const Args&... args)
+  {
+    if(check_equality_preconditions(logger, actions, x, y, args...))
+    {
+      const auto order{actions.order()};
+      if(check("Precondition - for checking semantics, order must be weak_ordering::less or weak_ordering::greater",
+               logger, order != 0))
+      {
+        if(check_ordering_consistency(logger, actions, x, y, args...))
+        {
+          const bool cond{order < 0 ? x < y : x > y};
+          auto mess{
+            [order](){
+              std::string mess{"Precondition - for ordered semantics, it is assumed that "};
+              return order == 0 ? mess.append("x < y") : mess.append("y > x");
+            }
+          };
+
+          if constexpr(serializable<T>)
+          {
+            return check(mess(), logger, cond,
+                       tutor{[](const T& x, const T& y) {
+                               return prediction_message(to_string(x), to_string(y)); } });
+          }
+          else
+          {
+            return check(mess(), logger, cond);
+          }
+        }
+      }
+    }
+
+    return false;
+  }
+
+  //================================  move construction ================================ //
+
+  template<test_mode Mode, class Actions, movable_comparable T, class... Args>
+    requires move_action<Actions>
+  std::optional<T> do_check_move_construction(test_logger<Mode>& logger, [[maybe_unused]] const Actions& actions, T&& z, const T& y, const Args&... args)
+  {
+    T w{std::move(z)};
+    if(!check_equality("Inconsistent move construction", logger, w, y))
+      return {};
+
+    if constexpr(Actions::has_post_move_action)
+    {
+      actions.post_move_action(logger, w, args...);
+    }
+
+    return w;
+  }
+
+  template<test_mode Mode, class Actions, movable_comparable T>
+    requires move_action<Actions>
+  std::optional<T> check_move_construction(test_logger<Mode>& logger, const Actions& actions, T&& z, const T& y)
+  {
+    return do_check_move_construction(logger, actions, std::forward<T>(z), y);
+  }
+
   //================================ move assign ================================//
 
   template<test_mode Mode, class Actions, movable_comparable T, invocable<T&> Mutator, class... Args>
+    requires move_assign_action<Actions>
   void do_check_move_assign(test_logger<Mode>& logger, [[maybe_unused]] const Actions& actions, T& z, T&& y, const T& yClone, [[maybe_unused]] Mutator&& yMutator, const Args&... args)
   {
     z = std::move(y);
@@ -315,6 +368,7 @@ namespace sequoia::testing::impl
   }
 
   template<test_mode Mode, class Actions, movable_comparable T, invocable<T&> Mutator>
+    requires move_assign_action<Actions>
   void check_move_assign(test_logger<Mode>& logger, const Actions& actions, T& z, T&& y, const T& yClone, Mutator m)
   {
     do_check_move_assign(logger, actions, z, std::forward<T>(y), yClone, std::move(m));
@@ -323,6 +377,7 @@ namespace sequoia::testing::impl
   //================================ swap ================================//
 
   template<test_mode Mode, class Actions, movable_comparable T, class... Args>
+    requires swap_action<Actions>
   bool do_check_swap(test_logger<Mode>& logger, [[maybe_unused]] const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, [[maybe_unused]] const Args&... args)
   {
     using std::swap;
@@ -351,38 +406,16 @@ namespace sequoia::testing::impl
   }
 
   template<test_mode Mode, class Actions, movable_comparable T>
+    requires swap_action<Actions>
   bool check_swap(test_logger<Mode>& logger, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone)
   {
     return do_check_swap(logger, actions, std::move(x), std::move(y), xClone, yClone);
   }
 
-  //================================  move construction ================================ //
-
-  template<test_mode Mode, class Actions, movable_comparable T, class... Args>
-  std::optional<T> do_check_move_construction(test_logger<Mode>& logger, [[maybe_unused]] const Actions& actions, T&& z, const T& y, const Args&... args)
-  {
-    T w{std::move(z)};
-    if(!check_equality("Inconsistent move construction", logger, w, y))
-      return {};
-
-    if constexpr(Actions::has_post_move_action)
-    {
-      actions.post_move_action(logger, w, args...);
-    }
-
-    return w;
-  }
-
-  template<test_mode Mode, class Actions, movable_comparable T>
-  std::optional<T> check_move_construction(test_logger<Mode>& logger, const Actions& actions, T&& z, const T& y)
-  {
-    return do_check_move_construction(logger, actions, std::forward<T>(z), y);
-  }
-
   //================================  serialization  ================================ //
 
   template<test_mode Mode, class Actions, movable_comparable T, class... Args>
-    requires (serializable_to<T, std::stringstream> && deserializable_from<T, std::stringstream>)
+    requires (serializable_to<T, std::stringstream> && deserializable_from<T, std::stringstream> && serialization_action<Actions>)
   bool do_check_serialization(test_logger<Mode>& logger,
                               [[maybe_unused]] const Actions& actions,
                               T&& u,
@@ -403,7 +436,7 @@ namespace sequoia::testing::impl
   }
 
   template<test_mode Mode, class Actions, movable_comparable T>
-    requires (serializable_to<T, std::stringstream> && deserializable_from<T, std::stringstream>)
+    requires (serializable_to<T, std::stringstream> && deserializable_from<T, std::stringstream> && serialization_action<Actions>)
   bool check_serialization(test_logger<Mode>& logger, const Actions& actions, T&& u, const T& y)
   {
     return do_check_serialization(logger, actions, std::forward<T>(u), y);

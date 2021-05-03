@@ -30,7 +30,6 @@ namespace sequoia::testing::impl
     constexpr static bool has_post_serialization_action{};
 
     template<test_mode Mode, class... Args>
-      requires pseudoregular<T>
     [[nodiscard]]
     bool check_preconditions(test_logger<Mode>& logger, const T& x, const T& y, const Args&... args) const
     {
