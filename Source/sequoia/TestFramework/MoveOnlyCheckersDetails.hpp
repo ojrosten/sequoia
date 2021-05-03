@@ -15,6 +15,24 @@
 
 namespace sequoia::testing::impl
 {
+  template<moveonly T>
+  struct move_only_actions : precondition_actions<T>
+  {
+    using precondition_actions<T>::precondition_actions;
+
+    constexpr static bool has_post_comparison_action{};
+    constexpr static bool has_post_move_action{};
+    constexpr static bool has_post_move_assign_action{};
+    constexpr static bool has_post_swap_action{};
+
+    template<test_mode Mode, class... Args>
+    [[nodiscard]]
+    bool check_preconditions(test_logger<Mode>& logger, const T& x, const T& y, const T& xClone, const T& yClone, const Args&... args) const
+    {
+      return precondition_actions<T>::check_preconditions(logger, *this, x, y, xClone, yClone, args...);
+    }
+  };
+
   template<test_mode Mode, class Actions, moveonly T, invocable<T&> Mutator, class... Args>
   bool check_semantics(test_logger<Mode>& logger, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, Mutator m, const Args&... args)
   {

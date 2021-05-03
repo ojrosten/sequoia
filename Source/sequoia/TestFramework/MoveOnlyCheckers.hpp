@@ -51,7 +51,7 @@ namespace sequoia::testing
   {
     sentinel<Mode> sentry{logger, add_type_info<T>(description).append("\n")};
 
-    impl::check_semantics(logger, impl::moveonly_actions<T>{}, std::forward<T>(x), std::forward<T>(y), xClone, yClone, impl::null_mutator{});
+    impl::check_semantics(logger, impl::move_only_actions<T>{}, std::forward<T>(x), std::forward<T>(y), xClone, yClone, impl::null_mutator{});
   }
 
   /*! Preconditions:
@@ -66,6 +66,6 @@ namespace sequoia::testing
   {
     sentinel<Mode> sentry{logger, add_type_info<T>(description).append("\n")};
 
-    impl::check_semantics(logger, impl::moveonly_actions<T>{order}, std::forward<T>(x), std::forward<T>(y), xClone, yClone, impl::null_mutator{});
+    impl::check_semantics(logger, impl::move_only_actions<T>{order}, std::forward<T>(x), std::forward<T>(y), xClone, yClone, impl::null_mutator{});
   }
 }

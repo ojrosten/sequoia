@@ -16,6 +16,28 @@
 
 namespace sequoia::testing::impl
 {
+  template<pseudoregular T>
+  struct regular_actions : precondition_actions<T>
+  {
+    using precondition_actions<T>::precondition_actions;
+
+    constexpr static bool has_post_comparison_action{};
+    constexpr static bool has_post_copy_action{};
+    constexpr static bool has_post_copy_assign_action{};
+    constexpr static bool has_post_move_action{};
+    constexpr static bool has_post_move_assign_action{};
+    constexpr static bool has_post_swap_action{};
+    constexpr static bool has_post_serialization_action{};
+
+    template<test_mode Mode, class... Args>
+      requires pseudoregular<T>
+    [[nodiscard]]
+    bool check_preconditions(test_logger<Mode>& logger, const T& x, const T& y, const Args&... args) const
+    {
+      return precondition_actions<T>::check_preconditions(logger, *this, x, y, args...);
+    }
+  };
+
   template<test_mode Mode, class Actions, pseudoregular T, class... Args>
   bool do_check_copy_assign(test_logger<Mode>& logger, [[maybe_unused]] const Actions& actions, T& z, const T& y, const Args&... args)
   {
