@@ -22,13 +22,6 @@ namespace sequoia::testing::impl
   struct move_only_allocation_actions : allocation_actions<T>
   {
     using allocation_actions<T>::allocation_actions;
-
-    template<test_mode Mode, alloc_getter<T>... Getters>
-    [[nodiscard]]
-    bool check_preconditions(test_logger<Mode>& logger, const T& x, const T& y, const T& xClone, const T& yClone, const dual_allocation_checker<T, Getters>&... checkers) const
-    {
-      return allocation_actions<T>::check_preconditions(logger, *this, x, y, xClone, yClone, dual_allocation_checker{checkers.info(), x, y}...);
-    }
   };
 
   template<test_mode Mode, class Actions, moveonly T, alloc_getter<T>... Getters>

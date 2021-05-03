@@ -23,13 +23,6 @@ namespace sequoia::testing::impl
     using allocation_actions<T>::allocation_actions;
 
     template<test_mode Mode, alloc_getter<T>... Getters>
-    [[nodiscard]]
-    bool check_preconditions(test_logger<Mode>& logger, const T& x, const T& y, const dual_allocation_checker<T, Getters>&... checkers) const
-    {
-      return  allocation_actions<T>::check_preconditions(logger, *this, x, y, dual_allocation_checker<T, Getters>{checkers.info(), x, y}...);
-    }
-
-    template<test_mode Mode, alloc_getter<T>... Getters>
     static void post_copy_action(test_logger<Mode>& logger, const T& xCopy, const T& yCopy, const dual_allocation_checker<T, Getters>&... checkers)
     {
       check_copy_x_allocation(logger, xCopy, allocation_checker{checkers.info(), checkers.first_count()}...);
