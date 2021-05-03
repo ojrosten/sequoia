@@ -443,13 +443,8 @@ namespace sequoia::testing::impl
     return check_equality("Inconsistent (de)serialization", logger, u, y);
   }
 
-  template<test_mode Mode, class Actions, movable_comparable T, class... Args>
-  bool do_check_serialization(test_logger<Mode>&, const Actions&, T&&, const T&, const Args&...)
-  {
-    return true;
-  }
-
   template<test_mode Mode, class Actions, movable_comparable T>
+    requires (serializable_to<T, std::stringstream> && deserializable_from<T, std::stringstream>)
   bool check_serialization(test_logger<Mode>& logger, const Actions& actions, T&& u, const T& y)
   {
     return do_check_serialization(logger, actions, std::forward<T>(u), y);

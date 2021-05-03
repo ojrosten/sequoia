@@ -116,7 +116,10 @@ namespace sequoia::testing::impl
       }
     }
 
-    check_serialization(logger, actions, T{x}, y, args...);
+    if constexpr (serializable_to<T, std::stringstream> && deserializable_from<T, std::stringstream>)
+    {
+      check_serialization(logger, actions, T{x}, y, args...);
+    }
 
     return !sentry.failure_detected();
   }

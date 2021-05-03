@@ -38,7 +38,10 @@ namespace sequoia::testing::impl
       check_move_assign(logger, actions, *opt, std::move(y), yClone, std::move(m), args...);
     }
 
-    check_serialization(logger, actions, std::move(x), yClone, args...);
+    if constexpr (serializable_to<T, std::stringstream> && deserializable_from<T, std::stringstream>)
+    {
+      check_serialization(logger, actions, std::move(x), yClone, args...);
+    }
 
     return !sentry.failure_detected();
   }
