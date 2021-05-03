@@ -25,10 +25,10 @@ namespace sequoia::testing::impl
   // TO DO: convert these 'concepts' to constexpr bools once MSVC stops bellyaching
 
   template<class Actions>
-  concept post_copy_action = requires { &Actions::post_copy_action; };
+  concept has_post_copy_action = requires { &Actions::post_copy_action; };
 
   template<class Actions>
-  concept post_copy_assign_action = requires { &Actions::post_copy_assign_action; };
+  concept has_post_copy_assign_action = requires { &Actions::post_copy_assign_action; };
 
 
   template<test_mode Mode, class Actions, pseudoregular T, class... Args>
@@ -37,7 +37,7 @@ namespace sequoia::testing::impl
     z = y;
     if(check_equality("Inconsistent copy assignment (from y)", logger, z, y))
     {
-      if constexpr(post_copy_assign_action<Actions>)
+      if constexpr(has_post_copy_assign_action<Actions>)
       {
         actions.post_copy_assign_action(logger, z, y, args...);
       }
@@ -56,12 +56,6 @@ namespace sequoia::testing::impl
     return do_check_copy_assign(logger, actions, z, y);
   }
 
-  template<test_mode Mode, class Actions, pseudoregular T, invocable<T&> Mutator>
-  bool check_swap(test_logger<Mode>& logger, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, Mutator yMutator)
-  {
-    return do_check_swap(logger, actions, std::move(x), std::move(y), xClone, yClone, std::move(yMutator));
-  }
-
   template<test_mode Mode, class Actions, pseudoregular T, invocable<T&> Mutator, class... Args>
   bool check_semantics(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, Mutator yMutator, const Args&... args)
   {
@@ -75,7 +69,7 @@ namespace sequoia::testing::impl
       check_equality("Inconsistent copy constructor (x)", logger, z, x)
     };
 
-    if constexpr(post_copy_action<Actions>)
+    if constexpr(has_post_copy_action<Actions>)
     {
       if(consistentCopy)
       {

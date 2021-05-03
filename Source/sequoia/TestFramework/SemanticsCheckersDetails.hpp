@@ -130,19 +130,19 @@ namespace sequoia::testing::impl
   // TO DO: convert these 'concepts' to constexpr bools once MSVC stops bellyaching
   
   template<class Actions>
-  concept post_comparison_action = requires { &Actions::post_comparison_action; };
+  concept has_post_comparison_action = requires { &Actions::post_comparison_action; };
 
   template<class Actions>
-  concept post_move_action = requires { &Actions::post_move_action; };
+  concept has_post_move_action = requires { &Actions::post_move_action; };
 
   template<class Actions>
-  concept post_move_assign_action = requires { &Actions::post_move_assign_action; };
+  concept has_post_move_assign_action = requires { &Actions::post_move_assign_action; };
 
   template<class Actions>
-  concept post_swap_action = requires { &Actions::post_swap_action; };
+  concept has_post_swap_action = requires { &Actions::post_swap_action; };
 
   template<class Actions>
-  concept post_serialization_action = requires { &Actions::post_serialization_action; };
+  concept has_post_serialization_action = requires { &Actions::post_serialization_action; };
 
   //================================ comparisons ================================//
 
@@ -184,7 +184,7 @@ namespace sequoia::testing::impl
     if(!check(std::string{"operator"}.append(to_string(comparison.value)).append(" is inconsistent ").append(tag), logger, fn(x)))
       return false;
 
-    if constexpr (post_comparison_action<Actions>)
+    if constexpr (has_post_comparison_action<Actions>)
     {
       if(!actions.post_comparison_action(logger, comparison, x, tag, args...))
         return false;
@@ -329,7 +329,7 @@ namespace sequoia::testing::impl
     if(!check_equality("Inconsistent move construction", logger, w, y))
       return {};
 
-    if constexpr(post_move_action<Actions>)
+    if constexpr(has_post_move_action<Actions>)
     {
       actions.post_move_action(logger, w, args...);
     }
@@ -352,7 +352,7 @@ namespace sequoia::testing::impl
     if(!check_equality("Inconsistent move assignment (from y)", logger, z, yClone))
        return;
 
-    if constexpr(post_move_assign_action<Actions>)
+    if constexpr(has_post_move_assign_action<Actions>)
     {
       actions.post_move_assign_action(logger, z, yClone, std::move(yMutator), args...);
     }
@@ -382,7 +382,7 @@ namespace sequoia::testing::impl
 
     if(swapx && swapy)
     {
-      if constexpr(post_swap_action<Actions>)
+      if constexpr(has_post_swap_action<Actions>)
       {
         actions.post_swap_action(logger, x, y, yClone, args...);
       }
@@ -400,6 +400,12 @@ namespace sequoia::testing::impl
     return do_check_swap(logger, actions, std::move(x), std::move(y), xClone, yClone);
   }
 
+  template<test_mode Mode, class Actions, pseudoregular T, invocable<T&> Mutator>
+  bool check_swap(test_logger<Mode>& logger, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, Mutator yMutator)
+  {
+    return do_check_swap(logger, actions, std::move(x), std::move(y), xClone, yClone, std::move(yMutator));
+  }
+
   //================================  serialization  ================================ //
 
   template<test_mode Mode, class Actions, movable_comparable T, class... Args>
@@ -413,7 +419,7 @@ namespace sequoia::testing::impl
     std::stringstream s{};
     s << y;
 
-    if constexpr(post_serialization_action<Actions>)
+    if constexpr(has_post_serialization_action<Actions>)
     {
       actions.post_serialization_action(logger, y, args...);
     }
