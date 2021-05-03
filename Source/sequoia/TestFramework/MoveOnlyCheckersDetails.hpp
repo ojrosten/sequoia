@@ -19,13 +19,6 @@ namespace sequoia::testing::impl
   struct move_only_actions : precondition_actions<T>
   {
     using precondition_actions<T>::precondition_actions;
-
-    template<test_mode Mode, class... Args>
-    [[nodiscard]]
-    bool check_preconditions(test_logger<Mode>& logger, const T& x, const T& y, const T& xClone, const T& yClone, const Args&... args) const
-    {
-      return precondition_actions<T>::check_preconditions(logger, *this, x, y, xClone, yClone, args...);
-    }
   };
 
   template<test_mode Mode, class Actions, moveonly T, invocable<T&> Mutator, class... Args>
@@ -33,7 +26,7 @@ namespace sequoia::testing::impl
   {
     sentinel<Mode> sentry{logger, ""};
 
-    if(!actions.check_preconditions(logger, x, y, xClone, yClone, args...))
+    if(!check_preconditions(logger, actions, x, y, xClone, yClone, args...))
       return false;
 
     auto opt{check_move_construction(logger, actions, std::move(x), xClone, args...)};

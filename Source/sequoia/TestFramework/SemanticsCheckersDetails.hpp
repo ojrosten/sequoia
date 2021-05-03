@@ -108,21 +108,7 @@ namespace sequoia::testing::impl
   template<equality_comparable T>
   struct precondition_actions<T>
   {
-    template<test_mode Mode, class Actions, class... Args>
-      requires pseudoregular<T>
-    [[nodiscard]]
-    static bool check_preconditions(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const Args&... args)
-    {
-      return check_equality_preconditions(logger, actions, x, y, args...);
-    }
-
-    template<test_mode Mode, class Actions, class... Args>
-      requires moveonly<T>
-    [[nodiscard]]
-    static bool check_preconditions(test_logger<Mode>& logger,  const Actions& actions, const T& x, const T& y, const T& xClone, const T& yClone, const Args&... args)
-    {
-      return check_equality_preconditions(logger, actions, x, y, xClone, yClone, args...);
-    }
+    
   };
 
   template<orderable T>
@@ -131,22 +117,6 @@ namespace sequoia::testing::impl
     constexpr explicit precondition_actions<T>(std::weak_ordering order)
       : m_Order{order}
     {}
-
-    template<test_mode Mode, class Actions, class... Args>
-      requires pseudoregular<T>
-    [[nodiscard]]
-    static bool check_preconditions(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const Args&... args)
-    {
-      return check_orderable_preconditions(logger, actions, x, y, args...);
-    }
-
-    template<test_mode Mode, class Actions, class... Args>
-      requires moveonly<T>
-    [[nodiscard]]
-    static bool check_preconditions(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const T& xClone, const T& yClone, const Args&... args)
-    {
-      return check_orderable_preconditions(logger, actions, x, y, xClone, yClone, args...);
-    }
 
     [[nodiscard]]
     std::weak_ordering order() const noexcept
@@ -173,6 +143,38 @@ namespace sequoia::testing::impl
 
   template<class Actions>
   concept post_serialization_action = requires { &Actions::post_serialization_action; };
+
+  //================================ comparisons ================================//
+
+  template<test_mode Mode, class Actions, pseudoregular T, class... Args>
+  [[nodiscard]]
+  static bool check_preconditions(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const Args&... args)
+  {
+    return check_equality_preconditions(logger, actions, x, y, args...);
+  }
+
+  template<test_mode Mode, class Actions, moveonly T, class... Args>
+  [[nodiscard]]
+  static bool check_preconditions(test_logger<Mode>& logger,  const Actions& actions, const T& x, const T& y, const T& xClone, const T& yClone, const Args&... args)
+  {
+    return check_equality_preconditions(logger, actions, x, y, xClone, yClone, args...);
+  }
+
+  template<test_mode Mode, class Actions, pseudoregular T, class... Args>
+    requires orderable<T>
+  [[nodiscard]]
+  static bool check_preconditions(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const Args&... args)
+  {
+    return check_orderable_preconditions(logger, actions, x, y, args...);
+  }
+
+  template<test_mode Mode, class Actions, moveonly T, class... Args>
+    requires orderable<T>
+  [[nodiscard]]
+  static bool check_preconditions(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const T& xClone, const T& yClone, const Args&... args)
+  {
+    return check_orderable_preconditions(logger, actions, x, y, xClone, yClone, args...);
+  }
 
   //================================ comparisons ================================//
 

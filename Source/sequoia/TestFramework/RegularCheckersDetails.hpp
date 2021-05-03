@@ -20,13 +20,6 @@ namespace sequoia::testing::impl
   struct regular_actions : precondition_actions<T>
   {
     using precondition_actions<T>::precondition_actions;
-
-    template<test_mode Mode, class... Args>
-    [[nodiscard]]
-    bool check_preconditions(test_logger<Mode>& logger, const T& x, const T& y, const Args&... args) const
-    {
-      return precondition_actions<T>::check_preconditions(logger, *this, x, y, args...);
-    }
   };
 
   // TO DO: convert these 'concepts' to constexpr bools once MSVC stops bellyaching
@@ -74,7 +67,7 @@ namespace sequoia::testing::impl
   {
     sentinel<Mode> sentry{logger, ""};
 
-    if(!actions.check_preconditions(logger, x, y, args...))
+    if(!check_preconditions(logger, actions, x, y, args...))
       return false;
 
     T z{x};
