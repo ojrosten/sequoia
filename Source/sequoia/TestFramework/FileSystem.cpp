@@ -152,8 +152,13 @@ namespace sequoia::testing
         const auto entryPathLen{std::distance(p.begin(), p.end())};
         if(entryPathLen >= toFindLen)
         {
-          auto entryIter{std::prev(p.end(), toFindLen)}, toFindIter{toFind.begin()};
-          
+          auto entryIter{p.end()}, toFindIter{toFind.begin()};
+
+          // MSVC 16.9.4 objects to std::prev or std::advance as its impl of path::iterator
+          // does not satisfy the requirements of a bi-directional iterator
+          using diff_t = std::remove_const_t<decltype(toFindLen)>;
+          for (diff_t n{}; n < toFindLen; ++n) --entryIter;
+
           while(entryIter != p.end())
           {
             if(*entryIter != *toFindIter++) break;
