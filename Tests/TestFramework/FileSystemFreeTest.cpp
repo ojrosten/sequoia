@@ -27,7 +27,13 @@ namespace sequoia::testing
 
     const auto root{working_materials()}, fooPath{root / "Foo"};
 
+    check_exception_thrown<std::runtime_error>(LINE(""),
+                                               [&fooPath](){ return find_in_tree(fooPath / "Bar" / "baz.txt", "baz.txt"); });
+    check_exception_thrown<std::runtime_error>(LINE(""),
+                                               [&fooPath](){ return find_in_tree(fooPath / "Stuff", "baz.txt"); });
+
     check_equality(LINE("Not found"), find_in_tree(root, "thing.txt"), fs::path{});
+    check_equality(LINE("Not found - empty"), find_in_tree(root, ""), fs::path{});
     check_equality(LINE("Unique file"), find_in_tree(root, "plurgh.txt"), fooPath / "Bar" / "plurgh.txt");
     check_equality(LINE("Unique directory"), find_in_tree(root, "Bar"), fooPath / "Bar");
     check_equality(LINE("Partial path"), find_in_tree(root, "Bar/plurgh.txt"), fooPath / "Bar" / "plurgh.txt");
