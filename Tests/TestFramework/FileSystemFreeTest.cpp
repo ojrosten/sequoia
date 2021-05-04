@@ -53,6 +53,6 @@ namespace sequoia::testing
     check_equality(LINE("No overlap"), rebase_from(fs::path{"Things/Stuff.txt"}, working_materials()), fs::path{"Things/Stuff.txt"});
     check_equality(LINE("Overlap"), rebase_from(fs::path{"Foo/Stuff.txt"}, working_materials() / "Foo"), fs::path{"Stuff.txt"});
     check_equality(LINE("Relative"), rebase_from(fs::path{"../Stuff.txt"}, working_materials()), fs::path{"Stuff.txt"});
-    
+    check_equality(LINE("Double overlap"), rebase_from(fs::path{"Foo/Bar/Stuff.txt"}, working_materials() / "Foo/Bar"), fs::path{"Stuff.txt"});
   }
 }

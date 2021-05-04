@@ -188,11 +188,25 @@ namespace sequoia::testing
     if(p.is_absolute() && dir.is_absolute())
       return fs::relative(p, dir);
 
-    auto last{*(--dir.end())};
-
     auto i{p.begin()};
 
-    while((i != p.end()) && ((*i == "..") || (*i == last))) ++i;
+    while((i != p.end()) && (*i == "..")) ++i;
+
+    if(i != p.end())
+    {      
+      auto dirIter{dir.end()};
+      while(dirIter != dir.begin())
+      {
+        --dirIter;
+        if(*dirIter == *i) break;
+      }
+
+      while((*dirIter == *i) && (dirIter != dir.end()) && (i != p.end()))
+      {
+        ++dirIter;
+        ++i;
+      }
+    }
 
     fs::path rebased{};
     for(; i!= p.end(); ++i)
