@@ -458,7 +458,7 @@ namespace sequoia::testing
   {
     auto& nascentTests{runner.m_NascentTests};
 
-    static creation_factory factory{{"semantic", "allocation", "behavioural"}, runner.m_TestRepo, runner.m_SourceRepo};
+    static creation_factory factory{{"semantic", "allocation", "behavioural"}, runner.m_Repos.tests, runner.m_Repos.source};
     auto nascent{factory.create(genus)};
 
     std::visit(
@@ -487,22 +487,19 @@ namespace sequoia::testing
     , m_ProjectRoot{project_root(argc, argv)}
     , m_TestMain{std::move(testMain)}
     , m_HashIncludeTarget{std::move(hashIncludeTarget)}      
-    , m_SourceRepo{std::move(repos.source)}
-    , m_TestRepo{std::move(repos.tests)}
-    , m_TestMaterialsRepo{std::move(repos.test_materials)}
-    , m_OutputDir{std::move(repos.output)}
+    , m_Repos{std::move(repos)}
     , m_Stream{&stream}
   {
     throw_unless_regular_file(m_TestMain, "\nTry ensuring that the application is run from the appropriate directory");
     throw_unless_regular_file(m_HashIncludeTarget);
-    throw_unless_directory(m_TestRepo);
+    throw_unless_directory(m_Repos.tests);
 
     process_args(argc, argv);
 
     namespace fs = std::filesystem;
-    fs::create_directory(m_OutputDir);
-    fs::create_directory(diagnostics_output_path(m_OutputDir));
-    fs::create_directory(test_summaries_path(m_OutputDir));
+    fs::create_directory(m_Repos.output);
+    fs::create_directory(diagnostics_output_path(m_Repos.output));
+    fs::create_directory(test_summaries_path(m_Repos.output));
   }
 
   void test_runner::process_args(int argc, char** argv)
@@ -621,14 +618,14 @@ namespace sequoia::testing
                   },
                   {"--verbose",  {"-v"}, {}, [this](const param_list&) { m_OutputMode |= output_mode::verbose; }},
                   {"--recovery", {"-r"}, {},
-                    [this,recoveryDir{recovery_path(m_OutputDir)}] (const param_list&) {
+                    [this,recoveryDir{recovery_path(m_Repos.output)}] (const param_list&) {
                       std::filesystem::create_directory(recoveryDir);
                       m_Recovery.recovery_file = recoveryDir / "Recovery.txt";
                       std::filesystem::remove(m_Recovery.recovery_file);
                     }
                   },
                   {"--dump", {}, {},
-                    [this, recoveryDir{recovery_path(m_OutputDir)}] (const param_list&) {
+                    [this, recoveryDir{recovery_path(m_Repos.output)}] (const param_list&) {
                       std::filesystem::create_directory(recoveryDir);
                       m_Recovery.dump_file = recoveryDir / "Dump.txt";
                       std::filesystem::remove(m_Recovery.dump_file);
@@ -744,7 +741,7 @@ namespace sequoia::testing
   auto test_runner::find_filename(const std::filesystem::path& filename) -> source_list::iterator
   {
     return std::find_if(m_SelectedSources.begin(), m_SelectedSources.end(),
-                 [&filename, repo{m_TestRepo}, root{m_ProjectRoot}](const auto& element){
+                 [&filename, repo{m_Repos.tests}, root{m_ProjectRoot}](const auto& element){
                    const auto& source{element.first};
 
                    if(filename == source) return true;
@@ -824,7 +821,7 @@ namespace sequoia::testing
       {
         if(const auto str{outputFile.string()}; str.find("Utilities.hpp") == std::string::npos)
         {
-          add_include(m_HashIncludeTarget, fs::relative(outputFile, m_TestRepo).generic_string());
+          add_include(m_HashIncludeTarget, fs::relative(outputFile, m_Repos.tests).generic_string());
         }
       }
       else if(outputFile.extension() == ".cpp")

@@ -284,7 +284,7 @@ namespace sequoia::testing
         [this, name](Test&& test, Tests&&... tests){
           if(!m_SelectedSources.empty())
           {
-            test_family f{name, m_TestRepo, m_TestMaterialsRepo, m_OutputDir, m_Recovery};
+            test_family f{name, m_Repos.tests, m_Repos.test_materials, m_Repos.output, m_Recovery};
             add_tests(f, std::forward<Test>(test), std::forward<Tests>(tests)...);
             if(!f.empty())
             {
@@ -302,7 +302,7 @@ namespace sequoia::testing
       {
         if(mark_family(name))
         {
-          m_Families.emplace_back(name, m_TestRepo, m_TestMaterialsRepo, m_OutputDir, m_Recovery,
+          m_Families.emplace_back(name, m_Repos.tests, m_Repos.test_materials, m_Repos.output, m_Recovery,
                                   std::forward<Test>(test), std::forward<Tests>(tests)...);
         }
       }
@@ -351,11 +351,8 @@ namespace sequoia::testing
     std::filesystem::path
       m_ProjectRoot{},
       m_TestMain{},
-      m_HashIncludeTarget{},      
-      m_SourceRepo{},
-      m_TestRepo{},
-      m_TestMaterialsRepo{},
-      m_OutputDir{};
+      m_HashIncludeTarget{};
+    repositories m_Repos;
 
     recovery_paths m_Recovery;
 
