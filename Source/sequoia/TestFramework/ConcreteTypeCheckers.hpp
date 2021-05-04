@@ -422,22 +422,6 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    static std::string report_file_issue(const std::filesystem::path& file, std::string_view description)
-    {
-      auto mess{std::string{"Unable to open file "}.append(file.generic_string())};
-      if(!description.empty()) mess.append(" ").append(description);
-      mess.append("\n");
-
-      return mess;
-    }
-
-    [[nodiscard]]
-    static std::string report_failed_read(const std::filesystem::path& file)
-    {
-      return report_file_issue(file, " for reading");
-    }
-
-    [[nodiscard]]
     static std::string preamble(std::string_view prefix, const std::filesystem::path& path, const std::filesystem::path& prediction)
     {
       return append_lines(prefix, path.generic_string(), "vs", prediction.generic_string()).append("\n");

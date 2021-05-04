@@ -15,6 +15,19 @@
 
 namespace sequoia::testing
 {
+  namespace
+  {    
+    [[nodiscard]]
+    std::string report_file_issue(const std::filesystem::path& file, std::string_view description)
+    {
+      auto mess{std::string{"Unable to open file "}.append(file.generic_string())};
+      if(!description.empty()) mess.append(" ").append(description);
+      mess.append("\n");
+
+      return mess;
+    }
+  }
+
   [[nodiscard]]
   std::filesystem::path project_root(int argc, char** argv, const std::filesystem::path& fallback)
   {
@@ -89,16 +102,6 @@ namespace sequoia::testing
   std::filesystem::path test_summaries_path(std::filesystem::path outputDir)
   {
     return outputDir /= "TestSummaries";
-  }
-
-  [[nodiscard]]
-  std::string report_file_issue(const std::filesystem::path& file, std::string_view description)
-  {
-    auto mess{std::string{"Unable to open file "}.append(file.generic_string())};
-    if(!description.empty()) mess.append(" ").append(description);
-    mess.append("\n");
-
-    return mess;
   }
 
   [[nodiscard]]

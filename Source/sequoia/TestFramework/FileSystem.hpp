@@ -62,9 +62,6 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string report_file_issue(const std::filesystem::path& file, std::string_view description);
-
-  [[nodiscard]]
   std::string report_failed_read(const std::filesystem::path& file);
 
   [[nodiscard]]
