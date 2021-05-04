@@ -1,2 +1,2 @@
 File System Free Test
-Standard Top Level Checks:                 9;  Failures:  0  [Deep checks: 9]
+Standard Top Level Checks:                15;  Failures:  0  [Deep checks: 15]

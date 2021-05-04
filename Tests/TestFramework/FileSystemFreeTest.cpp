@@ -19,6 +19,7 @@ namespace sequoia::testing
   void file_system_free_test::run_tests()
   {
     test_find_in_tree();
+    test_rebase_from();
   }
 
   void file_system_free_test::test_find_in_tree()
@@ -39,5 +40,19 @@ namespace sequoia::testing
     check_equality(LINE("Partial path"), find_in_tree(root, "Bar/plurgh.txt"), fooPath / "Bar" / "plurgh.txt");
     check_equality(LINE("Absolute path"), find_in_tree(root, fooPath), fooPath);
     check_equality(LINE("Absolute path: not found"), find_in_tree(root, fooPath / "Baz"), fs::path{});
+  }
+
+  void file_system_free_test::test_rebase_from()
+  {
+    namespace fs = std::filesystem;
+
+    check_equality(LINE("Non-existant path"), rebase_from("Foo/Bar", "Baz"), fs::path{"Foo/Bar"});
+    check_equality(LINE("Attempt to rebase from file"),
+                   rebase_from("Foo/Bar", working_materials() / "Foo" / "baz.txt"), fs::path{"Foo/Bar"});
+    check_equality(LINE("Rebase absolute"), rebase_from(working_materials() / "Foo", working_materials()), fs::path{"Foo"});
+    check_equality(LINE("No overlap"), rebase_from(fs::path{"Things/Stuff.txt"}, working_materials()), fs::path{"Things/Stuff.txt"});
+    check_equality(LINE("Overlap"), rebase_from(fs::path{"Foo/Stuff.txt"}, working_materials() / "Foo"), fs::path{"Stuff.txt"});
+    check_equality(LINE("Relative"), rebase_from(fs::path{"../Stuff.txt"}, working_materials()), fs::path{"Stuff.txt"});
+    
   }
 }

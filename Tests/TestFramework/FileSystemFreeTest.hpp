@@ -23,5 +23,7 @@ namespace sequoia::testing
     void run_tests() final;
 
     void test_find_in_tree();
+
+    void test_rebase_from();
   };
 }
