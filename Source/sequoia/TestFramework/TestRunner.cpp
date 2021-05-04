@@ -352,7 +352,7 @@ namespace sequoia::testing
     }
     else
     {
-      replace_all(text, "template<?> ", "");
+      replace_all(text, "<?>", "<>");
     }
 
     namespace fs = std::filesystem;
