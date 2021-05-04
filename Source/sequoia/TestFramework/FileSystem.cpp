@@ -138,14 +138,32 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path search_tree::find(const std::filesystem::path& filename) const
+  std::filesystem::path find_in_tree(const std::filesystem::path& root, const std::filesystem::path& toFind)
   {
+    throw_unless_directory(root, "");
+
     using dir_iter = std::filesystem::recursive_directory_iterator;
 
-    for(const auto& i : dir_iter{m_Root})
+    if(const auto toFindLen{std::distance(toFind.begin(), toFind.end())}; toFindLen)
     {
-      if(auto p{i.path()}; p.filename() == filename)
-        return p;
+      for(const auto& i : dir_iter{root})
+      {
+        const auto p{i.path()};
+        const auto entryPathLen{std::distance(p.begin(), p.end())};
+        if(entryPathLen >= toFindLen)
+        {
+          auto entryIter{std::prev(p.end(), toFindLen)}, toFindIter{toFind.begin()};
+          
+          while(entryIter != p.end())
+          {
+            if(*entryIter != *toFindIter++) break;
+
+            ++entryIter;
+          }
+
+          if(entryIter == p.end()) return p;
+        }
+      }
     }
 
     return {};

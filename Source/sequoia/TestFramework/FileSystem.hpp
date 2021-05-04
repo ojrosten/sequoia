@@ -76,37 +76,9 @@ namespace sequoia::testing
 
   void throw_unless_regular_file(const std::filesystem::path& p, std::string_view message="");
 
-
-  /*! \brief Used for performing a recursive search
-   */
-
-  class search_tree
-  {
-  public:
-    search_tree(std::filesystem::path root)
-      : m_Root{std::move(root)}
-    {
-      throw_unless_directory(m_Root, "");
-    }
-
-    [[nodiscard]]
-    const std::filesystem::path& root() const noexcept
-    {
-      return m_Root;
-    }
-
-    [[nodiscard]]
-    std::filesystem::path find(const std::filesystem::path& filename) const;
-
-    [[nodiscard]]
-    friend bool operator==(const search_tree&, const search_tree&) noexcept = default;
-
-    [[nodiscard]]
-    friend bool operator!=(const search_tree&, const search_tree&) noexcept = default;
-  private:
-    std::filesystem::path m_Root{};
-  };
-
+  [[nodiscard]]
+  std::filesystem::path find_in_tree(const std::filesystem::path& root, const std::filesystem::path& toFind);
+  
   [[nodiscard]]
   std::filesystem::path rebase_from(const std::filesystem::path& filename, const std::filesystem::path& dir);
 }

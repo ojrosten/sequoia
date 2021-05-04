@@ -77,6 +77,9 @@
 #include "Parsing/CommandLineArgumentsDiagnostics.hpp"
 #include "Parsing/CommandLineArgumentsTest.hpp"
 
+#include "Runtime/FactoryTestingDiagnostics.hpp"
+#include "Runtime/FactoryTest.hpp"
+
 #include "TestFramework/CoreDiagnostics.hpp"
 #include "TestFramework/MoveOnlyTestDiagnostics.hpp"
 #include "TestFramework/PerformanceTestDiagnostics.hpp"
@@ -94,10 +97,10 @@
 #include "TestFramework/TestRunnerTest.hpp"
 #include "TestFramework/TestRunnerTestCreation.hpp"
 #include "TestFramework/TestRunnerProjectCreation.hpp"
-#include "Runtime/FactoryTestingDiagnostics.hpp"
-#include "Runtime/FactoryTest.hpp"
+#include "TestFramework/FileSystemFreeTest.hpp"
 #include "TestFramework/TestRunnerEndToEndFreeTest.hpp"
 #include "TestFramework/OutputFreeTest.hpp"
+
 #include "TextProcessing/IndentFreeTest.hpp"
 #include "TextProcessing/SubstitutionsFreeTest.hpp"
 #include "TextProcessing/PatternsFreeTest.hpp"

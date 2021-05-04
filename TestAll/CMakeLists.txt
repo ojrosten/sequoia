@@ -63,6 +63,7 @@ target_sources(TestAll PRIVATE ${TestDir}/Experimental/ExperimentalTest.cpp
                                ${TestDir}/Parsing/CommandLineArgumentsDiagnostics.cpp
                                ${TestDir}/Parsing/CommandLineArgumentsTest.cpp
                                ${TestDir}/TestFramework/CoreDiagnostics.cpp
+                               ${TestDir}/TestFramework/FileSystemFreeTest.cpp
                                ${TestDir}/TestFramework/FuzzyTestDiagnostics.cpp
                                ${TestDir}/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp
                                ${TestDir}/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp

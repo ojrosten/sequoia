@@ -24,6 +24,20 @@ namespace sequoia::testing
     return report_time(s.log, s.execution_time);
   }
 
+  host_directory::host_directory(std::filesystem::path dir)
+    : m_Data{std::move(dir)}
+  {
+    namespace fs = std::filesystem;
+    fs::create_directories(std::get<fs::path>(m_Data));
+  }
+
+  host_directory::host_directory(std::filesystem::path hostRepo, std::filesystem::path sourceRepo)
+    : m_Data{generator{std::move(hostRepo), std::move(sourceRepo)}}
+  {
+    namespace fs = std::filesystem;
+    fs::create_directories(std::get<generator>(m_Data).hostRepo);
+  }
+
   [[nodiscard]]
   auto host_directory::get(const std::filesystem::path& filename) const -> paths
   {
@@ -34,26 +48,26 @@ namespace sequoia::testing
       [&filename](const generator& data) -> paths {
         const auto sourcePath{
           [&](){
-            if(const auto path{data.sourceRepo.find(filename)}; !path.empty())
+            if(const auto path{find_in_tree(data.sourceRepo, filename)}; !path.empty())
               return path;
 
             const auto ext{filename.extension()};
             const auto alternative{std::filesystem::path{filename}.replace_extension(ext == ".hpp" ? ".h" : ".hpp")};
-            if(const auto path{data.sourceRepo.find(alternative)}; !path.empty())
+            if(const auto path{find_in_tree(data.sourceRepo, alternative)}; !path.empty())
               return path;
 
             throw std::runtime_error{std::string{"Unable to locate file "}
                                    .append(filename.generic_string()).append(" or ")
                                    .append(alternative.generic_string()).append(" in the source repository\n")
-                                   .append(fs::relative(data.sourceRepo.root(), data.hostRepo).generic_string())};
+                                   .append(fs::relative(data.sourceRepo, data.hostRepo).generic_string())};
           }()
         };
 
-        const auto relSourcePath{fs::relative(sourcePath, data.sourceRepo.root())};
+        const auto relSourcePath{fs::relative(sourcePath, data.sourceRepo)};
         const auto dir{(data.hostRepo / relSourcePath).parent_path()};
         fs::create_directories(dir);
 
-        return {dir, fs::relative(sourcePath, data.sourceRepo.root().parent_path())};
+        return {dir, fs::relative(sourcePath, data.sourceRepo.parent_path())};
       }
     };
 
@@ -444,7 +458,7 @@ namespace sequoia::testing
   {
     auto& nascentTests{runner.m_NascentTests};
 
-    static creation_factory factory{{"semantic", "allocation", "behavioural"}, runner.m_TestRepo, runner.m_SourceSearchTree};
+    static creation_factory factory{{"semantic", "allocation", "behavioural"}, runner.m_TestRepo, runner.m_SourceRepo};
     auto nascent{factory.create(genus)};
 
     std::visit(
@@ -470,10 +484,10 @@ namespace sequoia::testing
 
   test_runner::test_runner(int argc, char** argv, std::string_view copyright, std::filesystem::path testMain, std::filesystem::path hashIncludeTarget, repositories repos, std::ostream& stream)
     : m_Copyright{copyright}
-    , m_SourceSearchTree{std::move(repos.source)}
     , m_ProjectRoot{project_root(argc, argv)}
     , m_TestMain{std::move(testMain)}
-    , m_HashIncludeTarget{std::move(hashIncludeTarget)}
+    , m_HashIncludeTarget{std::move(hashIncludeTarget)}      
+    , m_SourceRepo{std::move(repos.source)}
     , m_TestRepo{std::move(repos.tests)}
     , m_TestMaterialsRepo{std::move(repos.test_materials)}
     , m_OutputDir{std::move(repos.output)}
@@ -750,8 +764,7 @@ namespace sequoia::testing
                      if(rebase_from(source, repo) == rebase_from(filename, repo))
                        return true;
 
-                     const search_tree searchTree{repo};
-                     if(const auto path{searchTree.find(source)}; !path.empty())
+                     if(const auto path{find_in_tree(repo, source)}; !path.empty())
                      {
                        if(path == filename) return true;
                      }

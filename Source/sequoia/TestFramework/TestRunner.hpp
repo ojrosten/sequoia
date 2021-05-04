@@ -35,19 +35,9 @@ namespace sequoia::testing
 
     host_directory() = default;
 
-    host_directory(std::filesystem::path dir)
-      : m_Data{std::move(dir)}
-    {
-      namespace fs = std::filesystem;
-      fs::create_directories(std::get<fs::path>(m_Data));
-    }
+    host_directory(std::filesystem::path dir);
 
-    host_directory(std::filesystem::path hostRepo, search_tree sourceRepo)
-      : m_Data{generator{std::move(hostRepo), std::move(sourceRepo)}}
-    {
-      namespace fs = std::filesystem;
-      fs::create_directories(std::get<generator>(m_Data).hostRepo);
-    }
+    host_directory(std::filesystem::path hostRepo, std::filesystem::path sourceRepo);
 
     [[nodiscard]]
     auto get(const std::filesystem::path& filename) const -> paths;
@@ -59,9 +49,8 @@ namespace sequoia::testing
     friend bool operator!=(const host_directory&, const host_directory&) noexcept = default;
   private:
     struct generator
-    {
-      std::filesystem::path hostRepo;
-      search_tree sourceRepo;
+    {      
+      std::filesystem::path hostRepo, sourceRepo;
 
       [[nodiscard]]
       friend bool operator==(const generator&, const generator&) noexcept = default;
@@ -111,7 +100,7 @@ namespace sequoia::testing
   class nascent_test_base
   {
   public:
-    nascent_test_base(std::filesystem::path testRepo, search_tree sourceTree)
+    nascent_test_base(std::filesystem::path testRepo, std::filesystem::path sourceTree)
       : m_HostDirectory{std::move(testRepo), std::move(sourceTree)}
     {}
 
@@ -359,11 +348,11 @@ namespace sequoia::testing
     source_list m_SelectedSources{};
     std::vector<vessel> m_NascentTests{};
     std::string m_Copyright{};
-    search_tree m_SourceSearchTree;
     std::filesystem::path
       m_ProjectRoot{},
       m_TestMain{},
-      m_HashIncludeTarget{},
+      m_HashIncludeTarget{},      
+      m_SourceRepo{},
       m_TestRepo{},
       m_TestMaterialsRepo{},
       m_OutputDir{};

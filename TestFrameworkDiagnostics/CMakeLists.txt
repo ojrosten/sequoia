@@ -8,7 +8,8 @@ add_executable(TestFrameworkDiagnostics TestFrameworkDiagnosticsMain.cpp)
 set(TestDir "../Tests")
 
 target_sources(TestFrameworkDiagnostics PRIVATE
-               ${TestDir}/TestFramework/CoreDiagnostics.cpp
+               ${TestDir}/TestFramework/CoreDiagnostics.cpp               
+               ${TestDir}/TestFramework/FileSystemFreeTest.cpp
                ${TestDir}/TestFramework/FuzzyTestDiagnostics.cpp
                ${TestDir}/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp
                ${TestDir}/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp
@@ -31,8 +32,8 @@ target_sources(TestFrameworkDiagnostics PRIVATE
                ${TestDir}/Runtime/FactoryTestingDiagnostics.cpp
                ${TestDir}/Runtime/FactoryTest.cpp
                ${TestDir}/TextProcessing/IndentFreeTest.cpp
-               ../Tests/TextProcessing/SubstitutionsFreeTest.cpp
-               ../Tests/TextProcessing/PatternsFreeTest.cpp)
+               ${TestDir}/TextProcessing/SubstitutionsFreeTest.cpp
+               ${TestDir}/TextProcessing/PatternsFreeTest.cpp)
 
 set(BUILD_SYS ${CMAKE_CURRENT_SOURCE_DIR}/../build_system)
 
