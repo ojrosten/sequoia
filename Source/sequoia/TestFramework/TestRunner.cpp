@@ -13,6 +13,7 @@
 #include "sequoia/Parsing/CommandLineArguments.hpp"
 #include "sequoia/TestFramework/Summary.hpp"
 #include "sequoia/TestFramework/FileEditors.hpp"
+#include "sequoia/TextProcessing/Substitutions.hpp"
 
 namespace sequoia::testing
 {
@@ -197,6 +198,8 @@ namespace sequoia::testing
   }
 
   //=========================================== nascent_test_base ===========================================//
+
+  void nascent_test_base::camel_name(std::string name) { m_CamelName = to_camel_case(std::move(name)); }
 
   void nascent_test_base::finalize()
   {

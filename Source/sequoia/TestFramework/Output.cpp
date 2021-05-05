@@ -11,6 +11,12 @@
 
 #include "sequoia/TestFramework/Output.hpp"
 #include "sequoia/TextProcessing/Patterns.hpp"
+#include "sequoia/TextProcessing/Substitutions.hpp"
+#include "sequoia/PlatformSpecific/Preprocessor.hpp"
+
+#ifndef _MSC_VER
+  #include <cxxabi.h>
+#endif
 
 namespace sequoia::testing
 {
@@ -41,7 +47,7 @@ namespace sequoia::testing
     {
       if constexpr(sizeof(std::size_t) == sizeof(uint64_t))
       {
-        const auto replacement{demangle<uint64_t>([](std::string& name) -> std::string& { return name; })};
+        const auto replacement{demangle<uint64_t>([](std::string name) -> std::string { return name; })};
         replace_all(name, "", "unsigned long", ",>", replacement);
       }
 
@@ -228,19 +234,22 @@ namespace sequoia::testing
     return append_lines(pathToString().append(", Line ").append(std::to_string(line)), message).append("\n");
   }
 
-  std::string& tidy_name(std::string& name, clang_type)
+  [[nodiscard]]
+  std::string tidy_name(std::string name, clang_type)
   {
     replace_all(name, "::__", "::", "");
     return tidy_name(name);
   }
 
-  std::string& tidy_name(std::string& name, gcc_type)
+  [[nodiscard]]
+  std::string tidy_name(std::string name, gcc_type)
   {
     replace_all(name, ">>", ">> ");
     return tidy_name(name);
   }
 
-  std::string& tidy_name(std::string& name, msvc_type)
+  [[nodiscard]]
+  std::string tidy_name(std::string name, msvc_type)
   {
     auto peel{
       [](std::string& s, std::string_view prefix){
@@ -282,8 +291,34 @@ namespace sequoia::testing
     return name;
   }
 
-  std::string& tidy_name(std::string& name, other_compiler_type)
+  [[nodiscard]]
+  std::string tidy_name(std::string name, other_compiler_type)
   {
     return name;
+  }
+
+  [[nodiscard]]
+  std::string demangle(std::string mangled)
+  {
+    if constexpr(with_clang_v || with_gcc_v)
+    {
+      struct cxa_demangler
+      {
+        cxa_demangler(const std::string& name)
+          : data{abi::__cxa_demangle(name.data(), 0, 0, &status)}
+        {}
+
+        ~cxa_demangler() { std::free(data); }
+
+        int status{-1};
+        char* data;
+      };
+
+      cxa_demangler c{mangled};
+
+      if(!c.status) mangled = c.data;
+    }
+
+    return mangled;
   }
 }

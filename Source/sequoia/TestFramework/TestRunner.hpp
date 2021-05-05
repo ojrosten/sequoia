@@ -149,7 +149,7 @@ namespace sequoia::testing
 
     const std::string& camel_name() const noexcept { return m_CamelName; }
 
-    void camel_name(std::string name) { m_CamelName = to_camel_case(std::move(name)); }
+    void camel_name(std::string name);
 
     struct file_data
     {

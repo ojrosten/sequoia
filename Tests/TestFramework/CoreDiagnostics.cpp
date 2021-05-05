@@ -7,6 +7,7 @@
 
 #include "CoreDiagnostics.hpp"
 #include "CoreDiagnosticsUtilities.hpp"
+#include "sequoia/TextProcessing/Substitutions.hpp"
 
 #include <complex>
 #include <vector>

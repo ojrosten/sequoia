@@ -13,15 +13,9 @@
 
 #include "sequoia/TestFramework/CoreInfrastructure.hpp"
 #include "sequoia/TextProcessing/Indent.hpp"
-#include "sequoia/TextProcessing/Substitutions.hpp"
-#include "sequoia/PlatformSpecific/Preprocessor.hpp"
 
 #include <filesystem>
 #include <iostream>
-
-#ifndef _MSC_VER
-  #include <cxxabi.h>
-#endif
 
 namespace sequoia::testing
 {
@@ -82,46 +76,33 @@ namespace sequoia::testing
 
   #define LINE(message) report_line(__FILE__, __LINE__, message)
 
-  std::string& tidy_name(std::string& name, clang_type);
+  [[nodiscard]]
+  std::string tidy_name(std::string name, clang_type);
 
-  std::string& tidy_name(std::string& name, gcc_type);
+  [[nodiscard]]
+  std::string tidy_name(std::string name, gcc_type);
 
-  std::string& tidy_name(std::string& name, msvc_type);
+  [[nodiscard]]
+  std::string tidy_name(std::string name, msvc_type);
 
-  std::string& tidy_name(std::string& name, other_compiler_type);
+  [[nodiscard]]
+  std::string tidy_name(std::string name, other_compiler_type);
 
-  template<class T, invocable_r<std::string&, std::string&> Tidy>
+  [[nodiscard]]
+  std::string demangle(std::string mangled);
+
+  template<class T, invocable_r<std::string, std::string> Tidy>
   [[nodiscard]]
   std::string demangle(Tidy tidy)
   {
-    std::string mangled{typeid(T).name()};
-    if constexpr(with_clang_v || with_gcc_v)
-    {
-      struct cxa_demangler
-      {
-        cxa_demangler(const std::string& name)
-          : data{abi::__cxa_demangle(name.data(), 0, 0, &status)}
-        {}
-
-        ~cxa_demangler() { std::free(data); }
-
-        int status{-1};
-        char* data;
-      };
-
-      cxa_demangler c{mangled};
-
-      if(!c.status) mangled = c.data;
-    }
-
-    return tidy(mangled);
+    return tidy(demangle({typeid(T).name()}));
   }
 
   template<class T>
   [[nodiscard]]
   std::string demangle()
   {
-    return demangle<T>([](std::string& name) -> std::string& { return tidy_name(name, compiler_constant{}); });
+    return demangle<T>([](std::string name) -> std::string { return tidy_name(name, compiler_constant{}); });
   }
 
   /*! \brief Specialize this struct template to customize the way in which type info is generated for a given class.
