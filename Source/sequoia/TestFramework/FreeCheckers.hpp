@@ -338,8 +338,23 @@ namespace sequoia::testing
     return equal;
   }
 
-  template<class E, test_mode Mode, class Fn>
-  bool check_exception_thrown(std::string_view description, test_logger<Mode>& logger, Fn&& function)
+  struct default_exception_message_postprocessor
+  {
+    [[nodiscard]]
+    std::string operator()(std::string mess) const
+    {
+      return mess;
+    }
+  };
+
+  template
+  <
+    class E,
+    test_mode Mode,
+    class Fn,
+    invocable_r<std::string, std::string> Postprocessor=default_exception_message_postprocessor
+  >
+  bool check_exception_thrown(std::string_view description, test_logger<Mode>& logger, Fn&& function, Postprocessor postprocessor={})
   {
     auto message{
       [description](){
@@ -357,7 +372,7 @@ namespace sequoia::testing
     }
     catch(const E& e)
     {
-      sentry.log_caught_exception_message(exception_message_extractor<E>::get(e));
+      sentry.log_caught_exception_message(postprocessor(exception_message_extractor<E>::get(e)));
       return true;
     }
     catch(const std::exception& e)
@@ -486,10 +501,15 @@ namespace sequoia::testing
       return testing::check(description, logger(), value, std::move(advisor));
     }
 
-    template<class E, class Fn>
-    bool check_exception_thrown(std::string_view description, Fn&& function)
+    template
+    <
+      class E,
+      class Fn,
+      invocable_r<std::string, std::string> Postprocessor=default_exception_message_postprocessor
+    >
+    bool check_exception_thrown(std::string_view description, Fn&& function, Postprocessor postprocessor={})
     {
-      return testing::check_exception_thrown<E>(description, logger(), std::forward<Fn>(function));
+      return testing::check_exception_thrown<E>(description, logger(), std::forward<Fn>(function), std::move(postprocessor));
     }
 
     template<class Iter, class PredictionIter, class Advisor=null_advisor>

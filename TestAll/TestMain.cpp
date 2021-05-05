@@ -37,14 +37,10 @@ int main(int argc, char** argv)
 
     runner.add_test_family(
       "Test Framework Auxiliary",
-      file_system_free_test("File System Free Test")
+      file_system_free_test("File System Free Test"),
+      output_free_test("Output Free Test")
     );
 
-    runner.add_test_family(
-      "Output",
-      output_free_test("Free Test")
-    );
-  
     runner.add_test_family(
       "Core Diagnostics",
       false_positive_diagnostics{"False Positive Diagnostics"},

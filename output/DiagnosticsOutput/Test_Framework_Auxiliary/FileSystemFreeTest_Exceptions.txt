@@ -1,17 +1,17 @@
-Tests/TestFramework/FileSystemFreeTest.cpp, Line 31
+Tests/TestFramework/FileSystemFreeTest.cpp, Line 43
 
 Expected Exception Type:
 [std::runtime_error]
-/Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/FileSystemFreeTest/Foo/Bar/baz.txt  is not a directory
+output/TestsTemporaryData/TestFramework/FileSystemFreeTest/Foo/Bar/baz.txt  is not a directory
 
 
 	=======================================
 
-Tests/TestFramework/FileSystemFreeTest.cpp, Line 33
+Tests/TestFramework/FileSystemFreeTest.cpp, Line 46
 
 Expected Exception Type:
 [std::runtime_error]
-/Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/FileSystemFreeTest/Foo/Stuff  does not exist
+output/TestsTemporaryData/TestFramework/FileSystemFreeTest/Foo/Stuff  does not exist
 
 
 	=======================================

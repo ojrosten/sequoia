@@ -305,10 +305,19 @@ namespace sequoia::testing
       struct cxa_demangler
       {
         cxa_demangler(const std::string& name)
-          : data{abi::__cxa_demangle(name.data(), 0, 0, &status)}
+          : data{demangle(name)}
         {}
 
         ~cxa_demangler() { std::free(data); }
+
+#ifndef _MSC_VER
+        char* demangle(const std::string& name)
+        {
+          return abi::__cxa_demangle(name.data(), 0, 0, &status)
+        }
+#else
+        char* demangle(const std::string&) { return nullptr; }
+#endif
 
         int status{-1};
         char* data;

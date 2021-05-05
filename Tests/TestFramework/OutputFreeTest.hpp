@@ -23,5 +23,9 @@ namespace sequoia::testing
     void run_tests() final;
 
     void test_emphasise();
+
+    void test_display_character();
+
+    void test_tidy_name();
   };
 }
