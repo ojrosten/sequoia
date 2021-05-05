@@ -313,7 +313,7 @@ namespace sequoia::testing
 #ifndef _MSC_VER
         char* demangle(const std::string& name)
         {
-          return abi::__cxa_demangle(name.data(), 0, 0, &status)
+          return abi::__cxa_demangle(name.data(), 0, 0, &status);
         }
 #else
         char* demangle(const std::string&) { return nullptr; }
