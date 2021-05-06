@@ -95,7 +95,18 @@ namespace sequoia::testing
 
       // Think about alignment for non-empty T...
       if constexpr (std::is_empty_v<NodeWeight> && std::is_empty_v<EdgeWeight>)
-        check_equality(LINE("2 bytes for each half edge and 2 for the partition data"), sizeof(g_type), 4*sizeof(char));
+      {
+        constexpr auto size{
+          []() {
+            // This compenstates for what looks like an MSVC bug for empty base class optimization
+            // https://developercommunity.visualstudio.com/t/empty-base-class-optimization-is-failing/1415416
+            if constexpr (with_msvc_v) return 4 * sizeof(char) + 1;
+            else                       return 4 * sizeof(char);
+          }()
+        };
+
+        check_equality(LINE("2 bytes for each half edge and 2 for the partition data"), sizeof(g_type), size);
+      }
 
       static_assert(std::is_same_v<typename g_type::edge_index_type, unsigned char>);
     }
