@@ -14,6 +14,8 @@
 #include "Stuff/FooTest.hpp"
 #include "Partners/CoupleTestingDiagnostics.hpp"
 #include "Partners/CoupleTest.hpp"
+#include "Stuff/ThingsTestingDiagnostics.hpp"
+#include "Stuff/ThingsTest.hpp"
 #include "Utilities/UtilitiesFreeTest.hpp"
 #include "Stuff/BazzerFreeTest.hpp"
 #include "Stuff/FooAllocationTest.hpp"

@@ -2,11 +2,17 @@
 Running tests...
 
 Utilities:
-[0 (0)ms]
+[1 (0)ms]
+UsefulThings:
+[1 (0)ms]
+Bar:
+[1 (0)ms]
 Maybe:
-[0 (0)ms]
+[2 (0)ms]
+Oldschool:
+[1 (0)ms]
 Foo:
-[4 (3)ms]
+[6 (4)ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
 	Tests/Stuff/FooTest.cpp, Line 37
@@ -17,9 +23,9 @@ Foo:
 	[std::filesystem::path]
 
 	  Path type
-	  /Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases
+	  C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases
 	  vs
-	  /Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases
+	  C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases
 
 	  [std::filesystem::file_type]
 	  operator== returned false
@@ -30,12 +36,12 @@ Foo:
 
 
 Container:
-[0 (0)ms]
+[2 (0)ms]
 House:
 [0 (0)ms]
 
 -----------Grand Totals-----------
-[7 (3)ms]
+[18 (4)ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

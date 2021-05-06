@@ -2,7 +2,15 @@
 Running tests...
 
 Utilities:
-[0 (0)ms]
+[1 (0)ms]
+	Free Test
+	[0ms]
+UsefulThings:
+[1 (0)ms]
+	Free Test
+	[0ms]
+Bar:
+[1 (0)ms]
 	Free Test
 	[0ms]
 Maybe:
@@ -11,14 +19,20 @@ Maybe:
 	[0ms]
 	Unit Test
 	[0ms]
-Foo:
+Oldschool:
 [1 (0)ms]
 	False Positive Test
 	[0ms]
 	Unit Test
 	[0ms]
+Foo:
+[2 (0)ms]
+	False Positive Test
+	[0ms]
+	Unit Test
+	[0ms]
 Container:
-[1 (0)ms]
+[2 (0)ms]
 	Performance Test
 	[0ms]
 	Allocation Test
@@ -29,7 +43,7 @@ House:
 	[0ms]
 
 -----------Grand Totals-----------
-[6 (0)ms]
+[13 (0)ms]
 	Standard Top Level Checks:                 0;  Failures:  0
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

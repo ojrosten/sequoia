@@ -2,11 +2,17 @@
 Running tests...
 
 Utilities:
-[0 (0)ms]
+[1 (0)ms]
+UsefulThings:
+[1 (0)ms]
+Bar:
+[1 (0)ms]
 Maybe:
-[0 (0)ms]
+[2 (0)ms]
+Oldschool:
+[1 (0)ms]
 Foo:
-[5 (4)ms]
+[6 (4)ms]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 
 ******  Critical Failures:  1  ******
@@ -28,12 +34,12 @@ Foo:
 	=======================================
 
 Container:
-[1 (0)ms]
+[2 (0)ms]
 House:
 [0 (0)ms]
 
 -----------Grand Totals-----------
-[9 (4)ms]
+[18 (4)ms]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

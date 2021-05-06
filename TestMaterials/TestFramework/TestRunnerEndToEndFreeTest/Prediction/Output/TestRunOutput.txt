@@ -3,17 +3,23 @@ Running tests...
 
 Utilities:
 [1 (0)ms]
+UsefulThings:
+[1 (0)ms]
+Bar:
+[1 (0)ms]
 Maybe:
-[1 (0)ms]
+[2 (0)ms]
+Oldschool:
+[2 (0)ms]
 Foo:
-[1 (0)ms]
+[2 (0)ms]
 Container:
-[1 (0)ms]
+[2 (0)ms]
 House:
-[0 (0)ms]
+[1 (0)ms]
 
 -----------Grand Totals-----------
-[6 (0)ms]
+[15 (0)ms]
 	Standard Top Level Checks:                 0;  Failures:  0
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

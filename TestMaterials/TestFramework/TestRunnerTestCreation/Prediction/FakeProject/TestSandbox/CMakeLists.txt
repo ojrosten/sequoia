@@ -13,6 +13,8 @@ target_sources(TestMain PRIVATE
                ../Tests/Stuff/FooTest.cpp
                ../Tests/Partners/CoupleTestingDiagnostics.cpp
                ../Tests/Partners/CoupleTest.cpp
+               ../Tests/Stuff/ThingsTestingDiagnostics.cpp
+               ../Tests/Stuff/ThingsTest.cpp
                ../Tests/Utilities/UtilitiesFreeTest.cpp
                ../Tests/Stuff/BazzerFreeTest.cpp
                ../Tests/Stuff/FooAllocationTest.cpp

@@ -48,6 +48,12 @@ int main(int argc, char** argv)
     );
 
     runner.add_test_family(
+      "Things",
+      things_false_positive_test("False Positive Test"),
+      things_test("Unit Test")
+    );
+
+    runner.add_test_family(
       "Utilities",
       utilities_free_test("Free Test")
     );

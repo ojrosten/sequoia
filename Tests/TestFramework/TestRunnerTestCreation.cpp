@@ -75,8 +75,9 @@ namespace sequoia::testing
                                  , "create", "move_only_test", "bar::baz::foo<maths::floating_point T>", "T", "--family", "Iterator"
                                  , "create", "regular_test", "other::couple<class S, class T>", "S", "-e", "T",
                                                 "-h", hostDir, "-f", "partners", "-ch", "Couple.hpp"
+                                 , "create", "regular_test", "bar::things", "double", "-ch", "fakeProject/Stuff/Things.hpp"
                                  , "create", "free_test", "Utilities.h"
-                                 , "create", "free_test", "Baz.h", "--forename", "bazzer"
+                                 , "create", "free_test", "Source/fakeProject/Stuff/Baz.h", "--forename", "bazzer"
                                  , "create", "move_only_allocation_test", "foo", "--family", "Iterator"
                                  , "create", "regular_test", "container<class T>", "std::vector<T>"
                                  , "create", "regular_allocation_test", "container"
