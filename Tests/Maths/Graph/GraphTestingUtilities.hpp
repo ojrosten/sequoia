@@ -118,6 +118,7 @@ namespace sequoia::testing
   struct detailed_equality_checker<maths::connectivity<Directedness, EdgeTraits, WeightMaker>>
   {
     using type = maths::connectivity<Directedness, EdgeTraits, WeightMaker>;
+    using edge_index_type = typename type::edge_index_type;
 
     template<test_mode Mode>
     static void check(test_logger<Mode>& logger, const type& connectivity, const type& prediction)
@@ -126,7 +127,7 @@ namespace sequoia::testing
 
       if(check_equality("Connectivity order incorrect", logger, connectivity.order(), prediction.order()))
       {
-        for(std::size_t i{}; i<connectivity.order(); ++i)
+        for(edge_index_type i{}; i<connectivity.order(); ++i)
         {
           const auto message{std::string{"Partition "}.append(std::to_string(i))};
           check_range(append_lines(message, "cedge_iterator"), logger, connectivity.cbegin_edges(i), connectivity.cend_edges(i), prediction.cbegin_edges(i), prediction.cend_edges(i));
@@ -147,6 +148,7 @@ namespace sequoia::testing
   {
     using type            = maths::connectivity<Directedness, EdgeTraits, WeightMaker>;
     using edge_init_type  = typename type::edge_init_type;
+    using edge_index_type = typename type::edge_index_type;
     using edge_type       = typename type::edge_type;
     using equivalent_type = std::initializer_list<std::initializer_list<edge_init_type>>;
 
@@ -155,7 +157,7 @@ namespace sequoia::testing
     {
       if(check_equality("Connectivity order incorrect", logger, connectivity.order(), prediction.size()))
       {
-        for(std::size_t i{}; i<connectivity.order(); ++i)
+        for(edge_index_type i{}; i<connectivity.order(); ++i)
         {
           const auto message{std::string{"Partition "}.append(std::to_string(i))};
 
