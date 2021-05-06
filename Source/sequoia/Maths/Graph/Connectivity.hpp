@@ -821,7 +821,7 @@ namespace sequoia
       constexpr void sort_edges(const_edge_iterator begin, const_edge_iterator end, Comparer comp)
       {
         static_assert(edge_type::flavour == edge_flavour::partial, "Should not attempt to sort embedded graphs");
-        auto bsource{begin.partition_index()}, esource{end.partition_index()};
+        edge_index_type bsource{begin.partition_index()}, esource{end.partition_index()};
         if(bsource == esource)
         {
           sequoia::sort(begin_edges(bsource) + distance(cbegin_edges(bsource), begin), begin_edges(esource) + distance(cbegin_edges(esource), end), comp);
@@ -830,7 +830,7 @@ namespace sequoia
         {
           if(bsource > esource) std::swap(bsource, esource);
           sequoia::sort(begin_edges(bsource) + distance(cbegin_edges(bsource), begin), end_edges(bsource), comp);
-          for(auto i{bsource + 1}; i < esource; ++i)
+          for(edge_index_type i = bsource + 1; i < esource; ++i)
           {
             sequoia::sort(begin_edges(i), end_edges(i), comp);
           }
