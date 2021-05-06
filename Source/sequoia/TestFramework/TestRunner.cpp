@@ -749,10 +749,15 @@ namespace sequoia::testing
 
                    if(filename == source) return true;
 
-                   if(filename.is_absolute() && source.is_relative())
+                   if(filename.is_absolute())
                    {
-                     if(rebase_from(filename, root) == rebase_from(source, working_path()))
-                       return true;
+                     if(source.is_absolute()) return false;
+
+                     if(source.is_relative())
+                     {
+                       if(rebase_from(filename, root) == rebase_from(source, working_path()))
+                         return true;
+                     }
                    }
 
                    // filename is relative to where compilation was performed which
@@ -766,7 +771,8 @@ namespace sequoia::testing
 
                      if(const auto path{find_in_tree(repo, source)}; !path.empty())
                      {
-                       if(path == filename) return true;
+                       if(rebase_from(path, repo) == rebase_from(filename, repo))
+                         return true;
                      }
                    }
 
