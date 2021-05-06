@@ -21,6 +21,7 @@
 
 #include <string>
 #include <numeric>
+#include <stdexcept>
 
 namespace sequoia
 {
@@ -1090,7 +1091,14 @@ namespace sequoia
       constexpr PartitionIterator get_end_iterator(const index_type i, Iterator iter) const noexcept
       {
         index_type index{PartitionIterator::reversed() ? index_type{} : npos};
-        index_type offset(m_Storage.size());
+        index_type offset{
+          [sz{m_Storage.size()}] () {
+            if (sz > std::numeric_limits<index_type>::max())
+              throw std::out_of_range{"Partition offset out of range"};
+            return static_cast<index_type>(sz);
+          }()
+        };
+
         if(i < m_Partitions.size())
         {
           index = i;
@@ -1199,12 +1207,27 @@ namespace sequoia
       constexpr static auto make_partitions(std::initializer_list<std::initializer_list<T>> list)
       {
         constexpr auto N{num_partitions_v};
-        auto sizes{utilities::to_array<index_type, N>(list, [](const auto& l){ return l.size(); })};
+        constexpr auto upper{std::numeric_limits<partition_index_type>::max()};
+        const auto fn{
+          [](const auto& l) {
+            if (l.size() > upper)
+              throw std::out_of_range{"Partition size out of bounds"};
+
+            return static_cast<partition_index_type>(l.size());
+          }
+        };
+
+        auto sizes{utilities::to_array<partition_index_type, N>(list, fn)};
         if(!sizes.empty())
         {
           for(auto iter{sizes.begin()+1}; iter!=sizes.end(); ++iter)
           {
-            *iter += *(iter - 1);
+            const auto prev{*(iter - 1)};
+            auto& curr{*iter};
+            if(upper - prev < curr)
+              throw std::out_of_range{"Partition index out of bounds"};
+
+            curr += prev;
           }
         }
 

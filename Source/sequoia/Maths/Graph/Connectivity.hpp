@@ -1194,7 +1194,7 @@ namespace sequoia
           }
         };
 
-        for(size_type i{}; i< orderedEdges.num_partitions(); ++i)
+        for(edge_index_type i{}; i< orderedEdges.num_partitions(); ++i)
         {
           sequoia::sort(orderedEdges.begin_partition(i), orderedEdges.end_partition(i), edgeComparer);
 
@@ -1216,7 +1216,7 @@ namespace sequoia
         }
 
 
-        for(size_type i{}; i<orderedEdges.num_partitions(); ++i)
+        for(edge_index_type i{}; i<orderedEdges.num_partitions(); ++i)
         {
           if constexpr(!direct_edge_init_v) m_Edges.add_slot(allocs...);
 

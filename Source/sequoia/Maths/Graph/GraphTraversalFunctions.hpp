@@ -58,7 +58,7 @@ namespace sequoia::maths
   >
     requires (G::directedness == directed_flavour::directed)
   constexpr auto breadth_first_search(const G& graph, const bool findDisconnectedPieces = true,
-                 const std::size_t start = 0,
+                 const typename G::edge_index_type start = 0,
                  NFBE&& nodeFunctorBeforeEdges     = null_functor{},
                  NFAE&& nodeFunctorAfterEdges      = null_functor{},
                  EFTF&& edgeFirstTraversalFunctor  = null_functor{},
@@ -118,7 +118,7 @@ namespace sequoia::maths
   >
     requires (G::directedness == directed_flavour::directed)
   constexpr auto pseudo_depth_first_search(const G& graph, const bool findDisconnectedPieces = true,
-                 const std::size_t start = 0,
+                 const typename G::edge_index_type start = 0,
                  NFBE&& nodeFunctorBeforeEdges     = null_functor{},
                  NFAE&& nodeFunctorAfterEdges      = null_functor{},
                  EFTF&& edgeFirstTraversalFunctor  = null_functor{},
@@ -149,7 +149,7 @@ namespace sequoia::maths
   >
     requires (G::directedness != directed_flavour::directed)
   constexpr auto priority_search(const G& graph, const bool findDisconnectedPieces = true,
-                 const std::size_t start = 0,
+                 const typename G::edge_index_type start = 0,
                  NFBE&& nodeFunctorBeforeEdges     = null_functor{},
                  NFAE&& nodeFunctorAfterEdges      = null_functor{},
                  EFTF&& edgeFirstTraversalFunctor  = null_functor{},

@@ -20,89 +20,89 @@ namespace sequoia::maths::graph_impl
 {
   template<class Q> struct traversal_traits_base;
 
-  template<std::size_t MaxDepth, class Compare> struct traversal_traits_base<data_structures::static_priority_queue<std::size_t, MaxDepth, Compare>>
+  template<class IndexType, std::size_t MaxDepth, class Compare> struct traversal_traits_base<data_structures::static_priority_queue<IndexType, MaxDepth, Compare>>
   {
     [[nodiscard]]
     constexpr static bool uses_forward_iterator() noexcept { return true; }
 
     [[nodiscard]]
-    constexpr static auto get_container_element(const data_structures::static_priority_queue<std::size_t, MaxDepth, Compare>& q)
+    constexpr static auto get_container_element(const data_structures::static_priority_queue<IndexType, MaxDepth, Compare>& q)
     {
       return q.top();
     }
   };
 
-  template<std::size_t MaxDepth>
-  struct traversal_traits_base<data_structures::static_stack<std::size_t, MaxDepth>>
+  template<class IndexType, std::size_t MaxDepth>
+  struct traversal_traits_base<data_structures::static_stack<IndexType, MaxDepth>>
   {
     [[nodiscard]]
     constexpr static bool uses_forward_iterator() noexcept { return false; }
 
     [[nodiscard]]
-    constexpr static auto get_container_element(const data_structures::static_stack<std::size_t, MaxDepth>& s)
+    constexpr static auto get_container_element(const data_structures::static_stack<IndexType, MaxDepth>& s)
     {
       return s.top();
     }
   };
 
-  template<std::size_t MaxDepth>
-  struct traversal_traits_base<data_structures::static_queue<std::size_t, MaxDepth>>
+  template<class IndexType, std::size_t MaxDepth>
+  struct traversal_traits_base<data_structures::static_queue<IndexType, MaxDepth>>
   {
     [[nodiscard]]
     constexpr static bool uses_forward_iterator() noexcept { return true; }
 
     [[nodiscard]]
-    constexpr static auto get_container_element(const data_structures::static_queue<std::size_t, MaxDepth>& q)
+    constexpr static auto get_container_element(const data_structures::static_queue<IndexType, MaxDepth>& q)
     {
       return q.front();
     }
   };
 
   template <class G>
-  struct queue_constructor<G, data_structures::static_stack<std::size_t, G::order()>>
+  struct queue_constructor<G, data_structures::static_stack<typename G::edge_index_type, G::order()>>
   {
     constexpr static auto make(const G&)
     {
-      return data_structures::static_stack<std::size_t, G::order()>{};
+      return data_structures::static_stack<typename G::edge_index_type, G::order()>{};
     }
   };
 
   template <class G>
-  struct queue_constructor<G, data_structures::static_queue<std::size_t, G::order()>>
+  struct queue_constructor<G, data_structures::static_queue<typename G::edge_index_type, G::order()>>
   {
     [[nodiscard]]
     constexpr static auto make(const G&)
     {
-      return data_structures::static_queue<std::size_t, G::order()>{};
+      return data_structures::static_queue<typename G::edge_index_type, G::order()>{};
     }
   };
 
   template <class G, class Comparer>
-  struct queue_constructor<G, data_structures::static_priority_queue<std::size_t, G::order(), Comparer>>
+  struct queue_constructor<G, data_structures::static_priority_queue<typename G::edge_index_type, G::order(), Comparer>>
   {
     [[nodiscard]]
     constexpr static auto make(const G& g)
     {
-      return data_structures::static_priority_queue<std::size_t, G::order(), Comparer>{Comparer{g}};
+      return data_structures::static_priority_queue<typename G::edge_index_type, G::order(), Comparer>{Comparer{g}};
     }
   };
 
   template<static_network G>
   struct stack_selector<G>
   {
-    using stack_type = data_structures::static_stack<std::size_t, G::order()>;
+    using stack_type = data_structures::static_stack<typename G::edge_index_type, G::order()>;
   };
 
   template<static_network G>
   struct queue_selector<G>
   {
-    using queue_type = data_structures::static_queue<std::size_t, G::order()>;
+    using queue_type = data_structures::static_queue<typename G::edge_index_type, G::order()>;
   };
 
   template<static_network G, class Compare>
   struct priority_queue_selector<G, Compare>
   {
-    using queue_type = data_structures::static_priority_queue<std::size_t, G::order(), Compare>;
+    using queue_type = data_structures::static_priority_queue<typename G::edge_index_type, G::order(), Compare>;
   };
 
 }

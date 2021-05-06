@@ -29,22 +29,22 @@ namespace sequoia::maths::graph_impl
   {
     template<class G>
     [[nodiscard]]
-    constexpr static auto begin(const G& graph, const std::size_t nodeIndex) { return graph.cbegin_edges(nodeIndex); }
+    constexpr static auto begin(const G& graph, const typename G::edge_index_type nodeIndex) { return graph.cbegin_edges(nodeIndex); }
 
     template<class G>
     [[nodiscard]]
-    constexpr static auto end(const G& graph, const std::size_t nodeIndex) { return graph.cend_edges(nodeIndex); }
+    constexpr static auto end(const G& graph, const typename G::edge_index_type nodeIndex) { return graph.cend_edges(nodeIndex); }
   };
 
   template<> struct iterator_getter<false>
   {
     template<class G>
     [[nodiscard]]
-    constexpr static auto begin(const G& graph, const std::size_t nodeIndex) { return graph.crbegin_edges(nodeIndex); }
+    constexpr static auto begin(const G& graph, const typename G::edge_index_type nodeIndex) { return graph.crbegin_edges(nodeIndex); }
 
     template<class G>
     [[nodiscard]]
-    constexpr static auto end(const G& graph, const std::size_t nodeIndex) { return graph.crend_edges(nodeIndex); }
+    constexpr static auto end(const G& graph, const typename G::edge_index_type nodeIndex) { return graph.crend_edges(nodeIndex); }
   };
 
   template<class Q> struct traversal_traits_base;
@@ -53,13 +53,13 @@ namespace sequoia::maths::graph_impl
   struct traversal_traits : public traversal_traits_base<Q>
   {
     [[nodiscard]]
-    constexpr static auto begin(const G& graph, const std::size_t nodeIndex)
+    constexpr static auto begin(const G& graph, const typename G::edge_index_type nodeIndex)
     {
       return iterator_getter<traversal_traits_base<Q>::uses_forward_iterator()>::begin(graph, nodeIndex);
     }
 
     [[nodiscard]]
-    constexpr static auto end(const G& graph, const std::size_t nodeIndex)
+    constexpr static auto end(const G& graph, const typename G::edge_index_type nodeIndex)
     {
       return iterator_getter<traversal_traits_base<Q>::uses_forward_iterator()>::end(graph, nodeIndex);
     }
@@ -260,7 +260,7 @@ namespace sequoia::maths::graph_impl
     >
     constexpr auto traverse(const G& graph,
                             const bool findDisconnectedPieces,
-                            std::size_t start,
+                            typename G::edge_index_type start,
                             NFBE&& nodeFunctorBeforeEdges,
                             NFAE&& nodeFunctorAfterEdges,
                             EFTF&& edgeFirstTraversalFunctor,
@@ -268,13 +268,14 @@ namespace sequoia::maths::graph_impl
                             TaskProcessingModel&& taskProcessingModel)
     {
       static_assert(!directed(G::directedness) || std::is_same<std::decay_t<ESTF>, null_functor>::value, "For a directed graph, edges are traversed only once: the edgeSecondTraversalFunctor is ignored and so should be the null_functor");
+      using index_type = typename G::edge_index_type;
 
       if(start < graph.order())
       {
         auto discovered{traversal_traits<G, Q>::make_bitset(graph)};
         auto processed{traversal_traits<G, Q>::make_bitset(graph)};
 
-        std::size_t numDiscovered{}, restart{};
+        index_type numDiscovered{}, restart{};
 
         using namespace graph_impl;
         auto nodeIndexQueue{queue_constructor<G, Q>::make(graph)};
@@ -284,14 +285,14 @@ namespace sequoia::maths::graph_impl
         {
           while(discovered[restart]) ++restart;
 
-          const std::size_t startNode{numDiscovered ? restart : start};
+          const auto startNode{numDiscovered ? restart : start};
           nodeIndexQueue.push(startNode);
           discovered[startNode] = true;
           ++numDiscovered;
 
           while(!nodeIndexQueue.empty())
           {
-            const std::size_t nodeIndex{traversal_traits<G, container_type>::get_container_element(nodeIndexQueue)};
+            const auto nodeIndex{traversal_traits<G, container_type>::get_container_element(nodeIndexQueue)};
 
             nodeIndexQueue.pop();
 
