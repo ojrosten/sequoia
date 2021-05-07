@@ -145,12 +145,13 @@ namespace sequoia::testing
     write_to_file(file, text);
   }
 
-  void add_to_cmake(const std::filesystem::path& cmakeDir, const std::filesystem::path& file)
+  void add_to_cmake(const std::filesystem::path& cmakeDir, const std::filesystem::path& testDir, const std::filesystem::path& file)
   {
+    const auto relativeOutput{file.lexically_relative(testDir)};
     const auto cmakeLists{cmakeDir / "CMakeLists.txt"};
 
     const auto text{
-      [&cmakeLists,&file]() -> std::string {
+      [&cmakeLists](const std::filesystem::path& file) -> std::string {
         constexpr auto npos{std::string::npos};
         constexpr std::string_view pattern{"target_sources("};
 
@@ -159,13 +160,14 @@ namespace sequoia::testing
         {
           if(auto endPos{text.find(')', startPos + pattern.size())}; endPos != npos)
           {
-            text.insert(endPos, std::string{"\n"}.append(pattern.size(), ' ').append(file.generic_string()));
+            text.insert(endPos, std::string{"\n"}
+                .append(pattern.size(), ' ').append("${TestDir}/").append(file.generic_string()));
             return text;
           }
         }
 
         return "";
-      }()
+      }( !relativeOutput.empty() ? relativeOutput : file)
     };
 
     if(text.empty())

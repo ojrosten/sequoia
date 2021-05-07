@@ -489,7 +489,7 @@ namespace sequoia::testing
     : m_Copyright{copyright}
     , m_ProjectRoot{project_root(argc, argv)}
     , m_TestMain{std::move(testMain)}
-    , m_HashIncludeTarget{std::move(hashIncludeTarget)}      
+    , m_HashIncludeTarget{std::move(hashIncludeTarget)}
     , m_Repos{std::move(repos)}
     , m_Stream{&stream}
   {
@@ -835,9 +835,7 @@ namespace sequoia::testing
       }
       else if(outputFile.extension() == ".cpp")
       {
-        const auto mainDir{m_TestMain.parent_path()};
-        const auto relativeOutput{outputFile.lexically_relative(mainDir)};
-        add_to_cmake(mainDir, !relativeOutput.empty() ? relativeOutput : outputFile);
+        add_to_cmake(m_TestMain.parent_path(), m_Repos.tests, outputFile);
       }
 
       return std::string{"\""}.append(stringify(outputFile)).append("\"");

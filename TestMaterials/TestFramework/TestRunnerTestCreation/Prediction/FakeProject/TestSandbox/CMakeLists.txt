@@ -5,25 +5,25 @@ project(MyProject LANGUAGES CXX)
 add_executable(TestMain TestSandbox.cpp)
 
 target_sources(TestMain PRIVATE
-               ../Tests/Maybe/MaybeTestingDiagnostics.cpp
-               ../Tests/Maybe/MaybeTest.cpp
-               ../Tests/Utilities/IteratorTestingDiagnostics.cpp
-               ../Tests/Utilities/IteratorTest.cpp
-               ../Tests/Stuff/FooTestingDiagnostics.cpp
-               ../Tests/Stuff/FooTest.cpp
-               ../Tests/Partners/CoupleTestingDiagnostics.cpp
-               ../Tests/Partners/CoupleTest.cpp
-               ../Tests/Stuff/ThingsTestingDiagnostics.cpp
-               ../Tests/Stuff/ThingsTest.cpp
-               ../Tests/Utilities/UtilitiesFreeTest.cpp
-               ../Tests/Stuff/BazzerFreeTest.cpp
-               ../Tests/Stuff/FooAllocationTest.cpp
-               ../Tests/Stuff/ContainerTestingDiagnostics.cpp
-               ../Tests/Stuff/ContainerTest.cpp
-               ../Tests/Stuff/ContainerAllocationTest.cpp
-               ../Tests/Stuff/ContainerPerformanceTest.cpp
-               ../Tests/Utilities/VariadicTestingDiagnostics.cpp
-               ../Tests/Utilities/VariadicTest.cpp)
+               ${TestDir}/Maybe/MaybeTestingDiagnostics.cpp
+               ${TestDir}/Maybe/MaybeTest.cpp
+               ${TestDir}/Utilities/IteratorTestingDiagnostics.cpp
+               ${TestDir}/Utilities/IteratorTest.cpp
+               ${TestDir}/Stuff/FooTestingDiagnostics.cpp
+               ${TestDir}/Stuff/FooTest.cpp
+               ${TestDir}/Partners/CoupleTestingDiagnostics.cpp
+               ${TestDir}/Partners/CoupleTest.cpp
+               ${TestDir}/Stuff/ThingsTestingDiagnostics.cpp
+               ${TestDir}/Stuff/ThingsTest.cpp
+               ${TestDir}/Utilities/UtilitiesFreeTest.cpp
+               ${TestDir}/Stuff/BazzerFreeTest.cpp
+               ${TestDir}/Stuff/FooAllocationTest.cpp
+               ${TestDir}/Stuff/ContainerTestingDiagnostics.cpp
+               ${TestDir}/Stuff/ContainerTest.cpp
+               ${TestDir}/Stuff/ContainerAllocationTest.cpp
+               ${TestDir}/Stuff/ContainerPerformanceTest.cpp
+               ${TestDir}/Utilities/VariadicTestingDiagnostics.cpp
+               ${TestDir}/Utilities/VariadicTest.cpp)
 
 SET(BUILD_SYS SEQUOIA_ROOT/build_system)
 

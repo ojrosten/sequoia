@@ -23,7 +23,7 @@ namespace sequoia::testing
 
   void add_include(const std::filesystem::path& file, std::string_view include);
 
-  void add_to_cmake(const std::filesystem::path& cmakeDir, const std::filesystem::path& file);
+  void add_to_cmake(const std::filesystem::path& cmakeDir, const std::filesystem::path& testDir, const std::filesystem::path& file);
 
   void add_to_family(const std::filesystem::path& file, std::string_view familyName, const std::vector<std::string>& tests);
 }
