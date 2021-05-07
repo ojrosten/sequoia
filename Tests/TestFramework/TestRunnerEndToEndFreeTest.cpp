@@ -78,9 +78,14 @@ namespace sequoia::testing
     std::string build_cmd(const std::filesystem::path& buildDir)
     {
       auto cmd{cd(buildDir) && "cmake --build . --target TestMain"};
+
       if constexpr (with_msvc_v)
       {
-        cmd.append(" --config Debug");
+#ifdef CMAKE_INTDIR
+        cmd.append(" --config ").append(std::string{CMAKE_INTDIR});
+#else
+        throw std::logic_error{"Unable to find preprocessor definition for CMAKE_INTDIR"};
+#endif
       }
 
       return cmd;
@@ -241,10 +246,10 @@ namespace sequoia::testing
     const cmd_builder b{generated() / "TestAll", generated() / "build" / "CMade" / "TestAll"};
 
     // Run cmake, build and run
-    const auto cmakeBuildRun{b.cmake_and_build()};
-    std::system(cmakeBuildRun.cmd.c_str());
-    check(LINE("First CMake output existance"), fs::exists(cmakeBuildRun.cmake_output));
-    check(LINE("First build output existance"), fs::exists(cmakeBuildRun.build_output));
+    const auto cmakeBuild{b.cmake_and_build()};
+    std::system(cmakeBuild.cmd.c_str());
+    check(LINE("First CMake output existance"), fs::exists(cmakeBuild.cmake_output));
+    check(LINE("First build output existance"), fs::exists(cmakeBuild.build_output));
 
     // Create tests, rerun cmake, build and run
     fs::copy(fake() / "Source" / "fakeProject", generated() / "Source" / "generatedProject", fs::copy_options::recursive | fs::copy_options::skip_existing);
