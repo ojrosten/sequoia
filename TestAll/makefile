@@ -33,10 +33,10 @@ CFLAGS := -Wall -Wextra -Wpedantic -std=c++2a -O0 \
 CFLAGS += -I../TestCommon -I../Source -I../Tests
 CFLAGS += -I/usr/local/opt/llvm/include -I/usr/local/opt/llvm/include/c++/v1/
 
-CFLAGS +=  -ferror-limit=1 -Wno-missing-braces
+CFLAGS +=  -ferror-limit=1 -Wno-missing-braces -fsanitize=address
 #CFLAGS += -fmax-errors=1 -Wno-comment
 
-EXE      := $(TEST_BUILD_ROOT)/TestAll.exe
+EXE      := $(TEST_BUILD_ROOT)/TestAll
 SEQ_LIB  := $(SEQ_BUILD_ROOT)/Sequoia.a
 
 APP_SRC := TestMain.cpp

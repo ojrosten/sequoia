@@ -36,7 +36,7 @@ CFLAGS += -I/usr/local/opt/llvm/include -I/usr/local/opt/llvm/include/c++/v1/
 CFLAGS +=  -ferror-limit=1 -Wno-missing-braces
 #CFLAGS += -fmax-errors=1 -Wno-comment
 
-EXE      := $(TEST_BUILD_ROOT)/TestChamber.exe
+EXE      := $(TEST_BUILD_ROOT)/TestChamber
 SEQ_LIB  := $(SEQ_BUILD_ROOT)/Sequoia.a
 
 APP_SRC := TestChamberMain.cpp
