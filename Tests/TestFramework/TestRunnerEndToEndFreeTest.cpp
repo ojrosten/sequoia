@@ -87,6 +87,10 @@ namespace sequoia::testing
         throw std::logic_error{"Unable to find preprocessor definition for CMAKE_INTDIR"};
 #endif
       }
+      else
+      {
+        cmd.append(" -- -j4");
+      }
 
       return cmd;
     }
