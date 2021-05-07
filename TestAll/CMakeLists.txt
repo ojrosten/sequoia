@@ -88,7 +88,7 @@ target_sources(TestAll PRIVATE ${TestDir}/Experimental/ExperimentalTest.cpp
 
 set(BUILD_SYS ${CMAKE_CURRENT_SOURCE_DIR}/../build_system)
 
-file(GLOB_RECURSE HeaderFiles ${TestDir}/TestFramework/*.hpp)
+file(GLOB_RECURSE HeaderFiles ${TestDir}/*.hpp)
 target_sources(TestAll PRIVATE ${HeaderFiles})
 
 include(${BUILD_SYS}/Utilities.cmake)
