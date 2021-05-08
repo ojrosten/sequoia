@@ -635,7 +635,7 @@ namespace sequoia::testing
 
     if constexpr(GraphFlavour == flavour::undirected)
     {
-      const auto w{std::numeric_limits<std::size_t>::max() - 1_sz};
+      constexpr auto w{std::numeric_limits<std::size_t>::max() - 1_sz};
       Graph expected{
         {{ei_t{1,w}, ei_t{2,8_sz}, ei_t{2,3_sz}},
          {ei_t{0,w}, ei_t{3,3_sz}},
@@ -662,7 +662,7 @@ namespace sequoia::testing
     }
     else if constexpr(GraphFlavour == flavour::undirected_embedded)
     {
-      const auto w{std::numeric_limits<std::size_t>::max() - 1_sz};
+      constexpr auto w{std::numeric_limits<std::size_t>::max() - 1_sz};
       Graph expected{
         {{ei_t{1,0,w}, ei_t{2,1,8_sz}, ei_t{2,2,3_sz}},
          {ei_t{0,0,w}, ei_t{3,0,3_sz}},
