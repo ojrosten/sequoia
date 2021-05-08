@@ -48,18 +48,6 @@ namespace sequoia::testing
       }
     };
 
-    auto allocGetter{
-      [](const storage& s) {
-        return s.get_allocator();
-      }
-    };
-
-    auto innerAllocGetter{
-      [](const storage& s) {
-        return s.get_allocator().inner_allocator();
-      }
-    };
-
     auto partitionMaker{ [](storage& s) { s.add_slot(); } };
 
     // null; [0,2][1]
@@ -113,29 +101,21 @@ namespace sequoia::testing
       }
     };
 
-    auto partitionsAllocGetter{
-      [](const storage& s) { return s.get_partitions_allocator(); }
-    };
+    auto partitionMaker{ [](storage& s) { s.add_slot(); } };
+    // null; [0,2][1]
+    auto[s,t]{check_semantics(LINE(add_type_info<storage>("")),
+                              [](){ return storage{allocator{}, partitions_allocator{}}; },
+                              [](){ return storage{{{0,2}, {1}}, allocator{}, partitions_allocator{}}; },
+                              partitionMaker,
+                              allocation_info{contiguous_alloc_getter<storage>{}, {0_c, {1_c,0_mu}, {1_anp, 1_awp}}},
+                              allocation_info{partitions_alloc_getter<storage>{}, {0_c, {1_c,1_mu}, {1_anp, 1_awp}}})};
 
-    auto allocGetter{
-      [](const storage& s){ return s.get_allocator(); }
-    };
+    check_equivalence(LINE(makeMessage("")), s, prediction{});
+    check_equivalence(LINE(makeMessage("")), t, prediction{{0,2}, {1}});
 
-      auto partitionMaker{ [](storage& s) { s.add_slot(); } };
-      // null; [0,2][1]
-      auto[s,t]{check_semantics(LINE(add_type_info<storage>("")),
-                      [](){ return storage{allocator{}, partitions_allocator{}}; },
-                      [](){ return storage{{{0,2}, {1}}, allocator{}, partitions_allocator{}}; },
-                      partitionMaker,
-                      allocation_info{contiguous_alloc_getter<storage>{}, {0_c, {1_c,0_mu}, {1_anp, 1_awp}}},
-                      allocation_info{partitions_alloc_getter<storage>{}, {0_c, {1_c,1_mu}, {1_anp, 1_awp}}})};
+    s.add_slot();
+    // []
 
-      check_equivalence(LINE(makeMessage("")), s, prediction{});
-      check_equivalence(LINE(makeMessage("")), t, prediction{{0,2}, {1}});
-
-      s.add_slot();
-      // []
-
-      check_equality(LINE(makeMessage("")), s, storage{{{}}, allocator{}, partitions_allocator{}});
+    check_equality(LINE(makeMessage("")), s, storage{{{}}, allocator{}, partitions_allocator{}});
   }
 }
