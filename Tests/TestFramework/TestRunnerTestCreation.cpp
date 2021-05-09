@@ -104,39 +104,52 @@ namespace sequoia::testing
       [&mat{working_materials()}]() { return mat / "FakeProject"; }
     };
 
-    check_exception_thrown<std::runtime_error>(LINE(""),
-                                               [working](){
-                                                 std::stringstream outputStream{};
-                                                 const auto includeTarget{working().append("TestShared").append("SharedIncludes.hpp")};
-                                                 commandline_arguments args{"", "create", "free", "Plurgh.h"};
-                                                 test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "", includeTarget, repositories{working()}, outputStream};
-                                               });
+    check_exception_thrown<std::runtime_error>(
+      LINE(""),
+      [working]() {
+        std::stringstream outputStream{};
+        const auto includeTarget{working().append("TestShared").append("SharedIncludes.hpp")};
+        commandline_arguments args{"", "create", "free", "Plurgh.h"};
+        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "", includeTarget, repositories{working()}, outputStream};
+      });
 
-    check_exception_thrown<std::runtime_error>(LINE(""),
-                                               [working](){
-                                                 const auto testMain{working().append("TestSandbox").append("TestSandbox.cpp")};
-                                                 std::stringstream outputStream{};
-                                                 commandline_arguments args{"", "create", "free", "Plurgh.h"};
-                                                 test_runner tr{args.size(), args.get(), "Oliver J. Rosten", testMain, "", repositories{working()}, outputStream};
-                                               });
+    check_exception_thrown<std::runtime_error>(
+      LINE(""),
+      [working]() {
+        const auto testMain{working().append("TestSandbox").append("TestSandbox.cpp")};
+        std::stringstream outputStream{};
+        commandline_arguments args{"", "create", "free", "Plurgh.h"};
+        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", testMain, "", repositories{working()}, outputStream};
+      });
 
-     check_exception_thrown<std::runtime_error>(LINE(""),
-                                               [working](){
-                                                 const auto testMain{working().append("TestSandbox").append("TestSandbox.cpp")};
-                                                 const auto includeTarget{working().append("TestShared").append("SharedIncludes.hpp")};
-                                                 std::stringstream outputStream{};
-                                                 commandline_arguments args{"", "create", "free", "Plurgh.h"};
-                                                 test_runner tr{args.size(), args.get(), "Oliver J. Rosten", testMain, includeTarget, repositories{""}, outputStream};
-                                               });
+     check_exception_thrown<std::runtime_error>(
+       LINE(""),
+       [working]() {
+         const auto testMain{working().append("TestSandbox").append("TestSandbox.cpp")};
+         const auto includeTarget{working().append("TestShared").append("SharedIncludes.hpp")};
+         std::stringstream outputStream{};
+         commandline_arguments args{"", "create", "free", "Plurgh.h"};
+         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", testMain, includeTarget, repositories{""}, outputStream};
+       });
 
-      check_exception_thrown<std::runtime_error>(LINE(""),
-                                               [working](){
-                                                 const auto testMain{working().append("TestSandbox").append("TestSandbox.cpp")};
-                                                 const auto includeTarget{working().append("TestShared").append("SharedIncludes.hpp")};
-                                                 std::stringstream outputStream{};
-                                                 commandline_arguments args{"", "create", "free", "Plurgh.h"};
-                                                 test_runner tr{args.size(), args.get(), "Oliver J. Rosten", testMain, includeTarget, repositories{working()}, outputStream};
-                                                 tr.execute();
-                                               });
+      check_exception_thrown<std::runtime_error>(
+        LINE(""),
+        [working]() {
+          const auto testMain{working().append("TestSandbox").append("TestSandbox.cpp")};
+          const auto includeTarget{working().append("TestShared").append("SharedIncludes.hpp")};
+          std::stringstream outputStream{};
+          commandline_arguments args{"", "create", "free", "Plurgh.h"};
+          test_runner tr{args.size(), args.get(), "Oliver J. Rosten", testMain, includeTarget, repositories{working()}, outputStream};
+          tr.execute();
+        });
+
+      check_exception_thrown<std::runtime_error>(
+        LINE("Typo in specified class header"),
+        [working]() {
+          const auto testMain{working().append("TestSandbox").append("TestSandbox.cpp")};
+          std::stringstream outputStream{};
+          commandline_arguments args{"", "create", "regular_test", "bar::things", "double", "-ch", "fakeProject/Stuff/Thingz.hpp"};
+          test_runner tr{args.size(), args.get(), "Oliver J. Rosten", testMain, "", repositories{working()}, outputStream};
+        });
   }
 }
