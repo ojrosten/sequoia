@@ -82,7 +82,8 @@ Typo in specified class header
 
 Expected Exception Type:
 [std::runtime_error]
-  does not exist
+Unable to locate file fakeProject/Stuff/Thingz.hpp or fakeProject/Stuff/Thingz.h in the source repository
+../Source/fakeProject
 
 
 	=======================================

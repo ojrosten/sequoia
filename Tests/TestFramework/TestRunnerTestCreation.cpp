@@ -147,9 +147,10 @@ namespace sequoia::testing
         LINE("Typo in specified class header"),
         [working]() {
           const auto testMain{working().append("TestSandbox").append("TestSandbox.cpp")};
+          const auto includeTarget{working().append("TestShared").append("SharedIncludes.hpp")};
           std::stringstream outputStream{};
           commandline_arguments args{"", "create", "regular_test", "bar::things", "double", "-ch", "fakeProject/Stuff/Thingz.hpp"};
-          test_runner tr{args.size(), args.get(), "Oliver J. Rosten", testMain, "", repositories{working()}, outputStream};
+          test_runner tr{args.size(), args.get(), "Oliver J. Rosten", testMain, includeTarget, repositories{working()}, outputStream};
         });
   }
 }
