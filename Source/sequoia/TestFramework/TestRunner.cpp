@@ -40,27 +40,41 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  auto host_directory::get(const std::filesystem::path& filename) const -> paths
+  auto host_directory::get(const std::filesystem::path& filename, const std::vector<std::string_view>& extensions) const -> paths
   {
     namespace fs = std::filesystem;
 
     variant_visitor visitor{
-      [&filename](const fs::path& p)     -> paths { return {p, filename}; },
-      [&filename](const generator& data) -> paths {
+      [&](const fs::path& p)     -> paths { return {p, filename}; },
+      [&](const generator& data) -> paths {
         const auto sourcePath{
-          [&](){
+          [&]() {
             if(const auto path{find_in_tree(data.sourceRepo, filename)}; !path.empty())
               return path;
 
-            const auto ext{filename.extension()};
-            const auto alternative{std::filesystem::path{filename}.replace_extension(ext == ".hpp" ? ".h" : ".hpp")};
-            if(const auto path{find_in_tree(data.sourceRepo, alternative)}; !path.empty())
-              return path;
+            for(auto e : extensions)
+            {
+              if(e != filename.extension())
+              {
+                const auto alternative{std::filesystem::path{filename}.replace_extension(e)};
+                if(const auto path{find_in_tree(data.sourceRepo, alternative)}; !path.empty())
+                  return path;
+              }
+            }
 
-            throw std::runtime_error{std::string{"Unable to locate file "}
-                                   .append(filename.generic_string()).append(" or ")
-                                   .append(alternative.generic_string()).append(" in the source repository\n")
-                                   .append(fs::relative(data.sourceRepo, data.hostRepo).generic_string())};
+            auto mess{std::string{"Unable to locate file "}.append(filename.generic_string()).append(" or ")};
+            for(auto e : extensions)
+            {
+              if(e != filename.extension())
+              {
+                const auto alternative{fs::path{filename}.replace_extension(e)};
+                mess.append(alternative.generic_string());
+              }
+            }
+
+            mess.append(" in the source repository\n").append(fs::relative(data.sourceRepo, data.hostRepo).generic_string());
+
+            throw std::runtime_error{mess};
           }()
         };
 
@@ -209,7 +223,8 @@ namespace sequoia::testing
       replace_all(m_Family, "_", " ");
     }
 
-    auto paths{m_HostDirectory.get(m_Header)};
+    const std::vector<std::string_view> extensions{".hpp", ".h"};
+    auto paths{m_HostDirectory.get(m_Header, extensions)};
     m_HostDir = std::move(paths.host_dir);
     m_HeaderPath = std::move(paths.header_path);
   }

@@ -40,7 +40,7 @@ namespace sequoia::testing
     host_directory(std::filesystem::path hostRepo, std::filesystem::path sourceRepo);
 
     [[nodiscard]]
-    auto get(const std::filesystem::path& filename) const -> paths;
+    auto get(const std::filesystem::path& filename, const std::vector<std::string_view>& extensions) const -> paths;
 
     [[nodiscard]]
     friend bool operator==(const host_directory&, const host_directory&) noexcept = default;
@@ -49,7 +49,7 @@ namespace sequoia::testing
     friend bool operator!=(const host_directory&, const host_directory&) noexcept = default;
   private:
     struct generator
-    {      
+    {
       std::filesystem::path hostRepo, sourceRepo;
 
       [[nodiscard]]
