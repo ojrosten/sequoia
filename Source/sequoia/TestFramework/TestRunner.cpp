@@ -81,7 +81,9 @@ namespace sequoia::testing
     , tests{projectRoot/"Tests"}
     , test_materials{projectRoot/"TestMaterials"}
     , output{projectRoot/"output"}
-  {}
+  {
+    throw_unless_directory(projectRoot, "\nTest repository not found");
+  }
 
   [[nodiscard]]
   std::filesystem::path repositories::source_path(const std::filesystem::path& projectRoot)
@@ -496,8 +498,7 @@ namespace sequoia::testing
     , m_Stream{&stream}
   {
     throw_unless_regular_file(m_TestMain, "\nTry ensuring that the application is run from the appropriate directory");
-    throw_unless_regular_file(m_HashIncludeTarget);
-    throw_unless_directory(m_Repos.tests);
+    throw_unless_regular_file(m_HashIncludeTarget, "\nInclude target not found");
 
     process_args(argc, argv);
 

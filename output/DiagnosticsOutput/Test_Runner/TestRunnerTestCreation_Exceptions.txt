@@ -39,10 +39,11 @@ Expected Exception Type:
 	=======================================
 
 Tests/TestFramework/TestRunnerTestCreation.cpp, Line 108
+Test Main has empty path
 
 Expected Exception Type:
 [std::runtime_error]
-  does not exist
+File path is empty
 
 Try ensuring that the application is run from the appropriate directory
 
@@ -50,15 +51,43 @@ Try ensuring that the application is run from the appropriate directory
 	=======================================
 
 Tests/TestFramework/TestRunnerTestCreation.cpp, Line 117
+Test Main does not exist
 
 Expected Exception Type:
 [std::runtime_error]
-  does not exist
+FooMain.cpp not found
+
+Try ensuring that the application is run from the appropriate directory
 
 
 	=======================================
 
 Tests/TestFramework/TestRunnerTestCreation.cpp, Line 126
+Include Target has empty path
+
+Expected Exception Type:
+[std::runtime_error]
+File path is empty
+
+Include target not found
+
+
+	=======================================
+
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 135
+Include Target does not exist
+
+Expected Exception Type:
+[std::runtime_error]
+FooPath.hpp not found
+
+Include target not found
+
+
+	=======================================
+
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 144
+Project root is empty
 
 Expected Exception Type:
 [std::runtime_error]
@@ -67,7 +96,32 @@ Project root should not be empty
 
 	=======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 136
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 154
+Project root does not exist
+
+Expected Exception Type:
+[std::runtime_error]
+C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTestCreation/WorkingCopy/FakeProject/FooRepo is not a directory
+
+Test repository not found
+
+
+	=======================================
+
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 164
+Project root not a directory
+
+Expected Exception Type:
+[std::runtime_error]
+C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTestCreation/WorkingCopy/FakeProject/TestShared/SharedIncludes.hpp is not a directory
+
+Test repository not found
+
+
+	=======================================
+
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 174
+Plurgh.h does not exist
 
 Expected Exception Type:
 [std::runtime_error]
@@ -77,7 +131,7 @@ Unable to locate file Plurgh.h or Plurgh.hpp in the source repository
 
 	=======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 147
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 185
 Typo in specified class header
 
 Expected Exception Type:

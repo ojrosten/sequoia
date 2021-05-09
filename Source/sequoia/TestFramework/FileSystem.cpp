@@ -120,7 +120,7 @@ namespace sequoia::testing
   {
     namespace fs = std::filesystem;
 
-    throw_if(p, append_lines(" does not exist", message),
+    throw_if(p, append_lines(p.empty() ? "File path is empty" :"not found", message),
              [](const fs::path& p){ return !fs::exists(p); });
   }
 
@@ -128,8 +128,7 @@ namespace sequoia::testing
   {
     namespace fs = std::filesystem;
 
-    throw_unless_exists(p, message);
-    throw_if(p, append_lines(" is not a directory", message), [](const fs::path& p){ return !fs::is_directory(p); });
+    throw_if(p, append_lines(p.empty() ? "File path is empty" : "is not a directory", message), [](const fs::path& p){ return !fs::is_directory(p); });
   }
 
   void throw_unless_regular_file(const std::filesystem::path& p, std::string_view message)

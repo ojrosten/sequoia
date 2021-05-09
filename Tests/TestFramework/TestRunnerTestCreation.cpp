@@ -105,7 +105,7 @@ namespace sequoia::testing
     };
 
     check_exception_thrown<std::runtime_error>(
-      LINE(""),
+      LINE("Test Main has empty path"),
       [working]() {
         std::stringstream outputStream{};
         const auto includeTarget{working().append("TestShared").append("SharedIncludes.hpp")};
@@ -114,7 +114,16 @@ namespace sequoia::testing
       });
 
     check_exception_thrown<std::runtime_error>(
-      LINE(""),
+      LINE("Test Main does not exist"),
+      [working]() {
+        std::stringstream outputStream{};
+        const auto includeTarget{working().append("TestShared").append("SharedIncludes.hpp")};
+        commandline_arguments args{"", "create", "free", "Plurgh.h"};
+        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "FooMain.cpp", includeTarget, repositories{working()}, outputStream};
+      });
+
+    check_exception_thrown<std::runtime_error>(
+      LINE("Include Target has empty path"),
       [working]() {
         const auto testMain{working().append("TestSandbox").append("TestSandbox.cpp")};
         std::stringstream outputStream{};
@@ -122,8 +131,17 @@ namespace sequoia::testing
         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", testMain, "", repositories{working()}, outputStream};
       });
 
+    check_exception_thrown<std::runtime_error>(
+      LINE("Include Target does not exist"),
+      [working]() {
+        const auto testMain{working().append("TestSandbox").append("TestSandbox.cpp")};
+        std::stringstream outputStream{};
+        commandline_arguments args{"", "create", "free", "Plurgh.h"};
+        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", testMain, "FooPath.hpp", repositories{working()}, outputStream};
+      });
+
      check_exception_thrown<std::runtime_error>(
-       LINE(""),
+       LINE("Project root is empty"),
        [working]() {
          const auto testMain{working().append("TestSandbox").append("TestSandbox.cpp")};
          const auto includeTarget{working().append("TestShared").append("SharedIncludes.hpp")};
@@ -132,8 +150,28 @@ namespace sequoia::testing
          test_runner tr{args.size(), args.get(), "Oliver J. Rosten", testMain, includeTarget, repositories{""}, outputStream};
        });
 
+     check_exception_thrown<std::runtime_error>(
+       LINE("Project root does not exist"),
+       [working]() {
+         const auto testMain{working().append("TestSandbox").append("TestSandbox.cpp")};
+         const auto includeTarget{working().append("TestShared").append("SharedIncludes.hpp")};
+         std::stringstream outputStream{};
+         commandline_arguments args{"", "create", "free", "Plurgh.h"};
+         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", testMain, includeTarget, repositories{working() / "FooRepo"}, outputStream};
+       });
+
+     check_exception_thrown<std::runtime_error>(
+       LINE("Project root not a directory"),
+       [working]() {
+         const auto testMain{working().append("TestSandbox").append("TestSandbox.cpp")};
+         const auto includeTarget{working().append("TestShared").append("SharedIncludes.hpp")};
+         std::stringstream outputStream{};
+         commandline_arguments args{"", "create", "free", "Plurgh.h"};
+         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", testMain, includeTarget, repositories{includeTarget}, outputStream};
+       });
+
       check_exception_thrown<std::runtime_error>(
-        LINE(""),
+        LINE("Plurgh.h does not exist"),
         [working]() {
           const auto testMain{working().append("TestSandbox").append("TestSandbox.cpp")};
           const auto includeTarget{working().append("TestShared").append("SharedIncludes.hpp")};

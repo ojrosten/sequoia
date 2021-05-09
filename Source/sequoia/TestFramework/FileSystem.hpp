@@ -57,7 +57,7 @@ namespace sequoia::testing
   {
     if(pred(p))
     {
-      throw std::runtime_error{p.generic_string().append(" ").append(message)};
+      throw std::runtime_error{p.empty() ? std::string{message} : p.generic_string().append(" ").append(message)};
     }
   }
 
