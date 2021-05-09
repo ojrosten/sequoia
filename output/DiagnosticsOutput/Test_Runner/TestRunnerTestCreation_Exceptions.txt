@@ -101,26 +101,26 @@ Project root does not exist
 
 Expected Exception Type:
 [std::runtime_error]
-C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTestCreation/WorkingCopy/FakeProject/FooRepo is not a directory
+output/TestsTemporaryData/TestFramework/TestRunnerTestCreation/WorkingCopy/FakeProject/FooRepo is not a directory
 
 Test repository not found
 
 
 	=======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 164
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 171
 Project root not a directory
 
 Expected Exception Type:
 [std::runtime_error]
-C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTestCreation/WorkingCopy/FakeProject/TestShared/SharedIncludes.hpp is not a directory
+/Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTestCreation/WorkingCopy/FakeProject/TestShared/SharedIncludes.hpp is not a directory
 
 Test repository not found
 
 
 	=======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 174
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 181
 Plurgh.h does not exist
 
 Expected Exception Type:
@@ -131,7 +131,7 @@ Unable to locate file Plurgh.h or Plurgh.hpp in the source repository
 
 	=======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 185
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 192
 Typo in specified class header
 
 Expected Exception Type:
