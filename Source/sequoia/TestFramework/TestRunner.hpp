@@ -17,7 +17,7 @@
 #include "sequoia/Runtime/Factory.hpp"
 
 #include <map>
-#include <variant>
+#include <optional>
 #include <iostream>
 
 namespace sequoia::testing
@@ -38,7 +38,9 @@ namespace sequoia::testing
     host_directory(std::filesystem::path hostRepo, std::filesystem::path sourceRepo);
 
     [[nodiscard]]
-    auto build_paths(const std::filesystem::path& filename, const std::vector<std::string_view>& extensions) const -> paths;
+    auto build_paths(const std::filesystem::path& filename,
+                     const std::vector<std::string_view>& extensions,
+                     const std::optional<std::filesystem::path>& creationTemplate = {}) const->paths;
 
     [[nodiscard]]
     const std::filesystem::path& host_repo() const noexcept

@@ -192,7 +192,7 @@ namespace sequoia::testing
     while((i != p.end()) && (*i == "..")) ++i;
 
     if(i != p.end())
-    {      
+    {
       auto dirIter{dir.end()};
       while(dirIter != dir.begin())
       {
