@@ -25,68 +25,55 @@ namespace sequoia::testing
     return report_time(s.log, s.execution_time);
   }
 
-  host_directory::host_directory(std::filesystem::path dir)
-    : m_Data{std::move(dir)}
-  {
-    namespace fs = std::filesystem;
-    fs::create_directories(std::get<fs::path>(m_Data));
-  }
-
   host_directory::host_directory(std::filesystem::path hostRepo, std::filesystem::path sourceRepo)
-    : m_Data{generator{std::move(hostRepo), std::move(sourceRepo)}}
+    : m_HostRepo{std::move(hostRepo)}
+    , m_SourceRepo{std::move(sourceRepo)}
   {
     namespace fs = std::filesystem;
-    fs::create_directories(std::get<generator>(m_Data).hostRepo);
+    fs::create_directories(m_HostRepo);
   }
 
   [[nodiscard]]
-  auto host_directory::get(const std::filesystem::path& filename, const std::vector<std::string_view>& extensions) const -> paths
+  auto host_directory::build_paths(const std::filesystem::path& filename, const std::vector<std::string_view>& extensions) const -> paths
   {
     namespace fs = std::filesystem;
 
-    variant_visitor visitor{
-      [&](const fs::path& p)     -> paths { return {p, filename}; },
-      [&](const generator& data) -> paths {
-        const auto sourcePath{
-          [&]() {
-            if(const auto path{find_in_tree(data.sourceRepo, filename)}; !path.empty())
+    const auto sourcePath{
+      [&]() {
+        if(const auto path{find_in_tree(m_SourceRepo, filename)}; !path.empty())
               return path;
 
-            for(auto e : extensions)
-            {
-              if(e != filename.extension())
-              {
-                const auto alternative{std::filesystem::path{filename}.replace_extension(e)};
-                if(const auto path{find_in_tree(data.sourceRepo, alternative)}; !path.empty())
-                  return path;
-              }
-            }
+        for(auto e : extensions)
+        {
+          if(e != filename.extension())
+          {
+            const auto alternative{std::filesystem::path{filename}.replace_extension(e)};
+            if(const auto path{find_in_tree(m_SourceRepo, alternative)}; !path.empty())
+              return path;
+          }
+        }
 
-            auto mess{std::string{"Unable to locate file "}.append(filename.generic_string()).append(" or ")};
-            for(auto e : extensions)
-            {
-              if(e != filename.extension())
-              {
-                const auto alternative{fs::path{filename}.replace_extension(e)};
-                mess.append(alternative.generic_string());
-              }
-            }
+        auto mess{std::string{"Unable to locate file "}.append(filename.generic_string()).append(" or ")};
+        for(auto e : extensions)
+        {
+          if(e != filename.extension())
+          {
+            const auto alternative{fs::path{filename}.replace_extension(e)};
+            mess.append(alternative.generic_string());
+          }
+        }
 
-            mess.append(" in the source repository\n").append(fs::relative(data.sourceRepo, data.hostRepo).generic_string());
+        mess.append(" in the source repository\n").append(fs::relative(m_SourceRepo, m_HostRepo).generic_string());
 
-            throw std::runtime_error{mess};
-          }()
-        };
-
-        const auto relSourcePath{fs::relative(sourcePath, data.sourceRepo)};
-        const auto dir{(data.hostRepo / relSourcePath).parent_path()};
-        fs::create_directories(dir);
-
-        return {dir, fs::relative(sourcePath, data.sourceRepo.parent_path())};
-      }
+        throw std::runtime_error{mess};
+      }()
     };
 
-    return std::visit(visitor, m_Data);
+    const auto relSourcePath{fs::relative(sourcePath, m_SourceRepo)};
+    const auto dir{(m_HostRepo / relSourcePath).parent_path()};
+    fs::create_directories(dir);
+
+    return {dir, fs::relative(sourcePath, m_SourceRepo.parent_path())};
   }
 
   repositories::repositories(const std::filesystem::path& projectRoot)
@@ -224,7 +211,7 @@ namespace sequoia::testing
     }
 
     const std::vector<std::string_view> extensions{".hpp", ".h"};
-    auto paths{m_HostDirectory.get(m_Header, extensions)};
+    auto paths{m_HostDirectory.build_paths(m_Header, extensions)};
     m_HostDir = std::move(paths.host_dir);
     m_HeaderPath = std::move(paths.header_path);
   }
@@ -522,15 +509,6 @@ namespace sequoia::testing
 
   void test_runner::process_args(int argc, char** argv)
   {
-    const option hostOption{"--host-directory", {"-h"}, {"host_directory"},
-        [this](const param_list& args){
-          if(m_NascentTests.empty())
-            throw std::logic_error{"Unable to find nascent test"};
-
-          std::visit(variant_visitor{[&args](auto& nascent){ nascent.host_dir(args[0]);}}, m_NascentTests.back());
-        }
-    };
-
     const option familyOption{"--family", {"-f"}, {"family"},
         [this](const param_list& args){
           if(m_NascentTests.empty())
@@ -574,9 +552,9 @@ namespace sequoia::testing
         }
     };
 
-    const std::vector<option> semanticsOptions{equivOption, hostOption, familyOption, headerOption};
+    const std::vector<option> semanticsOptions{equivOption, familyOption, headerOption};
 
-    const std::vector<option> allocationOptions{hostOption, familyOption, headerOption};
+    const std::vector<option> allocationOptions{familyOption, headerOption};
 
     namespace fs = std::filesystem;
     const auto help{
@@ -603,10 +581,10 @@ namespace sequoia::testing
                       test_creator{"allocation", "move_only_allocation", *this}, allocationOptions
                      },
                      {"free_test", {"free"}, {"header"},
-                      test_creator{"behavioural", "free", *this}, {hostOption, familyOption, nameOption}
+                      test_creator{"behavioural", "free", *this}, {familyOption, nameOption}
                      },
                      {"performance_test", {"performance"}, {"header"},
-                       test_creator{"behavioural", "performance", *this}, {hostOption, familyOption}
+                       test_creator{"behavioural", "performance", *this}, {familyOption}
                      }
                    },
                    [this](const param_list&) {

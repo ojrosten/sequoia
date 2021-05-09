@@ -35,12 +35,22 @@ namespace sequoia::testing
 
     host_directory() = default;
 
-    host_directory(std::filesystem::path dir);
-
     host_directory(std::filesystem::path hostRepo, std::filesystem::path sourceRepo);
 
     [[nodiscard]]
-    auto get(const std::filesystem::path& filename, const std::vector<std::string_view>& extensions) const -> paths;
+    auto build_paths(const std::filesystem::path& filename, const std::vector<std::string_view>& extensions) const -> paths;
+
+    [[nodiscard]]
+    const std::filesystem::path& host_repo() const noexcept
+    {
+      return m_HostRepo;
+    }
+
+    [[nodiscard]]
+    const std::filesystem::path& source_repo() const noexcept
+    {
+      return m_SourceRepo;
+    }
 
     [[nodiscard]]
     friend bool operator==(const host_directory&, const host_directory&) noexcept = default;
@@ -48,18 +58,7 @@ namespace sequoia::testing
     [[nodiscard]]
     friend bool operator!=(const host_directory&, const host_directory&) noexcept = default;
   private:
-    struct generator
-    {
-      std::filesystem::path hostRepo, sourceRepo;
-
-      [[nodiscard]]
-      friend bool operator==(const generator&, const generator&) noexcept = default;
-
-      [[nodiscard]]
-      friend bool operator!=(const generator&, const generator&) noexcept = default;
-    };
-
-    std::variant<std::filesystem::path, generator> m_Data;
+    std::filesystem::path m_HostRepo, m_SourceRepo;
   };
 
   struct repositories
@@ -108,8 +107,6 @@ namespace sequoia::testing
     const std::string& family() const noexcept { return m_Family; }
 
     void family(std::string name) { m_Family = std::move(name); }
-
-    void host_dir(std::filesystem::path dir) { m_HostDirectory = host_directory{std::move(dir)}; }
 
     [[nodiscard]]
     const std::filesystem::path& header() const noexcept { return m_Header; }

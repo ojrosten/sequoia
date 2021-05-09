@@ -11,8 +11,8 @@ target_sources(TestMain PRIVATE
                ${TestDir}/Utilities/IteratorTest.cpp
                ${TestDir}/Stuff/FooTestingDiagnostics.cpp
                ${TestDir}/Stuff/FooTest.cpp
-               ${TestDir}/Partners/CoupleTestingDiagnostics.cpp
-               ${TestDir}/Partners/CoupleTest.cpp
+               ${TestDir}/CoupleTestingDiagnostics.cpp
+               ${TestDir}/CoupleTest.cpp
                ${TestDir}/Stuff/ThingsTestingDiagnostics.cpp
                ${TestDir}/Stuff/ThingsTest.cpp
                ${TestDir}/Utilities/UtilitiesFreeTest.cpp

@@ -68,13 +68,12 @@ namespace sequoia::testing
     const auto includeTarget{working().append("TestShared").append("SharedIncludes.hpp")};
 
     const repositories repos{working()};
-    const auto hostDir{(repos.tests / "Partners").string()};
 
     commandline_arguments args{"", "create", "regular_test", "other::functional::maybe<class T>", "std::optional<T>"
                                  , "create", "regular", "utilities::iterator", "int*"
                                  , "create", "move_only_test", "bar::baz::foo<maths::floating_point T>", "T", "--family", "Iterator"
                                  , "create", "regular_test", "other::couple<class S, class T>", "S", "-e", "T",
-                                                "-h", hostDir, "-f", "partners", "-ch", "Couple.hpp"
+                                                "-f", "partners", "-ch", "Couple.hpp"
                                  , "create", "regular_test", "bar::things", "double", "-ch", "fakeProject/Stuff/Things.hpp"
                                  , "create", "free_test", "Utilities.h"
                                  , "create", "free_test", "Source/fakeProject/Stuff/Baz.h", "--forename", "bazzer"
