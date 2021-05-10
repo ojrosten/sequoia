@@ -104,6 +104,15 @@ namespace sequoia::testing
       [&mat{working_materials()}]() { return mat / "FakeProject"; }
     };
 
+    auto pathTrimmer{
+      [](std::string mess) {
+        const auto pos{mess.find("output/")};
+        if(pos < mess.size()) mess.erase(0, pos);
+
+        return mess;
+      }
+    };
+
     check_exception_thrown<std::runtime_error>(
       LINE("Test Main has empty path"),
       [working]() {
@@ -158,14 +167,7 @@ namespace sequoia::testing
          std::stringstream outputStream{};
          commandline_arguments args{"", "create", "free", "Plurgh.h"};
          test_runner tr{args.size(), args.get(), "Oliver J. Rosten", testMain, includeTarget, repositories{working() / "FooRepo"}, outputStream};
-       },
-       [](std::string mess){
-         const auto pos{mess.find("output/")};
-         if(pos < mess.size())
-           mess.erase(0, pos);
-
-         return mess;
-       });
+       }, pathTrimmer);
 
      check_exception_thrown<std::runtime_error>(
        LINE("Project root not a directory"),
@@ -175,7 +177,7 @@ namespace sequoia::testing
          std::stringstream outputStream{};
          commandline_arguments args{"", "create", "free", "Plurgh.h"};
          test_runner tr{args.size(), args.get(), "Oliver J. Rosten", testMain, includeTarget, repositories{includeTarget}, outputStream};
-       });
+       }, pathTrimmer);
 
       check_exception_thrown<std::runtime_error>(
         LINE("Plurgh.h does not exist"),
