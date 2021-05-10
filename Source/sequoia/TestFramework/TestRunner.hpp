@@ -17,7 +17,6 @@
 #include "sequoia/Runtime/Factory.hpp"
 
 #include <map>
-#include <optional>
 #include <iostream>
 
 namespace sequoia::testing
@@ -37,10 +36,17 @@ namespace sequoia::testing
 
     host_directory(std::filesystem::path hostRepo, std::filesystem::path sourceRepo);
 
+    template<invocable_r<bool, std::filesystem::path, std::filesystem::path> WhenAbsent>
     [[nodiscard]]
     auto build_paths(const std::filesystem::path& filename,
                      const std::vector<std::string_view>& extensions,
-                     const std::optional<std::filesystem::path>& creationTemplate = {}) const->paths;
+                     WhenAbsent fn) const -> paths
+    {
+      const auto sourcePath{build_source_path(filename, extensions)};
+      if(!fn(filename, sourcePath)) on_error(filename, extensions);
+
+      return finalize(sourcePath);
+    }
 
     [[nodiscard]]
     const std::filesystem::path& host_repo() const noexcept
@@ -61,6 +67,15 @@ namespace sequoia::testing
     friend bool operator!=(const host_directory&, const host_directory&) noexcept = default;
   private:
     std::filesystem::path m_HostRepo, m_SourceRepo;
+
+    [[nodiscard]]
+    std::filesystem::path build_source_path(const std::filesystem::path& filename,
+                                            const std::vector<std::string_view>& extensions) const;
+
+    void on_error(const std::filesystem::path& filename, const std::vector<std::string_view>& extensions) const;
+
+    [[nodiscard]]
+    auto finalize(const std::filesystem::path& sourcePath) const -> paths;
   };
 
   struct repositories

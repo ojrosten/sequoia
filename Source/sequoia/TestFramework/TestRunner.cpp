@@ -34,59 +34,52 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  auto host_directory::build_paths(const std::filesystem::path& filename,
-                                   const std::vector<std::string_view>& extensions,
-                                   const std::optional<std::filesystem::path>& creationTemplate) const -> paths
+  std::filesystem::path host_directory::build_source_path(const std::filesystem::path& filename,
+                                                          const std::vector<std::string_view>& extensions) const
   {
-    namespace fs = std::filesystem;
-
     if(filename.empty())
       throw std::runtime_error{"Header name is empty"};
 
-    const auto sourcePath{
-      [&]() -> fs::path {
-        if(const auto path{find_in_tree(m_SourceRepo, filename)}; !path.empty())
-              return path;
+    if(const auto path{find_in_tree(m_SourceRepo, filename)}; !path.empty())
+      return path;
 
-        for(auto e : extensions)
-        {
-          if(e != filename.extension())
-          {
-            const auto alternative{std::filesystem::path{filename}.replace_extension(e)};
-            if(const auto path{find_in_tree(m_SourceRepo, alternative)}; !path.empty())
-              return path;
-          }
-        }
-
-        return {};
-      }()
-    };
-
-    if(sourcePath.empty())
+    for(auto e : extensions)
     {
-      if(creationTemplate)
+      if(e != filename.extension())
       {
-        const auto& templatePath{creationTemplate.value()};
-        if(!fs::exists(templatePath))
-          throw std::runtime_error{"Unable to find template for creating new file"};
-      }
-      else
-      {
-        auto mess{std::string{"Unable to locate file "}.append(filename.generic_string()).append(" or ")};
-        for(auto e : extensions)
-        {
-          if(e != filename.extension())
-          {
-            const auto alternative{fs::path{filename}.replace_extension(e)};
-            mess.append(alternative.generic_string());
-          }
-        }
-
-        mess.append(" in the source repository\n").append(fs::relative(m_SourceRepo, m_HostRepo).generic_string());
-
-        throw std::runtime_error{mess};
+        const auto alternative{std::filesystem::path{filename}.replace_extension(e)};
+        if(const auto path{find_in_tree(m_SourceRepo, alternative)}; !path.empty())
+          return path;
       }
     }
+
+    return {};
+  }
+
+  void host_directory::on_error(const std::filesystem::path& filename, const std::vector<std::string_view>& extensions) const
+  {
+    namespace fs = std::filesystem;
+
+    auto mess{std::string{"Unable to locate file "}.append(filename.generic_string()).append(" or ")};
+    for(auto e : extensions)
+    {
+      if(e != filename.extension())
+      {
+        const auto alternative{fs::path{filename}.replace_extension(e)};
+        mess.append(alternative.generic_string());
+      }
+    }
+
+    mess.append(" in the source repository\n").append(fs::relative(m_SourceRepo, m_HostRepo).generic_string());
+
+    throw std::runtime_error{mess};
+  }
+
+
+  [[nodiscard]]
+  auto host_directory::finalize(const std::filesystem::path& sourcePath) const -> paths
+  {
+    namespace fs = std::filesystem;
 
     const auto relSourcePath{fs::relative(sourcePath, m_SourceRepo)};
     const auto dir{(m_HostRepo / relSourcePath).parent_path()};
@@ -232,7 +225,11 @@ namespace sequoia::testing
     }
 
     const std::vector<std::string_view> extensions{".hpp", ".h"};
-    auto paths{m_HostDirectory.build_paths(m_Header, extensions)};
+
+    using path = std::filesystem::path;
+    auto paths{m_HostDirectory.build_paths(m_Header,
+                                           extensions,
+                                           [](const path&, const path& srcPath) { return !srcPath.empty(); })};
     m_HostDir = std::move(paths.host_dir);
     m_HeaderPath = std::move(paths.header_path);
   }
