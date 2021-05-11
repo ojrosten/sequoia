@@ -9,14 +9,20 @@
 
 namespace 
 {
-template<?>
-class ?_class
-{
-public:
-[[nodiscard]]
-friend bool operator==(const ?class&, const ?class&) = default;
-	
-[[nodiscard]]
-friend bool operator!=(const ?class&, const ?class&) = default;
-};
+	template<?>
+	class ?_class
+	{
+	public:
+		?_class(const ?_class&) = delete;
+		?_class(?_class&&)      = delete;
+
+		?_class& operator=(const ?_class&) = delete;
+		?_class& operator=(?_class&&)      = delete;
+
+		[[nodiscard]]
+		friend bool operator==(const ?class&, const ?class&) = default;
+
+		[[nodiscard]]
+		friend bool operator!=(const ?class&, const ?class&) = default;
+	};
 }
