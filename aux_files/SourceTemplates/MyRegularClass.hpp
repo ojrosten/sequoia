@@ -14,9 +14,9 @@ namespace
 	{
 		public:
 		[[nodiscard]]
-		friend bool operator==(const ?class&, const ?class&) = default;
+		friend bool operator==(const ?class&, const ?class&) noexcept = default;
 	
 		[[nodiscard]]
-		friend bool operator!=(const ?class&, const ?class&) = default;
+		friend bool operator!=(const ?class&, const ?class&) noexcept = default;
 	};
 }
