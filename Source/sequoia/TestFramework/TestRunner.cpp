@@ -216,7 +216,8 @@ namespace sequoia::testing
 
   void nascent_test_base::camel_name(std::string name) { m_CamelName = to_camel_case(std::move(name)); }
 
-  void nascent_test_base::finalize()
+  template<invocable_r<bool, std::filesystem::path, std::filesystem::path> WhenAbsent>
+  void nascent_test_base::finalize(WhenAbsent fn)
   {
     if(m_Family.empty())
     {
@@ -226,10 +227,10 @@ namespace sequoia::testing
 
     const std::vector<std::string_view> extensions{".hpp", ".h"};
 
-    using path = std::filesystem::path;
-    auto paths{m_HostDirectory.build_paths(m_Header,
-                                           extensions,
-                                           [](const path&, const path& srcPath) { return !srcPath.empty(); })};
+    namespace fs = std::filesystem;
+
+    auto ifNotFound{[this,fn](const fs::path& filename, const fs::path& sourcePath) { return when_source_absent(filename, sourcePath, fn); }};
+    auto paths{m_HostDirectory.build_paths(m_Header, extensions, ifNotFound)};
     m_HostDir = std::move(paths.host_dir);
     m_HeaderPath = std::move(paths.header_path);
   }
@@ -259,6 +260,25 @@ namespace sequoia::testing
     }
 
     return {outputFile, true};
+  }
+
+  template<invocable_r<bool, std::filesystem::path, std::filesystem::path> WhenAbsent>
+  [[nodiscard]]
+  bool nascent_test_base::when_source_absent(const std::filesystem::path& filename,
+                                             const std::filesystem::path& sourcePath,
+                                             WhenAbsent fn)
+  {
+    switch(m_SourceOption)
+    {
+    case add_source_option::no:
+      return !sourcePath.empty();
+    case add_source_option::yes:
+      if(!sourcePath.empty()) return true;
+
+      return fn(filename, sourcePath);
+    }
+
+    throw std::logic_error{"add_source_option: state not found"};
   }
 
   //=========================================== nascent_semantics_test ===========================================//
@@ -317,7 +337,8 @@ namespace sequoia::testing
     camel_name(forename());
     if(header().empty()) header(std::filesystem::path{camel_name()}.concat(".hpp"));
 
-    nascent_test_base::finalize();
+    namespace fs = std::filesystem;
+    nascent_test_base::finalize([](const fs::path&, const fs::path&) { return false; });
   }
 
   [[nodiscard]]
@@ -408,7 +429,8 @@ namespace sequoia::testing
   {
     camel_name(forename().empty() ? header().filename().replace_extension().string() : forename());
 
-    nascent_test_base::finalize();
+    namespace fs = std::filesystem;
+    nascent_test_base::finalize([](const fs::path&, const fs::path&) { return false; });
 
     camel_name(std::string{camel_name()}.append(capitalize(test_type())));
 
@@ -445,7 +467,8 @@ namespace sequoia::testing
     camel_name(forename());
     if(header().empty()) header(std::filesystem::path{camel_name()}.concat(".hpp"));
 
-    nascent_test_base::finalize();
+    namespace fs = std::filesystem;
+    nascent_test_base::finalize([](const fs::path&, const fs::path&) { return false; });
   }
 
   [[nodiscard]]

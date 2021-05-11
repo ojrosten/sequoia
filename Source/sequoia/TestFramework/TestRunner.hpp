@@ -116,6 +116,8 @@ namespace sequoia::testing
   class nascent_test_base
   {
   public:
+    enum class add_source_option {no, yes};
+
     nascent_test_base(std::filesystem::path testRepo, std::filesystem::path sourceTree)
       : m_HostDirectory{std::move(testRepo), std::move(sourceTree)}
     {}
@@ -140,6 +142,11 @@ namespace sequoia::testing
 
     void forename(std::string name) { m_Forename = std::move(name); }
 
+    void add_source_files(add_source_option opt)
+    {
+      m_SourceOption = opt;
+    }
+
     [[nodiscard]]
     const std::filesystem::path& host_dir() const noexcept { return m_HostDir; }
 
@@ -159,7 +166,8 @@ namespace sequoia::testing
 
     ~nascent_test_base() = default;
 
-    void finalize();
+    template<invocable_r<bool, std::filesystem::path, std::filesystem::path> WhenAbsent>
+    void finalize(WhenAbsent fn);
 
     const std::string& camel_name() const noexcept { return m_CamelName; }
 
@@ -180,6 +188,14 @@ namespace sequoia::testing
     host_directory m_HostDirectory{};
 
     std::filesystem::path m_Header{}, m_HostDir{}, m_HeaderPath{};
+
+    add_source_option m_SourceOption{};
+
+    template<invocable_r<bool, std::filesystem::path, std::filesystem::path> WhenAbsent>
+    [[nodiscard]]
+    bool when_source_absent(const std::filesystem::path& filename,
+                            const std::filesystem::path& sourcePath,
+                            WhenAbsent fn);
   };
 
   class nascent_semantics_test : public nascent_test_base
