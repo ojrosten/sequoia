@@ -116,7 +116,7 @@ namespace sequoia::testing
   class nascent_test_base
   {
   public:
-    enum class add_source_option {no, yes};
+    enum class gen_source_option {no, yes};
 
     nascent_test_base(std::filesystem::path testRepo, std::filesystem::path sourceTree)
       : m_HostDirectory{std::move(testRepo), std::move(sourceTree)}
@@ -142,7 +142,7 @@ namespace sequoia::testing
 
     void forename(std::string name) { m_Forename = std::move(name); }
 
-    void add_source_files(add_source_option opt)
+    void generate_source_files(gen_source_option opt)
     {
       m_SourceOption = opt;
     }
@@ -189,7 +189,7 @@ namespace sequoia::testing
 
     std::filesystem::path m_Header{}, m_HostDir{}, m_HeaderPath{};
 
-    add_source_option m_SourceOption{};
+    gen_source_option m_SourceOption{};
 
     template<invocable_r<bool, std::filesystem::path, std::filesystem::path> WhenAbsent>
     [[nodiscard]]

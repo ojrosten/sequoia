@@ -270,15 +270,15 @@ namespace sequoia::testing
   {
     switch(m_SourceOption)
     {
-    case add_source_option::no:
+    case gen_source_option::no:
       return !sourcePath.empty();
-    case add_source_option::yes:
+    case gen_source_option::yes:
       if(!sourcePath.empty()) return true;
 
       return fn(filename, sourcePath);
     }
 
-    throw std::logic_error{"add_source_option: state not found"};
+    throw std::logic_error{"gen_source_option: state not found"};
   }
 
   //=========================================== nascent_semantics_test ===========================================//
@@ -550,49 +550,59 @@ namespace sequoia::testing
   void test_runner::process_args(int argc, char** argv)
   {
     const option familyOption{"--family", {"-f"}, {"family"},
-        [this](const param_list& args){
-          if(m_NascentTests.empty())
-            throw std::logic_error{"Unable to find nascent test"};
+      [this](const param_list& args){
+        if(m_NascentTests.empty())
+          throw std::logic_error{"Unable to find nascent test"};
 
-          std::visit(variant_visitor{[&args](auto& nascent){ nascent.family(args[0]);}}, m_NascentTests.back());
-        }
+        std::visit(variant_visitor{[&args](auto& nascent){ nascent.family(args[0]);}}, m_NascentTests.back());
+      }
     };
 
     const option equivOption{"--equivalent-type", {"-e"}, {"equivalent_type"},
-        [this](const param_list& args){
-          if(m_NascentTests.empty())
-            throw std::logic_error{"Unable to find nascent test"};
+      [this](const param_list& args){
+        if(m_NascentTests.empty())
+          throw std::logic_error{"Unable to find nascent test"};
 
-          auto visitor{
-            variant_visitor{
-              [&args](nascent_semantics_test& nascent){ nascent.add_equivalent_type(args[0]); },
-              [](auto&){}
-            }
-          };
+        auto visitor{
+          variant_visitor{
+            [&args](nascent_semantics_test& nascent){ nascent.add_equivalent_type(args[0]); },
+            [](auto&){}
+          }
+        };
 
-          std::visit(visitor, m_NascentTests.back());
-        }
+        std::visit(visitor, m_NascentTests.back());
+      }
     };
 
     const option headerOption{"--class-header", {"-ch"}, {"class_header"},
-        [this](const param_list& args){
-          if(m_NascentTests.empty())
-            throw std::logic_error{"Unable to find nascent test"};
+      [this](const param_list& args){
+        if(m_NascentTests.empty())
+          throw std::logic_error{"Unable to find nascent test"};
 
-          std::visit(variant_visitor{[&args](auto& nascent){ nascent.header(args[0]); }}, m_NascentTests.back());
-        }
+        std::visit(variant_visitor{[&args](auto& nascent){ nascent.header(args[0]); }}, m_NascentTests.back());
+      }
     };
 
     const option nameOption{"--forename", {"-name"}, {"forename"},
-        [this](const param_list& args){
-          if(m_NascentTests.empty())
-            throw std::logic_error{"Unable to find nascent test"};
+      [this](const param_list& args){
+        if(m_NascentTests.empty())
+          throw std::logic_error{"Unable to find nascent test"};
 
-          std::visit(variant_visitor{[&args](auto& nascent){ nascent.forename(args[0]); }}, m_NascentTests.back());
-        }
+        std::visit(variant_visitor{[&args](auto& nascent){ nascent.forename(args[0]); }}, m_NascentTests.back());
+      }
     };
 
-    const std::vector<option> semanticsOptions{equivOption, familyOption, headerOption};
+    const option genSourceOption{"--gen-source", {"-g"}, {""},
+      [this](const param_list&) {
+        if(m_NascentTests.empty())
+          throw std::logic_error{"Unable to find nascent test"};
+
+        using src_opt = nascent_test_base::gen_source_option;
+        std::visit(variant_visitor{[](auto& nascent) { nascent.generate_source_files(src_opt::yes); }}, m_NascentTests.back());
+      }
+    };
+
+    const std::vector<option> semanticsOptions{equivOption, familyOption, headerOption, genSourceOption};
 
     const std::vector<option> allocationOptions{familyOption, headerOption};
 
@@ -621,7 +631,7 @@ namespace sequoia::testing
                       test_creator{"allocation", "move_only_allocation", *this}, allocationOptions
                      },
                      {"free_test", {"free"}, {"header"},
-                      test_creator{"behavioural", "free", *this}, {familyOption, nameOption}
+                      test_creator{"behavioural", "free", *this}, {familyOption, nameOption, genSourceOption}
                      },
                      {"performance_test", {"performance"}, {"header"},
                        test_creator{"behavioural", "performance", *this}, {familyOption}
