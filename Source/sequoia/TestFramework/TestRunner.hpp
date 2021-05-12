@@ -86,6 +86,7 @@ namespace sequoia::testing
     static std::filesystem::path source_path(const std::filesystem::path& projectRoot);
 
     std::filesystem::path
+      project_root{},
       source{},
       tests{},
       test_materials{},
@@ -118,8 +119,9 @@ namespace sequoia::testing
   public:
     enum class gen_source_option {no, yes};
 
-    nascent_test_base(std::filesystem::path testRepo, std::filesystem::path sourceTree)
-      : m_HostDirectory{std::move(testRepo), std::move(sourceTree)}
+    nascent_test_base(repositories repos)
+      : m_Repos{std::move(repos)}
+      , m_HostDirectory{m_Repos.tests, m_Repos.source}
     {}
 
     [[nodiscard]]
@@ -166,6 +168,12 @@ namespace sequoia::testing
 
     ~nascent_test_base() = default;
 
+    [[nodiscard]]
+    const repositories& repos() const noexcept
+    {
+      return m_Repos;
+    }
+
     template<invocable_r<bool, std::filesystem::path> WhenAbsent>
     void finalize(WhenAbsent fn);
 
@@ -185,6 +193,7 @@ namespace sequoia::testing
   private:
     std::string m_Family{}, m_TestType{}, m_Forename{}, m_CamelName{};
 
+    repositories m_Repos;
     host_directory m_HostDirectory{};
 
     std::filesystem::path m_Header{}, m_HostDir{}, m_HeaderPath{};

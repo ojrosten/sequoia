@@ -89,12 +89,13 @@ namespace sequoia::testing
   }
 
   repositories::repositories(const std::filesystem::path& projectRoot)
-    : source{source_path(projectRoot)}
+    : project_root{projectRoot}
+    , source{source_path(projectRoot)}
     , tests{projectRoot/"Tests"}
     , test_materials{projectRoot/"TestMaterials"}
     , output{projectRoot/"output"}
   {
-    throw_unless_directory(projectRoot, "\nTest repository not found");
+    throw_unless_directory(project_root, "\nTest repository not found");
   }
 
   [[nodiscard]]
@@ -430,7 +431,14 @@ namespace sequoia::testing
     camel_name(forename().empty() ? header().filename().replace_extension().string() : forename());
 
     namespace fs = std::filesystem;
-    nascent_test_base::finalize([](const fs::path&) { return false; });
+    nascent_test_base::finalize([this](const fs::path& filename) {
+
+      const auto path{rebase_from(filename, repos().source)};
+      // need to check path is actual in source repo
+      fs::copy_file(source_templates_path(repos().project_root) / "MyFreeFunctions.hpp", path);
+
+      return false;
+    });
 
     camel_name(std::string{camel_name()}.append(capitalize(test_type())));
 
@@ -504,7 +512,7 @@ namespace sequoia::testing
   {
     auto& nascentTests{runner.m_NascentTests};
 
-    static creation_factory factory{{"semantic", "allocation", "behavioural"}, runner.m_Repos.tests, runner.m_Repos.source};
+    static creation_factory factory{{"semantic", "allocation", "behavioural"}, runner.m_Repos};
     auto nascent{factory.create(genus)};
 
     std::visit(

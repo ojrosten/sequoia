@@ -75,6 +75,12 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
+  std::filesystem::path source_templates_path(std::filesystem::path projectRoot)
+  {
+    return projectRoot / "aux_files" / "SourceTemplates";
+  }
+
+  [[nodiscard]]
   std::filesystem::path project_template_path(std::filesystem::path projectRoot)
   {
     return projectRoot/"aux_files"/"ProjectTemplate";
