@@ -216,7 +216,7 @@ namespace sequoia::testing
 
   void nascent_test_base::camel_name(std::string name) { m_CamelName = to_camel_case(std::move(name)); }
 
-  template<invocable_r<bool, std::filesystem::path, std::filesystem::path> WhenAbsent>
+  template<invocable_r<bool, std::filesystem::path> WhenAbsent>
   void nascent_test_base::finalize(WhenAbsent fn)
   {
     if(m_Family.empty())
@@ -262,7 +262,7 @@ namespace sequoia::testing
     return {outputFile, true};
   }
 
-  template<invocable_r<bool, std::filesystem::path, std::filesystem::path> WhenAbsent>
+  template<invocable_r<bool, std::filesystem::path> WhenAbsent>
   [[nodiscard]]
   bool nascent_test_base::when_source_absent(const std::filesystem::path& filename,
                                              const std::filesystem::path& sourcePath,
@@ -275,7 +275,7 @@ namespace sequoia::testing
     case gen_source_option::yes:
       if(!sourcePath.empty()) return true;
 
-      return fn(filename, sourcePath);
+      return fn(filename);
     }
 
     throw std::logic_error{"gen_source_option: state not found"};
@@ -338,7 +338,7 @@ namespace sequoia::testing
     if(header().empty()) header(std::filesystem::path{camel_name()}.concat(".hpp"));
 
     namespace fs = std::filesystem;
-    nascent_test_base::finalize([](const fs::path&, const fs::path&) { return false; });
+    nascent_test_base::finalize([](const fs::path&) { return false; });
   }
 
   [[nodiscard]]
@@ -430,7 +430,7 @@ namespace sequoia::testing
     camel_name(forename().empty() ? header().filename().replace_extension().string() : forename());
 
     namespace fs = std::filesystem;
-    nascent_test_base::finalize([](const fs::path&, const fs::path&) { return false; });
+    nascent_test_base::finalize([](const fs::path&) { return false; });
 
     camel_name(std::string{camel_name()}.append(capitalize(test_type())));
 
@@ -468,7 +468,7 @@ namespace sequoia::testing
     if(header().empty()) header(std::filesystem::path{camel_name()}.concat(".hpp"));
 
     namespace fs = std::filesystem;
-    nascent_test_base::finalize([](const fs::path&, const fs::path&) { return false; });
+    nascent_test_base::finalize([](const fs::path&) { return false; });
   }
 
   [[nodiscard]]

@@ -166,7 +166,7 @@ namespace sequoia::testing
 
     ~nascent_test_base() = default;
 
-    template<invocable_r<bool, std::filesystem::path, std::filesystem::path> WhenAbsent>
+    template<invocable_r<bool, std::filesystem::path> WhenAbsent>
     void finalize(WhenAbsent fn);
 
     const std::string& camel_name() const noexcept { return m_CamelName; }
@@ -191,7 +191,7 @@ namespace sequoia::testing
 
     gen_source_option m_SourceOption{};
 
-    template<invocable_r<bool, std::filesystem::path, std::filesystem::path> WhenAbsent>
+    template<invocable_r<bool, std::filesystem::path> WhenAbsent>
     [[nodiscard]]
     bool when_source_absent(const std::filesystem::path& filename,
                             const std::filesystem::path& sourcePath,
