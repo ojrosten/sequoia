@@ -24,60 +24,6 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string report_time(const test_family::summary& s);
 
-  class host_directory
-  {
-  public:
-    struct paths
-    {
-      std::filesystem::path host_dir, header_path;
-    };
-
-    host_directory() = default;
-
-    host_directory(std::filesystem::path hostRepo, std::filesystem::path sourceRepo);
-
-    template<invocable_r<bool, std::filesystem::path, std::filesystem::path> WhenAbsent>
-    [[nodiscard]]
-    auto build_paths(const std::filesystem::path& filename,
-                     const std::vector<std::string_view>& extensions,
-                     WhenAbsent fn) const -> paths
-    {
-      const auto sourcePath{build_source_path(filename, extensions)};
-      if(!fn(filename, sourcePath)) on_error(filename, extensions);
-
-      return finalize(sourcePath);
-    }
-
-    [[nodiscard]]
-    const std::filesystem::path& host_repo() const noexcept
-    {
-      return m_HostRepo;
-    }
-
-    [[nodiscard]]
-    const std::filesystem::path& source_repo() const noexcept
-    {
-      return m_SourceRepo;
-    }
-
-    [[nodiscard]]
-    friend bool operator==(const host_directory&, const host_directory&) noexcept = default;
-
-    [[nodiscard]]
-    friend bool operator!=(const host_directory&, const host_directory&) noexcept = default;
-  private:
-    std::filesystem::path m_HostRepo, m_SourceRepo;
-
-    [[nodiscard]]
-    std::filesystem::path build_source_path(const std::filesystem::path& filename,
-                                            const std::vector<std::string_view>& extensions) const;
-
-    void on_error(const std::filesystem::path& filename, const std::vector<std::string_view>& extensions) const;
-
-    [[nodiscard]]
-    auto finalize(const std::filesystem::path& sourcePath) const -> paths;
-  };
-
   struct repositories
   {
     explicit repositories(const std::filesystem::path& projectRoot);
@@ -119,9 +65,7 @@ namespace sequoia::testing
   public:
     enum class gen_source_option {no, yes};
 
-    nascent_test_base(repositories repos)
-      : m_Repos{std::move(repos)}
-      , m_HostDirectory{m_Repos.tests, m_Repos.source}
+    nascent_test_base(repositories repos) : m_Repos{std::move(repos)}
     {}
 
     [[nodiscard]]
@@ -174,7 +118,10 @@ namespace sequoia::testing
       return m_Repos;
     }
 
-    template<invocable_r<bool, std::filesystem::path> WhenAbsent>
+    std::filesystem::path build_source_path(const std::filesystem::path& filename,
+                                            const std::vector<std::string_view>& extensions) const;
+
+    template<invocable_r<std::filesystem::path, std::filesystem::path> WhenAbsent>
     void finalize(WhenAbsent fn);
 
     const std::string& camel_name() const noexcept { return m_CamelName; }
@@ -194,17 +141,16 @@ namespace sequoia::testing
     std::string m_Family{}, m_TestType{}, m_Forename{}, m_CamelName{};
 
     repositories m_Repos;
-    host_directory m_HostDirectory{};
 
     std::filesystem::path m_Header{}, m_HostDir{}, m_HeaderPath{};
 
     gen_source_option m_SourceOption{};
 
-    template<invocable_r<bool, std::filesystem::path> WhenAbsent>
-    [[nodiscard]]
-    bool when_source_absent(const std::filesystem::path& filename,
-                            const std::filesystem::path& sourcePath,
-                            WhenAbsent fn);
+    void on_source_path_error(const std::vector<std::string_view>& extensions) const;
+
+    void finalize_family();
+
+    void finalize_header(const std::filesystem::path& sourcePath);
   };
 
   class nascent_semantics_test : public nascent_test_base

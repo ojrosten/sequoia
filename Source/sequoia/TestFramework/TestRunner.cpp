@@ -25,69 +25,6 @@ namespace sequoia::testing
     return report_time(s.log, s.execution_time);
   }
 
-  host_directory::host_directory(std::filesystem::path hostRepo, std::filesystem::path sourceRepo)
-    : m_HostRepo{std::move(hostRepo)}
-    , m_SourceRepo{std::move(sourceRepo)}
-  {
-    namespace fs = std::filesystem;
-    fs::create_directories(m_HostRepo);
-  }
-
-  [[nodiscard]]
-  std::filesystem::path host_directory::build_source_path(const std::filesystem::path& filename,
-                                                          const std::vector<std::string_view>& extensions) const
-  {
-    if(filename.empty())
-      throw std::runtime_error{"Header name is empty"};
-
-    if(const auto path{find_in_tree(m_SourceRepo, filename)}; !path.empty())
-      return path;
-
-    for(auto e : extensions)
-    {
-      if(e != filename.extension())
-      {
-        const auto alternative{std::filesystem::path{filename}.replace_extension(e)};
-        if(const auto path{find_in_tree(m_SourceRepo, alternative)}; !path.empty())
-          return path;
-      }
-    }
-
-    return {};
-  }
-
-  void host_directory::on_error(const std::filesystem::path& filename, const std::vector<std::string_view>& extensions) const
-  {
-    namespace fs = std::filesystem;
-
-    auto mess{std::string{"Unable to locate file "}.append(filename.generic_string()).append(" or ")};
-    for(auto e : extensions)
-    {
-      if(e != filename.extension())
-      {
-        const auto alternative{fs::path{filename}.replace_extension(e)};
-        mess.append(alternative.generic_string());
-      }
-    }
-
-    mess.append(" in the source repository\n").append(fs::relative(m_SourceRepo, m_HostRepo).generic_string());
-
-    throw std::runtime_error{mess};
-  }
-
-
-  [[nodiscard]]
-  auto host_directory::finalize(const std::filesystem::path& sourcePath) const -> paths
-  {
-    namespace fs = std::filesystem;
-
-    const auto relSourcePath{fs::relative(sourcePath, m_SourceRepo)};
-    const auto dir{(m_HostRepo / relSourcePath).parent_path()};
-    fs::create_directories(dir);
-
-    return {dir, fs::relative(sourcePath, m_SourceRepo.parent_path())};
-  }
-
   repositories::repositories(const std::filesystem::path& projectRoot)
     : project_root{projectRoot}
     , source{source_path(projectRoot)}
@@ -217,23 +154,89 @@ namespace sequoia::testing
 
   void nascent_test_base::camel_name(std::string name) { m_CamelName = to_camel_case(std::move(name)); }
 
-  template<invocable_r<bool, std::filesystem::path> WhenAbsent>
+
+  [[nodiscard]]
+  std::filesystem::path nascent_test_base::build_source_path(const std::filesystem::path& filename,
+    const std::vector<std::string_view>& extensions) const
+  {
+    if(filename.empty())
+      throw std::runtime_error{"Header name is empty"};
+
+    if(const auto path{find_in_tree(m_Repos.source, filename)}; !path.empty())
+      return path;
+
+    for(auto e : extensions)
+    {
+      if(e != filename.extension())
+      {
+        const auto alternative{std::filesystem::path{filename}.replace_extension(e)};
+        if(const auto path{find_in_tree(m_Repos.source, alternative)}; !path.empty())
+          return path;
+      }
+    }
+
+    return {};
+  }
+
+  template<invocable_r<std::filesystem::path, std::filesystem::path> WhenAbsent>
   void nascent_test_base::finalize(WhenAbsent fn)
+  {
+    finalize_family();
+
+    const auto srcPath{[this, fn]() {
+        const std::vector<std::string_view> extensions{".hpp", ".h"};
+        auto pth{build_source_path(m_Header, extensions)};
+        if(pth.empty() && (m_SourceOption == gen_source_option::yes))
+          pth = fn(m_Header);
+
+        if(pth.empty())
+          on_source_path_error(extensions);
+
+        return pth;
+      }()
+    };
+
+    finalize_header(srcPath);
+  }
+
+  void nascent_test_base::finalize_family()
   {
     if(m_Family.empty())
     {
       m_Family = m_CamelName;
       replace_all(m_Family, "_", " ");
     }
+  }
 
-    const std::vector<std::string_view> extensions{".hpp", ".h"};
-
+  void nascent_test_base::finalize_header(const std::filesystem::path& sourcePath)
+  {
     namespace fs = std::filesystem;
 
-    auto ifNotFound{[this,fn](const fs::path& filename, const fs::path& sourcePath) { return when_source_absent(filename, sourcePath, fn); }};
-    auto paths{m_HostDirectory.build_paths(m_Header, extensions, ifNotFound)};
-    m_HostDir = std::move(paths.host_dir);
-    m_HeaderPath = std::move(paths.header_path);
+    const auto relSourcePath{fs::relative(sourcePath, m_Repos.source)};
+    const auto dir{(m_Repos.tests / relSourcePath).parent_path()};
+    fs::create_directories(dir);
+
+    m_HostDir = dir;
+    m_HeaderPath = fs::relative(sourcePath, m_Repos.source.parent_path());
+  }
+
+  void nascent_test_base::on_source_path_error(const std::vector<std::string_view>& extensions) const
+  {
+    namespace fs = std::filesystem;
+
+    auto mess{std::string{"Unable to locate file "}.append(m_Header.generic_string()).append(" or ")};
+    for(auto e : extensions)
+    {
+      if(e != m_Header.extension())
+      {
+        const auto alternative{fs::path{m_Header}.replace_extension(e)};
+        mess.append(alternative.generic_string());
+      }
+    }
+
+    mess.append(" in the source repository\n").append(fs::relative(m_Repos.source, m_Repos.tests).generic_string());
+
+    throw std::runtime_error{mess};
   }
 
   template<invocable<std::string&> FileTransformer>
@@ -261,25 +264,6 @@ namespace sequoia::testing
     }
 
     return {outputFile, true};
-  }
-
-  template<invocable_r<bool, std::filesystem::path> WhenAbsent>
-  [[nodiscard]]
-  bool nascent_test_base::when_source_absent(const std::filesystem::path& filename,
-                                             const std::filesystem::path& sourcePath,
-                                             WhenAbsent fn)
-  {
-    switch(m_SourceOption)
-    {
-    case gen_source_option::no:
-      return !sourcePath.empty();
-    case gen_source_option::yes:
-      if(!sourcePath.empty()) return true;
-
-      return fn(filename);
-    }
-
-    throw std::logic_error{"gen_source_option: state not found"};
   }
 
   //=========================================== nascent_semantics_test ===========================================//
@@ -339,7 +323,7 @@ namespace sequoia::testing
     if(header().empty()) header(std::filesystem::path{camel_name()}.concat(".hpp"));
 
     namespace fs = std::filesystem;
-    nascent_test_base::finalize([](const fs::path&) { return false; });
+    nascent_test_base::finalize([](const fs::path& p) { return p; });
   }
 
   [[nodiscard]]
@@ -437,7 +421,7 @@ namespace sequoia::testing
       // need to check path is actual in source repo
       fs::copy_file(source_templates_path(repos().project_root) / "MyFreeFunctions.hpp", path);
 
-      return false;
+      return path;
     });
 
     camel_name(std::string{camel_name()}.append(capitalize(test_type())));
@@ -476,7 +460,7 @@ namespace sequoia::testing
     if(header().empty()) header(std::filesystem::path{camel_name()}.concat(".hpp"));
 
     namespace fs = std::filesystem;
-    nascent_test_base::finalize([](const fs::path&) { return false; });
+    nascent_test_base::finalize([](const fs::path& p) { return p; });
   }
 
   [[nodiscard]]

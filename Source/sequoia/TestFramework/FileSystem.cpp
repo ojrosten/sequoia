@@ -187,8 +187,8 @@ namespace sequoia::testing
   {
     namespace fs = std::filesystem;
 
-    if(!fs::is_directory(dir))
-      return p;
+    if(fs::exists(dir) && !fs::is_directory(dir))
+      throw std::logic_error{"Trying to rebase from something other than a directory"};
 
     if(p.is_absolute() && dir.is_absolute())
       return fs::relative(p, dir);

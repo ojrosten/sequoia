@@ -16,3 +16,13 @@ output/TestsTemporaryData/TestFramework/FileSystemFreeTest/Foo/Stuff is not a di
 
 	=======================================
 
+Tests/TestFramework/FileSystemFreeTest.cpp, Line 63
+Attempt to rebase from file
+
+Expected Exception Type:
+[std::logic_error]
+Trying to rebase from something other than a directory
+
+
+	=======================================
+

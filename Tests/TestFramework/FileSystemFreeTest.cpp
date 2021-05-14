@@ -60,9 +60,10 @@ namespace sequoia::testing
   {
     namespace fs = std::filesystem;
 
+    check_exception_thrown<std::logic_error>(LINE("Attempt to rebase from file"),
+                    [this]() { return rebase_from("Foo/Bar", working_materials() / "Foo" / "baz.txt"); });
+
     check_equality(LINE("Non-existant path"), rebase_from("Foo/Bar", "Baz"), fs::path{"Foo/Bar"});
-    check_equality(LINE("Attempt to rebase from file"),
-                   rebase_from("Foo/Bar", working_materials() / "Foo" / "baz.txt"), fs::path{"Foo/Bar"});
     check_equality(LINE("Rebase absolute"), rebase_from(working_materials() / "Foo", working_materials()), fs::path{"Foo"});
     check_equality(LINE("No overlap"), rebase_from(fs::path{"Things/Stuff.txt"}, working_materials()), fs::path{"Things/Stuff.txt"});
     check_equality(LINE("Overlap"), rebase_from(fs::path{"Foo/Stuff.txt"}, working_materials() / "Foo"), fs::path{"Stuff.txt"});
