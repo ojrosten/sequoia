@@ -212,8 +212,6 @@ namespace sequoia::testing
   void test_runner_end_to_end_test::test_project_creation()
   {
     namespace fs = std::filesystem;
-    //fs::copy(aux_files_path(test_repository().parent_path()), aux_files_path(fake()), fs::copy_options::recursive);
-    //fs::copy(build_system_path(test_repository().parent_path()), build_system_path(fake()), fs::copy_options::recursive);
 
     const auto seqRoot{test_repository().parent_path()};
     const auto testMain{seqRoot/"TestAll/TestMain.cpp"};
