@@ -6,7 +6,7 @@ Maybe:
 Foo:
 [1 (0)ms]
 House:
-[0 (0)ms]
+[1 (0)ms]
 
 -----------Grand Totals-----------
 [3 (0)ms]

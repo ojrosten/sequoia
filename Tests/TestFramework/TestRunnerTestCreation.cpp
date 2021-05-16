@@ -64,6 +64,10 @@ namespace sequoia::testing
       [&mat{working_materials()}]() { return mat / "FakeProject"; }
     };
 
+    namespace fs = std::filesystem;
+
+    fs::copy(aux_files_path(test_repository().parent_path()), aux_files_path(working()), fs::copy_options::recursive);
+
     const auto testMain{working().append("TestSandbox").append("TestSandbox.cpp")};
     const auto includeTarget{working().append("TestShared").append("SharedIncludes.hpp")};
 
@@ -77,6 +81,7 @@ namespace sequoia::testing
                                  , "create", "regular_test", "bar::things", "double", "-ch", "fakeProject/Stuff/Things.hpp"
                                  , "create", "free_test", "Utilities.h"
                                  , "create", "free_test", "Source/fakeProject/Stuff/Baz.h", "--forename", "bazzer"
+                                 /*, "create", "free_test", "Stuff/Doohicky.hpp", "--gen-source"*/
                                  , "create", "move_only_allocation_test", "foo", "--family", "Iterator"
                                  , "create", "regular_test", "container<class T>", "std::vector<T>"
                                  , "create", "regular_allocation_test", "container"

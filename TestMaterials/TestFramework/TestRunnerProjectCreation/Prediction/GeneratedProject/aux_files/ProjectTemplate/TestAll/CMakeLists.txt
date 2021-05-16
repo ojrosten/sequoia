@@ -5,7 +5,7 @@ project(GeneratedProject LANGUAGES CXX)
 add_executable(TestMain TestMain.cpp)
 
 set(CURRENT_DIR ${CMAKE_CURRENT_LIST_DIR})
-set(BuildSystem C:/Users/olive/sequoia/build_system)
+set(BuildSystem C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerProjectCreation/WorkingCopy/FakeProject/build_system)
 set(SourceDir ${CURRENT_DIR}/../Source)
 set(TestDir ${CURRENT_DIR}/../Tests)
 

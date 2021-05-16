@@ -38,7 +38,7 @@ Expected Exception Type:
 
 	=======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 118
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 122
 Test Main has empty path
 
 Expected Exception Type:
@@ -50,7 +50,7 @@ Try ensuring that the application is run from the appropriate directory
 
 	=======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 127
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 131
 Test Main does not exist
 
 Expected Exception Type:
@@ -62,7 +62,7 @@ Try ensuring that the application is run from the appropriate directory
 
 	=======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 136
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 140
 Include Target has empty path
 
 Expected Exception Type:
@@ -74,7 +74,7 @@ Include target not found
 
 	=======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 145
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 149
 Include Target does not exist
 
 Expected Exception Type:
@@ -86,7 +86,7 @@ Include target not found
 
 	=======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 154
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 158
 Project root is empty
 
 Expected Exception Type:
@@ -96,7 +96,7 @@ Project root should not be empty
 
 	=======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 164
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 168
 Project root does not exist
 
 Expected Exception Type:
@@ -108,7 +108,7 @@ Test repository not found
 
 	=======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 174
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 178
 Project root not a directory
 
 Expected Exception Type:
@@ -120,7 +120,7 @@ Test repository not found
 
 	=======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 184
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 188
 Plurgh.h does not exist
 
 Expected Exception Type:
@@ -131,7 +131,7 @@ Unable to locate file Plurgh.h or Plurgh.hpp in the source repository
 
 	=======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 195
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 199
 Typo in specified class header
 
 Expected Exception Type:

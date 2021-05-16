@@ -14,13 +14,13 @@ Bar:
 	Free Test
 	[0ms]
 Maybe:
-[1 (0)ms]
+[2 (0)ms]
 	False Positive Test
 	[0ms]
 	Unit Test
 	[0ms]
 Oldschool:
-[1 (0)ms]
+[2 (0)ms]
 	False Positive Test
 	[0ms]
 	Unit Test
@@ -38,12 +38,12 @@ Container:
 	Allocation Test
 	[0ms]
 House:
-[0 (0)ms]
+[1 (0)ms]
 	Allocation Test
 	[0ms]
 
 -----------Grand Totals-----------
-[13 (0)ms]
+[14 (0)ms]
 	Standard Top Level Checks:                 0;  Failures:  0
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

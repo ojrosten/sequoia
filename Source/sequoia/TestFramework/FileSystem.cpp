@@ -33,39 +33,38 @@ namespace sequoia::testing
   {
     namespace fs = std::filesystem;
 
-    static fs::path p{};
-
-    if(p.empty())
+    if(argc)
     {
-      if(argc)
+      std::string_view zeroth{argv[0]};
+      auto p{fs::canonical(fs::path(zeroth)).parent_path()};
+      if(!p.empty())
       {
-        std::string_view zeroth{argv[0]};
-        p = fs::canonical(fs::path(zeroth)).parent_path();
-        if(!p.empty())
+        auto back{[](const fs::path& p) { return *(--p.end()); }};
+
+        while((std::distance(p.begin(), p.end()) > 1))
         {
-          auto back{[](const fs::path& p){ return *(--p.end()); }};
-
-          while((std::distance(p.begin(), p.end()) > 1))
-          {
-            const auto last{back(p)};
-            p = p.parent_path();
-            if(last == "build") break;
-          }
-
-          return p;
+          const auto last{back(p)};
+          p = p.parent_path();
+          if(last == "build") break;
         }
-      }
 
-      p = fallback;
+        return p;
+      }
     }
 
-    return p;
+    return fallback;
   }
 
   [[nodiscard]]
   std::filesystem::path aux_files_path(std::filesystem::path projectRoot)
   {
     return projectRoot/"aux_files";
+  }
+
+  [[nodiscard]]
+  std::filesystem::path build_system_path(std::filesystem::path projectRoot)
+  {
+    return projectRoot / "build_system";
   }
 
   [[nodiscard]]

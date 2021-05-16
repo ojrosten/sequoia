@@ -419,7 +419,7 @@ namespace sequoia::testing
 
       const auto path{rebase_from(filename, repos().source)};
       // need to check path is actual in source repo
-      fs::copy_file(source_templates_path(repos().project_root) / "MyFreeFunctions.hpp", path);
+      fs::copy_file(source_templates_path(repos().project_root) / "MyFreeFunctions.hpp", repos().source / path);
 
       return path;
     });
@@ -522,7 +522,6 @@ namespace sequoia::testing
 
   test_runner::test_runner(int argc, char** argv, std::string_view copyright, std::filesystem::path testMain, std::filesystem::path hashIncludeTarget, repositories repos, std::ostream& stream)
     : m_Copyright{copyright}
-    , m_ProjectRoot{project_root(argc, argv)}
     , m_TestMain{std::move(testMain)}
     , m_HashIncludeTarget{std::move(hashIncludeTarget)}
     , m_Repos{std::move(repos)}
@@ -584,7 +583,7 @@ namespace sequoia::testing
       }
     };
 
-    const option genSourceOption{"--gen-source", {"-g"}, {""},
+    const option genSourceOption{"--gen-source", {"-g"}, {},
       [this](const param_list&) {
         if(m_NascentTests.empty())
           throw std::logic_error{"Unable to find nascent test"};
@@ -779,7 +778,7 @@ namespace sequoia::testing
   auto test_runner::find_filename(const std::filesystem::path& filename) -> source_list::iterator
   {
     return std::find_if(m_SelectedSources.begin(), m_SelectedSources.end(),
-                 [&filename, repo{m_Repos.tests}, root{m_ProjectRoot}](const auto& element){
+                 [&filename, &repo{m_Repos.tests}, &root{m_Repos.project_root}](const auto& element){
                    const auto& source{element.first};
 
                    if(filename == source) return true;
@@ -855,9 +854,9 @@ namespace sequoia::testing
   std::string test_runner::create_file(const Nascent& nascent, std::string_view stub) const
   {
     namespace fs = std::filesystem;
-    auto stringify{[root{m_ProjectRoot}] (const fs::path file) { return fs::relative(file, root).generic_string();  }};
+    auto stringify{[root{m_Repos.project_root}] (const fs::path file) { return fs::relative(file, root).generic_string();  }};
 
-    const auto[outputFile, created]{nascent.create_file(m_Copyright, code_templates_path(m_ProjectRoot), stub)};
+    const auto[outputFile, created]{nascent.create_file(m_Copyright, code_templates_path(m_Repos.project_root), stub)};
 
     if(created)
     {
@@ -944,12 +943,12 @@ namespace sequoia::testing
     if(name.find(' ') != std::string::npos)
       throw std::runtime_error{std::string{"Please remove spaces from the project name, '"}.append(name).append("'")};
 
-    report("Creating new project at location:", fs::relative(path, m_ProjectRoot).generic_string());
+    report("Creating new project at location:", fs::relative(path, m_Repos.project_root).generic_string());
 
     fs::create_directories(path);
-    fs::copy(project_template_path(m_ProjectRoot), path, fs::copy_options::recursive | fs::copy_options::skip_existing);
+    fs::copy(project_template_path(m_Repos.project_root), path, fs::copy_options::recursive | fs::copy_options::skip_existing);
     fs::create_directory(repositories::source_path(path));
-    fs::copy(aux_files_path(m_ProjectRoot), aux_files_path(path), fs::copy_options::recursive | fs::copy_options::skip_existing);
+    fs::copy(aux_files_path(m_Repos.project_root), aux_files_path(path), fs::copy_options::recursive | fs::copy_options::skip_existing);
 
     generate_test_main(copyright, path);
     generate_build_system_files(path);
@@ -994,7 +993,7 @@ namespace sequoia::testing
       }
     };
 
-    if(!replace(text, seqRoot, m_ProjectRoot.generic_string()))
+    if(!replace(text, seqRoot, m_Repos.project_root.generic_string()))
     {
       throw std::runtime_error{std::string{"Unable to locate "}.append(filename).append(" root definition")};
     }

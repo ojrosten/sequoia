@@ -5,12 +5,12 @@ create | c |
     --equivalent-type | -e | equivalent_type
     --family | -f | family
     --class-header | -ch | class_header
-    --gen-source | -g | 
+    --gen-source | -g |
   move_only_test | move_only | qualified::class_name<class T>, equivalent_type
     --equivalent-type | -e | equivalent_type
     --family | -f | family
     --class-header | -ch | class_header
-    --gen-source | -g | 
+    --gen-source | -g |
   regular_allocation_test | regular_allocation allocation_test | raw_class_name
     --family | -f | family
     --class-header | -ch | class_header
@@ -20,7 +20,7 @@ create | c |
   free_test | free | header
     --family | -f | family
     --forename | -name | forename
-    --gen-source | -g | 
+    --gen-source | -g |
   performance_test | performance | header
     --family | -f | family
 init | i | copyright, path, ending with project name

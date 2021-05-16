@@ -334,7 +334,6 @@ namespace sequoia::testing
     std::vector<vessel> m_NascentTests{};
     std::string m_Copyright{};
     std::filesystem::path
-      m_ProjectRoot{},
       m_TestMain{},
       m_HashIncludeTarget{};
     repositories m_Repos;

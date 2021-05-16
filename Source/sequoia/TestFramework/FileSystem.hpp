@@ -33,6 +33,9 @@ namespace sequoia::testing
   std::filesystem::path aux_files_path(std::filesystem::path projectRoot);
 
   [[nodiscard]]
+  std::filesystem::path build_system_path(std::filesystem::path projectRoot);
+
+  [[nodiscard]]
   std::filesystem::path code_templates_path(std::filesystem::path projectRoot);
 
   [[nodiscard]]

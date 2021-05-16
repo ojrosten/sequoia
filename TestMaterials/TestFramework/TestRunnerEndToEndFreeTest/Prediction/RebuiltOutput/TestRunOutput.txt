@@ -8,11 +8,11 @@ UsefulThings:
 Bar:
 [1 (0)ms]
 Maybe:
-[2 (0)ms]
+[4 (0)ms]
 Oldschool:
-[2 (0)ms]
+[4 (0)ms]
 Foo:
-[13 (11)ms]
+[31 (26)ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 43]
 
 	Tests/Stuff/FooTest.cpp, Line 37
@@ -116,12 +116,12 @@ Foo:
 
 
 Container:
-[1 (0)ms]
+[4 (0)ms]
 House:
-[0 (0)ms]
+[1 (0)ms]
 
 -----------Grand Totals-----------
-[25 (11)ms]
+[49 (26)ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 43]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

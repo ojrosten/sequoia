@@ -212,17 +212,14 @@ namespace sequoia::testing
   void test_runner_end_to_end_test::test_project_creation()
   {
     namespace fs = std::filesystem;
+    //fs::copy(aux_files_path(test_repository().parent_path()), aux_files_path(fake()), fs::copy_options::recursive);
+    //fs::copy(build_system_path(test_repository().parent_path()), build_system_path(fake()), fs::copy_options::recursive);
 
-    auto fake{
-      [&mat{auxiliary_materials()}]() {
-        return mat / "FakeProject";
-      }
-    };
+    const auto seqRoot{test_repository().parent_path()};
+    const auto testMain{seqRoot/"TestAll/TestMain.cpp"};
+    const auto includeTarget{seqRoot/"TestCommon/TestIncludes.hpp"};
 
-    const auto testMain{fake().append("TestSandbox").append("TestSandbox.cpp")};
-    const auto includeTarget{fake().append("TestShared").append("SharedIncludes.hpp")};
-
-    const repositories repos{fake()};
+    const repositories repos{seqRoot};
 
     auto generated{
       [&mat{working_materials()}]() {
@@ -254,6 +251,12 @@ namespace sequoia::testing
     std::system(cmakeBuild.cmd.c_str());
     check(LINE("First CMake output existance"), fs::exists(cmakeBuild.cmake_output));
     check(LINE("First build output existance"), fs::exists(cmakeBuild.build_output));
+
+    auto fake{
+      [&mat{auxiliary_materials()}] () {
+        return mat / "FakeProject";
+      }
+    };
 
     // Create tests, rerun cmake, build and run
     fs::copy(fake() / "Source" / "fakeProject", generated() / "Source" / "generatedProject", fs::copy_options::recursive | fs::copy_options::skip_existing);

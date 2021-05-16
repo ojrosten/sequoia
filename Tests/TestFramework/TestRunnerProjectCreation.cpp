@@ -30,6 +30,9 @@ namespace sequoia::testing
       [&mat{working_materials()}]() { return mat / "FakeProject"; }
     };
 
+    namespace fs = std::filesystem;
+    fs::copy(aux_files_path(test_repository().parent_path()), aux_files_path(fake()), fs::copy_options::recursive);
+
     const auto testMain{fake().append("TestSandbox").append("TestSandbox.cpp")};
     const auto includeTarget{fake().append("TestShared").append("SharedIncludes.hpp")};
 

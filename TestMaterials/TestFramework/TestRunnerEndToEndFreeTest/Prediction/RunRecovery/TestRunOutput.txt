@@ -4,15 +4,15 @@ Running tests...
 Utilities:
 [1 (0)ms]
 UsefulThings:
-[1 (0)ms]
+[2 (0)ms]
 Bar:
 [1 (0)ms]
 Maybe:
 [2 (0)ms]
 Oldschool:
-[1 (0)ms]
+[2 (0)ms]
 Foo:
-[6 (4)ms]
+[6 (3)ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
 	Tests/Stuff/FooTest.cpp, Line 37
@@ -38,10 +38,10 @@ Foo:
 Container:
 [2 (0)ms]
 House:
-[0 (0)ms]
+[1 (0)ms]
 
 -----------Grand Totals-----------
-[18 (4)ms]
+[21 (3)ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
