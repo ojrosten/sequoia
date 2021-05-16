@@ -31,6 +31,12 @@ namespace sequoia::testing
     [[nodiscard]]
     static std::filesystem::path source_path(const std::filesystem::path& projectRoot);
 
+    [[nodiscard]]
+    friend bool operator==(const repositories&, const repositories&) noexcept = default;
+
+    [[nodiscard]]
+    friend bool operator!=(const repositories&, const repositories&) noexcept = default;
+
     std::filesystem::path
       project_root{},
       source{},
