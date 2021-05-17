@@ -29,6 +29,8 @@ Creating files...
 "Tests/Utilities/UtilitiesFreeTest.cpp"
 "Tests/Stuff/BazzerFreeTest.hpp"
 "Tests/Stuff/BazzerFreeTest.cpp"
+"Tests/Stuff/DoohickyFreeTest.hpp"
+"Tests/Stuff/DoohickyFreeTest.cpp"
 "Tests/Stuff/FooAllocationTest.hpp"
 "Tests/Stuff/FooAllocationTest.cpp"
 "Tests/Stuff/ContainerTestingUtilities.hpp"

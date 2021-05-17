@@ -17,6 +17,7 @@ target_sources(TestMain PRIVATE
                ${TestDir}/Stuff/ThingsTest.cpp
                ${TestDir}/Utilities/UtilitiesFreeTest.cpp
                ${TestDir}/Stuff/BazzerFreeTest.cpp
+               ${TestDir}/Stuff/DoohickyFreeTest.cpp
                ${TestDir}/Stuff/FooAllocationTest.cpp
                ${TestDir}/Stuff/ContainerTestingDiagnostics.cpp
                ${TestDir}/Stuff/ContainerTest.cpp

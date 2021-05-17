@@ -18,6 +18,7 @@
 #include "Stuff/ThingsTest.hpp"
 #include "Utilities/UtilitiesFreeTest.hpp"
 #include "Stuff/BazzerFreeTest.hpp"
+#include "Stuff/DoohickyFreeTest.hpp"
 #include "Stuff/FooAllocationTest.hpp"
 #include "Stuff/ContainerTestingDiagnostics.hpp"
 #include "Stuff/ContainerTest.hpp"

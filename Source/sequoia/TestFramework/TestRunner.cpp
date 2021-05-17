@@ -417,9 +417,9 @@ namespace sequoia::testing
     namespace fs = std::filesystem;
     nascent_test_base::finalize([this](const fs::path& filename) {
 
-      const auto path{rebase_from(filename, repos().source)};
+      const auto path{repos().source / rebase_from(filename, repos().source)};
       // need to check path is actual in source repo
-      fs::copy_file(source_templates_path(repos().project_root) / "MyFreeFunctions.hpp", repos().source / path);
+      fs::copy_file(source_templates_path(repos().project_root) / "MyFreeFunctions.hpp", path);
 
       return path;
     });

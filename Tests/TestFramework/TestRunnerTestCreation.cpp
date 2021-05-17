@@ -81,7 +81,7 @@ namespace sequoia::testing
                                  , "create", "regular_test", "bar::things", "double", "-ch", "fakeProject/Stuff/Things.hpp"
                                  , "create", "free_test", "Utilities.h"
                                  , "create", "free_test", "Source/fakeProject/Stuff/Baz.h", "--forename", "bazzer"
-                                 /*, "create", "free_test", "Stuff/Doohicky.hpp", "--gen-source"*/
+                                 , "create", "free_test", "Stuff/Doohicky.hpp", "--gen-source"
                                  , "create", "move_only_allocation_test", "foo", "--family", "Iterator"
                                  , "create", "regular_test", "container<class T>", "std::vector<T>"
                                  , "create", "regular_allocation_test", "container"
