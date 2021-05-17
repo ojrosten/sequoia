@@ -417,11 +417,17 @@ namespace sequoia::testing
     namespace fs = std::filesystem;
     nascent_test_base::finalize([this](const fs::path& filename) {
 
-      const auto path{repos().source / rebase_from(filename, repos().source)};
-      // need to check path is actual in source repo
-      fs::copy_file(source_templates_path(repos().project_root) / "MyFreeFunctions.hpp", path);
+      const auto filePath{filename.is_absolute() ? filename : repos().source / rebase_from(filename, repos().source)};
+      fs::copy_file(source_templates_path(repos().project_root) / "MyFreeFunctions.hpp", filePath);
 
-      return path;
+      const auto srcFile{fs::path{filePath}.replace_extension("cpp")};
+      fs::copy_file(source_templates_path(repos().project_root) / "MyFreeFunctions.cpp", srcFile);
+
+      auto text{read_to_string(srcFile)};
+      replace_all(text, "?.hpp", rebase_from(filePath, repos().source.parent_path()).generic_string());
+      write_to_file(srcFile, text);
+
+      return filePath;
     });
 
     camel_name(std::string{camel_name()}.append(capitalize(test_type())));
