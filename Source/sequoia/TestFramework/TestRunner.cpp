@@ -323,7 +323,22 @@ namespace sequoia::testing
     if(header().empty()) header(std::filesystem::path{camel_name()}.concat(".hpp"));
 
     namespace fs = std::filesystem;
-    nascent_test_base::finalize([](const fs::path& p) { return p; });
+    nascent_test_base::finalize([this](const fs::path& filename) {
+
+      const auto headerTemplate{std::string{"My"}.append(capitalize(to_camel_case(test_type()))).append("Class.hpp")};
+
+      const auto filePath{filename.is_absolute() ? filename : repos().source / rebase_from(filename, repos().source)};
+      fs::copy_file(source_templates_path(repos().project_root) / headerTemplate, filePath);
+
+      const auto srcPath{fs::path{filePath}.replace_extension("cpp")};
+      fs::copy_file(source_templates_path(repos().project_root) / "MyClass.cpp", srcPath);
+
+      auto text{read_to_string(srcPath)};
+      replace_all(text, "?.hpp", rebase_from(filePath, repos().source.parent_path()).generic_string());
+      write_to_file(srcPath, text);
+
+      return filePath;
+    });
   }
 
   [[nodiscard]]
@@ -420,12 +435,12 @@ namespace sequoia::testing
       const auto filePath{filename.is_absolute() ? filename : repos().source / rebase_from(filename, repos().source)};
       fs::copy_file(source_templates_path(repos().project_root) / "MyFreeFunctions.hpp", filePath);
 
-      const auto srcFile{fs::path{filePath}.replace_extension("cpp")};
-      fs::copy_file(source_templates_path(repos().project_root) / "MyFreeFunctions.cpp", srcFile);
+      const auto srcPath{fs::path{filePath}.replace_extension("cpp")};
+      fs::copy_file(source_templates_path(repos().project_root) / "MyFreeFunctions.cpp", srcPath);
 
-      auto text{read_to_string(srcFile)};
+      auto text{read_to_string(srcPath)};
       replace_all(text, "?.hpp", rebase_from(filePath, repos().source.parent_path()).generic_string());
-      write_to_file(srcFile, text);
+      write_to_file(srcPath, text);
 
       return filePath;
     });

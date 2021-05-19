@@ -7,10 +7,10 @@
 
 #pragma once
 
-namespace 
+namespace
 {
 	template<?>
-	class ?_class
+	class ?class
 	{
 		public:
 		[[nodiscard]]
