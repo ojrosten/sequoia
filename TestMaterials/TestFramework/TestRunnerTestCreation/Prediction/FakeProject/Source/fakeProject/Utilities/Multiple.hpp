@@ -10,7 +10,7 @@
 
 {
 	template<class... T>
-class multiple
+	class multiple
 	{
 	public:
 		multiple(const multiple&)     = delete;

@@ -146,6 +146,12 @@ namespace sequoia::testing
     template<invocable<std::string&> FileTransformer>
     [[nodiscard]]
     auto create_file(const std::filesystem::path& codeTemplatesDir, std::string_view copyright, std::string_view inputNameStub, std::string_view nameEnding, FileTransformer transformer) const -> file_data;
+
+    [[nodiscard]]
+    const std::string& code_indent() const noexcept
+    {
+      return m_CodeIndent;
+    }
   private:
     std::string m_Family{}, m_TestType{}, m_Forename{}, m_CamelName{};
 
@@ -154,6 +160,8 @@ namespace sequoia::testing
     std::filesystem::path m_Header{}, m_HostDir{}, m_HeaderPath{};
 
     gen_source_option m_SourceOption{};
+
+    std::string m_CodeIndent{"\t"};
 
     void on_source_path_error(const std::vector<std::string_view>& extensions) const;
 

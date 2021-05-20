@@ -10,7 +10,7 @@
 namespace stuff
 {
 	template<class T>
-class thingummy
+	class thingummy
 	{
 		public:
 		[[nodiscard]]

@@ -372,7 +372,7 @@ namespace sequoia::testing
           }
           else
           {
-            const auto templateSpec{std::string{"template"}.append(to_string(m_TemplateData))};
+            const auto templateSpec{std::string{"template"}.append(to_string(m_TemplateData)).append(code_indent())};
             replace_all(text, "template<?> ", templateSpec);
           }
         }
