@@ -13,22 +13,22 @@ target_sources(TestMain PRIVATE
                ${TestDir}/Stuff/WidgetTest.cpp
                ${TestDir}/Thingummies/ThingummyTestingDiagnostics.cpp
                ${TestDir}/Thingummies/ThingummyTest.cpp
-               ${TestDir}/Stuff/FooTestingDiagnostics.cpp
-               ${TestDir}/Stuff/FooTest.cpp
+               ${TestDir}/Stuff/ContainerTestingDiagnostics.cpp
+               ${TestDir}/Stuff/ContainerTest.cpp
                ${TestDir}/CoupleTestingDiagnostics.cpp
                ${TestDir}/CoupleTest.cpp
                ${TestDir}/Stuff/ThingsTestingDiagnostics.cpp
                ${TestDir}/Stuff/ThingsTest.cpp
+               ${TestDir}/Stuff/FooTestingDiagnostics.cpp
+               ${TestDir}/Stuff/FooTest.cpp
+               ${TestDir}/Utilities/VariadicTestingDiagnostics.cpp
+               ${TestDir}/Utilities/VariadicTest.cpp
                ${TestDir}/Utilities/UtilitiesFreeTest.cpp
                ${TestDir}/Stuff/BazzerFreeTest.cpp
                ${TestDir}/Stuff/DoohickyFreeTest.cpp
-               ${TestDir}/Stuff/FooAllocationTest.cpp
-               ${TestDir}/Stuff/ContainerTestingDiagnostics.cpp
-               ${TestDir}/Stuff/ContainerTest.cpp
                ${TestDir}/Stuff/ContainerAllocationTest.cpp
-               ${TestDir}/Stuff/ContainerPerformanceTest.cpp
-               ${TestDir}/Utilities/VariadicTestingDiagnostics.cpp
-               ${TestDir}/Utilities/VariadicTest.cpp)
+               ${TestDir}/Stuff/FooAllocationTest.cpp
+               ${TestDir}/Stuff/ContainerPerformanceTest.cpp)
 
 SET(BUILD_SYS SEQUOIA_ROOT/build_system)
 

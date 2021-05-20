@@ -77,19 +77,19 @@ namespace sequoia::testing
                                  , "create", "regular", "utilities::iterator", "int*"
                                  , "create", "regular_test", "stuff::widget", "std::vector<int>", "gen-source", "Stuff"
                                  , "create", "regular_test", "stuff::thingummy<class T>", "std::vector<T>", "gen-source", "Thingummies"
-                                 , "create", "move_only_test", "bar::baz::foo<maths::floating_point T>", "T", "--family", "Iterator"
+                                 , "create", "regular_test", "container<class T>", "std::vector<T>"
                                  , "create", "regular_test", "other::couple<class S, class T>", "S", "-e", "T",
                                                 "-f", "partners", "-ch", "Couple.hpp"
                                  , "create", "regular_test", "bar::things", "double", "-ch", "fakeProject/Stuff/Things.hpp"
+                                 , "create", "move_only_test", "bar::baz::foo<maths::floating_point T>", "T", "--family", "Iterator"
+                                 , "create", "move_only", "variadic<class... T>", "std::tuple<T...>"
                                  , "create", "free_test", "Utilities.h"
                                  , "create", "free_test", "Source/fakeProject/Stuff/Baz.h", "--forename", "bazzer"
                                  , "create", "free_test", "Stuff/Doohicky.hpp", "gen-source"
-                                 , "create", "move_only_allocation_test", "foo", "--family", "Iterator"
-                                 , "create", "regular_test", "container<class T>", "std::vector<T>"
                                  , "create", "regular_allocation_test", "container"
+                                 , "create", "move_only_allocation_test", "foo", "--family", "Iterator"
                                  , "create", "performance_test", "Container.hpp"
                                  , "create", "performance_test", "Container.hpp"
-                                 , "create" , "move_only", "variadic<class... T>", "std::tuple<T...>"
     };
 
     std::stringstream outputStream{};

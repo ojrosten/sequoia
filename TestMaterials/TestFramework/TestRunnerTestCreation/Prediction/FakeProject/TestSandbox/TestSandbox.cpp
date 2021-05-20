@@ -54,6 +54,14 @@ int main(int argc, char** argv)
     );
 
     runner.add_test_family(
+      "Container",
+      container_performance_test("Performance Test"),
+      container_allocation_test("Allocation Test"),
+      container_false_positive_test("False Positive Test"),
+      container_test("Unit Test")
+    );
+
+    runner.add_test_family(
       "partners",
       couple_false_positive_test("False Positive Test"),
       couple_test("Unit Test")
@@ -63,6 +71,12 @@ int main(int argc, char** argv)
       "Things",
       things_false_positive_test("False Positive Test"),
       things_test("Unit Test")
+    );
+
+    runner.add_test_family(
+      "Variadic",
+      variadic_false_positive_test("False Positive Test"),
+      variadic_test("Unit Test")
     );
 
     runner.add_test_family(
@@ -78,20 +92,6 @@ int main(int argc, char** argv)
     runner.add_test_family(
       "Doohicky",
       doohicky_free_test("Free Test")
-    );
-
-    runner.add_test_family(
-      "Container",
-      container_performance_test("Performance Test"),
-      container_allocation_test("Allocation Test"),
-      container_false_positive_test("False Positive Test"),
-      container_test("Unit Test")
-    );
-
-    runner.add_test_family(
-      "Variadic",
-      variadic_false_positive_test("False Positive Test"),
-      variadic_test("Unit Test")
     );
 
     runner.execute();
