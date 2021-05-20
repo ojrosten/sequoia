@@ -9,7 +9,8 @@
 
 namespace
 ?{
-	template<?> class ?type
+	template<?>
+	class ?type
 	{
 	public:
 		?type(const ?type&)     = delete;

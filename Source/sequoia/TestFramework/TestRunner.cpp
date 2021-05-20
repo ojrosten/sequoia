@@ -24,11 +24,10 @@ namespace sequoia::testing
       if(spacing != "\t")
       {
         constexpr auto npos{std::string::npos};
-        auto tabPos{npos};
-        while((tabPos = text.find('\t')) != npos)
+        std::string::size_type tabPos{};
+        while((tabPos = text.find('\t', tabPos)) != npos)
         {
-          text.erase(tabPos, 1);
-          text.insert(tabPos, spacing);
+          text.replace(tabPos, 1, spacing);
           tabPos += spacing.size();
         }
       }
@@ -74,8 +73,7 @@ namespace sequoia::testing
     {
       str.append(d.species).append(" ").append(d.symbol).append(", ");
     }
-    str[str.size() - 2] = '>';
-    str.back() = '\n';
+    str.replace(str.size() - 2, 2, ">");
 
     return str;
   }
@@ -374,6 +372,15 @@ namespace sequoia::testing
           if(nameSpace.empty())
           {
             replace_all(text, {{"namespace", ""}, {"?{", ""}, {"?}", ""}});
+            constexpr auto npos{std::string::npos};
+            std::string::size_type endLine{};
+            while((endLine = text.find('\n', endLine)) != npos)
+            {
+              if((++endLine < text.size()) && (text[endLine] == '\t'))
+              {
+                text.erase(endLine, 1);
+              }
+            }
           }
           else
           {
@@ -388,12 +395,12 @@ namespace sequoia::testing
           replace_all(text, "?type", forename());
           if(m_TemplateData.empty())
           {
-            replace_all(text, "template<?> ", "");
+            replace_all(text, "\ttemplate<?>\n", "");
           }
           else
           {
-            const auto templateSpec{std::string{"template"}.append(to_string(m_TemplateData)).append(code_indent())};
-            replace_all(text, "template<?> ", templateSpec);
+            const auto templateSpec{std::string{"template"}.append(to_string(m_TemplateData))};
+            replace_all(text, "template<?>", templateSpec);
           }
 
           to_spaces(text, code_indent());
@@ -476,7 +483,7 @@ namespace sequoia::testing
 
     if(!m_TemplateData.empty())
     {
-      replace_all(text, "<?>", to_string(m_TemplateData).append(" "));
+      replace_all(text, "<?>", to_string(m_TemplateData).append("\n "));
     }
     else
     {
