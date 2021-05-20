@@ -9,13 +9,13 @@
 
 namespace stuff
 {
-	class widget
-	{
-		public:
-		[[nodiscard]]
-		friend bool operator==(const widget&, const widget&) noexcept = default;
-	
-		[[nodiscard]]
-		friend bool operator!=(const widget&, const widget&) noexcept = default;
-	};
+  class widget
+  {
+  public:
+    [[nodiscard]]
+    friend bool operator==(const widget&, const widget&) noexcept = default;
+
+    [[nodiscard]]
+    friend bool operator!=(const widget&, const widget&) noexcept = default;
+  };
 }

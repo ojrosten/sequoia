@@ -17,6 +17,26 @@
 
 namespace sequoia::testing
 {
+  namespace
+  {
+    std::string& to_spaces(std::string& text, std::string_view spacing)
+    {
+      if(spacing != "\t")
+      {
+        constexpr auto npos{std::string::npos};
+        auto tabPos{npos};
+        while((tabPos = text.find('\t')) != npos)
+        {
+          text.erase(tabPos, 1);
+          text.insert(tabPos, spacing);
+          tabPos += spacing.size();
+        }
+      }
+
+      return text;
+    }
+  }
+
   using namespace parsing::commandline;
 
   [[nodiscard]]
@@ -375,6 +395,8 @@ namespace sequoia::testing
             const auto templateSpec{std::string{"template"}.append(to_string(m_TemplateData)).append(code_indent())};
             replace_all(text, "template<?> ", templateSpec);
           }
+
+          to_spaces(text, code_indent());
         }
       };
 
@@ -388,6 +410,7 @@ namespace sequoia::testing
         auto setCppText{[&filePath, setNamespace, this](std::string& text) {
             setNamespace(text);
             replace_all(text, "?.hpp", rebase_from(filePath, repos().source.parent_path()).generic_string());
+            to_spaces(text, code_indent());
           }
         };
 
@@ -487,6 +510,7 @@ namespace sequoia::testing
 
       auto text{read_to_string(srcPath)};
       replace_all(text, "?.hpp", rebase_from(filePath, repos().source.parent_path()).generic_string());
+      to_spaces(text, code_indent());
       write_to_file(srcPath, text);
 
       return filePath;

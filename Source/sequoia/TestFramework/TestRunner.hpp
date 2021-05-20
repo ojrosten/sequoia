@@ -161,7 +161,7 @@ namespace sequoia::testing
 
     gen_source_option m_SourceOption{};
 
-    std::string m_CodeIndent{"\t"};
+    std::string m_CodeIndent{"  "};
 
     void on_source_path_error(const std::vector<std::string_view>& extensions) const;
 
