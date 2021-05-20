@@ -12,6 +12,8 @@
 #include "Utilities/IteratorTest.hpp"
 #include "Stuff/WidgetTestingDiagnostics.hpp"
 #include "Stuff/WidgetTest.hpp"
+#include "Thingummies/ThingummyTestingDiagnostics.hpp"
+#include "Thingummies/ThingummyTest.hpp"
 #include "Stuff/FooTestingDiagnostics.hpp"
 #include "Stuff/FooTest.hpp"
 #include "CoupleTestingDiagnostics.hpp"

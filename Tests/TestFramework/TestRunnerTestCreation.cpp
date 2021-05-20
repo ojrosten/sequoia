@@ -76,6 +76,7 @@ namespace sequoia::testing
     commandline_arguments args{"", "create", "regular_test", "other::functional::maybe<class T>", "std::optional<T>"
                                  , "create", "regular", "utilities::iterator", "int*"
                                  , "create", "regular_test", "stuff::widget", "std::vector<int>", "gen-source", "Stuff"
+                                 , "create", "regular_test", "stuff::thingummy<class T>", "std::vector<T>", "gen-source", "Thingummies"
                                  , "create", "move_only_test", "bar::baz::foo<maths::floating_point T>", "T", "--family", "Iterator"
                                  , "create", "regular_test", "other::couple<class S, class T>", "S", "-e", "T",
                                                 "-f", "partners", "-ch", "Couple.hpp"

@@ -59,6 +59,9 @@ namespace sequoia::testing
   using template_data = std::vector<template_spec>;
 
   [[nodiscard]]
+  std::string to_string(const template_data& data);
+
+  [[nodiscard]]
   template_data generate_template_data(std::string_view str);
 
   [[nodiscard]]

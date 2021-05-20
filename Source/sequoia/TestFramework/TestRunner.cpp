@@ -45,6 +45,22 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
+  std::string to_string(const template_data& data)
+  {
+    if(data.empty()) return "";
+
+    std::string str{"<"};
+    for(const auto& d : data)
+    {
+      str.append(d.species).append(" ").append(d.symbol).append(", ");
+    }
+    str[str.size() - 2] = '>';
+    str.back() = '\n';
+
+    return str;
+  }
+
+  [[nodiscard]]
   template_spec generate_template_spec(std::string_view str)
   {
     constexpr auto npos{std::string::npos};
@@ -330,6 +346,7 @@ namespace sequoia::testing
       const auto headerTemplate{std::string{"My"}.append(capitalize(to_camel_case(test_type()))).append("Class.hpp")};
 
       const auto filePath{filename.is_absolute() ? filename : repos().source / rebase_from(m_SourceDir / filename, repos().source)};
+      fs::create_directories(filePath.parent_path());
       fs::copy_file(source_templates_path(repos().project_root) / headerTemplate, filePath);
 
       auto setNamespace{
@@ -355,7 +372,8 @@ namespace sequoia::testing
           }
           else
           {
-            // TO DO
+            const auto templateSpec{std::string{"template"}.append(to_string(m_TemplateData))};
+            replace_all(text, "template<?> ", templateSpec);
           }
         }
       };
@@ -435,17 +453,7 @@ namespace sequoia::testing
 
     if(!m_TemplateData.empty())
     {
-      std::string spec{"<"};
-      for(const auto& d : m_TemplateData)
-      {
-        spec.append(d.species).append(" ").append(d.symbol).append(", ");
-      }
-
-      spec.erase(spec.size() - 1);
-      spec.back() = '>';
-      spec.append("\n ");
-
-      replace_all(text, "<?>", spec);
+      replace_all(text, "<?>", to_string(m_TemplateData).append(" "));
     }
     else
     {
