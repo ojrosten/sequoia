@@ -8,7 +8,7 @@
 #pragma once
 
 #include "sequoia/TestFramework/RegularTestCore.hpp"
-#include "fakeProject/Widget.hpp"
+#include "fakeProject/Stuff/Widget.hpp"
 
 namespace sequoia::testing
 {

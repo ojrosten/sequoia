@@ -168,6 +168,8 @@ namespace sequoia::testing
 
     void add_equivalent_type(std::string name) { m_EquivalentTypes.emplace_back(std::move(name)); }
 
+    void source_dir(std::filesystem::path dir) { m_SourceDir = std::move(dir); }
+
     void finalize();
 
     [[nodiscard]]
@@ -197,6 +199,8 @@ namespace sequoia::testing
     template_data m_TemplateData{};
 
     std::vector<std::string> m_EquivalentTypes{};
+
+    std::filesystem::path m_SourceDir{};
 
     void transform_file(std::string& text) const;
   };

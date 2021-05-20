@@ -327,7 +327,7 @@ namespace sequoia::testing
 
       const auto headerTemplate{std::string{"My"}.append(capitalize(to_camel_case(test_type()))).append("Class.hpp")};
 
-      const auto filePath{filename.is_absolute() ? filename : repos().source / rebase_from(filename, repos().source)};
+      const auto filePath{filename.is_absolute() ? filename : repos().source / rebase_from(m_SourceDir / filename, repos().source)};
       fs::copy_file(source_templates_path(repos().project_root) / headerTemplate, filePath);
 
       auto setClassName{
@@ -337,18 +337,26 @@ namespace sequoia::testing
       };
       read_modify_write(filePath, setClassName);
 
-      // replace ?class with class_name, derived from m_QualifiedName;
       // if qualified set namespace otherwise remove (both hpp and cpp)
 
       // if template data replace template<?>
 
-      const auto srcPath{fs::path{filePath}.replace_extension("cpp")};
-      fs::copy_file(source_templates_path(repos().project_root) / "MyClass.cpp", srcPath);
+      // need to ensure proper entry in CMakeLists
 
-      auto setHeader{[&filePath, this](std::string& text) {
-        replace_all(text, "?.hpp", rebase_from(filePath, repos().source.parent_path()).generic_string()); }
-      };
-      read_modify_write(srcPath, setHeader);
+      if(m_TemplateData.empty())
+      {
+        const auto srcPath{fs::path{filePath}.replace_extension("cpp")};
+        fs::copy_file(source_templates_path(repos().project_root) / "MyClass.cpp", srcPath);
+
+        auto setHeader{[&filePath, this](std::string& text) {
+          replace_all(text, "?.hpp", rebase_from(filePath, repos().source.parent_path()).generic_string()); }
+        };
+        read_modify_write(srcPath, setHeader);
+      }
+      else
+      {
+
+      }
 
       return filePath;
     });
@@ -628,12 +636,23 @@ namespace sequoia::testing
     };
 
     const option genSemanticsSourceOption{"gen-source", {"g"}, {"source_dir"},
-      [this](const param_list&) {
+      [this](const param_list& args) {
         if(m_NascentTests.empty())
           throw std::logic_error{"Unable to find nascent test"};
 
         using src_opt = nascent_test_base::gen_source_option;
-        std::visit(variant_visitor{[](auto& nascent) { nascent.generate_source_files(src_opt::yes); }}, m_NascentTests.back());
+
+        auto visitor{
+          variant_visitor{
+            [&args](nascent_semantics_test& nascent) {
+              nascent.generate_source_files(src_opt::yes);
+              nascent.source_dir(args[0]);
+            },
+            [](auto&) {}
+          }
+        };
+
+        std::visit(visitor, m_NascentTests.back());
       }
     };
 

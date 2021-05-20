@@ -5,7 +5,7 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#include "fakeProject/Widget.hpp"
+#include "fakeProject/Stuff/Widget.hpp"
 
 namespace
 {
