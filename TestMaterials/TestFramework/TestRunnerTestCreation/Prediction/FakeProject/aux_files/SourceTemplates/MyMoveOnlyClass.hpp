@@ -8,7 +8,7 @@
 #pragma once
 
 namespace
-{
+?{
 	template<?> class ?type
 	{
 	public:
@@ -24,4 +24,4 @@ namespace
 		[[nodiscard]]
 		friend bool operator!=(const ?type&, const ?type&) noexcept = default;
 	};
-}
+?}

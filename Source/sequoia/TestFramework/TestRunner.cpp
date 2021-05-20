@@ -357,7 +357,7 @@ namespace sequoia::testing
           }
           else
           {
-             replace_all(text, {{"namespace", std::string{"namespace "}.append(nameSpace)}, {"?{", "{"}, {"?}", "}"}});
+            replace_all(text, {{"namespace", std::string{"namespace "}.append(nameSpace)}, {"?{", "{"}, {"?}", "}"}});
           }
         }
       };
