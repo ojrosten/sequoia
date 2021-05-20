@@ -8,3 +8,7 @@
 #pragma once
 
 #include "?.hpp"
+
+namespace
+?{
+?}

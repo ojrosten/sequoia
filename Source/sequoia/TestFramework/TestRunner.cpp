@@ -516,9 +516,32 @@ namespace sequoia::testing
       fs::copy_file(source_templates_path(repos().project_root) / "MyFreeFunctions.cpp", srcPath);
 
       auto text{read_to_string(srcPath)};
-      replace_all(text, "?.hpp", rebase_from(filePath, repos().source.parent_path()).generic_string());
-      to_spaces(text, code_indent());
-      write_to_file(srcPath, text);
+
+      auto setNamespace{
+        [this](std::string& text) {
+          if(m_Namespace.empty())
+          {
+            replace_all(text, {{"namespace\n", ""}, {"?{\n", ""}, {"?}\n", ""}});
+
+          }
+          else
+          {
+            replace_all(text, {{"namespace", std::string{"namespace "}.append(m_Namespace)}, {"?{", "{"}, {"?}", "}"}});
+          }
+        }
+      };
+
+      read_modify_write(filePath, setNamespace);
+
+      auto setCppText{
+        [&filePath, this, setNamespace](std::string& text) {
+          replace_all(text, "?.hpp", rebase_from(filePath, repos().source.parent_path()).generic_string());
+          to_spaces(text, code_indent());
+          setNamespace(text);
+        }
+      };
+
+      read_modify_write(srcPath, setCppText);
 
       return filePath;
     });

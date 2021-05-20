@@ -263,6 +263,8 @@ namespace sequoia::testing
     };
   private:
     void transform_file(std::string& text) const;
+
+    std::string m_Namespace;
    };
 
   /*! \brief Consumes command-line arguments and holds all test families
