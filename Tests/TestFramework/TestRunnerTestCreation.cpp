@@ -83,6 +83,7 @@ namespace sequoia::testing
                                  , "create", "regular_test", "bar::things", "double", "-ch", "fakeProject/Stuff/Things.hpp"
                                  , "create", "move_only_test", "bar::baz::foo<maths::floating_point T>", "T", "--family", "Iterator"
                                  , "create", "move_only", "variadic<class... T>", "std::tuple<T...>"
+                                 , "create", "move_only_test", "multiple<class... T>", "std::tuple<T...>", "gen-source", "Utilities"
                                  , "create", "free_test", "Utilities.h"
                                  , "create", "free_test", "Source/fakeProject/Stuff/Baz.h", "--forename", "bazzer"
                                  , "create", "free_test", "Stuff/Doohicky.hpp", "gen-source"

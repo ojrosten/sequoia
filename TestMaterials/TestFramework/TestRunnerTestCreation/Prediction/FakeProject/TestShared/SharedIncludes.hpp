@@ -24,6 +24,8 @@
 #include "Stuff/FooTest.hpp"
 #include "Utilities/VariadicTestingDiagnostics.hpp"
 #include "Utilities/VariadicTest.hpp"
+#include "Utilities/MultipleTestingDiagnostics.hpp"
+#include "Utilities/MultipleTest.hpp"
 #include "Utilities/UtilitiesFreeTest.hpp"
 #include "Stuff/BazzerFreeTest.hpp"
 #include "Stuff/DoohickyFreeTest.hpp"

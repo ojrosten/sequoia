@@ -23,6 +23,8 @@ target_sources(TestMain PRIVATE
                ${TestDir}/Stuff/FooTest.cpp
                ${TestDir}/Utilities/VariadicTestingDiagnostics.cpp
                ${TestDir}/Utilities/VariadicTest.cpp
+               ${TestDir}/Utilities/MultipleTestingDiagnostics.cpp
+               ${TestDir}/Utilities/MultipleTest.cpp
                ${TestDir}/Utilities/UtilitiesFreeTest.cpp
                ${TestDir}/Stuff/BazzerFreeTest.cpp
                ${TestDir}/Stuff/DoohickyFreeTest.cpp
