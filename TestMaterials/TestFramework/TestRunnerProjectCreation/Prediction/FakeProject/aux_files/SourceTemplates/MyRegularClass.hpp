@@ -9,12 +9,13 @@
 
 namespace
 ?{
-	template<?> class ?type
+	template<?>
+	class ?type
 	{
-		public:
+	public:
 		[[nodiscard]]
 		friend bool operator==(const ?type&, const ?type&) noexcept = default;
-	
+
 		[[nodiscard]]
 		friend bool operator!=(const ?type&, const ?type&) noexcept = default;
 	};

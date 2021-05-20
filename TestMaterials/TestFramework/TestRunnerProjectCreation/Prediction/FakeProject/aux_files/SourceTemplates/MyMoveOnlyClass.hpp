@@ -8,8 +8,9 @@
 #pragma once
 
 namespace
-{
-	template<?> class ?type
+?{
+	template<?>
+	class ?type
 	{
 	public:
 		?type(const ?type&)     = delete;
@@ -24,4 +25,4 @@ namespace
 		[[nodiscard]]
 		friend bool operator!=(const ?type&, const ?type&) noexcept = default;
 	};
-}
+?}
