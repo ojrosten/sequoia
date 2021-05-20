@@ -11,6 +11,8 @@
     \brief Contains utilities for automatically editing certain files as part of the test creation process.
  */
 
+#include "sequoia/Core/Meta/Concepts.hpp"
+
 #include <filesystem>
 #include <vector>
 
@@ -20,6 +22,14 @@ namespace sequoia::testing
   std::string read_to_string(const std::filesystem::path& file);
 
   void write_to_file(const std::filesystem::path& file, std::string_view text);
+
+  template<invocable<std::string&> Fn>
+  void read_modify_write(const std::filesystem::path& file, Fn fn)
+  {
+    auto text{read_to_string(file)};
+    fn(text);
+    write_to_file(file, text);
+  }
 
   void add_include(const std::filesystem::path& file, std::string_view include);
 

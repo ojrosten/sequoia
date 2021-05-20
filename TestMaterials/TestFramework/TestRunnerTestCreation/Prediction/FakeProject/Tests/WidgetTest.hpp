@@ -7,22 +7,19 @@
 
 #pragma once
 
-namespace
+#include "WidgetTestingUtilities.hpp"
+
+namespace sequoia::testing
 {
-	template<?>
-	class ?class
-	{
-	public:
-		?class(const ?class&)     = delete;
-		?class(?class&&) noexcept = default;
+  class widget_test final : public regular_test
+  {
+  public:
+    using regular_test::regular_test;
 
-		?class& operator=(const ?class&)     = delete;
-		?class& operator=(?class&&) noexcept = default;
+  private:
+    [[nodiscard]]
+    std::string_view source_file() const noexcept final;
 
-		[[nodiscard]]
-		friend bool operator==(const ?class&, const ?class&) noexcept = default;
-
-		[[nodiscard]]
-		friend bool operator!=(const ?class&, const ?class&) noexcept = default;
-	};
+    void run_tests() final;
+  };
 }

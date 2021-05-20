@@ -10,6 +10,8 @@
 #include "Maybe/MaybeTest.hpp"
 #include "Utilities/IteratorTestingDiagnostics.hpp"
 #include "Utilities/IteratorTest.hpp"
+#include "WidgetTestingDiagnostics.hpp"
+#include "WidgetTest.hpp"
 #include "Stuff/FooTestingDiagnostics.hpp"
 #include "Stuff/FooTest.hpp"
 #include "CoupleTestingDiagnostics.hpp"

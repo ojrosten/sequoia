@@ -9,6 +9,8 @@ target_sources(TestMain PRIVATE
                ${TestDir}/Maybe/MaybeTest.cpp
                ${TestDir}/Utilities/IteratorTestingDiagnostics.cpp
                ${TestDir}/Utilities/IteratorTest.cpp
+               ${TestDir}/WidgetTestingDiagnostics.cpp
+               ${TestDir}/WidgetTest.cpp
                ${TestDir}/Stuff/FooTestingDiagnostics.cpp
                ${TestDir}/Stuff/FooTest.cpp
                ${TestDir}/CoupleTestingDiagnostics.cpp

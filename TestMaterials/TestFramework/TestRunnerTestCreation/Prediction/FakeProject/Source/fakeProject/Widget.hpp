@@ -10,19 +10,13 @@
 namespace
 {
 	template<?>
-	class ?class
+	class widget
 	{
-	public:
-		?class(const ?class&)     = delete;
-		?class(?class&&) noexcept = default;
-
-		?class& operator=(const ?class&)     = delete;
-		?class& operator=(?class&&) noexcept = default;
-
+		public:
 		[[nodiscard]]
-		friend bool operator==(const ?class&, const ?class&) noexcept = default;
-
+		friend bool operator==(const widget&, const widget&) noexcept = default;
+	
 		[[nodiscard]]
-		friend bool operator!=(const ?class&, const ?class&) noexcept = default;
+		friend bool operator!=(const widget&, const widget&) noexcept = default;
 	};
 }

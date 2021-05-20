@@ -5,24 +5,8 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#pragma once
+#include "fakeProject/Widget.hpp"
 
 namespace
 {
-	template<?>
-	class ?class
-	{
-	public:
-		?class(const ?class&)     = delete;
-		?class(?class&&) noexcept = default;
-
-		?class& operator=(const ?class&)     = delete;
-		?class& operator=(?class&&) noexcept = default;
-
-		[[nodiscard]]
-		friend bool operator==(const ?class&, const ?class&) noexcept = default;
-
-		[[nodiscard]]
-		friend bool operator!=(const ?class&, const ?class&) noexcept = default;
-	};
 }

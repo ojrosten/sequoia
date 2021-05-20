@@ -7,17 +7,17 @@
 
 #pragma once
 
-namespace 
+namespace
 {
 	template<?>
-	class ?_class
+	class ?class
 	{
 	public:
-		?_class(const ?_class&)     = delete;
-		?_class(?_class&&) noexcept = default;
+		?class(const ?class&)     = delete;
+		?class(?class&&) noexcept = default;
 
-		?_class& operator=(const ?_class&)     = delete;
-		?_class& operator=(?_class&&) noexcept = default;
+		?class& operator=(const ?class&)     = delete;
+		?class& operator=(?class&&) noexcept = default;
 
 		[[nodiscard]]
 		friend bool operator==(const ?class&, const ?class&) noexcept = default;

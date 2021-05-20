@@ -5,8 +5,19 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#include "?.hpp"
+#include "WidgetTestingUtilities.hpp"
 
-namespace
+namespace sequoia::testing
 {
+  class widget_false_positive_test final : public regular_false_positive_test
+  {
+  public:
+    using regular_false_positive_test::regular_false_positive_test;    
+
+  private:
+    [[nodiscard]]
+    std::string_view source_file() const noexcept final;
+
+    void run_tests() final;
+  };
 }

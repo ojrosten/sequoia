@@ -42,6 +42,12 @@ int main(int argc, char** argv)
     );
 
     runner.add_test_family(
+      "Widget",
+      widget_false_positive_test("False Positive Test"),
+      widget_test("Unit Test")
+    );
+
+    runner.add_test_family(
       "partners",
       couple_false_positive_test("False Positive Test"),
       couple_test("Unit Test")

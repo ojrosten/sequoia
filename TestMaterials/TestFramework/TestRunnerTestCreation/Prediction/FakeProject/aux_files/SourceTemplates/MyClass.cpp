@@ -7,6 +7,6 @@
 
 #include "?.hpp"
 
-namespace 
+namespace
 {
 }

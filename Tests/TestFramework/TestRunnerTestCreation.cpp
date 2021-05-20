@@ -75,13 +75,14 @@ namespace sequoia::testing
 
     commandline_arguments args{"", "create", "regular_test", "other::functional::maybe<class T>", "std::optional<T>"
                                  , "create", "regular", "utilities::iterator", "int*"
+                                 , "create", "regular_test", "stuff::widget", "std::vector<int>", "gen-source", "Stuff"
                                  , "create", "move_only_test", "bar::baz::foo<maths::floating_point T>", "T", "--family", "Iterator"
                                  , "create", "regular_test", "other::couple<class S, class T>", "S", "-e", "T",
                                                 "-f", "partners", "-ch", "Couple.hpp"
                                  , "create", "regular_test", "bar::things", "double", "-ch", "fakeProject/Stuff/Things.hpp"
                                  , "create", "free_test", "Utilities.h"
                                  , "create", "free_test", "Source/fakeProject/Stuff/Baz.h", "--forename", "bazzer"
-                                 , "create", "free_test", "Stuff/Doohicky.hpp", "--gen-source"
+                                 , "create", "free_test", "Stuff/Doohicky.hpp", "gen-source"
                                  , "create", "move_only_allocation_test", "foo", "--family", "Iterator"
                                  , "create", "regular_test", "container<class T>", "std::vector<T>"
                                  , "create", "regular_allocation_test", "container"

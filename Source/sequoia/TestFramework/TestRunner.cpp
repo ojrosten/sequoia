@@ -330,12 +330,25 @@ namespace sequoia::testing
       const auto filePath{filename.is_absolute() ? filename : repos().source / rebase_from(filename, repos().source)};
       fs::copy_file(source_templates_path(repos().project_root) / headerTemplate, filePath);
 
+      auto setClassName{
+        [&filePath, this](std::string& text) {
+          replace_all(text, "?class", forename());
+        }
+      };
+      read_modify_write(filePath, setClassName);
+
+      // replace ?class with class_name, derived from m_QualifiedName;
+      // if qualified set namespace otherwise remove (both hpp and cpp)
+
+      // if template data replace template<?>
+
       const auto srcPath{fs::path{filePath}.replace_extension("cpp")};
       fs::copy_file(source_templates_path(repos().project_root) / "MyClass.cpp", srcPath);
 
-      auto text{read_to_string(srcPath)};
-      replace_all(text, "?.hpp", rebase_from(filePath, repos().source.parent_path()).generic_string());
-      write_to_file(srcPath, text);
+      auto setHeader{[&filePath, this](std::string& text) {
+        replace_all(text, "?.hpp", rebase_from(filePath, repos().source.parent_path()).generic_string()); }
+      };
+      read_modify_write(srcPath, setHeader);
 
       return filePath;
     });
@@ -604,7 +617,7 @@ namespace sequoia::testing
       }
     };
 
-    const option genSourceOption{"--gen-source", {"-g"}, {},
+    const option genFreeSourceOption{"gen-source", {"g"}, {},
       [this](const param_list&) {
         if(m_NascentTests.empty())
           throw std::logic_error{"Unable to find nascent test"};
@@ -614,7 +627,17 @@ namespace sequoia::testing
       }
     };
 
-    const std::vector<option> semanticsOptions{equivOption, familyOption, headerOption, genSourceOption};
+    const option genSemanticsSourceOption{"gen-source", {"g"}, {"source_dir"},
+      [this](const param_list&) {
+        if(m_NascentTests.empty())
+          throw std::logic_error{"Unable to find nascent test"};
+
+        using src_opt = nascent_test_base::gen_source_option;
+        std::visit(variant_visitor{[](auto& nascent) { nascent.generate_source_files(src_opt::yes); }}, m_NascentTests.back());
+      }
+    };
+
+    const std::vector<option> semanticsOptions{equivOption, familyOption, headerOption, genSemanticsSourceOption};
 
     const std::vector<option> allocationOptions{familyOption, headerOption};
 
@@ -643,7 +666,7 @@ namespace sequoia::testing
                       test_creator{"allocation", "move_only_allocation", *this}, allocationOptions
                      },
                      {"free_test", {"free"}, {"header"},
-                      test_creator{"behavioural", "free", *this}, {familyOption, nameOption, genSourceOption}
+                      test_creator{"behavioural", "free", *this}, {familyOption, nameOption, genFreeSourceOption}
                      },
                      {"performance_test", {"performance"}, {"header"},
                        test_creator{"behavioural", "performance", *this}, {familyOption}
