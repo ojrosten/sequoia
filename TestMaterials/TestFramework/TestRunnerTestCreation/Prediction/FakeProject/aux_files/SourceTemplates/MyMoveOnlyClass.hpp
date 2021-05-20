@@ -9,20 +9,19 @@
 
 namespace
 {
-	template<?>
-	class ?class
+	template<?> class ?type
 	{
 	public:
-		?class(const ?class&)     = delete;
-		?class(?class&&) noexcept = default;
+		?type(const ?type&)     = delete;
+		?type(?type&&) noexcept = default;
 
-		?class& operator=(const ?class&)     = delete;
-		?class& operator=(?class&&) noexcept = default;
-
-		[[nodiscard]]
-		friend bool operator==(const ?class&, const ?class&) noexcept = default;
+		?type& operator=(const ?type&)     = delete;
+		?type& operator=(?type&&) noexcept = default;
 
 		[[nodiscard]]
-		friend bool operator!=(const ?class&, const ?class&) noexcept = default;
+		friend bool operator==(const ?type&, const ?type&) noexcept = default;
+
+		[[nodiscard]]
+		friend bool operator!=(const ?type&, const ?type&) noexcept = default;
 	};
 }

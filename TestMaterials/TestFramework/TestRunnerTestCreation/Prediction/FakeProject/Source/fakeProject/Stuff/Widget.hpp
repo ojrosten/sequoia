@@ -7,9 +7,8 @@
 
 #pragma once
 
-namespace
+namespace stuff
 {
-	template<?>
 	class widget
 	{
 		public:

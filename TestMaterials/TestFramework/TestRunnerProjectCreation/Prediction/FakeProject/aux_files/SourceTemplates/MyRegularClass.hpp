@@ -8,15 +8,14 @@
 #pragma once
 
 namespace
-{
-	template<?>
-	class ?class
+?{
+	template<?> class ?type
 	{
 		public:
 		[[nodiscard]]
-		friend bool operator==(const ?class&, const ?class&) noexcept = default;
+		friend bool operator==(const ?type&, const ?type&) noexcept = default;
 	
 		[[nodiscard]]
-		friend bool operator!=(const ?class&, const ?class&) noexcept = default;
+		friend bool operator!=(const ?type&, const ?type&) noexcept = default;
 	};
-}
+?}

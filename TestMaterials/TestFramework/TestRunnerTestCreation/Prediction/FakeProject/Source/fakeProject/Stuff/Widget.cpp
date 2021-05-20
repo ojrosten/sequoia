@@ -7,6 +7,6 @@
 
 #include "fakeProject/Stuff/Widget.hpp"
 
-namespace
+namespace stuff
 {
 }

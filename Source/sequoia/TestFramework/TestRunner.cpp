@@ -274,12 +274,14 @@ namespace sequoia::testing
 
     auto start{npos};
     auto templatePos{m_QualifiedName.find('<')};
+    std::string nameSpace{};
 
     if(auto pos{m_QualifiedName.rfind("::", templatePos)}; pos != npos)
     {
       if(pos < m_QualifiedName.length() - 2)
       {
         start = pos+2;
+        nameSpace = m_QualifiedName.substr(0, pos);
         forename(m_QualifiedName.substr(start));
       }
     }
@@ -323,39 +325,55 @@ namespace sequoia::testing
     if(header().empty()) header(std::filesystem::path{camel_name()}.concat(".hpp"));
 
     namespace fs = std::filesystem;
-    nascent_test_base::finalize([this](const fs::path& filename) {
+    nascent_test_base::finalize([&nameSpace,this](const fs::path& filename) {
 
       const auto headerTemplate{std::string{"My"}.append(capitalize(to_camel_case(test_type()))).append("Class.hpp")};
 
       const auto filePath{filename.is_absolute() ? filename : repos().source / rebase_from(m_SourceDir / filename, repos().source)};
       fs::copy_file(source_templates_path(repos().project_root) / headerTemplate, filePath);
 
-      auto setClassName{
-        [&filePath, this](std::string& text) {
-          replace_all(text, "?class", forename());
+      auto setNamespace{
+        [&nameSpace](std::string& text) {
+          if(nameSpace.empty())
+          {
+            replace_all(text, {{"namespace", ""}, {"?{", ""}, {"?}", ""}});
+          }
+          else
+          {
+             replace_all(text, {{"namespace", std::string{"namespace "}.append(nameSpace)}, {"?{", "{"}, {"?}", "}"}});
+          }
         }
       };
-      read_modify_write(filePath, setClassName);
 
-      // if qualified set namespace otherwise remove (both hpp and cpp)
+      auto setHeaderText{
+        [this,setNamespace](std::string& text) {
+          setNamespace(text);
+          replace_all(text, "?type", forename());
+          if(m_TemplateData.empty())
+          {
+            replace_all(text, "template<?> ", "");
+          }
+          else
+          {
+            // TO DO
+          }
+        }
+      };
 
-      // if template data replace template<?>
-
-      // need to ensure proper entry in CMakeLists
+      read_modify_write(filePath, setHeaderText);
 
       if(m_TemplateData.empty())
       {
         const auto srcPath{fs::path{filePath}.replace_extension("cpp")};
         fs::copy_file(source_templates_path(repos().project_root) / "MyClass.cpp", srcPath);
 
-        auto setHeader{[&filePath, this](std::string& text) {
-          replace_all(text, "?.hpp", rebase_from(filePath, repos().source.parent_path()).generic_string()); }
+        auto setCppText{[&filePath, setNamespace, this](std::string& text) {
+            setNamespace(text);
+            replace_all(text, "?.hpp", rebase_from(filePath, repos().source.parent_path()).generic_string());
+          }
         };
-        read_modify_write(srcPath, setHeader);
-      }
-      else
-      {
 
+        read_modify_write(srcPath, setCppText);
       }
 
       return filePath;
