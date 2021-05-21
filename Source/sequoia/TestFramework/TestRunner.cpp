@@ -412,7 +412,7 @@ namespace sequoia::testing
       if(m_TemplateData.empty())
       {
         const auto srcPath{fs::path{filePath}.replace_extension("cpp")};
-        fs::copy_file(source_templates_path(repos().project_root) / "MyClass.cpp", srcPath);
+        fs::copy_file(source_templates_path(repos().project_root) / "MyCpp.cpp", srcPath);
 
         auto setCppText{[&filePath, &nameSpace, this](std::string& text) {
             set_namespace(text, nameSpace);
@@ -513,7 +513,7 @@ namespace sequoia::testing
       fs::copy_file(source_templates_path(repos().project_root) / "MyFreeFunctions.hpp", filePath);
 
       const auto srcPath{fs::path{filePath}.replace_extension("cpp")};
-      fs::copy_file(source_templates_path(repos().project_root) / "MyFreeFunctions.cpp", srcPath);
+      fs::copy_file(source_templates_path(repos().project_root) / "MyCpp.cpp", srcPath);
 
       read_modify_write(filePath, [&nameSpace{m_Namespace}](std::string& text) { set_namespace(text, nameSpace); });
 
