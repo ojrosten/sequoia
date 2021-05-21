@@ -9,6 +9,8 @@ set(BuildSystem C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/T
 set(SourceDir ${CURRENT_DIR}/../Source)
 set(TestDir ${CURRENT_DIR}/../Tests)
 
+#add_subdirectory(${CURRENT_DIR}/../Source GeneratedProject)
+
 target_sources(TestMain PRIVATE)
 
 file(GLOB_RECURSE HeaderFiles ${TestDir}/*.hpp)
@@ -18,8 +20,6 @@ include(${BuildSystem}/Utilities.cmake)
 
 target_include_directories(TestMain PRIVATE ${SourceDir})
 target_include_directories(TestMain PRIVATE ${TestDir})
-
-#add_subdirectory(${CURRENT_DIR}/../Source GeneratedProject)
 
 FINALIZE(TestMain)
 

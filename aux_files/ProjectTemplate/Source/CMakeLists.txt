@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.19)
 
-set(SourceList )
+set(SourceList)
 
 add_library(MyProject STATIC ${SourceList})
 
