@@ -5,8 +5,21 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#include "fakeProject/Stuff/Doohicky.hpp"
+#pragma once
 
-namespace bar::things
+#include "sequoia/TestFramework/FreeTestCore.hpp"
+
+namespace sequoia::testing
 {
+  class defs_free_test final : public free_test
+  {
+  public:
+    using free_test::free_test;
+
+  private:
+    [[nodiscard]]
+    std::string_view source_file() const noexcept final;
+
+    void run_tests() final;
+  };
 }

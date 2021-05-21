@@ -5,8 +5,5 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#include "fakeProject/Stuff/Doohicky.hpp"
+#include "fakeProject/Global/Stuff/Global.hpp"
 
-namespace bar::things
-{
-}

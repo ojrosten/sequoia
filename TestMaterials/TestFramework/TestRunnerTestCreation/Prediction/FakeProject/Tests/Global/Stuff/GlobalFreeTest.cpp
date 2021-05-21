@@ -5,8 +5,19 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#include "fakeProject/Stuff/Doohicky.hpp"
+#include "GlobalFreeTest.hpp"
+#include "fakeProject/Global/Stuff/Global.hpp"
 
-namespace bar::things
+namespace sequoia::testing
 {
+  [[nodiscard]]
+  std::string_view global_free_test::source_file() const noexcept
+  {
+    return __FILE__;
+  }
+
+  void global_free_test::run_tests()
+  {
+    // TO DO
+  }
 }

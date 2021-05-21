@@ -36,7 +36,7 @@ namespace sequoia::testing
     }
 
 
-    void set_namespace(std::string& text, std::string_view nameSpace)
+    void process_namespace(std::string& text, std::string_view nameSpace)
     {
       if(nameSpace.empty())
       {
@@ -391,7 +391,7 @@ namespace sequoia::testing
 
       auto setHeaderText{
         [this,&nameSpace](std::string& text) {
-          set_namespace(text, nameSpace);
+          process_namespace(text, nameSpace);
           replace_all(text, "?type", forename());
           if(m_TemplateData.empty())
           {
@@ -415,7 +415,7 @@ namespace sequoia::testing
         fs::copy_file(source_templates_path(repos().project_root) / "MyCpp.cpp", srcPath);
 
         auto setCppText{[&filePath, &nameSpace, this](std::string& text) {
-            set_namespace(text, nameSpace);
+            process_namespace(text, nameSpace);
             replace_all(text, "?.hpp", rebase_from(filePath, repos().source.parent_path()).generic_string());
             to_spaces(text, code_indent());
           }
@@ -510,18 +510,19 @@ namespace sequoia::testing
     nascent_test_base::finalize([this](const fs::path& filename) {
 
       const auto filePath{filename.is_absolute() ? filename : repos().source / rebase_from(filename, repos().source)};
+      fs::create_directories(filePath.parent_path());
       fs::copy_file(source_templates_path(repos().project_root) / "MyFreeFunctions.hpp", filePath);
 
       const auto srcPath{fs::path{filePath}.replace_extension("cpp")};
       fs::copy_file(source_templates_path(repos().project_root) / "MyCpp.cpp", srcPath);
 
-      read_modify_write(filePath, [&nameSpace{m_Namespace}](std::string& text) { set_namespace(text, nameSpace); });
+      read_modify_write(filePath, [&nameSpace{m_Namespace}](std::string& text) { process_namespace(text, nameSpace); });
 
       auto setCppText{
         [&filePath, this](std::string& text) {
           replace_all(text, "?.hpp", rebase_from(filePath, repos().source.parent_path()).generic_string());
           to_spaces(text, code_indent());
-          set_namespace(text, m_Namespace);
+          process_namespace(text, m_Namespace);
         }
       };
 
@@ -689,13 +690,24 @@ namespace sequoia::testing
       }
     };
 
-    const option genFreeSourceOption{"gen-source", {"g"}, {},
-      [this](const param_list&) {
+    const option genFreeSourceOption{"gen-source", {"g"}, {"namespace"},
+      [this](const param_list& args) {
         if(m_NascentTests.empty())
           throw std::logic_error{"Unable to find nascent test"};
 
         using src_opt = nascent_test_base::gen_source_option;
-        std::visit(variant_visitor{[](auto& nascent) { nascent.generate_source_files(src_opt::yes); }}, m_NascentTests.back());
+
+        auto visitor{
+          variant_visitor{
+            [&args](nascent_behavioural_test& nascent) {
+              nascent.generate_source_files(src_opt::yes);
+              if(args[0] != "::") nascent.set_namespace(args[0]);
+            },
+            [](auto&) {}
+          }
+        };
+
+        std::visit(visitor, m_NascentTests.back());
       }
     };
 

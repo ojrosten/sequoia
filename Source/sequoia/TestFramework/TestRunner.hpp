@@ -261,6 +261,8 @@ namespace sequoia::testing
     {
       return {"Test.hpp", "Test.cpp"};
     };
+
+    void set_namespace(std::string n) { m_Namespace = std::move(n); }
   private:
     void transform_file(std::string& text) const;
 

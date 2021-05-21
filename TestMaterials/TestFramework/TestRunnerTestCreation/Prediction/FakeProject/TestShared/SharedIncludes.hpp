@@ -29,6 +29,8 @@
 #include "Utilities/UtilitiesFreeTest.hpp"
 #include "Stuff/BazzerFreeTest.hpp"
 #include "Stuff/DoohickyFreeTest.hpp"
+#include "Global/Stuff/GlobalFreeTest.hpp"
+#include "Global/Stuff/DefsFreeTest.hpp"
 #include "Stuff/ContainerAllocationTest.hpp"
 #include "Stuff/FooAllocationTest.hpp"
 #include "Stuff/ContainerPerformanceTest.hpp"

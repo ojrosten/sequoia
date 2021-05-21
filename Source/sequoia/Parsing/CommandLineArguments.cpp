@@ -66,17 +66,17 @@ namespace sequoia::parsing::commandline
     for(; m_Index < m_ArgCount; ++m_Index)
     {
       const std::string arg{m_Argv[m_Index]};
-      if(!arg.empty())
+      if(optionsIter == options.end())
       {
-        if(optionsIter == options.end())
+        if(!arg.empty())
         {
           optionsIter = std::find_if(options.begin(), options.end(),
-                                    [&arg](const auto& opt){ return opt.name == arg; });
+                                     [&arg](const auto& opt) { return opt.name == arg; });
 
           if(optionsIter == options.end())
           {
             optionsIter = std::find_if(options.begin(), options.end(),
-                                      [&arg](const auto& opt) { return is_alias(opt, arg); });
+              [&arg](const auto& opt) { return is_alias(opt, arg); });
 
             if(arg == "--help")
             {
@@ -87,7 +87,6 @@ namespace sequoia::parsing::commandline
 
             if(process_concatenated_aliases(optionsIter, options.begin(), options.end(), arg, operations))
               continue;
-
           }
 
           if(auto maybeIter{process_option(optionsIter, options.end(), arg, operations)})
@@ -99,16 +98,16 @@ namespace sequoia::parsing::commandline
             return false;
           }
         }
-        else
-        {
-          auto& currentOperation{operations.back()};
-          auto& params{currentOperation.parameters};
-          params.push_back(arg);
+      }
+      else
+      {
+        auto& currentOperation{operations.back()};
+        auto& params{currentOperation.parameters};
+        params.push_back(arg);
 
-          if(params.size() == optionsIter->parameters.size())
-          {
-            optionsIter = process_nested_options(optionsIter, options.end(), currentOperation);
-          }
+        if(params.size() == optionsIter->parameters.size())
+        {
+          optionsIter = process_nested_options(optionsIter, options.end(), currentOperation);
         }
       }
     }

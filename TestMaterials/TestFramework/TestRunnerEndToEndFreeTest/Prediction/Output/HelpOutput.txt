@@ -20,7 +20,7 @@ create | c |
   free_test | free | header
     --family | -f | family
     --forename | -name | forename
-    gen-source | g |
+    gen-source | g | namespace
   performance_test | performance | header
     --family | -f | family
 init | i | copyright, path, ending with project name

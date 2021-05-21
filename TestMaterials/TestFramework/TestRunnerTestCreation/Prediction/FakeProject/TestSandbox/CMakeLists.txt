@@ -28,6 +28,8 @@ target_sources(TestMain PRIVATE
                ${TestDir}/Utilities/UtilitiesFreeTest.cpp
                ${TestDir}/Stuff/BazzerFreeTest.cpp
                ${TestDir}/Stuff/DoohickyFreeTest.cpp
+               ${TestDir}/Global/Stuff/GlobalFreeTest.cpp
+               ${TestDir}/Global/Stuff/DefsFreeTest.cpp
                ${TestDir}/Stuff/ContainerAllocationTest.cpp
                ${TestDir}/Stuff/FooAllocationTest.cpp
                ${TestDir}/Stuff/ContainerPerformanceTest.cpp)

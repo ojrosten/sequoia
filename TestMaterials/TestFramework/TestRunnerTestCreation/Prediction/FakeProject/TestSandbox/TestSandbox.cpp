@@ -100,6 +100,16 @@ int main(int argc, char** argv)
       doohicky_free_test("Free Test")
     );
 
+    runner.add_test_family(
+      "Global",
+      global_free_test("Free Test")
+    );
+
+    runner.add_test_family(
+      "Defs",
+      defs_free_test("Free Test")
+    );
+
     runner.execute();
   }
   catch(const std::exception& e)
