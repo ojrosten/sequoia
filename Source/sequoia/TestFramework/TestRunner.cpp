@@ -1139,7 +1139,7 @@ namespace sequoia::testing
 
     const auto name{(--path.end())->generic_string()};
     const std::string myProj{"MyProject"}, projName{replace_all(name, " ", "_")};
-    replace(text, myProj, projName);
+    replace_all(text, myProj, projName);
 
     write_to_file(file, text);
     write_to_file(project_template_path(path) / destination, text);

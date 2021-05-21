@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.19)
 
-project(MyProject LANGUAGES CXX)
+project(MyProjectTests LANGUAGES CXX)
 
 add_executable(TestMain TestMain.cpp)
 
@@ -18,6 +18,8 @@ include(${BuildSystem}/Utilities.cmake)
 
 target_include_directories(TestMain PRIVATE ${SourceDir})
 target_include_directories(TestMain PRIVATE ${TestDir})
+
+#add_subdirectory(${CURRENT_DIR}/../Source MyProject)
 
 FINALIZE(TestMain)
 
