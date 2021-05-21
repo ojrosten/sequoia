@@ -7,8 +7,6 @@
 
 #pragma once
 
-
-
 template<class... T>
 class multiple
 {
@@ -25,4 +23,3 @@ public:
   [[nodiscard]]
   friend bool operator!=(const multiple&, const multiple&) noexcept = default;
 };
-

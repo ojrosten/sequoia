@@ -34,6 +34,28 @@ namespace sequoia::testing
 
       return text;
     }
+
+
+    void set_namespace(std::string& text, std::string_view nameSpace)
+    {
+      if(nameSpace.empty())
+      {
+        replace_all(text, {{"namespace\n", ""}, {"?{\n", ""}, {"?}\n", ""}});
+        constexpr auto npos{std::string::npos};
+        std::string::size_type endLine{};
+        while((endLine = text.find('\n', endLine)) != npos)
+        {
+          if((++endLine < text.size()) && (text[endLine] == '\t'))
+          {
+            text.erase(endLine, 1);
+          }
+        }
+      }
+      else
+      {
+        replace_all(text, {{"namespace", std::string{"namespace "}.append(nameSpace)}, {"?{", "{"}, {"?}", "}"}});
+      }
+    }
   }
 
   using namespace parsing::commandline;
@@ -367,31 +389,9 @@ namespace sequoia::testing
       fs::create_directories(filePath.parent_path());
       fs::copy_file(source_templates_path(repos().project_root) / headerTemplate, filePath);
 
-      auto setNamespace{
-        [&nameSpace](std::string& text) {
-          if(nameSpace.empty())
-          {
-            replace_all(text, {{"namespace", ""}, {"?{", ""}, {"?}", ""}});
-            constexpr auto npos{std::string::npos};
-            std::string::size_type endLine{};
-            while((endLine = text.find('\n', endLine)) != npos)
-            {
-              if((++endLine < text.size()) && (text[endLine] == '\t'))
-              {
-                text.erase(endLine, 1);
-              }
-            }
-          }
-          else
-          {
-            replace_all(text, {{"namespace", std::string{"namespace "}.append(nameSpace)}, {"?{", "{"}, {"?}", "}"}});
-          }
-        }
-      };
-
       auto setHeaderText{
-        [this,setNamespace](std::string& text) {
-          setNamespace(text);
+        [this,&nameSpace](std::string& text) {
+          set_namespace(text, nameSpace);
           replace_all(text, "?type", forename());
           if(m_TemplateData.empty())
           {
@@ -414,8 +414,8 @@ namespace sequoia::testing
         const auto srcPath{fs::path{filePath}.replace_extension("cpp")};
         fs::copy_file(source_templates_path(repos().project_root) / "MyClass.cpp", srcPath);
 
-        auto setCppText{[&filePath, setNamespace, this](std::string& text) {
-            setNamespace(text);
+        auto setCppText{[&filePath, &nameSpace, this](std::string& text) {
+            set_namespace(text, nameSpace);
             replace_all(text, "?.hpp", rebase_from(filePath, repos().source.parent_path()).generic_string());
             to_spaces(text, code_indent());
           }
@@ -515,29 +515,13 @@ namespace sequoia::testing
       const auto srcPath{fs::path{filePath}.replace_extension("cpp")};
       fs::copy_file(source_templates_path(repos().project_root) / "MyFreeFunctions.cpp", srcPath);
 
-      auto text{read_to_string(srcPath)};
-
-      auto setNamespace{
-        [this](std::string& text) {
-          if(m_Namespace.empty())
-          {
-            replace_all(text, {{"namespace\n", ""}, {"?{\n", ""}, {"?}\n", ""}});
-
-          }
-          else
-          {
-            replace_all(text, {{"namespace", std::string{"namespace "}.append(m_Namespace)}, {"?{", "{"}, {"?}", "}"}});
-          }
-        }
-      };
-
-      read_modify_write(filePath, setNamespace);
+      read_modify_write(filePath, [&nameSpace{m_Namespace}](std::string& text) { set_namespace(text, nameSpace); });
 
       auto setCppText{
-        [&filePath, this, setNamespace](std::string& text) {
+        [&filePath, this](std::string& text) {
           replace_all(text, "?.hpp", rebase_from(filePath, repos().source.parent_path()).generic_string());
           to_spaces(text, code_indent());
-          setNamespace(text);
+          set_namespace(text, m_Namespace);
         }
       };
 
