@@ -47,6 +47,12 @@ namespace sequoia::testing
     }
 
     {
+      commandline_arguments a{"bar", "", "-a"};
+
+      check_weak_equivalence(LINE("Ignored empty option"), parse(a.size(), a.get(), {{"--async", {"-a"}, {}, fo{}}}), outcome{"bar", {{fo{}, nullptr, {}}}});
+    }
+
+    {
       commandline_arguments a{"foo", "-a"};
 
       check_weak_equivalence(LINE(""), parse(a.size(), a.get(), { {"--async", {"-as", "-a"}, {}, fo{}} }), outcome{"foo", {{fo{}, nullptr, {}}}});
@@ -105,15 +111,21 @@ namespace sequoia::testing
     }
 
     {
-      commandline_arguments a{"foo", "test", "case"};
+      commandline_arguments a{"foo", "test", "thing"};
 
-      check_weak_equivalence(LINE(""), parse(a.size(), a.get(), { {"test", {}, {"case"}, fo{}} }), outcome{"foo", {{fo{}, nullptr, {"case"}}}});
+      check_weak_equivalence(LINE(""), parse(a.size(), a.get(), { {"test", {}, {"case"}, fo{}} }), outcome{"foo", {{fo{}, nullptr, {"thing"}}}});
     }
 
     {
-      commandline_arguments a{"foo", "t", "case"};
+      commandline_arguments a{"foo", "t", "thing"};
 
-      check_weak_equivalence(LINE(""), parse(a.size(), a.get(), { {"test", {"t"}, {"case"}, fo{}} }), outcome{"foo", {{fo{}, nullptr, {"case"}}}});
+      check_weak_equivalence(LINE(""), parse(a.size(), a.get(), { {"test", {"t"}, {"case"}, fo{}} }), outcome{"foo", {{fo{}, nullptr, {"thing"}}}});
+    }
+
+    {
+      commandline_arguments a{"foo", "test", ""};
+
+      check_weak_equivalence(LINE("Empty parameter"), parse(a.size(), a.get(), {{"test", {}, {"case"}, fo{}}}), outcome{"foo", {{fo{}, nullptr, {""}}}});
     }
 
     {

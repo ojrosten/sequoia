@@ -1,4 +1,4 @@
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 58
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 64
 Unexpected argument
 
 Expected Exception Type:
@@ -9,7 +9,7 @@ Expected Exception Type:
 
 	=======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 66
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 72
 Unexpected argument
 
 Expected Exception Type:
@@ -20,7 +20,7 @@ Expected Exception Type:
 
 	=======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 102
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 108
 Unexpected argument
 
 Expected Exception Type:
@@ -31,7 +31,7 @@ Expected Exception Type:
 
 	=======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 122
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 134
 Final argument missing
 
 Expected Exception Type:
@@ -42,7 +42,7 @@ Expected Exception Type:
 
 	=======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 349
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 361
 
 Expected Exception Type:
 [std::runtime_error]
