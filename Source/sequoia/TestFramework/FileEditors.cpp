@@ -145,36 +145,34 @@ namespace sequoia::testing
     write_to_file(file, text);
   }
 
-  void add_to_cmake(const std::filesystem::path& cmakeDir, const std::filesystem::path& testDir, const std::filesystem::path& file)
+  void add_to_cmake(const std::filesystem::path& cmakeDir,
+                    const std::filesystem::path& hostDir,
+                    const std::filesystem::path& file,
+                    std::string_view patternOpen,
+                    std::string_view patternClose,
+                    std::string_view cmakeEntryPrexfix)
   {
-    const auto relativeOutput{file.lexically_relative(testDir)};
     const auto cmakeLists{cmakeDir / "CMakeLists.txt"};
 
-    const auto text{
-      [&cmakeLists](const std::filesystem::path& file) -> std::string {
+    auto addEntry{
+      [file{file.lexically_relative(hostDir)}, &cmakeLists, patternOpen, patternClose, cmakeEntryPrexfix] (std::string& text) {
         constexpr auto npos{std::string::npos};
-        constexpr std::string_view pattern{"target_sources("};
 
-        std::string text{read_to_string(cmakeLists)};
-        if(auto startPos{text.find(pattern)}; startPos != npos)
+        if(auto startPos{text.find(patternOpen)}; startPos != npos)
         {
-          if(auto endPos{text.find(')', startPos + pattern.size())}; endPos != npos)
+          if(auto endPos{text.find(patternClose, startPos + patternOpen.size())}; endPos != npos)
           {
             text.insert(endPos, std::string{"\n"}
-                .append(pattern.size(), ' ').append("${TestDir}/").append(file.generic_string()));
-            return text;
+                .append(patternOpen.size(), ' ').append(cmakeEntryPrexfix).append(file.generic_string()));
+
+            return;
           }
         }
 
-        return "";
-      }( !relativeOutput.empty() ? relativeOutput : file)
+        throw std::runtime_error{std::string{"Unable to find appropriate place to add source file to "}.append(cmakeLists.generic_string())};
+      }
     };
 
-    if(text.empty())
-    {
-      throw std::runtime_error{"Unable to find appropriate place to add source file to CMakeLists.txt"};
-    }
-
-    write_to_file(cmakeLists, text);
+    read_modify_write(cmakeLists, addEntry);
   }
 }

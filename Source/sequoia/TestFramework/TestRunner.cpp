@@ -1008,7 +1008,7 @@ namespace sequoia::testing
       }
       else if(outputFile.extension() == ".cpp")
       {
-        add_to_cmake(m_TestMain.parent_path(), m_Repos.tests, outputFile);
+        add_to_cmake(m_TestMain.parent_path(), m_Repos.tests, outputFile, "target_sources(", ")", "${TestDir}/");
       }
 
       return std::string{"\""}.append(stringify(outputFile)).append("\"");
@@ -1109,14 +1109,14 @@ namespace sequoia::testing
     write_to_file(file, text);
   }
 
-  void test_runner::generate_build_system_files(const std::filesystem::path& path) const
+  void test_runner::generate_build_system_files(const std::filesystem::path& root) const
   {
-    if(path.empty())
+    if(root.empty())
       throw std::logic_error{"Pre-condition violated: path should not be empty"};
 
     const std::string filename{"CMakeLists.txt"}, seqRoot{"SEQUOIA_ROOT"};
     const auto destination{std::filesystem::path{"TestAll"}.append(filename)};
-    const auto file{path/destination};
+    const auto file{root/destination};
     std::string text{read_to_string(file)};
 
     constexpr auto npos{std::string::npos};
@@ -1137,11 +1137,11 @@ namespace sequoia::testing
       throw std::runtime_error{std::string{"Unable to locate "}.append(filename).append(" root definition")};
     }
 
-    const auto name{(--path.end())->generic_string()};
+    const auto name{(--root.end())->generic_string()};
     const std::string myProj{"MyProject"}, projName{replace_all(name, " ", "_")};
     replace_all(text, myProj, projName);
 
     write_to_file(file, text);
-    write_to_file(project_template_path(path) / destination, text);
+    write_to_file(project_template_path(root) / destination, text);
   }
 }
