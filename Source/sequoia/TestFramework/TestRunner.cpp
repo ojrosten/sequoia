@@ -55,25 +55,6 @@ namespace sequoia::testing
         replace_all(text, {{"namespace", std::string{"namespace "}.append(nameSpace)}, {"?{", "{"}, {"?}", "}"}});
       }
     }
-
-    void set_cpp_text(const std::filesystem::path& sourceRoot,
-                      const std::filesystem::path& headerPath,
-                      const std::filesystem::path& srcPath,
-                      const std::string& nameSpace,
-                      std::string_view codeIndent)
-    {
-      auto setCppText{
-        [&](std::string& text) {
-          process_namespace(text, nameSpace);
-          replace_all(text, "?.hpp", rebase_from(headerPath, sourceRoot).generic_string());
-          to_spaces(text, codeIndent);
-        }
-      };
-
-      read_modify_write(srcPath, setCppText);
-
-      add_to_cmake(sourceRoot, sourceRoot, srcPath, "set(", ")", "");
-    }
   }
 
   using namespace parsing::commandline;
@@ -340,6 +321,27 @@ namespace sequoia::testing
     return {outputFile, true};
   }
 
+  void nascent_test_base::set_cpp_text(const std::filesystem::path& headerPath, std::string_view nameSpace) const
+  {
+    namespace fs = std::filesystem;
+    const auto srcPath{fs::path{headerPath}.replace_extension("cpp")};
+
+    const auto sourceRoot{repos().source.parent_path()};
+    fs::copy_file(source_templates_path(repos().project_root) / "MyCpp.cpp", srcPath);
+
+    auto setCppText{
+        [&](std::string& text) {
+          process_namespace(text, nameSpace);
+          replace_all(text, "?.hpp", rebase_from(headerPath, sourceRoot).generic_string());
+          to_spaces(text, code_indent());
+        }
+    };
+
+    read_modify_write(srcPath, setCppText);
+
+    add_to_cmake(sourceRoot, sourceRoot, srcPath, "set(", ")", "");
+  }
+
   //=========================================== nascent_semantics_test ===========================================//
 
   void nascent_semantics_test::finalize()
@@ -429,11 +431,7 @@ namespace sequoia::testing
 
       if(m_TemplateData.empty())
       {
-        const auto srcPath{fs::path{headerPath}.replace_extension("cpp")};
-        fs::copy_file(source_templates_path(repos().project_root) / "MyCpp.cpp", srcPath);
-
-        const auto sourceRoot{repos().source.parent_path()};
-        set_cpp_text(sourceRoot, headerPath, srcPath, nameSpace, code_indent());
+        set_cpp_text(headerPath, nameSpace);
       }
 
       return headerPath;
@@ -525,13 +523,9 @@ namespace sequoia::testing
       fs::create_directories(headerPath.parent_path());
       fs::copy_file(source_templates_path(repos().project_root) / "MyFreeFunctions.hpp", headerPath);
 
-      const auto srcPath{fs::path{headerPath}.replace_extension("cpp")};
-      fs::copy_file(source_templates_path(repos().project_root) / "MyCpp.cpp", srcPath);
-
       read_modify_write(headerPath, [&nameSpace{m_Namespace}](std::string& text) { process_namespace(text, nameSpace); });
 
-      const auto sourceRoot{repos().source.parent_path()};
-      set_cpp_text(sourceRoot, headerPath, srcPath, m_Namespace, code_indent());
+      set_cpp_text(headerPath, m_Namespace);
 
       return headerPath;
     });

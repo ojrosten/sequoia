@@ -147,6 +147,8 @@ namespace sequoia::testing
     [[nodiscard]]
     auto create_file(const std::filesystem::path& codeTemplatesDir, std::string_view copyright, std::string_view inputNameStub, std::string_view nameEnding, FileTransformer transformer) const -> file_data;
 
+    void set_cpp_text(const std::filesystem::path& headerPath, std::string_view nameSpace) const;
+
     [[nodiscard]]
     const std::string& code_indent() const noexcept
     {
