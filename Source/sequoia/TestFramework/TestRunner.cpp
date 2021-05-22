@@ -422,6 +422,9 @@ namespace sequoia::testing
         };
 
         read_modify_write(srcPath, setCppText);
+
+        const auto sourceRoot{repos().source.parent_path()};
+        add_to_cmake(sourceRoot, sourceRoot, srcPath, "set(", ")", "");
       }
 
       return filePath;
