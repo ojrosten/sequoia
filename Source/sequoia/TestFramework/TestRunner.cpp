@@ -35,7 +35,6 @@ namespace sequoia::testing
       return text;
     }
 
-
     void process_namespace(std::string& text, std::string_view nameSpace)
     {
       if(nameSpace.empty())
@@ -55,6 +54,25 @@ namespace sequoia::testing
       {
         replace_all(text, {{"namespace", std::string{"namespace "}.append(nameSpace)}, {"?{", "{"}, {"?}", "}"}});
       }
+    }
+
+    void set_cpp_text(const std::filesystem::path& sourceRoot,
+                      const std::filesystem::path& headerPath,
+                      const std::filesystem::path& srcPath,
+                      const std::string& nameSpace,
+                      std::string_view codeIndent)
+    {
+      auto setCppText{
+        [&](std::string& text) {
+          process_namespace(text, nameSpace);
+          replace_all(text, "?.hpp", rebase_from(headerPath, sourceRoot).generic_string());
+          to_spaces(text, codeIndent);
+        }
+      };
+
+      read_modify_write(srcPath, setCppText);
+
+      add_to_cmake(sourceRoot, sourceRoot, srcPath, "set(", ")", "");
     }
   }
 
@@ -414,17 +432,8 @@ namespace sequoia::testing
         const auto srcPath{fs::path{headerPath}.replace_extension("cpp")};
         fs::copy_file(source_templates_path(repos().project_root) / "MyCpp.cpp", srcPath);
 
-        auto setCppText{[&headerPath, &nameSpace, this](std::string& text) {
-            process_namespace(text, nameSpace);
-            replace_all(text, "?.hpp", rebase_from(headerPath, repos().source.parent_path()).generic_string());
-            to_spaces(text, code_indent());
-          }
-        };
-
-        read_modify_write(srcPath, setCppText);
-
         const auto sourceRoot{repos().source.parent_path()};
-        add_to_cmake(sourceRoot, sourceRoot, srcPath, "set(", ")", "");
+        set_cpp_text(sourceRoot, headerPath, srcPath, nameSpace, code_indent());
       }
 
       return headerPath;
@@ -521,18 +530,8 @@ namespace sequoia::testing
 
       read_modify_write(headerPath, [&nameSpace{m_Namespace}](std::string& text) { process_namespace(text, nameSpace); });
 
-      auto setCppText{
-        [&headerPath, this](std::string& text) {
-          process_namespace(text, m_Namespace);
-          replace_all(text, "?.hpp", rebase_from(headerPath, repos().source.parent_path()).generic_string());
-          to_spaces(text, code_indent());
-        }
-      };
-
-      read_modify_write(srcPath, setCppText);
-
       const auto sourceRoot{repos().source.parent_path()};
-      add_to_cmake(sourceRoot, sourceRoot, srcPath, "set(", ")", "");
+      set_cpp_text(sourceRoot, headerPath, srcPath, m_Namespace, code_indent());
 
       return headerPath;
     });
