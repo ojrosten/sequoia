@@ -66,7 +66,9 @@ namespace sequoia::testing
 
     namespace fs = std::filesystem;
 
-    fs::copy(aux_files_path(test_repository().parent_path()), aux_files_path(working()), fs::copy_options::recursive);
+    const auto root{test_repository().parent_path()};
+    fs::copy(aux_files_path(root), aux_files_path(working()), fs::copy_options::recursive);
+    fs::copy(project_template_path(root) / "Source/CMakeLists.txt", working() / "Source");
 
     const auto testMain{working().append("TestSandbox").append("TestSandbox.cpp")};
     const auto includeTarget{working().append("TestShared").append("SharedIncludes.hpp")};
