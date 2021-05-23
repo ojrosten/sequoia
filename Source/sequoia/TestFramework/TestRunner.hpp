@@ -165,9 +165,11 @@ namespace sequoia::testing
   private:
     std::string m_Family{}, m_TestType{}, m_Forename{}, m_CamelName{};
 
+    std::filesystem::path m_TestMainDir{};
+
     repositories m_Repos;
 
-    std::filesystem::path m_TestMainDir{}, m_Header{}, m_HostDir{}, m_HeaderPath{};
+    std::filesystem::path m_Header{}, m_HostDir{}, m_HeaderPath{};
 
     gen_source_option m_SourceOption{};
 

@@ -1150,7 +1150,7 @@ namespace sequoia::testing
       }
     );
 
-    read_modify_write(project_template_path(projRoot) / relCmakeLocation, [replaceSeqroot, &projRoot](std::string& text) {
+    read_modify_write(project_template_path(projRoot) / relCmakeLocation, [replaceSeqroot](std::string& text) {
         replaceSeqroot(text);
       }
     );
