@@ -122,7 +122,7 @@ namespace sequoia::testing
     std::string create_cmd()
     {
       return run_cmd().append(" create free_test Utilities.hpp"
-                              " create free_test \"Utilities/UsefulThings.hpp\""
+                              " create free_test \"Utilities/UsefulThings.hpp\" gen-source utils"
                               " create free_test \"Source/generatedProject/Stuff/Bar.hpp\""
                               " create regular_test \"other::functional::maybe<class T>\" \"std::optional<T>\""
                               " create regular_test \"stuff::oldschool\" double --class-header \"NoTemplate.hpp\""

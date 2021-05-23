@@ -9,7 +9,8 @@ set(BuildSystem SEQUOIA_ROOT/build_system)
 set(SourceDir ${CURRENT_DIR}/../Source)
 set(TestDir ${CURRENT_DIR}/../Tests)
 
-#add_subdirectory(${CURRENT_DIR}/../Source MyProject)
+#!add_subdirectory(${SourceDir} MyProject)
+#!target_link_libraries(TestMain PUBLIC MyProject)
 
 target_sources(TestMain PRIVATE)
 

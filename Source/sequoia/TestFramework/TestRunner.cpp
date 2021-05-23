@@ -55,6 +55,15 @@ namespace sequoia::testing
         replace_all(text, {{"namespace", std::string{"namespace "}.append(nameSpace)}, {"?{", "{"}, {"?}", "}"}});
       }
     }
+
+    void set_proj_name(std::string& text, const std::filesystem::path& projRoot)
+    {
+      if(projRoot.empty()) return;
+
+      const auto name{(--projRoot.end())->generic_string()};
+      const std::string myProj{"MyProject"}, projName{replace_all(name, " ", "_")};
+      replace_all(text, myProj, projName);
+    }
   }
 
   using namespace parsing::commandline;
@@ -340,8 +349,8 @@ namespace sequoia::testing
 
     add_to_cmake(sourceRoot, sourceRoot, srcPath, "set(", ")", "");
 
-    read_modify_write(test_main_dir() / "CMakeLists.txt", [](std::string& text) {
-      replace_all(text, "#add_subdirectory", "add_subdirectory");
+    read_modify_write(test_main_dir() / "CMakeLists.txt", [&root{repos().project_root}](std::string& text) {
+        replace_all(text, "#!", "");
       }
     );
   }
@@ -1074,31 +1083,31 @@ namespace sequoia::testing
     check_for_missing_tests();
   }
 
-  void test_runner::init_project(std::string_view copyright, const std::filesystem::path& path)
+  void test_runner::init_project(std::string_view copyright, const std::filesystem::path& projRoot)
   {
     namespace fs = std::filesystem;
 
-    if(path.empty())
+    if(projRoot.empty())
       throw std::runtime_error{"Project path should not be empty"};
 
-    const auto name{(--path.end())->generic_string()};
+    const auto name{(--projRoot.end())->generic_string()};
     if(name.find(' ') != std::string::npos)
       throw std::runtime_error{std::string{"Please remove spaces from the project name, '"}.append(name).append("'")};
 
-    report("Creating new project at location:", fs::relative(path, m_Repos.project_root).generic_string());
+    report("Creating new project at location:", fs::relative(projRoot, m_Repos.project_root).generic_string());
 
-    fs::create_directories(path);
-    fs::copy(project_template_path(m_Repos.project_root), path, fs::copy_options::recursive | fs::copy_options::skip_existing);
-    fs::create_directory(repositories::source_path(path));
-    fs::copy(aux_files_path(m_Repos.project_root), aux_files_path(path), fs::copy_options::recursive | fs::copy_options::skip_existing);
+    fs::create_directories(projRoot);
+    fs::copy(project_template_path(m_Repos.project_root), projRoot, fs::copy_options::recursive | fs::copy_options::skip_existing);
+    fs::create_directory(repositories::source_path(projRoot));
+    fs::copy(aux_files_path(m_Repos.project_root), aux_files_path(projRoot), fs::copy_options::recursive | fs::copy_options::skip_existing);
 
-    generate_test_main(copyright, path);
-    generate_build_system_files(path);
+    generate_test_main(copyright, projRoot);
+    generate_build_system_files(projRoot);
   }
 
-  void test_runner::generate_test_main(std::string_view copyright, const std::filesystem::path& path) const
+  void test_runner::generate_test_main(std::string_view copyright, const std::filesystem::path& projRoot) const
   {
-    const auto file{path/"TestAll"/"TestMain.cpp"};
+    const auto file{projRoot/"TestAll"/"TestMain.cpp"};
     std::string text{read_to_string(file)};
 
     set_top_copyright(text, copyright);
@@ -1112,35 +1121,36 @@ namespace sequoia::testing
     write_to_file(file, text);
   }
 
-  void test_runner::generate_build_system_files(const std::filesystem::path& root) const
+  void test_runner::generate_build_system_files(const std::filesystem::path& projRoot) const
   {
-    if(root.empty())
+    if(projRoot.empty())
       throw std::logic_error{"Pre-condition violated: path should not be empty"};
 
     const std::filesystem::path relCmakeLocation{"TestAll/CMakeLists.txt"};
-    
 
     auto replaceSeqroot{
-      [&projRoot{m_Repos.project_root}](std::string& text)  {
+      [&parentProjRoot{m_Repos.project_root}](std::string& text) {
         constexpr auto npos{std::string::npos};
         constexpr std::string_view seqRoot{"SEQUOIA_ROOT"};
         if(auto pos{text.find(seqRoot)}; pos != npos)
         {
-          text.replace(pos, seqRoot.size(), projRoot.generic_string());
+          text.replace(pos, seqRoot.size(), parentProjRoot.generic_string());
         }
       }
     };
 
-    read_modify_write(root / relCmakeLocation, [replaceSeqroot, &root](std::string& text) {
+    read_modify_write(projRoot / relCmakeLocation, [replaceSeqroot, &projRoot](std::string& text) {
         replaceSeqroot(text);
-
-        const auto name{(--root.end())->generic_string()};
-        const std::string myProj{"MyProject"}, projName{replace_all(name, " ", "_")};
-        replace_all(text, myProj, projName);
+        set_proj_name(text, projRoot);
       }
     );
 
-    read_modify_write(project_template_path(root) / relCmakeLocation, [replaceSeqroot](std::string& text) {
+    read_modify_write(projRoot / "Source" / "CMakeLists.txt", [&projRoot](std::string& text) {
+        set_proj_name(text, projRoot);
+      }
+    );
+
+    read_modify_write(project_template_path(projRoot) / relCmakeLocation, [replaceSeqroot, &projRoot](std::string& text) {
         replaceSeqroot(text);
       }
     );

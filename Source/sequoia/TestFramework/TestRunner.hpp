@@ -427,7 +427,7 @@ namespace sequoia::testing
     [[nodiscard]]
     std::string create_files() const;
 
-    void init_project(std::string_view copyright, const std::filesystem::path& path);
+    void init_project(std::string_view copyright, const std::filesystem::path& projRoot);
 
     [[nodiscard]]
     bool mode(output_mode m) const noexcept
@@ -435,8 +435,8 @@ namespace sequoia::testing
       return (m_OutputMode & m) == m;
     }
 
-    void generate_test_main(std::string_view copyright, const std::filesystem::path& path) const;
+    void generate_test_main(std::string_view copyright, const std::filesystem::path& projRoot) const;
 
-    void generate_build_system_files(const std::filesystem::path& root) const;
+    void generate_build_system_files(const std::filesystem::path& projRoot) const;
  };
 }
