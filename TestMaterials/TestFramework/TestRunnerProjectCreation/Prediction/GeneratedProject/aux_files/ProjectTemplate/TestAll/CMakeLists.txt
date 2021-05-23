@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.19)
 
-project(GeneratedProjectTests LANGUAGES CXX)
+project(MyProjectTests LANGUAGES CXX)
 
 add_executable(TestMain TestMain.cpp)
 
@@ -9,7 +9,7 @@ set(BuildSystem C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/T
 set(SourceDir ${CURRENT_DIR}/../Source)
 set(TestDir ${CURRENT_DIR}/../Tests)
 
-#add_subdirectory(${CURRENT_DIR}/../Source GeneratedProject)
+#add_subdirectory(${CURRENT_DIR}/../Source MyProject)
 
 target_sources(TestMain PRIVATE)
 

@@ -321,7 +321,7 @@ namespace sequoia::testing
     return {outputFile, true};
   }
 
-  void nascent_test_base::set_cpp_text(const std::filesystem::path& headerPath, std::string_view nameSpace) const
+  void nascent_test_base::set_cpp(const std::filesystem::path& headerPath, std::string_view nameSpace) const
   {
     namespace fs = std::filesystem;
     const auto srcPath{fs::path{headerPath}.replace_extension("cpp")};
@@ -431,7 +431,7 @@ namespace sequoia::testing
 
       if(m_TemplateData.empty())
       {
-        set_cpp_text(headerPath, nameSpace);
+        set_cpp(headerPath, nameSpace);
       }
 
       return headerPath;
@@ -525,7 +525,7 @@ namespace sequoia::testing
 
       read_modify_write(headerPath, [&nameSpace{m_Namespace}](std::string& text) { process_namespace(text, nameSpace); });
 
-      set_cpp_text(headerPath, m_Namespace);
+      set_cpp(headerPath, m_Namespace);
 
       return headerPath;
     });
@@ -1113,34 +1113,32 @@ namespace sequoia::testing
     if(root.empty())
       throw std::logic_error{"Pre-condition violated: path should not be empty"};
 
-    const std::string filename{"CMakeLists.txt"}, seqRoot{"SEQUOIA_ROOT"};
-    const auto destination{std::filesystem::path{"TestAll"}.append(filename)};
-    const auto file{root/destination};
-    std::string text{read_to_string(file)};
+    const std::filesystem::path relCmakeLocation{"TestAll/CMakeLists.txt"};
+    
 
-    constexpr auto npos{std::string::npos};
-    auto replace{
-      [](std::string& text, std::string_view pat, std::string_view replacement) -> bool {
-        if(auto pos{text.find(pat)}; pos != npos)
+    auto replaceSeqroot{
+      [&projRoot{m_Repos.project_root}](std::string& text)  {
+        constexpr auto npos{std::string::npos};
+        constexpr std::string_view seqRoot{"SEQUOIA_ROOT"};
+        if(auto pos{text.find(seqRoot)}; pos != npos)
         {
-          text.replace(pos, pat.size(), replacement);
-          return true;
+          text.replace(pos, seqRoot.size(), projRoot.generic_string());
         }
-
-        return false;
       }
     };
 
-    if(!replace(text, seqRoot, m_Repos.project_root.generic_string()))
-    {
-      throw std::runtime_error{std::string{"Unable to locate "}.append(filename).append(" root definition")};
-    }
+    read_modify_write(root / relCmakeLocation, [replaceSeqroot, &root](std::string& text) {
+        replaceSeqroot(text);
 
-    const auto name{(--root.end())->generic_string()};
-    const std::string myProj{"MyProject"}, projName{replace_all(name, " ", "_")};
-    replace_all(text, myProj, projName);
+        const auto name{(--root.end())->generic_string()};
+        const std::string myProj{"MyProject"}, projName{replace_all(name, " ", "_")};
+        replace_all(text, myProj, projName);
+      }
+    );
 
-    write_to_file(file, text);
-    write_to_file(project_template_path(root) / destination, text);
+    read_modify_write(project_template_path(root) / relCmakeLocation, [replaceSeqroot](std::string& text) {
+        replaceSeqroot(text);
+      }
+    );
   }
 }
