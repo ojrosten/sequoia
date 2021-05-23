@@ -1,8 +1,15 @@
 cmake_minimum_required(VERSION 3.19)
 
-project(MyProject LANGUAGES CXX)
+project(MyProjectTests LANGUAGES CXX)
 
 add_executable(TestMain TestSandbox.cpp)
+
+set(CURRENT_DIR ${CMAKE_CURRENT_LIST_DIR})
+set(BuildSystem SEQUOIA_ROOT/build_system)
+set(SourceDir ${CURRENT_DIR}/../Source)
+set(TestDir ${CURRENT_DIR}/../Tests)
+
+add_subdirectory(${CURRENT_DIR}/../Source MyProject)
 
 target_sources(TestMain PRIVATE
                ${TestDir}/Maybe/MaybeTestingDiagnostics.cpp
@@ -34,9 +41,13 @@ target_sources(TestMain PRIVATE
                ${TestDir}/Stuff/FooAllocationTest.cpp
                ${TestDir}/Stuff/ContainerPerformanceTest.cpp)
 
-SET(BUILD_SYS SEQUOIA_ROOT/build_system)
+file(GLOB_RECURSE HeaderFiles ${TestDir}/*.hpp)
+target_sources(TestMain PRIVATE ${HeaderFiles})
 
-include(${BUILD_SYS}/Utilities.cmake)
+include(${BuildSystem}/Utilities.cmake)
+
+target_include_directories(TestMain PRIVATE ${SourceDir})
+target_include_directories(TestMain PRIVATE ${TestDir})
 
 FINALIZE(TestMain)
 

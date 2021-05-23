@@ -16,11 +16,11 @@ int main(int argc, char** argv)
   namespace fs = std::filesystem;
 
   try
-  {    
+  {
     test_runner runner{argc,
                        argv,
                        "Oliver J. Rosten",
-                       working_path().append("TestChamberMain.cpp"),
+                       working_path().append("TestSandbox/TestSandbox.cpp"),
                        sibling_path("TestShared").append("SharedIncludes.hpp"),
                        sibling_path("Tests"),
                        sibling_path("Source")

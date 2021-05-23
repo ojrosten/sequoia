@@ -74,7 +74,9 @@ namespace sequoia::testing
   public:
     enum class gen_source_option {no, yes};
 
-    nascent_test_base(repositories repos) : m_Repos{std::move(repos)}
+    nascent_test_base(std::filesystem::path testMainDir, repositories repos)
+      : m_TestMainDir{std::move(testMainDir)}
+      , m_Repos{std::move(repos)}
     {}
 
     [[nodiscard]]
@@ -122,6 +124,12 @@ namespace sequoia::testing
     ~nascent_test_base() = default;
 
     [[nodiscard]]
+    const std::filesystem::path& test_main_dir() const noexcept
+    {
+      return m_TestMainDir;
+    }
+
+    [[nodiscard]]
     const repositories& repos() const noexcept
     {
       return m_Repos;
@@ -159,7 +167,7 @@ namespace sequoia::testing
 
     repositories m_Repos;
 
-    std::filesystem::path m_Header{}, m_HostDir{}, m_HeaderPath{};
+    std::filesystem::path m_TestMainDir{}, m_Header{}, m_HostDir{}, m_HeaderPath{};
 
     gen_source_option m_SourceOption{};
 
@@ -281,7 +289,7 @@ namespace sequoia::testing
   class test_runner
   {
   public:
-    test_runner(int argc, char** argv, std::string_view copyright, std::filesystem::path testMain, std::filesystem::path hashIncludeTarget, repositories repos, std::ostream& stream=std::cout);
+    test_runner(int argc, char** argv, std::string_view copyright, std::filesystem::path testMainCpp, std::filesystem::path hashIncludeTarget, repositories repos, std::ostream& stream=std::cout);
 
     test_runner(const test_runner&)     = delete;
     test_runner(test_runner&&) noexcept = default;
@@ -361,7 +369,7 @@ namespace sequoia::testing
     std::vector<vessel> m_NascentTests{};
     std::string m_Copyright{};
     std::filesystem::path
-      m_TestMain{},
+      m_TestMainCpp{},
       m_HashIncludeTarget{};
     repositories m_Repos;
 

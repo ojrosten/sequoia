@@ -209,7 +209,6 @@ namespace sequoia::testing
 
   void nascent_test_base::camel_name(std::string name) { m_CamelName = to_camel_case(std::move(name)); }
 
-
   [[nodiscard]]
   std::filesystem::path nascent_test_base::build_source_path(const std::filesystem::path& filename,
     const std::vector<std::string_view>& extensions) const
@@ -340,6 +339,11 @@ namespace sequoia::testing
     read_modify_write(srcPath, setCppText);
 
     add_to_cmake(sourceRoot, sourceRoot, srcPath, "set(", ")", "");
+
+    read_modify_write(test_main_dir() / "CMakeLists.txt", [](std::string& text) {
+      replace_all(text, "#add_subdirectory", "add_subdirectory");
+      }
+    );
   }
 
   //=========================================== nascent_semantics_test ===========================================//
@@ -602,7 +606,7 @@ namespace sequoia::testing
   {
     auto& nascentTests{runner.m_NascentTests};
 
-    static creation_factory factory{{"semantic", "allocation", "behavioural"}, runner.m_Repos};
+    static creation_factory factory{{"semantic", "allocation", "behavioural"}, runner.m_TestMainCpp.parent_path(), runner.m_Repos};
     auto nascent{factory.create(genus)};
 
     std::visit(
@@ -626,14 +630,14 @@ namespace sequoia::testing
     nascentTests.emplace_back(std::move(nascent));
   }
 
-  test_runner::test_runner(int argc, char** argv, std::string_view copyright, std::filesystem::path testMain, std::filesystem::path hashIncludeTarget, repositories repos, std::ostream& stream)
+  test_runner::test_runner(int argc, char** argv, std::string_view copyright, std::filesystem::path testMainCpp, std::filesystem::path hashIncludeTarget, repositories repos, std::ostream& stream)
     : m_Copyright{copyright}
-    , m_TestMain{std::move(testMain)}
+    , m_TestMainCpp{std::move(testMainCpp)}
     , m_HashIncludeTarget{std::move(hashIncludeTarget)}
     , m_Repos{std::move(repos)}
     , m_Stream{&stream}
   {
-    throw_unless_regular_file(m_TestMain, "\nTry ensuring that the application is run from the appropriate directory");
+    throw_unless_regular_file(m_TestMainCpp, "\nTry ensuring that the application is run from the appropriate directory");
     throw_unless_regular_file(m_HashIncludeTarget, "\nInclude target not found");
 
     process_args(argc, argv);
@@ -977,7 +981,7 @@ namespace sequoia::testing
             append_lines(mess, create_file(nascent, stub));
           }
 
-          add_to_family(m_TestMain, nascent.family(), nascent.constructors());
+          add_to_family(m_TestMainCpp, nascent.family(), nascent.constructors());
         }
       };
 
@@ -1007,7 +1011,7 @@ namespace sequoia::testing
       }
       else if(outputFile.extension() == ".cpp")
       {
-        add_to_cmake(m_TestMain.parent_path(), m_Repos.tests, outputFile, "target_sources(", ")", "${TestDir}/");
+        add_to_cmake(m_TestMainCpp.parent_path(), m_Repos.tests, outputFile, "target_sources(", ")", "${TestDir}/");
       }
 
       return std::string{"\""}.append(stringify(outputFile)).append("\"");

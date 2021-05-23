@@ -8,6 +8,8 @@
 #include "TestRunnerTestCreation.hpp"
 #include "TestRunnerDiagnosticsUtilities.hpp"
 #include "Parsing/CommandLineArgumentsTestingUtilities.hpp"
+#include "sequoia/TestFramework/FileEditors.hpp"
+#include "sequoia/TextProcessing/Substitutions.hpp"
 
 namespace sequoia::testing
 {
@@ -69,6 +71,11 @@ namespace sequoia::testing
     const auto root{test_repository().parent_path()};
     fs::copy(aux_files_path(root), aux_files_path(working()), fs::copy_options::recursive);
     fs::copy(project_template_path(root) / "Source/CMakeLists.txt", working() / "Source");
+    fs::copy(project_template_path(root) / "TestAll/CMakeLists.txt", working() / "TestSandbox");
+    read_modify_write(working() / "TestSandbox" / "CMakeLists.txt" , [](std::string& text) {
+        replace_all(text, "TestMain.cpp", "TestSandbox.cpp");
+      }
+    );
 
     const auto testMain{working().append("TestSandbox").append("TestSandbox.cpp")};
     const auto includeTarget{working().append("TestShared").append("SharedIncludes.hpp")};
