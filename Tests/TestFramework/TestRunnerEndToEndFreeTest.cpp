@@ -115,7 +115,7 @@ namespace sequoia::testing
     [[nodiscard]]
     std::string add_output_file(std::string cmd, const std::filesystem::path& file)
     {
-      return !file.empty() ? cmd.append(" > ").append(file.string()) : cmd;
+      return !file.empty() ? cmd.append(" > ").append(file.string()).append(" 2>&1") : cmd;
     }
 
     [[nodiscard]]
