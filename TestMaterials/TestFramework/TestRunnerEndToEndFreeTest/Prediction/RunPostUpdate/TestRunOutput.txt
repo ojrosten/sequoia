@@ -6,21 +6,25 @@ Utilities:
 UsefulThings:
 [1 (0)ms]
 Bar:
-[1 (0)ms]
+[0 (0)ms]
 Maybe:
-[2 (0)ms]
+[3 (0)ms]
 Oldschool:
-[2 (0)ms]
+[3 (0)ms]
+Probability:
+[3 (0)ms]
 Foo:
-[23 (20)ms]
+[30 (27)ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 38]
+UniqueThing:
+[2 (0)ms]
 Container:
 [2 (0)ms]
 House:
 [1 (0)ms]
 
 -----------Grand Totals-----------
-[36 (20)ms]
+[52 (27)ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 38]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

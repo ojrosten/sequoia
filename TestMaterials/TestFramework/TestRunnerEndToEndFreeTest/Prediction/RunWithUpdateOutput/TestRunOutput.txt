@@ -11,6 +11,8 @@ Maybe:
 [2 (0)ms]
 Oldschool:
 [2 (0)ms]
+Probability:
+[2 (0)ms]
 Foo:
 [21 (11)ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 43]
@@ -115,10 +117,12 @@ Foo:
 	=======================================
 
 
-Container:
-[4 (0)ms]
-House:
+UniqueThing:
 [2 (0)ms]
+Container:
+[2 (0)ms]
+House:
+[0 (0)ms]
 
 -----------Grand Totals-----------
 [38 (11)ms]

@@ -25,7 +25,19 @@ Oldschool:
 	[0ms]
 	Unit Test
 	[0ms]
+Probability:
+[2 (0)ms]
+	False Positive Test
+	[0ms]
+	Unit Test
+	[0ms]
 Foo:
+[2 (0)ms]
+	False Positive Test
+	[0ms]
+	Unit Test
+	[0ms]
+UniqueThing:
 [2 (0)ms]
 	False Positive Test
 	[0ms]
@@ -43,7 +55,7 @@ House:
 	[0ms]
 
 -----------Grand Totals-----------
-[14 (0)ms]
+[20 (0)ms]
 	Standard Top Level Checks:                 0;  Failures:  0
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
