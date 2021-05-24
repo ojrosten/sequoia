@@ -270,10 +270,16 @@ namespace sequoia::testing
 
     check_equivalence(LINE("Test Runner Output"), working_materials() / "Output", predictive_materials() / "Output");
 
-    // Change one of the tests, rebuild and run
+    // Change several of the tests, and some of the source, rebuild and run
     fs::copy(auxiliary_materials() / "TestMaterials", generated() / "TestMaterials", fs::copy_options::recursive | fs::copy_options::overwrite_existing);
     fs::copy(auxiliary_materials() / "FooTest.cpp", generated() / "Tests" / "Stuff", fs::copy_options::overwrite_existing);
-    fs::last_write_time(generated() / "Tests" / "Stuff" / "FooTest.cpp", fs::file_time_type::clock::now());
+    fs::copy(auxiliary_materials() / "UsefulThings.hpp", generated() / "Source" / "generatedProject" / "Utilities", fs::copy_options::overwrite_existing);
+    fs::copy(auxiliary_materials() / "UsefulThings.cpp", generated() / "Source" / "generatedProject" / "Utilities", fs::copy_options::overwrite_existing);
+    fs::copy(auxiliary_materials() / "UsefulThingsFreeTest.cpp", generated() / "Tests" / "Utilities", fs::copy_options::overwrite_existing);
+
+    fs::last_write_time(generated() / "Tests" / "Stuff" / "FooTest.cpp",                                fs::file_time_type::clock::now());
+    fs::last_write_time(generated() / "Source" / "generatedProject" / "Utilities" / "UsefulThings.cpp", fs::file_time_type::clock::now());
+    fs::last_write_time(generated() / "Tests" / "Utilities" / "UsefulThingsFreeTest.cpp",               fs::file_time_type::clock::now());
     fs::create_directory(working_materials() / "RebuiltOutput");
 
     const auto rebuildRun{b.rebuild_run(working_materials() / "RebuiltOutput")};
@@ -294,7 +300,7 @@ namespace sequoia::testing
 
     fs::copy(generated() / "TestMaterials", working_materials() / "UpdatedTestMaterials", fs::copy_options::recursive);
     check_equivalence(LINE("Updated Test Materials"), working_materials() / "UpdatedTestMaterials", predictive_materials() / "UpdatedTestMaterials");
-
+    
     // Rerun and do a dump
     fs::create_directory(working_materials() / "RunPostUpdate");
     std::system(b.dump(working_materials() / "RunPostUpdate").c_str());

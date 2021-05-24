@@ -5,14 +5,26 @@ Utilities:
 [1 (0)ms]
 UsefulThings:
 [1 (0)ms]
+	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
+
+	Tests/Utilities/UsefulThingsFreeTest.cpp, Line 21
+
+	[int]
+	operator== returned false
+	Obtained : 43
+	Predicted: 42
+
+	=======================================
+
+
 Bar:
 [1 (0)ms]
 Maybe:
-[2 (0)ms]
+[1 (0)ms]
 Oldschool:
-[2 (0)ms]
+[1 (0)ms]
 Probability:
-[2 (0)ms]
+[1 (0)ms]
 Foo:
 [21 (11)ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 43]
@@ -125,8 +137,8 @@ House:
 [0 (0)ms]
 
 -----------Grand Totals-----------
-[38 (11)ms]
-	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 43]
+[37 (11)ms]
+	Standard Top Level Checks:                 2;  Failures:  2  [Deep checks: 44]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
 	False Negative Performance Checks:         0;  Failures:  0
