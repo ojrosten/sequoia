@@ -913,7 +913,7 @@ namespace sequoia::testing
   void test_runner::check_for_missing_tests()
   {
     auto check{
-      [&stream{stream()}](const auto& tests, std::string_view type) {
+      [&stream{stream()}](const auto& tests, std::string_view type, auto fn) {
         for(const auto& test : tests)
         {
           if(!test.second)
@@ -921,14 +921,32 @@ namespace sequoia::testing
             stream << warning(std::string{"Test "}.append(type)
                               .append(" '")
                               .append(convert(test.first))
-                              .append("' not found\n"));
+                              .append("' not found\n")
+                              .append(fn(test.first)));
           }
         }
       }
     };
 
-    check(m_SelectedFamilies, "Family");
-    check(m_SelectedSources, "File");
+    check(m_SelectedFamilies, "Family", [](const std::string& name) -> std::string {
+        if(auto pos{name.rfind('.')}; pos < std::string::npos)
+        {
+          return "--If trying to select a source file use 'select' rather than 'test'\n";
+        }
+
+        return "";
+      }
+    );
+
+    check(m_SelectedSources, "File", [](const std::filesystem::path& p) -> std::string {
+        if(!p.has_extension())
+        {
+          return "--If trying to test a family use 'test' rather than 'select'\n";
+        }
+  
+        return "";
+      }
+    );
   }
 
   [[nodiscard]]

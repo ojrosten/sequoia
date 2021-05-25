@@ -155,7 +155,7 @@ namespace sequoia::testing
                                            .append(" select Maybe/MaybeTest.cpp")
                                            .append(" select FooTest.cpp"),
                                   output / "SpecifiedSourceOutput.txt")
-               && add_output_file(run_cmd().append(" select Plurgh.cpp"), output / "FailedSpecifiedSourceOutput.txt")
+               && add_output_file(run_cmd().append(" select Plurgh.cpp test Absent select Foo test FooTest.cpp"), output / "FailedSpecifiedSourceOutput.txt")
                && add_output_file(run_cmd().append(" test Foo"), output / "SpecifiedFamilyOutput.txt")
                && add_output_file(run_cmd().append(" -v"), output / "VerboseOutput.txt")
                && add_output_file(run_cmd().append(" --help"), output / "HelpOutput.txt");
