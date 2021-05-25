@@ -9,20 +9,20 @@
 
 namespace sequoia::testing
 {
-  [[nodiscard]]
-  std::string_view ?_class_allocation_test::source_file() const noexcept
-  {
-    return __FILE__;
-  }
+	[[nodiscard]]
+	std::string_view ?_class_allocation_test::source_file() const noexcept
+	{
+		return __FILE__;
+	}
 
-  void ?_class_allocation_test::run_tests()
-  {
-    do_allocation_tests(*this);
-  }
+	void ?_class_allocation_test::run_tests()
+	{
+		do_allocation_tests(*this);
+	}
 
-  template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
-  void ?_class_allocation_test::test_allocation()
-  {
-
-  }
+	template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
+	void ?_class_allocation_test::test_allocation()
+	{
+		// See e.g RegularAllocationTestDiagnostics.cpp or MoveOnlyAllocationTestDiagostics.cpp
+	}
 }

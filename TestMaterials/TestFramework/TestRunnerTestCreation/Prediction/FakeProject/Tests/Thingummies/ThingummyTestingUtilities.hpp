@@ -16,11 +16,11 @@ namespace sequoia::testing
   struct detailed_equality_checker<stuff::thingummy<T>>
   {
     using type = stuff::thingummy<T>;
-    
+
     template<test_mode Mode>
     static void check(test_logger<Mode>& logger, const type& actual, const type& prediction)
     {
-      // TO DO
+      // e.g. check_equality("Description", logger, actual.method(), prediction.method());
     }
   };
 
@@ -28,11 +28,11 @@ namespace sequoia::testing
   struct equivalence_checker<stuff::thingummy<T>>
   {
     using type = stuff::thingummy<T>;
-    
+
     template<test_mode Mode>
     static void check(test_logger<Mode>& logger, const type& actual, const std::vector<T>& prediction)
     {
-      // TO DO
+      // e.g. check_equality("Description", logger, actual.method(), predictions.foo());
     }
   };
 }

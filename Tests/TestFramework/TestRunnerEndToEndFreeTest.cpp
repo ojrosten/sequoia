@@ -304,7 +304,7 @@ namespace sequoia::testing
 
     fs::copy(generated() / "TestMaterials", working_materials() / "UpdatedTestMaterials", fs::copy_options::recursive);
     check_equivalence(LINE("Updated Test Materials"), working_materials() / "UpdatedTestMaterials", predictive_materials() / "UpdatedTestMaterials");
-    
+
     // Rerun and do a dump
     fs::create_directory(working_materials() / "RunPostUpdate");
     std::system(b.dump(working_materials() / "RunPostUpdate").c_str());

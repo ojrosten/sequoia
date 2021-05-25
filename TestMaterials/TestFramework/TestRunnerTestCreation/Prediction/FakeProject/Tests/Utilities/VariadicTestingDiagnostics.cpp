@@ -17,6 +17,8 @@ namespace sequoia::testing
 
   void variadic_false_positive_test::run_tests()
   {
-    // TO DO
+    // e.g variadic x{args}, y{different args};
+    // check_equivalence(LINE("Useful Description"), x, something inequivalent - ordinarily this would fail);
+    // check_equality(LINE("Useful Description"), x, y);
   }
 }

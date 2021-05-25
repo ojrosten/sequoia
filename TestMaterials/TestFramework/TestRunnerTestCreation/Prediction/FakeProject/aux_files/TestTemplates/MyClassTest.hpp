@@ -11,15 +11,15 @@
 
 namespace sequoia::testing
 {
-  class ?_class_test final : public ?_test
-  {
-  public:
-    using ?_test::?_test;
+	class ?_class_test final : public ?_test
+	{
+	public:
+		using ?_test::?_test;
 
-  private:
-    [[nodiscard]]
-    std::string_view source_file() const noexcept final;
+	private:
+		[[nodiscard]]
+		std::string_view source_file() const noexcept final;
 
-    void run_tests() final;
-  };
+		void run_tests() final;
+	};
 }

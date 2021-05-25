@@ -18,6 +18,6 @@ namespace sequoia::testing
 
   void utilities_free_test::run_tests()
   {
-    // TO DO
+    // e.g. check_equality(LINE("Useful description"), some_function(), 42);
   }
 }

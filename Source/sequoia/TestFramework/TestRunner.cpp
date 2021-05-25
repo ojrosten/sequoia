@@ -467,6 +467,8 @@ namespace sequoia::testing
 
   void nascent_semantics_test::transform_file(std::string& text) const
   {
+    to_spaces(text, code_indent());
+
     if(!m_EquivalentTypes.empty())
     {
       std::string args{};
@@ -564,6 +566,8 @@ namespace sequoia::testing
 
   void nascent_behavioural_test::transform_file(std::string& text) const
   {
+    to_spaces(text, code_indent());
+
     replace_all(text, {{"?_behavioural", forename()},
                        {"?Behavioural", camel_name()},
                        {"?Test", to_camel_case(test_type()).append("Test")},
@@ -598,6 +602,8 @@ namespace sequoia::testing
 
   void nascent_allocation_test::transform_file(std::string& text) const
   {
+    to_spaces(text, code_indent());
+
     replace_all(text, {{"?_class", forename()},
                        {"?Class", camel_name()},
                        {"?Allocation", to_camel_case(test_type())},

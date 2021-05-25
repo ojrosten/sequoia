@@ -23,6 +23,6 @@ namespace sequoia::testing
   template<bool PropagateMove, bool PropagateSwap>
   void foo_allocation_test::test_allocation()
   {
-
+    // See e.g RegularAllocationTestDiagnostics.cpp or MoveOnlyAllocationTestDiagostics.cpp
   }
 }

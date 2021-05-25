@@ -17,6 +17,9 @@ namespace sequoia::testing
 
   void things_test::run_tests()
   {
-    // TO DO
+    // e.g things x{args}, y{different args};
+    // check_equivalence(LINE("Useful Description"), x, something equivalent);
+    // check_equivalence(LINE("Useful Description"), y, something equivalent);
+    // check_semantics(LINE("Useful Description"), x, y);
   }
 }

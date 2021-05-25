@@ -12,25 +12,25 @@
 
 namespace sequoia::testing
 {
-  template<?> struct detailed_equality_checker<::?_class>
-  {
-    using type = ::?_class;
-    
-    template<test_mode Mode>
-    static void check(test_logger<Mode>& logger, const type& actual, const type& prediction)
-    {
-      // TO DO
-    }
-  };
+	template<?> struct detailed_equality_checker<::?_class>
+	{
+		using type = ::?_class;
 
-  template<?> struct equivalence_checker<::?_class>
-  {
-    using type = ::?_class;
-    
-    template<test_mode Mode>
-    static void check(test_logger<Mode>& logger, const type& actual, ?predictions)
-    {
-      // TO DO
-    }
-  };
+		template<test_mode Mode>
+		static void check(test_logger<Mode>& logger, const type& actual, const type& prediction)
+		{
+			// e.g. check_equality("Description", logger, actual.method(), prediction.method());
+		}
+	};
+
+	template<?> struct equivalence_checker<::?_class>
+	{
+		using type = ::?_class;
+
+		template<test_mode Mode>
+		static void check(test_logger<Mode>& logger, const type& actual, ?predictions)
+		{
+			// e.g. check_equality("Description", logger, actual.method(), predictions.foo());
+		}
+	};
 }

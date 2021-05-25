@@ -16,11 +16,11 @@ namespace sequoia::testing
   struct detailed_equality_checker<other::couple<S, T>>
   {
     using type = other::couple<S, T>;
-    
+
     template<test_mode Mode>
     static void check(test_logger<Mode>& logger, const type& actual, const type& prediction)
     {
-      // TO DO
+      // e.g. check_equality("Description", logger, actual.method(), prediction.method());
     }
   };
 
@@ -28,11 +28,11 @@ namespace sequoia::testing
   struct equivalence_checker<other::couple<S, T>>
   {
     using type = other::couple<S, T>;
-    
+
     template<test_mode Mode>
     static void check(test_logger<Mode>& logger, const type& actual, const S& prediction_0, const T& prediction_1)
     {
-      // TO DO
+      // e.g. check_equality("Description", logger, actual.method(), predictions.foo());
     }
   };
 }
