@@ -347,7 +347,7 @@ namespace sequoia::testing
 
     read_modify_write(srcPath, setCppText);
 
-    add_to_cmake(sourceRoot, sourceRoot, srcPath, "set(", ")", "");
+    add_to_cmake(sourceRoot, sourceRoot, srcPath, "set(", ")\n", "");
 
     read_modify_write(test_main_dir() / "CMakeLists.txt", [&root{repos().project_root}](std::string& text) {
         replace_all(text, "#!", "");
@@ -1020,7 +1020,7 @@ namespace sequoia::testing
       }
       else if(outputFile.extension() == ".cpp")
       {
-        add_to_cmake(m_TestMainCpp.parent_path(), m_Repos.tests, outputFile, "target_sources(", ")", "${TestDir}/");
+        add_to_cmake(m_TestMainCpp.parent_path(), m_Repos.tests, outputFile, "target_sources(", ")\n", "${TestDir}/");
       }
 
       return std::string{"\""}.append(stringify(outputFile)).append("\"");

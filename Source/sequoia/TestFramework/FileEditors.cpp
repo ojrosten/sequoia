@@ -42,26 +42,54 @@ namespace sequoia::testing
     }
   }
 
-  void add_include(const std::filesystem::path& file, std::string_view include)
+  void add_include(const std::filesystem::path& file, std::string_view includePath)
   {
-    std::string text{read_to_string(file)};
+    auto inserter{
+      [&includePath](std::string& text) {
 
-    const std::string::size_type pos{
-      [&text](){
-        const auto lastIncludePos{text.rfind("#include")};
-        if(lastIncludePos != std::string::npos)
+        std::string_view include{"#include"};
+        std::vector<std::string> entries{std::string{include}.append(" \"").append(includePath).append("\"\n")};
+
+        constexpr auto npos{std::string::npos};
+
+        const auto lastIncludePos{text.rfind(include)};
+        const auto endBlock{std::min(text.find('\n', lastIncludePos), text.size())};
+        if(lastIncludePos != npos)
         {
-          const auto pos{text.find('\n', lastIncludePos)};
-          if(pos < text.size()) return pos + 1;
+          std::string::size_type start{npos}, end{};
+          while((start = text.find(include, end)) < endBlock)
+          {
+            end = text.find('\n', start);
+            if(end <= endBlock)
+            {
+                entries.push_back(text.substr(start, end + 1 - start));
+            }
+          }
         }
 
-        return text.size();
-      }()
+        std::sort(entries.begin(), entries.end(), [](const std::string& lhs, const std::string& rhs) {
+            auto lAnglePos{lhs.find('<')}, rAnglePos{rhs.find('>')};
+            if((lAnglePos < npos) && (rAnglePos == npos)) return false;
+            if((lAnglePos == npos) && (rAnglePos < npos)) return true;
+
+            return lhs < rhs;
+          });
+
+        std::string sorted{};
+        std::for_each(entries.begin(), entries.end(), [&sorted](const std::string& e) { sorted.append(e); });
+
+        if(const auto firstIncludePos{text.find(include)}; firstIncludePos < npos)
+        {
+          text.replace(firstIncludePos, endBlock + 1 - firstIncludePos, sorted);
+        }
+        else
+        {
+          text.insert(endBlock, sorted);
+        }
+      }
     };
 
-    text.insert(pos, std::string{"#include \""}.append(include).append("\"\n"));
-
-    write_to_file(file, text);
+    read_modify_write(file, inserter);
   }
 
   void add_to_family(const std::filesystem::path& file, std::string_view familyName, const std::vector<std::string>& tests)
@@ -163,7 +191,7 @@ namespace sequoia::testing
           if(auto endPos{text.find(patternClose, startPos + patternOpen.size())}; endPos != npos)
           {
             std::vector<std::string> entries{{std::string{cmakeEntryPrexfix}.append(file.generic_string())}};
-            std::string::size_type newlinePos{}, next{startPos + patternOpen.size()};
+            auto newlinePos{npos}, next{startPos + patternOpen.size()};
             while((newlinePos = text.find("\n", next)) < endPos)
             {
               next = std::min(text.find("\n", newlinePos + 1), endPos);

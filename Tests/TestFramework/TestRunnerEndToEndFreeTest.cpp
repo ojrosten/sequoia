@@ -289,6 +289,10 @@ namespace sequoia::testing
     check(LINE("Third build output existance"), fs::exists(rebuildRun.build_output));
 
     check_equivalence(LINE("Test Runner Output"), working_materials() / "RebuiltOutput", predictive_materials() / "RebuiltOutput");
+    fs::create_directory(working_materials() / "MainCpp");
+    const auto generatedProject{working_materials().parent_path() / "GeneratedProject"};
+    fs::copy_file(generatedProject / "TestAll" / "TestMain.cpp", working_materials() / "MainCpp" / "TestMain.cpp");
+    check_equivalence(LINE("TestMain.cpp"), working_materials() / "MainCpp", predictive_materials() / "MainCpp");
 
     fs::copy(generated() / "TestMaterials", working_materials() / "OriginalTestMaterials", fs::copy_options::recursive);
     check_equivalence(LINE("Original Test Materials"), working_materials() / "OriginalTestMaterials", predictive_materials() / "OriginalTestMaterials");
