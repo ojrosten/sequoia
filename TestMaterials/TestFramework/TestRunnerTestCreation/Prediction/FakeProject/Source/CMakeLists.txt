@@ -1,10 +1,10 @@
 cmake_minimum_required(VERSION 3.19)
 
 set(SourceList
-    fakeProject/Stuff/Widget.cpp
-    fakeProject/Stuff/Doohicky.cpp
+    fakeProject/Global/Stuff/Defs.cpp
     fakeProject/Global/Stuff/Global.cpp
-    fakeProject/Global/Stuff/Defs.cpp)
+    fakeProject/Stuff/Doohicky.cpp
+    fakeProject/Stuff/Widget.cpp)
 
 add_library(MyProject STATIC ${SourceList})
 

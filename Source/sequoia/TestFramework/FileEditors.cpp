@@ -162,8 +162,23 @@ namespace sequoia::testing
         {
           if(auto endPos{text.find(patternClose, startPos + patternOpen.size())}; endPos != npos)
           {
-            text.insert(endPos, std::string{"\n"}
-                .append(patternOpen.size(), ' ').append(cmakeEntryPrexfix).append(file.generic_string()));
+            std::vector<std::string> entries{{std::string{cmakeEntryPrexfix}.append(file.generic_string())}};
+            std::string::size_type newlinePos{}, next{startPos + patternOpen.size()};
+            while((newlinePos = text.find("\n", next)) < endPos)
+            {
+              next = std::min(text.find("\n", newlinePos + 1), endPos);
+              const auto entryStart{text.find_first_not_of(' ', newlinePos+1)};
+
+              entries.push_back(text.substr(entryStart, next - entryStart));
+            }
+
+            std::sort(entries.begin(), entries.end());
+            std::string sorted{};
+            std::for_each(entries.begin(), entries.end(), [&sorted, patternOpen](const std::string& e) {
+              sorted.append("\n").append(patternOpen.size(), ' ').append(e); });
+
+            const auto startSection{std::min(text.find("\n", startPos + patternOpen.size()), endPos)};
+            text.replace(startSection, endPos - startSection, sorted);
 
             return;
           }
