@@ -276,7 +276,7 @@ namespace sequoia::testing
         [this, name](Test&& test, Tests&&... tests){
           if(!m_SelectedSources.empty())
           {
-            test_family f{name, m_Paths.tests, m_Paths.test_materials, m_Paths.output, m_Recovery};
+            test_family f{name, m_Paths.tests(), m_Paths.test_materials(), m_Paths.output(), m_Recovery};
             add_tests(f, std::forward<Test>(test), std::forward<Tests>(tests)...);
             if(!f.empty())
             {
@@ -294,7 +294,7 @@ namespace sequoia::testing
       {
         if(mark_family(name))
         {
-          m_Families.emplace_back(name, m_Paths.tests, m_Paths.test_materials, m_Paths.output, m_Recovery,
+          m_Families.emplace_back(name, m_Paths.tests(), m_Paths.test_materials(), m_Paths.output(), m_Recovery,
                                   std::forward<Test>(test), std::forward<Tests>(tests)...);
         }
       }

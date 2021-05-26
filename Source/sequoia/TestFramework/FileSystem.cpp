@@ -67,19 +67,19 @@ namespace sequoia::testing
   {}
 
   project_paths::project_paths(const std::filesystem::path& projectRoot, std::filesystem::path mainCpp, std::filesystem::path includePath)
-    : project_root{projectRoot}
-    , source{source_path(projectRoot)}
-    , source_root{source.parent_path()}
-    , tests{projectRoot / "Tests"}
-    , test_materials{projectRoot / "TestMaterials"}
-    , output{projectRoot / "output"}
-    , main_cpp{std::move(mainCpp)}
-    , main_cpp_dir{main_cpp.parent_path()}
-    , include_target{std::move(includePath)}
+    : m_ProjectRoot{projectRoot}
+    , m_Source{source_path(projectRoot)}
+    , m_SourceRoot{m_Source.parent_path()}
+    , m_Tests{projectRoot / "Tests"}
+    , m_TestMaterials{projectRoot / "TestMaterials"}
+    , m_Output{projectRoot / "output"}
+    , m_MainCpp{std::move(mainCpp)}
+    , m_MainCppDir{m_MainCpp.parent_path()}
+    , m_IncludeTarget{std::move(includePath)}
   {
-    throw_unless_directory(project_root, "\nTest repository not found");
-    throw_unless_regular_file(main_cpp, "\nTry ensuring that the application is run from the appropriate directory");
-    throw_unless_regular_file(include_target, "\nInclude target not found");
+    throw_unless_directory(m_ProjectRoot, "\nTest repository not found");
+    throw_unless_regular_file(m_MainCpp, "\nTry ensuring that the application is run from the appropriate directory");
+    throw_unless_regular_file(m_IncludeTarget, "\nInclude target not found");
   }
 
   [[nodiscard]]
@@ -89,6 +89,60 @@ namespace sequoia::testing
       throw std::runtime_error{"Project root should not be empty"};
 
     return projectRoot / "Source" / uncapitalize((--projectRoot.end())->generic_string());
+  }
+
+  [[nodiscard]]
+  const std::filesystem::path& project_paths::project_root() const noexcept
+  {
+    return m_ProjectRoot;
+  }
+
+  [[nodiscard]]
+  const std::filesystem::path& project_paths::source() const noexcept
+  {
+    return m_Source;
+  }
+
+  [[nodiscard]]
+  const std::filesystem::path& project_paths::source_root() const noexcept
+  {
+    return m_SourceRoot;
+  }
+
+  [[nodiscard]]
+  const std::filesystem::path& project_paths::tests() const noexcept
+  {
+    return m_Tests;
+  }
+
+  [[nodiscard]]
+  const std::filesystem::path& project_paths::test_materials() const noexcept
+  {
+    return m_TestMaterials;
+  }
+
+  [[nodiscard]]
+  const std::filesystem::path& project_paths::output() const noexcept
+  {
+    return m_Output;
+  }
+
+  [[nodiscard]]
+  const std::filesystem::path& project_paths::main_cpp() const noexcept
+  {
+    return m_MainCpp;
+  }
+
+  [[nodiscard]]
+  const std::filesystem::path& project_paths::main_cpp_dir() const noexcept
+  {
+    return m_MainCppDir;
+  }
+
+  [[nodiscard]]
+  const std::filesystem::path& project_paths::include_target() const noexcept
+  {
+    return m_IncludeTarget;
   }
 
   [[nodiscard]]

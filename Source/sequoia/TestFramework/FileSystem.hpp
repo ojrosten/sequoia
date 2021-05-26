@@ -23,8 +23,9 @@ namespace sequoia::testing
   [[nodiscard]]
   std::filesystem::path working_path();
 
-  struct project_paths
+  class project_paths
   {
+  public:
     explicit project_paths(const std::filesystem::path& projectRoot);
 
     project_paths(const std::filesystem::path& projectRoot, std::filesystem::path mainCpp, std::filesystem::path includePath);
@@ -33,21 +34,48 @@ namespace sequoia::testing
     static std::filesystem::path source_path(const std::filesystem::path& projectRoot);
 
     [[nodiscard]]
+    const std::filesystem::path& project_root() const noexcept;
+
+    [[nodiscard]]
+    const std::filesystem::path& source() const noexcept;
+
+    [[nodiscard]]
+    const std::filesystem::path& source_root() const noexcept;
+
+    [[nodiscard]]
+    const std::filesystem::path& tests() const noexcept;
+
+    [[nodiscard]]
+    const std::filesystem::path& test_materials() const noexcept;
+
+    [[nodiscard]]
+    const std::filesystem::path& output() const noexcept;
+
+    [[nodiscard]]
+    const std::filesystem::path& main_cpp() const noexcept;
+
+    [[nodiscard]]
+    const std::filesystem::path& main_cpp_dir() const noexcept;
+
+    [[nodiscard]]
+    const std::filesystem::path& include_target() const noexcept;
+
+    [[nodiscard]]
     friend bool operator==(const project_paths&, const project_paths&) noexcept = default;
 
     [[nodiscard]]
     friend bool operator!=(const project_paths&, const project_paths&) noexcept = default;
-
+  private:
     std::filesystem::path
-      project_root{},
-      source{},
-      source_root{},
-      tests{},
-      test_materials{},
-      output{},
-      main_cpp{},
-      main_cpp_dir{},
-      include_target{};
+      m_ProjectRoot{},
+      m_Source{},
+      m_SourceRoot{},
+      m_Tests{},
+      m_TestMaterials{},
+      m_Output{},
+      m_MainCpp{},
+      m_MainCppDir{},
+      m_IncludeTarget{};
   };
 
 
