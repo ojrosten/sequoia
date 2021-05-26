@@ -32,7 +32,7 @@ Probability:
 	Unit Test
 	[0ms]
 Foo:
-[2 (0)ms]
+[1 (0)ms]
 	False Positive Test
 	[0ms]
 	Unit Test
@@ -55,7 +55,7 @@ House:
 	[0ms]
 
 -----------Grand Totals-----------
-[20 (0)ms]
+[18 (0)ms]
 	Standard Top Level Checks:                 0;  Failures:  0
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

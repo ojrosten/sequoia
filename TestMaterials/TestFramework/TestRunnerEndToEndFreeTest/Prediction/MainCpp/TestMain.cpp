@@ -37,7 +37,7 @@ int main(int argc, char** argv)
                        "Oliver Jacob Rosten",
                        root/"TestAll"/"TestMain.cpp",
                        root/"TestAll"/"TestMain.cpp",
-                       repositories{root}
+                       project_paths{root}
     };
  
     runner.add_test_family(

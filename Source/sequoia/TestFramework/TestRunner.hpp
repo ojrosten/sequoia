@@ -24,18 +24,18 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string report_time(const test_family::summary& s);
 
-  struct repositories
+  struct project_paths
   {
-    explicit repositories(const std::filesystem::path& projectRoot);
+    explicit project_paths(const std::filesystem::path& projectRoot);
 
     [[nodiscard]]
     static std::filesystem::path source_path(const std::filesystem::path& projectRoot);
 
     [[nodiscard]]
-    friend bool operator==(const repositories&, const repositories&) noexcept = default;
+    friend bool operator==(const project_paths&, const project_paths&) noexcept = default;
 
     [[nodiscard]]
-    friend bool operator!=(const repositories&, const repositories&) noexcept = default;
+    friend bool operator!=(const project_paths&, const project_paths&) noexcept = default;
 
     std::filesystem::path
       project_root{},
@@ -74,7 +74,7 @@ namespace sequoia::testing
   public:
     enum class gen_source_option {no, yes};
 
-    nascent_test_base(std::filesystem::path testMainDir, repositories repos)
+    nascent_test_base(std::filesystem::path testMainDir, project_paths repos)
       : m_TestMainDir{std::move(testMainDir)}
       , m_Repos{std::move(repos)}
     {}
@@ -130,7 +130,7 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    const repositories& repos() const noexcept
+    const project_paths& repos() const noexcept
     {
       return m_Repos;
     }
@@ -167,7 +167,7 @@ namespace sequoia::testing
 
     std::filesystem::path m_TestMainDir{};
 
-    repositories m_Repos;
+    project_paths m_Repos;
 
     std::filesystem::path m_Header{}, m_HostDir{}, m_HeaderPath{};
 
@@ -291,7 +291,7 @@ namespace sequoia::testing
   class test_runner
   {
   public:
-    test_runner(int argc, char** argv, std::string_view copyright, std::filesystem::path testMainCpp, std::filesystem::path hashIncludeTarget, repositories repos, std::ostream& stream=std::cout);
+    test_runner(int argc, char** argv, std::string_view copyright, std::filesystem::path testMainCpp, std::filesystem::path hashIncludeTarget, project_paths repos, std::ostream& stream=std::cout);
 
     test_runner(const test_runner&)     = delete;
     test_runner(test_runner&&) noexcept = default;
@@ -373,7 +373,7 @@ namespace sequoia::testing
     std::filesystem::path
       m_TestMainCpp{},
       m_HashIncludeTarget{};
-    repositories m_Repos;
+    project_paths m_Repos;
 
     recovery_paths m_Recovery;
 

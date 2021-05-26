@@ -74,7 +74,7 @@ namespace sequoia::testing
 
       const auto testMain{working().append("TestSandbox").append("TestSandbox.cpp")};
       const auto includeTarget{working().append("TestShared").append("SharedIncludes.hpp")};
-      const repositories repos{working()};
+      const project_paths repos{working()};
       test_runner runner{args.size(), args.get(), "Oliver J. Rosten", testMain, includeTarget, repos, outputStream};
 
       runner.add_test_family(

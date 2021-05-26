@@ -23,7 +23,7 @@ int main(int argc, char** argv)
                        "Oliver J. Rosten",
                        root/"TestFrameworkDiagnostics"/"TestFrameworkDiagnosticsMain.cpp",
                        root/"TestCommon" /"TestIncludes.hpp",
-                       repositories{root}
+                       project_paths{root}
     };
 
     runner.add_test_family(

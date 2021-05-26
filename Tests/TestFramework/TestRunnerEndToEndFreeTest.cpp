@@ -219,7 +219,7 @@ namespace sequoia::testing
     const auto testMain{seqRoot/"TestAll/TestMain.cpp"};
     const auto includeTarget{seqRoot/"TestCommon/TestIncludes.hpp"};
 
-    const repositories repos{seqRoot};
+    const project_paths repos{seqRoot};
 
     auto generated{
       [&mat{working_materials()}]() {

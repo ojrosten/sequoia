@@ -74,7 +74,7 @@ namespace sequoia::testing
     return report_time(s.log, s.execution_time);
   }
 
-  repositories::repositories(const std::filesystem::path& projectRoot)
+  project_paths::project_paths(const std::filesystem::path& projectRoot)
     : project_root{projectRoot}
     , source{source_path(projectRoot)}
     , tests{projectRoot/"Tests"}
@@ -85,7 +85,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path repositories::source_path(const std::filesystem::path& projectRoot)
+  std::filesystem::path project_paths::source_path(const std::filesystem::path& projectRoot)
   {
     if(projectRoot.empty())
       throw std::runtime_error{"Project root should not be empty"};
@@ -645,7 +645,7 @@ namespace sequoia::testing
     nascentTests.emplace_back(std::move(nascent));
   }
 
-  test_runner::test_runner(int argc, char** argv, std::string_view copyright, std::filesystem::path testMainCpp, std::filesystem::path hashIncludeTarget, repositories repos, std::ostream& stream)
+  test_runner::test_runner(int argc, char** argv, std::string_view copyright, std::filesystem::path testMainCpp, std::filesystem::path hashIncludeTarget, project_paths repos, std::ostream& stream)
     : m_Copyright{copyright}
     , m_TestMainCpp{std::move(testMainCpp)}
     , m_HashIncludeTarget{std::move(hashIncludeTarget)}
@@ -1122,7 +1122,7 @@ namespace sequoia::testing
 
     fs::create_directories(projRoot);
     fs::copy(project_template_path(m_Repos.project_root), projRoot, fs::copy_options::recursive | fs::copy_options::skip_existing);
-    fs::create_directory(repositories::source_path(projRoot));
+    fs::create_directory(project_paths::source_path(projRoot));
     fs::copy(aux_files_path(m_Repos.project_root), aux_files_path(projRoot), fs::copy_options::recursive | fs::copy_options::skip_existing);
 
     generate_test_main(copyright, projRoot);

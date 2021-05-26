@@ -2,15 +2,15 @@
 Running tests...
 
 Utilities:
-[3 (0)ms]
+[1 (0)ms]
 UsefulThings:
-[7 (0)ms]
+[1 (0)ms]
 Bar:
 [1 (0)ms]
 Maybe:
 [2 (0)ms]
 Oldschool:
-[4 (0)ms]
+[2 (0)ms]
 Probability:
 [2 (0)ms]
 Foo:
@@ -23,7 +23,7 @@ House:
 [1 (0)ms]
 
 -----------Grand Totals-----------
-[31 (0)ms]
+[23 (0)ms]
 	Standard Top Level Checks:                 0;  Failures:  0
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

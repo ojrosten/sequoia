@@ -36,7 +36,7 @@ namespace sequoia::testing
     const auto testMain{fake().append("TestSandbox").append("TestSandbox.cpp")};
     const auto includeTarget{fake().append("TestShared").append("SharedIncludes.hpp")};
 
-    const repositories repos{fake()};
+    const project_paths repos{fake()};
 
     auto generated{
       [&mat{working_materials()}]() { return mat / "GeneratedProject"; }
