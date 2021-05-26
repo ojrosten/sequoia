@@ -602,7 +602,7 @@ namespace sequoia::testing
   {
     auto& nascentTests{runner.m_NascentTests};
 
-    static creation_factory factory{{"semantic", "allocation", "behavioural"}, runner.m_Paths};
+    static creation_factory factory{{"semantic", "allocation", "behavioural"}, runner.m_Paths, runner.m_CodeIndent};
     auto nascent{factory.create(genus)};
 
     std::visit(

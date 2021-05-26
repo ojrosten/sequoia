@@ -53,8 +53,9 @@ namespace sequoia::testing
   public:
     enum class gen_source_option {no, yes};
 
-    nascent_test_base(project_paths paths)
+    nascent_test_base(project_paths paths, std::string codeIndent)
       : m_Paths{std::move(paths)}
+      , m_CodeIndent{codeIndent}
     {}
 
     [[nodiscard]]
