@@ -4,7 +4,7 @@ Running tests...
 Utilities:
 [1 (0)ms]
 UsefulThings:
-[2 (1)ms]
+[2 (0)ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
 	Tests/Utilities/UsefulThingsFreeTest.cpp, Line 21
@@ -18,7 +18,7 @@ UsefulThings:
 
 
 Bar:
-[2 (0)ms]
+[1 (0)ms]
 Maybe:
 [2 (0)ms]
 Oldschool:
@@ -26,17 +26,17 @@ Oldschool:
 Probability:
 [2 (0)ms]
 Foo:
-[23 (20)ms]
+[28 (24)ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 38]
 UniqueThing:
-[2 (0)ms]
+[4 (0)ms]
 Container:
-[2 (0)ms]
+[3 (0)ms]
 House:
 [1 (0)ms]
 
 -----------Grand Totals-----------
-[45 (22)ms]
+[50 (25)ms]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 39]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

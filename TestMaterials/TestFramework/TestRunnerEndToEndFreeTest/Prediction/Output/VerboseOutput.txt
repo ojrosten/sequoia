@@ -10,41 +10,41 @@ UsefulThings:
 	Free Test
 	[0ms]
 Bar:
-[1 (0)ms]
+[2 (0)ms]
 	Free Test
 	[0ms]
 Maybe:
-[2 (0)ms]
+[4 (0)ms]
 	False Positive Test
 	[0ms]
 	Unit Test
 	[0ms]
 Oldschool:
-[2 (0)ms]
+[3 (0)ms]
 	False Positive Test
 	[0ms]
 	Unit Test
 	[0ms]
 Probability:
-[2 (0)ms]
+[3 (0)ms]
 	False Positive Test
 	[0ms]
 	Unit Test
 	[0ms]
 Foo:
-[1 (0)ms]
+[3 (0)ms]
 	False Positive Test
 	[0ms]
 	Unit Test
 	[0ms]
 UniqueThing:
-[2 (0)ms]
+[4 (0)ms]
 	False Positive Test
 	[0ms]
 	Unit Test
 	[0ms]
 Container:
-[2 (0)ms]
+[4 (0)ms]
 	Performance Test
 	[0ms]
 	Allocation Test
@@ -55,7 +55,7 @@ House:
 	[0ms]
 
 -----------Grand Totals-----------
-[18 (0)ms]
+[33 (0)ms]
 	Standard Top Level Checks:                 0;  Failures:  0
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

@@ -24,27 +24,6 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string report_time(const test_family::summary& s);
 
-  struct project_paths
-  {
-    explicit project_paths(const std::filesystem::path& projectRoot);
-
-    [[nodiscard]]
-    static std::filesystem::path source_path(const std::filesystem::path& projectRoot);
-
-    [[nodiscard]]
-    friend bool operator==(const project_paths&, const project_paths&) noexcept = default;
-
-    [[nodiscard]]
-    friend bool operator!=(const project_paths&, const project_paths&) noexcept = default;
-
-    std::filesystem::path
-      project_root{},
-      source{},
-      tests{},
-      test_materials{},
-      output{};
-  };
-
   struct template_spec
   {
     std::string species, symbol;
@@ -74,9 +53,8 @@ namespace sequoia::testing
   public:
     enum class gen_source_option {no, yes};
 
-    nascent_test_base(std::filesystem::path testMainDir, project_paths repos)
-      : m_TestMainDir{std::move(testMainDir)}
-      , m_Repos{std::move(repos)}
+    nascent_test_base(project_paths paths)
+      : m_Paths{std::move(paths)}
     {}
 
     [[nodiscard]]
@@ -124,15 +102,9 @@ namespace sequoia::testing
     ~nascent_test_base() = default;
 
     [[nodiscard]]
-    const std::filesystem::path& test_main_dir() const noexcept
+    const project_paths& paths() const noexcept
     {
-      return m_TestMainDir;
-    }
-
-    [[nodiscard]]
-    const project_paths& repos() const noexcept
-    {
-      return m_Repos;
+      return m_Paths;
     }
 
     std::filesystem::path build_source_path(const std::filesystem::path& filename,
@@ -165,9 +137,7 @@ namespace sequoia::testing
   private:
     std::string m_Family{}, m_TestType{}, m_Forename{}, m_CamelName{};
 
-    std::filesystem::path m_TestMainDir{};
-
-    project_paths m_Repos;
+    project_paths m_Paths;
 
     std::filesystem::path m_Header{}, m_HostDir{}, m_HeaderPath{};
 
@@ -291,7 +261,7 @@ namespace sequoia::testing
   class test_runner
   {
   public:
-    test_runner(int argc, char** argv, std::string_view copyright, std::filesystem::path testMainCpp, std::filesystem::path hashIncludeTarget, project_paths repos, std::ostream& stream=std::cout);
+    test_runner(int argc, char** argv, std::string_view copyright, project_paths paths, std::string_view codeIndent="  ", std::ostream& stream=std::cout);
 
     test_runner(const test_runner&)     = delete;
     test_runner(test_runner&&) noexcept = default;
@@ -306,7 +276,7 @@ namespace sequoia::testing
         [this, name](Test&& test, Tests&&... tests){
           if(!m_SelectedSources.empty())
           {
-            test_family f{name, m_Repos.tests, m_Repos.test_materials, m_Repos.output, m_Recovery};
+            test_family f{name, m_Paths.tests, m_Paths.test_materials, m_Paths.output, m_Recovery};
             add_tests(f, std::forward<Test>(test), std::forward<Tests>(tests)...);
             if(!f.empty())
             {
@@ -324,7 +294,7 @@ namespace sequoia::testing
       {
         if(mark_family(name))
         {
-          m_Families.emplace_back(name, m_Repos.tests, m_Repos.test_materials, m_Repos.output, m_Recovery,
+          m_Families.emplace_back(name, m_Paths.tests, m_Paths.test_materials, m_Paths.output, m_Recovery,
                                   std::forward<Test>(test), std::forward<Tests>(tests)...);
         }
       }
@@ -370,13 +340,11 @@ namespace sequoia::testing
     source_list m_SelectedSources{};
     std::vector<vessel> m_NascentTests{};
     std::string m_Copyright{};
-    std::filesystem::path
-      m_TestMainCpp{},
-      m_HashIncludeTarget{};
-    project_paths m_Repos;
+    project_paths m_Paths;
 
     recovery_paths m_Recovery;
 
+    std::string m_CodeIndent{"  "};
     std::ostream* m_Stream;
 
     output_mode m_OutputMode{output_mode::standard};

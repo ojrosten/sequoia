@@ -80,7 +80,7 @@ namespace sequoia::testing
     const auto testMain{working().append("TestSandbox").append("TestSandbox.cpp")};
     const auto includeTarget{working().append("TestShared").append("SharedIncludes.hpp")};
 
-    const project_paths repos{working()};
+    const project_paths paths{working(), testMain, includeTarget};
 
     commandline_arguments args{"", "create", "regular_test", "other::functional::maybe<class T>", "std::optional<T>"
                                  , "create", "regular", "utilities::iterator", "int*"
@@ -105,7 +105,7 @@ namespace sequoia::testing
     };
 
     std::stringstream outputStream{};
-    test_runner tr{args.size(), args.get(), "Oliver J. Rosten", testMain, includeTarget, repos, outputStream};
+    test_runner tr{args.size(), args.get(), "Oliver J. Rosten", paths, "", outputStream};
 
     tr.execute();
 
@@ -138,7 +138,7 @@ namespace sequoia::testing
         std::stringstream outputStream{};
         const auto includeTarget{working().append("TestShared").append("SharedIncludes.hpp")};
         commandline_arguments args{"", "create", "free", "Plurgh.h"};
-        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "", includeTarget, project_paths{working()}, outputStream};
+        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", project_paths{working(), "", includeTarget}, "  ", outputStream};
       });
 
     check_exception_thrown<std::runtime_error>(
@@ -147,7 +147,7 @@ namespace sequoia::testing
         std::stringstream outputStream{};
         const auto includeTarget{working().append("TestShared").append("SharedIncludes.hpp")};
         commandline_arguments args{"", "create", "free", "Plurgh.h"};
-        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "FooMain.cpp", includeTarget, project_paths{working()}, outputStream};
+        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", project_paths{working(), "FooMain.cpp", includeTarget}, "  ", outputStream};
       });
 
     check_exception_thrown<std::runtime_error>(
@@ -156,7 +156,7 @@ namespace sequoia::testing
         const auto testMain{working().append("TestSandbox").append("TestSandbox.cpp")};
         std::stringstream outputStream{};
         commandline_arguments args{"", "create", "free", "Plurgh.h"};
-        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", testMain, "", project_paths{working()}, outputStream};
+        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", project_paths{working(), testMain, ""}, "  ", outputStream};
       });
 
     check_exception_thrown<std::runtime_error>(
@@ -165,7 +165,7 @@ namespace sequoia::testing
         const auto testMain{working().append("TestSandbox").append("TestSandbox.cpp")};
         std::stringstream outputStream{};
         commandline_arguments args{"", "create", "free", "Plurgh.h"};
-        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", testMain, "FooPath.hpp", project_paths{working()}, outputStream};
+        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", project_paths{working(), testMain, "FooPath.hpp"}, "  ", outputStream};
       });
 
      check_exception_thrown<std::runtime_error>(
@@ -175,7 +175,7 @@ namespace sequoia::testing
          const auto includeTarget{working().append("TestShared").append("SharedIncludes.hpp")};
          std::stringstream outputStream{};
          commandline_arguments args{"", "create", "free", "Plurgh.h"};
-         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", testMain, includeTarget, project_paths{""}, outputStream};
+         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", project_paths{"", testMain, includeTarget}, "  ", outputStream};
        });
 
      check_exception_thrown<std::runtime_error>(
@@ -185,7 +185,7 @@ namespace sequoia::testing
          const auto includeTarget{working().append("TestShared").append("SharedIncludes.hpp")};
          std::stringstream outputStream{};
          commandline_arguments args{"", "create", "free", "Plurgh.h"};
-         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", testMain, includeTarget, project_paths{working() / "FooRepo"}, outputStream};
+         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", project_paths{working() / "FooRepo", testMain, includeTarget}, "  ", outputStream};
        }, pathTrimmer);
 
      check_exception_thrown<std::runtime_error>(
@@ -195,7 +195,7 @@ namespace sequoia::testing
          const auto includeTarget{working().append("TestShared").append("SharedIncludes.hpp")};
          std::stringstream outputStream{};
          commandline_arguments args{"", "create", "free", "Plurgh.h"};
-         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", testMain, includeTarget, project_paths{includeTarget}, outputStream};
+         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", project_paths{includeTarget, testMain, includeTarget}, "  ", outputStream};
        }, pathTrimmer);
 
       check_exception_thrown<std::runtime_error>(
@@ -205,7 +205,7 @@ namespace sequoia::testing
           const auto includeTarget{working().append("TestShared").append("SharedIncludes.hpp")};
           std::stringstream outputStream{};
           commandline_arguments args{"", "create", "free", "Plurgh.h"};
-          test_runner tr{args.size(), args.get(), "Oliver J. Rosten", testMain, includeTarget, project_paths{working()}, outputStream};
+          test_runner tr{args.size(), args.get(), "Oliver J. Rosten", project_paths{working(), testMain, includeTarget}, "  ", outputStream};
           tr.execute();
         });
 
@@ -216,7 +216,7 @@ namespace sequoia::testing
           const auto includeTarget{working().append("TestShared").append("SharedIncludes.hpp")};
           std::stringstream outputStream{};
           commandline_arguments args{"", "create", "regular_test", "bar::things", "double", "-ch", "fakeProject/Stuff/Thingz.hpp"};
-          test_runner tr{args.size(), args.get(), "Oliver J. Rosten", testMain, includeTarget, project_paths{working()}, outputStream};
+          test_runner tr{args.size(), args.get(), "Oliver J. Rosten", project_paths{working(), testMain, includeTarget}, "  ", outputStream};
         });
   }
 }

@@ -20,8 +20,6 @@ int main(int argc, char** argv)
     test_runner runner{argc,
                        argv,
                        "Oliver J. Rosten",
-                       root/"TestAll"/"TestMain.cpp",
-                       root/"TestAll"/"TestMain.cpp",
                        project_paths{root}
     };
  

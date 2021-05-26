@@ -74,25 +74,6 @@ namespace sequoia::testing
     return report_time(s.log, s.execution_time);
   }
 
-  project_paths::project_paths(const std::filesystem::path& projectRoot)
-    : project_root{projectRoot}
-    , source{source_path(projectRoot)}
-    , tests{projectRoot/"Tests"}
-    , test_materials{projectRoot/"TestMaterials"}
-    , output{projectRoot/"output"}
-  {
-    throw_unless_directory(project_root, "\nTest repository not found");
-  }
-
-  [[nodiscard]]
-  std::filesystem::path project_paths::source_path(const std::filesystem::path& projectRoot)
-  {
-    if(projectRoot.empty())
-      throw std::runtime_error{"Project root should not be empty"};
-
-    return projectRoot / "Source" / uncapitalize((--projectRoot.end())->generic_string());
-  }
-
   [[nodiscard]]
   std::string to_string(const template_data& data)
   {
@@ -225,7 +206,7 @@ namespace sequoia::testing
     if(filename.empty())
       throw std::runtime_error{"Header name is empty"};
 
-    if(const auto path{find_in_tree(m_Repos.source, filename)}; !path.empty())
+    if(const auto path{find_in_tree(m_Paths.source, filename)}; !path.empty())
       return path;
 
     for(auto e : extensions)
@@ -233,7 +214,7 @@ namespace sequoia::testing
       if(e != filename.extension())
       {
         const auto alternative{std::filesystem::path{filename}.replace_extension(e)};
-        if(const auto path{find_in_tree(m_Repos.source, alternative)}; !path.empty())
+        if(const auto path{find_in_tree(m_Paths.source, alternative)}; !path.empty())
           return path;
       }
     }
@@ -275,12 +256,12 @@ namespace sequoia::testing
   {
     namespace fs = std::filesystem;
 
-    const auto relSourcePath{fs::relative(sourcePath, m_Repos.source)};
-    const auto dir{(m_Repos.tests / relSourcePath).parent_path()};
+    const auto relSourcePath{fs::relative(sourcePath, m_Paths.source)};
+    const auto dir{(m_Paths.tests / relSourcePath).parent_path()};
     fs::create_directories(dir);
 
     m_HostDir = dir;
-    m_HeaderPath = fs::relative(sourcePath, m_Repos.source.parent_path());
+    m_HeaderPath = fs::relative(sourcePath, m_Paths.source_root);
   }
 
   void nascent_test_base::on_source_path_error(const std::vector<std::string_view>& extensions) const
@@ -297,7 +278,7 @@ namespace sequoia::testing
       }
     }
 
-    mess.append(" in the source repository\n").append(fs::relative(m_Repos.source, m_Repos.tests).generic_string());
+    mess.append(" in the source repository\n").append(fs::relative(m_Paths.source, m_Paths.tests).generic_string());
 
     throw std::runtime_error{mess};
   }
@@ -334,8 +315,8 @@ namespace sequoia::testing
     namespace fs = std::filesystem;
     const auto srcPath{fs::path{headerPath}.replace_extension("cpp")};
 
-    const auto sourceRoot{repos().source.parent_path()};
-    fs::copy_file(source_templates_path(repos().project_root) / "MyCpp.cpp", srcPath);
+    const auto sourceRoot{paths().source_root};
+    fs::copy_file(source_templates_path(paths().project_root) / "MyCpp.cpp", srcPath);
 
     auto setCppText{
         [&](std::string& text) {
@@ -349,7 +330,7 @@ namespace sequoia::testing
 
     add_to_cmake(sourceRoot, sourceRoot, srcPath, "set(", ")\n", "");
 
-    read_modify_write(test_main_dir() / "CMakeLists.txt", [&root{repos().project_root}](std::string& text) {
+    read_modify_write(paths().main_cpp_dir / "CMakeLists.txt", [&root{paths().project_root}](std::string& text) {
         replace_all(text, "#!", "");
       }
     );
@@ -418,9 +399,9 @@ namespace sequoia::testing
 
       const auto headerTemplate{std::string{"My"}.append(capitalize(to_camel_case(test_type()))).append("Class.hpp")};
 
-      const auto headerPath{filename.is_absolute() ? filename : repos().source / rebase_from(m_SourceDir / filename, repos().source)};
+      const auto headerPath{filename.is_absolute() ? filename : paths().source / rebase_from(m_SourceDir / filename, paths().source)};
       fs::create_directories(headerPath.parent_path());
-      fs::copy_file(source_templates_path(repos().project_root) / headerTemplate, headerPath);
+      fs::copy_file(source_templates_path(paths().project_root) / headerTemplate, headerPath);
 
       auto setHeaderText{
         [this,&nameSpace](std::string& text) {
@@ -534,9 +515,9 @@ namespace sequoia::testing
     namespace fs = std::filesystem;
     nascent_test_base::finalize([this](const fs::path& filename) {
 
-      const auto headerPath{filename.is_absolute() ? filename : repos().source / rebase_from(filename, repos().source)};
+      const auto headerPath{filename.is_absolute() ? filename : paths().source / rebase_from(filename, paths().source)};
       fs::create_directories(headerPath.parent_path());
-      fs::copy_file(source_templates_path(repos().project_root) / "MyFreeFunctions.hpp", headerPath);
+      fs::copy_file(source_templates_path(paths().project_root) / "MyFreeFunctions.hpp", headerPath);
 
       read_modify_write(headerPath, [&nameSpace{m_Namespace}](std::string& text) { process_namespace(text, nameSpace); });
 
@@ -621,7 +602,7 @@ namespace sequoia::testing
   {
     auto& nascentTests{runner.m_NascentTests};
 
-    static creation_factory factory{{"semantic", "allocation", "behavioural"}, runner.m_TestMainCpp.parent_path(), runner.m_Repos};
+    static creation_factory factory{{"semantic", "allocation", "behavioural"}, runner.m_Paths};
     auto nascent{factory.create(genus)};
 
     std::visit(
@@ -645,22 +626,18 @@ namespace sequoia::testing
     nascentTests.emplace_back(std::move(nascent));
   }
 
-  test_runner::test_runner(int argc, char** argv, std::string_view copyright, std::filesystem::path testMainCpp, std::filesystem::path hashIncludeTarget, project_paths repos, std::ostream& stream)
+  test_runner::test_runner(int argc, char** argv, std::string_view copyright, project_paths paths, std::string_view codeIndent, std::ostream& stream)
     : m_Copyright{copyright}
-    , m_TestMainCpp{std::move(testMainCpp)}
-    , m_HashIncludeTarget{std::move(hashIncludeTarget)}
-    , m_Repos{std::move(repos)}
+    , m_Paths{std::move(paths)}
+    , m_CodeIndent{codeIndent}
     , m_Stream{&stream}
   {
-    throw_unless_regular_file(m_TestMainCpp, "\nTry ensuring that the application is run from the appropriate directory");
-    throw_unless_regular_file(m_HashIncludeTarget, "\nInclude target not found");
-
     process_args(argc, argv);
 
     namespace fs = std::filesystem;
-    fs::create_directory(m_Repos.output);
-    fs::create_directory(diagnostics_output_path(m_Repos.output));
-    fs::create_directory(test_summaries_path(m_Repos.output));
+    fs::create_directory(m_Paths.output);
+    fs::create_directory(diagnostics_output_path(m_Paths.output));
+    fs::create_directory(test_summaries_path(m_Paths.output));
   }
 
   void test_runner::process_args(int argc, char** argv)
@@ -812,14 +789,14 @@ namespace sequoia::testing
                   },
                   {"--verbose",  {"-v"}, {}, [this](const param_list&) { m_OutputMode |= output_mode::verbose; }},
                   {"--recovery", {"-r"}, {},
-                    [this,recoveryDir{recovery_path(m_Repos.output)}] (const param_list&) {
+                    [this,recoveryDir{recovery_path(m_Paths.output)}] (const param_list&) {
                       std::filesystem::create_directory(recoveryDir);
                       m_Recovery.recovery_file = recoveryDir / "Recovery.txt";
                       std::filesystem::remove(m_Recovery.recovery_file);
                     }
                   },
                   {"--dump", {}, {},
-                    [this, recoveryDir{recovery_path(m_Repos.output)}] (const param_list&) {
+                    [this, recoveryDir{recovery_path(m_Paths.output)}] (const param_list&) {
                       std::filesystem::create_directory(recoveryDir);
                       m_Recovery.dump_file = recoveryDir / "Dump.txt";
                       std::filesystem::remove(m_Recovery.dump_file);
@@ -953,7 +930,7 @@ namespace sequoia::testing
   auto test_runner::find_filename(const std::filesystem::path& filename) -> source_list::iterator
   {
     return std::find_if(m_SelectedSources.begin(), m_SelectedSources.end(),
-                 [&filename, &repo{m_Repos.tests}, &root{m_Repos.project_root}](const auto& element){
+                 [&filename, &repo{m_Paths.tests}, &root{m_Paths.project_root}](const auto& element){
                    const auto& source{element.first};
 
                    if(filename == source) return true;
@@ -1014,7 +991,7 @@ namespace sequoia::testing
             append_lines(mess, create_file(nascent, stub));
           }
 
-          add_to_family(m_TestMainCpp, nascent.family(), nascent.constructors());
+          add_to_family(m_Paths.main_cpp, nascent.family(), nascent.constructors());
         }
       };
 
@@ -1029,9 +1006,9 @@ namespace sequoia::testing
   std::string test_runner::create_file(const Nascent& nascent, std::string_view stub) const
   {
     namespace fs = std::filesystem;
-    auto stringify{[root{m_Repos.project_root}] (const fs::path file) { return fs::relative(file, root).generic_string();  }};
+    auto stringify{[root{m_Paths.project_root}] (const fs::path file) { return fs::relative(file, root).generic_string();  }};
 
-    const auto[outputFile, created]{nascent.create_file(m_Copyright, code_templates_path(m_Repos.project_root), stub)};
+    const auto[outputFile, created]{nascent.create_file(m_Copyright, code_templates_path(m_Paths.project_root), stub)};
 
     if(created)
     {
@@ -1039,12 +1016,12 @@ namespace sequoia::testing
       {
         if(const auto str{outputFile.string()}; str.find("Utilities.hpp") == std::string::npos)
         {
-          add_include(m_HashIncludeTarget, fs::relative(outputFile, m_Repos.tests).generic_string());
+          add_include(m_Paths.include_target, fs::relative(outputFile, m_Paths.tests).generic_string());
         }
       }
       else if(outputFile.extension() == ".cpp")
       {
-        add_to_cmake(m_TestMainCpp.parent_path(), m_Repos.tests, outputFile, "target_sources(", ")\n", "${TestDir}/");
+        add_to_cmake(m_Paths.main_cpp.parent_path(), m_Paths.tests, outputFile, "target_sources(", ")\n", "${TestDir}/");
       }
 
       return std::string{"\""}.append(stringify(outputFile)).append("\"");
@@ -1118,12 +1095,12 @@ namespace sequoia::testing
     if(name.find(' ') != std::string::npos)
       throw std::runtime_error{std::string{"Please remove spaces from the project name, '"}.append(name).append("'")};
 
-    report("Creating new project at location:", fs::relative(projRoot, m_Repos.project_root).generic_string());
+    report("Creating new project at location:", fs::relative(projRoot, m_Paths.project_root).generic_string());
 
     fs::create_directories(projRoot);
-    fs::copy(project_template_path(m_Repos.project_root), projRoot, fs::copy_options::recursive | fs::copy_options::skip_existing);
+    fs::copy(project_template_path(m_Paths.project_root), projRoot, fs::copy_options::recursive | fs::copy_options::skip_existing);
     fs::create_directory(project_paths::source_path(projRoot));
-    fs::copy(aux_files_path(m_Repos.project_root), aux_files_path(projRoot), fs::copy_options::recursive | fs::copy_options::skip_existing);
+    fs::copy(aux_files_path(m_Paths.project_root), aux_files_path(projRoot), fs::copy_options::recursive | fs::copy_options::skip_existing);
 
     generate_test_main(copyright, projRoot);
     generate_build_system_files(projRoot);
@@ -1153,7 +1130,7 @@ namespace sequoia::testing
     const std::filesystem::path relCmakeLocation{"TestAll/CMakeLists.txt"};
 
     auto replaceSeqroot{
-      [&parentProjRoot{m_Repos.project_root}](std::string& text) {
+      [&parentProjRoot{m_Paths.project_root}](std::string& text) {
         constexpr auto npos{std::string::npos};
         constexpr std::string_view seqRoot{"SEQUOIA_ROOT"};
         if(auto pos{text.find(seqRoot)}; pos != npos)

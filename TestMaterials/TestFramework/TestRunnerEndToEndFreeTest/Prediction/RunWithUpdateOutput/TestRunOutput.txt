@@ -22,11 +22,11 @@ Bar:
 Maybe:
 [2 (0)ms]
 Oldschool:
-[2 (0)ms]
+[4 (0)ms]
 Probability:
-[2 (0)ms]
+[3 (0)ms]
 Foo:
-[22 (10)ms]
+[38 (22)ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 43]
 
 	Tests/Stuff/FooTest.cpp, Line 37
@@ -130,14 +130,14 @@ Foo:
 
 
 UniqueThing:
-[2 (0)ms]
+[4 (0)ms]
 Container:
-[3 (0)ms]
+[5 (0)ms]
 House:
-[1 (0)ms]
+[2 (0)ms]
 
 -----------Grand Totals-----------
-[40 (11)ms]
+[67 (23)ms]
 	Standard Top Level Checks:                 2;  Failures:  2  [Deep checks: 44]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

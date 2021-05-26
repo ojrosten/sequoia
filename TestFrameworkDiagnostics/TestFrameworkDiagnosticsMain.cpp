@@ -21,9 +21,9 @@ int main(int argc, char** argv)
     test_runner runner{argc,
                        argv,
                        "Oliver J. Rosten",
-                       root/"TestFrameworkDiagnostics"/"TestFrameworkDiagnosticsMain.cpp",
-                       root/"TestCommon" /"TestIncludes.hpp",
-                       project_paths{root}
+                       project_paths{root,
+                                     root / "TestFrameworkDiagnostics" / "TestFrameworkDiagnosticsMain.cpp",
+                                     root / "TestCommon" / "TestIncludes.hpp"}
     };
 
     runner.add_test_family(

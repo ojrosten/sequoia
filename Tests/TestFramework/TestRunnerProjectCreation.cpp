@@ -36,7 +36,7 @@ namespace sequoia::testing
     const auto testMain{fake().append("TestSandbox").append("TestSandbox.cpp")};
     const auto includeTarget{fake().append("TestShared").append("SharedIncludes.hpp")};
 
-    const project_paths repos{fake()};
+    const project_paths paths{fake(), testMain, includeTarget};
 
     auto generated{
       [&mat{working_materials()}]() { return mat / "GeneratedProject"; }
@@ -48,7 +48,7 @@ namespace sequoia::testing
         commandline_arguments args{"", "init", "Oliver Jacob Rosten", (working_materials() / "Generated Project").string()};
 
         std::stringstream outputStream{};
-        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", testMain, includeTarget, repos, outputStream};
+        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", paths, "  ", outputStream};
 
         tr.execute();
       });
@@ -56,7 +56,7 @@ namespace sequoia::testing
     commandline_arguments args{"", "init", "Oliver Jacob Rosten", generated().string()};
 
     std::stringstream outputStream{};
-    test_runner tr{args.size(), args.get(), "Oliver J. Rosten", testMain, includeTarget, repos, outputStream};
+    test_runner tr{args.size(), args.get(), "Oliver J. Rosten", paths, "  ", outputStream};
 
     tr.execute();
 

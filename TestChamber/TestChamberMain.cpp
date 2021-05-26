@@ -20,9 +20,9 @@ int main(int argc, char** argv)
     test_runner runner{argc,
                        argv,
                        "Oliver J. Rosten",
-                       root/"TestChamber"/"TestChamberMain.cpp",
-                       root/"TestCommon" /"TestIncludes.hpp",
-                       project_paths{root}
+                       project_paths{root,
+                                     root / "TestChamber" / "TestChamberMain.cpp",
+                                     root / "TestCommon" / "TestIncludes.hpp"}
     };
 
     runner.add_test_family(

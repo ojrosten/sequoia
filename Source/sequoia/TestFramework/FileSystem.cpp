@@ -12,11 +12,12 @@
 #include "sequoia/TestFramework/FileSystem.hpp"
 
 #include "sequoia/TestFramework/Output.hpp"
+#include "sequoia/TextProcessing/Substitutions.hpp"
 
 namespace sequoia::testing
 {
   namespace
-  {    
+  {
     [[nodiscard]]
     std::string report_file_issue(const std::filesystem::path& file, std::string_view description)
     {
@@ -26,6 +27,12 @@ namespace sequoia::testing
 
       return mess;
     }
+  }
+
+  [[nodiscard]]
+  std::filesystem::path working_path()
+  {
+    return working_path_v;
   }
 
   [[nodiscard]]
@@ -53,6 +60,35 @@ namespace sequoia::testing
     }
 
     return fallback;
+  }
+
+  project_paths::project_paths(const std::filesystem::path& projectRoot)
+    : project_paths{projectRoot, projectRoot / "TestAll" / "TestMain.cpp", projectRoot / "TestAll" / "TestMain.cpp"}
+  {}
+
+  project_paths::project_paths(const std::filesystem::path& projectRoot, std::filesystem::path mainCpp, std::filesystem::path includePath)
+    : project_root{projectRoot}
+    , source{source_path(projectRoot)}
+    , source_root{source.parent_path()}
+    , tests{projectRoot / "Tests"}
+    , test_materials{projectRoot / "TestMaterials"}
+    , output{projectRoot / "output"}
+    , main_cpp{std::move(mainCpp)}
+    , main_cpp_dir{main_cpp.parent_path()}
+    , include_target{std::move(includePath)}
+  {
+    throw_unless_directory(project_root, "\nTest repository not found");
+    throw_unless_regular_file(main_cpp, "\nTry ensuring that the application is run from the appropriate directory");
+    throw_unless_regular_file(include_target, "\nInclude target not found");
+  }
+
+  [[nodiscard]]
+  std::filesystem::path project_paths::source_path(const std::filesystem::path& projectRoot)
+  {
+    if(projectRoot.empty())
+      throw std::runtime_error{"Project root should not be empty"};
+
+    return projectRoot / "Source" / uncapitalize((--projectRoot.end())->generic_string());
   }
 
   [[nodiscard]]

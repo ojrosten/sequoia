@@ -219,7 +219,7 @@ namespace sequoia::testing
     const auto testMain{seqRoot/"TestAll/TestMain.cpp"};
     const auto includeTarget{seqRoot/"TestCommon/TestIncludes.hpp"};
 
-    const project_paths repos{seqRoot};
+    const project_paths paths{seqRoot, testMain, includeTarget};
 
     auto generated{
       [&mat{working_materials()}]() {
@@ -230,7 +230,7 @@ namespace sequoia::testing
     commandline_arguments args{"", "init", "Oliver Jacob Rosten", generated().string()};
 
     std::stringstream outputStream{};
-    test_runner tr{args.size(), args.get(), "Oliver J. Rosten", testMain, includeTarget, repos, outputStream};
+    test_runner tr{args.size(), args.get(), "Oliver J. Rosten", paths, "  ", outputStream};
 
     tr.execute();
 

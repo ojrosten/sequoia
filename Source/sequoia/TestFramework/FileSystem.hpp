@@ -21,10 +21,35 @@ namespace sequoia::testing
   const static auto working_path_v{std::filesystem::current_path().lexically_normal()};
 
   [[nodiscard]]
-  inline std::filesystem::path working_path()
+  std::filesystem::path working_path();
+
+  struct project_paths
   {
-    return working_path_v;
-  }
+    explicit project_paths(const std::filesystem::path& projectRoot);
+
+    project_paths(const std::filesystem::path& projectRoot, std::filesystem::path mainCpp, std::filesystem::path includePath);
+
+    [[nodiscard]]
+    static std::filesystem::path source_path(const std::filesystem::path& projectRoot);
+
+    [[nodiscard]]
+    friend bool operator==(const project_paths&, const project_paths&) noexcept = default;
+
+    [[nodiscard]]
+    friend bool operator!=(const project_paths&, const project_paths&) noexcept = default;
+
+    std::filesystem::path
+      project_root{},
+      source{},
+      source_root{},
+      tests{},
+      test_materials{},
+      output{},
+      main_cpp{},
+      main_cpp_dir{},
+      include_target{};
+  };
+
 
   [[nodiscard]]
   std::filesystem::path project_root(int argc, char** argv, const std::filesystem::path& fallback=working_path().parent_path());
@@ -55,7 +80,6 @@ namespace sequoia::testing
 
   [[nodiscard]]
   std::filesystem::path test_summaries_path(std::filesystem::path outputDir);
-
 
   template<class Pred>
     requires invocable<Pred, std::filesystem::path>
