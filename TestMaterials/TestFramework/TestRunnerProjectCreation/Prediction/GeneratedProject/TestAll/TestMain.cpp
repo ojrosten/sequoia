@@ -20,7 +20,8 @@ int main(int argc, char** argv)
     test_runner runner{argc,
                        argv,
                        "Oliver Jacob Rosten",
-                       project_paths{root}
+                       project_paths{root},
+					   "\t"
     };
  
     runner.execute();

@@ -11,15 +11,15 @@ template<class... T>
 class multiple
 {
 public:
-  multiple(const multiple&)     = delete;
-  multiple(multiple&&) noexcept = default;
+	multiple(const multiple&)     = delete;
+	multiple(multiple&&) noexcept = default;
 
-  multiple& operator=(const multiple&)     = delete;
-  multiple& operator=(multiple&&) noexcept = default;
+	multiple& operator=(const multiple&)     = delete;
+	multiple& operator=(multiple&&) noexcept = default;
 
-  [[nodiscard]]
-  friend bool operator==(const multiple&, const multiple&) noexcept = default;
+	[[nodiscard]]
+	friend bool operator==(const multiple&, const multiple&) noexcept = default;
 
-  [[nodiscard]]
-  friend bool operator!=(const multiple&, const multiple&) noexcept = default;
+	[[nodiscard]]
+	friend bool operator!=(const multiple&, const multiple&) noexcept = default;
 };

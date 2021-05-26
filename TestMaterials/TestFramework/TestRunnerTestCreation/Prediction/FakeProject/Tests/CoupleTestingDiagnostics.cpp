@@ -9,16 +9,16 @@
 
 namespace sequoia::testing
 {
-  [[nodiscard]]
-  std::string_view couple_false_positive_test::source_file() const noexcept
-  {
-    return __FILE__;
-  }
+	[[nodiscard]]
+	std::string_view couple_false_positive_test::source_file() const noexcept
+	{
+		return __FILE__;
+	}
 
-  void couple_false_positive_test::run_tests()
-  {
-    // e.g couple x{args}, y{different args};
-    // check_equivalence(LINE("Useful Description"), x, something inequivalent - ordinarily this would fail);
-    // check_equality(LINE("Useful Description"), x, y);
-  }
+	void couple_false_positive_test::run_tests()
+	{
+		// e.g couple x{args}, y{different args};
+		// check_equivalence(LINE("Useful Description"), x, something inequivalent - ordinarily this would fail);
+		// check_equality(LINE("Useful Description"), x, y);
+	}
 }

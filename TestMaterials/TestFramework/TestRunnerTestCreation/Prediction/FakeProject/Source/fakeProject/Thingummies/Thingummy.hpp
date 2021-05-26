@@ -9,14 +9,14 @@
 
 namespace stuff
 {
-  template<class T>
-  class thingummy
-  {
-  public:
-    [[nodiscard]]
-    friend bool operator==(const thingummy&, const thingummy&) noexcept = default;
+	template<class T>
+	class thingummy
+	{
+	public:
+		[[nodiscard]]
+		friend bool operator==(const thingummy&, const thingummy&) noexcept = default;
 
-    [[nodiscard]]
-    friend bool operator!=(const thingummy&, const thingummy&) noexcept = default;
-  };
+		[[nodiscard]]
+		friend bool operator!=(const thingummy&, const thingummy&) noexcept = default;
+	};
 }
