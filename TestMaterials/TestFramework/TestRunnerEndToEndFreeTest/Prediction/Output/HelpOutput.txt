@@ -1,29 +1,29 @@
-test | t | test_family_name
-select | s | source_file_name
+test | t | test family name
+select | s | source file name
 create | c |
-  regular_test | regular | qualified::class_name<class T>, equivalent_type
+  regular_test | regular | qualified::class_name<class T>, equivalent type
     --equivalent-type | -e | equivalent_type
     --family | -f | family
-    --class-header | -ch | class_header
-    gen-source | g | source_dir
-  move_only_test | move_only | qualified::class_name<class T>, equivalent_type
+    --class-header | -ch | header of class to test
+    gen-source | g | source dir
+  move_only_test | move_only | qualified::class_name<class T>, equivalent type
     --equivalent-type | -e | equivalent_type
     --family | -f | family
-    --class-header | -ch | class_header
-    gen-source | g | source_dir
-  regular_allocation_test | regular_allocation allocation_test | raw_class_name
+    --class-header | -ch | header of class to test
+    gen-source | g | source dir
+  regular_allocation_test | regular_allocation allocation_test | raw class name
     --family | -f | family
-    --class-header | -ch | class_header
-  move_only_allocation_test | move_only_allocation | raw_class_name
+    --class-header | -ch | header of class to test
+  move_only_allocation_test | move_only_allocation | raw class name
     --family | -f | family
-    --class-header | -ch | class_header
+    --class-header | -ch | header of class to test
   free_test | free | header
     --family | -f | family
     --forename | -name | forename
     gen-source | g | namespace
   performance_test | performance | header
     --family | -f | family
-init | i | copyright, path, ending with project name
+init | i | copyright owner, path ending with project name
 update-materials | u |
 --async | -a |
 --async-depth | -ad | depth [0,1]

@@ -667,7 +667,7 @@ namespace sequoia::testing
       }
     };
 
-    const option headerOption{"--class-header", {"-ch"}, {"class_header"},
+    const option headerOption{"--class-header", {"-ch"}, {"header of class to test"},
       [this](const param_list& args){
         if(m_NascentTests.empty())
           throw std::logic_error{"Unable to find nascent test"};
@@ -706,7 +706,7 @@ namespace sequoia::testing
       }
     };
 
-    const option genSemanticsSourceOption{"gen-source", {"g"}, {"source_dir"},
+    const option genSemanticsSourceOption{"gen-source", {"g"}, {"source dir"},
       [this](const param_list& args) {
         if(m_NascentTests.empty())
           throw std::logic_error{"Unable to find nascent test"};
@@ -734,25 +734,25 @@ namespace sequoia::testing
     namespace fs = std::filesystem;
     const auto help{
       parse_invoke_depth_first(argc, argv,
-                { {"test", {"t"}, {"test_family_name"},
+                { {"test", {"t"}, {"test family name"},
                     [this](const param_list& args) { m_SelectedFamilies.emplace(args.front(), false); }
                   },
-                  {"select", {"s"}, {"source_file_name"},
+                  {"select", {"s"}, {"source file name"},
                     [this](const param_list& args) {
                       m_SelectedSources.emplace_back(fs::path{args.front()}.lexically_normal(), false);
                     }
                   },
                   {"create", {"c"}, {}, [](const param_list&) {},
-                   { {"regular_test", {"regular"}, {"qualified::class_name<class T>", "equivalent_type"},
+                   { {"regular_test", {"regular"}, {"qualified::class_name<class T>", "equivalent type"},
                       test_creator{"semantic", "regular", *this}, semanticsOptions
                      },
-                     {"move_only_test", {"move_only"}, {"qualified::class_name<class T>", "equivalent_type"},
+                     {"move_only_test", {"move_only"}, {"qualified::class_name<class T>", "equivalent type"},
                       test_creator{"semantic", "move_only", *this}, semanticsOptions
                      },
-                     {"regular_allocation_test", {"regular_allocation", "allocation_test"}, {"raw_class_name"},
+                     {"regular_allocation_test", {"regular_allocation", "allocation_test"}, {"raw class name"},
                       test_creator{"allocation", "regular_allocation", *this}, allocationOptions
                      },
-                     {"move_only_allocation_test", {"move_only_allocation"}, {"raw_class_name"},
+                     {"move_only_allocation_test", {"move_only_allocation"}, {"raw class name"},
                       test_creator{"allocation", "move_only_allocation", *this}, allocationOptions
                      },
                      {"free_test", {"free"}, {"header"},
@@ -767,7 +767,7 @@ namespace sequoia::testing
                         std::visit(variant_visitor{[](auto& nascent){ nascent.finalize();}}, m_NascentTests.back());
                     }
                   },
-                  {"init", {"i"}, {"copyright", "path, ending with project name"},
+                  {"init", {"i"}, {"copyright owner", "path ending with project name"},
                     [this](const param_list& args) {
                       init_project(args[0], args[1]);
                     }
