@@ -31,7 +31,7 @@ int main(int argc, char** argv)
       experimental_test{"Unit Test"}
     );
 
-    runner.execute((timer_resolution{1ms});
+    runner.execute(timer_resolution{1ms});
   }
   catch(const std::exception& e)
   {
