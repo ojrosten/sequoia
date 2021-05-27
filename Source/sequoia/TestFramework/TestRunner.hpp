@@ -315,7 +315,7 @@ namespace sequoia::testing
         , runner{r}
       {}
 
-      void operator()(const parsing::commandline::param_list& args);
+      void operator()(const parsing::commandline::arg_list& args);
 
       std::string genus, species;
       test_runner& runner;

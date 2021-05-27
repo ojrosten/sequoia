@@ -18,7 +18,7 @@ namespace sequoia::testing
       : tag{t}
     {}
 
-    void operator()(const std::vector<std::string>&) const noexcept {}
+    void operator()(const parsing::commandline::arg_list&) const noexcept {}
 
     std::string tag{};
   };
@@ -33,7 +33,7 @@ namespace sequoia::testing
     {
       check(logger, operation.early, prediction.early, "early");
       check(logger, operation.late, prediction.late, "late");
-      check_equality("Operation Parameters differ", logger, operation.parameters, prediction.parameters);
+      check_equality("Operation Parameters differ", logger, operation.arguments, prediction.arguments);
     }
   private:
     using executor = sequoia::parsing::commandline::executor;
@@ -83,6 +83,7 @@ namespace sequoia::testing
   class commandline_arguments
   {
   public:
+    [[nodiscard]]
     int size() const noexcept
     {
       return static_cast<int>(m_Args.size());

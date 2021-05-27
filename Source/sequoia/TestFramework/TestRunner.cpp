@@ -598,7 +598,7 @@ namespace sequoia::testing
 
   //=========================================== test_runner ===========================================//
 
-  void test_runner::test_creator::operator()(const parsing::commandline::param_list& args)
+  void test_runner::test_creator::operator()(const parsing::commandline::arg_list& args)
   {
     auto& nascentTests{runner.m_NascentTests};
 
@@ -643,7 +643,7 @@ namespace sequoia::testing
   void test_runner::process_args(int argc, char** argv)
   {
     const option familyOption{"--family", {"-f"}, {"family"},
-      [this](const param_list& args){
+      [this](const arg_list& args){
         if(m_NascentTests.empty())
           throw std::logic_error{"Unable to find nascent test"};
 
@@ -652,7 +652,7 @@ namespace sequoia::testing
     };
 
     const option equivOption{"--equivalent-type", {"-e"}, {"equivalent_type"},
-      [this](const param_list& args){
+      [this](const arg_list& args){
         if(m_NascentTests.empty())
           throw std::logic_error{"Unable to find nascent test"};
 
@@ -668,7 +668,7 @@ namespace sequoia::testing
     };
 
     const option headerOption{"--class-header", {"-ch"}, {"header of class to test"},
-      [this](const param_list& args){
+      [this](const arg_list& args){
         if(m_NascentTests.empty())
           throw std::logic_error{"Unable to find nascent test"};
 
@@ -677,7 +677,7 @@ namespace sequoia::testing
     };
 
     const option nameOption{"--forename", {"-name"}, {"forename"},
-      [this](const param_list& args){
+      [this](const arg_list& args){
         if(m_NascentTests.empty())
           throw std::logic_error{"Unable to find nascent test"};
 
@@ -686,7 +686,7 @@ namespace sequoia::testing
     };
 
     const option genFreeSourceOption{"gen-source", {"g"}, {"namespace"},
-      [this](const param_list& args) {
+      [this](const arg_list& args) {
         if(m_NascentTests.empty())
           throw std::logic_error{"Unable to find nascent test"};
 
@@ -707,7 +707,7 @@ namespace sequoia::testing
     };
 
     const option genSemanticsSourceOption{"gen-source", {"g"}, {"source dir"},
-      [this](const param_list& args) {
+      [this](const arg_list& args) {
         if(m_NascentTests.empty())
           throw std::logic_error{"Unable to find nascent test"};
 
@@ -735,14 +735,14 @@ namespace sequoia::testing
     const auto help{
       parse_invoke_depth_first(argc, argv,
                 { {"test", {"t"}, {"test family name"},
-                    [this](const param_list& args) { m_SelectedFamilies.emplace(args.front(), false); }
+                    [this](const arg_list& args) { m_SelectedFamilies.emplace(args.front(), false); }
                   },
                   {"select", {"s"}, {"source file name"},
-                    [this](const param_list& args) {
+                    [this](const arg_list& args) {
                       m_SelectedSources.emplace_back(fs::path{args.front()}.lexically_normal(), false);
                     }
                   },
-                  {"create", {"c"}, {}, [](const param_list&) {},
+                  {"create", {"c"}, {}, [](const arg_list&) {},
                    { {"regular_test", {"regular"}, {"qualified::class_name<class T>", "equivalent type"},
                       test_creator{"semantic", "regular", *this}, semanticsOptions
                      },
@@ -762,41 +762,41 @@ namespace sequoia::testing
                        test_creator{"behavioural", "performance", *this}, {familyOption}
                      }
                    },
-                   [this](const param_list&) {
+                   [this](const arg_list&) {
                       if(!m_NascentTests.empty())
                         std::visit(variant_visitor{[](auto& nascent){ nascent.finalize();}}, m_NascentTests.back());
                     }
                   },
                   {"init", {"i"}, {"copyright owner", "path ending with project name"},
-                    [this](const param_list& args) {
+                    [this](const arg_list& args) {
                       init_project(args[0], args[1]);
                     }
                   },
                   {"update-materials", {"u"}, {},
-                    [this](const param_list&) { m_UpdateMode = update_mode::soft; }
+                    [this](const arg_list&) { m_UpdateMode = update_mode::soft; }
                   },
                   {"--async", {"-a"}, {},
-                    [this](const param_list&) {
+                    [this](const arg_list&) {
                       if(m_ConcurrencyMode == concurrency_mode::serial)
                         m_ConcurrencyMode = concurrency_mode::family;
                     }
                   },
                   {"--async-depth", {"-ad"}, {"depth [0,1]"},
-                    [this](const param_list& args) {
+                    [this](const arg_list& args) {
                       const int i{std::clamp(std::stoi(args.front()), 0, 1)};
                       m_ConcurrencyMode = static_cast<concurrency_mode>(i);
                     }
                   },
-                  {"--verbose",  {"-v"}, {}, [this](const param_list&) { m_OutputMode |= output_mode::verbose; }},
+                  {"--verbose",  {"-v"}, {}, [this](const arg_list&) { m_OutputMode |= output_mode::verbose; }},
                   {"--recovery", {"-r"}, {},
-                    [this,recoveryDir{recovery_path(m_Paths.output())}] (const param_list&) {
+                    [this,recoveryDir{recovery_path(m_Paths.output())}] (const arg_list&) {
                       std::filesystem::create_directory(recoveryDir);
                       m_Recovery.recovery_file = recoveryDir / "Recovery.txt";
                       std::filesystem::remove(m_Recovery.recovery_file);
                     }
                   },
                   {"--dump", {}, {},
-                    [this, recoveryDir{recovery_path(m_Paths.output())}] (const param_list&) {
+                    [this, recoveryDir{recovery_path(m_Paths.output())}] (const arg_list&) {
                       std::filesystem::create_directory(recoveryDir);
                       m_Recovery.dump_file = recoveryDir / "Dump.txt";
                       std::filesystem::remove(m_Recovery.dump_file);

@@ -44,11 +44,11 @@ namespace sequoia::parsing::commandline
   {
     for(auto& op : operations)
     {
-      if(op.early) op.early(op.parameters);
+      if(op.early) op.early(op.arguments);
 
       invoke_depth_first(op.nested_operations);
 
-      if(op.late) op.late(op.parameters);
+      if(op.late) op.late(op.arguments);
     }
   }
 
@@ -102,10 +102,10 @@ namespace sequoia::parsing::commandline
       else
       {
         auto& currentOperation{operations.back()};
-        auto& params{currentOperation.parameters};
-        params.push_back(arg);
+        auto& arguments{currentOperation.arguments};
+        arguments.push_back(arg);
 
-        if(params.size() == optionsIter->parameters.size())
+        if(arguments.size() == optionsIter->parameters.size())
         {
           optionsIter = process_nested_options(optionsIter, options.end(), currentOperation);
         }
@@ -113,7 +113,7 @@ namespace sequoia::parsing::commandline
     }
 
     if(   !operations.empty() && (optionsIter != options.end())
-       && (operations.back().parameters.size() != optionsIter->parameters.size()))
+       && (operations.back().arguments.size() != optionsIter->parameters.size()))
     {
       const auto& params{optionsIter->parameters};
       const auto expected{params.size()};
@@ -127,7 +127,7 @@ namespace sequoia::parsing::commandline
         if(std::distance(i, params.end()) > 1) mess.append(", ");
       }
 
-      const auto actual{operations.back().parameters.size()};
+      const auto actual{operations.back().arguments.size()};
       mess.append("], but found ").append(std::to_string(actual)).append(pluralize(actual, "argument"));
 
       throw std::runtime_error{error(mess)};
@@ -238,9 +238,9 @@ namespace sequoia::parsing::commandline
         {
           if(!i->early && !i->late)
           {
-            auto& params{currentOp.parameters};
-            const auto& nestedParams{i->parameters};
-            std::copy(nestedParams.begin(), nestedParams.end(), std::back_inserter(params));
+            auto& args{currentOp.arguments};
+            const auto& nestedArgs{i->arguments};
+            std::copy(nestedArgs.begin(), nestedArgs.end(), std::back_inserter(args));
 
             i = nestedOperations.erase(i);
           }

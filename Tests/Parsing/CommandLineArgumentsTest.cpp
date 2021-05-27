@@ -29,6 +29,12 @@ namespace sequoia::testing
     using fo = function_object;
 
     {
+      check_exception_thrown<std::logic_error>(LINE("Empty name"),      []() { return option{"", {}, {}, fo{}}; });
+      check_exception_thrown<std::logic_error>(LINE("Empty alias"),     []() { return option{"test", {""}, {}, fo{}}; });
+      check_exception_thrown<std::logic_error>(LINE("Empty parameter"), []() { return option{"test", {}, {""}, fo{}}; });
+    }
+
+    {
       check_weak_equivalence(LINE(""), parse(0, nullptr, {}), outcome{});
     }
 

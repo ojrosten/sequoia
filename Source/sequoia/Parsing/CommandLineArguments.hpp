@@ -18,16 +18,46 @@
 #include <string>
 #include <functional>
 #include <optional>
+#include <filesystem>
+#include <stdexcept>
 
 namespace sequoia::parsing::commandline
 {
-  using param_list = std::vector<std::string>;
+  class proper_string
+  {
+  public:
+    proper_string(std::string s) : m_String{std::move(s)}
+    {
+      if(m_String.empty())
+        throw std::logic_error{"Empty string detected"};
+    }
 
-  using executor = std::function<void (const param_list&)>;
+    proper_string(const char* c) : proper_string{std::string{c}}
+    {}
+
+    [[nodiscard]]
+    operator const std::string& () const noexcept
+    {
+      return m_String;
+    }
+
+    [[nodiscard]]
+    friend bool operator==(const proper_string&, const proper_string&) noexcept = default;
+
+    [[nodiscard]]
+    friend bool operator!=(const proper_string&, const proper_string&) noexcept = default;
+  private:
+    std::string m_String;
+  };
+
+  using param_list = std::vector<proper_string>;
+  using arg_list   = std::vector<std::string>;
+
+  using executor = std::function<void (const arg_list&)>;
 
   struct option
   {
-    std::string name;
+    proper_string name;
     param_list aliases;
     param_list parameters;
     executor early{};
@@ -40,7 +70,7 @@ namespace sequoia::parsing::commandline
   struct operation
   {
     executor early, late;
-    param_list parameters;
+    arg_list arguments;
 
     std::vector<operation> nested_operations{};
   };
@@ -75,15 +105,7 @@ namespace sequoia::parsing::commandline
     if(help.empty())
     {
       zerothArgProcessor(zerothArg);
-
-      for(auto& op : ops)
-      {
-        if(op.early) op.early(op.parameters);
-
-        invoke_depth_first(op.nested_operations);
-
-        if(op.late) op.late(op.parameters);
-      }
+      invoke_depth_first(ops);
     }
 
     return help;

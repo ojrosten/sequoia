@@ -1,4 +1,34 @@
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 64
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 32
+Empty name
+
+Expected Exception Type:
+[std::logic_error]
+Empty string detected
+
+
+	=======================================
+
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 33
+Empty alias
+
+Expected Exception Type:
+[std::logic_error]
+Empty string detected
+
+
+	=======================================
+
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 34
+Empty parameter
+
+Expected Exception Type:
+[std::logic_error]
+Empty string detected
+
+
+	=======================================
+
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 70
 Unexpected argument
 
 Expected Exception Type:
@@ -9,7 +39,7 @@ Expected Exception Type:
 
 	=======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 72
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 78
 Unexpected argument
 
 Expected Exception Type:
@@ -20,7 +50,7 @@ Expected Exception Type:
 
 	=======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 108
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 114
 Unexpected argument
 
 Expected Exception Type:
@@ -31,7 +61,7 @@ Expected Exception Type:
 
 	=======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 134
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 140
 Final argument missing
 
 Expected Exception Type:
@@ -42,7 +72,7 @@ Expected Exception Type:
 
 	=======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 361
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 367
 
 Expected Exception Type:
 [std::runtime_error]
