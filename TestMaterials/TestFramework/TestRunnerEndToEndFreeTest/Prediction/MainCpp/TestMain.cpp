@@ -26,18 +26,14 @@
 
 int main(int argc, char** argv)
 {
-  using namespace sequoia;
-  using namespace testing;
-
   try
   {
-    const auto root{project_root(argc, argv)};
-    test_runner runner{argc,
-                       argv,
-                       "Oliver Jacob Rosten",
-                       project_paths{root},
-					   "\t"
-    };
+    using namespace sequoia;
+    using namespace testing;
+	using namespace std::literals::chrono_literals;
+
+	const auto paths{project_paths{project_root(argc, argv)}};
+    test_runner runner{argc, argv, "Oliver Jacob Rosten", paths, "\t"};
  
     runner.add_test_family(
       "Utilities",
@@ -95,7 +91,7 @@ int main(int argc, char** argv)
       house_allocation_test("Allocation Test")
     );
 
-    runner.execute();
+    runner.execute(timer_resolution{1ms});
   }
   catch(const std::exception& e)
   {

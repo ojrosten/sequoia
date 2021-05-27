@@ -11,13 +11,13 @@
 
 int main(int argc, char** argv)
 {
-  using namespace sequoia;
-  using namespace testing;
-
   try
   {
-    const auto root{project_root(argc, argv)};
+    using namespace sequoia;
+    using namespace testing;
+    using namespace std::literals::chrono_literals;
 
+    const auto root{project_root(argc, argv)};
     test_runner runner{argc,
                        argv,
                        "Oliver J. Rosten",
@@ -243,7 +243,6 @@ int main(int argc, char** argv)
       experimental_test{"Unit Test"}
     );
 
-    using namespace std::literals::chrono_literals;
     runner.execute(timer_resolution{1ms});
   }
   catch(const std::exception& e)

@@ -11,11 +11,12 @@
 
 int main(int argc, char** argv)
 {
-  using namespace sequoia;
-  using namespace testing;
-
   try
   {
+    using namespace sequoia;
+    using namespace testing;
+    using namespace std::literals::chrono_literals;
+
     const auto root{project_root(argc, argv)};
     test_runner runner{argc,
                        argv,
@@ -30,7 +31,7 @@ int main(int argc, char** argv)
       test_runner_end_to_end_test("End to End Test")
     );
 
-    runner.execute();
+    runner.execute(timer_resolution{1ms});
   }
   catch(const std::exception& e)
   {

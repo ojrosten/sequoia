@@ -11,11 +11,12 @@
 
 int main(int argc, char** argv)
 {
-  using namespace sequoia;
-  using namespace testing;
-
   try
   {
+    using namespace sequoia;
+    using namespace testing;
+    using namespace std::literals::chrono_literals;
+
     const auto root{project_root(argc, argv)};
 
     test_runner runner{argc,
@@ -111,7 +112,6 @@ int main(int argc, char** argv)
       substitutions_free_test("Substitutions Free Test")
     );
 
-    using namespace std::literals::chrono_literals;
     runner.execute(timer_resolution{1ms});
   }
   catch(const std::exception& e)
