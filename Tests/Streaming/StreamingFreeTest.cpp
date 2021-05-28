@@ -7,6 +7,7 @@
 
 #include "StreamingFreeTest.hpp"
 #include "sequoia/Streaming/Streaming.hpp"
+#include "sequoia/TextProcessing/Substitutions.hpp"
 
 namespace sequoia::testing
 {
@@ -18,6 +19,8 @@ namespace sequoia::testing
 
   void streaming_free_test::run_tests()
   {
-    // e.g. check_equality(LINE("Useful description"), some_function(), 42);
+    read_modify_write(working_materials() / "Foo.txt", [](std::string& s) { capitalize(s);  });
+
+    check_equivalence(LINE(""), working_materials() / "Foo.txt", predictive_materials() / "Foo.txt");
   }
 }
