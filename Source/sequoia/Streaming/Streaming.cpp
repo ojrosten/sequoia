@@ -8,6 +8,7 @@
 #include "sequoia/Streaming/Streaming.hpp"
 
 #include <fstream>
+#include <sstream>
 
 namespace sequoia
 {
