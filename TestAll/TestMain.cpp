@@ -243,6 +243,11 @@ int main(int argc, char** argv)
       experimental_test{"Unit Test"}
     );
 
+    runner.add_test_family(
+      "Streaming",
+      streaming_free_test("Free Test")
+    );
+
     runner.execute(timer_resolution{1ms});
   }
   catch(const std::exception& e)

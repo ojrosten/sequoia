@@ -18,19 +18,6 @@
 
 namespace sequoia::testing
 {
-  [[nodiscard]]
-  std::string read_to_string(const std::filesystem::path& file);
-
-  void write_to_file(const std::filesystem::path& file, std::string_view text);
-
-  template<invocable<std::string&> Fn>
-  void read_modify_write(const std::filesystem::path& file, Fn fn)
-  {
-    auto text{read_to_string(file)};
-    fn(text);
-    write_to_file(file, text);
-  }
-
   void add_include(const std::filesystem::path& file, std::string_view includePath);
 
   void add_to_cmake(const std::filesystem::path& cmakeDir,

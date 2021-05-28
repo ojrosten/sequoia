@@ -31,7 +31,7 @@
 
 #include "sequoia/TestFramework/FreeCheckers.hpp"
 #include "sequoia/TestFramework/FileSystem.hpp"
-#include "sequoia/Core/Meta/Concepts.hpp"
+#include "sequoia/Streaming/Streaming.hpp"
 
 #include <tuple>
 #include <optional>

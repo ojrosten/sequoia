@@ -9,6 +9,7 @@
     \brief Definitions for FileEditors.hpp
  */
 
+#include "sequoia/Streaming/Streaming.hpp"
 #include "sequoia/TestFramework/FileEditors.hpp"
 #include "sequoia/TestFramework/FileSystem.hpp"
 #include "sequoia/TestFramework/Output.hpp"
@@ -17,31 +18,6 @@
 
 namespace sequoia::testing
 {
-  [[nodiscard]]
-  std::string read_to_string(const std::filesystem::path& file)
-  {
-    if(std::ifstream ifile{file})
-    {
-      std::stringstream buffer{};
-      buffer << ifile.rdbuf();
-      return buffer.str();
-    }
-
-    throw std::runtime_error{report_failed_read(file)};
-  }
-
-  void write_to_file(const std::filesystem::path& file, std::string_view text)
-  {
-    if(std::ofstream ofile{file})
-    {
-      ofile.write(text.data(), text.size());
-    }
-    else
-    {
-      throw std::runtime_error{report_failed_write(file)};
-    }
-  }
-
   void add_include(const std::filesystem::path& file, std::string_view includePath)
   {
     auto inserter{

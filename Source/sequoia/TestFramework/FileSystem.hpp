@@ -119,12 +119,6 @@ namespace sequoia::testing
     }
   }
 
-  [[nodiscard]]
-  std::string report_failed_read(const std::filesystem::path& file);
-
-  [[nodiscard]]
-  std::string report_failed_write(const std::filesystem::path& file);
-
   void throw_unless_exists(const std::filesystem::path& p, std::string_view message="");
 
   void throw_unless_directory(const std::filesystem::path& p, std::string_view message="");
