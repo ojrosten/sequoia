@@ -14,6 +14,7 @@
 #include "sequoia/Maths/Graph/Connectivity.hpp"
 #include "sequoia/Maths/Graph/HeterogeneousNodeDetails.hpp"
 #include "sequoia/Core/Utilities/AssignmentUtilities.hpp"
+#include "sequoia//PlatformSpecific/Preprocessor.hpp"
 
 namespace sequoia
 {
@@ -34,7 +35,7 @@ namespace sequoia
     }
 
     template<network Connectivity, class Nodes>
-    class graph_primitive : public Connectivity, public Nodes
+    class MSVC_EMPTY_BASE_HACK graph_primitive : public Connectivity, public Nodes
     {
     private:
       friend struct sequoia::impl::assignment_helper;
