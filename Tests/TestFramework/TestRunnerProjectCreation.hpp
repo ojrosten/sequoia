@@ -19,6 +19,11 @@ namespace sequoia::testing
   private:
     void run_tests() final;
 
+    void test_exceptions();
     void test_project_creation();
+
+    std::filesystem::path fake_project() const;
+
+    project_paths make_project_paths() const;
   };
 }

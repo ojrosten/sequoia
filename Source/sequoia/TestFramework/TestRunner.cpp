@@ -1091,9 +1091,17 @@ namespace sequoia::testing
     if(projRoot.empty())
       throw std::runtime_error{"Project path should not be empty"};
 
+    if(!projRoot.is_absolute())
+      throw std::runtime_error{"Project path should be absolute"};
+
     const auto name{(--projRoot.end())->generic_string()};
-    if(name.find(' ') != std::string::npos)
-      throw std::runtime_error{std::string{"Please remove spaces from the project name, '"}.append(name).append("'")};
+    if(name.empty())
+     throw std::runtime_error{"Project name, deduced as the last token of path, is empty"};
+
+    if(std::find_if(name.cbegin(), name.cend(), [](char c) { return !std::isalnum(c) || (c == '_') || (c == '-'); }) != name.cend())
+    {
+      throw std::runtime_error{"Please ensure the project name consists of just alpha-numeric characters, underscores and dashes"};
+    }
 
     report("Creating new project at location:", fs::relative(projRoot, m_Paths.project_root()).generic_string());
 

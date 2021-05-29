@@ -1,8 +1,39 @@
-Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 46
+Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 44
+Project name with space
 
 Expected Exception Type:
 [std::runtime_error]
-Please remove spaces from the project name, 'Generated Project'
+Please ensure the project name consists of just alpha-numeric characters, underscores and dashes
+
+
+	=======================================
+
+Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 55
+Project name with $
+
+Expected Exception Type:
+[std::runtime_error]
+Please ensure the project name consists of just alpha-numeric characters, underscores and dashes
+
+
+	=======================================
+
+Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 66
+Project path that is not absolute
+
+Expected Exception Type:
+[std::runtime_error]
+Project path should be absolute
+
+
+	=======================================
+
+Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 77
+Empty project path
+
+Expected Exception Type:
+[std::runtime_error]
+Project path should not be empty
 
 
 	=======================================
