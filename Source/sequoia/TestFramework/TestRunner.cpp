@@ -1133,7 +1133,21 @@ namespace sequoia::testing
 
         to_spaces(text, codeIndent);
         replace(text, "Oliver J. Rosten", copyright);
-        replace(text, "\\t", codeIndent);
+
+        const auto indentReplacement{
+          [&codeIndent]() {
+            std::string replacement;
+            for(auto c : std::string_view{codeIndent})
+            {
+              if(c == '\t') replacement.append("\\t");
+              else          replacement.push_back(c);
+            }
+
+            return indentation{replacement};
+          }
+        };
+
+        replace(text, "\\t", indentReplacement());
       }
     };
 
