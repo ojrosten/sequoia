@@ -28,6 +28,8 @@ namespace sequoia
     using compiler_constant = msvc_type;
 
     #define SPECULATIVE_CONSTEVAL constexpr
+
+    [[nodiscard]]
     constexpr int iterator_debug_level() noexcept
     {
       return _ITERATOR_DEBUG_LEVEL;
@@ -41,7 +43,8 @@ namespace sequoia
       using compiler_constant = other_compiler_type;
     #endif
 
-    #define SPECULATIVE_CONSTEVAL consteval
+    #define SPECULATIVE_CONSTEVAL constexpr
+
     int iterator_debug_level() noexcept;
   #endif
 
