@@ -626,12 +626,15 @@ namespace sequoia::testing
     nascentTests.emplace_back(std::move(nascent));
   }
 
-  test_runner::test_runner(int argc, char** argv, std::string_view copyright, project_paths paths, std::string_view codeIndent, std::ostream& stream)
-    : m_Copyright{copyright}
+  test_runner::test_runner(int argc, char** argv, std::string copyright, project_paths paths, std::string codeIndent, std::ostream& stream)
+    : m_Copyright{std::move(copyright)}
     , m_Paths{std::move(paths)}
-    , m_CodeIndent{codeIndent}
+    , m_CodeIndent{std::move(codeIndent)}
     , m_Stream{&stream}
   {
+    if(m_CodeIndent.find_first_not_of("\t ") != std::string::npos)
+      throw std::runtime_error{"Code indent must comprise only spaces or tabs"};
+
     process_args(argc, argv);
 
     namespace fs = std::filesystem;

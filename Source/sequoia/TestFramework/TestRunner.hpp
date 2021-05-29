@@ -262,7 +262,7 @@ namespace sequoia::testing
   class test_runner
   {
   public:
-    test_runner(int argc, char** argv, std::string_view copyright, project_paths paths, std::string_view codeIndent="  ", std::ostream& stream=std::cout);
+    test_runner(int argc, char** argv, std::string copyright, project_paths paths, std::string codeIndent="  ", std::ostream& stream=std::cout);
 
     test_runner(const test_runner&)     = delete;
     test_runner(test_runner&&) noexcept = default;

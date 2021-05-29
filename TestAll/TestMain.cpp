@@ -258,7 +258,7 @@ int main(int argc, char** argv)
   {
     std::cout << "Unrecognized error\n"; 
   }
-  
+
   return 0;
 }
 
