@@ -37,6 +37,11 @@ namespace sequoia
   [[nodiscard]]
   std::string uncapitalize(std::string_view text);
 
+  std::string& replace(std::string& text, std::string_view from, std::string_view to);
+
+  [[nodiscard]]
+  std::string replace(std::string_view text, std::string_view from, std::string_view to);
+
   std::string& replace_all(std::string& text, std::string_view from, std::string_view to);
 
   [[nodiscard]]

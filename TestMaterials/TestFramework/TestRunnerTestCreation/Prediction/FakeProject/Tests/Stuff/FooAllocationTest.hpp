@@ -11,18 +11,18 @@
 
 namespace sequoia::testing
 {
-	class foo_allocation_test final : public move_only_allocation_test
-	{
-	public:
-		using move_only_allocation_test::move_only_allocation_test;
+  class foo_allocation_test final : public move_only_allocation_test
+  {
+  public:
+    using move_only_allocation_test::move_only_allocation_test;
 
-		template<bool PropagateMove, bool PropagateSwap>
-		void test_allocation();
+    template<bool PropagateMove, bool PropagateSwap>
+    void test_allocation();
 
-	private:
-		[[nodiscard]]
-		std::string_view source_file() const noexcept final;
+  private:
+    [[nodiscard]]
+    std::string_view source_file() const noexcept final;
 
-		void run_tests() final;
-	};
+    void run_tests() final;
+  };
 }

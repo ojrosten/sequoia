@@ -14,6 +14,7 @@
 #include "sequoia/TestFramework/TestFamily.hpp"
 #include "sequoia/Parsing/CommandLineArguments.hpp"
 #include "sequoia/PlatformSpecific/Helpers.hpp"
+#include "sequoia/TextProcessing/Indent.hpp"
 #include "sequoia/Runtime/Factory.hpp"
 
 #include <map>
@@ -53,7 +54,7 @@ namespace sequoia::testing
   public:
     enum class gen_source_option {no, yes};
 
-    nascent_test_base(project_paths paths, std::string codeIndent)
+    nascent_test_base(project_paths paths, indentation codeIndent)
       : m_Paths{std::move(paths)}
       , m_CodeIndent{codeIndent}
     {}
@@ -131,7 +132,7 @@ namespace sequoia::testing
     void set_cpp(const std::filesystem::path& headerPath, std::string_view nameSpace) const;
 
     [[nodiscard]]
-    const std::string& code_indent() const noexcept
+    const indentation& code_indent() const noexcept
     {
       return m_CodeIndent;
     }
@@ -144,7 +145,7 @@ namespace sequoia::testing
 
     gen_source_option m_SourceOption{};
 
-    std::string m_CodeIndent{"  "};
+    indentation m_CodeIndent{"  "};
 
     void on_source_path_error(const std::vector<std::string_view>& extensions) const;
 
@@ -345,7 +346,7 @@ namespace sequoia::testing
 
     recovery_paths m_Recovery;
 
-    std::string m_CodeIndent{"  "};
+    indentation m_CodeIndent{"  "};
     std::ostream* m_Stream;
 
     output_mode m_OutputMode{output_mode::standard};
@@ -398,7 +399,7 @@ namespace sequoia::testing
     [[nodiscard]]
     std::string create_files() const;
 
-    void init_project(std::string_view copyright, const std::filesystem::path& projRoot);
+    void init_project(std::string_view copyright, const std::filesystem::path& projRoot, indentation codeIndent);
 
     [[nodiscard]]
     bool mode(output_mode m) const noexcept
@@ -406,7 +407,7 @@ namespace sequoia::testing
       return (m_OutputMode & m) == m;
     }
 
-    void generate_test_main(std::string_view copyright, const std::filesystem::path& projRoot) const;
+    void generate_test_main(std::string_view copyright, const std::filesystem::path& projRoot, indentation codeIndent) const;
 
     void generate_build_system_files(const std::filesystem::path& projRoot) const;
  };

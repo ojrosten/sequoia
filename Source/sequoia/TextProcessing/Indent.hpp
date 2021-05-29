@@ -30,6 +30,12 @@ namespace sequoia
     }
 
     [[nodiscard]]
+    friend indentation operator+(const indentation& lhs, const indentation& rhs)
+    {
+      return indentation{lhs.m_Data + rhs.m_Data};
+    }
+
+    [[nodiscard]]
     friend bool operator==(const indentation&, const indentation&) noexcept = default;
 
     [[nodiscard]]

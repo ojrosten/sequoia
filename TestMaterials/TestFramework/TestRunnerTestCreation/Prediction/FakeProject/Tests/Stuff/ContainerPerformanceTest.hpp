@@ -11,15 +11,15 @@
 
 namespace sequoia::testing
 {
-	class container_performance_test final : public performance_test
-	{
-	public:
-		using performance_test::performance_test;
+  class container_performance_test final : public performance_test
+  {
+  public:
+    using performance_test::performance_test;
 
-	private:
-		[[nodiscard]]
-		std::string_view source_file() const noexcept final;
+  private:
+    [[nodiscard]]
+    std::string_view source_file() const noexcept final;
 
-		void run_tests() final;
-	};
+    void run_tests() final;
+  };
 }

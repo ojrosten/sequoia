@@ -54,7 +54,7 @@ namespace sequoia::testing
     check_exception_thrown<std::runtime_error>(
       LINE("Project name with $"),
       [this]() {
-        commandline_arguments args{"", "init", "Oliver Jacob Rosten", (working_materials() / "Generated$Project").string()};
+        commandline_arguments args{"", "init", "Oliver Jacob Rosten", (working_materials() / "Generated$Project").string(), "  "};
 
         std::stringstream outputStream{};
         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", make_project_paths(), "  ", outputStream};
@@ -65,7 +65,7 @@ namespace sequoia::testing
     check_exception_thrown<std::runtime_error>(
       LINE("Project path that is not absolute"),
       [this]() {
-        commandline_arguments args{"", "init", "Oliver Jacob Rosten", "Generated_Project"};
+        commandline_arguments args{"", "init", "Oliver Jacob Rosten", "Generated_Project", "  "};
 
         std::stringstream outputStream{};
         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", make_project_paths(), "  ", outputStream};
@@ -76,7 +76,7 @@ namespace sequoia::testing
     check_exception_thrown<std::runtime_error>(
       LINE("Empty project path"),
       [this]() {
-        commandline_arguments args{"", "init", "Oliver Jacob Rosten", ""};
+        commandline_arguments args{"", "init", "Oliver Jacob Rosten", "", "  "};
 
         std::stringstream outputStream{};
         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", make_project_paths(), "  ", outputStream};
@@ -87,7 +87,7 @@ namespace sequoia::testing
     check_exception_thrown<std::runtime_error>(
       LINE("Illegal indent"),
       [this]() {
-        commandline_arguments args{"", "init", "Oliver Jacob Rosten", (working_materials() / "GeneratedProject").string()};
+        commandline_arguments args{"", "init", "Oliver Jacob Rosten", (working_materials() / "GeneratedProject").string(), "  "};
 
         std::stringstream outputStream{};
         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", make_project_paths(), "\t  x", outputStream};
@@ -106,10 +106,10 @@ namespace sequoia::testing
       [&mat{working_materials()}]() { return mat / "GeneratedProject"; }
     };
 
-    commandline_arguments args{"", "init", "Oliver Jacob Rosten", generated().string()};
+    commandline_arguments args{"", "init", "Oliver Jacob Rosten", generated().string(), "  "};
 
     std::stringstream outputStream{};
-    test_runner tr{args.size(), args.get(), "Oliver J. Rosten", make_project_paths(), "  ", outputStream};
+    test_runner tr{args.size(), args.get(), "Oliver J. Rosten", make_project_paths(), "\t", outputStream};
 
     tr.execute();
 

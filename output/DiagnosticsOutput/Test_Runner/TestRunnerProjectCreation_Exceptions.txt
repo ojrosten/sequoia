@@ -3,7 +3,8 @@ Project name with space
 
 Expected Exception Type:
 [std::runtime_error]
-Please ensure the project name consists of just alpha-numeric characters, underscores and dashes
+
+  Error: expected 3 arguments, [copyright owner, path ending with project name, code indent], but found 2 arguments
 
 
 	=======================================

@@ -23,7 +23,7 @@ create | c |
     gen-source | g | namespace
   performance_test | performance | header
     --family | -f | family
-init | i | copyright owner, path ending with project name
+init | i | copyright owner, path ending with project name, code indent
 update-materials | u |
 --async | -a |
 --async-depth | -ad | depth [0,1]

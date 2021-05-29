@@ -64,6 +64,12 @@ namespace sequoia::testing
       const std::string myProj{"MyProject"}, projName{replace_all(name, " ", "_")};
       replace_all(text, myProj, projName);
     }
+
+    void check_indent(const indentation& ind)
+    {
+      if(std::string_view{ind}.find_first_not_of("\t ") != std::string::npos)
+        throw std::runtime_error{"Code indent must comprise only spaces or tabs"};
+    }
   }
 
   using namespace parsing::commandline;
@@ -632,8 +638,7 @@ namespace sequoia::testing
     , m_CodeIndent{std::move(codeIndent)}
     , m_Stream{&stream}
   {
-    if(m_CodeIndent.find_first_not_of("\t ") != std::string::npos)
-      throw std::runtime_error{"Code indent must comprise only spaces or tabs"};
+    check_indent(m_CodeIndent);
 
     process_args(argc, argv);
 
@@ -770,9 +775,9 @@ namespace sequoia::testing
                         std::visit(variant_visitor{[](auto& nascent){ nascent.finalize();}}, m_NascentTests.back());
                     }
                   },
-                  {"init", {"i"}, {"copyright owner", "path ending with project name"},
+                  {"init", {"i"}, {"copyright owner", "path ending with project name", "code indent"},
                     [this](const arg_list& args) {
-                      init_project(args[0], args[1]);
+                      init_project(args[0], args[1], indentation{args[2]});
                     }
                   },
                   {"update-materials", {"u"}, {},
@@ -994,7 +999,7 @@ namespace sequoia::testing
             append_lines(mess, create_file(nascent, stub));
           }
 
-          add_to_family(m_Paths.main_cpp(), nascent.family(), nascent.constructors());
+          add_to_family(m_Paths.main_cpp(), nascent.family(), m_CodeIndent, nascent.constructors());
         }
       };
 
@@ -1087,7 +1092,7 @@ namespace sequoia::testing
     check_for_missing_tests();
   }
 
-  void test_runner::init_project(std::string_view copyright, const std::filesystem::path& projRoot)
+  void test_runner::init_project(std::string_view copyright, const std::filesystem::path& projRoot, indentation codeIndent)
   {
     namespace fs = std::filesystem;
 
@@ -1106,6 +1111,8 @@ namespace sequoia::testing
       throw std::runtime_error{"Please ensure the project name consists of just alpha-numeric characters, underscores and dashes"};
     }
 
+    check_indent(codeIndent);
+
     report("Creating new project at location:", fs::relative(projRoot, m_Paths.project_root()).generic_string());
 
     fs::create_directories(projRoot);
@@ -1113,24 +1120,24 @@ namespace sequoia::testing
     fs::create_directory(project_paths::source_path(projRoot));
     fs::copy(aux_files_path(m_Paths.project_root()), aux_files_path(projRoot), fs::copy_options::recursive | fs::copy_options::skip_existing);
 
-    generate_test_main(copyright, projRoot);
+    generate_test_main(copyright, projRoot, codeIndent);
     generate_build_system_files(projRoot);
   }
 
-  void test_runner::generate_test_main(std::string_view copyright, const std::filesystem::path& projRoot) const
+  void test_runner::generate_test_main(std::string_view copyright, const std::filesystem::path& projRoot, indentation codeIndent) const
   {
-    const auto file{projRoot/"TestAll"/"TestMain.cpp"};
-    std::string text{read_to_string(file)};
+    auto modifier{
+      [copyright, codeIndent](std::string& text) {
 
-    set_top_copyright(text, copyright);
+        set_top_copyright(text, copyright);
 
-    std::string_view myCopyright{"Oliver J. Rosten"};
-    if(auto pos{text.find(myCopyright)}; pos != std::string::npos)
-    {
-      text.replace(pos, myCopyright.size(), copyright);
-    }
+        to_spaces(text, codeIndent);
+        replace(text, "Oliver J. Rosten", copyright);
+        replace(text, "\\t", codeIndent);
+      }
+    };
 
-    write_to_file(file, text);
+    read_modify_write(projRoot / "TestAll" / "TestMain.cpp", modifier);
   }
 
   void test_runner::generate_build_system_files(const std::filesystem::path& projRoot) const

@@ -68,7 +68,7 @@ namespace sequoia::testing
     read_modify_write(file, inserter);
   }
 
-  void add_to_family(const std::filesystem::path& file, std::string_view familyName, const std::vector<std::string>& tests)
+  void add_to_family(const std::filesystem::path& file, std::string_view familyName, indentation indent, const std::vector<std::string>& tests)
   {
     namespace fs = std::filesystem;
 
@@ -76,7 +76,7 @@ namespace sequoia::testing
       throw std::logic_error{std::string{"No tests specified to be added to the test family \""}.append(familyName).append("\"")};
 
     const auto text{
-      [&file, familyName, &tests]() -> std::string {
+      [&file, familyName, &tests, indent]() -> std::string {
         constexpr auto npos{std::string::npos};
         const auto pattern{std::string{"\""}.append(familyName).append("\",")};
         std::string text{read_to_string(file)};
@@ -89,7 +89,6 @@ namespace sequoia::testing
             {
               if(const auto nextLinePos{text.find('\n', pos)}; nextLinePos != npos)
               {
-                const indentation indent{text.substr(linePos + 1, pos - linePos - 1)};
                 const auto endpos{text.find(");", pos)};
                 for(const auto& t : tests)
                 {
@@ -97,7 +96,7 @@ namespace sequoia::testing
                   std::string_view subtextView{textView.substr(pos, endpos - pos)};
                   if(subtextView.find(t) == npos)
                   {
-                    text.insert(nextLinePos+1, std::string{indent}.append(t).append(",\n"));
+                    text.insert(nextLinePos + 1, std::string{indent + indent + indent}.append(t).append(",\n"));
                   }
                 }
 
@@ -111,12 +110,10 @@ namespace sequoia::testing
           if(const auto linePos{text.rfind('\n', pos)}; linePos != npos)
           {
             auto builder{
-              [&text, &tests, pos, linePos, familyName](){
-
-                const indentation indent_0{text.substr(linePos + 1, pos - linePos - 1)};
-                const indentation indent_1{std::string{indent_0}.append("  ")};
-
+              [&text, &tests, pos, linePos, familyName, indent](){
+                const indentation indent_0{indent + indent};
                 auto str{std::string{"\n"}.append(indent_0).append("runner.add_test_family(")};
+                const indentation indent_1{indent_0 + indent};
 
                 append_indented(str, std::string{"\""}.append(familyName).append("\","), indent_1);
 

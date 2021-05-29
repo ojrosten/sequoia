@@ -26,82 +26,82 @@
 
 int main(int argc, char** argv)
 {
-  try
-  {
-    using namespace sequoia;
-    using namespace testing;
-	using namespace std::literals::chrono_literals;
+    try
+    {
+        using namespace sequoia;
+        using namespace testing;
+        using namespace std::literals::chrono_literals;
 
-	const auto paths{project_paths{project_root(argc, argv)}};
-    test_runner runner{argc, argv, "Oliver Jacob Rosten", paths, "\t"};
- 
-    runner.add_test_family(
-      "Utilities",
-      utilities_free_test("Free Test")
-    );
+        const auto paths{project_paths{project_root(argc, argv)}};
+        test_runner runner{argc, argv, "Oliver Jacob Rosten", paths, "    "};
 
-    runner.add_test_family(
-      "UsefulThings",
-      useful_things_free_test("Free Test")
-    );
+        runner.add_test_family(
+            "Utilities",
+            utilities_free_test("Free Test")
+        );
 
-    runner.add_test_family(
-      "Bar",
-      bar_free_test("Free Test")
-    );
+        runner.add_test_family(
+            "UsefulThings",
+            useful_things_free_test("Free Test")
+        );
 
-    runner.add_test_family(
-      "Maybe",
-      maybe_false_positive_test("False Positive Test"),
-      maybe_test("Unit Test")
-    );
+        runner.add_test_family(
+            "Bar",
+            bar_free_test("Free Test")
+        );
 
-    runner.add_test_family(
-      "Oldschool",
-      oldschool_false_positive_test("False Positive Test"),
-      oldschool_test("Unit Test")
-    );
+        runner.add_test_family(
+            "Maybe",
+            maybe_false_positive_test("False Positive Test"),
+            maybe_test("Unit Test")
+        );
 
-    runner.add_test_family(
-      "Probability",
-      probability_false_positive_test("False Positive Test"),
-      probability_test("Unit Test")
-    );
+        runner.add_test_family(
+            "Oldschool",
+            oldschool_false_positive_test("False Positive Test"),
+            oldschool_test("Unit Test")
+        );
 
-    runner.add_test_family(
-      "Foo",
-      foo_false_positive_test("False Positive Test"),
-      foo_test("Unit Test")
-    );
+        runner.add_test_family(
+            "Probability",
+            probability_false_positive_test("False Positive Test"),
+            probability_test("Unit Test")
+        );
 
-    runner.add_test_family(
-      "UniqueThing",
-      unique_thing_false_positive_test("False Positive Test"),
-      unique_thing_test("Unit Test")
-    );
+        runner.add_test_family(
+            "Foo",
+            foo_false_positive_test("False Positive Test"),
+            foo_test("Unit Test")
+        );
 
-    runner.add_test_family(
-      "Container",
-      container_performance_test("Performance Test"),
-      container_allocation_test("Allocation Test")
-    );
+        runner.add_test_family(
+            "UniqueThing",
+            unique_thing_false_positive_test("False Positive Test"),
+            unique_thing_test("Unit Test")
+        );
 
-    runner.add_test_family(
-      "House",
-      house_allocation_test("Allocation Test")
-    );
+        runner.add_test_family(
+            "Container",
+            container_performance_test("Performance Test"),
+            container_allocation_test("Allocation Test")
+        );
 
-    runner.execute(timer_resolution{1ms});
-  }
-  catch(const std::exception& e)
-  {
-    std::cout << e.what();
-  }
-  catch(...)
-  {
-    std::cout << "Unrecognized error\n"; 
-  }
+        runner.add_test_family(
+            "House",
+            house_allocation_test("Allocation Test")
+        );
 
-  return 0;
+        runner.execute(timer_resolution{1ms});
+    }
+    catch(const std::exception& e)
+    {
+        std::cout << e.what();
+    }
+    catch(...)
+    {
+        std::cout << "Unrecognized error\n"; 
+    }
+
+    return 0;
 }
 

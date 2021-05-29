@@ -15,11 +15,11 @@ int main(int argc, char** argv)
   {
     using namespace sequoia;
     using namespace testing;
-	using namespace std::literals::chrono_literals;
+    using namespace std::literals::chrono_literals;
 
-	const auto paths{project_paths{project_root(argc, argv)}};
-    test_runner runner{argc, argv, "Oliver Jacob Rosten", paths, "\t"};
- 
+    const auto paths{project_paths{project_root(argc, argv)}};
+    test_runner runner{argc, argv, "Oliver Jacob Rosten", paths, "  "};
+
     runner.execute(timer_resolution{1ms});
   }
   catch(const std::exception& e)

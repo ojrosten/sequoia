@@ -11,15 +11,15 @@
 
 namespace sequoia::testing
 {
-	class variadic_test final : public move_only_test
-	{
-	public:
-		using move_only_test::move_only_test;
+  class variadic_test final : public move_only_test
+  {
+  public:
+    using move_only_test::move_only_test;
 
-	private:
-		[[nodiscard]]
-		std::string_view source_file() const noexcept final;
+  private:
+    [[nodiscard]]
+    std::string_view source_file() const noexcept final;
 
-		void run_tests() final;
-	};
+    void run_tests() final;
+  };
 }

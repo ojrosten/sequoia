@@ -114,6 +114,22 @@ namespace sequoia
     return uncapitalize(str);
   }
 
+  std::string& replace(std::string& text, std::string_view from, std::string_view to)
+  {
+    if(auto pos{text.find(from)}; pos != std::string::npos)
+    {
+      text.replace(pos, from.size(), to);
+    }
+    return text;
+  }
+
+  [[nodiscard]]
+  std::string replace(std::string_view text, std::string_view from, std::string_view to)
+  {
+    std::string str{text};
+    return replace(str, from, to);
+  }
+
   std::string& replace_all(std::string& text, std::string_view from, std::string_view to)
   {
     std::string::size_type pos{};

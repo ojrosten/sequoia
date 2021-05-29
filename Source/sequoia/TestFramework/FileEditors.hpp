@@ -12,6 +12,7 @@
  */
 
 #include "sequoia/Core/Meta/Concepts.hpp"
+#include "sequoia/TextProcessing/Indent.hpp"
 
 #include <filesystem>
 #include <vector>
@@ -27,5 +28,5 @@ namespace sequoia::testing
                     std::string_view patternClose,
                     std::string_view cmakeEntryPrexfix);
 
-  void add_to_family(const std::filesystem::path& file, std::string_view familyName, const std::vector<std::string>& tests);
+  void add_to_family(const std::filesystem::path& file, std::string_view familyName, indentation indent, const std::vector<std::string>& tests);
 }

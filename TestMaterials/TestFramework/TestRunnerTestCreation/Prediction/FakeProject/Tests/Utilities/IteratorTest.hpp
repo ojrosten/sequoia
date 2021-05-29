@@ -11,15 +11,15 @@
 
 namespace sequoia::testing
 {
-	class iterator_test final : public regular_test
-	{
-	public:
-		using regular_test::regular_test;
+  class iterator_test final : public regular_test
+  {
+  public:
+    using regular_test::regular_test;
 
-	private:
-		[[nodiscard]]
-		std::string_view source_file() const noexcept final;
+  private:
+    [[nodiscard]]
+    std::string_view source_file() const noexcept final;
 
-		void run_tests() final;
-	};
+    void run_tests() final;
+  };
 }
