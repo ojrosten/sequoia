@@ -110,7 +110,7 @@ namespace sequoia::testing
           if(const auto linePos{text.rfind('\n', pos)}; linePos != npos)
           {
             auto builder{
-              [&text, &tests, pos, linePos, familyName, indent](){
+              [&tests, familyName, indent](){
                 const indentation indent_0{indent + indent};
                 auto str{std::string{"\n"}.append(indent_0).append("runner.add_test_family(")};
                 const indentation indent_1{indent_0 + indent};
