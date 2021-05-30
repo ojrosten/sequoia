@@ -66,6 +66,7 @@ namespace sequoia::testing
     check_equality(LINE("Replace in empty string"), replace("", "foo", "bar"), ""s);
     check_equality(LINE("Single replacement"), replace("foo", "foo", "bar"), "bar"s);
     check_equality(LINE("Single replacement; multiple instances"), replace("foofoo", "foo", "bar"), "barfoo"s);
+    check_equality(LINE("Single replacement, arbitrary position"), replace("barfoobaz", "foo", "bar"), "barbarbaz"s);
   }
 
   void substitutions_free_test::test_replace_all()
