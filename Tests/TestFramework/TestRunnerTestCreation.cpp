@@ -70,8 +70,10 @@ namespace sequoia::testing
 
     const auto root{test_repository().parent_path()};
     fs::copy(aux_files_path(root), aux_files_path(working()), fs::copy_options::recursive);
-    fs::copy(project_template_path(root) / "Source/CMakeLists.txt", working() / "Source");
-    fs::copy(project_template_path(root) / "TestAll/CMakeLists.txt", working() / "TestSandbox");
+    fs::create_directory(working() / "TestSandbox");
+    fs::copy(project_template_path(root) / "Source" / "CMakeLists.txt", working() / "Source");
+    fs::copy(project_template_path(root) / "TestAll" / "CMakeLists.txt", working() / "TestSandbox");
+    fs::copy(project_template_path(root) / "TestAll"/ "TestMain.cpp", working() / "TestSandbox" / "TestSandbox.cpp");
     read_modify_write(working() / "TestSandbox" / "CMakeLists.txt" , [](std::string& text) {
         replace_all(text, "TestMain.cpp", "TestSandbox.cpp");
       }
@@ -105,7 +107,7 @@ namespace sequoia::testing
     };
 
     std::stringstream outputStream{};
-    test_runner tr{args.size(), args.get(), "Oliver J. Rosten", paths, "  ", outputStream};
+    test_runner tr{args.size(), args.get(), "Oliver J. Rosten", paths, "    ", outputStream};
 
     tr.execute();
 

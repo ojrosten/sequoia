@@ -10,14 +10,14 @@
 
 namespace sequoia::testing
 {
-  [[nodiscard]]
-  std::string_view utilities_free_test::source_file() const noexcept
-  {
-    return __FILE__;
-  }
+    [[nodiscard]]
+    std::string_view utilities_free_test::source_file() const noexcept
+    {
+        return __FILE__;
+    }
 
-  void utilities_free_test::run_tests()
-  {
-    // e.g. check_equality(LINE("Useful description"), some_function(), 42);
-  }
+    void utilities_free_test::run_tests()
+    {
+        // e.g. check_equality(LINE("Useful description"), some_function(), 42);
+    }
 }

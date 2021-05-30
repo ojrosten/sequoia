@@ -11,15 +11,15 @@
 
 namespace sequoia::testing
 {
-  class defs_free_test final : public free_test
-  {
-  public:
-    using free_test::free_test;
+    class defs_free_test final : public free_test
+    {
+    public:
+        using free_test::free_test;
 
-  private:
-    [[nodiscard]]
-    std::string_view source_file() const noexcept final;
+    private:
+        [[nodiscard]]
+        std::string_view source_file() const noexcept final;
 
-    void run_tests() final;
-  };
+        void run_tests() final;
+    };
 }
