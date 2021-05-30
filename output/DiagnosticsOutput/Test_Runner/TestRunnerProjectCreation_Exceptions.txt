@@ -49,3 +49,13 @@ Code indent must comprise only spaces or tabs
 
 	=======================================
 
+Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 99
+Illegal init indent
+
+Expected Exception Type:
+[std::runtime_error]
+Code indent must comprise only spaces or tabs
+
+
+	=======================================
+

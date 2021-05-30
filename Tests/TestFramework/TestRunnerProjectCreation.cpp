@@ -94,6 +94,17 @@ namespace sequoia::testing
 
         tr.execute();
       });
+
+    check_exception_thrown<std::runtime_error>(
+      LINE("Illegal init indent"),
+      [this]() {
+        commandline_arguments args{"", "init", "Oliver Jacob Rosten", (working_materials() / "GeneratedProject").string(), "\n"};
+
+        std::stringstream outputStream{};
+        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", make_project_paths(), "  ", outputStream};
+
+        tr.execute();
+      });
   }
 
   void test_runner_project_creation::test_project_creation()
