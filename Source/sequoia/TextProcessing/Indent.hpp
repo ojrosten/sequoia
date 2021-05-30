@@ -12,6 +12,7 @@
  */
 
 #include <string>
+#include <utility>
 
 namespace sequoia
 {

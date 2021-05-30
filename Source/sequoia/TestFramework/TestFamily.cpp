@@ -22,7 +22,7 @@ namespace sequoia::testing
     t.set_recovery_paths(m_Recovery);
 
     const auto rel{
-      [&t, &testRepo{m_TestRepo}, &materialsRepo{m_TestMaterialsRepo}](){
+      [&t, &testRepo=m_TestRepo, &materialsRepo=m_TestMaterialsRepo](){
         if(testRepo.empty()) return fs::path{};
 
         auto folderName{fs::path{t.source_filename()}.replace_extension()};
@@ -132,7 +132,7 @@ namespace sequoia::testing
       for(auto& pTest : m_Tests)
       {
         results.emplace_back(
-          std::async([&test{*pTest}, updateMode, outputDir{m_OutputDir}, testRepo{m_TestRepo}](){
+          std::async([&test=*pTest, updateMode, outputDir{m_OutputDir}, testRepo{m_TestRepo}](){
             return std::make_pair(test.execute(), paths{test, updateMode, outputDir, testRepo}); })
         );
       }

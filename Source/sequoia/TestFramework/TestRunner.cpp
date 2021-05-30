@@ -336,7 +336,7 @@ namespace sequoia::testing
 
     add_to_cmake(sourceRoot, sourceRoot, srcPath, "set(", ")\n", "");
 
-    read_modify_write(paths().main_cpp_dir() / "CMakeLists.txt", [&root{paths().project_root()}](std::string& text) {
+    read_modify_write(paths().main_cpp_dir() / "CMakeLists.txt", [&root=paths().project_root()](std::string& text) {
         replace_all(text, "#!", "");
       }
     );
@@ -525,7 +525,7 @@ namespace sequoia::testing
       fs::create_directories(headerPath.parent_path());
       fs::copy_file(source_templates_path(paths().project_root()) / "MyFreeFunctions.hpp", headerPath);
 
-      read_modify_write(headerPath, [&nameSpace{m_Namespace}](std::string& text) { process_namespace(text, nameSpace); });
+      read_modify_write(headerPath, [&nameSpace=m_Namespace](std::string& text) { process_namespace(text, nameSpace); });
 
       set_cpp(headerPath, m_Namespace);
 
@@ -613,16 +613,16 @@ namespace sequoia::testing
 
     std::visit(
         variant_visitor{
-          [&args,&species{species}](nascent_semantics_test& nascent){
+          [&args,&species=species](nascent_semantics_test& nascent){
             nascent.test_type(species);
             nascent.qualified_name(args[0]);
             nascent.add_equivalent_type(args[1]);
           },
-          [&args,&species{species}](nascent_allocation_test& nascent){
+          [&args,&species=species](nascent_allocation_test& nascent){
             nascent.test_type(species);
             nascent.forename(args[0]);
           },
-          [&args,&species{species}](nascent_behavioural_test& nascent){
+          [&args,&species=species](nascent_behavioural_test& nascent){
             nascent.test_type(species);
             nascent.header(args[0]);
           }
@@ -898,7 +898,7 @@ namespace sequoia::testing
   void test_runner::check_for_missing_tests()
   {
     auto check{
-      [&stream{stream()}](const auto& tests, std::string_view type, auto fn) {
+      [&stream=stream()](const auto& tests, std::string_view type, auto fn) {
         for(const auto& test : tests)
         {
           if(!test.second)
@@ -938,7 +938,7 @@ namespace sequoia::testing
   auto test_runner::find_filename(const std::filesystem::path& filename) -> source_list::iterator
   {
     return std::find_if(m_SelectedSources.begin(), m_SelectedSources.end(),
-                 [&filename, &repo{m_Paths.tests()}, &root{m_Paths.project_root()}](const auto& element){
+                 [&filename, &repo=m_Paths.tests(), &root=m_Paths.project_root()](const auto& element){
                    const auto& source{element.first};
 
                    if(filename == source) return true;
@@ -1162,7 +1162,7 @@ namespace sequoia::testing
     const std::filesystem::path relCmakeLocation{"TestAll/CMakeLists.txt"};
 
     auto replaceSeqroot{
-      [&parentProjRoot{m_Paths.project_root()}](std::string& text) {
+      [&parentProjRoot=m_Paths.project_root()](std::string& text) {
         constexpr auto npos{std::string::npos};
         constexpr std::string_view seqRoot{"SEQUOIA_ROOT"};
         if(auto pos{text.find(seqRoot)}; pos != npos)
