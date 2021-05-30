@@ -23,6 +23,7 @@ namespace sequoia::testing
     test_capitalize();
     test_uncapitalize();
     test_replace();
+    test_replace_all();
   }
 
   void substitutions_free_test::test_camel_case()
@@ -60,6 +61,14 @@ namespace sequoia::testing
   }
 
   void substitutions_free_test::test_replace()
+  {
+    using namespace std::string_literals;
+    check_equality(LINE("Replace in empty string"), replace("", "foo", "bar"), ""s);
+    check_equality(LINE("Single replacement"), replace("foo", "foo", "bar"), "bar"s);
+    check_equality(LINE("Single replacement; multiple instances"), replace("foofoo", "foo", "bar"), "barfoo"s);
+  }
+
+  void substitutions_free_test::test_replace_all()
   {
     using namespace std::string_literals;
     check_equality(LINE("Replace in empty string"), replace_all("", "foo", "bar"), ""s);

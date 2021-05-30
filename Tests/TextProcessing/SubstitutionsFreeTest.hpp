@@ -31,5 +31,7 @@ namespace sequoia::testing
     void test_uncapitalize();
 
     void test_replace();
+
+    void test_replace_all();
   };
 }

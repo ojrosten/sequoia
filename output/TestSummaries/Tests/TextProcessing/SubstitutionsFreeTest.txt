@@ -1,2 +1,2 @@
 Substitutions Free Test
-Standard Top Level Checks:                31;  Failures:  0  [Deep checks: 31]
+Standard Top Level Checks:                34;  Failures:  0  [Deep checks: 34]
