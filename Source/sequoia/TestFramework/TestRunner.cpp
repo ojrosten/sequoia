@@ -1174,21 +1174,31 @@ namespace sequoia::testing
     if(projRoot.empty())
       throw std::logic_error{"Pre-condition violated: path should not be empty"};
 
+    namespace fs = std::filesystem;
+
     const std::filesystem::path relCmakeLocation{"TestAll/CMakeLists.txt"};
 
-    auto replaceSeqroot{
-      [&parentProjRoot=m_Paths.project_root()](std::string& text) {
+    auto setBuildSysPath{
+      [&parentProjRoot=m_Paths.project_root(),&projRoot](std::string& text) {
         constexpr auto npos{std::string::npos};
-        constexpr std::string_view seqRoot{"SEQUOIA_ROOT"};
-        if(auto pos{text.find(seqRoot)}; pos != npos)
+        if(const auto pos{text.find("/build_system")}; pos != npos)
         {
-          text.replace(pos, seqRoot.size(), parentProjRoot.generic_string());
+          std::string_view pattern{"BuildSystem "};
+          if(auto left{text.rfind(pattern)}; left != npos)
+          {
+            left += pattern.size();
+            if(pos >= left)
+            {
+              const auto absPath{parentProjRoot / text.substr(left, pos - left)};
+              text.replace(left, pos - left, fs::relative(absPath, projRoot / "TestAll").lexically_normal().generic_string());
+            }
+          }
         }
       }
     };
 
-    read_modify_write(projRoot / relCmakeLocation, [replaceSeqroot, &projRoot](std::string& text) {
-        replaceSeqroot(text);
+    read_modify_write(projRoot / relCmakeLocation, [setBuildSysPath, &projRoot](std::string& text) {
+        setBuildSysPath(text);
         set_proj_name(text, projRoot);
       }
     );
@@ -1198,8 +1208,8 @@ namespace sequoia::testing
       }
     );
 
-    read_modify_write(project_template_path(projRoot) / relCmakeLocation, [replaceSeqroot](std::string& text) {
-        replaceSeqroot(text);
+    read_modify_write(project_template_path(projRoot) / relCmakeLocation, [setBuildSysPath](std::string& text) {
+        setBuildSysPath(text);
       }
     );
   }
