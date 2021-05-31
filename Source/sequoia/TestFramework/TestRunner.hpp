@@ -349,6 +349,8 @@ namespace sequoia::testing
     indentation m_CodeIndent{"  "};
     std::ostream* m_Stream;
 
+    bool m_ProjectInit{};
+
     output_mode m_OutputMode{output_mode::standard};
     update_mode m_UpdateMode{update_mode::none};
     concurrency_mode m_ConcurrencyMode{concurrency_mode::serial};

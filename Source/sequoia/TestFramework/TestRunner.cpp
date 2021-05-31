@@ -777,7 +777,15 @@ namespace sequoia::testing
                   },
                   {"init", {"i"}, {"copyright owner", "path ending with project name", "code indent"},
                     [this](const arg_list& args) {
-                      init_project(args[0], args[1], indentation{args[2]});
+                      const auto ind{
+                        [](std::string arg) {
+                          
+                          replace_all(arg, "\\t", "\t");
+                          return indentation{arg};
+                        }
+                      };
+
+                      init_project(args[0], args[1], ind(args[2]));
                     }
                   },
                   {"update-materials", {"u"}, {},
@@ -1054,7 +1062,7 @@ namespace sequoia::testing
     using namespace std::chrono;
     const auto time{steady_clock::now()};
 
-    if(!m_Families.empty() && (m_NascentTests.empty() || !m_SelectedFamilies.empty()))
+    if(!m_Families.empty() && ((m_NascentTests.empty() && !m_ProjectInit) || !m_SelectedFamilies.empty() || !m_SelectedSources.empty()))
     {
       stream() << "\nRunning tests...\n\n";
       log_summary summary{};
@@ -1097,23 +1105,28 @@ namespace sequoia::testing
     namespace fs = std::filesystem;
 
     if(projRoot.empty())
-      throw std::runtime_error{"Project path should not be empty"};
+      throw std::runtime_error{"Project path should not be empty\n"};
 
     if(!projRoot.is_absolute())
-      throw std::runtime_error{"Project path should be absolute"};
+      throw std::runtime_error{std::string{"Project path '"}.append(projRoot.generic_string()).append("' should be absolute\n")};
+
+    if(fs::exists(projRoot))
+      throw std::runtime_error{std::string{"Project location '"}.append(projRoot.generic_string()).append("' already exists\n")};
 
     const auto name{(--projRoot.end())->generic_string()};
     if(name.empty())
-     throw std::runtime_error{"Project name, deduced as the last token of path, is empty"};
+     throw std::runtime_error{"Project name, deduced as the last token of path, is empty\n"};
 
     if(std::find_if(name.cbegin(), name.cend(), [](char c) { return !std::isalnum(c) || (c == '_') || (c == '-'); }) != name.cend())
     {
-      throw std::runtime_error{"Please ensure the project name consists of just alpha-numeric characters, underscores and dashes"};
+      throw std::runtime_error{std::string{"Please ensure the project name '"}
+      .append(name)
+      .append("' consists of just alpha - numeric characters, underscores and dashes\n")};
     }
 
     check_indent(codeIndent);
 
-    report("Creating new project at location:", fs::relative(projRoot, m_Paths.project_root()).generic_string());
+    report("Creating new project at location:", projRoot.generic_string());
 
     fs::create_directories(projRoot);
     fs::copy(project_template_path(m_Paths.project_root()), projRoot, fs::copy_options::recursive | fs::copy_options::skip_existing);
@@ -1122,6 +1135,8 @@ namespace sequoia::testing
 
     generate_test_main(copyright, projRoot, codeIndent);
     generate_build_system_files(projRoot);
+
+    m_ProjectInit = true;
   }
 
   void test_runner::generate_test_main(std::string_view copyright, const std::filesystem::path& projRoot, indentation codeIndent) const
