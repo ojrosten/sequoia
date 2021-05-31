@@ -43,7 +43,7 @@ namespace sequoia::testing
     check_exception_thrown<std::runtime_error>(
       LINE("Project name with space"),
       [this]() {
-        commandline_arguments args{"", "init", "Oliver Jacob Rosten", (working_materials() / "Generated Project").string()};
+        commandline_arguments args{"", "init", "Oliver Jacob Rosten", (working_materials() / "Generated Project").string(), "  "};
 
         std::stringstream outputStream{};
         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", make_project_paths(), "  ", outputStream};
@@ -77,6 +77,17 @@ namespace sequoia::testing
       LINE("Empty project path"),
       [this]() {
         commandline_arguments args{"", "init", "Oliver Jacob Rosten", "", "  "};
+
+        std::stringstream outputStream{};
+        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", make_project_paths(), "  ", outputStream};
+
+        tr.execute();
+      });
+
+    check_exception_thrown<std::runtime_error>(
+      LINE("Project name clash"),
+      [this]() {
+        commandline_arguments args{"", "init", "Oliver Jacob Rosten", working_materials().string(), "  "};
 
         std::stringstream outputStream{};
         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", make_project_paths(), "  ", outputStream};

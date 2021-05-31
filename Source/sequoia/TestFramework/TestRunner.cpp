@@ -1121,7 +1121,7 @@ namespace sequoia::testing
     {
       throw std::runtime_error{std::string{"Please ensure the project name '"}
       .append(name)
-      .append("' consists of just alpha - numeric characters, underscores and dashes\n")};
+      .append("' consists of just alpha-numeric characters, underscores and dashes\n")};
     }
 
     check_indent(codeIndent);

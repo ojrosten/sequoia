@@ -3,8 +3,7 @@ Project name with space
 
 Expected Exception Type:
 [std::runtime_error]
-
-  Error: expected 3 arguments, [copyright owner, path ending with project name, code indent], but found 2 arguments
+Please ensure the project name 'Generated Project' consists of just alpha-numeric characters, underscores and dashes
 
 
 	=======================================
@@ -14,7 +13,7 @@ Project name with $
 
 Expected Exception Type:
 [std::runtime_error]
-Please ensure the project name 'Generated$Project' consists of just alpha - numeric characters, underscores and dashes
+Please ensure the project name 'Generated$Project' consists of just alpha-numeric characters, underscores and dashes
 
 
 	=======================================
@@ -40,6 +39,16 @@ Project path should not be empty
 	=======================================
 
 Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 88
+Project name clash
+
+Expected Exception Type:
+[std::runtime_error]
+Project location 'C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerProjectCreation/WorkingCopy' already exists
+
+
+	=======================================
+
+Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 99
 Illegal indent
 
 Expected Exception Type:
@@ -49,7 +58,7 @@ Code indent must comprise only spaces or tabs
 
 	=======================================
 
-Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 99
+Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 110
 Illegal init indent
 
 Expected Exception Type:
