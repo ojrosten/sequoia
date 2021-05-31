@@ -43,12 +43,12 @@ Project name clash
 
 Expected Exception Type:
 [std::runtime_error]
-Project location 'C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerProjectCreation/WorkingCopy' already exists
+output/TestsTemporaryData/TestFramework/TestRunnerProjectCreation/WorkingCopy' already exists
 
 
 	=======================================
 
-Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 99
+Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 106
 Illegal indent
 
 Expected Exception Type:
@@ -58,7 +58,7 @@ Code indent must comprise only spaces or tabs
 
 	=======================================
 
-Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 110
+Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 117
 Illegal init indent
 
 Expected Exception Type:
