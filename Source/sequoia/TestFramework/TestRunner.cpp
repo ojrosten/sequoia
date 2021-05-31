@@ -1181,7 +1181,8 @@ namespace sequoia::testing
     auto setBuildSysPath{
       [&parentProjRoot=m_Paths.project_root(),&projRoot](std::string& text) {
         constexpr auto npos{std::string::npos};
-        if(const auto pos{text.find("/build_system")}; pos != npos)
+        std::string_view token{"/build_system"};
+        if(const auto pos{text.find(token)}; pos != npos)
         {
           std::string_view pattern{"BuildSystem "};
           if(auto left{text.rfind(pattern)}; left != npos)
@@ -1189,8 +1190,9 @@ namespace sequoia::testing
             left += pattern.size();
             if(pos >= left)
             {
-              const auto absPath{parentProjRoot / "TestAll" / text.substr(left, pos - left)};
-              text.replace(left, pos - left, fs::relative(absPath, projRoot / "TestAll").lexically_normal().generic_string());
+              const auto count{pos - left + token.size()};
+              const auto relPath{fs::relative(parentProjRoot / "TestAll" / text.substr(left, count), projRoot / "TestAll")};
+              text.replace(left, count, relPath.lexically_normal().generic_string());
             }
           }
         }
