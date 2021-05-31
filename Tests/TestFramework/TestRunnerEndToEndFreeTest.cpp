@@ -289,10 +289,14 @@ namespace sequoia::testing
     check(LINE("Third build output existance"), fs::exists(rebuildRun.build_output));
 
     check_equivalence(LINE("Test Runner Output"), working_materials() / "RebuiltOutput", predictive_materials() / "RebuiltOutput");
-    fs::create_directory(working_materials() / "MainCpp");
+    fs::create_directory(working_materials() / "TestAll");
     const auto generatedProject{working_materials().parent_path() / "GeneratedProject"};
-    fs::copy_file(generatedProject / "TestAll" / "TestMain.cpp", working_materials() / "MainCpp" / "TestMain.cpp");
-    check_equivalence(LINE("TestMain.cpp"), working_materials() / "MainCpp", predictive_materials() / "MainCpp");
+
+    const fs::path mainCpp{"TestAll/TestMain.cpp"}, mainCmake{"TestAll/CMakeLists.txt"};
+    fs::copy_file(generatedProject / mainCpp,   working_materials() / mainCpp);
+    fs::copy_file(generatedProject / mainCmake, working_materials() / mainCmake);
+    check_equivalence(LINE("TestMain.cpp"),  working_materials() / mainCpp,   predictive_materials() / mainCpp);
+    check_equivalence(LINE("CMakeLists.tt"), working_materials() / mainCmake, predictive_materials() / mainCmake);
 
     fs::copy(generated() / "TestMaterials", working_materials() / "OriginalTestMaterials", fs::copy_options::recursive);
     check_equivalence(LINE("Original Test Materials"), working_materials() / "OriginalTestMaterials", predictive_materials() / "OriginalTestMaterials");
