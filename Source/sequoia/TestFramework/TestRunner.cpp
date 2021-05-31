@@ -1189,7 +1189,7 @@ namespace sequoia::testing
             left += pattern.size();
             if(pos >= left)
             {
-              const auto absPath{parentProjRoot / text.substr(left, pos - left)};
+              const auto absPath{parentProjRoot / "TestAll" / text.substr(left, pos - left)};
               text.replace(left, pos - left, fs::relative(absPath, projRoot / "TestAll").lexically_normal().generic_string());
             }
           }

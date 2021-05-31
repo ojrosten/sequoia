@@ -5,7 +5,7 @@ project(MyProjectTests LANGUAGES CXX)
 add_executable(TestMain TestMain.cpp)
 
 set(CURRENT_DIR ${CMAKE_CURRENT_LIST_DIR})
-set(BuildSystem /build_system)
+set(BuildSystem ../build_system)
 set(SourceDir ${CURRENT_DIR}/../Source)
 set(TestDir ${CURRENT_DIR}/../Tests)
 
