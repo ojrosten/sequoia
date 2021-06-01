@@ -139,9 +139,9 @@ namespace sequoia::testing
       std::filesystem::path mainDir, buildDir;
 
       [[nodiscard]]
-      cmake_and_build_command cmake_and_build() const
+      cmake_and_build_command cmake_build_and_run(const std::filesystem::path& output) const
       {
-        return cmake_and_build("CMakeOutput.txt", "BuildOutput.txt");
+        return cmake_and_build("CMakeOutput.txt", "BuildOutput.txt") && add_output_file(run_cmd(), output / "EmptyRunOutput.txt");
       }
 
       [[nodiscard]]
@@ -247,16 +247,14 @@ namespace sequoia::testing
     const cmd_builder b{generated() / "TestAll", generated() / "build" / "CMade" / "TestAll"};
 
     // Run cmake, build and run
-    const auto cmakeBuild{b.cmake_and_build()};
+    fs::create_directory(working_materials() / "EmptyRunOutput");
+    const auto cmakeBuild{b.cmake_build_and_run(working_materials() / "EmptyRunOutput")};
     std::system(cmakeBuild.cmd.c_str());
     check(LINE("First CMake output existance"), fs::exists(cmakeBuild.cmake_output));
     check(LINE("First build output existance"), fs::exists(cmakeBuild.build_output));
+    check_equivalence(LINE("Test Runner Output"), working_materials() / "EmptyRunOutput", predictive_materials() / "EmptyRunOutput");
 
-    auto fake{
-      [&mat{auxiliary_materials()}] () {
-        return mat / "FakeProject";
-      }
-    };
+    auto fake{ [&mat{auxiliary_materials()}] () { return mat / "FakeProject"; } };
 
     // Create tests, rerun cmake, build and run
     fs::copy(fake() / "Source" / "fakeProject", generated() / "Source" / "generatedProject", fs::copy_options::recursive | fs::copy_options::skip_existing);

@@ -1062,39 +1062,47 @@ namespace sequoia::testing
     using namespace std::chrono;
     const auto time{steady_clock::now()};
 
-    if(!m_Families.empty() && ((m_NascentTests.empty() && !m_ProjectInit) || !m_SelectedFamilies.empty() || !m_SelectedSources.empty()))
+    const bool selected{!m_SelectedFamilies.empty() || !m_SelectedSources.empty()};
+    if((m_NascentTests.empty() && !m_ProjectInit) || selected)
     {
-      stream() << "\nRunning tests...\n\n";
-      log_summary summary{};
-      if(!concurrent_execution())
+      if(!m_Families.empty())
       {
-        for(auto& family : m_Families)
+        stream() << "\nRunning tests...\n\n";
+        log_summary summary{};
+        if(!concurrent_execution())
         {
-          stream() << family.name() << ":\n";
-          summary += process_family(family.execute(m_UpdateMode, m_ConcurrencyMode)).log;
+          for(auto& family : m_Families)
+          {
+            stream() << family.name() << ":\n";
+            summary += process_family(family.execute(m_UpdateMode, m_ConcurrencyMode)).log;
+          }
         }
+        else
+        {
+          stream() << "\n\t--Using asynchronous execution, level: " << stringify(m_ConcurrencyMode) << "\n\n";
+          std::vector<std::pair<std::string, std::future<test_family::results>>> results{};
+          results.reserve(m_Families.size());
+
+          for(auto& family : m_Families)
+          {
+            results.emplace_back(family.name(),
+              std::async([&family, umode{m_UpdateMode}, cmode{m_ConcurrencyMode}](){
+              return family.execute(umode, cmode); }));
+          }
+
+          for(auto& res : results)
+          {
+            stream() << res.first << ":\n";
+            summary += process_family(res.second.get()).log;
+          }
+        }
+        stream() << "\n-----------Grand Totals-----------\n";
+        stream() << summarize(summary, steady_clock::now() - time, summary_detail::absent_checks | summary_detail::timings, indentation{"\t"}, no_indent);
       }
-      else
+      else if(!selected)
       {
-        stream() << "\n\t--Using asynchronous execution, level: " << stringify(m_ConcurrencyMode) << "\n\n";
-        std::vector<std::pair<std::string, std::future<test_family::results>>> results{};
-        results.reserve(m_Families.size());
-
-        for(auto& family : m_Families)
-        {
-          results.emplace_back(family.name(),
-            std::async([&family, umode{m_UpdateMode}, cmode{m_ConcurrencyMode}](){
-                         return family.execute(umode, cmode); }));
-        }
-
-        for(auto& res : results)
-        {
-          stream() << res.first << ":\n";
-          summary += process_family(res.second.get()).log;
-        }
+        stream() << "Nothing to do; try creating some tests!\nRun with --help to see options\n";
       }
-      stream() <<  "\n-----------Grand Totals-----------\n";
-      stream() << summarize(summary, steady_clock::now() - time, summary_detail::absent_checks | summary_detail::timings, indentation{"\t"},  no_indent);
     }
 
     check_for_missing_tests();
