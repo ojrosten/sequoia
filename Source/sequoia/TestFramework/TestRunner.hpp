@@ -129,7 +129,7 @@ namespace sequoia::testing
     [[nodiscard]]
     auto create_file(const std::filesystem::path& codeTemplatesDir, std::string_view copyright, std::string_view inputNameStub, std::string_view nameEnding, FileTransformer transformer) const -> file_data;
 
-    void set_cpp(const std::filesystem::path& headerPath, std::string_view nameSpace) const;
+    void set_cpp(const std::filesystem::path& headerPath, std::string_view copyright, std::string_view nameSpace) const;
 
     [[nodiscard]]
     const indentation& code_indent() const noexcept
@@ -165,7 +165,7 @@ namespace sequoia::testing
 
     void source_dir(std::filesystem::path dir) { m_SourceDir = std::move(dir); }
 
-    void finalize();
+    void finalize(std::string_view copyright);
 
     [[nodiscard]]
     auto create_file(std::string_view copyright, const std::filesystem::path& codeTemplatesDir, std::string_view nameEnding) const -> file_data;
@@ -198,6 +198,8 @@ namespace sequoia::testing
     std::filesystem::path m_SourceDir{};
 
     void transform_file(std::string& text) const;
+
+    void set_header_text(std::string& text, std::string_view copyright, std::string_view nameSpace) const;
   };
 
   class nascent_allocation_test : public nascent_test_base
@@ -227,7 +229,7 @@ namespace sequoia::testing
   public:
     using nascent_test_base::nascent_test_base;
 
-    void finalize();
+    void finalize(std::string_view copyright);
 
     [[nodiscard]]
     auto create_file(std::string_view copyright, const std::filesystem::path& codeTemplatesDir, std::string_view nameEnding) const->file_data;

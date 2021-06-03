@@ -316,7 +316,7 @@ namespace sequoia::testing
     return {outputFile, true};
   }
 
-  void nascent_test_base::set_cpp(const std::filesystem::path& headerPath, std::string_view nameSpace) const
+  void nascent_test_base::set_cpp(const std::filesystem::path& headerPath, std::string_view copyright, std::string_view nameSpace) const
   {
     namespace fs = std::filesystem;
     const auto srcPath{fs::path{headerPath}.replace_extension("cpp")};
@@ -326,6 +326,7 @@ namespace sequoia::testing
 
     auto setCppText{
         [&](std::string& text) {
+          set_top_copyright(text, copyright);
           process_namespace(text, nameSpace);
           replace_all(text, "?.hpp", rebase_from(headerPath, sourceRoot).generic_string());
           to_spaces(text, code_indent());
@@ -344,7 +345,7 @@ namespace sequoia::testing
 
   //=========================================== nascent_semantics_test ===========================================//
 
-  void nascent_semantics_test::finalize()
+  void nascent_semantics_test::finalize(std::string_view copyright)
   {
     constexpr auto npos{std::string::npos};
 
@@ -401,7 +402,7 @@ namespace sequoia::testing
     if(header().empty()) header(std::filesystem::path{camel_name()}.concat(".hpp"));
 
     namespace fs = std::filesystem;
-    nascent_test_base::finalize([&nameSpace,this](const fs::path& filename) {
+    nascent_test_base::finalize([&nameSpace,this,copyright](const fs::path& filename) {
 
       const auto headerTemplate{std::string{"My"}.append(capitalize(to_camel_case(test_type()))).append("Class.hpp")};
 
@@ -409,29 +410,11 @@ namespace sequoia::testing
       fs::create_directories(headerPath.parent_path());
       fs::copy_file(source_templates_path(paths().project_root()) / headerTemplate, headerPath);
 
-      auto setHeaderText{
-        [this,&nameSpace](std::string& text) {
-          process_namespace(text, nameSpace);
-          replace_all(text, "?type", forename());
-          if(m_TemplateData.empty())
-          {
-            replace_all(text, "\ttemplate<?>\n", "");
-          }
-          else
-          {
-            const auto templateSpec{std::string{"template"}.append(to_string(m_TemplateData))};
-            replace_all(text, "template<?>", templateSpec);
-          }
-
-          to_spaces(text, code_indent());
-        }
-      };
-
-      read_modify_write(headerPath, setHeaderText);
+      read_modify_write(headerPath, [this, &nameSpace, copyright](std::string& text) { set_header_text(text, copyright, nameSpace); });
 
       if(m_TemplateData.empty())
       {
-        set_cpp(headerPath, nameSpace);
+        set_cpp(headerPath, copyright, nameSpace);
       }
 
       return headerPath;
@@ -509,17 +492,34 @@ namespace sequoia::testing
                        {"?Class", camel_name()},
                        {"?Test", to_camel_case(test_type()).append("Test")},
                        {"?", test_type()}});
+  }
 
+  void nascent_semantics_test::set_header_text(std::string& text, std::string_view copyright, std::string_view nameSpace) const
+  {
+    set_top_copyright(text, copyright);
+    process_namespace(text, nameSpace);
+    replace_all(text, "?type", forename());
+    if(m_TemplateData.empty())
+    {
+      replace_all(text, "\ttemplate<?>\n", "");
+    }
+    else
+    {
+      const auto templateSpec{std::string{"template"}.append(to_string(m_TemplateData))};
+      replace_all(text, "template<?>", templateSpec);
+    }
+
+    to_spaces(text, code_indent());
   }
 
   //=========================================== nascent_behavioural_test ===========================================//
 
-  void nascent_behavioural_test::finalize()
+  void nascent_behavioural_test::finalize(std::string_view copyright)
   {
     camel_name(forename().empty() ? header().filename().replace_extension().string() : forename());
 
     namespace fs = std::filesystem;
-    nascent_test_base::finalize([this](const fs::path& filename) {
+    nascent_test_base::finalize([this,copyright](const fs::path& filename) {
 
       const auto headerPath{filename.is_absolute() ? filename : paths().source() / rebase_from(filename, paths().source())};
       fs::create_directories(headerPath.parent_path());
@@ -527,7 +527,7 @@ namespace sequoia::testing
 
       read_modify_write(headerPath, [&nameSpace=m_Namespace](std::string& text) { process_namespace(text, nameSpace); });
 
-      set_cpp(headerPath, m_Namespace);
+      set_cpp(headerPath, copyright, m_Namespace);
 
       return headerPath;
     });
@@ -772,7 +772,14 @@ namespace sequoia::testing
                    },
                    [this](const arg_list&) {
                       if(!m_NascentTests.empty())
-                        std::visit(variant_visitor{[](auto& nascent){ nascent.finalize();}}, m_NascentTests.back());
+                      {
+                        variant_visitor visitor{
+                          [copyright=m_Copyright](nascent_behavioural_test& nascent) { nascent.finalize(copyright); },
+                          [copyright=m_Copyright](nascent_semantics_test& nascent) { nascent.finalize(copyright); },
+                          [](auto& nascent) { nascent.finalize(); }
+                        };
+                        std::visit(visitor, m_NascentTests.back());
+                      }
                     }
                   },
                   {"init", {"i"}, {"copyright owner", "path ending with project name", "code indent"},

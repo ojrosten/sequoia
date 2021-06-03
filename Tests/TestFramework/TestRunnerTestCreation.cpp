@@ -107,7 +107,7 @@ namespace sequoia::testing
     };
 
     std::stringstream outputStream{};
-    test_runner tr{args.size(), args.get(), "Oliver J. Rosten", paths, "    ", outputStream};
+    test_runner tr{args.size(), args.get(), "Oliver Jacob Rosten", paths, "    ", outputStream};
 
     tr.execute();
 

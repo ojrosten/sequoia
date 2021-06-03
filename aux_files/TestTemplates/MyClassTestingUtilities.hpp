@@ -30,7 +30,7 @@ namespace sequoia::testing
 		template<test_mode Mode>
 		static void check(test_logger<Mode>& logger, const type& actual, ?predictions)
 		{
-			// e.g. check_equality("Description", logger, actual.method(), predictions.foo());
+			// e.g. check_equality("Description", logger, actual.method(), prediction);
 		}
 	};
 }
