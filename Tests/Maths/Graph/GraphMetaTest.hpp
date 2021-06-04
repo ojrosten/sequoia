@@ -26,7 +26,7 @@ namespace sequoia::testing
     template
     <
       maths::graph_flavour GraphFlavour,
-      template<class, template<class> class, class, class> class EdgeType
+      template<class, class> class EdgeType
     >
     void test_undirected();
 
@@ -38,8 +38,8 @@ namespace sequoia::testing
     <
       maths::graph_flavour GraphFlavour,
       class EdgeWeight,
-      class EdgeWeightPooling,
-      template<class, template<class> class, class, class> class EdgeType
+      class EdgeWeightCreator,
+      template<class, class> class EdgeType
     >
     void test_undirected_unshared();
 
@@ -47,8 +47,8 @@ namespace sequoia::testing
     <
       maths::graph_flavour GraphFlavour,
       class EdgeWeight,
-      class EdgeWeightPooling,
-      template<class, template<class> class, class, class> class EdgeType
+      class EdgeWeightCreator,
+      template<class, class> class EdgeType
     >
     void test_undirected_shared();
 
@@ -75,6 +75,6 @@ namespace sequoia::testing
 
     [[nodiscard]] friend constexpr bool operator==(const wrapper& lhs, const wrapper& rhs) noexcept = default;
 
-    [[nodiscard]] friend constexpr bool operator!=(const wrapper& lhs, const wrapper& rhs) noexcept = default;
+    [[nodiscard]] friend constexpr auto operator<=>(const wrapper& lhs, const wrapper& rhs) noexcept = default;
   };
 }

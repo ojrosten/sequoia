@@ -50,10 +50,10 @@ namespace sequoia
       using namespace maths;
       using namespace ownership;
 
-      using edge_t = partial_edge<null_weight, independent, utilities::uniform_wrapper<null_weight>>;
+      using edge_t = partial_edge<independent<utilities::uniform_wrapper<null_weight>>>;
       static_assert(sizeof(std::size_t) == sizeof(edge_t));
 
-      using compact_edge_t = partial_edge<null_weight, independent, utilities::uniform_wrapper<null_weight>, unsigned char>;
+      using compact_edge_t = partial_edge<independent<utilities::uniform_wrapper<null_weight>>, unsigned char>;
       static_assert(sizeof(unsigned char) == sizeof(compact_edge_t));
 
       edge_t e1{0};
@@ -73,7 +73,7 @@ namespace sequoia
       using namespace maths;
       using namespace ownership;
 
-      using edge_t = partial_edge<int, shared, utilities::uniform_wrapper<int>>;
+      using edge_t = partial_edge<shared<utilities::uniform_wrapper<int>>>;
 
       edge_t edge{1, 4};
       check_equality(LINE("Construction"), edge, edge_t{1, 4});
@@ -141,7 +141,7 @@ namespace sequoia
       using namespace maths;
       using namespace ownership;
 
-      using edge_t = partial_edge<int, independent, utilities::uniform_wrapper<int>>;
+      using edge_t = partial_edge<independent<utilities::uniform_wrapper<int>>>;
       static_assert(2 * sizeof(std::size_t) == sizeof(edge_t));
 
       edge_t edge{2, 7};
@@ -169,11 +169,11 @@ namespace sequoia
       using namespace maths;
       using namespace ownership;
 
-      using edge_t = embedded_partial_edge<null_weight, independent, utilities::uniform_wrapper<null_weight>>;
+      using edge_t = embedded_partial_edge<independent<utilities::uniform_wrapper<null_weight>>>;
       static_assert(2*sizeof(std::size_t) == sizeof(edge_t));
 
       using compact_edge_t
-        = embedded_partial_edge<null_weight, independent, utilities::uniform_wrapper<null_weight>, unsigned char>;
+        = embedded_partial_edge<independent<utilities::uniform_wrapper<null_weight>>, unsigned char>;
       static_assert(2*sizeof(unsigned char) == sizeof(compact_edge_t));
 
       edge_t e1{0, 4};
@@ -196,7 +196,7 @@ namespace sequoia
       using namespace maths;
       using namespace ownership;
 
-      using edge_t = embedded_partial_edge<double, independent, utilities::uniform_wrapper<double>>;
+      using edge_t = embedded_partial_edge<independent<utilities::uniform_wrapper<double>>>;
       static_assert(2*sizeof(std::size_t) + sizeof(double) == sizeof(edge_t));
 
       constexpr edge_t edge1{1, 2, 5.0};
@@ -222,7 +222,7 @@ namespace sequoia
       using namespace maths;
       using namespace ownership;
 
-      using edge_t = embedded_partial_edge<double, shared, utilities::uniform_wrapper<double>>;
+      using edge_t = embedded_partial_edge<shared<utilities::uniform_wrapper<double>>>;
 
       edge_t edge1{1, 2, 5.0};
       check_equality(LINE("Construction"), edge1, edge_t{1, 2, 5.0});
@@ -247,11 +247,12 @@ namespace sequoia
     void test_edges::test_plain_edge()
     {
       using namespace maths;
+      using namespace ownership;
 
-      using edge_t = edge<null_weight, utilities::uniform_wrapper<null_weight>>;
+      using edge_t = edge<independent<utilities::uniform_wrapper<null_weight>>>;
       static_assert(2*sizeof(std::size_t) == sizeof(edge_t));
 
-      using compact_edge_t = edge<null_weight, utilities::uniform_wrapper<null_weight>, unsigned char>;
+      using compact_edge_t = edge<independent<utilities::uniform_wrapper<null_weight>>, unsigned char>;
       static_assert(2 * sizeof(unsigned char) == sizeof(compact_edge_t));
 
       edge_t
@@ -286,9 +287,10 @@ namespace sequoia
     void test_edges::test_weighted_edge()
     {
       using namespace maths;
+      using namespace ownership;
 
       {
-        using edge_t = edge<double, utilities::uniform_wrapper<double>>;
+        using edge_t = edge<independent<utilities::uniform_wrapper<double>>>;
         static_assert(sizeof(edge_t) == sizeof(double) + 2*sizeof(std::size_t));
 
         edge_t
@@ -312,7 +314,7 @@ namespace sequoia
 
       {
         using std::complex;
-        using edge_t = edge<complex<float>, utilities::uniform_wrapper<complex<float>>>;
+        using edge_t = edge<independent<utilities::uniform_wrapper<complex<float>>>>;
         static_assert(sizeof(edge_t) == sizeof(std::complex<float>) + 2*sizeof(std::size_t));
 
         edge_t
@@ -327,7 +329,7 @@ namespace sequoia
 
       {
         using std::vector;
-        using edge_t = edge<vector<int>, utilities::uniform_wrapper<vector<int>>>;
+        using edge_t = edge<independent<utilities::uniform_wrapper<vector<int>>>>;
 
         edge_t
           e1(0, 0, 5, 1),
@@ -351,10 +353,10 @@ namespace sequoia
       using namespace maths;
       using namespace ownership;
 
-      using edge_t = embedded_edge<null_weight, independent, utilities::uniform_wrapper<null_weight>>;
+      using edge_t = embedded_edge<independent<utilities::uniform_wrapper<null_weight>>>;
       check_equality(LINE(""), sizeof(edge_t), 3*sizeof(std::size_t));
 
-      using compact_edge_t = embedded_edge<null_weight, independent, utilities::uniform_wrapper<null_weight>, unsigned char>;
+      using compact_edge_t = embedded_edge<independent<utilities::uniform_wrapper<null_weight>>, unsigned char>;
       static_assert(3*sizeof(unsigned char) == sizeof(compact_edge_t));
 
       edge_t e{3, 4, 1};
@@ -387,7 +389,7 @@ namespace sequoia
       using namespace maths;
       using namespace ownership;
 
-      using edge_t = embedded_edge<double, independent, utilities::uniform_wrapper<double>>;
+      using edge_t = embedded_edge<independent<utilities::uniform_wrapper<double>>>;
       check_equality(LINE(""), sizeof(edge_t), 3*sizeof(std::size_t) + sizeof(double));
 
       constexpr edge_t e{3, 4, 1, 4.2};
@@ -418,7 +420,7 @@ namespace sequoia
       using namespace maths;
       using namespace ownership;
 
-      using edge_t = embedded_edge<double, shared, utilities::uniform_wrapper<double>>;
+      using edge_t = embedded_edge<shared<utilities::uniform_wrapper<double>>>;
 
         edge_t e{10, 11, 0, -1.2};
         check_equality(LINE("Construction"), e, edge_t{10, 11, 0, -1.2});

@@ -14,17 +14,17 @@
 
 #include "sequoia/Core/Meta/Concepts.hpp"
 
-namespace sequoia
+namespace sequoia::ownership
 {
-  template<class T>
-  concept handler = requires() {
-    typename T::handle_type;
-    typename T::elementary_type;
+  // TO DO: replace with contexpr bool once MSVC can cope with this
+  template<class H>
+  concept handler = requires(H& h, typename H::handle_type& x, const typename H::handle_type& cx){
+    typename H::handle_type;
+    typename H::elementary_type;
 
-    { T::get(std::declval<typename T::handle_type>()) } -> same_as<const typename T::elementary_type&>;
-    { T::get_ptr(std::declval<typename T::handle_type>()) } -> same_as<const typename T::elementary_type*>;
-    { T::get(makelval<typename T::handle_type>()) } -> same_as<typename T::elementary_type&>;
-    { T::get_ptr(makelval<typename T::handle_type>()) } -> same_as<typename T::elementary_type*>;
-    { T::make() } -> same_as<typename T::handle_type>;
+    { h.get(x) }      -> same_as<typename H::elementary_type&>;
+    { h.get_ptr(x) }  -> same_as<typename H::elementary_type*>;
+    { h.get(cx) }     -> same_as<const typename H::elementary_type&>;
+    { h.get_ptr(cx) } -> same_as<const typename H::elementary_type*>;
   };
 }

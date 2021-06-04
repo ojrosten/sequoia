@@ -61,18 +61,19 @@ namespace sequoia::maths
     graph_flavour GraphFlavour,
     class EdgeWeight,
     class NodeWeight,
-    creator EdgeWeightCreator,
-    creator NodeWeightCreator,
+    class EdgeWeightCreator,
+    class NodeWeightCreator,
     class EdgeStorageTraits,
     class NodeWeightStorageTraits
   >
+    requires (ownership::creator<EdgeWeightCreator> && ownership::creator<NodeWeightCreator>)
   class graph_base : public
     graph_primitive
     <
       connectivity
       <
         to_directedness(GraphFlavour),
-        graph_impl::dynamic_edge_traits<GraphFlavour, EdgeWeight, EdgeWeightCreator, EdgeStorageTraits, std::size_t>,
+        graph_impl::dynamic_edge_traits<GraphFlavour, EdgeWeightCreator, EdgeStorageTraits, std::size_t>,
         EdgeWeightCreator
       >,
       graph_impl::node_storage
@@ -83,7 +84,7 @@ namespace sequoia::maths
     >
   {
   public:
-    using edge_traits_type = graph_impl::dynamic_edge_traits<GraphFlavour, EdgeWeight, EdgeWeightCreator, EdgeStorageTraits, std::size_t>;
+    using edge_traits_type  = graph_impl::dynamic_edge_traits<GraphFlavour, EdgeWeightCreator, EdgeStorageTraits, std::size_t>;
     using node_storage_type = graph_impl::node_storage<NodeWeightCreator, NodeWeightStorageTraits>;
 
     using primitive_type =
@@ -185,12 +186,14 @@ namespace sequoia::maths
     graph_flavour GraphFlavour,
     class EdgeWeight,
     class NodeWeight,
-    creator EdgeWeightCreator,
-    creator NodeWeightCreator,
+    class EdgeWeightCreator,
+    class NodeWeightCreator,
     class EdgeStorageTraits,
     class NodeWeightStorageTraits
   >
-    requires NodeWeightStorageTraits::has_allocator
+  requires (   ownership::creator<EdgeWeightCreator>
+            && ownership::creator<NodeWeightCreator>
+            && NodeWeightStorageTraits::has_allocator)
   class graph_base<
       GraphFlavour,
       EdgeWeight,
@@ -205,7 +208,7 @@ namespace sequoia::maths
       connectivity
       <
         to_directedness(GraphFlavour),
-        graph_impl::dynamic_edge_traits<GraphFlavour, EdgeWeight, EdgeWeightCreator, EdgeStorageTraits, std::size_t>,
+        graph_impl::dynamic_edge_traits<GraphFlavour, EdgeWeightCreator, EdgeStorageTraits, std::size_t>,
         EdgeWeightCreator
       >,
       graph_impl::node_storage
@@ -216,7 +219,7 @@ namespace sequoia::maths
     >
   {
   public:
-    using edge_traits_type = graph_impl::dynamic_edge_traits<GraphFlavour, EdgeWeight, EdgeWeightCreator, EdgeStorageTraits, std::size_t>;
+    using edge_traits_type = graph_impl::dynamic_edge_traits<GraphFlavour, EdgeWeightCreator, EdgeStorageTraits, std::size_t>;
     using node_storage_type = graph_impl::node_storage<NodeWeightCreator, NodeWeightStorageTraits>;
 
     using primitive_type =
@@ -333,11 +336,12 @@ namespace sequoia::maths
     directed_flavour Directedness,
     class EdgeWeight,
     class NodeWeight,
-    creator EdgeWeightCreator=ownership::spawner<EdgeWeight>,
-    creator NodeWeightCreator=ownership::spawner<NodeWeight>,
+    class EdgeWeightCreator=ownership::spawner<EdgeWeight>,
+    class NodeWeightCreator=ownership::spawner<NodeWeight>,
     class EdgeStorageTraits = bucketed_edge_storage_traits,
     class NodeWeightStorageTraits = node_weight_storage_traits<NodeWeight>
   >
+    requires (ownership::creator<EdgeWeightCreator> && ownership::creator<NodeWeightCreator>)
   class graph final : public
     graph_base
     <
@@ -402,11 +406,12 @@ namespace sequoia::maths
     directed_flavour Directedness,
     class EdgeWeight,
     class NodeWeight,
-    creator EdgeWeightCreator=ownership::spawner<EdgeWeight>,
-    creator NodeWeightCreator=ownership::spawner<NodeWeight>,
+    class EdgeWeightCreator=ownership::spawner<EdgeWeight>,
+    class NodeWeightCreator=ownership::spawner<NodeWeight>,
     class EdgeStorageTraits=bucketed_edge_storage_traits,
     class NodeWeightStorageTraits=node_weight_storage_traits<NodeWeight>
   >
+    requires (ownership::creator<EdgeWeightCreator> && ownership::creator<NodeWeightCreator>)
   class embedded_graph final : public
     graph_base
     <

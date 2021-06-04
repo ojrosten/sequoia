@@ -13,6 +13,11 @@
 
 #include "sequoia/Maths/Graph/GraphDetails.hpp"
 
+namespace data_structures
+{
+  template <class, std::size_t, std::size_t, class> class static_partitioned_sequence;
+}
+
 namespace sequoia::maths::graph_impl
 {
   template
@@ -24,9 +29,9 @@ namespace sequoia::maths::graph_impl
     integral IndexType
   >
   struct static_edge_traits
-    : public edge_type_generator<GraphFlavour, EdgeWeight, ownership::spawner<EdgeWeight>, IndexType, edge_sharing_preference::independent>
+    : public edge_type_generator<GraphFlavour, ownership::spawner<EdgeWeight>, IndexType, edge_sharing_preference::independent>
   {
-    using edge_type = typename edge_type_generator<GraphFlavour, EdgeWeight, ownership::spawner<EdgeWeight>, IndexType, edge_sharing_preference::independent>::edge_type;
+    using edge_type = typename edge_type_generator<GraphFlavour, ownership::spawner<EdgeWeight>, IndexType, edge_sharing_preference::independent>::edge_type;
     using edge_storage_type = data_structures::static_partitioned_sequence<edge_type, Order, num_static_edges(GraphFlavour, Size), IndexType>;
 
     constexpr static bool shared_edge_v{};

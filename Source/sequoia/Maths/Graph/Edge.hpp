@@ -28,6 +28,7 @@
 
 #include "sequoia/Core/Meta/Concepts.hpp"
 #include "sequoia/Core/Meta/TypeTraits.hpp"
+#include "sequoia/Core/Ownership/HandlerTraits.hpp"
 
 namespace sequoia
 {
@@ -94,35 +95,30 @@ namespace sequoia
         edges is done at the level of the graph.
     */
 
-    template
-    <
-      class Weight,
-      template <class> class WeightHandler,
-      class WeightProxy,
-      integral IndexType
-    >
+    template<class WeightHandler, integral IndexType>
+      requires ownership::handler<WeightHandler>
     class weighting
     {
     public:
-      using weight_type = Weight;
-      using weight_proxy_type = WeightProxy;
+      using weight_proxy_type = typename WeightHandler::elementary_type;
+      using weight_type       = typename weight_proxy_type::value_type;
 
       template<class Arg, class... Args>
       constexpr void weight(Arg&& arg, Args&&... args)
       {
-        wrapped_weight::get(m_Weight).set(std::forward<Arg>(arg), std::forward<Args>(args)...);
+        WeightHandler::get(m_Weight).set(std::forward<Arg>(arg), std::forward<Args>(args)...);
       }
 
       [[nodiscard]]
-      constexpr const weight_type& weight() const noexcept { return wrapped_weight::get(m_Weight).get(); }
+      constexpr const weight_type& weight() const noexcept { return WeightHandler::get(m_Weight).get(); }
 
       [[nodiscard]]
-      constexpr const weight_proxy_type& weight_proxy() const noexcept { return wrapped_weight::get(m_Weight); }
+      constexpr const weight_proxy_type& weight_proxy() const noexcept { return WeightHandler::get(m_Weight); }
 
       template<class Fn>
       constexpr void mutate_weight(Fn fn)
       {
-        wrapped_weight::get(m_Weight).mutate(fn);
+        WeightHandler::get(m_Weight).mutate(fn);
       }
 
       [[nodiscard]]
@@ -141,10 +137,10 @@ namespace sequoia
 
       template<class... Args>
         requires (!resolve_to_copy_v<weighting, Args...> && !is_base_of_head_v<weighting, Args...>)
-      constexpr explicit weighting(Args&&... args) : m_Weight{wrapped_weight::make(std::forward<Args>(args)...)}
+      constexpr explicit weighting(Args&&... args) : m_Weight{WeightHandler::make(std::forward<Args>(args)...)}
       {}
 
-      constexpr weighting(const weighting& in) : m_Weight{wrapped_weight::make(wrapped_weight::get(in.m_Weight))}
+      constexpr weighting(const weighting& in) : m_Weight{WeightHandler::make(WeightHandler::get(in.m_Weight))}
       {
       }
 
@@ -156,33 +152,27 @@ namespace sequoia
 
       constexpr weighting& operator=(const weighting& in)
       {
-        if(&in != this) m_Weight = wrapped_weight::make(wrapped_weight::get(in.m_Weight));
+        if(&in != this) m_Weight = WeightHandler::make(WeightHandler::get(in.m_Weight));
         return *this;
       }
 
       constexpr weighting& operator=(weighting&&) noexcept = default;
     private:
-      using wrapped_weight = WeightHandler<WeightProxy>;
-      typename wrapped_weight::handle_type m_Weight;
+      typename WeightHandler::handle_type m_Weight;
     };
 
-    /*! \class weighting<Weight, WeightHandler, WeightProxy, IndexType, true>
+    /*! \class weighting<WeightHandler, IndexType, true>
         \brief An empty (base) class for edges without a weight.
 
      */
 
-    template
-    <
-      empty Weight,
-      template <class> class WeightHandler,
-      class WeightProxy,
-      integral IndexType
-    >
-    class weighting<Weight, WeightHandler, WeightProxy, IndexType>
+    template<class WeightHandler, integral IndexType>
+      requires (ownership::handler<WeightHandler> && empty<typename WeightHandler::elementary_type::value_type>)
+    class weighting<WeightHandler, IndexType>
     {
     public:
-      using weight_type = Weight;
-      using weight_proxy_type = WeightProxy;
+      using weight_proxy_type = typename WeightHandler::elementary_type;
+      using weight_type       = typename weight_proxy_type::value_type;
 
       [[nodiscard]]
       friend constexpr bool operator==(const weighting&, const weighting&) noexcept = default;
@@ -198,7 +188,6 @@ namespace sequoia
       constexpr weighting& operator=(const weighting&)       noexcept = default;
       constexpr weighting& operator=(weighting&&)            noexcept = default;
       constexpr weighting(const weighting&, const IndexType) noexcept {}
-
     };
 
     //===================================Partial Edge Base===================================//
@@ -208,30 +197,23 @@ namespace sequoia
 
      */
 
-    template
-    <
-      class Weight,
-      template <class> class WeightHandler,
-      class WeightProxy,
-      integral IndexType
-    >
-    class partial_edge_base : public edge_base<IndexType>, public weighting<Weight, WeightHandler, WeightProxy, IndexType>
+    template<class WeightHandler, integral IndexType>
+      requires ownership::handler<WeightHandler>
+    class partial_edge_base : public edge_base<IndexType>, public weighting<WeightHandler, IndexType>
     {
     public:
-      using weight_type = Weight;
       using index_type = IndexType;
-      using weight_proxy_type = WeightProxy;
 
       template<class... Args>
         requires (!resolve_to_copy_v<partial_edge_base, Args...>)
       constexpr explicit partial_edge_base(const index_type target, Args&&... args)
         : edge_base<IndexType>{target}
-        , weighting<Weight, WeightHandler, WeightProxy, IndexType>{std::forward<Args>(args)...}
+        , weighting<WeightHandler, IndexType>{std::forward<Args>(args)...}
       {}
 
       constexpr partial_edge_base(const index_type target, const partial_edge_base& in)
         : edge_base<IndexType>{target}
-        , weighting<Weight, WeightHandler, WeightProxy, IndexType>{in, target}
+        , weighting<WeightHandler, IndexType>{in, target}
       {
       }
 
@@ -260,18 +242,13 @@ namespace sequoia
 
      */
 
-    template
-    <
-      class Weight,
-      template <class> class WeightHandler,
-      class WeightProxy,
-      integral IndexType=std::size_t
-    >
-    class partial_edge : public partial_edge_base<Weight, WeightHandler, WeightProxy, IndexType>
+    template<class WeightHandler, integral IndexType=std::size_t>
+      requires ownership::handler<WeightHandler>
+    class partial_edge : public partial_edge_base<WeightHandler, IndexType>
     {
     public:
       constexpr static edge_flavour flavour{edge_flavour::partial};
-      using partial_edge_base<Weight, WeightHandler, WeightProxy, IndexType>::partial_edge_base;
+      using partial_edge_base<WeightHandler, IndexType>::partial_edge_base;
     };
 
     //===================================Decorated Partial Edge Base===================================//
@@ -281,28 +258,23 @@ namespace sequoia
 
      */
 
-    template
-    <
-      class Weight,
-      template <class> class WeightHandler,
-      class WeightProxy,
-      integral IndexType=std::size_t
-    >
-    class decorated_edge_base : public partial_edge_base<Weight, WeightHandler, WeightProxy, IndexType>
+    template<class WeightHandler, integral IndexType=std::size_t>
+      requires ownership::handler<WeightHandler>
+    class decorated_edge_base : public partial_edge_base<WeightHandler, IndexType>
     {
     public:
-      using weight_type = typename partial_edge_base<Weight, WeightHandler, WeightProxy, IndexType>::weight_type;
-      using index_type = typename partial_edge_base<Weight, WeightHandler, WeightProxy, IndexType>::index_type;
+      using weight_type = typename partial_edge_base<WeightHandler, IndexType>::weight_type;
+      using index_type  = typename partial_edge_base<WeightHandler, IndexType>::index_type;
 
       template<class... Args>
         requires (!resolve_to_copy_v<decorated_edge_base, Args...>)
       constexpr decorated_edge_base(const index_type target, const index_type auxIndex, Args&&... args)
-        : partial_edge_base<Weight, WeightHandler, WeightProxy, IndexType>{target, std::forward<Args>(args)...}
+        : partial_edge_base<WeightHandler, IndexType>{target, std::forward<Args>(args)...}
         , m_AuxiliaryIndex{auxIndex}
       {}
 
       constexpr decorated_edge_base(const index_type target, const index_type auxIndex, const decorated_edge_base& in)
-        : partial_edge_base<Weight, WeightHandler, WeightProxy, IndexType>{target, in}
+        : partial_edge_base<WeightHandler, IndexType>{target, in}
         , m_AuxiliaryIndex{auxIndex}
       {}
 
@@ -335,21 +307,16 @@ namespace sequoia
 
      */
 
-    template
-    <
-      class Weight,
-      template <class> class WeightHandler,
-      class WeightProxy,
-      integral IndexType=std::size_t
-    >
-    class embedded_partial_edge : public decorated_edge_base<Weight, WeightHandler, WeightProxy, IndexType>
+    template<class WeightHandler, integral IndexType=std::size_t>
+      requires ownership::handler<WeightHandler>
+    class embedded_partial_edge : public decorated_edge_base<WeightHandler, IndexType>
     {
     public:
       constexpr static edge_flavour flavour{edge_flavour::partial_embedded};
-      using weight_type = typename decorated_edge_base<Weight, WeightHandler, WeightProxy, IndexType>::weight_type;
-      using index_type = typename decorated_edge_base<Weight, WeightHandler, WeightProxy, IndexType>::index_type;
+      using weight_type = typename decorated_edge_base<WeightHandler, IndexType>::weight_type;
+      using index_type  = typename decorated_edge_base<WeightHandler, IndexType>::index_type;
 
-      using decorated_edge_base<Weight, WeightHandler, WeightProxy, IndexType>::decorated_edge_base;
+      using decorated_edge_base<WeightHandler, IndexType>::decorated_edge_base;
 
       [[nodiscard]]
       constexpr index_type complementary_index() const noexcept { return this->auxiliary_index(); }
@@ -367,24 +334,19 @@ namespace sequoia
 
      */
 
-    template
-    <
-      class Weight,
-      class WeightProxy,
-      integral IndexType=std::size_t
-    >
-    class edge : public decorated_edge_base<Weight, ownership::independent, WeightProxy, IndexType>
+    template<class WeightHandler, integral IndexType=std::size_t>
+      requires ownership::handler<WeightHandler>
+    class edge : public decorated_edge_base<WeightHandler, IndexType>
     {
     public:
       constexpr static edge_flavour flavour{edge_flavour::full};
-      using weight_type = typename decorated_edge_base<Weight, ownership::independent, WeightProxy, IndexType>::weight_type;
-      using index_type = typename decorated_edge_base<Weight, ownership::independent, WeightProxy, IndexType>::index_type;
-      using weight_proxy_type = WeightProxy;
+      using weight_type = typename decorated_edge_base<WeightHandler, IndexType>::weight_type;
+      using index_type  = typename decorated_edge_base<WeightHandler, IndexType>::index_type;
 
       template<class... Args>
         requires (!resolve_to_copy_v<edge, Args...>)
       constexpr edge(const index_type source, const index_type target, Args&&... args)
-        : decorated_edge_base<Weight, ownership::independent, WeightProxy, IndexType>{target, source, std::forward<Args>(args)...}
+        : decorated_edge_base<WeightHandler, IndexType>{target, source, std::forward<Args>(args)...}
       {
         if(source == npos) throw std::runtime_error("Cannot initialize full edge using max value of index");
       }
@@ -395,7 +357,7 @@ namespace sequoia
         class... Args
       >
       constexpr edge(const index_type node, const inversion_constant<Inverted> inverted, Args&&... args)
-        : decorated_edge_base<Weight, ownership::independent, WeightProxy, IndexType>{
+        : decorated_edge_base<WeightHandler, IndexType>{
             node, inverted.value ? npos : node, std::forward<Args>(args)...
           }
       {
@@ -433,43 +395,34 @@ namespace sequoia
 
      */
 
-    template
-    <
-      class Weight,
-      template <class> class WeightHandler,
-      class WeightProxy,
-      integral IndexType=std::size_t
-    >
-    class embedded_edge : public decorated_edge_base<Weight, WeightHandler, WeightProxy, IndexType>
+    template<class WeightHandler, integral IndexType=std::size_t>
+      requires ownership::handler<WeightHandler>
+    class embedded_edge : public decorated_edge_base<WeightHandler, IndexType>
     {
     public:
       constexpr static edge_flavour flavour{edge_flavour::full_embedded};
-      using weight_type = typename decorated_edge_base<Weight, WeightHandler, WeightProxy, IndexType>::weight_type;
-      using index_type = typename decorated_edge_base<Weight, WeightHandler, WeightProxy, IndexType>::index_type;
+      using weight_type = typename decorated_edge_base<WeightHandler, IndexType>::weight_type;
+      using index_type  = typename decorated_edge_base<WeightHandler, IndexType>::index_type;
 
       template<class... Args>
-      requires (!resolve_to_copy_v<embedded_edge, Args...>)
+        requires (!resolve_to_copy_v<embedded_edge, Args...>)
       constexpr embedded_edge(const index_type source, const index_type target, const index_type auxIndex, Args&&... args)
-        : decorated_edge_base<Weight, WeightHandler, WeightProxy, IndexType>{target, auxIndex, std::forward<Args>(args)...}
+        : decorated_edge_base<WeightHandler, IndexType>{target, auxIndex, std::forward<Args>(args)...}
         , m_HostIndex{source}
       {
         if(source == npos) throw std::runtime_error("Cannot initialize full edge using max value of index");
       }
 
-      template
-      <
-        bool Inverted,
-        class... Args
-      >
+      template<bool Inverted, class... Args>
       constexpr embedded_edge(const index_type node, const inversion_constant<Inverted> inverted, const index_type auxIndex, Args&&... args)
-        : decorated_edge_base<Weight, WeightHandler, WeightProxy, IndexType>{node, auxIndex, std::forward<Args>(args)...}
+        : decorated_edge_base<WeightHandler, IndexType>{node, auxIndex, std::forward<Args>(args)...}
         , m_HostIndex{inverted.value ? npos : node}
       {
         if(node == npos) throw std::runtime_error("Cannot initialize full edge using max value of index");
       }
 
       constexpr embedded_edge(const index_type auxIndex, const embedded_edge& in)
-        : decorated_edge_base<Weight, WeightHandler, WeightProxy, IndexType>{in.target_node(), auxIndex, in}
+        : decorated_edge_base<WeightHandler, IndexType>{in.target_node(), auxIndex, in}
         , m_HostIndex{in.m_HostIndex}
       {
       }
@@ -500,8 +453,8 @@ namespace sequoia
       {
         return (lhs.source_node() == rhs.source_node())
           && (lhs.inverted() == rhs.inverted())
-          && (static_cast<const decorated_edge_base<Weight, WeightHandler, WeightProxy, IndexType>&>(lhs) ==
-              static_cast<const decorated_edge_base<Weight, WeightHandler, WeightProxy, IndexType>&>(rhs));
+          && (static_cast<const decorated_edge_base<WeightHandler, IndexType>&>(lhs) ==
+              static_cast<const decorated_edge_base<WeightHandler, IndexType>&>(rhs));
       }
 
       [[nodiscard]]

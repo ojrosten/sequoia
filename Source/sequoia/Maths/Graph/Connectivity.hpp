@@ -27,10 +27,10 @@ namespace sequoia
 {
   namespace data_structures
   {
-    template <class, handler, class> class bucketed_storage;
-    template <class, handler> struct bucketed_storage_traits;
-    template <class, handler, class> class partitioned_sequence;
-    template <class, handler> struct partitioned_sequence_traits;
+    template <class, class H, class> requires ownership::handler<H> class bucketed_storage;
+    template <class, class H>        requires ownership::handler<H> struct bucketed_storage_traits;
+    template <class, class H, class> requires ownership::handler<H> class partitioned_sequence;
+    template <class, class H>        requires ownership::handler<H> struct partitioned_sequence_traits;
     template <class, std::size_t, std::size_t, class> class static_partitioned_sequence;
     class static_data_base;
   }

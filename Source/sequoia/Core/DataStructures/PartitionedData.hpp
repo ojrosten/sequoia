@@ -29,28 +29,32 @@ namespace sequoia
   {
     //===================================A Custom Iterator===================================//
 
-    template<class Traits, handler Handler, class IndexType>
+    template<class Traits, class Handler, class IndexType>
+      requires ownership::handler<Handler>
     using partition_iterator
       = utilities::iterator<
           typename partition_impl::partition_iterator_generator<Traits, Handler, partition_impl::mutable_reference, false>::iterator,
           partition_impl::dereference_policy<Handler, partition_impl::mutable_reference, partition_impl::partition_index_policy<false, IndexType>>
         >;
 
-    template<class Traits, handler Handler, class IndexType>
+    template<class Traits, class Handler, class IndexType>
+      requires ownership::handler<Handler>
     using const_partition_iterator
       = utilities::iterator<
           typename partition_impl::partition_iterator_generator<Traits, Handler, partition_impl::const_reference, false>::iterator,
         partition_impl::dereference_policy<Handler, partition_impl::const_reference, partition_impl::partition_index_policy<false, IndexType>>
       >;
 
-    template<class Traits, handler Handler, class IndexType>
+    template<class Traits, class Handler, class IndexType>
+      requires ownership::handler<Handler>
     using reverse_partition_iterator
       = utilities::iterator<
           typename partition_impl::partition_iterator_generator<Traits, Handler, partition_impl::mutable_reference, true>::iterator,
         partition_impl::dereference_policy<Handler, partition_impl::mutable_reference, partition_impl::partition_index_policy<true, IndexType>>
       >;
 
-    template<class Traits, handler Handler, class IndexType>
+    template<class Traits, class Handler, class IndexType>
+      requires ownership::handler<Handler>
     using const_reverse_partition_iterator
       = utilities::iterator<
           typename partition_impl::partition_iterator_generator<Traits, Handler, partition_impl::const_reference, true>::iterator,
@@ -59,7 +63,8 @@ namespace sequoia
 
     //===================================Storage using buckets===================================//
 
-    template<class T, handler Handler>
+    template<class T, class Handler>
+      requires ownership::handler<Handler>
     struct bucketed_storage_traits
     {
       constexpr static bool throw_on_range_error{true};
@@ -71,7 +76,8 @@ namespace sequoia
       using buckets_type = std::vector<std::vector<S>>;
     };
 
-    template<class T, handler Handler=ownership::independent<T>, class Traits=bucketed_storage_traits<T, Handler>>
+    template<class T, class Handler=ownership::independent<T>, class Traits=bucketed_storage_traits<T, Handler>>
+      requires ownership::handler<Handler>
     class bucketed_storage
     {
     private:
@@ -482,7 +488,8 @@ namespace sequoia
 
     //===================================Contiguous storage===================================//
 
-    template<class T, handler Handler, class Traits>
+    template<class T, class Handler, class Traits>
+      requires ownership::handler<Handler>
     class partitioned_sequence_base
     {
       friend struct sequoia::impl::assignment_helper;
@@ -1110,7 +1117,9 @@ namespace sequoia
 
     };
 
-    template<class T, handler Handler> struct partitioned_sequence_traits
+    template<class T, class Handler>
+      requires ownership::handler<Handler>
+    struct partitioned_sequence_traits
     {
       constexpr static bool static_storage_v{false};
       constexpr static bool throw_on_range_error{true};
@@ -1123,7 +1132,8 @@ namespace sequoia
       template<class S> using container_type = std::vector<S, std::allocator<S>>;
     };
 
-    template<class T, handler Handler=ownership::independent<T>, class Traits=partitioned_sequence_traits<T, Handler>>
+    template<class T, class Handler=ownership::independent<T>, class Traits=partitioned_sequence_traits<T, Handler>>
+      requires ownership::handler<Handler>
     class partitioned_sequence : public partitioned_sequence_base<T, Handler, Traits>
     {
     private:

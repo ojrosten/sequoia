@@ -40,16 +40,11 @@ namespace sequoia::testing
     }
   }
 
-  template
-  <
-    class Weight,
-    template <class> class WeightHandler,
-    class WeightProxy,
-    class IndexType
-  >
-  struct detailed_equality_checker<maths::partial_edge<Weight, WeightHandler, WeightProxy, IndexType>>
+  template<class WeightHandler, integral IndexType>
+    requires ownership::handler<WeightHandler>
+  struct detailed_equality_checker<maths::partial_edge<WeightHandler, IndexType>>
   {
-    using type = maths::partial_edge<Weight, WeightHandler, WeightProxy, IndexType>;
+    using type = maths::partial_edge<WeightHandler, IndexType>;
 
     template<test_mode Mode>
     static void check(test_logger<Mode>& logger, const type& edge, const type& prediction)
@@ -59,35 +54,26 @@ namespace sequoia::testing
   };
 
 
-  template
-  <
-    class Weight,
-    template <class> class WeightHandler,
-    class WeightProxy,
-    class IndexType
-  >
-  struct equivalence_checker<maths::partial_edge<Weight, WeightHandler, WeightProxy, IndexType>>
+  template<class WeightHandler, integral IndexType>
+    requires ownership::handler<WeightHandler>
+  struct equivalence_checker<maths::partial_edge<WeightHandler, IndexType>>
   {
-    using type = maths::partial_edge<Weight, WeightHandler, WeightProxy, IndexType>;
+    using type = maths::partial_edge<WeightHandler, IndexType>;
 
-    template<test_mode Mode, template <class> class OtherWSPolicy, class OtherWProxy>
-    static void check(test_logger<Mode>& logger, const type& edge, const maths::partial_edge<Weight, OtherWSPolicy, OtherWProxy, IndexType>& prediction)
+    template<test_mode Mode, class OtherHandler>
+      requires ownership::handler<OtherHandler>
+    static void check(test_logger<Mode>& logger, const type& edge, const maths::partial_edge<OtherHandler, IndexType>& prediction)
     {
       impl::check_partial(logger, edge, prediction);
     }
   };
 
 
-  template
-  <
-    class Weight,
-    template <class> class WeightHandler,
-    class WeightProxy,
-    class IndexType
-  >
-  struct detailed_equality_checker<maths::embedded_partial_edge<Weight, WeightHandler, WeightProxy, IndexType>>
+  template<class WeightHandler, integral IndexType>
+    requires ownership::handler<WeightHandler>
+  struct detailed_equality_checker<maths::embedded_partial_edge<WeightHandler, IndexType>>
   {
-    using type = maths::embedded_partial_edge<Weight, WeightHandler, WeightProxy, IndexType>;
+    using type = maths::embedded_partial_edge<WeightHandler, IndexType>;
 
     template<test_mode Mode>
     static void check(test_logger<Mode>& logger, const type& edge, const type& prediction)
@@ -97,34 +83,26 @@ namespace sequoia::testing
     }
   };
 
-  template
-  <
-    class Weight,
-    template <class> class WeightHandler,
-    class WeightProxy,
-    class IndexType
-  >
-  struct equivalence_checker<maths::embedded_partial_edge<Weight, WeightHandler, WeightProxy, IndexType>>
+  template<class WeightHandler, integral IndexType>
+    requires ownership::handler<WeightHandler>
+  struct equivalence_checker<maths::embedded_partial_edge<WeightHandler, IndexType>>
   {
-    using type = maths::embedded_partial_edge<Weight, WeightHandler, WeightProxy, IndexType>;
+    using type = maths::embedded_partial_edge< WeightHandler,IndexType>;
 
-    template<test_mode Mode, template <class> class OtherWSPolicy, class OtherWProxy>
-    static void check(test_logger<Mode>& logger, const type& edge, const maths::embedded_partial_edge<Weight, OtherWSPolicy, OtherWProxy, IndexType>& prediction)
+    template<test_mode Mode, class OtherHandler>
+      requires ownership::handler<OtherHandler>
+    static void check(test_logger<Mode>& logger, const type& edge, const maths::embedded_partial_edge<OtherHandler, IndexType>& prediction)
     {
       impl::check_partial(logger, edge, prediction);
       impl::check_complementary(logger, edge, prediction);
     }
   };
 
-  template
-  <
-    class Weight,
-    class WeightProxy,
-    class IndexType
-  >
-  struct detailed_equality_checker<maths::edge<Weight, WeightProxy, IndexType>>
+  template<class WeightHandler, integral IndexType>
+    requires ownership::handler<WeightHandler>
+  struct detailed_equality_checker<maths::edge<WeightHandler, IndexType>>
   {
-    using type = maths::edge<Weight, WeightProxy, IndexType>;
+    using type = maths::edge<WeightHandler, IndexType>;
 
     template<test_mode Mode>
     static void check(test_logger<Mode>& logger, const type& edge, const type& prediction)
@@ -134,34 +112,26 @@ namespace sequoia::testing
     }
   };
 
-  template
-  <
-    class Weight,
-    class WeightProxy,
-    class IndexType
-  >
-  struct equivalence_checker<maths::edge<Weight, WeightProxy, IndexType>>
+  template<class WeightHandler, integral IndexType>
+    requires ownership::handler<WeightHandler>
+  struct equivalence_checker<maths::edge<WeightHandler, IndexType>>
   {
-    using type = maths::edge<Weight, WeightProxy, IndexType>;
+    using type = maths::edge<WeightHandler, IndexType>;
 
-    template<test_mode Mode, class OtherWProxy>
-    static void check(test_logger<Mode>& logger, const type& edge, const maths::edge<Weight, OtherWProxy, IndexType>& prediction)
+    template<test_mode Mode, class OtherHandler>
+      requires ownership::handler<OtherHandler>
+    static void check(test_logger<Mode>& logger, const type& edge, const maths::edge<OtherHandler, IndexType>& prediction)
     {
       impl::check_partial(logger, edge, prediction);
       impl::check_source(logger, edge, prediction);
     }
   };
 
-  template
-  <
-    class Weight,
-    template <class> class WeightHandler,
-    class WeightProxy,
-    class IndexType
-  >
-  struct detailed_equality_checker<maths::embedded_edge<Weight, WeightHandler, WeightProxy, IndexType>>
+  template<class WeightHandler, integral IndexType>
+    requires ownership::handler<WeightHandler>
+  struct detailed_equality_checker<maths::embedded_edge<WeightHandler, IndexType>>
   {
-    using type = maths::embedded_edge<Weight, WeightHandler, WeightProxy, IndexType>;
+    using type = maths::embedded_edge<WeightHandler, IndexType>;
 
     template<test_mode Mode>
     static void check(test_logger<Mode>& logger, const type& edge, const type& prediction)
@@ -172,19 +142,15 @@ namespace sequoia::testing
     }
   };
 
-  template
-  <
-    class Weight,
-    template <class> class WeightHandler,
-    class WeightProxy,
-    class IndexType
-  >
-  struct equivalence_checker<maths::embedded_edge<Weight, WeightHandler, WeightProxy, IndexType>>
+  template<class WeightHandler, integral IndexType>
+    requires ownership::handler<WeightHandler>
+  struct equivalence_checker<maths::embedded_edge<WeightHandler, IndexType>>
   {
-    using type = maths::embedded_edge<Weight, WeightHandler, WeightProxy, IndexType>;
+    using type = maths::embedded_edge<WeightHandler, IndexType>;
 
-    template<test_mode Mode, template <class> class OtherWSPolicy, class OtherWProxy>
-    static void check(test_logger<Mode>& logger, const type& edge, const maths::embedded_edge<Weight, OtherWSPolicy, OtherWProxy, IndexType>& prediction)
+    template<test_mode Mode, class OtherHandler>
+      requires ownership::handler<OtherHandler>
+    static void check(test_logger<Mode>& logger, const type& edge, const maths::embedded_edge<OtherHandler, IndexType>& prediction)
     {
       impl::check_partial(logger, edge, prediction);
       impl::check_complementary(logger, edge, prediction);
@@ -192,15 +158,11 @@ namespace sequoia::testing
     }
   };
 
-  template
-  <
-    class Weight,
-    class WeightProxy,
-    class IndexType
-  >
-  struct weak_equivalence_checker<maths::edge<Weight, WeightProxy, IndexType>>
+  template<class WeightHandler, integral IndexType>
+    requires ownership::handler<WeightHandler>
+  struct weak_equivalence_checker<maths::edge<WeightHandler, IndexType>>
   {
-    using type = maths::edge<Weight, WeightProxy, IndexType>;
+    using type = maths::edge<WeightHandler, IndexType>;
 
     template<test_mode Mode, class PredictionType>
     static void check(test_logger<Mode>& logger, const type& edge, const PredictionType& prediction)

@@ -58,7 +58,7 @@ namespace sequoia::maths::graph_impl
   };
 
   template<class T>
-  constexpr bool empty_proxy = creator<T> && empty<typename T::proxy::value_type>;
+  constexpr bool empty_proxy = ownership::creator<T> && empty<typename T::proxy::value_type>;
 
   // TO DO: remove this weird indirection when MSVC no longer needs it!
   template<class N>

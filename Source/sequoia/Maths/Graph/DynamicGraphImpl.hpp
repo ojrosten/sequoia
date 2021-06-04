@@ -43,17 +43,16 @@ namespace sequoia::maths::graph_impl
   template
   <
     graph_flavour GraphFlavour,
-    class EdgeWeight,
-    creator EdgeWeightPooling,
+    class EdgeWeightCreator,
     class EdgeStorageTraits,
     integral IndexType
   >
+    requires ownership::creator<EdgeWeightCreator>
   struct dynamic_edge_traits : public
     edge_type_generator
     <
       GraphFlavour,
-      EdgeWeight,
-      EdgeWeightPooling,
+      EdgeWeightCreator,
       IndexType,
       EdgeStorageTraits::edge_sharing
     >
@@ -62,8 +61,7 @@ namespace sequoia::maths::graph_impl
       edge_type_generator
       <
         GraphFlavour,
-        EdgeWeight,
-        EdgeWeightPooling,
+        EdgeWeightCreator,
         IndexType,
         EdgeStorageTraits::edge_sharing
       >;

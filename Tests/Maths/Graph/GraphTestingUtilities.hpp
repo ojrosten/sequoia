@@ -24,14 +24,16 @@ namespace sequoia::testing
   {
     template<class Edge> struct use_weak_equiv : std::false_type {};
 
-    template<class Weight, class WeightProxy, class IndexType>
-    struct use_weak_equiv<maths::edge<Weight, WeightProxy, IndexType>> : std::true_type {};
+    template<class WeightHandler, class IndexType>
+      requires ownership::handler<WeightHandler>
+    struct use_weak_equiv<maths::edge<WeightHandler, IndexType>> : std::true_type {};
 
     template<class Edge> constexpr bool use_weak_equiv_v{use_weak_equiv<Edge>::value};
 
     // Details Checker
 
-    template<class Graph> struct graph_detailed_equality_checker
+    template<class Graph>
+    struct graph_detailed_equality_checker
     {
       using type = Graph;
 
@@ -48,7 +50,8 @@ namespace sequoia::testing
 
     // Equivalence Checker
 
-    template<class Graph> struct graph_equivalence_checker
+    template<class Graph>
+    struct graph_equivalence_checker
     {
       using type = Graph;
 
@@ -79,7 +82,8 @@ namespace sequoia::testing
 
     // Weak Equivalence Checker
 
-    template<class Graph> struct graph_weak_equivalence_checker
+    template<class Graph>
+    struct graph_weak_equivalence_checker
     {
       using type = Graph;
 

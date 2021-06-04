@@ -14,6 +14,7 @@
  */
 
 #include "sequoia/Core/Ownership/HandlerTraits.hpp"
+#include "sequoia/Core/Meta/Concepts.hpp"
 
 #include <memory>
 
@@ -32,9 +33,6 @@ namespace sequoia::ownership
   public:
     using handle_type = std::shared_ptr<T>;
     using elementary_type = T;
-
-    [[nodiscard]]
-    static constexpr bool is_shared() noexcept { return true; }
 
     template<class... Args>
     [[nodiscard]] static handle_type make(Args&&... args)
@@ -83,9 +81,6 @@ namespace sequoia::ownership
   public:
     using handle_type = T;
     using elementary_type = T;
-
-    [[nodiscard]]
-    static constexpr bool is_shared() noexcept { return false; }
 
     template<class... Args>
     [[nodiscard]] constexpr static T make(Args&&... args)

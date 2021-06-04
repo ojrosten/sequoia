@@ -31,31 +31,37 @@ namespace sequoia::data_structures::partition_impl
     using pointer   = T*;
   };
 
-  template<class Traits, handler Handler> struct storage_type_generator
+  template<class Traits, class Handler>
+    requires ownership::handler<Handler>
+  struct storage_type_generator
   {
     using held_type      = typename Handler::handle_type;
     using container_type = typename Traits::template container_type<held_type>;
   };
 
-  template<class Traits, handler Handler, template<class> class ReferencePolicy, bool Reversed>
+  template<class Traits, class Handler, template<class> class ReferencePolicy, bool Reversed>
+    requires ownership::handler<Handler>
   struct partition_iterator_generator
   {
     using iterator = typename storage_type_generator<Traits, Handler>::container_type::iterator;
   };
 
-  template<class Traits, handler Handler>
+  template<class Traits, class Handler>
+    requires ownership::handler<Handler>
   struct partition_iterator_generator<Traits, Handler, mutable_reference, true>
   {
     using iterator = typename storage_type_generator<Traits,Handler>::container_type::reverse_iterator;
   };
 
-  template<class Traits, handler Handler>
+  template<class Traits, class Handler>
+    requires ownership::handler<Handler>
   struct partition_iterator_generator<Traits, Handler, const_reference, false>
   {
     using iterator = typename storage_type_generator<Traits, Handler>::container_type::const_iterator;
   };
 
-  template<class Traits, handler Handler>
+  template<class Traits, class Handler>
+    requires ownership::handler<Handler>
   struct partition_iterator_generator<Traits, Handler, const_reference, true>
   {
     using iterator = typename storage_type_generator<Traits, Handler>::container_type::const_reverse_iterator;
@@ -94,11 +100,13 @@ namespace sequoia::data_structures::partition_impl
     IndexType m_Partition;
   };
 
-  template<
-    handler Handler,
+  template
+  <
+    class Handler,
     template<class> class ReferencePolicy,
     class AuxiliaryDataPolicy
   >
+    requires ownership::handler<Handler>
   struct dereference_policy : public Handler, public AuxiliaryDataPolicy
   {
     using elementary_type = typename Handler::elementary_type;
@@ -151,7 +159,8 @@ namespace sequoia::data_structures::partition_impl
          || std::allocator_traits<Allocator>::is_always_equal::value)
   };
 
-  template<handler Handler, class T>
+  template<class Handler, class T>
+    requires ownership::handler<Handler>
   inline constexpr bool direct_copy_v{std::is_same_v<Handler, ownership::independent<T>>};
 
   template<class T> class data_duplicator;
