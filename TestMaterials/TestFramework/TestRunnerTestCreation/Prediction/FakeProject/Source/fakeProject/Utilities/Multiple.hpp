@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include <compare>
+
 template<class... T>
 class multiple
 {
@@ -21,5 +23,5 @@ public:
     friend bool operator==(const multiple&, const multiple&) noexcept = default;
 
     [[nodiscard]]
-    friend bool operator!=(const multiple&, const multiple&) noexcept = default;
+    friend auto operator<=>(const multiple&, const multiple&) noexcept = default;
 };

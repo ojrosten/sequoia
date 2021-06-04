@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include <compare>
+
 namespace stuff
 {
     template<class T>
@@ -17,6 +19,6 @@ namespace stuff
         friend bool operator==(const thingummy&, const thingummy&) noexcept = default;
 
         [[nodiscard]]
-        friend bool operator!=(const thingummy&, const thingummy&) noexcept = default;
+        friend auto operator<=>(const thingummy&, const thingummy&) noexcept = default;
     };
 }

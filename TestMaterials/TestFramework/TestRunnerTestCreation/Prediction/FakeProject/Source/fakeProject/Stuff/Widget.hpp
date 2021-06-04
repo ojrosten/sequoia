@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include <compare>
+
 namespace stuff
 {
     class widget
@@ -16,6 +18,6 @@ namespace stuff
         friend bool operator==(const widget&, const widget&) noexcept = default;
 
         [[nodiscard]]
-        friend bool operator!=(const widget&, const widget&) noexcept = default;
+        friend auto operator<=>(const widget&, const widget&) noexcept = default;
     };
 }
