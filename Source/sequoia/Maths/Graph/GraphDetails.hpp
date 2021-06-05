@@ -132,32 +132,23 @@ namespace sequoia
       {
         using weight_type    = typename Edge::weight_type;
         using proxy_type     = utilities::uniform_wrapper<weight_type>;
-        using handler_type   = shared_to_handler_t<false, proxy_type>;
-        using edge_init_type = embedded_edge<handler_type, typename Edge::index_type>;
+        using handler_type   = ownership::independent<proxy_type>;
+        using edge_init_type = std::conditional_t<Edge::flavour == edge_flavour::partial_embedded,
+                                                  embedded_partial_edge<handler_type, typename Edge::index_type>,
+                                                  embedded_edge<handler_type, typename Edge::index_type>>;
 
         constexpr static bool complementary_data_v{true};
       };
-
+      
       template<class Edge>
       struct edge_init_type_generator<Edge, graph_flavour::undirected, edge_flavour::partial>
       {
         using weight_type    = typename Edge::weight_type;
         using proxy_type     = utilities::uniform_wrapper<weight_type>;
-        using handler_type   = shared_to_handler_t<false, proxy_type>;
+        using handler_type   = ownership::independent<proxy_type>;
         using edge_init_type = partial_edge<handler_type, typename Edge::index_type>;
 
         constexpr static bool complementary_data_v{false};
-      };
-
-      template<class Edge>
-      struct edge_init_type_generator<Edge, graph_flavour::undirected_embedded, edge_flavour::partial>
-      {
-        using weight_type    = typename Edge::weight_type;
-        using proxy_type     = utilities::uniform_wrapper<weight_type>;
-        using handler_type   = shared_to_handler_t<false, proxy_type>;
-        using edge_init_type = embedded_partial_edge<handler_type, typename Edge::index_type>;
-
-        constexpr static bool complementary_data_v{true};
       };
 
       template<class Edge>
@@ -165,21 +156,10 @@ namespace sequoia
       {
         using weight_type    = typename Edge::weight_type;
         using proxy_type     = utilities::uniform_wrapper<weight_type>;
-        using handler_type   = shared_to_handler_t<false, proxy_type>;
+        using handler_type   = ownership::independent<proxy_type>;
         using edge_init_type = partial_edge<handler_type, typename Edge::index_type>;
 
         constexpr static bool complementary_data_v{false};
-      };
-
-      template<class Edge, graph_flavour GraphFlavour>
-      struct edge_init_type_generator<Edge, GraphFlavour, edge_flavour::partial_embedded>
-      {
-        using weight_type    = typename Edge::weight_type;
-        using proxy_type     = utilities::uniform_wrapper<weight_type>;
-        using handler_type   = shared_to_handler_t<false, proxy_type>;
-        using edge_init_type = embedded_partial_edge<handler_type, typename Edge::index_type>;
-
-        constexpr static bool complementary_data_v{true};
       };
 
       // Flavour to Edge
