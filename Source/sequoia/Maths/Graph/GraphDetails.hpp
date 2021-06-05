@@ -99,9 +99,11 @@ namespace sequoia
            && (big_proxy<EdgeWeightCreator>() || !copy_constructible_proxy<EdgeWeightCreator>())
         };
       public:
-        static_assert((GraphFlavour != graph_flavour::directed) || (SharingPreference != edge_sharing_preference::shared_weight), "A directed graph without embedding cannot have shared weights");
+        static_assert((GraphFlavour != graph_flavour::directed) || (SharingPreference != edge_sharing_preference::shared_weight),
+                      "A directed graph without embedding cannot have shared weights");
 
-        static_assert((SharingPreference != edge_sharing_preference::shared_edge) || (GraphFlavour == graph_flavour::directed_embedded), "Edges may only be shared for directed, embedded graphs");
+        static_assert((SharingPreference != edge_sharing_preference::shared_edge) || (GraphFlavour == graph_flavour::directed_embedded),
+                      "Edges may only be shared for directed, embedded graphs");
 
         constexpr static bool shared_edge_v{
           (GraphFlavour == graph_flavour::directed_embedded)
@@ -185,75 +187,10 @@ namespace sequoia
         using edge_init_type    = edge_to_init_type_t<edge_type, is_embedded_v>;
       };
 
-      // Dynamic Edge Traits
-
-      template<bool>
-      struct shared_edge_v_to_policy
-      {
-        template<class EdgeType>
-        using edge_storage_handler = ownership::independent<EdgeType>;
-      };
-
-      template<>
-      struct shared_edge_v_to_policy<true>
-      {
-        template<class EdgeType>
-        using edge_storage_handler = ownership::shared<EdgeType>;
-      };
-
-      // Determine dynamic reservartion type etc
-
       // TO DO: replace with contexpr bool once MSVC can cope with this
       template<class T>
       concept has_reservable_partitions = requires(T& t) {
         t.reserve_partition(0, 0);
-      };
-
-      // IndexType for Static Graphs
-
-      enum class index_type { u_char, u_short, u_int, u_long};
-
-      template<std::size_t Size, std::size_t Order, bool Embedded>
-      [[nodiscard]]
-      constexpr index_type to_index_max() noexcept
-      {
-        if constexpr((Order < 255) && (!Embedded || (Size < 255))) return index_type::u_char;
-        else if constexpr((Order < 65535) && (!Embedded || (Size < 65535))) return index_type::u_short;
-        else return index_type::u_long;
-      }
-
-      template
-      <
-        std::size_t Size,
-        std::size_t Order,
-        bool Embedded,
-        index_type=to_index_max<Size, Order, Embedded>()
-      >
-      struct static_edge_index_type_generator
-      {
-        using index_type = std::size_t;
-      };
-
-      template
-      <
-        std::size_t Size,
-        std::size_t Order,
-        bool Embedded
-      >
-      struct static_edge_index_type_generator<Size, Order, Embedded, index_type::u_char>
-      {
-        using index_type = unsigned char;
-      };
-
-      template
-      <
-        std::size_t Size,
-        std::size_t Order,
-        bool Embedded
-      >
-      struct static_edge_index_type_generator<Size, Order, Embedded, index_type::u_short>
-      {
-        using index_type = unsigned short;
       };
     }
   }

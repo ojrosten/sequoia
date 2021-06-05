@@ -8,6 +8,7 @@
 #include "GraphMetaTest.hpp"
 
 #include "sequoia/Maths/Graph/DynamicGraph.hpp"
+#include "sequoia/Maths/Graph/StaticGraph.hpp"
 
 namespace sequoia::testing
 {

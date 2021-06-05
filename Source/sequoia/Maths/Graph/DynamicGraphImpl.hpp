@@ -69,8 +69,9 @@ namespace sequoia::maths::graph_impl
     using edge_type = typename edge_type_gen::edge_type;
     constexpr static bool shared_edge_v{edge_type_gen::shared_edge_v};
 
-    using edge_storage_handler
-      = typename shared_edge_v_to_policy<shared_edge_v>::template edge_storage_handler<edge_type>;
+    using edge_storage_handler = std::conditional_t<shared_edge_v,
+                                                    ownership::shared<edge_type>,
+                                                    ownership::independent<edge_type>>;
 
     using edge_storage_traits
       = typename EdgeStorageTraits::template traits_type<edge_type, edge_storage_handler>;
