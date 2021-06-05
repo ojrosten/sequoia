@@ -272,10 +272,10 @@ namespace sequoia::testing
     fs::copy(auxiliary_materials() / "TestMaterials", generated() / "TestMaterials", fs::copy_options::recursive | fs::copy_options::overwrite_existing);
     fs::copy(auxiliary_materials() / "ModifiedSource" / "UsefulThings.hpp", generated() / "Source" / "generatedProject" / "Utilities", fs::copy_options::overwrite_existing);
     fs::copy(auxiliary_materials() / "ModifiedSource" / "UsefulThings.cpp", generated() / "Source" / "generatedProject" / "Utilities", fs::copy_options::overwrite_existing);
-    fs::copy(auxiliary_materials() / "ModifiedSource" / "Maths", generated() / "Source" / "generatedProject" / "Maths", fs::copy_options::overwrite_existing);
+    fs::copy(auxiliary_materials() / "ModifiedSource" / "Maths", generated() / "Source" / "generatedProject" / "Maths", fs::copy_options::recursive | fs::copy_options::overwrite_existing);
     fs::copy(auxiliary_materials() / "ModifiedTests" / "FooTest.cpp", generated() / "Tests" / "Stuff", fs::copy_options::overwrite_existing);
     fs::copy(auxiliary_materials() / "ModifiedTests" / "UsefulThingsFreeTest.cpp", generated() / "Tests" / "Utilities", fs::copy_options::overwrite_existing);
-    fs::copy(auxiliary_materials() / "ModifiedTests" / "Maths", generated() / "Tests" / "Maths", fs::copy_options::overwrite_existing);
+    fs::copy(auxiliary_materials() / "ModifiedTests" / "Maths", generated() / "Tests" / "Maths", fs::copy_options::recursive | fs::copy_options::overwrite_existing);
 
     fs::last_write_time(generated() / "Source" / "generatedProject" / "Utilities" / "UsefulThings.cpp", fs::file_time_type::clock::now());
     fs::last_write_time(generated() / "Source" / "generatedProject" / "Maths" / "Probability.cpp",      fs::file_time_type::clock::now());
