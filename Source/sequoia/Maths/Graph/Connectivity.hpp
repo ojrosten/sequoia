@@ -1017,7 +1017,7 @@ namespace sequoia
 
       constexpr void process_edges(std::initializer_list<std::initializer_list<edge_init_type>> edges)
       {
-        if constexpr (EdgeTraits::init_complementary_data_v)
+        if constexpr (EdgeTraits::is_embedded_v)
         {
           process_complementary_edges(edges);
         }
