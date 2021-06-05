@@ -127,39 +127,22 @@ namespace sequoia
 
       // Edge Init Type
 
-      template<class Edge, graph_flavour GraphFlavour, edge_flavour=Edge::flavour>
+      template<class Edge, graph_flavour GraphFlavour>
       struct edge_init_type_generator
-      {
+      {        
+        constexpr static bool complementary_data_v{
+             GraphFlavour == graph_flavour::undirected_embedded
+          || GraphFlavour == graph_flavour::directed_embedded};
+        
         using weight_type    = typename Edge::weight_type;
         using proxy_type     = utilities::uniform_wrapper<weight_type>;
         using handler_type   = ownership::independent<proxy_type>;
-        using edge_init_type = std::conditional_t<Edge::flavour == edge_flavour::partial_embedded,
-                                                  embedded_partial_edge<handler_type, typename Edge::index_type>,
-                                                  embedded_edge<handler_type, typename Edge::index_type>>;
-
-        constexpr static bool complementary_data_v{true};
-      };
-      
-      template<class Edge>
-      struct edge_init_type_generator<Edge, graph_flavour::undirected, edge_flavour::partial>
-      {
-        using weight_type    = typename Edge::weight_type;
-        using proxy_type     = utilities::uniform_wrapper<weight_type>;
-        using handler_type   = ownership::independent<proxy_type>;
-        using edge_init_type = partial_edge<handler_type, typename Edge::index_type>;
-
-        constexpr static bool complementary_data_v{false};
-      };
-
-      template<class Edge>
-      struct edge_init_type_generator<Edge, graph_flavour::directed, edge_flavour::partial>
-      {
-        using weight_type    = typename Edge::weight_type;
-        using proxy_type     = utilities::uniform_wrapper<weight_type>;
-        using handler_type   = ownership::independent<proxy_type>;
-        using edge_init_type = partial_edge<handler_type, typename Edge::index_type>;
-
-        constexpr static bool complementary_data_v{false};
+        using index_type     = typename Edge::index_type;
+        using edge_init_type = std::conditional_t<complementary_data_v,
+                                                  std::conditional_t<Edge::flavour == edge_flavour::partial_embedded,
+                                                                     embedded_partial_edge<handler_type, index_type>,
+                                                                     embedded_edge<handler_type, index_type>>,
+                                                  partial_edge<handler_type, index_type>>;
       };
 
       // Flavour to Edge
