@@ -182,106 +182,55 @@ namespace sequoia
         constexpr static bool complementary_data_v{true};
       };
 
-      // Edge Type
+      // Flavour to Edge
+      template<graph_flavour GraphFlavour, class Handler, integral IndexType, bool SharedEdge>
+        requires ownership::handler<Handler>
+      struct flavour_to_edge
+      {
+        using edge_type  = partial_edge<Handler, IndexType>;
+      };
 
-      // undirected, directed: partial_edge
+      template<class Handler, integral IndexType, bool SharedEdge>
+        requires ownership::handler<Handler>
+      struct flavour_to_edge<graph_flavour::undirected_embedded, Handler, IndexType, SharedEdge>
+      {
+        using edge_type = embedded_partial_edge<Handler, IndexType>;
+      };
+
+      template<class Handler, integral IndexType, bool SharedEdge>
+      struct flavour_to_edge<graph_flavour::directed_embedded, Handler, IndexType, SharedEdge>
+      {
+        using edge_type = std::conditional_t<SharedEdge, edge<Handler, IndexType>, embedded_edge<Handler, IndexType>>;
+      };
+
+      template<graph_flavour GraphFlavour, class Handler, integral IndexType, bool SharedEdge>
+        requires ownership::handler<Handler>
+      using flavour_to_edge_t = typename flavour_to_edge<GraphFlavour, Handler, IndexType, SharedEdge>::edge_type;
+
+      // Edge Type Generator
       template
       <
         graph_flavour GraphFlavour,
         class EdgeWeightCreator,
         integral IndexType,
-        edge_sharing_preference SharingPreference,
-        bool SharedEdge=sharing_traits<GraphFlavour, SharingPreference, EdgeWeightCreator>::shared_edge_v
+        edge_sharing_preference SharingPreference
       >
         requires ownership::creator<EdgeWeightCreator>
       struct edge_type_generator
       {
         using sharing = sharing_traits<GraphFlavour, SharingPreference, EdgeWeightCreator>;
         constexpr static bool shared_weight_v{sharing::shared_weight_v};
-        constexpr static bool shared_edge_v{SharedEdge};
+        constexpr static bool shared_edge_v{sharing::shared_edge_v};
+
+        static_assert(  (GraphFlavour != graph_flavour::directed_embedded)
+                      || !sharing::shared_edge_v || !shared_weight_v);
 
         using edge_weight_proxy = edge_weight_proxy_t<EdgeWeightCreator>;
         using handler_type      = shared_to_handler_t<shared_weight_v, edge_weight_proxy>;
-        using edge_type         = partial_edge<handler_type, IndexType>;
+        using edge_type         = flavour_to_edge_t<GraphFlavour, handler_type, IndexType, shared_edge_v>;
         using edge_init_type    = typename edge_init_type_generator<edge_type, GraphFlavour>::edge_init_type;
 
         constexpr static bool init_complementary_data_v{edge_init_type_generator<edge_type, GraphFlavour>::complementary_data_v};
-      };
-
-      // undirected_embedded: embedded_partial_edge
-      template
-      <
-        class EdgeWeightCreator,
-        integral IndexType,
-        edge_sharing_preference SharingPreference,
-        bool SharedEdge
-      >
-        requires ownership::creator<EdgeWeightCreator>
-      struct edge_type_generator
-      <
-        graph_flavour::undirected_embedded,
-        EdgeWeightCreator,
-        IndexType,
-        SharingPreference,
-        SharedEdge
-      >
-      {
-        using sharing = sharing_traits<graph_flavour::undirected_embedded, SharingPreference, EdgeWeightCreator>;
-        constexpr static bool shared_weight_v{sharing::shared_weight_v};
-        constexpr static bool shared_edge_v{sharing::shared_edge_v};
-
-        using edge_weight_proxy = edge_weight_proxy_t<EdgeWeightCreator>;
-        using handler_type      = shared_to_handler_t<shared_weight_v, edge_weight_proxy>;
-        using edge_type         = embedded_partial_edge<handler_type, IndexType>;
-        using edge_init_type    = typename edge_init_type_generator<edge_type, graph_flavour::undirected_embedded>::edge_init_type;
-
-        constexpr static bool init_complementary_data_v{edge_init_type_generator<edge_type, graph_flavour::undirected_embedded>::complementary_data_v};
-      };
-
-      // directed_embedded: (shared) edge
-      template
-      <
-        class EdgeWeightCreator,
-        integral IndexType,
-        edge_sharing_preference SharingPreference
-      >
-        requires ownership::creator<EdgeWeightCreator>
-      struct edge_type_generator<graph_flavour::directed_embedded, EdgeWeightCreator, IndexType, SharingPreference, true>
-      {
-        using sharing = sharing_traits<graph_flavour::directed_embedded, SharingPreference, EdgeWeightCreator>;
-        constexpr static bool shared_weight_v{sharing::shared_weight_v};
-        constexpr static bool shared_edge_v{sharing::shared_edge_v};
-        static_assert(shared_edge_v && !shared_weight_v);
-
-        using edge_weight_proxy = edge_weight_proxy_t<EdgeWeightCreator>;
-        using handler_type      = shared_to_handler_t<shared_weight_v, edge_weight_proxy>;
-        using edge_type         = edge<handler_type, IndexType>;
-        using edge_init_type    = typename edge_init_type_generator<edge_type, graph_flavour::directed_embedded>::edge_init_type;
-
-        constexpr static bool init_complementary_data_v{edge_init_type_generator<edge_type, graph_flavour::directed_embedded>::complementary_data_v};
-      };
-
-      // directed_embedded: embedded edge
-      template
-      <
-        class EdgeWeightCreator,
-        integral IndexType,
-        edge_sharing_preference SharingPreference
-      >
-        requires ownership::creator<EdgeWeightCreator>
-      struct edge_type_generator<graph_flavour::directed_embedded, EdgeWeightCreator, IndexType, SharingPreference, false>
-      {
-        using sharing = sharing_traits<graph_flavour::directed_embedded, SharingPreference, EdgeWeightCreator>;
-        constexpr static bool shared_weight_v{sharing::shared_weight_v};
-        constexpr static bool shared_edge_v{sharing::shared_edge_v};
-        static_assert(!sharing::shared_edge_v);
-
-        using edge_weight_proxy = edge_weight_proxy_t<EdgeWeightCreator>;
-        using handler_type      = shared_to_handler_t<shared_weight_v, edge_weight_proxy>;
-        using edge_type         = embedded_edge<handler_type, IndexType>;
-        using edge_init_type    = typename edge_init_type_generator<edge_type, graph_flavour::directed_embedded>::edge_init_type;
-
-        constexpr static bool init_complementary_data_v{edge_init_type_generator<edge_type, graph_flavour::directed_embedded>::complementary_data_v};
       };
 
       // Dynamic Edge Traits
