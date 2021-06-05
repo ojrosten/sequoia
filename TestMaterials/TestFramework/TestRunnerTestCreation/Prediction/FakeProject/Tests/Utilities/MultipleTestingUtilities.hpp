@@ -13,7 +13,7 @@
 namespace sequoia::testing
 {
     template<class... T>
-  struct detailed_equality_checker<multiple<T...>>
+    struct detailed_equality_checker<multiple<T...>>
     {
         using type = multiple<T...>;
 
@@ -25,7 +25,7 @@ namespace sequoia::testing
     };
 
     template<class... T>
-  struct equivalence_checker<multiple<T...>>
+    struct equivalence_checker<multiple<T...>>
     {
         using type = multiple<T...>;
 

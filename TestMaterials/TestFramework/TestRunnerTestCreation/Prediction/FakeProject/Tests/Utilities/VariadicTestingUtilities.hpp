@@ -13,7 +13,7 @@
 namespace sequoia::testing
 {
     template<class... T>
-  struct detailed_equality_checker<variadic<T...>>
+    struct detailed_equality_checker<variadic<T...>>
     {
         using type = variadic<T...>;
 
@@ -25,7 +25,7 @@ namespace sequoia::testing
     };
 
     template<class... T>
-  struct equivalence_checker<variadic<T...>>
+    struct equivalence_checker<variadic<T...>>
     {
         using type = variadic<T...>;
 

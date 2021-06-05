@@ -478,7 +478,7 @@ namespace sequoia::testing
 
     if(!m_TemplateData.empty())
     {
-      replace_all(text, "<?>", to_string(m_TemplateData).append("\n "));
+      replace_all(text, "<?> ", to_string(m_TemplateData).append("\n").append(code_indent()));
     }
     else
     {

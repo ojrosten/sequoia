@@ -13,7 +13,7 @@
 namespace sequoia::testing
 {
     template<class T>
-  struct detailed_equality_checker<container<T>>
+    struct detailed_equality_checker<container<T>>
     {
         using type = container<T>;
 
@@ -25,7 +25,7 @@ namespace sequoia::testing
     };
 
     template<class T>
-  struct equivalence_checker<container<T>>
+    struct equivalence_checker<container<T>>
     {
         using type = container<T>;
 
