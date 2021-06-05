@@ -17,7 +17,7 @@ namespace sequoia::testing
 
 	void ?_class_test::run_tests()
 	{
-		// e.g ?_class x{args}, y{different args};
+		// e.g ::?_class x{args}, y{different args};
 		// check_equivalence(LINE("Useful Description"), x, something equivalent);
 		// check_equivalence(LINE("Useful Description"), y, something equivalent);
 		// For orderable type, with x < y:

@@ -17,7 +17,7 @@ namespace sequoia::testing
 
     void foo_test::run_tests()
     {
-        // e.g foo x{args}, y{different args};
+        // e.g bar::baz::foo<T> x{args}, y{different args};
         // check_equivalence(LINE("Useful Description"), x, something equivalent);
         // check_equivalence(LINE("Useful Description"), y, something equivalent);
         // For orderable type, with x < y:
