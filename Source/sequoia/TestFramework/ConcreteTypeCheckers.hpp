@@ -297,8 +297,8 @@ namespace sequoia::testing
               check_directory(logger, path, prediction);
               break;
             default:
-              throw std::logic_error{std::string{"Detailed equivalance check for paths of type "}
-                .append(serializer<fs::file_type>::make(pathType)).append(" not currently implemented")};
+              throw std::logic_error{std::string{"Detailed equivalance check for paths of type '"}
+                .append(serializer<fs::file_type>::make(pathType)).append("' not currently implemented")};
             }
           }
         }

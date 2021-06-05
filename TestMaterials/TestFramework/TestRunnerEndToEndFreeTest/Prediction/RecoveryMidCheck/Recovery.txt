@@ -3,7 +3,7 @@ Check started:
 
 Critical Failure:
 Error -- Unexpected Exception:
-Detailed equivalance check for paths of type not found not currently implemented
+Detailed equivalance check for paths of type 'not found' not currently implemented
 
 Exception thrown during last check
 Last Recorded Message:

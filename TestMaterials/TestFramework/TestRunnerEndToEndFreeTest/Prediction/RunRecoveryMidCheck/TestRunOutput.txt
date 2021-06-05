@@ -28,14 +28,14 @@ Probability:
 	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 39]
 	False Positive Checks:                     2;  Failures:  0
 Foo:
-[7 (5)ms]
+[11 (9)ms]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 
 ******  Critical Failures:  1  ******
 
 
 	Error -- Unexpected Exception:
-	Detailed equivalance check for paths of type not found not currently implemented
+	Detailed equivalance check for paths of type 'not found' not currently implemented
 
 	Exception thrown during last check
 	Last Recorded Message:
@@ -57,7 +57,7 @@ House:
 [1 (0)ms]
 
 -----------Grand Totals-----------
-[31 (10)ms]
+[35 (14)ms]
 	Standard Top Level Checks:                 6;  Failures:  1  [Deep checks: 42]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
