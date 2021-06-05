@@ -3,6 +3,128 @@ Tests/Utilities/UsefulThingsFreeTest.cpp, Line 21
 [int]
 
 
+Tests/Maths/ProbabilityTestingDiagnostics.cpp, Line 21
+
+Comparison performed using:
+[sequoia::testing::equivalence_checker<maths::probability>]
+With equivalent types:
+[double]
+
+Description
+[double]
+
+
+Tests/Maths/ProbabilityTestingDiagnostics.cpp, Line 22
+
+[maths::probability]
+[double]
+
+
+Tests/Maths/ProbabilityTest.cpp, Line 21
+
+Comparison performed using:
+[sequoia::testing::equivalence_checker<maths::probability>]
+With equivalent types:
+[double]
+
+Description
+[double]
+
+
+Tests/Maths/ProbabilityTest.cpp, Line 22
+
+Comparison performed using:
+[sequoia::testing::equivalence_checker<maths::probability>]
+With equivalent types:
+[double]
+
+Description
+[double]
+
+
+Tests/Maths/ProbabilityTest.cpp, Line 23
+
+--Regular Semantics--
+[maths::probability]
+
+
+
+operator== is inconsistent (x)
+[bool]
+operator== is inconsistent (y)
+[bool]
+
+operator!= is inconsistent (x)
+[bool]
+operator!= is inconsistent (y)
+[bool]
+Precondition - for checking semantics, x and y are assumed to be different
+[bool]
+Precondition - for checking semantics, order must be weak_ordering::less or weak_ordering::greater
+[bool]
+
+
+operator< is inconsistent (x)
+[bool]
+operator< is inconsistent (y)
+[bool]
+
+operator<= is inconsistent (x)
+[bool]
+operator<= is inconsistent (y)
+[bool]
+
+operator> is inconsistent (x)
+[bool]
+operator> is inconsistent (y)
+[bool]
+
+operator>= is inconsistent (x)
+[bool]
+operator>= is inconsistent (y)
+[bool]
+
+operator<=> is inconsistent (x)
+[bool]
+operator<=> is inconsistent (y)
+[bool]
+
+operator> and operator< are inconsistent
+[bool]
+operator< and operator<= are inconsistent
+[bool]
+operator< and operator>= are inconsistent
+[bool]
+operator< and operator<=> are inconsistent
+[bool]
+Precondition - for ordered semantics, it is assumed that y > x
+[bool]
+Inconsistent copy constructor (x)
+[maths::probability]
+[double]
+Inconsistent copy assignment (from y)
+[maths::probability]
+[double]
+Inconsistent self copy assignment
+[maths::probability]
+[double]
+Inconsistent move construction
+[maths::probability]
+[double]
+Inconsistent move assignment (from y)
+[maths::probability]
+[double]
+Inconsistent Swap (y)
+[maths::probability]
+[double]
+Inconsistent Swap (x)
+[maths::probability]
+[double]
+Inconsistent Self Swap
+[maths::probability]
+[double]
+
+
 Tests/Stuff/FooTest.cpp, Line 37
 
 Comparison performed using:

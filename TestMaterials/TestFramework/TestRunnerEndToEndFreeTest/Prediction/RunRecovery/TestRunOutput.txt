@@ -24,9 +24,11 @@ Maybe:
 Oldschool:
 [2 (0)ms]
 Probability:
-[2 (0)ms]
+[38 (35)ms]
+	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 39]
+	False Positive Checks:                     2;  Failures:  0
 Foo:
-[6 (3)ms]
+[8 (5)ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
 	Tests/Stuff/FooTest.cpp, Line 37
@@ -50,17 +52,17 @@ Foo:
 
 
 UniqueThing:
-[5 (0)ms]
+[2 (0)ms]
 Container:
-[4 (0)ms]
+[2 (0)ms]
 House:
 [1 (0)ms]
 
 -----------Grand Totals-----------
-[29 (4)ms]
-	Standard Top Level Checks:                 2;  Failures:  2  [Deep checks: 2]
+[63 (42)ms]
+	Standard Top Level Checks:                 5;  Failures:  2  [Deep checks: 41]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
 	False Negative Performance Checks:         0;  Failures:  0
-	False Positive Checks:                     0;  Failures:  0
+	False Positive Checks:                     2;  Failures:  0
 	False Positive Performance Checks:         0;  Failures:  0
