@@ -17,7 +17,7 @@ namespace sequoia::testing
 
     void things_false_positive_test::run_tests()
     {
-        // e.g bar::things x{args}, y{different args};
+        // e.g. bar::things x{args}, y{different args};
         // check_equivalence(LINE("Useful Description"), x, something inequivalent - ordinarily this would fail);
         // check_equality(LINE("Useful Description"), x, y);
     }
