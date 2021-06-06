@@ -1,9 +1,7 @@
 Check started:
-Tests/Stuff/FooTest.cpp, Line 37
+Tests/Utilities/Thing/UniqueThingTest.cpp, Line 25
 
-Comparison performed using:
-[sequoia::testing::equivalence_checker<std::filesystem::path>]
-With equivalent types:
-[std::filesystem::path]
+--Move-only Semantics--
+[stuff::unique_thing]
 
 Check ended

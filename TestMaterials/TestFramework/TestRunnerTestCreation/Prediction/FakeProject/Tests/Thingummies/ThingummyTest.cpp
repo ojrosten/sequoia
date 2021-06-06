@@ -17,7 +17,7 @@ namespace sequoia::testing
 
     void thingummy_test::run_tests()
     {
-        // e.g stuff::thingummy<T> x{args}, y{different args};
+        // e.g. stuff::thingummy<T> x{args}, y{different args};
         // check_equivalence(LINE("Useful Description"), x, something equivalent);
         // check_equivalence(LINE("Useful Description"), y, something equivalent);
         // For orderable type, with x < y:

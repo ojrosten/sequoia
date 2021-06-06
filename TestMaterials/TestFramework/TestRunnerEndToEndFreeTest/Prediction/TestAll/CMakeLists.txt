@@ -25,8 +25,8 @@ target_sources(TestMain PRIVATE
                ${TestDir}/Stuff/OldschoolTestingDiagnostics.cpp
                ${TestDir}/Utilities/ContainerAllocationTest.cpp
                ${TestDir}/Utilities/ContainerPerformanceTest.cpp
-               ${TestDir}/Utilities/UniqueThingTest.cpp
-               ${TestDir}/Utilities/UniqueThingTestingDiagnostics.cpp
+               ${TestDir}/Utilities/Thing/UniqueThingTest.cpp
+               ${TestDir}/Utilities/Thing/UniqueThingTestingDiagnostics.cpp
                ${TestDir}/Utilities/UsefulThingsFreeTest.cpp
                ${TestDir}/Utilities/UtilitiesFreeTest.cpp)
 

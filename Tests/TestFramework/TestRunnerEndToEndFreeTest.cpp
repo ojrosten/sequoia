@@ -128,7 +128,7 @@ namespace sequoia::testing
                               " create regular_test \"stuff::oldschool\" double --class-header \"NoTemplate.hpp\""
                               " create regular \"maths::probability\" double gen-source Maths"
                               " create move_only_test \"bar::baz::foo<maths::floating_point T>\" T"
-                              " create move_only \"stuff::unique_thing\" double gen-source Utilities"
+                              " create move_only \"stuff::unique_thing\" double gen-source Utilities/Thing"
                               " create regular_allocation_test container"
                               " create move_only_allocation_test house"
                               " create performance_test Container.hpp");
@@ -273,16 +273,21 @@ namespace sequoia::testing
     fs::copy(auxiliary_materials() / "ModifiedSource" / "UsefulThings.hpp", generated() / "Source" / "generatedProject" / "Utilities", fs::copy_options::overwrite_existing);
     fs::copy(auxiliary_materials() / "ModifiedSource" / "UsefulThings.cpp", generated() / "Source" / "generatedProject" / "Utilities", fs::copy_options::overwrite_existing);
     fs::copy(auxiliary_materials() / "ModifiedSource" / "Maths", generated() / "Source" / "generatedProject" / "Maths", fs::copy_options::recursive | fs::copy_options::overwrite_existing);
+    fs::copy(auxiliary_materials() / "ModifiedSource" / "Thing", generated() / "Source" / "generatedProject" / "Utilities" / "Thing", fs::copy_options::recursive | fs::copy_options::overwrite_existing);
     fs::copy(auxiliary_materials() / "ModifiedTests" / "FooTest.cpp", generated() / "Tests" / "Stuff", fs::copy_options::overwrite_existing);
     fs::copy(auxiliary_materials() / "ModifiedTests" / "UsefulThingsFreeTest.cpp", generated() / "Tests" / "Utilities", fs::copy_options::overwrite_existing);
     fs::copy(auxiliary_materials() / "ModifiedTests" / "Maths", generated() / "Tests" / "Maths", fs::copy_options::recursive | fs::copy_options::overwrite_existing);
+    fs::copy(auxiliary_materials() / "ModifiedTests" / "Thing", generated() / "Tests" / "Utilities" / "Thing", fs::copy_options::recursive | fs::copy_options::overwrite_existing);
 
-    fs::last_write_time(generated() / "Source" / "generatedProject" / "Utilities" / "UsefulThings.cpp", fs::file_time_type::clock::now());
-    fs::last_write_time(generated() / "Source" / "generatedProject" / "Maths" / "Probability.cpp",      fs::file_time_type::clock::now());
-    fs::last_write_time(generated() / "Tests" / "Stuff" / "FooTest.cpp",                                fs::file_time_type::clock::now());
-    fs::last_write_time(generated() / "Tests" / "Utilities" / "UsefulThingsFreeTest.cpp",               fs::file_time_type::clock::now());
-    fs::last_write_time(generated() / "Tests" / "Maths" / "ProbabilityTest.cpp",                        fs::file_time_type::clock::now());
-    fs::last_write_time(generated() / "Tests" / "Maths" / "ProbabilityTestingDiagnostics.cpp",          fs::file_time_type::clock::now());
+    fs::last_write_time(generated() / "Source" / "generatedProject" / "Utilities" / "UsefulThings.cpp",          fs::file_time_type::clock::now());
+    fs::last_write_time(generated() / "Source" / "generatedProject" / "Maths" / "Probability.cpp",               fs::file_time_type::clock::now());
+    fs::last_write_time(generated() / "Source" / "generatedProject" / "Utilities" / "Thing" / "UniqueThing.cpp", fs::file_time_type::clock::now());
+    fs::last_write_time(generated() / "Tests" / "Stuff" / "FooTest.cpp",                                         fs::file_time_type::clock::now());
+    fs::last_write_time(generated() / "Tests" / "Utilities" / "UsefulThingsFreeTest.cpp",                        fs::file_time_type::clock::now());
+    fs::last_write_time(generated() / "Tests" / "Maths" / "ProbabilityTest.cpp",                                 fs::file_time_type::clock::now());
+    fs::last_write_time(generated() / "Tests" / "Maths" / "ProbabilityTestingDiagnostics.cpp",                   fs::file_time_type::clock::now());
+    fs::last_write_time(generated() / "Tests" / "Utilities" / "Thing" / "UniqueThingTest.cpp",                   fs::file_time_type::clock::now());
+    fs::last_write_time(generated() / "Tests" / "Utilities" / "Thing" / "UniqueThingTestingDiagnostics.cpp",     fs::file_time_type::clock::now());
     fs::create_directory(working_materials() / "RebuiltOutput");
 
     const auto rebuildRun{b.rebuild_run(working_materials() / "RebuiltOutput")};
