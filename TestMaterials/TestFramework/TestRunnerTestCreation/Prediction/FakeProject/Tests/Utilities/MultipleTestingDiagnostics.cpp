@@ -20,7 +20,7 @@ namespace sequoia::testing
         // For example:
 
         // auto x = []() { return multiple<T...>{args}; };
-        // auto y = []() { return multiple<T...>{different args}}; };
+        // auto y = []() { return multiple<T...>{different args}; };
         // check_equivalence(LINE("Useful Description"), x(), something inequivalent - ordinarily this would fail);
         // check_equality(LINE("Useful Description"), x(), y());
     }

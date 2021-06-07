@@ -24,7 +24,7 @@ $Regular
 		// check_equality(LINE("Useful Description"), x, y);
 $Move
 		// auto x = []() { return ::?_class{args}; };
-		// auto y = []() { return ::?_class{different args}}; };
+		// auto y = []() { return ::?_class{different args}; };
 		// check_equivalence(LINE("Useful Description"), x(), something inequivalent - ordinarily this would fail);
 		// check_equality(LINE("Useful Description"), x(), y());
 $
