@@ -463,29 +463,36 @@ namespace sequoia::testing
 
     if(!m_EquivalentTypes.empty())
     {
-      std::string args{};
-
       const auto num{m_EquivalentTypes.size()};
+      const auto prediction{
+        [num](const std::size_t i, std::string_view sep) {
+          std::string p{"prediction"};
+          if(num > 1) p.append("_").append(std::to_string(i));
+          if((i < num - 1) && !sep.empty()) p.append(sep).append(" ");
+          return p;
+        }
+      };
+
+      std::string args{};
       for(std::size_t i{}; i < num; ++i)
       {
         const auto& type{m_EquivalentTypes[i]};
         if(!type.empty())
         {
-          const bool normal{(type.back() != '*') && (type.back() != '&')};
-          if(normal) args.append("const ");
+          const bool value{(type.back() != '*') && (type.back() != '&')};
+          if(value) args.append("const ");
 
           args.append(type);
 
-          if(normal) args.append("&");
+          if(value) args.append("&");
+          args.append(" ");
 
-          args.append(" prediction");
-
-          if(num > 1) args.append("_").append(std::to_string(i));
-          if(i < num -1) args.append(", ");
+          args.append(prediction(i, ","));
         }
       }
 
-      replace_all(text, "?predictions", args);
+      replace_all(text, "?args", args);
+      replace_all(text, "?predictions", prediction(0, ""));
     }
     else
     {
