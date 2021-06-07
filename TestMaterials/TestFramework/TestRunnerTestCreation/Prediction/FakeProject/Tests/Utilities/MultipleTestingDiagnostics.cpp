@@ -17,8 +17,11 @@ namespace sequoia::testing
 
     void multiple_false_positive_test::run_tests()
     {
-        // e.g. multiple<T...> x{args}, y{different args};
-        // check_equivalence(LINE("Useful Description"), x, something inequivalent - ordinarily this would fail);
-        // check_equality(LINE("Useful Description"), x, y);
+        // For example:
+
+        // auto x = []() { return multiple<T...>{args}; };
+        // auto y = []() { return multiple<T...>{different args}}; };
+        // check_equivalence(LINE("Useful Description"), x(), something inequivalent - ordinarily this would fail);
+        // check_equality(LINE("Useful Description"), x(), y());
     }
 }

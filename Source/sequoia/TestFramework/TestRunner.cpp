@@ -437,6 +437,28 @@ namespace sequoia::testing
 
   void nascent_semantics_test::transform_file(std::string& text) const
   {
+    constexpr auto npos{std::string::npos};
+    constexpr std::string_view regPattern{"$Regular"}, movPattern{"$Move"}, endPattern{"$\n"};
+    if(auto start{text.find(regPattern)}; start != npos)
+    {
+      if(auto middle{text.find(movPattern, start + regPattern.size())}; middle != npos)
+      {
+        if(auto end{text.find(endPattern, middle + movPattern.size())}; end != npos)
+        {
+          if(test_type() == "regular")
+          {
+            text.erase(middle, end + endPattern.size() - middle);
+            text.erase(start, regPattern.size());
+          }
+          else
+          {
+            text.erase(end, endPattern.size());
+            text.erase(start, middle + movPattern.size() - start);
+          }
+        }
+      }
+    }
+
     to_spaces(text, code_indent());
 
     if(!m_EquivalentTypes.empty())
@@ -467,7 +489,6 @@ namespace sequoia::testing
     }
     else
     {
-      constexpr auto npos{std::string::npos};
       const auto start{text.rfind("template<?>")};
       const auto finish{text.rfind("};")};
       if((start != npos) && (finish != npos))

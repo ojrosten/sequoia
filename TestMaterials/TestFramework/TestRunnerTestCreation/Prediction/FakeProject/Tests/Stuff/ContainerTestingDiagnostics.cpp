@@ -17,7 +17,9 @@ namespace sequoia::testing
 
     void container_false_positive_test::run_tests()
     {
-        // e.g. container<T> x{args}, y{different args};
+        // For example:
+
+        // container<T> x{args}, y{different args};
         // check_equivalence(LINE("Useful Description"), x, something inequivalent - ordinarily this would fail);
         // check_equality(LINE("Useful Description"), x, y);
     }

@@ -17,7 +17,9 @@ namespace sequoia::testing
 
     void container_test::run_tests()
     {
-        // e.g. container<T> x{args}, y{different args};
+        // For example:
+
+        // container<T> x{args}, y{different args};
         // check_equivalence(LINE("Useful Description"), x, something equivalent);
         // check_equivalence(LINE("Useful Description"), y, something equivalent);
         // For orderable type, with x < y:
