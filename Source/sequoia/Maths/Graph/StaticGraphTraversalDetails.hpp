@@ -58,6 +58,30 @@ namespace sequoia::maths::graph_impl
     }
   };
 
+  template<static_network G, class Q>
+  struct traversal_traits<G, Q> : public traversal_traits_base<Q>
+  {
+    [[nodiscard]]
+    constexpr static auto begin(const G& graph, const typename G::edge_index_type nodeIndex)
+    {
+      return iterator_getter<traversal_traits_base<Q>::uses_forward_iterator()>::begin(graph, nodeIndex);
+    }
+
+    [[nodiscard]]
+    constexpr static auto end(const G& graph, const typename G::edge_index_type nodeIndex)
+    {
+      return iterator_getter<traversal_traits_base<Q>::uses_forward_iterator()>::end(graph, nodeIndex);
+    }
+
+    using bitset = std::array<bool, G::order()>;
+
+    [[nodiscard]]
+    constexpr static bitset make_bitset(const G&)
+    {
+      return bitset{};
+    }
+  };
+
   template <class G>
   struct queue_constructor<G, data_structures::static_stack<typename G::edge_index_type, G::order()>>
   {

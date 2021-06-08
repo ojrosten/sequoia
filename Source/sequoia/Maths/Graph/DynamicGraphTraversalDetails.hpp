@@ -17,7 +17,8 @@
 
 namespace sequoia::maths::graph_impl
 {
-  template<class Container, class Compare> struct traversal_traits_base<std::priority_queue<std::size_t, Container, Compare>>
+  template<class Container, class Compare>
+  struct traversal_traits_base<std::priority_queue<std::size_t, Container, Compare>>
   {
     [[nodiscard]]
     constexpr static bool uses_forward_iterator() noexcept { return true; }
@@ -29,7 +30,8 @@ namespace sequoia::maths::graph_impl
     }
   };
 
-  template<> struct traversal_traits_base<std::stack<std::size_t>>
+  template<>
+  struct traversal_traits_base<std::stack<std::size_t>>
   {
     [[nodiscard]]
     constexpr static bool uses_forward_iterator() noexcept { return false; }
@@ -38,14 +40,38 @@ namespace sequoia::maths::graph_impl
     static auto get_container_element(const std::stack<std::size_t>& s) { return s.top(); }
   };
 
-
-  template<> struct traversal_traits_base<std::queue<std::size_t>>
+  template<>
+  struct traversal_traits_base<std::queue<std::size_t>>
   {
     [[nodiscard]]
     constexpr static bool uses_forward_iterator() noexcept { return true; }
 
     [[nodiscard]]
     static auto get_container_element(const std::queue<std::size_t>& q) { return q.front(); }
+  };
+
+  template<dynamic_network G, class Q>
+  struct traversal_traits<G, Q> : public traversal_traits_base<Q>
+  {
+    [[nodiscard]]
+    static auto begin(const G& graph, const std::size_t nodeIndex)
+    {
+      return iterator_getter<traversal_traits_base<Q>::uses_forward_iterator()>::begin(graph, nodeIndex);
+    }
+
+    [[nodiscard]]
+    static auto end(const G& graph, const std::size_t nodeIndex)
+    {
+      return iterator_getter<traversal_traits_base<Q>::uses_forward_iterator()>::end(graph, nodeIndex);
+    }
+
+    using bitset = std::vector<bool>;
+
+    [[nodiscard]]
+    static bitset make_bitset(const G& g)
+    {
+      return bitset(g.order(), false);
+    }
   };
 
   template<class G, class Container, class Comparer>

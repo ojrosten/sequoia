@@ -15,7 +15,7 @@
 namespace sequoia::maths
 {
   template<class N>
-  concept network = requires(const N& n) {
+  concept network = equality_comparable<N> && requires(const N& n) {
     typename N::edge_type;
     typename N::edge_weight_type;
     typename N::edge_index_type;
