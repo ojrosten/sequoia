@@ -246,28 +246,40 @@ namespace sequoia::maths::graph_impl
   template<class G, class Compare> struct priority_queue_selector;
 
 
-  template<class G>
+  template<network G>
   class traversal_helper : private loop_processor<G>
   {
   public:
-    template<
+    using edge_index_type     = typename G::edge_index_type;
+    using const_edge_iterator = typename G::const_edge_iterator;
+
+    template
+    <
       class Q,
-      class NFBE,
-      class NFAE,
+      class NBEF,
+      class NAEF,
       class EFTF,
       class ESTF,
       class TaskProcessingModel
     >
+      requires (invocable<NBEF, edge_index_type>     || same_as<std::remove_cvref_t<NBEF>, null_functor>)
+            && (invocable<NAEF, edge_index_type>     || same_as<std::remove_cvref_t<NAEF>, null_functor>)
+            && (invocable<EFTF, const_edge_iterator> || same_as<std::remove_cvref_t<EFTF>, null_functor>)
+            && (invocable<ESTF, const_edge_iterator> || same_as<std::remove_cvref_t<ESTF>, null_functor>)
     constexpr auto traverse(const G& graph,
                             const bool findDisconnectedPieces,
-                            typename G::edge_index_type start,
-                            NFBE&& nodeFunctorBeforeEdges,
-                            NFAE&& nodeFunctorAfterEdges,
-                            EFTF&& edgeFirstTraversalFunctor,
-                            ESTF&& edgeSecondTraversalFunctor,
+                            edge_index_type start,
+                            NBEF&& nodeBeforeEdgesFn,
+                            NAEF&& nodeAfterEdgesFn,
+                            EFTF&& edgeFirstTraversalFn,
+                            ESTF&& edgeSecondTraversalFn,
                             TaskProcessingModel&& taskProcessingModel)
     {
-      static_assert(!directed(G::directedness) || std::is_same<std::decay_t<ESTF>, null_functor>::value, "For a directed graph, edges are traversed only once: the edgeSecondTraversalFunctor is ignored and so should be the null_functor");
+      // Note: do not forward any of the Fns as they could in principle end up repeatedly moved from.
+      // However, the Fns should not be captured by value as they may have mutable state with
+      // external visibility.
+
+      static_assert(!directed(G::directedness) || std::is_same<std::decay_t<ESTF>, null_functor>::value, "For a directed graph, edges are traversed only once: the edgeSecondTraversalFn is ignored and so should be the null_functor");
       using index_type = typename G::edge_index_type;
 
       if(start < graph.order())
@@ -296,7 +308,7 @@ namespace sequoia::maths::graph_impl
 
             nodeIndexQueue.pop();
 
-            node_functor_processor<NFBE>::process(taskProcessingModel, std::forward<NFBE>(nodeFunctorBeforeEdges), nodeIndex);
+            node_functor_processor<NBEF>::process(taskProcessingModel, nodeBeforeEdgesFn, nodeIndex);
 
             this->reset();
             for(auto iter{traversal_traits<G, container_type>::begin(graph, nodeIndex)}; iter != traversal_traits<G, container_type>::end(graph, nodeIndex); ++iter)
@@ -325,19 +337,19 @@ namespace sequoia::maths::graph_impl
                     if(iter->source_node() != nodeIndex) continue;
                   }
 
-                  edge_functor_processor<EFTF>::process(taskProcessingModel, std::forward<EFTF>(edgeFirstTraversalFunctor), iter);
+                  edge_functor_processor<EFTF>::process(taskProcessingModel, edgeFirstTraversalFn, iter);
                 }
                 else
                 {
                   const bool loopMatched{loop && this->loop_matched(traversal_traits<G, container_type>::begin(graph, nodeIndex), iter)};
                   const bool secondTraversal{processed[nextNode] || loopMatched};
-                  if(secondTraversal) edge_functor_processor<ESTF>::process(taskProcessingModel, std::forward<ESTF>(edgeSecondTraversalFunctor), iter);
-                  else                edge_functor_processor<EFTF>::process(taskProcessingModel, std::forward<EFTF>(edgeFirstTraversalFunctor), iter);
+                  if(secondTraversal) edge_functor_processor<ESTF>::process(taskProcessingModel, edgeSecondTraversalFn, iter);
+                  else                edge_functor_processor<EFTF>::process(taskProcessingModel, edgeFirstTraversalFn, iter);
                 }
               }
               else
               {
-                edge_functor_processor<EFTF>::process(taskProcessingModel, std::forward<EFTF>(edgeFirstTraversalFunctor), iter);
+                edge_functor_processor<EFTF>::process(taskProcessingModel, edgeFirstTraversalFn, iter);
               }
 
               if(!discovered[nextNode])
@@ -348,7 +360,7 @@ namespace sequoia::maths::graph_impl
               }
             }
 
-            node_functor_processor<NFAE>::process(taskProcessingModel, std::forward<NFAE>(nodeFunctorAfterEdges), nodeIndex);
+            node_functor_processor<NAEF>::process(taskProcessingModel, nodeAfterEdgesFn, nodeIndex);
             processed[nodeIndex] = true;
           }
         } while(findDisconnectedPieces && (numDiscovered != graph.order()));

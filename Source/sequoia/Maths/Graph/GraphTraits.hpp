@@ -21,18 +21,22 @@ namespace sequoia::maths
     typename N::edge_index_type;
     typename N::edge_init_type;
     typename N::size_type;
+    typename N::const_edge_iterator;
+    typename N::const_reverse_edge_iterator;
 
-    n.size();
-    n.order();
-    n.cbegin_edges(0);
-    n.cend_edges(0);
+    { n.size() } -> same_as<typename N::size_type>;
+    { n.order() } -> same_as<typename N::size_type>;
+    { n.cbegin_edges(0) } -> same_as<typename N::const_edge_iterator>;
+    { n.cend_edges(0) } -> same_as<typename N::const_edge_iterator>;
   };
 
+  // TO DO: replace with constexpr bool once MSVC supports this
   template<class G>
-  concept dynamic_nodes =  requires(G& g) {
+  concept dynamic_nodes = requires(G& g) {
      g.add_node();
   };
 
+  // TO DO: replace with constexpr bool once MSVC supports this
   template<class G>
   concept static_nodes = (!dynamic_nodes<G>);
 

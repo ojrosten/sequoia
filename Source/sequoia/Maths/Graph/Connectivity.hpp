@@ -52,17 +52,16 @@ namespace sequoia
       using edge_storage_type = typename EdgeTraits::edge_storage_type;
     public:
 
-      using edge_type         = typename EdgeTraits::edge_type;
-      using edge_weight_type  = typename edge_type::weight_type;
-      using edge_index_type   = typename edge_type::index_type;
-      using edge_init_type    = typename EdgeTraits::edge_init_type;
-      using size_type         = typename edge_storage_type::size_type;
-      using weight_maker_type = WeightMaker;
+      using edge_type                   = typename EdgeTraits::edge_type;
+      using edge_weight_type            = typename edge_type::weight_type;
+      using edge_index_type             = typename edge_type::index_type;
+      using edge_init_type              = typename EdgeTraits::edge_init_type;
+      using size_type                   = typename edge_storage_type::size_type;
+      using weight_maker_type           = WeightMaker;
+      using const_edge_iterator         = typename edge_storage_type::const_partition_iterator;
+      using const_reverse_edge_iterator = typename edge_storage_type::const_reverse_partition_iterator;
 
       static_assert(std::is_unsigned_v<edge_index_type>);
-
-      using const_edge_iterator = typename edge_storage_type::const_partition_iterator;
-      using const_reverse_edge_iterator = typename edge_storage_type::const_reverse_partition_iterator;
 
       constexpr static auto npos{std::numeric_limits<edge_index_type>::max()};
       constexpr static directed_flavour directedness{Directedness};
