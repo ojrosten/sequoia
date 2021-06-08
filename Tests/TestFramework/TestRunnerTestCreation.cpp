@@ -21,9 +21,32 @@ namespace sequoia::testing
 
   void test_runner_test_creation::run_tests()
   {
+    test_type_handling();
     test_template_data_generation();
     test_creation();
     test_creation_failure();
+  }
+
+  void test_runner_test_creation::test_type_handling()
+  {
+    check_exception_thrown<std::logic_error>(LINE("Empty string"), []() { return handle_as_ref(""); });
+    check_exception_thrown<std::logic_error>(LINE("Just spaces"), []() { return handle_as_ref(" "); });
+    check(LINE("Letter"),        handle_as_ref("a"));
+    check(LINE("int"),          !handle_as_ref("int"));
+    check(LINE(" int"),         !handle_as_ref(" int"));
+    check(LINE("  int"),        !handle_as_ref("  int"));
+    check(LINE("int*"),         !handle_as_ref("int*"));
+    check(LINE("int&"),         !handle_as_ref("int&"));
+    check(LINE("int *"),        !handle_as_ref("int *"));
+    check(LINE(" int "),        !handle_as_ref(" int "));
+    check(LINE("long"),         !handle_as_ref("long"));
+    check(LINE("longint"),      handle_as_ref("longint"));
+    check(LINE("long int"),     !handle_as_ref("long int"));
+    check(LINE("double"),       !handle_as_ref("double"));
+    check(LINE("std::size_t"),  !handle_as_ref("std::size_t"));
+    check(LINE("tuple<int>"),    handle_as_ref("tuple<int>"));
+    check(LINE("tuple<int >"),   handle_as_ref("tuple<int >"));
+    check(LINE("tuple< int >"),  handle_as_ref("tuple< int >"));
   }
 
   void test_runner_test_creation::test_template_data_generation()
@@ -87,8 +110,10 @@ namespace sequoia::testing
     commandline_arguments args{"", "create", "regular_test", "other::functional::maybe<class T>", "std::optional<T>"
                                  , "create", "regular", "utilities::iterator", "int*"
                                  , "create", "regular_test", "stuff::widget", "std::vector<int>", "gen-source", "Stuff"
-                                 , "create", "regular_test", "stuff::thingummy<class T>", "std::vector<T>", "gen-source", "Thingummies"
-                                 , "create", "regular_test", "container<class T>", "std::vector<T>"
+                                 , "create", "regular_test", "maths::probability", "double", "g", "Maths"
+                                 , "create", "regular_test", "maths::angle", "long double", "gen-source", "Maths"
+                                 , "create", "regular_test", "stuff::thingummy<class T>", "std::vector<T>", "g", "Thingummies"
+                                 , "create", "regular_test", "container<class T>", "const std::vector<T>"
                                  , "create", "regular_test", "other::couple<class S, class T>", "S", "-e", "T",
                                                 "-f", "partners", "-ch", "Couple.hpp"
                                  , "create", "regular_test", "bar::things", "double", "-ch", "fakeProject/Stuff/Things.hpp"

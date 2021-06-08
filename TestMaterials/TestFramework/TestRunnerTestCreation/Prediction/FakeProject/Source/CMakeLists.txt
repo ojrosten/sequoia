@@ -3,6 +3,8 @@ cmake_minimum_required(VERSION 3.19)
 set(SourceList
     fakeProject/Global/Stuff/Defs.cpp
     fakeProject/Global/Stuff/Global.cpp
+    fakeProject/Maths/Angle.cpp
+    fakeProject/Maths/Probability.cpp
     fakeProject/Stuff/Doohicky.cpp
     fakeProject/Stuff/Widget.cpp)
 

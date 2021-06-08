@@ -17,6 +17,10 @@ target_sources(TestMain PRIVATE
                ${TestDir}/CoupleTestingDiagnostics.cpp
                ${TestDir}/Global/Stuff/DefsFreeTest.cpp
                ${TestDir}/Global/Stuff/GlobalFreeTest.cpp
+               ${TestDir}/Maths/AngleTest.cpp
+               ${TestDir}/Maths/AngleTestingDiagnostics.cpp
+               ${TestDir}/Maths/ProbabilityTest.cpp
+               ${TestDir}/Maths/ProbabilityTestingDiagnostics.cpp
                ${TestDir}/Maybe/MaybeTest.cpp
                ${TestDir}/Maybe/MaybeTestingDiagnostics.cpp
                ${TestDir}/Stuff/BazzerFreeTest.cpp

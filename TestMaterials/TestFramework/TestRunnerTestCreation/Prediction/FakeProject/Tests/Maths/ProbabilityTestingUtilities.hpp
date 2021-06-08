@@ -8,13 +8,13 @@
 #pragma once
 
 #include "sequoia/TestFramework/RegularTestCore.hpp"
-#include "fakeProject/Utilities/Iterator.hpp"
+#include "fakeProject/Maths/Probability.hpp"
 
 namespace sequoia::testing
 {
-    template<> struct detailed_equality_checker<utilities::iterator>
+    template<> struct detailed_equality_checker<maths::probability>
     {
-        using type = utilities::iterator;
+        using type = maths::probability;
 
         template<test_mode Mode>
         static void check(test_logger<Mode>& logger, const type& actual, const type& prediction)
@@ -23,12 +23,12 @@ namespace sequoia::testing
         }
     };
 
-    template<> struct equivalence_checker<utilities::iterator>
+    template<> struct equivalence_checker<maths::probability>
     {
-        using type = utilities::iterator;
+        using type = maths::probability;
 
         template<test_mode Mode>
-        static void check(test_logger<Mode>& logger, const type& actual, const int* prediction)
+        static void check(test_logger<Mode>& logger, const type& actual, const double prediction)
         {
             // e.g. check_equality("Description", logger, actual.method(), prediction);
         }

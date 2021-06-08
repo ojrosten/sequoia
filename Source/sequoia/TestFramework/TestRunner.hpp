@@ -25,6 +25,9 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string report_time(const test_family::summary& s);
 
+  [[nodiscard]]
+  bool handle_as_ref(std::string_view type);
+
   struct template_spec
   {
     std::string species, symbol;

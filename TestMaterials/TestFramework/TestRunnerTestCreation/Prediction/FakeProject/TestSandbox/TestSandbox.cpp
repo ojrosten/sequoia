@@ -42,6 +42,18 @@ int main(int argc, char** argv)
         );
 
         runner.add_test_family(
+            "Probability",
+            probability_false_positive_test("False Positive Test"),
+            probability_test("Unit Test")
+        );
+
+        runner.add_test_family(
+            "Angle",
+            angle_false_positive_test("False Positive Test"),
+            angle_test("Unit Test")
+        );
+
+        runner.add_test_family(
             "Thingummy",
             thingummy_false_positive_test("False Positive Test"),
             thingummy_test("Unit Test")

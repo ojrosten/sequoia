@@ -72,7 +72,40 @@ namespace sequoia::testing
     }
   }
 
-  using namespace parsing::commandline;
+  [[nodiscard]]
+  bool handle_as_ref(std::string_view type)
+  {
+    if(type.empty())
+      throw std::logic_error{"Equivalent type is unspecified"};
+
+    const auto startPos{type.find_first_not_of(' ')};
+    if(startPos == std::string::npos)
+      throw std::logic_error{"Equivalent type is unspecified"};
+
+    if((type.back() == '*') || (type.back() == '&')) return false;
+
+    const auto endPos{type.find_first_of(' ', startPos)};
+    auto token{std::string_view{type}.substr(startPos, endPos - startPos)};
+
+    constexpr std::array<std::string_view, 9> funTypes{"int", "float", "double", "bool", "char", "short", "long", "signed", "unsigned"};
+    for(auto t : funTypes)
+    {
+      if(const auto pos{token.find(t)}; pos != std::string::npos)
+      {
+        if(token.size() == t.size()) return false;
+
+        return (t.size() < token.size()) && (token[t.size()] != ' ');
+      }
+    }
+
+    constexpr std::array<std::string_view, 10> types{"std::size_t", "size_t", "uint8_t", "uint16_t", "uint32_t", "uint64_t", "int8_t", "int16_t", "int32_t", "int64_t"};
+    for(auto t : types)
+    {
+      if(type == t) return false;
+    }
+
+    return true;
+  }
 
   [[nodiscard]]
   std::string report_time(const test_family::summary& s)
@@ -479,12 +512,17 @@ namespace sequoia::testing
         const auto& type{m_EquivalentTypes[i]};
         if(!type.empty())
         {
-          const bool value{(type.back() != '*') && (type.back() != '&')};
-          if(value) args.append("const ");
+          constexpr std::string_view pattern{"const "};
+          if(std::string_view{type}.substr(0, pattern.size()) != pattern)
+          {
+            args.append("const ");
+          }
 
           args.append(type);
 
-          if(value) args.append("&");
+          const bool value{(type.back() != '*') && (type.back() != '&')};
+
+          if(handle_as_ref(type)) args.append("&");
           args.append(" ");
 
           args.append(prediction(i, ","));
@@ -678,6 +716,9 @@ namespace sequoia::testing
 
   void test_runner::process_args(int argc, char** argv)
   {
+
+    using namespace parsing::commandline;
+
     const option familyOption{"--family", {"-f"}, {"family"},
       [this](const arg_list& args){
         if(m_NascentTests.empty())
@@ -946,6 +987,7 @@ namespace sequoia::testing
         {
           if(!test.second)
           {
+            using namespace parsing::commandline;
             stream << warning(std::string{"Test "}.append(type)
                               .append(" '")
                               .append(convert(test.first))
@@ -1079,6 +1121,7 @@ namespace sequoia::testing
     }
     else
     {
+      using namespace parsing::commandline;
       return warning(stringify(outputFile).append(" already exists, so not created\n"));
     }
   }

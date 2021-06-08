@@ -28,7 +28,7 @@ namespace sequoia::testing
         using type = bar::things;
 
         template<test_mode Mode>
-        static void check(test_logger<Mode>& logger, const type& actual, const double& prediction)
+        static void check(test_logger<Mode>& logger, const type& actual, const double prediction)
         {
             // e.g. check_equality("Description", logger, actual.method(), prediction);
         }
