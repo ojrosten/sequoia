@@ -520,8 +520,6 @@ namespace sequoia::testing
 
           args.append(type);
 
-          const bool value{(type.back() != '*') && (type.back() != '&')};
-
           if(handle_as_ref(type)) args.append("&");
           args.append(" ");
 
