@@ -12,6 +12,7 @@
 
  */
 
+#include "sequoia/Maths/Graph/GraphTraversalDetails.hpp"
 #include "sequoia/Core/DataStructures/StaticStack.hpp"
 #include "sequoia/Core/DataStructures/StaticQueue.hpp"
 #include "sequoia/Core/DataStructures/StaticPriorityQueue.hpp"
@@ -20,7 +21,7 @@ namespace sequoia::maths::graph_impl
 {
   template<class Q> struct traversal_traits_base;
 
-  template<class IndexType, std::size_t MaxDepth, class Compare> struct traversal_traits_base<data_structures::static_priority_queue<IndexType, MaxDepth, Compare>>
+  template<integral IndexType, std::size_t MaxDepth, class Compare> struct traversal_traits_base<data_structures::static_priority_queue<IndexType, MaxDepth, Compare>>
   {
     [[nodiscard]]
     constexpr static bool uses_forward_iterator() noexcept { return true; }
@@ -32,7 +33,7 @@ namespace sequoia::maths::graph_impl
     }
   };
 
-  template<class IndexType, std::size_t MaxDepth>
+  template<integral IndexType, std::size_t MaxDepth>
   struct traversal_traits_base<data_structures::static_stack<IndexType, MaxDepth>>
   {
     [[nodiscard]]
@@ -45,7 +46,7 @@ namespace sequoia::maths::graph_impl
     }
   };
 
-  template<class IndexType, std::size_t MaxDepth>
+  template<integral IndexType, std::size_t MaxDepth>
   struct traversal_traits_base<data_structures::static_queue<IndexType, MaxDepth>>
   {
     [[nodiscard]]
@@ -82,7 +83,7 @@ namespace sequoia::maths::graph_impl
     }
   };
 
-  template <class G>
+  template <static_network G>
   struct queue_constructor<G, data_structures::static_stack<typename G::edge_index_type, G::order()>>
   {
     constexpr static auto make(const G&)
@@ -91,7 +92,7 @@ namespace sequoia::maths::graph_impl
     }
   };
 
-  template <class G>
+  template <static_network G>
   struct queue_constructor<G, data_structures::static_queue<typename G::edge_index_type, G::order()>>
   {
     [[nodiscard]]
@@ -101,7 +102,7 @@ namespace sequoia::maths::graph_impl
     }
   };
 
-  template <class G, class Comparer>
+  template <static_network G, class Comparer>
   struct queue_constructor<G, data_structures::static_priority_queue<typename G::edge_index_type, G::order(), Comparer>>
   {
     [[nodiscard]]

@@ -70,68 +70,6 @@ namespace sequoia::maths::graph_impl
 
   template<network G, class Q> struct queue_constructor;
 
-  template<class NodeFunctor>
-  struct node_functor_processor
-  {
-    template<class ProcessingModel, class... Args>
-    constexpr static void process(ProcessingModel& model, NodeFunctor&& nodeFunctor, Args... args)
-    {
-      model.push(std::forward<NodeFunctor>(nodeFunctor), args...);
-    }
-  };
-
-  template<>
-  struct node_functor_processor<null_functor>
-  {
-    template<class ProcessingModel, class... Args>
-    constexpr static void process(ProcessingModel&, null_functor, Args...) {}
-  };
-
-  template<>
-  struct node_functor_processor<null_functor&>
-  {
-    template<class ProcessingModel, class... Args>
-    constexpr static void process(ProcessingModel&, null_functor, Args...) {}
-  };
-
-  template<>
-  struct node_functor_processor<const null_functor&>
-  {
-    template<class ProcessingModel, class... Args>
-    constexpr static void process(ProcessingModel&, null_functor, Args...) {}
-  };
-
-  template<class EdgeFunctor>
-  struct edge_functor_processor
-  {
-    template<class ProcessingModel, class... Args>
-    constexpr static void process(ProcessingModel& model, EdgeFunctor&& edgeFunctor, Args... args)
-    {
-      model.push(std::forward<EdgeFunctor>(edgeFunctor), args...);
-    }
-  };
-
-  template<>
-  struct edge_functor_processor<null_functor>
-  {
-    template<class ProcessingModel, class... Args>
-    constexpr static void process(ProcessingModel&, null_functor, Args...) {}
-  };
-
-  template<>
-  struct edge_functor_processor<null_functor&>
-  {
-    template<class ProcessingModel, class... Args>
-    constexpr static void process(ProcessingModel&, null_functor, Args...) {}
-  };
-
-  template<>
-  struct edge_functor_processor<const null_functor&>
-  {
-    template<class ProcessingModel, class... Args>
-    constexpr static void process(ProcessingModel&, null_functor, Args...) {}
-  };
-
   template<network G, graph_flavour GraphFlavour=G::flavour>
   class loop_processor
   {
@@ -196,7 +134,6 @@ namespace sequoia::maths::graph_impl
 
   template<network G, class Compare> struct priority_queue_selector;
 
-
   template<network G>
   class traversal_helper : private loop_processor<G>
   {
@@ -259,12 +196,17 @@ namespace sequoia::maths::graph_impl
 
             nodeIndexQueue.pop();
 
-            node_functor_processor<NBEF>::process(taskProcessingModel, nodeBeforeEdgesFn, nodeIndex);
+            constexpr bool executeNodeBeforeFn{!same_as<std::remove_cvref_t<NBEF>, null_functor>};
+            if constexpr(executeNodeBeforeFn)
+            {
+              taskProcessingModel.push(nodeBeforeEdgesFn, nodeIndex);
+            }
 
             this->reset();
             for(auto iter{traversal_traits<G, container_type>::begin(graph, nodeIndex)}; iter != traversal_traits<G, container_type>::end(graph, nodeIndex); ++iter)
             {
               const auto nextNode{iter->target_node()};
+              constexpr bool executeEdgeFirstFn{!same_as<std::remove_cvref_t<EFTF>, null_functor>};
 
               if constexpr(G::flavour != graph_flavour::directed)
               {
@@ -288,19 +230,38 @@ namespace sequoia::maths::graph_impl
                     if(iter->source_node() != nodeIndex) continue;
                   }
 
-                  edge_functor_processor<EFTF>::process(taskProcessingModel, edgeFirstTraversalFn, iter);
+                  if constexpr(executeEdgeFirstFn)
+                  {
+                    taskProcessingModel.push(edgeFirstTraversalFn, iter);
+                  }
                 }
                 else
                 {
-                  const bool loopMatched{loop && this->loop_matched(traversal_traits<G, container_type>::begin(graph, nodeIndex), iter)};
-                  const bool secondTraversal{processed[nextNode] || loopMatched};
-                  if(secondTraversal) edge_functor_processor<ESTF>::process(taskProcessingModel, edgeSecondTraversalFn, iter);
-                  else                edge_functor_processor<EFTF>::process(taskProcessingModel, edgeFirstTraversalFn, iter);
+                  constexpr bool executeEdgeSecondFn{!same_as<std::remove_cvref_t<ESTF>, null_functor>};
+                  if constexpr(executeEdgeFirstFn || executeEdgeSecondFn)
+                  {
+                    const bool loopMatched{loop && this->loop_matched(traversal_traits<G, container_type>::begin(graph, nodeIndex), iter)};
+                    const bool secondTraversal{processed[nextNode] || loopMatched};
+                    if(secondTraversal)
+                    {
+                      if constexpr(executeEdgeSecondFn)
+                      {
+                        taskProcessingModel.push(edgeSecondTraversalFn, iter);
+                      }
+                    }
+                    else
+                    {
+                      if constexpr(executeEdgeFirstFn)
+                      {
+                        taskProcessingModel.push(edgeFirstTraversalFn, iter);
+                      }
+                    }
+                  }
                 }
               }
-              else
+              else if constexpr(executeEdgeFirstFn)
               {
-                edge_functor_processor<EFTF>::process(taskProcessingModel, edgeFirstTraversalFn, iter);
+                taskProcessingModel.push(edgeFirstTraversalFn, iter);
               }
 
               if(!discovered[nextNode])
@@ -311,7 +272,11 @@ namespace sequoia::maths::graph_impl
               }
             }
 
-            node_functor_processor<NAEF>::process(taskProcessingModel, nodeAfterEdgesFn, nodeIndex);
+            if constexpr(!same_as<std::remove_cvref_t<NAEF>, null_functor>)
+            {
+              taskProcessingModel.push(nodeAfterEdgesFn, nodeIndex);
+            }
+
             processed[nodeIndex] = true;
           }
         } while(findDisconnectedPieces && (numDiscovered != graph.order()));

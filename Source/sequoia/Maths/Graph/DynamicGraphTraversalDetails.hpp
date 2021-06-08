@@ -12,6 +12,8 @@
 
  */
 
+#include "sequoia/Maths/Graph/GraphTraversalDetails.hpp"
+
 #include <queue>
 #include <stack>
 
@@ -74,7 +76,7 @@ namespace sequoia::maths::graph_impl
     }
   };
 
-  template<class G, class Container, class Comparer>
+  template<dynamic_network G, class Container, class Comparer>
   struct queue_constructor<G, std::priority_queue<std::size_t, Container, Comparer>>
   {
     [[nodiscard]]
@@ -84,7 +86,7 @@ namespace sequoia::maths::graph_impl
     }
   };
 
-  template <class G, class Container>
+  template <dynamic_network G, class Container>
   struct queue_constructor<G, std::stack<std::size_t, Container>>
   {
     [[nodiscard]]
@@ -94,7 +96,7 @@ namespace sequoia::maths::graph_impl
     }
   };
 
-  template <class G, class Container>
+  template <dynamic_network G, class Container>
   struct queue_constructor<G, std::queue<std::size_t, Container>>
   {
     [[nodiscard]]
