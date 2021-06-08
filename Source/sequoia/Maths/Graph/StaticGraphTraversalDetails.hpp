@@ -19,8 +19,6 @@
 
 namespace sequoia::maths::graph_impl
 {
-  template<class Q> struct traversal_traits_base;
-
   template<integral IndexType, std::size_t MaxDepth, class Compare> struct traversal_traits_base<data_structures::static_priority_queue<IndexType, MaxDepth, Compare>>
   {
     [[nodiscard]]
