@@ -135,7 +135,7 @@ namespace sequoia::maths::graph_impl
   template<network G, class Compare> struct priority_queue_selector;
 
   template<network G>
-  class traversal_helper : private loop_processor<G>
+  class traversal_helper
   {
   public:
     using edge_index_type     = typename G::edge_index_type;
@@ -167,15 +167,16 @@ namespace sequoia::maths::graph_impl
       // However, the Fns should not be captured by value as they may have mutable state with
       // external visibility.
 
-      static_assert(!directed(G::directedness) || std::is_same<std::decay_t<ESTF>, null_functor>::value, "For a directed graph, edges are traversed only once: the edgeSecondTraversalFn is ignored and so should be the null_functor");
-      using index_type = typename G::edge_index_type;
+      constexpr bool hasEdgeSecondFn{!same_as<std::remove_cvref_t<ESTF>, null_functor>};
+      static_assert(!directed(G::directedness) || !hasEdgeSecondFn,
+                    "For a directed graph, edges are traversed only once: the edgeSecondTraversalFn is ignored and so should be the null_functor");
 
       if(start < graph.order())
       {
         auto discovered{traversal_traits<G, Q>::make_bitset(graph)};
         auto processed{traversal_traits<G, Q>::make_bitset(graph)};
 
-        index_type numDiscovered{}, restart{};
+        edge_index_type numDiscovered{}, restart{};
 
         using namespace graph_impl;
         auto nodeIndexQueue{queue_constructor<G, Q>::make(graph)};
@@ -196,33 +197,25 @@ namespace sequoia::maths::graph_impl
 
             nodeIndexQueue.pop();
 
-            constexpr bool executeNodeBeforeFn{!same_as<std::remove_cvref_t<NBEF>, null_functor>};
-            if constexpr(executeNodeBeforeFn)
+            constexpr bool hasNodeBeforeFn{!same_as<std::remove_cvref_t<NBEF>, null_functor>};
+            if constexpr(hasNodeBeforeFn)
             {
               taskProcessingModel.push(nodeBeforeEdgesFn, nodeIndex);
             }
 
-            this->reset();
+            m_Loops.reset();
             for(auto iter{traversal_traits<G, container_type>::begin(graph, nodeIndex)}; iter != traversal_traits<G, container_type>::end(graph, nodeIndex); ++iter)
             {
               const auto nextNode{iter->target_node()};
-              constexpr bool executeEdgeFirstFn{!same_as<std::remove_cvref_t<EFTF>, null_functor>};
+              constexpr bool hasEdgeFirstFn{!same_as<std::remove_cvref_t<EFTF>, null_functor>};
 
               if constexpr(G::flavour != graph_flavour::directed)
               {
-                const bool loop{[iter]([[maybe_unused]] const std::size_t currentNodeIndex){
-                    if constexpr (G::flavour == graph_flavour::directed_embedded)
-                      return iter->target_node() == iter->source_node();
-                    else
-                      return iter->target_node() == currentNodeIndex;
-                  }(nodeIndex)
-                };
-
                 if constexpr(G::flavour == graph_flavour::directed_embedded)
                 {
-                  if(loop)
+                  if(is_loop(iter, nodeIndex))
                   {
-                    const bool loopMatched{this->loop_matched(traversal_traits<G, container_type>::begin(graph, nodeIndex), iter)};
+                    const bool loopMatched{m_Loops.loop_matched(traversal_traits<G, container_type>::begin(graph, nodeIndex), iter)};
                     if((iter->inverted() && !loopMatched) || (!iter->inverted() && loopMatched)) continue;
                   }
                   else
@@ -230,28 +223,27 @@ namespace sequoia::maths::graph_impl
                     if(iter->source_node() != nodeIndex) continue;
                   }
 
-                  if constexpr(executeEdgeFirstFn)
+                  if constexpr(hasEdgeFirstFn)
                   {
                     taskProcessingModel.push(edgeFirstTraversalFn, iter);
                   }
                 }
                 else
                 {
-                  constexpr bool executeEdgeSecondFn{!same_as<std::remove_cvref_t<ESTF>, null_functor>};
-                  if constexpr(executeEdgeFirstFn || executeEdgeSecondFn)
+                  if constexpr(hasEdgeFirstFn || hasEdgeSecondFn)
                   {
-                    const bool loopMatched{loop && this->loop_matched(traversal_traits<G, container_type>::begin(graph, nodeIndex), iter)};
+                    const bool loopMatched{is_loop(iter, nodeIndex) && m_Loops.loop_matched(traversal_traits<G, container_type>::begin(graph, nodeIndex), iter)};
                     const bool secondTraversal{processed[nextNode] || loopMatched};
                     if(secondTraversal)
                     {
-                      if constexpr(executeEdgeSecondFn)
+                      if constexpr(hasEdgeSecondFn)
                       {
                         taskProcessingModel.push(edgeSecondTraversalFn, iter);
                       }
                     }
                     else
                     {
-                      if constexpr(executeEdgeFirstFn)
+                      if constexpr(hasEdgeFirstFn)
                       {
                         taskProcessingModel.push(edgeFirstTraversalFn, iter);
                       }
@@ -259,7 +251,7 @@ namespace sequoia::maths::graph_impl
                   }
                 }
               }
-              else if constexpr(executeEdgeFirstFn)
+              else if constexpr(hasEdgeFirstFn)
               {
                 taskProcessingModel.push(edgeFirstTraversalFn, iter);
               }
@@ -284,5 +276,17 @@ namespace sequoia::maths::graph_impl
 
       return taskProcessingModel.get();
     }
+    private:
+      [[no_unique_address]]
+      loop_processor<G> m_Loops;
+
+      template<class Iter>
+      [[nodiscard]]
+      constexpr static bool is_loop(Iter iter, [[maybe_unused]] const edge_index_type currentNodeIndex) {
+        if constexpr(G::flavour == graph_flavour::directed_embedded)
+          return iter->target_node() == iter->source_node();
+        else
+          return iter->target_node() == currentNodeIndex;
+      }
   };
 }
