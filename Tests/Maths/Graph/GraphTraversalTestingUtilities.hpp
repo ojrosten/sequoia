@@ -21,7 +21,7 @@ namespace sequoia::testing
     using type = BFS;
 
     template<class G, class... Fn>
-    static void traverse(const G& g, const bool findDisconnected, const std::size_t start, Fn&&... fn)
+    static void traverse(const G& g, const maths::find_disconnected findDisconnected, const std::size_t start, Fn&&... fn)
     {
       maths::breadth_first_search(g, findDisconnected, start, std::forward<Fn>(fn)...);
     }
@@ -36,7 +36,7 @@ namespace sequoia::testing
     using type = DFS;
 
     template<class G, class... Fn>
-    static void traverse(const G& g, const bool findDisconnected, const std::size_t start, Fn&&... fn)
+    static void traverse(const G& g, const maths::find_disconnected findDisconnected, const std::size_t start, Fn&&... fn)
     {
       maths::pseudo_depth_first_search(g, findDisconnected, start, std::forward<Fn>(fn)...);
     }
@@ -51,7 +51,7 @@ namespace sequoia::testing
     using type = PRS;
 
     template<class G, class... Fn>
-    static void traverse(const G& g, const bool findDisconnected, const std::size_t start, Fn&&... fn)
+    static void traverse(const G& g, const maths::find_disconnected findDisconnected, const std::size_t start, Fn&&... fn)
     {
       maths::priority_search(g, findDisconnected, start, std::forward<Fn>(fn)...);
     }

@@ -34,7 +34,7 @@ namespace sequoia::testing
     };
 
     constexpr g_type g{{edge_t{1}}, {}};
-    pseudo_depth_first_search(g, true, 0, null_functor{}, lateNodeFn);
+    pseudo_depth_first_search(g, find_disconnected::yes, 0, null_functor{}, lateNodeFn);
 
     return ordering;
   }
@@ -66,7 +66,7 @@ namespace sequoia::testing
       }
     };
 
-    breadth_first_search(g, true, 0, null_functor{}, null_functor{}, edgeFn);
+    breadth_first_search(g, find_disconnected::yes, 0, null_functor{}, null_functor{}, edgeFn);
 
     return edgeData;
   }
@@ -102,7 +102,7 @@ namespace sequoia::testing
       }
     };
 
-    maths::priority_search(g, true, 0, nodeEarlyFn);
+    maths::priority_search(g, find_disconnected::yes, 0, nodeEarlyFn);
 
     return orderedNodeWeights;
   }

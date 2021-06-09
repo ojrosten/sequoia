@@ -20,19 +20,19 @@ namespace sequoia::maths
   template
   <
     class TaskProcessingModel = concurrency::serial<void>,
-    class G = void,
-    class NFBE = null_functor,
-    class NFAE = null_functor,
+    network G,
+    class NBEF = null_functor,
+    class NAEF = null_functor,
     class EFTF = null_functor,
     class ESTF = null_functor
   >
     requires (G::directedness != directed_flavour::directed)
-  constexpr auto breadth_first_search(const G& graph, const bool findDisconnectedPieces = true,
+  constexpr auto breadth_first_search(const G& graph, const find_disconnected findDisconnectedPieces = find_disconnected::yes,
                  const std::size_t start = 0,
-                 NFBE&& nodeFunctorBeforeEdges     = null_functor{},
-                 NFAE&& nodeFunctorAfterEdges      = null_functor{},
-                 EFTF&& edgeFirstTraversalFunctor  = null_functor{},
-                 ESTF&& edgeSecondTraversalFunctor = null_functor{},
+                 NBEF&& nodeBeforeEdgesFn     = null_functor{},
+                 NAEF&& nodeAfterEdgesFn      = null_functor{},
+                 EFTF&& edgeFirstTraversalFn  = null_functor{},
+                 ESTF&& edgeSecondTraversalFn = null_functor{},
                  TaskProcessingModel&& taskProcessingModel = TaskProcessingModel{})
   {
     using queue_type = typename graph_impl::queue_selector<G>::queue_type;
@@ -40,10 +40,10 @@ namespace sequoia::maths
              graph,
              findDisconnectedPieces,
              start,
-             std::forward<NFBE>(nodeFunctorBeforeEdges),
-             std::forward<NFAE>(nodeFunctorAfterEdges),
-             std::forward<EFTF>(edgeFirstTraversalFunctor),
-             std::forward<ESTF>(edgeSecondTraversalFunctor),
+             std::forward<NBEF>(nodeBeforeEdgesFn),
+             std::forward<NAEF>(nodeAfterEdgesFn),
+             std::forward<EFTF>(edgeFirstTraversalFn),
+             std::forward<ESTF>(edgeSecondTraversalFn),
              std::forward<TaskProcessingModel>(taskProcessingModel)
            );
   }
@@ -51,17 +51,17 @@ namespace sequoia::maths
   template
   <
     class TaskProcessingModel = concurrency::serial<void>,
-    class G = void,
-    class NFBE = null_functor,
-    class NFAE = null_functor,
+    network G,
+    class NBEF = null_functor,
+    class NAEF = null_functor,
     class EFTF = null_functor
   >
     requires (G::directedness == directed_flavour::directed)
-  constexpr auto breadth_first_search(const G& graph, const bool findDisconnectedPieces = true,
+  constexpr auto breadth_first_search(const G& graph, const find_disconnected findDisconnectedPieces = find_disconnected::yes,
                  const typename G::edge_index_type start = 0,
-                 NFBE&& nodeFunctorBeforeEdges     = null_functor{},
-                 NFAE&& nodeFunctorAfterEdges      = null_functor{},
-                 EFTF&& edgeFirstTraversalFunctor  = null_functor{},
+                 NBEF&& nodeBeforeEdgesFn     = null_functor{},
+                 NAEF&& nodeAfterEdgesFn      = null_functor{},
+                 EFTF&& edgeFirstTraversalFn  = null_functor{},
                  TaskProcessingModel&& taskProcessingModel = TaskProcessingModel{})
   {
     using queue_type = typename graph_impl::queue_selector<G>::queue_type;
@@ -69,9 +69,9 @@ namespace sequoia::maths
              graph,
              findDisconnectedPieces,
              start,
-             std::forward<NFBE>(nodeFunctorBeforeEdges),
-             std::forward<NFAE>(nodeFunctorAfterEdges),
-             std::forward<EFTF>(edgeFirstTraversalFunctor),
+             std::forward<NBEF>(nodeBeforeEdgesFn),
+             std::forward<NAEF>(nodeAfterEdgesFn),
+             std::forward<EFTF>(edgeFirstTraversalFn),
              null_functor{},
              std::forward<TaskProcessingModel>(taskProcessingModel)
            );
@@ -80,19 +80,19 @@ namespace sequoia::maths
   template
   <
     class TaskProcessingModel = concurrency::serial<void>,
-    class G = void,
-    class NFBE = null_functor,
-    class NFAE = null_functor,
+    network G,
+    class NBEF = null_functor,
+    class NAEF = null_functor,
     class EFTF = null_functor,
     class ESTF = null_functor
   >
     requires (G::directedness != directed_flavour::directed)
-  constexpr auto pseudo_depth_first_search(const G& graph, const bool findDisconnectedPieces = true,
+  constexpr auto pseudo_depth_first_search(const G& graph, const find_disconnected findDisconnectedPieces = find_disconnected::yes,
                  const std::size_t start = 0,
-                 NFBE&& nodeFunctorBeforeEdges     = null_functor{},
-                 NFAE&& nodeFunctorAfterEdges      = null_functor{},
-                 EFTF&& edgeFirstTraversalFunctor  = null_functor{},
-                 ESTF&& edgeSecondTraversalFunctor = null_functor{},
+                 NBEF&& nodeBeforeEdgesFn     = null_functor{},
+                 NAEF&& nodeAfterEdgesFn      = null_functor{},
+                 EFTF&& edgeFirstTraversalFn  = null_functor{},
+                 ESTF&& edgeSecondTraversalFn = null_functor{},
                  TaskProcessingModel&& taskProcessingModel = TaskProcessingModel{})
   {
     using stack_type = typename graph_impl::stack_selector<G>::stack_type;
@@ -100,10 +100,10 @@ namespace sequoia::maths
              graph,
              findDisconnectedPieces,
              start,
-             std::forward<NFBE>(nodeFunctorBeforeEdges),
-             std::forward<NFAE>(nodeFunctorAfterEdges),
-             std::forward<EFTF>(edgeFirstTraversalFunctor),
-             std::forward<ESTF>(edgeSecondTraversalFunctor),
+             std::forward<NBEF>(nodeBeforeEdgesFn),
+             std::forward<NAEF>(nodeAfterEdgesFn),
+             std::forward<EFTF>(edgeFirstTraversalFn),
+             std::forward<ESTF>(edgeSecondTraversalFn),
              std::forward<TaskProcessingModel>(taskProcessingModel)
            );
   }
@@ -111,17 +111,17 @@ namespace sequoia::maths
   template
   <
     class TaskProcessingModel = concurrency::serial<void>,
-    class G = void,
-    class NFBE = null_functor,
-    class NFAE = null_functor,
+    network G,
+    class NBEF = null_functor,
+    class NAEF = null_functor,
     class EFTF = null_functor
   >
     requires (G::directedness == directed_flavour::directed)
-  constexpr auto pseudo_depth_first_search(const G& graph, const bool findDisconnectedPieces = true,
+  constexpr auto pseudo_depth_first_search(const G& graph, const find_disconnected findDisconnectedPieces = find_disconnected::yes,
                  const typename G::edge_index_type start = 0,
-                 NFBE&& nodeFunctorBeforeEdges     = null_functor{},
-                 NFAE&& nodeFunctorAfterEdges      = null_functor{},
-                 EFTF&& edgeFirstTraversalFunctor  = null_functor{},
+                 NBEF&& nodeBeforeEdgesFn     = null_functor{},
+                 NAEF&& nodeAfterEdgesFn      = null_functor{},
+                 EFTF&& edgeFirstTraversalFn  = null_functor{},
                  TaskProcessingModel&& taskProcessingModel = TaskProcessingModel{})
   {
     using stack_type = typename graph_impl::stack_selector<G>::stack_type;
@@ -129,9 +129,9 @@ namespace sequoia::maths
              graph,
              findDisconnectedPieces,
              start,
-             std::forward<NFBE>(nodeFunctorBeforeEdges),
-             std::forward<NFAE>(nodeFunctorAfterEdges),
-             std::forward<EFTF>(edgeFirstTraversalFunctor),
+             std::forward<NBEF>(nodeBeforeEdgesFn),
+             std::forward<NAEF>(nodeAfterEdgesFn),
+             std::forward<EFTF>(edgeFirstTraversalFn),
              null_functor{},
              std::forward<TaskProcessingModel>(taskProcessingModel)
            );
@@ -140,20 +140,20 @@ namespace sequoia::maths
   template
   <
     class TaskProcessingModel = concurrency::serial<void>,
-    class G = void,
-    class NFBE = null_functor,
-    class NFAE = null_functor,
+    network G,
+    class NBEF = null_functor,
+    class NAEF = null_functor,
     class EFTF = null_functor,
     class ESTF = null_functor,
     class QCompare = graph_impl::node_comparer<G, std::less<typename G::node_weight_type>>
   >
     requires (G::directedness != directed_flavour::directed)
-  constexpr auto priority_search(const G& graph, const bool findDisconnectedPieces = true,
+  constexpr auto priority_search(const G& graph, const find_disconnected findDisconnectedPieces = find_disconnected::yes,
                  const typename G::edge_index_type start = 0,
-                 NFBE&& nodeFunctorBeforeEdges     = null_functor{},
-                 NFAE&& nodeFunctorAfterEdges      = null_functor{},
-                 EFTF&& edgeFirstTraversalFunctor  = null_functor{},
-                 ESTF&& edgeSecondTraversalFunctor = null_functor{},
+                 NBEF&& nodeBeforeEdgesFn     = null_functor{},
+                 NAEF&& nodeAfterEdgesFn      = null_functor{},
+                 EFTF&& edgeFirstTraversalFn  = null_functor{},
+                 ESTF&& edgeSecondTraversalFn = null_functor{},
                  TaskProcessingModel&& taskProcessingModel = TaskProcessingModel{})
   {
     using queue_type = typename graph_impl::priority_queue_selector<G, QCompare>::queue_type;
@@ -161,10 +161,10 @@ namespace sequoia::maths
              graph,
              findDisconnectedPieces,
              start,
-             std::forward<NFBE>(nodeFunctorBeforeEdges),
-             std::forward<NFAE>(nodeFunctorAfterEdges),
-             std::forward<EFTF>(edgeFirstTraversalFunctor),
-             std::forward<ESTF>(edgeSecondTraversalFunctor),
+             std::forward<NBEF>(nodeBeforeEdgesFn),
+             std::forward<NAEF>(nodeAfterEdgesFn),
+             std::forward<EFTF>(edgeFirstTraversalFn),
+             std::forward<ESTF>(edgeSecondTraversalFn),
              std::forward<TaskProcessingModel>(taskProcessingModel)
            );
   }
@@ -172,18 +172,18 @@ namespace sequoia::maths
   template
   <
     class TaskProcessingModel = concurrency::serial<void>,
-    class G = void,
-    class NFBE = null_functor,
-    class NFAE = null_functor,
+    network G,
+    class NBEF = null_functor,
+    class NAEF = null_functor,
     class EFTF = null_functor,
     class QCompare = graph_impl::node_comparer<G, std::less<typename G::node_weight_type>>
   >
     requires (G::directedness == directed_flavour::directed)
-  constexpr auto priority_search(const G& graph, const bool findDisconnectedPieces = true,
+  constexpr auto priority_search(const G& graph, const find_disconnected findDisconnectedPieces = find_disconnected::yes,
                  const std::size_t start = 0,
-                 NFBE&& nodeFunctorBeforeEdges     = null_functor{},
-                 NFAE&& nodeFunctorAfterEdges      = null_functor{},
-                 EFTF&& edgeFirstTraversalFunctor  = null_functor{},
+                 NBEF&& nodeBeforeEdgesFn     = null_functor{},
+                 NAEF&& nodeAfterEdgesFn      = null_functor{},
+                 EFTF&& edgeFirstTraversalFn  = null_functor{},
                  TaskProcessingModel&& taskProcessingModel = TaskProcessingModel{})
   {
     using queue_type = typename graph_impl::priority_queue_selector<G, QCompare>::queue_type;
@@ -191,9 +191,9 @@ namespace sequoia::maths
              graph,
              findDisconnectedPieces,
              start,
-             std::forward<NFBE>(nodeFunctorBeforeEdges),
-             std::forward<NFAE>(nodeFunctorAfterEdges),
-             std::forward<EFTF>(edgeFirstTraversalFunctor),
+             std::forward<NBEF>(nodeBeforeEdgesFn),
+             std::forward<NAEF>(nodeAfterEdgesFn),
+             std::forward<EFTF>(edgeFirstTraversalFn),
              null_functor{},
              std::forward<TaskProcessingModel>(taskProcessingModel)
            );

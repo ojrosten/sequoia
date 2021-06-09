@@ -112,7 +112,7 @@ namespace sequoia::testing
 
     //=================== For tracker =================//
     template<class Traverser, class G, class... Fn>
-    void traverse_graph(const G& g, const bool findDisconnected, const std::size_t start, Fn&&... fn)
+    void traverse_graph(const G& g, const maths::find_disconnected findDisconnected, const std::size_t start, Fn&&... fn)
     {
       clear(std::forward<Fn>(fn)...);
       Traverser::traverse(g, findDisconnected, start, std::forward<Fn>(fn)...);

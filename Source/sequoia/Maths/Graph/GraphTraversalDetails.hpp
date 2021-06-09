@@ -19,8 +19,8 @@
 
 namespace sequoia::maths
 {
-  enum class graph_flavour;
   struct null_functor{};
+  enum class find_disconnected { yes, no };
 }
 
 namespace sequoia::maths::graph_impl
@@ -155,7 +155,7 @@ namespace sequoia::maths::graph_impl
             && (invocable<EFTF, const_edge_iterator> || same_as<std::remove_cvref_t<EFTF>, null_functor>)
             && (invocable<ESTF, const_edge_iterator> || same_as<std::remove_cvref_t<ESTF>, null_functor>)
     constexpr auto traverse(const G& graph,
-                            const bool findDisconnectedPieces,
+                            const find_disconnected findDisconnectedPieces,
                             edge_index_type start,
                             NBEF&& nodeBeforeEdgesFn,
                             NAEF&& nodeAfterEdgesFn,
@@ -271,7 +271,7 @@ namespace sequoia::maths::graph_impl
 
             processed[nodeIndex] = true;
           }
-        } while(findDisconnectedPieces && (numDiscovered != graph.order()));
+        } while((findDisconnectedPieces == find_disconnected::yes) && (numDiscovered != graph.order()));
       }
 
       return taskProcessingModel.get();
