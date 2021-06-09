@@ -19,7 +19,7 @@
 
 namespace sequoia::maths
 {
-  struct null_functor{};
+  struct null_func_obj{};
   enum class find_disconnected { yes, no };
 }
 
@@ -150,10 +150,10 @@ namespace sequoia::maths::graph_impl
       class ESTF,
       class TaskProcessingModel
     >
-      requires (invocable<NBEF, edge_index_type>     || same_as<std::remove_cvref_t<NBEF>, null_functor>)
-            && (invocable<NAEF, edge_index_type>     || same_as<std::remove_cvref_t<NAEF>, null_functor>)
-            && (invocable<EFTF, const_edge_iterator> || same_as<std::remove_cvref_t<EFTF>, null_functor>)
-            && (invocable<ESTF, const_edge_iterator> || same_as<std::remove_cvref_t<ESTF>, null_functor>)
+      requires (invocable<NBEF, edge_index_type>     || same_as<std::remove_cvref_t<NBEF>, null_func_obj>)
+            && (invocable<NAEF, edge_index_type>     || same_as<std::remove_cvref_t<NAEF>, null_func_obj>)
+            && (invocable<EFTF, const_edge_iterator> || same_as<std::remove_cvref_t<EFTF>, null_func_obj>)
+            && (invocable<ESTF, const_edge_iterator> || same_as<std::remove_cvref_t<ESTF>, null_func_obj>)
     constexpr auto traverse(const G& graph,
                             const find_disconnected findDisconnectedPieces,
                             edge_index_type start,
@@ -167,9 +167,9 @@ namespace sequoia::maths::graph_impl
       // However, the Fns should not be captured by value as they may have mutable state with
       // external visibility.
 
-      constexpr bool hasEdgeSecondFn{!same_as<std::remove_cvref_t<ESTF>, null_functor>};
+      constexpr bool hasEdgeSecondFn{!same_as<std::remove_cvref_t<ESTF>, null_func_obj>};
       static_assert(!directed(G::directedness) || !hasEdgeSecondFn,
-                    "For a directed graph, edges are traversed only once: the edgeSecondTraversalFn is ignored and so should be the null_functor");
+                    "For a directed graph, edges are traversed only once: the edgeSecondTraversalFn is ignored and so should be the null_func_obj");
 
       if(start < graph.order())
       {
@@ -197,7 +197,7 @@ namespace sequoia::maths::graph_impl
 
             nodeIndexQueue.pop();
 
-            constexpr bool hasNodeBeforeFn{!same_as<std::remove_cvref_t<NBEF>, null_functor>};
+            constexpr bool hasNodeBeforeFn{!same_as<std::remove_cvref_t<NBEF>, null_func_obj>};
             if constexpr(hasNodeBeforeFn)
             {
               taskProcessingModel.push(nodeBeforeEdgesFn, nodeIndex);
@@ -207,7 +207,7 @@ namespace sequoia::maths::graph_impl
             for(auto iter{traversal_traits<G, container_type>::begin(graph, nodeIndex)}; iter != traversal_traits<G, container_type>::end(graph, nodeIndex); ++iter)
             {
               const auto nextNode{iter->target_node()};
-              constexpr bool hasEdgeFirstFn{!same_as<std::remove_cvref_t<EFTF>, null_functor>};
+              constexpr bool hasEdgeFirstFn{!same_as<std::remove_cvref_t<EFTF>, null_func_obj>};
 
               if constexpr(G::flavour != graph_flavour::directed)
               {
@@ -264,7 +264,7 @@ namespace sequoia::maths::graph_impl
               }
             }
 
-            if constexpr(!same_as<std::remove_cvref_t<NAEF>, null_functor>)
+            if constexpr(!same_as<std::remove_cvref_t<NAEF>, null_func_obj>)
             {
               taskProcessingModel.push(nodeAfterEdgesFn, nodeIndex);
             }

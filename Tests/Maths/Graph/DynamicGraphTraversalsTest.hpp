@@ -62,7 +62,7 @@ namespace sequoia::testing
     f.clear();
   }
 
-  inline void clear(maths::null_functor&) {}
+  inline void clear(maths::null_func_obj&) {}
 
   template<class F, class... Fn>
   void clear(F& f, Fn&... fn)

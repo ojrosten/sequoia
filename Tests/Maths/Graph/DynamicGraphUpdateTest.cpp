@@ -197,7 +197,7 @@ namespace sequoia::testing
     check_range(LINE(""), graph.cbegin_node_weights(), graph.cend_node_weights(), expectedNodeWeights.cbegin(), expectedNodeWeights.cend());
 
     auto secondNodeFn = [&updater](const std::size_t index){ updater.secondNodeTraversal(index); };
-    pseudo_depth_first_search(graph, find_disconnected::no, 0, null_functor{}, secondNodeFn);
+    pseudo_depth_first_search(graph, find_disconnected::no, 0, null_func_obj{}, secondNodeFn);
 
     // node_weight / = (2 + traversal index)
     //
@@ -213,7 +213,7 @@ namespace sequoia::testing
     check_range(LINE(""), graph.cbegin_node_weights(), graph.cend_node_weights(), expectedNodeWeights.cbegin(), expectedNodeWeights.cend());
 
     auto firstEdgeFn = [&updater](auto citer) { updater.firstEdgeTraversal(citer); };
-    pseudo_depth_first_search(graph, find_disconnected::no, 0, null_functor{}, null_functor{}, firstEdgeFn);
+    pseudo_depth_first_search(graph, find_disconnected::no, 0, null_func_obj{}, null_func_obj{}, firstEdgeFn);
 
     // edge_weight += 10 + traversal index
     //
@@ -291,11 +291,11 @@ namespace sequoia::testing
     auto secondEdgeFn = [&updater](auto citer) { updater.secondEdgeTraversal(citer); };
     if constexpr(undirected)
     {
-      pseudo_depth_first_search(graph, find_disconnected::no, 0, null_functor{}, null_functor{}, null_functor{}, secondEdgeFn);
+      pseudo_depth_first_search(graph, find_disconnected::no, 0, null_func_obj{}, null_func_obj{}, null_func_obj{}, secondEdgeFn);
     }
     else
     {
-      pseudo_depth_first_search(graph, find_disconnected::no, 0, null_functor{}, null_functor{}, secondEdgeFn);
+      pseudo_depth_first_search(graph, find_disconnected::no, 0, null_func_obj{}, null_func_obj{}, secondEdgeFn);
     }
 
     // edge_weight -= (10 + traversal index)
@@ -389,7 +389,7 @@ namespace sequoia::testing
     check_range(LINE(""), graph.cbegin_node_weights(), graph.cend_node_weights(), expectedNodeWeights.cbegin(), expectedNodeWeights.cend());
 
     auto secondNodeFn = [&updater](const std::size_t index){ updater.secondNodeTraversal(index); };
-    breadth_first_search(graph, find_disconnected::no, 0, null_functor{}, secondNodeFn);
+    breadth_first_search(graph, find_disconnected::no, 0, null_func_obj{}, secondNodeFn);
 
     // node_weight / = (2 + traversal index)
     //
@@ -405,7 +405,7 @@ namespace sequoia::testing
     check_range(LINE(""), graph.cbegin_node_weights(), graph.cend_node_weights(), expectedNodeWeights.cbegin(), expectedNodeWeights.cend());
 
     auto firstEdgeFn = [&updater](auto citer) { updater.firstEdgeTraversal(citer); };
-    breadth_first_search(graph, find_disconnected::no, 0, null_functor{}, null_functor{}, firstEdgeFn);
+    breadth_first_search(graph, find_disconnected::no, 0, null_func_obj{}, null_func_obj{}, firstEdgeFn);
 
     //  edge_weight += 10 + traversal index
     //
@@ -481,11 +481,11 @@ namespace sequoia::testing
     auto secondEdgeFn = [&updater](auto citer) { updater.secondEdgeTraversal(citer); };
     if constexpr(undirected)
     {
-      breadth_first_search(graph, find_disconnected::no, 0, null_functor{}, null_functor{}, null_functor{}, secondEdgeFn);
+      breadth_first_search(graph, find_disconnected::no, 0, null_func_obj{}, null_func_obj{}, null_func_obj{}, secondEdgeFn);
     }
     else
     {
-      breadth_first_search(graph, find_disconnected::no, 0, null_functor{}, null_functor{}, secondEdgeFn);
+      breadth_first_search(graph, find_disconnected::no, 0, null_func_obj{}, null_func_obj{}, secondEdgeFn);
     }
 
     // edge_weight -= (10 + traversal index)
@@ -527,7 +527,7 @@ namespace sequoia::testing
     check_range(LINE(""), graph.cbegin_node_weights(), graph.cend_node_weights(), expectedNodeWeights.cbegin(), expectedNodeWeights.cend());
 
     auto secondNodeFn = [&updater](const std::size_t index){ updater.secondNodeTraversal(index); };
-    priority_search(graph, find_disconnected::no, 0, null_functor{}, secondNodeFn);
+    priority_search(graph, find_disconnected::no, 0, null_func_obj{}, secondNodeFn);
 
     // node_weight / = (2 + traversal index)
     //
@@ -543,7 +543,7 @@ namespace sequoia::testing
     check_range(LINE(""), graph.cbegin_node_weights(), graph.cend_node_weights(), expectedNodeWeights.cbegin(), expectedNodeWeights.cend());
 
     auto firstEdgeFn = [&updater](auto citer) { updater.firstEdgeTraversal(citer); };
-    priority_search(graph, find_disconnected::no, 0, null_functor{}, null_functor{}, firstEdgeFn);
+    priority_search(graph, find_disconnected::no, 0, null_func_obj{}, null_func_obj{}, firstEdgeFn);
 
     // edge_weight += 10 + traversal index
     //
@@ -618,11 +618,11 @@ namespace sequoia::testing
     auto secondEdgeFn = [&updater](auto citer) { updater.secondEdgeTraversal(citer); };
     if constexpr(undirected(Graph::flavour))
     {
-      priority_search(graph, find_disconnected::no, 0, null_functor{}, null_functor{}, null_functor{}, secondEdgeFn);
+      priority_search(graph, find_disconnected::no, 0, null_func_obj{}, null_func_obj{}, null_func_obj{}, secondEdgeFn);
     }
     else
     {
-      priority_search(graph, find_disconnected::no, 0, null_functor{}, null_functor{}, secondEdgeFn);
+      priority_search(graph, find_disconnected::no, 0, null_func_obj{}, null_func_obj{}, secondEdgeFn);
     }
 
     // edge_weight -= (10 + traversal index)
@@ -803,7 +803,7 @@ namespace sequoia::testing
     check_range(LINE(""), graph.cbegin_node_weights(), graph.cend_node_weights(), expectedNodeWeights.cbegin(), expectedNodeWeights.cend());
 
     auto nodeFn2 = [&graph](const std::size_t index) { graph.node_weight(graph.cbegin_node_weights() + index, std::vector<int>{3 - static_cast<int>(index)}); };
-    maths::breadth_first_search(graph, find_disconnected::no, 0, null_functor{}, nodeFn2);
+    maths::breadth_first_search(graph, find_disconnected::no, 0, null_func_obj{}, nodeFn2);
 
     expectedNodeWeights = std::vector<std::vector<int>>{{3}, {2}, {1}};
     check_range(LINE(""), graph.cbegin_node_weights(), graph.cend_node_weights(), expectedNodeWeights.cbegin(), expectedNodeWeights.cend());
@@ -816,7 +816,7 @@ namespace sequoia::testing
       graph.set_edge_weight(edgeIter, std::vector<double>{static_cast<double>(nthConn)});
     };
 
-    maths::breadth_first_search(graph, find_disconnected::no, 0, null_functor{}, null_functor{}, edgeFn1);
+    maths::breadth_first_search(graph, find_disconnected::no, 0, null_func_obj{}, null_func_obj{}, edgeFn1);
     using ew_t = std::vector<double>;
 
     if constexpr(GraphFlavour == graph_flavour::undirected)
@@ -891,7 +891,7 @@ namespace sequoia::testing
       graph.set_edge_weight(edgeIter, std::vector<double>{val1, val2});
     };
 
-    breadth_first_search(graph, find_disconnected::no, 0, null_functor{}, null_functor{}, null_functor{}, edgeFn2);
+    breadth_first_search(graph, find_disconnected::no, 0, null_func_obj{}, null_func_obj{}, null_func_obj{}, edgeFn2);
 
     using ei_t = typename Graph::edge_init_type;
     using ew_t = std::vector<double>;
