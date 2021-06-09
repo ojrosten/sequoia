@@ -19,7 +19,12 @@
 
 namespace sequoia::maths
 {
-  struct null_func_obj{};
+  struct null_func_obj
+  {
+    template<class T>
+    void operator()(T&&);
+  };
+
   enum class find_disconnected { yes, no };
 }
 
@@ -150,10 +155,10 @@ namespace sequoia::maths::graph_impl
       class ESTF,
       class TaskProcessingModel
     >
-      requires (invocable<NBEF, edge_index_type>     || same_as<std::remove_cvref_t<NBEF>, null_func_obj>)
-            && (invocable<NAEF, edge_index_type>     || same_as<std::remove_cvref_t<NAEF>, null_func_obj>)
-            && (invocable<EFTF, const_edge_iterator> || same_as<std::remove_cvref_t<EFTF>, null_func_obj>)
-            && (invocable<ESTF, const_edge_iterator> || same_as<std::remove_cvref_t<ESTF>, null_func_obj>)
+      requires (invocable<NBEF, edge_index_type>    )
+            && (invocable<NAEF, edge_index_type>    )
+            && (invocable<EFTF, const_edge_iterator>)
+            && (invocable<ESTF, const_edge_iterator>)
     constexpr auto traverse(const G& graph,
                             const find_disconnected findDisconnectedPieces,
                             edge_index_type start,
