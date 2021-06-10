@@ -61,7 +61,32 @@ namespace sequoia::maths
 
     constexpr traversal_conditions(const traversal_conditions&) = default;
     constexpr traversal_conditions& operator=(const traversal_conditions&) = default;
+
+    template<class Bitset>
+    constexpr std::size_t compute_restart_index(const Bitset& b)
+    {
+      if(m_NumDiscovered)
+      {
+        while(b.size() && b[m_Restart]) ++m_Restart;
+
+        return m_Restart;
+      }
+
+      return starting_index();
+    }
+
+    constexpr void register_discovered()
+    {
+      ++m_NumDiscovered;
+    }
+
+    [[nodiscard]]
+    constexpr bool terminate(const std::size_t order) const noexcept
+    {
+      return m_NumDiscovered == order;
+    }
   private:
+    std::size_t m_NumDiscovered{}, m_Restart{};
   };
 
   template<>
@@ -74,6 +99,21 @@ namespace sequoia::maths
 
     constexpr traversal_conditions(const traversal_conditions&) = default;
     constexpr traversal_conditions& operator=(const traversal_conditions&) = default;
+
+    template<class Bitset>
+    constexpr std::size_t compute_restart_index(const Bitset&)
+    {
+      return starting_index();
+    }
+
+    [[nodiscard]]
+    constexpr bool terminate(std::size_t) const noexcept
+    {
+      return true;
+    }
+
+    constexpr void register_discovered()
+    {}
   };
 
   using find_disconnected_t = traversal_conditions<disconnected_discovery_mode::on>;
@@ -234,20 +274,17 @@ namespace sequoia::maths::graph_impl
         auto discovered{traversal_traits<G, Q>::make_bitset(graph)};
         auto processed{traversal_traits<G, Q>::make_bitset(graph)};
 
-        edge_index_type numDiscovered{}, restart{};
-
         using namespace graph_impl;
         auto nodeIndexQueue{queue_constructor<G, Q>::make(graph)};
         using container_type = decltype(nodeIndexQueue);
 
         do
         {
-          while(discovered[restart]) ++restart;
+          const auto restartNode{static_cast<edge_index_type>(conditions.compute_restart_index(discovered))};
 
-          const std::size_t startNode{numDiscovered ? restart : conditions.starting_index()};
-          nodeIndexQueue.push(startNode);
-          discovered[startNode] = true;
-          ++numDiscovered;
+          nodeIndexQueue.push(restartNode);
+          discovered[restartNode] = true;
+          conditions.register_discovered();
 
           while(!nodeIndexQueue.empty())
           {
@@ -318,7 +355,7 @@ namespace sequoia::maths::graph_impl
               {
                 nodeIndexQueue.push(nextNode);
                 discovered[nextNode] = true;
-                ++numDiscovered;
+                conditions.register_discovered();
               }
             }
 
@@ -329,7 +366,7 @@ namespace sequoia::maths::graph_impl
 
             processed[nodeIndex] = true;
           }
-        } while((conditions.mode == disconnected_discovery_mode::on) && (numDiscovered != graph.order()));
+        } while(!conditions.terminate(graph.order()));
       }
 
       return taskProcessingModel.get();
