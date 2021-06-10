@@ -111,11 +111,11 @@ namespace sequoia::testing
     void test_priority_traversal();
 
     //=================== For tracker =================//
-    template<class Traverser, class G, class... Fn>
-    void traverse_graph(const G& g, const maths::find_disconnected findDisconnected, const std::size_t start, Fn&&... fn)
+    template<class Traverser, class G, maths::disconnected_discovery_mode Mode, class... Fn>
+    void traverse_graph(const G& g, const maths::traversal_conditions<Mode> conditions, Fn&&... fn)
     {
       clear(std::forward<Fn>(fn)...);
-      Traverser::traverse(g, findDisconnected, start, std::forward<Fn>(fn)...);
+      Traverser::traverse(g, conditions, std::forward<Fn>(fn)...);
     }
 
     // true_types correspond BFS

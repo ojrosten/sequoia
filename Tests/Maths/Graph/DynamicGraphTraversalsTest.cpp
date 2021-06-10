@@ -126,11 +126,11 @@ namespace sequoia::testing
 
     if constexpr(undirected)
     {
-      traverse_graph<Traverser>(g, find_disconnected::yes, 0, discovery, discovery2, edgeDiscovery, edgeDiscovery2);
+      traverse_graph<Traverser>(g, find_disconnected_t{}, discovery, discovery2, edgeDiscovery, edgeDiscovery2);
     }
     else
     {
-      traverse_graph<Traverser>(g, find_disconnected::yes, 0, discovery, discovery2, edgeDiscovery);
+      traverse_graph<Traverser>(g, find_disconnected_t{}, discovery, discovery2, edgeDiscovery);
     }
 
     auto order = discovery.order();
@@ -150,11 +150,11 @@ namespace sequoia::testing
 
     if constexpr(undirected)
     {
-      traverse_graph<Traverser>(g, find_disconnected::yes, 0, discovery, discovery2, edgeDiscovery, edgeDiscovery2);
+      traverse_graph<Traverser>(g, find_disconnected_t{}, discovery, discovery2, edgeDiscovery, edgeDiscovery2);
     }
     else
     {
-      traverse_graph<Traverser>(g, find_disconnected::yes, 0, discovery, discovery2, edgeDiscovery);
+      traverse_graph<Traverser>(g, find_disconnected_t{}, discovery, discovery2, edgeDiscovery);
     }
 
     order = discovery.order();
@@ -177,11 +177,11 @@ namespace sequoia::testing
 
     if constexpr(undirected)
     {
-      traverse_graph<Traverser>(g, find_disconnected::yes, 0, discovery, discovery2, edgeDiscovery, edgeDiscovery2);
+      traverse_graph<Traverser>(g, find_disconnected_t{}, discovery, discovery2, edgeDiscovery, edgeDiscovery2);
     }
     else
     {
-      traverse_graph<Traverser>(g, find_disconnected::yes, 0, discovery, discovery2, edgeDiscovery);
+      traverse_graph<Traverser>(g, find_disconnected_t{}, discovery, discovery2, edgeDiscovery);
     }
 
     order = discovery.order();
@@ -205,11 +205,11 @@ namespace sequoia::testing
 
     if constexpr(undirected)
     {
-      traverse_graph<Traverser>(g, find_disconnected::yes, 1, discovery, discovery2, edgeDiscovery, edgeDiscovery2);
+      traverse_graph<Traverser>(g, find_disconnected_t{1}, discovery, discovery2, edgeDiscovery, edgeDiscovery2);
     }
     else
     {
-      traverse_graph<Traverser>(g, find_disconnected::yes, 1, discovery, discovery2, edgeDiscovery);
+      traverse_graph<Traverser>(g, find_disconnected_t{1}, discovery, discovery2, edgeDiscovery);
     }
 
     order = discovery.order();
@@ -233,11 +233,11 @@ namespace sequoia::testing
 
     if constexpr(undirected)
     {
-      traverse_graph<Traverser>(g, find_disconnected::no, 0, discovery, discovery2, edgeDiscovery, edgeDiscovery2);
+      traverse_graph<Traverser>(g, ignore_disconnected_t{}, discovery, discovery2, edgeDiscovery, edgeDiscovery2);
     }
     else
     {
-      traverse_graph<Traverser>(g, find_disconnected::no, 0, discovery, discovery2, edgeDiscovery);
+      traverse_graph<Traverser>(g, ignore_disconnected_t{}, discovery, discovery2, edgeDiscovery);
     }
 
     order = discovery.order();
@@ -263,11 +263,11 @@ namespace sequoia::testing
 
     if constexpr(undirected)
     {
-      traverse_graph<Traverser>(g, find_disconnected::yes, 0, discovery, discovery2, edgeDiscovery, edgeDiscovery2);
+      traverse_graph<Traverser>(g, find_disconnected_t{}, discovery, discovery2, edgeDiscovery, edgeDiscovery2);
     }
     else
     {
-      traverse_graph<Traverser>(g, find_disconnected::yes, 0, discovery, discovery2, edgeDiscovery);
+      traverse_graph<Traverser>(g, find_disconnected_t{}, discovery, discovery2, edgeDiscovery);
     }
 
     order = discovery.order();
@@ -301,11 +301,11 @@ namespace sequoia::testing
 
     if constexpr(undirected)
     {
-      traverse_graph<Traverser>(g, find_disconnected::no, 1, discovery, discovery2, edgeDiscovery, edgeDiscovery2);
+      traverse_graph<Traverser>(g, ignore_disconnected_t{1}, discovery, discovery2, edgeDiscovery, edgeDiscovery2);
     }
     else
     {
-      traverse_graph<Traverser>(g, find_disconnected::no, 1, discovery, discovery2, edgeDiscovery);
+      traverse_graph<Traverser>(g, ignore_disconnected_t{1}, discovery, discovery2, edgeDiscovery);
     }
 
     order = discovery.order();
@@ -362,11 +362,11 @@ namespace sequoia::testing
 
     if constexpr(undirected)
     {
-      traverse_graph<Traverser>(g, find_disconnected::no, 2, discovery, discovery2, edgeDiscovery, edgeDiscovery2);
+      traverse_graph<Traverser>(g, ignore_disconnected_t{2}, discovery, discovery2, edgeDiscovery, edgeDiscovery2);
     }
     else
     {
-      traverse_graph<Traverser>(g, find_disconnected::no, 2, discovery, discovery2, edgeDiscovery);
+      traverse_graph<Traverser>(g, ignore_disconnected_t{2}, discovery, discovery2, edgeDiscovery);
     }
 
     order = discovery.order();
@@ -420,11 +420,11 @@ namespace sequoia::testing
 
     if constexpr(undirected)
     {
-      traverse_graph<Traverser>(g, find_disconnected::no, 0, discovery, discovery2, edgeDiscovery, edgeDiscovery2);
+      traverse_graph<Traverser>(g, ignore_disconnected_t{}, discovery, discovery2, edgeDiscovery, edgeDiscovery2);
     }
     else
     {
-      traverse_graph<Traverser>(g, find_disconnected::no, 0, discovery, discovery2, edgeDiscovery);
+      traverse_graph<Traverser>(g, ignore_disconnected_t{}, discovery, discovery2, edgeDiscovery);
     }
 
     order = discovery.order();
@@ -447,11 +447,11 @@ namespace sequoia::testing
 
     if constexpr(undirected)
     {
-      traverse_graph<Traverser>(g, find_disconnected::no, 2, discovery, discovery2, edgeDiscovery, edgeDiscovery2);
+      traverse_graph<Traverser>(g, ignore_disconnected_t{2}, discovery, discovery2, edgeDiscovery, edgeDiscovery2);
     }
     else
     {
-      traverse_graph<Traverser>(g, find_disconnected::no, 2, discovery, discovery2, edgeDiscovery);
+      traverse_graph<Traverser>(g, ignore_disconnected_t{2}, discovery, discovery2, edgeDiscovery);
     }
 
     order = discovery.order();
@@ -564,7 +564,7 @@ namespace sequoia::testing
     auto graph{generate_priority_test_graph<Graph>()};
 
     node_tracker tracker;
-    maths::priority_search(graph, maths::find_disconnected::no, 0, tracker);
+    maths::priority_search(graph, maths::ignore_disconnected_t{}, tracker);
 
     auto order = tracker.order();
     check_equality(LINE(""), order, std::vector<std::size_t>{0,2,4,3,6,1,5});
@@ -756,14 +756,14 @@ namespace sequoia::testing
     if constexpr(Graph::directedness == directed_flavour::directed)
     {
       return early
-        ? breadth_first_search(graph, find_disconnected::no, 0, fn, null_func_obj{}, null_func_obj{}, ProcessingModel{std::forward<Args>(args)...})
-        : breadth_first_search(graph, find_disconnected::no, 0, null_func_obj{}, fn, null_func_obj{}, ProcessingModel{std::forward<Args>(args)...});
+        ? breadth_first_search(graph, ignore_disconnected_t{}, fn, null_func_obj{}, null_func_obj{}, ProcessingModel{std::forward<Args>(args)...})
+        : breadth_first_search(graph, ignore_disconnected_t{}, null_func_obj{}, fn, null_func_obj{}, ProcessingModel{std::forward<Args>(args)...});
     }
     else
     {
       return early
-        ? breadth_first_search(graph, find_disconnected::no, 0, fn, null_func_obj{}, null_func_obj{}, null_func_obj{}, ProcessingModel{std::forward<Args>(args)...})
-        : breadth_first_search(graph, find_disconnected::no, 0, null_func_obj{}, fn, null_func_obj{}, null_func_obj{}, ProcessingModel{std::forward<Args>(args)...});
+        ? breadth_first_search(graph, ignore_disconnected_t{}, fn, null_func_obj{}, null_func_obj{}, null_func_obj{}, ProcessingModel{std::forward<Args>(args)...})
+        : breadth_first_search(graph, ignore_disconnected_t{}, null_func_obj{}, fn, null_func_obj{}, null_func_obj{}, ProcessingModel{std::forward<Args>(args)...});
     }
   }
 
@@ -779,11 +779,11 @@ namespace sequoia::testing
     using namespace maths;
     if constexpr(Graph::directedness == maths::directed_flavour::directed)
     {
-      return breadth_first_search(graph, find_disconnected::no, 0, null_func_obj{}, null_func_obj{}, fn, ProcessingModel{std::forward<Args>(args)...});
+      return breadth_first_search(graph, ignore_disconnected_t{}, null_func_obj{}, null_func_obj{}, fn, ProcessingModel{std::forward<Args>(args)...});
     }
     else
     {
-      return breadth_first_search(graph, find_disconnected::no, 0, null_func_obj{}, null_func_obj{}, fn, null_func_obj{}, ProcessingModel{std::forward<Args>(args)...});
+      return breadth_first_search(graph, ignore_disconnected_t{}, null_func_obj{}, null_func_obj{}, fn, null_func_obj{}, ProcessingModel{std::forward<Args>(args)...});
     }
   }
 
@@ -797,7 +797,7 @@ namespace sequoia::testing
     };
 
     using namespace maths;
-    return breadth_first_search(graph, find_disconnected::no, 0, null_func_obj{}, null_func_obj{}, null_func_obj{}, fn, ProcessingModel{std::forward<Args>(args)...});
+    return breadth_first_search(graph, ignore_disconnected_t{}, null_func_obj{}, null_func_obj{}, null_func_obj{}, fn, ProcessingModel{std::forward<Args>(args)...});
   }
 
   template<class Graph>

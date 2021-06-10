@@ -20,10 +20,10 @@ namespace sequoia::testing
   {
     using type = BFS;
 
-    template<class G, class... Fn>
-    static void traverse(const G& g, const maths::find_disconnected findDisconnected, const std::size_t start, Fn&&... fn)
+    template<class G, maths::disconnected_discovery_mode Mode, class... Fn>
+    static void traverse(const G& g, const maths::traversal_conditions<Mode> conditions, Fn&&... fn)
     {
-      maths::breadth_first_search(g, findDisconnected, start, std::forward<Fn>(fn)...);
+      maths::breadth_first_search(g, conditions, std::forward<Fn>(fn)...);
     }
 
     constexpr static bool uses_forward_iterator() noexcept { return true; }
@@ -35,10 +35,10 @@ namespace sequoia::testing
   {
     using type = DFS;
 
-    template<class G, class... Fn>
-    static void traverse(const G& g, const maths::find_disconnected findDisconnected, const std::size_t start, Fn&&... fn)
+    template<class G, maths::disconnected_discovery_mode Mode, class... Fn>
+    static void traverse(const G& g, const maths::traversal_conditions<Mode> conditions, Fn&&... fn)
     {
-      maths::pseudo_depth_first_search(g, findDisconnected, start, std::forward<Fn>(fn)...);
+      maths::pseudo_depth_first_search(g, conditions, std::forward<Fn>(fn)...);
     }
 
     constexpr static bool uses_forward_iterator() noexcept { return false; }
@@ -50,10 +50,10 @@ namespace sequoia::testing
   {
     using type = PRS;
 
-    template<class G, class... Fn>
-    static void traverse(const G& g, const maths::find_disconnected findDisconnected, const std::size_t start, Fn&&... fn)
+    template<class G, maths::disconnected_discovery_mode Mode, class... Fn>
+    static void traverse(const G& g, const maths::traversal_conditions<Mode> conditions, Fn&&... fn)
     {
-      maths::priority_search(g, findDisconnected, start, std::forward<Fn>(fn)...);
+      maths::priority_search(g, conditions, std::forward<Fn>(fn)...);
     }
 
     constexpr static bool uses_forward_iterator() noexcept { return true; }

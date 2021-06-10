@@ -25,7 +25,60 @@ namespace sequoia::maths
     void operator()(T&&);
   };
 
-  enum class find_disconnected { yes, no };
+  enum class disconnected_discovery_mode { on, off };
+
+  class traversal_conditions_base
+  {
+  public:
+    constexpr traversal_conditions_base() = default;
+
+    constexpr explicit traversal_conditions_base(std::size_t startingIndex)
+      : m_Index{startingIndex}
+    {}
+
+    [[nodiscard]]
+    constexpr std::size_t starting_index() const noexcept
+    {
+      return m_Index;
+    }
+  protected:
+    constexpr traversal_conditions_base(const traversal_conditions_base&) = default;
+
+    constexpr traversal_conditions_base& operator=(const traversal_conditions_base&) = default;
+
+    ~traversal_conditions_base() = default;
+  private:
+    std::size_t m_Index{};
+  };
+
+  template<disconnected_discovery_mode FindDisconnected>
+  class traversal_conditions : public traversal_conditions_base
+  {
+  public:
+    constexpr static disconnected_discovery_mode mode{FindDisconnected};
+
+    using traversal_conditions_base::traversal_conditions_base;
+
+    constexpr traversal_conditions(const traversal_conditions&) = default;
+    constexpr traversal_conditions& operator=(const traversal_conditions&) = default;
+  private:
+  };
+
+  template<>
+  class traversal_conditions<disconnected_discovery_mode::off> : public traversal_conditions_base
+  {
+  public:
+    constexpr static disconnected_discovery_mode mode{disconnected_discovery_mode::off};
+
+    using traversal_conditions_base::traversal_conditions_base;
+
+    constexpr traversal_conditions(const traversal_conditions&) = default;
+    constexpr traversal_conditions& operator=(const traversal_conditions&) = default;
+  };
+
+  using find_disconnected_t = traversal_conditions<disconnected_discovery_mode::on>;
+
+  using ignore_disconnected_t = traversal_conditions<disconnected_discovery_mode::off>;
 }
 
 namespace sequoia::maths::graph_impl
@@ -149,6 +202,7 @@ namespace sequoia::maths::graph_impl
     template
     <
       class Q,
+      disconnected_discovery_mode FindDisconnected,
       class NBEF,
       class NAEF,
       class EFTF,
@@ -160,8 +214,7 @@ namespace sequoia::maths::graph_impl
             && (invocable<EFTF, const_edge_iterator>)
             && (invocable<ESTF, const_edge_iterator>)
     constexpr auto traverse(const G& graph,
-                            const find_disconnected findDisconnectedPieces,
-                            edge_index_type start,
+                            traversal_conditions<FindDisconnected> conditions,
                             NBEF&& nodeBeforeEdgesFn,
                             NAEF&& nodeAfterEdgesFn,
                             EFTF&& edgeFirstTraversalFn,
@@ -176,7 +229,7 @@ namespace sequoia::maths::graph_impl
       static_assert(!directed(G::directedness) || !hasEdgeSecondFn,
                     "For a directed graph, edges are traversed only once: the edgeSecondTraversalFn is ignored and so should be the null_func_obj");
 
-      if(start < graph.order())
+      if(conditions.starting_index() < graph.order())
       {
         auto discovered{traversal_traits<G, Q>::make_bitset(graph)};
         auto processed{traversal_traits<G, Q>::make_bitset(graph)};
@@ -191,7 +244,7 @@ namespace sequoia::maths::graph_impl
         {
           while(discovered[restart]) ++restart;
 
-          const auto startNode{numDiscovered ? restart : start};
+          const std::size_t startNode{numDiscovered ? restart : conditions.starting_index()};
           nodeIndexQueue.push(startNode);
           discovered[startNode] = true;
           ++numDiscovered;
@@ -276,7 +329,7 @@ namespace sequoia::maths::graph_impl
 
             processed[nodeIndex] = true;
           }
-        } while((findDisconnectedPieces == find_disconnected::yes) && (numDiscovered != graph.order()));
+        } while((conditions.mode == disconnected_discovery_mode::on) && (numDiscovered != graph.order()));
       }
 
       return taskProcessingModel.get();
