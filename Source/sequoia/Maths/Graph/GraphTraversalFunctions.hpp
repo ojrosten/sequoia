@@ -28,6 +28,10 @@ namespace sequoia::maths
     class ESTF = null_func_obj
   >
     requires (G::directedness != directed_flavour::directed)
+          && (invocable<NBEF, typename G::edge_index_type>)
+          && (invocable<NAEF, typename G::edge_index_type>)
+          && (invocable<EFTF, typename G::const_edge_iterator>)
+          && (invocable<ESTF, typename G::const_edge_iterator>)
   constexpr auto breadth_first_search(const G& graph,
                                       const traversal_conditions<Mode> conditions,
                                       NBEF&& nodeBeforeEdgesFn     = null_func_obj{},
@@ -58,6 +62,9 @@ namespace sequoia::maths
     class EFTF = null_func_obj
   >
     requires (G::directedness == directed_flavour::directed)
+          && (invocable<NBEF, typename G::edge_index_type>)
+          && (invocable<NAEF, typename G::edge_index_type>)
+          && (invocable<EFTF, typename G::const_edge_iterator>)
   constexpr auto breadth_first_search(const G& graph,
                                       const traversal_conditions<Mode> conditions,
                                       NBEF&& nodeBeforeEdgesFn     = null_func_obj{},
@@ -88,6 +95,10 @@ namespace sequoia::maths
     class ESTF = null_func_obj
   >
     requires (G::directedness != directed_flavour::directed)
+          && (invocable<NBEF, typename G::edge_index_type>)
+          && (invocable<NAEF, typename G::edge_index_type>)
+          && (invocable<EFTF, typename G::const_edge_iterator>)
+          && (invocable<ESTF, typename G::const_edge_iterator>)
   constexpr auto pseudo_depth_first_search(const G& graph,
                                            const traversal_conditions<Mode> conditions,
                                            NBEF&& nodeBeforeEdgesFn     = null_func_obj{},
@@ -118,6 +129,9 @@ namespace sequoia::maths
     class EFTF = null_func_obj
   >
     requires (G::directedness == directed_flavour::directed)
+          && (invocable<NBEF, typename G::edge_index_type>)
+          && (invocable<NAEF, typename G::edge_index_type>)
+          && (invocable<EFTF, typename G::const_edge_iterator>)
   constexpr auto pseudo_depth_first_search(const G& graph,
                                            const traversal_conditions<Mode> conditions,
                                            NBEF&& nodeBeforeEdgesFn     = null_func_obj{},
@@ -149,6 +163,10 @@ namespace sequoia::maths
     class QCompare = graph_impl::node_comparer<G, std::less<typename G::node_weight_type>>
   >
     requires (G::directedness != directed_flavour::directed)
+          && (invocable<NBEF, typename G::edge_index_type>)
+          && (invocable<NAEF, typename G::edge_index_type>)
+          && (invocable<EFTF, typename G::const_edge_iterator>)
+          && (invocable<ESTF, typename G::const_edge_iterator>)
   constexpr auto priority_search(const G& graph,
                                  const traversal_conditions<Mode> conditions,
                                  NBEF&& nodeBeforeEdgesFn     = null_func_obj{},
@@ -180,6 +198,9 @@ namespace sequoia::maths
     class QCompare = graph_impl::node_comparer<G, std::less<typename G::node_weight_type>>
   >
     requires (G::directedness == directed_flavour::directed)
+          && (invocable<NBEF, typename G::edge_index_type>)
+          && (invocable<NAEF, typename G::edge_index_type>)
+          && (invocable<EFTF, typename G::const_edge_iterator>)
   constexpr auto priority_search(const G& graph,
                                  const traversal_conditions<Mode> conditions,
                                  NBEF&& nodeBeforeEdgesFn     = null_func_obj{},
