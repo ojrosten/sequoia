@@ -67,19 +67,34 @@ namespace sequoia::testing
 
     wrapper w{}, v{1};
 
-    check_semantics(LINE("Regular semantics"), w, v);
+    // TO DO: prefer MSVC version once the spaceship fully lands elsewhere
+#ifdef _MSC_VER
+      check_semantics(LINE(""), w, v, std::weak_ordering::less);
+#else
+      check_semantics(LINE(""), w, v);
+#endif
 
     w.set(2);
 
     check_equality(LINE(""), w, wrapper{std::vector<int>{2}});
 
-    check_semantics(LINE("Regular semantics"), w, v);
+    // TO DO: prefer MSVC version once the spaceship fully lands elsewhere
+#ifdef _MSC_VER
+      check_semantics(LINE(""), w, v, std::weak_ordering::greater);
+#else
+      check_semantics(LINE(""), w, v);
+#endif
 
     v.mutate([](auto& u) { u.push_back(3); });
 
     check_equality(LINE(""), v, wrapper{std::vector<int>{1, 3}});
 
-    check_semantics(LINE("Regular semantics"), w, v);
+    // TO DO: prefer MSVC version once the spaceship fully lands elsewhere
+#ifdef _MSC_VER
+      check_semantics(LINE(""), w, v, std::weak_ordering::greater);
+#else
+      check_semantics(LINE(""), w, v);
+#endif
   }
   
   void uniform_wrapper_test::test_aggregate_type()
