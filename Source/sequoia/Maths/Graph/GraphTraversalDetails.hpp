@@ -232,7 +232,7 @@ namespace sequoia::maths::graph_impl
 
   template<network G, class Compare> struct priority_queue_selector;
 
-  template<network G>
+  template<network G, class Q>
   class traversal_helper
   {
   public:
@@ -241,7 +241,6 @@ namespace sequoia::maths::graph_impl
 
     template
     <
-      class Q,
       disconnected_discovery_mode FindDisconnected,
       class NBEF,
       class NAEF,

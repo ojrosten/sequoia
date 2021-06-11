@@ -41,7 +41,7 @@ namespace sequoia::maths
                                       TaskProcessingModel&& taskProcessingModel = TaskProcessingModel{})
   {
     using queue_type = typename graph_impl::queue_selector<G>::queue_type;
-    return graph_impl::traversal_helper<G>{}.template traverse<queue_type>(
+    return graph_impl::traversal_helper<G, queue_type>{}.traverse(
              graph,
              conditions,
              std::forward<NBEF>(nodeBeforeEdgesFn),
@@ -73,7 +73,7 @@ namespace sequoia::maths
                                       TaskProcessingModel&& taskProcessingModel = TaskProcessingModel{})
   {
     using queue_type = typename graph_impl::queue_selector<G>::queue_type;
-    return graph_impl::traversal_helper<G>{}.template traverse<queue_type>(
+    return graph_impl::traversal_helper<G, queue_type>{}.traverse(
              graph,
              conditions,
              std::forward<NBEF>(nodeBeforeEdgesFn),
@@ -108,7 +108,7 @@ namespace sequoia::maths
                                            TaskProcessingModel&& taskProcessingModel = TaskProcessingModel{})
   {
     using stack_type = typename graph_impl::stack_selector<G>::stack_type;
-    return graph_impl::traversal_helper<G>{}.template traverse<stack_type>(
+    return graph_impl::traversal_helper<G, stack_type>{}.traverse(
              graph,
              conditions,
              std::forward<NBEF>(nodeBeforeEdgesFn),
@@ -140,7 +140,7 @@ namespace sequoia::maths
                                            TaskProcessingModel&& taskProcessingModel = TaskProcessingModel{})
   {
     using stack_type = typename graph_impl::stack_selector<G>::stack_type;
-    return graph_impl::traversal_helper<G>{}.template traverse<stack_type>(
+    return graph_impl::traversal_helper<G, stack_type>{}.traverse(
              graph,
              conditions,
              std::forward<NBEF>(nodeBeforeEdgesFn),
@@ -176,7 +176,7 @@ namespace sequoia::maths
                                  TaskProcessingModel&& taskProcessingModel = TaskProcessingModel{})
   {
     using queue_type = typename graph_impl::priority_queue_selector<G, QCompare>::queue_type;
-    return graph_impl::traversal_helper<G>{}.template traverse<queue_type>(
+    return graph_impl::traversal_helper<G, queue_type>{}.traverse(
              graph,
              conditions,
              std::forward<NBEF>(nodeBeforeEdgesFn),
@@ -209,7 +209,7 @@ namespace sequoia::maths
                                  TaskProcessingModel&& taskProcessingModel = TaskProcessingModel{})
   {
     using queue_type = typename graph_impl::priority_queue_selector<G, QCompare>::queue_type;
-    return graph_impl::traversal_helper<G>{}.template traverse<queue_type>(
+    return graph_impl::traversal_helper<G, queue_type>{}.traverse(
              graph,
              conditions,
              std::forward<NBEF>(nodeBeforeEdgesFn),
