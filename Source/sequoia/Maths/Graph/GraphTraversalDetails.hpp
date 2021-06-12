@@ -101,7 +101,7 @@ namespace sequoia::maths
     constexpr traversal_conditions& operator=(const traversal_conditions&) = default;
 
     template<class Bitset>
-    constexpr std::size_t compute_restart_index(const Bitset&)
+    constexpr std::size_t compute_restart_index(const Bitset&) const noexcept
     {
       return starting_index();
     }
@@ -112,8 +112,7 @@ namespace sequoia::maths
       return true;
     }
 
-    constexpr void register_discovered()
-    {}
+    constexpr void register_discovered() noexcept {}
   };
 
   using find_disconnected_t = traversal_conditions<disconnected_discovery_mode::on>;
@@ -123,6 +122,8 @@ namespace sequoia::maths
 
 namespace sequoia::maths::graph_impl
 {
+  enum class edge_processing_mode { immediate, deferred };
+
   template<bool Forward> struct iterator_getter
   {
     template<network G>
@@ -322,25 +323,22 @@ namespace sequoia::maths::graph_impl
                     taskProcessingModel.push(edgeFirstTraversalFn, iter);
                   }
                 }
-                else
+                else if constexpr(hasEdgeFirstFn || hasEdgeSecondFn)
                 {
-                  if constexpr(hasEdgeFirstFn || hasEdgeSecondFn)
+                  const bool loopMatched{is_loop(iter, nodeIndex) && m_Loops.loop_matched(traversal_traits<G, container_type>::begin(graph, nodeIndex), iter)};
+                  const bool secondTraversal{processed[nextNode] || loopMatched};
+                  if(secondTraversal)
                   {
-                    const bool loopMatched{is_loop(iter, nodeIndex) && m_Loops.loop_matched(traversal_traits<G, container_type>::begin(graph, nodeIndex), iter)};
-                    const bool secondTraversal{processed[nextNode] || loopMatched};
-                    if(secondTraversal)
+                    if constexpr(hasEdgeSecondFn)
                     {
-                      if constexpr(hasEdgeSecondFn)
-                      {
-                        taskProcessingModel.push(edgeSecondTraversalFn, iter);
-                      }
+                      taskProcessingModel.push(edgeSecondTraversalFn, iter);
                     }
-                    else
+                  }
+                  else
+                  {
+                    if constexpr(hasEdgeFirstFn)
                     {
-                      if constexpr(hasEdgeFirstFn)
-                      {
-                        taskProcessingModel.push(edgeFirstTraversalFn, iter);
-                      }
+                      taskProcessingModel.push(edgeFirstTraversalFn, iter);
                     }
                   }
                 }
