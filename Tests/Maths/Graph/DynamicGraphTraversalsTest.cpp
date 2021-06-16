@@ -15,6 +15,67 @@ namespace sequoia::testing
   namespace
   {
     using edge_results = std::vector<std::pair<std::size_t, std::size_t>>;
+
+
+    class node_tracker
+    {
+    public:
+      void clear() noexcept { m_Order.clear(); }
+
+      void operator()(const std::size_t index) { m_Order.push_back(index); }
+
+      [[nodiscard]]
+      const std::vector<std::size_t>& order() const noexcept { return m_Order; }
+    private:
+      std::vector<std::size_t> m_Order;
+    };
+
+    template<class G, class T>
+    class edge_tracker
+    {
+    public:
+      using result_type = std::vector<std::pair<std::size_t, std::size_t>>;
+
+      edge_tracker(const G& graph) : m_Graph(graph) {}
+
+      void clear() noexcept { m_Order.clear(); }
+
+      template<class I> void operator()(I iter)
+      {
+        const auto pos = dist(typename std::is_same<typename T::type, DFS>::type(), iter);
+        m_Order.emplace_back(iter.partition_index(), static_cast<std::size_t>(pos));
+      }
+
+      [[nodiscard]]
+      const result_type& order() const noexcept { return m_Order; }
+    private:
+      result_type m_Order;
+      const G& m_Graph;
+
+      template<class I> [[nodiscard]] auto dist(std::true_type, I iter)
+      {
+        return distance(m_Graph.crbegin_edges(iter.partition_index()), iter);
+      }
+
+      template<class I> [[nodiscard]] auto dist(std::false_type, I iter)
+      {
+        return distance(m_Graph.cbegin_edges(iter.partition_index()), iter);
+      }
+    };
+
+    template<class F> void clear(F& f)
+    {
+      f.clear();
+    }
+
+    void clear(maths::null_func_obj&) {}
+
+    template<class F, class... Fn>
+    void clear(F& f, Fn&... fn)
+    {
+      f.clear();
+      clear(fn...);
+    }
   }
 
   [[nodiscard]]
@@ -54,12 +115,10 @@ namespace sequoia::testing
     using NSTraits = NodeWeightStorageTraits;
     using graph_type = graph_type_generator_t<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, ESTraits, NSTraits>;
 
-    if constexpr(std::is_empty_v<NodeWeight>)
-    {
-      tracker_test<graph_type, Traverser<BFS>>();
-      tracker_test<graph_type, Traverser<DFS>>();
-    }
-    else
+    tracker_test<graph_type, Traverser<BFS>>();
+    tracker_test<graph_type, Traverser<DFS>>();
+
+    if constexpr(!std::is_empty_v<NodeWeight>)
     {
       test_weighted_BFS_tasks<graph_type>();
       test_priority_traversal<graph_type>();

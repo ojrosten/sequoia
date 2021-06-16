@@ -11,66 +11,6 @@
 
 namespace sequoia::testing
 {
-  class node_tracker
-  {
-  public:
-    void clear() noexcept { m_Order.clear(); }
-
-    void operator()(const std::size_t index) { m_Order.push_back(index); }
-
-    [[nodiscard]]
-    const std::vector<std::size_t>& order() const noexcept { return m_Order; }
-  private:
-    std::vector<std::size_t> m_Order;
-  };
-
-  template<class G, class T>
-  class edge_tracker
-  {
-  public:
-    using result_type = std::vector<std::pair<std::size_t, std::size_t>>;
-
-    edge_tracker(const G& graph) : m_Graph(graph) {}
-
-    void clear() noexcept { m_Order.clear(); }
-
-    template<class I> void operator()(I iter)
-    {
-      const auto pos = dist(typename std::is_same<typename T::type, DFS>::type(), iter);
-      m_Order.emplace_back(iter.partition_index(), static_cast<std::size_t>(pos));
-    }
-
-    [[nodiscard]]
-    const result_type& order() const noexcept { return m_Order; }
-  private:
-    result_type m_Order;
-    const G& m_Graph;
-
-    template<class I> [[nodiscard]] auto dist(std::true_type, I iter)
-    {
-      return distance(m_Graph.crbegin_edges(iter.partition_index()), iter);
-    }
-
-    template<class I> [[nodiscard]] auto dist(std::false_type, I iter)
-    {
-      return distance(m_Graph.cbegin_edges(iter.partition_index()), iter);
-    }
-  };
-
-  template<class F> void clear(F& f)
-  {
-    f.clear();
-  }
-
-  inline void clear(maths::null_func_obj&) {}
-
-  template<class F, class... Fn>
-  void clear(F& f, Fn&... fn)
-  {
-    f.clear();
-    clear(fn...);
-  }
-
   // TO DO: separate out performance test
   class test_graph_traversals final : public performance_test
   {
