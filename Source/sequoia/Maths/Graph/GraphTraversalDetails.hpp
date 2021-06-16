@@ -75,8 +75,10 @@ namespace sequoia::maths
       return starting_index();
     }
 
-    constexpr void register_discovered()
+    template<class Bitset>
+    constexpr void register_discovered(Bitset& b, const std::size_t index)
     {
+      b[index] = true;
       ++m_NumDiscovered;
     }
 
@@ -112,7 +114,11 @@ namespace sequoia::maths
       return true;
     }
 
-    constexpr void register_discovered() noexcept {}
+    template<class Bitset>
+    constexpr void register_discovered(Bitset& b, const std::size_t index)
+    {
+      b[index] = true;
+    }
   };
 
   using find_disconnected_t = traversal_conditions<disconnected_discovery_mode::on>;
@@ -149,6 +155,8 @@ namespace sequoia::maths::graph_impl
   template<class Q> struct traversal_traits_base;
   template<network G, class Q> struct traversal_traits;
 
+  template<network G> struct traversal_tracking_traits;
+
   template<network G, class Compare>
   class node_comparer
   {
@@ -184,8 +192,6 @@ namespace sequoia::maths::graph_impl
 
       return false;
     }
-
-    constexpr void reset() noexcept {}
   };
 
   template<network G, graph_flavour GraphFlavour>
@@ -203,8 +209,6 @@ namespace sequoia::maths::graph_impl
       const auto dist{static_cast<index_type>(distance(begin, current))};
       return (current->complementary_index() < dist);
     }
-
-    constexpr void reset() noexcept {}
   };
 
   template<network G>
@@ -217,11 +221,6 @@ namespace sequoia::maths::graph_impl
     {
       m_Matched = !m_Matched;
       return m_Matched;
-    }
-
-    constexpr void reset() noexcept
-    {
-      m_Matched = true;
     }
   private:
     bool m_Matched{true};
@@ -271,114 +270,229 @@ namespace sequoia::maths::graph_impl
 
       if(conditions.starting_index() < graph.order())
       {
-        auto discovered{traversal_traits<G, Q>::make_bitset(graph)};
-        auto processed{traversal_traits<G, Q>::make_bitset(graph)};
+        auto discovered{traversal_tracking_traits<G>::make_bitset(graph)};
+        auto processed{traversal_tracking_traits<G>::make_bitset(graph)};
 
-        using namespace graph_impl;
         auto nodeIndexQueue{queue_constructor<G, Q>::make(graph)};
-        using container_type = decltype(nodeIndexQueue);
 
         do
         {
           const auto restartNode{static_cast<edge_index_type>(conditions.compute_restart_index(discovered))};
 
           nodeIndexQueue.push(restartNode);
-          discovered[restartNode] = true;
-          conditions.register_discovered();
+          conditions.register_discovered(discovered, restartNode);
 
           while(!nodeIndexQueue.empty())
           {
-            const auto nodeIndex{traversal_traits<G, container_type>::get_container_element(nodeIndexQueue)};
-
+            const auto nodeIndex{traversal_traits<G, Q>::get_container_element(nodeIndexQueue)};
             nodeIndexQueue.pop();
 
-            constexpr bool hasNodeBeforeFn{!same_as<std::remove_cvref_t<NBEF>, null_func_obj>};
-            if constexpr(hasNodeBeforeFn)
-            {
-              taskProcessingModel.push(nodeBeforeEdgesFn, nodeIndex);
-            }
+            auto onDiscovery{[&nodeIndexQueue](const edge_index_type nextNode) { nodeIndexQueue.push(nextNode); }};
 
-            m_Loops.reset();
-            for(auto iter{traversal_traits<G, container_type>::begin(graph, nodeIndex)}; iter != traversal_traits<G, container_type>::end(graph, nodeIndex); ++iter)
-            {
-              const auto nextNode{iter->target_node()};
-              constexpr bool hasEdgeFirstFn{!same_as<std::remove_cvref_t<EFTF>, null_func_obj>};
-
-              if constexpr(G::flavour != graph_flavour::directed)
-              {
-                if constexpr(G::flavour == graph_flavour::directed_embedded)
-                {
-                  if(is_loop(iter, nodeIndex))
-                  {
-                    const bool loopMatched{m_Loops.loop_matched(traversal_traits<G, container_type>::begin(graph, nodeIndex), iter)};
-                    if((iter->inverted() && !loopMatched) || (!iter->inverted() && loopMatched)) continue;
-                  }
-                  else
-                  {
-                    if(iter->source_node() != nodeIndex) continue;
-                  }
-
-                  if constexpr(hasEdgeFirstFn)
-                  {
-                    taskProcessingModel.push(edgeFirstTraversalFn, iter);
-                  }
-                }
-                else if constexpr(hasEdgeFirstFn || hasEdgeSecondFn)
-                {
-                  const bool loopMatched{is_loop(iter, nodeIndex) && m_Loops.loop_matched(traversal_traits<G, container_type>::begin(graph, nodeIndex), iter)};
-                  const bool secondTraversal{processed[nextNode] || loopMatched};
-                  if(secondTraversal)
-                  {
-                    if constexpr(hasEdgeSecondFn)
-                    {
-                      taskProcessingModel.push(edgeSecondTraversalFn, iter);
-                    }
-                  }
-                  else
-                  {
-                    if constexpr(hasEdgeFirstFn)
-                    {
-                      taskProcessingModel.push(edgeFirstTraversalFn, iter);
-                    }
-                  }
-                }
-              }
-              else if constexpr(hasEdgeFirstFn)
-              {
-                taskProcessingModel.push(edgeFirstTraversalFn, iter);
-              }
-
-              if(!discovered[nextNode])
-              {
-                nodeIndexQueue.push(nextNode);
-                discovered[nextNode] = true;
-                conditions.register_discovered();
-              }
-            }
-
-            if constexpr(!same_as<std::remove_cvref_t<NAEF>, null_func_obj>)
-            {
-              taskProcessingModel.push(nodeAfterEdgesFn, nodeIndex);
-            }
-
-            processed[nodeIndex] = true;
+            inner_loop(nodeIndex,
+                       conditions,
+                       traversal_traits<G, Q>::begin(graph, nodeIndex),
+                       traversal_traits<G, Q>::end(graph, nodeIndex),
+                       discovered,
+                       processed,
+                       onDiscovery,
+                       nodeBeforeEdgesFn,
+                       nodeAfterEdgesFn,
+                       edgeFirstTraversalFn,
+                       edgeSecondTraversalFn,
+                       taskProcessingModel);
           }
         } while(!conditions.terminate(graph.order()));
       }
 
       return taskProcessingModel.get();
     }
-    private:
-      [[no_unique_address]]
-      loop_processor<G> m_Loops;
 
+    template
+    <
+      disconnected_discovery_mode FindDisconnected,
+      class NBEF,
+      class NAEF,
+      class EFTF,
+      class ESTF,
+      class TaskProcessingModel
+    >
+      requires (invocable<NBEF, edge_index_type>)
+            && (invocable<NAEF, edge_index_type>)
+            && (invocable<EFTF, const_edge_iterator>)
+            && (invocable<ESTF, const_edge_iterator>)
+    constexpr auto recursive_dfs(const G& graph,
+                                 traversal_conditions<FindDisconnected> conditions,
+                                 NBEF&& nodeBeforeEdgesFn,
+                                 NAEF&& nodeAfterEdgesFn,
+                                 EFTF&& edgeFirstTraversalFn,
+                                 ESTF&& edgeSecondTraversalFn,
+                                 TaskProcessingModel&& taskProcessingModel)
+    {
+      // Note: do not forward any of the Fns as they could in principle end up repeatedly moved from.
+      // However, the Fns should not be captured by value as they may have mutable state with
+      // external visibility.
+
+      constexpr bool hasEdgeSecondFn{!same_as<std::remove_cvref_t<ESTF>, null_func_obj>};
+      static_assert(!directed(G::directedness) || !hasEdgeSecondFn,
+        "For a directed graph, edges are traversed only once: the edgeSecondTraversalFn is ignored and so should be the null_func_obj");
+
+      if(conditions.starting_index() < graph.order())
+      {
+        auto discovered{traversal_tracking_traits<G>::make_bitset(graph)};
+        auto processed{traversal_tracking_traits<G>::make_bitset(graph)};
+
+        do
+        {
+          const auto restartNode{static_cast<edge_index_type>(conditions.compute_restart_index(discovered))};
+          conditions.register_discovered(discovered, restartNode);
+
+          auto onDiscovery{
+            [&](const edge_index_type nextNode) {
+              recursive_dfs(graph,
+                            nextNode,
+                            conditions,
+                            graph.cbegin_edges(nextNode),
+                            graph.cend_edges(nextNode),
+                            discovered,
+                            processed,
+                            nodeBeforeEdgesFn,
+                            nodeAfterEdgesFn,
+                            edgeFirstTraversalFn,
+                            edgeSecondTraversalFn,
+                            taskProcessingModel);
+            }
+          };
+
+          inner_loop(restartNode,
+                     conditions,
+                     graph.cbegin_edges(restartNode),
+                     graph.cend_edges(restartNode),
+                     discovered,
+                     processed,
+                     onDiscovery,
+                     nodeBeforeEdgesFn,
+                     nodeAfterEdgesFn,
+                     edgeFirstTraversalFn,
+                     edgeSecondTraversalFn,
+                     taskProcessingModel);
+
+        } while(!conditions.terminate(graph.order()));
+      }
+
+      return taskProcessingModel.get();
+    }
+    private:
       template<class Iter>
       [[nodiscard]]
-      constexpr static bool is_loop(Iter iter, [[maybe_unused]] const edge_index_type currentNodeIndex) {
+      constexpr static bool is_loop(Iter iter, [[maybe_unused]] const edge_index_type currentNodeIndex)
+      {
         if constexpr(G::flavour == graph_flavour::directed_embedded)
           return iter->target_node() == iter->source_node();
         else
           return iter->target_node() == currentNodeIndex;
+      }
+
+      template
+      <
+        disconnected_discovery_mode FindDisconnected,
+        class Iter,
+        class Bitset,
+        class OnDiscovery,
+        class NBEF,
+        class NAEF,
+        class EFTF,
+        class ESTF,
+        class TaskProcessingModel
+      >
+        requires (invocable<NBEF, edge_index_type>)
+              && (invocable<NAEF, edge_index_type>)
+              && (invocable<EFTF, const_edge_iterator>)
+              && (invocable<ESTF, const_edge_iterator>)
+              && (invocable<OnDiscovery, edge_index_type>)
+        constexpr void inner_loop(const edge_index_type nodeIndex,
+                                  traversal_conditions<FindDisconnected>& conditions,
+                                  Iter begin,
+                                  Iter end,
+                                  Bitset& discovered,
+                                  Bitset& processed,
+                                  OnDiscovery onDiscovery,
+                                  NBEF&& nodeBeforeEdgesFn,
+                                  NAEF&& nodeAfterEdgesFn,
+                                  EFTF&& edgeFirstTraversalFn,
+                                  ESTF&& edgeSecondTraversalFn,
+                                  TaskProcessingModel&& taskProcessingModel)
+      {
+        constexpr bool hasNodeBeforeFn{!same_as<std::remove_cvref_t<NBEF>, null_func_obj>};
+        if constexpr(hasNodeBeforeFn)
+        {
+          taskProcessingModel.push(nodeBeforeEdgesFn, nodeIndex);
+        }
+
+        [[maybe_unused]] loop_processor<G> loops{};
+        for(auto iter{begin}; iter != end; ++iter)
+        {
+          const auto nextNode{iter->target_node()};
+          constexpr bool hasEdgeFirstFn{!same_as<std::remove_cvref_t<EFTF>, null_func_obj>};
+
+          if constexpr(G::flavour != graph_flavour::directed)
+          {
+            constexpr bool hasEdgeSecondFn{!same_as<std::remove_cvref_t<ESTF>, null_func_obj>};
+            if constexpr(G::flavour == graph_flavour::directed_embedded)
+            {
+              if(is_loop(iter, nodeIndex))
+              {
+                const bool loopMatched{loops.loop_matched(begin, iter)};
+                if((iter->inverted() && !loopMatched) || (!iter->inverted() && loopMatched)) continue;
+              }
+              else
+              {
+                if(iter->source_node() != nodeIndex) continue;
+              }
+
+              if constexpr(hasEdgeFirstFn)
+              {
+                taskProcessingModel.push(edgeFirstTraversalFn, iter);
+              }
+            }
+            else if constexpr(hasEdgeFirstFn || hasEdgeSecondFn)
+            {
+              const bool loopMatched{is_loop(iter, nodeIndex) && loops.loop_matched(begin, iter)};
+              const bool secondTraversal{processed[nextNode] || loopMatched};
+              if(secondTraversal)
+              {
+                if constexpr(hasEdgeSecondFn)
+                {
+                  taskProcessingModel.push(edgeSecondTraversalFn, iter);
+                }
+              }
+              else
+              {
+                if constexpr(hasEdgeFirstFn)
+                {
+                  taskProcessingModel.push(edgeFirstTraversalFn, iter);
+                }
+              }
+            }
+          }
+          else if constexpr(hasEdgeFirstFn)
+          {
+            taskProcessingModel.push(edgeFirstTraversalFn, iter);
+          }
+
+          if(!discovered[nextNode])
+          {
+            conditions.register_discovered(discovered, nextNode);
+            onDiscovery(nextNode);
+          }
+        }
+
+        if constexpr(!same_as<std::remove_cvref_t<NAEF>, null_func_obj>)
+        {
+          taskProcessingModel.push(nodeAfterEdgesFn, nodeIndex);
+        }
+
+        processed[nodeIndex] = true;
       }
   };
 }

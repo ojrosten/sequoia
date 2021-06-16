@@ -19,6 +19,17 @@
 
 namespace sequoia::maths::graph_impl
 {
+  template<static_network G> struct traversal_tracking_traits<G>
+  {
+    using bitset = std::array<bool, G::order()>;
+
+    [[nodiscard]]
+    constexpr static bitset make_bitset(const G&)
+    {
+      return bitset{};
+    }
+  };
+
   template<integral IndexType, std::size_t MaxDepth, class Compare> struct traversal_traits_base<data_structures::static_priority_queue<IndexType, MaxDepth, Compare>>
   {
     [[nodiscard]]
@@ -70,14 +81,6 @@ namespace sequoia::maths::graph_impl
     constexpr static auto end(const G& graph, const typename G::edge_index_type nodeIndex)
     {
       return iterator_getter<traversal_traits_base<Q>::uses_forward_iterator()>::end(graph, nodeIndex);
-    }
-
-    using bitset = std::array<bool, G::order()>;
-
-    [[nodiscard]]
-    constexpr static bitset make_bitset(const G&)
-    {
-      return bitset{};
     }
   };
 

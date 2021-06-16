@@ -19,6 +19,17 @@
 
 namespace sequoia::maths::graph_impl
 {
+  template<dynamic_network G> struct traversal_tracking_traits<G>
+  {
+    using bitset = std::vector<bool>;
+
+    [[nodiscard]]
+    static bitset make_bitset(const G& g)
+    {
+      return bitset(g.order(), false);
+    }
+  };
+
   template<class Container, class Compare>
   struct traversal_traits_base<std::priority_queue<std::size_t, Container, Compare>>
   {
@@ -65,14 +76,6 @@ namespace sequoia::maths::graph_impl
     static auto end(const G& graph, const std::size_t nodeIndex)
     {
       return iterator_getter<traversal_traits_base<Q>::uses_forward_iterator()>::end(graph, nodeIndex);
-    }
-
-    using bitset = std::vector<bool>;
-
-    [[nodiscard]]
-    static bitset make_bitset(const G& g)
-    {
-      return bitset(g.order(), false);
     }
   };
 
