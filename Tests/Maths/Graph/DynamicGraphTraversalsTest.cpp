@@ -320,10 +320,7 @@ namespace sequoia::testing
     check(LINE(make_message("No nodes to discover")), order.empty());
     check_equality(LINE(make_message("")), order, order2);
     check(LINE(make_message("No edges to discover")), edgeOrder.empty());
-    if constexpr(undirected)
-    {
-      check_equality(LINE(make_message("")), edgeDiscovery.visitation_order(), edge_results{});
-    }
+    check_equality(LINE(make_message("")), edgeDiscovery.visitation_order(), edge_results{});
 
     check_equality(LINE(make_message("First node added")), g.add_node(), 0_sz);
     // 0
@@ -347,7 +344,7 @@ namespace sequoia::testing
     }
     check_equality(LINE(make_message("")), order, order2);
     check(LINE(make_message("No edges to discover")), edgeOrder.empty());
-    if constexpr(undirected)
+    //if constexpr(undirected)
     {
       check_equality(LINE(make_message("")), edgeDiscovery.visitation_order(), edge_results{});
     }
@@ -378,7 +375,7 @@ namespace sequoia::testing
 
     check_equality(LINE(make_message("")), order, order2);
     check(LINE(make_message("No edges to discover")), edgeOrder.empty());
-    if constexpr(undirected)
+    //if constexpr(undirected)
     {
       check_equality(LINE(make_message("")), edgeDiscovery.visitation_order(), edge_results{});
     }
@@ -406,7 +403,7 @@ namespace sequoia::testing
     }
     check_equality(LINE(make_message("")), order, order2);
     check(LINE(make_message("No edges to discover")), edgeOrder.empty());
-    if constexpr(undirected)
+    //if constexpr(undirected)
     {
       check_equality(LINE(make_message("")), edgeDiscovery.visitation_order(), edge_results{});
     }
@@ -431,7 +428,7 @@ namespace sequoia::testing
     }
     check_equality(LINE(make_message("")), order, order2);
     check(LINE(make_message("No edges to discover")), edgeOrder.empty());
-    if constexpr(undirected)
+    //if constexpr(undirected)
     {
       check_equality(LINE(make_message("")), edgeDiscovery.visitation_order(), edge_results{});
     }
