@@ -289,15 +289,12 @@ namespace sequoia::testing
   void test_graph_traversals::tracker_test()
   {
     using namespace maths;
+    using TraversalType = traversal_constant<Traverser::flavour>;
 
     constexpr auto GraphFlavour{Graph::flavour};
     constexpr bool mutualInfo{mutual_info(GraphFlavour)};
     constexpr bool undirected{maths::undirected(GraphFlavour)};
-
-    using TraversalType = traversal_constant<Traverser::flavour>;
     constexpr bool isBFS{Traverser::flavour == traversal_flavour::BFS};
-
-    const std::string iterDescription{Traverser::iterator_description()};
     constexpr bool forwardIter{Traverser::uses_forward_iterator()};
 
     auto make_message{
@@ -422,9 +419,9 @@ namespace sequoia::testing
       }
       else
       {
-        check_equivalence(make_message("One node to discover"), nodeDiscovery1, std::vector<std::size_t>{2});
-        check_equivalence(make_message("One node to discover"), nodeDiscovery2, std::vector<std::size_t>{2});
-        check_equivalence(make_message("No edges to discover"), edgeDiscovery1, edge_results{});
+        check_equivalence(LINE(make_message("One node to discover")), nodeDiscovery1, std::vector<std::size_t>{2});
+        check_equivalence(LINE(make_message("One node to discover")), nodeDiscovery2, std::vector<std::size_t>{2});
+        check_equivalence(LINE(make_message("No edges to discover")), edgeDiscovery1, edge_results{});
       }
     }
 
