@@ -70,13 +70,24 @@ namespace sequoia::testing
     static std::string iterator_description() noexcept { return "forward"; }
   };
 
-
   class node_tracker
   {
   public:
     void clear() noexcept { m_Order.clear(); }
 
     void operator()(const std::size_t index) { m_Order.push_back(index); }
+
+    [[nodiscard]]
+    auto begin() const noexcept
+    {
+      return m_Order.begin();
+    }
+
+    [[nodiscard]]
+    auto end() const noexcept
+    {
+      return m_Order.end();
+    }
 
     [[nodiscard]]
     const std::vector<std::size_t>& visitation_order() const noexcept { return m_Order; }
@@ -101,6 +112,18 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
+    auto begin() const noexcept
+    {
+      return m_Order.begin();
+    }
+
+    [[nodiscard]]
+    auto end() const noexcept
+    {
+      return m_Order.end();
+    }
+
+    [[nodiscard]]
     const result_type& visitation_order() const noexcept { return m_Order; }
   private:
     result_type m_Order;
@@ -114,6 +137,29 @@ namespace sequoia::testing
     template<class I> [[nodiscard]] auto dist(bfs_type, I iter)
     {
       return distance(m_Graph.cbegin_edges(iter.partition_index()), iter);
+    }
+  };
+
+  template<>
+  struct equivalence_checker<node_tracker>
+  {
+    template<test_mode Mode>
+    static void check(test_logger<Mode>& logger, const node_tracker& tracker, const std::vector<std::size_t>& prediction)
+    {
+      check_range("Visitation Order", logger, tracker.begin(), tracker.end(), prediction.begin(), prediction.end());
+    }
+  };
+
+  template<maths::network G, traversal_flavour Flavour>
+  struct equivalence_checker<edge_tracker<G, Flavour>>
+  {
+    using type = edge_tracker<G, Flavour>;
+    using prediction_type = typename type::result_type;
+
+    template<test_mode Mode>
+    static void check(test_logger<Mode>& logger, const type& tracker, const prediction_type& prediction)
+    {
+      check_range("Visitation Order", logger, tracker.begin(), tracker.end(), prediction.begin(), prediction.end());
     }
   };
 }

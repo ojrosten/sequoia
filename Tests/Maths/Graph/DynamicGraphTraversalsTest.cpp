@@ -323,6 +323,14 @@ namespace sequoia::testing
     auto order2 = discovery2.visitation_order();
     auto edgeOrder = edgeDiscovery.visitation_order();
 
+    check_equivalence(make_message("No nodes to discover"), discovery, std::vector<std::size_t>{});
+    check_equivalence(make_message("No nodes to discover"), discovery2, std::vector<std::size_t>{});
+    check_equivalence(make_message("No edges to discover"), edgeDiscovery, edge_results{});
+    if constexpr(undirected)
+    {
+      check_equivalence(make_message("No edges to discover"), edgeDiscovery2, edge_results{});
+    }
+
     check(LINE(make_message("No nodes to discover")), order.empty());
     check_equality(LINE(make_message("")), order, order2);
     check(LINE(make_message("No edges to discover")), edgeOrder.empty());
