@@ -548,8 +548,7 @@ namespace sequoia::testing
     node_tracker tracker;
     maths::priority_search(graph, maths::ignore_disconnected_t{}, tracker);
 
-    auto order = tracker.visitation_order();
-    check_equality(LINE(""), order, std::vector<std::size_t>{0,2,4,3,6,1,5});
+    check_equivalence(LINE(""), tracker, std::vector<std::size_t>{0,2,4,3,6,1,5});
   }
 
   //=============================== Weighted BFS  ===============================//

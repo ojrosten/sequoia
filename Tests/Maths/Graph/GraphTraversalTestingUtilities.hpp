@@ -88,9 +88,6 @@ namespace sequoia::testing
     {
       return m_Order.end();
     }
-
-    [[nodiscard]]
-    const std::vector<std::size_t>& visitation_order() const noexcept { return m_Order; }
   private:
     std::vector<std::size_t> m_Order;
   };
@@ -122,9 +119,6 @@ namespace sequoia::testing
     {
       return m_Order.end();
     }
-
-    [[nodiscard]]
-    const result_type& visitation_order() const noexcept { return m_Order; }
   private:
     result_type m_Order;
     const G& m_Graph;
