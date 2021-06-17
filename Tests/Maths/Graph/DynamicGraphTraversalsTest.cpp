@@ -16,7 +16,6 @@ namespace sequoia::testing
   {
     using edge_results = std::vector<std::pair<std::size_t, std::size_t>>;
 
-
     class node_tracker
     {
     public:
@@ -42,7 +41,7 @@ namespace sequoia::testing
 
       template<class I> void operator()(I iter)
       {
-        const auto pos = dist(typename std::is_same<typename T::type, DFS>::type(), iter);
+        const auto pos{dist(traversal_constant<T::flavour>{}, iter)};
         m_Order.emplace_back(iter.partition_index(), static_cast<std::size_t>(pos));
       }
 
@@ -52,12 +51,12 @@ namespace sequoia::testing
       result_type m_Order;
       const G& m_Graph;
 
-      template<class I> [[nodiscard]] auto dist(std::true_type, I iter)
+      template<class I> [[nodiscard]] auto dist(pdfs_type, I iter)
       {
         return distance(m_Graph.crbegin_edges(iter.partition_index()), iter);
       }
 
-      template<class I> [[nodiscard]] auto dist(std::false_type, I iter)
+      template<class I> [[nodiscard]] auto dist(bfs_type, I iter)
       {
         return distance(m_Graph.cbegin_edges(iter.partition_index()), iter);
       }
@@ -75,6 +74,177 @@ namespace sequoia::testing
     {
       f.clear();
       clear(fn...);
+    }
+
+    template<class Traverser, class G, maths::disconnected_discovery_mode Mode, class... Fn>
+    void traverse_graph(const G& g, const maths::traversal_conditions<Mode> conditions, Fn&&... fn)
+    {
+      clear(std::forward<Fn>(fn)...);
+      Traverser::traverse(g, conditions, std::forward<Fn>(fn)...);
+    }
+
+    template<maths::dynamic_network Graph>
+    [[nodiscard]]
+    Graph generate_weighted_bfs_test_graph()
+    {
+      Graph graph;
+
+      std::size_t depth{};
+      int value = 1;
+      std::queue<std::size_t> parents;
+      parents.push(graph.add_node(value));
+
+      //    0
+      //   / \
+      //  0   0
+      //  /\
+      // 0  0
+
+      auto add_daughters{
+        [&graph](const std::size_t index, std::pair<int, int> values)
+          -> std::pair<std::size_t, std::size_t> {
+          const std::size_t index0{graph.add_node(values.first)};
+          const std::size_t index1{graph.add_node(values.second)};
+
+          graph.join(index, index0);
+          graph.join(index, index1);
+
+          return std::make_pair(index0, index1);
+        }
+      };
+
+      while(depth < 2)
+      {
+        ++value;
+        const auto node = parents.front();
+        auto daughters = add_daughters(node, std::make_pair(value, value));
+
+        parents.pop();
+        parents.push(daughters.first);
+        parents.push(daughters.second);
+        ++depth;
+      }
+
+      return graph;
+    }
+
+
+    template<maths::dynamic_network Graph>
+    Graph generate_priority_test_graph()
+    {
+      Graph graph;
+
+      graph.add_node(1);
+      graph.add_node(5);
+      graph.add_node(10);
+      graph.add_node(7);
+      graph.add_node(8);
+      graph.add_node(4);
+      graph.add_node(6);
+
+      graph.join(0, 1);
+      graph.join(0, 2);
+      graph.join(0, 3);
+      graph.join(0, 4);
+      graph.join(3, 5);
+      graph.join(3, 6);
+
+      //     1
+      //     |
+      // --------
+      // |  | | |
+      // 5 10 7 8
+      //     /\
+      //    4  6
+
+      return graph;
+    }
+
+    template<class ProcessingModel, maths::dynamic_network Graph, class... Args>
+    [[nodiscard]]
+    std::vector<int> task(Graph& graph, const int upper, const bool early, const std::chrono::microseconds pause, Args&&... args)
+    {
+      auto fn = [upper, pause](const std::size_t index) {
+        std::this_thread::sleep_for(pause);
+        const auto n{upper + static_cast<int>(index)};
+        return n * (n + 1) / 2;
+      };
+
+      using namespace maths;
+      if constexpr(Graph::directedness == directed_flavour::directed)
+      {
+        return early
+          ? breadth_first_search(graph, ignore_disconnected_t{}, fn, null_func_obj{}, null_func_obj{}, ProcessingModel{std::forward<Args>(args)...})
+          : breadth_first_search(graph, ignore_disconnected_t{}, null_func_obj{}, fn, null_func_obj{}, ProcessingModel{std::forward<Args>(args)...});
+      }
+      else
+      {
+        return early
+          ? breadth_first_search(graph, ignore_disconnected_t{}, fn, null_func_obj{}, null_func_obj{}, null_func_obj{}, ProcessingModel{std::forward<Args>(args)...})
+          : breadth_first_search(graph, ignore_disconnected_t{}, null_func_obj{}, fn, null_func_obj{}, null_func_obj{}, ProcessingModel{std::forward<Args>(args)...});
+      }
+    }
+
+    template<class ProcessingModel, maths::dynamic_network Graph, class... Args>
+    [[nodiscard]]
+    std::vector<int> edge_first_traversal_task(Graph& graph, const int upper, Args&&... args)
+    {
+      auto fn = [upper](auto edgeIter) {
+        const auto n{upper - static_cast<int>(edgeIter.partition_index())};
+        return n * (n + 1) / 2;
+      };
+
+      using namespace maths;
+      if constexpr(Graph::directedness == maths::directed_flavour::directed)
+      {
+        return breadth_first_search(graph, ignore_disconnected_t{}, null_func_obj{}, null_func_obj{}, fn, ProcessingModel{std::forward<Args>(args)...});
+      }
+      else
+      {
+        return breadth_first_search(graph, ignore_disconnected_t{}, null_func_obj{}, null_func_obj{}, fn, null_func_obj{}, ProcessingModel{std::forward<Args>(args)...});
+      }
+    }
+
+    template<class ProcessingModel, maths::dynamic_network Graph, class... Args>
+    [[nodiscard]]
+    std::vector<int> edge_second_traversal_task(Graph& graph, const int upper, Args&&... args)
+    {
+      auto fn = [upper](auto edgeIter) {
+        const auto n{upper - static_cast<int>(edgeIter.partition_index())};
+        return n * (n + 1) / 2;
+      };
+
+      using namespace maths;
+      return breadth_first_search(graph, ignore_disconnected_t{}, null_func_obj{}, null_func_obj{}, null_func_obj{}, fn, ProcessingModel{std::forward<Args>(args)...});
+    }
+
+    [[nodiscard]]
+    std::vector<int> node_task_answers(const int upper)
+    {
+      std::vector<int> answers;
+      int shift = 0;
+      for(int i = 0; i < 5; ++i)
+      {
+        answers.push_back((upper + shift) * (upper + shift + 1) / 2);
+        ++shift;
+      }
+
+      return answers;
+    }
+
+    [[nodiscard]]
+    std::vector<int> edge_task_answers(const int upper)
+    {
+      std::vector<int> answers;
+
+      int shift = 0;
+      for(int i = 0; i < 4; ++i)
+      {
+        if(i == 2) --shift;
+        answers.push_back((upper + shift) * (upper + shift + 1) / 2);
+      }
+
+      return answers;
     }
   }
 
@@ -115,8 +285,8 @@ namespace sequoia::testing
     using NSTraits = NodeWeightStorageTraits;
     using graph_type = graph_type_generator_t<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, ESTraits, NSTraits>;
 
-    tracker_test<graph_type, Traverser<BFS>>();
-    tracker_test<graph_type, Traverser<DFS>>();
+    tracker_test<graph_type, Traverser<traversal_flavour::BFS>>();
+    tracker_test<graph_type, Traverser<traversal_flavour::PDFS>>();
 
     if constexpr(!std::is_empty_v<NodeWeight>)
     {
@@ -158,17 +328,17 @@ namespace sequoia::testing
 
   //=============================== Tracker Test ===============================//
 
-  template<class Graph, class Traverser>
+  template<maths::dynamic_network Graph, class Traverser>
   void test_graph_traversals::tracker_test()
   {
     using namespace maths;
 
     constexpr auto GraphFlavour{Graph::flavour};
-    constexpr bool isBFS{std::is_same<typename Traverser::type, BFS>::value};
     constexpr bool mutualInfo{mutual_info(GraphFlavour)};
     constexpr bool undirected{maths::undirected(GraphFlavour)};
 
-    using TraversalType = std::bool_constant<isBFS>;
+    using TraversalType = traversal_constant<Traverser::flavour>;
+    constexpr bool isBFS{Traverser::flavour == traversal_flavour::BFS};
 
     const std::string iterDescription{Traverser::iterator_description()};
     constexpr bool forwardIter{Traverser::uses_forward_iterator()};
@@ -534,7 +704,7 @@ namespace sequoia::testing
 
 
   template<class NTracker, class ETracker, class ETracker2>
-  void test_graph_traversals::test_square_graph(const NTracker& tracker, const ETracker& eTracker, const ETracker2& eTracker2, const std::size_t start, const bool, std::true_type)
+  void test_graph_traversals::test_square_graph(const NTracker& tracker, const ETracker& eTracker, const ETracker2& eTracker2, const std::size_t start, const bool, bfs_type)
   {
     std::vector<std::size_t> expected;
     edge_results edgeAnswers, edgeAnswers2;
@@ -556,7 +726,7 @@ namespace sequoia::testing
   }
 
   template<class NTracker, class ETracker>
-  void test_graph_traversals::test_square_graph(const NTracker& tracker, const ETracker& eTracker, const std::size_t start, const bool mutualInfo, std::true_type)
+  void test_graph_traversals::test_square_graph(const NTracker& tracker, const ETracker& eTracker, const std::size_t start, const bool mutualInfo, bfs_type)
   {
     std::vector<std::size_t> expected;
     edge_results edgeAnswers;
@@ -575,7 +745,7 @@ namespace sequoia::testing
   }
 
   template<class NTracker, class ETracker, class ETracker2>
-  void test_graph_traversals::test_square_graph(const NTracker& tracker, const ETracker& eTracker, const ETracker2& eTracker2, const std::size_t start, const bool, std::false_type)
+  void test_graph_traversals::test_square_graph(const NTracker& tracker, const ETracker& eTracker, const ETracker2& eTracker2, const std::size_t start, const bool, pdfs_type)
   {
     std::vector<std::size_t> expected;
     edge_results edgeAnswers, edgeAnswers2;
@@ -597,7 +767,7 @@ namespace sequoia::testing
   }
 
   template<class NTracker, class ETracker>
-  void test_graph_traversals::test_square_graph(const NTracker& tracker, const ETracker& eTracker, const std::size_t start, const bool mutualInfo, std::false_type)
+  void test_graph_traversals::test_square_graph(const NTracker& tracker, const ETracker& eTracker, const std::size_t start, const bool mutualInfo, pdfs_type)
   {
     std::vector<std::size_t> expected;
     edge_results edgeAnswers;
@@ -617,7 +787,7 @@ namespace sequoia::testing
 
   //=============================== Priority Search  ===============================//
 
-  template<class Graph>
+  template<maths::dynamic_network Graph>
   void test_graph_traversals::test_priority_traversal()
   {
     auto graph{generate_priority_test_graph<Graph>()};
@@ -629,50 +799,21 @@ namespace sequoia::testing
     check_equality(LINE(""), order, std::vector<std::size_t>{0,2,4,3,6,1,5});
   }
 
-  template<class Graph>
-  Graph test_graph_traversals::generate_priority_test_graph()
-  {
-    Graph graph;
-
-    graph.add_node(1);
-    graph.add_node(5);
-    graph.add_node(10);
-    graph.add_node(7);
-    graph.add_node(8);
-    graph.add_node(4);
-    graph.add_node(6);
-
-    graph.join(0,1);
-    graph.join(0,2);
-    graph.join(0,3);
-    graph.join(0,4);
-    graph.join(3,5);
-    graph.join(3,6);
-
-    //     1
-    //     |
-    // --------
-    // |  | | |
-    // 5 10 7 8
-    //     /\
-    //    4  6
-
-    return graph;
-  }
-
   //=============================== Weighted BFS  ===============================//
 
-  template<class Graph>
+  template<maths::dynamic_network Graph>
   void test_graph_traversals::test_weighted_BFS_tasks()
   {
-    using UndirectedType = std::bool_constant<maths::undirected(Graph::flavour)>;
-
     test_node_and_first_edge_traversal<Graph>();
-    test_edge_second_traversal<Graph>(UndirectedType());
+
+    if constexpr(maths::undirected(Graph::flavour))
+    {
+      test_edge_second_traversal<Graph>();
+    }
   }
 
-  template<class Graph>
-  void test_graph_traversals::test_edge_second_traversal(std::true_type)
+  template<maths::dynamic_network Graph>
+  void test_graph_traversals::test_edge_second_traversal()
   {
     auto graph{generate_weighted_bfs_test_graph<Graph>()};
 
@@ -715,7 +856,7 @@ namespace sequoia::testing
     check_equality(LINE("Pool edge first task expected"), poolResults, expected);
   }
 
-  template<class Graph>
+  template<maths::dynamic_network Graph>
   void test_graph_traversals::test_node_and_first_edge_traversal()
   {
     auto graph{generate_weighted_bfs_test_graph<Graph>()};
@@ -799,137 +940,5 @@ namespace sequoia::testing
       check_relative_performance(LINE("Null versus async check"), asyncFn, serialFn, 2.0, 5.0);
       check_relative_performance(LINE("Null versus pool check"), poolFn, serialFn, 2.0, 5.0);
     }
-  }
-
-  template<class ProcessingModel, class Graph, class... Args>
-  [[nodiscard]]
-  std::vector<int> test_graph_traversals::task(Graph& graph, const int upper, const bool early, const std::chrono::microseconds pause, Args&&... args)
-  {
-    auto fn = [upper, pause](const std::size_t index) {
-      std::this_thread::sleep_for(pause);
-      const auto n{upper + static_cast<int>(index)};
-      return n * (n + 1) /2;
-    };
-
-    using namespace maths;
-    if constexpr(Graph::directedness == directed_flavour::directed)
-    {
-      return early
-        ? breadth_first_search(graph, ignore_disconnected_t{}, fn, null_func_obj{}, null_func_obj{}, ProcessingModel{std::forward<Args>(args)...})
-        : breadth_first_search(graph, ignore_disconnected_t{}, null_func_obj{}, fn, null_func_obj{}, ProcessingModel{std::forward<Args>(args)...});
-    }
-    else
-    {
-      return early
-        ? breadth_first_search(graph, ignore_disconnected_t{}, fn, null_func_obj{}, null_func_obj{}, null_func_obj{}, ProcessingModel{std::forward<Args>(args)...})
-        : breadth_first_search(graph, ignore_disconnected_t{}, null_func_obj{}, fn, null_func_obj{}, null_func_obj{}, ProcessingModel{std::forward<Args>(args)...});
-    }
-  }
-
-  template<class ProcessingModel, class Graph, class... Args>
-  [[nodiscard]]
-  std::vector<int>test_graph_traversals::edge_first_traversal_task(Graph& graph, const int upper, Args&&... args)
-  {
-    auto fn = [upper](auto edgeIter) {
-      const auto n{upper - static_cast<int>(edgeIter.partition_index())};
-      return n*(n+1)/2;
-    };
-
-    using namespace maths;
-    if constexpr(Graph::directedness == maths::directed_flavour::directed)
-    {
-      return breadth_first_search(graph, ignore_disconnected_t{}, null_func_obj{}, null_func_obj{}, fn, ProcessingModel{std::forward<Args>(args)...});
-    }
-    else
-    {
-      return breadth_first_search(graph, ignore_disconnected_t{}, null_func_obj{}, null_func_obj{}, fn, null_func_obj{}, ProcessingModel{std::forward<Args>(args)...});
-    }
-  }
-
-  template<class ProcessingModel, class Graph, class... Args>
-  [[nodiscard]]
-  std::vector<int> test_graph_traversals::edge_second_traversal_task(Graph& graph, const int upper, Args&&... args)
-  {
-    auto fn = [upper](auto edgeIter) {
-      const auto n{upper - static_cast<int>(edgeIter.partition_index())};
-      return n*(n+1)/2;
-    };
-
-    using namespace maths;
-    return breadth_first_search(graph, ignore_disconnected_t{}, null_func_obj{}, null_func_obj{}, null_func_obj{}, fn, ProcessingModel{std::forward<Args>(args)...});
-  }
-
-  template<class Graph>
-  [[nodiscard]]
-  Graph test_graph_traversals::generate_weighted_bfs_test_graph()
-  {
-    Graph graph;
-
-    std::size_t depth{};
-    int value = 1;
-    std::queue<std::size_t> parents;
-    parents.push(graph.add_node(value));
-
-    //    0
-    //   / \
-    //  0   0
-    //  /\
-    // 0  0
-
-    auto add_daughters{
-      [&graph](const std::size_t index, std::pair<int, int> values)
-        -> std::pair<std::size_t, std::size_t> {
-        const std::size_t index0{graph.add_node(values.first)};
-        const std::size_t index1{graph.add_node(values.second)};
-
-        graph.join(index, index0);
-        graph.join(index, index1);
-
-        return std::make_pair(index0, index1);
-      }
-    };
-
-    while(depth < 2)
-    {
-      ++value;
-      const auto node = parents.front();
-      auto daughters = add_daughters(node, std::make_pair(value, value));
-
-      parents.pop();
-      parents.push(daughters.first);
-      parents.push(daughters.second);
-      ++depth;
-    }
-
-    return graph;
-  }
-
-  [[nodiscard]]
-  std::vector<int> test_graph_traversals::node_task_answers(const int upper)
-  {
-    std::vector<int> answers;
-    int shift = 0;
-    for(int i=0; i < 5; ++i)
-      {
-        answers.push_back((upper + shift)*(upper + shift + 1) / 2);
-        ++shift;
-      }
-
-    return answers;
-  }
-
-  [[nodiscard]]
-  std::vector<int> test_graph_traversals::edge_task_answers(const int upper)
-  {
-    std::vector<int> answers;
-
-    int shift = 0;
-    for(int i=0; i < 4; ++i)
-      {
-        if(i == 2) --shift;
-        answers.push_back((upper + shift)*(upper + shift + 1) / 2);
-      }
-
-    return answers;
   }
 }
