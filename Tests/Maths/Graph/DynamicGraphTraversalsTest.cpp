@@ -615,7 +615,7 @@ namespace sequoia::testing
     {
       if constexpr(undirected)
       {
-        test_square_graph(discovery, edgeDiscovery, edgeDiscovery2, 0, mutualInfo, TraversalType{});
+        test_square_graph(discovery, edgeDiscovery, edgeDiscovery2, 0, TraversalType{});
       }
       else
       {
@@ -642,7 +642,7 @@ namespace sequoia::testing
     {
       if constexpr(undirected)
       {
-        test_square_graph(discovery, edgeDiscovery, edgeDiscovery2, 2, mutualInfo, TraversalType{});
+        test_square_graph(discovery, edgeDiscovery, edgeDiscovery2, 2, TraversalType{});
       }
       else
       {
@@ -654,10 +654,10 @@ namespace sequoia::testing
   }
 
 
-  template<class ETracker, class ETracker2>
-  void test_graph_traversals::test_square_graph(const node_tracker& tracker, const ETracker& eTracker, const ETracker2& eTracker2, const std::size_t start, const bool, bfs_type)
+  template<maths::network G, traversal_flavour Flavour>
+  void test_graph_traversals::test_square_graph(const node_tracker& tracker, const edge_tracker<G, Flavour>& eTracker, const edge_tracker<G, Flavour>& eTracker2, const std::size_t start, bfs_type)
   {
-    using edge_results = typename ETracker::result_type;
+    using edge_results = typename edge_tracker<G, Flavour>::result_type;
     std::vector<std::size_t> expected;
     edge_results edgeAnswers, edgeAnswers2;
     if(start == 0)
@@ -677,10 +677,10 @@ namespace sequoia::testing
     check_equality(LINE("Second edge traversal"), eTracker2.visitation_order(), edgeAnswers2);
   }
 
-  template<class ETracker>
-  void test_graph_traversals::test_square_graph(const node_tracker& tracker, const ETracker& eTracker, const std::size_t start, const bool mutualInfo, bfs_type)
+  template<maths::network G, traversal_flavour Flavour>
+  void test_graph_traversals::test_square_graph(const node_tracker& tracker, const edge_tracker<G, Flavour>& eTracker, const std::size_t start, const bool mutualInfo, bfs_type)
   {
-    using edge_results = typename ETracker::result_type;
+    using edge_results = typename edge_tracker<G, Flavour>::result_type;
     std::vector<std::size_t> expected;
     edge_results edgeAnswers;
     if(start == 0)
@@ -697,10 +697,10 @@ namespace sequoia::testing
     check_equality(LINE("First edge traversal, start = " + std::to_string(start) + " "), eTracker.visitation_order(), edgeAnswers);
   }
 
-  template<class ETracker, class ETracker2>
-  void test_graph_traversals::test_square_graph(const node_tracker& tracker, const ETracker& eTracker, const ETracker2& eTracker2, const std::size_t start, const bool, pdfs_type)
+  template<maths::network G, traversal_flavour Flavour>
+  void test_graph_traversals::test_square_graph(const node_tracker& tracker, const edge_tracker<G, Flavour>& eTracker, const edge_tracker<G, Flavour>& eTracker2, const std::size_t start, pdfs_type)
   {
-    using edge_results = typename ETracker::result_type;
+    using edge_results = typename edge_tracker<G, Flavour>::result_type;
     std::vector<std::size_t> expected;
     edge_results edgeAnswers, edgeAnswers2;
     if(start == 0)
@@ -720,10 +720,10 @@ namespace sequoia::testing
     check_equality(LINE("Second edge traversal"), eTracker2.visitation_order(), edgeAnswers2);
   }
 
-  template<class ETracker>
-  void test_graph_traversals::test_square_graph(const node_tracker& tracker, const ETracker& eTracker, const std::size_t start, const bool mutualInfo, pdfs_type)
+  template<maths::network G, traversal_flavour Flavour>
+  void test_graph_traversals::test_square_graph(const node_tracker& tracker, const edge_tracker<G, Flavour>& eTracker, const std::size_t start, const bool mutualInfo, pdfs_type)
   {
-    using edge_results = typename ETracker::result_type;
+    using edge_results = typename edge_tracker<G, Flavour>::result_type;
     std::vector<std::size_t> expected;
     edge_results edgeAnswers;
     if(start == 0)
