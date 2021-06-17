@@ -654,7 +654,7 @@ namespace sequoia::testing
   }
 
 
-  template<maths::network G, traversal_flavour Flavour>
+  template<maths::dynamic_network G, traversal_flavour Flavour>
   void test_graph_traversals::test_square_graph(const node_tracker& tracker, const edge_tracker<G, Flavour>& eTracker, const edge_tracker<G, Flavour>& eTracker2, const std::size_t start, bfs_type)
   {
     using edge_results = typename edge_tracker<G, Flavour>::result_type;
@@ -677,7 +677,7 @@ namespace sequoia::testing
     check_equality(LINE("Second edge traversal"), eTracker2.visitation_order(), edgeAnswers2);
   }
 
-  template<maths::network G, traversal_flavour Flavour>
+  template<maths::dynamic_network G, traversal_flavour Flavour>
   void test_graph_traversals::test_square_graph(const node_tracker& tracker, const edge_tracker<G, Flavour>& eTracker, const std::size_t start, const bool mutualInfo, bfs_type)
   {
     using edge_results = typename edge_tracker<G, Flavour>::result_type;
@@ -697,7 +697,7 @@ namespace sequoia::testing
     check_equality(LINE("First edge traversal, start = " + std::to_string(start) + " "), eTracker.visitation_order(), edgeAnswers);
   }
 
-  template<maths::network G, traversal_flavour Flavour>
+  template<maths::dynamic_network G, traversal_flavour Flavour>
   void test_graph_traversals::test_square_graph(const node_tracker& tracker, const edge_tracker<G, Flavour>& eTracker, const edge_tracker<G, Flavour>& eTracker2, const std::size_t start, pdfs_type)
   {
     using edge_results = typename edge_tracker<G, Flavour>::result_type;
@@ -720,7 +720,7 @@ namespace sequoia::testing
     check_equality(LINE("Second edge traversal"), eTracker2.visitation_order(), edgeAnswers2);
   }
 
-  template<maths::network G, traversal_flavour Flavour>
+  template<maths::dynamic_network G, traversal_flavour Flavour>
   void test_graph_traversals::test_square_graph(const node_tracker& tracker, const edge_tracker<G, Flavour>& eTracker, const std::size_t start, const bool mutualInfo, pdfs_type)
   {
     using edge_results = typename edge_tracker<G, Flavour>::result_type;
