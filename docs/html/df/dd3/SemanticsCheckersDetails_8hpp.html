@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.18"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Sequoia: /Users/Claire/Dropbox/Sequoia/Source/TestFramework/SemanticsCheckersDetails.hpp File Reference</title>
+<title>Sequoia: /Users/Claire/Dropbox/Sequoia/Source/sequoia/TestFramework/SemanticsCheckersDetails.hpp File Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -61,13 +61,16 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="../../dir_74389ed8173ad57b461b9d623a1f3867.html">Source</a></li><li class="navelem"><a class="el" href="../../dir_29d0af23d176bc5a813a115ff70b4bc5.html">TestFramework</a></li>  </ul>
+<li class="navelem"><a class="el" href="../../dir_74389ed8173ad57b461b9d623a1f3867.html">Source</a></li><li class="navelem"><a class="el" href="../../dir_2cc7e707cf7d8b577b4d17c7cb9b6739.html">sequoia</a></li><li class="navelem"><a class="el" href="../../dir_b8a7430685850b8d4f731afcd36d4c52.html">TestFramework</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#func-members">Functions</a>  </div>
+<a href="#typedef-members">Typedefs</a> &#124;
+<a href="#enum-members">Enumerations</a> &#124;
+<a href="#func-members">Functions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">SemanticsCheckersDetails.hpp File Reference</div>  </div>
 </div><!--header-->
@@ -75,10 +78,10 @@ $(function() {
 
 <p>Implementation details for semantics checks that cleanly supports types which do/do not have allocators.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;<a class="el" href="../../d5/d05/TestLogger_8hpp_source.html">TestLogger.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../da/d27/Advice_8hpp_source.html">Advice.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d2/d0d/FreeCheckers_8hpp_source.html">FreeCheckers.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d3/d84/Concepts_8hpp_source.html">Concepts.hpp</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="../../d5/d05/TestLogger_8hpp_source.html">sequoia/TestFramework/TestLogger.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../da/d27/Advice_8hpp_source.html">sequoia/TestFramework/Advice.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d2/d0d/FreeCheckers_8hpp_source.html">sequoia/TestFramework/FreeCheckers.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d3/d84/Concepts_8hpp_source.html">sequoia/Core/Meta/Concepts.hpp</a>&quot;</code><br />
 <code>#include &lt;compare&gt;</code><br />
 <code>#include &lt;optional&gt;</code><br />
 </div>
@@ -92,27 +95,83 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/da1/structsequoia_1_1testing_1_1impl_1_1null__mutator.html">sequoia::testing::impl::null_mutator</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/d27/structsequoia_1_1testing_1_1impl_1_1precondition__actions.html">sequoia::testing::impl::precondition_actions&lt; T &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/dff/structsequoia_1_1testing_1_1impl_1_1auxiliary__data__policy.html">sequoia::testing::impl::auxiliary_data_policy&lt; T &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d9d/structsequoia_1_1testing_1_1impl_1_1precondition__actions_3_01T_01_4.html">sequoia::testing::impl::precondition_actions&lt; T &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d6d/structsequoia_1_1testing_1_1impl_1_1auxiliary__data__policy_3_01T_01_4.html">sequoia::testing::impl::auxiliary_data_policy&lt; T &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d9d/structsequoia_1_1testing_1_1impl_1_1precondition__actions_3_01T_01_4.html">sequoia::testing::impl::precondition_actions&lt; T &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d6d/structsequoia_1_1testing_1_1impl_1_1auxiliary__data__policy_3_01T_01_4.html">sequoia::testing::impl::auxiliary_data_policy&lt; T &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/de6/structsequoia_1_1testing_1_1impl_1_1regular__actions.html">sequoia::testing::impl::regular_actions&lt; T &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d65/structsequoia_1_1testing_1_1impl_1_1auxiliary__data.html">sequoia::testing::impl::auxiliary_data&lt; T &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/dd2/structsequoia_1_1testing_1_1impl_1_1moveonly__actions.html">sequoia::testing::impl::moveonly_actions&lt; T &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:a32441261fdd8088c57e8ecbe80629620"><td class="memTemplParams" colspan="2"><a id="a32441261fdd8088c57e8ecbe80629620"></a>
+template&lt;comparison_flavour C&gt; </td></tr>
+<tr class="memitem:a32441261fdd8088c57e8ecbe80629620"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::comparison_constant</b> = std::integral_constant&lt; comparison_flavour, C &gt;</td></tr>
+<tr class="separator:a32441261fdd8088c57e8ecbe80629620"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2390c421c45ad1eee225c9c6e379368a"><td class="memItemLeft" align="right" valign="top"><a id="a2390c421c45ad1eee225c9c6e379368a"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::equality_type</b> = comparison_constant&lt; comparison_flavour::equality &gt;</td></tr>
+<tr class="separator:a2390c421c45ad1eee225c9c6e379368a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad551a933e4c21070ce34948dcd34d19d"><td class="memItemLeft" align="right" valign="top"><a id="ad551a933e4c21070ce34948dcd34d19d"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::inequality_type</b> = comparison_constant&lt; comparison_flavour::inequality &gt;</td></tr>
+<tr class="separator:ad551a933e4c21070ce34948dcd34d19d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7d0c451ef35793a6041a8f083b11e338"><td class="memItemLeft" align="right" valign="top"><a id="a7d0c451ef35793a6041a8f083b11e338"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::less_than_type</b> = comparison_constant&lt; comparison_flavour::less_than &gt;</td></tr>
+<tr class="separator:a7d0c451ef35793a6041a8f083b11e338"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeb1a990fa616384537a2b0b20b9557dd"><td class="memItemLeft" align="right" valign="top"><a id="aeb1a990fa616384537a2b0b20b9557dd"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::greater_than_type</b> = comparison_constant&lt; comparison_flavour::greater_than &gt;</td></tr>
+<tr class="separator:aeb1a990fa616384537a2b0b20b9557dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3c8b359b58c1edee26847b183b39a4d1"><td class="memItemLeft" align="right" valign="top"><a id="a3c8b359b58c1edee26847b183b39a4d1"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::leq_type</b> = comparison_constant&lt; comparison_flavour::leq &gt;</td></tr>
+<tr class="separator:a3c8b359b58c1edee26847b183b39a4d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5bd77e302d188df4eba3e7e4f587e84c"><td class="memItemLeft" align="right" valign="top"><a id="a5bd77e302d188df4eba3e7e4f587e84c"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::geq_type</b> = comparison_constant&lt; comparison_flavour::geq &gt;</td></tr>
+<tr class="separator:a5bd77e302d188df4eba3e7e4f587e84c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0535a56a40dfa2b75dcceeb65dd7d855"><td class="memItemLeft" align="right" valign="top"><a id="a0535a56a40dfa2b75dcceeb65dd7d855"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::threeway_type</b> = comparison_constant&lt; comparison_flavour::threeway &gt;</td></tr>
+<tr class="separator:a0535a56a40dfa2b75dcceeb65dd7d855"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
+Enumerations</h2></td></tr>
+<tr class="memitem:a2220f948f9b786e3e5b5da82ca6d5fd0"><td class="memItemLeft" align="right" valign="top"><a id="a2220f948f9b786e3e5b5da82ca6d5fd0"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><b>comparison_flavour</b> { <br />
+&#160;&#160;<b>equality</b>, 
+<b>inequality</b>, 
+<b>less_than</b>, 
+<b>greater_than</b>, 
+<br />
+&#160;&#160;<b>leq</b>, 
+<b>geq</b>, 
+<b>threeway</b>
+<br />
+ }</td></tr>
+<tr class="separator:a2220f948f9b786e3e5b5da82ca6d5fd0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a65f079a1dc306acee742712943113461"><td class="memTemplParams" colspan="2"><a id="a65f079a1dc306acee742712943113461"></a>
-template&lt;test_mode Mode, class Actions , movable_comparable T, invocable_r&lt; bool, T &gt; Fn, class... Args&gt; </td></tr>
-<tr class="memitem:a65f079a1dc306acee742712943113461"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_operator_consistency</b> (test_logger&lt; Mode &gt; &amp;logger, std::string_view op, const Actions &amp;actions, const T &amp;x, const T &amp;y, Fn fn, const Args &amp;... args)</td></tr>
-<tr class="separator:a65f079a1dc306acee742712943113461"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a68b3c1786c8347b3c3001bd215f1b07d"><td class="memItemLeft" align="right" valign="top"><a id="a68b3c1786c8347b3c3001bd215f1b07d"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::to_string</b> (const comparison_flavour f)</td></tr>
+<tr class="separator:a68b3c1786c8347b3c3001bd215f1b07d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aba8f7b4a694d239b4bafad60e629f672"><td class="memTemplParams" colspan="2"><a id="aba8f7b4a694d239b4bafad60e629f672"></a>
+template&lt;test_mode Mode, comparison_flavour C, class Actions , movable_comparable T, invocable_r&lt; bool, T &gt; Fn, class... Args&gt; </td></tr>
+<tr class="memitem:aba8f7b4a694d239b4bafad60e629f672"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::do_check_comparison_consistency</b> (test_logger&lt; Mode &gt; &amp;logger, comparison_constant&lt; C &gt; comparison, [[maybe_unused]] const Actions &amp;actions, const T &amp;x, std::string_view tag, Fn fn, [[maybe_unused]] const Args &amp;... args)</td></tr>
+<tr class="separator:aba8f7b4a694d239b4bafad60e629f672"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4bcf67e893704838671753f319a8470f"><td class="memTemplParams" colspan="2"><a id="a4bcf67e893704838671753f319a8470f"></a>
+template&lt;test_mode Mode, comparison_flavour C, class Actions , movable_comparable T, invocable_r&lt; bool, T &gt; Fn&gt; </td></tr>
+<tr class="memitem:a4bcf67e893704838671753f319a8470f"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_comparison_consistency</b> (test_logger&lt; Mode &gt; &amp;logger, comparison_constant&lt; C &gt; comparison, const Actions &amp;actions, const T &amp;x, const T &amp;y, Fn fn)</td></tr>
+<tr class="separator:a4bcf67e893704838671753f319a8470f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3bd54ef147a44e2f0523a0b15b1bee9e"><td class="memTemplParams" colspan="2"><a id="a3bd54ef147a44e2f0523a0b15b1bee9e"></a>
+template&lt;test_mode Mode, class Actions , orderable T, class... Args&gt; </td></tr>
+<tr class="memitem:a3bd54ef147a44e2f0523a0b15b1bee9e"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_ordering_operators</b> (test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, const T &amp;x, const T &amp;y, const Args &amp;... args)</td></tr>
+<tr class="separator:a3bd54ef147a44e2f0523a0b15b1bee9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afa9f43b07d74260e6c8bde70a175b094"><td class="memTemplParams" colspan="2"><a id="afa9f43b07d74260e6c8bde70a175b094"></a>
 template&lt;test_mode Mode, class Actions , orderable T, class... Args&gt; </td></tr>
 <tr class="memitem:afa9f43b07d74260e6c8bde70a175b094"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_ordering_consistency</b> (test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, const T &amp;x, const T &amp;y, const Args &amp;... args)</td></tr>
 <tr class="separator:afa9f43b07d74260e6c8bde70a175b094"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8e0e0c7d2e0a0d451e25eed69a595e85"><td class="memTemplParams" colspan="2"><a id="a8e0e0c7d2e0a0d451e25eed69a595e85"></a>
+template&lt;test_mode Mode, class Actions , orderable T, class... Args&gt; </td></tr>
+<tr class="memitem:a8e0e0c7d2e0a0d451e25eed69a595e85"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_ordering_consistency</b> (test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, const T &amp;x, const T &amp;y, const T &amp;, const T &amp;, const Args &amp;... args)</td></tr>
+<tr class="separator:a8e0e0c7d2e0a0d451e25eed69a595e85"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1d397b32168cbc433317ab6a195f763d"><td class="memTemplParams" colspan="2"><a id="a1d397b32168cbc433317ab6a195f763d"></a>
 template&lt;test_mode Mode, class Actions , equality_comparable T, class... Args&gt; </td></tr>
 <tr class="memitem:a1d397b32168cbc433317ab6a195f763d"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_equality_preconditions</b> (test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, const T &amp;x, const T &amp;y, const Args &amp;... args)</td></tr>
@@ -125,38 +184,78 @@ template&lt;test_mode Mode, class Actions , equality_comparable T, class... Args
 template&lt;test_mode Mode, class Actions , orderable T, class... Args&gt; </td></tr>
 <tr class="memitem:ab67f703cee85be85863943c7c487021f"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_orderable_preconditions</b> (test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, const T &amp;x, const T &amp;y, const Args &amp;... args)</td></tr>
 <tr class="separator:ab67f703cee85be85863943c7c487021f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af4eea809c6dc3698cddf9b6f81628edc"><td class="memTemplParams" colspan="2"><a id="af4eea809c6dc3698cddf9b6f81628edc"></a>
-template&lt;test_mode Mode, class Actions , movable_comparable T, invocable&lt; T &amp; &gt; Mutator, class... Args&gt; </td></tr>
-<tr class="memitem:af4eea809c6dc3698cddf9b6f81628edc"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::do_check_move_assign</b> (test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, T &amp;z, T &amp;&amp;y, const T &amp;yClone, Mutator &amp;&amp;yMutator, const Args &amp;... args)</td></tr>
-<tr class="separator:af4eea809c6dc3698cddf9b6f81628edc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4c847adee18aa1d62200928672437ec7"><td class="memTemplParams" colspan="2"><a id="a4c847adee18aa1d62200928672437ec7"></a>
-template&lt;test_mode Mode, class Actions , movable_comparable T, invocable&lt; T &amp; &gt; Mutator&gt; </td></tr>
-<tr class="memitem:a4c847adee18aa1d62200928672437ec7"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_move_assign</b> (test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, T &amp;z, T &amp;&amp;y, const T &amp;yClone, Mutator m)</td></tr>
-<tr class="separator:a4c847adee18aa1d62200928672437ec7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5e1182ff228e201afb43b89729b10159"><td class="memTemplParams" colspan="2"><a id="a5e1182ff228e201afb43b89729b10159"></a>
+<tr class="memitem:a70d57c7876344cdab9c9cc004c6f89ce"><td class="memTemplParams" colspan="2"><a id="a70d57c7876344cdab9c9cc004c6f89ce"></a>
 template&lt;test_mode Mode, class Actions , movable_comparable T, class... Args&gt; </td></tr>
-<tr class="memitem:a5e1182ff228e201afb43b89729b10159"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::do_check_swap</b> (test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, T &amp;&amp;x, T &amp;&amp;y, const T &amp;xClone, const T &amp;yClone, const Args &amp;... args)</td></tr>
-<tr class="separator:a5e1182ff228e201afb43b89729b10159"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9fcedc4faa4f98451a4e1ccb2156fdb4"><td class="memTemplParams" colspan="2"><a id="a9fcedc4faa4f98451a4e1ccb2156fdb4"></a>
-template&lt;test_mode Mode, class Actions , movable_comparable T&gt; </td></tr>
-<tr class="memitem:a9fcedc4faa4f98451a4e1ccb2156fdb4"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_swap</b> (test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, T &amp;&amp;x, T &amp;&amp;y, const T &amp;xClone, const T &amp;yClone)</td></tr>
-<tr class="separator:a9fcedc4faa4f98451a4e1ccb2156fdb4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab23952ff5cc0b31da036f2f7ec65b078"><td class="memTemplParams" colspan="2"><a id="ab23952ff5cc0b31da036f2f7ec65b078"></a>
-template&lt;test_mode Mode, class Actions , movable_comparable T, class... Args&gt; </td></tr>
-<tr class="memitem:ab23952ff5cc0b31da036f2f7ec65b078"><td class="memTemplItemLeft" align="right" valign="top">std::optional&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::do_check_move_construction</b> (test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, T &amp;&amp;z, const T &amp;y, const Args &amp;... args)</td></tr>
-<tr class="separator:ab23952ff5cc0b31da036f2f7ec65b078"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a70d57c7876344cdab9c9cc004c6f89ce"><td class="memTemplItemLeft" align="right" valign="top">std::optional&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::do_check_move_construction</b> (test_logger&lt; Mode &gt; &amp;logger, [[maybe_unused]] const Actions &amp;actions, T &amp;&amp;z, const T &amp;y, const Args &amp;... args)</td></tr>
+<tr class="separator:a70d57c7876344cdab9c9cc004c6f89ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aee94956438911210680607e578cc4919"><td class="memTemplParams" colspan="2"><a id="aee94956438911210680607e578cc4919"></a>
 template&lt;test_mode Mode, class Actions , movable_comparable T&gt; </td></tr>
 <tr class="memitem:aee94956438911210680607e578cc4919"><td class="memTemplItemLeft" align="right" valign="top">std::optional&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_move_construction</b> (test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, T &amp;&amp;z, const T &amp;y)</td></tr>
 <tr class="separator:aee94956438911210680607e578cc4919"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a73392f4192cb0ebc233a6a6a9461269a"><td class="memTemplParams" colspan="2"><a id="a73392f4192cb0ebc233a6a6a9461269a"></a>
+<tr class="memitem:af56393f760cbcaad1b1fc2b5ae676fd4"><td class="memTemplParams" colspan="2"><a id="af56393f760cbcaad1b1fc2b5ae676fd4"></a>
+template&lt;test_mode Mode, class Actions , movable_comparable T, invocable&lt; T &amp; &gt; Mutator, class... Args&gt; </td></tr>
+<tr class="memitem:af56393f760cbcaad1b1fc2b5ae676fd4"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::do_check_move_assign</b> (test_logger&lt; Mode &gt; &amp;logger, [[maybe_unused]] const Actions &amp;actions, T &amp;z, T &amp;&amp;y, const T &amp;yClone, [[maybe_unused]] Mutator &amp;&amp;yMutator, const Args &amp;... args)</td></tr>
+<tr class="separator:af56393f760cbcaad1b1fc2b5ae676fd4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4c847adee18aa1d62200928672437ec7"><td class="memTemplParams" colspan="2"><a id="a4c847adee18aa1d62200928672437ec7"></a>
+template&lt;test_mode Mode, class Actions , movable_comparable T, invocable&lt; T &amp; &gt; Mutator&gt; </td></tr>
+<tr class="memitem:a4c847adee18aa1d62200928672437ec7"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_move_assign</b> (test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, T &amp;z, T &amp;&amp;y, const T &amp;yClone, Mutator m)</td></tr>
+<tr class="separator:a4c847adee18aa1d62200928672437ec7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aede008810d4ba03d326faa23d2b57c88"><td class="memTemplParams" colspan="2"><a id="aede008810d4ba03d326faa23d2b57c88"></a>
 template&lt;test_mode Mode, class Actions , movable_comparable T, class... Args&gt; </td></tr>
-<tr class="memitem:a73392f4192cb0ebc233a6a6a9461269a"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::do_check_serialization</b> (test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, T &amp;&amp;u, const T &amp;y, const Args &amp;... args)</td></tr>
-<tr class="separator:a73392f4192cb0ebc233a6a6a9461269a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9102d4bc4cf4ccf5623f4ad0c55b1bbc"><td class="memTemplParams" colspan="2"><a id="a9102d4bc4cf4ccf5623f4ad0c55b1bbc"></a>
+<tr class="memitem:aede008810d4ba03d326faa23d2b57c88"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::do_check_swap</b> (test_logger&lt; Mode &gt; &amp;logger, [[maybe_unused]] const Actions &amp;actions, T &amp;&amp;x, T &amp;&amp;y, const T &amp;xClone, const T &amp;yClone, [[maybe_unused]] const Args &amp;... args)</td></tr>
+<tr class="separator:aede008810d4ba03d326faa23d2b57c88"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9fcedc4faa4f98451a4e1ccb2156fdb4"><td class="memTemplParams" colspan="2"><a id="a9fcedc4faa4f98451a4e1ccb2156fdb4"></a>
 template&lt;test_mode Mode, class Actions , movable_comparable T&gt; </td></tr>
-<tr class="memitem:a9102d4bc4cf4ccf5623f4ad0c55b1bbc"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_serialization</b> (test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, T &amp;&amp;u, const T &amp;y)</td></tr>
-<tr class="separator:a9102d4bc4cf4ccf5623f4ad0c55b1bbc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9fcedc4faa4f98451a4e1ccb2156fdb4"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_swap</b> (test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, T &amp;&amp;x, T &amp;&amp;y, const T &amp;xClone, const T &amp;yClone)</td></tr>
+<tr class="separator:a9fcedc4faa4f98451a4e1ccb2156fdb4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6b24869a102f17ac0a5f23b857f1f756"><td class="memTemplParams" colspan="2"><a id="a6b24869a102f17ac0a5f23b857f1f756"></a>
+template&lt;test_mode Mode, class Actions , pseudoregular T, invocable&lt; T &amp; &gt; Mutator&gt; </td></tr>
+<tr class="memitem:a6b24869a102f17ac0a5f23b857f1f756"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_swap</b> (test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, T &amp;&amp;x, T &amp;&amp;y, const T &amp;xClone, const T &amp;yClone, Mutator yMutator)</td></tr>
+<tr class="separator:a6b24869a102f17ac0a5f23b857f1f756"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a74689d1276697cc52452ae98a5c1ee08"><td class="memTemplParams" colspan="2"><a id="a74689d1276697cc52452ae98a5c1ee08"></a>
+template&lt;test_mode Mode, class Actions , movable_comparable T, class... Args&gt; </td></tr>
+<tr class="memitem:a74689d1276697cc52452ae98a5c1ee08"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::requires</b> (serializable_to&lt; T, std::stringstream &gt; &amp;&amp;deserializable_from&lt; T, std::stringstream &gt;) bool do_check_serialization(test_logger&lt; Mode &gt; &amp;logger</td></tr>
+<tr class="separator:a74689d1276697cc52452ae98a5c1ee08"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aedce97a3c7ae9e228c62a8f185e377cc"><td class="memItemLeft" align="right" valign="top"><a id="aedce97a3c7ae9e228c62a8f185e377cc"></a>
+return&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::impl::check_equality</b> (&quot;Inconsistent (de)serialization&quot;, logger, u, y)</td></tr>
+<tr class="separator:aedce97a3c7ae9e228c62a8f185e377cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4a1253ba4970478dbce678b32a4d91b8"><td class="memTemplParams" colspan="2"><a id="a4a1253ba4970478dbce678b32a4d91b8"></a>
+template&lt;test_mode Mode, class Actions , movable_comparable T&gt; </td></tr>
+<tr class="memitem:a4a1253ba4970478dbce678b32a4d91b8"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::requires</b> (serializable_to&lt; T, std::stringstream &gt; &amp;&amp;deserializable_from&lt; T, std::stringstream &gt;) bool check_serialization(test_logger&lt; Mode &gt; &amp;logger</td></tr>
+<tr class="separator:a4a1253ba4970478dbce678b32a4d91b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:a01fc4075e23666c6e447bf4bbddff687"><td class="memTemplParams" colspan="2"><a id="a01fc4075e23666c6e447bf4bbddff687"></a>
+template&lt;class Actions &gt; </td></tr>
+<tr class="memitem:a01fc4075e23666c6e447bf4bbddff687"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::has_post_comparison_action</b> = requires { &amp;Actions::post_comparison_action; }</td></tr>
+<tr class="separator:a01fc4075e23666c6e447bf4bbddff687"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af53d9d5b5b1e860e91ea31c32084e813"><td class="memTemplParams" colspan="2"><a id="af53d9d5b5b1e860e91ea31c32084e813"></a>
+template&lt;class Actions &gt; </td></tr>
+<tr class="memitem:af53d9d5b5b1e860e91ea31c32084e813"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::has_post_move_action</b> = requires { &amp;Actions::post_move_action; }</td></tr>
+<tr class="separator:af53d9d5b5b1e860e91ea31c32084e813"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad10df5dd4245394fa5791a2d3cf5726d"><td class="memTemplParams" colspan="2"><a id="ad10df5dd4245394fa5791a2d3cf5726d"></a>
+template&lt;class Actions &gt; </td></tr>
+<tr class="memitem:ad10df5dd4245394fa5791a2d3cf5726d"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::has_post_move_assign_action</b> = requires { &amp;Actions::post_move_assign_action; }</td></tr>
+<tr class="separator:ad10df5dd4245394fa5791a2d3cf5726d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae99163dceacb890f2a6ab8445c2193a3"><td class="memTemplParams" colspan="2"><a id="ae99163dceacb890f2a6ab8445c2193a3"></a>
+template&lt;class Actions &gt; </td></tr>
+<tr class="memitem:ae99163dceacb890f2a6ab8445c2193a3"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::has_post_swap_action</b> = requires { &amp;Actions::post_swap_action; }</td></tr>
+<tr class="separator:ae99163dceacb890f2a6ab8445c2193a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af3deaaad923fa434927b2916fb207c48"><td class="memTemplParams" colspan="2"><a id="af3deaaad923fa434927b2916fb207c48"></a>
+template&lt;class Actions &gt; </td></tr>
+<tr class="memitem:af3deaaad923fa434927b2916fb207c48"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::has_post_serialization_action</b> = requires { &amp;Actions::post_serialization_action; }</td></tr>
+<tr class="separator:af3deaaad923fa434927b2916fb207c48"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae52d70a488fc1e3c1e45f3ebca38d472"><td class="memItemLeft" align="right" valign="top"><a id="ae52d70a488fc1e3c1e45f3ebca38d472"></a>
+const Actions &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::impl::actions</b></td></tr>
+<tr class="separator:ae52d70a488fc1e3c1e45f3ebca38d472"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7b5836f739831474cd84623fc171522f"><td class="memItemLeft" align="right" valign="top"><a id="a7b5836f739831474cd84623fc171522f"></a>
+const Actions T &amp;&amp;&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::impl::u</b></td></tr>
+<tr class="separator:a7b5836f739831474cd84623fc171522f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a297dce7920978187d872d7b6e7ca96fe"><td class="memItemLeft" align="right" valign="top">const Actions T const T &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::impl::y</b></td></tr>
+<tr class="separator:a297dce7920978187d872d7b6e7ca96fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a421d2154f07414636789491cf2df0871"><td class="memItemLeft" align="right" valign="top">const Actions T const T const Args &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::impl::args</b></td></tr>
+<tr class="separator:a421d2154f07414636789491cf2df0871"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Implementation details for semantics checks that cleanly supports types which do/do not have allocators. </p>
@@ -181,7 +280,40 @@ if constexpr (Actions::some_flag)
 <p>Therefore when checking the semantics of an allocating type, the skeleton of the function is the same as for non-allocating types. However, in the former case extra checks are folded in. This pattern ensures consistency: if the scheme is tweaked for non-allocating types, allocating types will automatically benefit. But there is enough flexbility to allow for all the extra allocation checks that allocating types require.</p>
 <p>As such, the various check_foo functions in this header have overloads in <a class="el" href="../../d5/d00/AllocationCheckersDetails_8hpp.html" title="Implementation details for allocation checks.">AllocationCheckersDetails.hpp</a> which supply the extra argument(s) for the additional actions that comprise allocation checking.</p>
 <p>Note that check_foo / do_check_foo pairs in this file are common to both regular and move-only types. However, regular types additionally have copy semantics; the extra pieces necessary for this may be found in <a class="el" href="../../d6/d98/RegularCheckersDetails_8hpp.html" title="Implementation details for checking regular semantics.">RegularCheckersDetails.hpp</a> and RegularAllocationCheckerDetails.hpp </p>
-</div></div><!-- contents -->
+</div><h2 class="groupheader">Variable Documentation</h2>
+<a id="a421d2154f07414636789491cf2df0871"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a421d2154f07414636789491cf2df0871">&#9670;&nbsp;</a></span>args</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const Actions T const T const Args&amp; sequoia::testing::impl::args</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">{</div>
+<div class="line">    std::stringstream s{}</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="a297dce7920978187d872d7b6e7ca96fe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a297dce7920978187d872d7b6e7ca96fe">&#9670;&nbsp;</a></span>y</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const Actions T const T &amp; sequoia::testing::impl::y</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">{</div>
+<div class="line">    <span class="keywordflow">return</span> do_check_serialization(logger, actions, std::forward&lt;T&gt;(u), y)</div>
+</div><!-- fragment -->
+</div>
+</div>
+</div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

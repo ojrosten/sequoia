@@ -79,7 +79,7 @@ $(function() {
 <p>An iterator with policies controlling dereferencing and auxiliary data.  
  <a href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html#details">More...</a></p>
 
-<p><code>#include &lt;<a class="el" href="../../d5/d63/Source_2Core_2Utilities_2Iterator_8hpp_source.html">Iterator.hpp</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="../../d9/df3/Source_2sequoia_2Core_2Utilities_2Iterator_8hpp_source.html">Iterator.hpp</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for sequoia::utilities::iterator&lt; Iterator, DereferencePolicy &gt;:</div>
 <div class="dyncontent">
@@ -135,13 +135,14 @@ constexpr <a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator
 <tr class="memitem:acae0c916cabf518fa03fa36d5e4a6553"><td class="memItemLeft" align="right" valign="top"><a id="acae0c916cabf518fa03fa36d5e4a6553"></a>
 constexpr base_iterator_type&#160;</td><td class="memItemRight" valign="bottom"><b>base_iterator</b> () const noexcept</td></tr>
 <tr class="separator:acae0c916cabf518fa03fa36d5e4a6553"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab65494552d1eaf92b58d9f6b52010fcc"><td class="memItemLeft" align="right" valign="top"><a id="ab65494552d1eaf92b58d9f6b52010fcc"></a>
-constexpr const_dereference_type&#160;</td><td class="memItemRight" valign="bottom"><b>operator*</b> () const</td></tr>
-<tr class="separator:ab65494552d1eaf92b58d9f6b52010fcc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a33241cdc4b63f9f56e97d675f33f8759"><td class="memTemplParams" colspan="2"><a id="a33241cdc4b63f9f56e97d675f33f8759"></a>
+<tr class="memitem:a00454642522e1c84a5e8c2ce5c425b92"><td class="memTemplParams" colspan="2"><a id="a00454642522e1c84a5e8c2ce5c425b92"></a>
 template&lt;class DerefPol  = DereferencePolicy&gt; </td></tr>
-<tr class="memitem:a33241cdc4b63f9f56e97d675f33f8759"><td class="memTemplItemLeft" align="right" valign="top">requires constexpr impl::provides_mutable_reference_v&lt; DerefPol &gt; reference&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator*</b> ()</td></tr>
-<tr class="separator:a33241cdc4b63f9f56e97d675f33f8759"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a00454642522e1c84a5e8c2ce5c425b92"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires</b> (!impl::provides_mutable_reference_v&lt; DerefPol &gt;) const expr const _dereference_type operator*() const</td></tr>
+<tr class="separator:a00454642522e1c84a5e8c2ce5c425b92"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaf2370f076d6cb2aa8a3181907100b77"><td class="memTemplParams" colspan="2"><a id="aaf2370f076d6cb2aa8a3181907100b77"></a>
+template&lt;class DerefPol  = DereferencePolicy&gt; </td></tr>
+<tr class="memitem:aaf2370f076d6cb2aa8a3181907100b77"><td class="memTemplItemLeft" align="right" valign="top">requires constexpr impl::provides_mutable_reference_v&lt; DerefPol &gt; reference&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator*</b> () const</td></tr>
+<tr class="separator:aaf2370f076d6cb2aa8a3181907100b77"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af2493fba35c33be454d38bd54602a5e4"><td class="memItemLeft" align="right" valign="top"><a id="af2493fba35c33be454d38bd54602a5e4"></a>
 constexpr const_dereference_type&#160;</td><td class="memItemRight" valign="bottom"><b>operator[]</b> (const difference_type n) const</td></tr>
 <tr class="separator:af2493fba35c33be454d38bd54602a5e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -252,7 +253,7 @@ template&lt;class Iterator , dereference_policy DereferencePolicy&gt; </div>
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>/Users/Claire/Dropbox/Sequoia/Source/Core/Utilities/<a class="el" href="../../d5/d63/Source_2Core_2Utilities_2Iterator_8hpp_source.html">Iterator.hpp</a></li>
+<li>/Users/Claire/Dropbox/Sequoia/Source/sequoia/Core/Utilities/<a class="el" href="../../d9/df3/Source_2sequoia_2Core_2Utilities_2Iterator_8hpp_source.html">Iterator.hpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

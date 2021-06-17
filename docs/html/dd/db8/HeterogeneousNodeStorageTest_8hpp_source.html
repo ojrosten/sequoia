@@ -76,9 +76,9 @@ $(function() {
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment"></span> </div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#pragma once</span></div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="../../d9/daf/RegularTestCore_8hpp.html">RegularTestCore.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="../../d9/daf/RegularTestCore_8hpp.html">sequoia/TestFramework/RegularTestCore.hpp</a>&quot;</span></div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160; </div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="../../d5/dea/HeterogeneousNodeStorage_8hpp.html">HeterogeneousNodeStorage.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="../../d5/dea/HeterogeneousNodeStorage_8hpp.html">sequoia/Maths/Graph/HeterogeneousNodeStorage.hpp</a>&quot;</span></div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160; </div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="keyword">namespace </span>sequoia::testing</div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;{</div>
@@ -86,14 +86,14 @@ $(function() {
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;  {</div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;  <span class="keyword">public</span>:</div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <span class="keyword">using</span> regular_test::regular_test;</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    </div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    [[nodiscard]]</div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    std::string_view <a class="code" href="../../d6/d8d/classsequoia_1_1testing_1_1test__heterogeneous__node__storage.html#aa17eb39f8fda4194bcb58bd0f3be230b">source_file</a>() <span class="keyword">const</span> noexcept <span class="keyword">final</span>;</div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;  <span class="keyword">private</span>:</div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <span class="keyword">using</span> regular_test::check_equality;</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    </div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <span class="keywordtype">void</span> run_tests() <span class="keyword">final</span>;</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    </div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span>... Ts&gt;</div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <span class="keyword">class </span>storage_tester : <span class="keyword">public</span> <a class="code" href="../../d3/dea/classsequoia_1_1maths_1_1graph__impl_1_1heterogeneous__node__storage.html">maths::graph_impl::heterogeneous_node_storage</a>&lt;Ts...&gt;</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    {</div>
@@ -104,14 +104,14 @@ $(function() {
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;      {</div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;      }</div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    };</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    </div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    constexpr <span class="keyword">static</span> <span class="keyword">auto</span> make_storage() -&gt; storage_tester&lt;float, int&gt;;  </div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    constexpr <span class="keyword">static</span> <span class="keyword">auto</span> make_storage() -&gt; storage_tester&lt;float, int&gt;;</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;  };</div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
 <div class="ttc" id="aclasssequoia_1_1maths_1_1graph__impl_1_1heterogeneous__node__storage_html"><div class="ttname"><a href="../../d3/dea/classsequoia_1_1maths_1_1graph__impl_1_1heterogeneous__node__storage.html">sequoia::maths::graph_impl::heterogeneous_node_storage</a></div><div class="ttdoc">Storage for heterogeneous node weights.</div><div class="ttdef"><b>Definition:</b> HeterogeneousNodeStorage.hpp:26</div></div>
 <div class="ttc" id="aRegularTestCore_8hpp_html"><div class="ttname"><a href="../../d9/daf/RegularTestCore_8hpp.html">RegularTestCore.hpp</a></div><div class="ttdoc">Utilities for checking regular semantics.</div></div>
-<div class="ttc" id="aclasssequoia_1_1testing_1_1basic__test_html"><div class="ttname"><a href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">sequoia::testing::basic_test</a></div><div class="ttdoc">class template from which all concrete tests should derive.</div><div class="ttdef"><b>Definition:</b> FreeTestCore.hpp:122</div></div>
+<div class="ttc" id="aclasssequoia_1_1testing_1_1basic__test_html"><div class="ttname"><a href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">sequoia::testing::basic_test</a></div><div class="ttdef"><b>Definition:</b> FreeTestCore.hpp:180</div></div>
 <div class="ttc" id="aHeterogeneousNodeStorage_8hpp_html"><div class="ttname"><a href="../../d5/dea/HeterogeneousNodeStorage_8hpp.html">HeterogeneousNodeStorage.hpp</a></div><div class="ttdoc">Node storage for graphs with heterogeneous node weights.</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1test__heterogeneous__node__storage_html"><div class="ttname"><a href="../../d6/d8d/classsequoia_1_1testing_1_1test__heterogeneous__node__storage.html">sequoia::testing::test_heterogeneous_node_storage</a></div><div class="ttdef"><b>Definition:</b> HeterogeneousNodeStorageTest.hpp:17</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1test__heterogeneous__node__storage_html_aa17eb39f8fda4194bcb58bd0f3be230b"><div class="ttname"><a href="../../d6/d8d/classsequoia_1_1testing_1_1test__heterogeneous__node__storage.html#aa17eb39f8fda4194bcb58bd0f3be230b">sequoia::testing::test_heterogeneous_node_storage::source_file</a></div><div class="ttdeci">std::string_view source_file() const noexcept final</div><div class="ttdoc">Pure virtual method which should be overridden in a concrete test's cpp file in order to provide the ...</div><div class="ttdef"><b>Definition:</b> HeterogeneousNodeStorageTest.cpp:13</div></div>

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.18"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Sequoia: /Users/Claire/Dropbox/Sequoia/Source/TestFramework/FreeCheckers.hpp File Reference</title>
+<title>Sequoia: /Users/Claire/Dropbox/Sequoia/Source/sequoia/TestFramework/FreeCheckers.hpp File Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -61,7 +61,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="../../dir_74389ed8173ad57b461b9d623a1f3867.html">Source</a></li><li class="navelem"><a class="el" href="../../dir_29d0af23d176bc5a813a115ff70b4bc5.html">TestFramework</a></li>  </ul>
+<li class="navelem"><a class="el" href="../../dir_74389ed8173ad57b461b9d623a1f3867.html">Source</a></li><li class="navelem"><a class="el" href="../../dir_2cc7e707cf7d8b577b4d17c7cb9b6739.html">sequoia</a></li><li class="navelem"><a class="el" href="../../dir_b8a7430685850b8d4f731afcd36d4c52.html">TestFramework</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -76,10 +76,10 @@ $(function() {
 
 <p>Free functions for performing checks, together with the 'checker' class template which wraps them.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;<a class="el" href="../../d0/dae/CoreInfrastructure_8hpp_source.html">CoreInfrastructure.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../da/d27/Advice_8hpp_source.html">Advice.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d5/d05/TestLogger_8hpp_source.html">TestLogger.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../db/d8f/Utilities_8hpp_source.html">Utilities.hpp</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="../../d0/dae/CoreInfrastructure_8hpp_source.html">sequoia/TestFramework/CoreInfrastructure.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../da/d27/Advice_8hpp_source.html">sequoia/TestFramework/Advice.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d5/d05/TestLogger_8hpp_source.html">sequoia/TestFramework/TestLogger.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../db/dc4/Source_2sequoia_2Core_2Meta_2Utilities_8hpp_source.html">sequoia/Core/Meta/Utilities.hpp</a>&quot;</code><br />
 </div>
 <p><a href="../../d2/d0d/FreeCheckers_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -89,11 +89,21 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d0d/structsequoia_1_1testing_1_1equivalent__type__processor_3_01Ts_8_8_8_01_4.html">sequoia::testing::equivalent_type_processor&lt; Ts... &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d02/structsequoia_1_1testing_1_1exception__message__extractor.html">sequoia::testing::exception_message_extractor&lt; class &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/df9/structsequoia_1_1testing_1_1exception__message__extractor_3_01E_01_4.html">sequoia::testing::exception_message_extractor&lt; E &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/dd3/structsequoia_1_1testing_1_1default__exception__message__postprocessor.html">sequoia::testing::default_exception_message_postprocessor</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/de5/classsequoia_1_1testing_1_1checker.html">sequoia::testing::checker&lt; Mode, Extenders &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:a7f362f11be1053a0bc961cfc032ff3c4"><td class="memTemplParams" colspan="2"><a id="a7f362f11be1053a0bc961cfc032ff3c4"></a>
+template&lt;class E &gt; </td></tr>
+<tr class="memitem:a7f362f11be1053a0bc961cfc032ff3c4"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::requires</b> (!derived_from&lt; E, std::exception &gt;) &amp;&amp;serializable&lt; E &gt; struct exception_message_extractor&lt; E &gt;</td></tr>
+<tr class="separator:a7f362f11be1053a0bc961cfc032ff3c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aad1dd9129ae28daf8a4da6b42ba3b959"><td class="memTemplParams" colspan="2">template&lt;class EquivChecker , test_mode Mode, class T , class S , class... U&gt; </td></tr>
 <tr class="memitem:aad1dd9129ae28daf8a4da6b42ba3b959"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d2/d0d/FreeCheckers_8hpp.html#aad1dd9129ae28daf8a4da6b42ba3b959">sequoia::testing::general_equivalence_check</a> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const T &amp;value, const S &amp;s, const U &amp;... u)</td></tr>
 <tr class="memdesc:aad1dd9129ae28daf8a4da6b42ba3b959"><td class="mdescLeft">&#160;</td><td class="mdescRight">generic function that generates a check from any class providing a static check method.  <a href="../../d2/d0d/FreeCheckers_8hpp.html#aad1dd9129ae28daf8a4da6b42ba3b959">More...</a><br /></td></tr>
@@ -131,10 +141,10 @@ dispatch_check basic overload set</h2></td></tr>
 template&lt;test_mode Mode, class ElementDispatchDiscriminator , class Iter , class PredictionIter , class Advisor  = null_advisor&gt; </td></tr>
 <tr class="memitem:affd9d11cfd0d46148a1417700e3f15c6"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check_range</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, ElementDispatchDiscriminator discriminator, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast, tutor&lt; Advisor &gt; advisor=tutor&lt; Advisor &gt;{})</td></tr>
 <tr class="separator:affd9d11cfd0d46148a1417700e3f15c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4cc0f6dec6a730caea876b6383db8f91"><td class="memTemplParams" colspan="2"><a id="a4cc0f6dec6a730caea876b6383db8f91"></a>
-template&lt;class E , test_mode Mode, class Fn &gt; </td></tr>
-<tr class="memitem:a4cc0f6dec6a730caea876b6383db8f91"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check_exception_thrown</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, Fn &amp;&amp;function)</td></tr>
-<tr class="separator:a4cc0f6dec6a730caea876b6383db8f91"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a11dc8803b7a0c1229343c6a49da20896"><td class="memTemplParams" colspan="2"><a id="a11dc8803b7a0c1229343c6a49da20896"></a>
+template&lt;class E , test_mode Mode, class Fn , invocable_r&lt; std::string, std::string &gt; Postprocessor = default_exception_message_postprocessor&gt; </td></tr>
+<tr class="memitem:a11dc8803b7a0c1229343c6a49da20896"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check_exception_thrown</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, Fn &amp;&amp;function, Postprocessor postprocessor={})</td></tr>
+<tr class="separator:a11dc8803b7a0c1229343c6a49da20896"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af2c5496a2ab25ac01a68d80de2101763"><td class="memTemplParams" colspan="2"><a id="af2c5496a2ab25ac01a68d80de2101763"></a>
 template&lt;test_mode Mode, class T , class Advisor  = null_advisor&gt; </td></tr>
 <tr class="memitem:af2c5496a2ab25ac01a68d80de2101763"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check_equality</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const T &amp;value, const T &amp;prediction, tutor&lt; Advisor &gt; advisor=tutor&lt; Advisor &gt;{})</td></tr>
@@ -391,7 +401,7 @@ template&lt;class EquivChecker , test_mode Mode, class T , class S , class... U&
 </div><div class="memdoc">
 
 <p>generic function that generates a check from any class providing a static check method. </p>
-<p>This employs a <a class="el" href="../..//Users/Claire/Dropbox/Sequoia/Source/TestFramework/TestLogger.hpp#test_logger_primary">sentinel</a> and so can be used naively. </p>
+<p>This employs a <a class="el" href="../..//Users/Claire/Dropbox/Sequoia/Source/sequoia/TestFramework/TestLogger.hpp#test_logger_primary">sentinel</a> and so can be used naively. </p>
 
 </div>
 </div>

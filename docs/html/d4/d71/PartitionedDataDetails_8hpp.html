@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.18"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Sequoia: /Users/Claire/Dropbox/Sequoia/Source/Core/DataStructures/PartitionedDataDetails.hpp File Reference</title>
+<title>Sequoia: /Users/Claire/Dropbox/Sequoia/Source/sequoia/Core/DataStructures/PartitionedDataDetails.hpp File Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -61,7 +61,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="../../dir_74389ed8173ad57b461b9d623a1f3867.html">Source</a></li><li class="navelem"><a class="el" href="../../dir_1ad6433457b0067ef8f54a4fa85f5c9a.html">Core</a></li><li class="navelem"><a class="el" href="../../dir_171ce530a72091fcb4f5f3c25b185187.html">DataStructures</a></li>  </ul>
+<li class="navelem"><a class="el" href="../../dir_74389ed8173ad57b461b9d623a1f3867.html">Source</a></li><li class="navelem"><a class="el" href="../../dir_2cc7e707cf7d8b577b4d17c7cb9b6739.html">sequoia</a></li><li class="navelem"><a class="el" href="../../dir_af73bbb9d00c4493f0602a21eb50c280.html">Core</a></li><li class="navelem"><a class="el" href="../../dir_3d9ac77dfe77a42230562e57a523f504.html">DataStructures</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -76,7 +76,7 @@ $(function() {
 
 <p>Metaprogramming components for partitioned data.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;<a class="el" href="../../db/da7/Handlers_8hpp_source.html">Handlers.hpp</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="../../db/da7/Handlers_8hpp_source.html">sequoia/Core/Ownership/Handlers.hpp</a>&quot;</code><br />
 <code>#include &lt;map&gt;</code><br />
 </div>
 <p><a href="../../d4/d71/PartitionedDataDetails_8hpp_source.html">Go to the source code of this file.</a></p>
@@ -109,6 +109,8 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d63/classsequoia_1_1data__structures_1_1partition__impl_1_1data__duplicator_3_01ownership_1_1shared_3_01T_01_4_01_4.html">sequoia::data_structures::partition_impl::data_duplicator&lt; ownership::shared&lt; T &gt; &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/dd2/structsequoia_1_1data__structures_1_1partition__impl_1_1static__partitions__maker.html">sequoia::data_structures::partition_impl::static_partitions_maker&lt; class &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
@@ -130,6 +132,10 @@ Variables</h2></td></tr>
 <tr class="memitem:ab9e00b05b84150694bfc8f91ca9d0c09"><td class="memTemplParams" colspan="2">template&lt;alloc PartitionAllocator, alloc Allocator&gt; </td></tr>
 <tr class="memitem:ab9e00b05b84150694bfc8f91ca9d0c09"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::data_structures::partition_impl::propagates_on_move_assignment_v</b></td></tr>
 <tr class="separator:ab9e00b05b84150694bfc8f91ca9d0c09"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aad7b0c21a81dbe3c0730789d6607983c"><td class="memTemplParams" colspan="2"><a id="aad7b0c21a81dbe3c0730789d6607983c"></a>
+template&lt;class Handler , class T &gt; </td></tr>
+<tr class="memitem:aad7b0c21a81dbe3c0730789d6607983c"><td class="memTemplItemLeft" align="right" valign="top">requires constexpr ownership::handler&lt; Handler &gt; bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::data_structures::partition_impl::direct_copy_v</b> {std::is_same_v&lt;Handler, ownership::independent&lt;T&gt;&gt;}</td></tr>
+<tr class="separator:aad7b0c21a81dbe3c0730789d6607983c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Metaprogramming components for partitioned data. </p>
@@ -151,7 +157,7 @@ template&lt;alloc PartitionAllocator, alloc Allocator&gt; </div>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -179,7 +185,7 @@ template&lt;alloc PartitionAllocator, alloc Allocator&gt; </div>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -209,7 +215,7 @@ template&lt;alloc PartitionAllocator, alloc Allocator&gt; </div>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">

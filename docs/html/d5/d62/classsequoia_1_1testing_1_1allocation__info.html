@@ -66,52 +66,66 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
+<a href="#pub-types">Public Types</a> &#124;
+<a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="../../d7/d09/classsequoia_1_1testing_1_1allocation__info-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">sequoia::testing::allocation_info&lt; T, Getter &gt; Class Template Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>Class for use with a container possessing a (shared counting) allocator.  
+ <a href="../../d5/d62/classsequoia_1_1testing_1_1allocation__info.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="../../d3/dfb/AllocationCheckers_8hpp_source.html">AllocationCheckers.hpp</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for sequoia::testing::allocation_info&lt; T, Getter &gt;:</div>
 <div class="dyncontent">
  <div class="center">
   <img src="../../d5/d62/classsequoia_1_1testing_1_1allocation__info.png" usemap="#sequoia::testing::allocation_5Finfo_3C_20T_2C_20Getter_20_3E_map" alt=""/>
   <map id="sequoia::testing::allocation_5Finfo_3C_20T_2C_20Getter_20_3E_map" name="sequoia::testing::allocation_5Finfo_3C_20T_2C_20Getter_20_3E_map">
-<area href="../../dd/d5b/classsequoia_1_1testing_1_1basic__allocation__info.html" alt="sequoia::testing::basic_allocation_info&lt; T, Getter, allocation_predictions &gt;" shape="rect" coords="0,56,428,80"/>
-<area href="../../db/df4/classsequoia_1_1testing_1_1allocation__info__base.html" title="Base class for use with both plain (shared counting) allocators and std::scoped_allocator_adaptor." alt="sequoia::testing::allocation_info_base&lt; T, Getter &gt;" shape="rect" coords="0,0,428,24"/>
+<area href="../../db/df4/classsequoia_1_1testing_1_1allocation__info__base.html" title="Base class for use with both plain (shared counting) allocators and std::scoped_allocator_adaptor." alt="sequoia::testing::allocation_info_base&lt; T, Getter &gt;" shape="rect" coords="0,0,293,24"/>
   </map>
 </div></div>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
-Additional Inherited Members</h2></td></tr>
-<tr class="inherit_header pub_types_classsequoia_1_1testing_1_1basic__allocation__info"><td colspan="2" onclick="javascript:toggleInherit('pub_types_classsequoia_1_1testing_1_1basic__allocation__info')"><img src="../../closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="../../dd/d5b/classsequoia_1_1testing_1_1basic__allocation__info.html">sequoia::testing::basic_allocation_info&lt; T, Getter, allocation_predictions &gt;</a></td></tr>
-<tr class="memitem:a6ac03af570b547cb960c5f16a38007ad inherit pub_types_classsequoia_1_1testing_1_1basic__allocation__info"><td class="memItemLeft" align="right" valign="top"><a id="a6ac03af570b547cb960c5f16a38007ad"></a>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:a67d5786ad2c40e84326c6a48aafada56"><td class="memItemLeft" align="right" valign="top"><a id="a67d5786ad2c40e84326c6a48aafada56"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>value_type</b> = T</td></tr>
-<tr class="separator:a6ac03af570b547cb960c5f16a38007ad inherit pub_types_classsequoia_1_1testing_1_1basic__allocation__info"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab2b66f73166b8d433ef340c7922ec05d inherit pub_types_classsequoia_1_1testing_1_1basic__allocation__info"><td class="memItemLeft" align="right" valign="top"><a id="ab2b66f73166b8d433ef340c7922ec05d"></a>
+<tr class="separator:a67d5786ad2c40e84326c6a48aafada56"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac9882a319860158ba68248ad5cc5b771"><td class="memItemLeft" align="right" valign="top"><a id="ac9882a319860158ba68248ad5cc5b771"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>allocator_type</b> = typename base_t::allocator_type</td></tr>
-<tr class="separator:ab2b66f73166b8d433ef340c7922ec05d inherit pub_types_classsequoia_1_1testing_1_1basic__allocation__info"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a25f1421dcd451e2813b6fce296484521 inherit pub_types_classsequoia_1_1testing_1_1basic__allocation__info"><td class="memItemLeft" align="right" valign="top"><a id="a25f1421dcd451e2813b6fce296484521"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>predictions_type</b> = <a class="el" href="../../de/d67/structsequoia_1_1testing_1_1allocation__predictions.html">allocation_predictions</a></td></tr>
-<tr class="separator:a25f1421dcd451e2813b6fce296484521 inherit pub_types_classsequoia_1_1testing_1_1basic__allocation__info"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:ac9882a319860158ba68248ad5cc5b771"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6514ffcf4bc2ca9278e3878a0397b4d1"><td class="memItemLeft" align="right" valign="top"><a id="a6514ffcf4bc2ca9278e3878a0397b4d1"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>predictions_type</b> = type_to_allocation_predictions_t&lt; T &gt;</td></tr>
+<tr class="separator:a6514ffcf4bc2ca9278e3878a0397b4d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a15f0a7c8629beed30f7a7d29d6a814e9"><td class="memItemLeft" align="right" valign="top"><a id="a15f0a7c8629beed30f7a7d29d6a814e9"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>inner_predictions_type</b> = type_to_inner_allocation_predictions_t&lt; T &gt;</td></tr>
+<tr class="separator:a15f0a7c8629beed30f7a7d29d6a814e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_types_classsequoia_1_1testing_1_1allocation__info__base"><td colspan="2" onclick="javascript:toggleInherit('pub_types_classsequoia_1_1testing_1_1allocation__info__base')"><img src="../../closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="../../db/df4/classsequoia_1_1testing_1_1allocation__info__base.html">sequoia::testing::allocation_info_base&lt; T, Getter &gt;</a></td></tr>
 <tr class="memitem:a6a6017903df34a61a0ac76703b503727 inherit pub_types_classsequoia_1_1testing_1_1allocation__info__base"><td class="memItemLeft" align="right" valign="top"><a id="a6a6017903df34a61a0ac76703b503727"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>allocator_type</b> = std::invoke_result_t&lt; Getter, T &gt;</td></tr>
 <tr class="separator:a6a6017903df34a61a0ac76703b503727 inherit pub_types_classsequoia_1_1testing_1_1allocation__info__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pub_methods_classsequoia_1_1testing_1_1basic__allocation__info"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classsequoia_1_1testing_1_1basic__allocation__info')"><img src="../../closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="../../dd/d5b/classsequoia_1_1testing_1_1basic__allocation__info.html">sequoia::testing::basic_allocation_info&lt; T, Getter, allocation_predictions &gt;</a></td></tr>
-<tr class="memitem:a9fe591dec901be90de040e85cc255425 inherit pub_methods_classsequoia_1_1testing_1_1basic__allocation__info"><td class="memItemLeft" align="right" valign="top"><a id="a9fe591dec901be90de040e85cc255425"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>basic_allocation_info</b> (Getter allocGetter, <a class="el" href="../../de/d67/structsequoia_1_1testing_1_1allocation__predictions.html">allocation_predictions</a> predictions)</td></tr>
-<tr class="separator:a9fe591dec901be90de040e85cc255425 inherit pub_methods_classsequoia_1_1testing_1_1basic__allocation__info"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae7228d1fc2a66ac06539a9cad3849f4d inherit pub_methods_classsequoia_1_1testing_1_1basic__allocation__info"><td class="memItemLeft" align="right" valign="top"><a id="ae7228d1fc2a66ac06539a9cad3849f4d"></a>
-const <a class="el" href="../../de/d67/structsequoia_1_1testing_1_1allocation__predictions.html">allocation_predictions</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>get_predictions</b> () const noexcept</td></tr>
-<tr class="separator:ae7228d1fc2a66ac06539a9cad3849f4d inherit pub_methods_classsequoia_1_1testing_1_1basic__allocation__info"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:aa74ee097efd38d720cffcdb1abeacbc0"><td class="memItemLeft" align="right" valign="top"><a id="aa74ee097efd38d720cffcdb1abeacbc0"></a>
+constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>allocation_info</b> (Getter allocGetter, const predictions_type &amp;predictions)</td></tr>
+<tr class="separator:aa74ee097efd38d720cffcdb1abeacbc0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7d487060e312ed76c3e51f5ccbd0c18c"><td class="memItemLeft" align="right" valign="top"><a id="a7d487060e312ed76c3e51f5ccbd0c18c"></a>
+constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>allocation_info</b> (Getter allocGetter, const inner_predictions_type &amp;predictions)</td></tr>
+<tr class="separator:a7d487060e312ed76c3e51f5ccbd0c18c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad0c384e43f160d10d807cb18ed5f8fa4"><td class="memItemLeft" align="right" valign="top"><a id="ad0c384e43f160d10d807cb18ed5f8fa4"></a>
+constexpr const predictions_type &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>get_predictions</b> () const noexcept</td></tr>
+<tr class="separator:ad0c384e43f160d10d807cb18ed5f8fa4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classsequoia_1_1testing_1_1allocation__info__base"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classsequoia_1_1testing_1_1allocation__info__base')"><img src="../../closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="../../db/df4/classsequoia_1_1testing_1_1allocation__info__base.html">sequoia::testing::allocation_info_base&lt; T, Getter &gt;</a></td></tr>
-<tr class="memitem:a02c712bab46677e7d1426c62650cc0f6 inherit pub_methods_classsequoia_1_1testing_1_1allocation__info__base"><td class="memItemLeft" align="right" valign="top"><a id="a02c712bab46677e7d1426c62650cc0f6"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>allocation_info_base</b> (Getter allocGetter)</td></tr>
-<tr class="separator:a02c712bab46677e7d1426c62650cc0f6 inherit pub_methods_classsequoia_1_1testing_1_1allocation__info__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5eec8f8f3f36f87c759eaf147b3322c2 inherit pub_methods_classsequoia_1_1testing_1_1allocation__info__base"><td class="memItemLeft" align="right" valign="top"><a id="a5eec8f8f3f36f87c759eaf147b3322c2"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>allocation_info_base</b> (const <a class="el" href="../../db/df4/classsequoia_1_1testing_1_1allocation__info__base.html">allocation_info_base</a> &amp;)=default</td></tr>
-<tr class="separator:a5eec8f8f3f36f87c759eaf147b3322c2 inherit pub_methods_classsequoia_1_1testing_1_1allocation__info__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a895833aed426f4ac82a1c5c0a242a83f inherit pub_methods_classsequoia_1_1testing_1_1allocation__info__base"><td class="memItemLeft" align="right" valign="top"><a id="a895833aed426f4ac82a1c5c0a242a83f"></a>
+constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>allocation_info_base</b> (Getter allocGetter)</td></tr>
+<tr class="separator:a895833aed426f4ac82a1c5c0a242a83f inherit pub_methods_classsequoia_1_1testing_1_1allocation__info__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a29c10bb348bc31fb1d8de7d0f99975f9 inherit pub_methods_classsequoia_1_1testing_1_1allocation__info__base"><td class="memItemLeft" align="right" valign="top"><a id="a29c10bb348bc31fb1d8de7d0f99975f9"></a>
+constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>allocation_info_base</b> (const <a class="el" href="../../db/df4/classsequoia_1_1testing_1_1allocation__info__base.html">allocation_info_base</a> &amp;)=default</td></tr>
+<tr class="separator:a29c10bb348bc31fb1d8de7d0f99975f9 inherit pub_methods_classsequoia_1_1testing_1_1allocation__info__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abbc2613af75f25b75dc6e07a2f97ecd5 inherit pub_methods_classsequoia_1_1testing_1_1allocation__info__base"><td class="memItemLeft" align="right" valign="top"><a id="abbc2613af75f25b75dc6e07a2f97ecd5"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>count</b> (const T &amp;c) const noexcept</td></tr>
 <tr class="separator:abbc2613af75f25b75dc6e07a2f97ecd5 inherit pub_methods_classsequoia_1_1testing_1_1allocation__info__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -122,22 +136,31 @@ template&lt;class... Args&gt; </td></tr>
 <tr class="memitem:a216e4b6b478da6b78f4f8484ae8268a7 inherit pub_methods_classsequoia_1_1testing_1_1allocation__info__base"><td class="memItemLeft" align="right" valign="top"><a id="a216e4b6b478da6b78f4f8484ae8268a7"></a>
 allocator_type&#160;</td><td class="memItemRight" valign="bottom"><b>allocator</b> (const T &amp;c) const</td></tr>
 <tr class="separator:a216e4b6b478da6b78f4f8484ae8268a7 inherit pub_methods_classsequoia_1_1testing_1_1allocation__info__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
+Additional Inherited Members</h2></td></tr>
 <tr class="inherit_header pro_methods_classsequoia_1_1testing_1_1allocation__info__base"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classsequoia_1_1testing_1_1allocation__info__base')"><img src="../../closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="../../db/df4/classsequoia_1_1testing_1_1allocation__info__base.html">sequoia::testing::allocation_info_base&lt; T, Getter &gt;</a></td></tr>
-<tr class="memitem:a5749a8592534ea95656da63350c41378 inherit pro_methods_classsequoia_1_1testing_1_1allocation__info__base"><td class="memItemLeft" align="right" valign="top"><a id="a5749a8592534ea95656da63350c41378"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>allocation_info_base</b> (<a class="el" href="../../db/df4/classsequoia_1_1testing_1_1allocation__info__base.html">allocation_info_base</a> &amp;&amp;) noexcept=default</td></tr>
-<tr class="separator:a5749a8592534ea95656da63350c41378 inherit pro_methods_classsequoia_1_1testing_1_1allocation__info__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a981ab78b183e0c7f45f7a4b976472890 inherit pro_methods_classsequoia_1_1testing_1_1allocation__info__base"><td class="memItemLeft" align="right" valign="top"><a id="a981ab78b183e0c7f45f7a4b976472890"></a>
-<a class="el" href="../../db/df4/classsequoia_1_1testing_1_1allocation__info__base.html">allocation_info_base</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="../../db/df4/classsequoia_1_1testing_1_1allocation__info__base.html">allocation_info_base</a> &amp;)=default</td></tr>
-<tr class="separator:a981ab78b183e0c7f45f7a4b976472890 inherit pro_methods_classsequoia_1_1testing_1_1allocation__info__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aecf53238d073c79896eaa2cfa9fe73b8 inherit pro_methods_classsequoia_1_1testing_1_1allocation__info__base"><td class="memItemLeft" align="right" valign="top"><a id="aecf53238d073c79896eaa2cfa9fe73b8"></a>
-<a class="el" href="../../db/df4/classsequoia_1_1testing_1_1allocation__info__base.html">allocation_info_base</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="../../db/df4/classsequoia_1_1testing_1_1allocation__info__base.html">allocation_info_base</a> &amp;&amp;) noexcept=default</td></tr>
-<tr class="separator:aecf53238d073c79896eaa2cfa9fe73b8 inherit pro_methods_classsequoia_1_1testing_1_1allocation__info__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adbba9f811ea8911cea4c0e6872c75860 inherit pro_methods_classsequoia_1_1testing_1_1allocation__info__base"><td class="memItemLeft" align="right" valign="top"><a id="adbba9f811ea8911cea4c0e6872c75860"></a>
-Getter&#160;</td><td class="memItemRight" valign="bottom"><b>make_getter</b> () const</td></tr>
-<tr class="separator:adbba9f811ea8911cea4c0e6872c75860 inherit pro_methods_classsequoia_1_1testing_1_1allocation__info__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0cb55945d319f87978ec6e79c5fc9c59 inherit pro_methods_classsequoia_1_1testing_1_1allocation__info__base"><td class="memItemLeft" align="right" valign="top"><a id="a0cb55945d319f87978ec6e79c5fc9c59"></a>
+constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>allocation_info_base</b> (<a class="el" href="../../db/df4/classsequoia_1_1testing_1_1allocation__info__base.html">allocation_info_base</a> &amp;&amp;) noexcept=default</td></tr>
+<tr class="separator:a0cb55945d319f87978ec6e79c5fc9c59 inherit pro_methods_classsequoia_1_1testing_1_1allocation__info__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a89e7a0f4cddc566e6818469571336773 inherit pro_methods_classsequoia_1_1testing_1_1allocation__info__base"><td class="memItemLeft" align="right" valign="top"><a id="a89e7a0f4cddc566e6818469571336773"></a>
+constexpr <a class="el" href="../../db/df4/classsequoia_1_1testing_1_1allocation__info__base.html">allocation_info_base</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="../../db/df4/classsequoia_1_1testing_1_1allocation__info__base.html">allocation_info_base</a> &amp;)=default</td></tr>
+<tr class="separator:a89e7a0f4cddc566e6818469571336773 inherit pro_methods_classsequoia_1_1testing_1_1allocation__info__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acdd0ff9c39d6f3ddc9d6a8efca79d3fd inherit pro_methods_classsequoia_1_1testing_1_1allocation__info__base"><td class="memItemLeft" align="right" valign="top"><a id="acdd0ff9c39d6f3ddc9d6a8efca79d3fd"></a>
+constexpr <a class="el" href="../../db/df4/classsequoia_1_1testing_1_1allocation__info__base.html">allocation_info_base</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="../../db/df4/classsequoia_1_1testing_1_1allocation__info__base.html">allocation_info_base</a> &amp;&amp;) noexcept=default</td></tr>
+<tr class="separator:acdd0ff9c39d6f3ddc9d6a8efca79d3fd inherit pro_methods_classsequoia_1_1testing_1_1allocation__info__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abe4f6f1cec17931f116b630dc438d1ae inherit pro_methods_classsequoia_1_1testing_1_1allocation__info__base"><td class="memItemLeft" align="right" valign="top"><a id="abe4f6f1cec17931f116b630dc438d1ae"></a>
+constexpr Getter&#160;</td><td class="memItemRight" valign="bottom"><b>make_getter</b> () const</td></tr>
+<tr class="separator:abe4f6f1cec17931f116b630dc438d1ae inherit pro_methods_classsequoia_1_1testing_1_1allocation__info__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<hr/>The documentation for this class was generated from the following file:<ul>
-<li>/Users/Claire/Dropbox/Sequoia/Source/TestFramework/<a class="el" href="../../d9/dd1/RegularAllocationCheckers_8hpp_source.html">RegularAllocationCheckers.hpp</a></li>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><h3>template&lt;movable_comparable T, alloc_getter&lt; T &gt; Getter&gt;<br />
+class sequoia::testing::allocation_info&lt; T, Getter &gt;</h3>
+
+<p>Class for use with a container possessing a (shared counting) allocator. </p>
+<p>By inheriting from <a class="el" href="../../db/df4/classsequoia_1_1testing_1_1allocation__info__base.html" title="Base class for use with both plain (shared counting) allocators and std::scoped_allocator_adaptor.">allocation_info_base</a>, this class is able to acquire a copy of an allocator from a container. On top of this, the class holds predictions for the various allocation events. </p>
+</div><hr/>The documentation for this class was generated from the following file:<ul>
+<li>/Users/Claire/Dropbox/Sequoia/Source/sequoia/TestFramework/<a class="el" href="../../d3/dfb/AllocationCheckers_8hpp_source.html">AllocationCheckers.hpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

@@ -67,6 +67,7 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pro-types">Protected Types</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="../../d0/d9d/classsequoia_1_1testing_1_1test-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -74,7 +75,7 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>Abstract base class used for type-erasure of the template class <a class="el" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html" title="class template from which all concrete tests should derive.">basic_test</a>.  
+<p>Abstract base class used for type-erasure of the template class <a class="el" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">basic_test</a>.  
  <a href="../../da/d6f/classsequoia_1_1testing_1_1test.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="../../dd/d3e/FreeTestCore_8hpp_source.html">FreeTestCore.hpp</a>&gt;</code></p>
@@ -84,65 +85,99 @@ Inheritance diagram for sequoia::testing::test:</div>
  <div class="center">
   <img src="../../da/d6f/classsequoia_1_1testing_1_1test.png" usemap="#sequoia::testing::test_map" alt=""/>
   <map id="sequoia::testing::test_map" name="sequoia::testing::test_map">
-<area href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html" alt="sequoia::testing::basic_test&lt; checker&lt; Mode, move_only_allocation_extender&lt; Mode &gt; &gt; &gt;" shape="rect" coords="0,56,528,80"/>
-<area href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html" alt="sequoia::testing::basic_test&lt; checker&lt; Mode, regular_allocation_extender&lt; Mode &gt; &gt; &gt;" shape="rect" coords="538,56,1066,80"/>
-<area href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html" alt="sequoia::testing::basic_test&lt; graph_checker&lt; Mode, Extenders... &gt; &gt;" shape="rect" coords="1076,56,1604,80"/>
-<area href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html" title="class template from which all concrete tests should derive." alt="sequoia::testing::basic_test&lt; Checker &gt;" shape="rect" coords="1614,56,2142,80"/>
-<area href="../../d5/db2/classsequoia_1_1testing_1_1basic__move__only__allocation__test.html" title="Templated on the test_mode, this forms the basis of all allocation tests for move-only types." alt="sequoia::testing::basic_move_only_allocation_test&lt; Mode &gt;" shape="rect" coords="0,112,528,136"/>
-<area href="../../db/dbc/classsequoia_1_1testing_1_1basic__regular__allocation__test.html" title="Templated on the test_mode, this forms the basis of all allocation tests for regular types." alt="sequoia::testing::basic_regular_allocation_test&lt; Mode &gt;" shape="rect" coords="538,112,1066,136"/>
-<area href="../../d8/db8/classsequoia_1_1testing_1_1graph__basic__test.html" alt="sequoia::testing::graph_basic_test&lt; Mode, Extenders &gt;" shape="rect" coords="1076,112,1604,136"/>
-<area href="../../df/dda/classsequoia_1_1testing_1_1algorithms__test.html" alt="sequoia::testing::algorithms_test" shape="rect" coords="2152,112,2680,136"/>
-<area href="../../d2/dda/classsequoia_1_1testing_1_1array__utilities__test.html" alt="sequoia::testing::array_utilities_test" shape="rect" coords="2152,168,2680,192"/>
-<area href="../../db/d30/classsequoia_1_1testing_1_1commandline__arguments__false__positive__test.html" alt="sequoia::testing::commandline_arguments_false_positive_test" shape="rect" coords="2152,224,2680,248"/>
-<area href="../../de/de7/classsequoia_1_1testing_1_1commandline__arguments__test.html" alt="sequoia::testing::commandline_arguments_test" shape="rect" coords="2152,280,2680,304"/>
-<area href="../../d9/dfb/classsequoia_1_1testing_1_1concepts__test.html" alt="sequoia::testing::concepts_test" shape="rect" coords="2152,336,2680,360"/>
-<area href="../../d3/d66/classsequoia_1_1testing_1_1couple__false__positive__test.html" alt="sequoia::testing::couple_false_positive_test" shape="rect" coords="2152,392,2680,416"/>
-<area href="../../d5/d9a/classsequoia_1_1testing_1_1couple__test.html" alt="sequoia::testing::couple_test" shape="rect" coords="2152,448,2680,472"/>
-<area href="../../d1/d80/classsequoia_1_1testing_1_1data__pool__test.html" alt="sequoia::testing::data_pool_test" shape="rect" coords="2152,504,2680,528"/>
-<area href="../../d9/d26/classsequoia_1_1testing_1_1experimental__test.html" alt="sequoia::testing::experimental_test" shape="rect" coords="2152,560,2680,584"/>
-<area href="../../d5/de9/classsequoia_1_1testing_1_1false__negative__diagnostics.html" alt="sequoia::testing::false_negative_diagnostics" shape="rect" coords="2152,616,2680,640"/>
-<area href="../../d2/daa/classsequoia_1_1testing_1_1false__positive__diagnostics.html" alt="sequoia::testing::false_positive_diagnostics" shape="rect" coords="2152,672,2680,696"/>
-<area href="../../dc/d69/classsequoia_1_1testing_1_1foo__false__positive__test.html" alt="sequoia::testing::foo_false_positive_test" shape="rect" coords="2152,728,2680,752"/>
-<area href="../../d0/d81/classsequoia_1_1testing_1_1foo__test.html" alt="sequoia::testing::foo_test" shape="rect" coords="2152,784,2680,808"/>
-<area href="../../d7/d69/classsequoia_1_1testing_1_1fuzzy__false__negative__diagnostics.html" alt="sequoia::testing::fuzzy_false_negative_diagnostics" shape="rect" coords="2152,840,2680,864"/>
-<area href="../../db/dc4/classsequoia_1_1testing_1_1fuzzy__false__positive__diagnostics.html" alt="sequoia::testing::fuzzy_false_positive_diagnostics" shape="rect" coords="2152,896,2680,920"/>
-<area href="../../db/dac/classsequoia_1_1testing_1_1iterator__false__positive__test.html" alt="sequoia::testing::iterator_false_positive_test" shape="rect" coords="2152,952,2680,976"/>
-<area href="../../d9/d53/classsequoia_1_1testing_1_1iterator__test.html" alt="sequoia::testing::iterator_test" shape="rect" coords="2152,1008,2680,1032"/>
-<area href="../../d5/df8/classsequoia_1_1testing_1_1linear__sequence__false__positive__test.html" alt="sequoia::testing::linear_sequence_false_positive_test" shape="rect" coords="2152,1064,2680,1088"/>
-<area href="../../d4/d2e/classsequoia_1_1testing_1_1linear__sequence__test.html" alt="sequoia::testing::linear_sequence_test" shape="rect" coords="2152,1120,2680,1144"/>
-<area href="../../de/d00/classsequoia_1_1testing_1_1maybe__false__positive__test.html" alt="sequoia::testing::maybe_false_positive_test" shape="rect" coords="2152,1176,2680,1200"/>
-<area href="../../d7/dc8/classsequoia_1_1testing_1_1maybe__test.html" alt="sequoia::testing::maybe_test" shape="rect" coords="2152,1232,2680,1256"/>
-<area href="../../dc/db2/classsequoia_1_1testing_1_1monotonic__sequence__false__positive__test.html" alt="sequoia::testing::monotonic_sequence_false_positive_test" shape="rect" coords="2152,1288,2680,1312"/>
-<area href="../../d1/d45/classsequoia_1_1testing_1_1monotonic__sequence__test.html" alt="sequoia::testing::monotonic_sequence_test" shape="rect" coords="2152,1344,2680,1368"/>
-<area href="../../d9/dc1/classsequoia_1_1testing_1_1move__only__false__negative__diagnostics.html" alt="sequoia::testing::move_only_false_negative_diagnostics" shape="rect" coords="2152,1400,2680,1424"/>
-<area href="../../d4/de1/classsequoia_1_1testing_1_1move__only__false__positive__diagnostics.html" alt="sequoia::testing::move_only_false_positive_diagnostics" shape="rect" coords="2152,1456,2680,1480"/>
-<area href="../../d2/d3e/classsequoia_1_1testing_1_1node__storage__test.html" alt="sequoia::testing::node_storage_test" shape="rect" coords="2152,1512,2680,1536"/>
-<area href="../../dc/d29/classsequoia_1_1testing_1_1orderable__move__only__false__negative__diagnostics.html" alt="sequoia::testing::orderable_move_only_false_negative_diagnostics" shape="rect" coords="2152,1568,2680,1592"/>
-<area href="../../d9/d58/classsequoia_1_1testing_1_1orderable__move__only__false__positive__diagnostics.html" alt="sequoia::testing::orderable_move_only_false_positive_diagnostics" shape="rect" coords="2152,1624,2680,1648"/>
-<area href="../../d6/d20/classsequoia_1_1testing_1_1orderable__regular__false__negative__diagnostics.html" alt="sequoia::testing::orderable_regular_false_negative_diagnostics" shape="rect" coords="2152,1680,2680,1704"/>
-<area href="../../d8/d4a/classsequoia_1_1testing_1_1orderable__regular__false__positive__diagnostics.html" alt="sequoia::testing::orderable_regular_false_positive_diagnostics" shape="rect" coords="2152,1736,2680,1760"/>
-<area href="../../d0/dbf/classsequoia_1_1testing_1_1partitioned__data__false__positive__test.html" alt="sequoia::testing::partitioned_data_false_positive_test" shape="rect" coords="2152,1792,2680,1816"/>
-<area href="../../d1/d0f/classsequoia_1_1testing_1_1partitioned__data__test.html" alt="sequoia::testing::partitioned_data_test" shape="rect" coords="2152,1848,2680,1872"/>
-<area href="../../d5/d16/classsequoia_1_1testing_1_1performance__false__negative__diagnostics.html" alt="sequoia::testing::performance_false_negative_diagnostics" shape="rect" coords="2152,1904,2680,1928"/>
-<area href="../../dd/dad/classsequoia_1_1testing_1_1performance__false__positive__diagnostics.html" alt="sequoia::testing::performance_false_positive_diagnostics" shape="rect" coords="2152,1960,2680,1984"/>
-<area href="../../d6/dff/classsequoia_1_1testing_1_1protective__wrapper__false__positive__test.html" alt="sequoia::testing::protective_wrapper_false_positive_test" shape="rect" coords="2152,2016,2680,2040"/>
-<area href="../../d5/d07/classsequoia_1_1testing_1_1protective__wrapper__test.html" alt="sequoia::testing::protective_wrapper_test" shape="rect" coords="2152,2072,2680,2096"/>
-<area href="../../dd/d53/classsequoia_1_1testing_1_1statistical__algorithms__test.html" alt="sequoia::testing::statistical_algorithms_test" shape="rect" coords="2152,2128,2680,2152"/>
-<area href="../../d2/dbe/classsequoia_1_1testing_1_1test__edge__false__positives.html" alt="sequoia::testing::test_edge_false_positives" shape="rect" coords="2152,2184,2680,2208"/>
-<area href="../../dd/dcf/classsequoia_1_1testing_1_1test__edges.html" alt="sequoia::testing::test_edges" shape="rect" coords="2152,2240,2680,2264"/>
-<area href="../../d6/d8d/classsequoia_1_1testing_1_1test__heterogeneous__node__storage.html" alt="sequoia::testing::test_heterogeneous_node_storage" shape="rect" coords="2152,2296,2680,2320"/>
-<area href="../../d2/db9/classsequoia_1_1testing_1_1test__runner__false__positive__test.html" alt="sequoia::testing::test_runner_false_positive_test" shape="rect" coords="2152,2352,2680,2376"/>
-<area href="../../d5/dde/classsequoia_1_1testing_1_1test__runner__test.html" alt="sequoia::testing::test_runner_test" shape="rect" coords="2152,2408,2680,2432"/>
-<area href="../../da/d96/classsequoia_1_1testing_1_1test__static__priority__queue.html" alt="sequoia::testing::test_static_priority_queue" shape="rect" coords="2152,2464,2680,2488"/>
-<area href="../../dc/d27/classsequoia_1_1testing_1_1test__static__priority__queue__false__positives.html" alt="sequoia::testing::test_static_priority_queue_false_positives" shape="rect" coords="2152,2520,2680,2544"/>
-<area href="../../d3/d9d/classsequoia_1_1testing_1_1test__static__queue.html" alt="sequoia::testing::test_static_queue" shape="rect" coords="2152,2576,2680,2600"/>
-<area href="../../d9/dca/classsequoia_1_1testing_1_1test__static__queue__false__positives.html" alt="sequoia::testing::test_static_queue_false_positives" shape="rect" coords="2152,2632,2680,2656"/>
-<area href="../../d4/d64/classsequoia_1_1testing_1_1test__static__stack.html" alt="sequoia::testing::test_static_stack" shape="rect" coords="2152,2688,2680,2712"/>
-<area href="../../d4/d48/classsequoia_1_1testing_1_1test__static__stack__false__positives.html" alt="sequoia::testing::test_static_stack_false_positives" shape="rect" coords="2152,2744,2680,2768"/>
-<area href="../../df/da0/classsequoia_1_1testing_1_1threading__models__performance__test.html" alt="sequoia::testing::threading_models_performance_test" shape="rect" coords="2152,2800,2680,2824"/>
-<area href="../../d4/d68/classsequoia_1_1testing_1_1threading__models__test.html" alt="sequoia::testing::threading_models_test" shape="rect" coords="2152,2856,2680,2880"/>
-<area href="../../d2/d72/classsequoia_1_1testing_1_1type__traits__test.html" alt="sequoia::testing::type_traits_test" shape="rect" coords="2152,2912,2680,2936"/>
-<area href="../../de/d71/classsequoia_1_1testing_1_1utilities__test.html" alt="sequoia::testing::utilities_test" shape="rect" coords="2152,2968,2680,2992"/>
+<area href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html" alt="sequoia::testing::basic_test" shape="rect" coords="0,56,418,80"/>
+<area href="../../df/dda/classsequoia_1_1testing_1_1algorithms__test.html" alt="sequoia::testing::algorithms_test" shape="rect" coords="428,112,846,136"/>
+<area href="../../d8/d80/classsequoia_1_1testing_1_1angle__false__positive__test.html" alt="sequoia::testing::angle_false_positive_test" shape="rect" coords="428,168,846,192"/>
+<area href="../../de/d05/classsequoia_1_1testing_1_1angle__test.html" alt="sequoia::testing::angle_test" shape="rect" coords="428,224,846,248"/>
+<area href="../../d2/dda/classsequoia_1_1testing_1_1array__utilities__test.html" alt="sequoia::testing::array_utilities_test" shape="rect" coords="428,280,846,304"/>
+<area href="../../dc/d26/classsequoia_1_1testing_1_1bar__free__test.html" alt="sequoia::testing::bar_free_test" shape="rect" coords="428,336,846,360"/>
+<area href="../../de/dcd/classsequoia_1_1testing_1_1bazzer__test.html" alt="sequoia::testing::bazzer_test" shape="rect" coords="428,392,846,416"/>
+<area href="../../db/d30/classsequoia_1_1testing_1_1commandline__arguments__false__positive__test.html" alt="sequoia::testing::commandline_arguments_false_positive_test" shape="rect" coords="428,448,846,472"/>
+<area href="../../de/de7/classsequoia_1_1testing_1_1commandline__arguments__test.html" alt="sequoia::testing::commandline_arguments_test" shape="rect" coords="428,504,846,528"/>
+<area href="../../d9/dfb/classsequoia_1_1testing_1_1concepts__test.html" alt="sequoia::testing::concepts_test" shape="rect" coords="428,560,846,584"/>
+<area href="../../db/d34/classsequoia_1_1testing_1_1container__false__positive__test.html" alt="sequoia::testing::container_false_positive_test" shape="rect" coords="428,616,846,640"/>
+<area href="../../dc/d8e/classsequoia_1_1testing_1_1container__test.html" alt="sequoia::testing::container_test" shape="rect" coords="428,672,846,696"/>
+<area href="../../d3/d66/classsequoia_1_1testing_1_1couple__false__positive__test.html" alt="sequoia::testing::couple_false_positive_test" shape="rect" coords="428,728,846,752"/>
+<area href="../../d5/d9a/classsequoia_1_1testing_1_1couple__test.html" alt="sequoia::testing::couple_test" shape="rect" coords="428,784,846,808"/>
+<area href="../../d1/d80/classsequoia_1_1testing_1_1data__pool__test.html" alt="sequoia::testing::data_pool_test" shape="rect" coords="428,840,846,864"/>
+<area href="../../d5/d82/classsequoia_1_1testing_1_1defs__free__test.html" alt="sequoia::testing::defs_free_test" shape="rect" coords="428,896,846,920"/>
+<area href="../../d7/d0f/classsequoia_1_1testing_1_1doohicky__free__test.html" alt="sequoia::testing::doohicky_free_test" shape="rect" coords="428,952,846,976"/>
+<area href="../../d9/d26/classsequoia_1_1testing_1_1experimental__test.html" alt="sequoia::testing::experimental_test" shape="rect" coords="428,1008,846,1032"/>
+<area href="../../d1/d74/classsequoia_1_1testing_1_1factory__false__positive__test.html" alt="sequoia::testing::factory_false_positive_test" shape="rect" coords="428,1064,846,1088"/>
+<area href="../../d0/d23/classsequoia_1_1testing_1_1factory__test.html" alt="sequoia::testing::factory_test" shape="rect" coords="428,1120,846,1144"/>
+<area href="../../d5/de9/classsequoia_1_1testing_1_1false__negative__diagnostics.html" alt="sequoia::testing::false_negative_diagnostics" shape="rect" coords="428,1176,846,1200"/>
+<area href="../../d2/daa/classsequoia_1_1testing_1_1false__positive__diagnostics.html" alt="sequoia::testing::false_positive_diagnostics" shape="rect" coords="428,1232,846,1256"/>
+<area href="../../d3/d49/classsequoia_1_1testing_1_1file__system__free__test.html" alt="sequoia::testing::file_system_free_test" shape="rect" coords="428,1288,846,1312"/>
+<area href="../../dc/d69/classsequoia_1_1testing_1_1foo__false__positive__test.html" alt="sequoia::testing::foo_false_positive_test" shape="rect" coords="428,1344,846,1368"/>
+<area href="../../d0/d81/classsequoia_1_1testing_1_1foo__test.html" alt="sequoia::testing::foo_test" shape="rect" coords="428,1400,846,1424"/>
+<area href="../../d0/d81/classsequoia_1_1testing_1_1foo__test.html" alt="sequoia::testing::foo_test" shape="rect" coords="428,1456,846,1480"/>
+<area href="../../d7/d69/classsequoia_1_1testing_1_1fuzzy__false__negative__diagnostics.html" alt="sequoia::testing::fuzzy_false_negative_diagnostics" shape="rect" coords="428,1512,846,1536"/>
+<area href="../../db/dc4/classsequoia_1_1testing_1_1fuzzy__false__positive__diagnostics.html" alt="sequoia::testing::fuzzy_false_positive_diagnostics" shape="rect" coords="428,1568,846,1592"/>
+<area href="../../df/d72/classsequoia_1_1testing_1_1global__free__test.html" alt="sequoia::testing::global_free_test" shape="rect" coords="428,1624,846,1648"/>
+<area href="../../d9/d4f/classsequoia_1_1testing_1_1indent__free__test.html" alt="sequoia::testing::indent_free_test" shape="rect" coords="428,1680,846,1704"/>
+<area href="../../db/dac/classsequoia_1_1testing_1_1iterator__false__positive__test.html" alt="sequoia::testing::iterator_false_positive_test" shape="rect" coords="428,1736,846,1760"/>
+<area href="../../d9/d53/classsequoia_1_1testing_1_1iterator__test.html" alt="sequoia::testing::iterator_test" shape="rect" coords="428,1792,846,1816"/>
+<area href="../../d5/df8/classsequoia_1_1testing_1_1linear__sequence__false__positive__test.html" alt="sequoia::testing::linear_sequence_false_positive_test" shape="rect" coords="428,1848,846,1872"/>
+<area href="../../d4/d2e/classsequoia_1_1testing_1_1linear__sequence__test.html" alt="sequoia::testing::linear_sequence_test" shape="rect" coords="428,1904,846,1928"/>
+<area href="../../de/d00/classsequoia_1_1testing_1_1maybe__false__positive__test.html" alt="sequoia::testing::maybe_false_positive_test" shape="rect" coords="428,1960,846,1984"/>
+<area href="../../d7/dc8/classsequoia_1_1testing_1_1maybe__test.html" alt="sequoia::testing::maybe_test" shape="rect" coords="428,2016,846,2040"/>
+<area href="../../dc/db2/classsequoia_1_1testing_1_1monotonic__sequence__false__positive__test.html" alt="sequoia::testing::monotonic_sequence_false_positive_test" shape="rect" coords="428,2072,846,2096"/>
+<area href="../../d1/d45/classsequoia_1_1testing_1_1monotonic__sequence__test.html" alt="sequoia::testing::monotonic_sequence_test" shape="rect" coords="428,2128,846,2152"/>
+<area href="../../d9/dc1/classsequoia_1_1testing_1_1move__only__false__negative__diagnostics.html" alt="sequoia::testing::move_only_false_negative_diagnostics" shape="rect" coords="428,2184,846,2208"/>
+<area href="../../d4/de1/classsequoia_1_1testing_1_1move__only__false__positive__diagnostics.html" alt="sequoia::testing::move_only_false_positive_diagnostics" shape="rect" coords="428,2240,846,2264"/>
+<area href="../../d5/dce/classsequoia_1_1testing_1_1multiple__false__positive__test.html" alt="sequoia::testing::multiple_false_positive_test" shape="rect" coords="428,2296,846,2320"/>
+<area href="../../d9/d31/classsequoia_1_1testing_1_1multiple__test.html" alt="sequoia::testing::multiple_test" shape="rect" coords="428,2352,846,2376"/>
+<area href="../../d2/d3e/classsequoia_1_1testing_1_1node__storage__test.html" alt="sequoia::testing::node_storage_test" shape="rect" coords="428,2408,846,2432"/>
+<area href="../../d8/d08/classsequoia_1_1testing_1_1oldschool__false__positive__test.html" alt="sequoia::testing::oldschool_false_positive_test" shape="rect" coords="428,2464,846,2488"/>
+<area href="../../d2/d7d/classsequoia_1_1testing_1_1oldschool__test.html" alt="sequoia::testing::oldschool_test" shape="rect" coords="428,2520,846,2544"/>
+<area href="../../dc/d29/classsequoia_1_1testing_1_1orderable__move__only__false__negative__diagnostics.html" alt="sequoia::testing::orderable_move_only_false_negative_diagnostics" shape="rect" coords="428,2576,846,2600"/>
+<area href="../../d9/d58/classsequoia_1_1testing_1_1orderable__move__only__false__positive__diagnostics.html" alt="sequoia::testing::orderable_move_only_false_positive_diagnostics" shape="rect" coords="428,2632,846,2656"/>
+<area href="../../d6/d20/classsequoia_1_1testing_1_1orderable__regular__false__negative__diagnostics.html" alt="sequoia::testing::orderable_regular_false_negative_diagnostics" shape="rect" coords="428,2688,846,2712"/>
+<area href="../../d8/d4a/classsequoia_1_1testing_1_1orderable__regular__false__positive__diagnostics.html" alt="sequoia::testing::orderable_regular_false_positive_diagnostics" shape="rect" coords="428,2744,846,2768"/>
+<area href="../../df/dcd/classsequoia_1_1testing_1_1output__free__test.html" alt="sequoia::testing::output_free_test" shape="rect" coords="428,2800,846,2824"/>
+<area href="../../d0/dbf/classsequoia_1_1testing_1_1partitioned__data__false__positive__test.html" alt="sequoia::testing::partitioned_data_false_positive_test" shape="rect" coords="428,2856,846,2880"/>
+<area href="../../d1/d0f/classsequoia_1_1testing_1_1partitioned__data__test.html" alt="sequoia::testing::partitioned_data_test" shape="rect" coords="428,2912,846,2936"/>
+<area href="../../de/d88/classsequoia_1_1testing_1_1patterns__free__test.html" alt="sequoia::testing::patterns_free_test" shape="rect" coords="428,2968,846,2992"/>
+<area href="../../da/d5f/classsequoia_1_1testing_1_1performance__utilities__test.html" alt="sequoia::testing::performance_utilities_test" shape="rect" coords="428,3024,846,3048"/>
+<area href="../../dd/de5/classsequoia_1_1testing_1_1probability__false__positive__test.html" alt="sequoia::testing::probability_false_positive_test" shape="rect" coords="428,3080,846,3104"/>
+<area href="../../dc/d54/classsequoia_1_1testing_1_1probability__test.html" alt="sequoia::testing::probability_test" shape="rect" coords="428,3136,846,3160"/>
+<area href="../../d4/d42/classsequoia_1_1testing_1_1static__linearly__partitioned__sequence__false__positive__test.html" alt="sequoia::testing::static_linearly_partitioned_sequence_false_positive_test" shape="rect" coords="428,3192,846,3216"/>
+<area href="../../d2/d45/classsequoia_1_1testing_1_1static__linearly__partitioned__sequence__test.html" alt="sequoia::testing::static_linearly_partitioned_sequence_test" shape="rect" coords="428,3248,846,3272"/>
+<area href="../../dd/d53/classsequoia_1_1testing_1_1statistical__algorithms__test.html" alt="sequoia::testing::statistical_algorithms_test" shape="rect" coords="428,3304,846,3328"/>
+<area href="../../de/df5/classsequoia_1_1testing_1_1streaming__free__test.html" alt="sequoia::testing::streaming_free_test" shape="rect" coords="428,3360,846,3384"/>
+<area href="../../d7/ddb/classsequoia_1_1testing_1_1substitutions__free__test.html" alt="sequoia::testing::substitutions_free_test" shape="rect" coords="428,3416,846,3440"/>
+<area href="../../d2/dbe/classsequoia_1_1testing_1_1test__edge__false__positives.html" alt="sequoia::testing::test_edge_false_positives" shape="rect" coords="428,3472,846,3496"/>
+<area href="../../dd/dcf/classsequoia_1_1testing_1_1test__edges.html" alt="sequoia::testing::test_edges" shape="rect" coords="428,3528,846,3552"/>
+<area href="../../d9/d45/classsequoia_1_1testing_1_1test__graph__update.html" alt="sequoia::testing::test_graph_update" shape="rect" coords="428,3584,846,3608"/>
+<area href="../../d6/d8d/classsequoia_1_1testing_1_1test__heterogeneous__node__storage.html" alt="sequoia::testing::test_heterogeneous_node_storage" shape="rect" coords="428,3640,846,3664"/>
+<area href="../../d1/dbf/classsequoia_1_1testing_1_1test__runner__end__to__end__test.html" alt="sequoia::testing::test_runner_end_to_end_test" shape="rect" coords="428,3696,846,3720"/>
+<area href="../../d2/db9/classsequoia_1_1testing_1_1test__runner__false__positive__test.html" alt="sequoia::testing::test_runner_false_positive_test" shape="rect" coords="428,3752,846,3776"/>
+<area href="../../d2/d37/classsequoia_1_1testing_1_1test__runner__project__creation.html" alt="sequoia::testing::test_runner_project_creation" shape="rect" coords="428,3808,846,3832"/>
+<area href="../../d5/dde/classsequoia_1_1testing_1_1test__runner__test.html" alt="sequoia::testing::test_runner_test" shape="rect" coords="428,3864,846,3888"/>
+<area href="../../d9/df3/classsequoia_1_1testing_1_1test__runner__test__creation.html" alt="sequoia::testing::test_runner_test_creation" shape="rect" coords="428,3920,846,3944"/>
+<area href="../../da/d96/classsequoia_1_1testing_1_1test__static__priority__queue.html" alt="sequoia::testing::test_static_priority_queue" shape="rect" coords="428,3976,846,4000"/>
+<area href="../../dc/d27/classsequoia_1_1testing_1_1test__static__priority__queue__false__positives.html" alt="sequoia::testing::test_static_priority_queue_false_positives" shape="rect" coords="428,4032,846,4056"/>
+<area href="../../d3/d9d/classsequoia_1_1testing_1_1test__static__queue.html" alt="sequoia::testing::test_static_queue" shape="rect" coords="428,4088,846,4112"/>
+<area href="../../d9/dca/classsequoia_1_1testing_1_1test__static__queue__false__positives.html" alt="sequoia::testing::test_static_queue_false_positives" shape="rect" coords="428,4144,846,4168"/>
+<area href="../../d4/d64/classsequoia_1_1testing_1_1test__static__stack.html" alt="sequoia::testing::test_static_stack" shape="rect" coords="428,4200,846,4224"/>
+<area href="../../d4/d48/classsequoia_1_1testing_1_1test__static__stack__false__positives.html" alt="sequoia::testing::test_static_stack_false_positives" shape="rect" coords="428,4256,846,4280"/>
+<area href="../../d3/d6d/classsequoia_1_1testing_1_1things__false__positive__test.html" alt="sequoia::testing::things_false_positive_test" shape="rect" coords="428,4312,846,4336"/>
+<area href="../../dc/d07/classsequoia_1_1testing_1_1things__test.html" alt="sequoia::testing::things_test" shape="rect" coords="428,4368,846,4392"/>
+<area href="../../de/d62/classsequoia_1_1testing_1_1thingummy__false__positive__test.html" alt="sequoia::testing::thingummy_false_positive_test" shape="rect" coords="428,4424,846,4448"/>
+<area href="../../d7/d3a/classsequoia_1_1testing_1_1thingummy__test.html" alt="sequoia::testing::thingummy_test" shape="rect" coords="428,4480,846,4504"/>
+<area href="../../d4/d68/classsequoia_1_1testing_1_1threading__models__test.html" alt="sequoia::testing::threading_models_test" shape="rect" coords="428,4536,846,4560"/>
+<area href="../../d2/d72/classsequoia_1_1testing_1_1type__traits__test.html" alt="sequoia::testing::type_traits_test" shape="rect" coords="428,4592,846,4616"/>
+<area href="../../d3/d22/classsequoia_1_1testing_1_1uniform__wrapper__false__positive__test.html" alt="sequoia::testing::uniform_wrapper_false_positive_test" shape="rect" coords="428,4648,846,4672"/>
+<area href="../../dc/d9d/classsequoia_1_1testing_1_1uniform__wrapper__test.html" alt="sequoia::testing::uniform_wrapper_test" shape="rect" coords="428,4704,846,4728"/>
+<area href="../../d7/d74/classsequoia_1_1testing_1_1unique__thing__false__positive__test.html" alt="sequoia::testing::unique_thing_false_positive_test" shape="rect" coords="428,4760,846,4784"/>
+<area href="../../d8/d22/classsequoia_1_1testing_1_1unique__thing__test.html" alt="sequoia::testing::unique_thing_test" shape="rect" coords="428,4816,846,4840"/>
+<area href="../../d2/db1/classsequoia_1_1testing_1_1useful__things__free__test.html" alt="sequoia::testing::useful_things_free_test" shape="rect" coords="428,4872,846,4896"/>
+<area href="../../d8/db7/classsequoia_1_1testing_1_1utilities__free__test.html" alt="sequoia::testing::utilities_free_test" shape="rect" coords="428,4928,846,4952"/>
+<area href="../../de/d71/classsequoia_1_1testing_1_1utilities__test.html" alt="sequoia::testing::utilities_test" shape="rect" coords="428,4984,846,5008"/>
+<area href="../../d6/ddb/classsequoia_1_1testing_1_1variadic__false__positive__test.html" alt="sequoia::testing::variadic_false_positive_test" shape="rect" coords="428,5040,846,5064"/>
+<area href="../../db/d66/classsequoia_1_1testing_1_1variadic__test.html" alt="sequoia::testing::variadic_test" shape="rect" coords="428,5096,846,5120"/>
+<area href="../../d2/dd2/classsequoia_1_1testing_1_1widget__false__positive__test.html" alt="sequoia::testing::widget_false_positive_test" shape="rect" coords="428,5152,846,5176"/>
+<area href="../../d1/d35/classsequoia_1_1testing_1_1widget__test.html" alt="sequoia::testing::widget_test" shape="rect" coords="428,5208,846,5232"/>
   </map>
 </div></div>
 <table class="memberdecls">
@@ -157,49 +192,71 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:af522debe971e94025f66f8b430e1f022"><td class="memItemLeft" align="right" valign="top"><a id="af522debe971e94025f66f8b430e1f022"></a>
 <a class="el" href="../../da/d6f/classsequoia_1_1testing_1_1test.html">test</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="../../da/d6f/classsequoia_1_1testing_1_1test.html">test</a> &amp;)=delete</td></tr>
 <tr class="separator:af522debe971e94025f66f8b430e1f022"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab55e8b6d9ef23bea65e4742039b446ee"><td class="memItemLeft" align="right" valign="top"><a id="ab55e8b6d9ef23bea65e4742039b446ee"></a>
-<a class="el" href="../../da/d6f/classsequoia_1_1testing_1_1test.html">test</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="../../da/d6f/classsequoia_1_1testing_1_1test.html">test</a> &amp;&amp;)=delete</td></tr>
-<tr class="separator:ab55e8b6d9ef23bea65e4742039b446ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1ed22dd2f95775e092455be0fa2e6165"><td class="memItemLeft" align="right" valign="top"><a id="a1ed22dd2f95775e092455be0fa2e6165"></a>
 <a class="el" href="../../d2/daa/classsequoia_1_1testing_1_1log__summary.html">log_summary</a>&#160;</td><td class="memItemRight" valign="bottom"><b>execute</b> ()</td></tr>
 <tr class="separator:a1ed22dd2f95775e092455be0fa2e6165"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a65c436b55da44d3ab92c730cd1af425c"><td class="memItemLeft" align="right" valign="top"><a id="a65c436b55da44d3ab92c730cd1af425c"></a>
 std::filesystem::path&#160;</td><td class="memItemRight" valign="bottom"><b>source_filename</b> () const noexcept</td></tr>
 <tr class="separator:a65c436b55da44d3ab92c730cd1af425c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a431a64e494ddbbb90e326e9e9c212be8"><td class="memItemLeft" align="right" valign="top"><a id="a431a64e494ddbbb90e326e9e9c212be8"></a>
-std::string_view&#160;</td><td class="memItemRight" valign="bottom"><b>name</b> () const noexcept</td></tr>
-<tr class="separator:a431a64e494ddbbb90e326e9e9c212be8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a094b64b90e85414e726894523164c5dc"><td class="memItemLeft" align="right" valign="top"><a id="a094b64b90e85414e726894523164c5dc"></a>
+const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>name</b> () const noexcept</td></tr>
+<tr class="separator:a094b64b90e85414e726894523164c5dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7638125e51f87788fd146257c1652226"><td class="memItemLeft" align="right" valign="top"><a id="a7638125e51f87788fd146257c1652226"></a>
 const std::filesystem::path &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>working_materials</b> () const noexcept</td></tr>
 <tr class="separator:a7638125e51f87788fd146257c1652226"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3c426b4cbb5517c42a6726c4452c9dc8"><td class="memItemLeft" align="right" valign="top"><a id="a3c426b4cbb5517c42a6726c4452c9dc8"></a>
 const std::filesystem::path &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>predictive_materials</b> () const noexcept</td></tr>
 <tr class="separator:a3c426b4cbb5517c42a6726c4452c9dc8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ace8956d97bbedbfe302b48bb904bb4c4"><td class="memItemLeft" align="right" valign="top"><a id="ace8956d97bbedbfe302b48bb904bb4c4"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>materials</b> (std::filesystem::path workingMaterials, std::filesystem::path predictiveMaterials)</td></tr>
-<tr class="separator:ace8956d97bbedbfe302b48bb904bb4c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a865fe3f1e96fd53e9c3e18292ade3ae9"><td class="memItemLeft" align="right" valign="top"><a id="a865fe3f1e96fd53e9c3e18292ade3ae9"></a>
+const std::filesystem::path &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>auxiliary_materials</b> () const noexcept</td></tr>
+<tr class="separator:a865fe3f1e96fd53e9c3e18292ade3ae9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4942f782caea87710c7ddc958b2cda2f"><td class="memItemLeft" align="right" valign="top"><a id="a4942f782caea87710c7ddc958b2cda2f"></a>
+const std::filesystem::path &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>test_repository</b> () const noexcept</td></tr>
+<tr class="separator:a4942f782caea87710c7ddc958b2cda2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae8177646cf0968796783130fb3831460"><td class="memItemLeft" align="right" valign="top"><a id="ae8177646cf0968796783130fb3831460"></a>
+const std::filesystem::path &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>diagnostics_output_filename</b> () const noexcept</td></tr>
+<tr class="separator:ae8177646cf0968796783130fb3831460"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6fe69d428611b6978abc16577010f78a"><td class="memItemLeft" align="right" valign="top"><a id="a6fe69d428611b6978abc16577010f78a"></a>
+const std::filesystem::path &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>caught_exceptions_output_filename</b> () const noexcept</td></tr>
+<tr class="separator:a6fe69d428611b6978abc16577010f78a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3ff5d5ac5a342f33547bf8434a04c6a8"><td class="memItemLeft" align="right" valign="top"><a id="a3ff5d5ac5a342f33547bf8434a04c6a8"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>report_line</b> (const std::filesystem::path &amp;file, int line, std::string_view message)</td></tr>
+<tr class="separator:a3ff5d5ac5a342f33547bf8434a04c6a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a72049935cc41c522eb413238b8102210"><td class="memItemLeft" align="right" valign="top"><a id="a72049935cc41c522eb413238b8102210"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>set_filesystem_data</b> (std::filesystem::path testRepo, const std::filesystem::path &amp;outputDir, std::string_view familyName)</td></tr>
+<tr class="separator:a72049935cc41c522eb413238b8102210"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1c526bce621236a771dba807e762b71c"><td class="memItemLeft" align="right" valign="top"><a id="a1c526bce621236a771dba807e762b71c"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>set_materials</b> (std::filesystem::path workingMaterials, std::filesystem::path predictiveMaterials, std::filesystem::path auxiliaryMaterials)</td></tr>
+<tr class="separator:a1c526bce621236a771dba807e762b71c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2bc368e65140176a53a54ae2b9d52b08"><td class="memItemLeft" align="right" valign="top"><a id="a2bc368e65140176a53a54ae2b9d52b08"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>set_recovery_paths</b> (<a class="el" href="../../da/d58/structsequoia_1_1testing_1_1recovery__paths.html">recovery_paths</a> paths)</td></tr>
+<tr class="separator:a2bc368e65140176a53a54ae2b9d52b08"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-types"></a>
+Protected Types</h2></td></tr>
+<tr class="memitem:a58946d23ec53d3da907e59a57f2312d9"><td class="memItemLeft" align="right" valign="top"><a id="a58946d23ec53d3da907e59a57f2312d9"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>duration</b> = std::chrono::steady_clock::duration</td></tr>
+<tr class="separator:a58946d23ec53d3da907e59a57f2312d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
 <tr class="memitem:a6d02c180aff9e7ae225f6c12e70e2e0d"><td class="memItemLeft" align="right" valign="top"><a id="a6d02c180aff9e7ae225f6c12e70e2e0d"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>test</b> (<a class="el" href="../../da/d6f/classsequoia_1_1testing_1_1test.html">test</a> &amp;&amp;) noexcept=default</td></tr>
 <tr class="separator:a6d02c180aff9e7ae225f6c12e70e2e0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3cd13c830731a9b239d3f33f3eff328f"><td class="memItemLeft" align="right" valign="top"><a id="a3cd13c830731a9b239d3f33f3eff328f"></a>
-virtual <a class="el" href="../../d2/daa/classsequoia_1_1testing_1_1log__summary.html">log_summary</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/d6f/classsequoia_1_1testing_1_1test.html#a3cd13c830731a9b239d3f33f3eff328f">do_execute</a> ()=0</td></tr>
-<tr class="memdesc:a3cd13c830731a9b239d3f33f3eff328f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pure virtual method, the overrides of which determine the fine details of test execution. <br /></td></tr>
-<tr class="separator:a3cd13c830731a9b239d3f33f3eff328f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af45829b6c878446b52dab1107616995f"><td class="memItemLeft" align="right" valign="top"><a id="af45829b6c878446b52dab1107616995f"></a>
-virtual std::string_view&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/d6f/classsequoia_1_1testing_1_1test.html#af45829b6c878446b52dab1107616995f">source_file</a> () const noexcept=0</td></tr>
-<tr class="memdesc:af45829b6c878446b52dab1107616995f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pure virtual method which should be overridden in a concrete test's cpp file in order to provide the correct <b>FILE</b> <br /></td></tr>
-<tr class="separator:af45829b6c878446b52dab1107616995f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4a9b521b8b8edda25dd5d5a7f46d8818"><td class="memItemLeft" align="right" valign="top"><a id="a4a9b521b8b8edda25dd5d5a7f46d8818"></a>
+<a class="el" href="../../da/d6f/classsequoia_1_1testing_1_1test.html">test</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="../../da/d6f/classsequoia_1_1testing_1_1test.html">test</a> &amp;&amp;) noexcept=default</td></tr>
+<tr class="separator:a4a9b521b8b8edda25dd5d5a7f46d8818"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6baf9a7cb2290ca1f4e53e769040db4c"><td class="memItemLeft" align="right" valign="top"><a id="a6baf9a7cb2290ca1f4e53e769040db4c"></a>
+virtual <a class="el" href="../../d2/daa/classsequoia_1_1testing_1_1log__summary.html">log_summary</a>&#160;</td><td class="memItemRight" valign="bottom"><b>summarize</b> (duration delta) const =0</td></tr>
+<tr class="separator:a6baf9a7cb2290ca1f4e53e769040db4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Abstract base class used for type-erasure of the template class <a class="el" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html" title="class template from which all concrete tests should derive.">basic_test</a>. </p>
+<div class="textblock"><p>Abstract base class used for type-erasure of the template class <a class="el" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">basic_test</a>. </p>
 <p>This class allows for convenient, homogeneous treatment of all concrete tests.</p>
-<p>The only state it holds is a string representing the name of the test.</p>
-<p>The semantics are such that, of the special member functions, only explicit construction from a string_view and (virtual) destruction are publicly available. Move construction is protected; all remaining special member functions are deleted to discourage multiple instantiations. </p>
-</div><hr/>The documentation for this class was generated from the following file:<ul>
-<li>/Users/Claire/Dropbox/Sequoia/Source/TestFramework/<a class="el" href="../../dd/d3e/FreeTestCore_8hpp_source.html">FreeTestCore.hpp</a></li>
+<p>The semantics are such that, of the special member functions, only explicit construction from a string_view and (virtual) destruction are publicly available. Moves are protected; copy contruction / assignment are deleted. </p>
+</div><hr/>The documentation for this class was generated from the following files:<ul>
+<li>/Users/Claire/Dropbox/Sequoia/Source/sequoia/TestFramework/<a class="el" href="../../dd/d3e/FreeTestCore_8hpp_source.html">FreeTestCore.hpp</a></li>
+<li>/Users/Claire/Dropbox/Sequoia/Source/sequoia/TestFramework/FreeTestCore.cpp</li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

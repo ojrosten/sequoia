@@ -86,6 +86,12 @@ Inheritance diagram for sequoia::maths::graph_impl::node_storage&lt; WeightMaker
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
+<tr class="memitem:af785d9773d13f8001bb2e028ffbccfeb"><td class="memItemLeft" align="right" valign="top"><a id="af785d9773d13f8001bb2e028ffbccfeb"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>weight_maker_type</b> = WeightMaker</td></tr>
+<tr class="separator:af785d9773d13f8001bb2e028ffbccfeb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a79b2084a52ba81fef15903bfc12666e5"><td class="memItemLeft" align="right" valign="top"><a id="a79b2084a52ba81fef15903bfc12666e5"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>traits_type</b> = Traits</td></tr>
+<tr class="separator:a79b2084a52ba81fef15903bfc12666e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0b640650002cc2f4f0eb83ebeb77c40a"><td class="memItemLeft" align="right" valign="top"><a id="a0b640650002cc2f4f0eb83ebeb77c40a"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>weight_proxy_type</b> = typename WeightMaker::proxy</td></tr>
 <tr class="separator:a0b640650002cc2f4f0eb83ebeb77c40a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -177,9 +183,9 @@ constexpr <a class="el" href="../../d0/de4/classsequoia_1_1maths_1_1graph__impl_
 <tr class="memitem:a6ab9a3e5e9222fc6cc7e12d2adee2570"><td class="memItemLeft" align="right" valign="top"><a id="a6ab9a3e5e9222fc6cc7e12d2adee2570"></a>
 constexpr <a class="el" href="../../d0/de4/classsequoia_1_1maths_1_1graph__impl_1_1node__storage.html">node_storage</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="../../d0/de4/classsequoia_1_1maths_1_1graph__impl_1_1node__storage.html">node_storage</a> &amp;&amp;)=default</td></tr>
 <tr class="separator:a6ab9a3e5e9222fc6cc7e12d2adee2570"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adb4612e3e7bc74f621b13812197e2e1c"><td class="memItemLeft" align="right" valign="top"><a id="adb4612e3e7bc74f621b13812197e2e1c"></a>
-constexpr void&#160;</td><td class="memItemRight" valign="bottom"><b>swap</b> (<a class="el" href="../../d0/de4/classsequoia_1_1maths_1_1graph__impl_1_1node__storage.html">node_storage</a> &amp;other) noexcept(noexcept(sequoia::swap(this-&gt;m_NodeWeights, other.m_NodeWeights)))</td></tr>
-<tr class="separator:adb4612e3e7bc74f621b13812197e2e1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a856468ae2d21a154ef789eb143076973"><td class="memItemLeft" align="right" valign="top"><a id="a856468ae2d21a154ef789eb143076973"></a>
+constexpr void&#160;</td><td class="memItemRight" valign="bottom"><b>swap</b> (<a class="el" href="../../d0/de4/classsequoia_1_1maths_1_1graph__impl_1_1node__storage.html">node_storage</a> &amp;rhs) noexcept(noexcept(sequoia::swap(this-&gt;m_NodeWeights, rhs.m_NodeWeights)))</td></tr>
+<tr class="separator:a856468ae2d21a154ef789eb143076973"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afacf23f168c7446b770243b4148641f7"><td class="memTemplParams" colspan="2"><a id="afacf23f168c7446b770243b4148641f7"></a>
 template&lt;alloc Allocator&gt; </td></tr>
 <tr class="memitem:afacf23f168c7446b770243b4148641f7"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>reset</b> (const Allocator &amp;allocator) noexcept</td></tr>
@@ -230,7 +236,7 @@ constexpr friend bool&#160;</td><td class="memItemRight" valign="bottom"><b>oper
 <tr class="separator:adea1b25a39082a2c0efc6dadb3f53d7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>/Users/Claire/Dropbox/Sequoia/Source/Maths/Graph/<a class="el" href="../../dd/d8b/NodeStorage_8hpp_source.html">NodeStorage.hpp</a></li>
+<li>/Users/Claire/Dropbox/Sequoia/Source/sequoia/Maths/Graph/<a class="el" href="../../dd/d8b/NodeStorage_8hpp_source.html">NodeStorage.hpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

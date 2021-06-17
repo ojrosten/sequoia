@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.18"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Sequoia: /Users/Claire/Dropbox/Sequoia/Source/Maths/Graph/DynamicGraphTraversalDetails.hpp Source File</title>
+<title>Sequoia: /Users/Claire/Dropbox/Sequoia/Source/sequoia/Maths/Graph/DynamicGraphTraversalDetails.hpp Source File</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -61,7 +61,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="../../dir_74389ed8173ad57b461b9d623a1f3867.html">Source</a></li><li class="navelem"><a class="el" href="../../dir_bfce9ab249d47e16c9e42220e5fdc10e.html">Maths</a></li><li class="navelem"><a class="el" href="../../dir_9b931fa7f5ff4df7b8729af1757013d0.html">Graph</a></li>  </ul>
+<li class="navelem"><a class="el" href="../../dir_74389ed8173ad57b461b9d623a1f3867.html">Source</a></li><li class="navelem"><a class="el" href="../../dir_2cc7e707cf7d8b577b4d17c7cb9b6739.html">sequoia</a></li><li class="navelem"><a class="el" href="../../dir_d40775f9221ab099c4c7f71f5e5081b6.html">Maths</a></li><li class="navelem"><a class="el" href="../../dir_27f8922d3f79031079bf19303e1551e1.html">Graph</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -76,96 +76,131 @@ $(function() {
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment"></span> </div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#pragma once</span></div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#include &lt;queue&gt;</span></div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#include &lt;stack&gt;</span></div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="keyword">namespace </span>sequoia::maths::graph_impl</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;{</div>
-<div class="line"><a name="l00020"></a><span class="lineno"><a class="line" href="../../d1/dc8/structsequoia_1_1maths_1_1graph__impl_1_1traversal__traits__base_3_01std_1_1priority__queue_3_01094ef3a8ef37cc52d93d2377df10d74e.html">   20</a></span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> Container, <span class="keyword">class</span> Compare&gt; <span class="keyword">struct </span><a class="code" href="../../dd/dfa/structsequoia_1_1maths_1_1graph__impl_1_1traversal__traits__base.html">traversal_traits_base</a>&lt;std::priority_queue&lt;std::size_t, Container, Compare&gt;&gt;</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;  {</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    [[nodiscard]]</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    constexpr <span class="keyword">static</span> <span class="keywordtype">bool</span> uses_forward_iterator() noexcept { <span class="keywordflow">return</span> <span class="keyword">true</span>; }</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    [[nodiscard]]</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <span class="keyword">static</span> <span class="keyword">auto</span> get_container_element(<span class="keyword">const</span> std::priority_queue&lt;std::size_t, Container, Compare&gt;&amp; q)</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    {</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;      <span class="keywordflow">return</span> q.top();</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    }</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;  };</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
-<div class="line"><a name="l00032"></a><span class="lineno"><a class="line" href="../../d1/d2f/structsequoia_1_1maths_1_1graph__impl_1_1traversal__traits__base_3_01std_1_1stack_3_01std_1_1size__t_01_4_01_4.html">   32</a></span>&#160;  <span class="keyword">template</span>&lt;&gt; <span class="keyword">struct </span><a class="code" href="../../dd/dfa/structsequoia_1_1maths_1_1graph__impl_1_1traversal__traits__base.html">traversal_traits_base</a>&lt;std::stack&lt;std::size_t&gt;&gt;</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;  {</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    [[nodiscard]]</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    constexpr <span class="keyword">static</span> <span class="keywordtype">bool</span> uses_forward_iterator() noexcept { <span class="keywordflow">return</span> <span class="keyword">false</span>; }</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    [[nodiscard]]</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="keyword">static</span> <span class="keyword">auto</span> get_container_element(<span class="keyword">const</span> std::stack&lt;std::size_t&gt;&amp; s) { <span class="keywordflow">return</span> s.top(); }</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;  };</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; </div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
-<div class="line"><a name="l00042"></a><span class="lineno"><a class="line" href="../../d7/d51/structsequoia_1_1maths_1_1graph__impl_1_1traversal__traits__base_3_01std_1_1queue_3_01std_1_1size__t_01_4_01_4.html">   42</a></span>&#160;  <span class="keyword">template</span>&lt;&gt; <span class="keyword">struct </span><a class="code" href="../../dd/dfa/structsequoia_1_1maths_1_1graph__impl_1_1traversal__traits__base.html">traversal_traits_base</a>&lt;std::queue&lt;std::size_t&gt;&gt;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;  {</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    [[nodiscard]]</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    constexpr <span class="keyword">static</span> <span class="keywordtype">bool</span> uses_forward_iterator() noexcept { <span class="keywordflow">return</span> <span class="keyword">true</span>; }</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    [[nodiscard]]</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keyword">static</span> <span class="keyword">auto</span> get_container_element(<span class="keyword">const</span> std::queue&lt;std::size_t&gt;&amp; q) { <span class="keywordflow">return</span> q.front(); }</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;  };</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> G, <span class="keyword">class</span> Container, <span class="keyword">class</span> Comparer&gt;</div>
-<div class="line"><a name="l00052"></a><span class="lineno"><a class="line" href="../../d0/dbb/structsequoia_1_1maths_1_1graph__impl_1_1queue__constructor_3_01G_00_01std_1_1priority__queue_3_d4a1c822165e745ef8faad61dd1d2406.html">   52</a></span>&#160;  <span class="keyword">struct </span><a class="code" href="../../df/dc9/structsequoia_1_1maths_1_1graph__impl_1_1queue__constructor.html">queue_constructor</a>&lt;G, std::priority_queue&lt;std::size_t, Container, Comparer&gt;&gt;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;  {</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    [[nodiscard]]</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keyword">static</span> <span class="keyword">auto</span> make(<span class="keyword">const</span> G&amp; g)</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    {</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;      <span class="keywordflow">return</span> std::priority_queue&lt;std::size_t, Container, Comparer&gt;{Comparer{g}};</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    }</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;  };</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">class</span> G, <span class="keyword">class</span> Container&gt;</div>
-<div class="line"><a name="l00062"></a><span class="lineno"><a class="line" href="../../d3/dea/structsequoia_1_1maths_1_1graph__impl_1_1queue__constructor_3_01G_00_01std_1_1stack_3_01std_1_1size__t_00_01Container_01_4_01_4.html">   62</a></span>&#160;  <span class="keyword">struct </span><a class="code" href="../../df/dc9/structsequoia_1_1maths_1_1graph__impl_1_1queue__constructor.html">queue_constructor</a>&lt;G, std::stack&lt;std::size_t, Container&gt;&gt;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;  {</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    [[nodiscard]]</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keyword">static</span> <span class="keyword">auto</span> make(<span class="keyword">const</span> G&amp;)</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    {</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;      <span class="keywordflow">return</span> std::stack&lt;std::size_t, Container&gt;{};</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    }</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;  };</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160; </div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">class</span> G, <span class="keyword">class</span> Container&gt;</div>
-<div class="line"><a name="l00072"></a><span class="lineno"><a class="line" href="../../db/dda/structsequoia_1_1maths_1_1graph__impl_1_1queue__constructor_3_01G_00_01std_1_1queue_3_01std_1_1size__t_00_01Container_01_4_01_4.html">   72</a></span>&#160;  <span class="keyword">struct </span><a class="code" href="../../df/dc9/structsequoia_1_1maths_1_1graph__impl_1_1queue__constructor.html">queue_constructor</a>&lt;G, std::queue&lt;std::size_t, Container&gt;&gt;</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;  {</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    [[nodiscard]]</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="keyword">static</span> <span class="keyword">auto</span> make(<span class="keyword">const</span> G&amp;)</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    {</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;      <span class="keywordflow">return</span> std::queue&lt;std::size_t, Container&gt;{};</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    }</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;  };</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160; </div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;  <span class="keyword">template</span>&lt;dynamic_network G&gt;</div>
-<div class="line"><a name="l00082"></a><span class="lineno"><a class="line" href="../../d3/dc9/structsequoia_1_1maths_1_1graph__impl_1_1stack__selector_3_01G_01_4.html">   82</a></span>&#160;  <span class="keyword">struct </span><a class="code" href="../../d4/db0/structsequoia_1_1maths_1_1graph__impl_1_1stack__selector.html">stack_selector</a>&lt;G&gt;</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;  {</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="keyword">using</span> stack_type = std::stack&lt;std::size_t&gt;;</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;  };</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160; </div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;  <span class="keyword">template</span>&lt;dynamic_network G&gt;</div>
-<div class="line"><a name="l00088"></a><span class="lineno"><a class="line" href="../../d3/db2/structsequoia_1_1maths_1_1graph__impl_1_1queue__selector_3_01G_01_4.html">   88</a></span>&#160;  <span class="keyword">struct </span><a class="code" href="../../dc/d19/structsequoia_1_1maths_1_1graph__impl_1_1queue__selector.html">queue_selector</a>&lt;G&gt;</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;  {</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <span class="keyword">using</span> queue_type = std::queue&lt;std::size_t&gt;;</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;  };</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160; </div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;  <span class="keyword">template</span>&lt;dynamic_network G, <span class="keyword">class</span> Compare&gt;</div>
-<div class="line"><a name="l00094"></a><span class="lineno"><a class="line" href="../../d9/daf/structsequoia_1_1maths_1_1graph__impl_1_1priority__queue__selector_3_01G_00_01Compare_01_4.html">   94</a></span>&#160;  <span class="keyword">struct </span><a class="code" href="../../d8/d68/structsequoia_1_1maths_1_1graph__impl_1_1priority__queue__selector.html">priority_queue_selector</a>&lt;G, Compare&gt;</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;  {</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <span class="keyword">using</span> queue_type = std::priority_queue&lt;std::size_t, std::vector&lt;size_t&gt;, Compare&gt;;</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;  };</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;}</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="../../d1/d4d/GraphTraversalDetails_8hpp.html">sequoia/Maths/Graph/GraphTraversalDetails.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160; </div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="preprocessor">#include &lt;queue&gt;</span></div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#include &lt;stack&gt;</span></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160; </div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="keyword">namespace </span>sequoia::maths::graph_impl</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;{</div>
+<div class="line"><a name="l00022"></a><span class="lineno"><a class="line" href="../../dd/d2d/structsequoia_1_1maths_1_1graph__impl_1_1traversal__tracking__traits_3_01G_01_4.html">   22</a></span>&#160;  <span class="keyword">template</span>&lt;dynamic_network G&gt; <span class="keyword">struct </span><a class="code" href="../../dc/df5/structsequoia_1_1maths_1_1graph__impl_1_1traversal__tracking__traits.html">traversal_tracking_traits</a>&lt;G&gt;</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;  {</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <span class="keyword">using</span> bitset = std::vector&lt;bool&gt;;</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    [[nodiscard]]</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <span class="keyword">static</span> bitset make_bitset(<span class="keyword">const</span> G&amp; g)</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    {</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;      <span class="keywordflow">return</span> bitset(g.order(), <span class="keyword">false</span>);</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    }</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;  };</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> Container, <span class="keyword">class</span> Compare&gt;</div>
+<div class="line"><a name="l00034"></a><span class="lineno"><a class="line" href="../../d1/dc8/structsequoia_1_1maths_1_1graph__impl_1_1traversal__traits__base_3_01std_1_1priority__queue_3_01094ef3a8ef37cc52d93d2377df10d74e.html">   34</a></span>&#160;  <span class="keyword">struct </span><a class="code" href="../../dd/dfa/structsequoia_1_1maths_1_1graph__impl_1_1traversal__traits__base.html">traversal_traits_base</a>&lt;std::priority_queue&lt;std::size_t, Container, Compare&gt;&gt;</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;  {</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    [[nodiscard]]</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    constexpr <span class="keyword">static</span> <span class="keywordtype">bool</span> uses_forward_iterator() noexcept { <span class="keywordflow">return</span> <span class="keyword">true</span>; }</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    [[nodiscard]]</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keyword">static</span> <span class="keyword">auto</span> get_container_element(<span class="keyword">const</span> std::priority_queue&lt;std::size_t, Container, Compare&gt;&amp; q)</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    {</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;      <span class="keywordflow">return</span> q.top();</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    }</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;  };</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;  <span class="keyword">template</span>&lt;&gt;</div>
+<div class="line"><a name="l00047"></a><span class="lineno"><a class="line" href="../../d1/d2f/structsequoia_1_1maths_1_1graph__impl_1_1traversal__traits__base_3_01std_1_1stack_3_01std_1_1size__t_01_4_01_4.html">   47</a></span>&#160;  <span class="keyword">struct </span><a class="code" href="../../dd/dfa/structsequoia_1_1maths_1_1graph__impl_1_1traversal__traits__base.html">traversal_traits_base</a>&lt;std::stack&lt;std::size_t&gt;&gt;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;  {</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    [[nodiscard]]</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    constexpr <span class="keyword">static</span> <span class="keywordtype">bool</span> uses_forward_iterator() noexcept { <span class="keywordflow">return</span> <span class="keyword">false</span>; }</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    [[nodiscard]]</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="keyword">static</span> <span class="keyword">auto</span> get_container_element(<span class="keyword">const</span> std::stack&lt;std::size_t&gt;&amp; s) { <span class="keywordflow">return</span> s.top(); }</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;  };</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;  <span class="keyword">template</span>&lt;&gt;</div>
+<div class="line"><a name="l00057"></a><span class="lineno"><a class="line" href="../../d7/d51/structsequoia_1_1maths_1_1graph__impl_1_1traversal__traits__base_3_01std_1_1queue_3_01std_1_1size__t_01_4_01_4.html">   57</a></span>&#160;  <span class="keyword">struct </span><a class="code" href="../../dd/dfa/structsequoia_1_1maths_1_1graph__impl_1_1traversal__traits__base.html">traversal_traits_base</a>&lt;std::queue&lt;std::size_t&gt;&gt;</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;  {</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    [[nodiscard]]</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    constexpr <span class="keyword">static</span> <span class="keywordtype">bool</span> uses_forward_iterator() noexcept { <span class="keywordflow">return</span> <span class="keyword">true</span>; }</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160; </div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    [[nodiscard]]</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keyword">static</span> <span class="keyword">auto</span> get_container_element(<span class="keyword">const</span> std::queue&lt;std::size_t&gt;&amp; q) { <span class="keywordflow">return</span> q.front(); }</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;  };</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160; </div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;  <span class="keyword">template</span>&lt;dynamic_network G, <span class="keyword">class</span> Q&gt;</div>
+<div class="line"><a name="l00067"></a><span class="lineno"><a class="line" href="../../d9/d1b/structsequoia_1_1maths_1_1graph__impl_1_1traversal__traits_3_01G_00_01Q_01_4.html">   67</a></span>&#160;  <span class="keyword">struct </span><a class="code" href="../../d3/d34/structsequoia_1_1maths_1_1graph__impl_1_1traversal__traits.html">traversal_traits</a>&lt;G, Q&gt; : <span class="keyword">public</span> <a class="code" href="../../dd/dfa/structsequoia_1_1maths_1_1graph__impl_1_1traversal__traits__base.html">traversal_traits_base</a>&lt;Q&gt;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;  {</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    [[nodiscard]]</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="keyword">static</span> <span class="keyword">auto</span> begin(<span class="keyword">const</span> G&amp; graph, <span class="keyword">const</span> std::size_t nodeIndex)</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    {</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;      <span class="keywordflow">return</span> <a class="code" href="../../dc/d46/structsequoia_1_1maths_1_1graph__impl_1_1iterator__getter.html">iterator_getter&lt;traversal_traits_base&lt;Q&gt;::uses_forward_iterator</a>()&gt;::begin(graph, nodeIndex);</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    }</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    [[nodiscard]]</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="keyword">static</span> <span class="keyword">auto</span> end(<span class="keyword">const</span> G&amp; graph, <span class="keyword">const</span> std::size_t nodeIndex)</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    {</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;      <span class="keywordflow">return</span> <a class="code" href="../../dc/d46/structsequoia_1_1maths_1_1graph__impl_1_1iterator__getter.html">iterator_getter&lt;traversal_traits_base&lt;Q&gt;::uses_forward_iterator</a>()&gt;::end(graph, nodeIndex);</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    }</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;  };</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160; </div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;  <span class="keyword">template</span>&lt;dynamic_network G, <span class="keyword">class</span> Container, <span class="keyword">class</span> Comparer&gt;</div>
+<div class="line"><a name="l00083"></a><span class="lineno"><a class="line" href="../../d0/dbb/structsequoia_1_1maths_1_1graph__impl_1_1queue__constructor_3_01G_00_01std_1_1priority__queue_3_d4a1c822165e745ef8faad61dd1d2406.html">   83</a></span>&#160;  <span class="keyword">struct </span><a class="code" href="../../df/dc9/structsequoia_1_1maths_1_1graph__impl_1_1queue__constructor.html">queue_constructor</a>&lt;G, std::priority_queue&lt;std::size_t, Container, Comparer&gt;&gt;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;  {</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    [[nodiscard]]</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <span class="keyword">static</span> <span class="keyword">auto</span> make(<span class="keyword">const</span> G&amp; g)</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    {</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;      <span class="keywordflow">return</span> std::priority_queue&lt;std::size_t, Container, Comparer&gt;{Comparer{g}};</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    }</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;  };</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160; </div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;  <span class="keyword">template</span> &lt;dynamic_network G, <span class="keyword">class</span> Container&gt;</div>
+<div class="line"><a name="l00093"></a><span class="lineno"><a class="line" href="../../d3/dea/structsequoia_1_1maths_1_1graph__impl_1_1queue__constructor_3_01G_00_01std_1_1stack_3_01std_1_1size__t_00_01Container_01_4_01_4.html">   93</a></span>&#160;  <span class="keyword">struct </span><a class="code" href="../../df/dc9/structsequoia_1_1maths_1_1graph__impl_1_1queue__constructor.html">queue_constructor</a>&lt;G, std::stack&lt;std::size_t, Container&gt;&gt;</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;  {</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    [[nodiscard]]</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <span class="keyword">static</span> <span class="keyword">auto</span> make(<span class="keyword">const</span> G&amp;)</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    {</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;      <span class="keywordflow">return</span> std::stack&lt;std::size_t, Container&gt;{};</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    }</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;  };</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160; </div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;  <span class="keyword">template</span> &lt;dynamic_network G, <span class="keyword">class</span> Container&gt;</div>
+<div class="line"><a name="l00103"></a><span class="lineno"><a class="line" href="../../db/dda/structsequoia_1_1maths_1_1graph__impl_1_1queue__constructor_3_01G_00_01std_1_1queue_3_01std_1_1size__t_00_01Container_01_4_01_4.html">  103</a></span>&#160;  <span class="keyword">struct </span><a class="code" href="../../df/dc9/structsequoia_1_1maths_1_1graph__impl_1_1queue__constructor.html">queue_constructor</a>&lt;G, std::queue&lt;std::size_t, Container&gt;&gt;</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;  {</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    [[nodiscard]]</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    <span class="keyword">static</span> <span class="keyword">auto</span> make(<span class="keyword">const</span> G&amp;)</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    {</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;      <span class="keywordflow">return</span> std::queue&lt;std::size_t, Container&gt;{};</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    }</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;  };</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160; </div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;  <span class="keyword">template</span>&lt;dynamic_network G&gt;</div>
+<div class="line"><a name="l00113"></a><span class="lineno"><a class="line" href="../../d3/dc9/structsequoia_1_1maths_1_1graph__impl_1_1stack__selector_3_01G_01_4.html">  113</a></span>&#160;  <span class="keyword">struct </span><a class="code" href="../../d4/db0/structsequoia_1_1maths_1_1graph__impl_1_1stack__selector.html">stack_selector</a>&lt;G&gt;</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;  {</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    <span class="keyword">using</span> stack_type = std::stack&lt;std::size_t&gt;;</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;  };</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160; </div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;  <span class="keyword">template</span>&lt;dynamic_network G&gt;</div>
+<div class="line"><a name="l00119"></a><span class="lineno"><a class="line" href="../../d3/db2/structsequoia_1_1maths_1_1graph__impl_1_1queue__selector_3_01G_01_4.html">  119</a></span>&#160;  <span class="keyword">struct </span><a class="code" href="../../dc/d19/structsequoia_1_1maths_1_1graph__impl_1_1queue__selector.html">queue_selector</a>&lt;G&gt;</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;  {</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    <span class="keyword">using</span> queue_type = std::queue&lt;std::size_t&gt;;</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;  };</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160; </div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;  <span class="keyword">template</span>&lt;dynamic_network G, <span class="keyword">class</span> Compare&gt;</div>
+<div class="line"><a name="l00125"></a><span class="lineno"><a class="line" href="../../d9/daf/structsequoia_1_1maths_1_1graph__impl_1_1priority__queue__selector_3_01G_00_01Compare_01_4.html">  125</a></span>&#160;  <span class="keyword">struct </span><a class="code" href="../../d8/d68/structsequoia_1_1maths_1_1graph__impl_1_1priority__queue__selector.html">priority_queue_selector</a>&lt;G, Compare&gt;</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;  {</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;    <span class="keyword">using</span> queue_type = std::priority_queue&lt;std::size_t, std::vector&lt;size_t&gt;, Compare&gt;;</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;  };</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
-<div class="ttc" id="astructsequoia_1_1maths_1_1graph__impl_1_1queue__constructor_html"><div class="ttname"><a href="../../df/dc9/structsequoia_1_1maths_1_1graph__impl_1_1queue__constructor.html">sequoia::maths::graph_impl::queue_constructor</a></div><div class="ttdef"><b>Definition:</b> GraphTraversalDetails.hpp:117</div></div>
-<div class="ttc" id="astructsequoia_1_1maths_1_1graph__impl_1_1queue__selector_html"><div class="ttname"><a href="../../dc/d19/structsequoia_1_1maths_1_1graph__impl_1_1queue__selector.html">sequoia::maths::graph_impl::queue_selector</a></div><div class="ttdef"><b>Definition:</b> GraphTraversalDetails.hpp:241</div></div>
-<div class="ttc" id="astructsequoia_1_1maths_1_1graph__impl_1_1stack__selector_html"><div class="ttname"><a href="../../d4/db0/structsequoia_1_1maths_1_1graph__impl_1_1stack__selector.html">sequoia::maths::graph_impl::stack_selector</a></div><div class="ttdef"><b>Definition:</b> GraphTraversalDetails.hpp:239</div></div>
-<div class="ttc" id="astructsequoia_1_1maths_1_1graph__impl_1_1traversal__traits__base_html"><div class="ttname"><a href="../../dd/dfa/structsequoia_1_1maths_1_1graph__impl_1_1traversal__traits__base.html">sequoia::maths::graph_impl::traversal_traits_base</a></div><div class="ttdef"><b>Definition:</b> GraphTraversalDetails.hpp:47</div></div>
-<div class="ttc" id="astructsequoia_1_1maths_1_1graph__impl_1_1priority__queue__selector_html"><div class="ttname"><a href="../../d8/d68/structsequoia_1_1maths_1_1graph__impl_1_1priority__queue__selector.html">sequoia::maths::graph_impl::priority_queue_selector</a></div><div class="ttdef"><b>Definition:</b> GraphTraversalDetails.hpp:243</div></div>
+<div class="ttc" id="astructsequoia_1_1maths_1_1graph__impl_1_1traversal__traits_html"><div class="ttname"><a href="../../d3/d34/structsequoia_1_1maths_1_1graph__impl_1_1traversal__traits.html">sequoia::maths::graph_impl::traversal_traits</a></div><div class="ttdef"><b>Definition:</b> GraphTraversalDetails.hpp:156</div></div>
+<div class="ttc" id="astructsequoia_1_1maths_1_1graph__impl_1_1iterator__getter_html"><div class="ttname"><a href="../../dc/d46/structsequoia_1_1maths_1_1graph__impl_1_1iterator__getter.html">sequoia::maths::graph_impl::iterator_getter</a></div><div class="ttdef"><b>Definition:</b> GraphTraversalDetails.hpp:134</div></div>
+<div class="ttc" id="astructsequoia_1_1maths_1_1graph__impl_1_1queue__constructor_html"><div class="ttname"><a href="../../df/dc9/structsequoia_1_1maths_1_1graph__impl_1_1queue__constructor.html">sequoia::maths::graph_impl::queue_constructor</a></div><div class="ttdef"><b>Definition:</b> GraphTraversalDetails.hpp:178</div></div>
+<div class="ttc" id="astructsequoia_1_1maths_1_1graph__impl_1_1traversal__tracking__traits_html"><div class="ttname"><a href="../../dc/df5/structsequoia_1_1maths_1_1graph__impl_1_1traversal__tracking__traits.html">sequoia::maths::graph_impl::traversal_tracking_traits</a></div><div class="ttdef"><b>Definition:</b> GraphTraversalDetails.hpp:158</div></div>
+<div class="ttc" id="aGraphTraversalDetails_8hpp_html"><div class="ttname"><a href="../../d1/d4d/GraphTraversalDetails_8hpp.html">GraphTraversalDetails.hpp</a></div><div class="ttdoc">Meta-programming urilities and underlying function for graph traversals.</div></div>
+<div class="ttc" id="astructsequoia_1_1maths_1_1graph__impl_1_1queue__selector_html"><div class="ttname"><a href="../../dc/d19/structsequoia_1_1maths_1_1graph__impl_1_1queue__selector.html">sequoia::maths::graph_impl::queue_selector</a></div><div class="ttdef"><b>Definition:</b> GraphTraversalDetails.hpp:231</div></div>
+<div class="ttc" id="astructsequoia_1_1maths_1_1graph__impl_1_1stack__selector_html"><div class="ttname"><a href="../../d4/db0/structsequoia_1_1maths_1_1graph__impl_1_1stack__selector.html">sequoia::maths::graph_impl::stack_selector</a></div><div class="ttdef"><b>Definition:</b> GraphTraversalDetails.hpp:229</div></div>
+<div class="ttc" id="astructsequoia_1_1maths_1_1graph__impl_1_1traversal__traits__base_html"><div class="ttname"><a href="../../dd/dfa/structsequoia_1_1maths_1_1graph__impl_1_1traversal__traits__base.html">sequoia::maths::graph_impl::traversal_traits_base</a></div><div class="ttdef"><b>Definition:</b> GraphTraversalDetails.hpp:155</div></div>
+<div class="ttc" id="astructsequoia_1_1maths_1_1graph__impl_1_1priority__queue__selector_html"><div class="ttname"><a href="../../d8/d68/structsequoia_1_1maths_1_1graph__impl_1_1priority__queue__selector.html">sequoia::maths::graph_impl::priority_queue_selector</a></div><div class="ttdef"><b>Definition:</b> GraphTraversalDetails.hpp:233</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

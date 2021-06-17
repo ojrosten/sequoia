@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.18"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Sequoia: sequoia::maths::graph_impl::dynamic_edge_traits&lt; GraphFlavour, EdgeWeight, EdgeWeightPooling, EdgeStorageTraits, IndexType &gt; Struct Template Reference</title>
+<title>Sequoia: sequoia::maths::graph_impl::dynamic_edge_traits&lt; GraphFlavour, EdgeWeightCreator, EdgeStorageTraits, IndexType &gt; Struct Template Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -70,77 +70,80 @@ $(function() {
 <a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="../../d7/d29/structsequoia_1_1maths_1_1graph__impl_1_1dynamic__edge__traits-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">sequoia::maths::graph_impl::dynamic_edge_traits&lt; GraphFlavour, EdgeWeight, EdgeWeightPooling, EdgeStorageTraits, IndexType &gt; Struct Template Reference</div>  </div>
+<div class="title">sequoia::maths::graph_impl::dynamic_edge_traits&lt; GraphFlavour, EdgeWeightCreator, EdgeStorageTraits, IndexType &gt; Struct Template Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <div class="dynheader">
-Inheritance diagram for sequoia::maths::graph_impl::dynamic_edge_traits&lt; GraphFlavour, EdgeWeight, EdgeWeightPooling, EdgeStorageTraits, IndexType &gt;:</div>
+Inheritance diagram for sequoia::maths::graph_impl::dynamic_edge_traits&lt; GraphFlavour, EdgeWeightCreator, EdgeStorageTraits, IndexType &gt;:</div>
 <div class="dyncontent">
  <div class="center">
-  <img src="../../d5/de5/structsequoia_1_1maths_1_1graph__impl_1_1dynamic__edge__traits.png" usemap="#sequoia::maths::graph_5Fimpl::dynamic_5Fedge_5Ftraits_3C_20GraphFlavour_2C_20EdgeWeight_2C_20EdgeWeightPooling_2C_20EdgeStorageTraits_2C_20IndexType_20_3E_map" alt=""/>
-  <map id="sequoia::maths::graph_5Fimpl::dynamic_5Fedge_5Ftraits_3C_20GraphFlavour_2C_20EdgeWeight_2C_20EdgeWeightPooling_2C_20EdgeStorageTraits_2C_20IndexType_20_3E_map" name="sequoia::maths::graph_5Fimpl::dynamic_5Fedge_5Ftraits_3C_20GraphFlavour_2C_20EdgeWeight_2C_20EdgeWeightPooling_2C_20EdgeStorageTraits_2C_20IndexType_20_3E_map">
-<area href="../../d1/d76/structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator.html" alt="sequoia::maths::graph_impl::edge_type_generator&lt; GraphFlavour, EdgeWeight, EdgeWeightPooling, IndexType, EdgeStorageTraits::edge_sharing &gt;" shape="rect" coords="0,0,848,24"/>
+  <img src="../../d5/de5/structsequoia_1_1maths_1_1graph__impl_1_1dynamic__edge__traits.png" usemap="#sequoia::maths::graph_5Fimpl::dynamic_5Fedge_5Ftraits_3C_20GraphFlavour_2C_20EdgeWeightCreator_2C_20EdgeStorageTraits_2C_20IndexType_20_3E_map" alt=""/>
+  <map id="sequoia::maths::graph_5Fimpl::dynamic_5Fedge_5Ftraits_3C_20GraphFlavour_2C_20EdgeWeightCreator_2C_20EdgeStorageTraits_2C_20IndexType_20_3E_map" name="sequoia::maths::graph_5Fimpl::dynamic_5Fedge_5Ftraits_3C_20GraphFlavour_2C_20EdgeWeightCreator_2C_20EdgeStorageTraits_2C_20IndexType_20_3E_map">
+<area href="../../d1/d76/structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator.html" alt="sequoia::maths::graph_impl::edge_type_generator&lt; GraphFlavour, EdgeWeightCreator, IndexType, EdgeStorageTraits::edge_sharing &gt;" shape="rect" coords="0,0,773,24"/>
   </map>
 </div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a1b85eccf24d8a7137e640b991ef599db"><td class="memItemLeft" align="right" valign="top"><a id="a1b85eccf24d8a7137e640b991ef599db"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>edge_type_gen</b> = <a class="el" href="../../d1/d76/structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator.html">edge_type_generator</a>&lt; GraphFlavour, EdgeWeight, EdgeWeightPooling, IndexType, EdgeStorageTraits::edge_sharing &gt;</td></tr>
-<tr class="separator:a1b85eccf24d8a7137e640b991ef599db"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ada4f0120b281cf0b0bd386a4c2753887"><td class="memItemLeft" align="right" valign="top"><a id="ada4f0120b281cf0b0bd386a4c2753887"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>edge_type</b> = typename <a class="el" href="../../da/d14/classsequoia_1_1maths_1_1partial__edge.html">edge_type_gen::edge_type</a></td></tr>
-<tr class="separator:ada4f0120b281cf0b0bd386a4c2753887"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae57ab9f8d286017c3f122c159f2f5d74"><td class="memItemLeft" align="right" valign="top"><a id="ae57ab9f8d286017c3f122c159f2f5d74"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>edge_storage_handler</b> = typename <a class="el" href="../../d6/dcb/structsequoia_1_1maths_1_1graph__impl_1_1shared__edge__v__to__policy.html">shared_edge_v_to_policy</a>&lt; shared_edge_v &gt;::template edge_storage_handler&lt; edge_type &gt;</td></tr>
-<tr class="separator:ae57ab9f8d286017c3f122c159f2f5d74"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ada4bce41c84443849b1323abe5161609"><td class="memItemLeft" align="right" valign="top"><a id="ada4bce41c84443849b1323abe5161609"></a>
+<tr class="memitem:a10406c867906a2c2fdb6dfa6a726f5d5"><td class="memItemLeft" align="right" valign="top"><a id="a10406c867906a2c2fdb6dfa6a726f5d5"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>edge_type_gen</b> = <a class="el" href="../../d1/d76/structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator.html">edge_type_generator</a>&lt; GraphFlavour, EdgeWeightCreator, IndexType, EdgeStorageTraits::edge_sharing &gt;</td></tr>
+<tr class="separator:a10406c867906a2c2fdb6dfa6a726f5d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af3e7d7e0df123eb3920e731cc3ce6e62"><td class="memItemLeft" align="right" valign="top"><a id="af3e7d7e0df123eb3920e731cc3ce6e62"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>edge_type</b> = typename edge_type_gen::edge_type</td></tr>
+<tr class="separator:af3e7d7e0df123eb3920e731cc3ce6e62"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a18b0eca78e8d1d46468eba5e72c434e9"><td class="memItemLeft" align="right" valign="top"><a id="a18b0eca78e8d1d46468eba5e72c434e9"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>edge_storage_handler</b> = std::conditional_t&lt; shared_edge_v, <a class="el" href="../../d3/d1c/structsequoia_1_1ownership_1_1shared.html">ownership::shared</a>&lt; edge_type &gt;, <a class="el" href="../../de/db9/structsequoia_1_1ownership_1_1independent.html">ownership::independent</a>&lt; edge_type &gt; &gt;</td></tr>
+<tr class="separator:a18b0eca78e8d1d46468eba5e72c434e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a99025750359a3261ad5e2bd89193586f"><td class="memItemLeft" align="right" valign="top"><a id="a99025750359a3261ad5e2bd89193586f"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>edge_storage_traits</b> = typename EdgeStorageTraits::template traits_type&lt; edge_type, edge_storage_handler &gt;</td></tr>
-<tr class="separator:ada4bce41c84443849b1323abe5161609"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a20cc46a74a2bf6f60a52c1ca685d6761"><td class="memItemLeft" align="right" valign="top"><a id="a20cc46a74a2bf6f60a52c1ca685d6761"></a>
+<tr class="separator:a99025750359a3261ad5e2bd89193586f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5016b0b90e03d38d6c8e337913232fe3"><td class="memItemLeft" align="right" valign="top"><a id="a5016b0b90e03d38d6c8e337913232fe3"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>edge_storage_type</b> = typename EdgeStorageTraits::template storage_type&lt; edge_type, edge_storage_handler, edge_storage_traits &gt;</td></tr>
-<tr class="separator:a20cc46a74a2bf6f60a52c1ca685d6761"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab77446ef0955f25cea24a981266e3a45"><td class="memItemLeft" align="right" valign="top"><a id="ab77446ef0955f25cea24a981266e3a45"></a>
+<tr class="separator:a5016b0b90e03d38d6c8e337913232fe3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a68b50521b3414fb7ce903a7542a6781d"><td class="memItemLeft" align="right" valign="top"><a id="a68b50521b3414fb7ce903a7542a6781d"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>edge_allocator_type</b> = typename edge_storage_type::allocator_type</td></tr>
-<tr class="separator:ab77446ef0955f25cea24a981266e3a45"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pub_types_structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator"><td colspan="2" onclick="javascript:toggleInherit('pub_types_structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator')"><img src="../../closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="../../d1/d76/structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator.html">sequoia::maths::graph_impl::edge_type_generator&lt; GraphFlavour, EdgeWeight, EdgeWeightPooling, IndexType, EdgeStorageTraits::edge_sharing &gt;</a></td></tr>
-<tr class="memitem:a4a66a3fb91b60498f9f846b5fd7c1c20 inherit pub_types_structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator"><td class="memItemLeft" align="right" valign="top"><a id="a4a66a3fb91b60498f9f846b5fd7c1c20"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>sharing</b> = <a class="el" href="../../d7/deb/structsequoia_1_1maths_1_1graph__impl_1_1sharing__traits.html">sharing_traits</a>&lt; GraphFlavour, SharingPreference, EdgeWeight, EdgeWeightCreator &gt;</td></tr>
-<tr class="separator:a4a66a3fb91b60498f9f846b5fd7c1c20 inherit pub_types_structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab074038897ed25b2f85121bbc56315a6 inherit pub_types_structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator"><td class="memItemLeft" align="right" valign="top"><a id="ab074038897ed25b2f85121bbc56315a6"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>edge_weight_proxy</b> = typename <a class="el" href="../../d9/d17/structsequoia_1_1maths_1_1graph__impl_1_1edge__weight__wrapper.html">edge_weight_wrapper</a>&lt; EdgeWeight, EdgeWeightCreator &gt;::proxy</td></tr>
-<tr class="separator:ab074038897ed25b2f85121bbc56315a6 inherit pub_types_structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a69d5ba6aba082b283ebf1921c50d8f49 inherit pub_types_structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator"><td class="memItemLeft" align="right" valign="top"><a id="a69d5ba6aba082b283ebf1921c50d8f49"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>edge_type</b> = <a class="el" href="../../da/d14/classsequoia_1_1maths_1_1partial__edge.html">partial_edge</a>&lt; EdgeWeight, <a class="el" href="../../de/d10/structsequoia_1_1maths_1_1graph__impl_1_1sharing__v__to__type.html">sharing_v_to_type</a>&lt; shared_weight_v &gt;::template policy, edge_weight_proxy, IndexType &gt;</td></tr>
-<tr class="separator:a69d5ba6aba082b283ebf1921c50d8f49 inherit pub_types_structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6173c9d71d4fd6dc294d8b13e17d2d0d inherit pub_types_structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator"><td class="memItemLeft" align="right" valign="top"><a id="a6173c9d71d4fd6dc294d8b13e17d2d0d"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>edge_init_type</b> = typename <a class="el" href="../../d6/d9e/structsequoia_1_1maths_1_1graph__impl_1_1edge__init__type__generator.html">edge_init_type_generator</a>&lt; <a class="el" href="../../da/d14/classsequoia_1_1maths_1_1partial__edge.html">edge_type</a>, GraphFlavour &gt;::edge_init_type</td></tr>
-<tr class="separator:a6173c9d71d4fd6dc294d8b13e17d2d0d inherit pub_types_structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:a68b50521b3414fb7ce903a7542a6781d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_types_structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator"><td colspan="2" onclick="javascript:toggleInherit('pub_types_structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator')"><img src="../../closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="../../d1/d76/structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator.html">sequoia::maths::graph_impl::edge_type_generator&lt; GraphFlavour, EdgeWeightCreator, IndexType, EdgeStorageTraits::edge_sharing &gt;</a></td></tr>
+<tr class="memitem:ace047fe8b324202c92a9c06b2726f1b6 inherit pub_types_structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator"><td class="memItemLeft" align="right" valign="top"><a id="ace047fe8b324202c92a9c06b2726f1b6"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>sharing</b> = <a class="el" href="../../d7/deb/structsequoia_1_1maths_1_1graph__impl_1_1sharing__traits.html">sharing_traits</a>&lt; GraphFlavour, SharingPreference, EdgeWeightCreator &gt;</td></tr>
+<tr class="separator:ace047fe8b324202c92a9c06b2726f1b6 inherit pub_types_structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aea5114975e319009840a2efba59329b5 inherit pub_types_structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator"><td class="memItemLeft" align="right" valign="top"><a id="aea5114975e319009840a2efba59329b5"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>edge_weight_proxy</b> = edge_weight_proxy_t&lt; EdgeWeightCreator &gt;</td></tr>
+<tr class="separator:aea5114975e319009840a2efba59329b5 inherit pub_types_structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acfca775d51089766f74e841e318b647b inherit pub_types_structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator"><td class="memItemLeft" align="right" valign="top"><a id="acfca775d51089766f74e841e318b647b"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>handler_type</b> = shared_to_handler_t&lt; shared_weight_v, edge_weight_proxy &gt;</td></tr>
+<tr class="separator:acfca775d51089766f74e841e318b647b inherit pub_types_structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae8dbc8b40e9dd499bab1d2e27f0b5fb3 inherit pub_types_structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator"><td class="memItemLeft" align="right" valign="top"><a id="ae8dbc8b40e9dd499bab1d2e27f0b5fb3"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>edge_type</b> = flavour_to_edge_t&lt; GraphFlavour, handler_type, IndexType, shared_edge_v &gt;</td></tr>
+<tr class="separator:ae8dbc8b40e9dd499bab1d2e27f0b5fb3 inherit pub_types_structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a31e7a00170a3bf314e4a3aad30fca6c0 inherit pub_types_structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator"><td class="memItemLeft" align="right" valign="top"><a id="a31e7a00170a3bf314e4a3aad30fca6c0"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>edge_init_type</b> = edge_to_init_type_t&lt; edge_type, is_embedded_v &gt;</td></tr>
+<tr class="separator:a31e7a00170a3bf314e4a3aad30fca6c0 inherit pub_types_structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
-<tr class="memitem:a42a802bdfc9cbe1f8d2e4b2a417dcd3d"><td class="memItemLeft" align="right" valign="top"><a id="a42a802bdfc9cbe1f8d2e4b2a417dcd3d"></a>
+<tr class="memitem:afb8223e193860f03dc795368176c33d8"><td class="memItemLeft" align="right" valign="top"><a id="afb8223e193860f03dc795368176c33d8"></a>
 constexpr static bool&#160;</td><td class="memItemRight" valign="bottom"><b>shared_edge_v</b> {edge_type_gen::shared_edge_v}</td></tr>
-<tr class="separator:a42a802bdfc9cbe1f8d2e4b2a417dcd3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0a709a7d2da3a393c1f8c6133b99a7cc"><td class="memItemLeft" align="right" valign="top"><a id="a0a709a7d2da3a393c1f8c6133b99a7cc"></a>
+<tr class="separator:afb8223e193860f03dc795368176c33d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a690af2cc9ecd89ef8ffcf3c914bf0a13"><td class="memItemLeft" align="right" valign="top"><a id="a690af2cc9ecd89ef8ffcf3c914bf0a13"></a>
 constexpr static bool&#160;</td><td class="memItemRight" valign="bottom"><b>mutual_info_v</b> {GraphFlavour != graph_flavour::directed}</td></tr>
-<tr class="separator:a0a709a7d2da3a393c1f8c6133b99a7cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a025e6d54adc7a4b91ac23eabbc63e68f"><td class="memItemLeft" align="right" valign="top"><a id="a025e6d54adc7a4b91ac23eabbc63e68f"></a>
+<tr class="separator:a690af2cc9ecd89ef8ffcf3c914bf0a13"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a171cd743020d315253563efd466c939a"><td class="memItemLeft" align="right" valign="top"><a id="a171cd743020d315253563efd466c939a"></a>
 constexpr static bool&#160;</td><td class="memItemRight" valign="bottom"><b>weight_setting_exception_guarantee_v</b> {true}</td></tr>
-<tr class="separator:a025e6d54adc7a4b91ac23eabbc63e68f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pub_static_attribs_structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator"><td colspan="2" onclick="javascript:toggleInherit('pub_static_attribs_structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator')"><img src="../../closed.png" alt="-"/>&#160;Static Public Attributes inherited from <a class="el" href="../../d1/d76/structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator.html">sequoia::maths::graph_impl::edge_type_generator&lt; GraphFlavour, EdgeWeight, EdgeWeightPooling, IndexType, EdgeStorageTraits::edge_sharing &gt;</a></td></tr>
-<tr class="memitem:a47f7fe2303c3365254b6da51089cc594 inherit pub_static_attribs_structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator"><td class="memItemLeft" align="right" valign="top"><a id="a47f7fe2303c3365254b6da51089cc594"></a>
+<tr class="separator:a171cd743020d315253563efd466c939a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_static_attribs_structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator"><td colspan="2" onclick="javascript:toggleInherit('pub_static_attribs_structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator')"><img src="../../closed.png" alt="-"/>&#160;Static Public Attributes inherited from <a class="el" href="../../d1/d76/structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator.html">sequoia::maths::graph_impl::edge_type_generator&lt; GraphFlavour, EdgeWeightCreator, IndexType, EdgeStorageTraits::edge_sharing &gt;</a></td></tr>
+<tr class="memitem:a9e0d396e257a6e6ee307d985a3a1a1c5 inherit pub_static_attribs_structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator"><td class="memItemLeft" align="right" valign="top"><a id="a9e0d396e257a6e6ee307d985a3a1a1c5"></a>
 constexpr static bool&#160;</td><td class="memItemRight" valign="bottom"><b>shared_weight_v</b></td></tr>
-<tr class="separator:a47f7fe2303c3365254b6da51089cc594 inherit pub_static_attribs_structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aac25e3cd5b749fe13d5fdec18ffc4f94 inherit pub_static_attribs_structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator"><td class="memItemLeft" align="right" valign="top"><a id="aac25e3cd5b749fe13d5fdec18ffc4f94"></a>
+<tr class="separator:a9e0d396e257a6e6ee307d985a3a1a1c5 inherit pub_static_attribs_structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1fe329b8fb447d06b84b4a9005af5218 inherit pub_static_attribs_structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator"><td class="memItemLeft" align="right" valign="top"><a id="a1fe329b8fb447d06b84b4a9005af5218"></a>
 constexpr static bool&#160;</td><td class="memItemRight" valign="bottom"><b>shared_edge_v</b></td></tr>
-<tr class="separator:aac25e3cd5b749fe13d5fdec18ffc4f94 inherit pub_static_attribs_structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a44a5fb099983f0c35f3c87a54094b990 inherit pub_static_attribs_structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator"><td class="memItemLeft" align="right" valign="top"><a id="a44a5fb099983f0c35f3c87a54094b990"></a>
-constexpr static bool&#160;</td><td class="memItemRight" valign="bottom"><b>init_complementary_data_v</b></td></tr>
-<tr class="separator:a44a5fb099983f0c35f3c87a54094b990 inherit pub_static_attribs_structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:a1fe329b8fb447d06b84b4a9005af5218 inherit pub_static_attribs_structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abdfc21dc3e9fe4c9ad11309c0e154ce8 inherit pub_static_attribs_structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator"><td class="memItemLeft" align="right" valign="top"><a id="abdfc21dc3e9fe4c9ad11309c0e154ce8"></a>
+constexpr static bool&#160;</td><td class="memItemRight" valign="bottom"><b>is_embedded_v</b></td></tr>
+<tr class="separator:abdfc21dc3e9fe4c9ad11309c0e154ce8 inherit pub_static_attribs_structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this struct was generated from the following file:<ul>
-<li>/Users/Claire/Dropbox/Sequoia/Source/Maths/Graph/<a class="el" href="../../de/d77/DynamicGraphImpl_8hpp_source.html">DynamicGraphImpl.hpp</a></li>
+<li>/Users/Claire/Dropbox/Sequoia/Source/sequoia/Maths/Graph/<a class="el" href="../../de/d77/DynamicGraphImpl_8hpp_source.html">DynamicGraphImpl.hpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

@@ -81,6 +81,9 @@ Public Types</h2></td></tr>
 <tr class="memitem:afc0ccfd40287951e526cabeee9282d83"><td class="memItemLeft" align="right" valign="top"><a id="afc0ccfd40287951e526cabeee9282d83"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>allocator_type</b> = Allocator</td></tr>
 <tr class="separator:afc0ccfd40287951e526cabeee9282d83"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b1e3b6a430ffe316d9a3cf4b8dba178"><td class="memItemLeft" align="right" valign="top"><a id="a0b1e3b6a430ffe316d9a3cf4b8dba178"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>container_type</b> = std::vector&lt; T, Allocator &gt;</td></tr>
+<tr class="separator:a0b1e3b6a430ffe316d9a3cf4b8dba178"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -96,15 +99,15 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ac1ceb2a7eb45a1452effc627f396d7e1"><td class="memItemLeft" align="right" valign="top"><a id="ac1ceb2a7eb45a1452effc627f396d7e1"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>perfectly_normal_beast</b> (const <a class="el" href="../../d9/d0c/structsequoia_1_1testing_1_1perfectly__normal__beast.html">perfectly_normal_beast</a> &amp;)=default</td></tr>
 <tr class="separator:ac1ceb2a7eb45a1452effc627f396d7e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4c52d04633b5fb98b370cd14ee831e06"><td class="memItemLeft" align="right" valign="top"><a id="a4c52d04633b5fb98b370cd14ee831e06"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>perfectly_normal_beast</b> (const <a class="el" href="../../d9/d0c/structsequoia_1_1testing_1_1perfectly__normal__beast.html">perfectly_normal_beast</a> &amp;other, const allocator_type &amp;alloc)</td></tr>
-<tr class="separator:a4c52d04633b5fb98b370cd14ee831e06"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a75ca59b1a90b27e302f6cf0160f9d87e"><td class="memItemLeft" align="right" valign="top"><a id="a75ca59b1a90b27e302f6cf0160f9d87e"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>perfectly_normal_beast</b> (const <a class="el" href="../../d9/d0c/structsequoia_1_1testing_1_1perfectly__normal__beast.html">perfectly_normal_beast</a> &amp;other, const allocator_type &amp;a)</td></tr>
+<tr class="separator:a75ca59b1a90b27e302f6cf0160f9d87e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afd4f528c9f466ba9b9e44e94e17b782c"><td class="memItemLeft" align="right" valign="top"><a id="afd4f528c9f466ba9b9e44e94e17b782c"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>perfectly_normal_beast</b> (<a class="el" href="../../d9/d0c/structsequoia_1_1testing_1_1perfectly__normal__beast.html">perfectly_normal_beast</a> &amp;&amp;) noexcept=default</td></tr>
 <tr class="separator:afd4f528c9f466ba9b9e44e94e17b782c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4e637784e269592c3a8b3d6eb6d42fe6"><td class="memItemLeft" align="right" valign="top"><a id="a4e637784e269592c3a8b3d6eb6d42fe6"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>perfectly_normal_beast</b> (<a class="el" href="../../d9/d0c/structsequoia_1_1testing_1_1perfectly__normal__beast.html">perfectly_normal_beast</a> &amp;&amp;other, const allocator_type &amp;alloc)</td></tr>
-<tr class="separator:a4e637784e269592c3a8b3d6eb6d42fe6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a69db8368ae51a6a8f432e11c94f5f20f"><td class="memItemLeft" align="right" valign="top"><a id="a69db8368ae51a6a8f432e11c94f5f20f"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>perfectly_normal_beast</b> (<a class="el" href="../../d9/d0c/structsequoia_1_1testing_1_1perfectly__normal__beast.html">perfectly_normal_beast</a> &amp;&amp;other, const allocator_type &amp;a)</td></tr>
+<tr class="separator:a69db8368ae51a6a8f432e11c94f5f20f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad062f721189e4a5f52f34f0a843b68e9"><td class="memItemLeft" align="right" valign="top"><a id="ad062f721189e4a5f52f34f0a843b68e9"></a>
 <a class="el" href="../../d9/d0c/structsequoia_1_1testing_1_1perfectly__normal__beast.html">perfectly_normal_beast</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="../../d9/d0c/structsequoia_1_1testing_1_1perfectly__normal__beast.html">perfectly_normal_beast</a> &amp;)=default</td></tr>
 <tr class="separator:ad062f721189e4a5f52f34f0a843b68e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -112,14 +115,14 @@ Public Member Functions</h2></td></tr>
 <a class="el" href="../../d9/d0c/structsequoia_1_1testing_1_1perfectly__normal__beast.html">perfectly_normal_beast</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="../../d9/d0c/structsequoia_1_1testing_1_1perfectly__normal__beast.html">perfectly_normal_beast</a> &amp;&amp;)=default</td></tr>
 <tr class="separator:ae041193103ec1346e2084f76714e22eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae4dc4bd0585542b6f013eaf90b52fb5f"><td class="memItemLeft" align="right" valign="top"><a id="ae4dc4bd0585542b6f013eaf90b52fb5f"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>swap</b> (<a class="el" href="../../d9/d0c/structsequoia_1_1testing_1_1perfectly__normal__beast.html">perfectly_normal_beast</a> &amp;other) noexcept(noexcept(std::swap(this-&gt;x, other.x)))</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>swap</b> (<a class="el" href="../../d9/d0c/structsequoia_1_1testing_1_1perfectly__normal__beast.html">perfectly_normal_beast</a> &amp;other) noexcept(noexcept(std::swap(this-&gt;<a class="el" href="../../d6/d61/structsequoia_1_1testing_1_1x.html">x</a>, other.x)))</td></tr>
 <tr class="separator:ae4dc4bd0585542b6f013eaf90b52fb5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:ac5876f0b4e5da62d2176a18bd6b82f4c"><td class="memItemLeft" align="right" valign="top"><a id="ac5876f0b4e5da62d2176a18bd6b82f4c"></a>
-std::vector&lt; T, Allocator &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>x</b> {}</td></tr>
-<tr class="separator:ac5876f0b4e5da62d2176a18bd6b82f4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a57c87760a2ca82b26d93321003ccfbe7"><td class="memItemLeft" align="right" valign="top"><a id="a57c87760a2ca82b26d93321003ccfbe7"></a>
+container_type&#160;</td><td class="memItemRight" valign="bottom"><b>x</b> {}</td></tr>
+<tr class="separator:a57c87760a2ca82b26d93321003ccfbe7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="friends"></a>
 Friends</h2></td></tr>
@@ -132,14 +135,14 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator==</b> (const
 <tr class="memitem:a13485b9d1cbef6896b64e57015112dbe"><td class="memItemLeft" align="right" valign="top"><a id="a13485b9d1cbef6896b64e57015112dbe"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator!=</b> (const <a class="el" href="../../d9/d0c/structsequoia_1_1testing_1_1perfectly__normal__beast.html">perfectly_normal_beast</a> &amp;, const <a class="el" href="../../d9/d0c/structsequoia_1_1testing_1_1perfectly__normal__beast.html">perfectly_normal_beast</a> &amp;) noexcept=default</td></tr>
 <tr class="separator:a13485b9d1cbef6896b64e57015112dbe"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a077b9cd3adc4dcbf71f149492d3b1096"><td class="memTemplParams" colspan="2"><a id="a077b9cd3adc4dcbf71f149492d3b1096"></a>
+<tr class="memitem:ae8fcd4911a2ebbac0af67c221776a369"><td class="memTemplParams" colspan="2"><a id="ae8fcd4911a2ebbac0af67c221776a369"></a>
 template&lt;class Stream &gt; </td></tr>
-<tr class="memitem:a077b9cd3adc4dcbf71f149492d3b1096"><td class="memTemplItemLeft" align="right" valign="top">Stream &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator&lt;&lt;</b> (Stream &amp;s, const <a class="el" href="../../d9/d0c/structsequoia_1_1testing_1_1perfectly__normal__beast.html">perfectly_normal_beast</a> &amp;b)</td></tr>
-<tr class="separator:a077b9cd3adc4dcbf71f149492d3b1096"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac2976620138064b001373aa380b6b64c"><td class="memTemplParams" colspan="2"><a id="ac2976620138064b001373aa380b6b64c"></a>
+<tr class="memitem:ae8fcd4911a2ebbac0af67c221776a369"><td class="memTemplItemLeft" align="right" valign="top">requires serializable&lt; T &gt; friend Stream &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator&lt;&lt;</b> (Stream &amp;s, const <a class="el" href="../../d9/d0c/structsequoia_1_1testing_1_1perfectly__normal__beast.html">perfectly_normal_beast</a> &amp;b)</td></tr>
+<tr class="separator:ae8fcd4911a2ebbac0af67c221776a369"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a11e470447329c65df2dd51778ce9400e"><td class="memTemplParams" colspan="2"><a id="a11e470447329c65df2dd51778ce9400e"></a>
 template&lt;class Stream &gt; </td></tr>
-<tr class="memitem:ac2976620138064b001373aa380b6b64c"><td class="memTemplItemLeft" align="right" valign="top">Stream &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator&gt;&gt;</b> (Stream &amp;s, <a class="el" href="../../d9/d0c/structsequoia_1_1testing_1_1perfectly__normal__beast.html">perfectly_normal_beast</a> &amp;b)</td></tr>
-<tr class="separator:ac2976620138064b001373aa380b6b64c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a11e470447329c65df2dd51778ce9400e"><td class="memTemplItemLeft" align="right" valign="top">requires std::is_arithmetic_v&lt; T &gt; friend Stream &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator&gt;&gt;</b> (Stream &amp;s, <a class="el" href="../../d9/d0c/structsequoia_1_1testing_1_1perfectly__normal__beast.html">perfectly_normal_beast</a> &amp;b)</td></tr>
+<tr class="separator:a11e470447329c65df2dd51778ce9400e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this struct was generated from the following file:<ul>
 <li>/Users/Claire/Dropbox/Sequoia/Tests/TestFramework/<a class="el" href="../../d3/dcb/CoreDiagnosticsUtilities_8hpp_source.html">CoreDiagnosticsUtilities.hpp</a></li>

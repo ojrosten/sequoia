@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.18"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Sequoia: /Users/Claire/Dropbox/Sequoia/Source/Maths/Sequences/LinearSequence.hpp Source File</title>
+<title>Sequoia: /Users/Claire/Dropbox/Sequoia/Source/sequoia/Maths/Sequences/LinearSequence.hpp Source File</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -61,7 +61,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="../../dir_74389ed8173ad57b461b9d623a1f3867.html">Source</a></li><li class="navelem"><a class="el" href="../../dir_bfce9ab249d47e16c9e42220e5fdc10e.html">Maths</a></li><li class="navelem"><a class="el" href="../../dir_7de7eb9cfdf576b474757466b2b9fcd3.html">Sequences</a></li>  </ul>
+<li class="navelem"><a class="el" href="../../dir_74389ed8173ad57b461b9d623a1f3867.html">Source</a></li><li class="navelem"><a class="el" href="../../dir_2cc7e707cf7d8b577b4d17c7cb9b6739.html">sequoia</a></li><li class="navelem"><a class="el" href="../../dir_d40775f9221ab099c4c7f71f5e5081b6.html">Maths</a></li><li class="navelem"><a class="el" href="../../dir_5f420d15bec3fd76867a5fee1bc9fa30.html">Sequences</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -83,12 +83,12 @@ $(function() {
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;  {</div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;  <span class="keyword">public</span>:</div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <span class="keyword">using</span> size_type = Index;</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    </div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    constexpr <a class="code" href="../../d8/d4a/classsequoia_1_1maths_1_1linear__sequence.html">linear_sequence</a>(T start, T step)</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;      : m_Start{start}</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;      , m_Step{step}</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;      : m_Start{std::move(start)}</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;      , m_Step{std::move(step)}</div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    {}</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    </div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    [[nodiscard]]</div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    constexpr T operator[](<span class="keyword">const</span> size_type i)<span class="keyword"> const </span>{ <span class="keywordflow">return</span> m_Start + i * m_Step; }</div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
@@ -107,22 +107,31 @@ $(function() {
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    T m_Start, m_Step;</div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;  };</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;  </div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> T, T start, T step, <span class="keywordtype">int</span>egral Index&gt;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> T, T Start, T Step, std::<span class="keywordtype">size_t</span> Size, <span class="keywordtype">int</span>egral Index&gt;</div>
 <div class="line"><a name="l00047"></a><span class="lineno"><a class="line" href="../../de/da0/structsequoia_1_1maths_1_1static__linear__sequence.html">   47</a></span>&#160;  <span class="keyword">struct </span><a class="code" href="../../de/da0/structsequoia_1_1maths_1_1static__linear__sequence.html">static_linear_sequence</a></div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;  {</div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keyword">using</span> size_type = Index;</div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    [[nodiscard]]</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    constexpr T operator[](<span class="keyword">const</span> size_type i)<span class="keyword"> const </span>{ <span class="keywordflow">return</span> start + i * step; }</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    constexpr T start() <span class="keyword">const</span> noexcept { <span class="keywordflow">return</span> Start; }</div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    [[nodiscard]]</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keyword">friend</span> constexpr <span class="keywordtype">bool</span> operator==(<span class="keyword">const</span> <a class="code" href="../../de/da0/structsequoia_1_1maths_1_1static__linear__sequence.html">static_linear_sequence</a>&amp;, <span class="keyword">const</span> <a class="code" href="../../de/da0/structsequoia_1_1maths_1_1static__linear__sequence.html">static_linear_sequence</a>&amp;) noexcept = <span class="keywordflow">default</span>;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    constexpr T step() <span class="keyword">const</span> noexcept { <span class="keywordflow">return</span> Step; }</div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    [[nodiscard]]</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="keyword">friend</span> constexpr <span class="keywordtype">bool</span> operator!=(<span class="keyword">const</span> <a class="code" href="../../de/da0/structsequoia_1_1maths_1_1static__linear__sequence.html">static_linear_sequence</a>&amp;, <span class="keyword">const</span> <a class="code" href="../../de/da0/structsequoia_1_1maths_1_1static__linear__sequence.html">static_linear_sequence</a>&amp;) noexcept = <span class="keywordflow">default</span>;</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;  };</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;}</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    constexpr std::size_t size() <span class="keyword">const</span> noexcept { <span class="keywordflow">return</span> Size; }</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    [[nodiscard]]</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    constexpr T operator[](<span class="keyword">const</span> size_type i)<span class="keyword"> const </span>{ <span class="keywordflow">return</span> Start + i * Step; }</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    [[nodiscard]]</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="keyword">friend</span> constexpr <span class="keywordtype">bool</span> operator==(<span class="keyword">const</span> <a class="code" href="../../de/da0/structsequoia_1_1maths_1_1static__linear__sequence.html">static_linear_sequence</a>&amp;, <span class="keyword">const</span> <a class="code" href="../../de/da0/structsequoia_1_1maths_1_1static__linear__sequence.html">static_linear_sequence</a>&amp;) noexcept = <span class="keywordflow">default</span>;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160; </div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    [[nodiscard]]</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="keyword">friend</span> constexpr <span class="keywordtype">bool</span> operator!=(<span class="keyword">const</span> <a class="code" href="../../de/da0/structsequoia_1_1maths_1_1static__linear__sequence.html">static_linear_sequence</a>&amp;, <span class="keyword">const</span> <a class="code" href="../../de/da0/structsequoia_1_1maths_1_1static__linear__sequence.html">static_linear_sequence</a>&amp;) noexcept = <span class="keywordflow">default</span>;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;  };</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
 <div class="ttc" id="aclasssequoia_1_1maths_1_1linear__sequence_html"><div class="ttname"><a href="../../d8/d4a/classsequoia_1_1maths_1_1linear__sequence.html">sequoia::maths::linear_sequence</a></div><div class="ttdef"><b>Definition:</b> LinearSequence.hpp:18</div></div>
 <div class="ttc" id="astructsequoia_1_1maths_1_1static__linear__sequence_html"><div class="ttname"><a href="../../de/da0/structsequoia_1_1maths_1_1static__linear__sequence.html">sequoia::maths::static_linear_sequence</a></div><div class="ttdef"><b>Definition:</b> LinearSequence.hpp:48</div></div>

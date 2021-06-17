@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.18"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Sequoia: /Users/Claire/Dropbox/Sequoia/Source/Core/DataStructures/PartitionedData.hpp File Reference</title>
+<title>Sequoia: /Users/Claire/Dropbox/Sequoia/Source/sequoia/Core/DataStructures/PartitionedData.hpp File Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -61,7 +61,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="../../dir_74389ed8173ad57b461b9d623a1f3867.html">Source</a></li><li class="navelem"><a class="el" href="../../dir_1ad6433457b0067ef8f54a4fa85f5c9a.html">Core</a></li><li class="navelem"><a class="el" href="../../dir_171ce530a72091fcb4f5f3c25b185187.html">DataStructures</a></li>  </ul>
+<li class="navelem"><a class="el" href="../../dir_74389ed8173ad57b461b9d623a1f3867.html">Source</a></li><li class="navelem"><a class="el" href="../../dir_2cc7e707cf7d8b577b4d17c7cb9b6739.html">sequoia</a></li><li class="navelem"><a class="el" href="../../dir_af73bbb9d00c4493f0602a21eb50c280.html">Core</a></li><li class="navelem"><a class="el" href="../../dir_3d9ac77dfe77a42230562e57a523f504.html">DataStructures</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -76,15 +76,16 @@ $(function() {
 
 <p>Classes implementing the concept of a sequence of data which is divided into partitions.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;<a class="el" href="../../d4/d71/PartitionedDataDetails_8hpp_source.html">PartitionedDataDetails.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d0/d81/TypeTraits_8hpp_source.html">TypeTraits.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d8/def/ArrayUtilities_8hpp_source.html">ArrayUtilities.hpp</a>&quot;</code><br />
-<code>#include &quot;Iterator.hpp&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d6/d07/Algorithms_8hpp_source.html">Algorithms.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d7/d1c/MonotonicSequence_8hpp_source.html">MonotonicSequence.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d0/dbb/AssignmentUtilities_8hpp_source.html">AssignmentUtilities.hpp</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="../../d4/d71/PartitionedDataDetails_8hpp_source.html">sequoia/Core/DataStructures/PartitionedDataDetails.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d0/d81/TypeTraits_8hpp_source.html">sequoia/Core/Meta/TypeTraits.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d8/def/ArrayUtilities_8hpp_source.html">sequoia/Core/Utilities/ArrayUtilities.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d9/df3/Source_2sequoia_2Core_2Utilities_2Iterator_8hpp_source.html">sequoia/Core/Utilities/Iterator.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d6/d07/Algorithms_8hpp_source.html">sequoia/Algorithms/Algorithms.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d7/d1c/MonotonicSequence_8hpp_source.html">sequoia/Maths/Sequences/MonotonicSequence.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d0/dbb/AssignmentUtilities_8hpp_source.html">sequoia/Core/Utilities/AssignmentUtilities.hpp</a>&quot;</code><br />
 <code>#include &lt;string&gt;</code><br />
 <code>#include &lt;numeric&gt;</code><br />
+<code>#include &lt;stdexcept&gt;</code><br />
 </div>
 <p><a href="../../d3/d6e/PartitionedData_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -108,19 +109,19 @@ Classes</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
 <tr class="memitem:a9451dcf04a982b37149b1e705c20ca91"><td class="memTemplParams" colspan="2"><a id="a9451dcf04a982b37149b1e705c20ca91"></a>
-template&lt;class Traits , handler Handler, class IndexType &gt; </td></tr>
+template&lt;class Traits , class Handler , class IndexType &gt; </td></tr>
 <tr class="memitem:a9451dcf04a982b37149b1e705c20ca91"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::data_structures::partition_iterator</b> = utilities::iterator&lt; typename partition_impl::partition_iterator_generator&lt; Traits, Handler, partition_impl::mutable_reference, false &gt;::iterator, partition_impl::dereference_policy&lt; Handler, partition_impl::mutable_reference, partition_impl::partition_index_policy&lt; false, IndexType &gt; &gt; &gt;</td></tr>
 <tr class="separator:a9451dcf04a982b37149b1e705c20ca91"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a484b1c0b27410d2a41bd0189e45946a0"><td class="memTemplParams" colspan="2"><a id="a484b1c0b27410d2a41bd0189e45946a0"></a>
-template&lt;class Traits , handler Handler, class IndexType &gt; </td></tr>
+template&lt;class Traits , class Handler , class IndexType &gt; </td></tr>
 <tr class="memitem:a484b1c0b27410d2a41bd0189e45946a0"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::data_structures::const_partition_iterator</b> = utilities::iterator&lt; typename partition_impl::partition_iterator_generator&lt; Traits, Handler, partition_impl::const_reference, false &gt;::iterator, partition_impl::dereference_policy&lt; Handler, partition_impl::const_reference, partition_impl::partition_index_policy&lt; false, IndexType &gt; &gt; &gt;</td></tr>
 <tr class="separator:a484b1c0b27410d2a41bd0189e45946a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1657010fc2c834b3f51763a9c03cdd7b"><td class="memTemplParams" colspan="2"><a id="a1657010fc2c834b3f51763a9c03cdd7b"></a>
-template&lt;class Traits , handler Handler, class IndexType &gt; </td></tr>
+template&lt;class Traits , class Handler , class IndexType &gt; </td></tr>
 <tr class="memitem:a1657010fc2c834b3f51763a9c03cdd7b"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::data_structures::reverse_partition_iterator</b> = utilities::iterator&lt; typename partition_impl::partition_iterator_generator&lt; Traits, Handler, partition_impl::mutable_reference, true &gt;::iterator, partition_impl::dereference_policy&lt; Handler, partition_impl::mutable_reference, partition_impl::partition_index_policy&lt; true, IndexType &gt; &gt; &gt;</td></tr>
 <tr class="separator:a1657010fc2c834b3f51763a9c03cdd7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a99c91bb91771b9ca88483e90d37449aa"><td class="memTemplParams" colspan="2"><a id="a99c91bb91771b9ca88483e90d37449aa"></a>
-template&lt;class Traits , handler Handler, class IndexType &gt; </td></tr>
+template&lt;class Traits , class Handler , class IndexType &gt; </td></tr>
 <tr class="memitem:a99c91bb91771b9ca88483e90d37449aa"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::data_structures::const_reverse_partition_iterator</b> = utilities::iterator&lt; typename partition_impl::partition_iterator_generator&lt; Traits, Handler, partition_impl::const_reference, true &gt;::iterator, partition_impl::dereference_policy&lt; Handler, partition_impl::const_reference, partition_impl::partition_index_policy&lt; true, IndexType &gt; &gt; &gt;</td></tr>
 <tr class="separator:a99c91bb91771b9ca88483e90d37449aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.18"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Sequoia: /Users/Claire/Dropbox/Sequoia/Source/TestFramework/TestRunner.hpp File Reference</title>
+<title>Sequoia: /Users/Claire/Dropbox/Sequoia/Source/sequoia/TestFramework/TestRunner.hpp File Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -61,7 +61,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="../../dir_74389ed8173ad57b461b9d623a1f3867.html">Source</a></li><li class="navelem"><a class="el" href="../../dir_29d0af23d176bc5a813a115ff70b4bc5.html">TestFramework</a></li>  </ul>
+<li class="navelem"><a class="el" href="../../dir_74389ed8173ad57b461b9d623a1f3867.html">Source</a></li><li class="navelem"><a class="el" href="../../dir_2cc7e707cf7d8b577b4d17c7cb9b6739.html">sequoia</a></li><li class="navelem"><a class="el" href="../../dir_b8a7430685850b8d4f731afcd36d4c52.html">TestFramework</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -76,28 +76,29 @@ $(function() {
 
 <p>Utilities for running tests from the command line.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;<a class="el" href="../../db/d6a/TestFamily_8hpp_source.html">TestFamily.hpp</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="../../db/d6a/TestFamily_8hpp_source.html">sequoia/TestFramework/TestFamily.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d2/d4b/CommandLineArguments_8hpp_source.html">sequoia/Parsing/CommandLineArguments.hpp</a>&quot;</code><br />
+<code>#include &quot;sequoia/PlatformSpecific/Helpers.hpp&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d7/d62/Indent_8hpp_source.html">sequoia/TextProcessing/Indent.hpp</a>&quot;</code><br />
+<code>#include &quot;sequoia/Runtime/Factory.hpp&quot;</code><br />
 <code>#include &lt;map&gt;</code><br />
-<code>#include &lt;variant&gt;</code><br />
 <code>#include &lt;iostream&gt;</code><br />
 </div>
 <p><a href="../../de/d13/TestRunner_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/dca/classsequoia_1_1testing_1_1host__directory.html">sequoia::testing::host_directory</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/d74/structsequoia_1_1testing_1_1creation__data.html">sequoia::testing::creation_data</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">data supplied from the commandline for creating new tests  <a href="../../da/d74/structsequoia_1_1testing_1_1creation__data.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/de8/classsequoia_1_1testing_1_1creation__data_1_1sentinel.html">sequoia::testing::creation_data::sentinel</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d28/structsequoia_1_1testing_1_1template__spec.html">sequoia::testing::template_spec</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/ddd/classsequoia_1_1testing_1_1nascent__test.html">sequoia::testing::nascent_test</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Holds data for the automated creation of new tests.  <a href="../../da/ddd/classsequoia_1_1testing_1_1nascent__test.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/dd0/classsequoia_1_1testing_1_1nascent__test__base.html">sequoia::testing::nascent_test_base</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d84/structsequoia_1_1testing_1_1repositories.html">sequoia::testing::repositories</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/dca/structsequoia_1_1testing_1_1nascent__test__base_1_1file__data.html">sequoia::testing::nascent_test_base::file_data</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d59/classsequoia_1_1testing_1_1nascent__semantics__test.html">sequoia::testing::nascent_semantics_test</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d33/classsequoia_1_1testing_1_1nascent__allocation__test.html">sequoia::testing::nascent_allocation_test</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d1e/classsequoia_1_1testing_1_1nascent__behavioural__test.html">sequoia::testing::nascent_behavioural_test</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/d37/classsequoia_1_1testing_1_1test__runner.html">sequoia::testing::test_runner</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Consumes command-line arguments and holds all test families.  <a href="../../da/d37/classsequoia_1_1testing_1_1test__runner.html#details">More...</a><br /></td></tr>
@@ -114,16 +115,21 @@ Functions</h2></td></tr>
 <tr class="memitem:a6a45ec074d2be18774c71333d8ec4343"><td class="memItemLeft" align="right" valign="top"><a id="a6a45ec074d2be18774c71333d8ec4343"></a>
 std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::report_time</b> (const test_family::summary &amp;s)</td></tr>
 <tr class="separator:a6a45ec074d2be18774c71333d8ec4343"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7fb96e84c6fb3884d2635665bb94d08c"><td class="memTemplParams" colspan="2"><a id="a7fb96e84c6fb3884d2635665bb94d08c"></a>
-template&lt;class Fn &gt; </td></tr>
-<tr class="memitem:a7fb96e84c6fb3884d2635665bb94d08c"><td class="memTemplItemLeft" align="right" valign="top">requires invocable&lt; Fn, std::filesystem::path &gt; void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::create_file</b> (const std::filesystem::path &amp;source, const std::filesystem::path &amp;target, Fn action)</td></tr>
-<tr class="separator:a7fb96e84c6fb3884d2635665bb94d08c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aec513908ac2effd46c510a14110350b3"><td class="memItemLeft" align="right" valign="top"><a id="aec513908ac2effd46c510a14110350b3"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::handle_as_ref</b> (std::string_view type)</td></tr>
+<tr class="separator:aec513908ac2effd46c510a14110350b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a37d333f0ade7317d76e7b7db79ccfae2"><td class="memItemLeft" align="right" valign="top"><a id="a37d333f0ade7317d76e7b7db79ccfae2"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::to_string</b> (const template_data &amp;data)</td></tr>
+<tr class="separator:a37d333f0ade7317d76e7b7db79ccfae2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9127e3b80c83658d7a4e9e1d46fe2254"><td class="memItemLeft" align="right" valign="top"><a id="a9127e3b80c83658d7a4e9e1d46fe2254"></a>
 template_data&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::generate_template_data</b> (std::string_view str)</td></tr>
 <tr class="separator:a9127e3b80c83658d7a4e9e1d46fe2254"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab1739bae6b960490474c9e5b8f41a2a8"><td class="memItemLeft" align="right" valign="top"><a id="ab1739bae6b960490474c9e5b8f41a2a8"></a>
 template_spec&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::generate_template_spec</b> (std::string_view str)</td></tr>
 <tr class="separator:ab1739bae6b960490474c9e5b8f41a2a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a05abc09355de461c535a09c2f6b55876"><td class="memItemLeft" align="right" valign="top"><a id="a05abc09355de461c535a09c2f6b55876"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::set_top_copyright</b> (std::string &amp;text, std::string_view copyright)</td></tr>
+<tr class="separator:a05abc09355de461c535a09c2f6b55876"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Utilities for running tests from the command line. </p>

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.18"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Sequoia: /Users/Claire/Dropbox/Sequoia/Source/TestFramework/FileEditors.cpp File Reference</title>
+<title>Sequoia: /Users/Claire/Dropbox/Sequoia/Source/sequoia/TestFramework/FileEditors.cpp File Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -61,7 +61,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="../../dir_74389ed8173ad57b461b9d623a1f3867.html">Source</a></li><li class="navelem"><a class="el" href="../../dir_29d0af23d176bc5a813a115ff70b4bc5.html">TestFramework</a></li>  </ul>
+<li class="navelem"><a class="el" href="../../dir_74389ed8173ad57b461b9d623a1f3867.html">Source</a></li><li class="navelem"><a class="el" href="../../dir_2cc7e707cf7d8b577b4d17c7cb9b6739.html">sequoia</a></li><li class="navelem"><a class="el" href="../../dir_b8a7430685850b8d4f731afcd36d4c52.html">TestFramework</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -74,18 +74,23 @@ $(function() {
 
 <p>Definitions for <a class="el" href="../../d4/d87/FileEditors_8hpp.html" title="Contains utilities for automatically editing certain files as part of the test creation process.">FileEditors.hpp</a>.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;<a class="el" href="../../d4/d87/FileEditors_8hpp_source.html">FileEditors.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d8/dbf/Output_8hpp_source.html">Output.hpp</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;sequoia/Streaming/Streaming.hpp&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d4/d87/FileEditors_8hpp_source.html">sequoia/TestFramework/FileEditors.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d2/dbb/FileSystem_8hpp_source.html">sequoia/TestFramework/FileSystem.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d8/dbf/Output_8hpp_source.html">sequoia/TestFramework/Output.hpp</a>&quot;</code><br />
 <code>#include &lt;fstream&gt;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a2cb814925dc4201e98f98c1ffc63b9bb"><td class="memItemLeft" align="right" valign="top"><a id="a2cb814925dc4201e98f98c1ffc63b9bb"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::add_include</b> (const std::filesystem::path &amp;filePath, std::string_view include)</td></tr>
-<tr class="separator:a2cb814925dc4201e98f98c1ffc63b9bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0f5054145d483b65c0e0d7498a5ee247"><td class="memItemLeft" align="right" valign="top"><a id="a0f5054145d483b65c0e0d7498a5ee247"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::add_to_family</b> (const std::filesystem::path &amp;filePath, std::string_view familyName, const std::vector&lt; std::string &gt; &amp;tests)</td></tr>
-<tr class="separator:a0f5054145d483b65c0e0d7498a5ee247"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3e19bb6e43a6123ad265cd64ed476442"><td class="memItemLeft" align="right" valign="top"><a id="a3e19bb6e43a6123ad265cd64ed476442"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::add_include</b> (const std::filesystem::path &amp;file, std::string_view includePath)</td></tr>
+<tr class="separator:a3e19bb6e43a6123ad265cd64ed476442"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a37b36dd996417d53228f1beceaaf4ad2"><td class="memItemLeft" align="right" valign="top"><a id="a37b36dd996417d53228f1beceaaf4ad2"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::add_to_family</b> (const std::filesystem::path &amp;file, std::string_view familyName, indentation indent, const std::vector&lt; std::string &gt; &amp;tests)</td></tr>
+<tr class="separator:a37b36dd996417d53228f1beceaaf4ad2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae84ca01865c5352660e0671af2df2aff"><td class="memItemLeft" align="right" valign="top"><a id="ae84ca01865c5352660e0671af2df2aff"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::add_to_cmake</b> (const std::filesystem::path &amp;cmakeDir, const std::filesystem::path &amp;hostDir, const std::filesystem::path &amp;file, std::string_view patternOpen, std::string_view patternClose, std::string_view cmakeEntryPrexfix)</td></tr>
+<tr class="separator:ae84ca01865c5352660e0671af2df2aff"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Definitions for <a class="el" href="../../d4/d87/FileEditors_8hpp.html" title="Contains utilities for automatically editing certain files as part of the test creation process.">FileEditors.hpp</a>. </p>

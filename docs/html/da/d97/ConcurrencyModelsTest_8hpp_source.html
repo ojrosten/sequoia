@@ -76,14 +76,14 @@ $(function() {
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment"></span> </div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#pragma once</span></div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="../../d9/daf/RegularTestCore_8hpp.html">RegularTestCore.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="../../d9/daf/RegularTestCore_8hpp.html">sequoia/TestFramework/RegularTestCore.hpp</a>&quot;</span></div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160; </div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &lt;vector&gt;</span></div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160; </div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="keyword">namespace </span>sequoia::testing</div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;{</div>
 <div class="line"><a name="l00016"></a><span class="lineno"><a class="line" href="../../d4/d68/classsequoia_1_1testing_1_1threading__models__test.html">   16</a></span>&#160;  <span class="keyword">class </span><a class="code" href="../../d4/d68/classsequoia_1_1testing_1_1threading__models__test.html">threading_models_test</a> final : <span class="keyword">public</span> <a class="code" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">regular_test</a></div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;  {      </div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;  {</div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;  <span class="keyword">public</span>:</div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <span class="keyword">using</span> regular_test::regular_test;</div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
@@ -103,21 +103,22 @@ $(function() {
 <div class="line"><a name="l00034"></a><span class="lineno"><a class="line" href="../../d9/d74/classsequoia_1_1testing_1_1updatable.html">   34</a></span>&#160;  <span class="keyword">class </span><a class="code" href="../../d9/d74/classsequoia_1_1testing_1_1updatable.html">updatable</a></div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;  {</div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;  <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keywordtype">void</span> operator()(<span class="keyword">const</span> <span class="keywordtype">int</span> x)</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keywordtype">void</span> operator()(<span class="keyword">const</span> <span class="keywordtype">int</span> <a class="code" href="../../d6/d61/structsequoia_1_1testing_1_1x.html">x</a>)</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    {</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;      m_Data.push_back(x);</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;      m_Data.push_back(<a class="code" href="../../d6/d61/structsequoia_1_1testing_1_1x.html">x</a>);</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    }</div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keyword">const</span> <span class="keyword">auto</span>&amp; get_data()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> m_Data; }</div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;  <span class="keyword">private</span>:</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    std::vector&lt;int&gt; m_Data;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;  };  </div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;  };</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
 <div class="ttc" id="aclasssequoia_1_1testing_1_1threading__models__test_html"><div class="ttname"><a href="../../d4/d68/classsequoia_1_1testing_1_1threading__models__test.html">sequoia::testing::threading_models_test</a></div><div class="ttdef"><b>Definition:</b> ConcurrencyModelsTest.hpp:17</div></div>
 <div class="ttc" id="aRegularTestCore_8hpp_html"><div class="ttname"><a href="../../d9/daf/RegularTestCore_8hpp.html">RegularTestCore.hpp</a></div><div class="ttdoc">Utilities for checking regular semantics.</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1threading__models__test_html_ac7eaf34fbad938836d15ef647305aa5c"><div class="ttname"><a href="../../d4/d68/classsequoia_1_1testing_1_1threading__models__test.html#ac7eaf34fbad938836d15ef647305aa5c">sequoia::testing::threading_models_test::source_file</a></div><div class="ttdeci">std::string_view source_file() const noexcept final</div><div class="ttdoc">Pure virtual method which should be overridden in a concrete test's cpp file in order to provide the ...</div><div class="ttdef"><b>Definition:</b> ConcurrencyModelsTest.cpp:14</div></div>
-<div class="ttc" id="aclasssequoia_1_1testing_1_1basic__test_html"><div class="ttname"><a href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">sequoia::testing::basic_test</a></div><div class="ttdoc">class template from which all concrete tests should derive.</div><div class="ttdef"><b>Definition:</b> FreeTestCore.hpp:122</div></div>
+<div class="ttc" id="aclasssequoia_1_1testing_1_1basic__test_html"><div class="ttname"><a href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">sequoia::testing::basic_test</a></div><div class="ttdef"><b>Definition:</b> FreeTestCore.hpp:180</div></div>
+<div class="ttc" id="astructsequoia_1_1testing_1_1x_html"><div class="ttname"><a href="../../d6/d61/structsequoia_1_1testing_1_1x.html">sequoia::testing::x</a></div><div class="ttdef"><b>Definition:</b> FactoryTest.cpp:21</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1updatable_html"><div class="ttname"><a href="../../d9/d74/classsequoia_1_1testing_1_1updatable.html">sequoia::testing::updatable</a></div><div class="ttdef"><b>Definition:</b> ConcurrencyModelsTest.hpp:35</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

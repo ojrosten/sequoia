@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.18"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Sequoia: /Users/Claire/Dropbox/Sequoia/Source/TestFramework/Advice.hpp File Reference</title>
+<title>Sequoia: /Users/Claire/Dropbox/Sequoia/Source/sequoia/TestFramework/Advice.hpp File Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -61,7 +61,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="../../dir_74389ed8173ad57b461b9d623a1f3867.html">Source</a></li><li class="navelem"><a class="el" href="../../dir_29d0af23d176bc5a813a115ff70b4bc5.html">TestFramework</a></li>  </ul>
+<li class="navelem"><a class="el" href="../../dir_74389ed8173ad57b461b9d623a1f3867.html">Source</a></li><li class="navelem"><a class="el" href="../../dir_2cc7e707cf7d8b577b4d17c7cb9b6739.html">sequoia</a></li><li class="navelem"><a class="el" href="../../dir_b8a7430685850b8d4f731afcd36d4c52.html">TestFramework</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -76,15 +76,31 @@ $(function() {
 
 <p>Contains utilities for the advice framework.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;<a class="el" href="../../d3/d84/Concepts_8hpp_source.html">Concepts.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d0/d81/TypeTraits_8hpp_source.html">TypeTraits.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d8/dbf/Output_8hpp_source.html">Output.hpp</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="../../d3/d84/Concepts_8hpp_source.html">sequoia/Core/Meta/Concepts.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d0/d81/TypeTraits_8hpp_source.html">sequoia/Core/Meta/TypeTraits.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d8/dbf/Output_8hpp_source.html">sequoia/TestFramework/Output.hpp</a>&quot;</code><br />
 <code>#include &lt;string&gt;</code><br />
 </div>
 <p><a href="../../da/d27/Advice_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/dd5/structsequoia_1_1testing_1_1advisor__invoke__type.html">sequoia::testing::advisor_invoke_type&lt; Advisor &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/dfd/structsequoia_1_1testing_1_1advisor__invoke__type_3_01R_07Advisor_1_1_5_08_07T_00_01T_08_4.html">sequoia::testing::advisor_invoke_type&lt; R(Advisor::*)(T, T)&gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/dda/structsequoia_1_1testing_1_1advisor__invoke__type_3_01R_07Advisor_1_1_5_08_07T_00_01T_08_01const_01_4.html">sequoia::testing::advisor_invoke_type&lt; R(Advisor::*)(T, T) const &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d79/structsequoia_1_1testing_1_1advisor__invoke__type_3_01R_07Advisor_1_1_5_08_07T_00_01T_08_01const_01noexcept_01_4.html">sequoia::testing::advisor_invoke_type&lt; R(Advisor::*)(T, T) const noexcept &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d51/structsequoia_1_1testing_1_1advisor__invoke__type_3_01R_07Advisor_1_1_5_08_07T_00_01T_08_01noexcept_01_4.html">sequoia::testing::advisor_invoke_type&lt; R(Advisor::*)(T, T) noexcept &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d10/structsequoia_1_1testing_1_1advisor__analyser.html">sequoia::testing::advisor_analyser&lt; Advisor, T &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d3c/structsequoia_1_1testing_1_1advisor__analyser_3_01Advisor_00_01T_01_4.html">sequoia::testing::advisor_analyser&lt; Advisor, T &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d3c/structsequoia_1_1testing_1_1advisor__analyser_3_01Advisor_00_01T_01_4.html">sequoia::testing::advisor_analyser&lt; Advisor, T &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/d10/structsequoia_1_1testing_1_1null__advisor.html">sequoia::testing::null_advisor</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents the absence of advice.  <a href="../../da/d10/structsequoia_1_1testing_1_1null__advisor.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -106,6 +122,13 @@ std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia:
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
+<tr class="memitem:a8692d8909870cdcc497f3684d94385a6"><td class="memTemplParams" colspan="2">template&lt;class Advisor , class T &gt; </td></tr>
+<tr class="memitem:a8692d8909870cdcc497f3684d94385a6"><td class="memTemplItemLeft" align="right" valign="top">requires invocable&lt; Advisor, T, T &gt; &amp;&amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::requires</b></td></tr>
+<tr class="separator:a8692d8909870cdcc497f3684d94385a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a993a1d1f608fa5800ed6373bd0744bae"><td class="memTemplParams" colspan="2"><a id="a993a1d1f608fa5800ed6373bd0744bae"></a>
+template&lt;class Advisor , class T &gt; </td></tr>
+<tr class="memitem:a993a1d1f608fa5800ed6373bd0744bae"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::use_advisor_v</b> {advisor_analyser&lt;Advisor, T&gt;::utilize}</td></tr>
+<tr class="separator:a993a1d1f608fa5800ed6373bd0744bae"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a93d39052c2baebee72b41d26849283a9"><td class="memTemplParams" colspan="2">template&lt;class A &gt; </td></tr>
 <tr class="memitem:a93d39052c2baebee72b41d26849283a9"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::teacher</b></td></tr>
 <tr class="separator:a93d39052c2baebee72b41d26849283a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -117,6 +140,24 @@ template&lt;class... U&gt; </td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Contains utilities for the advice framework. </p>
 </div><h2 class="groupheader">Variable Documentation</h2>
+<a id="a8692d8909870cdcc497f3684d94385a6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8692d8909870cdcc497f3684d94385a6">&#9670;&nbsp;</a></span>requires</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Advisor , class T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">requires sequoia::testing::requires</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">{</div>
+<div class="line">      std::declval&lt;decltype(&amp;Advisor::operator())&gt;()</div>
+</div><!-- fragment -->
+</div>
+</div>
 <a id="a93d39052c2baebee72b41d26849283a9"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a93d39052c2baebee72b41d26849283a9">&#9670;&nbsp;</a></span>teacher</h2>
 

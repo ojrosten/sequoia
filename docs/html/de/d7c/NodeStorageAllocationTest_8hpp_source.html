@@ -78,7 +78,7 @@ $(function() {
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &quot;NodeStorageTestingUtilities.hpp&quot;</span></div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160; </div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="../../d8/da2/RegularAllocationTestCore_8hpp.html">RegularAllocationTestCore.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="../../d8/da2/RegularAllocationTestCore_8hpp.html">sequoia/TestFramework/RegularAllocationTestCore.hpp</a>&quot;</span></div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160; </div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="keyword">namespace </span>sequoia::testing</div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;{</div>
@@ -88,22 +88,21 @@ $(function() {
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <span class="keyword">using</span> regular_allocation_test::regular_allocation_test;</div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    [[nodiscard]]</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    std::string_view <a class="code" href="../../df/d88/classsequoia_1_1testing_1_1node__storage__allocation__test.html#a8ef877f014cab68be95cb8622914a81e">source_file</a>() <span class="keyword">const</span> noexcept <span class="keyword">final</span>;</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    std::string_view source_file() <span class="keyword">const</span> noexcept <span class="keyword">final</span>;</div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <span class="keyword">template</span>&lt;<span class="keywordtype">bool</span> PropagateCopy, <span class="keywordtype">bool</span> PropagateMove, <span class="keywordtype">bool</span> PropagateSwap&gt;</div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <span class="keywordtype">void</span> test_allocation();</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;  <span class="keyword">private</span>:  </div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;  <span class="keyword">private</span>:</div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <span class="keywordtype">void</span> run_tests() <span class="keyword">final</span>;</div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> Sharing, <span class="keywordtype">bool</span> PropagateCopy, <span class="keywordtype">bool</span> PropagateMove, <span class="keywordtype">bool</span> PropagateSwap&gt;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="keywordtype">void</span> test_allocation_impl();    </div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="keywordtype">void</span> test_allocation_impl();</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;  };</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
 <div class="ttc" id="aRegularAllocationTestCore_8hpp_html"><div class="ttname"><a href="../../d8/da2/RegularAllocationTestCore_8hpp.html">RegularAllocationTestCore.hpp</a></div><div class="ttdoc">Extension for checking allocations for types with regular semantics, see here.</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1node__storage__allocation__test_html"><div class="ttname"><a href="../../df/d88/classsequoia_1_1testing_1_1node__storage__allocation__test.html">sequoia::testing::node_storage_allocation_test</a></div><div class="ttdef"><b>Definition:</b> NodeStorageAllocationTest.hpp:17</div></div>
-<div class="ttc" id="aclasssequoia_1_1testing_1_1node__storage__allocation__test_html_a8ef877f014cab68be95cb8622914a81e"><div class="ttname"><a href="../../df/d88/classsequoia_1_1testing_1_1node__storage__allocation__test.html#a8ef877f014cab68be95cb8622914a81e">sequoia::testing::node_storage_allocation_test::source_file</a></div><div class="ttdeci">std::string_view source_file() const noexcept final</div><div class="ttdoc">Pure virtual method which should be overridden in a concrete test's cpp file in order to provide the ...</div><div class="ttdef"><b>Definition:</b> NodeStorageAllocationTest.cpp:15</div></div>
-<div class="ttc" id="aclasssequoia_1_1testing_1_1basic__regular__allocation__test_html"><div class="ttname"><a href="../../db/dbc/classsequoia_1_1testing_1_1basic__regular__allocation__test.html">sequoia::testing::basic_regular_allocation_test</a></div><div class="ttdoc">Templated on the test_mode, this forms the basis of all allocation tests for regular types.</div><div class="ttdef"><b>Definition:</b> RegularAllocationTestCore.hpp:88</div></div>
+<div class="ttc" id="aclasssequoia_1_1testing_1_1basic__regular__allocation__test_html"><div class="ttname"><a href="../../db/dbc/classsequoia_1_1testing_1_1basic__regular__allocation__test.html">sequoia::testing::basic_regular_allocation_test</a></div><div class="ttdoc">Templated on the test_mode, this forms the basis of all allocation tests for regular types.</div><div class="ttdef"><b>Definition:</b> RegularAllocationTestCore.hpp:116</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

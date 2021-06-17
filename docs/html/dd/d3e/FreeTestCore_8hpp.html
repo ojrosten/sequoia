@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.18"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Sequoia: /Users/Claire/Dropbox/Sequoia/Source/TestFramework/FreeTestCore.hpp File Reference</title>
+<title>Sequoia: /Users/Claire/Dropbox/Sequoia/Source/sequoia/TestFramework/FreeTestCore.hpp File Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -61,7 +61,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="../../dir_74389ed8173ad57b461b9d623a1f3867.html">Source</a></li><li class="navelem"><a class="el" href="../../dir_29d0af23d176bc5a813a115ff70b4bc5.html">TestFramework</a></li>  </ul>
+<li class="navelem"><a class="el" href="../../dir_74389ed8173ad57b461b9d623a1f3867.html">Source</a></li><li class="navelem"><a class="el" href="../../dir_2cc7e707cf7d8b577b4d17c7cb9b6739.html">sequoia</a></li><li class="navelem"><a class="el" href="../../dir_b8a7430685850b8d4f731afcd36d4c52.html">TestFramework</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -69,6 +69,7 @@ $(function() {
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
 <a href="#enum-members">Enumerations</a> &#124;
+<a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">FreeTestCore.hpp File Reference</div>  </div>
@@ -77,18 +78,22 @@ $(function() {
 
 <p>Core functionality for the testing framework.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;<a class="el" href="../../dc/d9c/ConcreteTypeCheckers_8hpp_source.html">ConcreteTypeCheckers.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d3/d84/Concepts_8hpp_source.html">Concepts.hpp</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="../../dc/d9c/ConcreteTypeCheckers_8hpp_source.html">sequoia/TestFramework/ConcreteTypeCheckers.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d3/d84/Concepts_8hpp_source.html">sequoia/Core/Meta/Concepts.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d8/dbf/Output_8hpp_source.html">sequoia/TestFramework/Output.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d2/dbb/FileSystem_8hpp_source.html">sequoia/TestFramework/FileSystem.hpp</a>&quot;</code><br />
+<code>#include &lt;memory&gt;</code><br />
 </div>
 <p><a href="../../dd/d3e/FreeTestCore_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/d6f/classsequoia_1_1testing_1_1test.html">sequoia::testing::test</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Abstract base class used for type-erasure of the template class <a class="el" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html" title="class template from which all concrete tests should derive.">basic_test</a>.  <a href="../../da/d6f/classsequoia_1_1testing_1_1test.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Abstract base class used for type-erasure of the template class <a class="el" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">basic_test</a>.  <a href="../../da/d6f/classsequoia_1_1testing_1_1test.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">sequoia::testing::basic_test&lt; Checker &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">class template from which all concrete tests should derive.  <a href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">sequoia::testing::basic_test</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/dce/classsequoia_1_1testing_1_1test__vessel.html">sequoia::testing::test_vessel</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
@@ -110,11 +115,20 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::fr
 Enumerations</h2></td></tr>
 <tr class="memitem:a5bf3cc5ec793288c6c7da7ceeb3249a7"><td class="memItemLeft" align="right" valign="top"><a id="a5bf3cc5ec793288c6c7da7ceeb3249a7"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d3e/FreeTestCore_8hpp.html#a5bf3cc5ec793288c6c7da7ceeb3249a7">sequoia::testing::concurrency_mode</a> { <b>serial</b> =-1, 
 <b>sequoia::testing::concurrency_mode::family</b>, 
-<b>sequoia::testing::concurrency_mode::test</b>, 
-<b>sequoia::testing::concurrency_mode::deep</b>
+<b>sequoia::testing::concurrency_mode::test</b>
  }</td></tr>
 <tr class="memdesc:a5bf3cc5ec793288c6c7da7ceeb3249a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specifies the granularity at which concurrent execution is applied. <br /></td></tr>
 <tr class="separator:a5bf3cc5ec793288c6c7da7ceeb3249a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:a1734a3f89713697d6220ad29719b08f7"><td class="memItemLeft" align="right" valign="top"><a id="a1734a3f89713697d6220ad29719b08f7"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::to_tag</b> (test_mode mode)</td></tr>
+<tr class="separator:a1734a3f89713697d6220ad29719b08f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac7174ab6daad7e3e2533d048af6f22ff"><td class="memTemplParams" colspan="2">template&lt;class Checker &gt; </td></tr>
+<tr class="memitem:ac7174ab6daad7e3e2533d048af6f22ff"><td class="memTemplItemLeft" align="right" valign="top">requires&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dd/d3e/FreeTestCore_8hpp.html#ac7174ab6daad7e3e2533d048af6f22ff">sequoia::testing::requires</a> ()</td></tr>
+<tr class="memdesc:ac7174ab6daad7e3e2533d048af6f22ff"><td class="mdescLeft">&#160;</td><td class="mdescRight">class template from which all concrete tests should derive.  <a href="../../dd/d3e/FreeTestCore_8hpp.html#ac7174ab6daad7e3e2533d048af6f22ff">More...</a><br /></td></tr>
+<tr class="separator:ac7174ab6daad7e3e2533d048af6f22ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
@@ -140,6 +154,34 @@ template&lt;class T &gt; </td></tr>
       </table>
 </div><div class="memdoc">
 <p><a class="anchor" id="free_test_alias"></a> </p>
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="ac7174ab6daad7e3e2533d048af6f22ff"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac7174ab6daad7e3e2533d048af6f22ff">&#9670;&nbsp;</a></span>requires()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Checker &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">requires sequoia::testing::requires </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>class template from which all concrete tests should derive. </p>
+<p>The class template publicly inherits from test, for the purposes of type-erasure.</p>
+<p>The class template inherits in a protected manner from the template parameter Checker. The inheritance is protected in order to keep the public interface of basic_test minimal, while allowing convenient internal access to the Checkers various check methods, in particular.</p>
+<p>test::execute is final; however, customisation of the way in which the log_summary is generated is allowed through the virtual function summarize.</p>
+<p>The execute method delegates to the pure virtual function run_tests. In a concrete test case, this method will contain, either directly or indirectly, the various checks which are to be performed.</p>
+<p>The semantics are such that, of the special member functions, only explicit construction from a string_view and (virtual) destruction are publicly available. Moves are protected; copy contruction / assignment are deleted.</p>
+<p><a class="anchor" id="basic_test_primary"></a></p>
 
 </div>
 </div>

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.18"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Sequoia: sequoia::maths::graph_impl::edge_type_generator&lt; GraphFlavour, EdgeWeight, EdgeWeightCreator, IndexType, SharingPreference, SharedEdge &gt; Struct Template Reference</title>
+<title>Sequoia: sequoia::maths::graph_impl::edge_type_generator&lt; GraphFlavour, EdgeWeightCreator, IndexType, SharingPreference &gt; Struct Template Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -70,39 +70,69 @@ $(function() {
 <a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="../../d4/dbe/structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">sequoia::maths::graph_impl::edge_type_generator&lt; GraphFlavour, EdgeWeight, EdgeWeightCreator, IndexType, SharingPreference, SharedEdge &gt; Struct Template Reference</div>  </div>
+<div class="title">sequoia::maths::graph_impl::edge_type_generator&lt; GraphFlavour, EdgeWeightCreator, IndexType, SharingPreference &gt; Struct Template Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a4a66a3fb91b60498f9f846b5fd7c1c20"><td class="memItemLeft" align="right" valign="top"><a id="a4a66a3fb91b60498f9f846b5fd7c1c20"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>sharing</b> = <a class="el" href="../../d7/deb/structsequoia_1_1maths_1_1graph__impl_1_1sharing__traits.html">sharing_traits</a>&lt; GraphFlavour, SharingPreference, EdgeWeight, EdgeWeightCreator &gt;</td></tr>
-<tr class="separator:a4a66a3fb91b60498f9f846b5fd7c1c20"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab074038897ed25b2f85121bbc56315a6"><td class="memItemLeft" align="right" valign="top"><a id="ab074038897ed25b2f85121bbc56315a6"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>edge_weight_proxy</b> = typename <a class="el" href="../../d9/d17/structsequoia_1_1maths_1_1graph__impl_1_1edge__weight__wrapper.html">edge_weight_wrapper</a>&lt; EdgeWeight, EdgeWeightCreator &gt;::proxy</td></tr>
-<tr class="separator:ab074038897ed25b2f85121bbc56315a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a69d5ba6aba082b283ebf1921c50d8f49"><td class="memItemLeft" align="right" valign="top"><a id="a69d5ba6aba082b283ebf1921c50d8f49"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>edge_type</b> = <a class="el" href="../../da/d14/classsequoia_1_1maths_1_1partial__edge.html">partial_edge</a>&lt; EdgeWeight, <a class="el" href="../../de/d10/structsequoia_1_1maths_1_1graph__impl_1_1sharing__v__to__type.html">sharing_v_to_type</a>&lt; shared_weight_v &gt;::template policy, edge_weight_proxy, IndexType &gt;</td></tr>
-<tr class="separator:a69d5ba6aba082b283ebf1921c50d8f49"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6173c9d71d4fd6dc294d8b13e17d2d0d"><td class="memItemLeft" align="right" valign="top"><a id="a6173c9d71d4fd6dc294d8b13e17d2d0d"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>edge_init_type</b> = typename <a class="el" href="../../d6/d9e/structsequoia_1_1maths_1_1graph__impl_1_1edge__init__type__generator.html">edge_init_type_generator</a>&lt; <a class="el" href="../../da/d14/classsequoia_1_1maths_1_1partial__edge.html">edge_type</a>, GraphFlavour &gt;::edge_init_type</td></tr>
-<tr class="separator:a6173c9d71d4fd6dc294d8b13e17d2d0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ace047fe8b324202c92a9c06b2726f1b6"><td class="memItemLeft" align="right" valign="top"><a id="ace047fe8b324202c92a9c06b2726f1b6"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>sharing</b> = <a class="el" href="../../d7/deb/structsequoia_1_1maths_1_1graph__impl_1_1sharing__traits.html">sharing_traits</a>&lt; GraphFlavour, SharingPreference, EdgeWeightCreator &gt;</td></tr>
+<tr class="separator:ace047fe8b324202c92a9c06b2726f1b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aea5114975e319009840a2efba59329b5"><td class="memItemLeft" align="right" valign="top"><a id="aea5114975e319009840a2efba59329b5"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>edge_weight_proxy</b> = edge_weight_proxy_t&lt; EdgeWeightCreator &gt;</td></tr>
+<tr class="separator:aea5114975e319009840a2efba59329b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acfca775d51089766f74e841e318b647b"><td class="memItemLeft" align="right" valign="top"><a id="acfca775d51089766f74e841e318b647b"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>handler_type</b> = shared_to_handler_t&lt; shared_weight_v, edge_weight_proxy &gt;</td></tr>
+<tr class="separator:acfca775d51089766f74e841e318b647b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae8dbc8b40e9dd499bab1d2e27f0b5fb3"><td class="memItemLeft" align="right" valign="top"><a id="ae8dbc8b40e9dd499bab1d2e27f0b5fb3"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>edge_type</b> = flavour_to_edge_t&lt; GraphFlavour, handler_type, IndexType, shared_edge_v &gt;</td></tr>
+<tr class="separator:ae8dbc8b40e9dd499bab1d2e27f0b5fb3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a31e7a00170a3bf314e4a3aad30fca6c0"><td class="memItemLeft" align="right" valign="top"><a id="a31e7a00170a3bf314e4a3aad30fca6c0"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>edge_init_type</b> = edge_to_init_type_t&lt; edge_type, is_embedded_v &gt;</td></tr>
+<tr class="separator:a31e7a00170a3bf314e4a3aad30fca6c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
-<tr class="memitem:a47f7fe2303c3365254b6da51089cc594"><td class="memItemLeft" align="right" valign="top"><a id="a47f7fe2303c3365254b6da51089cc594"></a>
+<tr class="memitem:a9e0d396e257a6e6ee307d985a3a1a1c5"><td class="memItemLeft" align="right" valign="top"><a id="a9e0d396e257a6e6ee307d985a3a1a1c5"></a>
 constexpr static bool&#160;</td><td class="memItemRight" valign="bottom"><b>shared_weight_v</b> {sharing::shared_weight_v}</td></tr>
-<tr class="separator:a47f7fe2303c3365254b6da51089cc594"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aac25e3cd5b749fe13d5fdec18ffc4f94"><td class="memItemLeft" align="right" valign="top"><a id="aac25e3cd5b749fe13d5fdec18ffc4f94"></a>
-constexpr static bool&#160;</td><td class="memItemRight" valign="bottom"><b>shared_edge_v</b> {SharedEdge}</td></tr>
-<tr class="separator:aac25e3cd5b749fe13d5fdec18ffc4f94"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a44a5fb099983f0c35f3c87a54094b990"><td class="memItemLeft" align="right" valign="top"><a id="a44a5fb099983f0c35f3c87a54094b990"></a>
-constexpr static bool&#160;</td><td class="memItemRight" valign="bottom"><b>init_complementary_data_v</b> {<a class="el" href="../../d6/d9e/structsequoia_1_1maths_1_1graph__impl_1_1edge__init__type__generator.html">edge_init_type_generator</a>&lt;<a class="el" href="../../da/d14/classsequoia_1_1maths_1_1partial__edge.html">edge_type</a>, GraphFlavour&gt;::complementary_data_v}</td></tr>
-<tr class="separator:a44a5fb099983f0c35f3c87a54094b990"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:a9e0d396e257a6e6ee307d985a3a1a1c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1fe329b8fb447d06b84b4a9005af5218"><td class="memItemLeft" align="right" valign="top"><a id="a1fe329b8fb447d06b84b4a9005af5218"></a>
+constexpr static bool&#160;</td><td class="memItemRight" valign="bottom"><b>shared_edge_v</b> {sharing::shared_edge_v}</td></tr>
+<tr class="separator:a1fe329b8fb447d06b84b4a9005af5218"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abdfc21dc3e9fe4c9ad11309c0e154ce8"><td class="memItemLeft" align="right" valign="top">constexpr static bool&#160;</td><td class="memItemRight" valign="bottom"><b>is_embedded_v</b></td></tr>
+<tr class="separator:abdfc21dc3e9fe4c9ad11309c0e154ce8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="abdfc21dc3e9fe4c9ad11309c0e154ce8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abdfc21dc3e9fe4c9ad11309c0e154ce8">&#9670;&nbsp;</a></span>is_embedded_v</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;graph_flavour GraphFlavour, class EdgeWeightCreator , integral IndexType, edge_sharing_preference SharingPreference&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr static bool <a class="el" href="../../d1/d76/structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator.html">sequoia::maths::graph_impl::edge_type_generator</a>&lt; GraphFlavour, EdgeWeightCreator, IndexType, SharingPreference &gt;::is_embedded_v</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">{</div>
+<div class="line">             GraphFlavour == graph_flavour::undirected_embedded</div>
+<div class="line">          || GraphFlavour == graph_flavour::directed_embedded}</div>
+</div><!-- fragment -->
+</div>
+</div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
-<li>/Users/Claire/Dropbox/Sequoia/Source/Maths/Graph/<a class="el" href="../../d3/d76/GraphDetails_8hpp_source.html">GraphDetails.hpp</a></li>
+<li>/Users/Claire/Dropbox/Sequoia/Source/sequoia/Maths/Graph/<a class="el" href="../../d3/d76/GraphDetails_8hpp_source.html">GraphDetails.hpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

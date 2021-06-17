@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.18"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Sequoia: /Users/Claire/Dropbox/Sequoia/Source/Core/Ownership/HandlerTraits.hpp File Reference</title>
+<title>Sequoia: /Users/Claire/Dropbox/Sequoia/Source/sequoia/Core/Ownership/HandlerTraits.hpp File Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -61,7 +61,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="../../dir_74389ed8173ad57b461b9d623a1f3867.html">Source</a></li><li class="navelem"><a class="el" href="../../dir_1ad6433457b0067ef8f54a4fa85f5c9a.html">Core</a></li><li class="navelem"><a class="el" href="../../dir_617d13cf0127fcfdbed045a86f43ce7e.html">Ownership</a></li>  </ul>
+<li class="navelem"><a class="el" href="../../dir_74389ed8173ad57b461b9d623a1f3867.html">Source</a></li><li class="navelem"><a class="el" href="../../dir_2cc7e707cf7d8b577b4d17c7cb9b6739.html">sequoia</a></li><li class="navelem"><a class="el" href="../../dir_af73bbb9d00c4493f0602a21eb50c280.html">Core</a></li><li class="navelem"><a class="el" href="../../dir_84705664fc2a7be4834ebdee19b6dfce.html">Ownership</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -74,41 +74,40 @@ $(function() {
 
 <p>Traits and Concepts for Sharing Policies.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;<a class="el" href="../../d3/d84/Concepts_8hpp_source.html">Concepts.hpp</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="../../d3/d84/Concepts_8hpp_source.html">sequoia/Core/Meta/Concepts.hpp</a>&quot;</code><br />
 </div>
 <p><a href="../../d5/d43/HandlerTraits_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a972af7fc9d887ba2b4d12f66fd00b3f3"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
-<tr class="memitem:a972af7fc9d887ba2b4d12f66fd00b3f3"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::handler</b></td></tr>
-<tr class="separator:a972af7fc9d887ba2b4d12f66fd00b3f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adf775f9bc6cdeb35f1c11344b25444d2"><td class="memTemplParams" colspan="2">template&lt;class H &gt; </td></tr>
+<tr class="memitem:adf775f9bc6cdeb35f1c11344b25444d2"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::ownership::handler</b></td></tr>
+<tr class="separator:adf775f9bc6cdeb35f1c11344b25444d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Traits and Concepts for Sharing Policies. </p>
 </div><h2 class="groupheader">Variable Documentation</h2>
-<a id="a972af7fc9d887ba2b4d12f66fd00b3f3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a972af7fc9d887ba2b4d12f66fd00b3f3">&#9670;&nbsp;</a></span>handler</h2>
+<a id="adf775f9bc6cdeb35f1c11344b25444d2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adf775f9bc6cdeb35f1c11344b25444d2">&#9670;&nbsp;</a></span>handler</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class T &gt; </div>
+template&lt;class H &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">concept sequoia::handler</td>
+          <td class="memname">concept sequoia::ownership::handler</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">= requires() {</div>
-<div class="line">    <span class="keyword">typename</span> T::handle_type;</div>
-<div class="line">    <span class="keyword">typename</span> T::elementary_type;</div>
+<b>Initial value:</b><div class="fragment"><div class="line">= requires(H&amp; h, <span class="keyword">typename</span> H::handle_type&amp; x, <span class="keyword">const</span> <span class="keyword">typename</span> H::handle_type&amp; cx){</div>
+<div class="line">    <span class="keyword">typename</span> H::handle_type;</div>
+<div class="line">    <span class="keyword">typename</span> H::elementary_type;</div>
 <div class="line"> </div>
-<div class="line">    { T::get(std::declval&lt;typename T::handle_type&gt;()) } -&gt; same_as&lt;const typename T::elementary_type&amp;&gt;;</div>
-<div class="line">    { T::get_ptr(std::declval&lt;typename T::handle_type&gt;()) } -&gt; same_as&lt;const typename T::elementary_type*&gt;;</div>
-<div class="line">    { T::get(makelval&lt;typename T::handle_type&gt;()) } -&gt; same_as&lt;typename T::elementary_type&amp;&gt;;</div>
-<div class="line">    { T::get_ptr(makelval&lt;typename T::handle_type&gt;()) } -&gt; same_as&lt;typename T::elementary_type*&gt;;</div>
-<div class="line">    { T::make() } -&gt; same_as&lt;typename T::handle_type&gt;;</div>
+<div class="line">    { h.get(x) }      -&gt; same_as&lt;typename H::elementary_type&amp;&gt;;</div>
+<div class="line">    { h.get_ptr(x) }  -&gt; same_as&lt;typename H::elementary_type*&gt;;</div>
+<div class="line">    { h.get(cx) }     -&gt; same_as&lt;const typename H::elementary_type&amp;&gt;;</div>
+<div class="line">    { h.get_ptr(cx) } -&gt; same_as&lt;const typename H::elementary_type*&gt;;</div>
 <div class="line">  }</div>
 </div><!-- fragment -->
 </div>

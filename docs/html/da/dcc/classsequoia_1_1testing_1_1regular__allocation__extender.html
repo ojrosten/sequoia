@@ -96,14 +96,22 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a8e261ef8b8d414b4fcbc69364ce3d6a0"><td class="memItemLeft" align="right" valign="top"><a id="a8e261ef8b8d414b4fcbc69364ce3d6a0"></a>
 <a class="el" href="../../da/dcc/classsequoia_1_1testing_1_1regular__allocation__extender.html">regular_allocation_extender</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="../../da/dcc/classsequoia_1_1testing_1_1regular__allocation__extender.html">regular_allocation_extender</a> &amp;&amp;)=delete</td></tr>
 <tr class="separator:a8e261ef8b8d414b4fcbc69364ce3d6a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7cc43845b17dff013aa3bbf8d6cfb8b7"><td class="memTemplParams" colspan="2"><a id="a7cc43845b17dff013aa3bbf8d6cfb8b7"></a>
+<tr class="memitem:ae886ceb1d382685edaf9fd1b44340772"><td class="memTemplParams" colspan="2"><a id="ae886ceb1d382685edaf9fd1b44340772"></a>
 template&lt;pseudoregular T, invocable&lt; T &amp; &gt; Mutator, alloc_getter&lt; T &gt;... Getters&gt; </td></tr>
-<tr class="memitem:a7cc43845b17dff013aa3bbf8d6cfb8b7"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires</b> (!orderable&lt; T &gt;) void check_semantics(std</td></tr>
-<tr class="separator:a7cc43845b17dff013aa3bbf8d6cfb8b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6fd8fb754efa66f4a65bc5c6098fbdf6"><td class="memTemplParams" colspan="2"><a id="a6fd8fb754efa66f4a65bc5c6098fbdf6"></a>
+<tr class="memitem:ae886ceb1d382685edaf9fd1b44340772"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires</b> (!orderable&lt; T &gt; &amp;&amp;(sizeof...(Getters) &gt; 0)) void check_semantics(std</td></tr>
+<tr class="separator:ae886ceb1d382685edaf9fd1b44340772"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b22c9f482882ebe101bc07d7e412d06"><td class="memTemplParams" colspan="2"><a id="a0b22c9f482882ebe101bc07d7e412d06"></a>
+template&lt;pseudoregular T, invocable_r&lt; T &gt; xMaker, invocable_r&lt; T &gt; yMaker, invocable&lt; T &amp; &gt; Mutator, alloc_getter&lt; T &gt;... Getters&gt; </td></tr>
+<tr class="memitem:a0b22c9f482882ebe101bc07d7e412d06"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires</b> (!orderable&lt; T &gt; &amp;&amp;(sizeof...(Getters) &gt; 0)) std</td></tr>
+<tr class="separator:a0b22c9f482882ebe101bc07d7e412d06"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2ac62cf62b2d3f6cab0ab117aac4e4aa"><td class="memTemplParams" colspan="2"><a id="a2ac62cf62b2d3f6cab0ab117aac4e4aa"></a>
 template&lt;pseudoregular T, invocable&lt; T &amp; &gt; Mutator, alloc_getter&lt; T &gt;... Getters&gt; </td></tr>
-<tr class="memitem:a6fd8fb754efa66f4a65bc5c6098fbdf6"><td class="memTemplItemLeft" align="right" valign="top">requires orderable&lt; T &gt; void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_semantics</b> (std::string_view description, const T &amp;x, const T &amp;y, std::weak_ordering order, Mutator m, <a class="el" href="../../d5/d62/classsequoia_1_1testing_1_1allocation__info.html">allocation_info</a>&lt; T, Getters &gt;... info)</td></tr>
-<tr class="separator:a6fd8fb754efa66f4a65bc5c6098fbdf6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2ac62cf62b2d3f6cab0ab117aac4e4aa"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires</b> (orderable&lt; T &gt; &amp;&amp;(sizeof...(Getters) &gt; 0)) void check_semantics(std</td></tr>
+<tr class="separator:a2ac62cf62b2d3f6cab0ab117aac4e4aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3b60b81ff251bfa8e5ca8a037b1cd91f"><td class="memTemplParams" colspan="2"><a id="a3b60b81ff251bfa8e5ca8a037b1cd91f"></a>
+template&lt;pseudoregular T, invocable_r&lt; T &gt; xMaker, invocable_r&lt; T &gt; yMaker, invocable&lt; T &amp; &gt; Mutator, alloc_getter&lt; T &gt;... Getters&gt; </td></tr>
+<tr class="memitem:a3b60b81ff251bfa8e5ca8a037b1cd91f"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires</b> (orderable&lt; T &gt; &amp;&amp;(sizeof...(Getters) &gt; 0)) std</td></tr>
+<tr class="separator:a3b60b81ff251bfa8e5ca8a037b1cd91f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
@@ -118,7 +126,7 @@ class sequoia::testing::regular_allocation_extender&lt; Mode &gt;</h3>
 <p>class template for plugging into the <a class="el" href="../../d2/d0d/FreeCheckers_8hpp.html#checker_primary">checker</a> class template to provide allocation checks for regular types. </p>
 <p><a class="anchor" id="regular_allocation_extender_primary"></a></p>
 </div><hr/>The documentation for this class was generated from the following file:<ul>
-<li>/Users/Claire/Dropbox/Sequoia/Source/TestFramework/<a class="el" href="../../d8/da2/RegularAllocationTestCore_8hpp_source.html">RegularAllocationTestCore.hpp</a></li>
+<li>/Users/Claire/Dropbox/Sequoia/Source/sequoia/TestFramework/<a class="el" href="../../d8/da2/RegularAllocationTestCore_8hpp_source.html">RegularAllocationTestCore.hpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

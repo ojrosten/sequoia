@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.18"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Sequoia: /Users/Claire/Dropbox/Sequoia/Source/TestFramework/TestFamily.hpp File Reference</title>
+<title>Sequoia: /Users/Claire/Dropbox/Sequoia/Source/sequoia/TestFramework/TestFamily.hpp File Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -61,7 +61,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="../../dir_74389ed8173ad57b461b9d623a1f3867.html">Source</a></li><li class="navelem"><a class="el" href="../../dir_29d0af23d176bc5a813a115ff70b4bc5.html">TestFramework</a></li>  </ul>
+<li class="navelem"><a class="el" href="../../dir_74389ed8173ad57b461b9d623a1f3867.html">Source</a></li><li class="navelem"><a class="el" href="../../dir_2cc7e707cf7d8b577b4d17c7cb9b6739.html">sequoia</a></li><li class="navelem"><a class="el" href="../../dir_b8a7430685850b8d4f731afcd36d4c52.html">TestFramework</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -76,9 +76,9 @@ $(function() {
 
 <p>Utilities for grouping tests into families.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;<a class="el" href="../../dd/d3e/FreeTestCore_8hpp_source.html">FreeTestCore.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d2/dbb/FileSystem_8hpp_source.html">FileSystem.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../dc/d7f/Summary_8hpp_source.html">Summary.hpp</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="../../dd/d3e/FreeTestCore_8hpp_source.html">sequoia/TestFramework/FreeTestCore.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d2/dbb/FileSystem_8hpp_source.html">sequoia/TestFramework/FileSystem.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../dc/d7f/Summary_8hpp_source.html">sequoia/TestFramework/Summary.hpp</a>&quot;</code><br />
 <code>#include &lt;vector&gt;</code><br />
 <code>#include &lt;future&gt;</code><br />
 <code>#include &lt;set&gt;</code><br />
@@ -87,6 +87,8 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d3f/structsequoia_1_1testing_1_1as__bitmask_3_01output__mode_01_4.html">sequoia::testing::as_bitmask&lt; output_mode &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d4a/classsequoia_1_1testing_1_1test__family.html">sequoia::testing::test_family</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allows tests to be grouped together into a family of related tests.  <a href="../../de/d4a/classsequoia_1_1testing_1_1test__family.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -97,32 +99,18 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
 Enumerations</h2></td></tr>
-<tr class="memitem:a5a6be1d7f84597f4ac1bae1fe3fc2594"><td class="memItemLeft" align="right" valign="top"><a id="a5a6be1d7f84597f4ac1bae1fe3fc2594"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><b>output_mode</b> { <b>none</b> =0, 
-<b>write_files</b> =1, 
-<b>update_materials</b> =2
+<tr class="memitem:a5a6be1d7f84597f4ac1bae1fe3fc2594"><td class="memItemLeft" align="right" valign="top"><a id="a5a6be1d7f84597f4ac1bae1fe3fc2594"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><b>output_mode</b> { <b>standard</b> =0, 
+<b>help</b> =1, 
+<b>verbose</b> =2
  }</td></tr>
 <tr class="separator:a5a6be1d7f84597f4ac1bae1fe3fc2594"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a14d7a9ca3d0aba3f7e54c1c44d6a7e28"><td class="memItemLeft" align="right" valign="top"><a id="a14d7a9ca3d0aba3f7e54c1c44d6a7e28"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><b>update_mode</b> { <b>none</b> =0, 
+<b>soft</b>
+ }</td></tr>
+<tr class="separator:a14d7a9ca3d0aba3f7e54c1c44d6a7e28"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a33567d9a7450b054ba05dd0222298abc"><td class="memItemLeft" align="right" valign="top"><a id="a33567d9a7450b054ba05dd0222298abc"></a>
-constexpr output_mode&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::operator|</b> (output_mode lhs, output_mode rhs) noexcept</td></tr>
-<tr class="separator:a33567d9a7450b054ba05dd0222298abc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a661effc32b87781d265301a306cd691d"><td class="memItemLeft" align="right" valign="top"><a id="a661effc32b87781d265301a306cd691d"></a>
-constexpr output_mode &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::operator|=</b> (output_mode &amp;lhs, output_mode rhs) noexcept</td></tr>
-<tr class="separator:a661effc32b87781d265301a306cd691d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac5c8848d8aa534ad76761d55702ef30c"><td class="memItemLeft" align="right" valign="top"><a id="ac5c8848d8aa534ad76761d55702ef30c"></a>
-constexpr output_mode&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::operator&amp;</b> (output_mode lhs, output_mode rhs) noexcept</td></tr>
-<tr class="separator:ac5c8848d8aa534ad76761d55702ef30c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1a946fd550a5b12b7c2471cdea46ace3"><td class="memItemLeft" align="right" valign="top"><a id="a1a946fd550a5b12b7c2471cdea46ace3"></a>
-constexpr output_mode &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::operator&amp;=</b> (output_mode &amp;lhs, output_mode rhs) noexcept</td></tr>
-<tr class="separator:a1a946fd550a5b12b7c2471cdea46ace3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ace8eb5b99a696898c224390c49e0aa03"><td class="memItemLeft" align="right" valign="top"><a id="ace8eb5b99a696898c224390c49e0aa03"></a>
-constexpr output_mode&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::operator~</b> (output_mode om)</td></tr>
-<tr class="separator:ace8eb5b99a696898c224390c49e0aa03"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adf4ca6e3bbb2d7d4663b54b4a76ce82c"><td class="memItemLeft" align="right" valign="top"><a id="adf4ca6e3bbb2d7d4663b54b4a76ce82c"></a>
-constexpr output_mode&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::operator^</b> (output_mode lhs, output_mode rhs) noexcept</td></tr>
-<tr class="separator:adf4ca6e3bbb2d7d4663b54b4a76ce82c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9402fa844180159e2988289f3d9b7acd"><td class="memItemLeft" align="right" valign="top"><a id="a9402fa844180159e2988289f3d9b7acd"></a>
 std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::summarize</b> (const test_family::summary &amp;summary, const summary_detail suppression, indentation ind_0, indentation ind_1)</td></tr>
 <tr class="separator:a9402fa844180159e2988289f3d9b7acd"><td class="memSeparator" colspan="2">&#160;</td></tr>

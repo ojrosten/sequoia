@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.18"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Sequoia: /Users/Claire/Dropbox/Sequoia/Source/TestFramework/TestRunner.cpp File Reference</title>
+<title>Sequoia: /Users/Claire/Dropbox/Sequoia/Source/sequoia/TestFramework/TestRunner.cpp File Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -61,12 +61,11 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="../../dir_74389ed8173ad57b461b9d623a1f3867.html">Source</a></li><li class="navelem"><a class="el" href="../../dir_29d0af23d176bc5a813a115ff70b4bc5.html">TestFramework</a></li>  </ul>
+<li class="navelem"><a class="el" href="../../dir_74389ed8173ad57b461b9d623a1f3867.html">Source</a></li><li class="navelem"><a class="el" href="../../dir_2cc7e707cf7d8b577b4d17c7cb9b6739.html">sequoia</a></li><li class="navelem"><a class="el" href="../../dir_b8a7430685850b8d4f731afcd36d4c52.html">TestFramework</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">TestRunner.cpp File Reference</div>  </div>
@@ -75,27 +74,32 @@ $(function() {
 
 <p>Definitions for <a class="el" href="../../de/d13/TestRunner_8hpp.html" title="Utilities for running tests from the command line.">TestRunner.hpp</a>.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;<a class="el" href="../../de/d13/TestRunner_8hpp_source.html">TestRunner.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d2/d4b/CommandLineArguments_8hpp_source.html">CommandLineArguments.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../dc/d7f/Summary_8hpp_source.html">Summary.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d4/d87/FileEditors_8hpp_source.html">FileEditors.hpp</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="../../de/d13/TestRunner_8hpp_source.html">sequoia/TestFramework/TestRunner.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d2/d4b/CommandLineArguments_8hpp_source.html">sequoia/Parsing/CommandLineArguments.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../dc/d7f/Summary_8hpp_source.html">sequoia/TestFramework/Summary.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d4/d87/FileEditors_8hpp_source.html">sequoia/TestFramework/FileEditors.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d1/d50/Substitutions_8hpp_source.html">sequoia/TextProcessing/Substitutions.hpp</a>&quot;</code><br />
 </div><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
-Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d16/classsequoia_1_1testing_1_1creation__data__setter.html">sequoia::testing::creation_data_setter</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:aec513908ac2effd46c510a14110350b3"><td class="memItemLeft" align="right" valign="top"><a id="aec513908ac2effd46c510a14110350b3"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::handle_as_ref</b> (std::string_view type)</td></tr>
+<tr class="separator:aec513908ac2effd46c510a14110350b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6a45ec074d2be18774c71333d8ec4343"><td class="memItemLeft" align="right" valign="top"><a id="a6a45ec074d2be18774c71333d8ec4343"></a>
 std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::report_time</b> (const test_family::summary &amp;s)</td></tr>
 <tr class="separator:a6a45ec074d2be18774c71333d8ec4343"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9127e3b80c83658d7a4e9e1d46fe2254"><td class="memItemLeft" align="right" valign="top"><a id="a9127e3b80c83658d7a4e9e1d46fe2254"></a>
-template_data&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::generate_template_data</b> (std::string_view str)</td></tr>
-<tr class="separator:a9127e3b80c83658d7a4e9e1d46fe2254"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a37d333f0ade7317d76e7b7db79ccfae2"><td class="memItemLeft" align="right" valign="top"><a id="a37d333f0ade7317d76e7b7db79ccfae2"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::to_string</b> (const template_data &amp;data)</td></tr>
+<tr class="separator:a37d333f0ade7317d76e7b7db79ccfae2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab1739bae6b960490474c9e5b8f41a2a8"><td class="memItemLeft" align="right" valign="top"><a id="ab1739bae6b960490474c9e5b8f41a2a8"></a>
 template_spec&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::generate_template_spec</b> (std::string_view str)</td></tr>
 <tr class="separator:ab1739bae6b960490474c9e5b8f41a2a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9127e3b80c83658d7a4e9e1d46fe2254"><td class="memItemLeft" align="right" valign="top"><a id="a9127e3b80c83658d7a4e9e1d46fe2254"></a>
+template_data&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::generate_template_data</b> (std::string_view str)</td></tr>
+<tr class="separator:a9127e3b80c83658d7a4e9e1d46fe2254"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a05abc09355de461c535a09c2f6b55876"><td class="memItemLeft" align="right" valign="top"><a id="a05abc09355de461c535a09c2f6b55876"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::set_top_copyright</b> (std::string &amp;text, std::string_view copyright)</td></tr>
+<tr class="separator:a05abc09355de461c535a09c2f6b55876"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Definitions for <a class="el" href="../../de/d13/TestRunner_8hpp.html" title="Utilities for running tests from the command line.">TestRunner.hpp</a>. </p>

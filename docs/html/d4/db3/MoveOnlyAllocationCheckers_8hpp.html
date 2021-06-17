@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.18"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Sequoia: /Users/Claire/Dropbox/Sequoia/Source/TestFramework/MoveOnlyAllocationCheckers.hpp File Reference</title>
+<title>Sequoia: /Users/Claire/Dropbox/Sequoia/Source/sequoia/TestFramework/MoveOnlyAllocationCheckers.hpp File Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -61,12 +61,13 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="../../dir_74389ed8173ad57b461b9d623a1f3867.html">Source</a></li><li class="navelem"><a class="el" href="../../dir_29d0af23d176bc5a813a115ff70b4bc5.html">TestFramework</a></li>  </ul>
+<li class="navelem"><a class="el" href="../../dir_74389ed8173ad57b461b9d623a1f3867.html">Source</a></li><li class="navelem"><a class="el" href="../../dir_2cc7e707cf7d8b577b4d17c7cb9b6739.html">sequoia</a></li><li class="navelem"><a class="el" href="../../dir_b8a7430685850b8d4f731afcd36d4c52.html">TestFramework</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
+<a href="#typedef-members">Typedefs</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">MoveOnlyAllocationCheckers.hpp File Reference</div>  </div>
@@ -75,32 +76,68 @@ $(function() {
 
 <p>Utilities for performing allocation checks of move-only types.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;<a class="el" href="../../d3/dfb/AllocationCheckers_8hpp_source.html">AllocationCheckers.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../df/d57/MoveOnlyAllocationCheckersDetails_8hpp_source.html">MoveOnlyAllocationCheckersDetails.hpp</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="../../d3/dfb/AllocationCheckers_8hpp_source.html">sequoia/TestFramework/AllocationCheckers.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../df/d57/MoveOnlyAllocationCheckersDetails_8hpp_source.html">sequoia/TestFramework/MoveOnlyAllocationCheckersDetails.hpp</a>&quot;</code><br />
 </div>
 <p><a href="../../d4/db3/MoveOnlyAllocationCheckers_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d78/structsequoia_1_1testing_1_1move__only__allocation__predictions.html">sequoia::testing::move_only_allocation_predictions</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d18/structsequoia_1_1testing_1_1individual__move__only__allocation__predictions.html">sequoia::testing::individual_move_only_allocation_predictions</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/ddf/classsequoia_1_1testing_1_1move__only__allocation__info.html">sequoia::testing::move_only_allocation_info&lt; T, Getter &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d54/structsequoia_1_1testing_1_1assignment__move__only__allocation__predictions.html">sequoia::testing::assignment_move_only_allocation_predictions</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d91/classsequoia_1_1testing_1_1basic__move__only__allocation__predictions.html">sequoia::testing::basic_move_only_allocation_predictions&lt; TopLevel &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d9f/structsequoia_1_1testing_1_1type__to__allocation__predictions_3_01T_01_4.html">sequoia::testing::type_to_allocation_predictions&lt; T &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:a37368644761924a9965928dd942101f1"><td class="memItemLeft" align="right" valign="top"><a id="a37368644761924a9965928dd942101f1"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::move_only_allocation_predictions</b> = basic_move_only_allocation_predictions&lt; top_level::yes &gt;</td></tr>
+<tr class="separator:a37368644761924a9965928dd942101f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad512d1243394d6e524a796f2ec9323d3"><td class="memItemLeft" align="right" valign="top"><a id="ad512d1243394d6e524a796f2ec9323d3"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::move_only_inner_allocation_predictions</b> = basic_move_only_allocation_predictions&lt; top_level::no &gt;</td></tr>
+<tr class="separator:ad512d1243394d6e524a796f2ec9323d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a2e39e302bfc71b686a1ba19ca143c79b"><td class="memTemplParams" colspan="2"><a id="a2e39e302bfc71b686a1ba19ca143c79b"></a>
-template&lt;class Fn , class Signature  = function_signature&lt;decltype(&amp;std::remove_cvref_t&lt;Fn&gt;::operator())&gt;&gt; </td></tr>
-<tr class="memitem:a2e39e302bfc71b686a1ba19ca143c79b"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::move_only_allocation_info</b> (Fn allocGetter, move_only_allocation_predictions predictions) -&gt; move_only_allocation_info&lt; std::remove_cvref_t&lt; typename Signature::arg &gt;, Fn &gt;</td></tr>
-<tr class="separator:a2e39e302bfc71b686a1ba19ca143c79b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af86af4dc8807c90484efd639d07ac369"><td class="memTemplParams" colspan="2"><a id="af86af4dc8807c90484efd639d07ac369"></a>
-template&lt;class Fn , class Signature  = function_signature&lt;decltype(&amp;std::remove_cvref_t&lt;Fn&gt;::operator())&gt;&gt; </td></tr>
-<tr class="memitem:af86af4dc8807c90484efd639d07ac369"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::move_only_allocation_info</b> (Fn allocGetter, std::initializer_list&lt; move_only_allocation_predictions &gt; predictions) -&gt; move_only_allocation_info&lt; std::remove_cvref_t&lt; typename Signature::arg &gt;, Fn &gt;</td></tr>
-<tr class="separator:af86af4dc8807c90484efd639d07ac369"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa23700494b4f4df8425ed73515b03ecd"><td class="memTemplParams" colspan="2"><a id="aa23700494b4f4df8425ed73515b03ecd"></a>
+<tr class="memitem:af334883e8e81bdf102981536b0b5ce83"><td class="memTemplParams" colspan="2"><a id="af334883e8e81bdf102981536b0b5ce83"></a>
+template&lt;class T &gt; </td></tr>
+<tr class="memitem:af334883e8e81bdf102981536b0b5ce83"><td class="memTemplItemLeft" align="right" valign="top">constexpr individual_move_only_allocation_predictions&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::shift</b> (const individual_move_only_allocation_predictions &amp;predictions, const alloc_prediction_shifter&lt; T &gt; &amp;shifter)</td></tr>
+<tr class="separator:af334883e8e81bdf102981536b0b5ce83"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:add28a250fafffa588693d0c7bf7f2b4c"><td class="memTemplParams" colspan="2"><a id="add28a250fafffa588693d0c7bf7f2b4c"></a>
+template&lt;class T &gt; </td></tr>
+<tr class="memitem:add28a250fafffa588693d0c7bf7f2b4c"><td class="memTemplItemLeft" align="right" valign="top">constexpr assignment_move_only_allocation_predictions&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::shift</b> (const assignment_move_only_allocation_predictions &amp;predictions, const alloc_prediction_shifter&lt; T &gt; &amp;shifter)</td></tr>
+<tr class="separator:add28a250fafffa588693d0c7bf7f2b4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7ee96052329d52ed078940018b920d02"><td class="memItemLeft" align="right" valign="top"><a id="a7ee96052329d52ed078940018b920d02"></a>
+constexpr basic_move_only_allocation_predictions&lt; top_level::yes &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::to_top_level</b> (const basic_move_only_allocation_predictions&lt; top_level::no &gt; &amp;predictions) noexcept</td></tr>
+<tr class="separator:a7ee96052329d52ed078940018b920d02"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8f15e71822fa694036081bdc5e59ba1b"><td class="memTemplParams" colspan="2"><a id="a8f15e71822fa694036081bdc5e59ba1b"></a>
+template&lt;class T &gt; </td></tr>
+<tr class="memitem:a8f15e71822fa694036081bdc5e59ba1b"><td class="memTemplItemLeft" align="right" valign="top">constexpr move_only_allocation_predictions&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::shift</b> (const move_only_allocation_predictions &amp;predictions)</td></tr>
+<tr class="separator:a8f15e71822fa694036081bdc5e59ba1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a778f657902e4e6874f5c2f556b635e2f"><td class="memTemplParams" colspan="2"><a id="a778f657902e4e6874f5c2f556b635e2f"></a>
+template&lt;class T &gt; </td></tr>
+<tr class="memitem:a778f657902e4e6874f5c2f556b635e2f"><td class="memTemplItemLeft" align="right" valign="top">constexpr move_only_inner_allocation_predictions&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::shift</b> (const move_only_inner_allocation_predictions &amp;predictions)</td></tr>
+<tr class="separator:a778f657902e4e6874f5c2f556b635e2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aad2ca6e68f25e0939ecc72f855b78b85"><td class="memTemplParams" colspan="2"><a id="aad2ca6e68f25e0939ecc72f855b78b85"></a>
 template&lt;test_mode Mode, moveonly T, invocable&lt; T &amp; &gt; Mutator, alloc_getter&lt; T &gt;... Getters&gt; </td></tr>
-<tr class="memitem:aa23700494b4f4df8425ed73515b03ecd"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check_semantics</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, T &amp;&amp;x, T &amp;&amp;y, const T &amp;xClone, const T &amp;yClone, Mutator m, move_only_allocation_info&lt; T, Getters &gt;... info)</td></tr>
-<tr class="separator:aa23700494b4f4df8425ed73515b03ecd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aad2ca6e68f25e0939ecc72f855b78b85"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::requires</b> (!orderable&lt; T &gt; &amp;&amp;(sizeof...(Getters) &gt; 0)) void check_semantics(std</td></tr>
+<tr class="separator:aad2ca6e68f25e0939ecc72f855b78b85"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a75968b1dabfabba2d272dcb58e769ac9"><td class="memTemplParams" colspan="2"><a id="a75968b1dabfabba2d272dcb58e769ac9"></a>
+template&lt;test_mode Mode, moveonly T, invocable&lt; T &amp; &gt; Mutator, alloc_getter&lt; T &gt;... Getters&gt; </td></tr>
+<tr class="memitem:a75968b1dabfabba2d272dcb58e769ac9"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::requires</b> (orderable&lt; T &gt; &amp;&amp;(sizeof...(Getters) &gt; 0)) void check_semantics(std</td></tr>
+<tr class="separator:a75968b1dabfabba2d272dcb58e769ac9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab693eba7800d184193c2400c7d40b160"><td class="memTemplParams" colspan="2"><a id="ab693eba7800d184193c2400c7d40b160"></a>
+template&lt;test_mode Mode, moveonly T, invocable_r&lt; T &gt; xMaker, invocable_r&lt; T &gt; yMaker, invocable&lt; T &amp; &gt; Mutator, alloc_getter&lt; T &gt;... Getters&gt; </td></tr>
+<tr class="memitem:ab693eba7800d184193c2400c7d40b160"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::requires</b> (!orderable&lt; T &gt; &amp;&amp;(sizeof...(Getters) &gt; 0)) std</td></tr>
+<tr class="separator:ab693eba7800d184193c2400c7d40b160"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8e09685521b4f123852b3fa275f333e9"><td class="memTemplParams" colspan="2"><a id="a8e09685521b4f123852b3fa275f333e9"></a>
+template&lt;test_mode Mode, moveonly T, invocable_r&lt; T &gt; xMaker, invocable_r&lt; T &gt; yMaker, invocable&lt; T &amp; &gt; Mutator, alloc_getter&lt; T &gt;... Getters&gt; </td></tr>
+<tr class="memitem:a8e09685521b4f123852b3fa275f333e9"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::requires</b> (orderable&lt; T &gt; &amp;&amp;(sizeof...(Getters) &gt; 0)) std</td></tr>
+<tr class="separator:a8e09685521b4f123852b3fa275f333e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Utilities for performing allocation checks of move-only types. </p>

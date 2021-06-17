@@ -185,9 +185,9 @@ constexpr <a class="el" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primi
 <tr class="memitem:ac0611b5c2906121e16b2cbc20b665872"><td class="memItemLeft" align="right" valign="top"><a id="ac0611b5c2906121e16b2cbc20b665872"></a>
 constexpr <a class="el" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a> &amp;in)</td></tr>
 <tr class="separator:ac0611b5c2906121e16b2cbc20b665872"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2b6ec0d06742ffbc0a8c7c0bed359e02"><td class="memItemLeft" align="right" valign="top"><a id="a2b6ec0d06742ffbc0a8c7c0bed359e02"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>swap</b> (<a class="el" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a> &amp;other) noexcept(noexcept(static_cast&lt; Connectivity &amp; &gt;(*this).swap(other)) &amp;&amp;noexcept(static_cast&lt; Nodes &amp; &gt;(*this).swap(other)))</td></tr>
-<tr class="separator:a2b6ec0d06742ffbc0a8c7c0bed359e02"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a86f08a3902af650e4388ce071ec203e9"><td class="memItemLeft" align="right" valign="top"><a id="a86f08a3902af650e4388ce071ec203e9"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>swap</b> (<a class="el" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a> &amp;rhs) noexcept(noexcept(Connectivity::swap(rhs)) &amp;&amp;noexcept(Nodes::swap(rhs)))</td></tr>
+<tr class="separator:a86f08a3902af650e4388ce071ec203e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5e97ae65180043ebb65d20ae8c00abaf"><td class="memItemLeft" align="right" valign="top"><a id="a5e97ae65180043ebb65d20ae8c00abaf"></a>
 constexpr void&#160;</td><td class="memItemRight" valign="bottom"><b>swap_nodes</b> (size_type i, size_type j)</td></tr>
 <tr class="separator:a5e97ae65180043ebb65d20ae8c00abaf"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -293,7 +293,7 @@ template&lt;network Connectivity, class Nodes &gt; </div>
 <b>Initial value:</b><div class="fragment"><div class="line">{}</div>
 <div class="line"> </div>
 <div class="line">      <span class="keyword">template</span></div>
-<div class="line">      &lt;        </div>
+<div class="line">      &lt;</div>
 <div class="line">        alloc EdgeAllocator,</div>
 <div class="line">        alloc NodeAllocator,</div>
 <div class="line">        <span class="keyword">class </span>N=node_weight_type</div>
@@ -329,7 +329,7 @@ template&lt;network Connectivity, class Nodes &gt; </div>
 <div class="line">      {}</div>
 <div class="line"> </div>
 <div class="line">      <span class="keyword">template</span></div>
-<div class="line">      &lt;        </div>
+<div class="line">      &lt;</div>
 <div class="line">        alloc EdgeAllocator,</div>
 <div class="line">        alloc EdgePartitionsAllocator,</div>
 <div class="line">        alloc NodeAllocator,</div>
@@ -396,7 +396,7 @@ template&lt;network Connectivity, class Nodes &gt; </div>
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>/Users/Claire/Dropbox/Sequoia/Source/Maths/Graph/<a class="el" href="../../d8/d78/GraphImpl_8hpp_source.html">GraphImpl.hpp</a></li>
+<li>/Users/Claire/Dropbox/Sequoia/Source/sequoia/Maths/Graph/<a class="el" href="../../d8/d78/GraphImpl_8hpp_source.html">GraphImpl.hpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

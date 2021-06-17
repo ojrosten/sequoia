@@ -66,6 +66,7 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
@@ -76,6 +77,11 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d58/structsequoia_1_1testing_1_1perfectly__sharing__beast_1_1alloc__acquirer.html">alloc_acquirer</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
 <tr class="memitem:af187289aaa82717c1318ffbdf9a22d30"><td class="memItemLeft" align="right" valign="top"><a id="af187289aaa82717c1318ffbdf9a22d30"></a>
@@ -84,27 +90,30 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>handle_type</b> = Ha
 <tr class="memitem:a76b6e6acd1dff99d808fe9a15cdd4fd8"><td class="memItemLeft" align="right" valign="top"><a id="a76b6e6acd1dff99d808fe9a15cdd4fd8"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>allocator_type</b> = Allocator</td></tr>
 <tr class="separator:a76b6e6acd1dff99d808fe9a15cdd4fd8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab2414d8fac52cbbc2fac4e265ca80b75"><td class="memItemLeft" align="right" valign="top"><a id="ab2414d8fac52cbbc2fac4e265ca80b75"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>container_type</b> = std::vector&lt; handle_type, allocator_type &gt;</td></tr>
+<tr class="separator:ab2414d8fac52cbbc2fac4e265ca80b75"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a51bc7fe434e77fb713213831a5f9e1f7"><td class="memItemLeft" align="right" valign="top"><a id="a51bc7fe434e77fb713213831a5f9e1f7"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>perfectly_sharing_beast</b> (const allocator_type &amp;alloc)</td></tr>
-<tr class="separator:a51bc7fe434e77fb713213831a5f9e1f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4c070e6f30faef31858bc34f6657adfd"><td class="memItemLeft" align="right" valign="top"><a id="a4c070e6f30faef31858bc34f6657adfd"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>perfectly_sharing_beast</b> (std::initializer_list&lt; T &gt; list, const allocator_type &amp;alloc=allocator_type{})</td></tr>
-<tr class="separator:a4c070e6f30faef31858bc34f6657adfd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeb97f3df9105cb1060e5b7373bf43cc3"><td class="memItemLeft" align="right" valign="top"><a id="aeb97f3df9105cb1060e5b7373bf43cc3"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>perfectly_sharing_beast</b> (const allocator_type &amp;a)</td></tr>
+<tr class="separator:aeb97f3df9105cb1060e5b7373bf43cc3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a48ee34de873b78dc99e0e0f80463bd2b"><td class="memItemLeft" align="right" valign="top"><a id="a48ee34de873b78dc99e0e0f80463bd2b"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>perfectly_sharing_beast</b> (std::initializer_list&lt; T &gt; list, const allocator_type &amp;a=allocator_type{})</td></tr>
+<tr class="separator:a48ee34de873b78dc99e0e0f80463bd2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad63a5b8f53b4e54bcddfe0c778f3da3b"><td class="memItemLeft" align="right" valign="top"><a id="ad63a5b8f53b4e54bcddfe0c778f3da3b"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>perfectly_sharing_beast</b> (const <a class="el" href="../../d2/dd8/structsequoia_1_1testing_1_1perfectly__sharing__beast.html">perfectly_sharing_beast</a> &amp;other)</td></tr>
 <tr class="separator:ad63a5b8f53b4e54bcddfe0c778f3da3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad4c2d6ddaa29450ace8d710221f5cdfa"><td class="memItemLeft" align="right" valign="top"><a id="ad4c2d6ddaa29450ace8d710221f5cdfa"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>perfectly_sharing_beast</b> (const <a class="el" href="../../d2/dd8/structsequoia_1_1testing_1_1perfectly__sharing__beast.html">perfectly_sharing_beast</a> &amp;other, const allocator_type &amp;alloc)</td></tr>
-<tr class="separator:ad4c2d6ddaa29450ace8d710221f5cdfa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abfa325d9447e1d73f3e6caba36a2f9f1"><td class="memItemLeft" align="right" valign="top"><a id="abfa325d9447e1d73f3e6caba36a2f9f1"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>perfectly_sharing_beast</b> (const <a class="el" href="../../d2/dd8/structsequoia_1_1testing_1_1perfectly__sharing__beast.html">perfectly_sharing_beast</a> &amp;other, const allocator_type &amp;a)</td></tr>
+<tr class="separator:abfa325d9447e1d73f3e6caba36a2f9f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab59a429347781b402da4026955df4a09"><td class="memItemLeft" align="right" valign="top"><a id="ab59a429347781b402da4026955df4a09"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>perfectly_sharing_beast</b> (<a class="el" href="../../d2/dd8/structsequoia_1_1testing_1_1perfectly__sharing__beast.html">perfectly_sharing_beast</a> &amp;&amp;) noexcept=default</td></tr>
 <tr class="separator:ab59a429347781b402da4026955df4a09"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac9a03d2c7d60194f35d0e86b2d1128e3"><td class="memItemLeft" align="right" valign="top"><a id="ac9a03d2c7d60194f35d0e86b2d1128e3"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>perfectly_sharing_beast</b> (<a class="el" href="../../d2/dd8/structsequoia_1_1testing_1_1perfectly__sharing__beast.html">perfectly_sharing_beast</a> &amp;&amp;other, const allocator_type &amp;alloc)</td></tr>
-<tr class="separator:ac9a03d2c7d60194f35d0e86b2d1128e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af41e284ac262144c3a2e1fae7d9847d2"><td class="memItemLeft" align="right" valign="top"><a id="af41e284ac262144c3a2e1fae7d9847d2"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>perfectly_sharing_beast</b> (<a class="el" href="../../d2/dd8/structsequoia_1_1testing_1_1perfectly__sharing__beast.html">perfectly_sharing_beast</a> &amp;&amp;other, const allocator_type &amp;a)</td></tr>
+<tr class="separator:af41e284ac262144c3a2e1fae7d9847d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4b4e9581f5de3aa5963bf34817dcd4da"><td class="memItemLeft" align="right" valign="top"><a id="a4b4e9581f5de3aa5963bf34817dcd4da"></a>
 <a class="el" href="../../d2/dd8/structsequoia_1_1testing_1_1perfectly__sharing__beast.html">perfectly_sharing_beast</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="../../d2/dd8/structsequoia_1_1testing_1_1perfectly__sharing__beast.html">perfectly_sharing_beast</a> &amp;other)</td></tr>
 <tr class="separator:a4b4e9581f5de3aa5963bf34817dcd4da"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -112,17 +121,17 @@ Public Member Functions</h2></td></tr>
 <a class="el" href="../../d2/dd8/structsequoia_1_1testing_1_1perfectly__sharing__beast.html">perfectly_sharing_beast</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="../../d2/dd8/structsequoia_1_1testing_1_1perfectly__sharing__beast.html">perfectly_sharing_beast</a> &amp;&amp;)=default</td></tr>
 <tr class="separator:ad192428112590243a7ee0662401993a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a28fae5d8baf97cda837cd4ba0cb45106"><td class="memItemLeft" align="right" valign="top"><a id="a28fae5d8baf97cda837cd4ba0cb45106"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>swap</b> (<a class="el" href="../../d2/dd8/structsequoia_1_1testing_1_1perfectly__sharing__beast.html">perfectly_sharing_beast</a> &amp;other) noexcept(noexcept(std::swap(this-&gt;x, other.x)))</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>swap</b> (<a class="el" href="../../d2/dd8/structsequoia_1_1testing_1_1perfectly__sharing__beast.html">perfectly_sharing_beast</a> &amp;other) noexcept(noexcept(std::swap(this-&gt;<a class="el" href="../../d6/d61/structsequoia_1_1testing_1_1x.html">x</a>, other.x)))</td></tr>
 <tr class="separator:a28fae5d8baf97cda837cd4ba0cb45106"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a99c5ab25e15b75d605c3c7a5b886d8b2"><td class="memItemLeft" align="right" valign="top"><a id="a99c5ab25e15b75d605c3c7a5b886d8b2"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>reset</b> (const allocator_type &amp;alloc)</td></tr>
-<tr class="separator:a99c5ab25e15b75d605c3c7a5b886d8b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afd3daea2cadb74626cd01b945b48cd55"><td class="memItemLeft" align="right" valign="top"><a id="afd3daea2cadb74626cd01b945b48cd55"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>reset</b> (const allocator_type &amp;a)</td></tr>
+<tr class="separator:afd3daea2cadb74626cd01b945b48cd55"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a401a15c3c41398d52e6b0fb1f41a603e"><td class="memItemLeft" align="right" valign="top"><a id="a401a15c3c41398d52e6b0fb1f41a603e"></a>
-std::vector&lt; handle_type, allocator_type &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>x</b> {}</td></tr>
-<tr class="separator:a401a15c3c41398d52e6b0fb1f41a603e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab72b277d5f44c2404edeb61bbc977a05"><td class="memItemLeft" align="right" valign="top"><a id="ab72b277d5f44c2404edeb61bbc977a05"></a>
+container_type&#160;</td><td class="memItemRight" valign="bottom"><b>x</b> {}</td></tr>
+<tr class="separator:ab72b277d5f44c2404edeb61bbc977a05"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="friends"></a>
 Friends</h2></td></tr>

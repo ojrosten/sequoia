@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.18"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Sequoia: sequoia::maths::graph_impl::traversal_helper&lt; G &gt; Class Template Reference</title>
+<title>Sequoia: sequoia::maths::graph_impl::traversal_helper&lt; G, Q &gt; Class Template Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -66,31 +66,42 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="../../d5/d06/classsequoia_1_1maths_1_1graph__impl_1_1traversal__helper-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">sequoia::maths::graph_impl::traversal_helper&lt; G &gt; Class Template Reference</div>  </div>
+<div class="title">sequoia::maths::graph_impl::traversal_helper&lt; G, Q &gt; Class Template Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="dynheader">
-Inheritance diagram for sequoia::maths::graph_impl::traversal_helper&lt; G &gt;:</div>
-<div class="dyncontent">
- <div class="center">
-  <img src="../../d7/d54/classsequoia_1_1maths_1_1graph__impl_1_1traversal__helper.png" usemap="#sequoia::maths::graph_5Fimpl::traversal_5Fhelper_3C_20G_20_3E_map" alt=""/>
-  <map id="sequoia::maths::graph_5Fimpl::traversal_5Fhelper_3C_20G_20_3E_map" name="sequoia::maths::graph_5Fimpl::traversal_5Fhelper_3C_20G_20_3E_map">
-<area href="../../dc/d07/classsequoia_1_1maths_1_1graph__impl_1_1loop__processor.html" alt="sequoia::maths::graph_impl::loop_processor&lt; G &gt;" shape="rect" coords="0,0,293,24"/>
-  </map>
-</div></div>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:ab62b190968cc1de91a14967a09dabae1"><td class="memItemLeft" align="right" valign="top"><a id="ab62b190968cc1de91a14967a09dabae1"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>edge_index_type</b> = typename G::edge_index_type</td></tr>
+<tr class="separator:ab62b190968cc1de91a14967a09dabae1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a42f83e3cee778d645ddfbad2d38477c3"><td class="memItemLeft" align="right" valign="top"><a id="a42f83e3cee778d645ddfbad2d38477c3"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>const_edge_iterator</b> = typename G::const_edge_iterator</td></tr>
+<tr class="separator:a42f83e3cee778d645ddfbad2d38477c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a2286772097777740a7355661ffecdfe6"><td class="memTemplParams" colspan="2"><a id="a2286772097777740a7355661ffecdfe6"></a>
-template&lt;class Q , class NFBE , class NFAE , class EFTF , class ESTF , class TaskProcessingModel &gt; </td></tr>
-<tr class="memitem:a2286772097777740a7355661ffecdfe6"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>traverse</b> (const G &amp;<a class="el" href="../../d8/d87/classsequoia_1_1maths_1_1graph.html">graph</a>, const bool findDisconnectedPieces, std::size_t start, NFBE &amp;&amp;nodeFunctorBeforeEdges, NFAE &amp;&amp;nodeFunctorAfterEdges, EFTF &amp;&amp;edgeFirstTraversalFunctor, ESTF &amp;&amp;edgeSecondTraversalFunctor, TaskProcessingModel &amp;&amp;taskProcessingModel)</td></tr>
-<tr class="separator:a2286772097777740a7355661ffecdfe6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a18145b06bb28e483d2eb1027369f956f"><td class="memTemplParams" colspan="2"><a id="a18145b06bb28e483d2eb1027369f956f"></a>
+template&lt;disconnected_discovery_mode FindDisconnected, class NBEF , class NAEF , class EFTF , class ESTF , class TaskProcessingModel &gt; </td></tr>
+<tr class="memitem:a18145b06bb28e483d2eb1027369f956f"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires</b> (invocable&lt; NBEF, edge_index_type &gt;) &amp;&amp;(invocable&lt; NAEF</td></tr>
+<tr class="separator:a18145b06bb28e483d2eb1027369f956f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a956135d88322e93baefbfc3f892d4f42"><td class="memItemLeft" align="right" valign="top"><a id="a956135d88322e93baefbfc3f892d4f42"></a>
+edge_index_type &amp;&amp;invocable&lt; EFTF, const_edge_iterator &gt; &amp;&amp;constexpr invocable&lt; ESTF, const_edge_iterator &gt; auto&#160;</td><td class="memItemRight" valign="bottom"><b>traverse</b> (const G &amp;graph, <a class="el" href="../../de/d9a/classsequoia_1_1maths_1_1traversal__conditions.html">traversal_conditions</a>&lt; FindDisconnected &gt; conditions, NBEF &amp;&amp;nodeBeforeEdgesFn, NAEF &amp;&amp;nodeAfterEdgesFn, EFTF &amp;&amp;edgeFirstTraversalFn, ESTF &amp;&amp;edgeSecondTraversalFn, TaskProcessingModel &amp;&amp;taskProcessingModel)</td></tr>
+<tr class="separator:a956135d88322e93baefbfc3f892d4f42"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a18145b06bb28e483d2eb1027369f956f"><td class="memTemplParams" colspan="2"><a id="a18145b06bb28e483d2eb1027369f956f"></a>
+template&lt;disconnected_discovery_mode FindDisconnected, class NBEF , class NAEF , class EFTF , class ESTF , class TaskProcessingModel &gt; </td></tr>
+<tr class="memitem:a18145b06bb28e483d2eb1027369f956f"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires</b> (invocable&lt; NBEF, edge_index_type &gt;) &amp;&amp;(invocable&lt; NAEF</td></tr>
+<tr class="separator:a18145b06bb28e483d2eb1027369f956f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae39f473a43c75c4314538557cc360534"><td class="memItemLeft" align="right" valign="top"><a id="ae39f473a43c75c4314538557cc360534"></a>
+edge_index_type &amp;&amp;invocable&lt; EFTF, const_edge_iterator &gt; &amp;&amp;constexpr invocable&lt; ESTF, const_edge_iterator &gt; auto&#160;</td><td class="memItemRight" valign="bottom"><b>recursive_dfs</b> (const G &amp;graph, <a class="el" href="../../de/d9a/classsequoia_1_1maths_1_1traversal__conditions.html">traversal_conditions</a>&lt; FindDisconnected &gt; conditions, NBEF &amp;&amp;nodeBeforeEdgesFn, NAEF &amp;&amp;nodeAfterEdgesFn, EFTF &amp;&amp;edgeFirstTraversalFn, ESTF &amp;&amp;edgeSecondTraversalFn, TaskProcessingModel &amp;&amp;taskProcessingModel)</td></tr>
+<tr class="separator:ae39f473a43c75c4314538557cc360534"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>/Users/Claire/Dropbox/Sequoia/Source/Maths/Graph/<a class="el" href="../../d1/d4d/GraphTraversalDetails_8hpp_source.html">GraphTraversalDetails.hpp</a></li>
+<li>/Users/Claire/Dropbox/Sequoia/Source/sequoia/Maths/Graph/<a class="el" href="../../d1/d4d/GraphTraversalDetails_8hpp_source.html">GraphTraversalDetails.hpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

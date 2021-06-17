@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.18"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Sequoia: sequoia::maths::edge&lt; Weight, WeightProxy, IndexType &gt; Class Template Reference</title>
+<title>Sequoia: sequoia::maths::edge&lt; WeightHandler, IndexType &gt; Class Template Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -72,7 +72,7 @@ $(function() {
 <a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="../../de/d80/classsequoia_1_1maths_1_1edge-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">sequoia::maths::edge&lt; Weight, WeightProxy, IndexType &gt; Class Template Reference</div>  </div>
+<div class="title">sequoia::maths::edge&lt; WeightHandler, IndexType &gt; Class Template Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
@@ -81,102 +81,94 @@ $(function() {
 
 <p><code>#include &lt;<a class="el" href="../../dc/d91/Edge_8hpp_source.html">Edge.hpp</a>&gt;</code></p>
 <div class="dynheader">
-Inheritance diagram for sequoia::maths::edge&lt; Weight, WeightProxy, IndexType &gt;:</div>
+Inheritance diagram for sequoia::maths::edge&lt; WeightHandler, IndexType &gt;:</div>
 <div class="dyncontent">
  <div class="center">
-  <img src="../../d1/de6/classsequoia_1_1maths_1_1edge.png" usemap="#sequoia::maths::edge_3C_20Weight_2C_20WeightProxy_2C_20IndexType_20_3E_map" alt=""/>
-  <map id="sequoia::maths::edge_3C_20Weight_2C_20WeightProxy_2C_20IndexType_20_3E_map" name="sequoia::maths::edge_3C_20Weight_2C_20WeightProxy_2C_20IndexType_20_3E_map">
-<area href="../../d4/d41/classsequoia_1_1maths_1_1decorated__edge__base.html" alt="sequoia::maths::decorated_edge_base&lt; Weight, ownership::independent, WeightProxy, std::size_t &gt;" shape="rect" coords="291,112,863,136"/>
-<area href="../../d5/de0/classsequoia_1_1maths_1_1partial__edge__base.html" alt="sequoia::maths::partial_edge_base&lt; Weight, ownership::independent, WeightProxy, IndexType &gt;" shape="rect" coords="291,56,863,80"/>
-<area href="../../d2/d60/classsequoia_1_1maths_1_1edge__base.html" title="The base class of all edges." alt="sequoia::maths::edge_base&lt; IndexType &gt;" shape="rect" coords="0,0,572,24"/>
-<area href="../../dc/de5/classsequoia_1_1maths_1_1weighting.html" alt="sequoia::maths::weighting&lt; Weight, ownership::independent, WeightProxy, IndexType &gt;" shape="rect" coords="582,0,1154,24"/>
+  <img src="../../d1/de6/classsequoia_1_1maths_1_1edge.png" usemap="#sequoia::maths::edge_3C_20WeightHandler_2C_20IndexType_20_3E_map" alt=""/>
+  <map id="sequoia::maths::edge_3C_20WeightHandler_2C_20IndexType_20_3E_map" name="sequoia::maths::edge_3C_20WeightHandler_2C_20IndexType_20_3E_map">
+<area href="../../d4/d41/classsequoia_1_1maths_1_1decorated__edge__base.html" alt="sequoia::maths::decorated_edge_base&lt; WeightHandler, std::size_t &gt;" shape="rect" coords="202,112,597,136"/>
+<area href="../../d5/de0/classsequoia_1_1maths_1_1partial__edge__base.html" title="Combines the edge_base and weighting class." alt="sequoia::maths::partial_edge_base&lt; WeightHandler, IndexType &gt;" shape="rect" coords="202,56,597,80"/>
+<area href="../../d2/d60/classsequoia_1_1maths_1_1edge__base.html" title="The base class of all edges." alt="sequoia::maths::edge_base&lt; IndexType &gt;" shape="rect" coords="0,0,395,24"/>
+<area href="../../dc/de5/classsequoia_1_1maths_1_1weighting.html" title="A class to store non-trivial edge weights." alt="sequoia::maths::weighting&lt; WeightHandler, IndexType &gt;" shape="rect" coords="405,0,800,24"/>
   </map>
 </div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:ae29de97c74e159fc082deb04edb87e71"><td class="memItemLeft" align="right" valign="top"><a id="ae29de97c74e159fc082deb04edb87e71"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>weight_type</b> = typename <a class="el" href="../../d4/d41/classsequoia_1_1maths_1_1decorated__edge__base.html">decorated_edge_base</a>&lt; Weight, <a class="el" href="../../de/db9/structsequoia_1_1ownership_1_1independent.html">ownership::independent</a>, WeightProxy, IndexType &gt;::weight_type</td></tr>
-<tr class="separator:ae29de97c74e159fc082deb04edb87e71"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2d3b86cf15b69f3edcae6df748d3ebde"><td class="memItemLeft" align="right" valign="top"><a id="a2d3b86cf15b69f3edcae6df748d3ebde"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>index_type</b> = typename <a class="el" href="../../d4/d41/classsequoia_1_1maths_1_1decorated__edge__base.html">decorated_edge_base</a>&lt; Weight, <a class="el" href="../../de/db9/structsequoia_1_1ownership_1_1independent.html">ownership::independent</a>, WeightProxy, IndexType &gt;::index_type</td></tr>
-<tr class="separator:a2d3b86cf15b69f3edcae6df748d3ebde"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aef65c31dc020d46363cf41506968a10e"><td class="memItemLeft" align="right" valign="top"><a id="aef65c31dc020d46363cf41506968a10e"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>weight_proxy_type</b> = WeightProxy</td></tr>
-<tr class="separator:aef65c31dc020d46363cf41506968a10e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pub_types_classsequoia_1_1maths_1_1decorated__edge__base"><td colspan="2" onclick="javascript:toggleInherit('pub_types_classsequoia_1_1maths_1_1decorated__edge__base')"><img src="../../closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="../../d4/d41/classsequoia_1_1maths_1_1decorated__edge__base.html">sequoia::maths::decorated_edge_base&lt; Weight, ownership::independent, WeightProxy, std::size_t &gt;</a></td></tr>
-<tr class="memitem:a38b8adf490f887812faab9a5c8ba4b96 inherit pub_types_classsequoia_1_1maths_1_1decorated__edge__base"><td class="memItemLeft" align="right" valign="top"><a id="a38b8adf490f887812faab9a5c8ba4b96"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>weight_type</b> = typename <a class="el" href="../../d5/de0/classsequoia_1_1maths_1_1partial__edge__base.html">partial_edge_base</a>&lt; Weight, <a class="el" href="../../de/db9/structsequoia_1_1ownership_1_1independent.html">ownership::independent</a>, WeightProxy, IndexType &gt;::weight_type</td></tr>
-<tr class="separator:a38b8adf490f887812faab9a5c8ba4b96 inherit pub_types_classsequoia_1_1maths_1_1decorated__edge__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa5171e35dd9ca3e3b9ae7cbe343f5261 inherit pub_types_classsequoia_1_1maths_1_1decorated__edge__base"><td class="memItemLeft" align="right" valign="top"><a id="aa5171e35dd9ca3e3b9ae7cbe343f5261"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>index_type</b> = typename <a class="el" href="../../d5/de0/classsequoia_1_1maths_1_1partial__edge__base.html">partial_edge_base</a>&lt; Weight, <a class="el" href="../../de/db9/structsequoia_1_1ownership_1_1independent.html">ownership::independent</a>, WeightProxy, IndexType &gt;::index_type</td></tr>
-<tr class="separator:aa5171e35dd9ca3e3b9ae7cbe343f5261 inherit pub_types_classsequoia_1_1maths_1_1decorated__edge__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pub_types_classsequoia_1_1maths_1_1partial__edge__base"><td colspan="2" onclick="javascript:toggleInherit('pub_types_classsequoia_1_1maths_1_1partial__edge__base')"><img src="../../closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="../../d5/de0/classsequoia_1_1maths_1_1partial__edge__base.html">sequoia::maths::partial_edge_base&lt; Weight, ownership::independent, WeightProxy, IndexType &gt;</a></td></tr>
-<tr class="memitem:a66d1039c083980d34b77904afe02b4b7 inherit pub_types_classsequoia_1_1maths_1_1partial__edge__base"><td class="memItemLeft" align="right" valign="top"><a id="a66d1039c083980d34b77904afe02b4b7"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>weight_type</b> = Weight</td></tr>
-<tr class="separator:a66d1039c083980d34b77904afe02b4b7 inherit pub_types_classsequoia_1_1maths_1_1partial__edge__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac4790730e8b60b5e14710343a7e6ef90 inherit pub_types_classsequoia_1_1maths_1_1partial__edge__base"><td class="memItemLeft" align="right" valign="top"><a id="ac4790730e8b60b5e14710343a7e6ef90"></a>
+<tr class="memitem:a6d243e5a2c580321c48cd56d557b0217"><td class="memItemLeft" align="right" valign="top"><a id="a6d243e5a2c580321c48cd56d557b0217"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>weight_type</b> = typename <a class="el" href="../../d4/d41/classsequoia_1_1maths_1_1decorated__edge__base.html">decorated_edge_base</a>&lt; WeightHandler, IndexType &gt;::weight_type</td></tr>
+<tr class="separator:a6d243e5a2c580321c48cd56d557b0217"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa7b8cd38e4a175fc995994c8e710515a"><td class="memItemLeft" align="right" valign="top"><a id="aa7b8cd38e4a175fc995994c8e710515a"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>index_type</b> = typename <a class="el" href="../../d4/d41/classsequoia_1_1maths_1_1decorated__edge__base.html">decorated_edge_base</a>&lt; WeightHandler, IndexType &gt;::index_type</td></tr>
+<tr class="separator:aa7b8cd38e4a175fc995994c8e710515a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_types_classsequoia_1_1maths_1_1decorated__edge__base"><td colspan="2" onclick="javascript:toggleInherit('pub_types_classsequoia_1_1maths_1_1decorated__edge__base')"><img src="../../closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="../../d4/d41/classsequoia_1_1maths_1_1decorated__edge__base.html">sequoia::maths::decorated_edge_base&lt; WeightHandler, std::size_t &gt;</a></td></tr>
+<tr class="memitem:aa1741dcb6e4933d1e1a43d9bfbbd4b89 inherit pub_types_classsequoia_1_1maths_1_1decorated__edge__base"><td class="memItemLeft" align="right" valign="top"><a id="aa1741dcb6e4933d1e1a43d9bfbbd4b89"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>weight_type</b> = typename <a class="el" href="../../d5/de0/classsequoia_1_1maths_1_1partial__edge__base.html">partial_edge_base</a>&lt; WeightHandler, IndexType &gt;::weight_type</td></tr>
+<tr class="separator:aa1741dcb6e4933d1e1a43d9bfbbd4b89 inherit pub_types_classsequoia_1_1maths_1_1decorated__edge__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9f0487ca21430d1812dd93a18d752c7d inherit pub_types_classsequoia_1_1maths_1_1decorated__edge__base"><td class="memItemLeft" align="right" valign="top"><a id="a9f0487ca21430d1812dd93a18d752c7d"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>index_type</b> = typename <a class="el" href="../../d5/de0/classsequoia_1_1maths_1_1partial__edge__base.html">partial_edge_base</a>&lt; WeightHandler, IndexType &gt;::index_type</td></tr>
+<tr class="separator:a9f0487ca21430d1812dd93a18d752c7d inherit pub_types_classsequoia_1_1maths_1_1decorated__edge__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_types_classsequoia_1_1maths_1_1partial__edge__base"><td colspan="2" onclick="javascript:toggleInherit('pub_types_classsequoia_1_1maths_1_1partial__edge__base')"><img src="../../closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="../../d5/de0/classsequoia_1_1maths_1_1partial__edge__base.html">sequoia::maths::partial_edge_base&lt; WeightHandler, IndexType &gt;</a></td></tr>
+<tr class="memitem:a0e97899e09c0c97e6dcfbfe70d296726 inherit pub_types_classsequoia_1_1maths_1_1partial__edge__base"><td class="memItemLeft" align="right" valign="top"><a id="a0e97899e09c0c97e6dcfbfe70d296726"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>index_type</b> = IndexType</td></tr>
-<tr class="separator:ac4790730e8b60b5e14710343a7e6ef90 inherit pub_types_classsequoia_1_1maths_1_1partial__edge__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8084ccd7d6f410ec2ba7f67ffdf1e049 inherit pub_types_classsequoia_1_1maths_1_1partial__edge__base"><td class="memItemLeft" align="right" valign="top"><a id="a8084ccd7d6f410ec2ba7f67ffdf1e049"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>weight_proxy_type</b> = WeightProxy</td></tr>
-<tr class="separator:a8084ccd7d6f410ec2ba7f67ffdf1e049 inherit pub_types_classsequoia_1_1maths_1_1partial__edge__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:a0e97899e09c0c97e6dcfbfe70d296726 inherit pub_types_classsequoia_1_1maths_1_1partial__edge__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_types_classsequoia_1_1maths_1_1edge__base"><td colspan="2" onclick="javascript:toggleInherit('pub_types_classsequoia_1_1maths_1_1edge__base')"><img src="../../closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="../../d2/d60/classsequoia_1_1maths_1_1edge__base.html">sequoia::maths::edge_base&lt; IndexType &gt;</a></td></tr>
 <tr class="memitem:af23ce38501c44d512a575cd6d49945b2 inherit pub_types_classsequoia_1_1maths_1_1edge__base"><td class="memItemLeft" align="right" valign="top"><a id="af23ce38501c44d512a575cd6d49945b2"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>index_type</b> = IndexType</td></tr>
 <tr class="separator:af23ce38501c44d512a575cd6d49945b2 inherit pub_types_classsequoia_1_1maths_1_1edge__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pub_types_classsequoia_1_1maths_1_1weighting"><td colspan="2" onclick="javascript:toggleInherit('pub_types_classsequoia_1_1maths_1_1weighting')"><img src="../../closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="../../dc/de5/classsequoia_1_1maths_1_1weighting.html">sequoia::maths::weighting&lt; Weight, ownership::independent, WeightProxy, IndexType &gt;</a></td></tr>
-<tr class="memitem:ab3953371fc7320d0743c60bc6454fc90 inherit pub_types_classsequoia_1_1maths_1_1weighting"><td class="memItemLeft" align="right" valign="top"><a id="ab3953371fc7320d0743c60bc6454fc90"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>weight_type</b> = Weight</td></tr>
-<tr class="separator:ab3953371fc7320d0743c60bc6454fc90 inherit pub_types_classsequoia_1_1maths_1_1weighting"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3a436e963522caa4e4a6a46b334f67f0 inherit pub_types_classsequoia_1_1maths_1_1weighting"><td class="memItemLeft" align="right" valign="top"><a id="a3a436e963522caa4e4a6a46b334f67f0"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>weight_proxy_type</b> = WeightProxy</td></tr>
-<tr class="separator:a3a436e963522caa4e4a6a46b334f67f0 inherit pub_types_classsequoia_1_1maths_1_1weighting"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_types_classsequoia_1_1maths_1_1weighting"><td colspan="2" onclick="javascript:toggleInherit('pub_types_classsequoia_1_1maths_1_1weighting')"><img src="../../closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="../../dc/de5/classsequoia_1_1maths_1_1weighting.html">sequoia::maths::weighting&lt; WeightHandler, IndexType &gt;</a></td></tr>
+<tr class="memitem:abd125886b05207d60dcd69be7a21987c inherit pub_types_classsequoia_1_1maths_1_1weighting"><td class="memItemLeft" align="right" valign="top"><a id="abd125886b05207d60dcd69be7a21987c"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>weight_proxy_type</b> = typename WeightHandler::elementary_type</td></tr>
+<tr class="separator:abd125886b05207d60dcd69be7a21987c inherit pub_types_classsequoia_1_1maths_1_1weighting"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aea4e5f37f46ae4f05894734fabe4ca19 inherit pub_types_classsequoia_1_1maths_1_1weighting"><td class="memItemLeft" align="right" valign="top"><a id="aea4e5f37f46ae4f05894734fabe4ca19"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>weight_type</b> = typename weight_proxy_type::value_type</td></tr>
+<tr class="separator:aea4e5f37f46ae4f05894734fabe4ca19 inherit pub_types_classsequoia_1_1maths_1_1weighting"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a010c7eadae5d21a6ca559ad27f6adfde"><td class="memTemplParams" colspan="2"><a id="a010c7eadae5d21a6ca559ad27f6adfde"></a>
+<tr class="memitem:a785897184b6ced44a9081d22c131b203"><td class="memTemplParams" colspan="2"><a id="a785897184b6ced44a9081d22c131b203"></a>
 template&lt;class... Args&gt; </td></tr>
-<tr class="memitem:a010c7eadae5d21a6ca559ad27f6adfde"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires</b> (!resolve_to_copy_v&lt; <a class="el" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>, Args... &gt;) const expr <a class="el" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>(const index_type source</td></tr>
-<tr class="separator:a010c7eadae5d21a6ca559ad27f6adfde"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aabdb348dfdfdc98edbc6e17773cee8f5"><td class="memItemLeft" align="right" valign="top"><a id="aabdb348dfdfdc98edbc6e17773cee8f5"></a>
+<tr class="memitem:a785897184b6ced44a9081d22c131b203"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires</b> (!resolve_to_copy_v&lt; <a class="el" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>, Args... &gt;) const expr <a class="el" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>(const index_type source</td></tr>
+<tr class="separator:a785897184b6ced44a9081d22c131b203"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adb4a623330e6fba9429554cab17ed374"><td class="memItemLeft" align="right" valign="top"><a id="adb4a623330e6fba9429554cab17ed374"></a>
 constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>edge</b> (<a class="el" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a> &amp;&amp;in)=default</td></tr>
-<tr class="separator:aabdb348dfdfdc98edbc6e17773cee8f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a094bccb9e6eeed45098c421e79041140"><td class="memItemLeft" align="right" valign="top"><a id="a094bccb9e6eeed45098c421e79041140"></a>
+<tr class="separator:adb4a623330e6fba9429554cab17ed374"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3393706d15e9682c56e8d5c38798147b"><td class="memItemLeft" align="right" valign="top"><a id="a3393706d15e9682c56e8d5c38798147b"></a>
 constexpr <a class="el" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a> &amp;in)=default</td></tr>
-<tr class="separator:a094bccb9e6eeed45098c421e79041140"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a203398b3d881f2dd3020ad2b078866ec"><td class="memItemLeft" align="right" valign="top"><a id="a203398b3d881f2dd3020ad2b078866ec"></a>
+<tr class="separator:a3393706d15e9682c56e8d5c38798147b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af22243c58478c403904d55420d8f600c"><td class="memItemLeft" align="right" valign="top"><a id="af22243c58478c403904d55420d8f600c"></a>
 constexpr <a class="el" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a> &amp;&amp;)=default</td></tr>
-<tr class="separator:a203398b3d881f2dd3020ad2b078866ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af5f5f60fabd5b78865ac4001965df4d2"><td class="memItemLeft" align="right" valign="top"><a id="af5f5f60fabd5b78865ac4001965df4d2"></a>
+<tr class="separator:af22243c58478c403904d55420d8f600c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad814de3d6423f8aa7ff4536491125da9"><td class="memItemLeft" align="right" valign="top"><a id="ad814de3d6423f8aa7ff4536491125da9"></a>
 constexpr index_type&#160;</td><td class="memItemRight" valign="bottom"><b>source_node</b> () const noexcept</td></tr>
-<tr class="separator:af5f5f60fabd5b78865ac4001965df4d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6a0b662d449a57bd6dc6deada5e18107"><td class="memItemLeft" align="right" valign="top"><a id="a6a0b662d449a57bd6dc6deada5e18107"></a>
+<tr class="separator:ad814de3d6423f8aa7ff4536491125da9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae5e3a416acbd946e0ea70db7b30fccdc"><td class="memItemLeft" align="right" valign="top"><a id="ae5e3a416acbd946e0ea70db7b30fccdc"></a>
 constexpr void&#160;</td><td class="memItemRight" valign="bottom"><b>source_node</b> (const index_type source) noexcept</td></tr>
-<tr class="separator:a6a0b662d449a57bd6dc6deada5e18107"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aba27d5358d4373090e80d9f44c3cdfba"><td class="memItemLeft" align="right" valign="top"><a id="aba27d5358d4373090e80d9f44c3cdfba"></a>
+<tr class="separator:ae5e3a416acbd946e0ea70db7b30fccdc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aabfa59fe0de165abe4e9c6e9d8298147"><td class="memItemLeft" align="right" valign="top"><a id="aabfa59fe0de165abe4e9c6e9d8298147"></a>
 constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>inverted</b> () const noexcept</td></tr>
-<tr class="separator:aba27d5358d4373090e80d9f44c3cdfba"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pub_methods_classsequoia_1_1maths_1_1decorated__edge__base"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classsequoia_1_1maths_1_1decorated__edge__base')"><img src="../../closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="../../d4/d41/classsequoia_1_1maths_1_1decorated__edge__base.html">sequoia::maths::decorated_edge_base&lt; Weight, ownership::independent, WeightProxy, std::size_t &gt;</a></td></tr>
-<tr class="memitem:aa69bccbb04ec468f04149b0efcbad1e5 inherit pub_methods_classsequoia_1_1maths_1_1decorated__edge__base"><td class="memItemLeft" align="right" valign="top"><a id="aa69bccbb04ec468f04149b0efcbad1e5"></a>
+<tr class="separator:aabfa59fe0de165abe4e9c6e9d8298147"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_classsequoia_1_1maths_1_1decorated__edge__base"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classsequoia_1_1maths_1_1decorated__edge__base')"><img src="../../closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="../../d4/d41/classsequoia_1_1maths_1_1decorated__edge__base.html">sequoia::maths::decorated_edge_base&lt; WeightHandler, std::size_t &gt;</a></td></tr>
+<tr class="memitem:af5b7d526f9ef81cc399851f274336a2e inherit pub_methods_classsequoia_1_1maths_1_1decorated__edge__base"><td class="memItemLeft" align="right" valign="top"><a id="af5b7d526f9ef81cc399851f274336a2e"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>requires</b> (!resolve_to_copy_v&lt; <a class="el" href="../../d4/d41/classsequoia_1_1maths_1_1decorated__edge__base.html">decorated_edge_base</a>, Args... &gt;) const expr <a class="el" href="../../d4/d41/classsequoia_1_1maths_1_1decorated__edge__base.html">decorated_edge_base</a>(const index_type target</td></tr>
-<tr class="separator:aa69bccbb04ec468f04149b0efcbad1e5 inherit pub_methods_classsequoia_1_1maths_1_1decorated__edge__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac77673049a033374281e1378cbb70b88 inherit pub_methods_classsequoia_1_1maths_1_1decorated__edge__base"><td class="memItemLeft" align="right" valign="top"><a id="ac77673049a033374281e1378cbb70b88"></a>
+<tr class="separator:af5b7d526f9ef81cc399851f274336a2e inherit pub_methods_classsequoia_1_1maths_1_1decorated__edge__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa2863629f5d34dd239dd50c7e8ea211e inherit pub_methods_classsequoia_1_1maths_1_1decorated__edge__base"><td class="memItemLeft" align="right" valign="top"><a id="aa2863629f5d34dd239dd50c7e8ea211e"></a>
 constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>decorated_edge_base</b> (<a class="el" href="../../d4/d41/classsequoia_1_1maths_1_1decorated__edge__base.html">decorated_edge_base</a> &amp;&amp;in)=default</td></tr>
-<tr class="separator:ac77673049a033374281e1378cbb70b88 inherit pub_methods_classsequoia_1_1maths_1_1decorated__edge__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acee2cb317ca42345f9a790e7477b161d inherit pub_methods_classsequoia_1_1maths_1_1decorated__edge__base"><td class="memItemLeft" align="right" valign="top"><a id="acee2cb317ca42345f9a790e7477b161d"></a>
+<tr class="separator:aa2863629f5d34dd239dd50c7e8ea211e inherit pub_methods_classsequoia_1_1maths_1_1decorated__edge__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae66b9e1bf7d5ad4528c8f043b7172f85 inherit pub_methods_classsequoia_1_1maths_1_1decorated__edge__base"><td class="memItemLeft" align="right" valign="top"><a id="ae66b9e1bf7d5ad4528c8f043b7172f85"></a>
 constexpr <a class="el" href="../../d4/d41/classsequoia_1_1maths_1_1decorated__edge__base.html">decorated_edge_base</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="../../d4/d41/classsequoia_1_1maths_1_1decorated__edge__base.html">decorated_edge_base</a> &amp;in)=default</td></tr>
-<tr class="separator:acee2cb317ca42345f9a790e7477b161d inherit pub_methods_classsequoia_1_1maths_1_1decorated__edge__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3e8e1ea0ab397d9204e229c868ae1416 inherit pub_methods_classsequoia_1_1maths_1_1decorated__edge__base"><td class="memItemLeft" align="right" valign="top"><a id="a3e8e1ea0ab397d9204e229c868ae1416"></a>
+<tr class="separator:ae66b9e1bf7d5ad4528c8f043b7172f85 inherit pub_methods_classsequoia_1_1maths_1_1decorated__edge__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8374140027259f45028689e2217bc07b inherit pub_methods_classsequoia_1_1maths_1_1decorated__edge__base"><td class="memItemLeft" align="right" valign="top"><a id="a8374140027259f45028689e2217bc07b"></a>
 constexpr <a class="el" href="../../d4/d41/classsequoia_1_1maths_1_1decorated__edge__base.html">decorated_edge_base</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="../../d4/d41/classsequoia_1_1maths_1_1decorated__edge__base.html">decorated_edge_base</a> &amp;&amp;)=default</td></tr>
-<tr class="separator:a3e8e1ea0ab397d9204e229c868ae1416 inherit pub_methods_classsequoia_1_1maths_1_1decorated__edge__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pub_methods_classsequoia_1_1maths_1_1partial__edge__base"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classsequoia_1_1maths_1_1partial__edge__base')"><img src="../../closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="../../d5/de0/classsequoia_1_1maths_1_1partial__edge__base.html">sequoia::maths::partial_edge_base&lt; Weight, ownership::independent, WeightProxy, IndexType &gt;</a></td></tr>
-<tr class="memitem:a254fb7bb4f973d487bed36a183ea2331 inherit pub_methods_classsequoia_1_1maths_1_1partial__edge__base"><td class="memItemLeft" align="right" valign="top"><a id="a254fb7bb4f973d487bed36a183ea2331"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>requires</b> (!resolve_to_copy_v&lt; <a class="el" href="../../d5/de0/classsequoia_1_1maths_1_1partial__edge__base.html">partial_edge_base</a>, Args... &gt;) const expr explicit <a class="el" href="../../d5/de0/classsequoia_1_1maths_1_1partial__edge__base.html">partial_edge_base</a>(const index_type target</td></tr>
-<tr class="separator:a254fb7bb4f973d487bed36a183ea2331 inherit pub_methods_classsequoia_1_1maths_1_1partial__edge__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab2ac129c7c04bf66941eb26a5ca75c5e inherit pub_methods_classsequoia_1_1maths_1_1partial__edge__base"><td class="memItemLeft" align="right" valign="top"><a id="ab2ac129c7c04bf66941eb26a5ca75c5e"></a>
+<tr class="separator:a8374140027259f45028689e2217bc07b inherit pub_methods_classsequoia_1_1maths_1_1decorated__edge__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_classsequoia_1_1maths_1_1partial__edge__base"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classsequoia_1_1maths_1_1partial__edge__base')"><img src="../../closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="../../d5/de0/classsequoia_1_1maths_1_1partial__edge__base.html">sequoia::maths::partial_edge_base&lt; WeightHandler, IndexType &gt;</a></td></tr>
+<tr class="memitem:af50f92ac6d7ac8f8be66320b12c89e4f inherit pub_methods_classsequoia_1_1maths_1_1partial__edge__base"><td class="memTemplParams" colspan="2"><a id="af50f92ac6d7ac8f8be66320b12c89e4f"></a>
+template&lt;class... Args&gt; </td></tr>
+<tr class="memitem:af50f92ac6d7ac8f8be66320b12c89e4f inherit pub_methods_classsequoia_1_1maths_1_1partial__edge__base"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires</b> (!resolve_to_copy_v&lt; <a class="el" href="../../d5/de0/classsequoia_1_1maths_1_1partial__edge__base.html">partial_edge_base</a>, Args... &gt;) const expr explicit <a class="el" href="../../d5/de0/classsequoia_1_1maths_1_1partial__edge__base.html">partial_edge_base</a>(const index_type target</td></tr>
+<tr class="separator:af50f92ac6d7ac8f8be66320b12c89e4f inherit pub_methods_classsequoia_1_1maths_1_1partial__edge__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae74e6f7254b86cce7f6f4049cba53dba inherit pub_methods_classsequoia_1_1maths_1_1partial__edge__base"><td class="memItemLeft" align="right" valign="top"><a id="ae74e6f7254b86cce7f6f4049cba53dba"></a>
 constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>partial_edge_base</b> (<a class="el" href="../../d5/de0/classsequoia_1_1maths_1_1partial__edge__base.html">partial_edge_base</a> &amp;&amp;in) noexcept=default</td></tr>
-<tr class="separator:ab2ac129c7c04bf66941eb26a5ca75c5e inherit pub_methods_classsequoia_1_1maths_1_1partial__edge__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:ae74e6f7254b86cce7f6f4049cba53dba inherit pub_methods_classsequoia_1_1maths_1_1partial__edge__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classsequoia_1_1maths_1_1edge__base"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classsequoia_1_1maths_1_1edge__base')"><img src="../../closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="../../d2/d60/classsequoia_1_1maths_1_1edge__base.html">sequoia::maths::edge_base&lt; IndexType &gt;</a></td></tr>
 <tr class="memitem:a514135bfb425bab5ab013929aa429bbe inherit pub_methods_classsequoia_1_1maths_1_1edge__base"><td class="memItemLeft" align="right" valign="top"><a id="a514135bfb425bab5ab013929aa429bbe"></a>
 constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>edge_base</b> (const index_type target) noexcept</td></tr>
@@ -193,82 +185,74 @@ constexpr IndexType&#160;</td><td class="memItemRight" valign="bottom"><b>target
 <tr class="memitem:a42f1446b541429acf520cf28bf2e7729 inherit pub_methods_classsequoia_1_1maths_1_1edge__base"><td class="memItemLeft" align="right" valign="top"><a id="a42f1446b541429acf520cf28bf2e7729"></a>
 constexpr void&#160;</td><td class="memItemRight" valign="bottom"><b>target_node</b> (const index_type target) noexcept</td></tr>
 <tr class="separator:a42f1446b541429acf520cf28bf2e7729 inherit pub_methods_classsequoia_1_1maths_1_1edge__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pub_methods_classsequoia_1_1maths_1_1weighting"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classsequoia_1_1maths_1_1weighting')"><img src="../../closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="../../dc/de5/classsequoia_1_1maths_1_1weighting.html">sequoia::maths::weighting&lt; Weight, ownership::independent, WeightProxy, IndexType &gt;</a></td></tr>
-<tr class="memitem:ad77f4ace8d817b0e3a61b5b9b24a31d9 inherit pub_methods_classsequoia_1_1maths_1_1weighting"><td class="memItemLeft" align="right" valign="top"><a id="ad77f4ace8d817b0e3a61b5b9b24a31d9"></a>
-constexpr void&#160;</td><td class="memItemRight" valign="bottom"><b>weight</b> (Arg &amp;&amp;arg, Args &amp;&amp;... args)</td></tr>
-<tr class="separator:ad77f4ace8d817b0e3a61b5b9b24a31d9 inherit pub_methods_classsequoia_1_1maths_1_1weighting"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a90bdba2c7c2dbd70c636ff63c45e5cae inherit pub_methods_classsequoia_1_1maths_1_1weighting"><td class="memItemLeft" align="right" valign="top"><a id="a90bdba2c7c2dbd70c636ff63c45e5cae"></a>
+<tr class="inherit_header pub_methods_classsequoia_1_1maths_1_1weighting"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classsequoia_1_1maths_1_1weighting')"><img src="../../closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="../../dc/de5/classsequoia_1_1maths_1_1weighting.html">sequoia::maths::weighting&lt; WeightHandler, IndexType &gt;</a></td></tr>
+<tr class="memitem:a456399408132032f668365d44d62819e inherit pub_methods_classsequoia_1_1maths_1_1weighting"><td class="memTemplParams" colspan="2"><a id="a456399408132032f668365d44d62819e"></a>
+template&lt;class Arg , class... Args&gt; </td></tr>
+<tr class="memitem:a456399408132032f668365d44d62819e inherit pub_methods_classsequoia_1_1maths_1_1weighting"><td class="memTemplItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>weight</b> (Arg &amp;&amp;arg, Args &amp;&amp;... args)</td></tr>
+<tr class="separator:a456399408132032f668365d44d62819e inherit pub_methods_classsequoia_1_1maths_1_1weighting"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3c3473225bf64b3556d2931a26987d8b inherit pub_methods_classsequoia_1_1maths_1_1weighting"><td class="memItemLeft" align="right" valign="top"><a id="a3c3473225bf64b3556d2931a26987d8b"></a>
 constexpr const weight_type &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>weight</b> () const noexcept</td></tr>
-<tr class="separator:a90bdba2c7c2dbd70c636ff63c45e5cae inherit pub_methods_classsequoia_1_1maths_1_1weighting"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a940b8f21b003da1fec7e3d1d09d94e4c inherit pub_methods_classsequoia_1_1maths_1_1weighting"><td class="memItemLeft" align="right" valign="top"><a id="a940b8f21b003da1fec7e3d1d09d94e4c"></a>
+<tr class="separator:a3c3473225bf64b3556d2931a26987d8b inherit pub_methods_classsequoia_1_1maths_1_1weighting"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a69eb78ece2f9adcaf5d7330bbd05e9a9 inherit pub_methods_classsequoia_1_1maths_1_1weighting"><td class="memItemLeft" align="right" valign="top"><a id="a69eb78ece2f9adcaf5d7330bbd05e9a9"></a>
 constexpr const weight_proxy_type &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>weight_proxy</b> () const noexcept</td></tr>
-<tr class="separator:a940b8f21b003da1fec7e3d1d09d94e4c inherit pub_methods_classsequoia_1_1maths_1_1weighting"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab08338ef1d8e5b24cc9fbb92a28e731b inherit pub_methods_classsequoia_1_1maths_1_1weighting"><td class="memItemLeft" align="right" valign="top"><a id="ab08338ef1d8e5b24cc9fbb92a28e731b"></a>
-constexpr void&#160;</td><td class="memItemRight" valign="bottom"><b>mutate_weight</b> (Fn fn)</td></tr>
-<tr class="separator:ab08338ef1d8e5b24cc9fbb92a28e731b inherit pub_methods_classsequoia_1_1maths_1_1weighting"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:a69eb78ece2f9adcaf5d7330bbd05e9a9 inherit pub_methods_classsequoia_1_1maths_1_1weighting"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8975e9a8ab78381a9ca42cc693d53045 inherit pub_methods_classsequoia_1_1maths_1_1weighting"><td class="memTemplParams" colspan="2"><a id="a8975e9a8ab78381a9ca42cc693d53045"></a>
+template&lt;class Fn &gt; </td></tr>
+<tr class="memitem:a8975e9a8ab78381a9ca42cc693d53045 inherit pub_methods_classsequoia_1_1maths_1_1weighting"><td class="memTemplItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>mutate_weight</b> (Fn fn)</td></tr>
+<tr class="separator:a8975e9a8ab78381a9ca42cc693d53045 inherit pub_methods_classsequoia_1_1maths_1_1weighting"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:aaffc24a528ed96a002350fa09e28e91c"><td class="memItemLeft" align="right" valign="top"><a id="aaffc24a528ed96a002350fa09e28e91c"></a>
+<tr class="memitem:ad22661ef273843ef257080a30b098164"><td class="memItemLeft" align="right" valign="top"><a id="ad22661ef273843ef257080a30b098164"></a>
 const index_type&#160;</td><td class="memItemRight" valign="bottom"><b>target</b></td></tr>
-<tr class="separator:aaffc24a528ed96a002350fa09e28e91c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2dd8a5f9f6854106b49e34283249e6f3"><td class="memItemLeft" align="right" valign="top"><a id="a2dd8a5f9f6854106b49e34283249e6f3"></a>
-const index_type Args &amp;&amp;&#160;</td><td class="memItemRight" valign="bottom"><b>args</b>: <a class="el" href="../../d4/d41/classsequoia_1_1maths_1_1decorated__edge__base.html">decorated_edge_base</a>&lt;Weight</td></tr>
-<tr class="separator:a2dd8a5f9f6854106b49e34283249e6f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a412e30d909a5695ff5b92bbc14795f8d"><td class="memItemLeft" align="right" valign="top"><a id="a412e30d909a5695ff5b92bbc14795f8d"></a>
-const index_type Args&#160;</td><td class="memItemRight" valign="bottom"><b>WeightProxy</b></td></tr>
-<tr class="separator:a412e30d909a5695ff5b92bbc14795f8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:affc93bf0c6d45887773ff770a382f701"><td class="memItemLeft" align="right" valign="top">const index_type Args&#160;</td><td class="memItemRight" valign="bottom"><b>IndexType</b></td></tr>
-<tr class="separator:affc93bf0c6d45887773ff770a382f701"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pub_attribs_classsequoia_1_1maths_1_1decorated__edge__base"><td colspan="2" onclick="javascript:toggleInherit('pub_attribs_classsequoia_1_1maths_1_1decorated__edge__base')"><img src="../../closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="../../d4/d41/classsequoia_1_1maths_1_1decorated__edge__base.html">sequoia::maths::decorated_edge_base&lt; Weight, ownership::independent, WeightProxy, std::size_t &gt;</a></td></tr>
-<tr class="memitem:ab58f030ad023286add6230058429d253 inherit pub_attribs_classsequoia_1_1maths_1_1decorated__edge__base"><td class="memItemLeft" align="right" valign="top"><a id="ab58f030ad023286add6230058429d253"></a>
+<tr class="separator:ad22661ef273843ef257080a30b098164"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a600f2b03dbfb8a0f4eb96ca0217eb25d"><td class="memItemLeft" align="right" valign="top"><a id="a600f2b03dbfb8a0f4eb96ca0217eb25d"></a>
+const index_type Args &amp;&amp;&#160;</td><td class="memItemRight" valign="bottom"><b>args</b>: <a class="el" href="../../d4/d41/classsequoia_1_1maths_1_1decorated__edge__base.html">decorated_edge_base</a>&lt;WeightHandler</td></tr>
+<tr class="separator:a600f2b03dbfb8a0f4eb96ca0217eb25d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a30ccfa263a81480b3b75e298ba9bc4cb"><td class="memItemLeft" align="right" valign="top">const index_type Args&#160;</td><td class="memItemRight" valign="bottom"><b>IndexType</b></td></tr>
+<tr class="separator:a30ccfa263a81480b3b75e298ba9bc4cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_attribs_classsequoia_1_1maths_1_1decorated__edge__base"><td colspan="2" onclick="javascript:toggleInherit('pub_attribs_classsequoia_1_1maths_1_1decorated__edge__base')"><img src="../../closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="../../d4/d41/classsequoia_1_1maths_1_1decorated__edge__base.html">sequoia::maths::decorated_edge_base&lt; WeightHandler, std::size_t &gt;</a></td></tr>
+<tr class="memitem:a6991319e73692d52fb88393eeb580b90 inherit pub_attribs_classsequoia_1_1maths_1_1decorated__edge__base"><td class="memItemLeft" align="right" valign="top"><a id="a6991319e73692d52fb88393eeb580b90"></a>
 const index_type&#160;</td><td class="memItemRight" valign="bottom"><b>auxIndex</b></td></tr>
-<tr class="separator:ab58f030ad023286add6230058429d253 inherit pub_attribs_classsequoia_1_1maths_1_1decorated__edge__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae96dba9dafa1dde68f4c252b20d7e294 inherit pub_attribs_classsequoia_1_1maths_1_1decorated__edge__base"><td class="memItemLeft" align="right" valign="top"><a id="ae96dba9dafa1dde68f4c252b20d7e294"></a>
+<tr class="separator:a6991319e73692d52fb88393eeb580b90 inherit pub_attribs_classsequoia_1_1maths_1_1decorated__edge__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0cd9aa88979b2cc8678b94d289fe48ee inherit pub_attribs_classsequoia_1_1maths_1_1decorated__edge__base"><td class="memItemLeft" align="right" valign="top"><a id="a0cd9aa88979b2cc8678b94d289fe48ee"></a>
 const index_type Args &amp;&amp;&#160;</td><td class="memItemRight" valign="bottom"><b>args</b></td></tr>
-<tr class="separator:ae96dba9dafa1dde68f4c252b20d7e294 inherit pub_attribs_classsequoia_1_1maths_1_1decorated__edge__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a89ade87908b545270df56d2b05f348f2 inherit pub_attribs_classsequoia_1_1maths_1_1decorated__edge__base"><td class="memItemLeft" align="right" valign="top"><a id="a89ade87908b545270df56d2b05f348f2"></a>
-const index_type Args&#160;</td><td class="memItemRight" valign="bottom"><b>WeightHandler</b></td></tr>
-<tr class="separator:a89ade87908b545270df56d2b05f348f2 inherit pub_attribs_classsequoia_1_1maths_1_1decorated__edge__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a62f7ceac270e5d6deff816c72315db3e inherit pub_attribs_classsequoia_1_1maths_1_1decorated__edge__base"><td class="memItemLeft" align="right" valign="top"><a id="a62f7ceac270e5d6deff816c72315db3e"></a>
-const index_type Args&#160;</td><td class="memItemRight" valign="bottom"><b>WeightProxy</b></td></tr>
-<tr class="separator:a62f7ceac270e5d6deff816c72315db3e inherit pub_attribs_classsequoia_1_1maths_1_1decorated__edge__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad80993629ce6e51b27c458aeac0dedc7 inherit pub_attribs_classsequoia_1_1maths_1_1decorated__edge__base"><td class="memItemLeft" align="right" valign="top"><a id="ad80993629ce6e51b27c458aeac0dedc7"></a>
+<tr class="separator:a0cd9aa88979b2cc8678b94d289fe48ee inherit pub_attribs_classsequoia_1_1maths_1_1decorated__edge__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2135f38632e3b172acfc97c2121a4492 inherit pub_attribs_classsequoia_1_1maths_1_1decorated__edge__base"><td class="memItemLeft" align="right" valign="top"><a id="a2135f38632e3b172acfc97c2121a4492"></a>
 const index_type Args&#160;</td><td class="memItemRight" valign="bottom"><b>IndexType</b></td></tr>
-<tr class="separator:ad80993629ce6e51b27c458aeac0dedc7 inherit pub_attribs_classsequoia_1_1maths_1_1decorated__edge__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a346658a843b2592db91db1e9e7ee0e3e inherit pub_attribs_classsequoia_1_1maths_1_1decorated__edge__base"><td class="memItemLeft" align="right" valign="top"><a id="a346658a843b2592db91db1e9e7ee0e3e"></a>
+<tr class="separator:a2135f38632e3b172acfc97c2121a4492 inherit pub_attribs_classsequoia_1_1maths_1_1decorated__edge__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa2bc87e279537d72712df4398bcaa9bc inherit pub_attribs_classsequoia_1_1maths_1_1decorated__edge__base"><td class="memItemLeft" align="right" valign="top"><a id="aa2bc87e279537d72712df4398bcaa9bc"></a>
 const index_type Args&#160;</td><td class="memItemRight" valign="bottom"><b>m_AuxiliaryIndex</b></td></tr>
-<tr class="separator:a346658a843b2592db91db1e9e7ee0e3e inherit pub_attribs_classsequoia_1_1maths_1_1decorated__edge__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pub_attribs_classsequoia_1_1maths_1_1partial__edge__base"><td colspan="2" onclick="javascript:toggleInherit('pub_attribs_classsequoia_1_1maths_1_1partial__edge__base')"><img src="../../closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="../../d5/de0/classsequoia_1_1maths_1_1partial__edge__base.html">sequoia::maths::partial_edge_base&lt; Weight, ownership::independent, WeightProxy, IndexType &gt;</a></td></tr>
-<tr class="memitem:a6475a05e75fb563a493adb75552e076c inherit pub_attribs_classsequoia_1_1maths_1_1partial__edge__base"><td class="memItemLeft" align="right" valign="top"><a id="a6475a05e75fb563a493adb75552e076c"></a>
-Args &amp;&amp;&#160;</td><td class="memItemRight" valign="bottom"><b>args</b></td></tr>
-<tr class="separator:a6475a05e75fb563a493adb75552e076c inherit pub_attribs_classsequoia_1_1maths_1_1partial__edge__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7cc958f3a32d3716db3a155c85359cbc inherit pub_attribs_classsequoia_1_1maths_1_1partial__edge__base"><td class="memItemLeft" align="right" valign="top"><a id="a7cc958f3a32d3716db3a155c85359cbc"></a>
-Args&#160;</td><td class="memItemRight" valign="bottom"><b>weighting&lt; Weight, WeightHandler, WeightProxy, IndexType &gt;</b></td></tr>
-<tr class="separator:a7cc958f3a32d3716db3a155c85359cbc inherit pub_attribs_classsequoia_1_1maths_1_1partial__edge__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:aa2bc87e279537d72712df4398bcaa9bc inherit pub_attribs_classsequoia_1_1maths_1_1decorated__edge__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_attribs_classsequoia_1_1maths_1_1partial__edge__base"><td colspan="2" onclick="javascript:toggleInherit('pub_attribs_classsequoia_1_1maths_1_1partial__edge__base')"><img src="../../closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="../../d5/de0/classsequoia_1_1maths_1_1partial__edge__base.html">sequoia::maths::partial_edge_base&lt; WeightHandler, IndexType &gt;</a></td></tr>
+<tr class="memitem:a9b32fdd8dc4a6eb18fdb4c98f7e490cd inherit pub_attribs_classsequoia_1_1maths_1_1partial__edge__base"><td class="memItemLeft" align="right" valign="top"><a id="a9b32fdd8dc4a6eb18fdb4c98f7e490cd"></a>
+Args &amp;&amp;&#160;</td><td class="memItemRight" valign="bottom"><b>args</b>: <a class="el" href="../../d2/d60/classsequoia_1_1maths_1_1edge__base.html">edge_base</a>&lt;IndexType&gt;{target}</td></tr>
+<tr class="separator:a9b32fdd8dc4a6eb18fdb4c98f7e490cd inherit pub_attribs_classsequoia_1_1maths_1_1partial__edge__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acfe84ddfeffbf5ccdf935bdd03d95905 inherit pub_attribs_classsequoia_1_1maths_1_1partial__edge__base"><td class="memItemLeft" align="right" valign="top">Args&#160;</td><td class="memItemRight" valign="bottom"><b>weighting&lt; WeightHandler, IndexType &gt;</b></td></tr>
+<tr class="separator:acfe84ddfeffbf5ccdf935bdd03d95905 inherit pub_attribs_classsequoia_1_1maths_1_1partial__edge__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
-<tr class="memitem:a0e0ce1cf4258b07d02592e7a3b46b9e1"><td class="memItemLeft" align="right" valign="top"><a id="a0e0ce1cf4258b07d02592e7a3b46b9e1"></a>
+<tr class="memitem:a898fda25d372a897273882facc0d84f5"><td class="memItemLeft" align="right" valign="top"><a id="a898fda25d372a897273882facc0d84f5"></a>
 constexpr static edge_flavour&#160;</td><td class="memItemRight" valign="bottom"><b>flavour</b> {edge_flavour::full}</td></tr>
-<tr class="separator:a0e0ce1cf4258b07d02592e7a3b46b9e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:a898fda25d372a897273882facc0d84f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
-<tr class="inherit_header pro_methods_classsequoia_1_1maths_1_1decorated__edge__base"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classsequoia_1_1maths_1_1decorated__edge__base')"><img src="../../closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="../../d4/d41/classsequoia_1_1maths_1_1decorated__edge__base.html">sequoia::maths::decorated_edge_base&lt; Weight, ownership::independent, WeightProxy, std::size_t &gt;</a></td></tr>
-<tr class="memitem:aaa83cce0b8ce36003d673a3c34c55b7e inherit pro_methods_classsequoia_1_1maths_1_1decorated__edge__base"><td class="memItemLeft" align="right" valign="top"><a id="aaa83cce0b8ce36003d673a3c34c55b7e"></a>
+<tr class="inherit_header pro_methods_classsequoia_1_1maths_1_1decorated__edge__base"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classsequoia_1_1maths_1_1decorated__edge__base')"><img src="../../closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="../../d4/d41/classsequoia_1_1maths_1_1decorated__edge__base.html">sequoia::maths::decorated_edge_base&lt; WeightHandler, std::size_t &gt;</a></td></tr>
+<tr class="memitem:a04bf4453f92d539a922d1a6db2e59178 inherit pro_methods_classsequoia_1_1maths_1_1decorated__edge__base"><td class="memItemLeft" align="right" valign="top"><a id="a04bf4453f92d539a922d1a6db2e59178"></a>
 constexpr index_type&#160;</td><td class="memItemRight" valign="bottom"><b>auxiliary_index</b> () const noexcept</td></tr>
-<tr class="separator:aaa83cce0b8ce36003d673a3c34c55b7e inherit pro_methods_classsequoia_1_1maths_1_1decorated__edge__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1dc10244bcefa2ebfb7158fbb7dd5056 inherit pro_methods_classsequoia_1_1maths_1_1decorated__edge__base"><td class="memItemLeft" align="right" valign="top"><a id="a1dc10244bcefa2ebfb7158fbb7dd5056"></a>
+<tr class="separator:a04bf4453f92d539a922d1a6db2e59178 inherit pro_methods_classsequoia_1_1maths_1_1decorated__edge__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad05383d41a064d6accff394925a2be04 inherit pro_methods_classsequoia_1_1maths_1_1decorated__edge__base"><td class="memItemLeft" align="right" valign="top"><a id="ad05383d41a064d6accff394925a2be04"></a>
 constexpr void&#160;</td><td class="memItemRight" valign="bottom"><b>auxiliary_index</b> (const index_type auxIndex) noexcept</td></tr>
-<tr class="separator:a1dc10244bcefa2ebfb7158fbb7dd5056 inherit pro_methods_classsequoia_1_1maths_1_1decorated__edge__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pro_methods_classsequoia_1_1maths_1_1partial__edge__base"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classsequoia_1_1maths_1_1partial__edge__base')"><img src="../../closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="../../d5/de0/classsequoia_1_1maths_1_1partial__edge__base.html">sequoia::maths::partial_edge_base&lt; Weight, ownership::independent, WeightProxy, IndexType &gt;</a></td></tr>
-<tr class="memitem:acef9cdbaa276f412f927971fe5714985 inherit pro_methods_classsequoia_1_1maths_1_1partial__edge__base"><td class="memItemLeft" align="right" valign="top"><a id="acef9cdbaa276f412f927971fe5714985"></a>
+<tr class="separator:ad05383d41a064d6accff394925a2be04 inherit pro_methods_classsequoia_1_1maths_1_1decorated__edge__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pro_methods_classsequoia_1_1maths_1_1partial__edge__base"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classsequoia_1_1maths_1_1partial__edge__base')"><img src="../../closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="../../d5/de0/classsequoia_1_1maths_1_1partial__edge__base.html">sequoia::maths::partial_edge_base&lt; WeightHandler, IndexType &gt;</a></td></tr>
+<tr class="memitem:a23a7ddae4fe439243a4eb7d18e077227 inherit pro_methods_classsequoia_1_1maths_1_1partial__edge__base"><td class="memItemLeft" align="right" valign="top"><a id="a23a7ddae4fe439243a4eb7d18e077227"></a>
 constexpr <a class="el" href="../../d5/de0/classsequoia_1_1maths_1_1partial__edge__base.html">partial_edge_base</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="../../d5/de0/classsequoia_1_1maths_1_1partial__edge__base.html">partial_edge_base</a> &amp;in)=default</td></tr>
-<tr class="separator:acef9cdbaa276f412f927971fe5714985 inherit pro_methods_classsequoia_1_1maths_1_1partial__edge__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a826d8686b01c3fa239a55bb16ac81739 inherit pro_methods_classsequoia_1_1maths_1_1partial__edge__base"><td class="memItemLeft" align="right" valign="top"><a id="a826d8686b01c3fa239a55bb16ac81739"></a>
+<tr class="separator:a23a7ddae4fe439243a4eb7d18e077227 inherit pro_methods_classsequoia_1_1maths_1_1partial__edge__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a949703e1d6dc42c3e6e30f50076bc135 inherit pro_methods_classsequoia_1_1maths_1_1partial__edge__base"><td class="memItemLeft" align="right" valign="top"><a id="a949703e1d6dc42c3e6e30f50076bc135"></a>
 constexpr <a class="el" href="../../d5/de0/classsequoia_1_1maths_1_1partial__edge__base.html">partial_edge_base</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="../../d5/de0/classsequoia_1_1maths_1_1partial__edge__base.html">partial_edge_base</a> &amp;&amp;) noexcept=default</td></tr>
-<tr class="separator:a826d8686b01c3fa239a55bb16ac81739 inherit pro_methods_classsequoia_1_1maths_1_1partial__edge__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:a949703e1d6dc42c3e6e30f50076bc135 inherit pro_methods_classsequoia_1_1maths_1_1partial__edge__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_methods_classsequoia_1_1maths_1_1edge__base"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classsequoia_1_1maths_1_1edge__base')"><img src="../../closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="../../d2/d60/classsequoia_1_1maths_1_1edge__base.html">sequoia::maths::edge_base&lt; IndexType &gt;</a></td></tr>
 <tr class="memitem:a7f8988afd5dcaf3440b226b04f89e61a inherit pro_methods_classsequoia_1_1maths_1_1edge__base"><td class="memItemLeft" align="right" valign="top"><a id="a7f8988afd5dcaf3440b226b04f89e61a"></a>
 constexpr <a class="el" href="../../d2/d60/classsequoia_1_1maths_1_1edge__base.html">edge_base</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="../../d2/d60/classsequoia_1_1maths_1_1edge__base.html">edge_base</a> &amp;) noexcept=default</td></tr>
@@ -276,42 +260,43 @@ constexpr <a class="el" href="../../d2/d60/classsequoia_1_1maths_1_1edge__base.h
 <tr class="memitem:a03854139835f23c804b94bbf5db9ad5f inherit pro_methods_classsequoia_1_1maths_1_1edge__base"><td class="memItemLeft" align="right" valign="top"><a id="a03854139835f23c804b94bbf5db9ad5f"></a>
 constexpr <a class="el" href="../../d2/d60/classsequoia_1_1maths_1_1edge__base.html">edge_base</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="../../d2/d60/classsequoia_1_1maths_1_1edge__base.html">edge_base</a> &amp;&amp;) noexcept=default</td></tr>
 <tr class="separator:a03854139835f23c804b94bbf5db9ad5f inherit pro_methods_classsequoia_1_1maths_1_1edge__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pro_methods_classsequoia_1_1maths_1_1weighting"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classsequoia_1_1maths_1_1weighting')"><img src="../../closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="../../dc/de5/classsequoia_1_1maths_1_1weighting.html">sequoia::maths::weighting&lt; Weight, ownership::independent, WeightProxy, IndexType &gt;</a></td></tr>
-<tr class="memitem:a5a292bdd8b65f9d87d15274cc6f3345c inherit pro_methods_classsequoia_1_1maths_1_1weighting"><td class="memItemLeft" align="right" valign="top"><a id="a5a292bdd8b65f9d87d15274cc6f3345c"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>requires</b> (!resolve_to_copy_v&lt; <a class="el" href="../../dc/de5/classsequoia_1_1maths_1_1weighting.html">weighting</a>, Args... &gt; &amp;&amp;!is_base_of_head_v&lt; <a class="el" href="../../dc/de5/classsequoia_1_1maths_1_1weighting.html">weighting</a>, Args... &gt;) const expr explicit <a class="el" href="../../dc/de5/classsequoia_1_1maths_1_1weighting.html">weighting</a>(Args &amp;&amp;... args)</td></tr>
-<tr class="separator:a5a292bdd8b65f9d87d15274cc6f3345c inherit pro_methods_classsequoia_1_1maths_1_1weighting"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a48f389634630c344c38fa2048c4b77ee inherit pro_methods_classsequoia_1_1maths_1_1weighting"><td class="memItemLeft" align="right" valign="top"><a id="a48f389634630c344c38fa2048c4b77ee"></a>
+<tr class="inherit_header pro_methods_classsequoia_1_1maths_1_1weighting"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classsequoia_1_1maths_1_1weighting')"><img src="../../closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="../../dc/de5/classsequoia_1_1maths_1_1weighting.html">sequoia::maths::weighting&lt; WeightHandler, IndexType &gt;</a></td></tr>
+<tr class="memitem:a2c0b165af76c6c73be98f196ff64cec4 inherit pro_methods_classsequoia_1_1maths_1_1weighting"><td class="memTemplParams" colspan="2"><a id="a2c0b165af76c6c73be98f196ff64cec4"></a>
+template&lt;class... Args&gt; </td></tr>
+<tr class="memitem:a2c0b165af76c6c73be98f196ff64cec4 inherit pro_methods_classsequoia_1_1maths_1_1weighting"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires</b> (!resolve_to_copy_v&lt; <a class="el" href="../../dc/de5/classsequoia_1_1maths_1_1weighting.html">weighting</a>, Args... &gt; &amp;&amp;!is_base_of_head_v&lt; <a class="el" href="../../dc/de5/classsequoia_1_1maths_1_1weighting.html">weighting</a>, Args... &gt;) const expr explicit <a class="el" href="../../dc/de5/classsequoia_1_1maths_1_1weighting.html">weighting</a>(Args &amp;&amp;... args)</td></tr>
+<tr class="separator:a2c0b165af76c6c73be98f196ff64cec4 inherit pro_methods_classsequoia_1_1maths_1_1weighting"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a53676987f11063aa7622be49523d7dc3 inherit pro_methods_classsequoia_1_1maths_1_1weighting"><td class="memItemLeft" align="right" valign="top"><a id="a53676987f11063aa7622be49523d7dc3"></a>
 constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>weighting</b> (const <a class="el" href="../../dc/de5/classsequoia_1_1maths_1_1weighting.html">weighting</a> &amp;in)</td></tr>
-<tr class="separator:a48f389634630c344c38fa2048c4b77ee inherit pro_methods_classsequoia_1_1maths_1_1weighting"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a122fff4076c5535cb175198eafc359f9 inherit pro_methods_classsequoia_1_1maths_1_1weighting"><td class="memItemLeft" align="right" valign="top"><a id="a122fff4076c5535cb175198eafc359f9"></a>
+<tr class="separator:a53676987f11063aa7622be49523d7dc3 inherit pro_methods_classsequoia_1_1maths_1_1weighting"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7294cc86ca3e942263f2ce476115e52d inherit pro_methods_classsequoia_1_1maths_1_1weighting"><td class="memItemLeft" align="right" valign="top"><a id="a7294cc86ca3e942263f2ce476115e52d"></a>
 constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>weighting</b> (const <a class="el" href="../../dc/de5/classsequoia_1_1maths_1_1weighting.html">weighting</a> &amp;in, const IndexType)</td></tr>
-<tr class="separator:a122fff4076c5535cb175198eafc359f9 inherit pro_methods_classsequoia_1_1maths_1_1weighting"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ace149d5b30433a621f762bcd725afded inherit pro_methods_classsequoia_1_1maths_1_1weighting"><td class="memItemLeft" align="right" valign="top"><a id="ace149d5b30433a621f762bcd725afded"></a>
+<tr class="separator:a7294cc86ca3e942263f2ce476115e52d inherit pro_methods_classsequoia_1_1maths_1_1weighting"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad45ed620fbc489b050fd4c2c2d2be526 inherit pro_methods_classsequoia_1_1maths_1_1weighting"><td class="memItemLeft" align="right" valign="top"><a id="ad45ed620fbc489b050fd4c2c2d2be526"></a>
 constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>weighting</b> (<a class="el" href="../../dc/de5/classsequoia_1_1maths_1_1weighting.html">weighting</a> &amp;&amp;) noexcept=default</td></tr>
-<tr class="separator:ace149d5b30433a621f762bcd725afded inherit pro_methods_classsequoia_1_1maths_1_1weighting"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a67f65494ded10afc4e58d78e2ee863c8 inherit pro_methods_classsequoia_1_1maths_1_1weighting"><td class="memItemLeft" align="right" valign="top"><a id="a67f65494ded10afc4e58d78e2ee863c8"></a>
+<tr class="separator:ad45ed620fbc489b050fd4c2c2d2be526 inherit pro_methods_classsequoia_1_1maths_1_1weighting"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a29b5eccf8b9eee5f185b9d2d6521ae92 inherit pro_methods_classsequoia_1_1maths_1_1weighting"><td class="memItemLeft" align="right" valign="top"><a id="a29b5eccf8b9eee5f185b9d2d6521ae92"></a>
 constexpr <a class="el" href="../../dc/de5/classsequoia_1_1maths_1_1weighting.html">weighting</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="../../dc/de5/classsequoia_1_1maths_1_1weighting.html">weighting</a> &amp;in)</td></tr>
-<tr class="separator:a67f65494ded10afc4e58d78e2ee863c8 inherit pro_methods_classsequoia_1_1maths_1_1weighting"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a17dce22e50a9e5ce5d588d27eb0b6aa4 inherit pro_methods_classsequoia_1_1maths_1_1weighting"><td class="memItemLeft" align="right" valign="top"><a id="a17dce22e50a9e5ce5d588d27eb0b6aa4"></a>
+<tr class="separator:a29b5eccf8b9eee5f185b9d2d6521ae92 inherit pro_methods_classsequoia_1_1maths_1_1weighting"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8470ffe8b551013142460e70673eb111 inherit pro_methods_classsequoia_1_1maths_1_1weighting"><td class="memItemLeft" align="right" valign="top"><a id="a8470ffe8b551013142460e70673eb111"></a>
 constexpr <a class="el" href="../../dc/de5/classsequoia_1_1maths_1_1weighting.html">weighting</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="../../dc/de5/classsequoia_1_1maths_1_1weighting.html">weighting</a> &amp;&amp;) noexcept=default</td></tr>
-<tr class="separator:a17dce22e50a9e5ce5d588d27eb0b6aa4 inherit pro_methods_classsequoia_1_1maths_1_1weighting"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:a8470ffe8b551013142460e70673eb111 inherit pro_methods_classsequoia_1_1maths_1_1weighting"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><h3>template&lt;class Weight, class WeightProxy, integral IndexType = std::size_t&gt;<br />
-class sequoia::maths::edge&lt; Weight, WeightProxy, IndexType &gt;</h3>
+<div class="textblock"><h3>template&lt;class WeightHandler, integral IndexType = std::size_t&gt;<br />
+class sequoia::maths::edge&lt; WeightHandler, IndexType &gt;</h3>
 
 <p>Stores the source node as well as the target node and an optional weight. </p>
 </div><h2 class="groupheader">Member Data Documentation</h2>
-<a id="affc93bf0c6d45887773ff770a382f701"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#affc93bf0c6d45887773ff770a382f701">&#9670;&nbsp;</a></span>IndexType</h2>
+<a id="a30ccfa263a81480b3b75e298ba9bc4cb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a30ccfa263a81480b3b75e298ba9bc4cb">&#9670;&nbsp;</a></span>IndexType</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class Weight , class WeightProxy , integral IndexType = std::size_t&gt; </div>
+template&lt;class WeightHandler , integral IndexType = std::size_t&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">const index_type Args <a class="el" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">sequoia::maths::edge</a>&lt; Weight, WeightProxy, IndexType &gt;::IndexType</td>
+          <td class="memname">const index_type Args <a class="el" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">sequoia::maths::edge</a>&lt; WeightHandler, IndexType &gt;::IndexType</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -326,7 +311,7 @@ template&lt;class Weight , class WeightProxy , integral IndexType = std::size_t&
 <div class="line">        <span class="keyword">class</span>... Args</div>
 <div class="line">      &gt;</div>
 <div class="line">      constexpr edge(<span class="keyword">const</span> index_type node, <span class="keyword">const</span> inversion_constant&lt;Inverted&gt; inverted, Args&amp;&amp;... args)</div>
-<div class="line">        : decorated_edge_base&lt;Weight, ownership::independent, WeightProxy, IndexType&gt;{</div>
+<div class="line">        : decorated_edge_base&lt;WeightHandler, IndexType&gt;{</div>
 <div class="line">            node, inverted.value ? npos : node, std::forward&lt;Args&gt;(args)...</div>
 <div class="line">          }</div>
 <div class="line">      {</div>
@@ -338,7 +323,7 @@ template&lt;class Weight , class WeightProxy , integral IndexType = std::size_t&
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>/Users/Claire/Dropbox/Sequoia/Source/Maths/Graph/<a class="el" href="../../dc/d91/Edge_8hpp_source.html">Edge.hpp</a></li>
+<li>/Users/Claire/Dropbox/Sequoia/Source/sequoia/Maths/Graph/<a class="el" href="../../dc/d91/Edge_8hpp_source.html">Edge.hpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

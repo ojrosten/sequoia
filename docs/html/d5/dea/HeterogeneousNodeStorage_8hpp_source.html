@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.18"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Sequoia: /Users/Claire/Dropbox/Sequoia/Source/Maths/Graph/HeterogeneousNodeStorage.hpp Source File</title>
+<title>Sequoia: /Users/Claire/Dropbox/Sequoia/Source/sequoia/Maths/Graph/HeterogeneousNodeStorage.hpp Source File</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -61,7 +61,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="../../dir_74389ed8173ad57b461b9d623a1f3867.html">Source</a></li><li class="navelem"><a class="el" href="../../dir_bfce9ab249d47e16c9e42220e5fdc10e.html">Maths</a></li><li class="navelem"><a class="el" href="../../dir_9b931fa7f5ff4df7b8729af1757013d0.html">Graph</a></li>  </ul>
+<li class="navelem"><a class="el" href="../../dir_74389ed8173ad57b461b9d623a1f3867.html">Source</a></li><li class="navelem"><a class="el" href="../../dir_2cc7e707cf7d8b577b4d17c7cb9b6739.html">sequoia</a></li><li class="navelem"><a class="el" href="../../dir_d40775f9221ab099c4c7f71f5e5081b6.html">Maths</a></li><li class="navelem"><a class="el" href="../../dir_27f8922d3f79031079bf19303e1551e1.html">Graph</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -76,7 +76,7 @@ $(function() {
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment"></span> </div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#pragma once</span></div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="../../dd/d8b/HeterogeneousNodeDetails_8hpp.html">HeterogeneousNodeDetails.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="../../dd/d8b/HeterogeneousNodeDetails_8hpp.html">sequoia/Maths/Graph/HeterogeneousNodeDetails.hpp</a>&quot;</span></div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#include &lt;tuple&gt;</span></div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="keyword">namespace </span>sequoia::maths::graph_impl</div>
@@ -86,7 +86,7 @@ $(function() {
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;  {</div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;  <span class="keyword">public</span>:</div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <span class="keyword">using</span> size_type = std::size_t;</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    </div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span>... Args&gt;</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    constexpr <span class="keyword">explicit</span> <a class="code" href="../../d3/dea/classsequoia_1_1maths_1_1graph__impl_1_1heterogeneous__node__storage.html">heterogeneous_node_storage</a>(Args&amp;&amp;... args) : m_Weights{std::forward&lt;Args&gt;(args)...}</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    {</div>
@@ -130,7 +130,7 @@ $(function() {
 <div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    {</div>
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;      std::get&lt;T&gt;(m_Weights) = T{std::forward&lt;Arg&gt;(arg), std::forward&lt;Args&gt;(args)...};</div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    }</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    </div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160; </div>
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="keyword">template</span>&lt;std::<span class="keywordtype">size_t</span> I, <span class="keyword">class</span> Fn&gt;</div>
 <div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    constexpr <span class="keywordtype">void</span> mutate_node_weight(Fn fn)</div>
 <div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    {</div>
@@ -150,18 +150,18 @@ $(function() {
 <div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    [[nodiscard]]</div>
 <div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    <span class="keyword">friend</span> constexpr <span class="keywordtype">bool</span> operator!=(<span class="keyword">const</span> <a class="code" href="../../d3/dea/classsequoia_1_1maths_1_1graph__impl_1_1heterogeneous__node__storage.html">heterogeneous_node_storage</a>&amp; lhs, <span class="keyword">const</span> <a class="code" href="../../d3/dea/classsequoia_1_1maths_1_1graph__impl_1_1heterogeneous__node__storage.html">heterogeneous_node_storage</a>&amp; rhs) noexcept</div>
 <div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;      = <span class="keywordflow">default</span>;</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;  <span class="keyword">protected</span>:    </div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;  <span class="keyword">protected</span>:</div>
 <div class="line"><a name="l00094"></a><span class="lineno"><a class="line" href="../../d4/d4b/structsequoia_1_1maths_1_1graph__impl_1_1heterogeneous__node__storage_1_1null__proxy__tag.html">   94</a></span>&#160;    <span class="keyword">struct </span><a class="code" href="../../d4/d4b/structsequoia_1_1maths_1_1graph__impl_1_1heterogeneous__node__storage_1_1null__proxy__tag.html">null_proxy_tag</a> {};</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    </div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160; </div>
 <div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <span class="keyword">using</span> <a class="code" href="../../d2/d94/structsequoia_1_1maths_1_1graph__impl_1_1heterogeneous__tag.html">weight_type</a> = <a class="code" href="../../d2/d94/structsequoia_1_1maths_1_1graph__impl_1_1heterogeneous__tag.html">heterogeneous_tag</a>;</div>
 <div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <span class="keyword">using</span> <a class="code" href="../../d4/d4b/structsequoia_1_1maths_1_1graph__impl_1_1heterogeneous__node__storage_1_1null__proxy__tag.html">weight_proxy_type</a> = <a class="code" href="../../d4/d4b/structsequoia_1_1maths_1_1graph__impl_1_1heterogeneous__node__storage_1_1null__proxy__tag.html">null_proxy_tag</a>;</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    </div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160; </div>
 <div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    constexpr <a class="code" href="../../d3/dea/classsequoia_1_1maths_1_1graph__impl_1_1heterogeneous__node__storage.html">heterogeneous_node_storage</a>(<span class="keyword">const</span> <a class="code" href="../../d3/dea/classsequoia_1_1maths_1_1graph__impl_1_1heterogeneous__node__storage.html">heterogeneous_node_storage</a>&amp; in) = <span class="keywordflow">default</span>;</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;      </div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160; </div>
 <div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    constexpr <a class="code" href="../../d3/dea/classsequoia_1_1maths_1_1graph__impl_1_1heterogeneous__node__storage.html">heterogeneous_node_storage</a>(<a class="code" href="../../d3/dea/classsequoia_1_1maths_1_1graph__impl_1_1heterogeneous__node__storage.html">heterogeneous_node_storage</a>&amp;&amp;) noexcept = default;</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;        </div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160; </div>
 <div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    ~<a class="code" href="../../d3/dea/classsequoia_1_1maths_1_1graph__impl_1_1heterogeneous__node__storage.html">heterogeneous_node_storage</a>() = default;</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    </div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160; </div>
 <div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    constexpr <a class="code" href="../../d3/dea/classsequoia_1_1maths_1_1graph__impl_1_1heterogeneous__node__storage.html">heterogeneous_node_storage</a>&amp; operator=(const <a class="code" href="../../d3/dea/classsequoia_1_1maths_1_1graph__impl_1_1heterogeneous__node__storage.html">heterogeneous_node_storage</a>&amp; in) = default;</div>
 <div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160; </div>
 <div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    constexpr <a class="code" href="../../d3/dea/classsequoia_1_1maths_1_1graph__impl_1_1heterogeneous__node__storage.html">heterogeneous_node_storage</a>&amp; operator=(<a class="code" href="../../d3/dea/classsequoia_1_1maths_1_1graph__impl_1_1heterogeneous__node__storage.html">heterogeneous_node_storage</a>&amp;&amp;) noexcept = default;</div>

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.18"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Sequoia: /Users/Claire/Dropbox/Sequoia/Source/Core/DataStructures/StaticQueue.hpp Source File</title>
+<title>Sequoia: /Users/Claire/Dropbox/Sequoia/Source/sequoia/Core/DataStructures/StaticQueue.hpp Source File</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -61,7 +61,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="../../dir_74389ed8173ad57b461b9d623a1f3867.html">Source</a></li><li class="navelem"><a class="el" href="../../dir_1ad6433457b0067ef8f54a4fa85f5c9a.html">Core</a></li><li class="navelem"><a class="el" href="../../dir_171ce530a72091fcb4f5f3c25b185187.html">DataStructures</a></li>  </ul>
+<li class="navelem"><a class="el" href="../../dir_74389ed8173ad57b461b9d623a1f3867.html">Source</a></li><li class="navelem"><a class="el" href="../../dir_2cc7e707cf7d8b577b4d17c7cb9b6739.html">sequoia</a></li><li class="navelem"><a class="el" href="../../dir_af73bbb9d00c4493f0602a21eb50c280.html">Core</a></li><li class="navelem"><a class="el" href="../../dir_3d9ac77dfe77a42230562e57a523f504.html">DataStructures</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -76,8 +76,8 @@ $(function() {
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment"></span> </div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#pragma once</span></div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="../../d8/def/ArrayUtilities_8hpp.html">ArrayUtilities.hpp</a>&quot;</span></div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="../../d6/d07/Algorithms_8hpp.html">Algorithms.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="../../d8/def/ArrayUtilities_8hpp.html">sequoia/Core/Utilities/ArrayUtilities.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="../../d6/d07/Algorithms_8hpp.html">sequoia/Algorithms/Algorithms.hpp</a>&quot;</span></div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="keyword">namespace </span>sequoia::data_structures</div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;{</div>
@@ -98,11 +98,11 @@ $(function() {
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    constexpr <a class="code" href="../../d7/d29/classsequoia_1_1data__structures_1_1static__queue.html">static_queue</a>&amp; operator=(<span class="keyword">const</span> <a class="code" href="../../d7/d29/classsequoia_1_1data__structures_1_1static__queue.html">static_queue</a>&amp;)    = <span class="keywordflow">default</span>;</div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    constexpr <a class="code" href="../../d7/d29/classsequoia_1_1data__structures_1_1static__queue.html">static_queue</a>&amp; operator=(<a class="code" href="../../d7/d29/classsequoia_1_1data__structures_1_1static__queue.html">static_queue</a>&amp;) noexcept = <span class="keywordflow">default</span>;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    </div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    constexpr <span class="keywordtype">void</span> push(<span class="keyword">const</span> T&amp; val)</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    {</div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;      <span class="keywordflow">if</span> constexpr(MaxDepth &gt; 0)</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;      {   </div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;      {</div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        <span class="keywordflow">if</span>(size() == MaxDepth)</div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        {</div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;          <span class="keywordflow">throw</span> std::logic_error(<span class="stringliteral">&quot;Attempting to exceed maximum queue depth&quot;</span>);</div>
@@ -112,7 +112,7 @@ $(function() {
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;          m_Front = 0;</div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;          m_Back  = 0;</div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        }</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        <span class="keywordflow">else</span> </div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        <span class="keywordflow">else</span></div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        {</div>
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;          m_Back = (m_Back + 1) % MaxDepth;</div>
 <div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        }</div>
@@ -177,7 +177,7 @@ $(function() {
 <div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    <span class="keyword">friend</span> constexpr <span class="keywordtype">bool</span> operator==(<span class="keyword">const</span> <a class="code" href="../../d7/d29/classsequoia_1_1data__structures_1_1static__queue.html">static_queue</a>&amp; lhs, <span class="keyword">const</span> <a class="code" href="../../d7/d29/classsequoia_1_1data__structures_1_1static__queue.html">static_queue</a>&amp; rhs) noexcept</div>
 <div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    {</div>
 <div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;      <span class="keywordflow">if</span> constexpr(MaxDepth &gt; 0)</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;      {   </div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;      {</div>
 <div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;        <span class="keyword">const</span> <span class="keyword">auto</span> sz{lhs.size()};</div>
 <div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;        <span class="keywordflow">if</span>(sz != rhs.size()) <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160; </div>
@@ -185,7 +185,7 @@ $(function() {
 <div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;        {</div>
 <div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160; </div>
 <div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;          <span class="keywordflow">if</span>(lhs.m_Queue[l] != rhs.m_Queue[r]) <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;        </div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160; </div>
 <div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;          l = (l+1) % MaxDepth;</div>
 <div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;          r = (r+1) % MaxDepth;</div>
 <div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;        }</div>
