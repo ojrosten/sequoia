@@ -430,43 +430,25 @@ namespace sequoia::testing
 
     traverse_graph<Traverser>(g, ignore_disconnected_t{}, discovery, discovery2, edgeDiscovery, edgeDiscovery2);
 
-    auto order = discovery.visitation_order();
-    auto order2 = discovery2.visitation_order();
-    auto edgeOrder = edgeDiscovery.visitation_order();
-
-    if(check_equality(LINE(make_message("Four nodes to discover")), order.size(), 4_sz))
+    if constexpr(undirected)
     {
-      if constexpr(undirected)
-      {
-        test_square_graph(discovery, edgeDiscovery, edgeDiscovery2, 0, TraversalType{});
-      }
-      else
-      {
-        test_square_graph(discovery, edgeDiscovery, 0, mutualInfo, TraversalType{});
-      }
+      test_square_graph(discovery, edgeDiscovery, edgeDiscovery2, 0, TraversalType{});
     }
-
-    check_equality(LINE(make_message("")), order, order2);
+    else
+    {
+      test_square_graph(discovery, edgeDiscovery, 0, mutualInfo, TraversalType{});
+    }
 
     traverse_graph<Traverser>(g, ignore_disconnected_t{2}, discovery, discovery2, edgeDiscovery, edgeDiscovery2);
 
-    order = discovery.visitation_order();
-    order2 = discovery2.visitation_order();
-    edgeOrder = edgeDiscovery.visitation_order();
-
-    if(check_equality(LINE(make_message("Four nodes to discover but this time starting from middle")), order.size(), 4_sz))
+    if constexpr(undirected)
     {
-      if constexpr(undirected)
-      {
-        test_square_graph(discovery, edgeDiscovery, edgeDiscovery2, 2, TraversalType{});
-      }
-      else
-      {
-        test_square_graph(discovery, edgeDiscovery, 2, mutualInfo, TraversalType{});
-      }
+      test_square_graph(discovery, edgeDiscovery, edgeDiscovery2, 2, TraversalType{});
     }
-
-    check_equality(LINE(make_message("")), order, order2);
+    else
+    {
+      test_square_graph(discovery, edgeDiscovery, 2, mutualInfo, TraversalType{});
+    }
   }
 
 
@@ -488,9 +470,9 @@ namespace sequoia::testing
       edgeAnswers = edge_results{{2, 0}, {2, 1}, {1, 0}, {3, 1}};
       edgeAnswers2 = edge_results{{1, 1}, {3, 0}, {0, 0}, {0, 1}};
     }
-    check_equality(LINE(""), tracker.visitation_order(), expected);
-    check_equality(LINE("First edge traversal"), eTracker.visitation_order(), edgeAnswers);
-    check_equality(LINE("Second edge traversal"), eTracker2.visitation_order(), edgeAnswers2);
+    check_equivalence(LINE(""), tracker, expected);
+    check_equivalence(LINE("First edge traversal"), eTracker, edgeAnswers);
+    check_equivalence(LINE("Second edge traversal"), eTracker2, edgeAnswers2);
   }
 
   template<maths::dynamic_network G, traversal_flavour Flavour>
@@ -509,8 +491,8 @@ namespace sequoia::testing
       expected = std::vector<std::size_t>{2,3,0,1};
       edgeAnswers = mutualInfo ? edge_results{{2, 1}, {3, 1}, {0, 0}, {1, 1}} : edge_results{{2, 0}, {3, 0}, {0, 0}, {1, 0}};
     }
-    check_equality(LINE("start = " + std::to_string(start) + " "), tracker.visitation_order(), expected);
-    check_equality(LINE("First edge traversal, start = " + std::to_string(start) + " "), eTracker.visitation_order(), edgeAnswers);
+    check_equivalence(LINE("start = " + std::to_string(start) + " "), tracker, expected);
+    check_equivalence(LINE("First edge traversal, start = " + std::to_string(start) + " "), eTracker, edgeAnswers);
   }
 
   template<maths::dynamic_network G, traversal_flavour Flavour>
@@ -531,9 +513,9 @@ namespace sequoia::testing
       edgeAnswers = edge_results{{2, 0}, {2, 1}, {1, 1}, {0, 0}};
       edgeAnswers2 = edge_results{{1, 0}, {0, 1}, {3, 0}, {3, 1}};
     }
-    check_equality(LINE(""), tracker.visitation_order(), expected);
-    check_equality(LINE("First edge traversal"), eTracker.visitation_order(), edgeAnswers);
-    check_equality(LINE("Second edge traversal"), eTracker2.visitation_order(), edgeAnswers2);
+    check_equivalence(LINE(""), tracker, expected);
+    check_equivalence(LINE("First edge traversal"), eTracker, edgeAnswers);
+    check_equivalence(LINE("Second edge traversal"), eTracker2, edgeAnswers2);
   }
 
   template<maths::dynamic_network G, traversal_flavour Flavour>
@@ -552,8 +534,8 @@ namespace sequoia::testing
       expected = std::vector<std::size_t>{2,3,0,1};
       edgeAnswers = mutualInfo ? edge_results{{2, 0}, {3, 0}, {0, 1}, {1, 0}} : edge_results{{2, 0}, {3, 0}, {0, 0}, {1, 0}};
     }
-    check_equality(LINE("start = " + std::to_string(start) + " "), tracker.visitation_order(), expected);
-    check_equality(LINE("First edge traversal, start = " + std::to_string(start) + " "), eTracker.visitation_order(), edgeAnswers);
+    check_equivalence(LINE("start = " + std::to_string(start) + " "), tracker, expected);
+    check_equivalence(LINE("First edge traversal, start = " + std::to_string(start) + " "), eTracker, edgeAnswers);
   }
 
   //=============================== Priority Search  ===============================//
