@@ -49,17 +49,17 @@ namespace sequoia::testing
     template<maths::dynamic_network Graph>
     void test_priority_traversal();
 
-    template<class NTracker, class ETracker, class ETracker2>
-    void test_square_graph(const NTracker& tracker, const ETracker& eTracker, const ETracker2& eTracker2, const std::size_t start, const bool, bfs_type);
+    template<class ETracker, class ETracker2>
+    void test_square_graph(const node_tracker& tracker, const ETracker& eTracker, const ETracker2& eTracker2, const std::size_t start, const bool, bfs_type);
 
-    template<class NTracker, class ETracker>
-    void test_square_graph(const NTracker& tracker, const ETracker& eTracker, const std::size_t start, const bool mutualInfo, bfs_type);
+    template<class ETracker>
+    void test_square_graph(const node_tracker& tracker, const ETracker& eTracker, const std::size_t start, const bool mutualInfo, bfs_type);
 
-    template<class NTracker, class ETracker, class ETracker2>
-    void test_square_graph(const NTracker& tracker, const ETracker& eTracker, const ETracker2& eTracker2, const std::size_t start, const bool, pdfs_type);
+    template<class ETracker, class ETracker2>
+    void test_square_graph(const node_tracker& tracker, const ETracker& eTracker, const ETracker2& eTracker2, const std::size_t start, const bool, pdfs_type);
 
-    template<class NTracker, class ETracker>
-    void test_square_graph(const NTracker& tracker, const ETracker& eTracker, const std::size_t start, const bool mutualInfo, pdfs_type);
+    template<class ETracker>
+    void test_square_graph(const node_tracker& tracker, const ETracker& eTracker, const std::size_t start, const bool mutualInfo, pdfs_type);
 
     //=================== For weighted BFS  =================//
 

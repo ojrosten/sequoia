@@ -69,4 +69,51 @@ namespace sequoia::testing
 
     static std::string iterator_description() noexcept { return "forward"; }
   };
+
+
+  class node_tracker
+  {
+  public:
+    void clear() noexcept { m_Order.clear(); }
+
+    void operator()(const std::size_t index) { m_Order.push_back(index); }
+
+    [[nodiscard]]
+    const std::vector<std::size_t>& visitation_order() const noexcept { return m_Order; }
+  private:
+    std::vector<std::size_t> m_Order;
+  };
+
+  template<maths::network G, traversal_flavour Flavour>
+  class edge_tracker
+  {
+  public:
+    using result_type = std::vector<std::pair<std::size_t, std::size_t>>;
+
+    edge_tracker(const G& graph) : m_Graph{graph} {}
+
+    void clear() noexcept { m_Order.clear(); }
+
+    template<class I> void operator()(I iter)
+    {
+      const auto pos{dist(traversal_constant<Flavour>{}, iter)};
+      m_Order.emplace_back(iter.partition_index(), static_cast<std::size_t>(pos));
+    }
+
+    [[nodiscard]]
+    const result_type& visitation_order() const noexcept { return m_Order; }
+  private:
+    result_type m_Order;
+    const G& m_Graph;
+
+    template<class I> [[nodiscard]] auto dist(pdfs_type, I iter)
+    {
+      return distance(m_Graph.crbegin_edges(iter.partition_index()), iter);
+    }
+
+    template<class I> [[nodiscard]] auto dist(bfs_type, I iter)
+    {
+      return distance(m_Graph.cbegin_edges(iter.partition_index()), iter);
+    }
+  };
 }

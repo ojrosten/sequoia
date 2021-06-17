@@ -14,69 +14,19 @@ namespace sequoia::testing
 {
   namespace
   {
-    using edge_results = std::vector<std::pair<std::size_t, std::size_t>>;
-
-    class node_tracker
-    {
-    public:
-      void clear() noexcept { m_Order.clear(); }
-
-      void operator()(const std::size_t index) { m_Order.push_back(index); }
-
-      [[nodiscard]]
-      const std::vector<std::size_t>& order() const noexcept { return m_Order; }
-    private:
-      std::vector<std::size_t> m_Order;
-    };
-
-    template<class G, class T>
-    class edge_tracker
-    {
-    public:
-      using result_type = std::vector<std::pair<std::size_t, std::size_t>>;
-
-      edge_tracker(const G& graph) : m_Graph(graph) {}
-
-      void clear() noexcept { m_Order.clear(); }
-
-      template<class I> void operator()(I iter)
-      {
-        const auto pos{dist(traversal_constant<T::flavour>{}, iter)};
-        m_Order.emplace_back(iter.partition_index(), static_cast<std::size_t>(pos));
-      }
-
-      [[nodiscard]]
-      const result_type& order() const noexcept { return m_Order; }
-    private:
-      result_type m_Order;
-      const G& m_Graph;
-
-      template<class I> [[nodiscard]] auto dist(pdfs_type, I iter)
-      {
-        return distance(m_Graph.crbegin_edges(iter.partition_index()), iter);
-      }
-
-      template<class I> [[nodiscard]] auto dist(bfs_type, I iter)
-      {
-        return distance(m_Graph.cbegin_edges(iter.partition_index()), iter);
-      }
-    };
-
-    template<class F> void clear(F& f)
-    {
-      f.clear();
-    }
-
-    void clear(maths::null_func_obj&) {}
+    void clear(maths::null_func_obj&) noexcept {}
 
     template<class F, class... Fn>
-    void clear(F& f, Fn&... fn)
+    void clear(F& f, Fn&... fn) noexcept
     {
       f.clear();
-      clear(fn...);
+      if constexpr(sizeof...(Fn) > 0)
+      {
+        clear(fn...);
+      }
     }
 
-    template<class Traverser, class G, maths::disconnected_discovery_mode Mode, class... Fn>
+    template<class Traverser, maths::dynamic_network G, maths::disconnected_discovery_mode Mode, class... Fn>
     void traverse_graph(const G& g, const maths::traversal_conditions<Mode> conditions, Fn&&... fn)
     {
       clear(std::forward<Fn>(fn)...);
@@ -351,7 +301,8 @@ namespace sequoia::testing
 
     Graph g;
     node_tracker discovery, discovery2;
-    edge_tracker<Graph, Traverser> edgeDiscovery{g}, edgeDiscovery2{g};
+    edge_tracker<Graph, Traverser::flavour> edgeDiscovery{g}, edgeDiscovery2{g};
+    using edge_results = typename edge_tracker<Graph, Traverser::flavour>::result_type;
 
     if constexpr(undirected)
     {
@@ -362,16 +313,16 @@ namespace sequoia::testing
       traverse_graph<Traverser>(g, find_disconnected_t{}, discovery, discovery2, edgeDiscovery);
     }
 
-    auto order = discovery.order();
-    auto order2 = discovery2.order();
-    auto edgeOrder = edgeDiscovery.order();
+    auto order = discovery.visitation_order();
+    auto order2 = discovery2.visitation_order();
+    auto edgeOrder = edgeDiscovery.visitation_order();
 
     check(LINE(make_message("No nodes to discover")), order.empty());
     check_equality(LINE(make_message("")), order, order2);
     check(LINE(make_message("No edges to discover")), edgeOrder.empty());
     if constexpr(undirected)
     {
-      check_equality(LINE(make_message("")), edgeDiscovery.order(), edge_results{});
+      check_equality(LINE(make_message("")), edgeDiscovery.visitation_order(), edge_results{});
     }
 
     check_equality(LINE(make_message("First node added")), g.add_node(), 0_sz);
@@ -386,9 +337,9 @@ namespace sequoia::testing
       traverse_graph<Traverser>(g, find_disconnected_t{}, discovery, discovery2, edgeDiscovery);
     }
 
-    order = discovery.order();
-    order2 = discovery2.order();
-    edgeOrder = edgeDiscovery.order();
+    order = discovery.visitation_order();
+    order2 = discovery2.visitation_order();
+    edgeOrder = edgeDiscovery.visitation_order();
 
     if(check_equality(LINE(make_message("One node to discover")), order.size(), 1_sz))
     {
@@ -398,7 +349,7 @@ namespace sequoia::testing
     check(LINE(make_message("No edges to discover")), edgeOrder.empty());
     if constexpr(undirected)
     {
-      check_equality(LINE(make_message("")), edgeDiscovery.order(), edge_results{});
+      check_equality(LINE(make_message("")), edgeDiscovery.visitation_order(), edge_results{});
     }
 
     check_equality(LINE(make_message("Second node added")), g.add_node(), 1_sz);
@@ -413,9 +364,9 @@ namespace sequoia::testing
       traverse_graph<Traverser>(g, find_disconnected_t{}, discovery, discovery2, edgeDiscovery);
     }
 
-    order = discovery.order();
-    order2 = discovery2.order();
-    edgeOrder = edgeDiscovery.order();
+    order = discovery.visitation_order();
+    order2 = discovery2.visitation_order();
+    edgeOrder = edgeDiscovery.visitation_order();
 
     check_equality(LINE(make_message("Two nodes to discover")), order.size(), 2_sz);
     if(order.size() == 2)
@@ -429,7 +380,7 @@ namespace sequoia::testing
     check(LINE(make_message("No edges to discover")), edgeOrder.empty());
     if constexpr(undirected)
     {
-      check_equality(LINE(make_message("")), edgeDiscovery.order(), edge_results{});
+      check_equality(LINE(make_message("")), edgeDiscovery.visitation_order(), edge_results{});
     }
 
     if constexpr(undirected)
@@ -441,9 +392,9 @@ namespace sequoia::testing
       traverse_graph<Traverser>(g, find_disconnected_t{1}, discovery, discovery2, edgeDiscovery);
     }
 
-    order = discovery.order();
-    order2 = discovery2.order();
-    edgeOrder = edgeDiscovery.order();
+    order = discovery.visitation_order();
+    order2 = discovery2.visitation_order();
+    edgeOrder = edgeDiscovery.visitation_order();
 
     check_equality(LINE(make_message("Two nodes to discover but this time in reverse order")), order.size(), 2_sz);
 
@@ -457,7 +408,7 @@ namespace sequoia::testing
     check(LINE(make_message("No edges to discover")), edgeOrder.empty());
     if constexpr(undirected)
     {
-      check_equality(LINE(make_message("")), edgeDiscovery.order(), edge_results{});
+      check_equality(LINE(make_message("")), edgeDiscovery.visitation_order(), edge_results{});
     }
 
     if constexpr(undirected)
@@ -469,9 +420,9 @@ namespace sequoia::testing
       traverse_graph<Traverser>(g, ignore_disconnected_t{}, discovery, discovery2, edgeDiscovery);
     }
 
-    order = discovery.order();
-    order2 = discovery2.order();
-    edgeOrder = edgeDiscovery.order();
+    order = discovery.visitation_order();
+    order2 = discovery2.visitation_order();
+    edgeOrder = edgeDiscovery.visitation_order();
 
     if(check_equality(LINE(make_message("Of two disconnected nodes, only one will be discovered")), order.size(), 1_sz))
     {
@@ -482,7 +433,7 @@ namespace sequoia::testing
     check(LINE(make_message("No edges to discover")), edgeOrder.empty());
     if constexpr(undirected)
     {
-      check_equality(LINE(make_message("")), edgeDiscovery.order(), edge_results{});
+      check_equality(LINE(make_message("")), edgeDiscovery.visitation_order(), edge_results{});
     }
 
     check_equality(LINE(make_message("Third node added")), g.add_node(), 2_sz);
@@ -499,9 +450,9 @@ namespace sequoia::testing
       traverse_graph<Traverser>(g, find_disconnected_t{}, discovery, discovery2, edgeDiscovery);
     }
 
-    order = discovery.order();
-    order2 = discovery2.order();
-    edgeOrder = edgeDiscovery.order();
+    order = discovery.visitation_order();
+    order2 = discovery2.visitation_order();
+    edgeOrder = edgeDiscovery.visitation_order();
 
     if(check_equality(LINE(make_message("Three nodes to discover")), order.size(), 3_sz))
     {
@@ -525,7 +476,7 @@ namespace sequoia::testing
 
     if constexpr(undirected)
     {
-      check_equality(LINE(make_message("")), edgeDiscovery2.order(), isBFS ? edge_results{{1,0}, {2,0}} : edge_results{{1, 1}, {2, 0}});
+      check_equality(LINE(make_message("")), edgeDiscovery2.visitation_order(), isBFS ? edge_results{{1,0}, {2,0}} : edge_results{{1, 1}, {2, 0}});
     }
 
     if constexpr(undirected)
@@ -537,9 +488,9 @@ namespace sequoia::testing
       traverse_graph<Traverser>(g, ignore_disconnected_t{1}, discovery, discovery2, edgeDiscovery);
     }
 
-    order = discovery.order();
-    order2 = discovery2.order();
-    edgeOrder = edgeDiscovery.order();
+    order = discovery.visitation_order();
+    order2 = discovery2.visitation_order();
+    edgeOrder = edgeDiscovery.visitation_order();
 
     if constexpr(undirected)
     {
@@ -575,7 +526,7 @@ namespace sequoia::testing
         check_equality(LINE(make_message("Edge has " + iterDescription + " index 1")), iter->second, 1_sz);
       }
 
-      check_equality(LINE(make_message("")), edgeDiscovery2.order(), isBFS ? edge_results{{0, 0}, {2, 0}} : edge_results{{0, 0}, {2, 0}});
+      check_equality(LINE(make_message("")), edgeDiscovery2.visitation_order(), isBFS ? edge_results{{0, 0}, {2, 0}} : edge_results{{0, 0}, {2, 0}});
     }
     else
     {
@@ -598,9 +549,9 @@ namespace sequoia::testing
       traverse_graph<Traverser>(g, ignore_disconnected_t{2}, discovery, discovery2, edgeDiscovery);
     }
 
-    order = discovery.order();
-    order2 = discovery2.order();
-    edgeOrder = edgeDiscovery.order();
+    order = discovery.visitation_order();
+    order2 = discovery2.visitation_order();
+    edgeOrder = edgeDiscovery.visitation_order();
 
     if constexpr(undirected)
     {
@@ -623,7 +574,7 @@ namespace sequoia::testing
         check_equality(LINE(make_message("Edge has " + iterDescription + " index " + std::to_string(expected))), iter->second, expected);
       }
 
-      check_equality(LINE(make_message("")), edgeDiscovery2.order(), isBFS ? edge_results{{1, 1}, {0, 0}} : edge_results{{1, 0}, {0, 0}});
+      check_equality(LINE(make_message("")), edgeDiscovery2.visitation_order(), isBFS ? edge_results{{1, 1}, {0, 0}} : edge_results{{1, 0}, {0, 0}});
     }
     else
     {
@@ -656,9 +607,9 @@ namespace sequoia::testing
       traverse_graph<Traverser>(g, ignore_disconnected_t{}, discovery, discovery2, edgeDiscovery);
     }
 
-    order = discovery.order();
-    order2 = discovery2.order();
-    edgeOrder = edgeDiscovery.order();
+    order = discovery.visitation_order();
+    order2 = discovery2.visitation_order();
+    edgeOrder = edgeDiscovery.visitation_order();
 
     if(check_equality(LINE(make_message("Four nodes to discover")), order.size(), 4_sz))
     {
@@ -683,9 +634,9 @@ namespace sequoia::testing
       traverse_graph<Traverser>(g, ignore_disconnected_t{2}, discovery, discovery2, edgeDiscovery);
     }
 
-    order = discovery.order();
-    order2 = discovery2.order();
-    edgeOrder = edgeDiscovery.order();
+    order = discovery.visitation_order();
+    order2 = discovery2.visitation_order();
+    edgeOrder = edgeDiscovery.visitation_order();
 
     if(check_equality(LINE(make_message("Four nodes to discover but this time starting from middle")), order.size(), 4_sz))
     {
@@ -703,9 +654,10 @@ namespace sequoia::testing
   }
 
 
-  template<class NTracker, class ETracker, class ETracker2>
-  void test_graph_traversals::test_square_graph(const NTracker& tracker, const ETracker& eTracker, const ETracker2& eTracker2, const std::size_t start, const bool, bfs_type)
+  template<class ETracker, class ETracker2>
+  void test_graph_traversals::test_square_graph(const node_tracker& tracker, const ETracker& eTracker, const ETracker2& eTracker2, const std::size_t start, const bool, bfs_type)
   {
+    using edge_results = typename ETracker::result_type;
     std::vector<std::size_t> expected;
     edge_results edgeAnswers, edgeAnswers2;
     if(start == 0)
@@ -720,14 +672,15 @@ namespace sequoia::testing
       edgeAnswers = edge_results{{2, 0}, {2, 1}, {1, 0}, {3, 1}};
       edgeAnswers2 = edge_results{{1, 1}, {3, 0}, {0, 0}, {0, 1}};
     }
-    check_equality(LINE(""), tracker.order(), expected);
-    check_equality(LINE("First edge traversal"), eTracker.order(), edgeAnswers);
-    check_equality(LINE("Second edge traversal"), eTracker2.order(), edgeAnswers2);
+    check_equality(LINE(""), tracker.visitation_order(), expected);
+    check_equality(LINE("First edge traversal"), eTracker.visitation_order(), edgeAnswers);
+    check_equality(LINE("Second edge traversal"), eTracker2.visitation_order(), edgeAnswers2);
   }
 
-  template<class NTracker, class ETracker>
-  void test_graph_traversals::test_square_graph(const NTracker& tracker, const ETracker& eTracker, const std::size_t start, const bool mutualInfo, bfs_type)
+  template<class ETracker>
+  void test_graph_traversals::test_square_graph(const node_tracker& tracker, const ETracker& eTracker, const std::size_t start, const bool mutualInfo, bfs_type)
   {
+    using edge_results = typename ETracker::result_type;
     std::vector<std::size_t> expected;
     edge_results edgeAnswers;
     if(start == 0)
@@ -740,13 +693,14 @@ namespace sequoia::testing
       expected = std::vector<std::size_t>{2,3,0,1};
       edgeAnswers = mutualInfo ? edge_results{{2, 1}, {3, 1}, {0, 0}, {1, 1}} : edge_results{{2, 0}, {3, 0}, {0, 0}, {1, 0}};
     }
-    check_equality(LINE("start = " + std::to_string(start) + " "), tracker.order(), expected);
-    check_equality(LINE("First edge traversal, start = " + std::to_string(start) + " "), eTracker.order(), edgeAnswers);
+    check_equality(LINE("start = " + std::to_string(start) + " "), tracker.visitation_order(), expected);
+    check_equality(LINE("First edge traversal, start = " + std::to_string(start) + " "), eTracker.visitation_order(), edgeAnswers);
   }
 
-  template<class NTracker, class ETracker, class ETracker2>
-  void test_graph_traversals::test_square_graph(const NTracker& tracker, const ETracker& eTracker, const ETracker2& eTracker2, const std::size_t start, const bool, pdfs_type)
+  template<class ETracker, class ETracker2>
+  void test_graph_traversals::test_square_graph(const node_tracker& tracker, const ETracker& eTracker, const ETracker2& eTracker2, const std::size_t start, const bool, pdfs_type)
   {
+    using edge_results = typename ETracker::result_type;
     std::vector<std::size_t> expected;
     edge_results edgeAnswers, edgeAnswers2;
     if(start == 0)
@@ -761,14 +715,15 @@ namespace sequoia::testing
       edgeAnswers = edge_results{{2, 0}, {2, 1}, {1, 1}, {0, 0}};
       edgeAnswers2 = edge_results{{1, 0}, {0, 1}, {3, 0}, {3, 1}};
     }
-    check_equality(LINE(""), tracker.order(), expected);
-    check_equality(LINE("First edge traversal"), eTracker.order(), edgeAnswers);
-    check_equality(LINE("Second edge traversal"), eTracker2.order(), edgeAnswers2);
+    check_equality(LINE(""), tracker.visitation_order(), expected);
+    check_equality(LINE("First edge traversal"), eTracker.visitation_order(), edgeAnswers);
+    check_equality(LINE("Second edge traversal"), eTracker2.visitation_order(), edgeAnswers2);
   }
 
-  template<class NTracker, class ETracker>
-  void test_graph_traversals::test_square_graph(const NTracker& tracker, const ETracker& eTracker, const std::size_t start, const bool mutualInfo, pdfs_type)
+  template<class ETracker>
+  void test_graph_traversals::test_square_graph(const node_tracker& tracker, const ETracker& eTracker, const std::size_t start, const bool mutualInfo, pdfs_type)
   {
+    using edge_results = typename ETracker::result_type;
     std::vector<std::size_t> expected;
     edge_results edgeAnswers;
     if(start == 0)
@@ -781,8 +736,8 @@ namespace sequoia::testing
       expected = std::vector<std::size_t>{2,3,0,1};
       edgeAnswers = mutualInfo ? edge_results{{2, 0}, {3, 0}, {0, 1}, {1, 0}} : edge_results{{2, 0}, {3, 0}, {0, 0}, {1, 0}};
     }
-    check_equality(LINE("start = " + std::to_string(start) + " "), tracker.order(), expected);
-    check_equality(LINE("First edge traversal, start = " + std::to_string(start) + " "), eTracker.order(), edgeAnswers);
+    check_equality(LINE("start = " + std::to_string(start) + " "), tracker.visitation_order(), expected);
+    check_equality(LINE("First edge traversal, start = " + std::to_string(start) + " "), eTracker.visitation_order(), edgeAnswers);
   }
 
   //=============================== Priority Search  ===============================//
@@ -795,7 +750,7 @@ namespace sequoia::testing
     node_tracker tracker;
     maths::priority_search(graph, maths::ignore_disconnected_t{}, tracker);
 
-    auto order = tracker.order();
+    auto order = tracker.visitation_order();
     check_equality(LINE(""), order, std::vector<std::size_t>{0,2,4,3,6,1,5});
   }
 
