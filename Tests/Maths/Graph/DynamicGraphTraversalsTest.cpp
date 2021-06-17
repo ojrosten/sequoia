@@ -382,7 +382,7 @@ namespace sequoia::testing
 
     check_equivalence(make_message("Three nodes to discover"), discovery, std::vector<std::size_t>{0, 1, 2});
     check_equivalence(make_message("Three nodes to discover"), discovery2, std::vector<std::size_t>{0, 1, 2});
-    check_equivalence(make_message("Two edges to discover"), edgeDiscovery, edge_results{{0,0}, {1, mutualInfo && forwardIter ? 1_sz : 0_sz}});
+    check_equivalence(make_message("Two edges to discover"), edgeDiscovery, edge_results{{0,0}, {1, mutualInfo && forwardIter ? 1 : 0}});
     if constexpr(undirected)
     {
       check_equivalence(make_message("Two edges to discover"), edgeDiscovery2, isBFS ? edge_results{{1,0}, {2,0}} : edge_results{{1, 1}, {2, 0}});
@@ -390,63 +390,25 @@ namespace sequoia::testing
 
     traverse_graph<Traverser>(g, ignore_disconnected_t{1}, discovery, discovery2, edgeDiscovery, edgeDiscovery2);
 
-    auto order = discovery.visitation_order();
-    auto order2 = discovery2.visitation_order();
-    auto edgeOrder = edgeDiscovery.visitation_order();
-
     if constexpr(undirected)
     {
-      if(check_equality(LINE(make_message("Search from middle; still three nodes to discover")), order.size(), 3_sz))
-      {
-        auto iter = order.begin();
-        check_equality(LINE(make_message("Middle node 1 discovered first")), *iter, 1_sz);
-        check_equality(LINE(make_message("Node 0 discovered next")), *++iter, 0_sz);
-        check_equality(LINE(make_message("Node 2 discovered last")), *++iter, 2_sz);
-      }
+      check_equivalence(make_message("Three nodes to discover"), discovery, std::vector<std::size_t>{1, 0, 2});
+      check_equivalence(make_message("Three nodes to discover"), discovery2, std::vector<std::size_t>{1, 0, 2});
+      check_equivalence(make_message("Two edges to discover"), edgeDiscovery, edge_results{{1,0}, {1, 1}});
+      check_equivalence(LINE(make_message("")), edgeDiscovery2, edge_results{{0, 0}, {2, 0}});
     }
     else
     {
-      if(check_equality(LINE(make_message("Search from middle; only two nodes to discover")), order.size(), 2_sz))
-      {
-        auto iter = order.begin();
-        check_equality(LINE(make_message("Middle node 1 discovered first")), *iter, 1_sz);
-        check_equality(LINE(make_message("Node 2 discovered next")), *++iter, 2_sz);
-      }
-    }
-
-    check_equality(LINE(make_message("")), order, order2);
-
-    if constexpr(undirected)
-    {
-      if(check_equality(LINE(make_message("Search from middle; two edges to discover")), edgeOrder.size(), 2_sz))
-      {
-        auto iter = edgeOrder.begin();
-        check_equality(LINE(make_message("Edge attached to node 1")), iter->first, 1_sz);
-        check_equality(LINE(make_message("Edge has " + iterDescription + " index 0")), iter->second, 0_sz);
-        ++iter;
-        check_equality(LINE(make_message("Edge attached to node 1")), iter->first, 1_sz);
-        check_equality(LINE(make_message("Edge has " + iterDescription + " index 1")), iter->second, 1_sz);
-      }
-
-      check_equality(LINE(make_message("")), edgeDiscovery2.visitation_order(), isBFS ? edge_results{{0, 0}, {2, 0}} : edge_results{{0, 0}, {2, 0}});
-    }
-    else
-    {
-      if(check_equality(LINE(make_message("Search from middle; only one edge to discover")), edgeOrder.size(), 1_sz))
-      {
-        auto iter = edgeOrder.begin();
-        check_equality(LINE(make_message("Edge attached to node 1")), iter->first, 1_sz);
-        const std::string num{mutualInfo ? "1" : "0"};
-        const auto expected{(mutualInfo && isBFS) ? 1_sz : 0_sz};
-        check_equality(LINE(make_message("Edge has " + iterDescription + " index " + std::to_string(expected))), iter->second, expected);
-      }
+      check_equivalence(make_message("Two nodes to discover"), discovery, std::vector<std::size_t>{1, 2});
+      check_equivalence(make_message("Two nodes to discover"), discovery2, std::vector<std::size_t>{1, 2});
+      check_equivalence(make_message("One edge to discover"), edgeDiscovery, edge_results{{1, mutualInfo && forwardIter ? 1 : 0}});
     }
 
     traverse_graph<Traverser>(g, ignore_disconnected_t{2}, discovery, discovery2, edgeDiscovery, edgeDiscovery2);
 
-    order = discovery.visitation_order();
-    order2 = discovery2.visitation_order();
-    edgeOrder = edgeDiscovery.visitation_order();
+    auto order = discovery.visitation_order();
+    auto order2 = discovery2.visitation_order();
+    auto edgeOrder = edgeDiscovery.visitation_order();
 
     if constexpr(undirected)
     {
