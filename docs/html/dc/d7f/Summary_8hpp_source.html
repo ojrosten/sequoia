@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.18"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Sequoia: /Users/Claire/Dropbox/Sequoia/Source/TestFramework/Summary.hpp Source File</title>
+<title>Sequoia: /Users/Claire/Dropbox/Sequoia/Source/sequoia/TestFramework/Summary.hpp Source File</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -61,7 +61,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="../../dir_74389ed8173ad57b461b9d623a1f3867.html">Source</a></li><li class="navelem"><a class="el" href="../../dir_29d0af23d176bc5a813a115ff70b4bc5.html">TestFramework</a></li>  </ul>
+<li class="navelem"><a class="el" href="../../dir_74389ed8173ad57b461b9d623a1f3867.html">Source</a></li><li class="navelem"><a class="el" href="../../dir_2cc7e707cf7d8b577b4d17c7cb9b6739.html">sequoia</a></li><li class="navelem"><a class="el" href="../../dir_b8a7430685850b8d4f731afcd36d4c52.html">TestFramework</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -76,7 +76,7 @@ $(function() {
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment"></span> </div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#pragma once</span></div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="../../d5/d05/TestLogger_8hpp.html">TestLogger.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="../../d5/d05/TestLogger_8hpp.html">sequoia/TestFramework/TestLogger.hpp</a>&quot;</span></div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160; </div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#include &lt;optional&gt;</span></div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
@@ -84,68 +84,61 @@ $(function() {
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;{</div>
 <div class="line"><a name="l00021"></a><span class="lineno"><a class="line" href="../../dc/d7f/Summary_8hpp.html#a005de6e9a187f3f10cc50eee1886b041">   21</a></span>&#160;  <span class="keyword">enum class</span> <a class="code" href="../../dc/d7f/Summary_8hpp.html#a005de6e9a187f3f10cc50eee1886b041">summary_detail</a> { absent_checks=1, failure_messages=2, timings=4};</div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160; </div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;  [[nodiscard]]</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;  constexpr summary_detail operator&amp;(summary_detail lhs, summary_detail rhs) noexcept</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;  {</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span>summary_detail<span class="keyword">&gt;</span>(<span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(lhs) &amp; <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(rhs));</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;  }</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;  [[nodiscard]]</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;  constexpr summary_detail operator|(summary_detail lhs, summary_detail rhs) noexcept</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;  {</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span>summary_detail<span class="keyword">&gt;</span>(<span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(lhs) | <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(rhs));</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;  }</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;  </div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> Iter&gt; <span class="keywordtype">void</span> pad_right(Iter begin, Iter end, std::string_view suffix)</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;  {</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keyword">auto</span> maxIter{</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;      std::max_element(begin, end, [](<span class="keyword">const</span> std::string&amp; lhs, <span class="keyword">const</span> std::string&amp; rhs) {</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;          <span class="keywordflow">return</span> lhs.size() &lt; rhs.size();</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        }</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;      )</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    };</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keyword">const</span> <span class="keyword">auto</span> maxChars{maxIter-&gt;size()};</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keywordflow">for</span>(; begin != end; ++begin)</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    {</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;      <span class="keyword">auto</span>&amp; s{*begin};</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;      s += std::string(maxChars - s.size(), <span class="charliteral">&#39; &#39;</span>) += std::string{suffix};</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    }</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;  }  </div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;      </div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> Iter&gt; <span class="keywordtype">void</span> pad_left(Iter begin, Iter end, <span class="keyword">const</span> std::size_t minChars)</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;  {</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keyword">auto</span> maxIter{std::max_element(begin, end, [](<span class="keyword">const</span> std::string&amp; lhs, <span class="keyword">const</span> std::string&amp; rhs) {</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;          <span class="keywordflow">return</span> lhs.size() &lt; rhs.size();</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        }</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;      )</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    };</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keyword">const</span> <span class="keyword">auto</span> maxChars{std::max(maxIter-&gt;size(), minChars)};</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keywordflow">for</span>(; begin != end; ++begin)</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    {</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;      <span class="keyword">auto</span>&amp; s{*begin};</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;      s = std::string(maxChars - s.size(), <span class="charliteral">&#39; &#39;</span>) + s;</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    }</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;  }</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;  <span class="keyword">template</span>&lt;&gt;</div>
+<div class="line"><a name="l00024"></a><span class="lineno"><a class="line" href="../../db/db3/structsequoia_1_1testing_1_1as__bitmask_3_01summary__detail_01_4.html">   24</a></span>&#160;  <span class="keyword">struct </span><a class="code" href="../../d4/d5f/structsequoia_1_1testing_1_1as__bitmask.html">as_bitmask</a>&lt;<a class="code" href="../../dc/d7f/Summary_8hpp.html#a005de6e9a187f3f10cc50eee1886b041">summary_detail</a>&gt; : std::true_type</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;  {};</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> Iter&gt; <span class="keywordtype">void</span> pad_right(Iter begin, Iter end, std::string_view suffix)</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;  {</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <span class="keyword">auto</span> maxIter{</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;      std::max_element(begin, end, [](<span class="keyword">const</span> std::string&amp; lhs, <span class="keyword">const</span> std::string&amp; rhs) {</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;          <span class="keywordflow">return</span> lhs.size() &lt; rhs.size();</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;        }</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;      )</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    };</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keyword">const</span> <span class="keyword">auto</span> maxChars{maxIter-&gt;size()};</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="keywordflow">for</span>(; begin != end; ++begin)</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    {</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;      <span class="keyword">auto</span>&amp; s{*begin};</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;      s += std::string(maxChars - s.size(), <span class="charliteral">&#39; &#39;</span>) += std::string{suffix};</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    }</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;  }</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> Iter&gt; <span class="keywordtype">void</span> pad_left(Iter begin, Iter end, <span class="keyword">const</span> std::size_t minChars)</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;  {</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keyword">auto</span> maxIter{std::max_element(begin, end, [](<span class="keyword">const</span> std::string&amp; lhs, <span class="keyword">const</span> std::string&amp; rhs) {</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;          <span class="keywordflow">return</span> lhs.size() &lt; rhs.size();</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        }</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;      )</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    };</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="keyword">const</span> <span class="keyword">auto</span> maxChars{std::max(maxIter-&gt;size(), minChars)};</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keywordflow">for</span>(; begin != end; ++begin)</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    {</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;      <span class="keyword">auto</span>&amp; s{*begin};</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;      s = std::string(maxChars - s.size(), <span class="charliteral">&#39; &#39;</span>) + s;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    }</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;  }</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160; </div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;  <span class="keyword">using</span> opt_duration = std::optional&lt;log_summary::duration&gt;;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;  [[nodiscard]]</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;  std::string stringify(<span class="keyword">const</span> log_summary::duration&amp; d);</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160; </div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;  [[nodiscard]]</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;  std::string report_time(<span class="keyword">const</span> log_summary&amp; log, opt_duration duration);</div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; </div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;  <span class="keyword">using</span> opt_duration = std::optional&lt;log_summary::duration&gt;;</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    </div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;  [[nodiscard]]</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;  std::string stringify(<span class="keyword">const</span> log_summary::duration&amp; d);</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;  [[nodiscard]]</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;  std::string report_time(<span class="keyword">const</span> log_summary&amp; log, opt_duration duration);</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160; </div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;  [[nodiscard]]</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;  std::string summarize(<span class="keyword">const</span> log_summary&amp; log, opt_duration duration, <span class="keyword">const</span> summary_detail verbosity, indentation ind_0, indentation ind_1);</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160; </div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;  [[nodiscard]]</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;  std::string summarize(<span class="keyword">const</span> log_summary&amp; log, summary_detail verbosity, indentation ind_0, indentation ind_1);</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;}</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;  [[nodiscard]]</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;  std::string summarize(<span class="keyword">const</span> log_summary&amp; log, opt_duration duration, <span class="keyword">const</span> summary_detail verbosity, indentation ind_0, indentation ind_1);</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160; </div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;  [[nodiscard]]</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;  std::string summarize(<span class="keyword">const</span> log_summary&amp; log, summary_detail verbosity, indentation ind_0, indentation ind_1);</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
+<div class="ttc" id="astructsequoia_1_1testing_1_1as__bitmask_html"><div class="ttname"><a href="../../d4/d5f/structsequoia_1_1testing_1_1as__bitmask.html">sequoia::testing::as_bitmask</a></div><div class="ttdef"><b>Definition:</b> CoreInfrastructure.hpp:119</div></div>
 <div class="ttc" id="aSummary_8hpp_html_a005de6e9a187f3f10cc50eee1886b041"><div class="ttname"><a href="../../dc/d7f/Summary_8hpp.html#a005de6e9a187f3f10cc50eee1886b041">sequoia::testing::summary_detail</a></div><div class="ttdeci">summary_detail</div><div class="ttdef"><b>Definition:</b> Summary.hpp:21</div></div>
 <div class="ttc" id="aTestLogger_8hpp_html"><div class="ttname"><a href="../../d5/d05/TestLogger_8hpp.html">TestLogger.hpp</a></div><div class="ttdoc">Utilities for recording the outcome of tests.</div></div>
 <!-- start footer part -->

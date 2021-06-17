@@ -67,6 +67,7 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-types">Public Types</a> &#124;
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="../../d6/d8d/structsequoia_1_1data__structures_1_1static__linearly__partitioned__sequence__traits-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -82,13 +83,19 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>index_type</b> = Ind
 <tr class="memitem:a7230fb9dfb907a2e6d63995b6fcc53a0"><td class="memItemLeft" align="right" valign="top"><a id="a7230fb9dfb907a2e6d63995b6fcc53a0"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>partition_index_type</b> = std::make_unsigned_t&lt; IndexType &gt;</td></tr>
 <tr class="separator:a7230fb9dfb907a2e6d63995b6fcc53a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae6a87c1747a029a160c20b0243dae6ff"><td class="memItemLeft" align="right" valign="top"><a id="ae6a87c1747a029a160c20b0243dae6ff"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>partitions_type</b> = <a class="el" href="../../de/da0/structsequoia_1_1maths_1_1static__linear__sequence.html">maths::static_linear_sequence</a>&lt; partition_index_type, NelementsPerPartition, NelementsPerPart, partition_index_type &gt;</td></tr>
-<tr class="separator:ae6a87c1747a029a160c20b0243dae6ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac840e649b23c8b5d1825764e3457498e"><td class="memTemplParams" colspan="2"><a id="ac840e649b23c8b5d1825764e3457498e"></a>
+<tr class="memitem:a51b7ac1c82f7c78d172c28fe34474f2b"><td class="memItemLeft" align="right" valign="top"><a id="a51b7ac1c82f7c78d172c28fe34474f2b"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>partitions_type</b> = <a class="el" href="../../de/da0/structsequoia_1_1maths_1_1static__linear__sequence.html">maths::static_linear_sequence</a>&lt; partition_index_type, NelementsPerPartition, NelementsPerPartition, Npartitions, partition_index_type &gt;</td></tr>
+<tr class="separator:a51b7ac1c82f7c78d172c28fe34474f2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae13d198a75d3ded537f6b72bce4dd836"><td class="memTemplParams" colspan="2"><a id="ae13d198a75d3ded537f6b72bce4dd836"></a>
 template&lt;class S &gt; </td></tr>
-<tr class="memitem:ac840e649b23c8b5d1825764e3457498e"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>container_type</b> = std::array&lt; S, Nelements &gt;</td></tr>
-<tr class="separator:ac840e649b23c8b5d1825764e3457498e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae13d198a75d3ded537f6b72bce4dd836"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>container_type</b> = std::array&lt; S, num_elements_v &gt;</td></tr>
+<tr class="separator:ae13d198a75d3ded537f6b72bce4dd836"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr class="memitem:a4ef61fa228846ca661345a065fe88bba"><td class="memItemLeft" align="right" valign="top"><a id="a4ef61fa228846ca661345a065fe88bba"></a>
+constexpr static <a class="el" href="../../de/da0/structsequoia_1_1maths_1_1static__linear__sequence.html">partitions_type</a>&#160;</td><td class="memItemRight" valign="bottom"><b>make_partitions</b> (std::initializer_list&lt; std::initializer_list&lt; T &gt;&gt;)</td></tr>
+<tr class="separator:a4ef61fa228846ca661345a065fe88bba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
@@ -106,7 +113,7 @@ constexpr static std::size_t&#160;</td><td class="memItemRight" valign="bottom">
 <tr class="separator:af1046c2df500684b69cf181eccba2931"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this struct was generated from the following file:<ul>
-<li>/Users/Claire/Dropbox/Sequoia/Source/Core/DataStructures/<a class="el" href="../../d9/d98/LinearlyPartitionedData_8hpp_source.html">LinearlyPartitionedData.hpp</a></li>
+<li>/Users/Claire/Dropbox/Sequoia/Source/sequoia/Core/DataStructures/<a class="el" href="../../da/d7f/StaticLinearlyPartitionedSequence_8hpp_source.html">StaticLinearlyPartitionedSequence.hpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

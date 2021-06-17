@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.18"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Sequoia: /Users/Claire/Dropbox/Sequoia/Source/Algorithms/Algorithms.hpp Source File</title>
+<title>Sequoia: /Users/Claire/Dropbox/Sequoia/Source/sequoia/Algorithms/Algorithms.hpp Source File</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -61,7 +61,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="../../dir_74389ed8173ad57b461b9d623a1f3867.html">Source</a></li><li class="navelem"><a class="el" href="../../dir_4cf5006b87ae639a1c165849cc7a95c0.html">Algorithms</a></li>  </ul>
+<li class="navelem"><a class="el" href="../../dir_74389ed8173ad57b461b9d623a1f3867.html">Source</a></li><li class="navelem"><a class="el" href="../../dir_2cc7e707cf7d8b577b4d17c7cb9b6739.html">sequoia</a></li><li class="navelem"><a class="el" href="../../dir_64b8362c67e34f2bf71833423fd91bde.html">Algorithms</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -76,7 +76,7 @@ $(function() {
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment"></span> </div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#pragma once</span></div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="../../d3/d84/Concepts_8hpp.html">Concepts.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="../../d3/d84/Concepts_8hpp.html">sequoia/Core/Meta/Concepts.hpp</a>&quot;</span></div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#include &lt;functional&gt;</span></div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
@@ -96,12 +96,12 @@ $(function() {
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;      b = std::move(tmp);</div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    }</div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;  }</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;  </div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> Iter&gt; constexpr <span class="keywordtype">void</span> iter_swap(Iter a, Iter b)</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;  {</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    sequoia::swap(*a, *b);</div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;  }</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;  </div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> FwdIter, <span class="keyword">class</span> Comparer=std::less&lt;std::decay_t&lt;decltype(*FwdIter())&gt;&gt;&gt;</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;  constexpr <span class="keywordtype">void</span> bubble_up(FwdIter begin, FwdIter current, Comparer comp = Comparer{})</div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;  {</div>
@@ -115,7 +115,7 @@ $(function() {
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;      bubble_up(begin, parent, comp);</div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    }</div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;  }</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;  </div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> FwdIter, <span class="keyword">class</span> Comparer=std::less&lt;std::decay_t&lt;decltype(*FwdIter())&gt;&gt;&gt;</div>
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;  constexpr <span class="keywordtype">void</span> bubble_down(FwdIter begin, FwdIter current, FwdIter end, Comparer comp = Comparer{})</div>
 <div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;  {</div>
@@ -123,7 +123,7 @@ $(function() {
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keywordflow">if</span>(distance(begin, end) &lt;= 1) <span class="keywordflow">return</span>;</div>
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keywordflow">if</span>(2*(distance(begin, current) + 1) &lt; distance(begin, end))</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    {    </div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    {</div>
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;      <span class="keyword">auto</span> rightChild{begin + 2*(distance(begin, current) + 1)};</div>
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;      <span class="keyword">auto</span> leftChild{rightChild - 1};</div>
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160; </div>
@@ -146,11 +146,11 @@ $(function() {
 <div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;  {</div>
 <div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <span class="keyword">using namespace </span>std;</div>
 <div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <span class="keywordflow">if</span>(distance(begin, end) &lt;= 1) <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    </div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160; </div>
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <span class="keyword">auto</span> current{begin+1};</div>
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <span class="keywordflow">while</span>(current != end)</div>
 <div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    {</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;      bubble_up(begin, current, comp);        </div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;      bubble_up(begin, current, comp);</div>
 <div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;      ++current;</div>
 <div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    }</div>
 <div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;  }</div>
@@ -160,7 +160,7 @@ $(function() {
 <div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;  {</div>
 <div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    <span class="keyword">using namespace </span>std;</div>
 <div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    <span class="keywordflow">if</span>(distance(begin, end) &lt;= 1) <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    </div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160; </div>
 <div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    sequoia::make_heap(begin, end, comp);</div>
 <div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    <span class="keywordflow">while</span>(end != begin)</div>
 <div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    {</div>
@@ -181,7 +181,7 @@ $(function() {
 <div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    <span class="keyword">const</span> <span class="keyword">auto</span> distToEnd{distance(n_first, last)};</div>
 <div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    <span class="keyword">const</span> <span class="keyword">auto</span> distFromBegin{distance(first, n_first)};</div>
 <div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    <span class="keyword">const</span> <span class="keyword">auto</span> retIter{next(first, distToEnd)};</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    </div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160; </div>
 <div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    <span class="keyword">const</span> <span class="keyword">auto</span> dist{min(distToEnd, distFromBegin)};</div>
 <div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160; </div>
 <div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;    <span class="keyword">const</span> <span class="keyword">auto</span> unswapped{next(first, dist)};</div>
@@ -203,12 +203,12 @@ $(function() {
 <div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;  constexpr <span class="keywordtype">void</span> cluster(FwdIter begin, FwdIter end, Comparer comp = Comparer{})</div>
 <div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;  {</div>
 <div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;    <span class="keywordflow">if</span>(begin == end) <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;    </div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160; </div>
 <div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;    <span class="keyword">auto</span> current{begin};</div>
 <div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;    <span class="keywordflow">while</span>((current != end) &amp;&amp; comp(*current, *begin)) ++current;</div>
 <div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160; </div>
 <div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;    <span class="keyword">auto</span> endOfCluster{current};</div>
-<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;    </div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160; </div>
 <div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;    <span class="keywordflow">while</span>(current != end)</div>
 <div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;    {</div>
 <div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;      <span class="keywordflow">if</span>(comp(*current, *begin))</div>
@@ -216,7 +216,7 @@ $(function() {
 <div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;        iter_swap(endOfCluster, current);</div>
 <div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;        ++endOfCluster;</div>
 <div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;      }</div>
-<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;      </div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160; </div>
 <div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;      ++current;</div>
 <div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;    }</div>
 <div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160; </div>
@@ -227,7 +227,7 @@ $(function() {
 <div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;  constexpr FwdIter lower_bound(FwdIter begin, FwdIter end, <span class="keyword">const</span> T&amp; val, Comparer comp = Comparer{})</div>
 <div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;  {</div>
 <div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;    <span class="keywordflow">while</span>(begin != end)</div>
-<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;    {        </div>
+<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;    {</div>
 <div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;      <span class="keyword">using namespace </span>std;</div>
 <div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;      <span class="keyword">auto</span> partition{begin + distance(begin, end)/2};</div>
 <div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;      <span class="keywordflow">if</span>(comp(*partition, val))</div>

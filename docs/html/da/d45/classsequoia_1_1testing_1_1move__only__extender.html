@@ -91,19 +91,24 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a680f012c05b2cf5de97da4cb14172b29"><td class="memItemLeft" align="right" valign="top"><a id="a680f012c05b2cf5de97da4cb14172b29"></a>
 <a class="el" href="../../da/d45/classsequoia_1_1testing_1_1move__only__extender.html">move_only_extender</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="../../da/d45/classsequoia_1_1testing_1_1move__only__extender.html">move_only_extender</a> &amp;)=delete</td></tr>
 <tr class="separator:a680f012c05b2cf5de97da4cb14172b29"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac13c2a182d1a134de53f5e02917cf2b5"><td class="memItemLeft" align="right" valign="top"><a id="ac13c2a182d1a134de53f5e02917cf2b5"></a>
-<a class="el" href="../../da/d45/classsequoia_1_1testing_1_1move__only__extender.html">move_only_extender</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="../../da/d45/classsequoia_1_1testing_1_1move__only__extender.html">move_only_extender</a> &amp;&amp;)=delete</td></tr>
-<tr class="separator:ac13c2a182d1a134de53f5e02917cf2b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa08fb624b4ce34735937378f7f6cdbfd"><td class="memTemplParams" colspan="2"><a id="aa08fb624b4ce34735937378f7f6cdbfd"></a>
+<tr class="memitem:a531b2a2cb896a881c7141aacc7bfc20a"><td class="memTemplParams" colspan="2"><a id="a531b2a2cb896a881c7141aacc7bfc20a"></a>
 template&lt;moveonly T&gt; </td></tr>
-<tr class="memitem:aa08fb624b4ce34735937378f7f6cdbfd"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../da/d45/classsequoia_1_1testing_1_1move__only__extender.html#aa08fb624b4ce34735937378f7f6cdbfd">requires</a> (!orderable&lt; T &gt;) void <a class="el" href="../../da/d45/classsequoia_1_1testing_1_1move__only__extender.html#a0e7b9c0d3cfaaa627da8ab34911f300e">check_semantics</a>(std</td></tr>
-<tr class="memdesc:aa08fb624b4ce34735937378f7f6cdbfd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Preconditions: x!=y; x==xClone, y==yClone. <br /></td></tr>
-<tr class="separator:aa08fb624b4ce34735937378f7f6cdbfd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a531b2a2cb896a881c7141aacc7bfc20a"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../da/d45/classsequoia_1_1testing_1_1move__only__extender.html#a531b2a2cb896a881c7141aacc7bfc20a">check_semantics</a> (std::string_view description, T &amp;&amp;<a class="el" href="../../d6/d61/structsequoia_1_1testing_1_1x.html">x</a>, T &amp;&amp;<a class="el" href="../../d9/dfe/structsequoia_1_1testing_1_1y.html">y</a>, const T &amp;xClone, const T &amp;yClone)</td></tr>
+<tr class="memdesc:a531b2a2cb896a881c7141aacc7bfc20a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Preconditions: x!=y; x==xClone, y==yClone. <br /></td></tr>
+<tr class="separator:a531b2a2cb896a881c7141aacc7bfc20a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a300b31c84490210f7e48ad40ac049d22"><td class="memTemplParams" colspan="2"><a id="a300b31c84490210f7e48ad40ac049d22"></a>
+template&lt;invocable&lt;&gt; xMaker, moveonly T = std::invoke_result_t&lt;xMaker&gt;, invocable_r&lt; T &gt; yMaker&gt; </td></tr>
+<tr class="memitem:a300b31c84490210f7e48ad40ac049d22"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_semantics</b> (std::string_view description, xMaker xFn, yMaker yFn)</td></tr>
+<tr class="separator:a300b31c84490210f7e48ad40ac049d22"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0e7b9c0d3cfaaa627da8ab34911f300e"><td class="memTemplParams" colspan="2"><a id="a0e7b9c0d3cfaaa627da8ab34911f300e"></a>
 template&lt;moveonly T&gt; </td></tr>
-<tr class="memitem:a0e7b9c0d3cfaaa627da8ab34911f300e"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../da/d45/classsequoia_1_1testing_1_1move__only__extender.html#aa08fb624b4ce34735937378f7f6cdbfd">requires</a> orderable&lt; T &gt; void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../da/d45/classsequoia_1_1testing_1_1move__only__extender.html#a0e7b9c0d3cfaaa627da8ab34911f300e">check_semantics</a> (std::string_view description, T &amp;&amp;x, T &amp;&amp;y, const T &amp;xClone, const T &amp;yClone, std::weak_ordering order)</td></tr>
+<tr class="memitem:a0e7b9c0d3cfaaa627da8ab34911f300e"><td class="memTemplItemLeft" align="right" valign="top">requires orderable&lt; T &gt; void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../da/d45/classsequoia_1_1testing_1_1move__only__extender.html#a0e7b9c0d3cfaaa627da8ab34911f300e">check_semantics</a> (std::string_view description, T &amp;&amp;<a class="el" href="../../d6/d61/structsequoia_1_1testing_1_1x.html">x</a>, T &amp;&amp;<a class="el" href="../../d9/dfe/structsequoia_1_1testing_1_1y.html">y</a>, const T &amp;xClone, const T &amp;yClone, std::weak_ordering order)</td></tr>
 <tr class="memdesc:a0e7b9c0d3cfaaa627da8ab34911f300e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Preconditions: x!=y, with values consistent with order; x==xClone, y==yClone. <br /></td></tr>
 <tr class="separator:a0e7b9c0d3cfaaa627da8ab34911f300e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3dbaf210ec1d36786b4da4742085f4d1"><td class="memTemplParams" colspan="2"><a id="a3dbaf210ec1d36786b4da4742085f4d1"></a>
+template&lt;invocable&lt;&gt; xMaker, moveonly T = std::invoke_result_t&lt;xMaker&gt;, invocable_r&lt; T &gt; yMaker&gt; </td></tr>
+<tr class="memitem:a3dbaf210ec1d36786b4da4742085f4d1"><td class="memTemplItemLeft" align="right" valign="top">requires orderable&lt; T &gt; void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_semantics</b> (std::string_view description, xMaker xFn, yMaker yFn, std::weak_ordering order)</td></tr>
+<tr class="separator:a3dbaf210ec1d36786b4da4742085f4d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
@@ -116,6 +121,9 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:a6a6863520939429718fe811a66bdc582"><td class="memItemLeft" align="right" valign="top"><a id="a6a6863520939429718fe811a66bdc582"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>move_only_extender</b> (<a class="el" href="../../da/d45/classsequoia_1_1testing_1_1move__only__extender.html">move_only_extender</a> &amp;&amp;) noexcept=default</td></tr>
 <tr class="separator:a6a6863520939429718fe811a66bdc582"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab926ef2181ad31af3cc6247339de9c2e"><td class="memItemLeft" align="right" valign="top"><a id="ab926ef2181ad31af3cc6247339de9c2e"></a>
+<a class="el" href="../../da/d45/classsequoia_1_1testing_1_1move__only__extender.html">move_only_extender</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="../../da/d45/classsequoia_1_1testing_1_1move__only__extender.html">move_only_extender</a> &amp;&amp;) noexcept=default</td></tr>
+<tr class="separator:ab926ef2181ad31af3cc6247339de9c2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><h3>template&lt;test_mode Mode&gt;<br />
@@ -124,7 +132,7 @@ class sequoia::testing::move_only_extender&lt; Mode &gt;</h3>
 <p>class template for plugging into the <a class="el" href="../../d2/d0d/FreeCheckers_8hpp.html#checker_primary">checker</a> class template to provide allocation checks for move-only types, see <a class="el" href="../../d2/dbc/MoveOnlyCheckers_8hpp.html#move_only_definition">here</a>. </p>
 <p><a class="anchor" id="move_only_extender_primary"></a></p>
 </div><hr/>The documentation for this class was generated from the following file:<ul>
-<li>/Users/Claire/Dropbox/Sequoia/Source/TestFramework/<a class="el" href="../../de/d25/MoveOnlyTestCore_8hpp_source.html">MoveOnlyTestCore.hpp</a></li>
+<li>/Users/Claire/Dropbox/Sequoia/Source/sequoia/TestFramework/<a class="el" href="../../de/d25/MoveOnlyTestCore_8hpp_source.html">MoveOnlyTestCore.hpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

@@ -76,50 +76,46 @@ $(function() {
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment"></span> </div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#pragma once</span></div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="../../d9/d44/PerformanceTestCore_8hpp.html">PerformanceTestCore.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="../../d9/d44/PerformanceTestCore_8hpp.html">sequoia/TestFramework/PerformanceTestCore.hpp</a>&quot;</span></div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160; </div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="keyword">namespace </span>sequoia::testing</div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;{</div>
-<div class="line"><a name="l00014"></a><span class="lineno"><a class="line" href="../../df/da0/classsequoia_1_1testing_1_1threading__models__performance__test.html">   14</a></span>&#160;  <span class="keyword">class </span><a class="code" href="../../df/da0/classsequoia_1_1testing_1_1threading__models__performance__test.html">threading_models_performance_test</a> final : <span class="keyword">public</span> <a class="code" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">performance_test</a></div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;  {      </div>
+<div class="line"><a name="l00014"></a><span class="lineno"><a class="line" href="../../df/da0/classsequoia_1_1testing_1_1threading__models__performance__test.html">   14</a></span>&#160;  <span class="keyword">class </span><a class="code" href="../../df/da0/classsequoia_1_1testing_1_1threading__models__performance__test.html">threading_models_performance_test</a> final : <span class="keyword">public</span> <a class="code" href="../../db/d88/classsequoia_1_1testing_1_1basic__performance__test.html">performance_test</a></div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;  {</div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;  <span class="keyword">public</span>:</div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <span class="keyword">using</span> performance_test::performance_test;</div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    [[nodiscard]]</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    std::string_view <a class="code" href="../../df/da0/classsequoia_1_1testing_1_1threading__models__performance__test.html#aff753a467765417215df437b7d6d808d">source_file</a>() <span class="keyword">const</span> noexcept <span class="keyword">final</span>;</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    std::string_view source_file() <span class="keyword">const</span> noexcept <span class="keyword">final</span>;</div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;  <span class="keyword">private</span>:</div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <span class="keywordtype">void</span> run_tests() <span class="keyword">final</span>;</div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <span class="keywordtype">void</span> test_waiting_task(<span class="keyword">const</span> std::chrono::milliseconds millisecs);</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <span class="keywordtype">void</span> test_waiting_task_return(<span class="keyword">const</span> std::chrono::milliseconds millisecs);    </div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <span class="keywordtype">void</span> check_return_values(std::string_view message, <a class="code" href="../../d2/db1/structsequoia_1_1testing_1_1performance__results.html">performance_results</a>&lt;std::vector&lt;int&gt;&gt;&amp;&amp; futures);        </div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class </span>ThreadModel, <span class="keyword">class</span>... Args&gt;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="keywordtype">void</span> waiting_task(<span class="keyword">const</span> std::size_t nTasks, <span class="keyword">const</span> std::chrono::milliseconds millisecs, Args&amp;&amp;... args);</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class </span>ThreadModel, <span class="keyword">class</span>... Args&gt;</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    std::vector&lt;int&gt; waiting_task_return(<span class="keyword">const</span> std::size_t nTasks, <span class="keyword">const</span> std::chrono::milliseconds millisecs, Args&amp;&amp;... args);    </div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;  };</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
-<div class="line"><a name="l00036"></a><span class="lineno"><a class="line" href="../../d0/d85/classsequoia_1_1testing_1_1wait.html">   36</a></span>&#160;  <span class="keyword">class </span><a class="code" href="../../d0/d85/classsequoia_1_1testing_1_1wait.html">wait</a></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;  {</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    std::chrono::milliseconds m_Wait;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;  <span class="keyword">public</span>:      </div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <a class="code" href="../../d0/d85/classsequoia_1_1testing_1_1wait.html">wait</a>(<span class="keyword">const</span> std::chrono::milliseconds millisecs) : m_Wait{millisecs} {}</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;      </div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keywordtype">void</span> operator()()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;      std::this_thread::sleep_for(m_Wait);</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    }</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;  };</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;}</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <span class="keywordtype">void</span> test_waiting_task_return(<span class="keyword">const</span> std::chrono::milliseconds millisecs);</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class </span>ThreadModel, <span class="keyword">class</span>... Args&gt;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <span class="keywordtype">void</span> waiting_task(<span class="keyword">const</span> std::size_t nTasks, <span class="keyword">const</span> std::chrono::milliseconds millisecs, Args&amp;&amp;... args);</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class </span>ThreadModel, <span class="keyword">class</span>... Args&gt;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    std::vector&lt;int&gt; waiting_task_return(<span class="keyword">const</span> std::size_t nTasks, <span class="keyword">const</span> std::chrono::milliseconds millisecs, Args&amp;&amp;... args);</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;  };</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
+<div class="line"><a name="l00034"></a><span class="lineno"><a class="line" href="../../d0/d85/classsequoia_1_1testing_1_1wait.html">   34</a></span>&#160;  <span class="keyword">class </span><a class="code" href="../../d0/d85/classsequoia_1_1testing_1_1wait.html">wait</a></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;  {</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    std::chrono::milliseconds m_Wait;</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;  <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <a class="code" href="../../d0/d85/classsequoia_1_1testing_1_1wait.html">wait</a>(<span class="keyword">const</span> std::chrono::milliseconds millisecs) : m_Wait{millisecs} {}</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keywordtype">void</span> operator()()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="keyword">    </span>{</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;      std::this_thread::sleep_for(m_Wait);</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    }</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;  };</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
-<div class="ttc" id="aclasssequoia_1_1testing_1_1wait_html"><div class="ttname"><a href="../../d0/d85/classsequoia_1_1testing_1_1wait.html">sequoia::testing::wait</a></div><div class="ttdef"><b>Definition:</b> ConcurrencyModelsPerformanceTest.hpp:37</div></div>
+<div class="ttc" id="aclasssequoia_1_1testing_1_1basic__performance__test_html"><div class="ttname"><a href="../../db/d88/classsequoia_1_1testing_1_1basic__performance__test.html">sequoia::testing::basic_performance_test</a></div><div class="ttdef"><b>Definition:</b> PerformanceTestCore.hpp:268</div></div>
+<div class="ttc" id="aclasssequoia_1_1testing_1_1wait_html"><div class="ttname"><a href="../../d0/d85/classsequoia_1_1testing_1_1wait.html">sequoia::testing::wait</a></div><div class="ttdef"><b>Definition:</b> ConcurrencyModelsPerformanceTest.hpp:35</div></div>
 <div class="ttc" id="aPerformanceTestCore_8hpp_html"><div class="ttname"><a href="../../d9/d44/PerformanceTestCore_8hpp.html">PerformanceTestCore.hpp</a></div><div class="ttdoc">Extension of the testing framework for perfomance testing.</div></div>
-<div class="ttc" id="aclasssequoia_1_1testing_1_1basic__test_html"><div class="ttname"><a href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">sequoia::testing::basic_test</a></div><div class="ttdoc">class template from which all concrete tests should derive.</div><div class="ttdef"><b>Definition:</b> FreeTestCore.hpp:122</div></div>
-<div class="ttc" id="aclasssequoia_1_1testing_1_1threading__models__performance__test_html_aff753a467765417215df437b7d6d808d"><div class="ttname"><a href="../../df/da0/classsequoia_1_1testing_1_1threading__models__performance__test.html#aff753a467765417215df437b7d6d808d">sequoia::testing::threading_models_performance_test::source_file</a></div><div class="ttdeci">std::string_view source_file() const noexcept final</div><div class="ttdoc">Pure virtual method which should be overridden in a concrete test's cpp file in order to provide the ...</div><div class="ttdef"><b>Definition:</b> ConcurrencyModelsPerformanceTest.cpp:14</div></div>
-<div class="ttc" id="astructsequoia_1_1testing_1_1performance__results_html"><div class="ttname"><a href="../../d2/db1/structsequoia_1_1testing_1_1performance__results.html">sequoia::testing::performance_results</a></div><div class="ttdef"><b>Definition:</b> PerformanceTestCore.hpp:24</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1threading__models__performance__test_html"><div class="ttname"><a href="../../df/da0/classsequoia_1_1testing_1_1threading__models__performance__test.html">sequoia::testing::threading_models_performance_test</a></div><div class="ttdef"><b>Definition:</b> ConcurrencyModelsPerformanceTest.hpp:15</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

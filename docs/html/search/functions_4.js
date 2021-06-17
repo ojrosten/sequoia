@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['indent_1485',['indent',['../d1/d2a/Indent_8cpp.html#a09a1d636c7ef4eb11effacfa8ca41a0e',1,'sequoia']]]
+  ['general_5fequivalence_5fcheck_1698',['general_equivalence_check',['../d2/d0d/FreeCheckers_8hpp.html#aad1dd9129ae28daf8a4da6b42ba3b959',1,'sequoia::testing']]]
 ];

@@ -79,27 +79,42 @@ $(function() {
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &quot;GraphTestingUtilities.hpp&quot;</span></div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160; </div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="keyword">namespace </span>sequoia::testing</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;{    </div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;{</div>
 <div class="line"><a name="l00014"></a><span class="lineno"><a class="line" href="../../d9/d50/classsequoia_1_1testing_1_1test__static__fixed__topology.html">   14</a></span>&#160;  <span class="keyword">class </span><a class="code" href="../../d9/d50/classsequoia_1_1testing_1_1test__static__fixed__topology.html">test_static_fixed_topology</a> final : <span class="keyword">public</span> <a class="code" href="../../d8/db8/classsequoia_1_1testing_1_1graph__basic__test.html">graph_unit_test</a></div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;  {</div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;  <span class="keyword">public</span>:</div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <span class="keyword">using</span> graph_unit_test::graph_unit_test;</div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    [[nodiscard]]</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    std::string_view <a class="code" href="../../d9/d50/classsequoia_1_1testing_1_1test__static__fixed__topology.html#a1ad261eddc2218bc069552c722849263">source_file</a>() <span class="keyword">const</span> noexcept <span class="keyword">final</span>;</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    std::string_view source_file() <span class="keyword">const</span> noexcept <span class="keyword">final</span>;</div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;  <span class="keyword">private</span>:</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <span class="keywordtype">void</span> run_tests() <span class="keyword">final</span>;</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> EdgeWeight, <span class="keyword">class</span> NodeWeight&gt; <span class="keywordtype">void</span> test_undirected();</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> EdgeWeight, <span class="keyword">class</span> NodeWeight&gt; <span class="keywordtype">void</span> test_embedded_undirected();</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> EdgeWeight, <span class="keyword">class</span> NodeWeight&gt; <span class="keywordtype">void</span> test_directed();</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> EdgeWeight, <span class="keyword">class</span> NodeWeight&gt; <span class="keywordtype">void</span> test_embedded_directed();</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;  };</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;}</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span>&gt;</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    <span class="keyword">friend</span> <span class="keyword">class </span><a class="code" href="../../df/ddc/classsequoia_1_1testing_1_1undirected__fixed__topology__checker.html">undirected_fixed_topology_checker</a>;</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span>&gt;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <span class="keyword">friend</span> <span class="keyword">class </span><a class="code" href="../../df/df0/classsequoia_1_1testing_1_1directed__fixed__topology__checker.html">directed_fixed_topology_checker</a>;</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span>&gt;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <span class="keyword">friend</span> <span class="keyword">class </span><a class="code" href="../../d5/d99/classsequoia_1_1testing_1_1e__undirected__fixed__topology__checker.html">e_undirected_fixed_topology_checker</a>;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span>&gt;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <span class="keyword">friend</span> <span class="keyword">class </span><a class="code" href="../../d5/d93/classsequoia_1_1testing_1_1e__directed__fixed__topology__checker.html">e_directed_fixed_topology_checker</a>;</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keywordtype">void</span> run_tests() <span class="keyword">final</span>;</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> EdgeWeight, <span class="keyword">class</span> NodeWeight&gt; <span class="keywordtype">void</span> test_undirected();</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> EdgeWeight, <span class="keyword">class</span> NodeWeight&gt; <span class="keywordtype">void</span> test_embedded_undirected();</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> EdgeWeight, <span class="keyword">class</span> NodeWeight&gt; <span class="keywordtype">void</span> test_directed();</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> EdgeWeight, <span class="keyword">class</span> NodeWeight&gt; <span class="keywordtype">void</span> test_embedded_directed();</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;  };</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
+<div class="ttc" id="aclasssequoia_1_1testing_1_1e__directed__fixed__topology__checker_html"><div class="ttname"><a href="../../d5/d93/classsequoia_1_1testing_1_1e__directed__fixed__topology__checker.html">sequoia::testing::e_directed_fixed_topology_checker</a></div><div class="ttdef"><b>Definition:</b> FixedTopologyTestingUtilities.hpp:288</div></div>
+<div class="ttc" id="aclasssequoia_1_1testing_1_1e__undirected__fixed__topology__checker_html"><div class="ttname"><a href="../../d5/d99/classsequoia_1_1testing_1_1e__undirected__fixed__topology__checker.html">sequoia::testing::e_undirected_fixed_topology_checker</a></div><div class="ttdef"><b>Definition:</b> FixedTopologyTestingUtilities.hpp:215</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1test__static__fixed__topology_html"><div class="ttname"><a href="../../d9/d50/classsequoia_1_1testing_1_1test__static__fixed__topology.html">sequoia::testing::test_static_fixed_topology</a></div><div class="ttdef"><b>Definition:</b> StaticGraphManipulationsTest.hpp:15</div></div>
-<div class="ttc" id="aclasssequoia_1_1testing_1_1test__static__fixed__topology_html_a1ad261eddc2218bc069552c722849263"><div class="ttname"><a href="../../d9/d50/classsequoia_1_1testing_1_1test__static__fixed__topology.html#a1ad261eddc2218bc069552c722849263">sequoia::testing::test_static_fixed_topology::source_file</a></div><div class="ttdeci">std::string_view source_file() const noexcept final</div><div class="ttdoc">Pure virtual method which should be overridden in a concrete test's cpp file in order to provide the ...</div><div class="ttdef"><b>Definition:</b> StaticGraphManipulationsTest.cpp:16</div></div>
-<div class="ttc" id="aclasssequoia_1_1testing_1_1graph__basic__test_html"><div class="ttname"><a href="../../d8/db8/classsequoia_1_1testing_1_1graph__basic__test.html">sequoia::testing::graph_basic_test</a></div><div class="ttdef"><b>Definition:</b> GraphTestingUtilities.hpp:272</div></div>
+<div class="ttc" id="aclasssequoia_1_1testing_1_1directed__fixed__topology__checker_html"><div class="ttname"><a href="../../df/df0/classsequoia_1_1testing_1_1directed__fixed__topology__checker.html">sequoia::testing::directed_fixed_topology_checker</a></div><div class="ttdef"><b>Definition:</b> FixedTopologyTestingUtilities.hpp:119</div></div>
+<div class="ttc" id="aclasssequoia_1_1testing_1_1undirected__fixed__topology__checker_html"><div class="ttname"><a href="../../df/ddc/classsequoia_1_1testing_1_1undirected__fixed__topology__checker.html">sequoia::testing::undirected_fixed_topology_checker</a></div><div class="ttdef"><b>Definition:</b> FixedTopologyTestingUtilities.hpp:21</div></div>
+<div class="ttc" id="aclasssequoia_1_1testing_1_1graph__basic__test_html"><div class="ttname"><a href="../../d8/db8/classsequoia_1_1testing_1_1graph__basic__test.html">sequoia::testing::graph_basic_test</a></div><div class="ttdef"><b>Definition:</b> GraphTestingUtilities.hpp:278</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

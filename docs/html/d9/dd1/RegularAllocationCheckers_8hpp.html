@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.18"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Sequoia: /Users/Claire/Dropbox/Sequoia/Source/TestFramework/RegularAllocationCheckers.hpp File Reference</title>
+<title>Sequoia: /Users/Claire/Dropbox/Sequoia/Source/sequoia/TestFramework/RegularAllocationCheckers.hpp File Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -61,12 +61,13 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="../../dir_74389ed8173ad57b461b9d623a1f3867.html">Source</a></li><li class="navelem"><a class="el" href="../../dir_29d0af23d176bc5a813a115ff70b4bc5.html">TestFramework</a></li>  </ul>
+<li class="navelem"><a class="el" href="../../dir_74389ed8173ad57b461b9d623a1f3867.html">Source</a></li><li class="navelem"><a class="el" href="../../dir_2cc7e707cf7d8b577b4d17c7cb9b6739.html">sequoia</a></li><li class="navelem"><a class="el" href="../../dir_b8a7430685850b8d4f731afcd36d4c52.html">TestFramework</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
+<a href="#typedef-members">Typedefs</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">RegularAllocationCheckers.hpp File Reference</div>  </div>
@@ -75,8 +76,8 @@ $(function() {
 
 <p>Utilities for performing allocation checks for regular types, see <a class="el" href="../../d1/db7/RegularCheckers_8hpp.html#regular_semantics_definition">here</a>.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;<a class="el" href="../../d3/dfb/AllocationCheckers_8hpp_source.html">AllocationCheckers.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d0/dce/RegularAllocationCheckersDetails_8hpp_source.html">RegularAllocationCheckersDetails.hpp</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="../../d3/dfb/AllocationCheckers_8hpp_source.html">sequoia/TestFramework/AllocationCheckers.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d0/dce/RegularAllocationCheckersDetails_8hpp_source.html">sequoia/TestFramework/RegularAllocationCheckersDetails.hpp</a>&quot;</code><br />
 </div>
 <p><a href="../../d9/dd1/RegularAllocationCheckers_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -86,25 +87,57 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/db4/structsequoia_1_1testing_1_1assignment__allocation__predictions.html">sequoia::testing::assignment_allocation_predictions</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d67/structsequoia_1_1testing_1_1allocation__predictions.html">sequoia::testing::allocation_predictions</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/de6/classsequoia_1_1testing_1_1basic__allocation__predictions.html">sequoia::testing::basic_allocation_predictions&lt; TopLevel &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d62/classsequoia_1_1testing_1_1allocation__info.html">sequoia::testing::allocation_info&lt; T, Getter &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d9f/structsequoia_1_1testing_1_1type__to__allocation__predictions_3_01T_01_4.html">sequoia::testing::type_to_allocation_predictions&lt; T &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:ab364aed0075ffa0caa52bb7ae1a4a4b1"><td class="memItemLeft" align="right" valign="top"><a id="ab364aed0075ffa0caa52bb7ae1a4a4b1"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::allocation_predictions</b> = basic_allocation_predictions&lt; top_level::yes &gt;</td></tr>
+<tr class="separator:ab364aed0075ffa0caa52bb7ae1a4a4b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e36ad1c35ac87ed2fa9755d34be66a5"><td class="memItemLeft" align="right" valign="top"><a id="a2e36ad1c35ac87ed2fa9755d34be66a5"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::inner_allocation_predictions</b> = basic_allocation_predictions&lt; top_level::no &gt;</td></tr>
+<tr class="separator:a2e36ad1c35ac87ed2fa9755d34be66a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ac702ff59f24958b7cc5a654c90778fbf"><td class="memTemplParams" colspan="2"><a id="ac702ff59f24958b7cc5a654c90778fbf"></a>
-template&lt;class Fn , class Signature  = function_signature&lt;decltype(&amp;std::remove_cvref_t&lt;Fn&gt;::operator())&gt;&gt; </td></tr>
-<tr class="memitem:ac702ff59f24958b7cc5a654c90778fbf"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::allocation_info</b> (Fn allocGetter, allocation_predictions predictions) -&gt; allocation_info&lt; std::remove_cvref_t&lt; typename Signature::arg &gt;, Fn &gt;</td></tr>
-<tr class="separator:ac702ff59f24958b7cc5a654c90778fbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a860d146ec83162c83b044d7b8c612965"><td class="memTemplParams" colspan="2"><a id="a860d146ec83162c83b044d7b8c612965"></a>
-template&lt;class Fn , class Signature  = function_signature&lt;decltype(&amp;std::remove_cvref_t&lt;Fn&gt;::operator())&gt;&gt; </td></tr>
-<tr class="memitem:a860d146ec83162c83b044d7b8c612965"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::allocation_info</b> (Fn allocGetter, std::initializer_list&lt; allocation_predictions &gt; predictions) -&gt; allocation_info&lt; std::remove_cvref_t&lt; typename Signature::arg &gt;, Fn &gt;</td></tr>
-<tr class="separator:a860d146ec83162c83b044d7b8c612965"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a20e0ae8dc84089c430451f75d9bd0ef4"><td class="memTemplParams" colspan="2"><a id="a20e0ae8dc84089c430451f75d9bd0ef4"></a>
-template&lt;test_mode Mode, pseudoregular T, invocable&lt; T &amp; &gt; Mutator, alloc_getter&lt; T &gt;... Getters&gt; </td></tr>
-<tr class="memitem:a20e0ae8dc84089c430451f75d9bd0ef4"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check_semantics</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const T &amp;x, const T &amp;y, Mutator yMutator, const allocation_info&lt; T, Getters &gt; &amp;... info)</td></tr>
-<tr class="separator:a20e0ae8dc84089c430451f75d9bd0ef4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac3fc495be3e0503403bac2063aca2d78"><td class="memTemplParams" colspan="2"><a id="ac3fc495be3e0503403bac2063aca2d78"></a>
+template&lt;class T &gt; </td></tr>
+<tr class="memitem:ac3fc495be3e0503403bac2063aca2d78"><td class="memTemplItemLeft" align="right" valign="top">constexpr individual_allocation_predictions&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::shift</b> (const individual_allocation_predictions &amp;predictions, const alloc_prediction_shifter&lt; T &gt; &amp;shifter)</td></tr>
+<tr class="separator:ac3fc495be3e0503403bac2063aca2d78"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a41ed346134a63c9891b4d831c556262c"><td class="memTemplParams" colspan="2"><a id="a41ed346134a63c9891b4d831c556262c"></a>
+template&lt;class T &gt; </td></tr>
+<tr class="memitem:a41ed346134a63c9891b4d831c556262c"><td class="memTemplItemLeft" align="right" valign="top">constexpr assignment_allocation_predictions&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::shift</b> (const assignment_allocation_predictions &amp;predictions, const alloc_prediction_shifter&lt; T &gt; &amp;shifter)</td></tr>
+<tr class="separator:a41ed346134a63c9891b4d831c556262c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3746506d8bb22cb65f562b3ceec62c2a"><td class="memItemLeft" align="right" valign="top"><a id="a3746506d8bb22cb65f562b3ceec62c2a"></a>
+constexpr basic_allocation_predictions&lt; top_level::yes &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::to_top_level</b> (const basic_allocation_predictions&lt; top_level::no &gt; &amp;predictions) noexcept</td></tr>
+<tr class="separator:a3746506d8bb22cb65f562b3ceec62c2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1666574575bb9b75062a37be02db609b"><td class="memTemplParams" colspan="2"><a id="a1666574575bb9b75062a37be02db609b"></a>
+template&lt;class T &gt; </td></tr>
+<tr class="memitem:a1666574575bb9b75062a37be02db609b"><td class="memTemplItemLeft" align="right" valign="top">constexpr allocation_predictions&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::shift</b> (const allocation_predictions &amp;predictions)</td></tr>
+<tr class="separator:a1666574575bb9b75062a37be02db609b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6ce6f303a2a290db640c509142100e9d"><td class="memTemplParams" colspan="2"><a id="a6ce6f303a2a290db640c509142100e9d"></a>
+template&lt;class T &gt; </td></tr>
+<tr class="memitem:a6ce6f303a2a290db640c509142100e9d"><td class="memTemplItemLeft" align="right" valign="top">constexpr inner_allocation_predictions&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::shift</b> (const inner_allocation_predictions &amp;predictions)</td></tr>
+<tr class="separator:a6ce6f303a2a290db640c509142100e9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aad2ca6e68f25e0939ecc72f855b78b85"><td class="memTemplParams" colspan="2"><a id="aad2ca6e68f25e0939ecc72f855b78b85"></a>
+template&lt;test_mode Mode, moveonly T, invocable&lt; T &amp; &gt; Mutator, alloc_getter&lt; T &gt;... Getters&gt; </td></tr>
+<tr class="memitem:aad2ca6e68f25e0939ecc72f855b78b85"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::requires</b> (!orderable&lt; T &gt; &amp;&amp;(sizeof...(Getters) &gt; 0)) void check_semantics(std</td></tr>
+<tr class="separator:aad2ca6e68f25e0939ecc72f855b78b85"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a75968b1dabfabba2d272dcb58e769ac9"><td class="memTemplParams" colspan="2"><a id="a75968b1dabfabba2d272dcb58e769ac9"></a>
+template&lt;test_mode Mode, moveonly T, invocable&lt; T &amp; &gt; Mutator, alloc_getter&lt; T &gt;... Getters&gt; </td></tr>
+<tr class="memitem:a75968b1dabfabba2d272dcb58e769ac9"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::requires</b> (orderable&lt; T &gt; &amp;&amp;(sizeof...(Getters) &gt; 0)) void check_semantics(std</td></tr>
+<tr class="separator:a75968b1dabfabba2d272dcb58e769ac9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1db24b6f07926c8f0a30fb81678dfd30"><td class="memTemplParams" colspan="2"><a id="a1db24b6f07926c8f0a30fb81678dfd30"></a>
+template&lt;test_mode Mode, pseudoregular T, invocable_r&lt; T &gt; xMaker, invocable_r&lt; T &gt; yMaker, invocable&lt; T &amp; &gt; Mutator, alloc_getter&lt; T &gt;... Getters&gt; </td></tr>
+<tr class="memitem:a1db24b6f07926c8f0a30fb81678dfd30"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::requires</b> (!orderable&lt; T &gt; &amp;&amp;sizeof...(Getters) &gt; 0) std</td></tr>
+<tr class="separator:a1db24b6f07926c8f0a30fb81678dfd30"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae5d372dbe58bf7281bf053a7ebe85b8b"><td class="memTemplParams" colspan="2"><a id="ae5d372dbe58bf7281bf053a7ebe85b8b"></a>
+template&lt;test_mode Mode, pseudoregular T, invocable_r&lt; T &gt; xMaker, invocable_r&lt; T &gt; yMaker, invocable&lt; T &amp; &gt; Mutator, alloc_getter&lt; T &gt;... Getters&gt; </td></tr>
+<tr class="memitem:ae5d372dbe58bf7281bf053a7ebe85b8b"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::requires</b> (orderable&lt; T &gt; &amp;&amp;sizeof...(Getters) &gt; 0) std</td></tr>
+<tr class="separator:ae5d372dbe58bf7281bf053a7ebe85b8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Utilities for performing allocation checks for regular types, see <a class="el" href="../../d1/db7/RegularCheckers_8hpp.html#regular_semantics_definition">here</a>. </p>

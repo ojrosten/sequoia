@@ -100,9 +100,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a55209392002ac061dfa72fe466244dcc"><td class="memItemLeft" align="right" valign="top"><a id="a55209392002ac061dfa72fe466244dcc"></a>
 <a class="el" href="../../d7/de5/classsequoia_1_1testing_1_1checker.html">checker</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="../../d7/de5/classsequoia_1_1testing_1_1checker.html">checker</a> &amp;)=delete</td></tr>
 <tr class="separator:a55209392002ac061dfa72fe466244dcc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5a0e90043ee869c9860669e21de01459"><td class="memItemLeft" align="right" valign="top"><a id="a5a0e90043ee869c9860669e21de01459"></a>
-<a class="el" href="../../d7/de5/classsequoia_1_1testing_1_1checker.html">checker</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="../../d7/de5/classsequoia_1_1testing_1_1checker.html">checker</a> &amp;&amp;)=delete</td></tr>
-<tr class="separator:a5a0e90043ee869c9860669e21de01459"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a680a1388f80338f5ae2d8e972a68463b"><td class="memTemplParams" colspan="2"><a id="a680a1388f80338f5ae2d8e972a68463b"></a>
 template&lt;class T , class Advisor  = null_advisor&gt; </td></tr>
 <tr class="memitem:a680a1388f80338f5ae2d8e972a68463b"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_equality</b> (std::string_view description, const T &amp;value, const T &amp;prediction, <a class="el" href="../../d6/d71/classsequoia_1_1testing_1_1tutor.html">tutor</a>&lt; Advisor &gt; advisor=<a class="el" href="../../d6/d71/classsequoia_1_1testing_1_1tutor.html">tutor</a>&lt; Advisor &gt;{})</td></tr>
@@ -119,10 +116,10 @@ template&lt;class T , class S , class... U&gt; </td></tr>
 template&lt;class Advisor  = null_advisor&gt; </td></tr>
 <tr class="memitem:ab9d87f4dfd517d6fcb589dc7230ff7c3"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check</b> (std::string_view description, const bool value, <a class="el" href="../../d6/d71/classsequoia_1_1testing_1_1tutor.html">tutor</a>&lt; Advisor &gt; advisor=<a class="el" href="../../d6/d71/classsequoia_1_1testing_1_1tutor.html">tutor</a>&lt; Advisor &gt;{})</td></tr>
 <tr class="separator:ab9d87f4dfd517d6fcb589dc7230ff7c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a74e390186762f2e8d72249071fcf3510"><td class="memTemplParams" colspan="2"><a id="a74e390186762f2e8d72249071fcf3510"></a>
-template&lt;class E , class Fn &gt; </td></tr>
-<tr class="memitem:a74e390186762f2e8d72249071fcf3510"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_exception_thrown</b> (std::string_view description, Fn &amp;&amp;function)</td></tr>
-<tr class="separator:a74e390186762f2e8d72249071fcf3510"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeee3fc565192476271c2d9b22e950ba0"><td class="memTemplParams" colspan="2"><a id="aeee3fc565192476271c2d9b22e950ba0"></a>
+template&lt;class E , class Fn , invocable_r&lt; std::string, std::string &gt; Postprocessor = default_exception_message_postprocessor&gt; </td></tr>
+<tr class="memitem:aeee3fc565192476271c2d9b22e950ba0"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_exception_thrown</b> (std::string_view description, Fn &amp;&amp;function, Postprocessor postprocessor={})</td></tr>
+<tr class="separator:aeee3fc565192476271c2d9b22e950ba0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab2c656975af3d8c671b648a85764f9d8"><td class="memTemplParams" colspan="2"><a id="ab2c656975af3d8c671b648a85764f9d8"></a>
 template&lt;class Iter , class PredictionIter , class Advisor  = null_advisor&gt; </td></tr>
 <tr class="memitem:ab2c656975af3d8c671b648a85764f9d8"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_range</b> (std::string_view description, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast, <a class="el" href="../../d6/d71/classsequoia_1_1testing_1_1tutor.html">tutor</a>&lt; Advisor &gt; advisor=<a class="el" href="../../d6/d71/classsequoia_1_1testing_1_1tutor.html">tutor</a>&lt; Advisor &gt;{})</td></tr>
@@ -142,6 +139,9 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:aaf617a349cea7afc2dac22300b4014cc"><td class="memItemLeft" align="right" valign="top"><a id="aaf617a349cea7afc2dac22300b4014cc"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>checker</b> (<a class="el" href="../../d7/de5/classsequoia_1_1testing_1_1checker.html">checker</a> &amp;&amp;other) noexcept</td></tr>
 <tr class="separator:aaf617a349cea7afc2dac22300b4014cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8a416a1b36fbfc54552437d2e2f0ec80"><td class="memItemLeft" align="right" valign="top"><a id="a8a416a1b36fbfc54552437d2e2f0ec80"></a>
+<a class="el" href="../../d7/de5/classsequoia_1_1testing_1_1checker.html">checker</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="../../d7/de5/classsequoia_1_1testing_1_1checker.html">checker</a> &amp;&amp;) noexcept=default</td></tr>
+<tr class="separator:a8a416a1b36fbfc54552437d2e2f0ec80"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adb1628af065cc323de44347a4162c6d6"><td class="memItemLeft" align="right" valign="top"><a id="adb1628af065cc323de44347a4162c6d6"></a>
 std::size_t&#160;</td><td class="memItemRight" valign="bottom"><b>checks</b> () const noexcept</td></tr>
 <tr class="separator:adb1628af065cc323de44347a4162c6d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -154,9 +154,12 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>exceptions_detected_by
 <tr class="memitem:aa87c0b0b5491d24d729f8b7c4e60f59d"><td class="memItemLeft" align="right" valign="top"><a id="aa87c0b0b5491d24d729f8b7c4e60f59d"></a>
 <a class="el" href="../../d1/d8f/classsequoia_1_1testing_1_1sentinel.html">sentinel</a>&lt; Mode &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>make_sentinel</b> (std::string_view message)</td></tr>
 <tr class="separator:aa87c0b0b5491d24d729f8b7c4e60f59d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa98d2abe4277de5a09550d2120c7e1b8"><td class="memItemLeft" align="right" valign="top"><a id="aa98d2abe4277de5a09550d2120c7e1b8"></a>
-std::string_view&#160;</td><td class="memItemRight" valign="bottom"><b>top_level_message</b> () const</td></tr>
-<tr class="separator:aa98d2abe4277de5a09550d2120c7e1b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa579e5300e4aea7b92aa5555ecc6ac0c"><td class="memItemLeft" align="right" valign="top"><a id="aa579e5300e4aea7b92aa5555ecc6ac0c"></a>
+const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>top_level_message</b> () const</td></tr>
+<tr class="separator:aa579e5300e4aea7b92aa5555ecc6ac0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acc91fe0b03b629e21d35f1a62ba31cd2"><td class="memItemLeft" align="right" valign="top"><a id="acc91fe0b03b629e21d35f1a62ba31cd2"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>recovery</b> (<a class="el" href="../../da/d58/structsequoia_1_1testing_1_1recovery__paths.html">recovery_paths</a> paths)</td></tr>
+<tr class="separator:acc91fe0b03b629e21d35f1a62ba31cd2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="friends"></a>
 Friends</h2></td></tr>
@@ -166,7 +169,7 @@ template&lt;class Stream &gt; </td></tr>
 <tr class="separator:a6dcdc89fd2256ca079e9720633814812"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>/Users/Claire/Dropbox/Sequoia/Source/TestFramework/<a class="el" href="../../d2/d0d/FreeCheckers_8hpp_source.html">FreeCheckers.hpp</a></li>
+<li>/Users/Claire/Dropbox/Sequoia/Source/sequoia/TestFramework/<a class="el" href="../../d2/d0d/FreeCheckers_8hpp_source.html">FreeCheckers.hpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

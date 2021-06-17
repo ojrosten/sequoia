@@ -76,15 +76,15 @@ $(function() {
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment"></span> </div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#pragma once</span></div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="../../de/d13/TestRunner_8hpp.html">TestRunner.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="../../de/d13/TestRunner_8hpp.html">sequoia/TestFramework/TestRunner.hpp</a>&quot;</span></div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160; </div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="../../d0/dae/CoreInfrastructure_8hpp.html">CoreInfrastructure.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="../../d0/dae/CoreInfrastructure_8hpp.html">sequoia/TestFramework/CoreInfrastructure.hpp</a>&quot;</span></div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160; </div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="keyword">namespace </span>sequoia::testing</div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;{</div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;  <span class="keyword">template</span>&lt;&gt;</div>
 <div class="line"><a name="l00017"></a><span class="lineno"><a class="line" href="../../d3/d48/structsequoia_1_1testing_1_1detailed__equality__checker_3_01template__spec_01_4.html">   17</a></span>&#160;  <span class="keyword">struct </span><a class="code" href="../../d9/d6d/structsequoia_1_1testing_1_1detailed__equality__checker.html">detailed_equality_checker</a>&lt;<a class="code" href="../../d2/d28/structsequoia_1_1testing_1_1template__spec.html">template_spec</a>&gt;</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;  {    </div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;  {</div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <span class="keyword">template</span>&lt;test_mode Mode&gt;</div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">void</span> check(<a class="code" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger&lt;Mode&gt;</a>&amp; logger, <span class="keyword">const</span> <a class="code" href="../../d2/d28/structsequoia_1_1testing_1_1template__spec.html">template_spec</a>&amp; obtained, <span class="keyword">const</span> <a class="code" href="../../d2/d28/structsequoia_1_1testing_1_1template__spec.html">template_spec</a>&amp; prediction)</div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    {</div>
@@ -92,12 +92,30 @@ $(function() {
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;      check_equality(<span class="stringliteral">&quot;Symbol&quot;</span>,  logger, obtained.symbol,  prediction.symbol);</div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    }</div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;  };</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;}</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;  <span class="keyword">class </span><a class="code" href="../../dc/d26/classsequoia_1_1testing_1_1bar__free__test.html">bar_free_test</a> final : <span class="keyword">public</span> <a class="code" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">free_test</a></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;  {</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;  <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="keyword">using</span> free_test::free_test;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    [[nodiscard]]</div>
+<div class="line"><a name="l00033"></a><span class="lineno"><a class="line" href="../../dc/d26/classsequoia_1_1testing_1_1bar__free__test.html#a53170f49e89c34173c9fab134efc4f4d">   33</a></span>&#160;    std::string_view <a class="code" href="../../dc/d26/classsequoia_1_1testing_1_1bar__free__test.html#a53170f49e89c34173c9fab134efc4f4d">source_file</a>() const noexcept final;</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;  private:</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keywordtype">void</span> run_tests() final</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    {</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;      check_equality(<span class="stringliteral">&quot;Phoney equality check&quot;</span>, 1, 1);</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;      <span class="keywordflow">throw</span> std::runtime_error{<span class="stringliteral">&quot;Throw after check&quot;</span>};</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    }</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;  };</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
+<div class="ttc" id="aclasssequoia_1_1testing_1_1basic__test_html"><div class="ttname"><a href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">sequoia::testing::basic_test</a></div><div class="ttdef"><b>Definition:</b> FreeTestCore.hpp:180</div></div>
 <div class="ttc" id="aCoreInfrastructure_8hpp_html"><div class="ttname"><a href="../../d0/dae/CoreInfrastructure_8hpp.html">CoreInfrastructure.hpp</a></div><div class="ttdoc">Core declarations / definitions.</div></div>
-<div class="ttc" id="aclasssequoia_1_1testing_1_1test__logger_html"><div class="ttname"><a href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">sequoia::testing::test_logger</a></div><div class="ttdef"><b>Definition:</b> TestLogger.hpp:62</div></div>
-<div class="ttc" id="astructsequoia_1_1testing_1_1detailed__equality__checker_html"><div class="ttname"><a href="../../d9/d6d/structsequoia_1_1testing_1_1detailed__equality__checker.html">sequoia::testing::detailed_equality_checker</a></div><div class="ttdoc">class template, specializations of which implement detailed comparison of two instantiations of T;</div><div class="ttdef"><b>Definition:</b> CoreInfrastructure.hpp:25</div></div>
-<div class="ttc" id="astructsequoia_1_1testing_1_1template__spec_html"><div class="ttname"><a href="../../d2/d28/structsequoia_1_1testing_1_1template__spec.html">sequoia::testing::template_spec</a></div><div class="ttdef"><b>Definition:</b> TestRunner.hpp:94</div></div>
+<div class="ttc" id="aclasssequoia_1_1testing_1_1bar__free__test_html"><div class="ttname"><a href="../../dc/d26/classsequoia_1_1testing_1_1bar__free__test.html">sequoia::testing::bar_free_test</a></div><div class="ttdef"><b>Definition:</b> BarFreeTest.hpp:15</div></div>
+<div class="ttc" id="aclasssequoia_1_1testing_1_1test__logger_html"><div class="ttname"><a href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">sequoia::testing::test_logger</a></div><div class="ttdef"><b>Definition:</b> TestLogger.hpp:59</div></div>
+<div class="ttc" id="astructsequoia_1_1testing_1_1detailed__equality__checker_html"><div class="ttname"><a href="../../d9/d6d/structsequoia_1_1testing_1_1detailed__equality__checker.html">sequoia::testing::detailed_equality_checker</a></div><div class="ttdoc">class template, specializations of which implement detailed comparison of two instantiations of T;</div><div class="ttdef"><b>Definition:</b> CoreInfrastructure.hpp:27</div></div>
+<div class="ttc" id="aclasssequoia_1_1testing_1_1bar__free__test_html_a53170f49e89c34173c9fab134efc4f4d"><div class="ttname"><a href="../../dc/d26/classsequoia_1_1testing_1_1bar__free__test.html#a53170f49e89c34173c9fab134efc4f4d">sequoia::testing::bar_free_test::source_file</a></div><div class="ttdeci">std::string_view source_file() const noexcept final</div><div class="ttdoc">Pure virtual method which should be overridden in a concrete test's cpp file in order to provide the ...</div></div>
+<div class="ttc" id="astructsequoia_1_1testing_1_1template__spec_html"><div class="ttname"><a href="../../d2/d28/structsequoia_1_1testing_1_1template__spec.html">sequoia::testing::template_spec</a></div><div class="ttdef"><b>Definition:</b> TestRunner.hpp:32</div></div>
 <div class="ttc" id="aTestRunner_8hpp_html"><div class="ttname"><a href="../../de/d13/TestRunner_8hpp.html">TestRunner.hpp</a></div><div class="ttdoc">Utilities for running tests from the command line.</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

@@ -96,6 +96,12 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>size_type</b> = type
 using&#160;</td><td class="memItemRight" valign="bottom"><b>weight_type</b> = typename base_t::weight_type</td></tr>
 <tr class="separator:afed4f77d546660bc80ad6bf72da76671"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_types_classsequoia_1_1maths_1_1graph__impl_1_1node__storage"><td colspan="2" onclick="javascript:toggleInherit('pub_types_classsequoia_1_1maths_1_1graph__impl_1_1node__storage')"><img src="../../closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="../../d0/de4/classsequoia_1_1maths_1_1graph__impl_1_1node__storage.html">sequoia::maths::graph_impl::node_storage&lt; WeightMaker, node_storage_traits&lt; true, true, true &gt; &gt;</a></td></tr>
+<tr class="memitem:af785d9773d13f8001bb2e028ffbccfeb inherit pub_types_classsequoia_1_1maths_1_1graph__impl_1_1node__storage"><td class="memItemLeft" align="right" valign="top"><a id="af785d9773d13f8001bb2e028ffbccfeb"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>weight_maker_type</b> = WeightMaker</td></tr>
+<tr class="separator:af785d9773d13f8001bb2e028ffbccfeb inherit pub_types_classsequoia_1_1maths_1_1graph__impl_1_1node__storage"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a79b2084a52ba81fef15903bfc12666e5 inherit pub_types_classsequoia_1_1maths_1_1graph__impl_1_1node__storage"><td class="memItemLeft" align="right" valign="top"><a id="a79b2084a52ba81fef15903bfc12666e5"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>traits_type</b> = node_storage_traits&lt; true, true, true &gt;</td></tr>
+<tr class="separator:a79b2084a52ba81fef15903bfc12666e5 inherit pub_types_classsequoia_1_1maths_1_1graph__impl_1_1node__storage"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0b640650002cc2f4f0eb83ebeb77c40a inherit pub_types_classsequoia_1_1maths_1_1graph__impl_1_1node__storage"><td class="memItemLeft" align="right" valign="top"><a id="a0b640650002cc2f4f0eb83ebeb77c40a"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>weight_proxy_type</b> = typename WeightMaker::proxy</td></tr>
 <tr class="separator:a0b640650002cc2f4f0eb83ebeb77c40a inherit pub_types_classsequoia_1_1maths_1_1graph__impl_1_1node__storage"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -248,9 +254,9 @@ constexpr <a class="el" href="../../d0/de4/classsequoia_1_1maths_1_1graph__impl_
 <tr class="memitem:a6ab9a3e5e9222fc6cc7e12d2adee2570 inherit pro_methods_classsequoia_1_1maths_1_1graph__impl_1_1node__storage"><td class="memItemLeft" align="right" valign="top"><a id="a6ab9a3e5e9222fc6cc7e12d2adee2570"></a>
 constexpr <a class="el" href="../../d0/de4/classsequoia_1_1maths_1_1graph__impl_1_1node__storage.html">node_storage</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="../../d0/de4/classsequoia_1_1maths_1_1graph__impl_1_1node__storage.html">node_storage</a> &amp;&amp;)=default</td></tr>
 <tr class="separator:a6ab9a3e5e9222fc6cc7e12d2adee2570 inherit pro_methods_classsequoia_1_1maths_1_1graph__impl_1_1node__storage"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adb4612e3e7bc74f621b13812197e2e1c inherit pro_methods_classsequoia_1_1maths_1_1graph__impl_1_1node__storage"><td class="memItemLeft" align="right" valign="top"><a id="adb4612e3e7bc74f621b13812197e2e1c"></a>
-constexpr void&#160;</td><td class="memItemRight" valign="bottom"><b>swap</b> (<a class="el" href="../../d0/de4/classsequoia_1_1maths_1_1graph__impl_1_1node__storage.html">node_storage</a> &amp;other) noexcept(noexcept(sequoia::swap(this-&gt;m_NodeWeights, other.m_NodeWeights)))</td></tr>
-<tr class="separator:adb4612e3e7bc74f621b13812197e2e1c inherit pro_methods_classsequoia_1_1maths_1_1graph__impl_1_1node__storage"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a856468ae2d21a154ef789eb143076973 inherit pro_methods_classsequoia_1_1maths_1_1graph__impl_1_1node__storage"><td class="memItemLeft" align="right" valign="top"><a id="a856468ae2d21a154ef789eb143076973"></a>
+constexpr void&#160;</td><td class="memItemRight" valign="bottom"><b>swap</b> (<a class="el" href="../../d0/de4/classsequoia_1_1maths_1_1graph__impl_1_1node__storage.html">node_storage</a> &amp;rhs) noexcept(noexcept(sequoia::swap(this-&gt;m_NodeWeights, rhs.m_NodeWeights)))</td></tr>
+<tr class="separator:a856468ae2d21a154ef789eb143076973 inherit pro_methods_classsequoia_1_1maths_1_1graph__impl_1_1node__storage"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afacf23f168c7446b770243b4148641f7 inherit pro_methods_classsequoia_1_1maths_1_1graph__impl_1_1node__storage"><td class="memItemLeft" align="right" valign="top"><a id="afacf23f168c7446b770243b4148641f7"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>reset</b> (const Allocator &amp;allocator) noexcept</td></tr>
 <tr class="separator:afacf23f168c7446b770243b4148641f7 inherit pro_methods_classsequoia_1_1maths_1_1graph__impl_1_1node__storage"><td class="memSeparator" colspan="2">&#160;</td></tr>

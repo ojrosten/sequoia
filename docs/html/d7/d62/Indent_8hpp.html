@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.18"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Sequoia: /Users/Claire/Dropbox/Sequoia/Source/Formatting/Indent.hpp File Reference</title>
+<title>Sequoia: /Users/Claire/Dropbox/Sequoia/Source/sequoia/TextProcessing/Indent.hpp File Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -61,7 +61,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="../../dir_74389ed8173ad57b461b9d623a1f3867.html">Source</a></li><li class="navelem"><a class="el" href="../../dir_5298f88f4d653ea4837ee94a80969771.html">Formatting</a></li>  </ul>
+<li class="navelem"><a class="el" href="../../dir_74389ed8173ad57b461b9d623a1f3867.html">Source</a></li><li class="navelem"><a class="el" href="../../dir_2cc7e707cf7d8b577b4d17c7cb9b6739.html">sequoia</a></li><li class="navelem"><a class="el" href="../../dir_c4004c47ffb425c61bb017c04046937b.html">TextProcessing</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -77,23 +77,27 @@ $(function() {
 <p>A collection of functions for formatting test output.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;string&gt;</code><br />
+<code>#include &lt;utility&gt;</code><br />
 </div>
 <p><a href="../../d7/d62/Indent_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d65/structsequoia_1_1indentation.html">sequoia::indentation</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type-safe mechanism for indentations.  <a href="../../dd/d65/structsequoia_1_1indentation.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d0f/classsequoia_1_1indentation.html">sequoia::indentation</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type-safe mechanism for indentations.  <a href="../../dc/d0f/classsequoia_1_1indentation.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a09a1d636c7ef4eb11effacfa8ca41a0e"><td class="memItemLeft" align="right" valign="top"><a id="a09a1d636c7ef4eb11effacfa8ca41a0e"></a>
-std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d2a/Indent_8cpp.html#a09a1d636c7ef4eb11effacfa8ca41a0e">sequoia::indent</a> (std::string_view s, indentation ind)</td></tr>
-<tr class="memdesc:a09a1d636c7ef4eb11effacfa8ca41a0e"><td class="mdescLeft">&#160;</td><td class="mdescRight">For a non-empty string_view prepends with an indentation; otherwise returns an empty string. <br /></td></tr>
-<tr class="separator:a09a1d636c7ef4eb11effacfa8ca41a0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a58589720af605df26d2b003c85de659c"><td class="memItemLeft" align="right" valign="top"><a id="a58589720af605df26d2b003c85de659c"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d2a/Indent_8cpp.html#a58589720af605df26d2b003c85de659c">sequoia::indent</a> (std::string_view sv, indentation ind)</td></tr>
+<tr class="memdesc:a58589720af605df26d2b003c85de659c"><td class="mdescLeft">&#160;</td><td class="mdescRight">For a non-empty string_view prepends with an indentation; otherwise returns an empty string. <br /></td></tr>
+<tr class="separator:a58589720af605df26d2b003c85de659c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a722e619d7be0b7615041b70bbfd1242f"><td class="memItemLeft" align="right" valign="top">std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d2a/Indent_8cpp.html#a722e619d7be0b7615041b70bbfd1242f">sequoia::append_indented</a> (std::string &amp;s1, std::string_view s2, indentation ind)</td></tr>
 <tr class="separator:a722e619d7be0b7615041b70bbfd1242f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a470da31a38992ec368f8c09221ac49d6"><td class="memItemLeft" align="right" valign="top"><a id="a470da31a38992ec368f8c09221ac49d6"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::append_indented</b> (std::string_view sv1, std::string_view sv2, indentation ind)</td></tr>
+<tr class="separator:a470da31a38992ec368f8c09221ac49d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a30a9bb0aa9a5c56f4180246fe93e0782"><td class="memTemplParams" colspan="2"><a id="a30a9bb0aa9a5c56f4180246fe93e0782"></a>
 template&lt;class... Ts, std::size_t... I&gt; </td></tr>
 <tr class="memitem:a30a9bb0aa9a5c56f4180246fe93e0782"><td class="memTemplItemLeft" align="right" valign="top">std::string &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::impl::append_indented</b> (std::string &amp;s, std::tuple&lt; Ts... &gt; strs, std::index_sequence&lt; I... &gt;)</td></tr>
@@ -121,12 +125,12 @@ template&lt;class... Ts&gt; </td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a46589ac556603b959a3cdf6c41af8dee"><td class="memItemLeft" align="right" valign="top"><a id="a46589ac556603b959a3cdf6c41af8dee"></a>
-constexpr indentation&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::tab</b> {&quot;\t&quot;}</td></tr>
-<tr class="separator:a46589ac556603b959a3cdf6c41af8dee"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a93bb49af2827d8d3a2cdd9392c070ecf"><td class="memItemLeft" align="right" valign="top"><a id="a93bb49af2827d8d3a2cdd9392c070ecf"></a>
-constexpr indentation&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::no_indent</b> {&quot;&quot;}</td></tr>
-<tr class="separator:a93bb49af2827d8d3a2cdd9392c070ecf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a43869c34331a26405044bae1722353e9"><td class="memItemLeft" align="right" valign="top"><a id="a43869c34331a26405044bae1722353e9"></a>
+const indentation&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::tab</b> {&quot;\t&quot;}</td></tr>
+<tr class="separator:a43869c34331a26405044bae1722353e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4d4a63ae097104951c512f31c1b0f150"><td class="memItemLeft" align="right" valign="top"><a id="a4d4a63ae097104951c512f31c1b0f150"></a>
+const indentation&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::no_indent</b> {&quot;&quot;}</td></tr>
+<tr class="separator:a4d4a63ae097104951c512f31c1b0f150"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>A collection of functions for formatting test output. </p>
@@ -152,7 +156,7 @@ constexpr indentation&#160;</td><td class="memItemRight" valign="bottom"><b>sequ
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="../../dd/d65/structsequoia_1_1indentation.html">indentation</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="../../dc/d0f/classsequoia_1_1indentation.html">indentation</a>&#160;</td>
           <td class="paramname"><em>ind</em>&#160;</td>
         </tr>
         <tr>

@@ -76,7 +76,7 @@ $(function() {
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment"></span> </div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#pragma once</span></div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="../../d9/daf/RegularTestCore_8hpp.html">RegularTestCore.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="../../d9/daf/RegularTestCore_8hpp.html">sequoia/TestFramework/RegularTestCore.hpp</a>&quot;</span></div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160; </div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="keyword">namespace </span>sequoia::testing</div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;{</div>
@@ -84,20 +84,20 @@ $(function() {
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;  {</div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;  <span class="keyword">public</span>:</div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <span class="keyword">using</span> free_test::free_test;</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    </div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    [[nodiscard]]</div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    std::string_view <a class="code" href="../../df/dda/classsequoia_1_1testing_1_1algorithms__test.html#a2586d4095f42d0962268b75f41a8f709">source_file</a>() <span class="keyword">const</span> noexcept <span class="keyword">final</span>;</div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;  <span class="keyword">private</span>:</div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <span class="keywordtype">void</span> run_tests() <span class="keyword">final</span>;</div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <span class="keywordtype">void</span> sort_basic_type();</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <span class="keywordtype">void</span> sort_protective_wrapper();</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <span class="keywordtype">void</span> sort_uniform_wrapper();</div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <span class="keywordtype">void</span> sort_partial_edge();</div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <span class="keywordtype">void</span> cluster_basic_type();</div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="keywordtype">void</span> lower_bound_basic_type();</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <span class="keywordtype">void</span> lower_bound_protective_wrapper();</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <span class="keywordtype">void</span> lower_bound_uniform_wrapper();</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <span class="keywordtype">void</span> lower_bound_partial_edge();</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keywordtype">void</span> upper_bound_basic_type();</div>
@@ -113,7 +113,7 @@ $(function() {
 <div class="ttc" id="aclasssequoia_1_1testing_1_1algorithms__test_html"><div class="ttname"><a href="../../df/dda/classsequoia_1_1testing_1_1algorithms__test.html">sequoia::testing::algorithms_test</a></div><div class="ttdef"><b>Definition:</b> AlgorithmsTest.hpp:15</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1algorithms__test_html_a2586d4095f42d0962268b75f41a8f709"><div class="ttname"><a href="../../df/dda/classsequoia_1_1testing_1_1algorithms__test.html#a2586d4095f42d0962268b75f41a8f709">sequoia::testing::algorithms_test::source_file</a></div><div class="ttdeci">std::string_view source_file() const noexcept final</div><div class="ttdoc">Pure virtual method which should be overridden in a concrete test's cpp file in order to provide the ...</div><div class="ttdef"><b>Definition:</b> AlgorithmsTest.cpp:45</div></div>
 <div class="ttc" id="aRegularTestCore_8hpp_html"><div class="ttname"><a href="../../d9/daf/RegularTestCore_8hpp.html">RegularTestCore.hpp</a></div><div class="ttdoc">Utilities for checking regular semantics.</div></div>
-<div class="ttc" id="aclasssequoia_1_1testing_1_1basic__test_html"><div class="ttname"><a href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">sequoia::testing::basic_test</a></div><div class="ttdoc">class template from which all concrete tests should derive.</div><div class="ttdef"><b>Definition:</b> FreeTestCore.hpp:122</div></div>
+<div class="ttc" id="aclasssequoia_1_1testing_1_1basic__test_html"><div class="ttname"><a href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">sequoia::testing::basic_test</a></div><div class="ttdef"><b>Definition:</b> FreeTestCore.hpp:180</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

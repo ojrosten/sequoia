@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.18"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Sequoia: /Users/Claire/Dropbox/Sequoia/Source/TestFramework/CoreInfrastructure.hpp File Reference</title>
+<title>Sequoia: /Users/Claire/Dropbox/Sequoia/Source/sequoia/TestFramework/CoreInfrastructure.hpp File Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -61,12 +61,13 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="../../dir_74389ed8173ad57b461b9d623a1f3867.html">Source</a></li><li class="navelem"><a class="el" href="../../dir_29d0af23d176bc5a813a115ff70b4bc5.html">TestFramework</a></li>  </ul>
+<li class="navelem"><a class="el" href="../../dir_74389ed8173ad57b461b9d623a1f3867.html">Source</a></li><li class="navelem"><a class="el" href="../../dir_2cc7e707cf7d8b577b4d17c7cb9b6739.html">sequoia</a></li><li class="navelem"><a class="el" href="../../dir_b8a7430685850b8d4f731afcd36d4c52.html">TestFramework</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
+<a href="#typedef-members">Typedefs</a> &#124;
 <a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
@@ -76,9 +77,11 @@ $(function() {
 
 <p>Core declarations / definitions.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;<a class="el" href="../../d3/d84/Concepts_8hpp_source.html">Concepts.hpp</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="../../d3/d84/Concepts_8hpp_source.html">sequoia/Core/Meta/Concepts.hpp</a>&quot;</code><br />
+<code>#include &quot;sequoia/PlatformSpecific/Preprocessor.hpp&quot;</code><br />
 <code>#include &lt;string&gt;</code><br />
 <code>#include &lt;sstream&gt;</code><br />
+<code>#include &lt;filesystem&gt;</code><br />
 </div>
 <p><a href="../../d0/dae/CoreInfrastructure_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -104,6 +107,17 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d99/structsequoia_1_1testing_1_1serializer_3_01T_01_4.html">sequoia::testing::serializer&lt; T &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d62/structsequoia_1_1testing_1_1serializer_3_01std_1_1filesystem_1_1path_01_4.html">sequoia::testing::serializer&lt; std::filesystem::path &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/d5f/structsequoia_1_1testing_1_1as__bitmask.html">sequoia::testing::as_bitmask&lt; T &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:afbb6cb09e1e15f5e3df542a41f792785"><td class="memTemplParams" colspan="2"><a id="afbb6cb09e1e15f5e3df542a41f792785"></a>
+template&lt;class T &gt; </td></tr>
+<tr class="memitem:afbb6cb09e1e15f5e3df542a41f792785"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::as_bitmask_t</b> = typename as_bitmask&lt; T &gt;::type</td></tr>
+<tr class="separator:afbb6cb09e1e15f5e3df542a41f792785"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
@@ -111,6 +125,37 @@ Functions</h2></td></tr>
 template&lt;serializable T&gt; </td></tr>
 <tr class="memitem:aa3547c09713fcd102f39383340686484"><td class="memTemplItemLeft" align="right" valign="top">std::string&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::to_string</b> (const T &amp;value)</td></tr>
 <tr class="separator:aa3547c09713fcd102f39383340686484"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a302753561f4a1ae87c3f1adda4475a0d"><td class="memTemplParams" colspan="2"><a id="a302753561f4a1ae87c3f1adda4475a0d"></a>
+template&lt;class T &gt; </td></tr>
+<tr class="memitem:a302753561f4a1ae87c3f1adda4475a0d"><td class="memTemplItemLeft" align="right" valign="top">requires std::is_integral_v&lt; T &gt; auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::fixed_width_unsigned_cast</b> (T x)</td></tr>
+<tr class="separator:a302753561f4a1ae87c3f1adda4475a0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a96c93fe0a7420a715ddee0f776178854"><td class="memTemplParams" colspan="2"><a id="a96c93fe0a7420a715ddee0f776178854"></a>
+template&lt;class T &gt; </td></tr>
+<tr class="memitem:a96c93fe0a7420a715ddee0f776178854"><td class="memTemplItemLeft" align="right" valign="top">requires constexpr as_bitmask_v&lt; T &gt; T&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::operator|</b> (T lhs, T rhs) noexcept</td></tr>
+<tr class="separator:a96c93fe0a7420a715ddee0f776178854"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6f3f252379126c57f727a5a65b97dc3c"><td class="memTemplParams" colspan="2"><a id="a6f3f252379126c57f727a5a65b97dc3c"></a>
+template&lt;class T &gt; </td></tr>
+<tr class="memitem:a6f3f252379126c57f727a5a65b97dc3c"><td class="memTemplItemLeft" align="right" valign="top">requires constexpr as_bitmask_v&lt; T &gt; T &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::operator|=</b> (T &amp;lhs, T rhs) noexcept</td></tr>
+<tr class="separator:a6f3f252379126c57f727a5a65b97dc3c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad45902593818df936f9cf22ae2b1f9d7"><td class="memTemplParams" colspan="2"><a id="ad45902593818df936f9cf22ae2b1f9d7"></a>
+template&lt;class T &gt; </td></tr>
+<tr class="memitem:ad45902593818df936f9cf22ae2b1f9d7"><td class="memTemplItemLeft" align="right" valign="top">requires constexpr as_bitmask_v&lt; T &gt; T&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::operator&amp;</b> (T lhs, T rhs) noexcept</td></tr>
+<tr class="separator:ad45902593818df936f9cf22ae2b1f9d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a365271a39faa894c4fd377f4094d060d"><td class="memTemplParams" colspan="2"><a id="a365271a39faa894c4fd377f4094d060d"></a>
+template&lt;class T &gt; </td></tr>
+<tr class="memitem:a365271a39faa894c4fd377f4094d060d"><td class="memTemplItemLeft" align="right" valign="top">requires constexpr as_bitmask_v&lt; T &gt; T &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::operator&amp;=</b> (T &amp;lhs, T rhs) noexcept</td></tr>
+<tr class="separator:a365271a39faa894c4fd377f4094d060d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9a81e3021ac975aded4b0a625ee16478"><td class="memTemplParams" colspan="2"><a id="a9a81e3021ac975aded4b0a625ee16478"></a>
+template&lt;class T &gt; </td></tr>
+<tr class="memitem:a9a81e3021ac975aded4b0a625ee16478"><td class="memTemplItemLeft" align="right" valign="top">requires constexpr as_bitmask_v&lt; T &gt; T&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::operator~</b> (T om)</td></tr>
+<tr class="separator:a9a81e3021ac975aded4b0a625ee16478"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad0400ba4ce3e277aa803986723bd85f4"><td class="memTemplParams" colspan="2"><a id="ad0400ba4ce3e277aa803986723bd85f4"></a>
+template&lt;class T &gt; </td></tr>
+<tr class="memitem:ad0400ba4ce3e277aa803986723bd85f4"><td class="memTemplItemLeft" align="right" valign="top">requires constexpr as_bitmask_v&lt; T &gt; T&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::operator^</b> (T lhs, T rhs) noexcept</td></tr>
+<tr class="separator:ad0400ba4ce3e277aa803986723bd85f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab25510dd6b17fd618b0264775b25d364"><td class="memItemLeft" align="right" valign="top"><a id="ab25510dd6b17fd618b0264775b25d364"></a>
+SPECULATIVE_CONSTEVAL std::size_t&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::operator&quot;&quot;_sz</b> (unsigned long long int n) noexcept</td></tr>
+<tr class="separator:ab25510dd6b17fd618b0264775b25d364"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
@@ -129,6 +174,10 @@ template&lt;class T &gt; </td></tr>
 <tr class="memitem:a43030c18e842a994dccaca455298f67c"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
 <tr class="memitem:a43030c18e842a994dccaca455298f67c"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::serializable</b></td></tr>
 <tr class="separator:a43030c18e842a994dccaca455298f67c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1c31b0856dfc4b8499dbd0bc703c3a66"><td class="memTemplParams" colspan="2"><a id="a1c31b0856dfc4b8499dbd0bc703c3a66"></a>
+template&lt;class T &gt; </td></tr>
+<tr class="memitem:a1c31b0856dfc4b8499dbd0bc703c3a66"><td class="memTemplItemLeft" align="right" valign="top">requires constexpr std::is_enum_v&lt; T &gt; bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::as_bitmask_v</b> {as_bitmask&lt;T&gt;::value}</td></tr>
+<tr class="separator:a1c31b0856dfc4b8499dbd0bc703c3a66"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Core declarations / definitions. </p>

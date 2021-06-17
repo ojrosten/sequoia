@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.18"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Sequoia: /Users/Claire/Dropbox/Sequoia/Source/TestFramework/MoveOnlyCheckers.hpp Source File</title>
+<title>Sequoia: /Users/Claire/Dropbox/Sequoia/Source/sequoia/TestFramework/MoveOnlyCheckers.hpp Source File</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -61,7 +61,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="../../dir_74389ed8173ad57b461b9d623a1f3867.html">Source</a></li><li class="navelem"><a class="el" href="../../dir_29d0af23d176bc5a813a115ff70b4bc5.html">TestFramework</a></li>  </ul>
+<li class="navelem"><a class="el" href="../../dir_74389ed8173ad57b461b9d623a1f3867.html">Source</a></li><li class="navelem"><a class="el" href="../../dir_2cc7e707cf7d8b577b4d17c7cb9b6739.html">sequoia</a></li><li class="navelem"><a class="el" href="../../dir_b8a7430685850b8d4f731afcd36d4c52.html">TestFramework</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -76,35 +76,37 @@ $(function() {
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment"></span> </div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#pragma once</span></div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="../../d2/d0d/FreeCheckers_8hpp.html">FreeCheckers.hpp</a>&quot;</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="../../d0/d79/MoveOnlyCheckersDetails_8hpp.html">MoveOnlyCheckersDetails.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="../../d2/d0d/FreeCheckers_8hpp.html">sequoia/TestFramework/FreeCheckers.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="../../d0/d79/MoveOnlyCheckersDetails_8hpp.html">sequoia/TestFramework/MoveOnlyCheckersDetails.hpp</a>&quot;</span></div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; </div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="keyword">namespace </span>sequoia::testing</div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;{</div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;  <span class="keyword">template</span>&lt;test_mode Mode, moveonly T&gt;</div>
-<div class="line"><a name="l00050"></a><span class="lineno"><a class="line" href="../../d2/dbc/MoveOnlyCheckers_8hpp.html#ac338b82e4f6a44a8a02400da454e953c">   50</a></span>&#160;  <span class="keywordtype">void</span> check_semantics(std::string_view description, <a class="code" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger&lt;Mode&gt;</a>&amp; logger, T&amp;&amp; x, T&amp;&amp; y, <span class="keyword">const</span> T&amp; xClone, <span class="keyword">const</span> T&amp; yClone)</div>
+<div class="line"><a name="l00050"></a><span class="lineno"><a class="line" href="../../d2/dbc/MoveOnlyCheckers_8hpp.html#ac338b82e4f6a44a8a02400da454e953c">   50</a></span>&#160;  <span class="keywordtype">void</span> check_semantics(std::string_view description, <a class="code" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger&lt;Mode&gt;</a>&amp; logger, T&amp;&amp; <a class="code" href="../../d6/d61/structsequoia_1_1testing_1_1x.html">x</a>, T&amp;&amp; <a class="code" href="../../d9/dfe/structsequoia_1_1testing_1_1y.html">y</a>, <span class="keyword">const</span> T&amp; xClone, <span class="keyword">const</span> T&amp; yClone)</div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;  {</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <a class="code" href="../../d1/d8f/classsequoia_1_1testing_1_1sentinel.html">sentinel&lt;Mode&gt;</a> sentry{logger, add_type_info&lt;T&gt;(description).append(<span class="stringliteral">&quot;\n&quot;</span>)};</div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    impl::check_semantics(logger, <a class="code" href="../../d4/dd2/structsequoia_1_1testing_1_1impl_1_1moveonly__actions.html">impl::moveonly_actions&lt;T&gt;</a>{}, std::forward&lt;T&gt;(x), std::forward&lt;T&gt;(y), xClone, yClone, <a class="code" href="../../d2/da1/structsequoia_1_1testing_1_1impl_1_1null__mutator.html">impl::null_mutator</a>{});</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    impl::check_semantics(logger, <a class="code" href="../../d9/d65/structsequoia_1_1testing_1_1impl_1_1auxiliary__data.html">impl::auxiliary_data&lt;T&gt;</a>{}, std::forward&lt;T&gt;(<a class="code" href="../../d6/d61/structsequoia_1_1testing_1_1x.html">x</a>), std::forward&lt;T&gt;(<a class="code" href="../../d9/dfe/structsequoia_1_1testing_1_1y.html">y</a>), xClone, yClone, <a class="code" href="../../d2/da1/structsequoia_1_1testing_1_1impl_1_1null__mutator.html">impl::null_mutator</a>{});</div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;  }</div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;  <span class="keyword">template</span>&lt;test_mode Mode, moveonly T&gt;</div>
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    requires orderable&lt;T&gt;</div>
-<div class="line"><a name="l00065"></a><span class="lineno"><a class="line" href="../../d2/dbc/MoveOnlyCheckers_8hpp.html#a686ab76100284cf4605931f5dc5fabdc">   65</a></span>&#160;  <span class="keywordtype">void</span> check_semantics(std::string_view description, <a class="code" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger&lt;Mode&gt;</a>&amp; logger, T&amp;&amp; x, T&amp;&amp; y, <span class="keyword">const</span> T&amp; xClone, <span class="keyword">const</span> T&amp; yClone, std::weak_ordering order)</div>
+<div class="line"><a name="l00065"></a><span class="lineno"><a class="line" href="../../d2/dbc/MoveOnlyCheckers_8hpp.html#a686ab76100284cf4605931f5dc5fabdc">   65</a></span>&#160;  <span class="keywordtype">void</span> check_semantics(std::string_view description, <a class="code" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger&lt;Mode&gt;</a>&amp; logger, T&amp;&amp; <a class="code" href="../../d6/d61/structsequoia_1_1testing_1_1x.html">x</a>, T&amp;&amp; <a class="code" href="../../d9/dfe/structsequoia_1_1testing_1_1y.html">y</a>, <span class="keyword">const</span> T&amp; xClone, <span class="keyword">const</span> T&amp; yClone, std::weak_ordering order)</div>
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;  {</div>
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <a class="code" href="../../d1/d8f/classsequoia_1_1testing_1_1sentinel.html">sentinel&lt;Mode&gt;</a> sentry{logger, add_type_info&lt;T&gt;(description).append(<span class="stringliteral">&quot;\n&quot;</span>)};</div>
 <div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160; </div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    impl::check_semantics(logger, <a class="code" href="../../d4/dd2/structsequoia_1_1testing_1_1impl_1_1moveonly__actions.html">impl::moveonly_actions&lt;T&gt;</a>{order}, std::forward&lt;T&gt;(x), std::forward&lt;T&gt;(y), xClone, yClone, <a class="code" href="../../d2/da1/structsequoia_1_1testing_1_1impl_1_1null__mutator.html">impl::null_mutator</a>{});</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    impl::check_semantics(logger, <a class="code" href="../../d9/d65/structsequoia_1_1testing_1_1impl_1_1auxiliary__data.html">impl::auxiliary_data&lt;T&gt;</a>{order}, std::forward&lt;T&gt;(<a class="code" href="../../d6/d61/structsequoia_1_1testing_1_1x.html">x</a>), std::forward&lt;T&gt;(<a class="code" href="../../d9/dfe/structsequoia_1_1testing_1_1y.html">y</a>), xClone, yClone, <a class="code" href="../../d2/da1/structsequoia_1_1testing_1_1impl_1_1null__mutator.html">impl::null_mutator</a>{});</div>
 <div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;  }</div>
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
-<div class="ttc" id="astructsequoia_1_1testing_1_1impl_1_1moveonly__actions_html"><div class="ttname"><a href="../../d4/dd2/structsequoia_1_1testing_1_1impl_1_1moveonly__actions.html">sequoia::testing::impl::moveonly_actions</a></div><div class="ttdef"><b>Definition:</b> SemanticsCheckersDetails.hpp:289</div></div>
-<div class="ttc" id="aclasssequoia_1_1testing_1_1sentinel_html"><div class="ttname"><a href="../../d1/d8f/classsequoia_1_1testing_1_1sentinel.html">sequoia::testing::sentinel</a></div><div class="ttdef"><b>Definition:</b> TestLogger.hpp:89</div></div>
-<div class="ttc" id="aclasssequoia_1_1testing_1_1test__logger_html"><div class="ttname"><a href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">sequoia::testing::test_logger</a></div><div class="ttdef"><b>Definition:</b> TestLogger.hpp:62</div></div>
+<div class="ttc" id="astructsequoia_1_1testing_1_1impl_1_1auxiliary__data_html"><div class="ttname"><a href="../../d9/d65/structsequoia_1_1testing_1_1impl_1_1auxiliary__data.html">sequoia::testing::impl::auxiliary_data</a></div><div class="ttdef"><b>Definition:</b> SemanticsCheckersDetails.hpp:135</div></div>
+<div class="ttc" id="astructsequoia_1_1testing_1_1x_html"><div class="ttname"><a href="../../d6/d61/structsequoia_1_1testing_1_1x.html">sequoia::testing::x</a></div><div class="ttdef"><b>Definition:</b> FactoryTest.cpp:21</div></div>
+<div class="ttc" id="aclasssequoia_1_1testing_1_1sentinel_html"><div class="ttname"><a href="../../d1/d8f/classsequoia_1_1testing_1_1sentinel.html">sequoia::testing::sentinel</a></div><div class="ttdef"><b>Definition:</b> TestLogger.hpp:86</div></div>
+<div class="ttc" id="aclasssequoia_1_1testing_1_1test__logger_html"><div class="ttname"><a href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">sequoia::testing::test_logger</a></div><div class="ttdef"><b>Definition:</b> TestLogger.hpp:59</div></div>
 <div class="ttc" id="aFreeCheckers_8hpp_html"><div class="ttname"><a href="../../d2/d0d/FreeCheckers_8hpp.html">FreeCheckers.hpp</a></div><div class="ttdoc">Free functions for performing checks, together with the 'checker' class template which wraps them.</div></div>
-<div class="ttc" id="astructsequoia_1_1testing_1_1impl_1_1null__mutator_html"><div class="ttname"><a href="../../d2/da1/structsequoia_1_1testing_1_1impl_1_1null__mutator.html">sequoia::testing::impl::null_mutator</a></div><div class="ttdef"><b>Definition:</b> SemanticsCheckersDetails.hpp:82</div></div>
+<div class="ttc" id="astructsequoia_1_1testing_1_1impl_1_1null__mutator_html"><div class="ttname"><a href="../../d2/da1/structsequoia_1_1testing_1_1impl_1_1null__mutator.html">sequoia::testing::impl::null_mutator</a></div><div class="ttdef"><b>Definition:</b> SemanticsCheckersDetails.hpp:101</div></div>
 <div class="ttc" id="aMoveOnlyCheckersDetails_8hpp_html"><div class="ttname"><a href="../../d0/d79/MoveOnlyCheckersDetails_8hpp.html">MoveOnlyCheckersDetails.hpp</a></div><div class="ttdoc">Implementation details for checking move-only semantics.</div></div>
+<div class="ttc" id="astructsequoia_1_1testing_1_1y_html"><div class="ttname"><a href="../../d9/dfe/structsequoia_1_1testing_1_1y.html">sequoia::testing::y</a></div><div class="ttdef"><b>Definition:</b> FactoryTest.cpp:38</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

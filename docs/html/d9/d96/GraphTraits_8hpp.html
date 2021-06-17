@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.18"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Sequoia: /Users/Claire/Dropbox/Sequoia/Source/Maths/Graph/GraphTraits.hpp File Reference</title>
+<title>Sequoia: /Users/Claire/Dropbox/Sequoia/Source/sequoia/Maths/Graph/GraphTraits.hpp File Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -61,7 +61,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="../../dir_74389ed8173ad57b461b9d623a1f3867.html">Source</a></li><li class="navelem"><a class="el" href="../../dir_bfce9ab249d47e16c9e42220e5fdc10e.html">Maths</a></li><li class="navelem"><a class="el" href="../../dir_9b931fa7f5ff4df7b8729af1757013d0.html">Graph</a></li>  </ul>
+<li class="navelem"><a class="el" href="../../dir_74389ed8173ad57b461b9d623a1f3867.html">Source</a></li><li class="navelem"><a class="el" href="../../dir_2cc7e707cf7d8b577b4d17c7cb9b6739.html">sequoia</a></li><li class="navelem"><a class="el" href="../../dir_d40775f9221ab099c4c7f71f5e5081b6.html">Maths</a></li><li class="navelem"><a class="el" href="../../dir_27f8922d3f79031079bf19303e1551e1.html">Graph</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -114,7 +114,7 @@ template&lt;class G &gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">=  requires(G&amp; g) {</div>
+<b>Initial value:</b><div class="fragment"><div class="line">= requires(G&amp; g) {</div>
 <div class="line">     g.add_node();</div>
 <div class="line">  }</div>
 </div><!-- fragment -->
@@ -133,17 +133,19 @@ template&lt;class N &gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">= requires(<span class="keyword">const</span> N&amp; n) {</div>
+<b>Initial value:</b><div class="fragment"><div class="line">= equality_comparable&lt;N&gt; &amp;&amp; requires(<span class="keyword">const</span> N&amp; n) {</div>
 <div class="line">    <span class="keyword">typename</span> N::edge_type;</div>
 <div class="line">    <span class="keyword">typename</span> N::edge_weight_type;</div>
 <div class="line">    <span class="keyword">typename</span> N::edge_index_type;</div>
 <div class="line">    <span class="keyword">typename</span> N::edge_init_type;</div>
 <div class="line">    <span class="keyword">typename</span> N::size_type;</div>
+<div class="line">    <span class="keyword">typename</span> N::const_edge_iterator;</div>
+<div class="line">    <span class="keyword">typename</span> N::const_reverse_edge_iterator;</div>
 <div class="line"> </div>
-<div class="line">    n.size();</div>
-<div class="line">    n.order();</div>
-<div class="line">    n.cbegin_edges(0);</div>
-<div class="line">    n.cend_edges(0);</div>
+<div class="line">    { n.size() } -&gt; same_as&lt;typename N::size_type&gt;;</div>
+<div class="line">    { n.order() } -&gt; same_as&lt;typename N::size_type&gt;;</div>
+<div class="line">    { n.cbegin_edges(0) } -&gt; same_as&lt;typename N::const_edge_iterator&gt;;</div>
+<div class="line">    { n.cend_edges(0) } -&gt; same_as&lt;typename N::const_edge_iterator&gt;;</div>
 <div class="line">  }</div>
 </div><!-- fragment -->
 </div>
