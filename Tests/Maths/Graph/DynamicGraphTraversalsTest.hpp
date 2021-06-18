@@ -49,17 +49,14 @@ namespace sequoia::testing
     template<maths::dynamic_network Graph>
     void test_priority_traversal();
 
-    template<maths::dynamic_network G, traversal_flavour Flavour>
-    void test_square_graph(const node_tracker& tracker, const edge_tracker<G, Flavour>& eTracker, const edge_tracker<G, Flavour>& eTracker2, const std::size_t start, bfs_type);
+    template<maths::dynamic_network G>
+    void test_square_graph(const G& g, std::size_t start, bfs_type);
 
-    template<maths::dynamic_network G, traversal_flavour Flavour>
-    void test_square_graph(const node_tracker& tracker, const edge_tracker<G, Flavour>& eTracker, const std::size_t start, const bool mutualInfo, bfs_type);
+    template<maths::dynamic_network G>
+    void test_square_graph(const G& g, std::size_t start, dfs_type);
 
-    template<maths::dynamic_network G, traversal_flavour Flavour>
-    void test_square_graph(const node_tracker& tracker, const edge_tracker<G, Flavour>& eTracker, const edge_tracker<G, Flavour>& eTracker2, const std::size_t start, pdfs_type);
-
-    template<maths::dynamic_network G, traversal_flavour Flavour>
-    void test_square_graph(const node_tracker& tracker, const edge_tracker<G, Flavour>& eTracker, const std::size_t start, const bool mutualInfo, pdfs_type);
+    template<maths::dynamic_network G>
+    void test_square_graph(const G& g, const std::size_t start, pdfs_type);
 
     //=================== For weighted BFS  =================//
 

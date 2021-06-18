@@ -12,12 +12,13 @@
 
 namespace sequoia::testing
 {
-  enum class traversal_flavour{ BFS, PDFS, PRS};
+  enum class traversal_flavour{ BFS, DFS, PDFS, PRS};
 
   template<traversal_flavour F>
   struct traversal_constant : std::integral_constant<traversal_flavour, F> {};
 
   using bfs_type  = traversal_constant<traversal_flavour::BFS>;
+  using dfs_type  = traversal_constant<traversal_flavour::DFS>;
   using pdfs_type = traversal_constant<traversal_flavour::PDFS>;
   using prs_type  = traversal_constant<traversal_flavour::PRS>;
 
@@ -33,6 +34,21 @@ namespace sequoia::testing
     static void traverse(const G& g, const maths::traversal_conditions<Mode> conditions, Fn&&... fn)
     {
       maths::breadth_first_search(g, conditions, std::forward<Fn>(fn)...);
+    }
+
+    constexpr static bool uses_forward_iterator() noexcept { return true; }
+
+    static std::string iterator_description() noexcept { return "forward"; }
+  };
+
+  template<> struct Traverser<traversal_flavour::DFS>
+  {
+    constexpr static auto flavour{traversal_flavour::DFS};
+
+    template<class G, maths::disconnected_discovery_mode Mode, class... Fn>
+    static void traverse(const G& g, const maths::traversal_conditions<Mode> conditions, Fn&&... fn)
+    {
+      maths::depth_first_search(g, conditions, std::forward<Fn>(fn)...);
     }
 
     constexpr static bool uses_forward_iterator() noexcept { return true; }

@@ -243,6 +243,7 @@ namespace sequoia::testing
     using graph_type = graph_type_generator_t<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, ESTraits, NSTraits>;
 
     tracker_test<graph_type, Traverser<traversal_flavour::BFS>>();
+    //tracker_test<graph_type, Traverser<traversal_flavour::DFS>>();
     tracker_test<graph_type, Traverser<traversal_flavour::PDFS>>();
 
     if constexpr(!std::is_empty_v<NodeWeight>)
@@ -433,118 +434,105 @@ namespace sequoia::testing
     //  |    |
     //  0----0
 
-    {
-      const auto[nodeDiscovery1, nodeDiscovery2, edgeDiscovery1, edgeDiscovery2]{traverse_graph<Traverser>(g, ignore_disconnected_t{})};
+    test_square_graph(g, 0, TraversalType{});
+    test_square_graph(g, 2, TraversalType{});
+  }
 
-      if constexpr(undirected)
+  template<maths::dynamic_network G>
+  void test_graph_traversals::test_square_graph(const G& g, const std::size_t start, bfs_type)
+  {
+    const auto[nodeDiscovery1, nodeDiscovery2, edgeDiscovery1, edgeDiscovery2]{traverse_graph<Traverser<bfs_type::value>>(g, maths::ignore_disconnected_t{start})};
+
+    using edge_results = typename decltype(edgeDiscovery1)::result_type;
+    if constexpr(maths::undirected(G::flavour))
+    {
+      std::vector<std::size_t> expected;
+      edge_results edgeAnswers, edgeAnswers2;
+      if(start == 0)
       {
-        test_square_graph(nodeDiscovery1, edgeDiscovery1, edgeDiscovery2, 0, TraversalType{});
+        expected = std::vector<std::size_t>{0,1,3,2};
+        edgeAnswers = edge_results{{0, 0}, {0, 1}, {1, 1}, {3, 0}};
+        edgeAnswers2 = edge_results{{1, 0}, {3, 1}, {2, 0}, {2, 1}};
       }
-      else
+      else if(start == 2)
       {
-        test_square_graph(nodeDiscovery1, edgeDiscovery1, 0, mutualInfo, TraversalType{});
+        expected = std::vector<std::size_t>{2,1,3,0};
+        edgeAnswers = edge_results{{2, 0}, {2, 1}, {1, 0}, {3, 1}};
+        edgeAnswers2 = edge_results{{1, 1}, {3, 0}, {0, 0}, {0, 1}};
       }
+      check_equivalence(LINE(""), nodeDiscovery1, expected);
+      check_equivalence(LINE("First edge traversal"), edgeDiscovery1, edgeAnswers);
+      check_equivalence(LINE("Second edge traversal"), edgeDiscovery2, edgeAnswers2);
     }
-
+    else
     {
-      const auto[nodeDiscovery1, nodeDiscovery2, edgeDiscovery1, edgeDiscovery2]{traverse_graph<Traverser>(g, ignore_disconnected_t{2})};
-
-      if constexpr(undirected)
+      std::vector<std::size_t> expected;
+      edge_results edgeAnswers;
+      constexpr auto mutualInfo{mutual_info(G::flavour)};
+      if(start == 0)
       {
-        test_square_graph(nodeDiscovery1, edgeDiscovery1, edgeDiscovery2, 2, TraversalType{});
+        expected = std::vector<std::size_t>{0,1,2,3};
+        edgeAnswers = mutualInfo ? edge_results{{0, 0}, {1, 1}, {2, 1}, {3, 1}} : edge_results{{0, 0}, {1, 0}, {2, 0}, {3, 0}};
       }
-      else
+      else if(start == 2)
       {
-        test_square_graph(nodeDiscovery1, edgeDiscovery1, 2, mutualInfo, TraversalType{});
+        expected = std::vector<std::size_t>{2,3,0,1};
+        edgeAnswers = mutualInfo ? edge_results{{2, 1}, {3, 1}, {0, 0}, {1, 1}} : edge_results{{2, 0}, {3, 0}, {0, 0}, {1, 0}};
       }
+      check_equivalence(LINE("start = " + std::to_string(start) + " "), nodeDiscovery1, expected);
+      check_equivalence(LINE("First edge traversal, start = " + std::to_string(start) + " "), edgeDiscovery1, edgeAnswers);
     }
   }
 
-
-  template<maths::dynamic_network G, traversal_flavour Flavour>
-  void test_graph_traversals::test_square_graph(const node_tracker& tracker, const edge_tracker<G, Flavour>& eTracker, const edge_tracker<G, Flavour>& eTracker2, const std::size_t start, bfs_type)
+  template<maths::dynamic_network G>
+  void test_graph_traversals::test_square_graph(const G& g, const std::size_t start, dfs_type)
   {
-    using edge_results = typename edge_tracker<G, Flavour>::result_type;
-    std::vector<std::size_t> expected;
-    edge_results edgeAnswers, edgeAnswers2;
-    if(start == 0)
-    {
-      expected = std::vector<std::size_t>{0,1,3,2};
-      edgeAnswers = edge_results{{0, 0}, {0, 1}, {1, 1}, {3, 0}};
-      edgeAnswers2 = edge_results{{1, 0}, {3, 1}, {2, 0}, {2, 1}};
-    }
-    else if(start == 2)
-    {
-      expected = std::vector<std::size_t>{2,1,3,0};
-      edgeAnswers = edge_results{{2, 0}, {2, 1}, {1, 0}, {3, 1}};
-      edgeAnswers2 = edge_results{{1, 1}, {3, 0}, {0, 0}, {0, 1}};
-    }
-    check_equivalence(LINE(""), tracker, expected);
-    check_equivalence(LINE("First edge traversal"), eTracker, edgeAnswers);
-    check_equivalence(LINE("Second edge traversal"), eTracker2, edgeAnswers2);
   }
 
-  template<maths::dynamic_network G, traversal_flavour Flavour>
-  void test_graph_traversals::test_square_graph(const node_tracker& tracker, const edge_tracker<G, Flavour>& eTracker, const std::size_t start, const bool mutualInfo, bfs_type)
+  template<maths::dynamic_network G>
+  void test_graph_traversals::test_square_graph(const G& g, const std::size_t start, pdfs_type)
   {
-    using edge_results = typename edge_tracker<G, Flavour>::result_type;
-    std::vector<std::size_t> expected;
-    edge_results edgeAnswers;
-    if(start == 0)
-    {
-      expected = std::vector<std::size_t>{0,1,2,3};
-      edgeAnswers = mutualInfo ? edge_results{{0, 0}, {1, 1}, {2, 1}, {3, 1}} : edge_results{{0, 0}, {1, 0}, {2, 0}, {3, 0}};
-    }
-    else if(start ==2)
-    {
-      expected = std::vector<std::size_t>{2,3,0,1};
-      edgeAnswers = mutualInfo ? edge_results{{2, 1}, {3, 1}, {0, 0}, {1, 1}} : edge_results{{2, 0}, {3, 0}, {0, 0}, {1, 0}};
-    }
-    check_equivalence(LINE("start = " + std::to_string(start) + " "), tracker, expected);
-    check_equivalence(LINE("First edge traversal, start = " + std::to_string(start) + " "), eTracker, edgeAnswers);
-  }
+    const auto[nodeDiscovery1, nodeDiscovery2, edgeDiscovery1, edgeDiscovery2]{traverse_graph<Traverser<pdfs_type::value>>(g, maths::ignore_disconnected_t{start})};
 
-  template<maths::dynamic_network G, traversal_flavour Flavour>
-  void test_graph_traversals::test_square_graph(const node_tracker& tracker, const edge_tracker<G, Flavour>& eTracker, const edge_tracker<G, Flavour>& eTracker2, const std::size_t start, pdfs_type)
-  {
-    using edge_results = typename edge_tracker<G, Flavour>::result_type;
-    std::vector<std::size_t> expected;
-    edge_results edgeAnswers, edgeAnswers2;
-    if(start == 0)
+    using edge_results = typename decltype(edgeDiscovery1)::result_type;
+    if constexpr(maths::undirected(G::flavour))
     {
-      expected = std::vector<std::size_t>{0,1,2,3};
-      edgeAnswers = edge_results{{0, 0}, {0, 1}, {1, 0}, {2, 0}};
-      edgeAnswers2 = edge_results{{1, 1}, {2, 1}, {3, 0}, {3, 1}};
+      std::vector<std::size_t> expected;
+      edge_results edgeAnswers, edgeAnswers2;
+      if(start == 0)
+      {
+        expected = std::vector<std::size_t>{0,1,2,3};
+        edgeAnswers = edge_results{{0, 0}, {0, 1}, {1, 0}, {2, 0}};
+        edgeAnswers2 = edge_results{{1, 1}, {2, 1}, {3, 0}, {3, 1}};
+      }
+      else if(start == 2)
+      {
+        expected = std::vector<std::size_t>{2,1,0,3};
+        edgeAnswers = edge_results{{2, 0}, {2, 1}, {1, 1}, {0, 0}};
+        edgeAnswers2 = edge_results{{1, 0}, {0, 1}, {3, 0}, {3, 1}};
+      }
+      check_equivalence(LINE(""), nodeDiscovery1, expected);
+      check_equivalence(LINE("First edge traversal"), edgeDiscovery1, edgeAnswers);
+      check_equivalence(LINE("Second edge traversal"), edgeDiscovery2, edgeAnswers2);
     }
-    else if(start ==2)
+    else
     {
-      expected = std::vector<std::size_t>{2,1,0,3};
-      edgeAnswers = edge_results{{2, 0}, {2, 1}, {1, 1}, {0, 0}};
-      edgeAnswers2 = edge_results{{1, 0}, {0, 1}, {3, 0}, {3, 1}};
+      std::vector<std::size_t> expected;
+      edge_results edgeAnswers;
+      constexpr auto mutualInfo{mutual_info(G::flavour)};
+      if(start == 0)
+      {
+        expected = std::vector<std::size_t>{0,1,2,3};
+        edgeAnswers = mutualInfo ? edge_results{{0, 1}, {1, 0}, {2, 0}, {3, 0}} : edge_results{{0, 0}, {1, 0}, {2, 0}, {3, 0}};
+      }
+      else if(start == 2)
+      {
+        expected = std::vector<std::size_t>{2,3,0,1};
+        edgeAnswers = mutualInfo ? edge_results{{2, 0}, {3, 0}, {0, 1}, {1, 0}} : edge_results{{2, 0}, {3, 0}, {0, 0}, {1, 0}};
+      }
+      check_equivalence(LINE("start = " + std::to_string(start) + " "), nodeDiscovery1, expected);
+      check_equivalence(LINE("First edge traversal, start = " + std::to_string(start) + " "), edgeDiscovery1, edgeAnswers);
     }
-    check_equivalence(LINE(""), tracker, expected);
-    check_equivalence(LINE("First edge traversal"), eTracker, edgeAnswers);
-    check_equivalence(LINE("Second edge traversal"), eTracker2, edgeAnswers2);
-  }
-
-  template<maths::dynamic_network G, traversal_flavour Flavour>
-  void test_graph_traversals::test_square_graph(const node_tracker& tracker, const edge_tracker<G, Flavour>& eTracker, const std::size_t start, const bool mutualInfo, pdfs_type)
-  {
-    using edge_results = typename edge_tracker<G, Flavour>::result_type;
-    std::vector<std::size_t> expected;
-    edge_results edgeAnswers;
-    if(start == 0)
-    {
-      expected = std::vector<std::size_t>{0,1,2,3};
-      edgeAnswers = mutualInfo ? edge_results{{0, 1}, {1, 0}, {2, 0}, {3, 0}} : edge_results{{0, 0}, {1, 0}, {2, 0}, {3, 0}};
-    }
-    else if(start ==2)
-    {
-      expected = std::vector<std::size_t>{2,3,0,1};
-      edgeAnswers = mutualInfo ? edge_results{{2, 0}, {3, 0}, {0, 1}, {1, 0}} : edge_results{{2, 0}, {3, 0}, {0, 0}, {1, 0}};
-    }
-    check_equivalence(LINE("start = " + std::to_string(start) + " "), tracker, expected);
-    check_equivalence(LINE("First edge traversal, start = " + std::to_string(start) + " "), eTracker, edgeAnswers);
   }
 
   //=============================== Priority Search  ===============================//
