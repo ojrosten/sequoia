@@ -445,8 +445,10 @@ namespace sequoia::maths::graph_impl
           }
           else if constexpr(hasEdgeFirstFn || hasEdgeSecondFn)
           {
-            const bool loopMatched{is_loop(iter, nodeIndex) && loops.loop_matched(begin, iter)};
-            const bool secondTraversal{processed[nextNode] || loopMatched};
+            constexpr bool isDFS{same_as<OnDiscovery, recurse>};
+            const bool loop{is_loop(iter, nodeIndex)};
+            const bool loopMatched{loop && loops.loop_matched(begin, iter)};
+            const bool secondTraversal{(isDFS && discovered[nextNode] && !(loop)) || (!isDFS && processed[nextNode]) || loopMatched};
             if(secondTraversal)
             {
               if constexpr(hasEdgeSecondFn)
