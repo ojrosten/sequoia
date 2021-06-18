@@ -243,7 +243,7 @@ namespace sequoia::testing
     using graph_type = graph_type_generator_t<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, ESTraits, NSTraits>;
 
     tracker_test<graph_type, Traverser<traversal_flavour::BFS>>();
-    //tracker_test<graph_type, Traverser<traversal_flavour::DFS>>();
+    tracker_test<graph_type, Traverser<traversal_flavour::DFS>>();
     tracker_test<graph_type, Traverser<traversal_flavour::PDFS>>();
 
     if constexpr(!std::is_empty_v<NodeWeight>)
@@ -296,6 +296,7 @@ namespace sequoia::testing
     constexpr bool mutualInfo{mutual_info(GraphFlavour)};
     constexpr bool undirected{maths::undirected(GraphFlavour)};
     constexpr bool isBFS{Traverser::flavour == traversal_flavour::BFS};
+    constexpr bool isDFS{Traverser::flavour == traversal_flavour::DFS};
     constexpr bool forwardIter{Traverser::uses_forward_iterator()};
 
     auto make_message{
@@ -305,17 +306,19 @@ namespace sequoia::testing
     };
 
     Graph g{};
-    using edge_results = typename edge_tracker<Graph, Traverser::flavour>::result_type;
+    using edge_order = typename edge_tracker<Graph, Traverser::flavour>::result_type;
+    using node_order = std::vector<std::size_t>;
+
 
     {
       const auto[nodeDiscovery1, nodeDiscovery2, edgeDiscovery1, edgeDiscovery2]{traverse_graph<Traverser>(g, find_disconnected_t{})};
 
-      check_equivalence(LINE(make_message("No nodes to discover")), nodeDiscovery1, std::vector<std::size_t>{});
-      check_equivalence(LINE(make_message("No nodes to discover")), nodeDiscovery2, std::vector<std::size_t>{});
-      check_equivalence(LINE(make_message("No edges to discover")), edgeDiscovery1, edge_results{});
+      check_equivalence(LINE(make_message("No nodes to discover")), nodeDiscovery1, node_order{});
+      check_equivalence(LINE(make_message("No nodes to discover")), nodeDiscovery2, node_order{});
+      check_equivalence(LINE(make_message("No edges to discover")), edgeDiscovery1, edge_order{});
       if constexpr(undirected)
       {
-        check_equivalence(LINE(make_message("No edges to discover")), edgeDiscovery2, edge_results{});
+        check_equivalence(LINE(make_message("No edges to discover")), edgeDiscovery2, edge_order{});
       }
     }
 
@@ -325,12 +328,12 @@ namespace sequoia::testing
     {
       const auto[nodeDiscovery1, nodeDiscovery2, edgeDiscovery1, edgeDiscovery2]{traverse_graph<Traverser>(g, find_disconnected_t{})};
 
-      check_equivalence(LINE(make_message("One nodes to discover")), nodeDiscovery1, std::vector<std::size_t>{0});
-      check_equivalence(LINE(make_message("One nodes to discover")), nodeDiscovery2, std::vector<std::size_t>{0});
-      check_equivalence(LINE(make_message("No edges to discover")), edgeDiscovery1, edge_results{});
+      check_equivalence(LINE(make_message("One nodes to discover")), nodeDiscovery1, node_order{0});
+      check_equivalence(LINE(make_message("One nodes to discover")), nodeDiscovery2, node_order{0});
+      check_equivalence(LINE(make_message("No edges to discover")), edgeDiscovery1, edge_order{});
       if constexpr(undirected)
       {
-        check_equivalence(LINE(make_message("No edges to discover")), edgeDiscovery2, edge_results{});
+        check_equivalence(LINE(make_message("No edges to discover")), edgeDiscovery2, edge_order{});
       }
     }
 
@@ -340,36 +343,36 @@ namespace sequoia::testing
     {
       const auto[nodeDiscovery1, nodeDiscovery2, edgeDiscovery1, edgeDiscovery2]{traverse_graph<Traverser>(g, find_disconnected_t{})};
 
-      check_equivalence(LINE(make_message("Two nodes to discover")), nodeDiscovery1, std::vector<std::size_t>{0, 1});
-      check_equivalence(LINE(make_message("Two nodes to discover")), nodeDiscovery2, std::vector<std::size_t>{0, 1});
-      check_equivalence(LINE(make_message("No edges to discover")), edgeDiscovery1, edge_results{});
+      check_equivalence(LINE(make_message("Two nodes to discover")), nodeDiscovery1, node_order{0, 1});
+      check_equivalence(LINE(make_message("Two nodes to discover")), nodeDiscovery2, node_order{0, 1});
+      check_equivalence(LINE(make_message("No edges to discover")), edgeDiscovery1, edge_order{});
       if constexpr(undirected)
       {
-        check_equivalence(make_message("No edges to discover"), edgeDiscovery2, edge_results{});
+        check_equivalence(make_message("No edges to discover"), edgeDiscovery2, edge_order{});
       }
     }
 
     {
       const auto[nodeDiscovery1, nodeDiscovery2, edgeDiscovery1, edgeDiscovery2]{traverse_graph<Traverser>(g, find_disconnected_t{1})};
 
-      check_equivalence(LINE(make_message("Two nodes to discover in reverse")), nodeDiscovery1, std::vector<std::size_t>{1, 0});
-      check_equivalence(LINE(make_message("Two nodes to discover in reverse")), nodeDiscovery2, std::vector<std::size_t>{1, 0});
-      check_equivalence(LINE(make_message("No edges to discover")), edgeDiscovery1, edge_results{});
+      check_equivalence(LINE(make_message("Two nodes to discover in reverse")), nodeDiscovery1, node_order{1, 0});
+      check_equivalence(LINE(make_message("Two nodes to discover in reverse")), nodeDiscovery2, node_order{1, 0});
+      check_equivalence(LINE(make_message("No edges to discover")), edgeDiscovery1, edge_order{});
       if constexpr(undirected)
       {
-        check_equivalence(LINE(make_message("No edges to discover")), edgeDiscovery2, edge_results{});
+        check_equivalence(LINE(make_message("No edges to discover")), edgeDiscovery2, edge_order{});
       }
     }
 
     {
       const auto[nodeDiscovery1, nodeDiscovery2, edgeDiscovery1, edgeDiscovery2]{traverse_graph<Traverser>(g, ignore_disconnected_t{})};
 
-      check_equivalence(LINE(make_message("Two nodes; one to discover")), nodeDiscovery1, std::vector<std::size_t>{0});
-      check_equivalence(LINE(make_message("Two nodes; one to discover")), nodeDiscovery2, std::vector<std::size_t>{0});
-      check_equivalence(LINE(make_message("No edges to discover")), edgeDiscovery1, edge_results{});
+      check_equivalence(LINE(make_message("Two nodes; one to discover")), nodeDiscovery1, node_order{0});
+      check_equivalence(LINE(make_message("Two nodes; one to discover")), nodeDiscovery2, node_order{0});
+      check_equivalence(LINE(make_message("No edges to discover")), edgeDiscovery1, edge_order{});
       if constexpr(undirected)
       {
-        check_equivalence(LINE(make_message("No edges to discover")), edgeDiscovery2, edge_results{});
+        check_equivalence(LINE(make_message("No edges to discover")), edgeDiscovery2, edge_order{});
       }
     }
 
@@ -381,48 +384,54 @@ namespace sequoia::testing
     {
       const auto[nodeDiscovery1, nodeDiscovery2, edgeDiscovery1, edgeDiscovery2]{traverse_graph<Traverser>(g, find_disconnected_t{})};
 
-      check_equivalence(LINE(make_message("Three nodes to discover")), nodeDiscovery1, std::vector<std::size_t>{0, 1, 2});
-      check_equivalence(LINE(make_message("Three nodes to discover")), nodeDiscovery2, std::vector<std::size_t>{0, 1, 2});
-      check_equivalence(LINE(make_message("Two edges to discover")), edgeDiscovery1, edge_results{{0,0}, {1, mutualInfo && forwardIter ? 1 : 0}});
+      check_equivalence(LINE(make_message("Three nodes to discover")), nodeDiscovery1, node_order{0, 1, 2});
+      check_equivalence(LINE(make_message("Three nodes to discover")), nodeDiscovery2, isDFS ? node_order{2, 1, 0} : node_order{0, 1, 2});
+      check_equivalence(LINE(make_message("Two edges to discover")), edgeDiscovery1, edge_order{{0,0}, {1, mutualInfo && forwardIter ? 1 : 0}});
       if constexpr(undirected)
       {
-        check_equivalence(LINE(make_message("Two edges to discover")), edgeDiscovery2, isBFS ? edge_results{{1,0}, {2,0}} : edge_results{{1, 1}, {2, 0}});
+        check_equivalence(LINE(make_message("Two edges to discover")), edgeDiscovery2, (isBFS || isDFS) ? edge_order{{1,0}, {2,0}} : edge_order{{1, 1}, {2, 0}});
       }
     }
+
+    // 0----0----0
 
     {
       const auto[nodeDiscovery1, nodeDiscovery2, edgeDiscovery1, edgeDiscovery2]{traverse_graph<Traverser>(g, ignore_disconnected_t{1})};
 
       if constexpr(undirected)
       {
-        check_equivalence(LINE(make_message("Three nodes to discover")), nodeDiscovery1, std::vector<std::size_t>{1, 0, 2});
-        check_equivalence(LINE(make_message("Three nodes to discover")), nodeDiscovery2, std::vector<std::size_t>{1, 0, 2});
-        check_equivalence(LINE(make_message("Two edges to discover")), edgeDiscovery1, edge_results{{1,0}, {1, 1}});
-        check_equivalence(LINE(make_message("Two edges to discover")), edgeDiscovery2, edge_results{{0, 0}, {2, 0}});
+        check_equivalence(LINE(make_message("Three nodes to discover")), nodeDiscovery1, node_order{1, 0, 2});
+        check_equivalence(LINE(make_message("Three nodes to discover")), nodeDiscovery2, isDFS ? node_order{0, 2, 1} : node_order{1, 0, 2});
+        check_equivalence(LINE(make_message("Two edges to discover")), edgeDiscovery1, edge_order{{1,0}, {1, 1}});
+        check_equivalence(LINE(make_message("Two edges to discover")), edgeDiscovery2, edge_order{{0, 0}, {2, 0}});
       }
       else
       {
-        check_equivalence(LINE(make_message("Two nodes to discover")), nodeDiscovery1, std::vector<std::size_t>{1, 2});
-        check_equivalence(LINE(make_message("Two nodes to discover")), nodeDiscovery2, std::vector<std::size_t>{1, 2});
-        check_equivalence(LINE(make_message("One edge to discover")), edgeDiscovery1, edge_results{{1, mutualInfo && forwardIter ? 1 : 0}});
+        check_equivalence(LINE(make_message("Two nodes to discover")), nodeDiscovery1, node_order{1, 2});
+        check_equivalence(LINE(make_message("Two nodes to discover")), nodeDiscovery2, isDFS ? node_order{2, 1} : node_order{1, 2});
+        check_equivalence(LINE(make_message("One edge to discover")), edgeDiscovery1, edge_order{{1, mutualInfo && forwardIter ? 1 : 0}});
       }
     }
+
+    // 0----0----0
 
     {
       const auto[nodeDiscovery1, nodeDiscovery2, edgeDiscovery1, edgeDiscovery2]{traverse_graph<Traverser>(g, ignore_disconnected_t{2})};
 
       if constexpr(undirected)
       {
-        check_equivalence(LINE(make_message("Three nodes to discover")), nodeDiscovery1, std::vector<std::size_t>{2, 1, 0});
-        check_equivalence(LINE(make_message("Three nodes to discover")), nodeDiscovery2, std::vector<std::size_t>{2, 1, 0});
-        check_equivalence(LINE(make_message("Two edges to discover")), edgeDiscovery1, edge_results{{2,0}, {1, forwardIter ? 0 : 1}});
-        check_equivalence(LINE(make_message("Two edges to discover")), edgeDiscovery2, isBFS ? edge_results{{1, 1}, {0, 0}} : edge_results{{1, 0}, {0, 0}});
+        check_equivalence(LINE(make_message("Three nodes to discover")), nodeDiscovery1, node_order{2, 1, 0});
+        check_equivalence(LINE(make_message("Three nodes to discover")), nodeDiscovery2, isDFS ? node_order{0, 1, 2} : node_order{2, 1, 0});
+        check_equivalence(LINE(make_message("Two edges to discover")), edgeDiscovery1, edge_order{{2,0}, {1, forwardIter ? 0 : 1}});
+        check_equivalence(LINE(make_message("Two edges to discover")), edgeDiscovery2,
+          isBFS ? edge_order{{1, 1}, {0, 0}} :
+          isDFS ? edge_order{{0, 0}, {1, 1}} : edge_order{{1, 0}, {0, 0}});
       }
       else
       {
-        check_equivalence(LINE(make_message("One node to discover")), nodeDiscovery1, std::vector<std::size_t>{2});
-        check_equivalence(LINE(make_message("One node to discover")), nodeDiscovery2, std::vector<std::size_t>{2});
-        check_equivalence(LINE(make_message("No edges to discover")), edgeDiscovery1, edge_results{});
+        check_equivalence(LINE(make_message("One node to discover")), nodeDiscovery1, node_order{2});
+        check_equivalence(LINE(make_message("One node to discover")), nodeDiscovery2, node_order{2});
+        check_equivalence(LINE(make_message("No edges to discover")), edgeDiscovery1, edge_order{});
       }
     }
 
@@ -444,23 +453,23 @@ namespace sequoia::testing
     using traverser_t = Traverser<bfs_type::value>;
     const auto[nodeDiscovery1, nodeDiscovery2, edgeDiscovery1, edgeDiscovery2]{traverse_graph<traverser_t>(g, maths::ignore_disconnected_t{start})};
 
-    using edge_results = typename decltype(edgeDiscovery1)::result_type;
+    using edge_order = typename decltype(edgeDiscovery1)::result_type;
     std::vector<std::size_t> nodeAnswers;
-    edge_results edgeAnswers;
+    edge_order edgeAnswers;
     if constexpr(maths::undirected(G::flavour))
     {
-      edge_results edgeAnswers2;
+      edge_order edgeAnswers2;
       if(start == 0)
       {
         nodeAnswers = std::vector<std::size_t>{0,1,3,2};
-        edgeAnswers = edge_results{{0, 0}, {0, 1}, {1, 1}, {3, 0}};
-        edgeAnswers2 = edge_results{{1, 0}, {3, 1}, {2, 0}, {2, 1}};
+        edgeAnswers = edge_order{{0, 0}, {0, 1}, {1, 1}, {3, 0}};
+        edgeAnswers2 = edge_order{{1, 0}, {3, 1}, {2, 0}, {2, 1}};
       }
       else if(start == 2)
       {
         nodeAnswers = std::vector<std::size_t>{2,1,3,0};
-        edgeAnswers = edge_results{{2, 0}, {2, 1}, {1, 0}, {3, 1}};
-        edgeAnswers2 = edge_results{{1, 1}, {3, 0}, {0, 0}, {0, 1}};
+        edgeAnswers = edge_order{{2, 0}, {2, 1}, {1, 0}, {3, 1}};
+        edgeAnswers2 = edge_order{{1, 1}, {3, 0}, {0, 0}, {0, 1}};
       }
 
       check_equivalence(LINE(messageMaker("Second edge traversal, start = " + std::to_string(start) + " ")), edgeDiscovery2, edgeAnswers2);
@@ -471,12 +480,12 @@ namespace sequoia::testing
       if(start == 0)
       {
         nodeAnswers = std::vector<std::size_t>{0,1,2,3};
-        edgeAnswers = mutualInfo ? edge_results{{0, 0}, {1, 1}, {2, 1}, {3, 1}} : edge_results{{0, 0}, {1, 0}, {2, 0}, {3, 0}};
+        edgeAnswers = mutualInfo ? edge_order{{0, 0}, {1, 1}, {2, 1}, {3, 1}} : edge_order{{0, 0}, {1, 0}, {2, 0}, {3, 0}};
       }
       else if(start == 2)
       {
         nodeAnswers = std::vector<std::size_t>{2,3,0,1};
-        edgeAnswers = mutualInfo ? edge_results{{2, 1}, {3, 1}, {0, 0}, {1, 1}} : edge_results{{2, 0}, {3, 0}, {0, 0}, {1, 0}};
+        edgeAnswers = mutualInfo ? edge_order{{2, 1}, {3, 1}, {0, 0}, {1, 1}} : edge_order{{2, 0}, {3, 0}, {0, 0}, {1, 0}};
       }
     }
 
@@ -496,23 +505,23 @@ namespace sequoia::testing
     using traverser_t = Traverser<pdfs_type::value>;
     const auto[nodeDiscovery1, nodeDiscovery2, edgeDiscovery1, edgeDiscovery2]{traverse_graph<traverser_t>(g, maths::ignore_disconnected_t{start})};
 
-    using edge_results = typename decltype(edgeDiscovery1)::result_type;
+    using edge_order = typename decltype(edgeDiscovery1)::result_type;
     std::vector<std::size_t> nodeAnswers;
-    edge_results edgeAnswers;
+    edge_order edgeAnswers;
     if constexpr(maths::undirected(G::flavour))
     {
-      edge_results edgeAnswers2;
+      edge_order edgeAnswers2;
       if(start == 0)
       {
         nodeAnswers = std::vector<std::size_t>{0,1,2,3};
-        edgeAnswers = edge_results{{0, 0}, {0, 1}, {1, 0}, {2, 0}};
-        edgeAnswers2 = edge_results{{1, 1}, {2, 1}, {3, 0}, {3, 1}};
+        edgeAnswers = edge_order{{0, 0}, {0, 1}, {1, 0}, {2, 0}};
+        edgeAnswers2 = edge_order{{1, 1}, {2, 1}, {3, 0}, {3, 1}};
       }
       else if(start == 2)
       {
         nodeAnswers = std::vector<std::size_t>{2,1,0,3};
-        edgeAnswers = edge_results{{2, 0}, {2, 1}, {1, 1}, {0, 0}};
-        edgeAnswers2 = edge_results{{1, 0}, {0, 1}, {3, 0}, {3, 1}};
+        edgeAnswers = edge_order{{2, 0}, {2, 1}, {1, 1}, {0, 0}};
+        edgeAnswers2 = edge_order{{1, 0}, {0, 1}, {3, 0}, {3, 1}};
       }
 
       check_equivalence(LINE(messageMaker("Second edge traversal, start = " + std::to_string(start) + " ")), edgeDiscovery2, edgeAnswers2);
@@ -523,12 +532,12 @@ namespace sequoia::testing
       if(start == 0)
       {
         nodeAnswers = std::vector<std::size_t>{0,1,2,3};
-        edgeAnswers = mutualInfo ? edge_results{{0, 1}, {1, 0}, {2, 0}, {3, 0}} : edge_results{{0, 0}, {1, 0}, {2, 0}, {3, 0}};
+        edgeAnswers = mutualInfo ? edge_order{{0, 1}, {1, 0}, {2, 0}, {3, 0}} : edge_order{{0, 0}, {1, 0}, {2, 0}, {3, 0}};
       }
       else if(start == 2)
       {
         nodeAnswers = std::vector<std::size_t>{2,3,0,1};
-        edgeAnswers = mutualInfo ? edge_results{{2, 0}, {3, 0}, {0, 1}, {1, 0}} : edge_results{{2, 0}, {3, 0}, {0, 0}, {1, 0}};
+        edgeAnswers = mutualInfo ? edge_order{{2, 0}, {3, 0}, {0, 1}, {1, 0}} : edge_order{{2, 0}, {3, 0}, {0, 0}, {1, 0}};
       }
     }
 
