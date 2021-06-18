@@ -289,7 +289,8 @@ namespace sequoia::maths::graph_impl
 
             auto onDiscovery{[&nodeIndexQueue](const edge_index_type nextNode) { nodeIndexQueue.push(nextNode); }};
 
-            inner_loop(nodeIndex,
+            inner_loop(graph,
+                       nodeIndex,
                        conditions,
                        traversal_traits<G, Q>::begin(graph, nodeIndex),
                        traversal_traits<G, Q>::end(graph, nodeIndex),
@@ -347,30 +348,14 @@ namespace sequoia::maths::graph_impl
           const auto restartNode{static_cast<edge_index_type>(conditions.compute_restart_index(discovered))};
           conditions.register_discovered(discovered, restartNode);
 
-          auto onDiscovery{
-            [&](const edge_index_type nextNode) {
-              recursive_dfs(graph,
-                            nextNode,
-                            conditions,
-                            graph.cbegin_edges(nextNode),
-                            graph.cend_edges(nextNode),
-                            discovered,
-                            processed,
-                            nodeBeforeEdgesFn,
-                            nodeAfterEdgesFn,
-                            edgeFirstTraversalFn,
-                            edgeSecondTraversalFn,
-                            taskProcessingModel);
-            }
-          };
-
-          inner_loop(restartNode,
+          inner_loop(graph,
+                     restartNode,
                      conditions,
                      graph.cbegin_edges(restartNode),
                      graph.cend_edges(restartNode),
                      discovered,
                      processed,
-                     onDiscovery,
+                     recurse{},
                      nodeBeforeEdgesFn,
                      nodeAfterEdgesFn,
                      edgeFirstTraversalFn,
@@ -382,117 +367,139 @@ namespace sequoia::maths::graph_impl
 
       return taskProcessingModel.get();
     }
-    private:
-      template<class Iter>
-      [[nodiscard]]
-      constexpr static bool is_loop(Iter iter, [[maybe_unused]] const edge_index_type currentNodeIndex)
+  private:
+    struct recurse {};
+
+    template<class Iter>
+    [[nodiscard]]
+    constexpr static bool is_loop(Iter iter, [[maybe_unused]] const edge_index_type currentNodeIndex)
+    {
+      if constexpr(G::flavour == graph_flavour::directed_embedded)
+        return iter->target_node() == iter->source_node();
+      else
+        return iter->target_node() == currentNodeIndex;
+    }
+
+    template
+    <
+      disconnected_discovery_mode FindDisconnected,
+      class Iter,
+      class Bitset,
+      class OnDiscovery,
+      class NBEF,
+      class NAEF,
+      class EFTF,
+      class ESTF,
+      class TaskProcessingModel
+    >
+      requires (invocable<NBEF, edge_index_type>)
+            && (invocable<NAEF, edge_index_type>)
+            && (invocable<EFTF, const_edge_iterator>)
+            && (invocable<ESTF, const_edge_iterator>)
+            && (invocable<OnDiscovery, edge_index_type> || same_as<OnDiscovery, recurse>)
+      constexpr void inner_loop([[maybe_unused]] const G& graph,
+                                const edge_index_type nodeIndex,
+                                traversal_conditions<FindDisconnected>& conditions,
+                                Iter begin,
+                                Iter end,
+                                Bitset& discovered,
+                                Bitset& processed,
+                                OnDiscovery onDiscovery,
+                                NBEF&& nodeBeforeEdgesFn,
+                                NAEF&& nodeAfterEdgesFn,
+                                EFTF&& edgeFirstTraversalFn,
+                                ESTF&& edgeSecondTraversalFn,
+                                TaskProcessingModel&& taskProcessingModel)
+    {
+      constexpr bool hasNodeBeforeFn{!same_as<std::remove_cvref_t<NBEF>, null_func_obj>};
+      if constexpr(hasNodeBeforeFn)
       {
-        if constexpr(G::flavour == graph_flavour::directed_embedded)
-          return iter->target_node() == iter->source_node();
-        else
-          return iter->target_node() == currentNodeIndex;
+        taskProcessingModel.push(nodeBeforeEdgesFn, nodeIndex);
       }
 
-      template
-      <
-        disconnected_discovery_mode FindDisconnected,
-        class Iter,
-        class Bitset,
-        class OnDiscovery,
-        class NBEF,
-        class NAEF,
-        class EFTF,
-        class ESTF,
-        class TaskProcessingModel
-      >
-        requires (invocable<NBEF, edge_index_type>)
-              && (invocable<NAEF, edge_index_type>)
-              && (invocable<EFTF, const_edge_iterator>)
-              && (invocable<ESTF, const_edge_iterator>)
-              && (invocable<OnDiscovery, edge_index_type>)
-        constexpr void inner_loop(const edge_index_type nodeIndex,
-                                  traversal_conditions<FindDisconnected>& conditions,
-                                  Iter begin,
-                                  Iter end,
-                                  Bitset& discovered,
-                                  Bitset& processed,
-                                  OnDiscovery onDiscovery,
-                                  NBEF&& nodeBeforeEdgesFn,
-                                  NAEF&& nodeAfterEdgesFn,
-                                  EFTF&& edgeFirstTraversalFn,
-                                  ESTF&& edgeSecondTraversalFn,
-                                  TaskProcessingModel&& taskProcessingModel)
+      [[maybe_unused]] loop_processor<G> loops{};
+      for(auto iter{begin}; iter != end; ++iter)
       {
-        constexpr bool hasNodeBeforeFn{!same_as<std::remove_cvref_t<NBEF>, null_func_obj>};
-        if constexpr(hasNodeBeforeFn)
-        {
-          taskProcessingModel.push(nodeBeforeEdgesFn, nodeIndex);
-        }
+        const auto nextNode{iter->target_node()};
+        constexpr bool hasEdgeFirstFn{!same_as<std::remove_cvref_t<EFTF>, null_func_obj>};
 
-        [[maybe_unused]] loop_processor<G> loops{};
-        for(auto iter{begin}; iter != end; ++iter)
+        if constexpr(G::flavour != graph_flavour::directed)
         {
-          const auto nextNode{iter->target_node()};
-          constexpr bool hasEdgeFirstFn{!same_as<std::remove_cvref_t<EFTF>, null_func_obj>};
-
-          if constexpr(G::flavour != graph_flavour::directed)
+          constexpr bool hasEdgeSecondFn{!same_as<std::remove_cvref_t<ESTF>, null_func_obj>};
+          if constexpr(G::flavour == graph_flavour::directed_embedded)
           {
-            constexpr bool hasEdgeSecondFn{!same_as<std::remove_cvref_t<ESTF>, null_func_obj>};
-            if constexpr(G::flavour == graph_flavour::directed_embedded)
+            if(is_loop(iter, nodeIndex))
             {
-              if(is_loop(iter, nodeIndex))
-              {
-                const bool loopMatched{loops.loop_matched(begin, iter)};
-                if((iter->inverted() && !loopMatched) || (!iter->inverted() && loopMatched)) continue;
-              }
-              else
-              {
-                if(iter->source_node() != nodeIndex) continue;
-              }
+              const bool loopMatched{loops.loop_matched(begin, iter)};
+              if((iter->inverted() && !loopMatched) || (!iter->inverted() && loopMatched)) continue;
+            }
+            else
+            {
+              if(iter->source_node() != nodeIndex) continue;
+            }
 
+            if constexpr(hasEdgeFirstFn)
+            {
+              taskProcessingModel.push(edgeFirstTraversalFn, iter);
+            }
+          }
+          else if constexpr(hasEdgeFirstFn || hasEdgeSecondFn)
+          {
+            const bool loopMatched{is_loop(iter, nodeIndex) && loops.loop_matched(begin, iter)};
+            const bool secondTraversal{processed[nextNode] || loopMatched};
+            if(secondTraversal)
+            {
+              if constexpr(hasEdgeSecondFn)
+              {
+                taskProcessingModel.push(edgeSecondTraversalFn, iter);
+              }
+            }
+            else
+            {
               if constexpr(hasEdgeFirstFn)
               {
                 taskProcessingModel.push(edgeFirstTraversalFn, iter);
               }
             }
-            else if constexpr(hasEdgeFirstFn || hasEdgeSecondFn)
-            {
-              const bool loopMatched{is_loop(iter, nodeIndex) && loops.loop_matched(begin, iter)};
-              const bool secondTraversal{processed[nextNode] || loopMatched};
-              if(secondTraversal)
-              {
-                if constexpr(hasEdgeSecondFn)
-                {
-                  taskProcessingModel.push(edgeSecondTraversalFn, iter);
-                }
-              }
-              else
-              {
-                if constexpr(hasEdgeFirstFn)
-                {
-                  taskProcessingModel.push(edgeFirstTraversalFn, iter);
-                }
-              }
-            }
           }
-          else if constexpr(hasEdgeFirstFn)
-          {
-            taskProcessingModel.push(edgeFirstTraversalFn, iter);
-          }
+        }
+        else if constexpr(hasEdgeFirstFn)
+        {
+          taskProcessingModel.push(edgeFirstTraversalFn, iter);
+        }
 
-          if(!discovered[nextNode])
+        if(!discovered[nextNode])
+        {
+          conditions.register_discovered(discovered, nextNode);
+          if constexpr(same_as<OnDiscovery, recurse>)
           {
-            conditions.register_discovered(discovered, nextNode);
+            inner_loop(graph,
+                       nextNode,
+                       conditions,
+                       graph.cbegin_edges(nextNode),
+                       graph.cend_edges(nextNode),
+                       discovered,
+                       processed,
+                       recurse{},
+                       nodeBeforeEdgesFn,
+                       nodeAfterEdgesFn,
+                       edgeFirstTraversalFn,
+                       edgeSecondTraversalFn,
+                       taskProcessingModel);
+          }
+          else
+          {
             onDiscovery(nextNode);
           }
         }
-
-        if constexpr(!same_as<std::remove_cvref_t<NAEF>, null_func_obj>)
-        {
-          taskProcessingModel.push(nodeAfterEdgesFn, nodeIndex);
-        }
-
-        processed[nodeIndex] = true;
       }
+
+      if constexpr(!same_as<std::remove_cvref_t<NAEF>, null_func_obj>)
+      {
+        taskProcessingModel.push(nodeAfterEdgesFn, nodeIndex);
+      }
+
+      processed[nodeIndex] = true;
+    }
   };
 }

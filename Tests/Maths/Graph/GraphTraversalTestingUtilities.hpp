@@ -148,6 +148,11 @@ namespace sequoia::testing
     {
       return distance(m_Graph.cbegin_edges(iter.partition_index()), iter);
     }
+
+    template<class I> [[nodiscard]] auto dist(dfs_type, I iter)
+    {
+      return distance(m_Graph.cbegin_edges(iter.partition_index()), iter);
+    }
   };
 
   template<>
