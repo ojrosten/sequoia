@@ -434,20 +434,22 @@ namespace sequoia::testing
     //  |    |
     //  0----0
 
-    test_square_graph(g, 0, TraversalType{});
-    test_square_graph(g, 2, TraversalType{});
+    test_square_graph(g, 0, make_message, TraversalType{});
+    test_square_graph(g, 2, make_message, TraversalType{});
   }
 
-  template<maths::dynamic_network G>
-  void test_graph_traversals::test_square_graph(const G& g, const std::size_t start, bfs_type)
+  template<maths::dynamic_network G, class MessageMaker>
+  void test_graph_traversals::test_square_graph(const G& g, const std::size_t start, MessageMaker messageMaker, bfs_type)
   {
-    const auto[nodeDiscovery1, nodeDiscovery2, edgeDiscovery1, edgeDiscovery2]{traverse_graph<Traverser<bfs_type::value>>(g, maths::ignore_disconnected_t{start})};
+    using traverser_t = Traverser<bfs_type::value>;
+    const auto[nodeDiscovery1, nodeDiscovery2, edgeDiscovery1, edgeDiscovery2]{traverse_graph<traverser_t>(g, maths::ignore_disconnected_t{start})};
 
     using edge_results = typename decltype(edgeDiscovery1)::result_type;
+    std::vector<std::size_t> expected;
+    edge_results edgeAnswers;
     if constexpr(maths::undirected(G::flavour))
     {
-      std::vector<std::size_t> expected;
-      edge_results edgeAnswers, edgeAnswers2;
+      edge_results edgeAnswers2;
       if(start == 0)
       {
         expected = std::vector<std::size_t>{0,1,3,2};
@@ -460,14 +462,11 @@ namespace sequoia::testing
         edgeAnswers = edge_results{{2, 0}, {2, 1}, {1, 0}, {3, 1}};
         edgeAnswers2 = edge_results{{1, 1}, {3, 0}, {0, 0}, {0, 1}};
       }
-      check_equivalence(LINE(""), nodeDiscovery1, expected);
-      check_equivalence(LINE("First edge traversal"), edgeDiscovery1, edgeAnswers);
-      check_equivalence(LINE("Second edge traversal"), edgeDiscovery2, edgeAnswers2);
+
+      check_equivalence(LINE(messageMaker("Second edge traversal, start = " + std::to_string(start) + " ")), edgeDiscovery2, edgeAnswers2);
     }
     else
     {
-      std::vector<std::size_t> expected;
-      edge_results edgeAnswers;
       constexpr auto mutualInfo{mutual_info(G::flavour)};
       if(start == 0)
       {
@@ -479,26 +478,29 @@ namespace sequoia::testing
         expected = std::vector<std::size_t>{2,3,0,1};
         edgeAnswers = mutualInfo ? edge_results{{2, 1}, {3, 1}, {0, 0}, {1, 1}} : edge_results{{2, 0}, {3, 0}, {0, 0}, {1, 0}};
       }
-      check_equivalence(LINE("start = " + std::to_string(start) + " "), nodeDiscovery1, expected);
-      check_equivalence(LINE("First edge traversal, start = " + std::to_string(start) + " "), edgeDiscovery1, edgeAnswers);
     }
+
+    check_equivalence(LINE(messageMaker("start = " + std::to_string(start) + " ")), nodeDiscovery1, expected);
+    check_equivalence(LINE(messageMaker("First edge traversal, start = " + std::to_string(start) + " ")), edgeDiscovery1, edgeAnswers);
   }
 
-  template<maths::dynamic_network G>
-  void test_graph_traversals::test_square_graph(const G& g, const std::size_t start, dfs_type)
+  template<maths::dynamic_network G, class MessageMaker>
+  void test_graph_traversals::test_square_graph(const G& g, const std::size_t start, MessageMaker messageMaker, dfs_type)
   {
   }
 
-  template<maths::dynamic_network G>
-  void test_graph_traversals::test_square_graph(const G& g, const std::size_t start, pdfs_type)
+  template<maths::dynamic_network G, class MessageMaker>
+  void test_graph_traversals::test_square_graph(const G& g, const std::size_t start, MessageMaker messageMaker, pdfs_type)
   {
-    const auto[nodeDiscovery1, nodeDiscovery2, edgeDiscovery1, edgeDiscovery2]{traverse_graph<Traverser<pdfs_type::value>>(g, maths::ignore_disconnected_t{start})};
+    using traverser_t = Traverser<pdfs_type::value>;
+    const auto[nodeDiscovery1, nodeDiscovery2, edgeDiscovery1, edgeDiscovery2]{traverse_graph<traverser_t>(g, maths::ignore_disconnected_t{start})};
 
     using edge_results = typename decltype(edgeDiscovery1)::result_type;
+    std::vector<std::size_t> expected;
+    edge_results edgeAnswers;
     if constexpr(maths::undirected(G::flavour))
     {
-      std::vector<std::size_t> expected;
-      edge_results edgeAnswers, edgeAnswers2;
+      edge_results edgeAnswers2;
       if(start == 0)
       {
         expected = std::vector<std::size_t>{0,1,2,3};
@@ -511,14 +513,11 @@ namespace sequoia::testing
         edgeAnswers = edge_results{{2, 0}, {2, 1}, {1, 1}, {0, 0}};
         edgeAnswers2 = edge_results{{1, 0}, {0, 1}, {3, 0}, {3, 1}};
       }
-      check_equivalence(LINE(""), nodeDiscovery1, expected);
-      check_equivalence(LINE("First edge traversal"), edgeDiscovery1, edgeAnswers);
-      check_equivalence(LINE("Second edge traversal"), edgeDiscovery2, edgeAnswers2);
+
+      check_equivalence(LINE(messageMaker("Second edge traversal, start = " + std::to_string(start) + " ")), edgeDiscovery2, edgeAnswers2);
     }
     else
     {
-      std::vector<std::size_t> expected;
-      edge_results edgeAnswers;
       constexpr auto mutualInfo{mutual_info(G::flavour)};
       if(start == 0)
       {
@@ -530,9 +529,10 @@ namespace sequoia::testing
         expected = std::vector<std::size_t>{2,3,0,1};
         edgeAnswers = mutualInfo ? edge_results{{2, 0}, {3, 0}, {0, 1}, {1, 0}} : edge_results{{2, 0}, {3, 0}, {0, 0}, {1, 0}};
       }
-      check_equivalence(LINE("start = " + std::to_string(start) + " "), nodeDiscovery1, expected);
-      check_equivalence(LINE("First edge traversal, start = " + std::to_string(start) + " "), edgeDiscovery1, edgeAnswers);
     }
+
+    check_equivalence(LINE(messageMaker("start = " + std::to_string(start) + " ")), nodeDiscovery1, expected);
+    check_equivalence(LINE(messageMaker("First edge traversal, start = " + std::to_string(start) + " ")), edgeDiscovery1, edgeAnswers);
   }
 
   //=============================== Priority Search  ===============================//

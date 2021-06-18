@@ -49,14 +49,14 @@ namespace sequoia::testing
     template<maths::dynamic_network Graph>
     void test_priority_traversal();
 
-    template<maths::dynamic_network G>
-    void test_square_graph(const G& g, std::size_t start, bfs_type);
+    template<maths::dynamic_network G, class MessageMaker>
+    void test_square_graph(const G& g, std::size_t start, MessageMaker messageMaker, bfs_type);
 
-    template<maths::dynamic_network G>
-    void test_square_graph(const G& g, std::size_t start, dfs_type);
+    template<maths::dynamic_network G, class MessageMaker>
+    void test_square_graph(const G& g, std::size_t start, MessageMaker messageMaker, dfs_type);
 
-    template<maths::dynamic_network G>
-    void test_square_graph(const G& g, const std::size_t start, pdfs_type);
+    template<maths::dynamic_network G, class MessageMaker>
+    void test_square_graph(const G& g, const std::size_t start, MessageMaker messageMaker, pdfs_type);
 
     //=================== For weighted BFS  =================//
 
