@@ -45,6 +45,7 @@ target_sources(TestAll PRIVATE ${TestDir}/Experimental/ExperimentalTest.cpp
                ${TestDir}/Maths/Graph/EdgeTest.cpp
                ${TestDir}/Maths/Graph/EdgeTestingDiagnostics.cpp
                ${TestDir}/Maths/Graph/GraphMetaTest.cpp
+               ${TestDir}/Maths/Graph/GraphTraversalTestingUtilities.cpp
                ${TestDir}/Maths/Graph/HeterogeneousNodeStorageTest.cpp
                ${TestDir}/Maths/Graph/HeterogeneousStaticGraphTest.cpp
                ${TestDir}/Maths/Graph/NodeStorageAllocationTest.cpp

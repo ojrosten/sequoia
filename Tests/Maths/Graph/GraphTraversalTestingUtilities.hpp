@@ -14,6 +14,9 @@ namespace sequoia::testing
 {
   enum class traversal_flavour{ BFS, DFS, PDFS, PRS};
 
+  [[nodiscard]]
+  std::string to_string(const traversal_flavour f);
+
   template<traversal_flavour F>
   struct traversal_constant : std::integral_constant<traversal_flavour, F> {};
 
