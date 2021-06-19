@@ -1,6 +1,6 @@
 /*! \page testframeworkpage The Testing Framework
 
-    The sequoia testing framework is designed to be
+    The `sequoia` testing framework is designed to be
     \ref sec_robustness "robust",
     \ref sec_extensible "extensible",
     \ref sec_semantics  "semantics-aware",
@@ -31,14 +31,14 @@
     check_equality("Description of test", x, 5);
     </pre>
 
-    If x==5 the check passes, whereas if x!=5 a failure is reported. However, suppose that
+    If `x==5` the check passes, whereas if `x!=5` a failure is reported. However, suppose that
     check_equality has a bug. For example, it might never report failure.
     To counter this, tests can be created to be run in false-positive mode. In this case,
-    the above example will pass when x!=5 and fail when x==5. The purpose of this is to pick
+    the above example will pass when `x!=5` and fail when `x==5`. The purpose of this is to pick
     up bugs in the testing framework itself.
 
     In standard mode, when a test fails, details of the failure will be given directly to
-    the client. In the above example, for the case where x==4, something like this will be
+    the client. In the above example, for the case where `x==4`, something like this will be
     seen:
 
     <pre>
@@ -55,7 +55,8 @@
     framework generates output.
 
     Clients may extend the testing framework to conveniently test their types, for example
-    by specializing the detailed_equality_checker (see \ref sec_extensible). This is a perfect
+    by specializing the \ref detailed_equality_checker_primary "detailed_equality_checker"
+    (see \ref sec_extensible). This is a perfect
     opportunity to write some false-positive tests to give confidence that the newly-added code
     is not spuriously reporting success.
 
@@ -75,25 +76,25 @@
     \section sec_extensible Extensibility
 
     There are several ways in which the testing framework may be extended. Suppose that a
-    client has created a new type, my_type. One way or another, it is almost inevitable that
-    calls will be made to check_equality. If the type is sufficiently simple, and defines
-    operator==, it suffices for clients to specialize the class template
+    client has created a new type, `my_type`. One way or another, it is almost inevitable that
+    calls will be made to `check_equality`. If the type is sufficiently simple, and defines
+    `operator==`, it suffices for clients to specialize the class template
     \ref serializer_primary "serializer". This
     defines how to serialize instances of the class and so we may again end up with a failure
     report along the lines of the above. However, if the class is more complex, there is
     a superior alternative.
 
-    sequoia defines a class template,
+    `sequoia` defines a class template,
     \ref detailed_equality_checker_primary "detailed_equality_checker".
     The purpose of this is to
-    use the const accessors of two instances of a class to probe their purported equality.
+    use the `const` accessors of two instances of a class to probe their purported equality.
     Suppose that a client has created a new container and consider comparing two instances.
-    operator== may return false or true. In the first case, we want to get to the bottom
+    `operator==` may return `false` or `true`. In the first case, we want to get to the bottom
     of this, in a more appropriate manner than simply serializing the class (which may produce
     excessive output). For a container, it would make sense compare the size and then
     to use iterators to compare
-    the elements and find any that differ. However, it is worth doing this even if operator==
-    returns true; after all, the aim is to test with high fidelity and it may be that operator==
+    the elements and find any that differ. However, it is worth doing this even if `operator==`
+    returns `true`; after all, the aim is to test with high fidelity and it may be that `operator==`
     has a bug; or perhaps it is fine but there's a bug in the const accessors. Either way,
     a well designed specialization of the
     \ref detailed_equality_checker_primary "detailed_equality_checker" will catch these
@@ -106,7 +107,7 @@
     my_type x{5};
     </pre>
 
-    It is desirable to check that x is correctly initialized, but circular to write something
+    It is desirable to check that `x` is correctly initialized, but circular to write something
     like
 
     <pre>
@@ -119,16 +120,16 @@
     \ref equivalence_checker_primary "equivalence_checker" and
     \ref weak_equivalence_checker_primary "weak_equivalence_checker".
     Suppose that, in this example,
-    my_type simply wraps an int. Here it may make sense to define the specialization
-    equivalence_checker<my_type>; internally, this will define a static function, check, which
-    defines a comparison between my_type and int. The line of code above may then be replaced by
+    `my_type` simply wraps an `int`. Here it may make sense to define the specialization
+    `equivalence_checker<my_type>`; internally, this will define a static function, `check`, which
+    defines a comparison between `my_type` and `int`. The line of code above may then be replaced by
 
     <pre>
     check_equivalence("x correctly initialized", x, 5);
     </pre>
 
     Once consistency of initialization has been checked, thereafter it makes sense to revert
-    to check_equality.
+    to `check_equality`.
 
     What of the \ref weak_equivalence_checker_primary "weak_equivalence_checker"?
     This is for cases where there is a signifcant mismatch
@@ -136,9 +137,9 @@
     with.
 
     There is also an entirely different way in which the testing framework may be extended.
-    The \ref checker_primary "checker" class template provides basic functionality such as check_equality and
-    check_exception_thrown. However, the class template accepts a variadic number of extenders,
-    which enhance its functionality. Examples provided with sequoia are various semantics extenders
+    The \ref checker_primary "checker" class template provides basic functionality such as `check_equality` and
+    `check_exception_thrown`. However, the class template accepts a variadic number of extenders,
+    which enhance its functionality. Examples provided with `sequoia` are various semantics extenders
     (see below), a
     \ref performance_extender_primary "performance_extender", and a
     \ref fuzzy_extender_primary "fuzzy_extender" for doing fuzzy comparisons. These may be readily
@@ -149,15 +150,15 @@
 
     \section sec_semantics Semantics-Awareness
 
-    By utilizing sequoia's testing framework, clients are strongly encourged to think carefully
+    By utilizing `sequoia`'s testing framework, clients are strongly encourged to think carefully
     about the semantics of their classes upfront, rather than as an after-thought. For the
     purposes of this library, a type exhibiting regular semantics is understood to exhibit copy/move
-    constructors, copy/move assigment, operator==, operator!= and swap. Note that
+    constructors, copy/move assigment, `operator==`, `operator!=` and swap. Note that
     there is no strict requirement for a default constructor. If a class provides this
     functionality, then the \ref regular_test_alias "regular_test" alias template may be utilized,
     which makes use of the
     \ref regular_extender_primary "regular_extender" class template. The latter
-    provides an overload of check_semantics; given two instantiations of a class it checks
+    provides an overload of `check_semantics`: given two instantiations of a class it checks
     consistency of the above list of special member functions / functions. Alternatively,
     for move-only types (defined as regular types but for which the copy operations are removed),
     the \ref move_only_test_alias "move_only_test" may be exploited.
@@ -170,20 +171,20 @@
 
     The C++17 allocator framework is powerful but complex. Much of this complexity derives
     from the intersection of the logical abstraction containers seek to represent with the
-    realities of creating efficient code. Consider std::vector. This models dynamic, contiguous
-    storage: the logical content of this container is its elements. Indeed, operator== checks
+    realities of creating efficient code. Consider `std::vector`. This models dynamic, contiguous
+    storage: the logical content of this container is its elements. Indeed, `operator==` checks
     that two vectors are of the same size and that its elements are equal, but no more than
     this. However, vectors additionally comprise allocators which are not part of the logical
     abstraction. In principle, the allocator maybe stateful and this raises interesting questions.
-    Should operator== take account of this state? The design of std::vector gives a definitive
+    Should `operator==` take account of this state? The design of `std::vector` gives a definitive
     answer: No. But what should be done when doing assignment? Should the state of the allocator
     propagate or not. Should the choice be consistent between copy assignment and move assignment?
     What about swapping? There are no definitive answers to these questions and so this is left
-    in the hands of the client. Indeed, std::allocator_traits exposes various type definitions,
+    in the hands of the client. Indeed, `std::allocator_traits` exposes various type definitions,
     reflecting this freedom.
 
     With flexibility of the C++ allocation model comes commensurate difficulty when it comes
-    to testing. To help with this, the sequoia testing framework has been built with allocators
+    to testing. To help with this, the `sequoia` testing framework has been built with allocators
     firmly in mind. An allocator-aware class with regular semantics may be rigorously tested by
     using a
     \ref regular_allocation_extender_primary "regular_allocation_extender"; for the move-only case
@@ -200,21 +201,34 @@
     \ref regular_allocation_test_alias "Regular allocation tests"
     come with a facility for
     automatically
-    generating all 8 combinations of allocation propagation from a single call to check_semantics.
+    generating all 8 combinations of allocation propagation from a single call to `check_semantics`.
     \ref move_only_allocation_test_alias "Move-only allocation tests" do likewise for the
     4 combinations relevant to move-only types.
 
+    An additional subtlety arises from attempting to ensure independence on library implementations
+    and build settings. This is
+    sharpened by the fact that certain operations on the standard containers perform
+    additional allocations in an MSVC debug build, compared to a release build. However, the framework
+    is flexible enough to deal with this. Indeed, if the semantics are such that the
+    container under inspection behaves like a container of values, then the framework automatically
+    shifts the user-supplied allocation predictions to compensate. If, instead, it behaves like
+    a container of pointers, then a line of code registering this fact is sufficient. If the
+    behaviour does not fit into either of these categories, then the framework is flexible enough
+    for clients to specify their own solutions.
+    
+
     The allocation testing framework has been rigorously tested with a combination of
     false-positive and false-negative checks and has very high fidelity. For example, if
-    check_semantics is fed a type for which operator== has accidentally been written such
-    that one (or both) of its arguments are captured by value, rather than be reference, the
+    `check_semantics` is fed instances of an allocating type for which `operator==` has accidentally
+    been written such
+    that one (or both) of its arguments are captured by value, rather than by reference, the
     framework will detect this.
 
 
     \section sec_generics Generics-Friendliness
 
     When writing generic code, it is natural to want to test it with a variety of appropriate
-    types. This leads to the idea of templated unit tests; within sequoia this is
+    types. This leads to the idea of templated unit tests; within `sequoia` this is
     most naturally achieved by leaving the test classes plain (rather than templated) but
     templating various methods inside. However, a challenge with doing this is interpreting failures.
     The line at which the failure occurs is no longer enough to uniquely disambiguate, since
@@ -223,7 +237,7 @@
 
     Consequently, sequoia reports failures with plenty of type information. For example, the following
     output is typical of what to expect when checking the equality of two instances
-    of std::pair<int,double>:
+    of `std::pair<int,double>`:
 
     <pre>
     ../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 51
@@ -243,10 +257,10 @@
 
     \section sec_expressive Expressiveness
 
-    The focus of the testing framework's API is on providing useful primitives, such as check_equality and
-    check_semantics, rather than providing classes with names like 'Then' and 'That'. However, in
+    The focus of the testing framework's API is on providing useful primitives, such as `check_equality` and
+    `check_semantics`, rather than providing classes with names like 'Then' and 'That'. However, in
     addition to encouraging clients to think seriously about providing each check with a descriptive
-    string (which, being the first argument of each check method, is hard to avoid), there is the facility
+    string (which, being the first argument of each check method, is firmly encouraged), there is the facility
     to provide customized advice in the event of particular failures. For example, within the allocation
     testing framework, it is possible for a negative number of allocations to be reported. This is rather
     counter-intuitive and, when encountered for the first time, may raise doubts as to the correctness
@@ -261,13 +275,13 @@
 
     Clients may provided customized advice by calling many of the check methods with an extra function
     object bound to an instance of the \ref tutor_primary "tutor" class template.
-    If operator() is overloaded in such a way that it takes two instances of a type and
+    If `operator()` is overloaded in such a way that it takes two instances of a type and
     returns a string, then reflection is utilized to apply this function object whenever the
     appropriate overload may be invoked. For example, consider the case where a function object is supplied to
     provide advice for ints, under certain conditions. Suppose this
-    function object is fed to a check performed on a std::vector<int>. In this case, the function object
+    function object is fed to a check performed on a `std::vector<int>`. In this case, the function object
     will be propagated internally until it reaches the point where it can be invoked
-    on the ints at the end of the chain.
+    on the `int`s at the end of the chain.
 
 
  */
