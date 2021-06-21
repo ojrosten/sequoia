@@ -668,7 +668,7 @@ namespace sequoia::testing
 
   //=========================================== test_runner ===========================================//
 
-  void test_runner::test_creator::operator()(const parsing::commandline::arg_list& args)
+  void test_runner::nascent_test_data::operator()(const parsing::commandline::arg_list& args)
   {
     auto& nascentTests{runner.m_NascentTests};
 
@@ -819,22 +819,22 @@ namespace sequoia::testing
                   },
                   {"create", {"c"}, {}, [](const arg_list&) {},
                    { {"regular_test", {"regular"}, {"qualified::class_name<class T>", "equivalent type"},
-                      test_creator{"semantic", "regular", *this}, semanticsOptions
+                      nascent_test_data{"semantic", "regular", *this}, semanticsOptions
                      },
                      {"move_only_test", {"move_only"}, {"qualified::class_name<class T>", "equivalent type"},
-                      test_creator{"semantic", "move_only", *this}, semanticsOptions
+                      nascent_test_data{"semantic", "move_only", *this}, semanticsOptions
                      },
                      {"regular_allocation_test", {"regular_allocation", "allocation_test"}, {"raw class name"},
-                      test_creator{"allocation", "regular_allocation", *this}, allocationOptions
+                      nascent_test_data{"allocation", "regular_allocation", *this}, allocationOptions
                      },
                      {"move_only_allocation_test", {"move_only_allocation"}, {"raw class name"},
-                      test_creator{"allocation", "move_only_allocation", *this}, allocationOptions
+                      nascent_test_data{"allocation", "move_only_allocation", *this}, allocationOptions
                      },
                      {"free_test", {"free"}, {"header"},
-                      test_creator{"behavioural", "free", *this}, {familyOption, nameOption, genFreeSourceOption}
+                      nascent_test_data{"behavioural", "free", *this}, {familyOption, nameOption, genFreeSourceOption}
                      },
                      {"performance_test", {"performance"}, {"header"},
-                       test_creator{"behavioural", "performance", *this}, {familyOption}
+                       nascent_test_data{"behavioural", "performance", *this}, {familyOption}
                      }
                    },
                    [this](const arg_list&) {
@@ -859,8 +859,9 @@ namespace sequoia::testing
                         }
                       };
 
-                      init_project(args[0], args[1], ind(args[2]));
-                    }
+                      m_NascentProjects.push_back(project_data{args[0], args[1], ind(args[2])});
+                    },
+                    {{"--no-build", {}, {}, [this](const arg_list&) { m_NascentProjects.back().do_build = build_invocation::no; }}}
                   },
                   {"update-materials", {"u"}, {},
                     [this](const arg_list&) { m_UpdateMode = update_mode::soft; }
@@ -1063,33 +1064,37 @@ namespace sequoia::testing
 
     if(!mode(output_mode::help))
     {
-      report("Creating files...\n", create_files());
-
+      init_projects();
+      create_tests();
       run_tests();
     }
   }
 
-  [[nodiscard]]
-  std::string test_runner::create_files() const
+  void test_runner::create_tests()
   {
-    std::string mess{};
+    if(!m_NascentTests.empty())
+    {
+      stream() << "Creating files...";
+    }
+
     for(const auto& nascentVessel : m_NascentTests)
     {
       variant_visitor visitor{
-        [&mess,this](const auto& nascent){
+        [this](const auto& nascent){
+          std::string mess{"\n"};
           for(const auto& stub : nascent.stubs())
           {
             append_lines(mess, create_file(nascent, stub));
           }
 
           add_to_family(m_Paths.main_cpp(), nascent.family(), m_CodeIndent, nascent.constructors());
+
+          stream() << mess;
         }
       };
 
       std::visit(visitor, nascentVessel);
     }
-
-    return mess;
   }
 
   template<class Nascent>
@@ -1139,7 +1144,7 @@ namespace sequoia::testing
     const auto time{steady_clock::now()};
 
     const bool selected{!m_SelectedFamilies.empty() || !m_SelectedSources.empty()};
-    if((m_NascentTests.empty() && !m_ProjectInit) || selected)
+    if((m_NascentTests.empty() && m_NascentProjects.empty()) || selected)
     {
       if(!m_Families.empty())
       {
@@ -1184,43 +1189,49 @@ namespace sequoia::testing
     check_for_missing_tests();
   }
 
-  void test_runner::init_project(std::string_view copyright, const std::filesystem::path& projRoot, indentation codeIndent)
+  void test_runner::init_projects()
   {
     namespace fs = std::filesystem;
 
-    if(projRoot.empty())
-      throw std::runtime_error{"Project path should not be empty\n"};
-
-    if(!projRoot.is_absolute())
-      throw std::runtime_error{std::string{"Project path '"}.append(projRoot.generic_string()).append("' should be absolute\n")};
-
-    if(fs::exists(projRoot))
-      throw std::runtime_error{std::string{"Project location '"}.append(projRoot.generic_string()).append("' already exists\n")};
-
-    const auto name{(--projRoot.end())->generic_string()};
-    if(name.empty())
-     throw std::runtime_error{"Project name, deduced as the last token of path, is empty\n"};
-
-    if(std::find_if(name.cbegin(), name.cend(), [](char c) { return !std::isalnum(c) || (c == '_') || (c == '-'); }) != name.cend())
+    if(!m_NascentProjects.empty())
     {
-      throw std::runtime_error{std::string{"Please ensure the project name '"}
-      .append(name)
-      .append("' consists of just alpha-numeric characters, underscores and dashes\n")};
+      stream() << "Initializing Project(s)....\n";
     }
 
-    check_indent(codeIndent);
+    for(const auto& data : m_NascentProjects)
+    {
+      if(data.project_root.empty())
+        throw std::runtime_error{"Project path should not be empty\n"};
 
-    report("Creating new project at location:", projRoot.generic_string());
+      if(!data.project_root.is_absolute())
+        throw std::runtime_error{std::string{"Project path '"}.append(data.project_root.generic_string()).append("' should be absolute\n")};
 
-    fs::create_directories(projRoot);
-    fs::copy(project_template_path(m_Paths.project_root()), projRoot, fs::copy_options::recursive | fs::copy_options::skip_existing);
-    fs::create_directory(project_paths::source_path(projRoot));
-    fs::copy(aux_files_path(m_Paths.project_root()), aux_files_path(projRoot), fs::copy_options::recursive | fs::copy_options::skip_existing);
+      if(fs::exists(data.project_root))
+        throw std::runtime_error{std::string{"Project location '"}.append(data.project_root.generic_string()).append("' already exists\n")};
 
-    generate_test_main(copyright, projRoot, codeIndent);
-    generate_build_system_files(projRoot);
+      const auto name{(--data.project_root.end())->generic_string()};
+      if(name.empty())
+        throw std::runtime_error{"Project name, deduced as the last token of path, is empty\n"};
 
-    m_ProjectInit = true;
+      if(std::find_if(name.cbegin(), name.cend(), [](char c) { return !std::isalnum(c) || (c == '_') || (c == '-'); }) != name.cend())
+      {
+        throw std::runtime_error{std::string{"Please ensure the project name '"}
+        .append(name)
+        .append("' consists of just alpha-numeric characters, underscores and dashes\n")};
+      }
+
+      check_indent(data.code_indent);
+
+      report("Creating new project at location:", data.project_root.generic_string());
+
+      fs::create_directories(data.project_root);
+      fs::copy(project_template_path(m_Paths.project_root()), data.project_root, fs::copy_options::recursive | fs::copy_options::skip_existing);
+      fs::create_directory(project_paths::source_path(data.project_root));
+      fs::copy(aux_files_path(m_Paths.project_root()), aux_files_path(data.project_root), fs::copy_options::recursive | fs::copy_options::skip_existing);
+
+      generate_test_main(data.copyright, data.project_root, data.code_indent);
+      generate_build_system_files(data.project_root);
+    }
   }
 
   void test_runner::generate_test_main(std::string_view copyright, const std::filesystem::path& projRoot, indentation codeIndent) const

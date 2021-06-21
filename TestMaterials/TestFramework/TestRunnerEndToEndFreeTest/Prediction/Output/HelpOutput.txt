@@ -24,6 +24,7 @@ create | c |
   performance_test | performance | header
     --family | -f | family
 init | i | copyright owner, path ending with project name, code indent
+  --no-build
 update-materials | u |
 --async | -a |
 --async-depth | -ad | depth [0,1]

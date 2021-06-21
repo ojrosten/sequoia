@@ -313,9 +313,11 @@ namespace sequoia::testing
     concurrency_mode concurrency() const noexcept { return m_ConcurrencyMode; }
 
   private:
-    struct test_creator
+    enum class build_invocation { yes, no };
+
+    struct nascent_test_data
     {
-      test_creator(std::string type, std::string subType, test_runner& r)
+      nascent_test_data(std::string type, std::string subType, test_runner& r)
         : genus{std::move(type)}
         , species{std::move(subType)}
         , runner{r}
@@ -327,25 +329,26 @@ namespace sequoia::testing
       test_runner& runner;
     };
 
-    friend test_creator;
-
-    using family_map = std::map<std::string, bool, std::less<>>;
-    using source_list = std::vector<std::pair<std::filesystem::path, bool>>;
-
-    struct init_data
+    struct project_data
     {
-      std::string copyright;
-      std::filesystem::path location;
+      std::string copyright{};
+      std::filesystem::path project_root{};
+      indentation code_indent{"\t"};
+      build_invocation do_build{build_invocation::yes};
     };
 
-    using creation_factory
-      = runtime::factory<nascent_semantics_test, nascent_allocation_test, nascent_behavioural_test>;
-    using vessel = typename creation_factory::vessel;
+    friend nascent_test_data;
+
+    using family_map        = std::map<std::string, bool, std::less<>>;
+    using source_list       = std::vector<std::pair<std::filesystem::path, bool>>;
+    using creation_factory  = runtime::factory<nascent_semantics_test, nascent_allocation_test, nascent_behavioural_test>;
+    using vessel            = typename creation_factory::vessel;
 
     std::vector<test_family> m_Families{};
     family_map m_SelectedFamilies{};
     source_list m_SelectedSources{};
     std::vector<vessel> m_NascentTests{};
+    std::vector<project_data> m_NascentProjects{};
     std::string m_Copyright{};
     project_paths m_Paths;
 
@@ -353,8 +356,6 @@ namespace sequoia::testing
 
     indentation m_CodeIndent{"  "};
     std::ostream* m_Stream;
-
-    bool m_ProjectInit{};
 
     output_mode m_OutputMode{output_mode::standard};
     update_mode m_UpdateMode{update_mode::none};
@@ -403,10 +404,9 @@ namespace sequoia::testing
     [[nodiscard]]
     std::string create_file(const Nascent& nascent, std::string_view stub) const;
 
-    [[nodiscard]]
-    std::string create_files() const;
+    void create_tests();
 
-    void init_project(std::string_view copyright, const std::filesystem::path& projRoot, indentation codeIndent);
+    void init_projects();
 
     [[nodiscard]]
     bool mode(output_mode m) const noexcept
