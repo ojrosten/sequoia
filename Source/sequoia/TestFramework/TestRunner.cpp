@@ -72,6 +72,66 @@ namespace sequoia::testing
     }
   }
 
+  shell_command::shell_command(std::string cmd, const std::filesystem::path& output)
+    : m_Command{std::move(cmd)}
+  {
+    if(!output.empty())
+      m_Command.append(" > ").append(output.string()).append(" 2>&1");
+  }
+
+  [[nodiscard]]
+  shell_command cd_cmd(const std::filesystem::path& dir)
+  {
+    return std::string{"cd "}.append(dir.string());
+  }
+
+  [[nodiscard]]
+  shell_command cmake_cmd(const std::filesystem::path& buildDir, const std::filesystem::path& output)
+  {
+    auto cmd{std::string{"cmake -S ."}.append(" -B \"").append(buildDir.string()).append("\" ")};
+
+    if constexpr(with_msvc_v)
+    {
+      cmd.append("-G \"Visual Studio 16 2019\"");
+    }
+    else if constexpr(with_clang_v)
+    {
+      cmd.append("-D CMAKE_CXX_COMPILER=/usr/local/opt/llvm/bin/clang++");
+    }
+    else if constexpr(with_gcc_v)
+    {
+      cmd.append("-D CMAKE_CXX_COMPILER=/usr/bin/g++");
+    }
+
+    return {cmd, output};
+  }
+
+  [[nodiscard]]
+  shell_command build_cmd(const std::filesystem::path& buildDir, const std::filesystem::path& output)
+  {
+    const auto cmd{
+      [&output]() -> shell_command {
+        std::string str{"cmake --build . --target TestMain"};
+        if constexpr(with_msvc_v)
+        {
+#ifdef CMAKE_INTDIR
+          str.append(" --config ").append(std::string{CMAKE_INTDIR});
+#else
+          std::cerr << warning("Unable to find preprocessor definition for CMAKE_INTDIR");
+#endif
+        }
+        else
+        {
+          str.append(" -- -j4");
+        }
+
+        return {str, output};
+      }()
+    };
+
+    return cd_cmd(buildDir) && cmd;
+  }
+
   [[nodiscard]]
   bool handle_as_ref(std::string_view type)
   {
@@ -861,7 +921,10 @@ namespace sequoia::testing
 
                       m_NascentProjects.push_back(project_data{args[0], args[1], ind(args[2])});
                     },
-                    {{"--no-build", {}, {}, [this](const arg_list&) { m_NascentProjects.back().do_build = build_invocation::no; }}}
+                    { {"--no-build",     {}, {},           [this](const arg_list&)      { m_NascentProjects.back().do_build = build_invocation::no; }},
+                      {"--cmake-output", {}, {"filename"}, [this](const arg_list& args) { m_NascentProjects.back().cmake_output = args[0]; }},
+                      {"--build-output", {}, {"filename"}, [this](const arg_list& args) { m_NascentProjects.back().build_output = args[0]; }}
+                    }
                   },
                   {"update-materials", {"u"}, {},
                     [this](const arg_list&) { m_UpdateMode = update_mode::soft; }
@@ -1195,7 +1258,7 @@ namespace sequoia::testing
 
     if(!m_NascentProjects.empty())
     {
-      stream() << "Initializing Project(s)....\n";
+      stream() << "Initializing Project(s)....\n\n";
     }
 
     for(const auto& data : m_NascentProjects)
@@ -1231,6 +1294,14 @@ namespace sequoia::testing
 
       generate_test_main(data.copyright, data.project_root, data.code_indent);
       generate_build_system_files(data.project_root);
+
+      if(data.do_build == build_invocation::yes)
+      {
+        stream() << "Building...\n\n";
+        const std::string buildDir{"../build/CMade/win/TestAll"};
+
+        invoke(cd_cmd(data.project_root / "TestAll") && cmake_cmd(buildDir, data.cmake_output) && build_cmd(buildDir, data.build_output));
+      }
     }
   }
 

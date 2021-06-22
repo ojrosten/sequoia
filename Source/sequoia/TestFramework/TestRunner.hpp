@@ -22,6 +22,43 @@
 
 namespace sequoia::testing
 {
+  class shell_command
+  {
+  public:
+    shell_command(std::string cmd) : m_Command{std::move(cmd)}
+    {}
+
+    shell_command(std::string cmd, const std::filesystem::path& output);
+
+    [[nodiscard]]
+    friend bool operator==(const shell_command&, const shell_command&) noexcept = default;
+
+    [[nodiscard]]
+    friend bool operator!=(const shell_command&, const shell_command&) noexcept = default;
+
+    [[nodiscard]]
+    friend shell_command operator&&(const shell_command& lhs, const shell_command& rhs)
+    {
+      return std::string{lhs.m_Command}.append(" && ").append(rhs.m_Command);
+    }
+
+    friend void invoke(const shell_command& cmd)
+    {
+      std::system(cmd.m_Command.data());
+    }
+  private:
+    std::string m_Command;
+  };
+
+  [[nodiscard]]
+  shell_command cd_cmd(const std::filesystem::path& dir);
+
+  [[nodiscard]]
+  shell_command cmake_cmd(const std::filesystem::path& buildDir, const std::filesystem::path& output);
+
+  [[nodiscard]]
+  shell_command build_cmd(const std::filesystem::path& buildDir, const std::filesystem::path& output);
+
   [[nodiscard]]
   std::string report_time(const test_family::summary& s);
 
@@ -335,6 +372,7 @@ namespace sequoia::testing
       std::filesystem::path project_root{};
       indentation code_indent{"\t"};
       build_invocation do_build{build_invocation::yes};
+      std::filesystem::path cmake_output{}, build_output{};
     };
 
     friend nascent_test_data;

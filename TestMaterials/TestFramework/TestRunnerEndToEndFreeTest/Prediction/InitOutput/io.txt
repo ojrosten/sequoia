@@ -1,4 +1,7 @@
 Initializing Project(s)....
+
 Creating new project at location:
 C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject
+
+Building...
 

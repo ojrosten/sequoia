@@ -227,7 +227,13 @@ namespace sequoia::testing
       }
     };
 
-    commandline_arguments args{"", "init", "Oliver Jacob Rosten", generated().string(), "\t"};
+    commandline_arguments args{"",
+                               "init",
+                               "Oliver Jacob Rosten",
+                               generated().string(),
+                               "\t",
+                               "--cmake-output", "CMakeOutput.txt",
+                               "--build-output", "BuildOutput.txt"};
 
     std::stringstream outputStream{};
     test_runner tr{args.size(), args.get(), "Oliver J. Rosten", paths, "  ", outputStream};
@@ -244,14 +250,14 @@ namespace sequoia::testing
 
     check(LINE("Command processor existance"), std::system(nullptr) > 0);
 
-    const cmd_builder b{generated() / "TestAll", generated() / "build" / "CMade" / "TestAll"};
+    const cmd_builder b{generated() / "TestAll", generated() / "build" / "CMade" / "win" / "TestAll"};
 
     // Run cmake, build and run
     fs::create_directory(working_materials() / "EmptyRunOutput");
-    const auto cmakeBuild{b.cmake_build_and_run(working_materials() / "EmptyRunOutput")};
-    std::system(cmakeBuild.cmd.c_str());
-    check(LINE("First CMake output existance"), fs::exists(cmakeBuild.cmake_output));
-    check(LINE("First build output existance"), fs::exists(cmakeBuild.build_output));
+    std::system(add_output_file(cd(b.buildDir) && run_cmd(), working_materials() / "EmptyRunOutput" / "EmptyRunOutput.txt").data());
+
+    check(LINE("First CMake output existance"), fs::exists(b.mainDir / "CMakeOutput.txt"));
+    check(LINE("First build output existance"), fs::exists(b.buildDir / "BuildOutput.txt"));
     check_equivalence(LINE("Test Runner Output"), working_materials() / "EmptyRunOutput", predictive_materials() / "EmptyRunOutput");
 
     auto fake{ [&mat{auxiliary_materials()}] () { return mat / "FakeProject"; } };

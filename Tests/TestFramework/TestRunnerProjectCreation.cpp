@@ -135,7 +135,7 @@ namespace sequoia::testing
       [&mat{working_materials()}]() { return mat / "GeneratedProject"; }
     };
 
-    commandline_arguments args{"", "init", "Oliver Jacob Rosten", generated().string(), "  "};
+    commandline_arguments args{"", "init", "Oliver Jacob Rosten", generated().string(), "  ", "--no-build"};
 
     std::stringstream outputStream{};
     test_runner tr{args.size(), args.get(), "Oliver J. Rosten", make_project_paths(), "\t", outputStream};
