@@ -139,12 +139,6 @@ namespace sequoia::testing
       std::filesystem::path mainDir, buildDir;
 
       [[nodiscard]]
-      cmake_and_build_command cmake_build_and_run(const std::filesystem::path& output) const
-      {
-        return cmake_and_build("CMakeOutput.txt", "BuildOutput.txt") && add_output_file(run_cmd(), output / "EmptyRunOutput.txt");
-      }
-
-      [[nodiscard]]
       cmake_and_build_command create_cmake_build_run(const std::filesystem::path& output) const
       {
         return    cd(buildDir)
