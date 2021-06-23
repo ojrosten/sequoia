@@ -70,6 +70,26 @@ namespace sequoia::testing
       if(std::string_view{ind}.find_first_not_of("\t ") != std::string::npos)
         throw std::runtime_error{"Code indent must comprise only spaces or tabs"};
     }
+
+    [[nodiscard]]
+    std::filesystem::path build_dir()
+    {
+      std::filesystem::path dir{"../build/CMade"};
+      if constexpr(with_msvc_v)
+      {
+        dir /= "win";
+      }
+      else if constexpr (with_clang_v)
+      {
+        dir /= "clang";
+      }
+      else if constexpr(with_gcc_v)
+      {
+        dir /= "gcc";
+      }
+
+      return dir /= "TestAll";
+    }
   }
 
   shell_command::shell_command(std::string cmd, const std::filesystem::path& output)
@@ -1298,7 +1318,7 @@ namespace sequoia::testing
       if(data.do_build == build_invocation::yes)
       {
         stream() << "Building...\n\n";
-        const std::string buildDir{"../build/CMade/win/TestAll"};
+        const auto buildDir{build_dir()};
 
         invoke(cd_cmd(data.project_root / "TestAll") && cmake_cmd(buildDir, data.cmake_output) && build_cmd(buildDir, data.build_output));
       }
