@@ -121,7 +121,7 @@ namespace sequoia::testing
 #ifdef CMAKE_INTDIR
           str.append(" --config ").append(std::string{CMAKE_INTDIR});
 #else
-          std::cerr << warning("Unable to find preprocessor definition for CMAKE_INTDIR");
+          std::cerr << parsing::commandline::warning("Unable to find preprocessor definition for CMAKE_INTDIR");
 #endif
         }
         else
