@@ -61,10 +61,16 @@ namespace sequoia::testing
     const std::filesystem::path& include_target() const noexcept;
 
     [[nodiscard]]
+    const std::filesystem::path& cmade_build_dir() const noexcept;
+
+    [[nodiscard]]
     friend bool operator==(const project_paths&, const project_paths&) noexcept = default;
 
     [[nodiscard]]
     friend bool operator!=(const project_paths&, const project_paths&) noexcept = default;
+
+    [[nodiscard]]
+    static std::filesystem::path cmade_build_dir(const std::filesystem::path& projectRoot, const std::filesystem::path& mainCppDir);
   private:
     std::filesystem::path
       m_ProjectRoot{},
@@ -75,7 +81,8 @@ namespace sequoia::testing
       m_Output{},
       m_MainCpp{},
       m_MainCppDir{},
-      m_IncludeTarget{};
+      m_IncludeTarget{},
+      m_CMadeBuildDir{};
   };
 
 

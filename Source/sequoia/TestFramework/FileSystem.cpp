@@ -63,10 +63,32 @@ namespace sequoia::testing
     , m_MainCpp{std::move(mainCpp)}
     , m_MainCppDir{m_MainCpp.parent_path()}
     , m_IncludeTarget{std::move(includePath)}
+    , m_CMadeBuildDir{cmade_build_dir(m_ProjectRoot, m_MainCppDir)}
   {
     throw_unless_directory(m_ProjectRoot, "\nTest repository not found");
     throw_unless_regular_file(m_MainCpp, "\nTry ensuring that the application is run from the appropriate directory");
     throw_unless_regular_file(m_IncludeTarget, "\nInclude target not found");
+  }
+
+  [[nodiscard]]
+  std::filesystem::path project_paths::cmade_build_dir(const std::filesystem::path& projectRoot, const std::filesystem::path& mainCppDir)
+  {
+    std::filesystem::path dir{projectRoot / "build" / "CMade"};
+    if constexpr(with_msvc_v)
+    {
+      dir /= "win";
+    }
+    else if constexpr(with_clang_v)
+    {
+      dir /= "clang";
+    }
+    else if constexpr(with_gcc_v)
+    {
+      dir /= "gcc";
+    }
+
+    namespace fs = std::filesystem;
+    return dir /= fs::relative(mainCppDir, projectRoot);
   }
 
   [[nodiscard]]
@@ -130,6 +152,12 @@ namespace sequoia::testing
   const std::filesystem::path& project_paths::include_target() const noexcept
   {
     return m_IncludeTarget;
+  }
+
+  [[nodiscard]]
+  const std::filesystem::path& project_paths::cmade_build_dir() const noexcept
+  {
+    return m_CMadeBuildDir;
   }
 
   [[nodiscard]]

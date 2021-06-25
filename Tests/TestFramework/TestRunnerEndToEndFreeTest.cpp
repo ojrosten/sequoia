@@ -50,19 +50,24 @@ namespace sequoia::testing
 
     struct cmd_builder
     {
+      explicit cmd_builder(const std::filesystem::path& projRoot)
+        : mainDir{projRoot / "TestAll"}
+        , buildDir{project_paths::cmade_build_dir(projRoot, mainDir)}
+      {}
+
       std::filesystem::path mainDir, buildDir;
 
       [[nodiscard]]
-      shell_command create_cmake_build_run(const std::filesystem::path& output) const
+      shell_command create_build_run(const std::filesystem::path& creationOutput, std::string_view buildOutput, const std::filesystem::path& output) const
       {
         return    cd_cmd(buildDir)
-               && shell_command{create_cmd(), output / "CreationOutput.txt"}
-               && build_cmd(buildDir, "BuildOutput2.txt")
+               && shell_command{create_cmd(), creationOutput / "CreationOutput.txt"}
+               && build_cmd(buildDir, buildOutput)
                && shell_command{run_cmd(), output / "TestRunOutput.txt"}
                && shell_command{run_cmd().append(" select ../../../Tests/HouseAllocationTest.cpp")
-                                           .append(" select Maybe/MaybeTest.cpp")
-                                           .append(" select FooTest.cpp"),
-                                  output / "SpecifiedSourceOutput.txt"}
+                                         .append(" select Maybe/MaybeTest.cpp")
+                                         .append(" select FooTest.cpp"),
+                                output / "SpecifiedSourceOutput.txt"}
                && shell_command{run_cmd().append(" select Plurgh.cpp test Absent select Foo test FooTest.cpp"), output / "FailedSpecifiedSourceOutput.txt"}
                && shell_command{run_cmd().append(" test Foo"), output / "SpecifiedFamilyOutput.txt"}
                && shell_command{run_cmd().append(" -v"), output / "VerboseOutput.txt"}
@@ -141,6 +146,7 @@ namespace sequoia::testing
     std::stringstream outputStream{};
     test_runner tr{args.size(), args.get(), "Oliver J. Rosten", paths, "  ", outputStream};
 
+    //=================== Initialize, cmake and build new project ===================//
     tr.execute();
 
     fs::create_directory(working_materials() / "InitOutput");
@@ -153,10 +159,9 @@ namespace sequoia::testing
 
     check(LINE("Command processor existance"), std::system(nullptr) > 0);
 
-    //////////// Correct platform dependence!
-    const cmd_builder b{generated() / "TestAll", generated() / "build" / "CMade" / "win" / "TestAll"};
+    const cmd_builder b{generated()};
 
-    // Run the tests
+    //=================== Run the test executable ===================//
     fs::create_directory(working_materials() / "EmptyRunOutput");
     invoke(cd_cmd(b.buildDir) && shell_command{run_cmd(), working_materials() / "EmptyRunOutput" / "EmptyRunOutput.txt" });
 
@@ -166,19 +171,20 @@ namespace sequoia::testing
 
     auto fake{ [&mat{auxiliary_materials()}] () { return mat / "FakeProject"; } };
 
-    // Create tests and run
+    //=================== Create tests and run ===================//
     fs::copy(fake() / "Source" / "fakeProject", generated() / "Source" / "generatedProject", fs::copy_options::recursive | fs::copy_options::skip_existing);
+    fs::create_directory(working_materials() / "CreationOutput");
     fs::create_directory(working_materials() / "Output");
 
-    const auto createTestsCMakeBuildRun{b.create_cmake_build_run(working_materials() / "Output")};
+    const auto createTestsCMakeBuildRun{b.create_build_run(working_materials() / "CreationOutput", "BuildOutput2.txt", working_materials() / "Output")};
     invoke(createTestsCMakeBuildRun);
 
-    //check(LINE("Second CMake output existance"), fs::exists(createTestsCMakeBuildRun.cmake_output));
-    //check(LINE("Second build output existance"), fs::exists(createTestsCMakeBuildRun.build_output));
-
+    // Note: the act of creation invokes cmake, and so the first check implicitly checks the cmake output
+    check_equivalence(LINE("Test Runner Creation Output"), working_materials() / "CreationOutput", predictive_materials() / "CreationOutput");
+    check(LINE("Second build output existance"), fs::exists(b.buildDir / "BuildOutput2.txt"));
     check_equivalence(LINE("Test Runner Output"), working_materials() / "Output", predictive_materials() / "Output");
 
-    // Change several of the tests, and some of the source, rebuild and run
+    //=================== Change several of the tests, and some of the source, rebuild and run ===================//
     fs::copy(auxiliary_materials() / "TestMaterials", generated() / "TestMaterials", fs::copy_options::recursive | fs::copy_options::overwrite_existing);
     fs::copy(auxiliary_materials() / "ModifiedSource" / "UsefulThings.hpp", generated() / "Source" / "generatedProject" / "Utilities", fs::copy_options::overwrite_existing);
     fs::copy(auxiliary_materials() / "ModifiedSource" / "UsefulThings.cpp", generated() / "Source" / "generatedProject" / "Utilities", fs::copy_options::overwrite_existing);
@@ -203,8 +209,8 @@ namespace sequoia::testing
     const auto rebuildRun{b.rebuild_run(working_materials() / "RebuiltOutput")};
     invoke(rebuildRun);
 
-    //check(LINE("Third CMake output existance"), fs::exists(rebuildRun.cmake_output));
-    //check(LINE("Third build output existance"), fs::exists(rebuildRun.build_output));
+    check(LINE("Third CMake output existance"), fs::exists(b.mainDir / "CMakeOutput3.txt"));
+    check(LINE("Third build output existance"), fs::exists(b.buildDir / "BuildOutput3.txt"));
 
     check_equivalence(LINE("Test Runner Output"), working_materials() / "RebuiltOutput", predictive_materials() / "RebuiltOutput");
     fs::create_directory(working_materials() / "TestAll");
@@ -219,7 +225,7 @@ namespace sequoia::testing
     fs::copy(generated() / "TestMaterials", working_materials() / "OriginalTestMaterials", fs::copy_options::recursive);
     check_equivalence(LINE("Original Test Materials"), working_materials() / "OriginalTestMaterials", predictive_materials() / "OriginalTestMaterials");
 
-    // Rerun but update materials
+    //=================== Rerun but update materials ===================//
     fs::create_directory(working_materials() / "RunWithUpdateOutput");
     invoke(b.materials_update(working_materials() / "RunWithUpdateOutput"));
     check_equivalence(LINE("Test Runner Output"), working_materials() / "RunWithUpdateOutput", predictive_materials() / "RunWithUpdateOutput");
@@ -227,7 +233,7 @@ namespace sequoia::testing
     fs::copy(generated() / "TestMaterials", working_materials() / "UpdatedTestMaterials", fs::copy_options::recursive);
     check_equivalence(LINE("Updated Test Materials"), working_materials() / "UpdatedTestMaterials", predictive_materials() / "UpdatedTestMaterials");
 
-    // Rerun and do a dump
+    //=================== Rerun and do a dump ===================//
     fs::create_directory(working_materials() / "RunPostUpdate");
     invoke(b.dump(working_materials() / "RunPostUpdate"));
     check_equivalence(LINE("Test Runner Output"), working_materials() / "RunPostUpdate", predictive_materials() / "RunPostUpdate");
@@ -236,6 +242,7 @@ namespace sequoia::testing
     fs::copy(generated() / "output" / "Recovery" / "Dump.txt", working_materials() / "Dump");
     check_equivalence(LINE("Dump File"), working_materials() / "Dump", predictive_materials() / "Dump");
 
+    //=================== Rerun in the presence of an exception ===================//
     // Rename generated() / TestMaterials / Stuff / FooTest / WorkingCopy / RepresentativeCases,
     // in order to cause the check in FooTest.cpp to throw, thereby allowing the recovery
     // mode to be tested.
@@ -252,6 +259,7 @@ namespace sequoia::testing
     fs::copy(generated() / "output" / "Recovery" / "Recovery.txt", working_materials() / "Recovery");
     check_equivalence(LINE("Recovery File"), working_materials() / "Recovery", predictive_materials() / "Recovery");
 
+    //=================== Rerun in the presence of an exception mid-check ===================//
     // Rename generated() / TestMaterials / Stuff / FooTest / Prediction / RepresentativeCases,
     // in order to cause the check in FooTest.cpp to throw mid-check, thereby allowing the recovery
     // mode to be tested.

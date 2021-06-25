@@ -54,5 +54,9 @@ include(${BuildSystem}/Utilities.cmake)
 target_include_directories(TestMain PRIVATE ${SourceDir})
 target_include_directories(TestMain PRIVATE ${TestDir})
 
+if (MSVC)
+	set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT TestMain)
+endif()
+
 FINALIZE(TestMain)
 

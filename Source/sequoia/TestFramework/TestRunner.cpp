@@ -15,6 +15,10 @@
 #include "sequoia/TestFramework/FileEditors.hpp"
 #include "sequoia/TextProcessing/Substitutions.hpp"
 
+#ifdef _MSC_VER
+  #include <format>
+#endif 
+
 namespace sequoia::testing
 {
   namespace
@@ -69,27 +73,6 @@ namespace sequoia::testing
     {
       if(std::string_view{ind}.find_first_not_of("\t ") != std::string::npos)
         throw std::runtime_error{"Code indent must comprise only spaces or tabs"};
-    }
-
-    // MOVE THIS!!
-    [[nodiscard]]
-    std::filesystem::path build_dir(std::string_view dir)
-    {
-      std::filesystem::path relDir{"../build/CMade"};
-      if constexpr(with_msvc_v)
-      {
-        relDir /= "win";
-      }
-      else if constexpr (with_clang_v)
-      {
-        relDir /= "clang";
-      }
-      else if constexpr(with_gcc_v)
-      {
-        relDir /= "gcc";
-      }
-
-      return relDir /= dir;
     }
   }
 
@@ -294,8 +277,18 @@ namespace sequoia::testing
         throw std::runtime_error("Unable to find boundaries of copyright message");
       }
 
-      const auto now{std::chrono::system_clock::to_time_t(std::chrono::system_clock::now())};
-      const auto year{std::to_string(1900 + std::localtime(&now)->tm_year)};
+      // TO DO: prefer the MSC code once supported by other compilers
+      const auto year{
+        []() -> std::string {
+#ifdef _MSC_VER
+          using namespace std::chrono;
+          return std::format("{}", year_month_day{floor<days>(system_clock::now())}.year());
+#else
+          const auto now{std::chrono::system_clock::to_time_t(std::chrono::system_clock::now())};
+          return std::to_string(1900 + std::localtime(&now)->tm_year);
+#endif
+        }()
+      };
 
       const auto newCopyright{std::string{"Copyright "}.append(copyright).append(" ").append(year).append(".")};
 
@@ -1180,13 +1173,9 @@ namespace sequoia::testing
       }
 
       namespace fs = std::filesystem;
-      if(!m_Paths.main_cpp_dir().empty())
+      if(fs::exists(m_Paths.main_cpp_dir()) && fs::exists(m_Paths.cmade_build_dir()))
       {
-        const auto token{(--m_Paths.main_cpp_dir().end())->string()};
-        if(const auto buildDir{build_dir(token)}; fs::exists(m_Paths.main_cpp_dir() / buildDir))
-        {
-          invoke(cd_cmd(m_Paths.main_cpp_dir()) && cmake_cmd(buildDir, ""));
-        }
+        invoke(cd_cmd(m_Paths.main_cpp_dir()) && cmake_cmd(m_Paths.cmade_build_dir(), ""));
       }
     }
   }
@@ -1329,9 +1318,10 @@ namespace sequoia::testing
       if(data.do_build == build_invocation::yes)
       {
         stream() << "Building...\n\n";
-        const auto buildDir{build_dir("TestAll")};
+        const auto mainDir{data.project_root / "TestAll"};
+        const auto buildDir{project_paths::cmade_build_dir(data.project_root, mainDir)};
 
-        invoke(cd_cmd(data.project_root / "TestAll") && cmake_cmd(buildDir, data.cmake_output) && build_cmd(buildDir, data.build_output));
+        invoke(cd_cmd(mainDir) && cmake_cmd(buildDir, data.cmake_output) && build_cmd(buildDir, data.build_output));
       }
     }
   }
