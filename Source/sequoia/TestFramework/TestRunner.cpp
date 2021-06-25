@@ -71,24 +71,25 @@ namespace sequoia::testing
         throw std::runtime_error{"Code indent must comprise only spaces or tabs"};
     }
 
+    // MOVE THIS!!
     [[nodiscard]]
-    std::filesystem::path build_dir()
+    std::filesystem::path build_dir(std::string_view dir)
     {
-      std::filesystem::path dir{"../build/CMade"};
+      std::filesystem::path relDir{"../build/CMade"};
       if constexpr(with_msvc_v)
       {
-        dir /= "win";
+        relDir /= "win";
       }
       else if constexpr (with_clang_v)
       {
-        dir /= "clang";
+        relDir /= "clang";
       }
       else if constexpr(with_gcc_v)
       {
-        dir /= "gcc";
+        relDir /= "gcc";
       }
 
-      return dir /= "TestAll";
+      return relDir /= dir;
     }
   }
 
@@ -1158,25 +1159,35 @@ namespace sequoia::testing
     if(!m_NascentTests.empty())
     {
       stream() << "Creating files...";
-    }
 
-    for(const auto& nascentVessel : m_NascentTests)
-    {
-      variant_visitor visitor{
-        [this](const auto& nascent){
-          std::string mess{"\n"};
-          for(const auto& stub : nascent.stubs())
-          {
-            append_lines(mess, create_file(nascent, stub));
+      for(const auto& nascentVessel : m_NascentTests)
+      {
+        variant_visitor visitor{
+          [this](const auto& nascent) {
+            std::string mess{"\n"};
+            for(const auto& stub : nascent.stubs())
+            {
+              append_lines(mess, create_file(nascent, stub));
+            }
+
+            add_to_family(m_Paths.main_cpp(), nascent.family(), m_CodeIndent, nascent.constructors());
+
+            stream() << mess;
           }
+        };
 
-          add_to_family(m_Paths.main_cpp(), nascent.family(), m_CodeIndent, nascent.constructors());
+        std::visit(visitor, nascentVessel);
+      }
 
-          stream() << mess;
+      namespace fs = std::filesystem;
+      if(!m_Paths.main_cpp_dir().empty())
+      {
+        const auto token{(--m_Paths.main_cpp_dir().end())->string()};
+        if(const auto buildDir{build_dir(token)}; fs::exists(m_Paths.main_cpp_dir() / buildDir))
+        {
+          invoke(cd_cmd(m_Paths.main_cpp_dir()) && cmake_cmd(buildDir, ""));
         }
-      };
-
-      std::visit(visitor, nascentVessel);
+      }
     }
   }
 
@@ -1318,7 +1329,7 @@ namespace sequoia::testing
       if(data.do_build == build_invocation::yes)
       {
         stream() << "Building...\n\n";
-        const auto buildDir{build_dir()};
+        const auto buildDir{build_dir("TestAll")};
 
         invoke(cd_cmd(data.project_root / "TestAll") && cmake_cmd(buildDir, data.cmake_output) && build_cmd(buildDir, data.build_output));
       }
