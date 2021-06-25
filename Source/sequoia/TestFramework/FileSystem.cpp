@@ -50,7 +50,7 @@ namespace sequoia::testing
   }
 
   project_paths::project_paths(const std::filesystem::path& projectRoot)
-    : project_paths{projectRoot, projectRoot / "TestAll" / "TestMain.cpp", projectRoot / "TestAll" / "TestMain.cpp"}
+    : project_paths{projectRoot, projectRoot / "TestAll" / "TestAllMain.cpp", projectRoot / "TestAll" / "TestAllMain.cpp"}
   {}
 
   project_paths::project_paths(const std::filesystem::path& projectRoot, std::filesystem::path mainCpp, std::filesystem::path includePath)

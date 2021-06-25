@@ -96,9 +96,9 @@ namespace sequoia::testing
     fs::create_directory(working() / "TestSandbox");
     fs::copy(project_template_path(root) / "Source" / "CMakeLists.txt", working() / "Source");
     fs::copy(project_template_path(root) / "TestAll" / "CMakeLists.txt", working() / "TestSandbox");
-    fs::copy(project_template_path(root) / "TestAll"/ "TestMain.cpp", working() / "TestSandbox" / "TestSandbox.cpp");
+    fs::copy(project_template_path(root) / "TestAll"/ "TestAllMain.cpp", working() / "TestSandbox" / "TestSandbox.cpp");
     read_modify_write(working() / "TestSandbox" / "CMakeLists.txt" , [](std::string& text) {
-        replace_all(text, "TestMain.cpp", "TestSandbox.cpp");
+        replace_all(text, "TestAllMain.cpp", "TestSandbox.cpp");
       }
     );
 

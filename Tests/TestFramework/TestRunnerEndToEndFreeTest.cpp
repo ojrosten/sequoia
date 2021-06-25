@@ -21,14 +21,14 @@ namespace sequoia::testing
       if constexpr (with_msvc_v)
       {
 #ifdef CMAKE_INTDIR
-        return std::string{CMAKE_INTDIR}.append("\\TestMain.exe");
+        return std::string{CMAKE_INTDIR}.append("\\TestAll.exe");
 #else
         throw std::logic_error{"Unable to find preprocessor definition for CMAKE_INTDIR"};
 #endif
       }
       else
       {
-        return "./TestMain";
+        return "./TestAll";
       }
     }
 
@@ -216,10 +216,10 @@ namespace sequoia::testing
     fs::create_directory(working_materials() / "TestAll");
     const auto generatedProject{working_materials().parent_path() / "GeneratedProject"};
 
-    const fs::path mainCpp{"TestAll/TestMain.cpp"}, mainCmake{"TestAll/CMakeLists.txt"};
+    const fs::path mainCpp{"TestAll/TestAllMain.cpp"}, mainCmake{"TestAll/CMakeLists.txt"};
     fs::copy_file(generatedProject / mainCpp,   working_materials() / mainCpp);
     fs::copy_file(generatedProject / mainCmake, working_materials() / mainCmake);
-    check_equivalence(LINE("TestMain.cpp"),  working_materials() / mainCpp,   predictive_materials() / mainCpp);
+    check_equivalence(LINE("TestAllMain.cpp"),  working_materials() / mainCpp,   predictive_materials() / mainCpp);
     check_equivalence(LINE("CMakeLists.tt"), working_materials() / mainCmake, predictive_materials() / mainCmake);
 
     fs::copy(generated() / "TestMaterials", working_materials() / "OriginalTestMaterials", fs::copy_options::recursive);

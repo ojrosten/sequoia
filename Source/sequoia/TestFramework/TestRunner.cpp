@@ -115,7 +115,7 @@ namespace sequoia::testing
   {
     const auto cmd{
       [&output]() -> shell_command {
-        std::string str{"cmake --build . --target TestMain"};
+        std::string str{"cmake --build . --target TestAll"};
         if constexpr(with_msvc_v)
         {
 #ifdef CMAKE_INTDIR
@@ -1353,7 +1353,7 @@ namespace sequoia::testing
       }
     };
 
-    read_modify_write(projRoot / "TestAll" / "TestMain.cpp", modifier);
+    read_modify_write(projRoot / "TestAll" / "TestAllMain.cpp", modifier);
   }
 
   void test_runner::generate_build_system_files(const std::filesystem::path& projRoot) const
