@@ -80,7 +80,9 @@ namespace sequoia::testing
     : m_Command{std::move(cmd)}
   {
     if(!output.empty())
+    {
       m_Command.append(" > ").append(output.string()).append(" 2>&1");
+    }
   }
 
   [[nodiscard]]
@@ -134,6 +136,12 @@ namespace sequoia::testing
     };
 
     return cd_cmd(buildDir) && cmd;
+  }
+
+  [[nodiscard]]
+  shell_command git_first_cmd(const std::filesystem::path& output)
+  {
+    return shell_command{"git init", output} && shell_command{"git add . ", output} && shell_command{"git commit -m \"First commit\"", output};
   }
 
   [[nodiscard]]
@@ -935,9 +943,9 @@ namespace sequoia::testing
 
                       m_NascentProjects.push_back(project_data{args[0], args[1], ind(args[2])});
                     },
-                    { {"--no-build",     {}, {},           [this](const arg_list&)      { m_NascentProjects.back().do_build = build_invocation::no; }},
-                      {"--cmake-output", {}, {"filename"}, [this](const arg_list& args) { m_NascentProjects.back().cmake_output = args[0]; }},
-                      {"--build-output", {}, {"filename"}, [this](const arg_list& args) { m_NascentProjects.back().build_output = args[0]; }}
+                    { {"--no-build", {}, {}, [this](const arg_list&) { m_NascentProjects.back().do_build = build_invocation::no; }},
+                      {"--to-files",  {}, {"filename (A file of this name will appear in multiple directories)"}, 
+                        [this](const arg_list& args) { m_NascentProjects.back().output = args[0]; }}
                     }
                   },
                   {"update-materials", {"u"}, {},
@@ -1175,7 +1183,8 @@ namespace sequoia::testing
       namespace fs = std::filesystem;
       if(fs::exists(m_Paths.main_cpp_dir()) && fs::exists(m_Paths.cmade_build_dir()))
       {
-        invoke(cd_cmd(m_Paths.main_cpp_dir()) && cmake_cmd(m_Paths.cmade_build_dir(), ""));
+        stream() << "\n";
+        invoke(cd_cmd(m_Paths.main_cpp_dir()) && cmake_cmd(m_Paths.cmade_build_dir(), {}));
       }
     }
   }
@@ -1321,7 +1330,12 @@ namespace sequoia::testing
         const auto mainDir{data.project_root / "TestAll"};
         const auto buildDir{project_paths::cmade_build_dir(data.project_root, mainDir)};
 
-        invoke(cd_cmd(mainDir) && cmake_cmd(buildDir, data.cmake_output) && build_cmd(buildDir, data.build_output));
+        invoke(   cd_cmd(mainDir)
+               && cmake_cmd(buildDir, data.output)
+               && build_cmd(buildDir, data.output)
+               && cd_cmd(data.project_root)
+               && git_first_cmd(data.output)
+        );
       }
     }
   }

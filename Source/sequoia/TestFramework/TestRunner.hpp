@@ -25,6 +25,8 @@ namespace sequoia::testing
   class shell_command
   {
   public:
+    enum class append_mode{no, yes};
+
     shell_command(std::string cmd) : m_Command{std::move(cmd)}
     {}
 
@@ -42,8 +44,15 @@ namespace sequoia::testing
       return std::string{lhs.m_Command}.append(" && ").append(rhs.m_Command);
     }
 
+    [[nodiscard]]
+    friend shell_command operator&&(const shell_command& lhs, std::string_view rhs)
+    {
+      return lhs && shell_command{std::string{rhs}};
+    }
+
     friend void invoke(const shell_command& cmd)
     {
+      std::cout << std::flush;
       std::system(cmd.m_Command.data());
     }
   private:
@@ -58,6 +67,9 @@ namespace sequoia::testing
 
   [[nodiscard]]
   shell_command build_cmd(const std::filesystem::path& buildDir, const std::filesystem::path& output);
+
+  [[nodiscard]]
+  shell_command git_first_cmd(const std::filesystem::path& output);
 
   [[nodiscard]]
   std::string report_time(const test_family::summary& s);
@@ -372,7 +384,7 @@ namespace sequoia::testing
       std::filesystem::path project_root{};
       indentation code_indent{"\t"};
       build_invocation do_build{build_invocation::yes};
-      std::filesystem::path cmake_output{}, build_output{};
+      std::filesystem::path output{};
     };
 
     friend nascent_test_data;

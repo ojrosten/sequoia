@@ -25,8 +25,7 @@ create | c |
     --family | -f | family
 init | i | copyright owner, path ending with project name, code indent
   --no-build
-  --cmake-output filename
-  --build-output filename
+  --to-files filename (A file of this name will appear in multiple directories)
 update-materials | u |
 --async | -a |
 --async-depth | -ad | depth [0,1]

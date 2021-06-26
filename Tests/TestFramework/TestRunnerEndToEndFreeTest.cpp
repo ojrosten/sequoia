@@ -140,8 +140,7 @@ namespace sequoia::testing
                                "Oliver Jacob Rosten",
                                generated().string(),
                                "\t",
-                               "--cmake-output", "CMakeOutput.txt",
-                               "--build-output", "BuildOutput.txt"};
+                               "--to-files", "GenerationOutput.txt"};
 
     std::stringstream outputStream{};
     test_runner tr{args.size(), args.get(), "Oliver J. Rosten", paths, "  ", outputStream};
@@ -165,8 +164,10 @@ namespace sequoia::testing
     fs::create_directory(working_materials() / "EmptyRunOutput");
     invoke(cd_cmd(b.buildDir) && shell_command{run_cmd(), working_materials() / "EmptyRunOutput" / "EmptyRunOutput.txt" });
 
-    check(LINE("First CMake output existance"), fs::exists(b.mainDir / "CMakeOutput.txt"));
-    check(LINE("First build output existance"), fs::exists(b.buildDir / "BuildOutput.txt"));
+    check(LINE("First CMake output existance"), fs::exists(b.mainDir / "GenerationOutput.txt"));
+    check(LINE("First build output existance"), fs::exists(b.buildDir / "GenerationOutput.txt"));
+    check(LINE("First git output existance"), fs::exists(generated() / "GenerationOutput.txt"));
+    check(LINE(".git existance"), fs::exists(generated() / ".git"));
     check_equivalence(LINE("Test Runner Output"), working_materials() / "EmptyRunOutput", predictive_materials() / "EmptyRunOutput");
 
     auto fake{ [&mat{auxiliary_materials()}] () { return mat / "FakeProject"; } };
