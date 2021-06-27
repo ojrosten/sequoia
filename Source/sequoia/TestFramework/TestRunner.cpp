@@ -76,12 +76,13 @@ namespace sequoia::testing
     }
   }
 
-  shell_command::shell_command(std::string cmd, const std::filesystem::path& output)
+  shell_command::shell_command(std::string cmd, const std::filesystem::path& output, append_mode app)
     : m_Command{std::move(cmd)}
   {
     if(!output.empty())
     {
-      m_Command.append(" > ").append(output.string()).append(" 2>&1");
+      m_Command.append(app == append_mode::no ? " > " : " >> ");
+      m_Command.append(output.string()).append(" 2>&1");
     }
   }
 
@@ -139,9 +140,19 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  shell_command git_first_cmd(const std::filesystem::path& output)
+  shell_command git_first_cmd(const std::filesystem::path& root, const std::filesystem::path& output)
   {
-    return shell_command{"git init", output} && shell_command{"git add . ", output} && shell_command{"git commit -m \"First commit\"", output};
+    if(!output.empty())
+    {
+      namespace fs = std::filesystem;
+      read_modify_write(root / ".gitignore", [&](std::string& text) { text.append("\n\n").append(output.filename().string()); });
+    }
+
+    using app_mode = shell_command::append_mode;
+    return cd_cmd(root)
+        && shell_command{"git init", output}
+        && shell_command{"git add . ", output, app_mode::yes}
+        && shell_command{"git commit -m \"First commit\"", output, app_mode::yes};
   }
 
   [[nodiscard]]
@@ -1333,8 +1344,7 @@ namespace sequoia::testing
         invoke(   cd_cmd(mainDir)
                && cmake_cmd(buildDir, data.output)
                && build_cmd(buildDir, data.output)
-               && cd_cmd(data.project_root)
-               && git_first_cmd(data.output)
+               && git_first_cmd(data.project_root, data.output)
         );
       }
     }

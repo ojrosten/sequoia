@@ -168,6 +168,13 @@ namespace sequoia::testing
     check(LINE("First build output existance"), fs::exists(b.buildDir / "GenerationOutput.txt"));
     check(LINE("First git output existance"), fs::exists(generated() / "GenerationOutput.txt"));
     check(LINE(".git existance"), fs::exists(generated() / ".git"));
+    if constexpr(with_msvc_v)
+    {
+      // There seems to be a problem whereby std::filesystem::remove_all won't remove
+      // .git on windows. This causes clean up to fail when the testing framework is
+      // invoked. Hence, it is manually removed here.
+      invoke(cd_cmd(generated().parent_path()) && std::string{"rd /s /q "}.append((generated() / ".git").string()));
+    }
     check_equivalence(LINE("Test Runner Output"), working_materials() / "EmptyRunOutput", predictive_materials() / "EmptyRunOutput");
 
     auto fake{ [&mat{auxiliary_materials()}] () { return mat / "FakeProject"; } };

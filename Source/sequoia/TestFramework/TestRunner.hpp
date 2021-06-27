@@ -30,7 +30,7 @@ namespace sequoia::testing
     shell_command(std::string cmd) : m_Command{std::move(cmd)}
     {}
 
-    shell_command(std::string cmd, const std::filesystem::path& output);
+    shell_command(std::string cmd, const std::filesystem::path& output, append_mode app=append_mode::no);
 
     [[nodiscard]]
     friend bool operator==(const shell_command&, const shell_command&) noexcept = default;
@@ -45,9 +45,9 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    friend shell_command operator&&(const shell_command& lhs, std::string_view rhs)
+    friend shell_command operator&&(const shell_command& lhs, std::string rhs)
     {
-      return lhs && shell_command{std::string{rhs}};
+      return lhs && shell_command{rhs};
     }
 
     friend void invoke(const shell_command& cmd)
@@ -69,7 +69,7 @@ namespace sequoia::testing
   shell_command build_cmd(const std::filesystem::path& buildDir, const std::filesystem::path& output);
 
   [[nodiscard]]
-  shell_command git_first_cmd(const std::filesystem::path& output);
+  shell_command git_first_cmd(const std::filesystem::path&  root, const std::filesystem::path& output);
 
   [[nodiscard]]
   std::string report_time(const test_family::summary& s);
