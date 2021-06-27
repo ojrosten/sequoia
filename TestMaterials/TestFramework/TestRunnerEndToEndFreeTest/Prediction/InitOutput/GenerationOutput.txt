@@ -1,5 +1,5 @@
-Initialized empty Git repository in C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/.git/
-[master (root-commit) 3ed14d0] First commit
+Initialized empty Git repository in /Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/.git/
+[trunk (root-commit) 49980d6] First commit
  27 files changed, 1869 insertions(+)
  create mode 100644 .gitignore
  create mode 100644 LICENSE.md
