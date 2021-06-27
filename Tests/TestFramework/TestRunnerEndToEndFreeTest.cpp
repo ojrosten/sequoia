@@ -158,7 +158,6 @@ namespace sequoia::testing
 
     const cmd_builder b{generated()};
 
-    check_equivalence(LINE(""), working_materials() / "InitOutput", predictive_materials() / "InitOutput");
     check(LINE("First CMake output existance"), fs::exists(b.mainDir / "GenerationOutput.txt"));
     check(LINE("First build output existance"), fs::exists(b.buildDir / "GenerationOutput.txt"));
     check(LINE("First git output existance"), fs::exists(generated() / "GenerationOutput.txt"));
@@ -170,6 +169,9 @@ namespace sequoia::testing
       // invoked. Hence, it is manually removed here.
       invoke(cd_cmd(generated().parent_path()) && std::string{"rd /s /q "}.append((generated() / ".git").string()));
     }
+
+    fs::copy(generated() / "GenerationOutput.txt", working_materials() / "InitOutput");
+    check_equivalence(LINE(""), working_materials() / "InitOutput", predictive_materials() / "InitOutput");
 
     //=================== Run the test executable ===================//
     fs::create_directory(working_materials() / "EmptyRunOutput");
