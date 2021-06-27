@@ -135,6 +135,8 @@ namespace sequoia::testing
       }
     };
 
+    check(LINE("Command processor existance"), std::system(nullptr) > 0);
+
     commandline_arguments args{"",
                                "init",
                                "Oliver Jacob Rosten",
@@ -154,16 +156,9 @@ namespace sequoia::testing
       file << outputStream.rdbuf();
     }
 
-    check_equivalence(LINE(""), working_materials() / "InitOutput", predictive_materials() / "InitOutput");
-
-    check(LINE("Command processor existance"), std::system(nullptr) > 0);
-
     const cmd_builder b{generated()};
 
-    //=================== Run the test executable ===================//
-    fs::create_directory(working_materials() / "EmptyRunOutput");
-    invoke(cd_cmd(b.buildDir) && shell_command{run_cmd(), working_materials() / "EmptyRunOutput" / "EmptyRunOutput.txt" });
-
+    check_equivalence(LINE(""), working_materials() / "InitOutput", predictive_materials() / "InitOutput");
     check(LINE("First CMake output existance"), fs::exists(b.mainDir / "GenerationOutput.txt"));
     check(LINE("First build output existance"), fs::exists(b.buildDir / "GenerationOutput.txt"));
     check(LINE("First git output existance"), fs::exists(generated() / "GenerationOutput.txt"));
@@ -175,6 +170,11 @@ namespace sequoia::testing
       // invoked. Hence, it is manually removed here.
       invoke(cd_cmd(generated().parent_path()) && std::string{"rd /s /q "}.append((generated() / ".git").string()));
     }
+
+    //=================== Run the test executable ===================//
+    fs::create_directory(working_materials() / "EmptyRunOutput");
+    invoke(cd_cmd(b.buildDir) && shell_command{run_cmd(), working_materials() / "EmptyRunOutput" / "EmptyRunOutput.txt" });
+
     check_equivalence(LINE("Test Runner Output"), working_materials() / "EmptyRunOutput", predictive_materials() / "EmptyRunOutput");
 
     auto fake{ [&mat{auxiliary_materials()}] () { return mat / "FakeProject"; } };
