@@ -76,6 +76,12 @@ namespace sequoia::testing
     }
   }
 
+  void invoke(const shell_command& cmd)
+  {
+    std::cout << std::flush;
+    if(cmd.m_Command.data()) std::system(cmd.m_Command.data());
+  }
+
   shell_command::shell_command(std::string cmd, const std::filesystem::path& output, append_mode app)
     : m_Command{std::move(cmd)}
   {
@@ -153,6 +159,49 @@ namespace sequoia::testing
         && shell_command{"git init -b trunk", output}
         && shell_command{"git add . ", output, app_mode::yes}
         && shell_command{"git commit -m \"First commit\"", output, app_mode::yes};
+  }
+
+  [[nodiscard]]
+  shell_command launch_cmd(const std::filesystem::path& root, const std::filesystem::path& buildDir)
+  {
+    if(root.empty()) return {};
+
+    if constexpr(with_msvc_v)
+    {
+      namespace fs = std::filesystem;
+
+      const auto vs2019Dir{
+        []() -> std::filesystem::path {
+          const fs::path vs2019Path{"C:/Program Files (x86)/Microsoft Visual Studio/2019"};
+          if(const auto enterprise{vs2019Path / "Enterprise"}; fs::exists(enterprise))
+          {
+            return enterprise;
+          }
+          else if(const auto pro{vs2019Path / "Professional"}; fs::exists(pro))
+          {
+            return pro;
+          }
+          else if(const auto community{vs2019Path / "Community"}; fs::exists(community))
+          {
+            return community;
+          }
+
+          return "";
+        }()
+      };
+
+      if(!vs2019Dir.empty())
+      {
+        const auto devenv{vs2019Dir / "Common7" / "IDE" / "devenv"};
+
+        const auto token{*(--root.end())};
+        const auto sln{(buildDir / token).concat("Tests.sln")};
+
+        return std::string{"\""}.append(devenv.string()).append("\" ").append("/Run ").append(sln.string());
+      }
+    }
+
+    return {};
   }
 
   [[nodiscard]]
@@ -956,7 +1005,12 @@ namespace sequoia::testing
                     },
                     { {"--no-build", {}, {}, [this](const arg_list&) { m_NascentProjects.back().do_build = build_invocation::no; }},
                       {"--to-files",  {}, {"filename (A file of this name will appear in multiple directories)"}, 
-                        [this](const arg_list& args) { m_NascentProjects.back().output = args[0]; }}
+                        [this](const arg_list& args) { m_NascentProjects.back().output = args[0]; }},
+                      {"--no-ide", {}, {}, [this](const arg_list&) {
+                          auto& build{m_NascentProjects.back().do_build};
+                          if(build == build_invocation::launch_ide) build = build_invocation::yes;
+                        }
+                      }
                     }
                   },
                   {"update-materials", {"u"}, {},
@@ -1335,7 +1389,7 @@ namespace sequoia::testing
       generate_test_main(data.copyright, data.project_root, data.code_indent);
       generate_build_system_files(data.project_root);
 
-      if(data.do_build == build_invocation::yes)
+      if(data.do_build != build_invocation::no)
       {
         stream() << "Building...\n\n";
         const auto mainDir{data.project_root / "TestAll"};
@@ -1345,6 +1399,7 @@ namespace sequoia::testing
                && cmake_cmd(buildDir, data.output)
                && build_cmd(buildDir, data.output)
                && git_first_cmd(data.project_root, data.output)
+               && (data.do_build == build_invocation::launch_ide ? launch_cmd(data.project_root, buildDir) : shell_command{})
         );
       }
     }

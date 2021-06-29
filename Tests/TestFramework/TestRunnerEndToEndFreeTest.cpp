@@ -142,7 +142,8 @@ namespace sequoia::testing
                                "Oliver Jacob Rosten",
                                generated().string(),
                                "\t",
-                               "--to-files", "GenerationOutput.txt"};
+                               "--to-files", "GenerationOutput.txt",
+                               "--no-ide"};
 
     std::stringstream outputStream{};
     test_runner tr{args.size(), args.get(), "Oliver J. Rosten", paths, "  ", outputStream};

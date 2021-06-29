@@ -27,6 +27,8 @@ namespace sequoia::testing
   public:
     enum class append_mode{no, yes};
 
+    shell_command() = default;
+
     shell_command(std::string cmd) : m_Command{std::move(cmd)}
     {}
 
@@ -41,7 +43,7 @@ namespace sequoia::testing
     [[nodiscard]]
     friend shell_command operator&&(const shell_command& lhs, const shell_command& rhs)
     {
-      return std::string{lhs.m_Command}.append(" && ").append(rhs.m_Command);
+      return rhs.m_Command.empty() ? lhs : std::string{lhs.m_Command}.append(" && ").append(rhs.m_Command);
     }
 
     [[nodiscard]]
@@ -50,11 +52,7 @@ namespace sequoia::testing
       return lhs && shell_command{rhs};
     }
 
-    friend void invoke(const shell_command& cmd)
-    {
-      std::cout << std::flush;
-      std::system(cmd.m_Command.data());
-    }
+    friend void invoke(const shell_command& cmd);
   private:
     std::string m_Command;
   };
@@ -69,7 +67,10 @@ namespace sequoia::testing
   shell_command build_cmd(const std::filesystem::path& buildDir, const std::filesystem::path& output);
 
   [[nodiscard]]
-  shell_command git_first_cmd(const std::filesystem::path&  root, const std::filesystem::path& output);
+  shell_command git_first_cmd(const std::filesystem::path& root, const std::filesystem::path& output);
+
+  [[nodiscard]]
+  shell_command launch_cmd(const std::filesystem::path& root, const std::filesystem::path& buildDir);
 
   [[nodiscard]]
   std::string report_time(const test_family::summary& s);
@@ -362,7 +363,7 @@ namespace sequoia::testing
     concurrency_mode concurrency() const noexcept { return m_ConcurrencyMode; }
 
   private:
-    enum class build_invocation { yes, no };
+    enum class build_invocation { no = 0, yes, launch_ide };
 
     struct nascent_test_data
     {
@@ -383,7 +384,7 @@ namespace sequoia::testing
       std::string copyright{};
       std::filesystem::path project_root{};
       indentation code_indent{"\t"};
-      build_invocation do_build{build_invocation::yes};
+      build_invocation do_build{build_invocation::launch_ide};
       std::filesystem::path output{};
     };
 
