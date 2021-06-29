@@ -32,7 +32,7 @@ namespace sequoia::testing
     shell_command(std::string cmd) : m_Command{std::move(cmd)}
     {}
 
-    shell_command(std::string cmd, const std::filesystem::path& output, append_mode app=append_mode::no);
+    shell_command(std::string_view preamble, std::string cmd, const std::filesystem::path& output, append_mode app = append_mode::no);
 
     [[nodiscard]]
     friend bool operator==(const shell_command&, const shell_command&) noexcept = default;
@@ -43,7 +43,8 @@ namespace sequoia::testing
     [[nodiscard]]
     friend shell_command operator&&(const shell_command& lhs, const shell_command& rhs)
     {
-      return rhs.m_Command.empty() ? lhs : std::string{lhs.m_Command}.append(" && ").append(rhs.m_Command);
+      return rhs.m_Command.empty() ? lhs
+           : lhs.m_Command.empty() ? rhs : std::string{lhs.m_Command}.append(" && ").append(rhs.m_Command);
     }
 
     [[nodiscard]]
@@ -52,9 +53,18 @@ namespace sequoia::testing
       return lhs && shell_command{rhs};
     }
 
+    [[nodiscard]]
+    bool empty() const noexcept
+    {
+      return m_Command.empty();
+    }
+
     friend void invoke(const shell_command& cmd);
   private:
     std::string m_Command;
+
+    shell_command(std::string cmd, const std::filesystem::path& output, append_mode app);
+
   };
 
   [[nodiscard]]

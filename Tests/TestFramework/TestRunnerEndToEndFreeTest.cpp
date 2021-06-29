@@ -61,17 +61,17 @@ namespace sequoia::testing
       shell_command create_build_run(const std::filesystem::path& creationOutput, std::string_view buildOutput, const std::filesystem::path& output) const
       {
         return    cd_cmd(buildDir)
-               && shell_command{create_cmd(), creationOutput / "CreationOutput.txt"}
+               && shell_command{"", create_cmd(), creationOutput / "CreationOutput.txt" }
                && build_cmd(buildDir, buildOutput)
-               && shell_command{run_cmd(), output / "TestRunOutput.txt"}
-               && shell_command{run_cmd().append(" select ../../../Tests/HouseAllocationTest.cpp")
+               && shell_command{"", run_cmd(), output / "TestRunOutput.txt" }
+               && shell_command{"", run_cmd().append(" select ../../../Tests/HouseAllocationTest.cpp")
                                          .append(" select Maybe/MaybeTest.cpp")
                                          .append(" select FooTest.cpp"),
                                 output / "SpecifiedSourceOutput.txt"}
-               && shell_command{run_cmd().append(" select Plurgh.cpp test Absent select Foo test FooTest.cpp"), output / "FailedSpecifiedSourceOutput.txt"}
-               && shell_command{run_cmd().append(" test Foo"), output / "SpecifiedFamilyOutput.txt"}
-               && shell_command{run_cmd().append(" -v"), output / "VerboseOutput.txt"}
-               && shell_command{run_cmd().append(" --help"), output / "HelpOutput.txt"};
+               && shell_command{"", run_cmd().append(" select Plurgh.cpp test Absent select Foo test FooTest.cpp"), output / "FailedSpecifiedSourceOutput.txt"}
+               && shell_command{"", run_cmd().append(" test Foo"), output / "SpecifiedFamilyOutput.txt"}
+               && shell_command{"", run_cmd().append(" -v"), output / "VerboseOutput.txt"}
+               && shell_command{"", run_cmd().append(" --help"), output / "HelpOutput.txt"};
       }
 
       [[nodiscard]]
@@ -79,25 +79,25 @@ namespace sequoia::testing
       {
         return     cd_cmd(buildDir)
                 && cmake_and_build("CMakeOutput3.txt", "BuildOutput3.txt")
-                && shell_command{run_cmd(), output / "TestRunOutput.txt"};
+                && shell_command{"", run_cmd(), output / "TestRunOutput.txt" };
       }
 
       [[nodiscard]]
       shell_command materials_update(const std::filesystem::path& output) const
       {
-        return cd_cmd(buildDir) && shell_command(run_cmd().append(" u"), output / "TestRunOutput.txt");
+        return cd_cmd(buildDir) && shell_command("", run_cmd().append(" u"), output / "TestRunOutput.txt");
       }
 
       [[nodiscard]]
       shell_command dump(const std::filesystem::path& output) const
       {
-        return cd_cmd(buildDir) && shell_command(run_cmd().append(" --dump"), output / "TestRunOutput.txt");
+        return cd_cmd(buildDir) && shell_command("", run_cmd().append(" --dump"), output / "TestRunOutput.txt");
       }
 
       [[nodiscard]]
       shell_command recovery(const std::filesystem::path& output) const
       {
-        return cd_cmd(buildDir) && shell_command(run_cmd().append(" --recovery"), output / "TestRunOutput.txt");
+        return cd_cmd(buildDir) && shell_command("", run_cmd().append(" --recovery"), output / "TestRunOutput.txt");
       }
     private:
       [[nodiscard]]
@@ -176,7 +176,7 @@ namespace sequoia::testing
 
     //=================== Run the test executable ===================//
     fs::create_directory(working_materials() / "EmptyRunOutput");
-    invoke(cd_cmd(b.buildDir) && shell_command{run_cmd(), working_materials() / "EmptyRunOutput" / "EmptyRunOutput.txt" });
+    invoke(cd_cmd(b.buildDir) && shell_command{"", run_cmd(), working_materials() / "EmptyRunOutput" / "EmptyRunOutput.txt" });
 
     check_equivalence(LINE("Test Runner Output"), working_materials() / "EmptyRunOutput", predictive_materials() / "EmptyRunOutput");
 

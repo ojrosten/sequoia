@@ -1,2 +1,60 @@
 End to End Test
-Standard Top Level Checks:                24;  Failures:  0  [Deep checks: 339]
+Standard Top Level Checks:                24;  Failures:  2  [Deep checks: 341]
+
+	Tests/TestFramework/TestRunnerEndToEndFreeTest.cpp, Line 175
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<std::filesystem::path>]
+	With equivalent types:
+	[std::filesystem::path]
+
+	  Contents of
+	  C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/WorkingCopy/InitOutput/GenerationOutput.txt
+	  vs
+	  C:/Users/olive/sequoia/TestMaterials/TestFramework/TestRunnerEndToEndFreeTest/Prediction/InitOutput/GenerationOutput.txt
+
+	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
+	  operator== returned false
+
+	    First difference detected at character 0:
+	    [char]
+	    operator== returned false
+	    Obtained : ' '
+	    Predicted: I
+
+	    Surrounding substring(s):
+	    Obtained :   ...
+	    Predicted: Initialized empty Git ...
+
+	=======================================
+
+
+	Tests/TestFramework/TestRunnerEndToEndFreeTest.cpp, Line 194
+	Test Runner Creation Output
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<std::filesystem::path>]
+	With equivalent types:
+	[std::filesystem::path]
+
+	  Contents of
+	  C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/WorkingCopy/CreationOutput/CreationOutput.txt
+	  vs
+	  C:/Users/olive/sequoia/TestMaterials/TestFramework/TestRunnerEndToEndFreeTest/Prediction/CreationOutput/CreationOutput.txt
+
+	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
+	  operator== returned false
+
+	    First difference detected at character 1546:
+	    [char]
+	    operator== returned false
+	    Obtained : '\n'
+	    Predicted: ' '
+
+	    Surrounding substring(s):
+	    Obtained : ...\n ...
+	    Predicted: ...\n  ...
+
+	=======================================
+
+

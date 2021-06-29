@@ -92,6 +92,24 @@ namespace sequoia::testing
     }
   }
 
+  shell_command::shell_command(std::string_view preamble, std::string cmd, const std::filesystem::path& output, append_mode app)
+  {
+    const auto pre{
+      [&]() -> shell_command {
+        if(!preamble.empty())
+        {
+          return shell_command{"echo.", output, app}
+              && shell_command{std::string{"echo "}.append(preamble), output, append_mode::yes}
+              && shell_command{"echo.", output, append_mode::yes};
+        }
+
+        return {};
+      }()
+    };
+
+    *this = pre && shell_command{std::move(cmd), output, !pre.empty() ? append_mode::yes : app};
+  }
+
   [[nodiscard]]
   shell_command cd_cmd(const std::filesystem::path& dir)
   {
@@ -116,7 +134,7 @@ namespace sequoia::testing
       cmd.append("-D CMAKE_CXX_COMPILER=/usr/bin/g++");
     }
 
-    return {cmd, output};
+    return {"Running CMake...", cmd, output};
   }
 
   [[nodiscard]]
@@ -138,7 +156,7 @@ namespace sequoia::testing
           str.append(" -- -j4");
         }
 
-        return {str, output};
+        return {"Building...", str, output};
       }()
     };
 
@@ -156,9 +174,9 @@ namespace sequoia::testing
 
     using app_mode = shell_command::append_mode;
     return cd_cmd(root)
-        && shell_command{"git init -b trunk", output}
-        && shell_command{"git add . ", output, app_mode::yes}
-        && shell_command{"git commit -m \"First commit\"", output, app_mode::yes};
+        && shell_command{"Placing under version control...", "git init -b trunk", output}
+        && shell_command{"", "git add . ", output, app_mode::yes}
+        && shell_command{"", "git commit -m \"First commit\"", output, app_mode::yes};
   }
 
   [[nodiscard]]
@@ -197,7 +215,7 @@ namespace sequoia::testing
         const auto token{*(--root.end())};
         const auto sln{(buildDir / token).concat("Tests.sln")};
 
-        return std::string{"\""}.append(devenv.string()).append("\" ").append("/Run ").append(sln.string());
+        return {"Attempting to open IDE...", std::string{"\""}.append(devenv.string()).append("\" ").append("/Run ").append(sln.string()), ""};
       }
     }
 
@@ -1391,15 +1409,14 @@ namespace sequoia::testing
 
       if(data.do_build != build_invocation::no)
       {
-        stream() << "Building...\n\n";
         const auto mainDir{data.project_root / "TestAll"};
         const auto buildDir{project_paths::cmade_build_dir(data.project_root, mainDir)};
 
-        invoke(   cd_cmd(mainDir)
-               && cmake_cmd(buildDir, data.output)
-               && build_cmd(buildDir, data.output)
-               && git_first_cmd(data.project_root, data.output)
-               && (data.do_build == build_invocation::launch_ide ? launch_cmd(data.project_root, buildDir) : shell_command{})
+        invoke(cd_cmd(mainDir)
+            && cmake_cmd(buildDir, data.output)
+            && build_cmd(buildDir, data.output)
+            && git_first_cmd(data.project_root, data.output)
+            && (data.do_build == build_invocation::launch_ide ? launch_cmd(data.project_root, buildDir) : shell_command{})
         );
       }
     }
