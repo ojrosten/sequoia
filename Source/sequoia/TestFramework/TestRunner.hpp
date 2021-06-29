@@ -47,10 +47,18 @@ namespace sequoia::testing
     friend bool operator!=(const shell_command&, const shell_command&) noexcept = default;
 
     [[nodiscard]]
-    friend shell_command operator&&(const shell_command& lhs, const shell_command& rhs);
+    friend shell_command operator&&(const shell_command& lhs, const shell_command& rhs)
+    {
+      return rhs.empty() ? lhs :
+             lhs.empty() ? rhs :
+                           std::string{lhs.m_Command}.append("&&").append(rhs.m_Command);
+    }
 
     [[nodiscard]]
-    friend shell_command operator&&(const shell_command& lhs, std::string rhs);
+    friend shell_command operator&&(const shell_command& lhs, std::string rhs)
+    {
+      return lhs && shell_command{rhs};
+    }
 
     friend void invoke(const shell_command& cmd);
   private:

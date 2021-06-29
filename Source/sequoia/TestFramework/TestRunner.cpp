@@ -112,20 +112,6 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  shell_command operator&&(const shell_command& lhs, const shell_command& rhs)
-  {
-    return rhs.empty() ? lhs :
-           lhs.empty() ? rhs :
-                         std::string{lhs.m_Command}.append("&&").append(rhs.m_Command);
-  }
-
-  [[nodiscard]]
-  shell_command operator&&(const shell_command& lhs, std::string rhs)
-  {
-    return lhs && shell_command{rhs};
-  }
-
-  [[nodiscard]]
   shell_command cd_cmd(const std::filesystem::path& dir)
   {
     return std::string{"cd "}.append(dir.string());
