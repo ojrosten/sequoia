@@ -35,29 +35,22 @@ namespace sequoia::testing
     shell_command(std::string_view preamble, std::string cmd, const std::filesystem::path& output, append_mode app = append_mode::no);
 
     [[nodiscard]]
+    bool empty() const noexcept
+    {
+      return m_Command.empty();
+    }
+
+    [[nodiscard]]
     friend bool operator==(const shell_command&, const shell_command&) noexcept = default;
 
     [[nodiscard]]
     friend bool operator!=(const shell_command&, const shell_command&) noexcept = default;
 
     [[nodiscard]]
-    friend shell_command operator&&(const shell_command& lhs, const shell_command& rhs)
-    {
-      return rhs.m_Command.empty() ? lhs
-           : lhs.m_Command.empty() ? rhs : std::string{lhs.m_Command}.append(" && ").append(rhs.m_Command);
-    }
+    friend shell_command operator&&(const shell_command& lhs, const shell_command& rhs);
 
     [[nodiscard]]
-    friend shell_command operator&&(const shell_command& lhs, std::string rhs)
-    {
-      return lhs && shell_command{rhs};
-    }
-
-    [[nodiscard]]
-    bool empty() const noexcept
-    {
-      return m_Command.empty();
-    }
+    friend shell_command operator&&(const shell_command& lhs, std::string rhs);
 
     friend void invoke(const shell_command& cmd);
   private:

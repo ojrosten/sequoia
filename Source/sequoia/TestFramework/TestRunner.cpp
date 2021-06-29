@@ -76,18 +76,12 @@ namespace sequoia::testing
     }
   }
 
-  void invoke(const shell_command& cmd)
-  {
-    std::cout << std::flush;
-    if(cmd.m_Command.data()) std::system(cmd.m_Command.data());
-  }
-
   shell_command::shell_command(std::string cmd, const std::filesystem::path& output, append_mode app)
     : m_Command{std::move(cmd)}
   {
     if(!output.empty())
     {
-      m_Command.append(app == append_mode::no ? " > " : " >> ");
+      m_Command.append(app == append_mode::no ? "> " : ">> ");
       m_Command.append(output.string()).append(" 2>&1");
     }
   }
@@ -109,6 +103,26 @@ namespace sequoia::testing
     };
 
     *this = pre && shell_command{std::move(cmd), output, !pre.empty() ? append_mode::yes : app};
+  }
+
+  void invoke(const shell_command& cmd)
+  {
+    std::cout << std::flush;
+    if(cmd.m_Command.data()) std::system(cmd.m_Command.data());
+  }
+
+  [[nodiscard]]
+  shell_command operator&&(const shell_command& lhs, const shell_command& rhs)
+  {
+    return rhs.empty() ? lhs :
+           lhs.empty() ? rhs :
+                         std::string{lhs.m_Command}.append("&&").append(rhs.m_Command);
+  }
+
+  [[nodiscard]]
+  shell_command operator&&(const shell_command& lhs, std::string rhs)
+  {
+    return lhs && shell_command{rhs};
   }
 
   [[nodiscard]]
