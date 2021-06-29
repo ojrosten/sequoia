@@ -47,10 +47,9 @@ Creating files...
 
 "Tests/Utilities/ContainerPerformanceTest.hpp"
 "Tests/Utilities/ContainerPerformanceTest.cpp"
- 
-Running CMake... 
- 
--- Selecting Windows SDK version 10.0.19041.0 to target Windows 10.0.19043.
+
+Running CMake...
+
 -- Configuring done
 -- Generating done
--- Build files have been written to: C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/build/CMade/win/TestAll
+-- Build files have been written to: /Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/build/CMade/clang/TestAll
