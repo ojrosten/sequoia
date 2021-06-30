@@ -12,6 +12,7 @@
  */
 
 #include "sequoia/Core/Ownership/Handlers.hpp"
+#include "sequoia/Core/Meta/TypeTraits.hpp"
 
 #include <map>
 
