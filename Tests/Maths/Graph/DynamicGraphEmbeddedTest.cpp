@@ -21,8 +21,6 @@ namespace sequoia
     {
       using namespace maths;
 
-      struct null_weight {};
-
       {
         graph_test_helper<null_weight, null_weight, test_edge_insertion> helper{*this};
         helper.run_tests<graph_flavour::undirected_embedded>();

@@ -12,9 +12,10 @@
 
 */
 
+#include "sequoia/Core/DataStructures/PartitionedData.hpp"
+#include "sequoia/Core/Ownership/DataPool.hpp"
 #include "sequoia/Maths/Graph/GraphImpl.hpp"
 #include "sequoia/Maths/Graph/DynamicGraphImpl.hpp"
-
 #include "sequoia/Maths/Graph/NodeStorage.hpp"
 
 namespace sequoia::maths

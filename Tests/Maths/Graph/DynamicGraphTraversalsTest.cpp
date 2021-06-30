@@ -213,6 +213,8 @@ namespace sequoia::testing
 
   void test_graph_traversals::run_tests()
   {
+    using namespace maths;
+
     test_prs_details();
 
     {

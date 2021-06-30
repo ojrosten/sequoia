@@ -19,8 +19,6 @@ namespace sequoia::testing
     [[nodiscard]]
     std::string_view source_file() const noexcept final;
   private:
-    struct null_weight {};
-
     template<class, class, class>
     friend class graph_test_helper;
 

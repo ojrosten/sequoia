@@ -20,6 +20,8 @@ namespace sequoia::testing
 
   void test_static_graph::run_tests()
   {
+    using namespace maths;
+
     test_generic_undirected<null_weight,null_weight>();
     test_generic_undirected<null_weight, int>();
     test_generic_undirected<null_weight,unsortable>();

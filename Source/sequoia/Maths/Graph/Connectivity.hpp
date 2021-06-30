@@ -22,6 +22,7 @@
 #include <limits>
 #include <set>
 #include <map>
+#include <stdexcept>
 
 namespace sequoia
 {

@@ -17,6 +17,8 @@ namespace sequoia::testing
 
   void test_graph_false_positives::run_tests()
   {
+    using namespace maths;
+
     graph_test_helper<null_weight, null_weight, test_graph_false_positives> helper{*this};
     helper.run_tests();
   }

@@ -18,8 +18,8 @@ namespace sequoia::testing
 
   void threading_models_performance_test::run_tests()
   {
-    test_waiting_task(std::chrono::milliseconds{10});
-    test_waiting_task_return(std::chrono::milliseconds{10});
+    test_waiting_task(std::chrono::milliseconds{15});
+    test_waiting_task_return(std::chrono::milliseconds{15});
   }
 
   void threading_models_performance_test::test_waiting_task(const std::chrono::milliseconds millisecs)

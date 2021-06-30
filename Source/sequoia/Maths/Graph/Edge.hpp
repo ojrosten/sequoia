@@ -29,6 +29,9 @@
 #include "sequoia/Core/Meta/Concepts.hpp"
 #include "sequoia/Core/Meta/TypeTraits.hpp"
 #include "sequoia/Core/Ownership/HandlerTraits.hpp"
+#include "sequoia/Maths/Graph/EdgesAndNodesUtilities.hpp"
+
+#include <stdexcept>
 
 namespace sequoia
 {

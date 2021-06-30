@@ -17,10 +17,9 @@ namespace sequoia::testing
 
   void unweighted_graph_allocation_test::run_tests()
   {
+    using namespace maths;
     using contig_edge_traits = custom_allocator_contiguous_edge_storage_traits;
     using bucket_edge_traits = custom_allocator_bucketed_edge_storage_traits;
-
-    struct null_weight {};
 
     graph_test_helper<null_weight, null_weight, unweighted_graph_allocation_test> helper{*this};
 

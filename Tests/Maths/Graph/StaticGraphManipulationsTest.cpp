@@ -20,6 +20,8 @@ namespace sequoia::testing
 
   void test_static_fixed_topology::run_tests()
   {
+    using namespace maths;
+
     test_undirected<int, null_weight>();
     test_undirected<int, int>();
 

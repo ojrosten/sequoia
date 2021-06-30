@@ -17,7 +17,7 @@ namespace sequoia::testing
 
   void unweighted_graph_test::run_tests()
   {
-    struct null_weight {};
+    using namespace maths;
 
     graph_test_helper<null_weight, null_weight, unweighted_graph_test> helper{*this};
 

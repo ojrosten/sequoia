@@ -1,7 +1,7 @@
 	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 46
 	Differing target indices
 
-	[sequoia::maths::partial_edge<sequoia::ownership::independent<sequoia::utilities::uniform_wrapper<sequoia::testing::test_edge_false_positives::null_weight> >, unsigned long long>]
+	[sequoia::maths::partial_edge<sequoia::ownership::independent<sequoia::utilities::uniform_wrapper<sequoia::maths::null_weight> >, unsigned long long>]
 	operator== returned false
 
 	  Target node incorrect
@@ -15,7 +15,7 @@
 	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 50
 	Differing target indices
 
-	[sequoia::maths::partial_edge<sequoia::ownership::independent<sequoia::utilities::uniform_wrapper<sequoia::testing::test_edge_false_positives::null_weight> >, unsigned char>]
+	[sequoia::maths::partial_edge<sequoia::ownership::independent<sequoia::utilities::uniform_wrapper<sequoia::maths::null_weight> >, unsigned char>]
 	operator== returned false
 
 	  Target node incorrect
@@ -742,7 +742,7 @@
 	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 157
 	Differing targets, identical soures
 
-	[sequoia::maths::edge<sequoia::ownership::independent<sequoia::utilities::uniform_wrapper<sequoia::testing::test_edge_false_positives::null_weight> >, unsigned long long>]
+	[sequoia::maths::edge<sequoia::ownership::independent<sequoia::utilities::uniform_wrapper<sequoia::maths::null_weight> >, unsigned long long>]
 	operator== returned false
 
 	  Target node incorrect
@@ -756,7 +756,7 @@
 	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 158
 	Differing targets, identical soures
 
-	[sequoia::maths::edge<sequoia::ownership::independent<sequoia::utilities::uniform_wrapper<sequoia::testing::test_edge_false_positives::null_weight> >, unsigned long long>]
+	[sequoia::maths::edge<sequoia::ownership::independent<sequoia::utilities::uniform_wrapper<sequoia::maths::null_weight> >, unsigned long long>]
 	operator== returned false
 
 	  Target node incorrect
@@ -770,7 +770,7 @@
 	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 160
 	Differing soures, identical targets
 
-	[sequoia::maths::edge<sequoia::ownership::independent<sequoia::utilities::uniform_wrapper<sequoia::testing::test_edge_false_positives::null_weight> >, unsigned long long>]
+	[sequoia::maths::edge<sequoia::ownership::independent<sequoia::utilities::uniform_wrapper<sequoia::maths::null_weight> >, unsigned long long>]
 	operator== returned false
 
 	  Host node incorrect
@@ -784,7 +784,7 @@
 	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 161
 	Differing soures, identical targets
 
-	[sequoia::maths::edge<sequoia::ownership::independent<sequoia::utilities::uniform_wrapper<sequoia::testing::test_edge_false_positives::null_weight> >, unsigned long long>]
+	[sequoia::maths::edge<sequoia::ownership::independent<sequoia::utilities::uniform_wrapper<sequoia::maths::null_weight> >, unsigned long long>]
 	operator== returned false
 
 	  Host node incorrect
@@ -798,7 +798,7 @@
 	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 163
 	Differing soures and targets
 
-	[sequoia::maths::edge<sequoia::ownership::independent<sequoia::utilities::uniform_wrapper<sequoia::testing::test_edge_false_positives::null_weight> >, unsigned long long>]
+	[sequoia::maths::edge<sequoia::ownership::independent<sequoia::utilities::uniform_wrapper<sequoia::maths::null_weight> >, unsigned long long>]
 	operator== returned false
 
 	  Target node incorrect
@@ -818,7 +818,7 @@
 	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 165
 	Differing inversion flag
 
-	[sequoia::maths::edge<sequoia::ownership::independent<sequoia::utilities::uniform_wrapper<sequoia::testing::test_edge_false_positives::null_weight> >, unsigned long long>]
+	[sequoia::maths::edge<sequoia::ownership::independent<sequoia::utilities::uniform_wrapper<sequoia::maths::null_weight> >, unsigned long long>]
 	operator== returned false
 
 	  Inversion flag incorrect
@@ -1054,7 +1054,7 @@
 	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 202
 	Differing targets, identical soures and complementary indices
 
-	[sequoia::maths::embedded_edge<sequoia::ownership::independent<sequoia::utilities::uniform_wrapper<sequoia::testing::test_edge_false_positives::null_weight> >, unsigned long long>]
+	[sequoia::maths::embedded_edge<sequoia::ownership::independent<sequoia::utilities::uniform_wrapper<sequoia::maths::null_weight> >, unsigned long long>]
 	operator== returned false
 
 	  Target node incorrect
@@ -1068,7 +1068,7 @@
 	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 203
 	Differing targets, identical soure and complementary indices
 
-	[sequoia::maths::embedded_edge<sequoia::ownership::independent<sequoia::utilities::uniform_wrapper<sequoia::testing::test_edge_false_positives::null_weight> >, unsigned long long>]
+	[sequoia::maths::embedded_edge<sequoia::ownership::independent<sequoia::utilities::uniform_wrapper<sequoia::maths::null_weight> >, unsigned long long>]
 	operator== returned false
 
 	  Host node incorrect
@@ -1082,7 +1082,7 @@
 	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 204
 	Differing targets, identical soure and complementary indices
 
-	[sequoia::maths::embedded_edge<sequoia::ownership::independent<sequoia::utilities::uniform_wrapper<sequoia::testing::test_edge_false_positives::null_weight> >, unsigned long long>]
+	[sequoia::maths::embedded_edge<sequoia::ownership::independent<sequoia::utilities::uniform_wrapper<sequoia::maths::null_weight> >, unsigned long long>]
 	operator== returned false
 
 	  Host node incorrect
@@ -1096,7 +1096,7 @@
 	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 205
 	Differing inversion flag
 
-	[sequoia::maths::embedded_edge<sequoia::ownership::independent<sequoia::utilities::uniform_wrapper<sequoia::testing::test_edge_false_positives::null_weight> >, unsigned long long>]
+	[sequoia::maths::embedded_edge<sequoia::ownership::independent<sequoia::utilities::uniform_wrapper<sequoia::maths::null_weight> >, unsigned long long>]
 	operator== returned false
 
 	  Inversion flag incorrect
@@ -1108,7 +1108,7 @@
 	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 207
 	Differing soures, identical targets and complementary indices
 
-	[sequoia::maths::embedded_edge<sequoia::ownership::independent<sequoia::utilities::uniform_wrapper<sequoia::testing::test_edge_false_positives::null_weight> >, unsigned long long>]
+	[sequoia::maths::embedded_edge<sequoia::ownership::independent<sequoia::utilities::uniform_wrapper<sequoia::maths::null_weight> >, unsigned long long>]
 	operator== returned false
 
 	  Target node incorrect
@@ -1122,7 +1122,7 @@
 	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 208
 	Differing soures, identical targets and complementary indices
 
-	[sequoia::maths::embedded_edge<sequoia::ownership::independent<sequoia::utilities::uniform_wrapper<sequoia::testing::test_edge_false_positives::null_weight> >, unsigned long long>]
+	[sequoia::maths::embedded_edge<sequoia::ownership::independent<sequoia::utilities::uniform_wrapper<sequoia::maths::null_weight> >, unsigned long long>]
 	operator== returned false
 
 	  Target node incorrect
@@ -1136,7 +1136,7 @@
 	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 209
 	Differing soures, identical targets and complementary indices
 
-	[sequoia::maths::embedded_edge<sequoia::ownership::independent<sequoia::utilities::uniform_wrapper<sequoia::testing::test_edge_false_positives::null_weight> >, unsigned long long>]
+	[sequoia::maths::embedded_edge<sequoia::ownership::independent<sequoia::utilities::uniform_wrapper<sequoia::maths::null_weight> >, unsigned long long>]
 	operator== returned false
 
 	  Target node incorrect
@@ -1150,7 +1150,7 @@
 	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 211
 	Differing complementary indicess, identical targets and soures
 
-	[sequoia::maths::embedded_edge<sequoia::ownership::independent<sequoia::utilities::uniform_wrapper<sequoia::testing::test_edge_false_positives::null_weight> >, unsigned long long>]
+	[sequoia::maths::embedded_edge<sequoia::ownership::independent<sequoia::utilities::uniform_wrapper<sequoia::maths::null_weight> >, unsigned long long>]
 	operator== returned false
 
 	  Complementary index incorrect
@@ -1164,7 +1164,7 @@
 	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 212
 	Differing complementary indicess, identical targets and soures
 
-	[sequoia::maths::embedded_edge<sequoia::ownership::independent<sequoia::utilities::uniform_wrapper<sequoia::testing::test_edge_false_positives::null_weight> >, unsigned long long>]
+	[sequoia::maths::embedded_edge<sequoia::ownership::independent<sequoia::utilities::uniform_wrapper<sequoia::maths::null_weight> >, unsigned long long>]
 	operator== returned false
 
 	  Complementary index incorrect
@@ -1178,7 +1178,7 @@
 	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 213
 	Differing complementary indicess, identical targets and soures
 
-	[sequoia::maths::embedded_edge<sequoia::ownership::independent<sequoia::utilities::uniform_wrapper<sequoia::testing::test_edge_false_positives::null_weight> >, unsigned long long>]
+	[sequoia::maths::embedded_edge<sequoia::ownership::independent<sequoia::utilities::uniform_wrapper<sequoia::maths::null_weight> >, unsigned long long>]
 	operator== returned false
 
 	  Complementary index incorrect
@@ -1192,7 +1192,7 @@
 	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 215
 	Differing targets and soures, identical complementary indices
 
-	[sequoia::maths::embedded_edge<sequoia::ownership::independent<sequoia::utilities::uniform_wrapper<sequoia::testing::test_edge_false_positives::null_weight> >, unsigned long long>]
+	[sequoia::maths::embedded_edge<sequoia::ownership::independent<sequoia::utilities::uniform_wrapper<sequoia::maths::null_weight> >, unsigned long long>]
 	operator== returned false
 
 	  Target node incorrect
@@ -1212,7 +1212,7 @@
 	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 216
 	Differing targets and complementary indices, identical soures
 
-	[sequoia::maths::embedded_edge<sequoia::ownership::independent<sequoia::utilities::uniform_wrapper<sequoia::testing::test_edge_false_positives::null_weight> >, unsigned long long>]
+	[sequoia::maths::embedded_edge<sequoia::ownership::independent<sequoia::utilities::uniform_wrapper<sequoia::maths::null_weight> >, unsigned long long>]
 	operator== returned false
 
 	  Complementary index incorrect
@@ -1232,7 +1232,7 @@
 	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 217
 	Differing soures and complementary indices, identical targets
 
-	[sequoia::maths::embedded_edge<sequoia::ownership::independent<sequoia::utilities::uniform_wrapper<sequoia::testing::test_edge_false_positives::null_weight> >, unsigned long long>]
+	[sequoia::maths::embedded_edge<sequoia::ownership::independent<sequoia::utilities::uniform_wrapper<sequoia::maths::null_weight> >, unsigned long long>]
 	operator== returned false
 
 	  Target node incorrect
@@ -1252,7 +1252,7 @@
 	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 219
 	Differing targets, soures and complementary indicess
 
-	[sequoia::maths::embedded_edge<sequoia::ownership::independent<sequoia::utilities::uniform_wrapper<sequoia::testing::test_edge_false_positives::null_weight> >, unsigned long long>]
+	[sequoia::maths::embedded_edge<sequoia::ownership::independent<sequoia::utilities::uniform_wrapper<sequoia::maths::null_weight> >, unsigned long long>]
 	operator== returned false
 
 	  Target node incorrect

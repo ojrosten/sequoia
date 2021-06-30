@@ -205,8 +205,6 @@ namespace sequoia::testing
     }
   };
 
-  struct null_weight{};
-
   constexpr bool mutual_info(const maths::graph_flavour flavour) noexcept
   {
     return flavour != maths::graph_flavour::directed;

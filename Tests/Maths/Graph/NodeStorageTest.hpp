@@ -24,8 +24,6 @@ namespace sequoia::testing
 
     void run_tests() final;
 
-    struct null_weight{};
-
     template<class Sharing>
     void test_dynamic_node_storage();
 

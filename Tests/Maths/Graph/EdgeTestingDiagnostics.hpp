@@ -12,8 +12,6 @@ namespace sequoia::testing
     [[nodiscard]]
     std::string_view source_file() const noexcept final;
   private:
-    struct null_weight{};
-
     void run_tests() final;
 
     void test_plain_partial_edge();

@@ -5,15 +5,13 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#include "sequoia/TestFramework/DependencyAnalyzer.hpp"
+#pragma once
 
-namespace sequoia::testing
+/*! \file
+    \brief Utilities for both edges and nodes
+ */
+
+namespace sequoia::maths
 {
-  [[nodiscard]]
-  tests_dependency_graph build_dependency_graph(const std::filesystem::path& sourceRepo, const std::filesystem::path& testRepo)
-  {
-    tests_dependency_graph g{};
-
-    return g;
-  }
+  struct null_weight {};
 }
