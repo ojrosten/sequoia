@@ -248,6 +248,11 @@ int main(int argc, char** argv)
       streaming_free_test("Free Test")
     );
 
+    runner.add_test_family(
+      "DependencyAnalyzer",
+      dependency_analyzer_free_test("Free Test")
+    );
+
     runner.execute(timer_resolution{1ms});
   }
   catch(const std::exception& e)

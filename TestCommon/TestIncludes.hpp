@@ -62,6 +62,7 @@
 #include "Runtime/FactoryTestingDiagnostics.hpp"
 #include "Streaming/StreamingFreeTest.hpp"
 #include "TestFramework/CoreDiagnostics.hpp"
+#include "TestFramework/DependencyAnalyzerFreeTest.hpp"
 #include "TestFramework/FileSystemFreeTest.hpp"
 #include "TestFramework/FuzzyTestDiagnostics.hpp"
 #include "TestFramework/MoveOnlyAllocationTestDiagnostics.hpp"

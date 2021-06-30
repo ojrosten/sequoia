@@ -5,6 +5,7 @@ set(SourceList sequoia/TestFramework/Advice.cpp
     sequoia/PlatformSpecific/Helpers.cpp
     sequoia/Streaming/Streaming.cpp
     sequoia/TestFramework/AllocationCheckersDetails.cpp
+    sequoia/TestFramework/DependencyAnalyzer.cpp
     sequoia/TestFramework/FileEditors.cpp
     sequoia/TestFramework/FileSystem.cpp
     sequoia/TestFramework/FreeTestCore.cpp
