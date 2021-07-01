@@ -1,0 +1,7 @@
+
+Running CMake...
+
+-- Selecting Windows SDK version 10.0.19041.0 to target Windows 10.0.19043.
+-- Configuring done
+-- Generating done
+-- Build files have been written to: C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/build/CMade/win/TestAll

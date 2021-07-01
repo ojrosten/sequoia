@@ -18,6 +18,9 @@ namespace sequoia::testing
 
   void dependency_analyzer_free_test::run_tests()
   {
-    // e.g. check_equality(LINE("Useful description"), some_function(), 42);
+    const auto fake{working_materials() / "FakeProject"};
+    const auto source{fake / "Source"}, tests{fake / "Tests"};
+
+    const auto g{build_dependency_graph(source, tests)};
   }
 }

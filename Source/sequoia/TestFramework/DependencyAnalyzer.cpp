@@ -21,7 +21,7 @@ namespace sequoia::testing
       if(auto inGraph{std::find_if(g.cbegin_node_weights(), g.cend_node_weights(), [&file](const auto& w) { return w == file; })};
         inGraph == g.cend_node_weights())
       {
-        return g.add_node(fs::relative(file, repo));
+        return g.add_node(file.is_absolute() ? fs::relative(file, repo) : file);
       }
       else
       {
