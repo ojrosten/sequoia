@@ -20,10 +20,10 @@ namespace sequoia::testing
 
     struct file_info
     {
-      file_info(const target_repository targetRepo, fs::path f, const fs::file_time_type& timeStamp)
+      file_info(const fs::path& repo, const target_repository targetRepo, const fs::path& f, const fs::file_time_type& timeStamp)
         : target{targetRepo}
-        , file{std::move(f)}
-        , stale{fs::last_write_time(f) > timeStamp}
+        , file{f.is_absolute() ? fs::relative(f, repo) : f}
+        , stale{fs::last_write_time(repo / file) > timeStamp}
       {}
 
       target_repository target{target_repository::no};
@@ -43,7 +43,7 @@ namespace sequoia::testing
       if(auto inGraph{std::find_if(g.cbegin_node_weights(), g.cend_node_weights(), [&file](const auto& w) { return w.file == file; })};
         inGraph == g.cend_node_weights())
       {
-        return g.add_node(targetRepo, file.is_absolute() ? fs::relative(file, repo) : file, timeStamp);
+        return g.add_node(repo, targetRepo, file, timeStamp);
       }
       else
       {
@@ -113,7 +113,7 @@ namespace sequoia::testing
 
     tests_dependency_graph g{};
     build_dependency_graph(g, sourceRepo, target_repository::no, timeStamp.value());
-    build_dependency_graph(g, testRepo, target_repository::yes, timeStamp.value());
+    //build_dependency_graph(g, testRepo, target_repository::yes, timeStamp.value());
 
     return testsToRun;
   }
