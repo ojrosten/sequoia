@@ -7,14 +7,15 @@
 
 #pragma once
 
-#include "sequoia/Maths/Graph/DynamicGraph.hpp"
-
 #include <filesystem>
+#include <optional>
+#include <string>
+#include <vector>
 
 namespace sequoia::testing
 {
-  using tests_dependency_graph = maths::graph<maths::directed_flavour::directed, maths::null_weight, std::filesystem::path>;
-
   [[nodiscard]]
-  tests_dependency_graph build_dependency_graph(const std::filesystem::path& sourceRepo, const std::filesystem::path& testRepo);
+  std::optional<std::vector<std::string>> tests_to_run(const std::filesystem::path& sourceRepo,
+                                                       const std::filesystem::path& testRepo,
+                                                       const std::optional<std::filesystem::file_time_type>& timeStamp);
 }

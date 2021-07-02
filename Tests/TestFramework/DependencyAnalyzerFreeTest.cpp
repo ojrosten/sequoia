@@ -19,8 +19,9 @@ namespace sequoia::testing
   void dependency_analyzer_free_test::run_tests()
   {
     const auto fake{working_materials() / "FakeProject"};
-    const auto source{fake / "Source"}, tests{fake / "Tests"};
+    const auto sourceRepo{fake / "Source"}, testsRepo{fake / "Tests"};
+    // testing materials
 
-    const auto g{build_dependency_graph(source, tests)};
+    const auto testsToRun{tests_to_run(sourceRepo, testsRepo, std::chrono::file_clock::now())};
   }
 }

@@ -48,7 +48,7 @@ namespace sequoia::maths::graph_impl
     static constexpr reference get(proxy_reference ref) noexcept { return ref.get(); }
 
     [[nodiscard]]
-    static constexpr pointer get_ptr(proxy_reference ref) noexcept { return &ref; }
+    static constexpr pointer get_ptr(proxy_reference ref) noexcept { return &ref.get(); }
   protected:
     constexpr proxy_dereference_policy(proxy_dereference_policy&&) noexcept = default;
 

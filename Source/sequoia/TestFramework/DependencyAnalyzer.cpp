@@ -7,6 +7,7 @@
 
 #include "sequoia/TestFramework/DependencyAnalyzer.hpp"
 
+#include "sequoia/Maths/Graph/DynamicGraph.hpp"
 #include "sequoia/Streaming/Streaming.hpp"
 
 namespace sequoia::testing
@@ -15,13 +16,34 @@ namespace sequoia::testing
 
   namespace
   {
-    [[nodiscard]]
-    tests_dependency_graph::size_type add_file(tests_dependency_graph& g, const fs::path& file, const fs::path& repo)
+    enum class target_repository {yes, no};
+
+    struct file_info
     {
-      if(auto inGraph{std::find_if(g.cbegin_node_weights(), g.cend_node_weights(), [&file](const auto& w) { return w == file; })};
+      file_info(const target_repository targetRepo, fs::path f, const fs::file_time_type& timeStamp)
+        : target{targetRepo}
+        , file{std::move(f)}
+        , stale{fs::last_write_time(f) > timeStamp}
+      {}
+
+      target_repository target{target_repository::no};
+      fs::path file;
+      bool stale{true};
+    };
+
+    using tests_dependency_graph = maths::graph<maths::directed_flavour::directed, maths::null_weight, file_info>;
+
+    [[nodiscard]]
+    tests_dependency_graph::size_type add_file(tests_dependency_graph& g,
+                                               const fs::path& repo,
+                                               const target_repository targetRepo,
+                                               const fs::path& file,
+                                               const fs::file_time_type& timeStamp)
+    {
+      if(auto inGraph{std::find_if(g.cbegin_node_weights(), g.cend_node_weights(), [&file](const auto& w) { return w.file == file; })};
         inGraph == g.cend_node_weights())
       {
-        return g.add_node(file.is_absolute() ? fs::relative(file, repo) : file);
+        return g.add_node(targetRepo, file.is_absolute() ? fs::relative(file, repo) : file, timeStamp);
       }
       else
       {
@@ -30,7 +52,7 @@ namespace sequoia::testing
       }
     }
 
-    void build_dependency_graph(tests_dependency_graph& g, const std::filesystem::path& repo)
+    void build_dependency_graph(tests_dependency_graph& g, const std::filesystem::path& repo, const target_repository targetRepo, const fs::file_time_type& timeStamp)
     {
       constexpr std::array<std::string_view, 5> exts{".h", ".hpp", ".cpp", ".cc", ".cxx"};
 
@@ -39,7 +61,7 @@ namespace sequoia::testing
         const auto file{entry.path()};
         if(auto found{std::find(exts.begin(), exts.end(), file.extension().string())}; found != exts.end())
         {
-          const auto nodePos{add_file(g, file, repo)};
+          const auto nodePos{add_file(g, repo, targetRepo, file, timeStamp)};
 
           const auto text{read_to_string(entry.path())};
           std::string::size_type pos{};
@@ -63,7 +85,13 @@ namespace sequoia::testing
                     includedFile = file.parent_path() / includedFile;
                   }
 
-                  const auto includeNodePos{add_file(g, includedFile, repo)};
+                  const auto includeNodePos{add_file(g, repo, targetRepo, includedFile, timeStamp)};
+
+                  if((file.stem() == includedFile.stem()) && (g.cbegin_node_weights() + nodePos)->stale)
+                  {
+                    g.mutate_node_weight(g.cbegin_node_weights() + includeNodePos, [](auto& w) { w.stale = true; });
+                  }
+
                   g.join(nodePos, includeNodePos);
                 }
               }
@@ -75,12 +103,18 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  tests_dependency_graph build_dependency_graph(const std::filesystem::path& sourceRepo, const std::filesystem::path& testRepo)
+  std::optional<std::vector<std::string>> tests_to_run(const std::filesystem::path& sourceRepo,
+                                                       const std::filesystem::path& testRepo,
+                                                       const std::optional<std::filesystem::file_time_type>& timeStamp)
   {
-    tests_dependency_graph g{};
-    build_dependency_graph(g, sourceRepo);
-    build_dependency_graph(g, testRepo);
+    if(!timeStamp) return std::nullopt;
 
-    return g;
+    std::optional<std::vector<std::string>> testsToRun{};
+
+    tests_dependency_graph g{};
+    build_dependency_graph(g, sourceRepo, target_repository::no, timeStamp.value());
+    build_dependency_graph(g, testRepo, target_repository::yes, timeStamp.value());
+
+    return testsToRun;
   }
 }
