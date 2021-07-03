@@ -20,10 +20,10 @@ namespace sequoia::testing
 
     struct file_info
     {
-      file_info(const fs::path& repo, const target_repository targetRepo, const fs::path& f, const fs::file_time_type& timeStamp)
+      file_info(const target_repository targetRepo, const fs::path& f, const fs::file_time_type& timeStamp)
         : target{targetRepo}
-        , file{f.is_absolute() ? fs::relative(f, repo) : f}
-        , stale{fs::last_write_time(repo / file) > timeStamp}
+        , file{f}
+        , stale{fs::last_write_time(file) > timeStamp}
       {}
 
       target_repository target{target_repository::no};
@@ -33,26 +33,7 @@ namespace sequoia::testing
 
     using tests_dependency_graph = maths::graph<maths::directed_flavour::directed, maths::null_weight, file_info>;
 
-    [[nodiscard]]
-    tests_dependency_graph::size_type add_file(tests_dependency_graph& g,
-                                               const fs::path& repo,
-                                               const target_repository targetRepo,
-                                               const fs::path& file,
-                                               const fs::file_time_type& timeStamp)
-    {
-      if(auto inGraph{std::find_if(g.cbegin_node_weights(), g.cend_node_weights(), [&file](const auto& w) { return w.file == file; })};
-        inGraph == g.cend_node_weights())
-      {
-        return g.add_node(repo, targetRepo, file, timeStamp);
-      }
-      else
-      {
-        using size_type = tests_dependency_graph::size_type;
-        return static_cast<size_type>(distance(g.cbegin_node_weights(), inGraph));
-      }
-    }
-
-    void build_dependency_graph(tests_dependency_graph& g, const std::filesystem::path& repo, const target_repository targetRepo, const fs::file_time_type& timeStamp)
+    void add_files(tests_dependency_graph& g, const std::filesystem::path& repo, const target_repository targetRepo, const fs::file_time_type& timeStamp)
     {
       constexpr std::array<std::string_view, 5> exts{".h", ".hpp", ".cpp", ".cc", ".cxx"};
 
@@ -61,37 +42,51 @@ namespace sequoia::testing
         const auto file{entry.path()};
         if(auto found{std::find(exts.begin(), exts.end(), file.extension().string())}; found != exts.end())
         {
-          const auto nodePos{add_file(g, repo, targetRepo, file, timeStamp)};
+          g.add_node(targetRepo, file, timeStamp);
+        }
+      }
+    }
 
-          const auto text{read_to_string(entry.path())};
-          std::string::size_type pos{};
-          constexpr auto npos{std::string::npos};
-          while(pos != npos)
+    void build_dependencies(tests_dependency_graph& g)
+    {
+      using size_type = tests_dependency_graph::size_type;
+
+      for(auto i{g.cbegin_node_weights()}; i != g.cend_node_weights(); ++i)
+      {
+        const auto nodePos{static_cast<size_type>(distance(g.cbegin_node_weights(), i))};
+
+        const auto text{read_to_string(i->file)};
+        std::string::size_type pos{};
+        constexpr auto npos{std::string::npos};
+        while(pos != npos)
+        {
+          constexpr std::string_view include{"#include"};
+          pos = text.find(include, pos);
+          if(pos != npos)
           {
-            constexpr std::string_view include{"#include"};
-            pos = text.find(include, pos);
-            if(pos != npos)
+            pos += include.size();
+            const auto start{text.find_first_of("\"<", pos)};
+            const auto end{text.find_first_of("\">", start + 1)};
+            if((start != npos) && (end != npos) && (((text[start] == '\"') && (text[end] == '\"')) || ((text[start] == '<') && (text[end] == '>'))))
             {
-              pos += include.size();
-              const auto start{text.find_first_of("\"<", pos)};
-              const auto end{text.find_first_of("\">", start + 1)};
-              if((start != npos) && (end != npos) && (((text[start] == '\"') && (text[end] == '\"')) || ((text[start] == '<') && (text[end] == '>'))))
+              fs::path includedFile{text.substr(start + 1, end - 1 - start)};
+              if(includedFile.has_extension())
               {
-                fs::path includedFile{text.substr(start + 1, end - 1 - start)};
-                if(includedFile.has_extension())
+                const auto& file{i->file};
+                if(includedFile.parent_path().empty())
                 {
-                  if(includedFile.parent_path().empty())
+                  includedFile = file.parent_path() / includedFile;
+                }
+
+                if(auto incIter{std::find_if(g.cbegin_node_weights(), g.cend_node_weights(), [&includedFile](const auto& w) { return w.file == includedFile; })};
+                  incIter != g.cend_node_weights())
+                {
+                  if((file.stem() == includedFile.stem()) && i->stale)
                   {
-                    includedFile = file.parent_path() / includedFile;
+                    g.mutate_node_weight(incIter, [](auto& w) { w.stale = true; });
                   }
 
-                  const auto includeNodePos{add_file(g, repo, targetRepo, includedFile, timeStamp)};
-
-                  if((file.stem() == includedFile.stem()) && (g.cbegin_node_weights() + nodePos)->stale)
-                  {
-                    g.mutate_node_weight(g.cbegin_node_weights() + includeNodePos, [](auto& w) { w.stale = true; });
-                  }
-
+                  const auto includeNodePos{static_cast<size_type>(distance(g.cbegin_node_weights(), incIter))};
                   g.join(nodePos, includeNodePos);
                 }
               }
@@ -112,8 +107,9 @@ namespace sequoia::testing
     std::optional<std::vector<std::string>> testsToRun{};
 
     tests_dependency_graph g{};
-    build_dependency_graph(g, sourceRepo, target_repository::no, timeStamp.value());
-    //build_dependency_graph(g, testRepo, target_repository::yes, timeStamp.value());
+    add_files(g, sourceRepo, target_repository::no, timeStamp.value());
+    add_files(g, testRepo, target_repository::yes, timeStamp.value());
+    build_dependencies(g);
 
     return testsToRun;
   }
