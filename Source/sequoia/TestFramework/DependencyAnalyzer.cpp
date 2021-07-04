@@ -8,6 +8,7 @@
 #include "sequoia/TestFramework/DependencyAnalyzer.hpp"
 
 #include "sequoia/Maths/Graph/DynamicGraph.hpp"
+#include "sequoia/Maths/Graph/GraphTraversalFunctions.hpp"
 #include "sequoia/Streaming/Streaming.hpp"
 
 namespace sequoia::testing
@@ -112,6 +113,8 @@ namespace sequoia::testing
                                                        const std::filesystem::path& testRepo,
                                                        const std::optional<std::filesystem::file_time_type>& timeStamp)
   {
+    using namespace maths;
+
     if(!timeStamp) return std::nullopt;
 
     std::optional<std::vector<std::string>> testsToRun{};
@@ -120,6 +123,21 @@ namespace sequoia::testing
     add_files(g, sourceRepo, target_repository::no, timeStamp.value());
     add_files(g, testRepo, target_repository::yes, timeStamp.value());
     build_dependencies(g, sourceRepo, testRepo);
+
+    auto nodesLate{
+      [&g](const std::size_t node) {
+        for(auto i{g.cbegin_edges(node)}; i != g.cend_edges(node); ++i)
+        {
+          if((g.cbegin_node_weights() + i->target_node())->stale)
+          {
+            g.mutate_node_weight(g.cbegin_node_weights() + node, [](auto& w) { w.stale = true; });
+            break;
+          }
+        }
+      }
+    };
+
+    depth_first_search(g, find_disconnected_t{0}, null_func_obj{}, nodesLate);
 
     return testsToRun;
   }

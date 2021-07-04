@@ -13,6 +13,8 @@
  */
 
 #include "sequoia/Maths/Graph/GraphTraversalDetails.hpp"
+#include "sequoia/Maths/Graph/DynamicGraphTraversalDetails.hpp"
+#include "sequoia/Maths/Graph/StaticGraphTraversalDetails.hpp"
 #include "sequoia/Core/Concurrency/ConcurrencyModels.hpp"
 
 namespace sequoia::maths
