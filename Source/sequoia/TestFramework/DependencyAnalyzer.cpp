@@ -44,6 +44,7 @@ namespace sequoia::testing
     }
 
     using tests_dependency_graph = maths::graph<maths::directed_flavour::directed, maths::null_weight, file_info>;
+    using node_iterator = tests_dependency_graph::const_iterator;
 
     void add_files(tests_dependency_graph& g, const std::filesystem::path& repo, const fs::file_time_type& timeStamp)
     {
@@ -117,6 +118,26 @@ namespace sequoia::testing
         }
       }
     }
+
+    void consider_materials(tests_dependency_graph& g,
+      node_iterator i,
+      const fs::path& relFilePath,
+      const fs::path& materialsRepo,
+      const std::filesystem::file_time_type timeStamp)
+    {
+      const auto materials{materialsRepo / fs::path{relFilePath}.replace_extension("")};
+      if(fs::exists(materials))
+      {
+        for(const auto& entry : fs::recursive_directory_iterator(materials))
+        {
+          if(fs::last_write_time(entry) > timeStamp)
+          {
+            g.mutate_node_weight(i, [](auto& w) { w.stale = true; });
+            break;
+          }
+        }
+      }
+    }
   }
 
   [[nodiscard]]
@@ -153,31 +174,13 @@ namespace sequoia::testing
 
     for(auto i{g.cbegin_node_weights()}; i != g.cend_node_weights(); ++i)
     {
-      const auto& weight{*i};
-      if(in_repo(weight.file, testRepo))
+      if(const auto& weight{*i}; in_repo(weight.file, testRepo))
       {
         const auto relPath{fs::relative(weight.file, testRepo)};
 
-        if(!weight.stale)
-        {
-          const auto materials{materialsRepo / fs::path{relPath}.replace_extension("")};
-          if(fs::exists(materials))
-          {
-            for(const auto& entry : fs::recursive_directory_iterator(materials))
-            {
-              if(fs::last_write_time(entry) > timeStamp)
-              {
-                g.mutate_node_weight(i, [](auto& w) { w.stale = true; });
-                break;
-              }
-            }
-          }
-        }
+        if(!weight.stale) consider_materials(g, i, relPath, materialsRepo, timeStamp.value());
 
-        if(weight.stale)
-        {
-          testsToRun->push_back(relPath.generic_string());
-        }
+        if(weight.stale) testsToRun->push_back(relPath.generic_string());
       }
     }
 
