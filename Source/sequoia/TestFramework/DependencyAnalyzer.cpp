@@ -47,7 +47,9 @@ namespace sequoia::testing
       }
     }
 
-    void build_dependencies(tests_dependency_graph& g)
+    void build_dependencies(tests_dependency_graph& g,
+                            const std::filesystem::path& sourceRepo,
+                            const std::filesystem::path& testRepo)
     {
       using size_type = tests_dependency_graph::size_type;
 
@@ -78,7 +80,15 @@ namespace sequoia::testing
                   includedFile = file.parent_path() / includedFile;
                 }
 
-                if(auto incIter{std::find_if(g.cbegin_node_weights(), g.cend_node_weights(), [&includedFile](const auto& w) { return w.file == includedFile; })};
+                auto includeMatcher{
+                  [&includedFile,&sourceRepo,&testRepo](const auto& weight) {
+                    if(includedFile.is_absolute()) return weight.file == includedFile;
+
+                    return (weight.file == (sourceRepo / includedFile).lexically_normal()) || (weight.file == (testRepo / includedFile).lexically_normal());
+                  }
+                };
+
+                if(auto incIter{std::find_if(g.cbegin_node_weights(), g.cend_node_weights(), includeMatcher)};
                   incIter != g.cend_node_weights())
                 {
                   if((file.stem() == includedFile.stem()) && i->stale)
@@ -109,7 +119,7 @@ namespace sequoia::testing
     tests_dependency_graph g{};
     add_files(g, sourceRepo, target_repository::no, timeStamp.value());
     add_files(g, testRepo, target_repository::yes, timeStamp.value());
-    build_dependencies(g);
+    build_dependencies(g, sourceRepo, testRepo);
 
     return testsToRun;
   }
