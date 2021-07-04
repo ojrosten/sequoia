@@ -17,24 +17,35 @@ namespace sequoia::testing
 
   namespace
   {
-    enum class target_repository {yes, no};
-
     struct file_info
     {
-      file_info(const target_repository targetRepo, const fs::path& f, const fs::file_time_type& timeStamp)
-        : target{targetRepo}
-        , file{f}
+      file_info(fs::path f, const fs::file_time_type& timeStamp)
+        : file{std::move(f)}
         , stale{fs::last_write_time(file) > timeStamp}
       {}
 
-      target_repository target{target_repository::no};
       fs::path file;
       bool stale{true};
     };
 
+    [[nodiscard]]
+    bool in_repo(const fs::path& file, const fs::path& repo)
+    {
+      if(std::distance(repo.begin(), repo.end()) >= std::distance(file.begin(), file.end())) return false;
+
+      auto fIter{file.begin()}, rIter{repo.begin()};
+      while(rIter != repo.end())
+      {
+        if(*fIter++ != *rIter++)
+          return false;
+      }
+
+      return true;
+    }
+
     using tests_dependency_graph = maths::graph<maths::directed_flavour::directed, maths::null_weight, file_info>;
 
-    void add_files(tests_dependency_graph& g, const std::filesystem::path& repo, const target_repository targetRepo, const fs::file_time_type& timeStamp)
+    void add_files(tests_dependency_graph& g, const std::filesystem::path& repo, const fs::file_time_type& timeStamp)
     {
       constexpr std::array<std::string_view, 5> exts{".h", ".hpp", ".cpp", ".cc", ".cxx"};
 
@@ -43,7 +54,7 @@ namespace sequoia::testing
         const auto file{entry.path()};
         if(auto found{std::find(exts.begin(), exts.end(), file.extension().string())}; found != exts.end())
         {
-          g.add_node(targetRepo, file, timeStamp);
+          g.add_node(file, timeStamp);
         }
       }
     }
@@ -85,7 +96,7 @@ namespace sequoia::testing
                   [&includedFile,&sourceRepo,&testRepo](const auto& weight) {
                     if(includedFile.is_absolute()) return weight.file == includedFile;
 
-                    return (weight.file == (sourceRepo / includedFile).lexically_normal()) || (weight.file == (testRepo / includedFile).lexically_normal());
+                    return (weight.file == sourceRepo / includedFile) || (weight.file == testRepo / includedFile);
                   }
                 };
 
@@ -117,11 +128,11 @@ namespace sequoia::testing
 
     if(!timeStamp) return std::nullopt;
 
-    std::optional<std::vector<std::string>> testsToRun{};
+    std::optional<std::vector<std::string>> testsToRun{{}};
 
     tests_dependency_graph g{};
-    add_files(g, sourceRepo, target_repository::no, timeStamp.value());
-    add_files(g, testRepo, target_repository::yes, timeStamp.value());
+    add_files(g, sourceRepo, timeStamp.value());
+    add_files(g, testRepo, timeStamp.value());
     build_dependencies(g, sourceRepo, testRepo);
 
     auto nodesLate{
@@ -138,6 +149,14 @@ namespace sequoia::testing
     };
 
     depth_first_search(g, find_disconnected_t{0}, null_func_obj{}, nodesLate);
+
+    std::for_each(g.cbegin_node_weights(), g.cend_node_weights(),
+      [&toRun{testsToRun.value()}, &testRepo](const auto& w) {
+        if(w.stale && in_repo(w.file, testRepo))
+        {
+          toRun.push_back(fs::relative(w.file, testRepo).generic_string());
+        }
+      });
 
     return testsToRun;
   }
