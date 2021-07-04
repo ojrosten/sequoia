@@ -122,6 +122,7 @@ namespace sequoia::testing
   [[nodiscard]]
   std::optional<std::vector<std::string>> tests_to_run(const std::filesystem::path& sourceRepo,
                                                        const std::filesystem::path& testRepo,
+                                                       const std::filesystem::path& materialsRepo,
                                                        const std::optional<std::filesystem::file_time_type>& timeStamp)
   {
     using namespace maths;
@@ -150,13 +151,35 @@ namespace sequoia::testing
 
     depth_first_search(g, find_disconnected_t{0}, null_func_obj{}, nodesLate);
 
-    std::for_each(g.cbegin_node_weights(), g.cend_node_weights(),
-      [&toRun{testsToRun.value()}, &testRepo](const auto& w) {
-        if(w.stale && in_repo(w.file, testRepo))
+    for(auto i{g.cbegin_node_weights()}; i != g.cend_node_weights(); ++i)
+    {
+      const auto& weight{*i};
+      if(in_repo(weight.file, testRepo))
+      {
+        const auto relPath{fs::relative(weight.file, testRepo)};
+
+        if(!weight.stale)
         {
-          toRun.push_back(fs::relative(w.file, testRepo).generic_string());
+          const auto materials{materialsRepo / fs::path{relPath}.replace_extension("")};
+          if(fs::exists(materials))
+          {
+            for(const auto& entry : fs::recursive_directory_iterator(materials))
+            {
+              if(fs::last_write_time(entry) > timeStamp)
+              {
+                g.mutate_node_weight(i, [](auto& w) { w.stale = true; });
+                break;
+              }
+            }
+          }
         }
-      });
+
+        if(weight.stale)
+        {
+          testsToRun->push_back(relPath.generic_string());
+        }
+      }
+    }
 
     return testsToRun;
   }

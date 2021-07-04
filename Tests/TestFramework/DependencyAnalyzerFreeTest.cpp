@@ -20,8 +20,8 @@ namespace sequoia::testing
   {
     const auto fake{working_materials() / "FakeProject"};
     const auto sourceRepo{fake / "Source"}, testsRepo{fake / "Tests"};
-    // testing materials
+    const auto materials{fake / "TestMaterials"};
 
-    const auto testsToRun{tests_to_run(sourceRepo, testsRepo, std::chrono::file_clock::now())};
+    const auto testsToRun{tests_to_run(sourceRepo, testsRepo, materials, std::chrono::file_clock::now())};
   }
 }
