@@ -79,6 +79,10 @@ namespace sequoia::testing
                        info,
                        {{info.tests_repo / "Maths" / "ProbabilityTestingUtilities.hpp"}},
                        {{"Maths/ProbabilityTest.cpp"}, {"Maths/ProbabilityTestingDiagnostics.cpp"}});
+    check_tests_to_run(LINE("Reused utils stale"),
+                       info,
+                       {{info.tests_repo / "Stuff" / "OldSchoolTestingUtilities.hpp"}},
+                       {{"Maybe/MaybeTest.cpp"}, {"Stuff/OldschoolTest.cpp"}, {"Stuff/OldschoolTestingDiagnostics.cpp"}});
     check_tests_to_run(LINE("Source cpp stale"),
                        info,
                        {{info.source_repo / "generatedProject" / "Maths" / "Probability.cpp"}},

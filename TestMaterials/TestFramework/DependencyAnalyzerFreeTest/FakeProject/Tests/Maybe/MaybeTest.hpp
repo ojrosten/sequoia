@@ -8,6 +8,7 @@
 #pragma once
 
 #include "MaybeTestingUtilities.hpp"
+#include "Stuff/OldschoolTestingUtilities.hpp"
 
 namespace sequoia::testing
 {
