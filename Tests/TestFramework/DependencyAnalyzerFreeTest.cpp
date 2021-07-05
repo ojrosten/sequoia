@@ -18,10 +18,12 @@ namespace sequoia::testing
 
   void dependency_analyzer_free_test::run_tests()
   {
+    using test_list = std::optional<std::vector<std::string>>;
+
     const auto fake{working_materials() / "FakeProject"};
     const auto sourceRepo{fake / "Source"}, testsRepo{fake / "Tests"};
     const auto materials{fake / "TestMaterials"};
 
-    const auto testsToRun{tests_to_run(sourceRepo, testsRepo, materials, std::chrono::file_clock::now())};
+    check_equality(LINE("No timestamp"), tests_to_run(sourceRepo, testsRepo, materials, std::nullopt), test_list{});
   }
 }
