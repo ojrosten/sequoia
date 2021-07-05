@@ -18,12 +18,21 @@ namespace sequoia::testing
 
   void dependency_analyzer_free_test::run_tests()
   {
+    namespace fs = std::filesystem;
     using test_list = std::optional<std::vector<std::string>>;
 
     const auto fake{working_materials() / "FakeProject"};
     const auto sourceRepo{fake / "Source"}, testsRepo{fake / "Tests"};
     const auto materials{fake / "TestMaterials"};
 
+    const auto initialTime{std::chrono::file_clock::now()};
+
+    for(auto& entry : fs::recursive_directory_iterator(fake))
+    {
+      fs::last_write_time(entry.path(), initialTime);
+    }
+
     check_equality(LINE("No timestamp"), tests_to_run(sourceRepo, testsRepo, materials, std::nullopt), test_list{});
+    check_equality(LINE("Nothing stale"), tests_to_run(sourceRepo, testsRepo, materials, std::chrono::file_clock::now()), test_list{{}});
   }
 }
