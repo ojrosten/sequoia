@@ -10,26 +10,6 @@
 
 namespace sequoia::testing
 {
-  namespace
-  {
-    class tests_to_run_checker
-    {
-    public:
-      tests_to_run_checker(const std::filesystem::path& sourceRepo,
-                           const std::filesystem::path& testRepo,
-                           const std::filesystem::path& materialsRepo,
-                           const std::filesystem::file_time_type resetTime)
-        : m_SourceRepo{sourceRepo}
-        , m_TestsRepo{testRepo}
-        , m_Materials{materialsRepo}
-        , m_ResetTime{resetTime}
-      {}
-    private:
-      const std::vector<std::filesystem::path>& m_SourceRepo, m_TestsRepo, m_Materials;
-      std::filesystem::file_time_type m_ResetTime;
-    };
-  }
-
   [[nodiscard]]
   std::string_view dependency_analyzer_free_test::source_file() const noexcept
   {
