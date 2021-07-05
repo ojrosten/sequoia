@@ -9,6 +9,7 @@
 
 #include "sequoia/TestFramework/MoveOnlyTestCore.hpp"
 #include "generatedProject/Utilities/Thing/UniqueThing.hpp"
+#include "../../Stuff/FooTestingUtilities.hpp"
 
 namespace sequoia::testing
 {

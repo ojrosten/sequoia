@@ -83,6 +83,10 @@ namespace sequoia::testing
                        info,
                        {{info.tests_repo / "Stuff" / "OldSchoolTestingUtilities.hpp"}},
                        {{"Maybe/MaybeTest.cpp"}, {"Stuff/OldschoolTest.cpp"}, {"Stuff/OldschoolTestingDiagnostics.cpp"}});
+    check_tests_to_run(LINE("Reused utils stale, relative path"),
+                       info,
+                       {{info.tests_repo / "Stuff" / "FooTestingUtilities.hpp"}},
+                       {{"Stuff/FooTest.cpp"}, {"Stuff/FooTestingDiagnostics.cpp"}, {"Utilities/Thing/UniqueThingTest.cpp"}, {"Utilities/Thing/UniqueThingTestingDiagnostics.cpp"}});
     check_tests_to_run(LINE("Source cpp stale"),
                        info,
                        {{info.source_repo / "generatedProject" / "Maths" / "Probability.cpp"}},

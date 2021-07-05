@@ -106,10 +106,17 @@ namespace sequoia::testing
                 }
 
                 auto includeMatcher{
-                  [&includedFile,&sourceRepo,&testRepo](const auto& weight) {
-                    if(includedFile.is_absolute()) return weight.file == includedFile;
+                  [&includedFile,&sourceRepo,&testRepo,&file](const auto& weight) {
+                    if(includedFile.is_absolute())
+                      return weight.file == includedFile;
 
-                    return (weight.file == sourceRepo / includedFile) || (weight.file == testRepo / includedFile);
+                    if((weight.file == sourceRepo / includedFile) || (weight.file == testRepo / includedFile))
+                      return true;
+
+                    if(const auto trial{file.parent_path() / includedFile}; fs::exists(trial))
+                      return weight.file == fs::canonical(trial);
+
+                    return false;
                   }
                 };
 
