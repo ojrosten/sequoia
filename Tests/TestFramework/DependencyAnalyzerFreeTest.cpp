@@ -34,5 +34,8 @@ namespace sequoia::testing
 
     check_equality(LINE("No timestamp"), tests_to_run(sourceRepo, testsRepo, materials, std::nullopt), test_list{});
     check_equality(LINE("Nothing stale"), tests_to_run(sourceRepo, testsRepo, materials, std::chrono::file_clock::now()), test_list{{}});
+
+    fs::last_write_time(testsRepo / "HouseAllocationTest.cpp", std::chrono::file_clock::now());
+    check_equality(LINE("Test cpp stale"), tests_to_run(sourceRepo, testsRepo, materials, initialTime), test_list{{{"HouseAllocationTest.cpp"}}});
   }
 }

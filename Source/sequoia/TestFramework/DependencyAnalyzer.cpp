@@ -43,17 +43,29 @@ namespace sequoia::testing
       return true;
     }
 
+    [[nodiscard]]
+    bool is_cpp(const std::filesystem::path& file)
+    {
+      const auto ext{file.extension()};
+      return (ext == ".cpp") || (ext == ".cc") || (ext == ".cxx");
+    }
+
+    [[nodiscard]]
+    bool is_header(const std::filesystem::path& file)
+    {
+      const auto ext{file.extension()};
+      return (ext == ".hpp") || (ext == ".h") || (ext == ".hxx");
+    }
+
     using tests_dependency_graph = maths::graph<maths::directed_flavour::directed, maths::null_weight, file_info>;
     using node_iterator = tests_dependency_graph::const_iterator;
 
     void add_files(tests_dependency_graph& g, const std::filesystem::path& repo, const fs::file_time_type& timeStamp)
     {
-      constexpr std::array<std::string_view, 5> exts{".h", ".hpp", ".cpp", ".cc", ".cxx"};
-
       for(const auto& entry : fs::recursive_directory_iterator(repo))
       {
         const auto file{entry.path()};
-        if(auto found{std::find(exts.begin(), exts.end(), file.extension().string())}; found != exts.end())
+        if(is_cpp(file) || is_header(file))
         {
           g.add_node(file, timeStamp);
         }
@@ -174,7 +186,7 @@ namespace sequoia::testing
 
     for(auto i{g.cbegin_node_weights()}; i != g.cend_node_weights(); ++i)
     {
-      if(const auto& weight{*i}; in_repo(weight.file, testRepo))
+      if(const auto& weight{*i}; is_cpp(weight.file) && in_repo(weight.file, testRepo))
       {
         const auto relPath{fs::relative(weight.file, testRepo)};
 
