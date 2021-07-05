@@ -132,10 +132,10 @@ namespace sequoia::testing
     }
 
     void consider_materials(tests_dependency_graph& g,
-      node_iterator i,
-      const fs::path& relFilePath,
-      const fs::path& materialsRepo,
-      const std::filesystem::file_time_type timeStamp)
+                            node_iterator i,
+                            const fs::path& relFilePath,
+                            const fs::path& materialsRepo,
+                            const std::filesystem::file_time_type timeStamp)
     {
       const auto materials{materialsRepo / fs::path{relFilePath}.replace_extension("")};
       if(fs::exists(materials))
