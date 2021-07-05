@@ -24,11 +24,15 @@ namespace sequoia::testing
       fs::last_write_time(f, std::chrono::file_clock::now());
     }
 
-    test_list list{{}};
-    std::transform(toRun.begin(), toRun.end(), std::back_inserter(*list), [](const std::filesystem::path& file) { return file.generic_string(); });
-    std::sort(list->begin(), list->end());
+    test_list actual{tests_to_run(info.source_repo, info.tests_repo, info.materials, info.reset_time)};
+    if(actual.has_value())
+      std::sort(actual->begin(), actual->end());
 
-    check_equality(description, tests_to_run(info.source_repo, info.tests_repo, info.materials, info.reset_time), list);
+    test_list prediction{{}};
+    std::transform(toRun.begin(), toRun.end(), std::back_inserter(*prediction), [](const std::filesystem::path& file) { return file.generic_string(); });
+    std::sort(prediction->begin(), prediction->end());
+
+    check_equality(description, actual, prediction);
 
     for(const auto& f : makeStale)
     {
