@@ -17,9 +17,19 @@ namespace sequoia::testing
     using free_test::free_test;
 
   private:
+    struct information
+    {
+      std::filesystem::path source_repo, tests_repo, materials;
+      std::filesystem::file_time_type reset_time;
+    };
+
+    using test_list = std::optional<std::vector<std::string>>;
+
     [[nodiscard]]
     std::string_view source_file() const noexcept final;
 
     void run_tests() final;
+
+    void check_tests_to_run(std::string_view description, const information& info, const std::vector<std::filesystem::path>& makeStale, const std::vector<std::filesystem::path>& toRun);
   };
 }
