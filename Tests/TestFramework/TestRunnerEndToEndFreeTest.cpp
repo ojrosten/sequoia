@@ -70,6 +70,7 @@ namespace sequoia::testing
                                 output / "SpecifiedSourceOutput.txt"}
                && shell_command{"", run_cmd().append(" select Plurgh.cpp test Absent select Foo test FooTest.cpp"), output / "FailedSpecifiedSourceOutput.txt"}
                && shell_command{"", run_cmd().append(" test Foo"), output / "SpecifiedFamilyOutput.txt"}
+               && shell_command{"", run_cmd().append(" --prune"), output / "FullyPrunedOutput.txt"}
                && shell_command{"", run_cmd().append(" -v"), output / "VerboseOutput.txt"}
                && shell_command{"", run_cmd().append(" --help"), output / "HelpOutput.txt"};
       }
