@@ -90,6 +90,12 @@ namespace sequoia::testing
       }
 
       [[nodiscard]]
+      shell_command prune_after_materials_update(const std::filesystem::path& output) const
+      {
+        return cd_cmd(buildDir) && shell_command("", run_cmd().append(" --prune"), output / "TestRunOutput.txt");
+      }
+
+      [[nodiscard]]
       shell_command dump(const std::filesystem::path& output) const
       {
         return cd_cmd(buildDir) && shell_command("", run_cmd().append(" --dump"), output / "TestRunOutput.txt");
@@ -244,6 +250,11 @@ namespace sequoia::testing
 
     fs::copy(generated() / "TestMaterials", working_materials() / "UpdatedTestMaterials", fs::copy_options::recursive);
     check_equivalence(LINE("Updated Test Materials"), working_materials() / "UpdatedTestMaterials", predictive_materials() / "UpdatedTestMaterials");
+
+    //=================== Rerun with prune, which should detect the change to materials ===================//
+    fs::create_directory(working_materials() / "RunWithPruneOutput");
+    invoke(b.prune_after_materials_update(working_materials() / "RunWithPruneOutput"));
+    check_equivalence(LINE("Test Runner Output"), working_materials() / "RunWithPruneOutput", predictive_materials() / "RunWithPruneOutput");
 
     //=================== Rerun and do a dump ===================//
     fs::create_directory(working_materials() / "RunPostUpdate");
