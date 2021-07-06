@@ -214,6 +214,12 @@ namespace sequoia::testing
     return outputDir /= "TestSummaries";
   }
 
+  [[nodiscard]]
+  std::filesystem::path timestamp_path(std::filesystem::path outputDir)
+  {
+    return outputDir /= ".timestamp";
+  }
+
   void throw_unless_exists(const std::filesystem::path& p, std::string_view message)
   {
     namespace fs = std::filesystem;

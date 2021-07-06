@@ -33,3 +33,4 @@ update-materials | u |
 --verbose | -v |
 --recovery | -r |
 --dump
+--prune

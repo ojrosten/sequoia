@@ -116,6 +116,9 @@ namespace sequoia::testing
   [[nodiscard]]
   std::filesystem::path test_summaries_path(std::filesystem::path outputDir);
 
+  [[nodiscard]]
+  std::filesystem::path timestamp_path(std::filesystem::path outputDir);
+
   template<class Pred>
     requires invocable<Pred, std::filesystem::path>
   void throw_if(const std::filesystem::path& p, std::string_view message, Pred pred)

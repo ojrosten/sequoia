@@ -12,3 +12,6 @@ output/Recovery
 
 #ignore temporary data from tests
 output/TestsTemporaryData
+
+#ingnore time stamp for test run
+.timestamp

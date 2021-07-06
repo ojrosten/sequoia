@@ -160,16 +160,16 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::optional<std::vector<std::string>> tests_to_run(const std::filesystem::path& sourceRepo,
-                                                       const std::filesystem::path& testRepo,
-                                                       const std::filesystem::path& materialsRepo,
-                                                       const std::optional<std::filesystem::file_time_type>& timeStamp)
+  std::optional<std::vector<std::filesystem::path>> tests_to_run(const std::filesystem::path& sourceRepo,
+                                                                 const std::filesystem::path& testRepo,
+                                                                 const std::filesystem::path& materialsRepo,
+                                                                 const std::optional<std::filesystem::file_time_type>& timeStamp)
   {
     using namespace maths;
 
     if(!timeStamp) return std::nullopt;
 
-    std::optional<std::vector<std::string>> testsToRun{{}};
+    std::optional<std::vector<std::filesystem::path>> testsToRun{{}};
 
     tests_dependency_graph g{};
     add_files(g, sourceRepo, timeStamp.value());
@@ -199,7 +199,7 @@ namespace sequoia::testing
 
         if(!weight.stale) consider_materials(g, i, relPath, materialsRepo, timeStamp.value());
 
-        if(weight.stale) testsToRun->push_back(relPath.generic_string());
+        if(weight.stale) testsToRun->push_back(relPath);
       }
     }
 

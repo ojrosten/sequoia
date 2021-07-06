@@ -23,7 +23,7 @@ namespace sequoia::testing
       std::filesystem::file_time_type reset_time;
     };
 
-    using test_list = std::optional<std::vector<std::string>>;
+    using test_list = std::optional<std::vector<std::filesystem::path>>;
 
     [[nodiscard]]
     std::string_view source_file() const noexcept final;

@@ -13,6 +13,7 @@
 #include "sequoia/Parsing/CommandLineArguments.hpp"
 #include "sequoia/TestFramework/Summary.hpp"
 #include "sequoia/TestFramework/FileEditors.hpp"
+#include "sequoia/TestFramework/DependencyAnalyzer.hpp"
 #include "sequoia/TextProcessing/Substitutions.hpp"
 
 #ifdef _MSC_VER
@@ -1061,6 +1062,16 @@ namespace sequoia::testing
                       m_Recovery.dump_file = recoveryDir / "Dump.txt";
                       std::filesystem::remove(m_Recovery.dump_file);
                     }
+                  },
+                  {"--prune", {}, {},
+                    [this](const arg_list&) { 
+                      namespace fs = std::filesystem;
+                      const auto tsFile{timestamp_path(m_Paths.output())};
+                      if(fs::exists(tsFile))
+                      {
+                        m_TimeStamp = fs::last_write_time(tsFile);
+                      }
+                    }
                   }
                 },
                 [](std::string_view){})
@@ -1077,12 +1088,30 @@ namespace sequoia::testing
     }
   }
 
-  void test_runner::check_argument_consistency() const
+  void test_runner::check_argument_consistency()
   {
     using parsing::commandline::error;
+    using parsing::commandline::warning;
 
     if(concurrent_execution() && (!m_Recovery.recovery_file.empty() || !m_Recovery.dump_file.empty()))
       throw std::runtime_error{error("Can't run asynchronously in recovery/dump mode\n")};
+
+    if(m_TimeStamp)
+    {
+      if((!m_SelectedFamilies.empty() || !m_SelectedSources.empty()))
+      {
+        stream() << warning("--prune ignored if either test families or specific test source files are selected");
+        m_TimeStamp = std::nullopt;
+      }
+      else
+      {
+        if(const auto toRun{tests_to_run(m_Paths.source_root(), m_Paths.tests(), m_Paths.test_materials(), m_TimeStamp)})
+        {
+          std::transform(toRun->begin(), toRun->end(), std::back_inserter(m_SelectedSources),
+            [](const std::filesystem::path& file)  -> std::pair<std::filesystem::path, bool> { return {file, false}; });
+        }
+      }
+    }
   }
 
   [[nodiscard]]
@@ -1324,6 +1353,11 @@ namespace sequoia::testing
     {
       if(!m_Families.empty())
       {
+        if(!selected)
+        {
+          std::ofstream ostream{timestamp_path(m_Paths.output())};
+        }
+
         stream() << "\nRunning tests...\n\n";
         log_summary summary{};
         if(!concurrent_execution())

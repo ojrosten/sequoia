@@ -405,23 +405,22 @@ namespace sequoia::testing
     using source_list       = std::vector<std::pair<std::filesystem::path, bool>>;
     using creation_factory  = runtime::factory<nascent_semantics_test, nascent_allocation_test, nascent_behavioural_test>;
     using vessel            = typename creation_factory::vessel;
+    using time_stamp        = std::optional<std::filesystem::file_time_type>;
 
-    std::vector<test_family> m_Families{};
-    family_map m_SelectedFamilies{};
-    source_list m_SelectedSources{};
-    std::vector<vessel> m_NascentTests{};
+    std::vector<test_family>  m_Families{};
+    family_map                m_SelectedFamilies{};
+    source_list               m_SelectedSources{};
+    std::vector<vessel>       m_NascentTests{};
     std::vector<project_data> m_NascentProjects{};
-    std::string m_Copyright{};
-    project_paths m_Paths;
-
-    recovery_paths m_Recovery;
-
-    indentation m_CodeIndent{"  "};
-    std::ostream* m_Stream;
-
-    output_mode m_OutputMode{output_mode::standard};
-    update_mode m_UpdateMode{update_mode::none};
-    concurrency_mode m_ConcurrencyMode{concurrency_mode::serial};
+    std::string               m_Copyright{};
+    project_paths             m_Paths;
+    recovery_paths            m_Recovery;
+    indentation               m_CodeIndent{"  "};
+    std::ostream*             m_Stream;
+    output_mode               m_OutputMode{output_mode::standard};
+    update_mode               m_UpdateMode{update_mode::none};
+    concurrency_mode          m_ConcurrencyMode{concurrency_mode::serial};
+    time_stamp                m_TimeStamp{};
 
     std::ostream& stream() noexcept { return *m_Stream; }
 
@@ -435,7 +434,7 @@ namespace sequoia::testing
     [[nodiscard]]
     bool concurrent_execution() const noexcept { return m_ConcurrencyMode != concurrency_mode::serial; }
 
-    void check_argument_consistency() const;
+    void check_argument_consistency();
 
     void run_tests();
 

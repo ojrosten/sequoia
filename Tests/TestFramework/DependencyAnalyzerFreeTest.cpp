@@ -28,8 +28,7 @@ namespace sequoia::testing
     if(actual.has_value())
       std::sort(actual->begin(), actual->end());
 
-    test_list prediction{{}};
-    std::transform(toRun.begin(), toRun.end(), std::back_inserter(*prediction), [](const std::filesystem::path& file) { return file.generic_string(); });
+    test_list prediction{toRun};
     std::sort(prediction->begin(), prediction->end());
 
     check_equality(description, actual, prediction);
