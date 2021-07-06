@@ -358,7 +358,7 @@ namespace sequoia::testing
         }(std::forward<Test>(test), std::forward<Tests>(tests)...)
       };
 
-      if(!done && (m_SelectedSources.empty() || !m_SelectedFamilies.empty()))
+      if(!done && ( (m_SelectedSources.empty() && !pruned()) || !m_SelectedFamilies.empty() ))
       {
         if(mark_family(name))
         {
@@ -423,6 +423,9 @@ namespace sequoia::testing
     time_stamp                m_TimeStamp{};
 
     std::ostream& stream() noexcept { return *m_Stream; }
+
+    [[nodiscard]]
+    bool pruned() const noexcept;
 
     bool mark_family(std::string_view name);
 

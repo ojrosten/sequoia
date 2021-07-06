@@ -1096,7 +1096,7 @@ namespace sequoia::testing
     if(concurrent_execution() && (!m_Recovery.recovery_file.empty() || !m_Recovery.dump_file.empty()))
       throw std::runtime_error{error("Can't run asynchronously in recovery/dump mode\n")};
 
-    if(m_TimeStamp)
+    if(pruned())
     {
       if((!m_SelectedFamilies.empty() || !m_SelectedSources.empty()))
       {
@@ -1128,6 +1128,12 @@ namespace sequoia::testing
     }
 
     throw std::logic_error{"Unknown option for concurrency_mode"};
+  }
+
+  [[nodiscard]]
+  bool test_runner::pruned() const noexcept
+  {
+    return m_TimeStamp.has_value();
   }
 
   bool test_runner::mark_family(std::string_view name)
@@ -1351,13 +1357,13 @@ namespace sequoia::testing
     const bool selected{!m_SelectedFamilies.empty() || !m_SelectedSources.empty()};
     if((m_NascentTests.empty() && m_NascentProjects.empty()) || selected)
     {
+      if(!selected || pruned())
+      {
+        std::ofstream ostream{timestamp_path(m_Paths.output())};
+      }
+
       if(!m_Families.empty())
       {
-        if(!selected)
-        {
-          std::ofstream ostream{timestamp_path(m_Paths.output())};
-        }
-
         stream() << "\nRunning tests...\n\n";
         log_summary summary{};
         if(!concurrent_execution())
