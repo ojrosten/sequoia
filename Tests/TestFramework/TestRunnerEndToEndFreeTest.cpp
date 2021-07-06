@@ -65,11 +65,13 @@ namespace sequoia::testing
                && build_cmd(buildDir, buildOutput)
                && shell_command{"", run_cmd(), output / "TestRunOutput.txt" }
                && shell_command{"", run_cmd().append(" select ../../../Tests/HouseAllocationTest.cpp")
-                                         .append(" select Maybe/MaybeTest.cpp")
-                                         .append(" select FooTest.cpp"),
+                                             .append(" select Maybe/MaybeTest.cpp")
+                                             .append(" select FooTest.cpp"),
                                 output / "SpecifiedSourceOutput.txt"}
+               && shell_command{"", run_cmd().append(" select FooTest.cpp --prune"), output / "SelectedSourcePruneConflictOutput.txt"}
                && shell_command{"", run_cmd().append(" select Plurgh.cpp test Absent select Foo test FooTest.cpp"), output / "FailedSpecifiedSourceOutput.txt"}
                && shell_command{"", run_cmd().append(" test Foo"), output / "SpecifiedFamilyOutput.txt"}
+               && shell_command{"", run_cmd().append(" test Foo --prune"), output / "SpecifiedFamilyPruneConflictOutput.txt"}
                && shell_command{"", run_cmd().append(" --prune"), output / "FullyPrunedOutput.txt"}
                && shell_command{"", run_cmd().append(" -v"), output / "VerboseOutput.txt"}
                && shell_command{"", run_cmd().append(" --help"), output / "HelpOutput.txt"};

@@ -1100,7 +1100,7 @@ namespace sequoia::testing
     {
       if((!m_SelectedFamilies.empty() || !m_SelectedSources.empty()))
       {
-        stream() << warning("--prune ignored if either test families or specific test source files are selected");
+        stream() << warning("--prune ignored if either test families or test source files are specified");
         m_TimeStamp = std::nullopt;
       }
       else
