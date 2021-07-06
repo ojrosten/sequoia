@@ -1396,6 +1396,10 @@ namespace sequoia::testing
         stream() << "\n-----------Grand Totals-----------\n";
         stream() << summarize(summary, steady_clock::now() - time, summary_detail::absent_checks | summary_detail::timings, indentation{"\t"}, no_indent);
       }
+      else if(pruned())
+      {
+        stream() << "Nothing to do: no changes since the last run, therefore --prune has pruned all tests\n";
+      }
       else if(!selected)
       {
         stream() << "Nothing to do; try creating some tests!\nRun with --help to see options\n";
