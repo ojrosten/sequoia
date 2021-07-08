@@ -78,10 +78,29 @@ $(function() {
 <code>#include &quot;<a class="el" href="../../d2/d4b/CommandLineArguments_8hpp_source.html">sequoia/Parsing/CommandLineArguments.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../dc/d7f/Summary_8hpp_source.html">sequoia/TestFramework/Summary.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../d4/d87/FileEditors_8hpp_source.html">sequoia/TestFramework/FileEditors.hpp</a>&quot;</code><br />
+<code>#include &quot;sequoia/TestFramework/DependencyAnalyzer.hpp&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../d1/d50/Substitutions_8hpp_source.html">sequoia/TextProcessing/Substitutions.hpp</a>&quot;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:ae089b37d718bd502e320028779d21a51"><td class="memItemLeft" align="right" valign="top"><a id="ae089b37d718bd502e320028779d21a51"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::invoke</b> (const shell_command &amp;cmd)</td></tr>
+<tr class="separator:ae089b37d718bd502e320028779d21a51"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab02742a9377f5b2397bfe782c64028e6"><td class="memItemLeft" align="right" valign="top"><a id="ab02742a9377f5b2397bfe782c64028e6"></a>
+shell_command&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::cd_cmd</b> (const std::filesystem::path &amp;dir)</td></tr>
+<tr class="separator:ab02742a9377f5b2397bfe782c64028e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afd409ef2214f2415a9bb146933f8058b"><td class="memItemLeft" align="right" valign="top"><a id="afd409ef2214f2415a9bb146933f8058b"></a>
+shell_command&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::cmake_cmd</b> (const std::filesystem::path &amp;buildDir, const std::filesystem::path &amp;output)</td></tr>
+<tr class="separator:afd409ef2214f2415a9bb146933f8058b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a01b40c7344f00569e0544246dcb67df4"><td class="memItemLeft" align="right" valign="top"><a id="a01b40c7344f00569e0544246dcb67df4"></a>
+shell_command&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::build_cmd</b> (const std::filesystem::path &amp;buildDir, const std::filesystem::path &amp;output)</td></tr>
+<tr class="separator:a01b40c7344f00569e0544246dcb67df4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9b913be0e2348ca4b407dd126657a890"><td class="memItemLeft" align="right" valign="top"><a id="a9b913be0e2348ca4b407dd126657a890"></a>
+shell_command&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::git_first_cmd</b> (const std::filesystem::path &amp;root, const std::filesystem::path &amp;output)</td></tr>
+<tr class="separator:a9b913be0e2348ca4b407dd126657a890"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a006b8a6b680e8206cf3626d7a128049d"><td class="memItemLeft" align="right" valign="top"><a id="a006b8a6b680e8206cf3626d7a128049d"></a>
+shell_command&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::launch_cmd</b> (const std::filesystem::path &amp;root, const std::filesystem::path &amp;buildDir)</td></tr>
+<tr class="separator:a006b8a6b680e8206cf3626d7a128049d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aec513908ac2effd46c510a14110350b3"><td class="memItemLeft" align="right" valign="top"><a id="aec513908ac2effd46c510a14110350b3"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::handle_as_ref</b> (std::string_view type)</td></tr>
 <tr class="separator:aec513908ac2effd46c510a14110350b3"><td class="memSeparator" colspan="2">&#160;</td></tr>

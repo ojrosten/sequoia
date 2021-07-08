@@ -1,6 +1,9 @@
 /*! \page testframeworkpage The Testing Framework
 
-    The `sequoia` testing framework is designed to be
+    The `sequoia` testing framework is designed for
+    \ref sec_scale "scale"
+    and is
+    \ref sec_automated  "highly automated",
     \ref sec_robustness "robust",
     \ref sec_extensible "extensible",
     \ref sec_semantics  "semantics-aware",
@@ -8,6 +11,43 @@
     \ref sec_generics   "generics-friendly"
     and
     \ref sec_expressive "expressive".
+
+    \section sec_scale Scale
+
+    To operate effectively at scale, `sequoia` incorporates the following features:
+    - No waste: if a principled structure is adhered to, then running with the `--prune` option
+    will ensure that only those tests dependent on changes since the last run will be executed.
+    Changes may be either to source files or materials exploited by the test.
+    In particular:
+       -# cpp files should supply definitions only for the header of the same name;
+       -# Given a test file `Tests/Foo/Bar.cpp`, any testing materials should be stored in `TestMaterials\Foo\Bar`.
+    - Concurrency: running with `-a` will run tests concurrently. Tests are grouped into families and,
+      by default, concurrency is at the level of families. However, there is flexibility.
+      By specifying `--async-depth 1` individual tests are run concurrently.
+
+    \section sec_automated Automation
+
+    The processes of initializating a new project, and creating new tests are highly automated.
+    Both are integrated with CMake. For example, running with the command line arguments
+
+    <pre>
+        init "Jo Bloggs" "Some/Absolute/Path" "\t"
+    </pre>
+
+    will do the following:
+    -# Create a new project in the specified location, with tabs preferred to spaces, and with
+       the copyright of any new material created though mechanisms described below belonging to
+       Jo Bloggs.
+    -# Invoke `CMake` to build the new project.
+    -# Initialize a new `git` repository and add the newly created project files.
+
+    Additionally, on Windows:
+    -# Visual Studio will be launched, with the appropriate start-up project set.
+    -# The new project's (empty) test suite will be run.
+
+    Once a new project has been created, it is natural to add code and tests. This can all
+    be done automatically by utilizing the `create` mode which will add the appropriate files,
+    amend the `CMakeLists.txt` files and run CMake.
 
     \section sec_robustness Robustness
 
@@ -235,7 +275,7 @@
     this line may correspond to
     several different template instantiations.
 
-    Consequently, sequoia reports failures with plenty of type information. For example, the following
+    Consequently, `sequoia` reports failures with plenty of type information. For example, the following
     output is typical of what to expect when checking the equality of two instances
     of `std::pair<int,double>`:
 

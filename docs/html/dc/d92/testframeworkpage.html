@@ -65,7 +65,32 @@ $(function() {
 <div class="title">The Testing Framework </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>The <code>sequoia</code> testing framework is designed to be <a class="el" href="../../dc/d92/testframeworkpage.html#sec_robustness">robust</a>, <a class="el" href="../../dc/d92/testframeworkpage.html#sec_extensible">extensible</a>, <a class="el" href="../../dc/d92/testframeworkpage.html#sec_semantics">semantics-aware</a>, <a class="el" href="../../dc/d92/testframeworkpage.html#sec_allocators">allocator-aware</a>, <a class="el" href="../../dc/d92/testframeworkpage.html#sec_generics">generics-friendly</a> and <a class="el" href="../../dc/d92/testframeworkpage.html#sec_expressive">expressive</a>.</p>
+<div class="textblock"><p>The <code>sequoia</code> testing framework is designed for <a class="el" href="../../dc/d92/testframeworkpage.html#sec_scale">scale</a> and is <a class="el" href="../../dc/d92/testframeworkpage.html#sec_automated">highly automated</a>, <a class="el" href="../../dc/d92/testframeworkpage.html#sec_robustness">robust</a>, <a class="el" href="../../dc/d92/testframeworkpage.html#sec_extensible">extensible</a>, <a class="el" href="../../dc/d92/testframeworkpage.html#sec_semantics">semantics-aware</a>, <a class="el" href="../../dc/d92/testframeworkpage.html#sec_allocators">allocator-aware</a>, <a class="el" href="../../dc/d92/testframeworkpage.html#sec_generics">generics-friendly</a> and <a class="el" href="../../dc/d92/testframeworkpage.html#sec_expressive">expressive</a>.</p>
+<h1><a class="anchor" id="sec_scale"></a>
+Scale</h1>
+<p>To operate effectively at scale, <code>sequoia</code> incorporates the following features:</p><ul>
+<li>No waste: if a principled structure is adhered to, then running with the <code>--prune</code> option will ensure that only those tests dependent on changes since the last run will be executed. Changes may be either to source files or materials exploited by the test. In particular:<ol type="1">
+<li>cpp files should supply definitions only for the header of the same name;</li>
+<li>Given a test file <code>Tests/Foo/Bar.cpp</code>, any testing materials should be stored in <code>TestMaterials\Foo\Bar</code>.</li>
+</ol>
+</li>
+<li>Concurrency: running with <code>-a</code> will run tests concurrently. Tests are grouped into families and, by default, concurrency is at the level of families. However, there is flexibility. By specifying <code>--async-depth 1</code> individual tests are run concurrently.</li>
+</ul>
+<h1><a class="anchor" id="sec_automated"></a>
+Automation</h1>
+<p>The processes of initializating a new project, and creating new tests are highly automated. Both are integrated with CMake. For example, running with the command line arguments</p>
+<pre>
+    init "Jo Bloggs" "Some/Absolute/Path" "\t"
+</pre><p>will do the following:</p><ol type="1">
+<li>Create a new project in the specified location, with tabs preferred to spaces, and with the copyright of any new material created though mechanisms described below belonging to Jo Bloggs.</li>
+<li>Invoke <code>CMake</code> to build the new project.</li>
+<li>Initialize a new <code>git</code> repository and add the newly created project files.</li>
+</ol>
+<p>Additionally, on Windows:</p><ol type="1">
+<li>Visual Studio will be launched, with the appropriate start-up project set.</li>
+<li>The new project's (empty) test suite will be run.</li>
+</ol>
+<p>Once a new project has been created, it is natural to add code and tests. This can all be done automatically by utilizing the <code>create</code> mode which will add the appropriate files, amend the <code>CMakeLists.txt</code> files and run CMake.</p>
 <h1><a class="anchor" id="sec_robustness"></a>
 Robustness</h1>
 <p>The testing framework is sophisticated and sophistication brings danger, since it raises the chances that the framework itself has bugs. If this is the case, then the framework would give clients a false sense of security about the code they have written, which could be disastrous. To mitigate this risk, the testing framework has been designed to run self-diagnostics. This has been employed to give a high degree of confidence that the existing framework is correct. Used idiomatically, it should confer similar confidence in any extensions.</p>
@@ -112,7 +137,7 @@ Allocator-Awareness</h1>
 <h1><a class="anchor" id="sec_generics"></a>
 Generics-Friendliness</h1>
 <p>When writing generic code, it is natural to want to test it with a variety of appropriate types. This leads to the idea of templated unit tests; within <code>sequoia</code> this is most naturally achieved by leaving the test classes plain (rather than templated) but templating various methods inside. However, a challenge with doing this is interpreting failures. The line at which the failure occurs is no longer enough to uniquely disambiguate, since this line may correspond to several different template instantiations.</p>
-<p>Consequently, sequoia reports failures with plenty of type information. For example, the following output is typical of what to expect when checking the equality of two instances of <code>std::pair&lt;int,double&gt;</code>:</p>
+<p>Consequently, <code>sequoia</code> reports failures with plenty of type information. For example, the following output is typical of what to expect when checking the equality of two instances of <code>std::pair&lt;int,double&gt;</code>:</p>
 <pre>
 ../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 51
 [std::pair&lt;int, double&gt;]
