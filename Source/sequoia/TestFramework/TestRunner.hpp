@@ -205,6 +205,8 @@ namespace sequoia::testing
 
     [[nodiscard]]
     std::ostream& stream() noexcept { return *m_Stream; }
+
+    void finalize_family(std::string_view fallbackIngredient);
   private:
     constexpr static std::array<std::string_view, 3> st_HeaderExtensions{".hpp", ".h", ".hxx"};
 
@@ -218,8 +220,6 @@ namespace sequoia::testing
     gen_source_option m_SourceOption{};
 
     void on_source_path_error() const;
-
-    void finalize_family();
 
     void finalize_header(const std::filesystem::path& sourcePath);
 

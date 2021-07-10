@@ -472,8 +472,6 @@ namespace sequoia::testing
   {
     stream() << "Creating files for new test:\n";
 
-    finalize_family();
-
     const auto srcPath{[this, fn]() {
         auto pth{build_source_path(m_Header)};
         if(pth.empty() && (m_SourceOption == gen_source_option::yes))
@@ -498,11 +496,11 @@ namespace sequoia::testing
     stream() << '\n';
   }
 
-  void nascent_test_base::finalize_family()
+  void nascent_test_base::finalize_family(std::string_view fallbackIngredient)
   {
     if(m_Family.empty())
     {
-      m_Family = m_CamelName;
+      m_Family = fallbackIngredient;
       replace_all(m_Family, "_", " ");
     }
   }
@@ -622,6 +620,7 @@ namespace sequoia::testing
     }
 
     camel_name(forename());
+    finalize_family(camel_name());
     if(header().empty()) header(std::filesystem::path{camel_name()}.concat(".hpp"));
 
     namespace fs = std::filesystem;
@@ -774,12 +773,13 @@ namespace sequoia::testing
 
   void nascent_behavioural_test::finalize()
   {
-    family(capitalize(forename().empty() ? header().filename().replace_extension().string() : forename()));
+    const auto fallbackFamily{capitalize(forename().empty() ? header().filename().replace_extension().string() : forename())};
+    finalize_family(fallbackFamily);
 
     if(forename().empty())
-      forename(to_snake_case(family()).append("_").append(test_type()));
+      forename(to_snake_case(fallbackFamily).append("_").append(test_type()));
 
-    camel_name(capitalize(forename()));
+    camel_name(forename());
 
     namespace fs = std::filesystem;
     nascent_test_base::finalize([this](const fs::path& filename) { return when_header_absent(filename); },
@@ -829,6 +829,7 @@ namespace sequoia::testing
   void nascent_allocation_test::finalize()
   {
     camel_name(forename());
+    finalize_family(camel_name());
     if(header().empty()) header(std::filesystem::path{camel_name()}.concat(".hpp"));
 
     namespace fs = std::filesystem;
