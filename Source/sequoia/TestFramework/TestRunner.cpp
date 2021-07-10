@@ -401,8 +401,7 @@ namespace sequoia::testing
   void nascent_test_base::camel_name(std::string name) { m_CamelName = to_camel_case(std::move(name)); }
 
   [[nodiscard]]
-  std::filesystem::path nascent_test_base::build_source_path(const std::filesystem::path& filename,
-    const std::vector<std::string_view>& extensions) const
+  std::filesystem::path nascent_test_base::build_source_path(const std::filesystem::path& filename) const
   {
     if(filename.empty())
       throw std::runtime_error{"Header name is empty"};
@@ -410,7 +409,7 @@ namespace sequoia::testing
     if(const auto path{find_in_tree(m_Paths.source(), filename)}; !path.empty())
       return path;
 
-    for(auto e : extensions)
+    for(auto e : st_HeaderExtensions)
     {
       if(e != filename.extension())
       {
@@ -423,25 +422,80 @@ namespace sequoia::testing
     return {};
   }
 
-  template<invocable_r<std::filesystem::path, std::filesystem::path> WhenAbsent>
-  void nascent_test_base::finalize(WhenAbsent fn)
+  template<invocable<std::string&> FileTransformer>
+  [[nodiscard]]
+  std::string nascent_test_base::create_file(std::string_view nameStub, std::string_view nameEnding, FileTransformer transformer) const
   {
+    namespace fs = std::filesystem;
+
+    const auto outputFile{(host_dir() / camel_name()) += nameEnding};
+    auto stringify{[root{m_Paths.project_root()}] (const fs::path file) { return fs::relative(file, root).generic_string();  }};
+
+    if(fs::exists(outputFile))
+    {
+      using namespace parsing::commandline;
+      return warning(stringify(outputFile).append(" already exists, so not created\n"));
+    }
+
+    const auto inputFile{(code_templates_path(m_Paths.project_root()) / nameStub).concat(nameEnding)};
+
+    fs::copy_file(inputFile, outputFile, fs::copy_options::overwrite_existing);
+    if(std::string text{read_to_string(outputFile)}; !text.empty())
+    {
+      set_top_copyright(text, m_Copyright);
+      transformer(text);
+
+      write_to_file(outputFile, text);
+    }
+
+    if(outputFile.extension() == ".hpp")
+    {
+      if(const auto str{outputFile.string()}; str.find("Utilities.hpp") == std::string::npos)
+      {
+        add_include(m_Paths.include_target(), fs::relative(outputFile, m_Paths.tests()).generic_string());
+      }
+    }
+    else if(outputFile.extension() == ".cpp")
+    {
+      add_to_cmake(m_Paths.main_cpp_dir(), m_Paths.tests(), outputFile, "target_sources(", ")\n", "${TestDir}/");
+    }
+
+    return stringify(outputFile);
+  }
+
+  template<invocable_r<std::filesystem::path, std::filesystem::path> WhenAbsent, std::size_t N, invocable<std::string&> FileTransformer>
+  void nascent_test_base::finalize(WhenAbsent fn,
+                                   const std::array<std::string_view, N>& stubs,
+                                   const std::vector<std::string>& constructors,
+                                   std::string_view nameStub,
+                                   FileTransformer transformer)
+  {
+    stream() << "Creating files for new test:\n";
+
     finalize_family();
 
     const auto srcPath{[this, fn]() {
-        const std::vector<std::string_view> extensions{".hpp", ".h"};
-        auto pth{build_source_path(m_Header, extensions)};
+        auto pth{build_source_path(m_Header)};
         if(pth.empty() && (m_SourceOption == gen_source_option::yes))
           pth = fn(m_Header);
 
         if(pth.empty())
-          on_source_path_error(extensions);
+          on_source_path_error();
 
         return pth;
       }()
     };
 
     finalize_header(srcPath);
+
+    for(const auto& stub : stubs)
+    {
+      stream() << std::quoted(create_file(nameStub, stub, transformer)) << '\n';
+    }
+
+    add_to_family(m_Paths.main_cpp(), family(), m_CodeIndent, constructors);
+
+    stream() << '\n';
   }
 
   void nascent_test_base::finalize_family()
@@ -465,17 +519,17 @@ namespace sequoia::testing
     m_HeaderPath = fs::relative(sourcePath, m_Paths.source_root());
   }
 
-  void nascent_test_base::on_source_path_error(const std::vector<std::string_view>& extensions) const
+  void nascent_test_base::on_source_path_error() const
   {
     namespace fs = std::filesystem;
 
-    auto mess{std::string{"Unable to locate file "}.append(m_Header.generic_string()).append(" or ")};
-    for(auto e : extensions)
+    auto mess{std::string{"Unable to locate file "}.append(m_Header.generic_string())};
+    for(auto e : st_HeaderExtensions)
     {
       if(e != m_Header.extension())
       {
         const auto alternative{fs::path{m_Header}.replace_extension(e)};
-        mess.append(alternative.generic_string());
+        mess.append(" or ").append(alternative.generic_string());
       }
     }
 
@@ -484,39 +538,13 @@ namespace sequoia::testing
     throw std::runtime_error{mess};
   }
 
-  template<invocable<std::string&> FileTransformer>
-  [[nodiscard]]
-  auto nascent_test_base::create_file(const std::filesystem::path& codeTemplatesDir, std::string_view copyright, std::string_view inputNameStub, std::string_view nameEnding, FileTransformer transformer) const -> file_data
-  {
-    namespace fs = std::filesystem;
-
-    const auto outputFile{(host_dir() / camel_name()) += nameEnding};
-
-    if(fs::exists(outputFile))
-    {
-      return {outputFile, false};
-    }
-
-    const auto inputFile{(codeTemplatesDir / inputNameStub).concat(nameEnding)};
-
-    fs::copy_file(inputFile, outputFile, fs::copy_options::overwrite_existing);
-    if(std::string text{read_to_string(outputFile)}; !text.empty())
-    {
-      set_top_copyright(text, copyright);
-      transformer(text);
-
-      write_to_file(outputFile, text);
-    }
-
-    return {outputFile, true};
-  }
-
-  void nascent_test_base::set_cpp(const std::filesystem::path& headerPath, std::string_view copyright, std::string_view nameSpace) const
+  void nascent_test_base::set_cpp(const std::filesystem::path& headerPath, std::string_view copyright, std::string_view nameSpace)
   {
     namespace fs = std::filesystem;
     const auto srcPath{fs::path{headerPath}.replace_extension("cpp")};
 
     const auto sourceRoot{paths().source_root()};
+    stream() << std::quoted(fs::relative(srcPath, paths().project_root()) .generic_string()) << '\n';
     fs::copy_file(source_templates_path(paths().project_root()) / "MyCpp.cpp", srcPath);
 
     auto setCppText{
@@ -540,7 +568,7 @@ namespace sequoia::testing
 
   //=========================================== nascent_semantics_test ===========================================//
 
-  void nascent_semantics_test::finalize(std::string_view copyright)
+  void nascent_semantics_test::finalize()
   {
     constexpr auto npos{std::string::npos};
 
@@ -597,30 +625,34 @@ namespace sequoia::testing
     if(header().empty()) header(std::filesystem::path{camel_name()}.concat(".hpp"));
 
     namespace fs = std::filesystem;
-    nascent_test_base::finalize([&nameSpace,this,copyright](const fs::path& filename) {
-
-      const auto headerTemplate{std::string{"My"}.append(capitalize(to_camel_case(test_type()))).append("Class.hpp")};
-
-      const auto headerPath{filename.is_absolute() ? filename : paths().source() / rebase_from(m_SourceDir / filename, paths().source())};
-      fs::create_directories(headerPath.parent_path());
-      fs::copy_file(source_templates_path(paths().project_root()) / headerTemplate, headerPath);
-
-      read_modify_write(headerPath, [this, &nameSpace, copyright](std::string& text) { set_header_text(text, copyright, nameSpace); });
-
-      if(m_TemplateData.empty())
-      {
-        set_cpp(headerPath, copyright, nameSpace);
-      }
-
-      return headerPath;
-    });
+    nascent_test_base::finalize([this, &nameSpace](const fs::path& filename) { return when_header_absent(filename, nameSpace); },
+                                stubs(),
+                                constructors(),
+                                "MyClass",
+                                [this](std::string& text) { transform_file(text); });
   }
 
   [[nodiscard]]
-  auto nascent_semantics_test::create_file(std::string_view copyright, const std::filesystem::path& codeTemplatesDir, std::string_view nameEnding) const -> file_data
+  std::filesystem::path nascent_semantics_test::when_header_absent(const std::filesystem::path& filename, const std::string& nameSpace)
   {
-    auto transformer{[this](std::string& text) { transform_file(text); }};
-    return nascent_test_base::create_file(codeTemplatesDir, copyright, "MyClass", nameEnding, transformer);
+    namespace fs = std::filesystem;
+
+    const auto headerTemplate{std::string{"My"}.append(capitalize(to_camel_case(test_type()))).append("Class.hpp")};
+
+    const auto headerPath{filename.is_absolute() ? filename : paths().source() / rebase_from(m_SourceDir / filename, paths().source())};
+
+    stream() << std::quoted(fs::relative(headerPath, paths().project_root()).generic_string()) << '\n';
+    fs::create_directories(headerPath.parent_path());
+    fs::copy_file(source_templates_path(paths().project_root()) / headerTemplate, headerPath);
+
+    read_modify_write(headerPath, [this, &nameSpace](std::string& text) { set_header_text(text, copyright(), nameSpace); });
+
+    if(m_TemplateData.empty())
+    {
+      set_cpp(headerPath, copyright(), nameSpace);
+    }
+
+    return headerPath;
   }
 
   [[nodiscard]]
@@ -740,35 +772,39 @@ namespace sequoia::testing
 
   //=========================================== nascent_behavioural_test ===========================================//
 
-  void nascent_behavioural_test::finalize(std::string_view copyright)
+  void nascent_behavioural_test::finalize()
   {
-    camel_name(forename().empty() ? header().filename().replace_extension().string() : forename());
-
-    namespace fs = std::filesystem;
-    nascent_test_base::finalize([this,copyright](const fs::path& filename) {
-
-      const auto headerPath{filename.is_absolute() ? filename : paths().source() / rebase_from(filename, paths().source())};
-      fs::create_directories(headerPath.parent_path());
-      fs::copy_file(source_templates_path(paths().project_root()) / "MyFreeFunctions.hpp", headerPath);
-
-      read_modify_write(headerPath, [&nameSpace=m_Namespace](std::string& text) { process_namespace(text, nameSpace); });
-
-      set_cpp(headerPath, copyright, m_Namespace);
-
-      return headerPath;
-    });
-
-    camel_name(std::string{camel_name()}.append(capitalize(test_type())));
+    family(capitalize(forename().empty() ? header().filename().replace_extension().string() : forename()));
 
     if(forename().empty())
-      forename(to_snake_case(camel_name()));
+      forename(to_snake_case(family()).append("_").append(test_type()));
+
+    camel_name(capitalize(forename()));
+
+    namespace fs = std::filesystem;
+    nascent_test_base::finalize([this](const fs::path& filename) { return when_header_absent(filename); },
+                                stubs(),
+                                constructors(),
+                                "MyBehavioural",
+                                [this](std::string& text) { transform_file(text); });
   }
 
   [[nodiscard]]
-  auto nascent_behavioural_test::create_file(std::string_view copyright, const std::filesystem::path& codeTemplatesDir, std::string_view nameEnding) const -> file_data
+  std::filesystem::path nascent_behavioural_test::when_header_absent(const std::filesystem::path& filename)
   {
-    auto transformer{[this](std::string& text) { transform_file(text); }};
-    return nascent_test_base::create_file(codeTemplatesDir, copyright, "MyBehavioural", nameEnding, transformer);
+    namespace fs = std::filesystem;
+
+    const auto headerPath{filename.is_absolute() ? filename : paths().source() / rebase_from(filename, paths().source())};
+
+    stream() << fs::relative(headerPath, paths().project_root()).generic_string() << '\n';
+    fs::create_directories(headerPath.parent_path());
+    fs::copy_file(source_templates_path(paths().project_root()) / "MyFreeFunctions.hpp", headerPath);
+
+    read_modify_write(headerPath, [&nameSpace = m_Namespace](std::string& text) { process_namespace(text, nameSpace); });
+
+    set_cpp(headerPath, copyright(), m_Namespace);
+
+    return headerPath;
   }
 
   [[nodiscard]]
@@ -796,15 +832,11 @@ namespace sequoia::testing
     if(header().empty()) header(std::filesystem::path{camel_name()}.concat(".hpp"));
 
     namespace fs = std::filesystem;
-    nascent_test_base::finalize([](const fs::path& p) { return p; });
-  }
-
-  [[nodiscard]]
-  auto nascent_allocation_test::create_file(std::string_view copyright, const std::filesystem::path& codeTemplatesDir,
-                                            std::string_view nameEnding) const -> file_data
-  {
-    auto transformer{[this](std::string& text) { transform_file(text); }};
-    return nascent_test_base::create_file(codeTemplatesDir, copyright, "MyClass", nameEnding, transformer);
+    nascent_test_base::finalize([](const fs::path& p) { return p; },
+                                stubs(),
+                                constructors(),
+                                "MyClass",
+                                [this](std::string& text) { transform_file(text); });
   }
 
   [[nodiscard]]
@@ -834,7 +866,7 @@ namespace sequoia::testing
   {
     auto& nascentTests{runner.m_NascentTests};
 
-    static creation_factory factory{{"semantic", "allocation", "behavioural"}, runner.m_Paths, runner.m_CodeIndent};
+    creation_factory factory{{"semantic", "allocation", "behavioural"}, runner.m_Paths, runner.m_Copyright, runner.m_CodeIndent, runner.stream()};
     auto nascent{factory.create(genus)};
 
     std::visit(
@@ -1002,11 +1034,7 @@ namespace sequoia::testing
                    [this](const arg_list&) {
                       if(!m_NascentTests.empty())
                       {
-                        variant_visitor visitor{
-                          [copyright=m_Copyright](nascent_behavioural_test& nascent) { nascent.finalize(copyright); },
-                          [copyright=m_Copyright](nascent_semantics_test& nascent) { nascent.finalize(copyright); },
-                          [](auto& nascent) { nascent.finalize(); }
-                        };
+                        variant_visitor visitor{ [](auto& nascent) { nascent.finalize(); } };
                         std::visit(visitor, m_NascentTests.back());
                       }
                     }
@@ -1278,65 +1306,12 @@ namespace sequoia::testing
   {
     if(!m_NascentTests.empty())
     {
-      stream() << "Creating files...";
-
-      for(const auto& nascentVessel : m_NascentTests)
-      {
-        variant_visitor visitor{
-          [this](const auto& nascent) {
-            std::string mess{"\n"};
-            for(const auto& stub : nascent.stubs())
-            {
-              append_lines(mess, create_file(nascent, stub));
-            }
-
-            add_to_family(m_Paths.main_cpp(), nascent.family(), m_CodeIndent, nascent.constructors());
-
-            stream() << mess;
-          }
-        };
-
-        std::visit(visitor, nascentVessel);
-      }
-
       namespace fs = std::filesystem;
       if(fs::exists(m_Paths.main_cpp_dir()) && fs::exists(m_Paths.cmade_build_dir()))
       {
         stream() << "\n";
         invoke(cd_cmd(m_Paths.main_cpp_dir()) && cmake_cmd(m_Paths.cmade_build_dir(), {}));
       }
-    }
-  }
-
-  template<class Nascent>
-  [[nodiscard]]
-  std::string test_runner::create_file(const Nascent& nascent, std::string_view stub) const
-  {
-    namespace fs = std::filesystem;
-    auto stringify{[root{m_Paths.project_root()}] (const fs::path file) { return fs::relative(file, root).generic_string();  }};
-
-    const auto[outputFile, created]{nascent.create_file(m_Copyright, code_templates_path(m_Paths.project_root()), stub)};
-
-    if(created)
-    {
-      if(outputFile.extension() == ".hpp")
-      {
-        if(const auto str{outputFile.string()}; str.find("Utilities.hpp") == std::string::npos)
-        {
-          add_include(m_Paths.include_target(), fs::relative(outputFile, m_Paths.tests()).generic_string());
-        }
-      }
-      else if(outputFile.extension() == ".cpp")
-      {
-        add_to_cmake(m_Paths.main_cpp_dir(), m_Paths.tests(), outputFile, "target_sources(", ")\n", "${TestDir}/");
-      }
-
-      return std::string{"\""}.append(stringify(outputFile)).append("\"");
-    }
-    else
-    {
-      using namespace parsing::commandline;
-      return warning(stringify(outputFile).append(" already exists, so not created\n"));
     }
   }
 

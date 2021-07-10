@@ -54,9 +54,11 @@ namespace sequoia::runtime
 
     template<class... Args>
       requires (constructible_from<Products, Args...> && ...)
-    factory(const std::array<string_view, size()>& names, const Args&... args)
+    factory(const std::array<string_view, size()>& names, Args&&... args)
       : m_Creators{make_array(names, std::make_index_sequence<size()>{}, args...)}
     {
+      // Note: arguments not forwarded above to void accidentally reusing moved-from objects
+      // const& avoided to allow for mutable state to be passed in
       std::sort(m_Creators.begin(), m_Creators.end(), [](const element& lhs, const element& rhs){ return lhs.first < rhs.first; });
 
       auto comp{[](const element& lhs, const element& rhs) { return lhs.first == rhs.first; }};

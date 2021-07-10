@@ -5,7 +5,7 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#include "BazzerFreeTest.hpp"
+#include "BazzerTest.hpp"
 #include "fakeProject/Stuff/Baz.h"
 
 namespace sequoia::testing

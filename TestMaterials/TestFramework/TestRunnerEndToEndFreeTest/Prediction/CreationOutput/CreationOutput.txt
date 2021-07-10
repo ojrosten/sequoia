@@ -1,55 +1,74 @@
-Creating files...
-
+Creating files for new test:
 "Tests/Utilities/UtilitiesFreeTest.hpp"
 "Tests/Utilities/UtilitiesFreeTest.cpp"
 
+Creating files for new test:
+Source/generatedProject/Utilities/UsefulThings.hpp
+"Source/generatedProject/Utilities/UsefulThings.cpp"
 "Tests/Utilities/UsefulThingsFreeTest.hpp"
 "Tests/Utilities/UsefulThingsFreeTest.cpp"
 
+Creating files for new test:
 "Tests/Stuff/BarFreeTest.hpp"
 "Tests/Stuff/BarFreeTest.cpp"
 
+Creating files for new test:
+"Source/generatedProject/Maybe/Maybe.hpp"
 "Tests/Maybe/MaybeTestingUtilities.hpp"
 "Tests/Maybe/MaybeTestingDiagnostics.hpp"
 "Tests/Maybe/MaybeTestingDiagnostics.cpp"
 "Tests/Maybe/MaybeTest.hpp"
 "Tests/Maybe/MaybeTest.cpp"
 
+Creating files for new test:
 "Tests/Stuff/OldschoolTestingUtilities.hpp"
 "Tests/Stuff/OldschoolTestingDiagnostics.hpp"
 "Tests/Stuff/OldschoolTestingDiagnostics.cpp"
 "Tests/Stuff/OldschoolTest.hpp"
 "Tests/Stuff/OldschoolTest.cpp"
 
+Creating files for new test:
+"Source/generatedProject/Maths/Probability.hpp"
+"Source/generatedProject/Maths/Probability.cpp"
 "Tests/Maths/ProbabilityTestingUtilities.hpp"
 "Tests/Maths/ProbabilityTestingDiagnostics.hpp"
 "Tests/Maths/ProbabilityTestingDiagnostics.cpp"
 "Tests/Maths/ProbabilityTest.hpp"
 "Tests/Maths/ProbabilityTest.cpp"
 
+Creating files for new test:
 "Tests/Stuff/FooTestingUtilities.hpp"
 "Tests/Stuff/FooTestingDiagnostics.hpp"
 "Tests/Stuff/FooTestingDiagnostics.cpp"
 "Tests/Stuff/FooTest.hpp"
 "Tests/Stuff/FooTest.cpp"
 
+Creating files for new test:
+"Source/generatedProject/Utilities/Thing/UniqueThing.hpp"
+"Source/generatedProject/Utilities/Thing/UniqueThing.cpp"
 "Tests/Utilities/Thing/UniqueThingTestingUtilities.hpp"
 "Tests/Utilities/Thing/UniqueThingTestingDiagnostics.hpp"
 "Tests/Utilities/Thing/UniqueThingTestingDiagnostics.cpp"
 "Tests/Utilities/Thing/UniqueThingTest.hpp"
 "Tests/Utilities/Thing/UniqueThingTest.cpp"
 
+Creating files for new test:
 "Tests/Utilities/ContainerAllocationTest.hpp"
 "Tests/Utilities/ContainerAllocationTest.cpp"
 
+Creating files for new test:
 "Tests/HouseAllocationTest.hpp"
 "Tests/HouseAllocationTest.cpp"
 
+Creating files for new test:
 "Tests/Utilities/ContainerPerformanceTest.hpp"
 "Tests/Utilities/ContainerPerformanceTest.cpp"
 
+
+
 Running CMake...
 
+-- Selecting Windows SDK version 10.0.19041.0 to target Windows 10.0.19043.
 -- Configuring done
 -- Generating done
--- Build files have been written to: /Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/build/CMade/clang/TestAll
+-- Build files have been written to: C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/build/CMade/win/TestAll

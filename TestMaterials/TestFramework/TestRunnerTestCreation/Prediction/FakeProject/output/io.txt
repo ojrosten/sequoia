@@ -1,103 +1,138 @@
-Creating files...
-
+Creating files for new test:
 "Tests/Maybe/MaybeTestingUtilities.hpp"
 "Tests/Maybe/MaybeTestingDiagnostics.hpp"
 "Tests/Maybe/MaybeTestingDiagnostics.cpp"
 "Tests/Maybe/MaybeTest.hpp"
 "Tests/Maybe/MaybeTest.cpp"
 
+Creating files for new test:
 "Tests/Utilities/IteratorTestingUtilities.hpp"
 "Tests/Utilities/IteratorTestingDiagnostics.hpp"
 "Tests/Utilities/IteratorTestingDiagnostics.cpp"
 "Tests/Utilities/IteratorTest.hpp"
 "Tests/Utilities/IteratorTest.cpp"
 
+Creating files for new test:
+"Source/fakeProject/Stuff/Widget.hpp"
+"Source/fakeProject/Stuff/Widget.cpp"
 "Tests/Stuff/WidgetTestingUtilities.hpp"
 "Tests/Stuff/WidgetTestingDiagnostics.hpp"
 "Tests/Stuff/WidgetTestingDiagnostics.cpp"
 "Tests/Stuff/WidgetTest.hpp"
 "Tests/Stuff/WidgetTest.cpp"
 
+Creating files for new test:
+"Source/fakeProject/Maths/Probability.hpp"
+"Source/fakeProject/Maths/Probability.cpp"
 "Tests/Maths/ProbabilityTestingUtilities.hpp"
 "Tests/Maths/ProbabilityTestingDiagnostics.hpp"
 "Tests/Maths/ProbabilityTestingDiagnostics.cpp"
 "Tests/Maths/ProbabilityTest.hpp"
 "Tests/Maths/ProbabilityTest.cpp"
 
+Creating files for new test:
+"Source/fakeProject/Maths/Angle.hpp"
+"Source/fakeProject/Maths/Angle.cpp"
 "Tests/Maths/AngleTestingUtilities.hpp"
 "Tests/Maths/AngleTestingDiagnostics.hpp"
 "Tests/Maths/AngleTestingDiagnostics.cpp"
 "Tests/Maths/AngleTest.hpp"
 "Tests/Maths/AngleTest.cpp"
 
+Creating files for new test:
+"Source/fakeProject/Thingummies/Thingummy.hpp"
 "Tests/Thingummies/ThingummyTestingUtilities.hpp"
 "Tests/Thingummies/ThingummyTestingDiagnostics.hpp"
 "Tests/Thingummies/ThingummyTestingDiagnostics.cpp"
 "Tests/Thingummies/ThingummyTest.hpp"
 "Tests/Thingummies/ThingummyTest.cpp"
 
+Creating files for new test:
 "Tests/Stuff/ContainerTestingUtilities.hpp"
 "Tests/Stuff/ContainerTestingDiagnostics.hpp"
 "Tests/Stuff/ContainerTestingDiagnostics.cpp"
 "Tests/Stuff/ContainerTest.hpp"
 "Tests/Stuff/ContainerTest.cpp"
 
+Creating files for new test:
 "Tests/CoupleTestingUtilities.hpp"
 "Tests/CoupleTestingDiagnostics.hpp"
 "Tests/CoupleTestingDiagnostics.cpp"
 "Tests/CoupleTest.hpp"
 "Tests/CoupleTest.cpp"
 
+Creating files for new test:
 "Tests/Stuff/ThingsTestingUtilities.hpp"
 "Tests/Stuff/ThingsTestingDiagnostics.hpp"
 "Tests/Stuff/ThingsTestingDiagnostics.cpp"
 "Tests/Stuff/ThingsTest.hpp"
 "Tests/Stuff/ThingsTest.cpp"
 
+Creating files for new test:
 "Tests/Stuff/FooTestingUtilities.hpp"
 "Tests/Stuff/FooTestingDiagnostics.hpp"
 "Tests/Stuff/FooTestingDiagnostics.cpp"
 "Tests/Stuff/FooTest.hpp"
 "Tests/Stuff/FooTest.cpp"
 
+Creating files for new test:
 "Tests/Utilities/VariadicTestingUtilities.hpp"
 "Tests/Utilities/VariadicTestingDiagnostics.hpp"
 "Tests/Utilities/VariadicTestingDiagnostics.cpp"
 "Tests/Utilities/VariadicTest.hpp"
 "Tests/Utilities/VariadicTest.cpp"
 
+Creating files for new test:
+"Source/fakeProject/Utilities/Multiple.hpp"
 "Tests/Utilities/MultipleTestingUtilities.hpp"
 "Tests/Utilities/MultipleTestingDiagnostics.hpp"
 "Tests/Utilities/MultipleTestingDiagnostics.cpp"
 "Tests/Utilities/MultipleTest.hpp"
 "Tests/Utilities/MultipleTest.cpp"
 
+Creating files for new test:
 "Tests/Utilities/UtilitiesFreeTest.hpp"
 "Tests/Utilities/UtilitiesFreeTest.cpp"
 
-"Tests/Stuff/BazzerFreeTest.hpp"
-"Tests/Stuff/BazzerFreeTest.cpp"
+Creating files for new test:
+"Tests/Stuff/BazzerTest.hpp"
+"Tests/Stuff/BazzerTest.cpp"
 
+Creating files for new test:
+Source/fakeProject/Stuff/Doohicky.hpp
+"Source/fakeProject/Stuff/Doohicky.cpp"
 "Tests/Stuff/DoohickyFreeTest.hpp"
 "Tests/Stuff/DoohickyFreeTest.cpp"
 
+Creating files for new test:
+Source/fakeProject/Global/Stuff/Global.hpp
+"Source/fakeProject/Global/Stuff/Global.cpp"
 "Tests/Global/Stuff/GlobalFreeTest.hpp"
 "Tests/Global/Stuff/GlobalFreeTest.cpp"
 
+Creating files for new test:
+Source/fakeProject/Global/Stuff/Defs.hpp
+"Source/fakeProject/Global/Stuff/Defs.cpp"
 "Tests/Global/Stuff/DefsFreeTest.hpp"
 "Tests/Global/Stuff/DefsFreeTest.cpp"
 
+Creating files for new test:
 "Tests/Stuff/ContainerAllocationTest.hpp"
 "Tests/Stuff/ContainerAllocationTest.cpp"
 
+Creating files for new test:
 "Tests/Stuff/FooAllocationTest.hpp"
 "Tests/Stuff/FooAllocationTest.cpp"
 
+Creating files for new test:
 "Tests/Stuff/ContainerPerformanceTest.hpp"
 "Tests/Stuff/ContainerPerformanceTest.cpp"
 
-
+Creating files for new test:
+"
   Warning: Tests/Stuff/ContainerPerformanceTest.hpp already exists, so not created
-
-
+"
+"
   Warning: Tests/Stuff/ContainerPerformanceTest.cpp already exists, so not created
+"
+

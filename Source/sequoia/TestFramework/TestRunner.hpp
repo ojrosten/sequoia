@@ -118,9 +118,11 @@ namespace sequoia::testing
   public:
     enum class gen_source_option {no, yes};
 
-    nascent_test_base(project_paths paths, indentation codeIndent)
+    nascent_test_base(project_paths paths, std::string copyright, indentation codeIndent, std::ostream& stream)
       : m_Paths{std::move(paths)}
+      , m_Copyright{std::move(copyright)}
       , m_CodeIndent{codeIndent}
+      , m_Stream{&stream}
     {}
 
     [[nodiscard]]
@@ -173,49 +175,58 @@ namespace sequoia::testing
       return m_Paths;
     }
 
-    std::filesystem::path build_source_path(const std::filesystem::path& filename,
-                                            const std::vector<std::string_view>& extensions) const;
+    [[nodiscard]]
+    std::filesystem::path build_source_path(const std::filesystem::path& filename) const;
 
-    template<invocable_r<std::filesystem::path, std::filesystem::path> WhenAbsent>
-    void finalize(WhenAbsent fn);
+    template<invocable_r<std::filesystem::path, std::filesystem::path> WhenAbsent, std::size_t N, invocable<std::string&> FileTransformer>
+    void finalize(WhenAbsent fn,
+                  const std::array<std::string_view, N>& stubs,
+                  const std::vector<std::string>& constructors,
+                  std::string_view nameStub,
+                  FileTransformer transformer);
 
+    [[nodiscard]]
     const std::string& camel_name() const noexcept { return m_CamelName; }
 
     void camel_name(std::string name);
 
-    struct file_data
-    {
-      std::filesystem::path output_file{};
-      bool created{};
-    };
-
-    template<invocable<std::string&> FileTransformer>
-    [[nodiscard]]
-    auto create_file(const std::filesystem::path& codeTemplatesDir, std::string_view copyright, std::string_view inputNameStub, std::string_view nameEnding, FileTransformer transformer) const -> file_data;
-
-    void set_cpp(const std::filesystem::path& headerPath, std::string_view copyright, std::string_view nameSpace) const;
+    void set_cpp(const std::filesystem::path& headerPath, std::string_view copyright, std::string_view nameSpace);
 
     [[nodiscard]]
     const indentation& code_indent() const noexcept
     {
       return m_CodeIndent;
     }
+
+    const std::string& copyright() const noexcept
+    {
+      return m_Copyright;
+    }
+
+    [[nodiscard]]
+    std::ostream& stream() noexcept { return *m_Stream; }
   private:
-    std::string m_Family{}, m_TestType{}, m_Forename{}, m_CamelName{};
+    constexpr static std::array<std::string_view, 3> st_HeaderExtensions{".hpp", ".h", ".hxx"};
 
     project_paths m_Paths;
+    std::string m_Copyright{};
+    indentation m_CodeIndent{"  "};
+    std::ostream* m_Stream;
 
+    std::string m_Family{}, m_TestType{}, m_Forename{}, m_CamelName{};
     std::filesystem::path m_Header{}, m_HostDir{}, m_HeaderPath{};
-
     gen_source_option m_SourceOption{};
 
-    indentation m_CodeIndent{"  "};
-
-    void on_source_path_error(const std::vector<std::string_view>& extensions) const;
+    void on_source_path_error() const;
 
     void finalize_family();
 
     void finalize_header(const std::filesystem::path& sourcePath);
+
+    template<invocable<std::string&> FileTransformer>
+    [[nodiscard]]
+    std::string create_file(std::string_view inputNameStub, std::string_view nameEnding, FileTransformer transformer) const;
+
   };
 
   class nascent_semantics_test : public nascent_test_base
@@ -229,10 +240,7 @@ namespace sequoia::testing
 
     void source_dir(std::filesystem::path dir) { m_SourceDir = std::move(dir); }
 
-    void finalize(std::string_view copyright);
-
-    [[nodiscard]]
-    auto create_file(std::string_view copyright, const std::filesystem::path& codeTemplatesDir, std::string_view nameEnding) const -> file_data;
+    void finalize();
 
     [[nodiscard]]
     std::vector<std::string> constructors() const;
@@ -252,7 +260,6 @@ namespace sequoia::testing
               "Test.cpp"};
     };
   private:
-
     std::string m_QualifiedName{};
 
     template_data m_TemplateData{};
@@ -264,6 +271,9 @@ namespace sequoia::testing
     void transform_file(std::string& text) const;
 
     void set_header_text(std::string& text, std::string_view copyright, std::string_view nameSpace) const;
+
+    [[nodiscard]]
+    std::filesystem::path when_header_absent(const std::filesystem::path& filename, const std::string& nameSpace);
   };
 
   class nascent_allocation_test : public nascent_test_base
@@ -280,9 +290,6 @@ namespace sequoia::testing
     void finalize();
 
     [[nodiscard]]
-    auto create_file(std::string_view copyright, const std::filesystem::path& codeTemplatesDir, std::string_view nameEnding) const -> file_data;
-
-    [[nodiscard]]
     std::vector<std::string> constructors() const;
   private:
     void transform_file(std::string& text) const;
@@ -293,10 +300,7 @@ namespace sequoia::testing
   public:
     using nascent_test_base::nascent_test_base;
 
-    void finalize(std::string_view copyright);
-
-    [[nodiscard]]
-    auto create_file(std::string_view copyright, const std::filesystem::path& codeTemplatesDir, std::string_view nameEnding) const->file_data;
+    void finalize();
 
     [[nodiscard]]
     std::vector<std::string> constructors() const;
@@ -317,6 +321,9 @@ namespace sequoia::testing
     void transform_file(std::string& text) const;
 
     std::string m_Namespace;
+
+    [[nodiscard]]
+    std::filesystem::path when_header_absent(const std::filesystem::path& filename);
    };
 
   /*! \brief Consumes command-line arguments and holds all test families
@@ -464,9 +471,9 @@ namespace sequoia::testing
     [[nodiscard]]
     static std::string stringify(concurrency_mode mode);
 
-    template<class Nascent>
+    /*template<class Nascent>
     [[nodiscard]]
-    std::string create_file(const Nascent& nascent, std::string_view stub) const;
+    std::string create_file(const Nascent& nascent, std::string_view stub) const;*/
 
     void create_tests();
 

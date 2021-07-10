@@ -145,7 +145,7 @@ Plurgh.h does not exist
 
 Expected Exception Type:
 [std::runtime_error]
-Unable to locate file Plurgh.h or Plurgh.hpp in the source repository
+Unable to locate file Plurgh.h or Plurgh.hpp or Plurgh.hxx in the source repository
 ../Source/fakeProject
 
 
@@ -156,7 +156,7 @@ Typo in specified class header
 
 Expected Exception Type:
 [std::runtime_error]
-Unable to locate file fakeProject/Stuff/Thingz.hpp or fakeProject/Stuff/Thingz.h in the source repository
+Unable to locate file fakeProject/Stuff/Thingz.hpp or fakeProject/Stuff/Thingz.h or fakeProject/Stuff/Thingz.hxx in the source repository
 ../Source/fakeProject
 
 
