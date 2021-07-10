@@ -99,6 +99,10 @@ Creating files for new test:
 "Tests/Stuff/BazzerTest.cpp"
 
 Creating files for new test:
+"Tests/Stuff/BazagainTest.hpp"
+"Tests/Stuff/BazagainTest.cpp"
+
+Creating files for new test:
 Source/fakeProject/Stuff/Doohicky.hpp
 "Source/fakeProject/Stuff/Doohicky.cpp"
 "Tests/Stuff/DoohickyFreeTest.hpp"

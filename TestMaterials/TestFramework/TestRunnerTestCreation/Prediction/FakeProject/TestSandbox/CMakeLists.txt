@@ -23,6 +23,7 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Maths/ProbabilityTestingDiagnostics.cpp
                ${TestDir}/Maybe/MaybeTest.cpp
                ${TestDir}/Maybe/MaybeTestingDiagnostics.cpp
+               ${TestDir}/Stuff/BazagainTest.cpp
                ${TestDir}/Stuff/BazzerTest.cpp
                ${TestDir}/Stuff/ContainerAllocationTest.cpp
                ${TestDir}/Stuff/ContainerPerformanceTest.cpp

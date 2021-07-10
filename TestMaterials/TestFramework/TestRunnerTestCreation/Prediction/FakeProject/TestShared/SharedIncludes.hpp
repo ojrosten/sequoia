@@ -15,6 +15,7 @@
 #include "Maths/ProbabilityTestingDiagnostics.hpp"
 #include "Maybe/MaybeTest.hpp"
 #include "Maybe/MaybeTestingDiagnostics.hpp"
+#include "Stuff/BazagainTest.hpp"
 #include "Stuff/BazzerTest.hpp"
 #include "Stuff/ContainerAllocationTest.hpp"
 #include "Stuff/ContainerPerformanceTest.hpp"

@@ -122,6 +122,7 @@ namespace sequoia::testing
                                  , "create", "move_only_test", "multiple<class... T>", "std::tuple<T...>", "gen-source", "Utilities"
                                  , "create", "free_test", "Utilities.h"
                                  , "create", "free_test", "Source/fakeProject/Stuff/Baz.h", "--forename", "bazzer"
+                                 , "create", "free_test", "Source/fakeProject/Stuff/Baz.h", "--forename", "bazagain", "--family", "Bazzer"
                                  , "create", "free_test", "Stuff/Doohicky.hpp", "gen-source", "bar::things"
                                  , "create", "free_test", "Global/Stuff/Global.hpp", "gen-source", "::"
                                  , "create", "free_test", "Global/Stuff/Defs.hpp", "gen-source", ""
