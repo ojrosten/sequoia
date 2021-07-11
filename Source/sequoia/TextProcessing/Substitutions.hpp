@@ -17,6 +17,46 @@
 
 namespace sequoia
 {
+  struct char_to_char
+  {
+    [[nodiscard]]
+    char operator()(char c) const noexcept
+    {
+      return c;
+    }
+  };
+
+  template<invocable_r<char, char> OnUpper=char_to_char>
+  std::string& camel_to_words(std::string& text, std::string_view separator = " ", OnUpper onUpper = OnUpper{})
+  {
+    auto i{text.begin()};
+    while(i != text.end())
+    {
+      auto& c{*i};
+      if(std::isupper(c))
+      {
+        c = onUpper(c);
+        if((std::distance(text.begin(), i) > 0))
+        {
+          i = text.insert(i, separator.begin(), separator.end());
+          i += std::distance(separator.begin(), separator.end());
+        }
+      }
+
+      ++i;
+    }
+
+    return text;
+  }
+
+  template<invocable_r<char, char> OnUpper>
+  [[nodiscard]]
+  std::string camel_to_words(std::string_view text, std::string_view separator = " ", OnUpper onUpper = [](char c) { return c; })
+  {
+    std::string str{text};
+    return camel_to_words(str, separator, onUpper);
+  }
+
   std::string& to_camel_case(std::string& text);
 
   [[nodiscard]]

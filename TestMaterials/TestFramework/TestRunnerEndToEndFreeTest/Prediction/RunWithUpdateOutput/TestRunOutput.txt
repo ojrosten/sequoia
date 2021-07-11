@@ -2,8 +2,8 @@
 Running tests...
 
 Utilities:
-[1 (0)ms]
-UsefulThings:
+[0 (0)ms]
+Useful Things:
 [1 (0)ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
@@ -18,17 +18,17 @@ UsefulThings:
 
 
 Bar:
-[1 (0)ms]
+[0 (0)ms]
 Maybe:
-[2 (0)ms]
+[1 (0)ms]
 Oldschool:
-[2 (0)ms]
+[1 (0)ms]
 Probability:
 [3 (1)ms]
 	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 39]
 	False Positive Checks:                     2;  Failures:  0
 Foo:
-[21 (10)ms]
+[17 (8)ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 43]
 
 	Tests/Stuff/FooTest.cpp, Line 37
@@ -131,17 +131,17 @@ Foo:
 	=======================================
 
 
-UniqueThing:
-[4 (1)ms]
+Unique Thing:
+[3 (1)ms]
 	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 35]
 	False Positive Checks:                     2;  Failures:  0
 Container:
-[2 (0)ms]
-House:
 [1 (0)ms]
+House:
+[0 (0)ms]
 
 -----------Grand Totals-----------
-[41 (13)ms]
+[33 (11)ms]
 	Standard Top Level Checks:                 8;  Failures:  2  [Deep checks: 118]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

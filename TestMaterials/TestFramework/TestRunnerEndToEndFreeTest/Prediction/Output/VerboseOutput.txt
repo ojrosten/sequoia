@@ -2,19 +2,19 @@
 Running tests...
 
 Utilities:
-[1 (0)ms]
+[2 (0)ms]
 	Free Test
 	[0ms]
-UsefulThings:
+Useful Things:
 [1 (0)ms]
 	Free Test
 	[0ms]
 Bar:
-[2 (0)ms]
+[1 (0)ms]
 	Free Test
 	[0ms]
 Maybe:
-[4 (0)ms]
+[3 (0)ms]
 	False Positive Test
 	[0ms]
 	Unit Test
@@ -26,18 +26,18 @@ Oldschool:
 	Unit Test
 	[0ms]
 Probability:
-[3 (0)ms]
+[4 (0)ms]
 	False Positive Test
 	[0ms]
 	Unit Test
 	[0ms]
 Foo:
-[3 (0)ms]
+[4 (0)ms]
 	False Positive Test
 	[0ms]
 	Unit Test
 	[0ms]
-UniqueThing:
+Unique Thing:
 [4 (0)ms]
 	False Positive Test
 	[0ms]
@@ -55,7 +55,7 @@ House:
 	[0ms]
 
 -----------Grand Totals-----------
-[33 (0)ms]
+[36 (0)ms]
 	Standard Top Level Checks:                 0;  Failures:  0
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

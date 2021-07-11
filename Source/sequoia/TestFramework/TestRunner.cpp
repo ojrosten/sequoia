@@ -501,7 +501,7 @@ namespace sequoia::testing
     if(m_Family.empty())
     {
       m_Family = fallbackIngredient;
-      replace_all(m_Family, "_", " ");
+      camel_to_words(m_Family);
     }
   }
 

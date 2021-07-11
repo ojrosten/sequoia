@@ -41,7 +41,7 @@ int main(int argc, char** argv)
 		);
 
 		runner.add_test_family(
-			"UsefulThings",
+			"Useful Things",
 			useful_things_free_test("Free Test")
 		);
 
@@ -75,7 +75,7 @@ int main(int argc, char** argv)
 		);
 
 		runner.add_test_family(
-			"UniqueThing",
+			"Unique Thing",
 			unique_thing_false_positive_test("False Positive Test"),
 			unique_thing_test("Unit Test")
 		);

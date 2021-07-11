@@ -54,21 +54,7 @@ namespace sequoia
 
   std::string& to_snake_case(std::string& text)
   {
-    auto i{text.begin()};
-    while(i != text.end())
-    {
-      auto& c{*i};
-      if(std::isupper(c))
-      {
-        c = static_cast<char>(std::tolower(static_cast<unsigned char>(c)));
-        if(std::distance(text.begin(), i) > 0)
-          text.insert(i, '_');
-      }
-
-      ++i;
-    }
-
-    return text;
+    return camel_to_words(text, "_", [](char c) { return static_cast<char>(std::tolower(static_cast<unsigned char>(c))); });
   }
 
   [[nodiscard]]

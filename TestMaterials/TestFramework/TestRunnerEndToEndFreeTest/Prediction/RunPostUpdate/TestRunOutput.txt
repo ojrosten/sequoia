@@ -3,7 +3,7 @@ Running tests...
 
 Utilities:
 [1 (0)ms]
-UsefulThings:
+Useful Things:
 [2 (0)ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
@@ -18,29 +18,29 @@ UsefulThings:
 
 
 Bar:
-[1 (0)ms]
+[0 (0)ms]
 Maybe:
-[4 (0)ms]
+[1 (0)ms]
 Oldschool:
-[4 (0)ms]
+[1 (0)ms]
 Probability:
-[18 (15)ms]
+[20 (18)ms]
 	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 39]
 	False Positive Checks:                     2;  Failures:  0
 Foo:
-[38 (35)ms]
-	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 38]
-UniqueThing:
 [16 (14)ms]
+	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 38]
+Unique Thing:
+[12 (9)ms]
 	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 35]
 	False Positive Checks:                     2;  Failures:  0
 Container:
-[2 (0)ms]
-House:
 [1 (0)ms]
+House:
+[0 (0)ms]
 
 -----------Grand Totals-----------
-[91 (65)ms]
+[60 (44)ms]
 	Standard Top Level Checks:                 8;  Failures:  1  [Deep checks: 113]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
