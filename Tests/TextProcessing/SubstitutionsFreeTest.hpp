@@ -24,6 +24,8 @@ namespace sequoia::testing
 
     void test_camel_case();
 
+    void test_camel_to_words();
+
     void test_snake_case();
 
     void test_capitalize();

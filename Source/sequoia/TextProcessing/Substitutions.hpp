@@ -49,9 +49,9 @@ namespace sequoia
     return text;
   }
 
-  template<invocable_r<char, char> OnUpper>
+  template<invocable_r<char, char> OnUpper = char_to_char>
   [[nodiscard]]
-  std::string camel_to_words(std::string_view text, std::string_view separator = " ", OnUpper onUpper = [](char c) { return c; })
+  std::string camel_to_words(std::string_view text, std::string_view separator = " ", OnUpper onUpper = OnUpper{})
   {
     std::string str{text};
     return camel_to_words(str, separator, onUpper);

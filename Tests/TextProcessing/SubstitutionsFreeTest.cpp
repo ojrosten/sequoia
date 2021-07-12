@@ -19,6 +19,7 @@ namespace sequoia::testing
   void substitutions_free_test::run_tests()
   {
     test_camel_case();
+    test_camel_to_words();
     test_snake_case();
     test_capitalize();
     test_uncapitalize();
@@ -33,6 +34,17 @@ namespace sequoia::testing
     check_equality(LINE("Camel from letter"), to_camel_case("a"), "A"s);
     check_equality(LINE("Camel from minimal snake"), to_camel_case("a_b"), "AB"s);
     check_equality(LINE(""), to_camel_case("foo_bar_baz"), "FooBarBaz"s);
+  }
+
+  void substitutions_free_test::test_camel_to_words()
+  {
+    using namespace std::string_literals;
+    check_equality(LINE("Camel to words from empty string"), camel_to_words(""), ""s);
+    check_equality(LINE("Camel to words from letter"), camel_to_words("a"), "a"s);
+    check_equality(LINE("Camel to words from captial letter"), camel_to_words("A"), "A"s);
+    check_equality(LINE("Camel to words from two letters"), camel_to_words("aa"), "aa"s);
+    check_equality(LINE("Camel to words from minimal camel"), camel_to_words("aA"), "a A"s);
+    check_equality(LINE("Camel to words exceeding capacity"), camel_to_words("aA", "_____________________"), "a_____________________A"s);
   }
 
   void substitutions_free_test::test_snake_case()
