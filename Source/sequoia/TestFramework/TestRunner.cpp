@@ -22,6 +22,8 @@
 
 namespace sequoia::testing
 {
+  namespace fs = std::filesystem;
+
   namespace
   {
     std::string& to_spaces(std::string& text, std::string_view spacing)
@@ -74,6 +76,21 @@ namespace sequoia::testing
     {
       if(std::string_view{ind}.find_first_not_of("\t ") != std::string::npos)
         throw std::runtime_error{"Code indent must comprise only spaces or tabs"};
+    }
+
+    [[nodiscard]]
+    bool is_appropriate_root(const fs::path& root)
+    {
+      if(fs::exists(root))
+      {
+        for(auto& entry : fs::directory_iterator(root))
+        {
+          const auto& f{entry.path().filename()};
+          if((f != ".DS_Store") && (f != ".keep")) return false;
+        }
+      }
+
+      return true;
     }
   }
 
@@ -170,7 +187,6 @@ namespace sequoia::testing
   {
     if(!output.empty())
     {
-      namespace fs = std::filesystem;
       read_modify_write(root / ".gitignore", [&](std::string& text) { text.append("\n\n").append(output.filename().string()); });
     }
 
@@ -188,8 +204,6 @@ namespace sequoia::testing
 
     if constexpr(with_msvc_v)
     {
-      namespace fs = std::filesystem;
-
       const auto vs2019Dir{
         []() -> std::filesystem::path {
           const fs::path vs2019Path{"C:/Program Files (x86)/Microsoft Visual Studio/2019"};
@@ -426,8 +440,6 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string nascent_test_base::create_file(std::string_view nameStub, std::string_view nameEnding, FileTransformer transformer) const
   {
-    namespace fs = std::filesystem;
-
     const auto outputFile{(host_dir() / camel_name()) += nameEnding};
     auto stringify{[root{m_Paths.project_root()}] (const fs::path file) { return fs::relative(file, root).generic_string();  }};
 
@@ -507,8 +519,6 @@ namespace sequoia::testing
 
   void nascent_test_base::finalize_header(const std::filesystem::path& sourcePath)
   {
-    namespace fs = std::filesystem;
-
     const auto relSourcePath{fs::relative(sourcePath, m_Paths.source())};
     const auto dir{(m_Paths.tests() / relSourcePath).parent_path()};
     fs::create_directories(dir);
@@ -519,8 +529,6 @@ namespace sequoia::testing
 
   void nascent_test_base::on_source_path_error() const
   {
-    namespace fs = std::filesystem;
-
     auto mess{std::string{"Unable to locate file "}.append(m_Header.generic_string())};
     for(auto e : st_HeaderExtensions)
     {
@@ -538,7 +546,6 @@ namespace sequoia::testing
 
   void nascent_test_base::set_cpp(const std::filesystem::path& headerPath, std::string_view copyright, std::string_view nameSpace)
   {
-    namespace fs = std::filesystem;
     const auto srcPath{fs::path{headerPath}.replace_extension("cpp")};
 
     const auto sourceRoot{paths().source_root()};
@@ -623,7 +630,6 @@ namespace sequoia::testing
     finalize_family(camel_name());
     if(header().empty()) header(std::filesystem::path{camel_name()}.concat(".hpp"));
 
-    namespace fs = std::filesystem;
     nascent_test_base::finalize([this, &nameSpace](const fs::path& filename) { return when_header_absent(filename, nameSpace); },
                                 stubs(),
                                 constructors(),
@@ -634,8 +640,6 @@ namespace sequoia::testing
   [[nodiscard]]
   std::filesystem::path nascent_semantics_test::when_header_absent(const std::filesystem::path& filename, const std::string& nameSpace)
   {
-    namespace fs = std::filesystem;
-
     const auto headerTemplate{std::string{"My"}.append(capitalize(to_camel_case(test_type()))).append("Class.hpp")};
 
     const auto headerPath{filename.is_absolute() ? filename : paths().source() / rebase_from(m_SourceDir / filename, paths().source())};
@@ -742,7 +746,6 @@ namespace sequoia::testing
       replace_all(text, "<?>", "<>");
     }
 
-    namespace fs = std::filesystem;
     replace_all(text, {{"::?_class", m_QualifiedName},
                        {"?_class", forename()},
                        {"?Class.hpp", header_path().generic_string()},
@@ -781,7 +784,6 @@ namespace sequoia::testing
 
     camel_name(forename());
 
-    namespace fs = std::filesystem;
     nascent_test_base::finalize([this](const fs::path& filename) { return when_header_absent(filename); },
                                 stubs(),
                                 constructors(),
@@ -792,8 +794,6 @@ namespace sequoia::testing
   [[nodiscard]]
   std::filesystem::path nascent_behavioural_test::when_header_absent(const std::filesystem::path& filename)
   {
-    namespace fs = std::filesystem;
-
     const auto headerPath{filename.is_absolute() ? filename : paths().source() / rebase_from(filename, paths().source())};
 
     stream() << fs::relative(headerPath, paths().project_root()).generic_string() << '\n';
@@ -832,7 +832,6 @@ namespace sequoia::testing
     finalize_family(camel_name());
     if(header().empty()) header(std::filesystem::path{camel_name()}.concat(".hpp"));
 
-    namespace fs = std::filesystem;
     nascent_test_base::finalize([](const fs::path& p) { return p; },
                                 stubs(),
                                 constructors(),
@@ -901,7 +900,6 @@ namespace sequoia::testing
 
     process_args(argc, argv);
 
-    namespace fs = std::filesystem;
     fs::create_directory(m_Paths.output());
     fs::create_directory(diagnostics_output_path(m_Paths.output()));
     fs::create_directory(test_summaries_path(m_Paths.output()));
@@ -1001,7 +999,6 @@ namespace sequoia::testing
 
     const std::vector<option> allocationOptions{familyOption, headerOption};
 
-    namespace fs = std::filesystem;
     const auto help{
       parse_invoke_depth_first(argc, argv,
                 { {"test", {"t"}, {"test family name"},
@@ -1093,8 +1090,7 @@ namespace sequoia::testing
                     }
                   },
                   {"--prune", {}, {},
-                    [this](const arg_list&) { 
-                      namespace fs = std::filesystem;
+                    [this](const arg_list&) {
                       const auto tsFile{timestamp_path(m_Paths.output())};
                       if(fs::exists(tsFile))
                       {
@@ -1293,8 +1289,6 @@ namespace sequoia::testing
 
   void test_runner::execute([[maybe_unused]] timer_resolution r)
   {
-    namespace fs = std::filesystem;
-
     if(!mode(output_mode::help))
     {
       init_projects();
@@ -1307,7 +1301,6 @@ namespace sequoia::testing
   {
     if(!m_NascentTests.empty())
     {
-      namespace fs = std::filesystem;
       if(fs::exists(m_Paths.main_cpp_dir()) && fs::exists(m_Paths.cmade_build_dir()))
       {
         stream() << "\n";
@@ -1387,8 +1380,6 @@ namespace sequoia::testing
 
   void test_runner::init_projects()
   {
-    namespace fs = std::filesystem;
-
     if(!m_NascentProjects.empty())
     {
       stream() << "Initializing Project(s)....\n\n";
@@ -1402,8 +1393,8 @@ namespace sequoia::testing
       if(!data.project_root.is_absolute())
         throw std::runtime_error{std::string{"Project path '"}.append(data.project_root.generic_string()).append("' should be absolute\n")};
 
-      if(fs::exists(data.project_root))
-        throw std::runtime_error{std::string{"Project location '"}.append(data.project_root.generic_string()).append("' already exists\n")};
+      if(!is_appropriate_root(data.project_root))
+        throw std::runtime_error{std::string{"Project location '"}.append(data.project_root.generic_string()).append("' is in use\n")};
 
       const auto name{(--data.project_root.end())->generic_string()};
       if(name.empty())
@@ -1477,8 +1468,6 @@ namespace sequoia::testing
   {
     if(projRoot.empty())
       throw std::logic_error{"Pre-condition violated: path should not be empty"};
-
-    namespace fs = std::filesystem;
 
     const std::filesystem::path relCmakeLocation{"TestAll/CMakeLists.txt"};
 

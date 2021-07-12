@@ -1,4 +1,4 @@
-Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 44
+Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 31
 Project name with space
 
 Expected Exception Type:
@@ -8,7 +8,7 @@ Please ensure the project name 'Generated Project' consists of just alpha-numeri
 
 	=======================================
 
-Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 55
+Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 42
 Project name with $
 
 Expected Exception Type:
@@ -18,7 +18,7 @@ Please ensure the project name 'Generated$Project' consists of just alpha-numeri
 
 	=======================================
 
-Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 66
+Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 53
 Project path that is not absolute
 
 Expected Exception Type:
@@ -28,7 +28,7 @@ Project path 'Generated_Project' should be absolute
 
 	=======================================
 
-Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 77
+Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 64
 Empty project path
 
 Expected Exception Type:
@@ -38,17 +38,17 @@ Project path should not be empty
 
 	=======================================
 
-Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 88
+Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 75
 Project name clash
 
 Expected Exception Type:
 [std::runtime_error]
-output/TestsTemporaryData/TestFramework/TestRunnerProjectCreation/WorkingCopy' already exists
+output/TestsTemporaryData/TestFramework/TestRunnerProjectCreation/WorkingCopy' is in use
 
 
 	=======================================
 
-Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 106
+Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 93
 Illegal indent
 
 Expected Exception Type:
@@ -58,7 +58,7 @@ Code indent must comprise only spaces or tabs
 
 	=======================================
 
-Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 117
+Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 104
 Illegal init indent
 
 Expected Exception Type:

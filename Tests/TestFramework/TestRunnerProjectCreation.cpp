@@ -25,19 +25,6 @@ namespace sequoia::testing
     test_project_creation();
   }
 
-  project_paths test_runner_project_creation::make_project_paths() const
-  {
-    const auto testMain{fake_project().append("TestSandbox").append("TestSandbox.cpp")};
-    const auto includeTarget{fake_project().append("TestShared").append("SharedIncludes.hpp")};
-
-    return {fake_project(), testMain, includeTarget};
-  }
-
-  std::filesystem::path test_runner_project_creation::fake_project() const
-  {
-    return working_materials() / "FakeProject";
-  }
-
   void test_runner_project_creation::test_exceptions()
   {
     check_exception_thrown<std::runtime_error>(
@@ -125,29 +112,57 @@ namespace sequoia::testing
       });
   }
 
+
+  project_paths test_runner_project_creation::make_project_paths() const
+  {
+    const auto testMain{fake_project().append("TestSandbox").append("TestSandbox.cpp")};
+    const auto includeTarget{fake_project().append("TestShared").append("SharedIncludes.hpp")};
+
+    return {fake_project(), testMain, includeTarget};
+  }
+
+  std::filesystem::path test_runner_project_creation::fake_project() const
+  {
+    return working_materials() / "FakeProject";
+  }
+
+
   void test_runner_project_creation::test_project_creation()
   {
     namespace fs = std::filesystem;
     fs::copy(aux_files_path(test_repository().parent_path()), aux_files_path(fake_project()), fs::copy_options::recursive);
 
-
-    auto generated{
-      [&mat{working_materials()}]() { return mat / "GeneratedProject"; }
-    };
-
-    commandline_arguments args{"", "init", "Oliver Jacob Rosten", generated().string(), "  ", "--no-build"};
-
-    std::stringstream outputStream{};
-    test_runner tr{args.size(), args.get(), "Oliver J. Rosten", make_project_paths(), "\t", outputStream};
-
-    tr.execute();
-
-    if(std::ofstream file{fake_project() / "output" / "io.txt"})
     {
-      file << outputStream.rdbuf();
+      auto generated{
+        [&mat{working_materials()}] () { return mat / "GeneratedProject"; }
+      };
+
+      commandline_arguments args{"", "init", "Oliver Jacob Rosten", generated().string(), "  ", "--no-build"};
+
+      std::stringstream outputStream{};
+      test_runner tr{args.size(), args.get(), "Oliver J. Rosten", make_project_paths(), "\t", outputStream};
+
+      tr.execute();
+
+      if(std::ofstream file{fake_project() / "output" / "io.txt"})
+      {
+        file << outputStream.rdbuf();
+      }
+
+      check_equivalence(LINE(""), generated(), predictive_materials() / "GeneratedProject");
+      check_equivalence(LINE(""), fake_project(), predictive_materials() / "FakeProject");
     }
 
-    check_equivalence(LINE(""), generated(), predictive_materials() / "GeneratedProject");
-    check_equivalence(LINE(""), fake_project(), predictive_materials() / "FakeProject");
+    {
+      const auto hostDir{working_materials() / "AnotherGeneratedProject"};
+      commandline_arguments args{"", "init", "Oliver Jacob Rosten", hostDir.generic_string(), "  ", "--no-build"};
+
+      std::stringstream outputStream{};
+      test_runner tr{args.size(), args.get(), "Oliver J. Rosten", make_project_paths(), "\t", outputStream};
+
+      tr.execute();
+
+      check_equivalence(LINE(""), hostDir, predictive_materials() / "AnotherGeneratedProject");
+    }
   }
 }
