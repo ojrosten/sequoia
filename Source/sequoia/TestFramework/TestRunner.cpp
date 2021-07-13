@@ -890,10 +890,21 @@ namespace sequoia::testing
     nascentTests.emplace_back(std::move(nascent));
   }
 
+  auto test_runner::time_stamps::from_file(const std::filesystem::path& stampFile) -> stamp
+  {
+    if(fs::exists(stampFile))
+    {
+      return fs::last_write_time(stampFile);
+    }
+
+    return std::nullopt;
+  }
+
   test_runner::test_runner(int argc, char** argv, std::string copyright, project_paths paths, std::string codeIndent, std::ostream& stream)
     : m_Copyright{std::move(copyright)}
     , m_Paths{std::move(paths)}
     , m_CodeIndent{std::move(codeIndent)}
+    , m_TimeStamps{}
     , m_Stream{&stream}
   {
     check_indent(m_CodeIndent);
@@ -1091,11 +1102,7 @@ namespace sequoia::testing
                   },
                   {"--prune", {}, {},
                     [this](const arg_list&) {
-                      const auto tsFile{timestamp_path(m_Paths.output())};
-                      if(fs::exists(tsFile))
-                      {
-                        m_TimeStamp = fs::last_write_time(tsFile);
-                      }
+                      m_TimeStamps.ondisk = time_stamps::from_file(timestamp_path(m_Paths.output()));
                     }
                   }
                 },
@@ -1126,11 +1133,11 @@ namespace sequoia::testing
       if((!m_SelectedFamilies.empty() || !m_SelectedSources.empty()))
       {
         stream() << warning("--prune ignored if either test families or test source files are specified");
-        m_TimeStamp = std::nullopt;
+        m_TimeStamps.ondisk = std::nullopt;
       }
       else
       {
-        if(const auto toRun{tests_to_run(m_Paths.source_root(), m_Paths.tests(), m_Paths.test_materials(), m_TimeStamp)})
+        if(const auto toRun{tests_to_run(m_Paths.source_root(), m_Paths.tests(), m_Paths.test_materials(), m_TimeStamps.ondisk)})
         {
           std::transform(toRun->begin(), toRun->end(), std::back_inserter(m_SelectedSources),
             [](const std::filesystem::path& file)  -> std::pair<std::filesystem::path, bool> { return {file, false}; });
@@ -1158,7 +1165,7 @@ namespace sequoia::testing
   [[nodiscard]]
   bool test_runner::pruned() const noexcept
   {
-    return m_TimeStamp.has_value();
+    return m_TimeStamps.ondisk.has_value();
   }
 
   bool test_runner::mark_family(std::string_view name)
@@ -1326,15 +1333,10 @@ namespace sequoia::testing
     const bool selected{!m_SelectedFamilies.empty() || !m_SelectedSources.empty()};
     if((m_NascentTests.empty() && m_NascentProjects.empty()) || selected)
     {
-      if(!selected || pruned())
-      {
-        std::ofstream ostream{timestamp_path(m_Paths.output())};
-      }
-
+      log_summary summary{};
       if(!m_Families.empty())
       {
         stream() << "\nRunning tests...\n\n";
-        log_summary summary{};
         if(!concurrent_execution())
         {
           for(auto& family : m_Families)
@@ -1372,6 +1374,18 @@ namespace sequoia::testing
       else if(!selected)
       {
         stream() << "Nothing to do; try creating some tests!\nRun with --help to see options\n";
+      }
+
+
+      if((!selected || pruned()) && !summary.soft_failures() && !summary.critical_failures())
+      {
+        const auto stampFile{timestamp_path(m_Paths.output())};
+        if(!fs::exists(stampFile))
+        {
+          std::ofstream ostream{stampFile};
+        }
+
+        fs::last_write_time(stampFile, m_TimeStamps.current);
       }
     }
 

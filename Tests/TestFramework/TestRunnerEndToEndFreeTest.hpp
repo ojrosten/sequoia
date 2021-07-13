@@ -22,5 +22,10 @@ namespace sequoia::testing
     void run_tests() final;
 
     void test_project_creation();
+
+    [[nodiscard]]
+    std::filesystem::path generated_project() const;
+
+    void copy_aux_materials(const std::filesystem::path& relativeFrom, const std::filesystem::path& relativeTo) const;
   };
 }

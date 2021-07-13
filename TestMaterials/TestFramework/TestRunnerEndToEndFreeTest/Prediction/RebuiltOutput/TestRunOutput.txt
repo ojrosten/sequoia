@@ -1,8 +1,6 @@
 
 Running tests...
 
-Utilities:
-[0 (0)ms]
 Useful Things:
 [1 (0)ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
@@ -17,132 +15,18 @@ Useful Things:
 	=======================================
 
 
-Bar:
-[0 (0)ms]
-Maybe:
-[1 (0)ms]
-Oldschool:
-[1 (0)ms]
 Probability:
 [3 (1)ms]
 	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 39]
 	False Positive Checks:                     2;  Failures:  0
-Foo:
-[11 (9)ms]
-	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 43]
-
-	Tests/Stuff/FooTest.cpp, Line 37
-
-	Comparison performed using:
-	[sequoia::testing::equivalence_checker<std::filesystem::path>]
-	With equivalent types:
-	[std::filesystem::path]
-
-	  Contents of
-	  C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases/NoSeqpat/baz.txt
-	  vs
-	  C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/NoSeqpat/baz.txt
-
-	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
-	  operator== returned false
-
-	    First difference detected at character 0:
-	    [char]
-	    operator== returned false
-	    Obtained : U
-	    Predicted: O
-
-	    Full strings:
-	    Obtained : Updated
-	    Predicted: Old
-
-	  Contents of
-	  C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases/NoSeqpat/baz2.txt
-	  vs
-	  C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/NoSeqpat/baz2.txt
-
-	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
-	  operator== returned false
-
-	    First difference detected at character 0:
-	    [char]
-	    operator== returned false
-	    Obtained : U
-	    Predicted: O
-
-	    Full strings:
-	    Obtained : Updated
-	    Predicted: Old
-
-	  Contents of
-	  C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases/RemovedSeqpat/bar2.txt
-	  vs
-	  C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/RemovedSeqpat/bar2.txt
-
-	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
-	  operator== returned false
-
-	    First difference detected at character 0:
-	    [char]
-	    operator== returned false
-	    Obtained : U
-	    Predicted: O
-
-	    Full strings:
-	    Obtained : Updated
-	    Predicted: Old
-
-	  Contents of
-	  C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases/RetainedSeqpat/foo.txt
-	  vs
-	  C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/RetainedSeqpat/foo.txt
-
-	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
-	  operator== returned false
-
-	    First difference detected at character 0:
-	    [char]
-	    operator== returned false
-	    Obtained : U
-	    Predicted: O
-
-	    Full strings:
-	    Obtained : Updated
-	    Predicted: Old
-
-	  Contents of
-	  C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases/RetainedSeqpat/foo2.txt
-	  vs
-	  C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/RetainedSeqpat/foo2.txt
-
-	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
-	  operator== returned false
-
-	    First difference detected at character 0:
-	    [char]
-	    operator== returned false
-	    Obtained : U
-	    Predicted: O
-
-	    Full strings:
-	    Obtained : Updated
-	    Predicted: Old
-
-	=======================================
-
-
 Unique Thing:
 [3 (1)ms]
 	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 35]
 	False Positive Checks:                     2;  Failures:  0
-Container:
-[1 (0)ms]
-House:
-[0 (0)ms]
 
 -----------Grand Totals-----------
-[28 (12)ms]
-	Standard Top Level Checks:                 8;  Failures:  2  [Deep checks: 118]
+[8 (2)ms]
+	Standard Top Level Checks:                 7;  Failures:  1  [Deep checks: 75]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
 	False Negative Performance Checks:         0;  Failures:  0

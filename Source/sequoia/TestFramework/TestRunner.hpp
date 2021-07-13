@@ -19,6 +19,7 @@
 
 #include <map>
 #include <iostream>
+#include <chrono>
 
 namespace sequoia::testing
 {
@@ -406,13 +407,23 @@ namespace sequoia::testing
       std::filesystem::path output{};
     };
 
+    struct time_stamps
+    {
+      using time_type = std::filesystem::file_time_type;
+      using stamp = std::optional<time_type>;
+
+      static auto from_file(const std::filesystem::path& stampFile) -> stamp;
+
+      time_type current{std::chrono::file_clock::now()};
+      stamp ondisk, executable;
+    };
+
     friend nascent_test_data;
 
     using family_map        = std::map<std::string, bool, std::less<>>;
     using source_list       = std::vector<std::pair<std::filesystem::path, bool>>;
     using creation_factory  = runtime::factory<nascent_semantics_test, nascent_allocation_test, nascent_behavioural_test>;
     using vessel            = typename creation_factory::vessel;
-    using time_stamp        = std::optional<std::filesystem::file_time_type>;
 
     std::vector<test_family>  m_Families{};
     family_map                m_SelectedFamilies{};
@@ -427,7 +438,7 @@ namespace sequoia::testing
     output_mode               m_OutputMode{output_mode::standard};
     update_mode               m_UpdateMode{update_mode::none};
     concurrency_mode          m_ConcurrencyMode{concurrency_mode::serial};
-    time_stamp                m_TimeStamp{};
+    time_stamps               m_TimeStamps{};
 
     std::ostream& stream() noexcept { return *m_Stream; }
 

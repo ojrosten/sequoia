@@ -13,6 +13,8 @@
 
 namespace sequoia::testing
 {
+  namespace fs = std::filesystem;
+
   namespace
   {
     [[nodiscard]]
@@ -78,35 +80,17 @@ namespace sequoia::testing
       }
 
       [[nodiscard]]
-      shell_command rebuild_run(const std::filesystem::path& output) const
+      shell_command rebuild_run(const std::filesystem::path& outputDir, std::string_view cmakeOutput, std::string_view buildOutput, std::string_view options) const
       {
         return     cd_cmd(buildDir)
-                && cmake_and_build("CMakeOutput3.txt", "BuildOutput3.txt")
-                && shell_command{"", run_cmd(), output / "TestRunOutput.txt" };
+                && cmake_and_build(cmakeOutput, buildOutput)
+                && run(outputDir, options);
       }
 
       [[nodiscard]]
-      shell_command materials_update(const std::filesystem::path& output) const
+      shell_command run(const std::filesystem::path& outputDir, std::string_view options) const
       {
-        return cd_cmd(buildDir) && shell_command("", run_cmd().append(" u"), output / "TestRunOutput.txt");
-      }
-
-      [[nodiscard]]
-      shell_command prune_after_materials_update(const std::filesystem::path& output) const
-      {
-        return cd_cmd(buildDir) && shell_command("", run_cmd().append(" --prune"), output / "TestRunOutput.txt");
-      }
-
-      [[nodiscard]]
-      shell_command dump(const std::filesystem::path& output) const
-      {
-        return cd_cmd(buildDir) && shell_command("", run_cmd().append(" --dump"), output / "TestRunOutput.txt");
-      }
-
-      [[nodiscard]]
-      shell_command recovery(const std::filesystem::path& output) const
-      {
-        return cd_cmd(buildDir) && shell_command("", run_cmd().append(" --recovery"), output / "TestRunOutput.txt");
+        return cd_cmd(buildDir) && shell_command("", run_cmd().append(" ").append(options), outputDir / "TestRunOutput.txt");
       }
     private:
       [[nodiscard]]
@@ -123,6 +107,32 @@ namespace sequoia::testing
     return __FILE__;
   }
 
+  [[nodiscard]]
+  std::filesystem::path test_runner_end_to_end_test::generated_project() const
+  {
+    return working_materials().parent_path() / "GeneratedProject";
+  }
+
+  void test_runner_end_to_end_test::copy_aux_materials(const std::filesystem::path& relativeFrom, const std::filesystem::path& relativeDirTo) const
+  {
+    const auto absoluteFrom{auxiliary_materials() / relativeFrom};
+    const auto absoluteTo{generated_project() / relativeDirTo};
+    fs::copy(absoluteFrom, absoluteTo, fs::copy_options::recursive | fs::copy_options::overwrite_existing);
+    const auto now{fs::file_time_type::clock::now()};
+
+    if(fs::is_regular_file(absoluteFrom))
+    {
+      fs::last_write_time(absoluteTo / relativeFrom.filename(), now);
+    }
+    else if(fs::is_directory(absoluteFrom))
+    {
+      for(auto& entry : fs::recursive_directory_iterator(absoluteTo))
+      {
+        fs::last_write_time(entry.path(), now);
+      }
+    }
+  }
+
   void test_runner_end_to_end_test::run_tests()
   {
     test_project_creation();
@@ -130,8 +140,6 @@ namespace sequoia::testing
 
   void test_runner_end_to_end_test::test_project_creation()
   {
-    namespace fs = std::filesystem;
-
     const auto seqRoot{test_repository().parent_path()};
     const auto testMain{seqRoot/"TestAll/TestMain.cpp"};
     const auto includeTarget{seqRoot/"TestCommon/TestIncludes.hpp"};
@@ -204,33 +212,60 @@ namespace sequoia::testing
     check(LINE("Second build output existance"), fs::exists(b.buildDir / "BuildOutput2.txt"));
     check_equivalence(LINE("Test Runner Output"), working_materials() / "Output", predictive_materials() / "Output");
 
-    //=================== Change several of the tests, and some of the source, rebuild and run ===================//
-    fs::copy(auxiliary_materials() / "TestMaterials", generated() / "TestMaterials", fs::copy_options::recursive | fs::copy_options::overwrite_existing);
-    fs::copy(auxiliary_materials() / "ModifiedSource" / "UsefulThings.hpp", generated() / "Source" / "generatedProject" / "Utilities", fs::copy_options::overwrite_existing);
-    fs::copy(auxiliary_materials() / "ModifiedSource" / "UsefulThings.cpp", generated() / "Source" / "generatedProject" / "Utilities", fs::copy_options::overwrite_existing);
-    fs::copy(auxiliary_materials() / "ModifiedSource" / "Maths", generated() / "Source" / "generatedProject" / "Maths", fs::copy_options::recursive | fs::copy_options::overwrite_existing);
-    fs::copy(auxiliary_materials() / "ModifiedSource" / "Thing", generated() / "Source" / "generatedProject" / "Utilities" / "Thing", fs::copy_options::recursive | fs::copy_options::overwrite_existing);
+    //=================== Change some test materials and run with prune ===================//
+
     fs::copy(auxiliary_materials() / "ModifiedTests" / "FooTest.cpp", generated() / "Tests" / "Stuff", fs::copy_options::overwrite_existing);
-    fs::copy(auxiliary_materials() / "ModifiedTests" / "UsefulThingsFreeTest.cpp", generated() / "Tests" / "Utilities", fs::copy_options::overwrite_existing);
-    fs::copy(auxiliary_materials() / "ModifiedTests" / "Maths", generated() / "Tests" / "Maths", fs::copy_options::recursive | fs::copy_options::overwrite_existing);
-    fs::copy(auxiliary_materials() / "ModifiedTests" / "Thing", generated() / "Tests" / "Utilities" / "Thing", fs::copy_options::recursive | fs::copy_options::overwrite_existing);
+    fs::last_write_time(generated() / "Tests" / "Stuff" / "FooTest.cpp", fs::file_time_type::clock::now());
 
-    fs::last_write_time(generated() / "Source" / "generatedProject" / "Utilities" / "UsefulThings.cpp",          fs::file_time_type::clock::now());
-    fs::last_write_time(generated() / "Source" / "generatedProject" / "Maths" / "Probability.cpp",               fs::file_time_type::clock::now());
-    fs::last_write_time(generated() / "Source" / "generatedProject" / "Utilities" / "Thing" / "UniqueThing.cpp", fs::file_time_type::clock::now());
-    fs::last_write_time(generated() / "Tests" / "Stuff" / "FooTest.cpp",                                         fs::file_time_type::clock::now());
-    fs::last_write_time(generated() / "Tests" / "Utilities" / "UsefulThingsFreeTest.cpp",                        fs::file_time_type::clock::now());
-    fs::last_write_time(generated() / "Tests" / "Maths" / "ProbabilityTest.cpp",                                 fs::file_time_type::clock::now());
-    fs::last_write_time(generated() / "Tests" / "Maths" / "ProbabilityTestingDiagnostics.cpp",                   fs::file_time_type::clock::now());
-    fs::last_write_time(generated() / "Tests" / "Utilities" / "Thing" / "UniqueThingTest.cpp",                   fs::file_time_type::clock::now());
-    fs::last_write_time(generated() / "Tests" / "Utilities" / "Thing" / "UniqueThingTestingDiagnostics.cpp",     fs::file_time_type::clock::now());
-    fs::create_directory(working_materials() / "RebuiltOutput");
+    fs::copy(auxiliary_materials() / "TestMaterials", generated() / "TestMaterials", fs::copy_options::recursive | fs::copy_options::overwrite_existing);
+    fs::create_directory(working_materials() / "RunWithChangedMaterials");
 
-    const auto rebuildRun{b.rebuild_run(working_materials() / "RebuiltOutput")};
-    invoke(rebuildRun);
-
+    invoke(b.rebuild_run(working_materials() / "RunWithChangedMaterials", "CMakeOutput3.txt", "BuildOutput3.txt", "--prune"));
+    check_equivalence(LINE("Test Runner Output"), working_materials() / "RunWithChangedMaterials", predictive_materials() / "RunWithChangedMaterials");
     check(LINE("Third CMake output existance"), fs::exists(b.mainDir / "CMakeOutput3.txt"));
     check(LINE("Third build output existance"), fs::exists(b.buildDir / "BuildOutput3.txt"));
+
+    // Check materials are unchanged
+    fs::copy(generated() / "TestMaterials", working_materials() / "OriginalTestMaterials", fs::copy_options::recursive);
+    check_equivalence(LINE("Original Test Materials"), working_materials() / "OriginalTestMaterials", predictive_materials() / "OriginalTestMaterials");
+
+    //=================== Rerun with prune but update materials ===================//
+
+    fs::create_directory(working_materials() / "RunWithUpdateOutput");
+    invoke(b.run(working_materials() / "RunWithUpdateOutput", "--prune u"));
+    check_equivalence(LINE("Test Runner Output"), working_materials() / "RunWithUpdateOutput", predictive_materials() / "RunWithUpdateOutput");
+
+    fs::copy(generated() / "TestMaterials", working_materials() / "UpdatedTestMaterials", fs::copy_options::recursive);
+    check_equivalence(LINE("Updated Test Materials"), working_materials() / "UpdatedTestMaterials", predictive_materials() / "UpdatedTestMaterials");
+
+    //=================== Rerun with prune, which should detect the change to materials ===================//
+
+    fs::create_directory(working_materials() / "RunWithPruneOutput");
+    invoke(b.run(working_materials() / "RunWithPruneOutput", "--prune"));
+    check_equivalence(LINE("Test Runner Output"), working_materials() / "RunWithPruneOutput", predictive_materials() / "RunWithPruneOutput");
+
+    //=================== Rerun again with prune, which should do nothing  ===================//
+
+    fs::create_directory(working_materials() / "NullRunWithPruneOutput");
+    invoke(b.run(working_materials() / "NullRunWithPruneOutput", "--prune"));
+    check_equivalence(LINE("Test Runner Output"), working_materials() / "NullRunWithPruneOutput", predictive_materials() / "NullRunWithPruneOutput");
+
+    //=================== Change several of the tests, and some of the source, rebuild and run ===================//
+
+    copy_aux_materials("ModifiedSource/UsefulThings.hpp",        "Source/generatedProject/Utilities");
+    copy_aux_materials("ModifiedSource/UsefulThings.cpp",        "Source/generatedProject/Utilities");
+    copy_aux_materials("ModifiedSource/Maths",                   "Source/generatedProject/Maths");
+    copy_aux_materials("ModifiedSource/Thing",                   "Source/generatedProject/Utilities/Thing");
+    copy_aux_materials("ModifiedTests/UsefulThingsFreeTest.cpp", "Tests/Utilities");
+    copy_aux_materials("ModifiedTests/Maths",                    "Tests/Maths");
+    copy_aux_materials("ModifiedTests/Thing",                    "Tests/Utilities/Thing");
+
+    fs::create_directory(working_materials() / "RebuiltOutput");
+    const auto rebuildRun{b.rebuild_run(working_materials() / "RebuiltOutput", "CMakeOutput4.txt", "BuildOutput4.txt", "--prune")};
+    invoke(rebuildRun);
+
+    check(LINE("Fourth CMake output existance"), fs::exists(b.mainDir / "CMakeOutput4.txt"));
+    check(LINE("Fourth build output existance"), fs::exists(b.buildDir / "BuildOutput4.txt"));
 
     check_equivalence(LINE("Test Runner Output"), working_materials() / "RebuiltOutput", predictive_materials() / "RebuiltOutput");
     fs::create_directory(working_materials() / "TestAll");
@@ -242,25 +277,10 @@ namespace sequoia::testing
     check_equivalence(LINE("TestAllMain.cpp"),  working_materials() / mainCpp,   predictive_materials() / mainCpp);
     check_equivalence(LINE("CMakeLists.tt"), working_materials() / mainCmake, predictive_materials() / mainCmake);
 
-    fs::copy(generated() / "TestMaterials", working_materials() / "OriginalTestMaterials", fs::copy_options::recursive);
-    check_equivalence(LINE("Original Test Materials"), working_materials() / "OriginalTestMaterials", predictive_materials() / "OriginalTestMaterials");
-
-    //=================== Rerun but update materials ===================//
-    fs::create_directory(working_materials() / "RunWithUpdateOutput");
-    invoke(b.materials_update(working_materials() / "RunWithUpdateOutput"));
-    check_equivalence(LINE("Test Runner Output"), working_materials() / "RunWithUpdateOutput", predictive_materials() / "RunWithUpdateOutput");
-
-    fs::copy(generated() / "TestMaterials", working_materials() / "UpdatedTestMaterials", fs::copy_options::recursive);
-    check_equivalence(LINE("Updated Test Materials"), working_materials() / "UpdatedTestMaterials", predictive_materials() / "UpdatedTestMaterials");
-
-    //=================== Rerun with prune, which should detect the change to materials ===================//
-    fs::create_directory(working_materials() / "RunWithPruneOutput");
-    invoke(b.prune_after_materials_update(working_materials() / "RunWithPruneOutput"));
-    check_equivalence(LINE("Test Runner Output"), working_materials() / "RunWithPruneOutput", predictive_materials() / "RunWithPruneOutput");
 
     //=================== Rerun and do a dump ===================//
     fs::create_directory(working_materials() / "RunPostUpdate");
-    invoke(b.dump(working_materials() / "RunPostUpdate"));
+    invoke(b.run(working_materials() / "RunPostUpdate", "--dump"));
     check_equivalence(LINE("Test Runner Output"), working_materials() / "RunPostUpdate", predictive_materials() / "RunPostUpdate");
 
     fs::create_directory(working_materials() / "Dump");
@@ -277,7 +297,7 @@ namespace sequoia::testing
     fs::remove_all(generatedWorkingCopy / "RepresentativeCases");
 
     fs::create_directory(working_materials() / "RunRecovery");
-    invoke(b.recovery(working_materials() / "RunRecovery"));
+    invoke(b.run(working_materials() / "RunRecovery", "--recovery"));
     check_equivalence(LINE("Test Runner Output"), working_materials() / "RunRecovery", predictive_materials() / "RunRecovery");
 
     fs::create_directory(working_materials() / "Recovery");
@@ -294,7 +314,7 @@ namespace sequoia::testing
     fs::remove_all(generatedPredictive / "RepresentativeCases");
 
     fs::create_directory(working_materials() / "RunRecoveryMidCheck");
-    invoke(b.recovery(working_materials() / "RunRecoveryMidCheck"));
+    invoke(b.run(working_materials() / "RunRecoveryMidCheck", "--recovery"));
     check_equivalence(LINE("Test Runner Output"), working_materials() / "RunRecoveryMidCheck", predictive_materials() / "RunRecoveryMidCheck");
 
     fs::create_directory(working_materials() / "RecoveryMidCheck");
