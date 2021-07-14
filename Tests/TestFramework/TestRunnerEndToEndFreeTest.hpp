@@ -8,9 +8,27 @@
 #pragma once
 
 #include "sequoia/TestFramework/FreeTestCore.hpp"
+#include "sequoia/TestFramework/TestRunner.hpp"
 
 namespace sequoia::testing
 {
+  struct cmd_builder
+  {
+    cmd_builder(const std::filesystem::path& projRoot);
+
+    void create_build_run(const std::filesystem::path& creationOutput, std::string_view buildOutput, const std::filesystem::path& output) const;
+
+    void rebuild_run(const std::filesystem::path& outputDir, std::string_view cmakeOutput, std::string_view buildOutput, std::string_view options) const;
+
+    void run_executable(const std::filesystem::path& outputDir, std::string_view options) const;
+
+    std::filesystem::path mainDir, buildDir;
+
+  private:
+    [[nodiscard]]
+    shell_command run(const std::filesystem::path& outputDir, std::string_view options) const;
+  };
+
   class test_runner_end_to_end_test final : public free_test
   {
   public:
@@ -27,5 +45,11 @@ namespace sequoia::testing
     std::filesystem::path generated_project() const;
 
     void copy_aux_materials(const std::filesystem::path& relativeFrom, const std::filesystem::path& relativeTo) const;
+
+    void create_run_and_check(std::string_view description, const cmd_builder& b);
+
+    void run_and_check(std::string_view description, const cmd_builder& b, std::string_view relOutputDir, std::string_view options);
+
+    void rebuild_run_and_check(std::string_view description, const cmd_builder& b, std::string_view relOutputDir, std::string_view CMakeOutput, std::string_view BuildOutput, std::string_view options);
   };
 }
