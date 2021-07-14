@@ -61,17 +61,6 @@ namespace sequoia::maths::graph_impl
   template<class T>
   constexpr bool empty_proxy = ownership::creator<T> && empty<typename T::proxy::value_type>;
 
-  // TO DO: remove this weird indirection when MSVC no longer needs it!
-  template<class N>
-  auto get_allocator(const N&) {}
-
-  template<class N>
-    requires requires (const N& n) { n.get_allocator(); }
-  auto get_allocator(const N& nodes)
-  {
-    return nodes.get_allocator();
-  }
-
   template<class WeightMaker, class Traits>
   class node_storage : private WeightMaker
   {
@@ -233,9 +222,11 @@ namespace sequoia::maths::graph_impl
       }
     }
 
+    // TO DO: define constexpr bool for requirement, when MSVC supports this
     auto get_node_allocator() const
+      requires requires (const node_weight_container_type& n) { n.get_allocator(); }
     {
-      return get_allocator(m_NodeWeights);
+      return m_NodeWeights.get_allocator();
     }
 
     void reserve(const size_type newCapacity)
