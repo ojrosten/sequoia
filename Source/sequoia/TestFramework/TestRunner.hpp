@@ -425,20 +425,21 @@ namespace sequoia::testing
     using creation_factory  = runtime::factory<nascent_semantics_test, nascent_allocation_test, nascent_behavioural_test>;
     using vessel            = typename creation_factory::vessel;
 
+    std::string               m_Copyright{};
+    project_paths             m_Paths;    
+    indentation               m_CodeIndent{"  "};    
+    time_stamps               m_TimeStamps{};    
+    std::ostream*             m_Stream;
+    
     std::vector<test_family>  m_Families{};
     family_map                m_SelectedFamilies{};
     source_list               m_SelectedSources{};
     std::vector<vessel>       m_NascentTests{};
-    std::vector<project_data> m_NascentProjects{};
-    std::string               m_Copyright{};
-    project_paths             m_Paths;
-    recovery_paths            m_Recovery;
-    indentation               m_CodeIndent{"  "};
-    std::ostream*             m_Stream;
+    std::vector<project_data> m_NascentProjects{};  
+    recovery_paths            m_Recovery{};
     output_mode               m_OutputMode{output_mode::standard};
     update_mode               m_UpdateMode{update_mode::none};
     concurrency_mode          m_ConcurrencyMode{concurrency_mode::serial};
-    time_stamps               m_TimeStamps{};
 
     std::ostream& stream() noexcept { return *m_Stream; }
 
