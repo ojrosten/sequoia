@@ -1216,6 +1216,8 @@ namespace sequoia::testing
 
   void test_runner::check_for_missing_tests()
   {
+    if(pruned()) return;
+
     auto check{
       [&stream=stream()](const auto& tests, std::string_view type, auto fn) {
         for(const auto& test : tests)
