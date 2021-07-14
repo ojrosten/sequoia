@@ -253,16 +253,12 @@ namespace sequoia::concurrency
   public:
     using return_type = R;
 
-    template<bool B=MultiPipeline>
-      requires (!B)
-    explicit thread_pool(const std::size_t numThreads)
+    explicit thread_pool(const std::size_t numThreads) requires( !MultiPipeline)
     {
       make_pool(numThreads);
     }
 
-    template<bool B=MultiPipeline>
-      requires B
-    thread_pool(const std::size_t numThreads, const std::size_t pushCycles = 46)
+    thread_pool(const std::size_t numThreads, const std::size_t pushCycles = 46) requires MultiPipeline
       : impl::queue_details<R, MultiPipeline>{pushCycles}
       , m_Queues(numThreads)
     {

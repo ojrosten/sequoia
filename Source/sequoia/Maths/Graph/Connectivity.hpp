@@ -326,9 +326,8 @@ namespace sequoia
         return m_Edges.get_allocator();
       }
 
-      template<class T=edge_storage_type>
-        requires has_partitions_allocator<T>
       auto get_edge_allocator(partitions_allocator_tag) const
+        requires has_partitions_allocator<edge_storage_type>
       {
         return m_Edges.get_partitions_allocator();
       }
@@ -344,32 +343,28 @@ namespace sequoia
         return m_Edges.num_partitions_capacity();
       }
 
-      template<class T=edge_storage_type>
-        requires graph_impl::has_reservable_partitions<T>
       void reserve_edges(const edge_index_type partition, const edge_index_type size)
+        requires graph_impl::has_reservable_partitions<edge_storage_type>
       {
         m_Edges.reserve_partition(partition, size);
       }
 
-      template<class T=edge_storage_type>
-      requires (!graph_impl::has_reservable_partitions<T>)
       void reserve_edges(const edge_index_type size)
+        requires (!graph_impl::has_reservable_partitions<edge_storage_type>)
       {
         m_Edges.reserve(size);
       }
 
-      template<class T=edge_storage_type>
-        requires graph_impl::has_reservable_partitions<T>
       [[nodiscard]]
       size_type edges_capacity(const edge_index_type partition) const
+        requires graph_impl::has_reservable_partitions<edge_storage_type>
       {
         return m_Edges.partition_capacity(partition);
       }
 
-      template<class T=edge_storage_type>
-        requires (!graph_impl::has_reservable_partitions<T>)
       [[nodiscard]]
       size_type edges_capacity() const noexcept
+        requires (!graph_impl::has_reservable_partitions<edge_storage_type>)
       {
         return m_Edges.capacity();
       }

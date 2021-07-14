@@ -106,22 +106,21 @@ namespace sequoia::testing
   class basic_allocation_predictions : public container_predictions_policy<TopLevel>
   {
   public:
-    template<top_level Level=TopLevel>
-      requires (Level == top_level::yes)
     constexpr basic_allocation_predictions(copy_prediction x,
                                            individual_allocation_predictions y,
                                            assignment_allocation_predictions assignYtoX)
+      requires (TopLevel == top_level::yes)
       : m_x{x}
       , m_y{y}
       , m_Assign_y_to_x{assignYtoX}
     {}
 
-    template<top_level Level=TopLevel>
-      requires (Level == top_level::no)
     constexpr basic_allocation_predictions(copy_prediction x,
                                            individual_allocation_predictions y,
                                            assignment_allocation_predictions assignYtoX,
                                            container_counts counts)
+
+      requires (TopLevel == top_level::no)
       : container_predictions_policy<TopLevel>{counts}
       , m_x{x}
       , m_y{y}
