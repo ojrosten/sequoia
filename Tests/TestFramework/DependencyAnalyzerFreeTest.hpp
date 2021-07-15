@@ -21,7 +21,10 @@ namespace sequoia::testing
     {
       std::filesystem::path source_repo, tests_repo, materials;
       std::filesystem::file_time_type reset_time;
+      std::optional<std::filesystem::file_time_type> exe_time_stamp;
     };
+
+    information m_Info{};
 
     using test_list = std::optional<std::vector<std::filesystem::path>>;
 
@@ -29,6 +32,10 @@ namespace sequoia::testing
     std::string_view source_file() const noexcept final;
 
     void run_tests() final;
+
+    void test_exceptions();
+
+    void test_dependencies();
 
     void check_tests_to_run(std::string_view description, const information& info, const std::vector<std::filesystem::path>& makeStale, const std::vector<std::filesystem::path>& toRun);
   };

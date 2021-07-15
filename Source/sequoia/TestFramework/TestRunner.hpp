@@ -426,9 +426,9 @@ namespace sequoia::testing
     using vessel            = typename creation_factory::vessel;
 
     std::string               m_Copyright{};
-    project_paths             m_Paths;    
-    indentation               m_CodeIndent{"  "};    
-    time_stamps               m_TimeStamps{};    
+    project_paths             m_Paths;
+    indentation               m_CodeIndent{"  "};
+    time_stamps               m_TimeStamps{};
     std::ostream*             m_Stream;
     
     std::vector<test_family>  m_Families{};

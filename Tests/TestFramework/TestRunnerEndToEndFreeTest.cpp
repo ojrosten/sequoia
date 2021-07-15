@@ -242,9 +242,13 @@ namespace sequoia::testing
 
     run_and_check(LINE("Prune again, no tests should run"), b, "NullRunWithPruneOutput", "--prune");
 
+    //=================== Change a file, don't build and run the --prune ===================//
+
+    copy_aux_materials("ModifiedSource/UsefulThings.hpp", "Source/generatedProject/Utilities");
+    run_and_check(LINE("Attempt to prune when build is out of date"), b, "PruneWithStaleBuild", "--prune");
+
     //=================== Change several of the tests, and some of the source, rebuild and run ===================//
 
-    copy_aux_materials("ModifiedSource/UsefulThings.hpp",        "Source/generatedProject/Utilities");
     copy_aux_materials("ModifiedSource/UsefulThings.cpp",        "Source/generatedProject/Utilities");
     copy_aux_materials("ModifiedSource/Maths",                   "Source/generatedProject/Maths");
     copy_aux_materials("ModifiedSource/Thing",                   "Source/generatedProject/Utilities/Thing");

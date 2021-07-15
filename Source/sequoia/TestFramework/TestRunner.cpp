@@ -1106,7 +1106,22 @@ namespace sequoia::testing
                     }
                   }
                 },
-                [](std::string_view){})
+                [this](std::string_view exe){
+                  const auto exePath{
+                    [exe]() -> fs::path {
+                      const fs::path attempt{exe};
+                      if(attempt.is_absolute())
+                      {
+                        return attempt;
+                      }
+
+                      return working_path_v / attempt;
+                    }()
+                  };
+
+                  if(fs::exists(exePath))
+                    m_TimeStamps.executable = fs::last_write_time(exePath);
+                })
         };
 
     if(!help.empty())
@@ -1137,7 +1152,7 @@ namespace sequoia::testing
       }
       else
       {
-        if(const auto toRun{tests_to_run(m_Paths.source_root(), m_Paths.tests(), m_Paths.test_materials(), m_TimeStamps.ondisk)})
+        if(const auto toRun{tests_to_run(m_Paths.source_root(), m_Paths.tests(), m_Paths.test_materials(), m_TimeStamps.ondisk, m_TimeStamps.executable)})
         {
           std::transform(toRun->begin(), toRun->end(), std::back_inserter(m_SelectedSources),
             [](const std::filesystem::path& file)  -> std::pair<std::filesystem::path, bool> { return {file, false}; });

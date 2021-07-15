@@ -17,11 +17,21 @@ namespace sequoia::testing
 
   namespace
   {
+    [[nodiscard]]
+    bool is_stale(fs::path file, const fs::file_time_type& timeStamp, const std::optional<fs::file_time_type>& exeTimeStamp)
+    {
+      const auto lwt{fs::last_write_time(file)};
+      if(exeTimeStamp.has_value() && (lwt >= exeTimeStamp.value()))
+        throw std::runtime_error{"Exectuable is out of date; please build it!"};
+
+        return lwt > timeStamp;
+    }
+
     struct file_info
     {
-      file_info(fs::path f, const fs::file_time_type& timeStamp)
+      file_info(fs::path f, const fs::file_time_type& timeStamp, const std::optional<fs::file_time_type>& exeTimeStamp)
         : file{std::move(f)}
-        , stale{fs::last_write_time(file) > timeStamp}
+        , stale{is_stale(file, timeStamp, exeTimeStamp)}
       {}
 
       fs::path file;
@@ -60,14 +70,14 @@ namespace sequoia::testing
     using tests_dependency_graph = maths::graph<maths::directed_flavour::directed, maths::null_weight, file_info>;
     using node_iterator = tests_dependency_graph::const_iterator;
 
-    void add_files(tests_dependency_graph& g, const std::filesystem::path& repo, const fs::file_time_type& timeStamp)
+    void add_files(tests_dependency_graph& g, const std::filesystem::path& repo, const fs::file_time_type& timeStamp, const std::optional<fs::file_time_type>& exeTimeStamp)
     {
       for(const auto& entry : fs::recursive_directory_iterator(repo))
       {
         const auto file{entry.path()};
         if(is_cpp(file) || is_header(file))
         {
-          g.add_node(file, timeStamp);
+          g.add_node(file, timeStamp, exeTimeStamp);
         }
       }
     }
@@ -160,10 +170,11 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::optional<std::vector<std::filesystem::path>> tests_to_run(const std::filesystem::path& sourceRepo,
-                                                                 const std::filesystem::path& testRepo,
-                                                                 const std::filesystem::path& materialsRepo,
-                                                                 const std::optional<std::filesystem::file_time_type>& timeStamp)
+  std::optional<std::vector<std::filesystem::path>> tests_to_run(const fs::path& sourceRepo,
+                                                                 const fs::path& testRepo,
+                                                                 const fs::path& materialsRepo,
+                                                                 const std::optional<fs::file_time_type>& timeStamp,
+                                                                 const std::optional<fs::file_time_type>& exeTimeStamp)
   {
     using namespace maths;
 
@@ -172,8 +183,8 @@ namespace sequoia::testing
     std::optional<std::vector<std::filesystem::path>> testsToRun{{}};
 
     tests_dependency_graph g{};
-    add_files(g, sourceRepo, timeStamp.value());
-    add_files(g, testRepo, timeStamp.value());
+    add_files(g, sourceRepo, timeStamp.value(), exeTimeStamp);
+    add_files(g, testRepo, timeStamp.value(), exeTimeStamp);
     build_dependencies(g, sourceRepo, testRepo);
 
     auto nodesLate{
