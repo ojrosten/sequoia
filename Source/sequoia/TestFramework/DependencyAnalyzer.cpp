@@ -24,7 +24,7 @@ namespace sequoia::testing
       if(exeTimeStamp.has_value() && (lwt >= exeTimeStamp.value()))
         throw std::runtime_error{"Exectuable is out of date; please build it!"};
 
-        return lwt > timeStamp;
+      return lwt > timeStamp;
     }
 
     struct file_info
