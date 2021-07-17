@@ -1,4 +1,8 @@
 
+Analyzing dependencies...
+[40ms]
+
+
 Running tests...
 
 Foo:

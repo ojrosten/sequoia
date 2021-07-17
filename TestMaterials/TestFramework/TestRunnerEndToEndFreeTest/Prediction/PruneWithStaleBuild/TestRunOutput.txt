@@ -1,1 +1,3 @@
+
+Analyzing dependencies...
 Exectuable is out of date; please build it!

@@ -1,4 +1,8 @@
 
+Analyzing dependencies...
+[61ms]
+
+
 Running tests...
 
 Useful Things:
@@ -16,16 +20,16 @@ Useful Things:
 
 
 Probability:
-[3 (1)ms]
+[7 (2)ms]
 	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 39]
 	False Positive Checks:                     2;  Failures:  0
 Unique Thing:
-[3 (1)ms]
+[7 (2)ms]
 	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 35]
 	False Positive Checks:                     2;  Failures:  0
 
 -----------Grand Totals-----------
-[8 (2)ms]
+[16 (5)ms]
 	Standard Top Level Checks:                 7;  Failures:  1  [Deep checks: 75]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

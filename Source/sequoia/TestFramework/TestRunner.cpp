@@ -1152,11 +1152,18 @@ namespace sequoia::testing
       }
       else
       {
+        stream() << "\nAnalyzing dependencies...\n";
+        const auto start{std::chrono::steady_clock::now()};
+
         if(const auto toRun{tests_to_run(m_Paths.source_root(), m_Paths.tests(), m_Paths.test_materials(), m_TimeStamps.ondisk, m_TimeStamps.executable)})
         {
           std::transform(toRun->begin(), toRun->end(), std::back_inserter(m_SelectedSources),
             [](const std::filesystem::path& file)  -> std::pair<std::filesystem::path, bool> { return {file, false}; });
         }
+
+        const auto end{std::chrono::steady_clock::now()};
+
+        stream() << '[' << testing::stringify(end - start) << "ms]\n\n";
       }
     }
   }
