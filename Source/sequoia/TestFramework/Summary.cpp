@@ -14,24 +14,25 @@
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::string stringify(const log_summary::duration& d)
+  stringified_duration stringify(const log_summary::duration& d)
   {
     using namespace std::chrono;
     const auto count{duration_cast<milliseconds>(d).count()};
-    return std::to_string(count);
+    return {std::to_string(count), "ms"};
   }
 
   [[nodiscard]]
   std::string report_time(const log_summary& log, const opt_duration duration)
   {
     auto mess{std::string{"["}};
-    if(duration) mess.append(stringify(*duration)).append(" (");
+    if(duration) mess.append(stringify(*duration).time).append(" (");
 
-    mess.append(stringify(log.execution_time()));
+    const auto[dur, unit]{stringify(log.execution_time())};
+    mess.append(dur);
 
     if(duration) mess.append(")");
 
-    return mess.append("ms]\n");
+    return mess.append(unit).append("]\n");
   }
 
   [[nodiscard]]

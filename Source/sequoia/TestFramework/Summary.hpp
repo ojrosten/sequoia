@@ -61,8 +61,13 @@ namespace sequoia::testing
 
   using opt_duration = std::optional<log_summary::duration>;
 
+  struct stringified_duration
+  {
+    std::string time, unit;
+  };
+
   [[nodiscard]]
-  std::string stringify(const log_summary::duration& d);
+  stringified_duration stringify(const log_summary::duration& d);
 
   [[nodiscard]]
   std::string report_time(const log_summary& log, opt_duration duration);

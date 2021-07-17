@@ -1163,7 +1163,8 @@ namespace sequoia::testing
 
         const auto end{std::chrono::steady_clock::now()};
 
-        stream() << '[' << testing::stringify(end - start) << "ms]\n\n";
+        const auto [dur, unit]{testing::stringify(end - start)};
+        stream() << '[' << dur << unit << "]\n\n";
       }
     }
   }
