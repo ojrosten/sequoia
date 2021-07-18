@@ -1286,17 +1286,15 @@ namespace sequoia::testing
                  [&filename, &repo=m_Paths.tests(), &root=m_Paths.project_root()](const auto& element){
                    const auto& source{element.first};
 
+                   if(filename.empty() || source.empty() || ((*--source.end()) != (*--filename.end())))
+                     return false;
+
                    if(filename == source) return true;
 
                    if(filename.is_absolute())
                    {
-                     if(source.is_absolute()) return false;
-
-                     if(source.is_relative())
-                     {
-                       if(rebase_from(filename, root) == rebase_from(source, working_path()))
-                         return true;
-                     }
+                     if(rebase_from(filename, root) == rebase_from(source, working_path()))
+                       return true;
                    }
 
                    // filename is relative to where compilation was performed which
@@ -1419,10 +1417,9 @@ namespace sequoia::testing
 
   void test_runner::init_projects()
   {
-    if(!m_NascentProjects.empty())
-    {
-      stream() << "Initializing Project(s)....\n\n";
-    }
+    if(m_NascentProjects.empty()) return;
+
+    stream() << "Initializing Project(s)....\n\n";
 
     for(const auto& data : m_NascentProjects)
     {
