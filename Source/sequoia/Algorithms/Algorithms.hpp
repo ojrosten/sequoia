@@ -96,7 +96,7 @@ namespace sequoia
   template<class FwdIter, class Comparer=std::less<std::decay_t<decltype(*FwdIter())>>>
   constexpr void sort(FwdIter begin, FwdIter end, Comparer comp = Comparer{})
   {
-    using namespace std;
+    using std::distance;
     if(distance(begin, end) <= 1) return;
 
     sequoia::make_heap(begin, end, comp);

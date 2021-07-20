@@ -183,8 +183,11 @@ namespace sequoia::testing
     std::optional<std::vector<std::filesystem::path>> testsToRun{{}};
 
     tests_dependency_graph g{};
+
     add_files(g, sourceRepo, timeStamp.value(), exeTimeStamp);
     add_files(g, testRepo, timeStamp.value(), exeTimeStamp);
+    g.sort_nodes([&g](auto i, auto j) { return (g.cbegin_node_weights() + i)->file < (g.cbegin_node_weights() + j)->file; });
+
     build_dependencies(g, sourceRepo, testRepo);
 
     auto nodesLate{

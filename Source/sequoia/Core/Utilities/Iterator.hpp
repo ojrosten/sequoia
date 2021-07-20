@@ -175,7 +175,7 @@ namespace sequoia::utilities
     [[nodiscard]]
     friend constexpr iterator operator+(const iterator& it, const difference_type n)
     {
-      iterator tmp(it);
+      iterator tmp{it};
       return tmp+=n;
     }
 

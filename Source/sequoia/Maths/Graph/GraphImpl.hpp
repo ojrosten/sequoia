@@ -11,6 +11,7 @@
     \brief Underlying class for the various different graph species.
  */
 
+#include "sequoia/Algorithms/Algorithms.hpp"
 #include "sequoia/Maths/Graph/Connectivity.hpp"
 #include "sequoia/Maths/Graph/HeterogeneousNodeDetails.hpp"
 #include "sequoia/Core/Utilities/AssignmentUtilities.hpp"
@@ -20,6 +21,9 @@ namespace sequoia
 {
   namespace maths
   {
+    template<network Connectivity, class Nodes>
+    class MSVC_EMPTY_BASE_HACK graph_primitive;
+
     namespace graph_impl
     {
       // TO DO: trade below for adhoc if constexpr (requires ...) once supported by MSVC
@@ -32,6 +36,102 @@ namespace sequoia
         requires requires { has_allocator_type<typename N::node_weight_container_type>; }
       struct nodes_allocate<N> : std::true_type
       {};
+
+      template<network Connectivity, class Nodes>
+      class graph_iterator
+      {
+      public:
+        using graph_type    = graph_primitive<Connectivity, Nodes>;
+        using index_type    = typename graph_type::edge_index_type;
+        using distance_type = std::make_signed_t<index_type>;
+
+        constexpr graph_iterator(graph_type& g, const index_type i)
+          : m_Graph{&g}
+          , m_Index{i}
+        {}
+
+        [[nodiscard]]
+        graph_type& graph() noexcept
+        {
+          return *m_Graph;
+        }
+
+        [[nodiscard]]
+        index_type index() const noexcept
+        {
+          return m_Index;
+        }
+
+        constexpr index_type operator*() const
+        {
+          return m_Index;
+        }
+
+        constexpr graph_iterator& operator++() { ++m_Index; return *this; }
+
+        constexpr graph_iterator& operator+=(const distance_type n) { m_Index += n; return *this; }
+
+        [[nodiscard]]
+        friend constexpr graph_iterator operator+(const graph_iterator& it, const distance_type n)
+        {
+          graph_iterator tmp{it};
+          return tmp += n;
+        }
+
+        constexpr graph_iterator operator++(int)
+        {
+          graph_iterator tmp{*this};
+          operator++();
+          return tmp;
+        }
+
+        constexpr graph_iterator& operator--() { --m_Index; return *this; }
+
+        constexpr graph_iterator& operator-=(const distance_type n) { m_Index -= n; return *this; }
+
+        [[nodiscard]]
+        friend constexpr graph_iterator operator-(const graph_iterator& it, const distance_type n)
+        {
+          graph_iterator tmp{it};
+          return tmp -= n;
+        }
+
+        constexpr graph_iterator operator--(int)
+        {
+          graph_iterator tmp{*this};
+          operator--();
+          return tmp;
+        }
+
+        [[nodiscard]]
+        friend bool operator==(const graph_iterator& lhs, const graph_iterator& rhs) noexcept
+        {
+          return lhs.m_Index == rhs.m_Index;
+        }
+
+        [[nodiscard]]
+        friend bool operator!=(const graph_iterator& lhs, const graph_iterator& rhs) noexcept
+        {
+          return !(lhs == rhs);
+        }
+      private:
+        graph_type* m_Graph;
+        index_type m_Index;
+      };
+    }
+
+    template<network Connectivity, class Nodes>
+    constexpr auto distance(graph_impl::graph_iterator<Connectivity, Nodes> a, graph_impl::graph_iterator<Connectivity, Nodes> b)
+      -> typename graph_impl::graph_iterator<Connectivity, Nodes>::distance_type
+    {
+      using dist_type = typename graph_impl::graph_iterator<Connectivity, Nodes>::distance_type;
+      return static_cast<dist_type>(b.index()) - static_cast<dist_type>(a.index());
+    }
+
+    template<network Connectivity, class Nodes>
+    constexpr void iter_swap(graph_impl::graph_iterator<Connectivity, Nodes> a, graph_impl::graph_iterator<Connectivity, Nodes> b)
+    {
+      a.graph().swap_nodes(a.index(), b.index());
     }
 
     template<network Connectivity, class Nodes>
@@ -81,6 +181,22 @@ namespace sequoia
       constexpr size_type size() const noexcept
       {
         return connectivity_type::size();
+      }
+
+      constexpr void swap_nodes(size_type i, size_type j)
+      {
+        if constexpr(!std::is_empty_v<node_weight_type>)
+        {
+          Nodes::swap_nodes(i, j);
+        }
+
+        Connectivity::swap_nodes(i, j);
+      }
+
+      template<class Compare>
+      constexpr void sort_nodes(Compare c)
+      {
+        sequoia::sort(begin(), end(), c);
       }
 
       //===============================equality (not isomorphism) operators================================//
@@ -358,16 +474,6 @@ namespace sequoia
         Nodes::swap(rhs);
       }
 
-      constexpr void swap_nodes(size_type i, size_type j)
-      {
-        if constexpr(!std::is_empty_v<node_weight_type>)
-        {
-          Nodes::swap_nodes(i, j);
-        }
-
-        Connectivity::swap_nodes(i, j);
-      }
-
       void reserve_nodes(const size_type size)
       {
         if constexpr(!std::is_empty_v<node_weight_type>)
@@ -490,6 +596,18 @@ namespace sequoia
         : Connectivity{edges},
           Nodes{}
       {}
+
+      [[nodiscard]]
+      graph_impl::graph_iterator<Connectivity, Nodes> begin()
+      {
+        return {*this, edge_index_type{}};
+      }
+
+      [[nodiscard]]
+      graph_impl::graph_iterator<Connectivity, Nodes> end()
+      {
+        return {*this, Connectivity::order()};
+      }
 
       template<class... Args>
       size_type insert_node_impl(const size_type pos, Args&&... args)
