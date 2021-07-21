@@ -96,6 +96,10 @@ namespace sequoia::testing
                        m_Info,
                        {{m_Info.source_repo / "generatedProject" / "Maths" / "Probability.hpp"}},
                        {{"Maths/ProbabilityTest.cpp"}, {"Maths/ProbabilityTestingDiagnostics.cpp"}});
+    check_tests_to_run(LINE("Source cpp indirectly stale via included header"),
+                       m_Info,
+                       {{m_Info.source_repo / "generatedProject" / "Maths" / "Helper.hpp"}},
+                       {{"Maths/ProbabilityTest.cpp"}});
     check_tests_to_run(LINE("Materials stale"),
                        m_Info,
                        {{m_Info.materials / "Stuff" / "FooTest" / "Prediction" / "RepresentativeCasesTemp" / "NoSeqpat" / "baz.txt"}},

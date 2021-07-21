@@ -5,11 +5,4 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#include "generatedProject/Maths/Probability.hpp"
 #include "generatedProject/Maths/Helper.hpp"
-
-namespace maths
-{
-	[[nodiscard]]
-	double probability::raw_value() const noexcept { return m_Prob; }
-}
