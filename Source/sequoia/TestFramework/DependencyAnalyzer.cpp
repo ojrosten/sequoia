@@ -140,6 +140,21 @@ namespace sequoia::testing
 
                   const auto includeNodePos{static_cast<size_type>(distance(g.cbegin_node_weights(), incIter))};
                   g.join(nodePos, includeNodePos);
+
+                  if(is_cpp(file))
+                  {
+                    // Furnish the associated hpp with the same dependencies,
+                    // as these are what ultimately determine whether or not
+                    // the test cpp is considered stale
+                    if(auto next{std::next(i)}; next != g.cend_node_weights())
+                    {
+                      if(next->file.stem() == file.stem())
+                      {
+                        const auto nextPos{static_cast<size_type>(distance(g.cbegin_node_weights(), next))};
+                        g.join(nextPos, includeNodePos);
+                      }
+                    }
+                  }
                 }
               }
             }
