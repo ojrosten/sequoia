@@ -117,8 +117,8 @@ namespace sequoia::testing
                 }
 
                 auto includeMatcher{
-                  [&includedFile,&sourceRepo,&testRepo,&file](const auto& weight) {
-                    if(includedFile.empty() || weight.file.empty() || (*(--includedFile.end()) != *(--weight.file.end())))
+                  [&includedFile,&sourceRepo,&testRepo,&file](const file_info& weight) {
+                    if(*(--includedFile.end()) != *(--weight.file.end()))
                       return false;
 
                     if(includedFile.is_absolute())
