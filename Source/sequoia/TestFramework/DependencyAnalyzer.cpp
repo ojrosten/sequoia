@@ -82,6 +82,7 @@ namespace sequoia::testing
       }
     }
 
+    // pre-condition: the nodes of g have been sorted by file path
     void build_dependencies(tests_dependency_graph& g,
                             const std::filesystem::path& sourceRepo,
                             const std::filesystem::path& testRepo)
@@ -117,6 +118,9 @@ namespace sequoia::testing
 
                 auto includeMatcher{
                   [&includedFile,&sourceRepo,&testRepo,&file](const auto& weight) {
+                    if(includedFile.empty() || weight.file.empty() || (*(--includedFile.end()) != *(--weight.file.end())))
+                      return false;
+
                     if(includedFile.is_absolute())
                       return weight.file == includedFile;
 
@@ -145,7 +149,8 @@ namespace sequoia::testing
                   {
                     // Furnish the associated hpp with the same dependencies,
                     // as these are what ultimately determine whether or not
-                    // the test cpp is considered stale
+                    // the test cpp is considered stale. Sorting of g ensures
+                    // that headers are directly after sources
                     if(auto next{std::next(i)}; next != g.cend_node_weights())
                     {
                       if(next->file.stem() == file.stem())
