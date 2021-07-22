@@ -510,8 +510,6 @@ namespace sequoia
       template<class... Args>
       size_type add_node(Args&&... args)
       {
-        reserve_nodes(this->order() + 1);
-
         Connectivity::add_node();
         if constexpr (!emptyNodes) Nodes::add_node(std::forward<Args>(args)...);
         return (this->order()-1);
@@ -612,8 +610,6 @@ namespace sequoia
       template<class... Args>
       size_type insert_node_impl(const size_type pos, Args&&... args)
       {
-        reserve_nodes(this->order() + 1);
-
         const auto node{(pos < this->order()) ? pos : (this->order() - 1)};
         if constexpr (!emptyNodes)
         {
