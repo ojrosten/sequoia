@@ -1020,6 +1020,11 @@ namespace sequoia::testing
                       m_SelectedSources.emplace_back(fs::path{args.front()}.lexically_normal(), false);
                     }
                   },
+                  {"prune", {"p"}, {},
+                    [this](const arg_list&) {
+                      m_TimeStamps.ondisk = time_stamps::from_file(timestamp_path(m_Paths.output()));
+                    }
+                  },
                   {"create", {"c"}, {}, [](const arg_list&) {},
                    { {"regular_test", {"regular"}, {"qualified::class_name<class T>", "equivalent type"},
                       nascent_test_data{"semantic", "regular", *this}, semanticsOptions
@@ -1073,6 +1078,13 @@ namespace sequoia::testing
                   {"update-materials", {"u"}, {},
                     [this](const arg_list&) { m_UpdateMode = update_mode::soft; }
                   },
+                  {"dump", {}, {},
+                    [this, recoveryDir{recovery_path(m_Paths.output())}](const arg_list&) {
+                      std::filesystem::create_directory(recoveryDir);
+                      m_Recovery.dump_file = recoveryDir / "Dump.txt";
+                      std::filesystem::remove(m_Recovery.dump_file);
+                    }
+                  },
                   {"--async", {"-a"}, {},
                     [this](const arg_list&) {
                       if(m_ConcurrencyMode == concurrency_mode::serial)
@@ -1091,18 +1103,6 @@ namespace sequoia::testing
                       std::filesystem::create_directory(recoveryDir);
                       m_Recovery.recovery_file = recoveryDir / "Recovery.txt";
                       std::filesystem::remove(m_Recovery.recovery_file);
-                    }
-                  },
-                  {"--dump", {}, {},
-                    [this, recoveryDir{recovery_path(m_Paths.output())}] (const arg_list&) {
-                      std::filesystem::create_directory(recoveryDir);
-                      m_Recovery.dump_file = recoveryDir / "Dump.txt";
-                      std::filesystem::remove(m_Recovery.dump_file);
-                    }
-                  },
-                  {"--prune", {}, {},
-                    [this](const arg_list&) {
-                      m_TimeStamps.ondisk = time_stamps::from_file(timestamp_path(m_Paths.output()));
                     }
                   }
                 },
