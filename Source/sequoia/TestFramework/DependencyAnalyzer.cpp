@@ -34,6 +34,10 @@ namespace sequoia::testing
         , stale{is_stale(file, timeStamp, exeTimeStamp)}
       {}
 
+      file_info(fs::path f)
+        : file{std::move(f)}
+      {}
+
       fs::path file;
       bool stale{true};
     };
@@ -116,47 +120,60 @@ namespace sequoia::testing
                   includedFile = file.parent_path() / includedFile;
                 }
 
-                auto includeMatcher{
-                  [&includedFile,&sourceRepo,&testRepo,&file](const file_info& weight) {
-                    if(*(--includedFile.end()) != *(--weight.file.end()))
-                      return false;
-
-                    if(includedFile.is_absolute())
-                      return weight.file == includedFile;
-
-                    if((weight.file == sourceRepo / includedFile) || (weight.file == testRepo / includedFile))
-                      return true;
-
-                    if(const auto trial{file.parent_path() / includedFile}; fs::exists(trial))
-                      return weight.file == fs::canonical(trial);
-
-                    return false;
+                auto comparer{
+                  [](const file_info& weight, const file_info& incFile) {
+                    return weight.file.filename() < incFile.file.filename();
                   }
                 };
 
-                if(auto incIter{std::find_if(g.cbegin_node_weights(), g.cend_node_weights(), includeMatcher)};
-                  incIter != g.cend_node_weights())
+                if(auto[b, e]{std::equal_range(g.cbegin_node_weights(), g.cend_node_weights(), includedFile, comparer)}; b != e)
                 {
-                  if((file.stem() == includedFile.stem()) && i->stale)
-                  {
-                    g.mutate_node_weight(incIter, [](auto& w) { w.stale = true; });
-                  }
-
-                  const auto includeNodePos{static_cast<size_type>(distance(g.cbegin_node_weights(), incIter))};
-                  g.join(nodePos, includeNodePos);
-
-                  if(is_cpp(file))
-                  {
-                    // Furnish the associated hpp with the same dependencies,
-                    // as these are what ultimately determine whether or not
-                    // the test cpp is considered stale. Sorting of g ensures
-                    // that headers are directly after sources
-                    if(auto next{std::next(i)}; next != g.cend_node_weights())
-                    {
-                      if(next->file.stem() == file.stem())
+                  auto found{
+                    [&includedFile,&sourceRepo,&testRepo,&file](auto b, auto e) {
+                      while(b != e)
                       {
-                        const auto nextPos{static_cast<size_type>(distance(g.cbegin_node_weights(), next))};
-                        g.join(nextPos, includeNodePos);
+                        if(includedFile.is_absolute())
+                        {
+                          if(b->file == includedFile) return b;
+                          else                       continue;
+                        }
+
+                        if((b->file == sourceRepo / includedFile) || (b->file == testRepo / includedFile))
+                          return b;
+
+                        if(const auto trial{file.parent_path() / includedFile}; fs::exists(trial) && (b->file == fs::canonical(trial)))
+                          return b;
+
+                        ++b;
+                      }
+
+                      return b;
+                    }(b, e)
+                  };
+
+                  if(found != e)
+                  {
+                    if((file.stem() == includedFile.stem()) && i->stale)
+                    {
+                      g.mutate_node_weight(found, [](auto& w) { w.stale = true; });
+                    }
+
+                    const auto includeNodePos{static_cast<size_type>(distance(g.cbegin_node_weights(), found))};
+                    g.join(nodePos, includeNodePos);
+
+                    if(is_cpp(file))
+                    {
+                      // Furnish the associated hpp with the same dependencies,
+                      // as these are what ultimately determine whether or not
+                      // the test cpp is considered stale. Sorting of g ensures
+                      // that headers are directly after sources
+                      if(auto next{std::next(i)}; next != g.cend_node_weights())
+                      {
+                        if(next->file.stem() == file.stem())
+                        {
+                          const auto nextPos{static_cast<size_type>(distance(g.cbegin_node_weights(), next))};
+                          g.join(nextPos, includeNodePos);
+                        }
                       }
                     }
                   }
@@ -206,7 +223,17 @@ namespace sequoia::testing
 
     add_files(g, sourceRepo, timeStamp.value(), exeTimeStamp);
     add_files(g, testRepo, timeStamp.value(), exeTimeStamp);
-    g.sort_nodes([&g](auto i, auto j) { return (g.cbegin_node_weights() + i)->file < (g.cbegin_node_weights() + j)->file; });
+    g.sort_nodes([&g](auto i, auto j) {
+        const fs::path&
+          lfile{(g.cbegin_node_weights() + i)->file},
+          rfile{(g.cbegin_node_weights() + j)->file};
+
+        const fs::path
+          lname{lfile.filename()},
+          rname{rfile.filename()};
+
+        return lname != rname ? lname < rname : lfile < rfile ;
+      });
 
     build_dependencies(g, sourceRepo, testRepo);
 
