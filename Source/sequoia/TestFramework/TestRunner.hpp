@@ -435,7 +435,7 @@ namespace sequoia::testing
     family_map                m_SelectedFamilies{};
     source_list               m_SelectedSources{};
     std::vector<vessel>       m_NascentTests{};
-    std::vector<project_data> m_NascentProjects{};  
+    std::vector<project_data> m_NascentProjects{};
     recovery_paths            m_Recovery{};
     output_mode               m_OutputMode{output_mode::standard};
     update_mode               m_UpdateMode{update_mode::none};

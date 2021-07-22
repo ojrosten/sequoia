@@ -339,7 +339,7 @@ namespace sequoia::maths
     class NodeWeight,
     class EdgeWeightCreator=ownership::spawner<EdgeWeight>,
     class NodeWeightCreator=ownership::spawner<NodeWeight>,
-    class EdgeStorageTraits = contiguous_edge_storage_traits,
+    class EdgeStorageTraits = bucketed_edge_storage_traits,
     class NodeWeightStorageTraits = node_weight_storage_traits<NodeWeight>
   >
     requires (ownership::creator<EdgeWeightCreator> && ownership::creator<NodeWeightCreator>)
@@ -409,7 +409,7 @@ namespace sequoia::maths
     class NodeWeight,
     class EdgeWeightCreator=ownership::spawner<EdgeWeight>,
     class NodeWeightCreator=ownership::spawner<NodeWeight>,
-    class EdgeStorageTraits=contiguous_edge_storage_traits,
+    class EdgeStorageTraits=bucketed_edge_storage_traits,
     class NodeWeightStorageTraits=node_weight_storage_traits<NodeWeight>
   >
     requires (ownership::creator<EdgeWeightCreator> && ownership::creator<NodeWeightCreator>)
