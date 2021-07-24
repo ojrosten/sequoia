@@ -11,6 +11,8 @@
 #include "sequoia/Maths/Graph/GraphTraversalFunctions.hpp"
 #include "sequoia/Streaming/Streaming.hpp"
 
+#include <fstream>
+
 namespace sequoia::testing
 {
   namespace fs = std::filesystem;
@@ -71,6 +73,146 @@ namespace sequoia::testing
       return (ext == ".hpp") || (ext == ".h") || (ext == ".hxx");
     }
 
+    [[nodiscard]]
+    std::vector<fs::path> get_includes(const fs::path& file, std::string_view boundary)
+    {
+      std::vector<fs::path> includes{};
+
+      if(std::ifstream ifile{file})
+      {
+        constexpr auto eof{std::ifstream::traits_type::eof()};
+        using int_type = std::ifstream::int_type;
+
+        auto getPattern{
+          [&ifile](char delimiter) -> std::string {
+            const auto pos{ifile.tellg()};
+            if(ifile.ignore(std::numeric_limits<std::streamsize>::max(), delimiter))
+            {
+              if(const auto count{ifile.gcount()}; count > 1)
+              {
+                ifile.seekg(pos);
+                std::string str(count - 1, ' ');
+                ifile.read(str.data(), str.size());
+
+                return str;
+              }
+            }
+
+            return "";
+          }
+        };
+
+        int_type c{};
+        while((c = ifile.get()) != eof)
+        {
+          if(c == '/')
+          {
+            if(ifile.peek() == '/')
+            {
+              ifile.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            }
+            else if(ifile.peek() == '*')
+            {
+              ifile.get();
+              while(ifile)
+              {
+                ifile.ignore(std::numeric_limits<std::streamsize>::max(), '*');
+                if(ifile.peek() == '/')
+                {
+                  ifile.get();
+                  break;
+                }
+              }
+            }
+          }
+          else if(c == '#')
+          {
+            const auto followsHash{getPattern(' ')};
+            if(followsHash == "include")
+            {
+              int_type ch{};
+              while(std::isspace(ch = ifile.get())) {};
+
+              if(ifile)
+              {
+                auto includedFile{
+                  [getPattern, ch]() -> fs::path {
+                    if(ch == '\"')
+                    {
+                      return getPattern('\"');
+                    }
+                    else if(ch == '<')
+                    {
+                      return getPattern('>');
+                    }
+
+                    return "";
+                  }()
+                };
+                
+
+                if(includedFile.has_extension())
+                {
+                  if(includedFile.parent_path().empty())
+                  {
+                    includedFile = file.parent_path() / includedFile;
+                  }
+
+                  includes.push_back(includedFile);
+                }
+              }
+            }
+
+          }
+          else if(!boundary.empty() && (c == boundary.front()))
+          {
+            ifile.unget();
+            const auto pattern{getPattern('\n')};
+            if(const auto pos{pattern.find(boundary)}; pos != std::string::npos)
+            {
+              break;
+            }
+          }
+        }
+      }
+
+      return includes;
+    }
+
+    [[nodiscard]]
+    std::string read_to_boundary(const fs::path& file, std::string_view boundary)
+    {
+      if(boundary.empty()) return read_to_string(file);
+
+      if(std::ifstream ifile{file})
+      {
+        // change this: will fail if # is inside comment!
+        ifile.ignore(std::numeric_limits<std::streamsize>::max(), '#');
+        ifile.putback('#');
+
+        std::string str{};
+        for(std::string line; std::getline(ifile, line);)
+        {
+          //if(line.find("//") != std::string::npos) continue;
+
+          if(auto pos{line.find(boundary)}; pos == std::string::npos)
+          {
+            str.append(line);
+          }
+          else
+          {
+            if(pos != 0) str.append(line.substr(0, pos));
+
+            break;
+          }
+        }
+
+        return str;
+      }
+
+      throw std::runtime_error{report_failed_read(file)};
+    }
+
     using tests_dependency_graph = maths::graph<maths::directed_flavour::directed, maths::null_weight, file_info>;
     using node_iterator = tests_dependency_graph::const_iterator;
 
@@ -96,86 +238,63 @@ namespace sequoia::testing
       for(auto i{g.cbegin_node_weights()}; i != g.cend_node_weights(); ++i)
       {
         const auto nodePos{static_cast<size_type>(distance(g.cbegin_node_weights(), i))};
+        const auto& file{i->file};
 
-        const auto text{read_to_string(i->file)};
-        std::string::size_type pos{};
-        constexpr auto npos{std::string::npos};
-        while(pos != npos)
+        for(const auto& includedFile : get_includes(file, "namespace"))
         {
-          constexpr std::string_view include{"#include"};
-          pos = text.find(include, pos);
-          if(pos != npos)
+          auto comparer{
+            [](const file_info& weight, const file_info& incFile) {
+              return weight.file.filename() < incFile.file.filename();
+            }
+          };
+
+          if(auto [b, e] {std::equal_range(g.cbegin_node_weights(), g.cend_node_weights(), includedFile, comparer)}; b != e)
           {
-            pos += include.size();
-            const auto start{text.find_first_of("\"<", pos)};
-            const auto end{text.find_first_of("\">", start + 1)};
-            if((start != npos) && (end != npos) && (((text[start] == '\"') && (text[end] == '\"')) || ((text[start] == '<') && (text[end] == '>'))))
-            {
-              fs::path includedFile{text.substr(start + 1, end - 1 - start)};
-              if(includedFile.has_extension())
-              {
-                const auto& file{i->file};
-                if(includedFile.parent_path().empty())
+            auto found{
+              [&includedFile,&sourceRepo,&testRepo,&file](auto b, auto e) {
+                while(b != e)
                 {
-                  includedFile = file.parent_path() / includedFile;
+                  if(includedFile.is_absolute())
+                  {
+                    if(b->file == includedFile) return b;
+                    else                       continue;
+                  }
+
+                  if((b->file == sourceRepo / includedFile) || (b->file == testRepo / includedFile))
+                    return b;
+
+                  if(const auto trial{file.parent_path() / includedFile}; fs::exists(trial) && (b->file == fs::canonical(trial)))
+                    return b;
+
+                  ++b;
                 }
 
-                auto comparer{
-                  [](const file_info& weight, const file_info& incFile) {
-                    return weight.file.filename() < incFile.file.filename();
-                  }
-                };
+                return b;
+              }(b, e)
+            };
 
-                if(auto[b, e]{std::equal_range(g.cbegin_node_weights(), g.cend_node_weights(), includedFile, comparer)}; b != e)
+            if(found != e)
+            {
+              if((file.stem() == includedFile.stem()) && i->stale)
+              {
+                g.mutate_node_weight(found, [](auto& w) { w.stale = true; });
+              }
+
+              const auto includeNodePos{static_cast<size_type>(distance(g.cbegin_node_weights(), found))};
+              g.join(nodePos, includeNodePos);
+
+              if(is_cpp(file))
+              {
+                // Furnish the associated hpp with the same dependencies,
+                // as these are what ultimately determine whether or not
+                // the test cpp is considered stale. Sorting of g ensures
+                // that headers are directly after sources
+                if(auto next{std::next(i)}; next != g.cend_node_weights())
                 {
-                  auto found{
-                    [&includedFile,&sourceRepo,&testRepo,&file](auto b, auto e) {
-                      while(b != e)
-                      {
-                        if(includedFile.is_absolute())
-                        {
-                          if(b->file == includedFile) return b;
-                          else                       continue;
-                        }
-
-                        if((b->file == sourceRepo / includedFile) || (b->file == testRepo / includedFile))
-                          return b;
-
-                        if(const auto trial{file.parent_path() / includedFile}; fs::exists(trial) && (b->file == fs::canonical(trial)))
-                          return b;
-
-                        ++b;
-                      }
-
-                      return b;
-                    }(b, e)
-                  };
-
-                  if(found != e)
+                  if(next->file.stem() == file.stem())
                   {
-                    if((file.stem() == includedFile.stem()) && i->stale)
-                    {
-                      g.mutate_node_weight(found, [](auto& w) { w.stale = true; });
-                    }
-
-                    const auto includeNodePos{static_cast<size_type>(distance(g.cbegin_node_weights(), found))};
-                    g.join(nodePos, includeNodePos);
-
-                    if(is_cpp(file))
-                    {
-                      // Furnish the associated hpp with the same dependencies,
-                      // as these are what ultimately determine whether or not
-                      // the test cpp is considered stale. Sorting of g ensures
-                      // that headers are directly after sources
-                      if(auto next{std::next(i)}; next != g.cend_node_weights())
-                      {
-                        if(next->file.stem() == file.stem())
-                        {
-                          const auto nextPos{static_cast<size_type>(distance(g.cbegin_node_weights(), next))};
-                          g.join(nextPos, includeNodePos);
-                        }
-                      }
-                    }
+                    const auto nextPos{static_cast<size_type>(distance(g.cbegin_node_weights(), next))};
+                    g.join(nextPos, includeNodePos);
                   }
                 }
               }
