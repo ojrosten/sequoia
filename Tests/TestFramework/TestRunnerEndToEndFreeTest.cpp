@@ -215,6 +215,10 @@ namespace sequoia::testing
 
     create_run_and_check(LINE("Test Runner Creation Output"), b);
 
+    //=================== Rerun with async execution ===================//
+
+    run_and_check(LINE("Run asynchronously"), b, "RunAsync", "-a");
+
     //=================== Change some test materials and run with prune ===================//
 
     fs::copy(auxiliary_materials() / "ModifiedTests" / "FooTest.cpp", generated_project() / "Tests" / "Stuff", fs::copy_options::overwrite_existing);
@@ -247,7 +251,7 @@ namespace sequoia::testing
     copy_aux_materials("ModifiedSource/UsefulThings.hpp", "Source/generatedProject/Utilities");
     run_and_check(LINE("Attempt to prune when build is out of date"), b, "PruneWithStaleBuild", "prune");
 
-    //=================== Change several of the tests, and some of the source, rebuild and run ===================//
+    //=================== Change several of the tests, and some of the source, rebuild and run asynchronously ===================//
 
     copy_aux_materials("ModifiedSource/UsefulThings.cpp",        "Source/generatedProject/Utilities");
     copy_aux_materials("ModifiedSource/Maths",                   "Source/generatedProject/Maths");
@@ -256,7 +260,7 @@ namespace sequoia::testing
     copy_aux_materials("ModifiedTests/Maths",                    "Tests/Maths");
     copy_aux_materials("ModifiedTests/Thing",                    "Tests/Utilities/Thing");
 
-    rebuild_run_and_check(LINE("Rebuild and run after source/test changes (pruned)"), b, "RebuiltOutput", "CMakeOutput4.txt", "BuildOutput4.txt", "prune --cutoff namespace");
+    rebuild_run_and_check(LINE("Rebuild and run after source/test changes (pruned)"), b, "RebuiltOutput", "CMakeOutput4.txt", "BuildOutput4.txt", "prune --cutoff namespace -a");
 
     check_equivalence(LINE("Test Runner Output"), working_materials() / "RebuiltOutput", predictive_materials() / "RebuiltOutput");
     fs::create_directory(working_materials() / "TestAll");
