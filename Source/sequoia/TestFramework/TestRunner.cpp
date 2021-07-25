@@ -1147,7 +1147,7 @@ namespace sequoia::testing
     {
       if((!m_SelectedFamilies.empty() || !m_SelectedSources.empty()))
       {
-        stream() << warning("--prune ignored if either test families or test source files are specified");
+        stream() << warning("'prune' ignored if either test families or test source files are specified");
         m_TimeStamps.ondisk = std::nullopt;
       }
       else
@@ -1392,7 +1392,7 @@ namespace sequoia::testing
       }
       else if(pruned())
       {
-        stream() << "Nothing to do: no changes since the last run, therefore --prune has pruned all tests\n";
+        stream() << "Nothing to do: no changes since the last run, therefore 'prune' has pruned all tests\n";
       }
       else if(!selected)
       {
