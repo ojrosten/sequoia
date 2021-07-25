@@ -197,7 +197,8 @@ namespace sequoia::testing
     // pre-condition: the nodes of g have been sorted by file path
     void build_dependencies(tests_dependency_graph& g,
                             const std::filesystem::path& sourceRepo,
-                            const std::filesystem::path& testRepo)
+                            const std::filesystem::path& testRepo,
+                            std::string_view cutoff)
     {
       using size_type = tests_dependency_graph::size_type;
 
@@ -206,7 +207,7 @@ namespace sequoia::testing
         const auto nodePos{static_cast<size_type>(distance(g.cbegin_node_weights(), i))};
         const auto& file{i->file};
 
-        for(const auto& includedFile : get_includes(file, "namespace"))
+        for(const auto& includedFile : get_includes(file, cutoff))
         {
           auto comparer{
             [](const file_info& weight, const file_info& incFile) {
@@ -292,11 +293,13 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::optional<std::vector<std::filesystem::path>> tests_to_run(const fs::path& sourceRepo,
-                                                                 const fs::path& testRepo,
-                                                                 const fs::path& materialsRepo,
-                                                                 const std::optional<fs::file_time_type>& timeStamp,
-                                                                 const std::optional<fs::file_time_type>& exeTimeStamp)
+  std::optional<std::vector<std::filesystem::path>>
+  tests_to_run(const fs::path& sourceRepo,
+               const fs::path& testRepo,
+               const fs::path& materialsRepo,
+               const std::optional<fs::file_time_type>& timeStamp,
+               const std::optional<fs::file_time_type>& exeTimeStamp,
+               std::string_view cutoff)
   {
     using namespace maths;
 
@@ -320,7 +323,7 @@ namespace sequoia::testing
         return lname != rname ? lname < rname : lfile < rfile ;
       });
 
-    build_dependencies(g, sourceRepo, testRepo);
+    build_dependencies(g, sourceRepo, testRepo, cutoff);
 
     auto nodesLate{
       [&g](const std::size_t node) {

@@ -418,6 +418,12 @@ namespace sequoia::testing
       stamp ondisk, executable;
     };
 
+    struct prune_info
+    {
+      time_stamps stamps{};
+      std::string include_cutoff{};
+    };
+
     friend nascent_test_data;
 
     using family_map        = std::map<std::string, bool, std::less<>>;
@@ -428,9 +434,9 @@ namespace sequoia::testing
     std::string               m_Copyright{};
     project_paths             m_Paths;
     indentation               m_CodeIndent{"  "};
-    time_stamps               m_TimeStamps{};
     std::ostream*             m_Stream;
-    
+
+    prune_info                m_PruneInfo{};
     std::vector<test_family>  m_Families{};
     family_map                m_SelectedFamilies{};
     source_list               m_SelectedSources{};

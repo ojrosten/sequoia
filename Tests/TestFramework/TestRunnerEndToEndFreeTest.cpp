@@ -69,7 +69,7 @@ namespace sequoia::testing
            && shell_command{"", run_cmd().append(" select Plurgh.cpp test Absent select Foo test FooTest.cpp"), output / "FailedSpecifiedSourceOutput.txt"}
            && shell_command{"", run_cmd().append(" test Foo"), output / "SpecifiedFamilyOutput.txt"}
            && shell_command{"", run_cmd().append(" test Foo prune"), output / "SpecifiedFamilyPruneConflictOutput.txt"}
-           && shell_command{"", run_cmd().append(" prune"), output / "FullyPrunedOutput.txt"}
+           && shell_command{"", run_cmd().append(" prune --cutoff namespace"), output / "FullyPrunedOutput.txt"}
            && shell_command{"", run_cmd().append(" -v"), output / "VerboseOutput.txt"}
            && shell_command{"", run_cmd().append(" --help"), output / "HelpOutput.txt"});
   }
@@ -221,7 +221,7 @@ namespace sequoia::testing
     fs::last_write_time(generated_project() / "Tests" / "Stuff" / "FooTest.cpp", fs::file_time_type::clock::now());
     fs::copy(auxiliary_materials() / "TestMaterials", generated_project() / "TestMaterials", fs::copy_options::recursive | fs::copy_options::overwrite_existing);
 
-    rebuild_run_and_check(LINE("Change Materials (pruned)"), b, "RunWithChangedMaterials", "CMakeOutput3.txt", "BuildOutput3.txt", "prune");
+    rebuild_run_and_check(LINE("Change Materials (pruned)"), b, "RunWithChangedMaterials", "CMakeOutput3.txt", "BuildOutput3.txt", "prune --cutoff namespace");
 
     // Check materials are unchanged
     fs::copy(generated_project() / "TestMaterials", working_materials() / "OriginalTestMaterials", fs::copy_options::recursive);
@@ -229,7 +229,7 @@ namespace sequoia::testing
 
     //=================== Rerun with prune but update materials ===================//
 
-    run_and_check(LINE("Updated Materials"), b, "RunWithUpdateOutput", "prune u");
+    run_and_check(LINE("Updated Materials"), b, "RunWithUpdateOutput", "prune --cutoff namespace u");
 
     fs::copy(generated_project() / "TestMaterials", working_materials() / "UpdatedTestMaterials", fs::copy_options::recursive);
     check_equivalence(LINE("Updated Test Materials"), working_materials() / "UpdatedTestMaterials", predictive_materials() / "UpdatedTestMaterials");
@@ -256,7 +256,7 @@ namespace sequoia::testing
     copy_aux_materials("ModifiedTests/Maths",                    "Tests/Maths");
     copy_aux_materials("ModifiedTests/Thing",                    "Tests/Utilities/Thing");
 
-    rebuild_run_and_check(LINE("Rebuild and run after source/test changes (pruned)"), b, "RebuiltOutput", "CMakeOutput4.txt", "BuildOutput4.txt", "prune");
+    rebuild_run_and_check(LINE("Rebuild and run after source/test changes (pruned)"), b, "RebuiltOutput", "CMakeOutput4.txt", "BuildOutput4.txt", "prune --cutoff namespace");
 
     check_equivalence(LINE("Test Runner Output"), working_materials() / "RebuiltOutput", predictive_materials() / "RebuiltOutput");
     fs::create_directory(working_materials() / "TestAll");

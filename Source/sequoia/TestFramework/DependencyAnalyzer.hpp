@@ -19,5 +19,6 @@ namespace sequoia::testing
                                                                  const std::filesystem::path& testRepo,
                                                                  const std::filesystem::path& materialsRepo,
                                                                  const std::optional<std::filesystem::file_time_type>& timeStamp,
-                                                                 const std::optional<std::filesystem::file_time_type>& exeTimeStamp);
+                                                                 const std::optional<std::filesystem::file_time_type>& exeTimeStamp,
+                                                                 std::string_view cutoff);
 }

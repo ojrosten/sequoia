@@ -37,6 +37,6 @@ namespace sequoia::testing
 
     void test_dependencies();
 
-    void check_tests_to_run(std::string_view description, const information& info, const std::vector<std::filesystem::path>& makeStale, const std::vector<std::filesystem::path>& toRun);
+    void check_tests_to_run(std::string_view description, const information& info, std::string_view cutoff, const std::vector<std::filesystem::path>& makeStale, const std::vector<std::filesystem::path>& toRun);
   };
 }

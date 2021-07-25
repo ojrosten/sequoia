@@ -904,7 +904,6 @@ namespace sequoia::testing
     : m_Copyright{std::move(copyright)}
     , m_Paths{std::move(paths)}
     , m_CodeIndent{std::move(codeIndent)}
-    , m_TimeStamps{}
     , m_Stream{&stream}
   {
     check_indent(m_CodeIndent);
@@ -1022,7 +1021,12 @@ namespace sequoia::testing
                   },
                   {"prune", {"p"}, {},
                     [this](const arg_list&) {
-                      m_TimeStamps.ondisk = time_stamps::from_file(timestamp_path(m_Paths.output()));
+                      m_PruneInfo.stamps.ondisk = time_stamps::from_file(timestamp_path(m_Paths.output()));
+                    },
+                    {{"--cutoff", {"-c"}, {"Cutoff for #include search e.g. 'namespace'"},
+                      [this](const arg_list& args) {
+                        m_PruneInfo.include_cutoff = args[0];
+                      }}
                     }
                   },
                   {"create", {"c"}, {}, [](const arg_list&) {},
@@ -1120,7 +1124,7 @@ namespace sequoia::testing
                   };
 
                   if(fs::exists(exePath))
-                    m_TimeStamps.executable = fs::last_write_time(exePath);
+                    m_PruneInfo.stamps.executable = fs::last_write_time(exePath);
                 })
         };
 
@@ -1148,17 +1152,17 @@ namespace sequoia::testing
       if((!m_SelectedFamilies.empty() || !m_SelectedSources.empty()))
       {
         stream() << warning("'prune' ignored if either test families or test source files are specified");
-        m_TimeStamps.ondisk = std::nullopt;
+        m_PruneInfo.stamps.ondisk = std::nullopt;
       }
       else
       {
         stream() << "\nAnalyzing dependencies...\n";
         const auto start{std::chrono::steady_clock::now()};
 
-        if(const auto toRun{tests_to_run(m_Paths.source_root(), m_Paths.tests(), m_Paths.test_materials(), m_TimeStamps.ondisk, m_TimeStamps.executable)})
+        if(const auto toRun{tests_to_run(m_Paths.source_root(), m_Paths.tests(), m_Paths.test_materials(), m_PruneInfo.stamps.ondisk, m_PruneInfo.stamps.executable, m_PruneInfo.include_cutoff)})
         {
           std::transform(toRun->begin(), toRun->end(), std::back_inserter(m_SelectedSources),
-            [](const std::filesystem::path& file)  -> std::pair<std::filesystem::path, bool> { return {file, false}; });
+            [](const std::filesystem::path& file) -> std::pair<std::filesystem::path, bool> { return {file, false}; });
         }
 
         const auto end{std::chrono::steady_clock::now()};
@@ -1188,7 +1192,7 @@ namespace sequoia::testing
   [[nodiscard]]
   bool test_runner::pruned() const noexcept
   {
-    return m_TimeStamps.ondisk.has_value();
+    return m_PruneInfo.stamps.ondisk.has_value();
   }
 
   bool test_runner::mark_family(std::string_view name)
@@ -1408,7 +1412,7 @@ namespace sequoia::testing
           std::ofstream ostream{stampFile};
         }
 
-        fs::last_write_time(stampFile, m_TimeStamps.current);
+        fs::last_write_time(stampFile, m_PruneInfo.stamps.current);
       }
     }
 

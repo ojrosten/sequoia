@@ -18,7 +18,7 @@ namespace sequoia::testing
     return __FILE__;
   }
 
-  void dependency_analyzer_free_test::check_tests_to_run(std::string_view description, const information& info, const std::vector<std::filesystem::path>& makeStale, const std::vector<std::filesystem::path>& toRun)
+  void dependency_analyzer_free_test::check_tests_to_run(std::string_view description, const information& info, std::string_view cutoff, const std::vector<std::filesystem::path>& makeStale, const std::vector<std::filesystem::path>& toRun)
   {
     namespace fs = std::filesystem;
     for(const auto& f : makeStale)
@@ -26,7 +26,7 @@ namespace sequoia::testing
       fs::last_write_time(f, std::chrono::file_clock::now());
     }
 
-    test_list actual{tests_to_run(info.source_repo, info.tests_repo, info.materials, info.reset_time, info.exe_time_stamp)};
+    test_list actual{tests_to_run(info.source_repo, info.tests_repo, info.materials, info.reset_time, info.exe_time_stamp, cutoff)};
     if(actual.has_value())
       std::sort(actual->begin(), actual->end());
 
@@ -40,7 +40,7 @@ namespace sequoia::testing
       fs::last_write_time(f, info.reset_time);
     }
 
-    check_equality(append_lines(description, "Nothing Stale"), tests_to_run(info.source_repo, info.tests_repo, info.materials, info.reset_time, info.exe_time_stamp), test_list{{}});
+    check_equality(append_lines(description, "Nothing Stale"), tests_to_run(info.source_repo, info.tests_repo, info.materials, info.reset_time, info.exe_time_stamp, cutoff), test_list{{}});
   }
 
   void dependency_analyzer_free_test::run_tests()
@@ -63,7 +63,7 @@ namespace sequoia::testing
     check_exception_thrown<std::runtime_error>(LINE("Executable out of date"), 
       [this]() {
         const auto now{std::chrono::file_clock::now()};
-        return tests_to_run(m_Info.source_repo, m_Info.tests_repo, m_Info.materials, now, m_Info.reset_time);
+        return tests_to_run(m_Info.source_repo, m_Info.tests_repo, m_Info.materials, now, m_Info.reset_time, "");
       });
   }
 #
@@ -71,41 +71,51 @@ namespace sequoia::testing
   {
    
 
-    check_equality(LINE("No timestamp"), tests_to_run(m_Info.source_repo, m_Info.tests_repo, m_Info.materials, std::nullopt, std::nullopt), test_list{});
-    check_equality(LINE("Nothing stale"), tests_to_run(m_Info.source_repo, m_Info.tests_repo, m_Info.materials, std::chrono::file_clock::now(), std::nullopt), test_list{{}});
+    check_equality(LINE("No timestamp"), tests_to_run(m_Info.source_repo, m_Info.tests_repo, m_Info.materials, std::nullopt, std::nullopt, ""), test_list{});
+    check_equality(LINE("Nothing stale"), tests_to_run(m_Info.source_repo, m_Info.tests_repo, m_Info.materials, std::chrono::file_clock::now(), std::nullopt, ""), test_list{{}});
 
-    check_tests_to_run(LINE("Test cpp stale"), m_Info, {{m_Info.tests_repo / "HouseAllocationTest.cpp"}}, {{"HouseAllocationTest.cpp"}});
-    check_tests_to_run(LINE("Test hpp stale"), m_Info, {{m_Info.tests_repo / "HouseAllocationTest.cpp"}}, {{"HouseAllocationTest.cpp"}});
+    check_tests_to_run(LINE("Test cpp stale (no cutoff)"), m_Info, "", { {m_Info.tests_repo / "HouseAllocationTest.cpp"}}, {{"HouseAllocationTest.cpp"}});
+    check_tests_to_run(LINE("Test cpp stale"), m_Info, "namespace", {{m_Info.tests_repo / "HouseAllocationTest.cpp"}}, {{"HouseAllocationTest.cpp"}});
+    check_tests_to_run(LINE("Test hpp stale (no cutoff)"), m_Info, "", {{m_Info.tests_repo / "HouseAllocationTest.cpp"}}, {{"HouseAllocationTest.cpp"}});
+    check_tests_to_run(LINE("Test hpp stale"), m_Info, "namespace", { {m_Info.tests_repo / "HouseAllocationTest.cpp"}}, {{"HouseAllocationTest.cpp"}});
     check_tests_to_run(LINE("Test utils stale"),
                        m_Info,
+                       "namespace",
                        {{m_Info.tests_repo / "Maths" / "ProbabilityTestingUtilities.hpp"}},
                        {{"Maths/ProbabilityTest.cpp"}, {"Maths/ProbabilityTestingDiagnostics.cpp"}});
     check_tests_to_run(LINE("Reused utils stale"),
                        m_Info,
+                       "namespace",
                        {{m_Info.tests_repo / "Stuff" / "OldSchoolTestingUtilities.hpp"}},
                        {{"Maybe/MaybeTest.cpp"}, {"Stuff/OldschoolTest.cpp"}, {"Stuff/OldschoolTestingDiagnostics.cpp"}});
     check_tests_to_run(LINE("Reused utils stale, relative path"),
                        m_Info,
+                       "namespace",
                        {{m_Info.tests_repo / "Stuff" / "FooTestingUtilities.hpp"}},
                        {{"Stuff/FooTest.cpp"}, {"Stuff/FooTestingDiagnostics.cpp"}, {"Utilities/Thing/UniqueThingTest.cpp"}, {"Utilities/Thing/UniqueThingTestingDiagnostics.cpp"}});
     check_tests_to_run(LINE("Source cpp stale"),
                        m_Info,
+                      "namespace",
                        {{m_Info.source_repo / "generatedProject" / "Maths" / "Probability.cpp"}},
                        {{"Maths/ProbabilityTest.cpp"}, {"Maths/ProbabilityTestingDiagnostics.cpp"}});
     check_tests_to_run(LINE("Source hpp stale"),
                        m_Info,
+                      "namespace",
                        {{m_Info.source_repo / "generatedProject" / "Maths" / "Probability.hpp"}},
                        {{"Maths/ProbabilityTest.cpp"}, {"Maths/ProbabilityTestingDiagnostics.cpp"}});
     check_tests_to_run(LINE("Source cpp indirectly stale via included header"),
                        m_Info,
+                      "namespace",
                        {{m_Info.source_repo / "generatedProject" / "Maths" / "Helper.hpp"}},
                        {{"Maths/ProbabilityTest.cpp"}, {"Maths/ProbabilityTestingDiagnostics.cpp"}});
     check_tests_to_run(LINE("Source cpp indirectly stale via cpp definitions for included header"),
                        m_Info,
+                       "namespace",
                        {{m_Info.source_repo / "generatedProject" / "Maths" / "Helper.cpp"}},
                        {{"Maths/ProbabilityTest.cpp"}, {"Maths/ProbabilityTestingDiagnostics.cpp"}});
     check_tests_to_run(LINE("Materials stale"),
                        m_Info,
+                       "namespace",
                        {{m_Info.materials / "Stuff" / "FooTest" / "Prediction" / "RepresentativeCasesTemp" / "NoSeqpat" / "baz.txt"}},
                        {{"Stuff/FooTest.cpp"}});
    
