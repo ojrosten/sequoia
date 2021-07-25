@@ -9,6 +9,7 @@
 #include "generatedProject/Stuff/Bar.hpp"
 
 /* #include "Stuff/FooTestingUtilities.hpp" */
+/** #include "Stuff/FooTestingUtilities.hpp" **/
 // #include "Stuff/FooTestingUtilities.hpp"
 
 namespace sequoia::testing
