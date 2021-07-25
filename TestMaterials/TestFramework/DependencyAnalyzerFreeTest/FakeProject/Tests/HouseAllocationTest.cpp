@@ -7,6 +7,9 @@
 
 #include "HouseAllocationTest.hpp"
 
+/* Check that 'namespace' inside a c-style comment is ignored */
+// Check that 'namespace' inside a comment is ignored
+
 namespace sequoia::testing
 {
 	[[nodiscard]]
