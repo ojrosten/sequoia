@@ -76,20 +76,20 @@ namespace sequoia::testing
     [[nodiscard]]
     std::string from_stream(std::istream& istr, char delimiter)
     {
-      const auto pos{istr.tellg()};
-      if(istr.ignore(std::numeric_limits<std::streamsize>::max(), delimiter))
-      {
-        if(const auto count{istr.gcount()}; count > 1)
-        {
-          istr.seekg(pos);
-          std::string str(count - 1, ' ');
-          istr.read(str.data(), str.size());
+      constexpr auto eof{std::ifstream::traits_type::eof()};
+      using int_type = std::ifstream::int_type;
 
-          return str;
-        }
+      std::string str{};
+
+      int_type c{};
+      while((c = istr.get()) != eof)
+      {
+        if(c == delimiter) break;
+
+        str.push_back(static_cast<char>(c));
       }
 
-      return "";
+      return str;
     }
 
     [[nodiscard]]
