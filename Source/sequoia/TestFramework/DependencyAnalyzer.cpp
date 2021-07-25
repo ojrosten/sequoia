@@ -93,7 +93,7 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    std::vector<fs::path> get_includes(const fs::path& file, std::string_view boundary)
+    std::vector<fs::path> get_includes(const fs::path& file, std::string_view cutoff)
     {
       std::vector<fs::path> includes{};
 
@@ -164,11 +164,11 @@ namespace sequoia::testing
             }
 
           }
-          else if(!boundary.empty() && (c == boundary.front()))
+          else if(!cutoff.empty() && (c == cutoff.front()))
           {
             ifile.unget();
             const auto pattern{from_stream(ifile, '\n')};
-            if(const auto pos{pattern.find(boundary)}; pos != std::string::npos)
+            if(const auto pos{pattern.find(cutoff)}; pos != std::string::npos)
             {
               break;
             }
