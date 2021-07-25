@@ -456,6 +456,8 @@ namespace sequoia::testing
 
     void process_args(int argc, char** argv);
 
+    void finalize_concurrency_mode();
+
     [[nodiscard]]
     test_family::summary process_family(const test_family::results& results);
 
@@ -488,10 +490,6 @@ namespace sequoia::testing
 
     [[nodiscard]]
     static std::string stringify(concurrency_mode mode);
-
-    /*template<class Nascent>
-    [[nodiscard]]
-    std::string create_file(const Nascent& nascent, std::string_view stub) const;*/
 
     void create_tests();
 

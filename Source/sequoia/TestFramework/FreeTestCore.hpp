@@ -231,7 +231,8 @@ namespace sequoia::testing
 
   /*! \brief Specifies the granularity at which concurrent execution is applied */
   enum class concurrency_mode{
-    serial=-1, /// serial execution
+    serial,    /// serial execution
+    dynamic,   /// determined at runtime
     family,    /// families of tests are executed concurrently
     test,      /// tests are executed concurrently, independently of their families
   };

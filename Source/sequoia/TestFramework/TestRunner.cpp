@@ -1092,13 +1092,13 @@ namespace sequoia::testing
                   {"--async", {"-a"}, {},
                     [this](const arg_list&) {
                       if(m_ConcurrencyMode == concurrency_mode::serial)
-                        m_ConcurrencyMode = concurrency_mode::family;
+                        m_ConcurrencyMode = concurrency_mode::dynamic;
                     }
                   },
                   {"--async-depth", {"-ad"}, {"depth [0,1]"},
                     [this](const arg_list& args) {
                       const int i{std::clamp(std::stoi(args.front()), 0, 1)};
-                      m_ConcurrencyMode = static_cast<concurrency_mode>(i);
+                      m_ConcurrencyMode = i ? concurrency_mode::test : concurrency_mode::family;
                     }
                   },
                   {"--verbose",  {"-v"}, {}, [this](const arg_list&) { m_OutputMode |= output_mode::verbose; }},
@@ -1180,6 +1180,8 @@ namespace sequoia::testing
     {
     case concurrency_mode::serial:
       return "Serial";
+    case concurrency_mode::dynamic:
+      return "Dynamic";
     case concurrency_mode::family:
       return "Family";
     case concurrency_mode::test:
@@ -1352,10 +1354,27 @@ namespace sequoia::testing
     }
   }
 
+  void test_runner::finalize_concurrency_mode()
+  {
+    if(m_ConcurrencyMode == concurrency_mode::dynamic)
+    {
+      if(!m_SelectedSources.empty() || (m_Families.size() < 4))
+      {
+        m_ConcurrencyMode = concurrency_mode::test;
+      }
+      else
+      {
+        m_ConcurrencyMode = concurrency_mode::family;
+      }
+    }
+  }
+
   void test_runner::run_tests()
   {
     using namespace std::chrono;
     const auto time{steady_clock::now()};
+
+    finalize_concurrency_mode();
 
     const bool selected{!m_SelectedFamilies.empty() || !m_SelectedSources.empty()};
     if((m_NascentTests.empty() && m_NascentProjects.empty()) || selected)
