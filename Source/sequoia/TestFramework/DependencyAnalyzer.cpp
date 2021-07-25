@@ -74,6 +74,25 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
+    std::string from_stream(std::istream& istr, char delimiter)
+    {
+      const auto pos{istr.tellg()};
+      if(istr.ignore(std::numeric_limits<std::streamsize>::max(), delimiter))
+      {
+        if(const auto count{istr.gcount()}; count > 1)
+        {
+          istr.seekg(pos);
+          std::string str(count - 1, ' ');
+          istr.read(str.data(), str.size());
+
+          return str;
+        }
+      }
+
+      return "";
+    }
+
+    [[nodiscard]]
     std::vector<fs::path> get_includes(const fs::path& file, std::string_view boundary)
     {
       std::vector<fs::path> includes{};
@@ -82,25 +101,6 @@ namespace sequoia::testing
       {
         constexpr auto eof{std::ifstream::traits_type::eof()};
         using int_type = std::ifstream::int_type;
-
-        auto getPattern{
-          [&ifile](char delimiter) -> std::string {
-            const auto pos{ifile.tellg()};
-            if(ifile.ignore(std::numeric_limits<std::streamsize>::max(), delimiter))
-            {
-              if(const auto count{ifile.gcount()}; count > 1)
-              {
-                ifile.seekg(pos);
-                std::string str(count - 1, ' ');
-                ifile.read(str.data(), str.size());
-
-                return str;
-              }
-            }
-
-            return "";
-          }
-        };
 
         int_type c{};
         while((c = ifile.get()) != eof)
@@ -127,7 +127,7 @@ namespace sequoia::testing
           }
           else if(c == '#')
           {
-            const auto followsHash{getPattern(' ')};
+            const auto followsHash{from_stream(ifile, ' ')};
             if(followsHash == "include")
             {
               int_type ch{};
@@ -136,14 +136,14 @@ namespace sequoia::testing
               if(ifile)
               {
                 auto includedFile{
-                  [getPattern, ch]() -> fs::path {
+                  [&ifile, ch]() -> fs::path {
                     if(ch == '\"')
                     {
-                      return getPattern('\"');
+                      return from_stream(ifile, '\"');
                     }
                     else if(ch == '<')
                     {
-                      return getPattern('>');
+                      return from_stream(ifile, '>');
                     }
 
                     return "";
@@ -167,7 +167,7 @@ namespace sequoia::testing
           else if(!boundary.empty() && (c == boundary.front()))
           {
             ifile.unget();
-            const auto pattern{getPattern('\n')};
+            const auto pattern{from_stream(ifile, '\n')};
             if(const auto pos{pattern.find(boundary)}; pos != std::string::npos)
             {
               break;
@@ -177,40 +177,6 @@ namespace sequoia::testing
       }
 
       return includes;
-    }
-
-    [[nodiscard]]
-    std::string read_to_boundary(const fs::path& file, std::string_view boundary)
-    {
-      if(boundary.empty()) return read_to_string(file);
-
-      if(std::ifstream ifile{file})
-      {
-        // change this: will fail if # is inside comment!
-        ifile.ignore(std::numeric_limits<std::streamsize>::max(), '#');
-        ifile.putback('#');
-
-        std::string str{};
-        for(std::string line; std::getline(ifile, line);)
-        {
-          //if(line.find("//") != std::string::npos) continue;
-
-          if(auto pos{line.find(boundary)}; pos == std::string::npos)
-          {
-            str.append(line);
-          }
-          else
-          {
-            if(pos != 0) str.append(line.substr(0, pos));
-
-            break;
-          }
-        }
-
-        return str;
-      }
-
-      throw std::runtime_error{report_failed_read(file)};
     }
 
     using tests_dependency_graph = maths::graph<maths::directed_flavour::directed, maths::null_weight, file_info>;
