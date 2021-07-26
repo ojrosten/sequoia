@@ -10,12 +10,31 @@
 
 #include "Parsing/CommandLineArgumentsTestingUtilities.hpp"
 
+#include <numeric>
+
 namespace sequoia::testing
 {
   namespace fs = std::filesystem;
 
   namespace
   {
+    [[nodiscard]]
+    std::vector<int> extract_timings(const fs::path& file)
+    {
+      std::vector<int> timings{};
+
+      if(std::ifstream ifile{file})
+      {
+        while(ifile.ignore(std::numeric_limits<std::streamsize>::max(), '[') && !ifile.eof())
+        {
+          timings.push_back(0);
+          ifile >> timings.back();
+        }
+      }
+
+      return timings;
+    }
+
     [[nodiscard]]
     std::string run_cmd()
     {
@@ -155,6 +174,25 @@ namespace sequoia::testing
     check(append_lines(description, "Build output existance"), fs::exists(b.buildDir / BuildOutput));
   }
 
+  void test_runner_end_to_end_test::check_timings(std::string_view description, const std::filesystem::path& relOutputFile, const int speedupFactor)
+  {
+    const auto timings{extract_timings(working_materials() / relOutputFile)};
+    if(check(append_lines(description, "At least three timings"), timings.size() > 2))
+    {
+      const auto sum{std::accumulate(timings.cbegin(), --timings.cend(), 0)};
+
+      if(speedupFactor == 1)
+      {
+        const auto roundingError{(static_cast<int>(timings.size()) - 1)};
+        check_approx_equality(append_lines(description, "Sum of timings"), within_tolerance{roundingError}, sum, timings.back());
+      }
+      else
+      {
+        check(append_lines(description, "Sum of timings"), sum / 2 >= timings.back());
+      }
+    }
+  }
+
   void test_runner_end_to_end_test::run_tests()
   {
     test_project_creation();
@@ -214,10 +252,12 @@ namespace sequoia::testing
     //=================== Create tests and run ===================//
 
     create_run_and_check(LINE("Test Runner Creation Output"), b);
+    check_timings("Serial run", fs::path{"Output/TestRunOutput.txt"}, 1);
 
     //=================== Rerun with async execution ===================//
 
     run_and_check(LINE("Run asynchronously"), b, "RunAsync", "-a");
+    check_timings("Async run", fs::path{"RunAsync/TestRunOutput.txt"}, 2);
 
     //=================== Change some test materials and run with prune ===================//
 

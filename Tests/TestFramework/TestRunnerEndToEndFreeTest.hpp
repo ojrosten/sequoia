@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "sequoia/TestFramework/FreeTestCore.hpp"
+#include "sequoia/TestFramework/FuzzyTestCore.hpp"
 #include "sequoia/TestFramework/TestRunner.hpp"
 
 namespace sequoia::testing
@@ -29,10 +29,10 @@ namespace sequoia::testing
     shell_command run(const std::filesystem::path& outputDir, std::string_view options) const;
   };
 
-  class test_runner_end_to_end_test final : public free_test
+  class test_runner_end_to_end_test final : public fuzzy_test
   {
   public:
-    using free_test::free_test;
+    using fuzzy_test::fuzzy_test;
 
     [[nodiscard]]
     std::string_view source_file() const noexcept final;
@@ -51,5 +51,7 @@ namespace sequoia::testing
     void run_and_check(std::string_view description, const cmd_builder& b, std::string_view relOutputDir, std::string_view options);
 
     void rebuild_run_and_check(std::string_view description, const cmd_builder& b, std::string_view relOutputDir, std::string_view CMakeOutput, std::string_view BuildOutput, std::string_view options);
+
+    void check_timings(std::string_view description, const std::filesystem::path& relOutputFile, const int speedupFactor);
   };
 }
