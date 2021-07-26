@@ -38,7 +38,8 @@ int main(int argc, char** argv)
     runner.add_test_family(
       "Test Framework Auxiliary",
       file_system_free_test("File System Free Test"),
-      output_free_test("Output Free Test")
+      output_free_test("Output Free Test"),
+      dependency_analyzer_free_test("Dependency Analyzer Free Test")
     );
 
     runner.add_test_family(
@@ -246,11 +247,6 @@ int main(int argc, char** argv)
     runner.add_test_family(
       "Streaming",
       streaming_free_test("Free Test")
-    );
-
-    runner.add_test_family(
-      "DependencyAnalyzer",
-      dependency_analyzer_free_test("Free Test")
     );
 
     runner.execute(timer_resolution{1ms});
