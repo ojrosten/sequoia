@@ -8,7 +8,8 @@ add_executable(TestFrameworkDiagnostics TestFrameworkDiagnosticsMain.cpp)
 set(TestDir "../Tests")
 
 target_sources(TestFrameworkDiagnostics PRIVATE
-               ${TestDir}/TestFramework/CoreDiagnostics.cpp               
+               ${TestDir}/TestFramework/CoreDiagnostics.cpp
+               ${TestDir}/TestFramework/DependencyAnalyzerFreeTest.cpp               
                ${TestDir}/TestFramework/FileSystemFreeTest.cpp
                ${TestDir}/TestFramework/FuzzyTestDiagnostics.cpp
                ${TestDir}/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp
