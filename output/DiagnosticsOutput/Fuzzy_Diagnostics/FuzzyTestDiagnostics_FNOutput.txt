@@ -1,5 +1,5 @@
 	False Positive Failure:
-	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 76
+	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 81
 
 	[double]
 
@@ -7,7 +7,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 77
+	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 82
 
 	[double]
 
@@ -15,7 +15,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 79
+	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 84
 
 	[double]
 
@@ -23,7 +23,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 80
+	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 85
 
 	[double]
 
@@ -31,13 +31,49 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 86
+	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 87
+	<
+
+	[int]
 
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 91
+	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 88
+	<=
+
+	[int]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 89
+	>
+
+	[int]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 90
+	>=
+
+	[int]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 96
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 101
 
 	[std::vector<double, std::allocator<double> >]
 
@@ -45,7 +81,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 94
+	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 104
 
 	[std::vector<std::vector<double, std::allocator<double> >, std::allocator<std::vector<double, std::allocator<double> > > >]
 

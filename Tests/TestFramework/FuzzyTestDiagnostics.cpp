@@ -32,6 +32,11 @@ namespace sequoia::testing
                             return "Tweak your tolerance!";
                            }});
 
+    check_approx_equality(LINE("<"),  inequality<int, std::less<int>>{},          5, 4);
+    check_approx_equality(LINE("<="), inequality<int, std::less_equal<int>>{},    5, 4);
+    check_approx_equality(LINE(">"),  inequality<int, std::greater<int>>{},       4, 5);
+    check_approx_equality(LINE(">="), inequality<int, std::greater_equal<int>>{}, 4, 5);
+
     check_approx_equality(LINE(""), [](const double& lhs, const double& rhs){
         return std::abs(lhs - rhs) < 0.3;
       }, 1.0, 2.0);
@@ -78,6 +83,11 @@ namespace sequoia::testing
 
     check_approx_equality(LINE(""), within_tolerance{0.5}, 4.5, 5.0);
     check_approx_equality(LINE(""), within_tolerance{0.5}, 5.5, 5.0);
+
+    check_approx_equality(LINE("<"),  inequality<int, std::less<int>>{},          4, 5);
+    check_approx_equality(LINE("<="), inequality<int, std::less_equal<int>>{},    4, 5);
+    check_approx_equality(LINE(">"),  inequality<int, std::greater<int>>{},       5, 4);
+    check_approx_equality(LINE(">="), inequality<int, std::greater_equal<int>>{}, 5, 4);
   }
 
   void fuzzy_false_negative_diagnostics::range_tests()

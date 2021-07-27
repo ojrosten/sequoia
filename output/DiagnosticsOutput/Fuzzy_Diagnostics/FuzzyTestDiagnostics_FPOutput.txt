@@ -16,6 +16,42 @@
 	=======================================
 
 	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 35
+	<
+
+	[int]
+	Obtained : 5
+	Predicted: < 4
+
+	=======================================
+
+	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 36
+	<=
+
+	[int]
+	Obtained : 5
+	Predicted: <= 4
+
+	=======================================
+
+	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 37
+	>
+
+	[int]
+	Obtained : 4
+	Predicted: > 5
+
+	=======================================
+
+	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 38
+	>=
+
+	[int]
+	Obtained : 4
+	Predicted: >= 5
+
+	=======================================
+
+	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 40
 
 	[double]
 	Fuzzy comparison failed
@@ -24,7 +60,7 @@
 
 	=======================================
 
-	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 43
+	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 48
 
 	  Element 0 of range incorrect
 	  [double]
@@ -33,7 +69,7 @@
 
 	=======================================
 
-	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 44
+	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 49
 
 	  Element 0 of range incorrect
 	  [double]
@@ -43,7 +79,7 @@
 
 	=======================================
 
-	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 50
+	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 55
 
 	  Element 1 of range incorrect
 	  [double]
@@ -52,7 +88,7 @@
 
 	=======================================
 
-	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 55
+	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 60
 
 	[std::vector<double, std::allocator<double> >]
 	  Element 1 of range incorrect
@@ -62,7 +98,7 @@
 
 	=======================================
 
-	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 58
+	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 63
 
 	[std::vector<std::vector<double, std::allocator<double> >, std::allocator<std::vector<double, std::allocator<double> > > >]
 	  Element 1 of range incorrect

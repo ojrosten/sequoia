@@ -26,6 +26,7 @@
 #include "sequoia/TestFramework/RegularTestCore.hpp"
 
 #include <cmath>
+#include <functional>
 
 namespace sequoia::testing
 {
@@ -65,7 +66,7 @@ namespace sequoia::testing
     if constexpr(invocable<Compare, T, T>)
     {
       sentry.log_check();
-      if(!c.compare(prediction, obtained))
+      if(!c.compare(obtained, prediction))
       {
         std::string message{};
         if constexpr(fuzzy_reporter<Compare, T>)
@@ -180,11 +181,62 @@ namespace sequoia::testing
     [[nodiscard]]
     std::string report(const T& obtained, const T& prediction) const
     {
-      auto mess{prediction_message(to_string(obtained), to_string(prediction))
-        .append(" +/- ")
-        .append(to_string(m_Tol))};
+      return prediction_message(to_string(obtained), to_string(prediction))
+              .append(" +/- ")
+              .append(to_string(m_Tol));
+    }
+  };
 
-      return mess;
+  template<class T>
+  [[nodiscard]]
+  std::string to_string(std::less<T>)
+  {
+    return "<";
+  }
+
+  template<class T>
+  [[nodiscard]]
+  std::string to_string(std::less_equal<T>)
+  {
+    return "<=";
+  }
+
+  template<class T>
+  [[nodiscard]]
+  std::string to_string(std::greater<T>)
+  {
+    return ">";
+  }
+
+  template<class T>
+  [[nodiscard]]
+  std::string to_string(std::greater_equal<T>)
+  {
+    return ">=";
+  }
+
+  template<class T, class Compare>
+  class inequality
+  {
+  private:
+    Compare m_Compare;
+  public:
+    constexpr inequality() = default;
+
+    constexpr explicit inequality(Compare c)
+      : m_Compare{std::move(c)}
+    {}
+
+    [[nodiscard]]
+    constexpr bool operator()(const T& obtained, const T& prediction) const noexcept
+    {
+      return m_Compare(obtained, prediction);
+    }
+
+    [[nodiscard]]
+    std::string report(const T& obtained, const T& prediction) const
+    {
+      return prediction_message(to_string(obtained), to_string(m_Compare).append(" ").append(to_string(prediction)));
     }
   };
 }
