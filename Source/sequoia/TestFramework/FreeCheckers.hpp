@@ -179,7 +179,7 @@ namespace sequoia::testing
 
       The next three functions form an overload set, dedicated to appropiately dispatching requests
       to check equality, equivalence and weak equivalence. This set may be supplemented by extenders
-      of the testing framework, see FuzzyTestCore.hpp for an example.
+      of the testing framework, see RelationalTestCore.hpp for an example.
 
       In each case, the final argument may be utilized to supply custom advice, targeted at particular
       failures which may benefit from explanation. To active this, clients must supply a function

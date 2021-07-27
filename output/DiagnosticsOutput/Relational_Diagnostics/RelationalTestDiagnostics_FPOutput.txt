@@ -1,4 +1,4 @@
-	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 29
+	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 29
 
 	[double]
 	Obtained : 3
@@ -6,7 +6,7 @@
 
 	=======================================
 
-	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 30
+	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 30
 
 	[double]
 	Obtained : 7
@@ -15,7 +15,7 @@
 
 	=======================================
 
-	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 35
+	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 35
 	<
 
 	[int]
@@ -24,7 +24,7 @@
 
 	=======================================
 
-	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 36
+	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 36
 	<=
 
 	[int]
@@ -33,7 +33,7 @@
 
 	=======================================
 
-	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 37
+	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 37
 	>
 
 	[int]
@@ -42,7 +42,7 @@
 
 	=======================================
 
-	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 38
+	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 38
 	>=
 
 	[int]
@@ -51,16 +51,16 @@
 
 	=======================================
 
-	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 40
+	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 40
 
 	[double]
-	Fuzzy comparison failed
+	Relational comparison failed
 	Obtained : 1
 	Predicted: 2
 
 	=======================================
 
-	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 49
+	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 49
 
 	  Element 0 of range incorrect
 	  [double]
@@ -69,7 +69,7 @@
 
 	=======================================
 
-	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 50
+	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 50
 
 	  Element 0 of range incorrect
 	  [double]
@@ -79,7 +79,7 @@
 
 	=======================================
 
-	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 56
+	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 56
 
 	  Element 1 of range incorrect
 	  [double]
@@ -88,7 +88,7 @@
 
 	=======================================
 
-	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 61
+	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 61
 	<
 
 	  Element 1 of range incorrect
@@ -98,7 +98,7 @@
 
 	=======================================
 
-	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 67
+	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 67
 
 	[std::vector<double, std::allocator<double> >]
 	  Element 1 of range incorrect
@@ -108,7 +108,7 @@
 
 	=======================================
 
-	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 70
+	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 70
 
 	[std::vector<std::vector<double, std::allocator<double> >, std::allocator<std::vector<double, std::allocator<double> > > >]
 	  Element 1 of range incorrect

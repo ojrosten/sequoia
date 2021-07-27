@@ -17,9 +17,9 @@
     The pattern is to provide a new overload for
     \ref dispatch_check_free_overloads "dispatch_check". Internally, if no compare
     object is identified for the given type, an attempt it made to interpret the type as
-    a range. Thus if, for example, a fuzzy comparison is defined for a type, T, then no
-    additional work is required to do a fuzzy comparison of the elements of a container of T.
-    All that is required to do this is to feed the fuzzy_compare object to the existing
+    a range. Thus if, for example, a relational comparison is defined for a type, T, then no
+    additional work is required to do a relational comparison of the elements of a container of T.
+    All that is required to do this is to feed the relational_compare object to the existing
     check_range overload set and everything works smoothly.
  */
 
@@ -34,9 +34,9 @@ namespace sequoia::testing
       to \ref dispatch_check_free_overloads "dispatch_check".
    */
   template<class Compare>
-  struct fuzzy_compare
+  struct relational_compare
   {
-    explicit fuzzy_compare(Compare c) : compare{std::move(c)} {}
+    explicit relational_compare(Compare c) : compare{std::move(c)} {}
 
     Compare compare;
   };
@@ -49,17 +49,17 @@ namespace sequoia::testing
       Generally, when writing a new comparison class, it is desirable to provide detailed information
       in the case that the comparison fails. If this is done via a function, report, it will be
       automatically used by
-      \ref dispatch_check_fuzzy "dispatch_check"
+      \ref dispatch_check_relational "dispatch_check"
    */
 
   template<class Compare, class T>
-  concept fuzzy_reporter = requires(Compare& c, const std::remove_reference_t<T>& t) {
+  concept relational_reporter = requires(Compare& c, const std::remove_reference_t<T>& t) {
    c.report(t, t);
   };
 
   /*! \brief Adds to the overload set dispatch_check_free_overloads */
   template<test_mode Mode, class Compare, class T, class Advisor>
-  bool dispatch_check(std::string_view description, test_logger<Mode>& logger, fuzzy_compare<Compare> c, const T& obtained, const T& prediction, tutor<Advisor> advisor)
+  bool dispatch_check(std::string_view description, test_logger<Mode>& logger, relational_compare<Compare> c, const T& obtained, const T& prediction, tutor<Advisor> advisor)
   {
     sentinel<Mode> sentry{logger, add_type_info<T>(description)};
 
@@ -69,13 +69,13 @@ namespace sequoia::testing
       if(!c.compare(obtained, prediction))
       {
         std::string message{};
-        if constexpr(fuzzy_reporter<Compare, T>)
+        if constexpr(relational_reporter<Compare, T>)
         {
           message = c.compare.report(obtained, prediction);
         }
         else
         {
-          message = append_lines("Fuzzy comparison failed", prediction_message(to_string(obtained), to_string(prediction)));
+          message = append_lines("Relational comparison failed", prediction_message(to_string(obtained), to_string(prediction)));
         }
 
         append_advice(message, {advisor, obtained, prediction});
@@ -98,65 +98,65 @@ namespace sequoia::testing
   //================= namespace-level convenience functions =================//
 
   template<test_mode Mode, class Compare, class T, class Advisor>
-  bool check_approx_equality(std::string_view description, test_logger<Mode>& logger, Compare&& compare, const T& obtained, const T& prediction, tutor<Advisor> advisor)
+  bool check_relation(std::string_view description, test_logger<Mode>& logger, Compare&& compare, const T& obtained, const T& prediction, tutor<Advisor> advisor)
   {
-    return dispatch_check(description, logger, fuzzy_compare<Compare>{compare}, obtained, prediction, std::move(advisor));
+    return dispatch_check(description, logger, relational_compare<Compare>{compare}, obtained, prediction, std::move(advisor));
   }
 
   template<test_mode Mode, class Iter, class PredictionIter, class Compare, class Advisor>
-  bool check_range_approx(std::string_view description, test_logger<Mode>& logger, Compare compare, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast, tutor<Advisor> advisor)
+  bool check_range_relation(std::string_view description, test_logger<Mode>& logger, Compare compare, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast, tutor<Advisor> advisor)
   {
-    return check_range(description, logger, fuzzy_compare{std::move(compare)}, first, last, predictionFirst, predictionLast, std::move(advisor));
+    return check_range(description, logger, relational_compare{std::move(compare)}, first, last, predictionFirst, predictionLast, std::move(advisor));
   }
 
   /*! \brief class template for plugging into the \ref checker_primary "checker"
-      class template to provide fuzzy checks.
+      class template to provide relational checks.
 
-      \anchor fuzzy_extender_primary
+      \anchor relational_extender_primary
    */
   template<test_mode Mode>
-  class fuzzy_extender
+  class relational_extender
   {
   public:
     constexpr static test_mode mode{Mode};
 
-    explicit fuzzy_extender(test_logger<Mode>& logger) : m_Logger{logger} {}
+    explicit relational_extender(test_logger<Mode>& logger) : m_Logger{logger} {}
 
-    fuzzy_extender(const fuzzy_extender&)            = delete;
-    fuzzy_extender& operator=(const fuzzy_extender&) = delete;
+    relational_extender(const relational_extender&)            = delete;
+    relational_extender& operator=(const relational_extender&) = delete;
 
     template<class T, class Compare, class Advisor=null_advisor>
-    bool check_approx_equality(std::string_view description, Compare compare, const T& obtained, const T& prediction, tutor<Advisor> advisor=tutor<Advisor>{})
+    bool check_relation(std::string_view description, Compare compare, const T& obtained, const T& prediction, tutor<Advisor> advisor=tutor<Advisor>{})
     {
-      return testing::check_approx_equality(description, m_Logger, std::move(compare), obtained, prediction, std::move(advisor));
+      return testing::check_relation(description, m_Logger, std::move(compare), obtained, prediction, std::move(advisor));
     }
 
     template<class Iter, class PredictionIter, class Compare, class Advisor=null_advisor>
-    bool check_range_approx(std::string_view description, Compare compare, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast, tutor<Advisor> advisor=tutor<Advisor>{})
+    bool check_range_relation(std::string_view description, Compare compare, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast, tutor<Advisor> advisor=tutor<Advisor>{})
     {
-      return testing::check_range_approx(description, m_Logger, std::move(compare), first, last, predictionFirst, predictionLast, std::move(advisor));
+      return testing::check_range_relation(description, m_Logger, std::move(compare), first, last, predictionFirst, predictionLast, std::move(advisor));
     }
 
   protected:
-    fuzzy_extender(fuzzy_extender&&)             noexcept = default;
-    fuzzy_extender& operator=(fuzzy_extender&&)  noexcept = default;
+    relational_extender(relational_extender&&)             noexcept = default;
+    relational_extender& operator=(relational_extender&&)  noexcept = default;
 
-    ~fuzzy_extender() = default;
+    ~relational_extender() = default;
 
   private:
     test_logger<Mode>& m_Logger;
   };
 
   template<test_mode mode>
-  using fuzzy_checker = checker<mode, fuzzy_extender<mode>>;
+  using relational_checker = checker<mode, relational_extender<mode>>;
 
   template<test_mode mode>
-  using basic_fuzzy_test = basic_test<fuzzy_checker<mode>>;
+  using basic_relational_test = basic_test<relational_checker<mode>>;
 
-  /*! \anchor fuzzy_test_alias */
-  using fuzzy_test                = basic_fuzzy_test<test_mode::standard>;
-  using fuzzy_false_negative_test = basic_fuzzy_test<test_mode::false_negative>;
-  using fuzzy_false_positive_test = basic_fuzzy_test<test_mode::false_positive>;
+  /*! \anchor relational_test_alias */
+  using relational_test                = basic_relational_test<test_mode::standard>;
+  using relational_false_negative_test = basic_relational_test<test_mode::false_negative>;
+  using relational_false_positive_test = basic_relational_test<test_mode::false_positive>;
 
   /*! \brief Function object for performing comparisons within an absolute tolerance
 

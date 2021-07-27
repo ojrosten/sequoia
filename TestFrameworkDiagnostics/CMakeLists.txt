@@ -11,7 +11,6 @@ target_sources(TestFrameworkDiagnostics PRIVATE
                ${TestDir}/TestFramework/CoreDiagnostics.cpp
                ${TestDir}/TestFramework/DependencyAnalyzerFreeTest.cpp               
                ${TestDir}/TestFramework/FileSystemFreeTest.cpp
-               ${TestDir}/TestFramework/FuzzyTestDiagnostics.cpp
                ${TestDir}/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp
                ${TestDir}/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp
                ${TestDir}/TestFramework/MoveOnlyTestDiagnostics.cpp
@@ -21,7 +20,8 @@ target_sources(TestFrameworkDiagnostics PRIVATE
                ${TestDir}/TestFramework/OrderableRegularAllocationTestDiagnostics.cpp
                ${TestDir}/TestFramework/OutputFreeTest.cpp
                ${TestDir}/TestFramework/PerformanceTestDiagnostics.cpp
-               ${TestDir}/TestFramework/RegularAllocationTestDiagnostics.cpp
+               ${TestDir}/TestFramework/RegularAllocationTestDiagnostics.cpp			   
+               ${TestDir}/TestFramework/RelationalTestDiagnostics.cpp
                ${TestDir}/TestFramework/ScopedAllocationTestDiagnostics.cpp
                ${TestDir}/TestFramework/TestRunnerDiagnostics.cpp
                ${TestDir}/TestFramework/TestRunnerDiagnosticsUtilities.cpp

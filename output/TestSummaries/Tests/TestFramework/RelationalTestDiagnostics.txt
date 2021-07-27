@@ -1,4 +1,4 @@
-Fuzzy False Positive Diagnostics
+Relational False Positive Diagnostics
 False Positive Checks:                    13;  Failures:  0
-Fuzzy False Negative Diagnostics
+Relational False Negative Diagnostics
 False Negative Checks:                    12;  Failures:  0

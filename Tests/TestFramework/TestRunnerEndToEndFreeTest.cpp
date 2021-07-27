@@ -184,11 +184,11 @@ namespace sequoia::testing
       if(speedupFactor == 1)
       {
         const auto roundingError{(static_cast<int>(timings.size()) - 1)};
-        check_approx_equality(append_lines(description, "Sum of timings"), within_tolerance{roundingError}, sum, timings.back());
+        check_relation(append_lines(description, "Sum of timings"), within_tolerance{roundingError}, sum, timings.back());
       }
       else
       {
-        check_approx_equality(append_lines(description, "Sum of timings"), inequality<int, std::greater_equal<int>>{}, sum / 2, timings.back());
+        check_relation(append_lines(description, "Sum of timings"), inequality<int, std::greater_equal<int>>{}, sum / 2, timings.back());
       }
     }
   }

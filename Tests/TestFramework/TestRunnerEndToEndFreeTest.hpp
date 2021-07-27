@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "sequoia/TestFramework/FuzzyTestCore.hpp"
+#include "sequoia/TestFramework/RelationalTestCore.hpp"
 #include "sequoia/TestFramework/TestRunner.hpp"
 
 namespace sequoia::testing
@@ -29,10 +29,10 @@ namespace sequoia::testing
     shell_command run(const std::filesystem::path& outputDir, std::string_view options) const;
   };
 
-  class test_runner_end_to_end_test final : public fuzzy_test
+  class test_runner_end_to_end_test final : public relational_test
   {
   public:
-    using fuzzy_test::fuzzy_test;
+    using relational_test::relational_test;
 
     [[nodiscard]]
     std::string_view source_file() const noexcept final;
