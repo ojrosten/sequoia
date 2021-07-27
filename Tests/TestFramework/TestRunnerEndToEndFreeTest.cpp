@@ -188,7 +188,7 @@ namespace sequoia::testing
       }
       else
       {
-        check(append_lines(description, "Sum of timings"), sum / 2 >= timings.back());
+        check_approx_equality(append_lines(description, "Sum of timings"), inequality<int, std::greater_equal<int>>{}, sum / 2, timings.back());
       }
     }
   }
