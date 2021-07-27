@@ -1,5 +1,5 @@
 	False Positive Failure:
-	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 81
+	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 88
 
 	[double]
 
@@ -7,7 +7,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 82
+	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 89
 
 	[double]
 
@@ -15,7 +15,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 84
+	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 91
 
 	[double]
 
@@ -23,7 +23,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 85
+	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 92
 
 	[double]
 
@@ -31,7 +31,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 87
+	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 94
 	<
 
 	[int]
@@ -40,7 +40,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 88
+	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 95
 	<=
 
 	[int]
@@ -49,7 +49,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 89
+	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 96
 	>
 
 	[int]
@@ -58,7 +58,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 90
+	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 97
 	>=
 
 	[int]
@@ -67,13 +67,20 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 96
+	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 104
 
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 101
+	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 109
+	<
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 115
 
 	[std::vector<double, std::allocator<double> >]
 
@@ -81,7 +88,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 104
+	Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 118
 
 	[std::vector<std::vector<double, std::allocator<double> >, std::allocator<std::vector<double, std::allocator<double> > > >]
 

@@ -44,15 +44,22 @@ namespace sequoia::testing
 
   void fuzzy_false_positive_diagnostics::range_tests()
   {
-    std::vector<double> v{0.5, 0.6}, p{-0.1, 1.0};
-    check_range_approx(LINE(""), within_tolerance{0.5}, v.cbegin(), v.cend(), p.cbegin(), p.cend());
-    check_range_approx(LINE(""), within_tolerance{0.5}, v.cbegin(), v.cend(), p.cbegin(), p.cend(),
-                       tutor{[](double, double){
-                         return "Consider increasing tolerance!";
-                       }});
+    {
+      std::vector<double> v{0.5, 0.6}, p{-0.1, 1.0};
+      check_range_approx(LINE(""), within_tolerance{0.5}, v.cbegin(), v.cend(), p.cbegin(), p.cend());
+      check_range_approx(LINE(""), within_tolerance{0.5}, v.cbegin(), v.cend(), p.cbegin(), p.cend(),
+        tutor{[](double, double) {
+          return "Consider increasing tolerance!";
+        }});
 
-    p = {0.5, 1.2};
-    check_range_approx(LINE(""), within_tolerance{0.5}, v.cbegin(), v.cend(), p.cbegin(), p.cend());
+      p = {0.5, 1.2};
+      check_range_approx(LINE(""), within_tolerance{0.5}, v.cbegin(), v.cend(), p.cbegin(), p.cend());
+    }
+
+    {
+      std::vector<int> v{4, 5}, p{5, 4};
+      check_range_approx(LINE("<"), inequality<int, std::less<int>>{}, v.cbegin(), v.cend(), p.cbegin(), p.cend());
+    }
   }
 
   void fuzzy_false_positive_diagnostics::container_tests()
@@ -92,8 +99,15 @@ namespace sequoia::testing
 
   void fuzzy_false_negative_diagnostics::range_tests()
   {
-    std::vector<double> v{0.5, 0.6}, p{0, 1.0};
-    check_range_approx(LINE(""), within_tolerance{0.5}, v.cbegin(), v.cend(), p.cbegin(), p.cend());
+    {
+      std::vector<double> v{0.5, 0.6}, p{0, 1.0};
+      check_range_approx(LINE(""), within_tolerance{0.5}, v.cbegin(), v.cend(), p.cbegin(), p.cend());
+    }
+
+    {
+      std::vector<int> v{4, 3}, p{5, 4};
+      check_range_approx(LINE("<"), inequality<int, std::less<int>>{}, v.cbegin(), v.cend(), p.cbegin(), p.cend());
+    }
   }
 
   void fuzzy_false_negative_diagnostics::container_tests()
