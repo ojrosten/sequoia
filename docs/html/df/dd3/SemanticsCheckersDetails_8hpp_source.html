@@ -85,7 +85,7 @@ $(function() {
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="preprocessor">#include &lt;compare&gt;</span></div>
 <div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="preprocessor">#include &lt;optional&gt;</span></div>
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160; </div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="keyword">namespace </span>sequoia::testing</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="keyword">namespace </span><a class="code" href="../../dd/da8/namespacesequoia_1_1testing.html">sequoia::testing</a></div>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;{</div>
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;  <span class="keyword">enum class</span> comparison_flavour { equality, inequality, less_than, greater_than, leq, geq, threeway };</div>
 <div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160; </div>
@@ -171,21 +171,21 @@ $(function() {
 <div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160; </div>
 <div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;  <span class="comment">//================================ comparisons ================================//</span></div>
 <div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160; </div>
-<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;  <span class="keyword">template</span>&lt;<a class="code" href="../../d5/d05/TestLogger_8hpp.html#ae4e97c9d45a89647799f0d308ba6d244">test_mode</a> Mode, <span class="keyword">class </span>Actions, pseudoregular T, <span class="keyword">class</span>... Args&gt;</div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;  <span class="keyword">template</span>&lt;<a class="code" href="../../dd/da8/namespacesequoia_1_1testing.html#ae4e97c9d45a89647799f0d308ba6d244">test_mode</a> Mode, <span class="keyword">class </span>Actions, pseudoregular T, <span class="keyword">class</span>... Args&gt;</div>
 <div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;  [[nodiscard]]</div>
 <div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;  <span class="keyword">static</span> <span class="keywordtype">bool</span> check_preconditions(test_logger&lt;Mode&gt;&amp; logger, <span class="keyword">const</span> Actions&amp; actions, <span class="keyword">const</span> T&amp; x, <span class="keyword">const</span> T&amp; y, <span class="keyword">const</span> Args&amp;... args)</div>
 <div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;  {</div>
 <div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;    <span class="keywordflow">return</span> check_equality_preconditions(logger, actions, x, y, args...);</div>
 <div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;  }</div>
 <div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160; </div>
-<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;  <span class="keyword">template</span>&lt;<a class="code" href="../../d5/d05/TestLogger_8hpp.html#ae4e97c9d45a89647799f0d308ba6d244">test_mode</a> Mode, <span class="keyword">class </span>Actions, moveonly T, <span class="keyword">class</span>... Args&gt;</div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;  <span class="keyword">template</span>&lt;<a class="code" href="../../dd/da8/namespacesequoia_1_1testing.html#ae4e97c9d45a89647799f0d308ba6d244">test_mode</a> Mode, <span class="keyword">class </span>Actions, moveonly T, <span class="keyword">class</span>... Args&gt;</div>
 <div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;  [[nodiscard]]</div>
 <div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;  <span class="keyword">static</span> <span class="keywordtype">bool</span> check_preconditions(test_logger&lt;Mode&gt;&amp; logger,  <span class="keyword">const</span> Actions&amp; actions, <span class="keyword">const</span> T&amp; x, <span class="keyword">const</span> T&amp; y, <span class="keyword">const</span> T&amp; xClone, <span class="keyword">const</span> T&amp; yClone, <span class="keyword">const</span> Args&amp;... args)</div>
 <div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;  {</div>
 <div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;    <span class="keywordflow">return</span> check_equality_preconditions(logger, actions, x, y, xClone, yClone, args...);</div>
 <div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;  }</div>
 <div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160; </div>
-<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;  <span class="keyword">template</span>&lt;<a class="code" href="../../d5/d05/TestLogger_8hpp.html#ae4e97c9d45a89647799f0d308ba6d244">test_mode</a> Mode, <span class="keyword">class </span>Actions, pseudoregular T, <span class="keyword">class</span>... Args&gt;</div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;  <span class="keyword">template</span>&lt;<a class="code" href="../../dd/da8/namespacesequoia_1_1testing.html#ae4e97c9d45a89647799f0d308ba6d244">test_mode</a> Mode, <span class="keyword">class </span>Actions, pseudoregular T, <span class="keyword">class</span>... Args&gt;</div>
 <div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;    requires orderable&lt;T&gt;</div>
 <div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;  [[nodiscard]]</div>
 <div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;  <span class="keyword">static</span> <span class="keywordtype">bool</span> check_preconditions(test_logger&lt;Mode&gt;&amp; logger, <span class="keyword">const</span> Actions&amp; actions, <span class="keyword">const</span> T&amp; x, <span class="keyword">const</span> T&amp; y, <span class="keyword">const</span> Args&amp;... args)</div>
@@ -193,7 +193,7 @@ $(function() {
 <div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;    <span class="keywordflow">return</span> check_orderable_preconditions(logger, actions, x, y, args...);</div>
 <div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;  }</div>
 <div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160; </div>
-<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;  <span class="keyword">template</span>&lt;<a class="code" href="../../d5/d05/TestLogger_8hpp.html#ae4e97c9d45a89647799f0d308ba6d244">test_mode</a> Mode, <span class="keyword">class </span>Actions, moveonly T, <span class="keyword">class</span>... Args&gt;</div>
+<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;  <span class="keyword">template</span>&lt;<a class="code" href="../../dd/da8/namespacesequoia_1_1testing.html#ae4e97c9d45a89647799f0d308ba6d244">test_mode</a> Mode, <span class="keyword">class </span>Actions, moveonly T, <span class="keyword">class</span>... Args&gt;</div>
 <div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;    requires orderable&lt;T&gt;</div>
 <div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;  [[nodiscard]]</div>
 <div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;  <span class="keyword">static</span> <span class="keywordtype">bool</span> check_preconditions(test_logger&lt;Mode&gt;&amp; logger, <span class="keyword">const</span> Actions&amp; actions, <span class="keyword">const</span> T&amp; x, <span class="keyword">const</span> T&amp; y, <span class="keyword">const</span> T&amp; xClone, <span class="keyword">const</span> T&amp; yClone, <span class="keyword">const</span> Args&amp;... args)</div>
@@ -229,7 +229,7 @@ $(function() {
 <div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;    <span class="keywordflow">return</span> !sentry.failure_detected();</div>
 <div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;  }</div>
 <div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160; </div>
-<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;  <span class="keyword">template</span>&lt;<a class="code" href="../../d5/d05/TestLogger_8hpp.html#ae4e97c9d45a89647799f0d308ba6d244">test_mode</a> Mode, <span class="keyword">class </span>Actions, orderable T, <span class="keyword">class</span>... Args&gt;</div>
+<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;  <span class="keyword">template</span>&lt;<a class="code" href="../../dd/da8/namespacesequoia_1_1testing.html#ae4e97c9d45a89647799f0d308ba6d244">test_mode</a> Mode, <span class="keyword">class </span>Actions, orderable T, <span class="keyword">class</span>... Args&gt;</div>
 <div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;  [[nodiscard]]</div>
 <div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;  <span class="keywordtype">bool</span> check_ordering_operators(test_logger&lt;Mode&gt;&amp; logger, <span class="keyword">const</span> Actions&amp; actions, <span class="keyword">const</span> T&amp; x, <span class="keyword">const</span> T&amp; y, <span class="keyword">const</span> Args&amp;... args)</div>
 <div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;  {</div>
@@ -248,7 +248,7 @@ $(function() {
 <div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;    <span class="keywordflow">return</span> !sentry.failure_detected();</div>
 <div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;  }</div>
 <div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160; </div>
-<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;  <span class="keyword">template</span>&lt;<a class="code" href="../../d5/d05/TestLogger_8hpp.html#ae4e97c9d45a89647799f0d308ba6d244">test_mode</a> Mode, <span class="keyword">class </span>Actions, orderable T, <span class="keyword">class</span>... Args&gt;</div>
+<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;  <span class="keyword">template</span>&lt;<a class="code" href="../../dd/da8/namespacesequoia_1_1testing.html#ae4e97c9d45a89647799f0d308ba6d244">test_mode</a> Mode, <span class="keyword">class </span>Actions, orderable T, <span class="keyword">class</span>... Args&gt;</div>
 <div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;  [[nodiscard]]</div>
 <div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;  <span class="keywordtype">bool</span> check_ordering_consistency(test_logger&lt;Mode&gt;&amp; logger, <span class="keyword">const</span> Actions&amp; actions, <span class="keyword">const</span> T&amp; x, <span class="keyword">const</span> T&amp; y, <span class="keyword">const</span> Args&amp;... args)</div>
 <div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;  {</div>
@@ -274,14 +274,14 @@ $(function() {
 <div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;    <span class="keywordflow">return</span> x &lt; y ? comp(x,y) : comp(y,x);</div>
 <div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;  }</div>
 <div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160; </div>
-<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;  <span class="keyword">template</span>&lt;<a class="code" href="../../d5/d05/TestLogger_8hpp.html#ae4e97c9d45a89647799f0d308ba6d244">test_mode</a> Mode, <span class="keyword">class </span>Actions, orderable T, <span class="keyword">class</span>... Args&gt;</div>
+<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;  <span class="keyword">template</span>&lt;<a class="code" href="../../dd/da8/namespacesequoia_1_1testing.html#ae4e97c9d45a89647799f0d308ba6d244">test_mode</a> Mode, <span class="keyword">class </span>Actions, orderable T, <span class="keyword">class</span>... Args&gt;</div>
 <div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;  [[nodiscard]]</div>
 <div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;  <span class="keywordtype">bool</span> check_ordering_consistency(test_logger&lt;Mode&gt;&amp; logger, <span class="keyword">const</span> Actions&amp; actions, <span class="keyword">const</span> T&amp; x, <span class="keyword">const</span> T&amp; y, <span class="keyword">const</span> T&amp;, <span class="keyword">const</span> T&amp;, <span class="keyword">const</span> Args&amp;... args)</div>
 <div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;  {</div>
 <div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;    <span class="keywordflow">return</span> check_ordering_consistency(logger, actions, x, y, args...);</div>
 <div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;  }</div>
 <div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160; </div>
-<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;  <span class="keyword">template</span>&lt;<a class="code" href="../../d5/d05/TestLogger_8hpp.html#ae4e97c9d45a89647799f0d308ba6d244">test_mode</a> Mode, <span class="keyword">class </span>Actions, equality_comparable T, <span class="keyword">class</span>... Args&gt;</div>
+<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;  <span class="keyword">template</span>&lt;<a class="code" href="../../dd/da8/namespacesequoia_1_1testing.html#ae4e97c9d45a89647799f0d308ba6d244">test_mode</a> Mode, <span class="keyword">class </span>Actions, equality_comparable T, <span class="keyword">class</span>... Args&gt;</div>
 <div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;  [[nodiscard]]</div>
 <div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;  <span class="keywordtype">bool</span> check_equality_preconditions(test_logger&lt;Mode&gt;&amp; logger, <span class="keyword">const</span> Actions&amp; actions, <span class="keyword">const</span> T&amp; x, <span class="keyword">const</span> T&amp; y, <span class="keyword">const</span> Args&amp;... args)</div>
 <div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;  {</div>
@@ -291,7 +291,7 @@ $(function() {
 <div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;    <span class="keywordflow">return</span> eq &amp;&amp; neq &amp;&amp; check(<span class="stringliteral">&quot;Precondition - for checking semantics, x and y are assumed to be different&quot;</span>, logger, x != y);</div>
 <div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;  }</div>
 <div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160; </div>
-<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;  <span class="keyword">template</span>&lt;<a class="code" href="../../d5/d05/TestLogger_8hpp.html#ae4e97c9d45a89647799f0d308ba6d244">test_mode</a> Mode, <span class="keyword">class </span>Actions, equality_comparable T, <span class="keyword">class</span>... Args&gt;</div>
+<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;  <span class="keyword">template</span>&lt;<a class="code" href="../../dd/da8/namespacesequoia_1_1testing.html#ae4e97c9d45a89647799f0d308ba6d244">test_mode</a> Mode, <span class="keyword">class </span>Actions, equality_comparable T, <span class="keyword">class</span>... Args&gt;</div>
 <div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;  [[nodiscard]]</div>
 <div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;  <span class="keywordtype">bool</span> check_equality_preconditions(test_logger&lt;Mode&gt;&amp; logger, <span class="keyword">const</span> Actions&amp; actions, <span class="keyword">const</span> T&amp; x, <span class="keyword">const</span> T&amp; y, <span class="keyword">const</span> T&amp; xClone, <span class="keyword">const</span> T&amp; yClone, <span class="keyword">const</span> Args&amp;... args)</div>
 <div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;  {</div>
@@ -308,7 +308,7 @@ $(function() {
 <div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;      <span class="keywordflow">return</span> check(mess(<span class="stringliteral">&quot;x&quot;</span>), logger, x == xClone) &amp;&amp; check(mess(<span class="stringliteral">&quot;y&quot;</span>), logger, y == yClone);</div>
 <div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;  }</div>
 <div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160; </div>
-<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;  <span class="keyword">template</span>&lt;<a class="code" href="../../d5/d05/TestLogger_8hpp.html#ae4e97c9d45a89647799f0d308ba6d244">test_mode</a> Mode, <span class="keyword">class </span>Actions, orderable T, <span class="keyword">class</span>... Args&gt;</div>
+<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;  <span class="keyword">template</span>&lt;<a class="code" href="../../dd/da8/namespacesequoia_1_1testing.html#ae4e97c9d45a89647799f0d308ba6d244">test_mode</a> Mode, <span class="keyword">class </span>Actions, orderable T, <span class="keyword">class</span>... Args&gt;</div>
 <div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;  [[nodiscard]]</div>
 <div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;  <span class="keywordtype">bool</span> check_orderable_preconditions(test_logger&lt;Mode&gt;&amp; logger, <span class="keyword">const</span> Actions&amp; actions, <span class="keyword">const</span> T&amp; x, <span class="keyword">const</span> T&amp; y, <span class="keyword">const</span> Args&amp;... args)</div>
 <div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;  {</div>
@@ -347,7 +347,7 @@ $(function() {
 <div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160; </div>
 <div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;  <span class="comment">//================================  move construction ================================ //</span></div>
 <div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160; </div>
-<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;  <span class="keyword">template</span>&lt;<a class="code" href="../../d5/d05/TestLogger_8hpp.html#ae4e97c9d45a89647799f0d308ba6d244">test_mode</a> Mode, <span class="keyword">class </span>Actions, movable_comparable T, <span class="keyword">class</span>... Args&gt;</div>
+<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;  <span class="keyword">template</span>&lt;<a class="code" href="../../dd/da8/namespacesequoia_1_1testing.html#ae4e97c9d45a89647799f0d308ba6d244">test_mode</a> Mode, <span class="keyword">class </span>Actions, movable_comparable T, <span class="keyword">class</span>... Args&gt;</div>
 <div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;  std::optional&lt;T&gt; do_check_move_construction(test_logger&lt;Mode&gt;&amp; logger, [[maybe_unused]] <span class="keyword">const</span> Actions&amp; actions, T&amp;&amp; z, <span class="keyword">const</span> T&amp; y, <span class="keyword">const</span> Args&amp;... args)</div>
 <div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;  {</div>
 <div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;    T w{std::move(z)};</div>
@@ -391,7 +391,7 @@ $(function() {
 <div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160; </div>
 <div class="line"><a name="l00376"></a><span class="lineno">  376</span>&#160;  <span class="comment">//================================ swap ================================//</span></div>
 <div class="line"><a name="l00377"></a><span class="lineno">  377</span>&#160; </div>
-<div class="line"><a name="l00378"></a><span class="lineno">  378</span>&#160;  <span class="keyword">template</span>&lt;<a class="code" href="../../d5/d05/TestLogger_8hpp.html#ae4e97c9d45a89647799f0d308ba6d244">test_mode</a> Mode, <span class="keyword">class </span>Actions, movable_comparable T, <span class="keyword">class</span>... Args&gt;</div>
+<div class="line"><a name="l00378"></a><span class="lineno">  378</span>&#160;  <span class="keyword">template</span>&lt;<a class="code" href="../../dd/da8/namespacesequoia_1_1testing.html#ae4e97c9d45a89647799f0d308ba6d244">test_mode</a> Mode, <span class="keyword">class </span>Actions, movable_comparable T, <span class="keyword">class</span>... Args&gt;</div>
 <div class="line"><a name="l00379"></a><span class="lineno">  379</span>&#160;  <span class="keywordtype">bool</span> do_check_swap(test_logger&lt;Mode&gt;&amp; logger, [[maybe_unused]] <span class="keyword">const</span> Actions&amp; actions, T&amp;&amp; x, T&amp;&amp; y, <span class="keyword">const</span> T&amp; xClone, <span class="keyword">const</span> T&amp; yClone, [[maybe_unused]] <span class="keyword">const</span> Args&amp;... args)</div>
 <div class="line"><a name="l00380"></a><span class="lineno">  380</span>&#160;  {</div>
 <div class="line"><a name="l00381"></a><span class="lineno">  381</span>&#160;    <span class="keyword">using</span> std::swap;</div>
@@ -433,7 +433,7 @@ $(function() {
 <div class="line"><a name="l00417"></a><span class="lineno">  417</span>&#160; </div>
 <div class="line"><a name="l00418"></a><span class="lineno">  418</span>&#160;  <span class="comment">//================================  serialization  ================================ //</span></div>
 <div class="line"><a name="l00419"></a><span class="lineno">  419</span>&#160; </div>
-<div class="line"><a name="l00420"></a><span class="lineno">  420</span>&#160;  <span class="keyword">template</span>&lt;<a class="code" href="../../d5/d05/TestLogger_8hpp.html#ae4e97c9d45a89647799f0d308ba6d244">test_mode</a> Mode, <span class="keyword">class </span>Actions, movable_comparable T, <span class="keyword">class</span>... Args&gt;</div>
+<div class="line"><a name="l00420"></a><span class="lineno">  420</span>&#160;  <span class="keyword">template</span>&lt;<a class="code" href="../../dd/da8/namespacesequoia_1_1testing.html#ae4e97c9d45a89647799f0d308ba6d244">test_mode</a> Mode, <span class="keyword">class </span>Actions, movable_comparable T, <span class="keyword">class</span>... Args&gt;</div>
 <div class="line"><a name="l00421"></a><span class="lineno">  421</span>&#160;    requires (serializable_to&lt;T, std::stringstream&gt; &amp;&amp; deserializable_from&lt;T, std::stringstream&gt;)</div>
 <div class="line"><a name="l00422"></a><span class="lineno">  422</span>&#160;  <span class="keywordtype">bool</span> do_check_serialization(test_logger&lt;Mode&gt;&amp; logger,</div>
 <div class="line"><a name="l00423"></a><span class="lineno">  423</span>&#160;                              [[maybe_unused]] <span class="keyword">const</span> Actions&amp; actions,</div>
@@ -462,7 +462,6 @@ $(function() {
 <div class="line"><a name="l00446"></a><span class="lineno">  446</span>&#160;  }</div>
 <div class="line"><a name="l00447"></a><span class="lineno">  447</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
-<div class="ttc" id="aTestLogger_8hpp_html_ae4e97c9d45a89647799f0d308ba6d244"><div class="ttname"><a href="../../d5/d05/TestLogger_8hpp.html#ae4e97c9d45a89647799f0d308ba6d244">sequoia::testing::test_mode</a></div><div class="ttdeci">test_mode</div><div class="ttdoc">Specifies whether tests are run as standard tests or in false postive/negative mode.</div><div class="ttdef"><b>Definition:</b> TestLogger.hpp:50</div></div>
 <div class="ttc" id="astructsequoia_1_1testing_1_1impl_1_1do__swap_3_4_html"><div class="ttname"><a href="../../d9/dfd/structsequoia_1_1testing_1_1impl_1_1do__swap_3_4.html">sequoia::testing::impl::do_swap&lt;&gt;</a></div><div class="ttdef"><b>Definition:</b> SemanticsCheckersDetails.hpp:96</div></div>
 <div class="ttc" id="astructsequoia_1_1testing_1_1impl_1_1auxiliary__data_html"><div class="ttname"><a href="../../d9/d65/structsequoia_1_1testing_1_1impl_1_1auxiliary__data.html">sequoia::testing::impl::auxiliary_data</a></div><div class="ttdef"><b>Definition:</b> SemanticsCheckersDetails.hpp:135</div></div>
 <div class="ttc" id="aConcepts_8hpp_html"><div class="ttname"><a href="../../d3/d84/Concepts_8hpp.html">Concepts.hpp</a></div><div class="ttdoc">Concepts mostly, but not exclusively, replicating things which will appear in std at some point.</div></div>
@@ -473,6 +472,8 @@ $(function() {
 <div class="ttc" id="astructsequoia_1_1testing_1_1impl_1_1auxiliary__data__policy_html"><div class="ttname"><a href="../../dc/dff/structsequoia_1_1testing_1_1impl_1_1auxiliary__data__policy.html">sequoia::testing::impl::auxiliary_data_policy</a></div><div class="ttdef"><b>Definition:</b> SemanticsCheckersDetails.hpp:106</div></div>
 <div class="ttc" id="aAdvice_8hpp_html"><div class="ttname"><a href="../../da/d27/Advice_8hpp.html">Advice.hpp</a></div><div class="ttdoc">Contains utilities for the advice framework.</div></div>
 <div class="ttc" id="astructsequoia_1_1testing_1_1impl_1_1do__swap_html"><div class="ttname"><a href="../../d1/d63/structsequoia_1_1testing_1_1impl_1_1do__swap.html">sequoia::testing::impl::do_swap</a></div><div class="ttdef"><b>Definition:</b> SemanticsCheckersDetails.hpp:93</div></div>
+<div class="ttc" id="anamespacesequoia_1_1testing_html"><div class="ttname"><a href="../../dd/da8/namespacesequoia_1_1testing.html">sequoia::testing</a></div><div class="ttdef"><b>Definition:</b> MyBehaviouralTest.cpp:12</div></div>
+<div class="ttc" id="anamespacesequoia_1_1testing_html_ae4e97c9d45a89647799f0d308ba6d244"><div class="ttname"><a href="../../dd/da8/namespacesequoia_1_1testing.html#ae4e97c9d45a89647799f0d308ba6d244">sequoia::testing::test_mode</a></div><div class="ttdeci">test_mode</div><div class="ttdoc">Specifies whether tests are run as standard tests or in false postive/negative mode.</div><div class="ttdef"><b>Definition:</b> TestLogger.hpp:50</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

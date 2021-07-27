@@ -61,7 +61,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><b>sequoia</b></li><li class="navelem"><b>testing</b></li><li class="navelem"><a class="el" href="../../d7/d8c/classsequoia_1_1testing_1_1move__only__allocation__extender.html">move_only_allocation_extender</a></li>  </ul>
+<li class="navelem"><b>sequoia</b></li><li class="navelem"><a class="el" href="../../dd/da8/namespacesequoia_1_1testing.html">testing</a></li><li class="navelem"><a class="el" href="../../d7/d8c/classsequoia_1_1testing_1_1move__only__allocation__extender.html">move_only_allocation_extender</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -74,7 +74,7 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>class template for plugging into the <a class="el" href="../../d2/d0d/FreeCheckers_8hpp.html#checker_primary">checker</a> class template to provide allocation checks for move-only types.  
+<p>class template for plugging into the <a class="el" href="../../dd/da8/namespacesequoia_1_1testing.html#checker_primary">checker</a> class template to provide allocation checks for move-only types.  
  <a href="../../d7/d8c/classsequoia_1_1testing_1_1move__only__allocation__extender.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="../../d3/d67/MoveOnlyAllocationTestCore_8hpp_source.html">MoveOnlyAllocationTestCore.hpp</a>&gt;</code></p>
@@ -98,7 +98,7 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a8c37377376662f22139e1b409ef42c0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a311fa1e01c849076c5d57936f2af9c00"><td class="memTemplParams" colspan="2"><a id="a311fa1e01c849076c5d57936f2af9c00"></a>
 template&lt;moveonly T, invocable&lt; T &amp; &gt; Mutator, alloc_getter&lt; T &gt;... Getters&gt; </td></tr>
-<tr class="memitem:a311fa1e01c849076c5d57936f2af9c00"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires</b> (!orderable&lt; T &gt; &amp;&amp;(sizeof...(Getters) &gt; 0)) void check_semantics(std</td></tr>
+<tr class="memitem:a311fa1e01c849076c5d57936f2af9c00"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires</b> (!orderable&lt; T &gt; &amp;&amp;(sizeof...(Getters) &gt; 0)) void <a class="el" href="../../dd/da8/namespacesequoia_1_1testing.html#ac338b82e4f6a44a8a02400da454e953c">check_semantics</a>(std</td></tr>
 <tr class="separator:a311fa1e01c849076c5d57936f2af9c00"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a264cd36b8942869207979533977cba5b"><td class="memTemplParams" colspan="2"><a id="a264cd36b8942869207979533977cba5b"></a>
 template&lt;moveonly T, invocable_r&lt; T &gt; xMaker, invocable_r&lt; T &gt; yMaker, invocable&lt; T &amp; &gt; Mutator, alloc_getter&lt; T &gt;... Getters&gt; </td></tr>
@@ -106,7 +106,7 @@ template&lt;moveonly T, invocable_r&lt; T &gt; xMaker, invocable_r&lt; T &gt; yM
 <tr class="separator:a264cd36b8942869207979533977cba5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a87ef95bead522f48e9a49a2848420d92"><td class="memTemplParams" colspan="2"><a id="a87ef95bead522f48e9a49a2848420d92"></a>
 template&lt;moveonly T, invocable&lt; T &amp; &gt; Mutator, alloc_getter&lt; T &gt;... Getters&gt; </td></tr>
-<tr class="memitem:a87ef95bead522f48e9a49a2848420d92"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires</b> (orderable&lt; T &gt; &amp;&amp;(sizeof...(Getters) &gt; 0)) void check_semantics(std</td></tr>
+<tr class="memitem:a87ef95bead522f48e9a49a2848420d92"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires</b> (orderable&lt; T &gt; &amp;&amp;(sizeof...(Getters) &gt; 0)) void <a class="el" href="../../dd/da8/namespacesequoia_1_1testing.html#ac338b82e4f6a44a8a02400da454e953c">check_semantics</a>(std</td></tr>
 <tr class="separator:a87ef95bead522f48e9a49a2848420d92"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac64bce19b4c076092372916f837e3710"><td class="memTemplParams" colspan="2"><a id="ac64bce19b4c076092372916f837e3710"></a>
 template&lt;moveonly T, invocable_r&lt; T &gt; xMaker, invocable_r&lt; T &gt; yMaker, invocable&lt; T &amp; &gt; Mutator, alloc_getter&lt; T &gt;... Getters&gt; </td></tr>
@@ -116,14 +116,14 @@ template&lt;moveonly T, invocable_r&lt; T &gt; xMaker, invocable_r&lt; T &gt; yM
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
 <tr class="memitem:ae6a02495c5a82be464c55c8cdc86088b"><td class="memItemLeft" align="right" valign="top"><a id="ae6a02495c5a82be464c55c8cdc86088b"></a>
-constexpr static <a class="el" href="../../d5/d05/TestLogger_8hpp.html#ae4e97c9d45a89647799f0d308ba6d244">test_mode</a>&#160;</td><td class="memItemRight" valign="bottom"><b>mode</b> {Mode}</td></tr>
+constexpr static <a class="el" href="../../dd/da8/namespacesequoia_1_1testing.html#ae4e97c9d45a89647799f0d308ba6d244">test_mode</a>&#160;</td><td class="memItemRight" valign="bottom"><b>mode</b> {Mode}</td></tr>
 <tr class="separator:ae6a02495c5a82be464c55c8cdc86088b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><h3>template&lt;test_mode Mode&gt;<br />
 class sequoia::testing::move_only_allocation_extender&lt; Mode &gt;</h3>
 
-<p>class template for plugging into the <a class="el" href="../../d2/d0d/FreeCheckers_8hpp.html#checker_primary">checker</a> class template to provide allocation checks for move-only types. </p>
+<p>class template for plugging into the <a class="el" href="../../dd/da8/namespacesequoia_1_1testing.html#checker_primary">checker</a> class template to provide allocation checks for move-only types. </p>
 <p><a class="anchor" id="move_only_allocation_extender_primary"></a></p>
 </div><hr/>The documentation for this class was generated from the following file:<ul>
 <li>/Users/Claire/Dropbox/Sequoia/Source/sequoia/TestFramework/<a class="el" href="../../d3/d67/MoveOnlyAllocationTestCore_8hpp_source.html">MoveOnlyAllocationTestCore.hpp</a></li>

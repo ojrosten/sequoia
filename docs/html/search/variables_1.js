@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['fuzzy_5freporter_1723',['fuzzy_reporter',['../d8/d43/FuzzyTestCore_8hpp.html#aba59820ff13a87fe4672e7159928f3e7',1,'sequoia::testing']]]
+  ['relational_5freporter_1741',['relational_reporter',['../dd/da8/namespacesequoia_1_1testing.html#a295963982b3f9dd5e8cd6973ff8a1489',1,'sequoia::testing']]]
 ];

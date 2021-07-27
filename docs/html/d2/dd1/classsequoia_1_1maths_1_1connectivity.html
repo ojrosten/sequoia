@@ -218,32 +218,21 @@ constexpr void&#160;</td><td class="memItemRight" valign="bottom"><b>swap_nodes<
 <tr class="memitem:a122d8ac0601b87a434e04d6bf4cbbfa3"><td class="memItemLeft" align="right" valign="top"><a id="a122d8ac0601b87a434e04d6bf4cbbfa3"></a>
 auto&#160;</td><td class="memItemRight" valign="bottom"><b>get_edge_allocator</b> () const</td></tr>
 <tr class="separator:a122d8ac0601b87a434e04d6bf4cbbfa3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a30109048deadb2a688f66bd3d3ef34ce"><td class="memTemplParams" colspan="2"><a id="a30109048deadb2a688f66bd3d3ef34ce"></a>
-template&lt;class T  = edge_storage_type&gt; </td></tr>
-<tr class="memitem:a30109048deadb2a688f66bd3d3ef34ce"><td class="memTemplItemLeft" align="right" valign="top">requires has_partitions_allocator&lt; T &gt; auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>get_edge_allocator</b> (<a class="el" href="../../d4/dd4/structsequoia_1_1maths_1_1partitions__allocator__tag.html">partitions_allocator_tag</a>) const</td></tr>
-<tr class="separator:a30109048deadb2a688f66bd3d3ef34ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4f4bc6e04a7952daa2774eb4d907a207"><td class="memItemLeft" align="right" valign="top"><a id="a4f4bc6e04a7952daa2774eb4d907a207"></a>
+auto&#160;</td><td class="memItemRight" valign="bottom"><b>get_edge_allocator</b> (<a class="el" href="../../d4/dd4/structsequoia_1_1maths_1_1partitions__allocator__tag.html">partitions_allocator_tag</a>) const requires has_partitions_allocator&lt; edge_storage_type &gt;</td></tr>
+<tr class="separator:a4f4bc6e04a7952daa2774eb4d907a207"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac619351b167e4c70cb76a5d73068bf9a"><td class="memItemLeft" align="right" valign="top"><a id="ac619351b167e4c70cb76a5d73068bf9a"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>reserve_nodes</b> (const size_type size)</td></tr>
 <tr class="separator:ac619351b167e4c70cb76a5d73068bf9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a22e603d2f47c548ffa87d3417db5b114"><td class="memItemLeft" align="right" valign="top"><a id="a22e603d2f47c548ffa87d3417db5b114"></a>
 size_type&#160;</td><td class="memItemRight" valign="bottom"><b>node_capacity</b> () const noexcept</td></tr>
 <tr class="separator:a22e603d2f47c548ffa87d3417db5b114"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae4bc311d8a21ef00dc2beff3c1e4e5ec"><td class="memTemplParams" colspan="2"><a id="ae4bc311d8a21ef00dc2beff3c1e4e5ec"></a>
-template&lt;class T  = edge_storage_type&gt; </td></tr>
-<tr class="memitem:ae4bc311d8a21ef00dc2beff3c1e4e5ec"><td class="memTemplItemLeft" align="right" valign="top">requires graph_impl::has_reservable_partitions&lt; T &gt; void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>reserve_edges</b> (const edge_index_type partition, const edge_index_type size)</td></tr>
-<tr class="separator:ae4bc311d8a21ef00dc2beff3c1e4e5ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af81d9fdc5fdca22766a70f6b53f5510d"><td class="memTemplParams" colspan="2"><a id="af81d9fdc5fdca22766a70f6b53f5510d"></a>
-template&lt;class T  = edge_storage_type&gt; </td></tr>
-<tr class="memitem:af81d9fdc5fdca22766a70f6b53f5510d"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires</b> (!graph_impl::has_reservable_partitions&lt; T &gt;) void reserve_edges(const edge_index_type size)</td></tr>
-<tr class="separator:af81d9fdc5fdca22766a70f6b53f5510d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aee2fc33ff5df741eb3cfd49e12a35f44"><td class="memTemplParams" colspan="2"><a id="aee2fc33ff5df741eb3cfd49e12a35f44"></a>
-template&lt;class T  = edge_storage_type&gt; </td></tr>
-<tr class="memitem:aee2fc33ff5df741eb3cfd49e12a35f44"><td class="memTemplItemLeft" align="right" valign="top">requires graph_impl::has_reservable_partitions&lt; T &gt; size_type&#160;</td><td class="memTemplItemRight" valign="bottom"><b>edges_capacity</b> (const edge_index_type partition) const</td></tr>
-<tr class="separator:aee2fc33ff5df741eb3cfd49e12a35f44"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a131c04f4b2607b414e942b8320614199"><td class="memTemplParams" colspan="2"><a id="a131c04f4b2607b414e942b8320614199"></a>
-template&lt;class T  = edge_storage_type&gt; </td></tr>
-<tr class="memitem:a131c04f4b2607b414e942b8320614199"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires</b> (!graph_impl::has_reservable_partitions&lt; T &gt;) size_type edges_capacity() const noexcept</td></tr>
-<tr class="separator:a131c04f4b2607b414e942b8320614199"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7e24f11724d5f286cc9b9b8d33523424"><td class="memItemLeft" align="right" valign="top"><a id="a7e24f11724d5f286cc9b9b8d33523424"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>reserve_edges</b> (const edge_index_type partition, const edge_index_type size) requires graph_impl</td></tr>
+<tr class="separator:a7e24f11724d5f286cc9b9b8d33523424"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ade93366211b7ec4fcc22537bc04da4b7"><td class="memItemLeft" align="right" valign="top"><a id="ade93366211b7ec4fcc22537bc04da4b7"></a>
+size_type&#160;</td><td class="memItemRight" valign="bottom"><b>edges_capacity</b> (const edge_index_type partition) const requires graph_impl</td></tr>
+<tr class="separator:ade93366211b7ec4fcc22537bc04da4b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a373d00fa6e70ab02f4798b4874e22e05"><td class="memItemLeft" align="right" valign="top"><a id="a373d00fa6e70ab02f4798b4874e22e05"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>shrink_to_fit</b> ()</td></tr>
 <tr class="separator:a373d00fa6e70ab02f4798b4874e22e05"><td class="memSeparator" colspan="2">&#160;</td></tr>

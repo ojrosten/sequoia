@@ -403,7 +403,7 @@ $(function() {
 <div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;    <span class="keyword">class </span>NodeWeight,</div>
 <div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;    <span class="keyword">class </span>EdgeWeightCreator=ownership::spawner&lt;EdgeWeight&gt;,</div>
 <div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;    <span class="keyword">class </span>NodeWeightCreator=ownership::spawner&lt;NodeWeight&gt;,</div>
-<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;    <span class="keyword">class </span>EdgeStorageTraits = contiguous_edge_storage_traits,</div>
+<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;    <span class="keyword">class </span>EdgeStorageTraits = bucketed_edge_storage_traits,</div>
 <div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160;    <span class="keyword">class </span>NodeWeightStorageTraits = node_weight_storage_traits&lt;NodeWeight&gt;</div>
 <div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160;  &gt;</div>
 <div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160;    requires (ownership::creator&lt;EdgeWeightCreator&gt; &amp;&amp; ownership::creator&lt;NodeWeightCreator&gt;)</div>
@@ -473,7 +473,7 @@ $(function() {
 <div class="line"><a name="l00409"></a><span class="lineno">  409</span>&#160;    <span class="keyword">class </span>NodeWeight,</div>
 <div class="line"><a name="l00410"></a><span class="lineno">  410</span>&#160;    <span class="keyword">class </span>EdgeWeightCreator=ownership::spawner&lt;EdgeWeight&gt;,</div>
 <div class="line"><a name="l00411"></a><span class="lineno">  411</span>&#160;    <span class="keyword">class </span>NodeWeightCreator=ownership::spawner&lt;NodeWeight&gt;,</div>
-<div class="line"><a name="l00412"></a><span class="lineno">  412</span>&#160;    <span class="keyword">class </span>EdgeStorageTraits=contiguous_edge_storage_traits,</div>
+<div class="line"><a name="l00412"></a><span class="lineno">  412</span>&#160;    <span class="keyword">class </span>EdgeStorageTraits=bucketed_edge_storage_traits,</div>
 <div class="line"><a name="l00413"></a><span class="lineno">  413</span>&#160;    <span class="keyword">class </span>NodeWeightStorageTraits=node_weight_storage_traits&lt;NodeWeight&gt;</div>
 <div class="line"><a name="l00414"></a><span class="lineno">  414</span>&#160;  &gt;</div>
 <div class="line"><a name="l00415"></a><span class="lineno">  415</span>&#160;    requires (ownership::creator&lt;EdgeWeightCreator&gt; &amp;&amp; ownership::creator&lt;NodeWeightCreator&gt;)</div>
@@ -539,7 +539,7 @@ $(function() {
 <div class="ttc" id="aDynamicGraphImpl_8hpp_html"><div class="ttname"><a href="../../de/d77/DynamicGraphImpl_8hpp.html">DynamicGraphImpl.hpp</a></div><div class="ttdoc">Implementation details for edge traits.</div></div>
 <div class="ttc" id="astructsequoia_1_1maths_1_1bucketed__edge__storage__traits_html"><div class="ttname"><a href="../../dc/d63/structsequoia_1_1maths_1_1bucketed__edge__storage__traits.html">sequoia::maths::bucketed_edge_storage_traits</a></div><div class="ttdef"><b>Definition:</b> DynamicGraph.hpp:32</div></div>
 <div class="ttc" id="aDataPool_8hpp_html"><div class="ttname"><a href="../../df/d01/DataPool_8hpp.html">DataPool.hpp</a></div><div class="ttdoc">Classes to allow homogenous treatment of pooled/spawned data.</div></div>
-<div class="ttc" id="aclasssequoia_1_1maths_1_1graph__primitive_html"><div class="ttname"><a href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">sequoia::maths::graph_primitive</a></div><div class="ttdef"><b>Definition:</b> GraphImpl.hpp:39</div></div>
+<div class="ttc" id="aclasssequoia_1_1maths_1_1graph__primitive_html"><div class="ttname"><a href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">sequoia::maths::graph_primitive</a></div><div class="ttdef"><b>Definition:</b> GraphImpl.hpp:139</div></div>
 <div class="ttc" id="aclasssequoia_1_1maths_1_1graph__impl_1_1node__storage_html"><div class="ttname"><a href="../../d0/de4/classsequoia_1_1maths_1_1graph__impl_1_1node__storage.html">sequoia::maths::graph_impl::node_storage</a></div><div class="ttdef"><b>Definition:</b> NodeStorage.hpp:77</div></div>
 <div class="ttc" id="aclasssequoia_1_1data__structures_1_1bucketed__storage_html"><div class="ttname"><a href="../../da/d7b/classsequoia_1_1data__structures_1_1bucketed__storage.html">sequoia::data_structures::bucketed_storage</a></div><div class="ttdef"><b>Definition:</b> PartitionedData.hpp:82</div></div>
 <div class="ttc" id="aPartitionedData_8hpp_html"><div class="ttname"><a href="../../d3/d6e/PartitionedData_8hpp.html">PartitionedData.hpp</a></div><div class="ttdoc">Classes implementing the concept of a sequence of data which is divided into partitions.</div></div>

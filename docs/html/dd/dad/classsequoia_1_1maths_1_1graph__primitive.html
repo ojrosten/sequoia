@@ -112,73 +112,79 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a535b169acc5152ea76d416fbd05c7219"><td class="memItemLeft" align="right" valign="top"><a id="a535b169acc5152ea76d416fbd05c7219"></a>
 constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>graph_primitive</b> (edges_initializer edges)</td></tr>
 <tr class="separator:a535b169acc5152ea76d416fbd05c7219"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3c7641a38229ec2004c0f149a21c4217"><td class="memTemplParams" colspan="2"><a id="a3c7641a38229ec2004c0f149a21c4217"></a>
-template&lt;class N  = node_weight_type&gt; </td></tr>
-<tr class="memitem:a3c7641a38229ec2004c0f149a21c4217"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires</b> (!empty&lt; N &gt; &amp;&amp;!same_as&lt; N, <a class="el" href="../../d2/d94/structsequoia_1_1maths_1_1graph__impl_1_1heterogeneous__tag.html">graph_impl::heterogeneous_tag</a> &gt;) const expr <a class="el" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a>(edges_initializer edges</td></tr>
-<tr class="separator:a3c7641a38229ec2004c0f149a21c4217"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a27f5525caf19cdfdb681945dd3aa1fd4"><td class="memTemplParams" colspan="2"><a id="a27f5525caf19cdfdb681945dd3aa1fd4"></a>
-template&lt;class... NodeWeights, class N  = node_weight_type&gt; </td></tr>
-<tr class="memitem:a27f5525caf19cdfdb681945dd3aa1fd4"><td class="memTemplItemLeft" align="right" valign="top">requires constexpr same_as&lt; N, <a class="el" href="../../d2/d94/structsequoia_1_1maths_1_1graph__impl_1_1heterogeneous__tag.html">graph_impl::heterogeneous_tag</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>graph_primitive</b> (edges_initializer edges, NodeWeights &amp;&amp;... nodeWeights)</td></tr>
-<tr class="separator:a27f5525caf19cdfdb681945dd3aa1fd4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab3b8382b648d7d137c3d208f6a47d8e4"><td class="memItemLeft" align="right" valign="top"><a id="ab3b8382b648d7d137c3d208f6a47d8e4"></a>
+constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>graph_primitive</b> (edges_initializer edges, std::initializer_list&lt; node_weight_type &gt; nodeWeights) requires(!empty&lt; node_weight_type &gt; &amp;&amp;!same_as&lt; node_weight_type</td></tr>
+<tr class="separator:ab3b8382b648d7d137c3d208f6a47d8e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aee116c39d966217e01f99fd4b9df7ce4"><td class="memTemplParams" colspan="2"><a id="aee116c39d966217e01f99fd4b9df7ce4"></a>
+template&lt;class... NodeWeights&gt; </td></tr>
+<tr class="memitem:aee116c39d966217e01f99fd4b9df7ce4"><td class="memTemplItemLeft" align="right" valign="top">requires constexpr same_as&lt; node_weight_type, <a class="el" href="../../d2/d94/structsequoia_1_1maths_1_1graph__impl_1_1heterogeneous__tag.html">graph_impl::heterogeneous_tag</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>graph_primitive</b> (edges_initializer edges, NodeWeights &amp;&amp;... nodeWeights)</td></tr>
+<tr class="separator:aee116c39d966217e01f99fd4b9df7ce4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a389dfd57deed1b3ba694c6ca68805f91"><td class="memItemLeft" align="right" valign="top"><a id="a389dfd57deed1b3ba694c6ca68805f91"></a>
 constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>graph_primitive</b> (const <a class="el" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a> &amp;in)</td></tr>
 <tr class="separator:a389dfd57deed1b3ba694c6ca68805f91"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a86e99eef1bb3aa167f8a6b0cc33a2bf2"><td class="memItemLeft" align="right" valign="top"><a id="a86e99eef1bb3aa167f8a6b0cc33a2bf2"></a>
 constexpr size_type&#160;</td><td class="memItemRight" valign="bottom"><b>size</b> () const noexcept</td></tr>
 <tr class="separator:a86e99eef1bb3aa167f8a6b0cc33a2bf2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5e97ae65180043ebb65d20ae8c00abaf"><td class="memItemLeft" align="right" valign="top"><a id="a5e97ae65180043ebb65d20ae8c00abaf"></a>
+constexpr void&#160;</td><td class="memItemRight" valign="bottom"><b>swap_nodes</b> (size_type i, size_type j)</td></tr>
+<tr class="separator:a5e97ae65180043ebb65d20ae8c00abaf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af82dc4d33b8a5e49c5469b3bfb968479"><td class="memTemplParams" colspan="2"><a id="af82dc4d33b8a5e49c5469b3bfb968479"></a>
+template&lt;class Compare &gt; </td></tr>
+<tr class="memitem:af82dc4d33b8a5e49c5469b3bfb968479"><td class="memTemplItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sort_nodes</b> (Compare c)</td></tr>
+<tr class="separator:af82dc4d33b8a5e49c5469b3bfb968479"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a75e6bc0f4e207d71e2767bb2520929a3"><td class="memItemLeft" align="right" valign="top">std::initializer_list&lt; N &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>nodeWeights</b>: <a class="el" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a>(homo_init_type{}</td></tr>
-<tr class="separator:a75e6bc0f4e207d71e2767bb2520929a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0991828f204ac11bc683764e682665c4"><td class="memItemLeft" align="right" valign="top"><a id="a0991828f204ac11bc683764e682665c4"></a>
-std::initializer_list&lt; N &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>edges</b></td></tr>
-<tr class="separator:a0991828f204ac11bc683764e682665c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3801a20d6bc89181464bfbb1f41b6c31"><td class="memItemLeft" align="right" valign="top"><a id="a3801a20d6bc89181464bfbb1f41b6c31"></a>
+constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>edges</b></td></tr>
+<tr class="separator:a3801a20d6bc89181464bfbb1f41b6c31"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3b5138309ad2d3ec332e1bdb7d92cbb3"><td class="memItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>nodeWeights</b></td></tr>
+<tr class="separator:a3b5138309ad2d3ec332e1bdb7d92cbb3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
-<tr class="memitem:af283139b16041034ffa166db94804983"><td class="memTemplParams" colspan="2"><a id="af283139b16041034ffa166db94804983"></a>
-template&lt;alloc EdgeAllocator, alloc NodeAllocator, class N  = node_weight_type&gt; </td></tr>
-<tr class="memitem:af283139b16041034ffa166db94804983"><td class="memTemplItemLeft" align="right" valign="top">requires constexpr enableNodeAllocation&lt; N &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>graph_primitive</b> (const EdgeAllocator &amp;edgeAlloc, const NodeAllocator &amp;nodeAlloc)</td></tr>
-<tr class="separator:af283139b16041034ffa166db94804983"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae1599dc892209373ae4986d4454fb9f0"><td class="memTemplParams" colspan="2"><a id="ae1599dc892209373ae4986d4454fb9f0"></a>
-template&lt;alloc EdgeAllocator, alloc EdgePartitionsAllocator, alloc NodeAllocator, class N  = node_weight_type&gt; </td></tr>
-<tr class="memitem:ae1599dc892209373ae4986d4454fb9f0"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires</b> (enableNodeAllocation&lt; N &gt;) const expr <a class="el" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a>(const EdgeAllocator &amp;edgeAlloc</td></tr>
-<tr class="separator:ae1599dc892209373ae4986d4454fb9f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a91ca6b3753d574815a61aee56be25b42"><td class="memTemplParams" colspan="2"><a id="a91ca6b3753d574815a61aee56be25b42"></a>
+template&lt;alloc EdgeAllocator, alloc NodeAllocator&gt; </td></tr>
+<tr class="memitem:a91ca6b3753d574815a61aee56be25b42"><td class="memTemplItemLeft" align="right" valign="top">requires constexpr enableNodeAllocation&lt; node_weight_type &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>graph_primitive</b> (const EdgeAllocator &amp;edgeAlloc, const NodeAllocator &amp;nodeAlloc)</td></tr>
+<tr class="separator:a91ca6b3753d574815a61aee56be25b42"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2cb9ce6c071c6cd963d0785888c306b2"><td class="memTemplParams" colspan="2"><a id="a2cb9ce6c071c6cd963d0785888c306b2"></a>
+template&lt;alloc EdgeAllocator, alloc EdgePartitionsAllocator, alloc NodeAllocator&gt; </td></tr>
+<tr class="memitem:a2cb9ce6c071c6cd963d0785888c306b2"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires</b> (enableNodeAllocation&lt; node_weight_type &gt;) const expr <a class="el" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a>(const EdgeAllocator &amp;edgeAlloc</td></tr>
+<tr class="separator:a2cb9ce6c071c6cd963d0785888c306b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a801eb4f378bd536681574d20606af12b"><td class="memItemLeft" align="right" valign="top"><a id="a801eb4f378bd536681574d20606af12b"></a>
 const EdgePartitionsAllocator const NodeAllocator&#160;</td><td class="memItemRight" valign="bottom"><b>Nodes</b> (nodeAlloc)</td></tr>
 <tr class="separator:a801eb4f378bd536681574d20606af12b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3db0a1532fa33d0c56fe3a10ef9fbdbe"><td class="memTemplParams" colspan="2"><a id="a3db0a1532fa33d0c56fe3a10ef9fbdbe"></a>
-template&lt;alloc EdgeAllocator, class N  = node_weight_type&gt; </td></tr>
-<tr class="memitem:a3db0a1532fa33d0c56fe3a10ef9fbdbe"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires</b> (!enableNodeAllocation&lt; N &gt;) const expr <a class="el" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a>(const EdgeAllocator &amp;edgeAlloc)</td></tr>
-<tr class="separator:a3db0a1532fa33d0c56fe3a10ef9fbdbe"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab832cbef75d8091fa50199d4a64c09ab"><td class="memTemplParams" colspan="2"><a id="ab832cbef75d8091fa50199d4a64c09ab"></a>
-template&lt;alloc EdgeAllocator, alloc EdgePartitionsAllocator, class N  = node_weight_type&gt; </td></tr>
-<tr class="memitem:ab832cbef75d8091fa50199d4a64c09ab"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires</b> (!enableNodeAllocation&lt; N &gt;) const expr <a class="el" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a>(const EdgeAllocator &amp;edgeAlloc</td></tr>
-<tr class="separator:ab832cbef75d8091fa50199d4a64c09ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b111aea3eecebf21fc5589e092ba6db"><td class="memTemplParams" colspan="2"><a id="a0b111aea3eecebf21fc5589e092ba6db"></a>
+template&lt;alloc EdgeAllocator&gt; </td></tr>
+<tr class="memitem:a0b111aea3eecebf21fc5589e092ba6db"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires</b> (!enableNodeAllocation&lt; node_weight_type &gt;) const expr <a class="el" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a>(const EdgeAllocator &amp;edgeAlloc)</td></tr>
+<tr class="separator:a0b111aea3eecebf21fc5589e092ba6db"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a99f8db744ccf1f8f17c26e201773f917"><td class="memTemplParams" colspan="2"><a id="a99f8db744ccf1f8f17c26e201773f917"></a>
+template&lt;alloc EdgeAllocator, alloc EdgePartitionsAllocator&gt; </td></tr>
+<tr class="memitem:a99f8db744ccf1f8f17c26e201773f917"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires</b> (!enableNodeAllocation&lt; node_weight_type &gt;) const expr <a class="el" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a>(const EdgeAllocator &amp;edgeAlloc</td></tr>
+<tr class="separator:a99f8db744ccf1f8f17c26e201773f917"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3be999d3f934a432e3579ad808f78ab1"><td class="memItemLeft" align="right" valign="top"><a id="a3be999d3f934a432e3579ad808f78ab1"></a>
 const EdgePartitionsAllocator&#160;</td><td class="memItemRight" valign="bottom"><b>Nodes</b> (edges.size(), nodeAlloc)</td></tr>
 <tr class="separator:a3be999d3f934a432e3579ad808f78ab1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a17c1c8a0a349ed669709a6216fd421ec"><td class="memTemplParams" colspan="2"><a id="a17c1c8a0a349ed669709a6216fd421ec"></a>
-template&lt;alloc EdgeAllocator, alloc EdgePartitionsAllocator, alloc NodeAllocator, class N  = node_weight_type&gt; </td></tr>
-<tr class="memitem:a17c1c8a0a349ed669709a6216fd421ec"><td class="memTemplItemLeft" align="right" valign="top">requires constexpr enableNodeAllocation&lt; N &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>graph_primitive</b> (edges_initializer edges, const EdgeAllocator &amp;edgeAlloc, const EdgePartitionsAllocator &amp;edgeParitionsAlloc, const NodeAllocator &amp;nodeAlloc)</td></tr>
-<tr class="separator:a17c1c8a0a349ed669709a6216fd421ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a41444be932e0b3db5c801e4b88774d3b"><td class="memTemplParams" colspan="2"><a id="a41444be932e0b3db5c801e4b88774d3b"></a>
-template&lt;alloc EdgeAllocator, alloc EdgePartitionsAllocator, class N  = node_weight_type&gt; </td></tr>
-<tr class="memitem:a41444be932e0b3db5c801e4b88774d3b"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires</b> (!enableNodeAllocation&lt; N &gt;) const expr <a class="el" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a>(edges_initializer edges</td></tr>
-<tr class="separator:a41444be932e0b3db5c801e4b88774d3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a204e83e831ec917301d93a1a02cdb2f1"><td class="memTemplParams" colspan="2"><a id="a204e83e831ec917301d93a1a02cdb2f1"></a>
-template&lt;alloc EdgeAllocator, alloc EdgePartitionsAllocator, alloc NodeAllocator, class N  = node_weight_type&gt; </td></tr>
-<tr class="memitem:a204e83e831ec917301d93a1a02cdb2f1"><td class="memTemplItemLeft" align="right" valign="top">requires constexpr enableNodeAllocation&lt; N &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>graph_primitive</b> (<a class="el" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a> &amp;&amp;in, const EdgeAllocator &amp;edgeAlloc, const EdgePartitionsAllocator &amp;edgeParitionsAlloc, const NodeAllocator &amp;nodeAlloc)</td></tr>
-<tr class="separator:a204e83e831ec917301d93a1a02cdb2f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a10e9d5a96eeb6e203959f45a1bb7b9b3"><td class="memTemplParams" colspan="2"><a id="a10e9d5a96eeb6e203959f45a1bb7b9b3"></a>
-template&lt;alloc EdgeAllocator, alloc NodeAllocator, class N  = node_weight_type&gt; </td></tr>
-<tr class="memitem:a10e9d5a96eeb6e203959f45a1bb7b9b3"><td class="memTemplItemLeft" align="right" valign="top">requires constexpr enableNodeAllocation&lt; N &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>graph_primitive</b> (<a class="el" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a> &amp;&amp;in, const EdgeAllocator &amp;edgeAlloc, const NodeAllocator &amp;nodeAlloc)</td></tr>
-<tr class="separator:a10e9d5a96eeb6e203959f45a1bb7b9b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acf3d25abbe28ba72668d3c1216d30cbd"><td class="memTemplParams" colspan="2"><a id="acf3d25abbe28ba72668d3c1216d30cbd"></a>
-template&lt;alloc EdgeAllocator, alloc EdgePartitionsAllocator, alloc NodeAllocator, class N  = node_weight_type&gt; </td></tr>
-<tr class="memitem:acf3d25abbe28ba72668d3c1216d30cbd"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires</b> (!enableNodeAllocation&lt; N &gt;) const expr <a class="el" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a>(<a class="el" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a> &amp;&amp;in</td></tr>
-<tr class="separator:acf3d25abbe28ba72668d3c1216d30cbd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae2ede97ce65da686bcefbc3b40cf48e5"><td class="memTemplParams" colspan="2"><a id="ae2ede97ce65da686bcefbc3b40cf48e5"></a>
+template&lt;alloc EdgeAllocator, alloc EdgePartitionsAllocator, alloc NodeAllocator&gt; </td></tr>
+<tr class="memitem:ae2ede97ce65da686bcefbc3b40cf48e5"><td class="memTemplItemLeft" align="right" valign="top">requires constexpr enableNodeAllocation&lt; node_weight_type &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>graph_primitive</b> (edges_initializer edges, const EdgeAllocator &amp;edgeAlloc, const EdgePartitionsAllocator &amp;edgeParitionsAlloc, const NodeAllocator &amp;nodeAlloc)</td></tr>
+<tr class="separator:ae2ede97ce65da686bcefbc3b40cf48e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a88214c0a97be0fb3560482f8e0bda914"><td class="memTemplParams" colspan="2"><a id="a88214c0a97be0fb3560482f8e0bda914"></a>
+template&lt;alloc EdgeAllocator, alloc EdgePartitionsAllocator&gt; </td></tr>
+<tr class="memitem:a88214c0a97be0fb3560482f8e0bda914"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires</b> (!enableNodeAllocation&lt; node_weight_type &gt;) const expr <a class="el" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a>(edges_initializer edges</td></tr>
+<tr class="separator:a88214c0a97be0fb3560482f8e0bda914"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a972d73f7d21ed8a07f00b9c4d369a9e6"><td class="memTemplParams" colspan="2"><a id="a972d73f7d21ed8a07f00b9c4d369a9e6"></a>
+template&lt;alloc EdgeAllocator, alloc EdgePartitionsAllocator, alloc NodeAllocator&gt; </td></tr>
+<tr class="memitem:a972d73f7d21ed8a07f00b9c4d369a9e6"><td class="memTemplItemLeft" align="right" valign="top">requires constexpr enableNodeAllocation&lt; node_weight_type &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>graph_primitive</b> (<a class="el" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a> &amp;&amp;in, const EdgeAllocator &amp;edgeAlloc, const EdgePartitionsAllocator &amp;edgeParitionsAlloc, const NodeAllocator &amp;nodeAlloc)</td></tr>
+<tr class="separator:a972d73f7d21ed8a07f00b9c4d369a9e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0c0c29bf8f026f847666ac66c0c84936"><td class="memTemplParams" colspan="2"><a id="a0c0c29bf8f026f847666ac66c0c84936"></a>
+template&lt;alloc EdgeAllocator, alloc NodeAllocator&gt; </td></tr>
+<tr class="memitem:a0c0c29bf8f026f847666ac66c0c84936"><td class="memTemplItemLeft" align="right" valign="top">requires constexpr enableNodeAllocation&lt; node_weight_type &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>graph_primitive</b> (<a class="el" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a> &amp;&amp;in, const EdgeAllocator &amp;edgeAlloc, const NodeAllocator &amp;nodeAlloc)</td></tr>
+<tr class="separator:a0c0c29bf8f026f847666ac66c0c84936"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abdd65ba0f88f22e2e3d65f3c0949aea3"><td class="memTemplParams" colspan="2"><a id="abdd65ba0f88f22e2e3d65f3c0949aea3"></a>
+template&lt;alloc EdgeAllocator, alloc EdgePartitionsAllocator, alloc NodeAllocator&gt; </td></tr>
+<tr class="memitem:abdd65ba0f88f22e2e3d65f3c0949aea3"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires</b> (!enableNodeAllocation&lt; node_weight_type &gt;) const expr <a class="el" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a>(<a class="el" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a> &amp;&amp;in</td></tr>
+<tr class="separator:abdd65ba0f88f22e2e3d65f3c0949aea3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac1725f5bf156d00acf6f09930e6e9d94"><td class="memItemLeft" align="right" valign="top"><a id="ac1725f5bf156d00acf6f09930e6e9d94"></a>
 constexpr <a class="el" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a> &amp;&amp;) noexcept=default</td></tr>
 <tr class="separator:ac1725f5bf156d00acf6f09930e6e9d94"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -188,9 +194,6 @@ constexpr <a class="el" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primi
 <tr class="memitem:a86f08a3902af650e4388ce071ec203e9"><td class="memItemLeft" align="right" valign="top"><a id="a86f08a3902af650e4388ce071ec203e9"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>swap</b> (<a class="el" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a> &amp;rhs) noexcept(noexcept(Connectivity::swap(rhs)) &amp;&amp;noexcept(Nodes::swap(rhs)))</td></tr>
 <tr class="separator:a86f08a3902af650e4388ce071ec203e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5e97ae65180043ebb65d20ae8c00abaf"><td class="memItemLeft" align="right" valign="top"><a id="a5e97ae65180043ebb65d20ae8c00abaf"></a>
-constexpr void&#160;</td><td class="memItemRight" valign="bottom"><b>swap_nodes</b> (size_type i, size_type j)</td></tr>
-<tr class="separator:a5e97ae65180043ebb65d20ae8c00abaf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0b7cc8a417c83634a5ee8a7e8181fc39"><td class="memItemLeft" align="right" valign="top"><a id="a0b7cc8a417c83634a5ee8a7e8181fc39"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>reserve_nodes</b> (const size_type size)</td></tr>
 <tr class="separator:a0b7cc8a417c83634a5ee8a7e8181fc39"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -232,8 +235,8 @@ const EdgePartitionsAllocator const NodeAllocator&#160;</td><td class="memItemRi
 <tr class="separator:ac78967a2bd8dde40bad6bccfbb24b53a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a19bf595d81c0cd6cab94b1fc15a519c4"><td class="memItemLeft" align="right" valign="top">const EdgePartitionsAllocator&#160;</td><td class="memItemRight" valign="bottom"><b>edgeParitionsAlloc</b></td></tr>
 <tr class="separator:a19bf595d81c0cd6cab94b1fc15a519c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a41822a216773cd83608e536196218659"><td class="memItemLeft" align="right" valign="top">const EdgePartitionsAllocator&#160;</td><td class="memItemRight" valign="bottom"><b>Nodes</b></td></tr>
-<tr class="separator:a41822a216773cd83608e536196218659"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a52f3abe80c0a82f38252da548622a0f2"><td class="memItemLeft" align="right" valign="top">const EdgePartitionsAllocator&#160;</td><td class="memItemRight" valign="bottom"><b>Nodes</b></td></tr>
+<tr class="separator:a52f3abe80c0a82f38252da548622a0f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a05624a3e6028296ea152cf2dfbce8072"><td class="memItemLeft" align="right" valign="top"><a id="a05624a3e6028296ea152cf2dfbce8072"></a>
 const EdgeAllocator &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>edgeAlloc</b></td></tr>
 <tr class="separator:a05624a3e6028296ea152cf2dfbce8072"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -295,17 +298,16 @@ template&lt;network Connectivity, class Nodes &gt; </div>
 <div class="line">      <span class="keyword">template</span></div>
 <div class="line">      &lt;</div>
 <div class="line">        alloc EdgeAllocator,</div>
-<div class="line">        alloc NodeAllocator,</div>
-<div class="line">        <span class="keyword">class </span>N=node_weight_type</div>
+<div class="line">        alloc NodeAllocator</div>
 <div class="line">      &gt;</div>
-<div class="line">        requires enableNodeAllocation&lt;N&gt;</div>
+<div class="line">        requires enableNodeAllocation&lt;node_weight_type&gt;</div>
 <div class="line">      constexpr graph_primitive(edges_initializer edges, <span class="keyword">const</span> EdgeAllocator&amp; edgeAlloc, std::initializer_list&lt;node_weight_type&gt; nodeWeights, <span class="keyword">const</span> NodeAllocator&amp; nodeAlloc)</div>
 <div class="line">        : Connectivity{edges, edgeAlloc}</div>
 </div><!-- fragment -->
 </div>
 </div>
-<a id="a41822a216773cd83608e536196218659"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a41822a216773cd83608e536196218659">&#9670;&nbsp;</a></span>Nodes <span class="overload">[1/2]</span></h2>
+<a id="a52f3abe80c0a82f38252da548622a0f2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a52f3abe80c0a82f38252da548622a0f2">&#9670;&nbsp;</a></span>Nodes <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -316,7 +318,7 @@ template&lt;network Connectivity, class Nodes &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">edges_initializer std::initializer_list&lt; node_weight_type &gt; <a class="el" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">sequoia::maths::graph_primitive</a>&lt; Connectivity, Nodes &gt;::Nodes</td>
+          <td class="memname">constexpr <a class="el" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">sequoia::maths::graph_primitive</a>&lt; Connectivity, Nodes &gt;::Nodes</td>
         </tr>
       </table>
   </td>
@@ -332,10 +334,9 @@ template&lt;network Connectivity, class Nodes &gt; </div>
 <div class="line">      &lt;</div>
 <div class="line">        alloc EdgeAllocator,</div>
 <div class="line">        alloc EdgePartitionsAllocator,</div>
-<div class="line">        alloc NodeAllocator,</div>
-<div class="line">        <span class="keyword">class </span>N=node_weight_type</div>
+<div class="line">        alloc NodeAllocator</div>
 <div class="line">      &gt;</div>
-<div class="line">        requires enableNodeAllocation&lt;N&gt;</div>
+<div class="line">        requires enableNodeAllocation&lt;node_weight_type&gt;</div>
 <div class="line">      constexpr graph_primitive(edges_initializer edges, <span class="keyword">const</span> EdgeAllocator&amp; edgeAlloc, <span class="keyword">const</span> EdgePartitionsAllocator&amp; edgeParitionsAlloc, std::initializer_list&lt;node_weight_type&gt; nodeWeights, <span class="keyword">const</span> NodeAllocator&amp; nodeAlloc)</div>
 <div class="line">        : Connectivity{edges, edgeAlloc, edgeParitionsAlloc}</div>
 </div><!-- fragment -->
@@ -365,19 +366,15 @@ template&lt;network Connectivity, class Nodes &gt; </div>
 <b>Initial value:</b><div class="fragment"><div class="line">{}</div>
 <div class="line">      {}</div>
 <div class="line"> </div>
-<div class="line">      <span class="keyword">template</span></div>
-<div class="line">      &lt;</div>
-<div class="line">        alloc EdgeAllocator,</div>
-<div class="line">        <span class="keyword">class </span>N=node_weight_type</div>
-<div class="line">      &gt;</div>
-<div class="line">        requires (!enableNodeAllocation&lt;N&gt;)</div>
+<div class="line">      <span class="keyword">template</span>&lt;alloc EdgeAllocator&gt;</div>
+<div class="line">        requires (!enableNodeAllocation&lt;node_weight_type&gt;)</div>
 <div class="line">      constexpr graph_primitive(edges_initializer edges, <span class="keyword">const</span> EdgeAllocator&amp; edgeAlloc)</div>
 <div class="line">        : Connectivity{edges, edgeAlloc}</div>
 </div><!-- fragment -->
 </div>
 </div>
-<a id="a75e6bc0f4e207d71e2767bb2520929a3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a75e6bc0f4e207d71e2767bb2520929a3">&#9670;&nbsp;</a></span>nodeWeights</h2>
+<a id="a3b5138309ad2d3ec332e1bdb7d92cbb3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3b5138309ad2d3ec332e1bdb7d92cbb3">&#9670;&nbsp;</a></span>nodeWeights</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -385,7 +382,7 @@ template&lt;network Connectivity, class Nodes &gt; </div>
 template&lt;network Connectivity, class Nodes &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">std::initializer_list&lt; N &gt; <a class="el" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">sequoia::maths::graph_primitive</a>&lt; Connectivity, Nodes &gt;::nodeWeights</td>
+          <td class="memname">constexpr <a class="el" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">sequoia::maths::graph_primitive</a>&lt; Connectivity, Nodes &gt;::nodeWeights</td>
         </tr>
       </table>
 </div><div class="memdoc">

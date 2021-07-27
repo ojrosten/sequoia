@@ -96,14 +96,12 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>return_type</b> = R<
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a567a6d5a46c7781c941ddff077954bc5"><td class="memTemplParams" colspan="2"><a id="a567a6d5a46c7781c941ddff077954bc5"></a>
-template&lt;bool B = MultiPipeline&gt; </td></tr>
-<tr class="memitem:a567a6d5a46c7781c941ddff077954bc5"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires</b> (!B) explicit <a class="el" href="../../d4/d85/classsequoia_1_1concurrency_1_1thread__pool.html">thread_pool</a>(const std</td></tr>
-<tr class="separator:a567a6d5a46c7781c941ddff077954bc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab240d3cecfda36f8ee79fa8eea680b13"><td class="memTemplParams" colspan="2"><a id="ab240d3cecfda36f8ee79fa8eea680b13"></a>
-template&lt;bool B = MultiPipeline&gt; </td></tr>
-<tr class="memitem:ab240d3cecfda36f8ee79fa8eea680b13"><td class="memTemplItemLeft" align="right" valign="top">requires B&#160;</td><td class="memTemplItemRight" valign="bottom"><b>thread_pool</b> (const std::size_t numThreads, const std::size_t pushCycles=46)</td></tr>
-<tr class="separator:ab240d3cecfda36f8ee79fa8eea680b13"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8d82a90d18b81cee03ccae21e2f98230"><td class="memItemLeft" align="right" valign="top"><a id="a8d82a90d18b81cee03ccae21e2f98230"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>thread_pool</b> (const std::size_t numThreads) requires(!MultiPipeline)</td></tr>
+<tr class="separator:a8d82a90d18b81cee03ccae21e2f98230"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a67ec7e7932af811599062c8b2cf159eb"><td class="memItemLeft" align="right" valign="top"><a id="a67ec7e7932af811599062c8b2cf159eb"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>thread_pool</b> (const std::size_t numThreads, const std::size_t pushCycles=46) requires MultiPipeline</td></tr>
+<tr class="separator:a67ec7e7932af811599062c8b2cf159eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a43bb826eda0785a478b90dd01d436194"><td class="memItemLeft" align="right" valign="top"><a id="a43bb826eda0785a478b90dd01d436194"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>thread_pool</b> (const <a class="el" href="../../d4/d85/classsequoia_1_1concurrency_1_1thread__pool.html">thread_pool</a> &amp;)=delete</td></tr>
 <tr class="separator:a43bb826eda0785a478b90dd01d436194"><td class="memSeparator" colspan="2">&#160;</td></tr>

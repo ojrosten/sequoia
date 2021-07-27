@@ -144,7 +144,7 @@ $(function() {
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160; </div>
 <div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;  <span class="keyword">template</span></div>
 <div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;  &lt;</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <a class="code" href="../../d5/d05/TestLogger_8hpp.html#ae4e97c9d45a89647799f0d308ba6d244">test_mode</a> Mode,</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <a class="code" href="../../dd/da8/namespacesequoia_1_1testing.html#ae4e97c9d45a89647799f0d308ba6d244">test_mode</a> Mode,</div>
 <div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="keyword">class </span>Actions,</div>
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    pseudoregular T,</div>
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    invocable&lt;T&amp;&gt; Mutator,</div>
@@ -157,11 +157,11 @@ $(function() {
 <div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160; </div>
 <div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;  <span class="keyword">template</span>&lt;test_mode Mode, <span class="keyword">class</span> Actions, pseudoregular T, invocable&lt;T&amp;&gt; Mutator, alloc_getter&lt;T&gt;... Getters&gt;</div>
 <div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    requires (<span class="keyword">sizeof</span>...(Getters) &gt; 0)</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;  void check_semantics(std::string_view description, test_logger&lt;Mode&gt;&amp; logger, const Actions&amp; actions, const T&amp; x, const T&amp; y, Mutator yMutator, const allocation_info&lt;T, Getters&gt;&amp;... info)</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;  void <a class="code" href="../../dd/da8/namespacesequoia_1_1testing.html#ac338b82e4f6a44a8a02400da454e953c">check_semantics</a>(std::string_view description, test_logger&lt;Mode&gt;&amp; logger, const Actions&amp; actions, const T&amp; x, const T&amp; y, Mutator yMutator, const allocation_info&lt;T, Getters&gt;&amp;... info)</div>
 <div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;  {</div>
 <div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    sentinel&lt;Mode&gt; sentry{logger, add_type_info&lt;T&gt;(description).append(<span class="stringliteral">&quot;\n&quot;</span>)};</div>
 <div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160; </div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    <span class="keywordflow">if</span>(check_semantics(logger, actions, x, y, yMutator, std::tuple_cat(make_dual_allocation_checkers(info, x, y)...)))</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    <span class="keywordflow">if</span>(<a class="code" href="../../dd/da8/namespacesequoia_1_1testing.html#ac338b82e4f6a44a8a02400da454e953c">check_semantics</a>(logger, actions, x, y, yMutator, std::tuple_cat(make_dual_allocation_checkers(info, x, y)...)))</div>
 <div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    {</div>
 <div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;      check_para_constructor_allocations(logger, y, yMutator, info...);</div>
 <div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    }</div>
@@ -169,7 +169,7 @@ $(function() {
 <div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160; </div>
 <div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;  <span class="keyword">template</span></div>
 <div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;  &lt;</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    <a class="code" href="../../d5/d05/TestLogger_8hpp.html#ae4e97c9d45a89647799f0d308ba6d244">test_mode</a> Mode,</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    <a class="code" href="../../dd/da8/namespacesequoia_1_1testing.html#ae4e97c9d45a89647799f0d308ba6d244">test_mode</a> Mode,</div>
 <div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    <span class="keyword">class </span>Actions,</div>
 <div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    pseudoregular T,</div>
 <div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    invocable_r&lt;T&gt; xMaker,</div>
@@ -178,7 +178,7 @@ $(function() {
 <div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    alloc_getter&lt;T&gt;... Getters</div>
 <div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;  &gt;</div>
 <div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    requires (<span class="keyword">sizeof</span>...(Getters) &gt; 0)</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;  std::pair&lt;T, T&gt; check_semantics(std::string_view description, test_logger&lt;Mode&gt;&amp; logger, const Actions&amp; actions, xMaker xFn, yMaker yFn, Mutator yMutator, const allocation_info&lt;T, Getters&gt;&amp;... info)</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;  std::pair&lt;T, T&gt; <a class="code" href="../../dd/da8/namespacesequoia_1_1testing.html#ac338b82e4f6a44a8a02400da454e953c">check_semantics</a>(std::string_view description, test_logger&lt;Mode&gt;&amp; logger, const Actions&amp; actions, xMaker xFn, yMaker yFn, Mutator yMutator, const allocation_info&lt;T, Getters&gt;&amp;... info)</div>
 <div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;  {</div>
 <div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    sentinel&lt;Mode&gt; sentry{logger, add_type_info&lt;T&gt;(description).append(<span class="stringliteral">&quot;\n&quot;</span>)};</div>
 <div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160; </div>
@@ -186,24 +186,24 @@ $(function() {
 <div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;    <span class="keyword">auto</span> y{yFn()};</div>
 <div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160; </div>
 <div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;    check_initialization_allocations(logger, x, y, info...);</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;    check_semantics(description, logger, actions, x, y, std::move(yMutator), info...);</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;    <a class="code" href="../../dd/da8/namespacesequoia_1_1testing.html#ac338b82e4f6a44a8a02400da454e953c">check_semantics</a>(description, logger, actions, x, y, std::move(yMutator), info...);</div>
 <div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160; </div>
 <div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    <span class="keywordflow">return</span> {std::move(x), std::move(y)};</div>
 <div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;  }</div>
 <div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160; </div>
 <div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;  <span class="keyword">template</span></div>
 <div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;  &lt;</div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;    <a class="code" href="../../d5/d05/TestLogger_8hpp.html#ae4e97c9d45a89647799f0d308ba6d244">test_mode</a> Mode,</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;    <a class="code" href="../../dd/da8/namespacesequoia_1_1testing.html#ae4e97c9d45a89647799f0d308ba6d244">test_mode</a> Mode,</div>
 <div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;    <span class="keyword">class </span>Actions,</div>
 <div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;    pseudoregular T,</div>
 <div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;    invocable&lt;T&amp;&gt; Mutator,</div>
 <div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;    alloc_getter&lt;T&gt;... Getters</div>
 <div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;  &gt;</div>
-<div class="line"><a name="l00142"></a><span class="lineno"><a class="line" href="../../d0/dce/RegularAllocationCheckersDetails_8hpp.html#ad5d87ba71f63912d9537b1a2fe8782da">  142</a></span>&#160;  <span class="keywordtype">bool</span> check_semantics(<a class="code" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger&lt;Mode&gt;</a>&amp; logger, <span class="keyword">const</span> Actions&amp; actions, <span class="keyword">const</span> T&amp; <a class="code" href="../../d6/d61/structsequoia_1_1testing_1_1x.html">x</a>, <span class="keyword">const</span> T&amp; <a class="code" href="../../d9/dfe/structsequoia_1_1testing_1_1y.html">y</a>, Mutator yMutator, std::tuple&lt;<a class="code" href="../../dd/df2/classsequoia_1_1testing_1_1impl_1_1dual__allocation__checker.html">dual_allocation_checker&lt;T, Getters&gt;</a>...&gt; checkers)</div>
+<div class="line"><a name="l00142"></a><span class="lineno"><a class="line" href="../../d0/dce/RegularAllocationCheckersDetails_8hpp.html#ad5d87ba71f63912d9537b1a2fe8782da">  142</a></span>&#160;  <span class="keywordtype">bool</span> <a class="code" href="../../dd/da8/namespacesequoia_1_1testing.html#ac338b82e4f6a44a8a02400da454e953c">check_semantics</a>(<a class="code" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger&lt;Mode&gt;</a>&amp; logger, <span class="keyword">const</span> Actions&amp; actions, <span class="keyword">const</span> T&amp; <a class="code" href="../../d6/d61/structsequoia_1_1testing_1_1x.html">x</a>, <span class="keyword">const</span> T&amp; <a class="code" href="../../d9/dfe/structsequoia_1_1testing_1_1y.html">y</a>, Mutator yMutator, std::tuple&lt;<a class="code" href="../../dd/df2/classsequoia_1_1testing_1_1impl_1_1dual__allocation__checker.html">dual_allocation_checker&lt;T, Getters&gt;</a>...&gt; checkers)</div>
 <div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;  {</div>
 <div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;    <span class="keyword">auto</span> fn{</div>
 <div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;      [&amp;logger, &amp;actions, &amp;<a class="code" href="../../d6/d61/structsequoia_1_1testing_1_1x.html">x</a>, &amp;<a class="code" href="../../d9/dfe/structsequoia_1_1testing_1_1y.html">y</a>, m{std::move(yMutator)}](<span class="keyword">auto</span>&amp;&amp;... checkers){</div>
-<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;        <span class="keywordflow">return</span> check_semantics(logger, actions, <a class="code" href="../../d6/d61/structsequoia_1_1testing_1_1x.html">x</a>, <a class="code" href="../../d9/dfe/structsequoia_1_1testing_1_1y.html">y</a>, m, std::forward&lt;decltype(checkers)&gt;(checkers)...);</div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="../../dd/da8/namespacesequoia_1_1testing.html#ac338b82e4f6a44a8a02400da454e953c">check_semantics</a>(logger, actions, <a class="code" href="../../d6/d61/structsequoia_1_1testing_1_1x.html">x</a>, <a class="code" href="../../d9/dfe/structsequoia_1_1testing_1_1y.html">y</a>, m, std::forward&lt;decltype(checkers)&gt;(checkers)...);</div>
 <div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;      }</div>
 <div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;    };</div>
 <div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160; </div>
@@ -211,7 +211,6 @@ $(function() {
 <div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;  }</div>
 <div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
-<div class="ttc" id="aTestLogger_8hpp_html_ae4e97c9d45a89647799f0d308ba6d244"><div class="ttname"><a href="../../d5/d05/TestLogger_8hpp.html#ae4e97c9d45a89647799f0d308ba6d244">sequoia::testing::test_mode</a></div><div class="ttdeci">test_mode</div><div class="ttdoc">Specifies whether tests are run as standard tests or in false postive/negative mode.</div><div class="ttdef"><b>Definition:</b> TestLogger.hpp:50</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1impl_1_1allocation__checker_html"><div class="ttname"><a href="../../d3/d83/classsequoia_1_1testing_1_1impl_1_1allocation__checker.html">sequoia::testing::impl::allocation_checker</a></div><div class="ttdoc">Wraps allocation_info, together with the prior allocation count.</div><div class="ttdef"><b>Definition:</b> AllocationCheckersDetails.hpp:234</div></div>
 <div class="ttc" id="astructsequoia_1_1testing_1_1impl_1_1regular__allocation__actions_html"><div class="ttname"><a href="../../da/dbd/structsequoia_1_1testing_1_1impl_1_1regular__allocation__actions.html">sequoia::testing::impl::regular_allocation_actions</a></div><div class="ttdoc">Extends allocation_actions for types with copy semantics.</div><div class="ttdef"><b>Definition:</b> RegularAllocationCheckersDetails.hpp:22</div></div>
 <div class="ttc" id="astructsequoia_1_1testing_1_1impl_1_1allocation__actions_html"><div class="ttname"><a href="../../d9/d71/structsequoia_1_1testing_1_1impl_1_1allocation__actions.html">sequoia::testing::impl::allocation_actions</a></div><div class="ttdoc">actions common to both move-only and regular types.</div><div class="ttdef"><b>Definition:</b> AllocationCheckersDetails.hpp:648</div></div>
@@ -221,8 +220,10 @@ $(function() {
 <div class="ttc" id="aclasssequoia_1_1testing_1_1test__logger_html"><div class="ttname"><a href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">sequoia::testing::test_logger</a></div><div class="ttdef"><b>Definition:</b> TestLogger.hpp:59</div></div>
 <div class="ttc" id="aRegularCheckersDetails_8hpp_html"><div class="ttname"><a href="../../d6/d98/RegularCheckersDetails_8hpp.html">RegularCheckersDetails.hpp</a></div><div class="ttdoc">Implementation details for checking regular semantics.</div></div>
 <div class="ttc" id="aRegularAllocationCheckersDetails_8hpp_html_acdfafedc78858f634a0c1d3aec524f3e"><div class="ttname"><a href="../../d0/dce/RegularAllocationCheckersDetails_8hpp.html#acdfafedc78858f634a0c1d3aec524f3e">sequoia::testing::impl::check_copy_assign</a></div><div class="ttdeci">bool check_copy_assign(test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, T &amp;z, const T &amp;y, const dual_allocation_checker&lt; T, Getters &gt; &amp;... checkers)</div><div class="ttdef"><b>Definition:</b> RegularAllocationCheckersDetails.hpp:51</div></div>
+<div class="ttc" id="anamespacesequoia_1_1testing_html_ac338b82e4f6a44a8a02400da454e953c"><div class="ttname"><a href="../../dd/da8/namespacesequoia_1_1testing.html#ac338b82e4f6a44a8a02400da454e953c">sequoia::testing::check_semantics</a></div><div class="ttdeci">void check_semantics(std::string_view description, test_logger&lt; Mode &gt; &amp;logger, T &amp;&amp;x, T &amp;&amp;y, const T &amp;xClone, const T &amp;yClone)</div><div class="ttdef"><b>Definition:</b> MoveOnlyCheckers.hpp:50</div></div>
 <div class="ttc" id="astructsequoia_1_1testing_1_1y_html"><div class="ttname"><a href="../../d9/dfe/structsequoia_1_1testing_1_1y.html">sequoia::testing::y</a></div><div class="ttdef"><b>Definition:</b> FactoryTest.cpp:38</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1impl_1_1dual__allocation__checker_html"><div class="ttname"><a href="../../dd/df2/classsequoia_1_1testing_1_1impl_1_1dual__allocation__checker.html">sequoia::testing::impl::dual_allocation_checker</a></div><div class="ttdoc">Wraps allocation_info, together with two prior allocation counts.</div><div class="ttdef"><b>Definition:</b> AllocationCheckersDetails.hpp:106</div></div>
+<div class="ttc" id="anamespacesequoia_1_1testing_html_ae4e97c9d45a89647799f0d308ba6d244"><div class="ttname"><a href="../../dd/da8/namespacesequoia_1_1testing.html#ae4e97c9d45a89647799f0d308ba6d244">sequoia::testing::test_mode</a></div><div class="ttdeci">test_mode</div><div class="ttdoc">Specifies whether tests are run as standard tests or in false postive/negative mode.</div><div class="ttdef"><b>Definition:</b> TestLogger.hpp:50</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

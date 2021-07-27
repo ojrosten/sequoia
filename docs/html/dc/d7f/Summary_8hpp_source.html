@@ -80,12 +80,12 @@ $(function() {
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160; </div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#include &lt;optional&gt;</span></div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="keyword">namespace </span>sequoia::testing</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="keyword">namespace </span><a class="code" href="../../dd/da8/namespacesequoia_1_1testing.html">sequoia::testing</a></div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;{</div>
-<div class="line"><a name="l00021"></a><span class="lineno"><a class="line" href="../../dc/d7f/Summary_8hpp.html#a005de6e9a187f3f10cc50eee1886b041">   21</a></span>&#160;  <span class="keyword">enum class</span> <a class="code" href="../../dc/d7f/Summary_8hpp.html#a005de6e9a187f3f10cc50eee1886b041">summary_detail</a> { absent_checks=1, failure_messages=2, timings=4};</div>
+<div class="line"><a name="l00021"></a><span class="lineno"><a class="line" href="../../dd/da8/namespacesequoia_1_1testing.html#a005de6e9a187f3f10cc50eee1886b041">   21</a></span>&#160;  <span class="keyword">enum class</span> <a class="code" href="../../dd/da8/namespacesequoia_1_1testing.html#a005de6e9a187f3f10cc50eee1886b041">summary_detail</a> { absent_checks=1, failure_messages=2, timings=4};</div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160; </div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;  <span class="keyword">template</span>&lt;&gt;</div>
-<div class="line"><a name="l00024"></a><span class="lineno"><a class="line" href="../../db/db3/structsequoia_1_1testing_1_1as__bitmask_3_01summary__detail_01_4.html">   24</a></span>&#160;  <span class="keyword">struct </span><a class="code" href="../../d4/d5f/structsequoia_1_1testing_1_1as__bitmask.html">as_bitmask</a>&lt;<a class="code" href="../../dc/d7f/Summary_8hpp.html#a005de6e9a187f3f10cc50eee1886b041">summary_detail</a>&gt; : std::true_type</div>
+<div class="line"><a name="l00024"></a><span class="lineno"><a class="line" href="../../db/db3/structsequoia_1_1testing_1_1as__bitmask_3_01summary__detail_01_4.html">   24</a></span>&#160;  <span class="keyword">struct </span><a class="code" href="../../d4/d5f/structsequoia_1_1testing_1_1as__bitmask.html">as_bitmask</a>&lt;<a class="code" href="../../dd/da8/namespacesequoia_1_1testing.html#a005de6e9a187f3f10cc50eee1886b041">summary_detail</a>&gt; : std::true_type</div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;  {};</div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> Iter&gt; <span class="keywordtype">void</span> pad_right(Iter begin, Iter end, std::string_view suffix)</div>
@@ -125,22 +125,31 @@ $(function() {
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160; </div>
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;  <span class="keyword">using</span> opt_duration = std::optional&lt;log_summary::duration&gt;;</div>
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;  [[nodiscard]]</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;  std::string stringify(<span class="keyword">const</span> log_summary::duration&amp; d);</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160; </div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;  [[nodiscard]]</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;  std::string report_time(<span class="keyword">const</span> log_summary&amp; log, opt_duration duration);</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; </div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;  [[nodiscard]]</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;  std::string summarize(<span class="keyword">const</span> log_summary&amp; log, opt_duration duration, <span class="keyword">const</span> summary_detail verbosity, indentation ind_0, indentation ind_1);</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160; </div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;  [[nodiscard]]</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;  std::string summarize(<span class="keyword">const</span> log_summary&amp; log, summary_detail verbosity, indentation ind_0, indentation ind_1);</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;}</div>
+<div class="line"><a name="l00064"></a><span class="lineno"><a class="line" href="../../da/d7c/structsequoia_1_1testing_1_1stringified__duration.html">   64</a></span>&#160;  <span class="keyword">struct </span><a class="code" href="../../da/d7c/structsequoia_1_1testing_1_1stringified__duration.html">stringified_duration</a></div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;  {</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    std::string time, unit;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;  };</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160; </div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;  [[nodiscard]]</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;  <a class="code" href="../../da/d7c/structsequoia_1_1testing_1_1stringified__duration.html">stringified_duration</a> stringify(<span class="keyword">const</span> log_summary::duration&amp; d);</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160; </div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;  [[nodiscard]]</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;  std::string report_time(<span class="keyword">const</span> <a class="code" href="../../d2/daa/classsequoia_1_1testing_1_1log__summary.html">log_summary</a>&amp; log, opt_duration duration);</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;  [[nodiscard]]</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;  std::string summarize(<span class="keyword">const</span> <a class="code" href="../../d2/daa/classsequoia_1_1testing_1_1log__summary.html">log_summary</a>&amp; log, opt_duration duration, <span class="keyword">const</span> <a class="code" href="../../dd/da8/namespacesequoia_1_1testing.html#a005de6e9a187f3f10cc50eee1886b041">summary_detail</a> verbosity, <a class="code" href="../../dc/d0f/classsequoia_1_1indentation.html">indentation</a> ind_0, <a class="code" href="../../dc/d0f/classsequoia_1_1indentation.html">indentation</a> ind_1);</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160; </div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;  [[nodiscard]]</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;  std::string summarize(<span class="keyword">const</span> <a class="code" href="../../d2/daa/classsequoia_1_1testing_1_1log__summary.html">log_summary</a>&amp; log, <a class="code" href="../../dd/da8/namespacesequoia_1_1testing.html#a005de6e9a187f3f10cc50eee1886b041">summary_detail</a> verbosity, <a class="code" href="../../dc/d0f/classsequoia_1_1indentation.html">indentation</a> ind_0, <a class="code" href="../../dc/d0f/classsequoia_1_1indentation.html">indentation</a> ind_1);</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
 <div class="ttc" id="astructsequoia_1_1testing_1_1as__bitmask_html"><div class="ttname"><a href="../../d4/d5f/structsequoia_1_1testing_1_1as__bitmask.html">sequoia::testing::as_bitmask</a></div><div class="ttdef"><b>Definition:</b> CoreInfrastructure.hpp:119</div></div>
-<div class="ttc" id="aSummary_8hpp_html_a005de6e9a187f3f10cc50eee1886b041"><div class="ttname"><a href="../../dc/d7f/Summary_8hpp.html#a005de6e9a187f3f10cc50eee1886b041">sequoia::testing::summary_detail</a></div><div class="ttdeci">summary_detail</div><div class="ttdef"><b>Definition:</b> Summary.hpp:21</div></div>
+<div class="ttc" id="aclasssequoia_1_1testing_1_1log__summary_html"><div class="ttname"><a href="../../d2/daa/classsequoia_1_1testing_1_1log__summary.html">sequoia::testing::log_summary</a></div><div class="ttdoc">Summaries data generated by the logger, for the purposes of reporting.</div><div class="ttdef"><b>Definition:</b> TestLogger.hpp:487</div></div>
+<div class="ttc" id="anamespacesequoia_1_1testing_html_a005de6e9a187f3f10cc50eee1886b041"><div class="ttname"><a href="../../dd/da8/namespacesequoia_1_1testing.html#a005de6e9a187f3f10cc50eee1886b041">sequoia::testing::summary_detail</a></div><div class="ttdeci">summary_detail</div><div class="ttdef"><b>Definition:</b> Summary.hpp:21</div></div>
 <div class="ttc" id="aTestLogger_8hpp_html"><div class="ttname"><a href="../../d5/d05/TestLogger_8hpp.html">TestLogger.hpp</a></div><div class="ttdoc">Utilities for recording the outcome of tests.</div></div>
+<div class="ttc" id="astructsequoia_1_1testing_1_1stringified__duration_html"><div class="ttname"><a href="../../da/d7c/structsequoia_1_1testing_1_1stringified__duration.html">sequoia::testing::stringified_duration</a></div><div class="ttdef"><b>Definition:</b> Summary.hpp:65</div></div>
+<div class="ttc" id="aclasssequoia_1_1indentation_html"><div class="ttname"><a href="../../dc/d0f/classsequoia_1_1indentation.html">sequoia::indentation</a></div><div class="ttdoc">Type-safe mechanism for indentations.</div><div class="ttdef"><b>Definition:</b> Indent.hpp:21</div></div>
+<div class="ttc" id="anamespacesequoia_1_1testing_html"><div class="ttname"><a href="../../dd/da8/namespacesequoia_1_1testing.html">sequoia::testing</a></div><div class="ttdef"><b>Definition:</b> MyBehaviouralTest.cpp:12</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

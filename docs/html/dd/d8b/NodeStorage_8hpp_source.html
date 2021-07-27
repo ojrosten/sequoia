@@ -120,7 +120,7 @@ $(function() {
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> T&gt;</div>
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;  constexpr <span class="keywordtype">bool</span> empty_proxy = ownership::creator&lt;T&gt; &amp;&amp; empty&lt;typename T::proxy::value_type&gt;;</div>
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;  <span class="comment">// TO DO: remove this weird indirection when MSVC no longer needs it!</span></div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;  <span class="comment">// TO DO: remove this indirection if/when clang no longer needs it!</span></div>
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> N&gt;</div>
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;  <span class="keyword">auto</span> get_allocator(<span class="keyword">const</span> N&amp;) {}</div>
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160; </div>

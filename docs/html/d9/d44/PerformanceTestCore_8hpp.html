@@ -67,6 +67,7 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
+<a href="#namespaces">Namespaces</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
@@ -93,13 +94,18 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d88/classsequoia_1_1testing_1_1basic__performance__test.html">sequoia::testing::basic_performance_test&lt; mode &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
+Namespaces</h2></td></tr>
+<tr class="memitem:dd/da8/namespacesequoia_1_1testing"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/da8/namespacesequoia_1_1testing.html">sequoia::testing</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
 <tr class="memitem:a1cbc72b3ac1d9a7994e5f8b5b19a3e46"><td class="memTemplParams" colspan="2"><a id="a1cbc72b3ac1d9a7994e5f8b5b19a3e46"></a>
 template&lt;test_mode mode&gt; </td></tr>
 <tr class="memitem:a1cbc72b3ac1d9a7994e5f8b5b19a3e46"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::performance_checker</b> = checker&lt; mode, performance_extender&lt; mode &gt; &gt;</td></tr>
 <tr class="separator:a1cbc72b3ac1d9a7994e5f8b5b19a3e46"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3b874e01861e15541be69707ad861a5c"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d44/PerformanceTestCore_8hpp.html#a3b874e01861e15541be69707ad861a5c">sequoia::testing::performance_test</a> = basic_performance_test&lt; test_mode::standard &gt;</td></tr>
+<tr class="memitem:a3b874e01861e15541be69707ad861a5c"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/da8/namespacesequoia_1_1testing.html#a3b874e01861e15541be69707ad861a5c">sequoia::testing::performance_test</a> = basic_performance_test&lt; test_mode::standard &gt;</td></tr>
 <tr class="separator:a3b874e01861e15541be69707ad861a5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2c92efd3ec66c66bc04c225c05d91868"><td class="memItemLeft" align="right" valign="top"><a id="a2c92efd3ec66c66bc04c225c05d91868"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::performance_false_negative_test</b> = basic_performance_test&lt; test_mode::false_negative &gt;</td></tr>
@@ -115,8 +121,8 @@ template&lt;invocable Task&gt; </td></tr>
 <tr class="memitem:ab1707e114550937b50f5dedda6866e0e"><td class="memTemplItemLeft" align="right" valign="top">std::chrono::duration&lt; double &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::profile</b> (Task task)</td></tr>
 <tr class="separator:ab1707e114550937b50f5dedda6866e0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a851cce1136b7e58818d1ba2b02ddbc6a"><td class="memTemplParams" colspan="2">template&lt;test_mode Mode, invocable F, invocable S&gt; </td></tr>
-<tr class="memitem:a851cce1136b7e58818d1ba2b02ddbc6a"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d9/d44/PerformanceTestCore_8hpp.html#a851cce1136b7e58818d1ba2b02ddbc6a">sequoia::testing::check_relative_performance</a> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, F fast, S slow, const double minSpeedUp, const double maxSpeedUp, const std::size_t trials, const double num_sds, const std::size_t maxAttempts)</td></tr>
-<tr class="memdesc:a851cce1136b7e58818d1ba2b02ddbc6a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function for comparing the performance of a fast task to a slow task.  <a href="../../d9/d44/PerformanceTestCore_8hpp.html#a851cce1136b7e58818d1ba2b02ddbc6a">More...</a><br /></td></tr>
+<tr class="memitem:a851cce1136b7e58818d1ba2b02ddbc6a"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dd/da8/namespacesequoia_1_1testing.html#a851cce1136b7e58818d1ba2b02ddbc6a">sequoia::testing::check_relative_performance</a> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, F fast, S slow, const double minSpeedUp, const double maxSpeedUp, const std::size_t trials, const double num_sds, const std::size_t maxAttempts)</td></tr>
+<tr class="memdesc:a851cce1136b7e58818d1ba2b02ddbc6a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function for comparing the performance of a fast task to a slow task.  <a href="../../dd/da8/namespacesequoia_1_1testing.html#a851cce1136b7e58818d1ba2b02ddbc6a">More...</a><br /></td></tr>
 <tr class="separator:a851cce1136b7e58818d1ba2b02ddbc6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5bc727143a37f1f6e4210630b9e0922e"><td class="memTemplParams" colspan="2"><a id="a5bc727143a37f1f6e4210630b9e0922e"></a>
 template&lt;class T , class Period &gt; </td></tr>
@@ -128,119 +134,7 @@ std::string_view&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Extension of the testing framework for perfomance testing. </p>
-</div><h2 class="groupheader">Typedef Documentation</h2>
-<a id="a3b874e01861e15541be69707ad861a5c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3b874e01861e15541be69707ad861a5c">&#9670;&nbsp;</a></span>performance_test</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">using <a class="el" href="../../d9/d44/PerformanceTestCore_8hpp.html#a3b874e01861e15541be69707ad861a5c">sequoia::testing::performance_test</a> = typedef basic_performance_test&lt;test_mode::standard&gt;</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p><a class="anchor" id="performance_test_alias"></a> </p>
-
-</div>
-</div>
-<h2 class="groupheader">Function Documentation</h2>
-<a id="a851cce1136b7e58818d1ba2b02ddbc6a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a851cce1136b7e58818d1ba2b02ddbc6a">&#9670;&nbsp;</a></span>check_relative_performance()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;test_mode Mode, invocable F, invocable S&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">bool sequoia::testing::check_relative_performance </td>
-          <td>(</td>
-          <td class="paramtype">std::string_view&#160;</td>
-          <td class="paramname"><em>description</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger</a>&lt; Mode &gt; &amp;&#160;</td>
-          <td class="paramname"><em>logger</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">F&#160;</td>
-          <td class="paramname"><em>fast</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">S&#160;</td>
-          <td class="paramname"><em>slow</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const double&#160;</td>
-          <td class="paramname"><em>minSpeedUp</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const double&#160;</td>
-          <td class="paramname"><em>maxSpeedUp</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::size_t&#160;</td>
-          <td class="paramname"><em>trials</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const double&#160;</td>
-          <td class="paramname"><em>num_sds</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::size_t&#160;</td>
-          <td class="paramname"><em>maxAttempts</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Function for comparing the performance of a fast task to a slow task. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">minSpeedUp</td><td>the minimum predicted speed up of fast over slow; must be &gt; 1 </td></tr>
-    <tr><td class="paramname">maxSpeedUp</td><td>the maximum predicted speed up of fast over slow; must be &gt; minSpeedUp </td></tr>
-    <tr><td class="paramname">trials</td><td>the number of trial used for the statistical analysis </td></tr>
-    <tr><td class="paramname">num_sds</td><td>the number of standard deviations used to define a significant result </td></tr>
-    <tr><td class="paramname">maxAttempts</td><td>the number of times the entire test should be re-run before accepting failure</td></tr>
-  </table>
-  </dd>
-</dl>
-<p>For each trial, both the supposedly fast and slow tasks are run. Their order is random. When all trials have been completed, the mean and standard deviations are computed for both fast and slow tasks. Denote these by m_f, sig_f and m_s, sig_s.</p>
-<p>if (m_f + sig_f &lt; m_s + sig_s)</p>
-<p>then it is concluded that the purportedly fast task is actually slower than the slow task and so the test fails. If this is not the case then the analysis branches depending on which standard deviation is bigger.</p>
-<p>if (sig_f &gt;= sig_s)</p>
-<p>then we mutliply m_f by both the min/max predicted speed-up and compare to the range of values around m_s defined by the number of standard deviations. In particular, the test is taken to pass if</p>
-<p>(minSpeedUp * m_f &lt;= (m_s + num_sds * sig_s)) &amp;&amp; (maxSpeedUp * m_f &gt;= (m_s - num_sds * sig_s))</p>
-<p>which is essentially saying that the range of predicted speed-ups must fall within the specified number of standard deviations of m_s.</p>
-<p>On the other hand</p>
-<p>if(sig_s &gt; sif_g)</p>
-<p>then we divide m_s by both the min/max predicted speed-up and compare to the range of values around m_f defined by the number of standard deviations. In particular, the test is taken to pass if</p>
-<p>(m_s / maxSpeedUp &lt;= (m_f + num_sds * sig_f)) &amp;&amp; (m_s / minSpeedUp &gt;= (m_f - num_sds * sig_f)) </p>
-
-</div>
-</div>
-</div><!-- contents -->
+</div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

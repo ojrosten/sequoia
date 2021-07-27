@@ -158,7 +158,7 @@ $(function() {
 <div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> FwdIter, <span class="keyword">class</span> Comparer=std::less&lt;std::decay_t&lt;decltype(*FwdIter())&gt;&gt;&gt;</div>
 <div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;  constexpr <span class="keywordtype">void</span> sort(FwdIter begin, FwdIter end, Comparer comp = Comparer{})</div>
 <div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;  {</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    <span class="keyword">using namespace </span>std;</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    <span class="keyword">using</span> std::distance;</div>
 <div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    <span class="keywordflow">if</span>(distance(begin, end) &lt;= 1) <span class="keywordflow">return</span>;</div>
 <div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160; </div>
 <div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    sequoia::make_heap(begin, end, comp);</div>
