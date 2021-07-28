@@ -216,6 +216,7 @@ namespace sequoia::testing
   }
 
   template<class T, class Compare>
+    requires requires(const Compare& c, const T& t) { { c(t, t) } -> convertible_to<bool>; }
   class inequality
   {
   private:
