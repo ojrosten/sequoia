@@ -188,7 +188,8 @@ namespace sequoia::testing
       }
       else
       {
-        check_relation(append_lines(description, "Sum of timings"), inequality<int, std::greater_equal<int>>{}, sum / 2, timings.back());
+        const auto prediction{sum / speedupFactor};       
+        check_relation(append_lines(description, "Sum of timings"), inequality<int, std::less_equal<int>>{}, timings.back(), prediction);
       }
     }
   }
@@ -257,7 +258,7 @@ namespace sequoia::testing
     //=================== Rerun with async execution ===================//
 
     run_and_check(LINE("Run asynchronously"), b, "RunAsync", "-a");
-    check_timings("Async run (level: family)", fs::path{"RunAsync/TestRunOutput.txt"}, 2);
+    check_timings(LINE("Async run (level: family)"), fs::path{"RunAsync/TestRunOutput.txt"}, 2);
 
     //=================== Change some test materials and run with prune ===================//
 
@@ -301,7 +302,7 @@ namespace sequoia::testing
     copy_aux_materials("ModifiedTests/Thing",                    "Tests/Utilities/Thing");
 
     rebuild_run_and_check(LINE("Rebuild and run after source/test changes (pruned)"), b, "RebuiltOutput", "CMakeOutput4.txt", "BuildOutput4.txt", "prune --cutoff namespace -a");
-    check_timings("Async run (level: test)", fs::path{"RebuiltOutput/TestRunOutput.txt"}, 2);
+    check_timings(LINE("Async run (level: test)"), fs::path{"RebuiltOutput/TestRunOutput.txt"}, 2);
 
     check_equivalence(LINE("Test Runner Output"), working_materials() / "RebuiltOutput", predictive_materials() / "RebuiltOutput");
     fs::create_directory(working_materials() / "TestAll");
