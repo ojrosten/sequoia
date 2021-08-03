@@ -76,6 +76,7 @@
 */
 
 #include "sequoia/TestFramework/CoreInfrastructure.hpp"
+#include "sequoia/TestFramework/BinaryRelationships.hpp"
 #include "sequoia/TestFramework/Advice.hpp"
 #include "sequoia/TestFramework/TestLogger.hpp"
 #include "sequoia/Core/Meta/Utilities.hpp"
@@ -135,14 +136,6 @@ namespace sequoia::testing
   {
     static std::string get(const E& e) { return to_string(e); }
   };
-  
-  template<class Compare>
-  struct failure_reporter
-  {
-    template<class T>
-    [[nodiscard]]
-    static std::string report(const Compare&, const T&, const T&) = delete;
-  };
 
   /*! \brief generic function that generates a check from any class providing a static check method.
 
@@ -187,9 +180,8 @@ namespace sequoia::testing
 
   /*! \name dispatch_check basic overload set
 
-      The next three functions form an overload set, dedicated to appropiately dispatching requests
-      to check equality, equivalence and weak equivalence. This set may be supplemented by extenders
-      of the testing framework, see RelationalTestCore.hpp for an example.
+      The nextfour functions form an overload set, dedicated to appropiately dispatching requests
+      to check equality, binary relationships, equivalence and weak equivalence.
 
       In each case, the final argument may be utilized to supply custom advice, targeted at particular
       failures which may benefit from explanation. To active this, clients must supply a function
@@ -211,7 +203,7 @@ namespace sequoia::testing
    */
 
   template<test_mode Mode, class T, class Advisor=null_advisor>
-  bool dispatch_check(std::string_view description, test_logger<Mode>& logger, equality_tag, const T& obtained, const T& prediction, [[maybe_unused]] tutor<Advisor> advisor=tutor<Advisor>{})
+  bool dispatch_check(std::string_view description, test_logger<Mode>& logger, equality_tag, const T& obtained, const T& prediction, [[maybe_unused]] tutor<Advisor> advisor={})
   {
     constexpr bool delegate{has_detailed_equality_checker_v<T> || range<T>};
 
@@ -261,7 +253,7 @@ namespace sequoia::testing
   }
 
   
-  /*! \brief Adds to the overload set dispatch_check_free_overloads
+  /*! \brief The workhorse for performing a check with respect to a user-specified binary operator
 
    */
   template<test_mode Mode, class Compare, class T, class Advisor>
@@ -344,7 +336,7 @@ namespace sequoia::testing
   }
 
   template<test_mode Mode, class ElementDispatchDiscriminator, class Iter, class PredictionIter, class Advisor=null_advisor>
-  bool check_range(std::string_view description, test_logger<Mode>& logger, ElementDispatchDiscriminator discriminator, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast, tutor<Advisor> advisor=tutor<Advisor>{})
+  bool check_range(std::string_view description, test_logger<Mode>& logger, ElementDispatchDiscriminator discriminator, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast, tutor<Advisor> advisor={})
   {
     auto info{
       [description](){
@@ -440,7 +432,7 @@ namespace sequoia::testing
                       Compare&& compare,
                       const T& obtained,
                       const T& prediction,
-                      tutor<Advisor> advisor=tutor<Advisor>{})
+                      tutor<Advisor> advisor={})
   {
     return dispatch_check(description, logger, std::forward<Compare>(compare), obtained, prediction, std::move(advisor));
   }
@@ -450,7 +442,7 @@ namespace sequoia::testing
                       test_logger<Mode>& logger,
                       const T& value,
                       const T& prediction,
-                      tutor<Advisor> advisor=tutor<Advisor>{})
+                      tutor<Advisor> advisor={})
   {
     auto transformer{
       [](const T& val) -> decltype(auto) {
@@ -477,13 +469,13 @@ namespace sequoia::testing
   }
 
   template<test_mode Mode, class Advisor=null_advisor>
-  bool check(std::string_view description, test_logger<Mode>& logger, const bool value, tutor<Advisor> advisor=tutor<Advisor>{})
+  bool check(std::string_view description, test_logger<Mode>& logger, const bool value, tutor<Advisor> advisor={})
   {
     return check_equality(description, logger, value, true, std::move(advisor));
   }
 
   template<test_mode Mode, class Iter, class PredictionIter, class Advisor=null_advisor>
-  bool check_range(std::string_view description, test_logger<Mode>& logger, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast, tutor<Advisor> advisor=tutor<Advisor>{})
+  bool check_range(std::string_view description, test_logger<Mode>& logger, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast, tutor<Advisor> advisor={})
   {
     return check_range(description, logger, equality_tag{}, first, last, predictionFirst, predictionLast, std::move(advisor));
   }
@@ -536,13 +528,13 @@ namespace sequoia::testing
     checker& operator=(const checker&) = delete;
 
     template<class T, class Advisor=null_advisor>
-    bool check_equality(std::string_view description, const T& value, const T& prediction, tutor<Advisor> advisor=tutor<Advisor>{})
+    bool check_equality(std::string_view description, const T& value, const T& prediction, tutor<Advisor> advisor={})
     {
       return testing::check_equality(description, logger(), value, prediction, std::move(advisor));
     }
 
     template<class T, class Compare, class Advisor=null_advisor>
-    bool check_relation(std::string_view description, Compare compare, const T& obtained, const T& prediction, tutor<Advisor> advisor=tutor<Advisor>{})
+    bool check_relation(std::string_view description, Compare compare, const T& obtained, const T& prediction, tutor<Advisor> advisor={})
     {
       return testing::check_relation(description, logger(), std::move(compare), obtained, prediction, std::move(advisor));
     }
@@ -560,7 +552,7 @@ namespace sequoia::testing
     }
 
     template<class Advisor=null_advisor>
-    bool check(std::string_view description, const bool value, tutor<Advisor> advisor=tutor<Advisor>{})
+    bool check(std::string_view description, const bool value, tutor<Advisor> advisor={})
     {
       return testing::check(description, logger(), value, std::move(advisor));
     }
@@ -577,13 +569,13 @@ namespace sequoia::testing
     }
 
     template<class Iter, class PredictionIter, class Advisor=null_advisor>
-    bool check_range(std::string_view description, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast, tutor<Advisor> advisor=tutor<Advisor>{})
+    bool check_range(std::string_view description, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast, tutor<Advisor> advisor={})
     {
       return testing::check_range(description, logger(), first, last, predictionFirst, predictionLast, std::move(advisor));
     }
 
     template<class Iter, class PredictionIter, class Compare, class Advisor=null_advisor>
-    bool check_range(std::string_view description, Compare compare, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast, tutor<Advisor> advisor=tutor<Advisor>{})
+    bool check_range(std::string_view description, Compare compare, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast, tutor<Advisor> advisor={})
     {
       return testing::check_range(description, logger(), std::move(compare), first, last, predictionFirst, predictionLast, std::move(advisor));
     }
