@@ -188,8 +188,8 @@ namespace sequoia::testing
       }
       else
       {
-        const auto prediction{sum / speedupFactor};       
-        check_relation(append_lines(description, "Sum of timings"), inequality<int, std::less_equal<int>>{}, timings.back(), prediction);
+        const auto prediction{sum / speedupFactor};
+        check_relation(append_lines(description, "Sum of timings"), std::less_equal<int>{}, timings.back(), prediction);
       }
     }
   }

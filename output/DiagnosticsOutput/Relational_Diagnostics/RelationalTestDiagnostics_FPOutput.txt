@@ -15,7 +15,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 35
+	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 34
 	<
 
 	[int]
@@ -24,7 +24,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 36
+	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 35
 	<=
 
 	[int]
@@ -33,7 +33,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 37
+	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 36
 	>
 
 	[int]
@@ -42,7 +42,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 38
+	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 37
 	>=
 
 	[int]
@@ -51,16 +51,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 40
-
-	[double]
-	Relational comparison failed
-	Obtained : 1
-	Predicted: 2
-
-	=======================================
-
-	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 49
+	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 44
 
 	  Element 0 of range incorrect
 	  [double]
@@ -69,7 +60,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 50
+	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 45
 
 	  Element 0 of range incorrect
 	  [double]
@@ -79,7 +70,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 56
+	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 50
 
 	  Element 1 of range incorrect
 	  [double]
@@ -88,7 +79,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 61
+	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 55
 	<
 
 	  Element 1 of range incorrect
@@ -98,7 +89,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 67
+	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 61
 
 	[std::vector<double, std::allocator<double> >]
 	  Element 1 of range incorrect
@@ -108,7 +99,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 70
+	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 64
 
 	[std::vector<std::vector<double, std::allocator<double> >, std::allocator<std::vector<double, std::allocator<double> > > >]
 	  Element 1 of range incorrect

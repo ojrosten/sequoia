@@ -41,20 +41,12 @@ namespace sequoia::testing
     Compare compare;
   };
 
-
-
-  /*! \brief Concept for wether an object of type Compare defines a function, report, which accepts
-      two instance of a type, T.
-
-      Generally, when writing a new comparison class, it is desirable to provide detailed information
-      in the case that the comparison fails. If this is done via a function, report, it will be
-      automatically used by
-      \ref dispatch_check_relational "dispatch_check"
-   */
-
-  template<class Compare, class T>
-  concept relational_reporter = requires(Compare& c, const std::remove_reference_t<T>& t) {
-   c.report(t, t);
+  template<class Compare>
+  struct failure_reporter
+  {
+    template<class T>
+    [[nodiscard]]
+    static std::string report(const Compare&, const T&, const T&) = delete;
   };
 
   /*! \brief Adds to the overload set dispatch_check_free_overloads */
@@ -68,16 +60,7 @@ namespace sequoia::testing
       sentry.log_check();
       if(!c.compare(obtained, prediction))
       {
-        std::string message{};
-        if constexpr(relational_reporter<Compare, T>)
-        {
-          message = c.compare.report(obtained, prediction);
-        }
-        else
-        {
-          message = append_lines("Relational comparison failed", prediction_message(to_string(obtained), to_string(prediction)));
-        }
-
+        std::string message{failure_reporter<Compare>::report(c.compare, obtained, prediction)};
         append_advice(message, {advisor, obtained, prediction});
 
         sentry.log_failure(message);
@@ -172,72 +155,75 @@ namespace sequoia::testing
     constexpr explicit within_tolerance(T tol) : m_Tol{std::move(tol)} {};
 
     [[nodiscard]]
+    constexpr T tol() const noexcept
+    {
+      return m_Tol;
+    }
+
+    [[nodiscard]]
     constexpr bool operator()(const T& obtained, const T& prediction) const noexcept
     {
       using std::abs;
       return abs(obtained - prediction) <= m_Tol;
     }
+  };
 
+  template<class T>
+  struct failure_reporter<within_tolerance<T>>
+  {
     [[nodiscard]]
-    std::string report(const T& obtained, const T& prediction) const
+    static std::string report(const within_tolerance<T>& c, const T& obtained, const T& prediction)
     {
       return prediction_message(to_string(obtained), to_string(prediction))
-              .append(" +/- ")
-              .append(to_string(m_Tol));
+        .append(" +/- ")
+        .append(to_string(c.tol()));
     }
   };
 
   template<class T>
   [[nodiscard]]
-  std::string to_string(std::less<T>)
+  std::string relational_failure_message(std::string symbol, const T& obtained, const T& prediction)
   {
-    return "<";
+    return prediction_message(to_string(obtained), symbol.append(" ").append(to_string(prediction)));
   }
 
   template<class T>
-  [[nodiscard]]
-  std::string to_string(std::less_equal<T>)
+  struct failure_reporter<std::less<T>>
   {
-    return "<=";
-  }
-
-  template<class T>
-  [[nodiscard]]
-  std::string to_string(std::greater<T>)
-  {
-    return ">";
-  }
-
-  template<class T>
-  [[nodiscard]]
-  std::string to_string(std::greater_equal<T>)
-  {
-    return ">=";
-  }
-
-  template<class T, class Compare>
-    requires requires(const Compare& c, const T& t) { { c(t, t) } -> convertible_to<bool>; }
-  class inequality
-  {
-  private:
-    Compare m_Compare;
-  public:
-    constexpr inequality() = default;
-
-    constexpr explicit inequality(Compare c)
-      : m_Compare{std::move(c)}
-    {}
-
     [[nodiscard]]
-    constexpr bool operator()(const T& obtained, const T& prediction) const noexcept
+    static std::string report(const std::less<T>&, const T& obtained, const T& prediction)
     {
-      return m_Compare(obtained, prediction);
+      return relational_failure_message("<", obtained, prediction);
     }
+  };
 
+  template<class T>
+  struct failure_reporter<std::less_equal<T>>
+  {
     [[nodiscard]]
-    std::string report(const T& obtained, const T& prediction) const
+    static std::string report(const std::less_equal<T>&, const T& obtained, const T& prediction)
     {
-      return prediction_message(to_string(obtained), to_string(m_Compare).append(" ").append(to_string(prediction)));
+      return relational_failure_message("<=", obtained, prediction);
+    }
+  };
+
+  template<class T>
+  struct failure_reporter<std::greater<T>>
+  {
+    [[nodiscard]]
+    static std::string report(const std::greater<T>&, const T& obtained, const T& prediction)
+    {
+      return relational_failure_message(">", obtained, prediction);
+    }
+  };
+
+  template<class T>
+  struct failure_reporter<std::greater_equal<T>>
+  {
+    [[nodiscard]]
+    static std::string report(const std::greater_equal<T>&, const T& obtained, const T& prediction)
+    {
+      return relational_failure_message(">=", obtained, prediction);
     }
   };
 }
