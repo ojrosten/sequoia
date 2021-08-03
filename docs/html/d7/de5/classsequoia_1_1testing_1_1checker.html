@@ -100,10 +100,14 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a55209392002ac061dfa72fe466244dcc"><td class="memItemLeft" align="right" valign="top"><a id="a55209392002ac061dfa72fe466244dcc"></a>
 <a class="el" href="../../d7/de5/classsequoia_1_1testing_1_1checker.html">checker</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="../../d7/de5/classsequoia_1_1testing_1_1checker.html">checker</a> &amp;)=delete</td></tr>
 <tr class="separator:a55209392002ac061dfa72fe466244dcc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a680a1388f80338f5ae2d8e972a68463b"><td class="memTemplParams" colspan="2"><a id="a680a1388f80338f5ae2d8e972a68463b"></a>
+<tr class="memitem:a5ef5014606a9058eac0dc0efc8538a64"><td class="memTemplParams" colspan="2"><a id="a5ef5014606a9058eac0dc0efc8538a64"></a>
 template&lt;class T , class Advisor  = null_advisor&gt; </td></tr>
-<tr class="memitem:a680a1388f80338f5ae2d8e972a68463b"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_equality</b> (std::string_view description, const T &amp;value, const T &amp;prediction, <a class="el" href="../../d6/d71/classsequoia_1_1testing_1_1tutor.html">tutor</a>&lt; Advisor &gt; advisor=<a class="el" href="../../d6/d71/classsequoia_1_1testing_1_1tutor.html">tutor</a>&lt; Advisor &gt;{})</td></tr>
-<tr class="separator:a680a1388f80338f5ae2d8e972a68463b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5ef5014606a9058eac0dc0efc8538a64"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_equality</b> (std::string_view description, const T &amp;value, const T &amp;prediction, <a class="el" href="../../d6/d71/classsequoia_1_1testing_1_1tutor.html">tutor</a>&lt; Advisor &gt; advisor={})</td></tr>
+<tr class="separator:a5ef5014606a9058eac0dc0efc8538a64"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a426da0f3c349641a5a353291777b61b2"><td class="memTemplParams" colspan="2"><a id="a426da0f3c349641a5a353291777b61b2"></a>
+template&lt;class T , class Compare , class Advisor  = null_advisor&gt; </td></tr>
+<tr class="memitem:a426da0f3c349641a5a353291777b61b2"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_relation</b> (std::string_view description, Compare compare, const T &amp;obtained, const T &amp;prediction, <a class="el" href="../../d6/d71/classsequoia_1_1testing_1_1tutor.html">tutor</a>&lt; Advisor &gt; advisor={})</td></tr>
+<tr class="separator:a426da0f3c349641a5a353291777b61b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af54fb3940b983af4f19c157626e81a18"><td class="memTemplParams" colspan="2"><a id="af54fb3940b983af4f19c157626e81a18"></a>
 template&lt;class T , class S , class... U&gt; </td></tr>
 <tr class="memitem:af54fb3940b983af4f19c157626e81a18"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_equivalence</b> (std::string_view description, const T &amp;value, S &amp;&amp;s, U &amp;&amp;... u)</td></tr>
@@ -112,18 +116,22 @@ template&lt;class T , class S , class... U&gt; </td></tr>
 template&lt;class T , class S , class... U&gt; </td></tr>
 <tr class="memitem:aa80bd6c2f724c661020671adb80e365d"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_weak_equivalence</b> (std::string_view description, const T &amp;value, S &amp;&amp;s, U &amp;&amp;... u)</td></tr>
 <tr class="separator:aa80bd6c2f724c661020671adb80e365d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab9d87f4dfd517d6fcb589dc7230ff7c3"><td class="memTemplParams" colspan="2"><a id="ab9d87f4dfd517d6fcb589dc7230ff7c3"></a>
+<tr class="memitem:abf84e3b444a909b0234ab34f67923537"><td class="memTemplParams" colspan="2"><a id="abf84e3b444a909b0234ab34f67923537"></a>
 template&lt;class Advisor  = null_advisor&gt; </td></tr>
-<tr class="memitem:ab9d87f4dfd517d6fcb589dc7230ff7c3"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check</b> (std::string_view description, const bool value, <a class="el" href="../../d6/d71/classsequoia_1_1testing_1_1tutor.html">tutor</a>&lt; Advisor &gt; advisor=<a class="el" href="../../d6/d71/classsequoia_1_1testing_1_1tutor.html">tutor</a>&lt; Advisor &gt;{})</td></tr>
-<tr class="separator:ab9d87f4dfd517d6fcb589dc7230ff7c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abf84e3b444a909b0234ab34f67923537"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check</b> (std::string_view description, const bool value, <a class="el" href="../../d6/d71/classsequoia_1_1testing_1_1tutor.html">tutor</a>&lt; Advisor &gt; advisor={})</td></tr>
+<tr class="separator:abf84e3b444a909b0234ab34f67923537"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeee3fc565192476271c2d9b22e950ba0"><td class="memTemplParams" colspan="2"><a id="aeee3fc565192476271c2d9b22e950ba0"></a>
 template&lt;class E , class Fn , invocable_r&lt; std::string, std::string &gt; Postprocessor = default_exception_message_postprocessor&gt; </td></tr>
 <tr class="memitem:aeee3fc565192476271c2d9b22e950ba0"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_exception_thrown</b> (std::string_view description, Fn &amp;&amp;function, Postprocessor postprocessor={})</td></tr>
 <tr class="separator:aeee3fc565192476271c2d9b22e950ba0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab2c656975af3d8c671b648a85764f9d8"><td class="memTemplParams" colspan="2"><a id="ab2c656975af3d8c671b648a85764f9d8"></a>
+<tr class="memitem:a31aca8fefdaf91dcd1aa4de612400346"><td class="memTemplParams" colspan="2"><a id="a31aca8fefdaf91dcd1aa4de612400346"></a>
 template&lt;class Iter , class PredictionIter , class Advisor  = null_advisor&gt; </td></tr>
-<tr class="memitem:ab2c656975af3d8c671b648a85764f9d8"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_range</b> (std::string_view description, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast, <a class="el" href="../../d6/d71/classsequoia_1_1testing_1_1tutor.html">tutor</a>&lt; Advisor &gt; advisor=<a class="el" href="../../d6/d71/classsequoia_1_1testing_1_1tutor.html">tutor</a>&lt; Advisor &gt;{})</td></tr>
-<tr class="separator:ab2c656975af3d8c671b648a85764f9d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a31aca8fefdaf91dcd1aa4de612400346"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_range</b> (std::string_view description, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast, <a class="el" href="../../d6/d71/classsequoia_1_1testing_1_1tutor.html">tutor</a>&lt; Advisor &gt; advisor={})</td></tr>
+<tr class="separator:a31aca8fefdaf91dcd1aa4de612400346"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae76f83781debf1d9c6165e968a02f485"><td class="memTemplParams" colspan="2"><a id="ae76f83781debf1d9c6165e968a02f485"></a>
+template&lt;class Iter , class PredictionIter , class Compare , class Advisor  = null_advisor&gt; </td></tr>
+<tr class="memitem:ae76f83781debf1d9c6165e968a02f485"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_range</b> (std::string_view description, Compare compare, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast, <a class="el" href="../../d6/d71/classsequoia_1_1testing_1_1tutor.html">tutor</a>&lt; Advisor &gt; advisor={})</td></tr>
+<tr class="separator:ae76f83781debf1d9c6165e968a02f485"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a822ba54129c80bd1e0e2a4433acf1c1e"><td class="memItemLeft" align="right" valign="top"><a id="a822ba54129c80bd1e0e2a4433acf1c1e"></a>
 <a class="el" href="../../d2/daa/classsequoia_1_1testing_1_1log__summary.html">log_summary</a>&#160;</td><td class="memItemRight" valign="bottom"><b>summary</b> (std::string_view prefix, const log_summary::duration delta) const</td></tr>
 <tr class="separator:a822ba54129c80bd1e0e2a4433acf1c1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
