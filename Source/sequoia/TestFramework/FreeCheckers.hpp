@@ -80,6 +80,8 @@
 #include "sequoia/TestFramework/TestLogger.hpp"
 #include "sequoia/Core/Meta/Utilities.hpp"
 
+#include <functional>
+
 namespace sequoia::testing
 {
   template<class Checker, test_mode Mode, class... Args>
@@ -132,6 +134,14 @@ namespace sequoia::testing
   struct exception_message_extractor<E>
   {
     static std::string get(const E& e) { return to_string(e); }
+  };
+  
+  template<class Compare>
+  struct failure_reporter
+  {
+    template<class T>
+    [[nodiscard]]
+    static std::string report(const Compare&, const T&, const T&) = delete;
   };
 
   /*! \brief generic function that generates a check from any class providing a static check method.
@@ -248,6 +258,39 @@ namespace sequoia::testing
     }
 
     return !sentry.failure_detected();
+  }
+
+  
+  /*! \brief Adds to the overload set dispatch_check_free_overloads
+
+   */
+  template<test_mode Mode, class Compare, class T, class Advisor>
+    requires (!same_as<Compare, weak_equivalence_tag> && !same_as<Compare, weak_equivalence_tag>)
+  bool dispatch_check(std::string_view description, test_logger<Mode>& logger, Compare c, const T& obtained, const T& prediction, tutor<Advisor> advisor)
+  {
+    sentinel<Mode> sentry{logger, add_type_info<T>(description)};
+
+    if constexpr(invocable<Compare, T, T>)
+    {
+      sentry.log_check();
+      if(!c(obtained, prediction))
+      {
+        std::string message{failure_reporter<Compare>::report(c, obtained, prediction)};
+        append_advice(message, {advisor, obtained, prediction});
+
+        sentry.log_failure(message);
+      }
+
+      return !sentry.failure_detected();
+    }
+    else if constexpr(range<T>)
+    {
+      return check_range("", logger, std::move(c), obtained.begin(), obtained.end(), prediction.begin(), prediction.end(), advisor);
+    }
+    else
+    {
+      static_assert(dependent_false<T>::value, "Compare cannot consume T directly nor interpret as a range");
+    }
   }
 
   /*! \brief The workhorse for equivalence checking
@@ -391,8 +434,23 @@ namespace sequoia::testing
 
   //================= namespace-level convenience functions =================//
 
+  template<test_mode Mode, class Compare, class T, class Advisor=null_advisor>
+  bool check_relation(std::string_view description,
+                      test_logger<Mode>& logger,
+                      Compare&& compare,
+                      const T& obtained,
+                      const T& prediction,
+                      tutor<Advisor> advisor=tutor<Advisor>{})
+  {
+    return dispatch_check(description, logger, std::forward<Compare>(compare), obtained, prediction, std::move(advisor));
+  }
+  
   template<test_mode Mode, class T, class Advisor=null_advisor>
-  bool check_equality(std::string_view description, test_logger<Mode>& logger, const T& value, const T& prediction, tutor<Advisor> advisor=tutor<Advisor>{})
+  bool check_equality(std::string_view description,
+                      test_logger<Mode>& logger,
+                      const T& value,
+                      const T& prediction,
+                      tutor<Advisor> advisor=tutor<Advisor>{})
   {
     auto transformer{
       [](const T& val) -> decltype(auto) {
@@ -483,6 +541,12 @@ namespace sequoia::testing
       return testing::check_equality(description, logger(), value, prediction, std::move(advisor));
     }
 
+    template<class T, class Compare, class Advisor=null_advisor>
+    bool check_relation(std::string_view description, Compare compare, const T& obtained, const T& prediction, tutor<Advisor> advisor=tutor<Advisor>{})
+    {
+      return testing::check_relation(description, logger(), std::move(compare), obtained, prediction, std::move(advisor));
+    }
+
     template<class T, class S, class... U>
     bool check_equivalence(std::string_view description, const T& value, S&& s, U&&... u)
     {
@@ -516,6 +580,12 @@ namespace sequoia::testing
     bool check_range(std::string_view description, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast, tutor<Advisor> advisor=tutor<Advisor>{})
     {
       return testing::check_range(description, logger(), first, last, predictionFirst, predictionLast, std::move(advisor));
+    }
+
+    template<class Iter, class PredictionIter, class Compare, class Advisor=null_advisor>
+    bool check_range(std::string_view description, Compare compare, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast, tutor<Advisor> advisor=tutor<Advisor>{})
+    {
+      return testing::check_range(description, logger(), std::move(compare), first, last, predictionFirst, predictionLast, std::move(advisor));
     }
 
     template<class Stream>

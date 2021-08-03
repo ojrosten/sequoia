@@ -30,56 +30,15 @@
 
 namespace sequoia::testing
 {
-  template<class Compare>
-  struct failure_reporter
-  {
-    template<class T>
-    [[nodiscard]]
-    static std::string report(const Compare&, const T&, const T&) = delete;
-  };
-
-  /*! \brief Adds to the overload set dispatch_check_free_overloads */
-  template<test_mode Mode, class Compare, class T, class Advisor>
-  bool dispatch_check(std::string_view description, test_logger<Mode>& logger, Compare c, const T& obtained, const T& prediction, tutor<Advisor> advisor)
-  {
-    sentinel<Mode> sentry{logger, add_type_info<T>(description)};
-
-    if constexpr(invocable<Compare, T, T>)
-    {
-      sentry.log_check();
-      if(!c(obtained, prediction))
-      {
-        std::string message{failure_reporter<Compare>::report(c, obtained, prediction)};
-        append_advice(message, {advisor, obtained, prediction});
-
-        sentry.log_failure(message);
-      }
-
-      return !sentry.failure_detected();
-    }
-    else if constexpr(range<T>)
-    {
-      return check_range("", logger, std::move(c), obtained.begin(), obtained.end(), prediction.begin(), prediction.end(), advisor);
-    }
-    else
-    {
-      static_assert(dependent_false<T>::value, "Compare cannot consume T directly nor interpret as a range");
-    }
-  }
-
   //================= namespace-level convenience functions =================//
 
-  template<test_mode Mode, class Compare, class T, class Advisor>
-  bool check_relation(std::string_view description, test_logger<Mode>& logger, Compare&& compare, const T& obtained, const T& prediction, tutor<Advisor> advisor)
-  {
-    return dispatch_check(description, logger, std::forward<Compare>(compare), obtained, prediction, std::move(advisor));
-  }
+  
 
-  template<test_mode Mode, class Iter, class PredictionIter, class Compare, class Advisor>
+  /*template<test_mode Mode, class Iter, class PredictionIter, class Compare, class Advisor>
   bool check_range_relation(std::string_view description, test_logger<Mode>& logger, Compare compare, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast, tutor<Advisor> advisor)
   {
     return check_range(description, logger, std::move(compare), first, last, predictionFirst, predictionLast, std::move(advisor));
-  }
+    }*/
 
   /*! \brief class template for plugging into the \ref checker_primary "checker"
       class template to provide relational checks.
@@ -96,18 +55,6 @@ namespace sequoia::testing
 
     relational_extender(const relational_extender&)            = delete;
     relational_extender& operator=(const relational_extender&) = delete;
-
-    template<class T, class Compare, class Advisor=null_advisor>
-    bool check_relation(std::string_view description, Compare compare, const T& obtained, const T& prediction, tutor<Advisor> advisor=tutor<Advisor>{})
-    {
-      return testing::check_relation(description, m_Logger, std::move(compare), obtained, prediction, std::move(advisor));
-    }
-
-    template<class Iter, class PredictionIter, class Compare, class Advisor=null_advisor>
-    bool check_range_relation(std::string_view description, Compare compare, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast, tutor<Advisor> advisor=tutor<Advisor>{})
-    {
-      return testing::check_range_relation(description, m_Logger, std::move(compare), first, last, predictionFirst, predictionLast, std::move(advisor));
-    }
 
   protected:
     relational_extender(relational_extender&&)             noexcept = default;

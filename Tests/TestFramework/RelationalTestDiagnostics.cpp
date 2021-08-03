@@ -41,18 +41,18 @@ namespace sequoia::testing
   {
     {
       std::vector<double> v{0.5, 0.6}, p{-0.1, 1.0};
-      check_range_relation(LINE(""), within_tolerance{0.5}, v.cbegin(), v.cend(), p.cbegin(), p.cend());
-      check_range_relation(LINE(""),
-                           within_tolerance{0.5}, v.cbegin(), v.cend(), p.cbegin(), p.cend(),
-                           tutor{[](double, double) { return "Consider increasing tolerance!"; }});
+      check_range(LINE(""), within_tolerance{0.5}, v.cbegin(), v.cend(), p.cbegin(), p.cend());
+      check_range(LINE(""),
+                  within_tolerance{0.5}, v.cbegin(), v.cend(), p.cbegin(), p.cend(),
+                  tutor{[](double, double) { return "Consider increasing tolerance!"; }});
 
       p = {0.5, 1.2};
-      check_range_relation(LINE(""), within_tolerance{0.5}, v.cbegin(), v.cend(), p.cbegin(), p.cend());
+      check_range(LINE(""), within_tolerance{0.5}, v.cbegin(), v.cend(), p.cbegin(), p.cend());
     }
 
     {
       std::vector<int> v{4, 5}, p{5, 4};
-      check_range_relation(LINE("<"),std::less<int>{}, v.cbegin(), v.cend(), p.cbegin(), p.cend());
+      check_range(LINE("<"),std::less<int>{}, v.cbegin(), v.cend(), p.cbegin(), p.cend());
     }
   }
 
@@ -95,12 +95,12 @@ namespace sequoia::testing
   {
     {
       std::vector<double> v{0.5, 0.6}, p{0, 1.0};
-      check_range_relation(LINE(""), within_tolerance{0.5}, v.cbegin(), v.cend(), p.cbegin(), p.cend());
+      check_range(LINE(""), within_tolerance{0.5}, v.cbegin(), v.cend(), p.cbegin(), p.cend());
     }
 
     {
       std::vector<int> v{4, 3}, p{5, 4};
-      check_range_relation(LINE("<"), std::less<int>{}, v.cbegin(), v.cend(), p.cbegin(), p.cend());
+      check_range(LINE("<"), std::less<int>{}, v.cbegin(), v.cend(), p.cbegin(), p.cend());
     }
   }
 
