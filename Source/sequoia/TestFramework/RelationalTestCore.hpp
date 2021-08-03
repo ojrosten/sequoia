@@ -30,17 +30,6 @@
 
 namespace sequoia::testing
 {
-  /*! Thin wrapper for the comparison object, for the purposes of cleanly adding an overload
-      to \ref dispatch_check_free_overloads "dispatch_check".
-   */
-  template<class Compare>
-  struct relational_compare
-  {
-    explicit relational_compare(Compare c) : compare{std::move(c)} {}
-
-    Compare compare;
-  };
-
   template<class Compare>
   struct failure_reporter
   {
@@ -51,16 +40,16 @@ namespace sequoia::testing
 
   /*! \brief Adds to the overload set dispatch_check_free_overloads */
   template<test_mode Mode, class Compare, class T, class Advisor>
-  bool dispatch_check(std::string_view description, test_logger<Mode>& logger, relational_compare<Compare> c, const T& obtained, const T& prediction, tutor<Advisor> advisor)
+  bool dispatch_check(std::string_view description, test_logger<Mode>& logger, Compare c, const T& obtained, const T& prediction, tutor<Advisor> advisor)
   {
     sentinel<Mode> sentry{logger, add_type_info<T>(description)};
 
     if constexpr(invocable<Compare, T, T>)
     {
       sentry.log_check();
-      if(!c.compare(obtained, prediction))
+      if(!c(obtained, prediction))
       {
-        std::string message{failure_reporter<Compare>::report(c.compare, obtained, prediction)};
+        std::string message{failure_reporter<Compare>::report(c, obtained, prediction)};
         append_advice(message, {advisor, obtained, prediction});
 
         sentry.log_failure(message);
@@ -83,13 +72,13 @@ namespace sequoia::testing
   template<test_mode Mode, class Compare, class T, class Advisor>
   bool check_relation(std::string_view description, test_logger<Mode>& logger, Compare&& compare, const T& obtained, const T& prediction, tutor<Advisor> advisor)
   {
-    return dispatch_check(description, logger, relational_compare<Compare>{compare}, obtained, prediction, std::move(advisor));
+    return dispatch_check(description, logger, std::forward<Compare>(compare), obtained, prediction, std::move(advisor));
   }
 
   template<test_mode Mode, class Iter, class PredictionIter, class Compare, class Advisor>
   bool check_range_relation(std::string_view description, test_logger<Mode>& logger, Compare compare, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast, tutor<Advisor> advisor)
   {
-    return check_range(description, logger, relational_compare{std::move(compare)}, first, last, predictionFirst, predictionLast, std::move(advisor));
+    return check_range(description, logger, std::move(compare), first, last, predictionFirst, predictionLast, std::move(advisor));
   }
 
   /*! \brief class template for plugging into the \ref checker_primary "checker"

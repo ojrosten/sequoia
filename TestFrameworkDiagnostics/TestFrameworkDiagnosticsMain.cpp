@@ -90,8 +90,8 @@ int main(int argc, char** argv)
 
     runner.add_test_family(
       "Relational Diagnostics",
-      relational_false_positive_diagnostics{"Fuzzy False Positive Diagnostics"},
-      relational_false_negative_diagnostics{"Fuzzy False Negative Diagnostics"}
+      relational_false_positive_diagnostics{"Relational False Positive Diagnostics"},
+      relational_false_negative_diagnostics{"Relational False Negative Diagnostics"}
     );
 
     runner.add_test_family(
