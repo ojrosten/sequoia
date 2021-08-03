@@ -15,7 +15,10 @@
     \ref failure_reporter_primary "failure_reporter".
  */
 
+#include "sequoia/TestFramework/Output.hpp"
+
 #include <cmath>
+#include <functional>
 
 namespace sequoia::testing
 {

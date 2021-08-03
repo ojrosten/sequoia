@@ -7,14 +7,14 @@
 
 #pragma once
 
-#include "sequoia/TestFramework/RelationalTestCore.hpp"
+#include "sequoia/TestFramework/FreeTestCore.hpp"
 
 namespace sequoia:: testing
 {
-  class relational_false_positive_diagnostics final : public relational_false_positive_test
+  class relational_false_positive_diagnostics final : public free_false_positive_test
   {
   public:
-    using relational_false_positive_test::relational_false_positive_test;
+    using free_false_positive_test::free_false_positive_test;
 
     [[nodiscard]]
     std::string_view source_file() const noexcept final;
@@ -26,10 +26,10 @@ namespace sequoia:: testing
     void container_tests();
   };
 
-  class relational_false_negative_diagnostics final : public relational_false_negative_test
+  class relational_false_negative_diagnostics final : public free_false_negative_test
   {
   public:
-    using relational_false_negative_test::relational_false_negative_test;
+    using free_false_negative_test::free_false_negative_test;
 
     [[nodiscard]]
     std::string_view source_file() const noexcept final;

@@ -81,8 +81,6 @@
 #include "sequoia/TestFramework/TestLogger.hpp"
 #include "sequoia/Core/Meta/Utilities.hpp"
 
-#include <functional>
-
 namespace sequoia::testing
 {
   template<class Checker, test_mode Mode, class... Args>

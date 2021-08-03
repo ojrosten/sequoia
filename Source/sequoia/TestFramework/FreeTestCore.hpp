@@ -17,8 +17,6 @@
 
 #include "sequoia/TestFramework/ConcreteTypeCheckers.hpp"
 #include "sequoia/Core/Meta/Concepts.hpp"
-
-#include "sequoia/TestFramework/Output.hpp"
 #include "sequoia/TestFramework/FileSystem.hpp"
 
 #include <memory>
