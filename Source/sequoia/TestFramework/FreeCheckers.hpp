@@ -143,10 +143,10 @@ namespace sequoia::testing
   template<class EquivChecker, test_mode Mode, class T, class S, class... U>
   bool general_equivalence_check(std::string_view description, test_logger<Mode>& logger, const T& value, const S& s, const U&... u)
   {
-    constexpr equivalent_type_processor<S, U...> processor{};
+    using processor = equivalent_type_processor<S, U...>;
 
     const auto msg{
-      [description, types{processor.info()}](){
+      [description, types{processor::info()}](){
         return append_lines(description, "Comparison performed using:", make_type_info<EquivChecker>(), "With equivalent types:", types)
           .append("\n");
       }()
@@ -158,7 +158,7 @@ namespace sequoia::testing
     {
       EquivChecker::check(logger, value, s, u...);
     }
-    else if constexpr(processor.ends_with_tutor)
+    else if constexpr(processor::ends_with_tutor)
     {
       auto fn{
         [&logger,&value](auto&&... predictions){
