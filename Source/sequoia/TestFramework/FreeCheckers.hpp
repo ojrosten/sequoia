@@ -265,17 +265,17 @@ namespace sequoia::testing
     if constexpr(invocable<Compare, T, T>)
     {
       binary_comparison(sentry, compare, obtained, prediction, advisor);
-
-      return !sentry.failure_detected();
     }
     else if constexpr(range<T>)
     {
-      return check_range("", logger, compare, obtained.begin(), obtained.end(), prediction.begin(), prediction.end(), advisor);
+      check_range("", logger, compare, obtained.begin(), obtained.end(), prediction.begin(), prediction.end(), advisor);
     }
     else
     {
       static_assert(dependent_false<T>::value, "Compare cannot consume T directly nor interpret as a range");
     }
+
+    return !sentry.failure_detected();
   }
 
   /*! \brief The workhorse for (weak) equivalence checking
