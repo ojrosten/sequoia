@@ -287,7 +287,7 @@ namespace sequoia::testing
    */
 
   template<test_mode Mode, class Tag, class T, class S, class... U>
-    requires requires { Tag::template checker; }
+    requires requires { Tag::template checker<T>; }
   bool dispatch_check(std::string_view description, test_logger<Mode>& logger, Tag, const T& value, S&& s, U&&... u)
   {
     if constexpr(class_template_is_default_instantiable<Tag::template checker, T>)
