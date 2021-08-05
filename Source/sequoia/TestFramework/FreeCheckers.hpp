@@ -176,6 +176,19 @@ namespace sequoia::testing
     return !sentry.failure_detected();
   }
 
+  template<test_mode Mode, class Compare, class T, class Advisor>
+  void binary_comparison(sentinel<Mode>& sentry, Compare compare, const T& obtained, const T& prediction, tutor<Advisor> advisor)
+  {
+    sentry.log_check();
+    if(!compare(obtained, prediction))
+    {
+      std::string message{failure_reporter<Compare>::report(compare, obtained, prediction)};
+      append_advice(message, {advisor, obtained, prediction});
+
+      sentry.log_failure(message);
+    }
+  }
+
   /*! \name dispatch_check basic overload set
 
       The next batch of functions form an overload set, dedicated to appropiately dispatching requests
@@ -213,15 +226,7 @@ namespace sequoia::testing
 
     if constexpr(equality_comparable<T>)
     {
-      sentry.log_check();
-      if(!(prediction == obtained))
-      {
-        auto message{failure_message(obtained, prediction)};
-
-        append_advice(message, {advisor, obtained, prediction});
-
-        sentry.log_failure(std::move(message));
-      }
+      binary_comparison(sentry, std::equal_to<T>{}, obtained, prediction, advisor);
     }
 
     if constexpr(delegate)
@@ -250,32 +255,22 @@ namespace sequoia::testing
     return !sentry.failure_detected();
   }
 
-  
-  /*! \brief The workhorse for performing a check with respect to a user-specified binary operator
-
-   */
+  /*! \brief The workhorse for performing a check with respect to a user-specified binary operator */
   template<test_mode Mode, class Compare, class T, class Advisor>
-    requires (!same_as<Compare, weak_equivalence_tag> && !same_as<Compare, weak_equivalence_tag>)
-  bool dispatch_check(std::string_view description, test_logger<Mode>& logger, Compare c, const T& obtained, const T& prediction, tutor<Advisor> advisor)
+    requires (!same_as<Compare, equivalence_tag> && !same_as<Compare, weak_equivalence_tag>)
+  bool dispatch_check(std::string_view description, test_logger<Mode>& logger, Compare compare, const T& obtained, const T& prediction, tutor<Advisor> advisor)
   {
     sentinel<Mode> sentry{logger, add_type_info<T>(description)};
 
     if constexpr(invocable<Compare, T, T>)
     {
-      sentry.log_check();
-      if(!c(obtained, prediction))
-      {
-        std::string message{failure_reporter<Compare>::report(c, obtained, prediction)};
-        append_advice(message, {advisor, obtained, prediction});
-
-        sentry.log_failure(message);
-      }
+      binary_comparison(sentry, compare, obtained, prediction, advisor);
 
       return !sentry.failure_detected();
     }
     else if constexpr(range<T>)
     {
-      return check_range("", logger, std::move(c), obtained.begin(), obtained.end(), prediction.begin(), prediction.end(), advisor);
+      return check_range("", logger, compare, obtained.begin(), obtained.end(), prediction.begin(), prediction.end(), advisor);
     }
     else
     {

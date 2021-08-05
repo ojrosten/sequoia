@@ -77,6 +77,16 @@ namespace sequoia::testing
   };
 
   template<class T>
+  struct failure_reporter<std::equal_to<T>>
+  {
+    [[nodiscard]]
+    static std::string report(const std::equal_to<T>&, const T& obtained, const T& prediction)
+    {
+      return failure_message(obtained, prediction);
+    }
+  };
+
+  template<class T>
   [[nodiscard]]
   std::string relational_failure_message(std::string symbol, const T& obtained, const T& prediction)
   {
