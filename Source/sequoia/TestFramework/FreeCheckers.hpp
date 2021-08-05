@@ -178,7 +178,7 @@ namespace sequoia::testing
 
   /*! \name dispatch_check basic overload set
 
-      The nextfour functions form an overload set, dedicated to appropiately dispatching requests
+      The next batch of functions form an overload set, dedicated to appropiately dispatching requests
       to check equality, binary relationships, equivalence and weak equivalence.
 
       In each case, the final argument may be utilized to supply custom advice, targeted at particular
@@ -283,53 +283,30 @@ namespace sequoia::testing
     }
   }
 
-  /*! \brief The workhorse for equivalence checking
+  /*! \brief The workhorse for (weak) equivalence checking
 
-      This function will reflect on whether an appropriate specialization of equivalence_checker exists.
+      This function will reflect on whether an appropriate specialization of (weak_) equivalence_checker exists.
       If so, it will be used and if not it will attempt to interpret T as a range. Only if this fails
       then a static assertion will terminate compilation.
 
    */
 
-  template<test_mode Mode, class T, class S, class... U>
-  bool dispatch_check(std::string_view description, test_logger<Mode>& logger, equivalence_tag, const T& value, S&& s, U&&... u)
+  template<test_mode Mode, class Tag, class T, class S, class... U>
+    requires requires { Tag::template checker; }
+  bool dispatch_check(std::string_view description, test_logger<Mode>& logger, Tag, const T& value, S&& s, U&&... u)
   {
-    if constexpr(class_template_is_default_instantiable<equivalence_checker, T>)
+    if constexpr(class_template_is_default_instantiable<Tag::template checker, T>)
     {
-      return general_equivalence_check<equivalence_checker<T>>(description, logger, value, std::forward<S>(s), std::forward<U>(u)...);
+      using checker = Tag::template checker<T>;
+      return general_equivalence_check<checker>(description, logger, value, std::forward<S>(s), std::forward<U>(u)...);
     }
     else if constexpr(range<T>)
     {
-      return check_range(add_type_info<T>(description), logger, equivalence_tag{}, std::begin(value), std::end(value), std::begin(std::forward<S>(s)), std::end(std::forward<S>(s)), std::forward<U>(u)...);
+      return check_range(add_type_info<T>(description), logger, Tag{}, std::begin(value), std::end(value), std::begin(std::forward<S>(s)), std::end(std::forward<S>(s)), std::forward<U>(u)...);
     }
     else
     {
       static_assert(dependent_false<T>::value, "Unable to find an appropriate specialization of the equivalence_checker");
-    }
-  }
-
-  /*! \brief The workhorse for weak equivalence checking
-
-      This function will reflect on whether an appropriate specialization of weak_equivalence_checker exists.
-      If so, it will be used and if not it will attempt to interpret T as a range. Only if this fails then a
-      static assertion will terminate compilation.
-
-   */
-
-  template<test_mode Mode, class T, class S, class... U>
-  bool dispatch_check(std::string_view description, test_logger<Mode>& logger, weak_equivalence_tag, const T& value, S&& s, U&&... u)
-  {
-    if constexpr(class_template_is_default_instantiable<weak_equivalence_checker, T>)
-    {
-      return general_equivalence_check<weak_equivalence_checker<T>>(description, logger, value, std::forward<S>(s), std::forward<U>(u)...);
-    }
-    else if constexpr(range<T>)
-    {
-      return check_range(add_type_info<T>(description), logger, weak_equivalence_tag{}, std::begin(value), std::end(value), std::begin(std::forward<S>(s)), std::end(std::forward<S>(s)), std::forward<U...>(u)...);
-    }
-    else
-    {
-      static_assert(dependent_false<T>::value, "Unable to find an appropriate specialization of the weak_equivalence_checker");
     }
   }
 

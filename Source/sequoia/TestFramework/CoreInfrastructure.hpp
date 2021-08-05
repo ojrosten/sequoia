@@ -47,8 +47,18 @@ namespace sequoia::testing
   inline constexpr bool has_detailed_equality_checker_v{class_template_is_default_instantiable<detailed_equality_checker, T>};
 
   struct equality_tag{};
-  struct equivalence_tag{};
-  struct weak_equivalence_tag{};
+ 
+  struct equivalence_tag
+  {
+    template<class T>
+    using checker = equivalence_checker<T>;
+  };
+
+  struct weak_equivalence_tag
+  {
+    template<class T>
+    using checker = weak_equivalence_checker<T>;
+  };
 
 
   /*! \brief Specialize this struct template to provide custom serialization of a given class.
