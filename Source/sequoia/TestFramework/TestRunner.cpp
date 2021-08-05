@@ -1358,7 +1358,7 @@ namespace sequoia::testing
   {
     if(m_ConcurrencyMode == concurrency_mode::dynamic)
     {
-      if(!m_SelectedSources.empty() || (m_Families.size() < 4))
+      if(!m_SelectedSources.empty() && (m_Families.size() < 4))
       {
         m_ConcurrencyMode = concurrency_mode::test;
       }
