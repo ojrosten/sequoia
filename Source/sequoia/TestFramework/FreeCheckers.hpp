@@ -292,7 +292,7 @@ namespace sequoia::testing
   {
     if constexpr(class_template_is_default_instantiable<Tag::template checker, T>)
     {
-      using checker = Tag::template checker<T>;
+      using checker = typename Tag::template checker<T>;
       return general_equivalence_check<checker>(description, logger, value, std::forward<S>(s), std::forward<U>(u)...);
     }
     else if constexpr(range<T>)
