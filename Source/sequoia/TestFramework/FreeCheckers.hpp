@@ -88,6 +88,11 @@ namespace sequoia::testing
     Checker::check(logger, std::forward<Args>(args)...);
   };
 
+  // TO DO: trade for bool when supported by MSVC
+
+  template<class Compare>
+  concept has_parens = requires() { &Compare::operator(); };
+
   template<class... Ts>
   struct equivalent_type_processor
   {
@@ -255,9 +260,12 @@ namespace sequoia::testing
     return !sentry.failure_detected();
   }
 
-  /*! \brief The workhorse for performing a check with respect to a user-specified binary operator */
+  /*! \brief The workhorse for performing a check with respect to a user-specified binary operator 
+  
+      The comparison object either implements binary comparison for T or it is fed into check_range.
+   */
   template<test_mode Mode, class Compare, class T, class Advisor>
-    requires (!same_as<Compare, equivalence_tag> && !same_as<Compare, weak_equivalence_tag>)
+    requires (invocable<Compare, T, T> || has_parens<Compare>)
   bool dispatch_check(std::string_view description, test_logger<Mode>& logger, Compare compare, const T& obtained, const T& prediction, tutor<Advisor> advisor)
   {
     sentinel<Mode> sentry{logger, add_type_info<T>(description)};
