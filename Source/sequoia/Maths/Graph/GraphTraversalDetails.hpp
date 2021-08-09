@@ -414,7 +414,7 @@ namespace sequoia::maths::graph_impl
       for(auto iter{begin}; iter != end; ++iter)
       {
         const auto nextNode{iter->target_node()};
-        constexpr bool hasEdgeFirstFn{!same_as<std::remove_cvref_t<EFTF>, null_func_obj>};    
+        constexpr bool hasEdgeFirstFn{!same_as<std::remove_cvref_t<EFTF>, null_func_obj>};
         constexpr bool isDFS{same_as<OnDiscovery, recurse>};
 
         if constexpr(isDFS)
