@@ -103,42 +103,49 @@ namespace sequoia::testing
     template<invocable<std::string, T, T> CheckFn>
     static void check(std::string_view description, const transition_graph& g, CheckFn checkFn)
     {
-      using namespace maths;
-
       auto edgeFn{
         [description,&g,checkFn](auto i) {
           const auto& w{i->weight()};
-          const auto host{i.partition_index()}, target{i->target_node()};
-          const auto preamble{std::string{"Transition from node "}.append(std::to_string(host)).append(" to ").append(std::to_string(target))};
+          const auto parent{i.partition_index()}, target{i->target_node()};
+          const auto preamble{std::string{"Transition from node "}.append(std::to_string(parent)).append(" to ").append(std::to_string(target))};
 
-          checkFn(append_lines(description, preamble, w.description), w.fn((g.cbegin_node_weights() + host)->object), (g.cbegin_node_weights() + target)->object);
+          checkFn(append_lines(description, preamble, w.description),
+                  w.fn((g.cbegin_node_weights() + parent)->object),
+                  (g.cbegin_node_weights() + target)->object);
         }
       };
 
-      breadth_first_search(g, find_disconnected_t{0}, null_func_obj{}, null_func_obj{}, edgeFn);
+     check(g, edgeFn);
     }
 
     template<invocable<std::string, T, T, T, std::weak_ordering> CheckFn>
       requires orderable<T>
     static void check(std::string_view description, const transition_graph& g, CheckFn checkFn)
     {
-      using namespace maths;
-
       auto edgeFn{
         [description,&g,checkFn](auto i) {
           const auto& w{i->weight()};
-          const auto host{i.partition_index()}, target{i->target_node()};
-          const auto preamble{std::string{"Transition from node "}.append(std::to_string(host)).append(" to ").append(std::to_string(target))};
+          const auto parent{i.partition_index()}, target{i->target_node()};
+          const auto preamble{std::string{"Transition from node "}.append(std::to_string(parent)).append(" to ").append(std::to_string(target))};
 
-          const auto& parentNode{(g.cbegin_node_weights() + host)->object};
+          const auto& parentObject{(g.cbegin_node_weights() + parent)->object};
           checkFn(append_lines(description, preamble, w.description),
-                               w.fn(parentNode),
+                               w.fn(parentObject),
                                (g.cbegin_node_weights() + target)->object,
-                               parentNode,
+                               parentObject,
                                w.ordering);
         }
       };
 
+      check(g, edgeFn);
+    }
+  private:
+    using edge_iterator = typename transition_graph::const_edge_iterator;
+
+    template<invocable<edge_iterator> EdgeFn>
+    static void check(const transition_graph& g, EdgeFn edgeFn)
+    {
+      using namespace maths;
       breadth_first_search(g, find_disconnected_t{0}, null_func_obj{}, null_func_obj{}, edgeFn);
     }
   };
