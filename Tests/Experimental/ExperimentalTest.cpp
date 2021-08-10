@@ -48,25 +48,35 @@ namespace sequoia::testing
     }
   };
 
-  template<class TransitionFn>
-  struct transition_info
+  template<class T, invocable_r<T, const T&> TransitionFn>
+  struct transition_info_base
   {
     std::string description;
     TransitionFn fn;
 
     // TO DO: investigate why MSVC requires this but clang does not
     [[nodiscard]]
-    friend bool operator==(const transition_info& lhs, const transition_info& rhs) noexcept
+    friend bool operator==(const transition_info_base& lhs, const transition_info_base& rhs) noexcept
     {
       return (lhs.description == rhs.description) &&
         (((lhs.fn == nullptr) && (rhs.fn == nullptr) || (lhs.fn != nullptr) && (rhs.fn != nullptr)));
     }
 
     [[nodiscard]]
-    friend bool operator!=(const transition_info& lhs, const transition_info& rhs) noexcept
+    friend bool operator!=(const transition_info_base& lhs, const transition_info_base& rhs) noexcept
     {
       return !(lhs == rhs);
     }
+  };
+
+  template<class T, invocable_r<T, const T&> TransitionFn>
+  struct transition_info : transition_info_base<T, TransitionFn>
+  {};
+
+  template<orderable T, invocable_r<T, const T&> TransitionFn>
+  struct transition_info<T, TransitionFn> : transition_info_base<T, TransitionFn>
+  {
+    std::weak_ordering ordering;
   };
 
   template<class T>
@@ -87,30 +97,50 @@ namespace sequoia::testing
   template<class T, invocable_r<T, const T&> TransitionFn=std::function<T(const T&)>>
   struct transition_checker
   {
-    using transition_graph = maths::graph<maths::directed_flavour::directed, transition_info<TransitionFn>, object_info<T>>;
+    using transition_graph = maths::graph<maths::directed_flavour::directed, transition_info<T, TransitionFn>, object_info<T>>;
     using edge = typename transition_graph::edge_type;
 
     template<invocable<std::string, T, T> CheckFn>
-    static void check(std::string_view description, const transition_graph& g, CheckFn fn)
+    static void check(std::string_view description, const transition_graph& g, CheckFn checkFn)
     {
       using namespace maths;
 
       auto edgeFn{
-        [description,&g,fn](auto i) {
+        [description,&g,checkFn](auto i) {
           const auto& w{i->weight()};
           const auto host{i.partition_index()}, target{i->target_node()};
           const auto preamble{std::string{"Transition from node "}.append(std::to_string(host)).append(" to ").append(std::to_string(target))};
-          
-          fn(append_lines(description, preamble, w.description), w.fn((g.cbegin_node_weights() + host)->object), (g.cbegin_node_weights() + target)->object);
+
+          checkFn(append_lines(description, preamble, w.description), w.fn((g.cbegin_node_weights() + host)->object), (g.cbegin_node_weights() + target)->object);
+        }
+      };
+
+      breadth_first_search(g, find_disconnected_t{0}, null_func_obj{}, null_func_obj{}, edgeFn);
+    }
+
+    template<invocable<std::string, T, T, T, std::weak_ordering> CheckFn>
+    static void check(std::string_view description, const transition_graph& g, CheckFn checkFn)
+    {
+      using namespace maths;
+
+      auto edgeFn{
+        [description,&g,checkFn](auto i) {
+          const auto& w{i->weight()};
+          const auto host{i.partition_index()}, target{i->target_node()};
+          const auto preamble{std::string{"Transition from node "}.append(std::to_string(host)).append(" to ").append(std::to_string(target))};
+
+          const auto& parentNode{(g.cbegin_node_weights() + host)->object};
+          checkFn(append_lines(description, preamble, w.description),
+                               w.fn(parentNode),
+                               (g.cbegin_node_weights() + target)->object,
+                               parentNode,
+                               w.ordering);
         }
       };
 
       breadth_first_search(g, find_disconnected_t{0}, null_func_obj{}, null_func_obj{}, edgeFn);
     }
   };
-
-  template<class T, invocable_r<T, const T&> TransitionFn>
-  using object_transition_graph = maths::graph<maths::directed_flavour::directed, transition_info<TransitionFn>, object_info<T>>;
 
   [[nodiscard]]
   std::string_view experimental_test::source_file() const noexcept
@@ -124,23 +154,37 @@ namespace sequoia::testing
     using edge_t = transition_checker<foo>::edge;
 
     foo_graph g{
-      { { edge_t{1, "Adding 1.1", [](const foo& f) -> foo { return {f.x + 1.1}; }} },
+      { { edge_t{1, "Adding 1.1", [](const foo& f) -> foo { return {f.x + 1.1}; }, std::weak_ordering::greater }},
 
-        { edge_t{0, "Subtracting 1.1", [](const foo& f) -> foo { return {f.x - 1.1};}},
-          edge_t{2, "Multiplying by 2", [](const foo& f) -> foo { return {f.x * 2};}} },
+        { edge_t{0, "Subtracting 1.1", [](const foo& f) -> foo { return {f.x - 1.1}; }, std::weak_ordering::less},
+          edge_t{2, "Multiplying by 2", [](const foo& f) -> foo { return {f.x * 2}; }, std::weak_ordering::greater} },
 
-        { edge_t{1, "Dividing by 2", [](const foo& f) -> foo { return {f.x / 2}; }} }
+        { edge_t{1, "Dividing by 2", [](const foo& f) -> foo { return {f.x / 2}; }, std::weak_ordering::less} }
       },
       {{"Empty", foo{}}, {"1.1", foo{1.1}}, {"2.2", foo{2.2}}}
     };
 
-    auto checker{
-      [this](std::string_view description, const foo& obtained, const foo& prediction) {
-        check_equality(description, obtained, prediction);
-        check_relation(description, within_tolerance{foo{0.1}}, obtained, prediction);
-      }
-    };
+    {
+      auto checker{
+        [this](std::string_view description, const foo& obtained, const foo& prediction, const foo& parent, std::weak_ordering ordering) {
+          check_equality(description, obtained, prediction);
+          check_relation(description, within_tolerance{foo{0.1}}, obtained, prediction);
+          check_semantics(description, prediction, parent, ordering);
+        }
+      };
 
-    transition_checker<foo>::check(LINE(""), g, checker);
+      transition_checker<foo>::check(LINE(""), g, checker);
+    }
+
+    {
+      auto checker{
+        [this](std::string_view description, const foo& obtained, const foo& prediction) {
+          check_equality(description, obtained, prediction);
+          check_relation(description, within_tolerance{foo{0.1}}, obtained, prediction);
+        }
+      };
+
+      transition_checker<foo>::check(LINE(""), g, checker);
+    }
   }
 }
