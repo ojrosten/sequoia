@@ -119,6 +119,7 @@ namespace sequoia::testing
     }
 
     template<invocable<std::string, T, T, T, std::weak_ordering> CheckFn>
+      requires orderable<T>
     static void check(std::string_view description, const transition_graph& g, CheckFn checkFn)
     {
       using namespace maths;
