@@ -94,10 +94,12 @@ namespace sequoia::testing
       [this,&g](auto i) {
 
         const auto& w{i->weight()};
+        const auto host{i.partition_index()}, target{i->target_node()};
+        const auto preamble{std::string{"Transition from node "}.append(std::to_string(host)).append(" to ").append(std::to_string(target))};
 
-        check_equality(w.description,
-                       w.fn((g.cbegin_node_weights() + i.partition_index())->object),
-                       (g.cbegin_node_weights() + i->target_node())->object);
+        check_equality(append_lines(LINE(""), preamble, w.description),
+                       w.fn((g.cbegin_node_weights() + host)->object),
+                       (g.cbegin_node_weights() + target)->object);
       }
     };
 
