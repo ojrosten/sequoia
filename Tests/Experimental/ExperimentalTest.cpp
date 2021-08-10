@@ -105,12 +105,12 @@ namespace sequoia::testing
     {
       auto edgeFn{
         [description,&g,checkFn](auto i) {
-          const auto& w{i->weight()};
-          const auto parent{i.partition_index()}, target{i->target_node()};
-          const auto preamble{std::string{"Transition from node "}.append(std::to_string(parent)).append(" to ").append(std::to_string(target))};
+          const auto [parent,target,message] {make(description, i)};
 
-          checkFn(append_lines(description, preamble, w.description),
-                  w.fn((g.cbegin_node_weights() + parent)->object),
+          const auto& parentObject{(g.cbegin_node_weights() + parent)->object};
+          const auto& w{i->weight()};
+          checkFn(message,
+                  w.fn(parentObject),
                   (g.cbegin_node_weights() + target)->object);
         }
       };
@@ -124,16 +124,15 @@ namespace sequoia::testing
     {
       auto edgeFn{
         [description,&g,checkFn](auto i) {
-          const auto& w{i->weight()};
-          const auto parent{i.partition_index()}, target{i->target_node()};
-          const auto preamble{std::string{"Transition from node "}.append(std::to_string(parent)).append(" to ").append(std::to_string(target))};
+          const auto [parent,target,message] {make(description, i)};
 
           const auto& parentObject{(g.cbegin_node_weights() + parent)->object};
-          checkFn(append_lines(description, preamble, w.description),
-                               w.fn(parentObject),
-                               (g.cbegin_node_weights() + target)->object,
-                               parentObject,
-                               w.ordering);
+          const auto& w{i->weight()};
+          checkFn(message,
+                  w.fn(parentObject),
+                  (g.cbegin_node_weights() + target)->object,
+                  parentObject,
+                  w.ordering);
         }
       };
 
@@ -141,12 +140,31 @@ namespace sequoia::testing
     }
   private:
     using edge_iterator = typename transition_graph::const_edge_iterator;
+    using size_type = typename transition_graph::size_type;
 
     template<invocable<edge_iterator> EdgeFn>
     static void check(const transition_graph& g, EdgeFn edgeFn)
     {
       using namespace maths;
       breadth_first_search(g, find_disconnected_t{0}, null_func_obj{}, null_func_obj{}, edgeFn);
+    }
+
+    struct info
+    {
+      size_type parent, target;
+      std::string message;
+    };
+
+    [[nodiscard]]
+    static info make(std::string_view description, edge_iterator i)
+    {
+      const auto& w{i->weight()};
+      const auto parent{i.partition_index()}, target{i->target_node()};
+      return {parent,
+              target,
+              append_lines(description,
+                           std::string{"Transition from node "}.append(std::to_string(parent)).append(" to ").append(std::to_string(target)),
+                           w.description)};
     }
   };
 
