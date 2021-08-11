@@ -9,7 +9,7 @@ set(TestDir "../Tests")
 
 target_sources(TestFrameworkDiagnostics PRIVATE
                ${TestDir}/TestFramework/CoreDiagnostics.cpp
-               ${TestDir}/TestFramework/DependencyAnalyzerFreeTest.cpp               
+               ${TestDir}/TestFramework/DependencyAnalyzerFreeTest.cpp
                ${TestDir}/TestFramework/FileSystemFreeTest.cpp
                ${TestDir}/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp
                ${TestDir}/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp
@@ -20,7 +20,8 @@ target_sources(TestFrameworkDiagnostics PRIVATE
                ${TestDir}/TestFramework/OrderableRegularAllocationTestDiagnostics.cpp
                ${TestDir}/TestFramework/OutputFreeTest.cpp
                ${TestDir}/TestFramework/PerformanceTestDiagnostics.cpp
-               ${TestDir}/TestFramework/RegularAllocationTestDiagnostics.cpp			   
+               ${TestDir}/TestFramework/RegularAllocationTestDiagnostics.cpp
+               ${TestDir}/TestFramework/RegularStateTransitionDiagnosticsTest.cpp
                ${TestDir}/TestFramework/RelationalTestDiagnostics.cpp
                ${TestDir}/TestFramework/ScopedAllocationTestDiagnostics.cpp
                ${TestDir}/TestFramework/TestRunnerDiagnostics.cpp

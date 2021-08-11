@@ -95,6 +95,11 @@ int main(int argc, char** argv)
     );
 
     runner.add_test_family(
+      "State Transition Utilities",
+      regular_state_transition_diagnostics_test("Regular Test")
+    );
+
+    runner.add_test_family(
       "CommandLine Arguments",
       commandline_arguments_false_positive_test{"False Positive Test"},
       commandline_arguments_test{"Unit Test"}

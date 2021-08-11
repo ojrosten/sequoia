@@ -93,8 +93,8 @@ int main(int argc, char** argv)
       relational_false_positive_diagnostics{"Relational False Positive Diagnostics"},
       relational_false_negative_diagnostics{"Relational False Negative Diagnostics"}
     );
-	
-	runner.add_test_family(
+
+    runner.add_test_family(
       "State Transition Utilities",
       regular_state_transition_diagnostics_test("Regular Test")
     );
