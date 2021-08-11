@@ -7,6 +7,10 @@
 
 #pragma once
 
+/*! \file
+    \brief Facility to define tests via a graph comprising states of an object and transitions between them.
+ */
+
 #include "sequoia/Core/Meta/Concepts.hpp"
 #include "sequoia/Maths/Graph/DynamicGraph.hpp"
 #include "sequoia/Maths/Graph/GraphTraversalFunctions.hpp"
