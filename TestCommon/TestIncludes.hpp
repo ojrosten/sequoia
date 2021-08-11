@@ -76,6 +76,7 @@
 #include "TestFramework/RegularAllocationTestDiagnostics.hpp"
 #include "TestFramework/RelationalTestDiagnostics.hpp"
 #include "TestFramework/ScopedAllocationTestDiagnostics.hpp"
+#include "TestFramework/StateTransitionDiagnosticsTest.hpp"
 #include "TestFramework/TestRunnerDiagnostics.hpp"
 #include "TestFramework/TestRunnerEndToEndFreeTest.hpp"
 #include "TestFramework/TestRunnerProjectCreation.hpp"

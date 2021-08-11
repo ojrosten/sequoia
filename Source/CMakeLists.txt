@@ -12,6 +12,7 @@ set(SourceList sequoia/TestFramework/Advice.cpp
     sequoia/TestFramework/Output.cpp
     sequoia/TestFramework/PerformanceTestCore.cpp
     sequoia/TestFramework/SemanticsCheckersDetails.cpp
+    sequoia/TestFramework/StateTransitionUtilities.cpp
     sequoia/TestFramework/Summary.cpp
     sequoia/TestFramework/TestFamily.cpp
     sequoia/TestFramework/TestRunner.cpp

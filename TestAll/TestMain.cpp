@@ -69,7 +69,7 @@ int main(int argc, char** argv)
     runner.add_test_family(
       "Scoped Allocation Diagnostics",
       scoped_allocation_false_positive_diagnostics{"Scoped Allocation False Positive Diagnostics"},
-      move_only_scoped_allocation_false_positive_diagnostics{"Move-Only Scoped Allocation False Positive Diagnostics"},    
+      move_only_scoped_allocation_false_positive_diagnostics{"Move-Only Scoped Allocation False Positive Diagnostics"},
       scoped_allocation_false_negative_diagnostics{"Scoped Allocation False Negative Diagnostics"},
       move_only_scoped_allocation_false_negative_diagnostics{"Move-Only Scoped Allocation False Negative Diagnostics"}
     );
@@ -247,6 +247,11 @@ int main(int argc, char** argv)
     runner.add_test_family(
       "Streaming",
       streaming_free_test("Free Test")
+    );
+
+    runner.add_test_family(
+      "State Transition Utilities",
+      state_transition_diagnostics_test("Free Test")
     );
 
     runner.execute(timer_resolution{1ms});
