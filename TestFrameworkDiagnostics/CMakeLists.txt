@@ -21,7 +21,7 @@ target_sources(TestFrameworkDiagnostics PRIVATE
                ${TestDir}/TestFramework/OutputFreeTest.cpp
                ${TestDir}/TestFramework/PerformanceTestDiagnostics.cpp
                ${TestDir}/TestFramework/RegularAllocationTestDiagnostics.cpp
-               ${TestDir}/TestFramework/RegularStateTransitionDiagnosticsTest.cpp
+               ${TestDir}/TestFramework/RegularStateTransitionDiagnostics.cpp
                ${TestDir}/TestFramework/RelationalTestDiagnostics.cpp
                ${TestDir}/TestFramework/ScopedAllocationTestDiagnostics.cpp
                ${TestDir}/TestFramework/TestRunnerDiagnostics.cpp

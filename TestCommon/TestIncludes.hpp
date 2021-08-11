@@ -74,7 +74,7 @@
 #include "TestFramework/OutputFreeTest.hpp"
 #include "TestFramework/PerformanceTestDiagnostics.hpp"
 #include "TestFramework/RegularAllocationTestDiagnostics.hpp"
-#include "TestFramework/RegularStateTransitionDiagnosticsTest.hpp"
+#include "TestFramework/RegularStateTransitionDiagnostics.hpp"
 #include "TestFramework/RelationalTestDiagnostics.hpp"
 #include "TestFramework/ScopedAllocationTestDiagnostics.hpp"
 #include "TestFramework/TestRunnerDiagnostics.hpp"

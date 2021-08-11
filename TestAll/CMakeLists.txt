@@ -76,8 +76,8 @@ target_sources(TestAll PRIVATE ${TestDir}/Experimental/ExperimentalTest.cpp
                ${TestDir}/TestFramework/OrderableRegularTestDiagnostics.cpp
                ${TestDir}/TestFramework/OutputFreeTest.cpp
                ${TestDir}/TestFramework/PerformanceTestDiagnostics.cpp
-               ${TestDir}/TestFramework/RegularAllocationTestDiagnostics.cpp			   
-               ${TestDir}/TestFramework/RegularStateTransitionDiagnosticsTest.cpp
+               ${TestDir}/TestFramework/RegularAllocationTestDiagnostics.cpp
+               ${TestDir}/TestFramework/RegularStateTransitionDiagnostics.cpp
                ${TestDir}/TestFramework/RelationalTestDiagnostics.cpp
                ${TestDir}/TestFramework/ScopedAllocationTestDiagnostics.cpp
                ${TestDir}/TestFramework/TestRunnerDiagnostics.cpp

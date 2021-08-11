@@ -5,7 +5,7 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#include "RegularStateTransitionDiagnosticsTest.hpp"
+#include "RegularStateTransitionDiagnostics.hpp"
 
 #include "sequoia/TestFramework/StateTransitionUtilities.hpp"
 
