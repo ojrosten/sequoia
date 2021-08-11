@@ -93,6 +93,11 @@ int main(int argc, char** argv)
       relational_false_positive_diagnostics{"Relational False Positive Diagnostics"},
       relational_false_negative_diagnostics{"Relational False Negative Diagnostics"}
     );
+	
+	runner.add_test_family(
+      "State Transition Utilities",
+      regular_state_transition_diagnostics_test("Regular Test")
+    );
 
     runner.add_test_family(
       "Text Processing",
@@ -247,11 +252,6 @@ int main(int argc, char** argv)
     runner.add_test_family(
       "Streaming",
       streaming_free_test("Free Test")
-    );
-
-    runner.add_test_family(
-      "State Transition Utilities",
-      state_transition_diagnostics_test("Free Test")
     );
 
     runner.execute(timer_resolution{1ms});

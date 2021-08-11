@@ -11,7 +11,7 @@
 
 namespace sequoia::testing
 {
-  class state_transition_diagnostics_test final : public regular_test
+  class regular_state_transition_diagnostics_test final : public regular_test
   {
   public:
     using regular_test::regular_test;

@@ -5,13 +5,12 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#include "StateTransitionDiagnosticsTest.hpp"
+#include "RegularStateTransitionDiagnosticsTest.hpp"
 
 #include "sequoia/TestFramework/StateTransitionUtilities.hpp"
 
 namespace sequoia::testing
 {
-
   struct foo
   {
     double x{};
@@ -49,12 +48,12 @@ namespace sequoia::testing
   };
 
   [[nodiscard]]
-  std::string_view state_transition_diagnostics_test::source_file() const noexcept
+  std::string_view regular_state_transition_diagnostics_test::source_file() const noexcept
   {
     return __FILE__;
   }
 
-  void state_transition_diagnostics_test::run_tests()
+  void regular_state_transition_diagnostics_test::run_tests()
   {
     using foo_graph = transition_checker<foo>::transition_graph;
     using edge_t = transition_checker<foo>::edge;
