@@ -56,13 +56,6 @@ namespace sequoia::testing
 
   void state_transition_diagnostics_test::run_tests()
   {
-    test_regular();
-    test_move_only();
-  }
-
-  void state_transition_diagnostics_test::test_regular()
-  {
-
     using foo_graph = transition_checker<foo>::transition_graph;
     using edge_t = transition_checker<foo>::edge;
 
@@ -99,10 +92,5 @@ namespace sequoia::testing
 
       transition_checker<foo>::check(LINE(""), g, checker);
     }
-  }
-
-  void state_transition_diagnostics_test::test_move_only()
-  {
-
   }
 }
