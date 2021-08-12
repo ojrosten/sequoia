@@ -11,41 +11,41 @@
 
 namespace sequoia::testing
 {
-  struct foo
+  namespace
   {
-    double x{};
+    struct foo
+    {
+      double x{};
+
+      [[nodiscard]]
+      friend auto operator<=>(const foo&, const foo&) noexcept = default;
+
+      template<class Stream>
+      friend Stream& operator<<(Stream& s, const foo& b)
+      {
+        s << b.x;
+        return s;
+      }
+
+      [[nodiscard]]
+      friend foo operator-(const foo& lhs, const foo& rhs)
+      {
+        return {lhs.x - rhs.x};
+      }
+    };
 
     [[nodiscard]]
-    friend auto operator<=>(const foo&, const foo&) noexcept = default;
+    std::string to_string(const foo& f)
+    {
+      return std::to_string(f.x);
+    }
 
     [[nodiscard]]
-    friend foo operator-(const foo& lhs, const foo& rhs)
+    foo abs(const foo& f)
     {
-      return {lhs.x - rhs.x};
+      return {std::abs(f.x)};
     }
-  };
-
-  [[nodiscard]]
-  std::string to_string(const foo& f)
-  {
-    return std::to_string(f.x);
   }
-
-  [[nodiscard]]
-  foo abs(const foo& f)
-  {
-    return {std::abs(f.x)};
-  }
-
-  template<>
-  struct detailed_equality_checker<foo>
-  {
-    template<test_mode Mode>
-    static void check(test_logger<Mode>& logger, const foo& obtained, const foo& prediction)
-    {
-      check_equality("value of x", logger, obtained.x, prediction.x);
-    }
-  };
 
   [[nodiscard]]
   std::string_view regular_state_transition_diagnostics_test::source_file() const noexcept

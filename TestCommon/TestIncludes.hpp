@@ -66,6 +66,7 @@
 #include "TestFramework/FileSystemFreeTest.hpp"
 #include "TestFramework/MoveOnlyAllocationTestDiagnostics.hpp"
 #include "TestFramework/MoveOnlyScopedAllocationTestDiagnostics.hpp"
+#include "TestFramework/MoveOnlyStateTransitionDiagnostics.hpp"
 #include "TestFramework/MoveOnlyTestDiagnostics.hpp"
 #include "TestFramework/OrderableMoveOnlyAllocationTestDiagnostics.hpp"
 #include "TestFramework/OrderableMoveOnlyTestDiagnostics.hpp"

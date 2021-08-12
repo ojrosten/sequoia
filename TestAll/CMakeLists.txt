@@ -69,6 +69,7 @@ target_sources(TestAll PRIVATE ${TestDir}/Experimental/ExperimentalTest.cpp
                ${TestDir}/TestFramework/FileSystemFreeTest.cpp
                ${TestDir}/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp
                ${TestDir}/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp
+               ${TestDir}/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp
                ${TestDir}/TestFramework/MoveOnlyTestDiagnostics.cpp
                ${TestDir}/TestFramework/OrderableMoveOnlyAllocationTestDiagnostics.cpp
                ${TestDir}/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp
