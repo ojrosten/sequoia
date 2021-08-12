@@ -1,4 +1,4 @@
-Tests/TestFramework/CoreDiagnostics.cpp, Line 335
+Tests/TestFramework/CoreDiagnostics.cpp, Line 339
 
 Expected Exception Type:
 [std::runtime_error]
@@ -7,7 +7,7 @@ Error
 
 	=======================================
 
-Tests/TestFramework/CoreDiagnostics.cpp, Line 337
+Tests/TestFramework/CoreDiagnostics.cpp, Line 341
 
 Expected Exception Type:
 [int]

@@ -18,6 +18,24 @@
 
 namespace sequoia::testing
 {
+  namespace
+  {
+      struct bland
+      {
+        [[nodiscard]]
+        std::string operator()(int, int) const
+        {
+          return {"Integer advice"};
+        }
+
+        [[nodiscard]]
+        std::string operator()(double, double) const
+        {
+          return {"Double advice"};
+        }
+      };
+  }
+  
   log_summary& postprocess(log_summary& summary, const std::filesystem::path& testRepo)
   {
     std::string updatedOutput{summary.diagnostics_output()};
@@ -44,20 +62,6 @@ namespace sequoia::testing
       check_range("", logger, std::begin(beast.x), std::end(beast.x), std::begin(prediction), std::end(prediction), std::move(advisor));
     }
   };
-
-  struct bland
-  {
-    std::string operator()(int, int) const
-    {
-      return {"Integer advice"};
-    }
-
-    std::string operator()(double, double) const
-    {
-      return {"Double advice"};
-    }
-  };
-
 
   [[nodiscard]]
   std::string_view false_positive_diagnostics::source_file() const noexcept
