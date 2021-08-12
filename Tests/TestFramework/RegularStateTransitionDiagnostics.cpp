@@ -92,4 +92,32 @@ namespace sequoia::testing
       transition_checker<foo>::check(LINE(""), g, checker);
     }
   }
+
+  [[nodiscard]]
+  std::string_view regular_state_transition_false_positive_diagnostics::source_file() const noexcept
+  {
+    return __FILE__;
+  }
+
+  void regular_state_transition_false_positive_diagnostics::run_tests()
+  {
+    using foo_graph = transition_checker<foo>::transition_graph;
+    using edge_t = transition_checker<foo>::edge;
+
+    foo_graph g{
+      { { edge_t{1, "Adding 1.1", [](const foo& f) -> foo { return {f.x + 1.0}; }, std::weak_ordering::greater }},
+
+        { edge_t{0, "Subtracting 1.1", [](const foo& f) -> foo { return {f.x - 1.0}; }, std::weak_ordering::less}}
+      },
+      {{"Empty", foo{}}, {"1.1", foo{1.1}}}
+    };
+
+    auto checker{
+        [this](std::string_view description, const foo& obtained, const foo& prediction) {
+          check_equality(description, obtained, prediction);
+        }
+    };
+
+    transition_checker<foo>::check(LINE("Mistake in transition functions"), g, checker);
+  }
 }

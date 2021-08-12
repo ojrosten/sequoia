@@ -74,12 +74,12 @@ namespace sequoia::testing
         [this](std::string_view description, const bar& obtained, const bar& prediction, const bar& parent, std::weak_ordering ordering) {
           check_equality(description, obtained, prediction);
           check_relation(description, within_tolerance{bar{0.1}}, obtained, prediction);
-          check_semantics(description, prediction, parent, ordering);
+          check_semantics(description, [&prediction]() { return prediction; }, [&parent]() { return parent; }, ordering);
         }
       };
 
       transition_checker<bar>::check(LINE(""), g, checker);
-    }
+    }*/
 
     {
       auto checker{
@@ -90,6 +90,34 @@ namespace sequoia::testing
       };
 
       transition_checker<bar>::check(LINE(""), g, checker);
-    }*/
+    }
+  }
+
+  [[nodiscard]]
+  std::string_view move_only_state_transition_false_positive_diagnostics::source_file() const noexcept
+  {
+    return __FILE__;
+  }
+
+  void move_only_state_transition_false_positive_diagnostics::run_tests()
+  {
+    using bar_graph = transition_checker<bar>::transition_graph;
+    using edge_t = transition_checker<bar>::edge;
+
+    bar_graph g{
+      { { edge_t{1, "Adding 1.1", [](const bar& f) -> bar { return {f.x + 1.0}; }, std::weak_ordering::greater }},
+
+        { edge_t{0, "Subtracting 1.1", [](const bar& f) -> bar { return {f.x - 1.0}; }, std::weak_ordering::less}}
+      },
+      {{"Empty", bar{}}, {"1.1", bar{1.1}}}
+    };
+
+    auto checker{
+        [this](std::string_view description, const bar& obtained, const bar& prediction) {
+          check_equality(description, obtained, prediction);
+        }
+    };
+
+    transition_checker<bar>::check(LINE("Mistake in transition functions"), g, checker);
   }
 }

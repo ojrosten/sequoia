@@ -22,4 +22,16 @@ namespace sequoia::testing
 
     void run_tests() final;
   };
+
+  class regular_state_transition_false_positive_diagnostics final : public regular_false_positive_test
+  {
+  public:
+    using regular_false_positive_test::regular_false_positive_test;
+
+  private:
+    [[nodiscard]]
+    std::string_view source_file() const noexcept final;
+
+    void run_tests() final;
+  };
 }

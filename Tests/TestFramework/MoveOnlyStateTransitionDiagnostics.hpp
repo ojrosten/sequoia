@@ -22,4 +22,16 @@ namespace sequoia::testing
 
     void run_tests() final;
   };
+
+  class move_only_state_transition_false_positive_diagnostics final : public move_only_false_positive_test
+  {
+  public:
+    using move_only_false_positive_test::move_only_false_positive_test;
+
+  private:
+    [[nodiscard]]
+    std::string_view source_file() const noexcept final;
+
+    void run_tests() final;
+  };
 }
