@@ -96,8 +96,8 @@ int main(int argc, char** argv)
 
     runner.add_test_family(
       "State Transition Utilities",
-      regular_state_transition_diagnostics_test("Regular Test"),
-      move_only_state_transition_diagnostics_test("Move-only Test")
+      regular_state_transition_false_negative_diagnostics("Regular False Negative Diagnostics"),
+      move_only_state_transition_false_negative_diagnostics("Move-Only False Negative Diagnostics")
     );
 
     runner.add_test_family(

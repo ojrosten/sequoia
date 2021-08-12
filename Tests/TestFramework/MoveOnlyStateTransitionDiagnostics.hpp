@@ -11,10 +11,10 @@
 
 namespace sequoia::testing
 {
-  class move_only_state_transition_diagnostics_test final : public move_only_test
+  class move_only_state_transition_false_negative_diagnostics final : public move_only_false_negative_test
   {
   public:
-    using move_only_test::move_only_test;
+    using move_only_false_negative_test::move_only_false_negative_test;
 
   private:
     [[nodiscard]]

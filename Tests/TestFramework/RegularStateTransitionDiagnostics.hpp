@@ -11,10 +11,10 @@
 
 namespace sequoia::testing
 {
-  class regular_state_transition_diagnostics_test final : public regular_test
+  class regular_state_transition_false_negative_diagnostics final : public regular_false_negative_test
   {
   public:
-    using regular_test::regular_test;
+    using regular_false_negative_test::regular_false_negative_test;
 
   private:
     [[nodiscard]]

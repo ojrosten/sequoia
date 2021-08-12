@@ -1,2 +1,2 @@
-Regular Test
-Standard Top Level Checks:                20;  Failures:  0  [Deep checks: 132]
+Regular False Negative Diagnostics
+False Negative Checks:                    20;  Failures:  0

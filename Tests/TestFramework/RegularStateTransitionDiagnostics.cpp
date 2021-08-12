@@ -48,12 +48,12 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string_view regular_state_transition_diagnostics_test::source_file() const noexcept
+  std::string_view regular_state_transition_false_negative_diagnostics::source_file() const noexcept
   {
     return __FILE__;
   }
 
-  void regular_state_transition_diagnostics_test::run_tests()
+  void regular_state_transition_false_negative_diagnostics::run_tests()
   {
     using foo_graph = transition_checker<foo>::transition_graph;
     using edge_t = transition_checker<foo>::edge;
