@@ -1,4 +1,4 @@
 Move-Only False Positive Diagnostics
-False Negative Checks:                     8;  Failures:  0
+False Negative Checks:                    16;  Failures:  0
 Move-Only False Negative Diagnostics
 False Positive Checks:                     2;  Failures:  0

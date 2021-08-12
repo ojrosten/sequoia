@@ -51,7 +51,7 @@ namespace sequoia::testing
     constexpr explicit within_tolerance(T tol) : m_Tol{std::move(tol)} {};
 
     [[nodiscard]]
-    constexpr T tol() const noexcept
+    constexpr const T& tol() const noexcept
     {
       return m_Tol;
     }

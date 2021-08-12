@@ -1,5 +1,5 @@
 	False Positive Failure:
-	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 92
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 93
 
 	Transition from node 0 to 1
 	Adding 1.1
@@ -9,7 +9,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 92
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 93
 
 	Transition from node 0 to 1
 	Adding 1.1
@@ -19,7 +19,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 92
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 93
 
 	Transition from node 1 to 0
 	Subtracting 1.1
@@ -29,7 +29,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 92
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 93
 
 	Transition from node 1 to 0
 	Subtracting 1.1
@@ -39,7 +39,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 92
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 93
 
 	Transition from node 1 to 2
 	Multiplying by 2
@@ -49,7 +49,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 92
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 93
 
 	Transition from node 1 to 2
 	Multiplying by 2
@@ -59,7 +59,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 92
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 93
 
 	Transition from node 2 to 1
 	Dividing by 2
@@ -69,7 +69,87 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 92
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 93
+
+	Transition from node 2 to 1
+	Dividing by 2
+	[sequoia::testing::(anonymous namespace)::bar]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 104
+
+	Transition from node 0 to 1
+	Adding 1.1
+	[sequoia::testing::(anonymous namespace)::bar]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 104
+
+	Transition from node 0 to 1
+	Adding 1.1
+	[sequoia::testing::(anonymous namespace)::bar]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 104
+
+	Transition from node 1 to 0
+	Subtracting 1.1
+	[sequoia::testing::(anonymous namespace)::bar]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 104
+
+	Transition from node 1 to 0
+	Subtracting 1.1
+	[sequoia::testing::(anonymous namespace)::bar]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 104
+
+	Transition from node 1 to 2
+	Multiplying by 2
+	[sequoia::testing::(anonymous namespace)::bar]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 104
+
+	Transition from node 1 to 2
+	Multiplying by 2
+	[sequoia::testing::(anonymous namespace)::bar]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 104
+
+	Transition from node 2 to 1
+	Dividing by 2
+	[sequoia::testing::(anonymous namespace)::bar]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 104
 
 	Transition from node 2 to 1
 	Dividing by 2

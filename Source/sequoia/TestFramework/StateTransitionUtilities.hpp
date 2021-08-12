@@ -54,15 +54,28 @@ namespace sequoia::testing
     template<class T>
     struct object_info
     {
+      template<class... Args>
+      object_info(std::string s, Args&&... args)
+        : description{std::move(s)}
+        , fn{[...args{args}] () { return T{args...}; }}
+      {}
+
       std::string description;
-      T object;
+      std::function<T()> fn;
 
       // TO DO: investigate why MSVC requires this but clang does not
       [[nodiscard]]
-      friend bool operator==(const object_info&, const object_info&) noexcept = default;
+      friend bool operator==(const object_info& lhs, const object_info& rhs) noexcept
+      {
+        return (lhs.description == rhs.description) &&
+          (((lhs.fn == nullptr) && (rhs.fn == nullptr) || (lhs.fn != nullptr) && (rhs.fn != nullptr)));
+      }
 
       [[nodiscard]]
-      friend bool operator!=(const object_info&, const object_info&) noexcept = default;
+      friend bool operator!=(const object_info& lhs, const object_info& rhs) noexcept
+      {
+        return !(lhs == rhs);
+      }
 
     };
   }
@@ -80,11 +93,11 @@ namespace sequoia::testing
         [description,&g,checkFn](auto i) {
           const auto [parent,target,message] {make(description, i)};
 
-          const auto& parentObject{(g.cbegin_node_weights() + parent)->object};
+          const auto& parentObject{(g.cbegin_node_weights() + parent)->fn()};
           const auto& w{i->weight()};
           checkFn(message,
                   w.fn(parentObject),
-                  (g.cbegin_node_weights() + target)->object);
+                  (g.cbegin_node_weights() + target)->fn());
         }
       };
 
@@ -99,12 +112,12 @@ namespace sequoia::testing
         [description,&g,checkFn](auto i) {
           const auto [parent,target,message] {make(description, i)};
 
-          const auto& parentObject{(g.cbegin_node_weights() + parent)->object};
+          const auto parentIter{(g.cbegin_node_weights() + parent)};
           const auto& w{i->weight()};
           checkFn(message,
-                  w.fn(parentObject),
-                  (g.cbegin_node_weights() + target)->object,
-                  parentObject,
+                  w.fn(parentIter->fn()),
+                  (g.cbegin_node_weights() + target)->fn(),
+                  parentIter->fn(),
                   w.ordering);
         }
       };

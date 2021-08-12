@@ -109,7 +109,7 @@ namespace sequoia::testing
 
         { edge_t{0, "Subtracting 1.1", [](const foo& f) -> foo { return {f.x - 1.0}; }, std::weak_ordering::less}}
       },
-      {{"Empty", foo{}}, {"1.1", foo{1.1}}}
+      {{"Empty"}, {"1.1", 1.1}}
     };
 
     auto checker{

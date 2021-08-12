@@ -272,11 +272,11 @@ namespace sequoia::testing
 
     if constexpr(invocable<Compare, T, T>)
     {
-      binary_comparison(sentry, compare, obtained, prediction, advisor);
+      binary_comparison(sentry, std::move(compare), obtained, prediction, advisor);
     }
     else if constexpr(range<T>)
     {
-      check_range("", logger, compare, obtained.begin(), obtained.end(), prediction.begin(), prediction.end(), advisor);
+      check_range("", logger, std::move(compare), obtained.begin(), obtained.end(), prediction.begin(), prediction.end(), advisor);
     }
     else
     {
