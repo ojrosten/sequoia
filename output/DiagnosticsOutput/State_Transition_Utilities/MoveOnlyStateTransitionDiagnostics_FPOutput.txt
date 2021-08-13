@@ -1,4 +1,4 @@
-	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 133
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 135
 	Mistake in transition functions
 
 	Transition from node 0 to 1
@@ -10,7 +10,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 133
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 135
 	Mistake in transition functions
 
 	Transition from node 1 to 0

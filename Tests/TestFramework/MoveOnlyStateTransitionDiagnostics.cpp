@@ -116,6 +116,8 @@ namespace sequoia::testing
     using bar_graph = transition_checker<bar>::transition_graph;
     using edge_t = transition_checker<bar>::edge;
     using node_weight_t = transition_checker<bar>::transition_graph::node_weight_type;
+    // Note: the use of node_weight_t below only seems to be necessary
+    // with MSVC
 
     bar_graph g{
       { { edge_t{1, "Adding 1.1", [](const bar& f) -> bar { return bar{f.x + 1.0}; }, std::weak_ordering::greater }},
