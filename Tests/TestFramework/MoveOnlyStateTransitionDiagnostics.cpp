@@ -78,15 +78,15 @@ namespace sequoia::testing
 
         { edge_t{1, "Dividing by 2", [](const bar& f) -> bar { return bar{f.x / 2}; }, std::weak_ordering::less} }
       },
-      {{"Empty"}, {"1.1", 1.1}, {"2.2", 2.2}}
+      {{}, {1.1}, {2.2}}
     };
 
     {
       auto checker{
-        [this](std::string_view description, const bar& obtained, const bar& prediction, const bar& parent, std::weak_ordering ordering) {
-          check_equality(description, obtained, prediction);
-          check_relation(description, within_tolerance{bar{0.1}}, obtained, prediction);
-          //check_semantics(description, [&prediction]() { return prediction; }, [&parent]() { return parent; }, ordering);
+        [this](std::string_view description, std::function<bar()> obtained, std::function<bar()> prediction, std::function<bar()> parent, std::weak_ordering ordering) {
+          check_equality(description, obtained(), prediction());
+          check_relation(description, within_tolerance{bar{0.1}}, obtained(), prediction());
+          check_semantics(description, prediction, parent, ordering);
         }
       };
 
@@ -115,13 +115,13 @@ namespace sequoia::testing
   {
     using bar_graph = transition_checker<bar>::transition_graph;
     using edge_t = transition_checker<bar>::edge;
+    using node_weight_t = transition_checker<bar>::transition_graph::node_weight_type;
 
     bar_graph g{
       { { edge_t{1, "Adding 1.1", [](const bar& f) -> bar { return bar{f.x + 1.0}; }, std::weak_ordering::greater }},
-
-        { edge_t{0, "Subtracting 1.1", [](const bar& f) -> bar { return bar{f.x - 1.0}; }, std::weak_ordering::less}}
+        { edge_t{0, "Subtracting 1.1", [](const bar& f) -> bar { return bar{f.x - 1.0}; }, std::weak_ordering::less} },
       },
-      {{"Empty"}, {"1.1", 1.1}}
+      {node_weight_t{}, node_weight_t{1.1}}
     };
 
     auto checker{

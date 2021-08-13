@@ -59,16 +59,16 @@ namespace sequoia::testing
     using edge_t = transition_checker<foo>::edge;
 
     foo_graph g{
-      { { edge_t{1, "Adding 1.1", [](const foo& f) -> foo { return {f.x + 1.1}; }, std::weak_ordering::greater }},
+      { { edge_t{1, "Adding 1.1", [](const foo& f) -> foo { return {f.x + 1.1}; }, std::weak_ordering::greater} },
 
         { edge_t{0, "Subtracting 1.1", [](const foo& f) -> foo { return {f.x - 1.1}; }, std::weak_ordering::less},
           edge_t{2, "Multiplying by 2", [](const foo& f) -> foo { return {f.x * 2}; }, std::weak_ordering::greater} },
 
         { edge_t{1, "Dividing by 2", [](const foo& f) -> foo { return {f.x / 2}; }, std::weak_ordering::less} }
       },
-      {{"Empty", foo{}}, {"1.1", foo{1.1}}, {"2.2", foo{2.2}}}
+      {{}, {1.1}, {2.2}}
     };
-
+    
     {
       auto checker{
         [this](std::string_view description, const foo& obtained, const foo& prediction, const foo& parent, std::weak_ordering ordering) {
@@ -105,11 +105,10 @@ namespace sequoia::testing
     using edge_t = transition_checker<foo>::edge;
 
     foo_graph g{
-      { { edge_t{1, "Adding 1.1", [](const foo& f) -> foo { return {f.x + 1.0}; }, std::weak_ordering::greater }},
-
-        { edge_t{0, "Subtracting 1.1", [](const foo& f) -> foo { return {f.x - 1.0}; }, std::weak_ordering::less}}
+      { { edge_t{1, "Adding 1.1", [](const foo& f) -> foo { return {f.x + 1.0}; }, std::weak_ordering::greater } },
+        { edge_t{0, "Subtracting 1.1", [](const foo& f) -> foo { return {f.x - 1.0}; }, std::weak_ordering::less} }
       },
-      {{"Empty"}, {"1.1", 1.1}}
+      {foo{}, foo{1.1}}
     };
 
     auto checker{

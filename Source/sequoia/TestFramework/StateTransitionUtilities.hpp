@@ -31,7 +31,7 @@ namespace sequoia::testing
       friend bool operator==(const transition_info_base& lhs, const transition_info_base& rhs) noexcept
       {
         return (lhs.description == rhs.description) &&
-          (((lhs.fn == nullptr) && (rhs.fn == nullptr) || (lhs.fn != nullptr) && (rhs.fn != nullptr)));
+               (((lhs.fn == nullptr) && (rhs.fn == nullptr)) || ((lhs.fn != nullptr) && (rhs.fn != nullptr)));
       }
 
       [[nodiscard]]
@@ -55,20 +55,18 @@ namespace sequoia::testing
     struct object_info
     {
       template<class... Args>
-      object_info(std::string s, Args&&... args)
-        : description{std::move(s)}
-        , fn{[...args{args}] () { return T{args...}; }}
+        requires (!resolve_to_copy_v<object_info, Args...>)
+      object_info(Args&&... args)
+        : fn{[...args{args}] () { return T{args...}; }}
       {}
 
-      std::string description;
       std::function<T()> fn;
 
       // TO DO: investigate why MSVC requires this but clang does not
       [[nodiscard]]
       friend bool operator==(const object_info& lhs, const object_info& rhs) noexcept
       {
-        return (lhs.description == rhs.description) &&
-          (((lhs.fn == nullptr) && (rhs.fn == nullptr) || (lhs.fn != nullptr) && (rhs.fn != nullptr)));
+        return ((lhs.fn == nullptr) && (rhs.fn == nullptr)) || ((lhs.fn != nullptr) && (rhs.fn != nullptr));
       }
 
       [[nodiscard]]
@@ -104,8 +102,29 @@ namespace sequoia::testing
       check(g, edgeFn);
     }
 
-    template<invocable<std::string, T, T, T, std::weak_ordering> CheckFn>
+    template<invocable<std::string, std::function<T()>, std::function<T()>, std::function<T()>, std::weak_ordering> CheckFn>
       requires orderable<T>
+    static void check(std::string_view description, const transition_graph& g, CheckFn checkFn)
+    {
+      auto edgeFn{
+        [description,&g,checkFn](auto i) {
+          const auto [parent,target,message] {make(description, i)};
+
+          const auto parentIter{(g.cbegin_node_weights() + parent)};
+          const auto& w{i->weight()};
+          checkFn(message,
+                  [&]() { return w.fn(parentIter->fn()); },
+                  (g.cbegin_node_weights() + target)->fn,
+                  parentIter->fn,
+                  w.ordering);
+        }
+      };
+
+      check(g, edgeFn);
+    }
+
+    template<invocable<std::string, T, T, T, std::weak_ordering> CheckFn>
+      requires (orderable<T> && pseudoregular<T>)
     static void check(std::string_view description, const transition_graph& g, CheckFn checkFn)
     {
       auto edgeFn{
