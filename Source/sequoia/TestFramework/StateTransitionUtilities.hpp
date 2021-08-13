@@ -57,7 +57,7 @@ namespace sequoia::testing
       template<class... Args>
         requires (!resolve_to_copy_v<object_info, Args...>)
       object_info(Args&&... args)
-        : fn{[...args{args}] () { return T{args...}; }}
+        : fn{[...args{std::move(args)}] () { return T{args...}; }}
       {}
 
       std::function<T()> fn;
