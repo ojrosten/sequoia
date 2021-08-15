@@ -5,7 +5,7 @@
 	[int]
 	Unexpected exception thrown (caught by std::exception&):
 	"
-	  Error: expected 1 argument, [case], but found 0 arguments"
+	  Error: while parsing option "test": expected 1 argument, [case], but found 0 arguments"
 
 	=======================================
 

@@ -67,7 +67,7 @@ Final argument missing
 Expected Exception Type:
 [std::runtime_error]
 
-  Error: expected 1 argument, [case], but found 0 arguments
+  Error: while parsing option "test": expected 1 argument, [case], but found 0 arguments
 
 
 	=======================================

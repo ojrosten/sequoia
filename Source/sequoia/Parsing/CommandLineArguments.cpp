@@ -112,14 +112,18 @@ namespace sequoia::parsing::commandline
       }
     }
 
-    if(   !operations.empty() && (optionsIter != options.end())
+    if(   !operations.empty()
+       && (optionsIter != options.end())
        && (operations.back().arguments.size() != optionsIter->parameters.size()))
     {
       const auto& params{optionsIter->parameters};
       const auto expected{params.size()};
-      auto mess{std::string{"expected "}.append(std::to_string(expected))
-                                        .append(pluralize(expected, "argument"))
-                                        .append(", [")};
+      auto mess{std::string{"while parsing option \""}
+                  .append(optionsIter->name)
+                  .append("\": expected ")
+                  .append(std::to_string(expected))
+                  .append(pluralize(expected, "argument"))
+                  .append(", [")};
 
       for(auto i{params.begin()}; i != params.end(); ++i)
       {
