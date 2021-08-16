@@ -1,0 +1,23 @@
+
+Running tests...
+
+
+	--Using asynchronous execution, level: Test
+
+Maybe:
+[3 (0)ms]
+Probability:
+[2 (0)ms]
+Foo:
+[2 (0)ms]
+House:
+[2 (0)ms]
+
+-----------Grand Totals-----------
+[3 (0)ms]
+	Standard Top Level Checks:                 0;  Failures:  0
+	Standard Performance Checks:               0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
+	False Positive Checks:                     0;  Failures:  0
+	False Positive Performance Checks:         0;  Failures:  0

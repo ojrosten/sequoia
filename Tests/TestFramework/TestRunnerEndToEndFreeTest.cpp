@@ -256,9 +256,42 @@ namespace sequoia::testing
     check_timings("Serial run", fs::path{"Output/TestRunOutput.txt"}, 1);
 
     //=================== Rerun with async execution ===================//
+    // --> async depth should be automatically set to "family" since number of families is > 4
 
     run_and_check(LINE("Run asynchronously"), b, "RunAsync", "-a");
     check_timings(LINE("Async run (level: family)"), fs::path{"RunAsync/TestRunOutput.txt"}, 2);
+
+    //=================== Rerun with async selecting 3 tests from 3 families ===================//
+    // --> async depth should be automatically set to "test" since number of families is < 4
+
+    run_and_check(LINE("Run asynchronously with 3 selected tests"), b, "RunAsyncThreeTests",
+                       "-a select HouseAllocationTest.cpp select Maths/ProbabilityTest.cpp select Maybe/MaybeTest.cpp");
+
+    //=================== Rerun with async selecting 4 tests from 4 families===================//
+    // --> async depth should be automatically set to "family"
+
+    run_and_check(LINE("Run asynchronously with 4 selected tests"), b, "RunAsyncFourTests",
+                       "-a select HouseAllocationTest.cpp select Maths/ProbabilityTest.cpp select Maybe/MaybeTest.cpp"
+                       " select Stuff/FooTest.cpp");
+
+    //=================== Rerun with async selecting 4 tests from 4 families, and setting async-depth to test===================//
+    // --> async depth should be overridden to "test"
+
+    run_and_check(LINE("Run asynchronously (level: test) with 4 selected tests"), b, "RunAsyncFourTestsDepthTest",
+                       "-a -ad 1 select HouseAllocationTest.cpp select Maths/ProbabilityTest.cpp select Maybe/MaybeTest.cpp"
+                       " select Stuff/FooTest.cpp");
+
+    //=================== Rerun with async, selecting 2 tests, and setting async-depth to family ===================//
+    // --> async depth should be overridden to "family"
+
+    run_and_check(LINE("Run asynchronously (level: family) with 2 selected tests"), b, "RunAsyncTwoTestsDepthFamily",
+                       "-a -ad 0 select HouseAllocationTest.cpp select Maths/ProbabilityTest.cpp");
+
+    //=================== Rerun with async, selecting one family ===================//
+    // --> async depth should be set "family" [May wish to change this!]
+
+    run_and_check(LINE("Run asynchronously with 1 family"), b, "RunAsyncOneTestOneFamily",
+                       "-a test Probability");
 
     //=================== Change some test materials and run with prune ===================//
 
@@ -287,7 +320,7 @@ namespace sequoia::testing
 
     run_and_check(LINE("Prune again, no tests should run"), b, "NullRunWithPruneOutput", "prune");
 
-    //=================== Change a file, don't build and run the prune ===================//
+    //=================== Change a file, don't build and run with prune ===================//
 
     copy_aux_materials("ModifiedSource/UsefulThings.hpp", "Source/generatedProject/Utilities");
     run_and_check(LINE("Attempt to prune when build is out of date"), b, "PruneWithStaleBuild", "prune");
