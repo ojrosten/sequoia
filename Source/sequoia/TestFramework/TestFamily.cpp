@@ -14,10 +14,42 @@
 
 namespace sequoia::testing
 {
+
+  namespace fs = std::filesystem;
+
+  namespace
+  {
+    void copy_special_files_to_working_copy(const fs::path& predictions, const fs::path& working)
+    {
+      for(auto& p : fs::recursive_directory_iterator(predictions))
+      {
+        if(fs::is_regular_file(p) && ((p.path().extension() == seqpat) || (p.path().filename() == ".keep")))
+        {
+          const auto predRelDir{fs::relative(p.path().parent_path(), predictions)};
+          const auto workingSubdir{working / predRelDir};
+
+          if(p.path().extension() == seqpat)
+          {
+            for(auto& w : fs::directory_iterator(workingSubdir))
+            {
+              if((w.path().stem() == p.path().stem()) && (w.path().extension() != seqpat))
+              {
+                fs::copy(p, workingSubdir, fs::copy_options::overwrite_existing);
+                break;
+              }
+            }
+          }
+          else if(p.path().filename() == ".keep")
+          {
+            fs::copy(p, workingSubdir, fs::copy_options::overwrite_existing);
+          }
+        }
+      }
+    }
+  }
+
   void test_family::set_materials(test& t)
   {
-    namespace fs = std::filesystem;
-
     t.set_filesystem_data(m_TestRepo, m_OutputDir, name());
     t.set_recovery_paths(m_Recovery);
 
@@ -81,7 +113,6 @@ namespace sequoia::testing
   auto test_family::execute(const update_mode updateMode, const concurrency_mode concurrenyMode) -> results
   {
     using namespace std::chrono;
-    namespace fs = std::filesystem;
 
     const auto time{steady_clock::now()};
 
@@ -146,31 +177,7 @@ namespace sequoia::testing
 
     for(const auto& update : updateables)
     {
-      for(auto& p : fs::recursive_directory_iterator(update.predictions))
-      {
-        if(fs::is_regular_file(p) && ((p.path().extension() == seqpat) || (p.path().filename() == ".keep")))
-        {
-          const auto predRelDir{fs::relative(p.path().parent_path(), update.predictions)};
-          const auto workingSubdir{update.workingMaterials / predRelDir};
-
-          if(p.path().extension() == seqpat)
-          {
-            for(auto& w : fs::directory_iterator(workingSubdir))
-            {
-              if((w.path().stem() == p.path().stem()) && (w.path().extension() != seqpat))
-              {
-                fs::copy(p, workingSubdir, fs::copy_options::overwrite_existing);
-                break;
-              }
-            }
-          }
-          else if(p.path().filename() == ".keep")
-          {
-            fs::copy(p, workingSubdir, fs::copy_options::overwrite_existing);
-          }
-        }
-      }
-
+      copy_special_files_to_working_copy(update.predictions, update.workingMaterials);
       fs::remove_all(update.predictions);
       fs::copy(update.workingMaterials, update.predictions, fs::copy_options::recursive);
     }
@@ -180,8 +187,6 @@ namespace sequoia::testing
 
   std::filesystem::path test_family::test_summary_filename(const test& t, const std::filesystem::path& outputDir, const std::filesystem::path& testRepo)
   {
-    namespace fs = std::filesystem;
-
     const auto name{t.source_filename().replace_extension(".txt")};
     if(name.empty())
       throw std::logic_error("Source files should have a non-trivial name!");
