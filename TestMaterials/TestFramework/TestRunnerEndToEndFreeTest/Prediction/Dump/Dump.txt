@@ -125,7 +125,7 @@ Inconsistent Self Swap
 [double]
 
 
-Tests/Stuff/FooTest.cpp, Line 37
+Tests/Stuff/FooTest.cpp, Line 41
 
 Comparison performed using:
 [sequoia::testing::equivalence_checker<std::filesystem::path>]
@@ -244,9 +244,6 @@ Unable to open file C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramewo
 
 [bool]
 Unable to open file C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/RetainedSeqpat/foo.txt  for reading
-
-[bool]
-Unable to open file C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/RetainedSeqpat/foo.seqpat  for reading
 
 [bool]
 Contents of

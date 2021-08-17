@@ -452,12 +452,19 @@ namespace sequoia::testing
     const auto inputFile{(code_templates_path(m_Paths.project_root()) / nameStub).concat(nameEnding)};
 
     fs::copy_file(inputFile, outputFile, fs::copy_options::overwrite_existing);
-    if(std::string text{read_to_string(outputFile)}; !text.empty())
+    if(auto contents{read_to_string(outputFile)})
     {
-      set_top_copyright(text, m_Copyright);
-      transformer(text);
+      if(std::string& text{contents.value()}; !text.empty())
+      {
+        set_top_copyright(text, m_Copyright);
+        transformer(text);
 
-      write_to_file(outputFile, text);
+        write_to_file(outputFile, text);
+      }
+    }
+    else
+    {
+      throw std::runtime_error{report_failed_read(outputFile)};
     }
 
     if(outputFile.extension() == ".hpp")

@@ -38,7 +38,7 @@ namespace sequoia
   }
 
   [[nodiscard]]
-  std::string read_to_string(const std::filesystem::path& file)
+  std::optional<std::string> read_to_string(const std::filesystem::path& file)
   {
     if(std::ifstream ifile{file})
     {
@@ -47,7 +47,7 @@ namespace sequoia
       return buffer.str();
     }
 
-    throw std::runtime_error{report_failed_read(file)};
+    return std::nullopt;
   }
 
   void write_to_file(const std::filesystem::path& file, std::string_view text)

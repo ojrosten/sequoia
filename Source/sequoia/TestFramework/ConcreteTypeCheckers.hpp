@@ -30,12 +30,12 @@
  */
 
 #include "sequoia/TestFramework/FreeCheckers.hpp"
+#include "sequoia/TestFramework/FileEditors.hpp"
 #include "sequoia/TestFramework/FileSystem.hpp"
 #include "sequoia/Streaming/Streaming.hpp"
 
 #include <tuple>
 #include <optional>
-#include <regex>
 #include <variant>
 
 namespace sequoia::testing
@@ -367,57 +367,18 @@ namespace sequoia::testing
       }
     }
 
-    template<test_mode Mode>
-    [[nodiscard]]
-    static std::optional<std::string> file_contents(test_logger<Mode>& logger, const std::filesystem::path& file)
-    {
-      std::ifstream fileStream{file};
-      if(testing::check(report_failed_read(file), logger, static_cast<bool>(fileStream)))
-      {
-        std::stringstream buf{};
-        buf << fileStream.rdbuf();
-        return buf.str();
-      }
-
-      return std::nullopt;
-    }
 
     template<test_mode Mode>
     static void check_file(test_logger<Mode>& logger, const std::filesystem::path& file, const std::filesystem::path& prediction)
     {
-      auto fileContents{file_contents(logger, file)}, predictionContents{file_contents(logger, prediction)};
-      if(fileContents && predictionContents)
-      {
-        if(file.extension() != seqpat)
-        {
-          namespace fs = std::filesystem;
-          auto supplPath{[](fs::path f) { return f.replace_extension(seqpat); }(prediction)};
-          if(fs::exists(supplPath))
-          {
-            const auto expressions{file_contents(logger, supplPath)};
-            if(expressions)
-            {
-              std::string::size_type pos{};
-              while(pos < expressions->size())
-              {
-                const auto next{std::min(expressions->find("\n", pos), expressions->size())};
-                if(const auto count{next - pos})
-                {
-                  std::basic_regex rgx{expressions->data() + pos, count};
-                  fileContents = std::regex_replace(fileContents.value(), rgx, std::string{});
-                  predictionContents = std::regex_replace(predictionContents.value(), rgx, std::string{});
-                  pos = next+1;
-                }
-                else
-                {
-                  break;
-                }
-              }
-            }
-          }
-        }
+      const auto [reducedWorking, reducedPrediction] {get_reduced_file_content(file, prediction)};
 
-        check_equality(preamble("Contents of", file, prediction), logger, fileContents.value(), predictionContents.value());
+      testing::check(report_failed_read(file), logger, static_cast<bool>(reducedWorking));
+      testing::check(report_failed_read(prediction), logger, static_cast<bool>(reducedPrediction));
+      
+      if(reducedWorking && reducedPrediction)
+      {
+        check_equality(preamble("Contents of", file, prediction), logger, reducedWorking.value(), reducedPrediction.value());
       }
     }
 

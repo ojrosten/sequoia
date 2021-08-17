@@ -46,6 +46,86 @@ namespace sequoia::testing
         }
       }
     }
+
+    [[nodiscard]]
+    std::vector<fs::path> sort_dir_entries(const fs::path& dir)
+    {
+      std::vector<fs::path> paths{};
+      for(auto& entry : fs::directory_iterator(dir))
+      {
+        paths.push_back(entry.path());
+      }
+
+      std::sort(paths.begin(), paths.end());
+      return paths;
+    }
+
+    using paths_iter = std::vector<fs::path>::const_iterator;
+
+    void soft_update(const fs::path& working, const fs::path& prediction);
+
+    void soft_update(paths_iter workingBegin, paths_iter workingEnd, paths_iter predictionBegin, paths_iter predictionEnd, const fs::path& predictionDir)
+    {
+      auto iters{std::mismatch(workingBegin, workingEnd, predictionBegin, predictionBegin)}; // check path type as well
+      for(auto wi{workingBegin}, pi{predictionBegin}; wi != iters.first; ++wi, ++pi)
+      {
+        const auto pathType{fs::status(*wi).type()};
+
+        switch(pathType)
+        {
+        case fs::file_type::regular:
+        {
+          const auto [working, prediction] {get_reduced_file_content(*wi, *pi)};
+          if(working && prediction)
+          {
+            if(working.value() != prediction.value())
+            {
+              fs::copy_file(working.value(), prediction.value(), fs::copy_options::overwrite_existing);
+            }
+          }
+          break;
+        }
+        case fs::file_type::directory:
+        {
+          soft_update(*wi, *pi);
+          break;
+        }
+        default:
+          throw std::logic_error{std::string{"Detailed equivalance check for paths of type '"}
+            .append(serializer<fs::file_type>::make(pathType)).append("' not currently implemented")};
+        }
+      }
+
+
+      if((iters.first != workingEnd) && (iters.second != predictionEnd))
+      {
+        fs::remove_all(*iters.second);
+        soft_update(iters.first, workingEnd, ++iters.second, predictionEnd, predictionDir);
+      }
+      else if(iters.first != workingEnd)
+      {
+        for(; iters.first != workingEnd; ++iters.first)
+        {
+          fs::copy(*iters.first, predictionDir, fs::copy_options::recursive);
+        }
+      }
+      else if(iters.second != predictionEnd)
+      {
+        for(; iters.second != predictionEnd; ++iters.second)
+        {
+          fs::remove_all(*iters.second);
+        }
+      }
+    }
+
+    void soft_update(const fs::path& working, const fs::path& prediction)
+    {
+      const std::vector<fs::path>
+        sortedWorkingEntries{sort_dir_entries(working)},
+        sortedPredictionEntries{sort_dir_entries(prediction)};
+
+      soft_update(sortedWorkingEntries.begin(), sortedWorkingEntries.end(), sortedPredictionEntries.begin(), sortedPredictionEntries.end(), prediction);
+    }
   }
 
   void test_family::set_materials(test& t)

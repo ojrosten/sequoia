@@ -284,7 +284,11 @@ namespace sequoia::testing
           [filename{this->diagnostics_output_filename()}]() -> std::string {
             if(std::filesystem::exists(filename))
             {
-              return read_to_string(filename);
+              if(auto contents{read_to_string(filename)})
+                return contents.value();
+
+
+              throw std::runtime_error{report_failed_read(filename)};
             }
 
             return "";

@@ -1,15 +1,15 @@
 
 Analyzing dependencies...
-[40ms]
+[18ms]
 
 
 Running tests...
 
 Foo:
-[11 (10)ms]
-	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 43]
+[10 (9)ms]
+	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 32]
 
-	Tests/Stuff/FooTest.cpp, Line 37
+	Tests/Stuff/FooTest.cpp, Line 41
 
 	Comparison performed using:
 	[sequoia::testing::equivalence_checker<std::filesystem::path>]
@@ -111,8 +111,8 @@ Foo:
 
 
 -----------Grand Totals-----------
-[11 (10)ms]
-	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 43]
+[10 (9)ms]
+	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 32]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
 	False Negative Performance Checks:         0;  Failures:  0

@@ -25,10 +25,14 @@ namespace sequoia::testing
     {
       if(fs::is_regular_file(e))
       {
-        if(std::string text{read_to_string(e.path())}; !text.empty())
+        if(auto contents{read_to_string(e.path())})
         {
-          replace_all(text, "Old", "Updated");
-          write_to_file(e.path(), text);
+          auto& text{contents.value()};
+          if(!text.empty())
+          {
+            replace_all(text, "Old", "Updated");
+            write_to_file(e.path(), text);
+          }
         }
       }
     }

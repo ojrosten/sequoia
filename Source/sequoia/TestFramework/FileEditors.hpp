@@ -29,4 +29,14 @@ namespace sequoia::testing
                     std::string_view cmakeEntryPrexfix);
 
   void add_to_family(const std::filesystem::path& file, std::string_view familyName, indentation indent, const std::vector<std::string>& tests);
+
+
+  struct reduced_file_contents
+  {
+    std::optional<std::string> working, prediction;
+  };
+
+  [[nodiscard]]
+  reduced_file_contents get_reduced_file_content(const std::filesystem::path& file, const std::filesystem::path& prediction);
+
 }

@@ -18,9 +18,9 @@ Useful Things:
 
 
 Bar:
-[0 (0)ms]
-Maybe:
 [1 (0)ms]
+Maybe:
+[2 (0)ms]
 Oldschool:
 [1 (0)ms]
 Probability:
@@ -31,7 +31,7 @@ Foo:
 [5 (3)ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
-	Tests/Stuff/FooTest.cpp, Line 37
+	Tests/Stuff/FooTest.cpp, Line 41
 
 	Comparison performed using:
 	[sequoia::testing::equivalence_checker<std::filesystem::path>]
@@ -52,16 +52,16 @@ Foo:
 
 
 Unique Thing:
-[6 (3)ms]
+[19 (16)ms]
 	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 35]
 	False Positive Checks:                     2;  Failures:  0
 Container:
-[6 (0)ms]
+[2 (0)ms]
 House:
-[1 (0)ms]
+[0 (0)ms]
 
 -----------Grand Totals-----------
-[34 (11)ms]
+[43 (25)ms]
 	Standard Top Level Checks:                 8;  Failures:  2  [Deep checks: 76]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

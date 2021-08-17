@@ -15,6 +15,7 @@
 #include "sequoia/TestFramework/Output.hpp"
 
 #include <fstream>
+#include <regex>
 
 namespace sequoia::testing
 {
@@ -79,7 +80,11 @@ namespace sequoia::testing
       [&file, familyName, &tests, indent]() -> std::string {
         constexpr auto npos{std::string::npos};
         const auto pattern{std::string{"\""}.append(familyName).append("\",")};
-        std::string text{read_to_string(file)};
+        auto contents{read_to_string(file)};
+        if(!contents)
+          throw std::runtime_error{report_failed_read(file)};
+
+        std::string& text{contents.value()};
         if(auto pos{text.find(pattern)}; pos != npos)
         {
           if(const auto linePos{text.rfind('\n', pos)}; linePos != npos)
@@ -190,5 +195,50 @@ namespace sequoia::testing
     };
 
     read_modify_write(cmakeLists, addEntry);
+  }
+
+  [[nodiscard]]
+  reduced_file_contents get_reduced_file_content(const std::filesystem::path& file, const std::filesystem::path& prediction)
+  {
+    reduced_file_contents contents{read_to_string(file), read_to_string(prediction)};
+
+    if(contents.working && contents.prediction)
+    {
+      if(file.extension() != seqpat)
+      {
+        namespace fs = std::filesystem;
+        auto supplPath{[](fs::path f) { return f.replace_extension(seqpat); }(prediction)};
+        if(fs::exists(supplPath))
+        {
+          if(auto exprContents{read_to_string(supplPath)})
+          {
+            const auto& expressions{exprContents.value()};
+
+            std::string::size_type pos{};
+            while(pos < expressions.size())
+            {
+              const auto next{std::min(expressions.find("\n", pos), expressions.size())};
+              if(const auto count{next - pos})
+              {
+                std::basic_regex rgx{expressions.data() + pos, count};
+                contents.working = std::regex_replace(contents.working.value(), rgx, std::string{});
+                contents.prediction = std::regex_replace(contents.prediction.value(), rgx, std::string{});
+                pos = next + 1;
+              }
+              else
+              {
+                break;
+              }
+            }
+          }
+          else
+          {
+            throw std::runtime_error{report_failed_read(supplPath)};
+          }
+        }
+      }
+    }
+
+    return contents;
   }
 }
