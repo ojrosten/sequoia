@@ -15,6 +15,7 @@
 #include "sequoia/TextProcessing/Indent.hpp"
 
 #include <filesystem>
+#include <optional>
 #include <vector>
 
 namespace sequoia::testing

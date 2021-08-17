@@ -10,6 +10,7 @@
 #include "sequoia/Core/Meta/Concepts.hpp"
 
 #include <filesystem>
+#include <optional>
 
 namespace sequoia
 {
