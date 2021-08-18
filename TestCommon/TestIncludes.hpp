@@ -64,6 +64,7 @@
 #include "TestFramework/CoreDiagnostics.hpp"
 #include "TestFramework/DependencyAnalyzerFreeTest.hpp"
 #include "TestFramework/FileSystemFreeTest.hpp"
+#include "TestFramework/MaterialsUpdaterFreeTest.hpp"
 #include "TestFramework/MoveOnlyAllocationTestDiagnostics.hpp"
 #include "TestFramework/MoveOnlyScopedAllocationTestDiagnostics.hpp"
 #include "TestFramework/MoveOnlyStateTransitionDiagnostics.hpp"

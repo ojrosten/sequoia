@@ -30,16 +30,17 @@ int main(int argc, char** argv)
     runner.add_test_family(
       "Test Runner",
       test_runner_false_positive_test{"False Positive Diagnostics"},
-      test_runner_test("Functionality Test"),
+      test_runner_test{"Functionality Test"},
       test_runner_test_creation{"Test Creation"},
       test_runner_project_creation{"Project Creation"}
     );
 
     runner.add_test_family(
       "Test Framework Auxiliary",
-      file_system_free_test("File System Free Test"),
-      output_free_test("Output Free Test"),
-      dependency_analyzer_free_test("Dependency Analyzer Free Test")
+      file_system_free_test{"File System Free Test"},
+      output_free_test{"Output Free Test"},
+      dependency_analyzer_free_test{"Dependency Analyzer Free Test"},
+      materials_updater_free_test{"Free Test"}
     );
 
     runner.add_test_family(
