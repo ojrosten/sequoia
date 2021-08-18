@@ -80,16 +80,6 @@ namespace sequoia::testing
     }
   };
 
-  template<>
-  struct serializer<std::filesystem::path>
-  {
-    [[nodiscard]]
-    static std::string make(const std::filesystem::path& p)
-    {
-      return p.generic_string();
-    }
-  };
-
   template<class T>
   concept serializable = requires(serializer<T>& s, T& t)
   {

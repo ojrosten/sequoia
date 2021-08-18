@@ -9,6 +9,7 @@ set(SourceList sequoia/TestFramework/Advice.cpp
     sequoia/TestFramework/FileEditors.cpp
     sequoia/TestFramework/FileSystem.cpp
     sequoia/TestFramework/FreeTestCore.cpp
+    sequoia/TestFramework/MaterialsUpdater.cpp
     sequoia/TestFramework/Output.cpp
     sequoia/TestFramework/PerformanceTestCore.cpp
     sequoia/TestFramework/SemanticsCheckersDetails.cpp

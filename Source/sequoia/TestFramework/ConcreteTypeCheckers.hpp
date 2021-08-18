@@ -227,41 +227,6 @@ namespace sequoia::testing
     }
   };
 
-  template<>
-  struct serializer<std::filesystem::file_type>
-  {
-    [[nodiscard]]
-    static std::string make(const std::filesystem::file_type& val)
-    {
-      using ft = std::filesystem::file_type;
-      switch(val)
-      {
-      case ft::none:
-        return "none";
-      case ft::not_found:
-        return "not found";
-      case ft::regular:
-        return "regular";
-      case ft::directory:
-        return "directory";
-      case ft::symlink:
-        return "symlink";
-      case ft::block:
-        return "block";
-      case ft::character:
-        return "character";
-      case ft::fifo:
-        return "fifo";
-      case ft::socket:
-        return "socket";
-      case ft::unknown:
-        return "unknown";
-      default:
-        return "unrecognized";
-      }
-    }
-  };
-
   /*! \brief Checks equivalence of filesystem paths.
 
       Files are considered equivalent if they have the same name and the same contents;

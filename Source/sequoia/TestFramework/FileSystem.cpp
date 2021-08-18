@@ -17,6 +17,43 @@
 namespace sequoia::testing
 {
   [[nodiscard]]
+  std::string serializer<std::filesystem::path>::make(const std::filesystem::path& p)
+  {
+    return p.generic_string();
+  }
+
+  [[nodiscard]]
+  std::string serializer<std::filesystem::file_type>::make(const std::filesystem::file_type& val)
+  {
+    using ft = std::filesystem::file_type;
+    switch(val)
+    {
+    case ft::none:
+      return "none";
+    case ft::not_found:
+      return "not found";
+    case ft::regular:
+      return "regular";
+    case ft::directory:
+      return "directory";
+    case ft::symlink:
+      return "symlink";
+    case ft::block:
+      return "block";
+    case ft::character:
+      return "character";
+    case ft::fifo:
+      return "fifo";
+    case ft::socket:
+      return "socket";
+    case ft::unknown:
+      return "unknown";
+    default:
+      return "unrecognized";
+    }
+  }
+
+  [[nodiscard]]
   std::filesystem::path working_path()
   {
     return working_path_v;
