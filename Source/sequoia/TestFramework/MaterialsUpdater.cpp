@@ -16,14 +16,14 @@ namespace sequoia::testing
   namespace fs = std::filesystem;
 
 
-  void copy_special_files_to_working_copy(const fs::path& predictions, const fs::path& working)
+  void copy_special_files(const fs::path& from, const fs::path& to)
   {
-    for(auto& p : fs::recursive_directory_iterator(predictions))
+    for(auto& p : fs::recursive_directory_iterator(to))
     {
       if(fs::is_regular_file(p) && ((p.path().extension() == seqpat) || (p.path().filename() == ".keep")))
       {
-        const auto predRelDir{fs::relative(p.path().parent_path(), predictions)};
-        const auto workingSubdir{working / predRelDir};
+        const auto predRelDir{fs::relative(p.path().parent_path(), to)};
+        const auto workingSubdir{from / predRelDir};
 
         if(p.path().extension() == seqpat)
         {
@@ -46,51 +46,70 @@ namespace sequoia::testing
 
   namespace
   {
-    [[nodiscard]]
-    std::vector<fs::path> sort_dir_entries(const fs::path& dir)
+    struct path_info
     {
-      std::vector<fs::path> paths{};
+      fs::path full, relative;
+    };
+
+    struct compare
+    {
+      bool operator()(const path_info& lhs, const path_info& rhs) const
+      {
+        using type = std::underlying_type_t<fs::file_type>;
+
+        return (lhs.relative == rhs.relative)
+          ? static_cast<type>(fs::status(lhs.full).type()) < static_cast<type>(fs::status(rhs.full).type())
+          : lhs.relative < rhs.relative;
+      };
+    };
+
+    [[nodiscard]]
+    std::vector<path_info> sort_dir_entries(const fs::path& dir)
+    {
+      std::vector<path_info> paths{};
       for(auto& entry : fs::directory_iterator(dir))
       {
-        paths.push_back(entry.path());
+        paths.emplace_back(entry.path(), fs::relative(entry.path(), dir));
       }
 
-      std::sort(paths.begin(), paths.end());
+      std::sort(paths.begin(), paths.end(), compare{});
       return paths;
     }
 
-    using paths_iter = std::vector<fs::path>::const_iterator;
+    using paths_iter = std::vector<path_info>::const_iterator;
 
-    void soft_update(paths_iter workingBegin, paths_iter workingEnd, paths_iter predictionBegin, paths_iter predictionEnd, const fs::path& predictionDir)
+    void soft_update(const fs::path& from, const fs::path& to, paths_iter fromBegin, paths_iter fromEnd, paths_iter toBegin, paths_iter toEnd)
     {
-      auto compare{[](const fs::path& lhs, const fs::path& rhs) {
-        using type = std::underlying_type_t<fs::file_type>;
+      auto equiv{
+        [](const path_info& lhs, const path_info& rhs) {
+          using type = std::underlying_type_t<fs::file_type>;
 
-        return (lhs == rhs) ? static_cast<type>(fs::status(lhs).type()) < static_cast<type>(fs::status(rhs).type()) : lhs < rhs;
-      }};
+          return (lhs.relative == rhs.relative) && (static_cast<type>(fs::status(lhs.full).type()) == static_cast<type>(fs::status(rhs.full).type()));
+        }
+      };
 
-      auto iters{std::mismatch(workingBegin, workingEnd, predictionBegin, predictionBegin, compare)};
-      for(auto wi{workingBegin}, pi{predictionBegin}; wi != iters.first; ++wi, ++pi)
+      auto iters{std::mismatch(fromBegin, fromEnd, toBegin, toEnd, equiv)};
+      for(auto fi{fromBegin}, ti{toBegin}; fi != iters.first; ++fi, ++ti)
       {
-        const auto pathType{fs::status(*wi).type()};
+        const auto pathType{fs::status(fi->full).type()};
 
         switch(pathType)
         {
         case fs::file_type::regular:
         {
-          const auto [working, prediction] {get_reduced_file_content(*wi, *pi)};
-          if(working && prediction)
+          const auto [rFrom, rTo] {get_reduced_file_content(fi->full, ti->full)};
+          if(rFrom && rTo)
           {
-            if(working.value() != prediction.value())
+            if(rFrom.value() != rTo.value())
             {
-              fs::copy_file(working.value(), prediction.value(), fs::copy_options::overwrite_existing);
+              fs::copy_file(fi->full, ti->full, fs::copy_options::overwrite_existing);
             }
           }
           break;
         }
         case fs::file_type::directory:
         {
-          testing::soft_update(*wi, *pi);
+          testing::soft_update(fi->full, ti->full);
           break;
         }
         default:
@@ -99,36 +118,48 @@ namespace sequoia::testing
         }
       }
 
-
-      if((iters.first != workingEnd) && (iters.second != predictionEnd))
+      if((iters.first != fromEnd) && (iters.second != toEnd))
       {
-        fs::remove_all(*iters.second);
-        soft_update(iters.first, workingEnd, ++iters.second, predictionEnd, predictionDir);
-      }
-      else if(iters.first != workingEnd)
-      {
-        for(; iters.first != workingEnd; ++iters.first)
+        for(; (iters.first != fromEnd) && (compare{}(*iters.first, *iters.second)); ++iters.first)
         {
-          fs::copy(*iters.first, predictionDir, fs::copy_options::recursive);
+          fs::copy(iters.first->full, to, fs::copy_options::recursive);
+        }
+
+        fs::remove_all(iters.second->full);
+        soft_update(from, to, iters.first, fromEnd, ++iters.second, toEnd);
+      }
+      else if(iters.first != fromEnd)
+      {
+        for(; iters.first != fromEnd; ++iters.first)
+        {
+          fs::copy(iters.first->full, to, fs::copy_options::recursive);
         }
       }
-      else if(iters.second != predictionEnd)
+      else if(iters.second != toEnd)
       {
-        for(; iters.second != predictionEnd; ++iters.second)
+        for(; iters.second != toEnd; ++iters.second)
         {
-          fs::remove_all(*iters.second);
+          fs::remove_all(iters.second->full);
         }
       }
     }
   }
 
-  void soft_update(const fs::path& working, const fs::path& prediction)
+  void soft_update(const fs::path& from, const fs::path& to)
   {
-    const std::vector<fs::path>
-      sortedWorkingEntries{sort_dir_entries(working)},
-      sortedPredictionEntries{sort_dir_entries(prediction)};
+    throw_unless_exists(from);
+    throw_unless_exists(to);
 
-    soft_update(sortedWorkingEntries.begin(), sortedWorkingEntries.end(), sortedPredictionEntries.begin(), sortedPredictionEntries.end(), prediction);
+    if(*(--from.end()) != *(--to.end()))
+      throw std::runtime_error{"Soft update requires the names of the from/to directories to be the same"};
+
+    copy_special_files(from, to);
+
+    const std::vector<path_info>
+      sortedFromEntries{sort_dir_entries(from)},
+      sortedToEntries{sort_dir_entries(to)};
+
+    soft_update(from, to, sortedFromEntries.begin(), sortedFromEntries.end(), sortedToEntries.begin(), sortedToEntries.end());
   }
 
 }

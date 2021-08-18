@@ -146,7 +146,7 @@ namespace sequoia::testing
 
     for(const auto& update : updateables)
     {
-      copy_special_files_to_working_copy(update.predictions, update.workingMaterials);
+      copy_special_files(update.workingMaterials, update.predictions);
       fs::remove_all(update.predictions);
       fs::copy(update.workingMaterials, update.predictions, fs::copy_options::recursive);
     }

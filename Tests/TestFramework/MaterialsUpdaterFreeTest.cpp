@@ -18,6 +18,9 @@ namespace sequoia::testing
 
   void materials_updater_free_test::run_tests()
   {
-    // e.g. check_equality(LINE("Useful description"), some_function(), 42);
+    const auto& auxiliary{auxiliary_materials()}, working{working_materials()}, predictive{predictive_materials()};
+
+    soft_update(auxiliary / "Stuff", working / "Stuff");
+    check_equivalence(LINE(""), working / "Stuff", predictive / "Stuff");
   }
 }
