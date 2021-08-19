@@ -23,7 +23,7 @@ namespace sequoia::testing
     check_exception_thrown<std::runtime_error>(LINE("Empty 'to' path"),   [&]() { soft_update("", working); });
     check_exception_thrown<std::runtime_error>(LINE("Empty 'from' path"), [&]() { soft_update(auxiliary, ""); });
 
-    soft_update(auxiliary / "Stuff", working / "Stuff");
-    check_equivalence(LINE("Soft update"), working / "Stuff", predictive / "Stuff");
+    soft_update(auxiliary, working);
+    check_weak_equivalence(LINE("Soft update"), working, predictive);
   }
 }

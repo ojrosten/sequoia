@@ -287,6 +287,10 @@ namespace sequoia::testing
     check_equivalence(LINE("Inequivalence of directories with some common files"),
                       fs::path{working_materials()}.append("MoreStuff").append("B"),
                       fs::path{working_materials()}.append("Stuff").append("B"));
+
+    check_weak_equivalence(LINE("Weak inequivalence of directories with some common files"),
+                           fs::path{working_materials()}.append("MoreStuff").append("B"),
+                           fs::path{working_materials()}.append("Stuff").append("B"));
   }
 
   void false_positive_diagnostics::test_weak_equivalence_checks()
@@ -425,6 +429,10 @@ namespace sequoia::testing
     check_equivalence(LINE("Equivalence of identical directories in different locations"),
                       fs::path{working_materials()}.append("Stuff").append("C"),
                       fs::path{working_materials()}.append("Stuff").append("C"));
+
+    check_weak_equivalence(LINE("Equivalence of directories in different locations"),
+                           fs::path{working_materials()}.append("Stuff"),
+                           fs::path{working_materials()}.append("SameStuff"));
   }
 
   void false_negative_diagnostics::test_weak_equivalence_checks()

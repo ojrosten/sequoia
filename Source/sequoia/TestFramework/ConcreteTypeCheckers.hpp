@@ -227,18 +227,12 @@ namespace sequoia::testing
     }
   };
 
-  /*! \brief Checks equivalence of filesystem paths.
+  /*! \brief Helper class fo checking (weak) equivalence of file paths */
 
-      Files are considered equivalent if they have the same name and the same contents;
-      similarly directories.
-
-   */
-
-  template<>
-  struct equivalence_checker<std::filesystem::path>
+  struct path_checker
   {
-    template<test_mode Mode>
-    static void check(test_logger<Mode>& logger, const std::filesystem::path& path, const std::filesystem::path& prediction)
+    template<test_mode Mode, invocable_r<bool, std::filesystem::path, std::filesystem::path> FinalTokenComparison>
+    static void check(test_logger<Mode>& logger, const std::filesystem::path& path, const std::filesystem::path& prediction, FinalTokenComparison compare)
     {
       namespace fs = std::filesystem;
 
@@ -251,7 +245,7 @@ namespace sequoia::testing
         {
           const auto pathFinalToken{*(--path.end())};
           const auto predictionFinalToken{*(--prediction.end())};
-          if(check_equality("Final path token", logger, pathFinalToken, predictionFinalToken))
+          if(compare(pathFinalToken, predictionFinalToken))
           {
             switch(pathType)
             {
@@ -259,7 +253,7 @@ namespace sequoia::testing
               check_file(logger, path, prediction);
               break;
             case fs::file_type::directory:
-              check_directory(logger, path, prediction);
+              check_directory(logger, path, prediction, compare);
               break;
             default:
               throw std::logic_error{std::string{"Detailed equivalance check for paths of type '"}
@@ -277,17 +271,17 @@ namespace sequoia::testing
     constexpr static std::array<std::string_view, 1>
       excluded_extensions{seqpat};
 
-    template<test_mode Mode>
-    static void check_directory(test_logger<Mode>& logger, const std::filesystem::path& dir, const std::filesystem::path& prediction)
+    template<test_mode Mode, invocable_r<bool, std::filesystem::path, std::filesystem::path> FinalTokenComparison>
+    static void check_directory(test_logger<Mode>& logger, const std::filesystem::path& dir, const std::filesystem::path& prediction, FinalTokenComparison compare)
     {
       namespace fs = std::filesystem;
 
       auto generator{
-        [](const fs::path& dir){
+        [](const fs::path& dir) {
           std::vector<fs::path> paths{};
           for(const auto& p : fs::directory_iterator(dir))
           {
-            if(    std::find(excluded_files.begin(),      excluded_files.end(),      p.path().filename())  == excluded_files.end()
+            if(std::find(excluded_files.begin(),      excluded_files.end(),      p.path().filename()) == excluded_files.end()
                 && std::find(excluded_extensions.begin(), excluded_extensions.end(), p.path().extension()) == excluded_extensions.end())
             {
                paths.push_back(p);
@@ -303,12 +297,12 @@ namespace sequoia::testing
       const std::vector<fs::path> paths{generator(dir)}, predictedPaths{generator(prediction)};
 
       check_equality(std::string{"Number of directory entries for "}.append(dir.generic_string()),
-                     logger,
-                     paths.size(),
-                     predictedPaths.size());
+        logger,
+        paths.size(),
+        predictedPaths.size());
 
       const auto iters{std::mismatch(paths.begin(), paths.end(), predictedPaths.begin(), predictedPaths.end(),
-          [&dir,&prediction](const fs::path& lhs, const fs::path& rhs){
+          [&dir,&prediction](const fs::path& lhs, const fs::path& rhs) {
             return fs::relative(lhs, dir) == fs::relative(rhs, prediction);
           })};
       if((iters.first != paths.end()) && (iters.second != predictedPaths.end()))
@@ -327,7 +321,7 @@ namespace sequoia::testing
       {
         for(std::size_t i{}; i < paths.size(); ++i)
         {
-          check(logger, paths[i], predictedPaths[i]);
+          check(logger, paths[i], predictedPaths[i], compare);
         }
       }
     }
@@ -340,7 +334,7 @@ namespace sequoia::testing
 
       testing::check(report_failed_read(file), logger, static_cast<bool>(reducedWorking));
       testing::check(report_failed_read(prediction), logger, static_cast<bool>(reducedPrediction));
-      
+
       if(reducedWorking && reducedPrediction)
       {
         check_equality(preamble("Contents of", file, prediction), logger, reducedWorking.value(), reducedPrediction.value());
@@ -351,6 +345,50 @@ namespace sequoia::testing
     static std::string preamble(std::string_view prefix, const std::filesystem::path& path, const std::filesystem::path& prediction)
     {
       return append_lines(prefix, path.generic_string(), "vs", prediction.generic_string()).append("\n");
+    }
+  };
+
+  /*! \brief Checks equivalence of filesystem paths.
+
+    Files are considered equivalent if they have the same name and the same contents;
+    similarly directories.
+
+   */
+
+  template<>
+  struct equivalence_checker<std::filesystem::path>
+  {
+    template<test_mode Mode>
+    static void check(test_logger<Mode>& logger, const std::filesystem::path& path, const std::filesystem::path& prediction)
+    {
+      namespace fs = std::filesystem;
+
+      auto pred{
+        [&logger](const fs::path& pathFinalToken, const fs::path& predictionFinalToken)
+        {
+           return check_equality("Final path token", logger, pathFinalToken, predictionFinalToken);
+        }
+      };
+
+      path_checker::check(logger, path, prediction, pred);
+    }
+  };
+
+  /*! \brief Checks equivalence of filesystem paths.
+
+    Files are considered equivalent if they have the same contents;
+    similarly directories. The names of both are ignored.
+
+   */
+
+  template<>
+  struct weak_equivalence_checker<std::filesystem::path>
+  {
+    template<test_mode Mode>
+    static void check(test_logger<Mode>& logger, const std::filesystem::path& path, const std::filesystem::path& prediction)
+    {
+      namespace fs = std::filesystem;
+      path_checker::check(logger, path, prediction, [](const fs::path&, const fs::path&) { return true; });
     }
   };
 
