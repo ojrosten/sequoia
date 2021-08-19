@@ -69,7 +69,7 @@ namespace sequoia::testing
       std::vector<path_info> paths{};
       for(auto& entry : fs::directory_iterator(dir))
       {
-        paths.emplace_back(entry.path(), fs::relative(entry.path(), dir));
+        paths.push_back({entry.path(), fs::relative(entry.path(), dir)});
       }
 
       std::sort(paths.begin(), paths.end(), compare{});
