@@ -478,7 +478,7 @@ $(function() {
 <div class="line"><a name="l00414"></a><span class="lineno">  414</span>&#160;      <span class="keywordflow">for</span>(<span class="keyword">auto</span> iter{begin}; iter != end; ++iter)</div>
 <div class="line"><a name="l00415"></a><span class="lineno">  415</span>&#160;      {</div>
 <div class="line"><a name="l00416"></a><span class="lineno">  416</span>&#160;        <span class="keyword">const</span> <span class="keyword">auto</span> nextNode{iter-&gt;target_node()};</div>
-<div class="line"><a name="l00417"></a><span class="lineno">  417</span>&#160;        constexpr <span class="keywordtype">bool</span> hasEdgeFirstFn{!same_as&lt;std::remove_cvref_t&lt;EFTF&gt;, <a class="code" href="../../d1/df7/structsequoia_1_1maths_1_1null__func__obj.html">null_func_obj</a>&gt;};    </div>
+<div class="line"><a name="l00417"></a><span class="lineno">  417</span>&#160;        constexpr <span class="keywordtype">bool</span> hasEdgeFirstFn{!same_as&lt;std::remove_cvref_t&lt;EFTF&gt;, <a class="code" href="../../d1/df7/structsequoia_1_1maths_1_1null__func__obj.html">null_func_obj</a>&gt;};</div>
 <div class="line"><a name="l00418"></a><span class="lineno">  418</span>&#160;        constexpr <span class="keywordtype">bool</span> isDFS{same_as&lt;OnDiscovery, recurse&gt;};</div>
 <div class="line"><a name="l00419"></a><span class="lineno">  419</span>&#160; </div>
 <div class="line"><a name="l00420"></a><span class="lineno">  420</span>&#160;        <span class="keywordflow">if</span> constexpr(isDFS)</div>

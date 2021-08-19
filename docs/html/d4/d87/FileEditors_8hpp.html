@@ -66,6 +66,7 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
 <a href="#namespaces">Namespaces</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
@@ -78,10 +79,16 @@ $(function() {
 <div class="textblock"><code>#include &quot;<a class="el" href="../../d3/d84/Concepts_8hpp_source.html">sequoia/Core/Meta/Concepts.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../d7/d62/Indent_8hpp_source.html">sequoia/TextProcessing/Indent.hpp</a>&quot;</code><br />
 <code>#include &lt;filesystem&gt;</code><br />
+<code>#include &lt;optional&gt;</code><br />
 <code>#include &lt;vector&gt;</code><br />
 </div>
 <p><a href="../../d4/d87/FileEditors_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d08/structsequoia_1_1testing_1_1reduced__file__contents.html">sequoia::testing::reduced_file_contents</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
 Namespaces</h2></td></tr>
 <tr class="memitem:dd/da8/namespacesequoia_1_1testing"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/da8/namespacesequoia_1_1testing.html">sequoia::testing</a></td></tr>
@@ -98,6 +105,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::add
 <tr class="memitem:a37b36dd996417d53228f1beceaaf4ad2"><td class="memItemLeft" align="right" valign="top"><a id="a37b36dd996417d53228f1beceaaf4ad2"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::add_to_family</b> (const std::filesystem::path &amp;file, std::string_view familyName, indentation indent, const std::vector&lt; std::string &gt; &amp;tests)</td></tr>
 <tr class="separator:a37b36dd996417d53228f1beceaaf4ad2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0326c2d0e4a855cae3b07fa64263950c"><td class="memItemLeft" align="right" valign="top"><a id="a0326c2d0e4a855cae3b07fa64263950c"></a>
+reduced_file_contents&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::get_reduced_file_content</b> (const std::filesystem::path &amp;file, const std::filesystem::path &amp;prediction)</td></tr>
+<tr class="separator:a0326c2d0e4a855cae3b07fa64263950c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Contains utilities for automatically editing certain files as part of the test creation process. </p>

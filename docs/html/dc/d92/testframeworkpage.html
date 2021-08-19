@@ -67,14 +67,14 @@ $(function() {
 <div class="contents">
 <div class="textblock"><p>The <code>sequoia</code> testing framework is designed for <a class="el" href="../../dc/d92/testframeworkpage.html#sec_scale">scale</a> and is <a class="el" href="../../dc/d92/testframeworkpage.html#sec_automated">highly automated</a>, <a class="el" href="../../dc/d92/testframeworkpage.html#sec_robustness">robust</a>, <a class="el" href="../../dc/d92/testframeworkpage.html#sec_extensible">extensible</a>, <a class="el" href="../../dc/d92/testframeworkpage.html#sec_semantics">semantics-aware</a>, <a class="el" href="../../dc/d92/testframeworkpage.html#sec_allocators">allocator-aware</a>, <a class="el" href="../../dc/d92/testframeworkpage.html#sec_generics">generics-friendly</a> and <a class="el" href="../../dc/d92/testframeworkpage.html#sec_expressive">expressive</a>.</p>
 <h1><a class="anchor" id="sec_scale"></a>
-Scale</h1>
+Scalabilty</h1>
 <p>To operate effectively at scale, <code>sequoia</code> incorporates the following features:</p><ul>
 <li>No waste: if a principled structure is adhered to, then running with the <code>--prune</code> option will ensure that only those tests dependent on changes since the last run will be executed. Changes may be either to source files or materials exploited by the test. In particular:<ol type="1">
 <li>cpp files should supply definitions only for the header of the same name;</li>
 <li>Given a test file <code>Tests/Foo/Bar.cpp</code>, any testing materials should be stored in <code>TestMaterials\Foo\Bar</code>.</li>
 </ol>
 </li>
-<li>Concurrency: running with <code>-a</code> will run tests concurrently. Tests are grouped into families and, by default, concurrency is at the level of families. However, there is flexibility. By specifying <code>--async-depth 1</code> individual tests are run concurrently.</li>
+<li>Concurrency: running with <code>-a</code> will run tests concurrently. Tests are grouped into families and, by default, concurrency will be at the family level if there are more than three families; otherwise, concurrency is at the level of individual tests. However, there is flexibility. Specifying <code>--async-depth 1</code> forces individual tests to run concurrently, whereas a value of zero will force families to be run concurrently.</li>
 </ul>
 <h1><a class="anchor" id="sec_automated"></a>
 Automation</h1>

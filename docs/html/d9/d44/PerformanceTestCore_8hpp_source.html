@@ -304,30 +304,34 @@ $(function() {
 <div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;          [filename{this-&gt;diagnostics_output_filename()}]() -&gt; std::string {</div>
 <div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;            <span class="keywordflow">if</span>(std::filesystem::exists(filename))</div>
 <div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;            {</div>
-<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;              <span class="keywordflow">return</span> read_to_string(filename);</div>
-<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;            }</div>
+<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;              <span class="keywordflow">if</span>(<span class="keyword">auto</span> contents{read_to_string(filename)})</div>
+<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;                <span class="keywordflow">return</span> contents.value();</div>
 <div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160; </div>
-<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;            <span class="keywordflow">return</span> <span class="stringliteral">&quot;&quot;</span>;</div>
-<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;          }()</div>
-<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;        };</div>
+<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160; </div>
+<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;              <span class="keywordflow">throw</span> std::runtime_error{report_failed_read(filename)};</div>
+<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;            }</div>
 <div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160; </div>
-<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;        std::string outputToUse{postprocess(summary.diagnostics_output(), referenceOutput)};</div>
-<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;        summary.diagnostics_output(std::move(outputToUse));</div>
-<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;      }</div>
+<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;            <span class="keywordflow">return</span> <span class="stringliteral">&quot;&quot;</span>;</div>
+<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;          }()</div>
+<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;        };</div>
 <div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160; </div>
-<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;      <span class="keywordflow">return</span> summary;</div>
-<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;    }</div>
-<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;  };</div>
+<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;        std::string outputToUse{postprocess(summary.diagnostics_output(), referenceOutput)};</div>
+<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;        summary.diagnostics_output(std::move(outputToUse));</div>
+<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;      }</div>
 <div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160; </div>
-<div class="line"><a name="l00303"></a><span class="lineno"><a class="line" href="../../dd/da8/namespacesequoia_1_1testing.html#a3b874e01861e15541be69707ad861a5c">  303</a></span>&#160;  <span class="keyword">using</span> <a class="code" href="../../db/d88/classsequoia_1_1testing_1_1basic__performance__test.html">performance_test</a>                = <a class="code" href="../../db/d88/classsequoia_1_1testing_1_1basic__performance__test.html">basic_performance_test&lt;test_mode::standard&gt;</a>;</div>
-<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;  <span class="keyword">using</span> <a class="code" href="../../db/d88/classsequoia_1_1testing_1_1basic__performance__test.html">performance_false_negative_test</a> = <a class="code" href="../../db/d88/classsequoia_1_1testing_1_1basic__performance__test.html">basic_performance_test&lt;test_mode::false_negative&gt;</a>;</div>
-<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;  <span class="keyword">using</span> <a class="code" href="../../db/d88/classsequoia_1_1testing_1_1basic__performance__test.html">performance_false_positive_test</a> = <a class="code" href="../../db/d88/classsequoia_1_1testing_1_1basic__performance__test.html">basic_performance_test&lt;test_mode::false_positive&gt;</a>;</div>
-<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;}</div>
+<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;      <span class="keywordflow">return</span> summary;</div>
+<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;    }</div>
+<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;  };</div>
+<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160; </div>
+<div class="line"><a name="l00307"></a><span class="lineno"><a class="line" href="../../dd/da8/namespacesequoia_1_1testing.html#a3b874e01861e15541be69707ad861a5c">  307</a></span>&#160;  <span class="keyword">using</span> <a class="code" href="../../db/d88/classsequoia_1_1testing_1_1basic__performance__test.html">performance_test</a>                = <a class="code" href="../../db/d88/classsequoia_1_1testing_1_1basic__performance__test.html">basic_performance_test&lt;test_mode::standard&gt;</a>;</div>
+<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;  <span class="keyword">using</span> <a class="code" href="../../db/d88/classsequoia_1_1testing_1_1basic__performance__test.html">performance_false_negative_test</a> = <a class="code" href="../../db/d88/classsequoia_1_1testing_1_1basic__performance__test.html">basic_performance_test&lt;test_mode::false_negative&gt;</a>;</div>
+<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;  <span class="keyword">using</span> <a class="code" href="../../db/d88/classsequoia_1_1testing_1_1basic__performance__test.html">performance_false_positive_test</a> = <a class="code" href="../../db/d88/classsequoia_1_1testing_1_1basic__performance__test.html">basic_performance_test&lt;test_mode::false_positive&gt;</a>;</div>
+<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
 <div class="ttc" id="aFileEditors_8hpp_html"><div class="ttname"><a href="../../d4/d87/FileEditors_8hpp.html">FileEditors.hpp</a></div><div class="ttdoc">Contains utilities for automatically editing certain files as part of the test creation process.</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1basic__performance__test_html"><div class="ttname"><a href="../../db/d88/classsequoia_1_1testing_1_1basic__performance__test.html">sequoia::testing::basic_performance_test</a></div><div class="ttdef"><b>Definition:</b> PerformanceTestCore.hpp:268</div></div>
 <div class="ttc" id="aRegularTestCore_8hpp_html"><div class="ttname"><a href="../../d9/daf/RegularTestCore_8hpp.html">RegularTestCore.hpp</a></div><div class="ttdoc">Utilities for checking regular semantics.</div></div>
-<div class="ttc" id="aclasssequoia_1_1testing_1_1checker_html"><div class="ttname"><a href="../../d7/de5/classsequoia_1_1testing_1_1checker.html">sequoia::testing::checker</a></div><div class="ttdef"><b>Definition:</b> FreeCheckers.hpp:516</div></div>
+<div class="ttc" id="aclasssequoia_1_1testing_1_1checker_html"><div class="ttname"><a href="../../d7/de5/classsequoia_1_1testing_1_1checker.html">sequoia::testing::checker</a></div><div class="ttdef"><b>Definition:</b> FreeCheckers.hpp:496</div></div>
 <div class="ttc" id="aStatisticalAlgorithms_8hpp_html"><div class="ttname"><a href="../../dd/d02/StatisticalAlgorithms_8hpp.html">StatisticalAlgorithms.hpp</a></div><div class="ttdoc">Tools for statistical analysis.</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1log__summary_html"><div class="ttname"><a href="../../d2/daa/classsequoia_1_1testing_1_1log__summary.html">sequoia::testing::log_summary</a></div><div class="ttdoc">Summaries data generated by the logger, for the purposes of reporting.</div><div class="ttdef"><b>Definition:</b> TestLogger.hpp:487</div></div>
 <div class="ttc" id="astructsequoia_1_1testing_1_1data_html"><div class="ttname"><a href="../../d7/d5b/structsequoia_1_1testing_1_1data.html">sequoia::testing::data</a></div><div class="ttdef"><b>Definition:</b> UniformWrapperTestingUtilities.hpp:30</div></div>

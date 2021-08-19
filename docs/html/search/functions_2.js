@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['dispatch_5fcheck_1736',['dispatch_check',['../dd/da8/namespacesequoia_1_1testing.html#a3b50ca0b2a7e5aa0e15b012c73172e95',1,'sequoia::testing::dispatch_check(std::string_view description, test_logger&lt; Mode &gt; &amp;logger, equality_tag, const T &amp;obtained, const T &amp;prediction, [[maybe_unused]] tutor&lt; Advisor &gt; advisor={})'],['../dd/da8/namespacesequoia_1_1testing.html#ac5e40556136bb09f6265a46293a91ef1',1,'sequoia::testing::dispatch_check(std::string_view description, test_logger&lt; Mode &gt; &amp;logger, equivalence_tag, const T &amp;value, S &amp;&amp;s, U &amp;&amp;... u)'],['../dd/da8/namespacesequoia_1_1testing.html#a2b33834db9998057330de5758a25ad24',1,'sequoia::testing::dispatch_check(std::string_view description, test_logger&lt; Mode &gt; &amp;logger, weak_equivalence_tag, const T &amp;value, S &amp;&amp;s, U &amp;&amp;... u)']]]
+  ['dispatch_5fcheck_1766',['dispatch_check',['../dd/da8/namespacesequoia_1_1testing.html#a3b50ca0b2a7e5aa0e15b012c73172e95',1,'sequoia::testing']]]
 ];

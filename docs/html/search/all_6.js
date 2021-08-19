@@ -1,8 +1,9 @@
 var searchData=
 [
-  ['factory_5ffalse_5fpositive_5ftest_321',['factory_false_positive_test',['../d1/d74/classsequoia_1_1testing_1_1factory__false__positive__test.html',1,'sequoia::testing']]],
-  ['factory_5ftest_322',['factory_test',['../d0/d23/classsequoia_1_1testing_1_1factory__test.html',1,'sequoia::testing']]],
-  ['failure_5freporter_323',['failure_reporter',['../d5/d62/structsequoia_1_1testing_1_1failure__reporter.html',1,'sequoia::testing']]],
+  ['factory_5ffalse_5fpositive_5ftest_320',['factory_false_positive_test',['../d1/d74/classsequoia_1_1testing_1_1factory__false__positive__test.html',1,'sequoia::testing']]],
+  ['factory_5ftest_321',['factory_test',['../d0/d23/classsequoia_1_1testing_1_1factory__test.html',1,'sequoia::testing']]],
+  ['failure_5freporter_322',['failure_reporter',['../d5/d62/structsequoia_1_1testing_1_1failure__reporter.html',1,'sequoia::testing']]],
+  ['failure_5freporter_3c_20std_3a_3aequal_5fto_3c_20t_20_3e_20_3e_323',['failure_reporter&lt; std::equal_to&lt; T &gt; &gt;',['../da/dd7/structsequoia_1_1testing_1_1failure__reporter_3_01std_1_1equal__to_3_01T_01_4_01_4.html',1,'sequoia::testing']]],
   ['failure_5freporter_3c_20std_3a_3agreater_3c_20t_20_3e_20_3e_324',['failure_reporter&lt; std::greater&lt; T &gt; &gt;',['../dc/d10/structsequoia_1_1testing_1_1failure__reporter_3_01std_1_1greater_3_01T_01_4_01_4.html',1,'sequoia::testing']]],
   ['failure_5freporter_3c_20std_3a_3agreater_5fequal_3c_20t_20_3e_20_3e_325',['failure_reporter&lt; std::greater_equal&lt; T &gt; &gt;',['../d0/dc8/structsequoia_1_1testing_1_1failure__reporter_3_01std_1_1greater__equal_3_01T_01_4_01_4.html',1,'sequoia::testing']]],
   ['failure_5freporter_3c_20std_3a_3aless_3c_20t_20_3e_20_3e_326',['failure_reporter&lt; std::less&lt; T &gt; &gt;',['../dc/d0c/structsequoia_1_1testing_1_1failure__reporter_3_01std_1_1less_3_01T_01_4_01_4.html',1,'sequoia::testing']]],
@@ -21,7 +22,7 @@ var searchData=
   ['flavour_5fto_5fedge_339',['flavour_to_edge',['../df/d9f/structsequoia_1_1maths_1_1graph__impl_1_1flavour__to__edge.html',1,'sequoia::maths::graph_impl']]],
   ['flavour_5fto_5fedge_3c_20graph_5fflavour_3a_3adirected_5fembedded_2c_20handler_2c_20indextype_2c_20sharededge_20_3e_340',['flavour_to_edge&lt; graph_flavour::directed_embedded, Handler, IndexType, SharedEdge &gt;',['../dd/d0a/structsequoia_1_1maths_1_1graph__impl_1_1flavour__to__edge_3_01graph__flavour_1_1directed__embed81c2cecece700198770500b3dbf7d453.html',1,'sequoia::maths::graph_impl']]],
   ['flavour_5fto_5fedge_3c_20graph_5fflavour_3a_3aundirected_5fembedded_2c_20handler_2c_20indextype_2c_20sharededge_20_3e_341',['flavour_to_edge&lt; graph_flavour::undirected_embedded, Handler, IndexType, SharedEdge &gt;',['../d7/d03/structsequoia_1_1maths_1_1graph__impl_1_1flavour__to__edge_3_01graph__flavour_1_1undirected__embb5cb4e8a68b11329b6f8c40fa1a73a95.html',1,'sequoia::maths::graph_impl']]],
-  ['foo_342',['foo',['../d3/ddb/structsequoia_1_1testing_1_1foo.html',1,'sequoia::testing::foo&lt; class &gt;'],['../d1/d9e/classbar_1_1baz_1_1foo.html',1,'bar::baz::foo&lt; T &gt;']]],
+  ['foo_342',['foo',['../d1/d9e/classbar_1_1baz_1_1foo.html',1,'bar::baz::foo&lt; T &gt;'],['../d3/ddb/structsequoia_1_1testing_1_1foo.html',1,'sequoia::testing::foo&lt; class &gt;']]],
   ['foo_3c_20int_20_3e_343',['foo&lt; int &gt;',['../d0/d65/structsequoia_1_1testing_1_1foo_3_01int_01_4.html',1,'sequoia::testing']]],
   ['foo_5fallocation_5ftest_344',['foo_allocation_test',['../d1/d54/classsequoia_1_1testing_1_1foo__allocation__test.html',1,'sequoia::testing']]],
   ['foo_5ffalse_5fpositive_5ftest_345',['foo_false_positive_test',['../dc/d69/classsequoia_1_1testing_1_1foo__false__positive__test.html',1,'sequoia::testing']]],
