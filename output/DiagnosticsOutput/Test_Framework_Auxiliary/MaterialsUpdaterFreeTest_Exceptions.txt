@@ -1,0 +1,30 @@
+Tests/TestFramework/MaterialsUpdaterFreeTest.cpp, Line 23
+Empty 'to' path
+
+Expected Exception Type:
+[std::runtime_error]
+File path is empty
+
+
+	=======================================
+
+Tests/TestFramework/MaterialsUpdaterFreeTest.cpp, Line 24
+Empty 'from' path
+
+Expected Exception Type:
+[std::runtime_error]
+File path is empty
+
+
+	=======================================
+
+Tests/TestFramework/MaterialsUpdaterFreeTest.cpp, Line 25
+Directory names differnt
+
+Expected Exception Type:
+[std::runtime_error]
+Soft update requires the names of the from/to directories to be the same
+
+
+	=======================================
+

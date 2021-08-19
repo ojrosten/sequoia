@@ -20,6 +20,11 @@ namespace sequoia::testing
   {
     const auto& auxiliary{auxiliary_materials()}, working{working_materials()}, predictive{predictive_materials()};
 
+    check_exception_thrown<std::runtime_error>(LINE("Empty 'to' path"),          [&]() { soft_update("", working / "Stuff"); });
+    check_exception_thrown<std::runtime_error>(LINE("Empty 'from' path"),        [&]() { soft_update(auxiliary / "Stuff", ""); });
+    check_exception_thrown<std::runtime_error>(LINE("Directory names differnt"), [&]() { soft_update(auxiliary / "Stuff", working); });
+    
+
     soft_update(auxiliary / "Stuff", working / "Stuff");
     check_equivalence(LINE(""), working / "Stuff", predictive / "Stuff");
   }
