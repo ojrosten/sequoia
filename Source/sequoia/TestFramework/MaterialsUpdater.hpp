@@ -15,6 +15,5 @@
 
 namespace sequoia::testing
 {
-  void copy_special_files(const std::filesystem::path& from, const std::filesystem::path& to); // TO DO: hide this!
   void soft_update(const std::filesystem::path& from, const std::filesystem::path& to);
 }

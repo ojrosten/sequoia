@@ -150,9 +150,6 @@ namespace sequoia::testing
     throw_unless_exists(from);
     throw_unless_exists(to);
 
-    if(*(--from.end()) != *(--to.end()))
-      throw std::runtime_error{"Soft update requires the names of the from/to directories to be the same"};
-
     copy_special_files(from, to);
 
     const std::vector<path_info>

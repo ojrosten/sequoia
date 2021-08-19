@@ -146,9 +146,7 @@ namespace sequoia::testing
 
     for(const auto& update : updateables)
     {
-      copy_special_files(update.workingMaterials, update.predictions);
-      fs::remove_all(update.predictions);
-      fs::copy(update.workingMaterials, update.predictions, fs::copy_options::recursive);
+      soft_update(update.workingMaterials, update.predictions);
     }
 
     return {steady_clock::now() - time, std::move(summaries)};
