@@ -12,7 +12,7 @@
     and
     \ref sec_expressive "expressive".
 
-    \section sec_scale Scale
+    \section sec_scale Scalabilty
 
     To operate effectively at scale, `sequoia` incorporates the following features:
     - No waste: if a principled structure is adhered to, then running with the `--prune` option
@@ -22,8 +22,10 @@
        -# cpp files should supply definitions only for the header of the same name;
        -# Given a test file `Tests/Foo/Bar.cpp`, any testing materials should be stored in `TestMaterials\Foo\Bar`.
     - Concurrency: running with `-a` will run tests concurrently. Tests are grouped into families and,
-      by default, concurrency is at the level of families. However, there is flexibility.
-      By specifying `--async-depth 1` individual tests are run concurrently.
+      by default, concurrency will be at the family level if there are more than three families; otherwise,
+      concurrency is at the level of individual tests. However, there is flexibility.
+      Specifying `--async-depth 1` forces individual tests to run concurrently, whereas a value of zero will force
+      families to be run concurrently.
 
     \section sec_automated Automation
 
