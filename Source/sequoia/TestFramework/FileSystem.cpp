@@ -252,9 +252,11 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path timestamp_path(std::filesystem::path outputDir)
+  std::filesystem::path prune_path(std::filesystem::path outputDir, const std::filesystem::path& testMainDir)
   {
-    return outputDir /= ".timestamp";
+    throw_unless_exists(testMainDir);
+
+    return (outputDir /= *(--testMainDir.end())).concat(".prune");
   }
 
   void throw_unless_exists(const std::filesystem::path& p, std::string_view message)

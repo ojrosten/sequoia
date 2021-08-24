@@ -1028,7 +1028,7 @@ namespace sequoia::testing
                   },
                   {"prune", {"p"}, {},
                     [this](const arg_list&) {
-                      m_PruneInfo.stamps.ondisk = time_stamps::from_file(timestamp_path(m_Paths.output()));
+                      m_PruneInfo.stamps.ondisk = time_stamps::from_file(prune_path(m_Paths.output(), m_Paths.main_cpp_dir()));
                     },
                     {{"--cutoff", {"-c"}, {"Cutoff for #include search e.g. 'namespace'"},
                       [this](const arg_list& args) {
@@ -1425,7 +1425,7 @@ namespace sequoia::testing
 
       if((!selected || pruned()) && !summary.soft_failures() && !summary.critical_failures())
       {
-        const auto stampFile{timestamp_path(m_Paths.output())};
+        const auto stampFile{prune_path(m_Paths.output(), m_Paths.main_cpp_dir())};
         if(!fs::exists(stampFile))
         {
           std::ofstream ostream{stampFile};

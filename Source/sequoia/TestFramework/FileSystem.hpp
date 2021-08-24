@@ -131,7 +131,7 @@ namespace sequoia::testing
   std::filesystem::path test_summaries_path(std::filesystem::path outputDir);
 
   [[nodiscard]]
-  std::filesystem::path timestamp_path(std::filesystem::path outputDir);
+  std::filesystem::path prune_path(std::filesystem::path outputDir, const std::filesystem::path& testMainDir);
 
   template<class Pred>
     requires invocable<Pred, std::filesystem::path>
