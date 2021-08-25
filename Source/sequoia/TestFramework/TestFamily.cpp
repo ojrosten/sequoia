@@ -85,8 +85,9 @@ namespace sequoia::testing
 
     const auto time{steady_clock::now()};
 
-    std::vector<log_summary> summaries{};
-    summaries.reserve(m_Tests.size());
+    results res{};
+
+    res.logs.reserve(m_Tests.size());
     summary_writer writer{};
 
     auto compare{
@@ -98,10 +99,11 @@ namespace sequoia::testing
     std::set<paths, decltype(compare)> updateables{};
 
     auto process{
-      [&summaries, &writer, &updateables](log_summary summary, const paths& files){
-        summaries.push_back(std::move(summary));
+      [&res, &writer, &updateables](log_summary summary, const paths& files){
+        if(summary.soft_failures() || summary.critical_failures())
+          res.failed_tests.push_back(files.test_file);
 
-        writer.to_file(files.summary, summaries.back());
+        writer.to_file(files.summary, summary);
 
         if(files.mode != update_mode::none)
         {
@@ -113,6 +115,8 @@ namespace sequoia::testing
             }
           }
         }
+
+        res.logs.push_back(std::move(summary));
       }
     };
 
@@ -137,9 +141,9 @@ namespace sequoia::testing
         );
       }
 
-      for(auto& res : results)
+      for(auto& r : results)
       {
-        const auto [summary, paths]{res.get()};
+        const auto [summary, paths]{r.get()};
         process(summary, paths);
       }
     }
@@ -149,7 +153,8 @@ namespace sequoia::testing
       soft_update(update.workingMaterials, update.predictions);
     }
 
-    return {steady_clock::now() - time, std::move(summaries)};
+    res.execution_time = steady_clock::now() - time;
+    return res;
   }
 
   std::filesystem::path test_family::test_summary_filename(const test& t, const std::filesystem::path& outputDir, const std::filesystem::path& testRepo)
@@ -208,6 +213,7 @@ namespace sequoia::testing
 
   test_family::paths::paths(const test& t, update_mode updateMode, const std::filesystem::path& outputDir, const std::filesystem::path& testRepo)
     : mode{updateMode}
+    , test_file{t.source_filename()}
     , summary{test_summary_filename(t, outputDir, testRepo)}
     , workingMaterials{t.working_materials()}
     , predictions{t.predictive_materials()}

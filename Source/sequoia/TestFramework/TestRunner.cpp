@@ -1166,10 +1166,23 @@ namespace sequoia::testing
         stream() << "\nAnalyzing dependencies...\n";
         const auto start{std::chrono::steady_clock::now()};
 
-        if(const auto toRun{tests_to_run(m_Paths.source_root(), m_Paths.tests(), m_Paths.test_materials(), m_PruneInfo.stamps.ondisk, m_PruneInfo.stamps.executable, m_PruneInfo.include_cutoff)})
+        if(auto maybeToRun{tests_to_run(m_Paths.source_root(), m_Paths.tests(), m_Paths.test_materials(), m_PruneInfo.stamps.ondisk, m_PruneInfo.stamps.executable, m_PruneInfo.include_cutoff)})
         {
-          std::transform(toRun->begin(), toRun->end(), std::back_inserter(m_SelectedSources),
-            [](const std::filesystem::path& file) -> std::pair<std::filesystem::path, bool> { return {file, false}; });
+          auto& toRun{maybeToRun.value()};
+
+          if(std::ifstream ifile{prune_path(m_Paths.output(), m_Paths.main_cpp_dir())})
+          {
+            fs::path source{};
+            ifile >> source;
+            toRun.push_back(source);
+          }
+
+          std::sort(toRun.begin(), toRun.end());
+          auto last{std::unique(toRun.begin(), toRun.end())};
+          toRun.erase(last, toRun.end());
+
+          std::transform(toRun.begin(), toRun.end(), std::back_inserter(m_SelectedSources),
+            [](const fs::path& file) -> std::pair<fs::path, bool> { return {file, false}; });
         }
 
         const auto end{std::chrono::steady_clock::now()};
@@ -1240,6 +1253,8 @@ namespace sequoia::testing
     }
 
     stream() << output;
+
+    std::copy(results.failed_tests.begin(), results.failed_tests.end(), std::back_inserter(m_FailedTestSourceFiles));
 
     return familySummary;
   }
@@ -1423,12 +1438,15 @@ namespace sequoia::testing
       }
 
 
-      if((!selected || pruned()) && !summary.soft_failures() && !summary.critical_failures())
+      if(!selected || pruned())
       {
         const auto stampFile{prune_path(m_Paths.output(), m_Paths.main_cpp_dir())};
-        if(!fs::exists(stampFile))
+        if(std::ofstream ostream{stampFile})
         {
-          std::ofstream ostream{stampFile};
+          for(const auto& source : m_FailedTestSourceFiles)
+          {
+            ostream << source.generic_string() << "\n";
+          }
         }
 
         fs::last_write_time(stampFile, m_PruneInfo.stamps.current);

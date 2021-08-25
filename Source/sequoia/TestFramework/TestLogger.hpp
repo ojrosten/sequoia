@@ -488,9 +488,12 @@ namespace sequoia::testing
   public:
     using duration = std::chrono::steady_clock::duration;
 
-    explicit log_summary(std::string_view name="") : m_Name{name} {}
+    log_summary() = default;
 
-    template<test_mode Mode> log_summary(std::string_view name, const test_logger<Mode>& logger, const duration delta)
+    explicit log_summary(std::string_view name) : m_Name{name} {}
+
+    template<test_mode Mode>
+    log_summary(std::string_view name, const test_logger<Mode>& logger, const duration delta)
       : m_Name{name}
       , m_FailureMessages{logger.failure_messages()}
       , m_Duration{delta}

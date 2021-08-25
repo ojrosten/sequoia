@@ -42,6 +42,7 @@ namespace sequoia::testing
     {
       log_summary::duration execution_time{};
       std::vector<log_summary> logs;
+      std::vector<std::filesystem::path> failed_tests{};
     };
 
     struct summary
@@ -135,7 +136,7 @@ namespace sequoia::testing
       paths(const test& t, update_mode updateMode, const std::filesystem::path& outputDir, const std::filesystem::path& testRepo);
 
       update_mode mode{update_mode::none};
-      std::filesystem::path summary, workingMaterials, predictions;
+      std::filesystem::path test_file, summary, workingMaterials, predictions;
     };
   };
 

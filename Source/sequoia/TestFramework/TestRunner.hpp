@@ -447,6 +447,8 @@ namespace sequoia::testing
     update_mode               m_UpdateMode{update_mode::none};
     concurrency_mode          m_ConcurrencyMode{concurrency_mode::serial};
 
+    std::vector<std::filesystem::path> m_FailedTestSourceFiles;
+
     std::ostream& stream() noexcept { return *m_Stream; }
 
     [[nodiscard]]
