@@ -18,7 +18,7 @@ namespace sequoia::testing
 
   void copy_special_files(const fs::path& from, const fs::path& to)
   {
-    for(auto& p : fs::recursive_directory_iterator(to))
+    for(auto& p : fs::directory_iterator(to))
     {
       if(fs::is_regular_file(p) && ((p.path().extension() == seqpat) || (p.path().filename() == ".keep")))
       {
@@ -53,6 +53,7 @@ namespace sequoia::testing
 
     struct compare
     {
+      [[nodiscard]]
       bool operator()(const path_info& lhs, const path_info& rhs) const
       {
         using type = std::underlying_type_t<fs::file_type>;
@@ -114,13 +115,13 @@ namespace sequoia::testing
         }
         default:
           throw std::logic_error{std::string{"Detailed equivalance check for paths of type '"}
-            .append(serializer<fs::file_type>::make(pathType)).append("' not currently implemented")};
+                                  .append(serializer<fs::file_type>::make(pathType)).append("' not currently implemented")};
         }
       }
 
-      if((iters.first != fromEnd) && (iters.second != toEnd))
+      if(iters.first != fromEnd)
       {
-        for(; (iters.first != fromEnd) && (compare{}(*iters.first, *iters.second)); ++iters.first)
+        for(; (iters.first != fromEnd) && ((iters.second == toEnd) || (compare{}(*iters.first, *iters.second))); ++iters.first)
         {
           if(fs::is_directory(iters.first->full))
           {
@@ -134,14 +135,10 @@ namespace sequoia::testing
           }
         }
 
-        fs::remove_all(iters.second->full);
-        soft_update(from, to, iters.first, fromEnd, ++iters.second, toEnd);
-      }
-      else if(iters.first != fromEnd)
-      {
-        for(; iters.first != fromEnd; ++iters.first)
+        if(iters.second != toEnd)
         {
-          fs::copy(iters.first->full, to, fs::copy_options::recursive);
+          fs::remove_all(iters.second->full);
+          soft_update(from, to, iters.first, fromEnd, ++iters.second, toEnd);
         }
       }
       else if(iters.second != toEnd)
