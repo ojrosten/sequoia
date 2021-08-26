@@ -325,7 +325,7 @@ namespace sequoia::testing
     copy_aux_materials("ModifiedSource/UsefulThings.hpp", "Source/generatedProject/Utilities");
     run_and_check(LINE("Attempt to prune when build is out of date"), b, "PruneWithStaleBuild", "prune");
 
-    //=================== Change several of the tests, and some of the source, rebuild and run asynchronously ===================//
+    //=================== Change several of the tests, and some of the source, rebuild and run asynchronously, with prune ===================//
 
     copy_aux_materials("ModifiedSource/UsefulThings.cpp",        "Source/generatedProject/Utilities");
     copy_aux_materials("ModifiedSource/Maths",                   "Source/generatedProject/Maths");
@@ -347,6 +347,10 @@ namespace sequoia::testing
     check_equivalence(LINE("TestAllMain.cpp"),  working_materials() / mainCpp,   predictive_materials() / mainCpp);
     check_equivalence(LINE("CMakeLists.tt"), working_materials() / mainCmake, predictive_materials() / mainCmake);
 
+    //=================== Rerun with prune ===================//
+    // --> only failing tests should rerun
+
+    run_and_check(LINE("Pruned output, post failures"), b, "RunPrunePostFailureOutput", "prune -c namespace -a");
 
     //=================== Rerun and do a dump ===================//
 

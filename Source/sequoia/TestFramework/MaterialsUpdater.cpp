@@ -122,7 +122,16 @@ namespace sequoia::testing
       {
         for(; (iters.first != fromEnd) && (compare{}(*iters.first, *iters.second)); ++iters.first)
         {
-          fs::copy(iters.first->full, to, fs::copy_options::recursive);
+          if(fs::is_directory(iters.first->full))
+          {
+            const auto subdir{to / iters.first->relative};
+            fs::create_directory(subdir);
+            fs::copy(iters.first->full, subdir, fs::copy_options::recursive);
+          }
+          else
+          {
+            fs::copy(iters.first->full, to);
+          }
         }
 
         fs::remove_all(iters.second->full);
