@@ -29,5 +29,9 @@ namespace sequoia::testing
     check_equality(LINE("Ensure that a target file equivalent to its replacement is not replaced"),
                    read_to_string(working_materials() / "DirToBeKept" / "Comments.txt"),
                    read_to_string(predictive_materials() / "DirToBeKept" / "Comments.txt"));
+
+    check(LINE("Ensure fidelity of previous check"),
+              read_to_string(working_materials() / "DirToBeKept" / "Comments.txt")
+          !=  read_to_string(auxiliary_materials() / "DirToBeKept" / "Comments.txt"));
   }
 }
