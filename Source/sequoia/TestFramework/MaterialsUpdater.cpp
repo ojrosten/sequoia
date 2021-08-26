@@ -137,8 +137,13 @@ namespace sequoia::testing
 
         if(iters.second != toEnd)
         {
-          fs::remove_all(iters.second->full);
-          soft_update(from, to, iters.first, fromEnd, ++iters.second, toEnd);
+          while(compare{}(*iters.second, *iters.first))
+          {
+            fs::remove_all(iters.second->full);
+            ++iters.second;
+          }
+
+          soft_update(from, to, iters.first, fromEnd, iters.second, toEnd);
         }
       }
       else if(iters.second != toEnd)
