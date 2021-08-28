@@ -580,7 +580,6 @@ namespace sequoia::testing
     [[nodiscard]]
     const std::string& failure_messages() const noexcept { return m_FailureMessages; }
 
-    [[nodiscard]]
     friend log_summary operator+(const log_summary& lhs, const log_summary& rhs);
   private:
     std::string m_Name, m_FailureMessages, m_DiagnosticsOutput, m_CaughtExceptionMessages;

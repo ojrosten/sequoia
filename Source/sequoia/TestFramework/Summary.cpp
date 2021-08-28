@@ -11,6 +11,8 @@
 
 #include "sequoia/TestFramework/Summary.hpp"
 
+#include <array>
+
 namespace sequoia::testing
 {
   [[nodiscard]]
