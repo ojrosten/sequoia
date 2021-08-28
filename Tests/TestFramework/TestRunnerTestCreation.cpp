@@ -11,6 +11,8 @@
 #include "sequoia/TestFramework/FileEditors.hpp"
 #include "sequoia/TextProcessing/Substitutions.hpp"
 
+#include <fstream>
+
 namespace sequoia::testing
 {
   [[nodiscard]]

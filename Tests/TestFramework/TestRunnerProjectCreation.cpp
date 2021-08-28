@@ -10,6 +10,7 @@
 #include "Parsing/CommandLineArgumentsTestingUtilities.hpp"
 
 #include <cstdlib>
+#include <fstream>
 
 namespace sequoia::testing
 {

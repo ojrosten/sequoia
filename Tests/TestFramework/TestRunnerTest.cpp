@@ -9,6 +9,8 @@
 #include "TestRunnerDiagnosticsUtilities.hpp"
 #include "Parsing/CommandLineArgumentsTestingUtilities.hpp"
 
+#include <fstream>
+
 namespace sequoia::testing
 {
   namespace

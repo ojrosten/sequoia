@@ -16,6 +16,9 @@
 #include "sequoia/TestFramework/DependencyAnalyzer.hpp"
 #include "sequoia/TextProcessing/Substitutions.hpp"
 
+#include <fstream>
+
+// TO DO: remove once libc++ supports <format>
 #ifdef _MSC_VER
   #include <format>
 #endif 

@@ -13,6 +13,8 @@
 #include "sequoia/TestFramework/MaterialsUpdater.hpp"
 #include "sequoia/TestFramework/Summary.hpp"
 
+#include <fstream>
+
 namespace sequoia::testing
 {
   namespace fs = std::filesystem;

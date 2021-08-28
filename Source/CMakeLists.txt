@@ -15,6 +15,7 @@ set(SourceList sequoia/TestFramework/Advice.cpp
     sequoia/TestFramework/SemanticsCheckersDetails.cpp
     sequoia/TestFramework/Summary.cpp
     sequoia/TestFramework/TestFamily.cpp
+    sequoia/TestFramework/TestLogger.cpp
     sequoia/TestFramework/TestRunner.cpp
     sequoia/TextProcessing/Indent.cpp
     sequoia/TextProcessing/Patterns.cpp

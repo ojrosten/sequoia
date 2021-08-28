@@ -22,16 +22,21 @@
 #include "sequoia/Core/Meta/TypeTraits.hpp"
 #include "sequoia/TestFramework/Output.hpp"
 
-#include <sstream>
-#include <fstream>
-#include <array>
 #include <chrono>
-#include <functional>
 #include <filesystem>
 #include <vector>
 
 namespace sequoia::testing
 {
+  namespace impl
+  {
+    void record_check_started(const std::filesystem::path& file, std::string_view message);
+    void record_check_ended(const std::filesystem::path& file);
+    void recored_dump_started(const std::filesystem::path& file, std::string_view message);
+    void recored_dump_ended(const std::filesystem::path& file);
+    void recored_critical_failure(const std::filesystem::path& file, std::string_view message);
+  }
+
   /*! \brief Holds details of the file to which the last successfully completed test is registered.
 
       If a check causes a crash, the recovery file may be used to provide a clue as to where this
@@ -95,20 +100,10 @@ namespace sequoia::testing
       if(!logger.depth())
       {
         logger.log_top_level_check();
-
-        if(auto file{m_Logger.get().recovery().recovery_file}; !file.empty())
-        {
-          if(std::ofstream of{file})
-            of << "Check started:\n" << message << "\n";
-        }
+        impl::record_check_started(m_Logger.get().recovery().recovery_file, message);
       }
 
-      if(auto file{m_Logger.get().recovery().dump_file}; !file.empty())
-      {
-        if(std::ofstream of{file, std::ios_base::app})
-          of << message << "\n";
-      }
-
+      impl::recored_dump_started(m_Logger.get().recovery().dump_file, message);
       logger.push_message(message);
       logger.increment_depth();
     }
@@ -152,19 +147,10 @@ namespace sequoia::testing
               logger.append_to_diagnostics_output(messageMaker());
           }
 
-          if(auto file{m_Logger.get().recovery().recovery_file}; !file.empty())
-          {
-            if(std::ofstream of{file, std::ios_base::app})
-              of << "Check ended\n";
-          }
+          impl::record_check_ended(m_Logger.get().recovery().recovery_file);
         }
 
-        if(auto file{m_Logger.get().recovery().dump_file}; !file.empty())
-        {
-          if(std::ofstream of{file, std::ios_base::app})
-            of << "\n\n";
-        }
-
+        impl::recored_dump_ended(m_Logger.get().recovery().dump_file);
         logger.exceptions_detected_by_sentinel(std::uncaught_exceptions());
       }
 
@@ -210,7 +196,7 @@ namespace sequoia::testing
     [[nodiscard]]
     bool critical_failure_detected() const noexcept
     {
-      return (m_Logger.get().critical_failures() != m_PriorCriticalFailures);
+      return m_Logger.get().critical_failures() != m_PriorCriticalFailures;
     }
 
     [[nodiscard]]
@@ -396,12 +382,7 @@ namespace sequoia::testing
     {
       ++m_CriticalFailures;
       failure_message(message, critical::yes);
-
-      if(auto file{m_Recovery.recovery_file}; !file.empty())
-      {
-        if(std::ofstream of{file, std::ios_base::app})
-          of << "\nCritical Failure:\n" << message << "\n";
-      }
+      impl::recored_critical_failure(m_Recovery.recovery_file, message);
     }
 
     void log_top_level_failure(std::string_view message)
@@ -527,11 +508,7 @@ namespace sequoia::testing
       m_CriticalFailures        = logger.critical_failures();
     }
 
-    void clear()
-    {
-      log_summary clean{""};
-      std::swap(*this, clean);
-    }
+    void clear() noexcept;
 
     [[nodiscard]]
     std::size_t standard_top_level_checks() const noexcept { return m_StandardTopLevelChecks; }
@@ -579,15 +556,7 @@ namespace sequoia::testing
     std::size_t critical_failures() const noexcept { return m_CriticalFailures; }
 
     [[nodiscard]]
-    std::size_t soft_failures() const noexcept
-    {
-      return    standard_top_level_failures()
-             || false_positive_failures()
-             || false_negative_failures()
-             || standard_performance_failures()
-             || false_positive_performance_failures()
-             || false_negative_performance_failures();
-    }
+    std::size_t soft_failures() const noexcept;
 
     [[nodiscard]]
     const std::string& diagnostics_output() const noexcept { return m_DiagnosticsOutput; }
@@ -603,33 +572,7 @@ namespace sequoia::testing
     [[nodiscard]]
     duration execution_time() const noexcept { return m_Duration; }
 
-    log_summary& operator+=(const log_summary& rhs)
-    {
-      m_FailureMessages                += rhs.m_FailureMessages;
-
-      m_StandardTopLevelChecks         += rhs.m_StandardTopLevelChecks;
-      m_StandardDeepChecks             += rhs.m_StandardDeepChecks;
-      m_StandardPerformanceChecks      += rhs.m_StandardPerformanceChecks;
-      m_FalseNegativeChecks            += rhs.m_FalseNegativeChecks;
-      m_FalsePositiveChecks            += rhs.m_FalsePositiveChecks;
-      m_FalseNegativePerformanceChecks += rhs.m_FalseNegativePerformanceChecks;
-      m_FalsePositivePerformanceChecks += rhs.m_FalsePositivePerformanceChecks;
-
-      m_StandardTopLevelFailures         += rhs.m_StandardTopLevelFailures;
-      m_StandardDeepFailures             += rhs.m_StandardDeepFailures;
-      m_StandardPerformanceFailures      += rhs.m_StandardPerformanceFailures;
-      m_FalseNegativeFailures            += rhs.m_FalseNegativeFailures;
-      m_FalsePositiveFailures            += rhs.m_FalsePositiveFailures;
-      m_FalseNegativePerformanceFailures += rhs.m_FalseNegativePerformanceFailures;
-      m_FalsePositivePerformanceFailures += rhs.m_FalsePositivePerformanceFailures;
-
-      m_CriticalFailures   += rhs.m_CriticalFailures;
-      m_ExceptionsInFlight += rhs.m_ExceptionsInFlight;
-      m_DiagnosticsOutput  += rhs.m_DiagnosticsOutput;
-      m_Duration           += rhs.m_Duration;
-
-      return *this;
-    }
+    log_summary& operator+=(const log_summary& rhs);
 
     [[nodiscard]]
     const std::string& name() const noexcept { return m_Name; }
@@ -638,12 +581,7 @@ namespace sequoia::testing
     const std::string& failure_messages() const noexcept { return m_FailureMessages; }
 
     [[nodiscard]]
-    friend log_summary operator+(const log_summary& lhs, const log_summary& rhs)
-    {
-      log_summary s{lhs};
-      s += rhs;
-      return s;
-    }
+    friend log_summary operator+(const log_summary& lhs, const log_summary& rhs);
   private:
     std::string m_Name, m_FailureMessages, m_DiagnosticsOutput, m_CaughtExceptionMessages;
     std::size_t
