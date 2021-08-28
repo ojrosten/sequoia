@@ -1175,9 +1175,12 @@ namespace sequoia::testing
 
           if(std::ifstream ifile{prune_path(m_Paths.output(), m_Paths.main_cpp_dir())})
           {
-            fs::path source{};
-            ifile >> source;
-            toRun.push_back(source);
+            while(ifile)
+            {
+              fs::path source{};
+              ifile >> source;
+              toRun.push_back(source);
+            }
           }
 
           std::sort(toRun.begin(), toRun.end());
