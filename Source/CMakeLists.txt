@@ -12,11 +12,14 @@ set(SourceList sequoia/TestFramework/Advice.cpp
     sequoia/TestFramework/MaterialsUpdater.cpp
     sequoia/TestFramework/Output.cpp
     sequoia/TestFramework/PerformanceTestCore.cpp
+    sequoia/TestFramework/ProjectCreator.cpp
     sequoia/TestFramework/SemanticsCheckersDetails.cpp
     sequoia/TestFramework/Summary.cpp
+    sequoia/TestFramework/TestCreator.cpp
     sequoia/TestFramework/TestFamily.cpp
     sequoia/TestFramework/TestLogger.cpp
     sequoia/TestFramework/TestRunner.cpp
+    sequoia/TestFramework/TestSelector.cpp
     sequoia/TextProcessing/Indent.cpp
     sequoia/TextProcessing/Patterns.cpp
     sequoia/TextProcessing/Substitutions.cpp)
