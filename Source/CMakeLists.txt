@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.19)
 set(SourceList sequoia/TestFramework/Advice.cpp
     sequoia/Parsing/CommandLineArguments.cpp
     sequoia/PlatformSpecific/Helpers.cpp
+    sequoia/Runtime/ShellCommands.cpp
     sequoia/Streaming/Streaming.cpp
     sequoia/TestFramework/AllocationCheckersDetails.cpp
     sequoia/TestFramework/DependencyAnalyzer.cpp
