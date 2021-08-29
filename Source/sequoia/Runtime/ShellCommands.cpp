@@ -7,6 +7,7 @@
 
 #include "sequoia/Runtime/ShellCommands.hpp"
 
+#include "sequoia/Parsing/CommandLineArguments.hpp"
 #include "sequoia/PlatformSpecific/Preprocessor.hpp"
 
 #include <iostream>
