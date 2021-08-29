@@ -10,6 +10,8 @@
 */
 
 #include "sequoia/TestFramework/TestRunner.hpp"
+
+#include "sequoia/TestFramework/ProjectCreator.hpp"
 #include "sequoia/Parsing/CommandLineArguments.hpp"
 #include "sequoia/TestFramework/Summary.hpp"
 #include "sequoia/TestFramework/FileEditors.hpp"
@@ -95,150 +97,6 @@ namespace sequoia::testing
 
       return true;
     }
-  }
-
-  shell_command::shell_command(std::string cmd, const std::filesystem::path& output, append_mode app)
-    : m_Command{std::move(cmd)}
-  {
-    if(!output.empty())
-    {
-      m_Command.append(app == append_mode::no ? "> " : ">> ");
-      m_Command.append(output.string()).append(" 2>&1");
-    }
-  }
-
-  shell_command::shell_command(std::string_view preamble, std::string cmd, const std::filesystem::path& output, append_mode app)
-  {
-    const auto pre{
-      [&]() -> shell_command {
-        if(!preamble.empty())
-        {
-          const std::string newline{with_msvc_v ? "echo/" : "echo"};
-          return shell_command{newline, output, app}
-              && shell_command{std::string{"echo "}.append(preamble), output, append_mode::yes}
-              && shell_command{newline, output, append_mode::yes};
-        }
-
-        return {};
-      }()
-    };
-
-    *this = pre && shell_command{std::move(cmd), output, !pre.empty() ? append_mode::yes : app};
-  }
-
-  void invoke(const shell_command& cmd)
-  {
-    std::cout << std::flush;
-    if(cmd.m_Command.data()) std::system(cmd.m_Command.data());
-  }
-
-  [[nodiscard]]
-  shell_command cd_cmd(const std::filesystem::path& dir)
-  {
-    return std::string{"cd "}.append(dir.string());
-  }
-
-  [[nodiscard]]
-  shell_command cmake_cmd(const std::filesystem::path& buildDir, const std::filesystem::path& output)
-  {
-    auto cmd{std::string{"cmake -S ."}.append(" -B \"").append(buildDir.string()).append("\" ")};
-
-    if constexpr(with_msvc_v)
-    {
-      cmd.append("-G \"Visual Studio 16 2019\"");
-    }
-    else if constexpr(with_clang_v)
-    {
-      cmd.append("-D CMAKE_CXX_COMPILER=/usr/local/opt/llvm/bin/clang++");
-    }
-    else if constexpr(with_gcc_v)
-    {
-      cmd.append("-D CMAKE_CXX_COMPILER=/usr/bin/g++");
-    }
-
-    return {"Running CMake...", cmd, output};
-  }
-
-  [[nodiscard]]
-  shell_command build_cmd(const std::filesystem::path& buildDir, const std::filesystem::path& output)
-  {
-    const auto cmd{
-      [&output]() -> shell_command {
-        std::string str{"cmake --build . --target TestAll"};
-        if constexpr(with_msvc_v)
-        {
-#ifdef CMAKE_INTDIR
-          str.append(" --config ").append(std::string{CMAKE_INTDIR});
-#else
-          std::cerr << parsing::commandline::warning("Unable to find preprocessor definition for CMAKE_INTDIR");
-#endif
-        }
-        else
-        {
-          str.append(" -- -j4");
-        }
-
-        return {"Building...", str, output};
-      }()
-    };
-
-    return cd_cmd(buildDir) && cmd;
-  }
-
-  [[nodiscard]]
-  shell_command git_first_cmd(const std::filesystem::path& root, const std::filesystem::path& output)
-  {
-    if(!output.empty())
-    {
-      read_modify_write(root / ".gitignore", [&](std::string& text) { text.append("\n\n").append(output.filename().string()); });
-    }
-
-    using app_mode = shell_command::append_mode;
-    return cd_cmd(root)
-        && shell_command{"Placing under version control...", "git init -b trunk", output}
-        && shell_command{"", "git add . ", output, app_mode::yes}
-        && shell_command{"", "git commit -m \"First commit\"", output, app_mode::yes};
-  }
-
-  [[nodiscard]]
-  shell_command launch_cmd(const std::filesystem::path& root, const std::filesystem::path& buildDir)
-  {
-    if(root.empty()) return {};
-
-    if constexpr(with_msvc_v)
-    {
-      const auto vs2019Dir{
-        []() -> std::filesystem::path {
-          const fs::path vs2019Path{"C:/Program Files (x86)/Microsoft Visual Studio/2019"};
-          if(const auto enterprise{vs2019Path / "Enterprise"}; fs::exists(enterprise))
-          {
-            return enterprise;
-          }
-          else if(const auto pro{vs2019Path / "Professional"}; fs::exists(pro))
-          {
-            return pro;
-          }
-          else if(const auto community{vs2019Path / "Community"}; fs::exists(community))
-          {
-            return community;
-          }
-
-          return "";
-        }()
-      };
-
-      if(!vs2019Dir.empty())
-      {
-        const auto devenv{vs2019Dir / "Common7" / "IDE" / "devenv"};
-
-        const auto token{*(--root.end())};
-        const auto sln{(buildDir / token).concat("Tests.sln")};
-
-        return {"Attempting to open IDE...", std::string{"\""}.append(devenv.string()).append("\" ").append("/Run ").append(sln.string()), ""};
-      }
-    }
-
-    return {};
   }
 
   [[nodiscard]]
@@ -1363,6 +1221,7 @@ namespace sequoia::testing
 
   void test_runner::create_tests()
   {
+    using namespace runtime;
     if(!m_NascentTests.empty())
     {
       if(fs::exists(m_Paths.main_cpp_dir()) && fs::exists(m_Paths.cmade_build_dir()))
@@ -1507,6 +1366,7 @@ namespace sequoia::testing
         const auto mainDir{data.project_root / "TestAll"};
         const auto buildDir{project_paths::cmade_build_dir(data.project_root, mainDir)};
 
+        using namespace runtime;
         invoke(cd_cmd(mainDir)
             && cmake_cmd(buildDir, data.output)
             && build_cmd(buildDir, data.output)

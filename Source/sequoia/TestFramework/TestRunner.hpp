@@ -12,6 +12,7 @@
 */
 
 #include "sequoia/TestFramework/TestFamily.hpp"
+
 #include "sequoia/Parsing/CommandLineArguments.hpp"
 #include "sequoia/PlatformSpecific/Helpers.hpp"
 #include "sequoia/TextProcessing/Indent.hpp"
@@ -23,67 +24,6 @@
 
 namespace sequoia::testing
 {
-  class shell_command
-  {
-  public:
-    enum class append_mode{no, yes};
-
-    shell_command() = default;
-
-    shell_command(std::string cmd) : m_Command{std::move(cmd)}
-    {}
-
-    shell_command(std::string_view preamble, std::string cmd, const std::filesystem::path& output, append_mode app = append_mode::no);
-
-    [[nodiscard]]
-    bool empty() const noexcept
-    {
-      return m_Command.empty();
-    }
-
-    [[nodiscard]]
-    friend bool operator==(const shell_command&, const shell_command&) noexcept = default;
-
-    [[nodiscard]]
-    friend bool operator!=(const shell_command&, const shell_command&) noexcept = default;
-
-    [[nodiscard]]
-    friend shell_command operator&&(const shell_command& lhs, const shell_command& rhs)
-    {
-      return rhs.empty() ? lhs :
-             lhs.empty() ? rhs :
-                           std::string{lhs.m_Command}.append("&&").append(rhs.m_Command);
-    }
-
-    [[nodiscard]]
-    friend shell_command operator&&(const shell_command& lhs, std::string rhs)
-    {
-      return lhs && shell_command{rhs};
-    }
-
-    friend void invoke(const shell_command& cmd);
-  private:
-    std::string m_Command;
-
-    shell_command(std::string cmd, const std::filesystem::path& output, append_mode app);
-
-  };
-
-  [[nodiscard]]
-  shell_command cd_cmd(const std::filesystem::path& dir);
-
-  [[nodiscard]]
-  shell_command cmake_cmd(const std::filesystem::path& buildDir, const std::filesystem::path& output);
-
-  [[nodiscard]]
-  shell_command build_cmd(const std::filesystem::path& buildDir, const std::filesystem::path& output);
-
-  [[nodiscard]]
-  shell_command git_first_cmd(const std::filesystem::path& root, const std::filesystem::path& output);
-
-  [[nodiscard]]
-  shell_command launch_cmd(const std::filesystem::path& root, const std::filesystem::path& buildDir);
-
   [[nodiscard]]
   std::string report_time(const test_family::summary& s);
 

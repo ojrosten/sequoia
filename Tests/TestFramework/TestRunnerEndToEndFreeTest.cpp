@@ -6,15 +6,17 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "TestRunnerEndToEndFreeTest.hpp"
-#include "sequoia/TestFramework/FileEditors.hpp"
-
 #include "Parsing/CommandLineArgumentsTestingUtilities.hpp"
+
+#include "sequoia/TestFramework/FileEditors.hpp"
+#include "sequoia/TestFramework/TestRunner.hpp"
 
 #include <fstream>
 #include <numeric>
 
 namespace sequoia::testing
 {
+  using namespace runtime;
   namespace fs = std::filesystem;
 
   namespace
@@ -81,9 +83,10 @@ namespace sequoia::testing
            && shell_command{"", create_cmd(), creationOutput / "CreationOutput.txt" }
            && build_cmd(buildDir, buildOutput)
            && shell_command{"", run_cmd(), output / "TestRunOutput.txt" }
-           && shell_command{"", run_cmd().append(" select ../../../Tests/HouseAllocationTest.cpp")
-                                         .append(" select Maybe/MaybeTest.cpp")
-                                         .append(" select FooTest.cpp"),
+           && shell_command{"",
+                            run_cmd().append(" select ../../../Tests/HouseAllocationTest.cpp")
+                                     .append(" select Maybe/MaybeTest.cpp")
+                                     .append(" select FooTest.cpp"),
                             output / "SpecifiedSourceOutput.txt"}
            && shell_command{"", run_cmd().append(" select FooTest.cpp prune"), output / "SelectedSourcePruneConflictOutput.txt"}
            && shell_command{"", run_cmd().append(" select Plurgh.cpp test Absent select Foo test FooTest.cpp"), output / "FailedSpecifiedSourceOutput.txt"}

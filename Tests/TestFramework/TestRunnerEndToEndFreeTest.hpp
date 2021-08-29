@@ -8,7 +8,7 @@
 #pragma once
 
 #include "sequoia/TestFramework/FreeTestCore.hpp"
-#include "sequoia/TestFramework/TestRunner.hpp"
+#include "sequoia/Runtime/ShellCommands.hpp"
 
 namespace sequoia::testing
 {
@@ -26,7 +26,7 @@ namespace sequoia::testing
 
   private:
     [[nodiscard]]
-    shell_command run(const std::filesystem::path& outputDir, std::string_view options) const;
+    runtime::shell_command run(const std::filesystem::path& outputDir, std::string_view options) const;
   };
 
   class test_runner_end_to_end_test final : public free_test
