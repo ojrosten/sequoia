@@ -10,6 +10,7 @@
 #include "sequoia/TestFramework/FileSystem.hpp"
 #include "sequoia/TextProcessing/Indent.hpp"
 
+#include <array>
 #include <vector>
 
 namespace sequoia::testing
