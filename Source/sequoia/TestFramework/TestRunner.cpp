@@ -21,47 +21,9 @@
 
 #include <fstream>
 
-// TO DO: remove once libc++ supports <format>
-#ifdef _MSC_VER
-  #include <format>
-#endif 
-
 namespace sequoia::testing
 {
   namespace fs = std::filesystem;
-
-  namespace
-  {
-    void set_proj_name(std::string& text, const std::filesystem::path& projRoot)
-    {
-      if(projRoot.empty()) return;
-
-      const auto name{(--projRoot.end())->generic_string()};
-      const std::string myProj{"MyProject"}, projName{replace_all(name, " ", "_")};
-      replace_all(text, myProj, projName);
-    }
-
-    void check_indent(const indentation& ind)
-    {
-      if(std::string_view{ind}.find_first_not_of("\t ") != std::string::npos)
-        throw std::runtime_error{"Code indent must comprise only spaces or tabs"};
-    }
-
-    [[nodiscard]]
-    bool is_appropriate_root(const fs::path& root)
-    {
-      if(fs::exists(root))
-      {
-        for(auto& entry : fs::directory_iterator(root))
-        {
-          const auto& f{entry.path().filename()};
-          if((f != ".DS_Store") && (f != ".keep")) return false;
-        }
-      }
-
-      return true;
-    }
-  }
 
   [[nodiscard]]
   std::string report_time(const test_family::summary& s)
@@ -582,15 +544,6 @@ namespace sequoia::testing
     }
   }
 
-  void test_runner::report(std::string_view prefix, std::string_view message)
-  {
-    if(!message.empty())
-    {
-      stream() << prefix << '\n';
-      stream() << message << "\n\n";
-    }
-  }
-
   void test_runner::finalize_concurrency_mode()
   {
     if(m_ConcurrencyMode == concurrency_mode::dynamic)
@@ -677,128 +630,6 @@ namespace sequoia::testing
 
     stream() << "Initializing Project(s)....\n\n";
 
-    for(const auto& data : m_NascentProjects)
-    {
-      if(data.project_root.empty())
-        throw std::runtime_error{"Project path should not be empty\n"};
-
-      if(!data.project_root.is_absolute())
-        throw std::runtime_error{std::string{"Project path '"}.append(data.project_root.generic_string()).append("' should be absolute\n")};
-
-      if(!is_appropriate_root(data.project_root))
-        throw std::runtime_error{std::string{"Project location '"}.append(data.project_root.generic_string()).append("' is in use\n")};
-
-      const auto name{(--data.project_root.end())->generic_string()};
-      if(name.empty())
-        throw std::runtime_error{"Project name, deduced as the last token of path, is empty\n"};
-
-      if(std::find_if(name.cbegin(), name.cend(), [](char c) { return !std::isalnum(c) || (c == '_') || (c == '-'); }) != name.cend())
-      {
-        throw std::runtime_error{std::string{"Please ensure the project name '"}
-        .append(name)
-        .append("' consists of just alpha-numeric characters, underscores and dashes\n")};
-      }
-
-      check_indent(data.code_indent);
-
-      report("Creating new project at location:", data.project_root.generic_string());
-
-      fs::create_directories(data.project_root);
-      fs::copy(project_template_path(m_Paths.project_root()), data.project_root, fs::copy_options::recursive | fs::copy_options::skip_existing);
-      fs::create_directory(project_paths::source_path(data.project_root));
-      fs::copy(aux_files_path(m_Paths.project_root()), aux_files_path(data.project_root), fs::copy_options::recursive | fs::copy_options::skip_existing);
-
-      generate_test_main(data.copyright, data.project_root, data.code_indent);
-      generate_build_system_files(data.project_root);
-
-      if(data.do_build != build_invocation::no)
-      {
-        const auto mainDir{data.project_root / "TestAll"};
-        const auto buildDir{project_paths::cmade_build_dir(data.project_root, mainDir)};
-
-        using namespace runtime;
-        invoke(cd_cmd(mainDir)
-            && cmake_cmd(buildDir, data.output)
-            && build_cmd(buildDir, data.output)
-            && git_first_cmd(data.project_root, data.output)
-            && (data.do_build == build_invocation::launch_ide ? launch_cmd(data.project_root, buildDir) : shell_command{})
-        );
-      }
-    }
-  }
-
-  void test_runner::generate_test_main(std::string_view copyright, const std::filesystem::path& projRoot, indentation codeIndent) const
-  {
-    auto modifier{
-      [copyright, codeIndent](std::string& text) {
-
-        set_top_copyright(text, copyright);
-
-        tabs_to_spacing(text, codeIndent);
-        replace(text, "Oliver J. Rosten", copyright);
-
-        const auto indentReplacement{
-          [&codeIndent]() {
-            std::string replacement;
-            for(auto c : std::string_view{codeIndent})
-            {
-              if(c == '\t') replacement.append("\\t");
-              else          replacement.push_back(c);
-            }
-
-            return indentation{replacement};
-          }
-        };
-
-        replace(text, "\\t", indentReplacement());
-      }
-    };
-
-    read_modify_write(projRoot / "TestAll" / "TestAllMain.cpp", modifier);
-  }
-
-  void test_runner::generate_build_system_files(const std::filesystem::path& projRoot) const
-  {
-    if(projRoot.empty())
-      throw std::logic_error{"Pre-condition violated: path should not be empty"};
-
-    const std::filesystem::path relCmakeLocation{"TestAll/CMakeLists.txt"};
-
-    auto setBuildSysPath{
-      [&parentProjRoot=m_Paths.project_root(),&projRoot](std::string& text) {
-        constexpr auto npos{std::string::npos};
-        std::string_view token{"/build_system"};
-        if(const auto pos{text.find(token)}; pos != npos)
-        {
-          std::string_view pattern{"BuildSystem "};
-          if(auto left{text.rfind(pattern)}; left != npos)
-          {
-            left += pattern.size();
-            if(pos >= left)
-            {
-              const auto count{pos - left + token.size()};
-              const auto relPath{fs::relative(parentProjRoot / "TestAll" / text.substr(left, count), projRoot / "TestAll")};
-              text.replace(left, count, relPath.lexically_normal().generic_string());
-            }
-          }
-        }
-      }
-    };
-
-    read_modify_write(projRoot / relCmakeLocation, [setBuildSysPath, &projRoot](std::string& text) {
-        setBuildSysPath(text);
-        set_proj_name(text, projRoot);
-      }
-    );
-
-    read_modify_write(projRoot / "Source" / "CMakeLists.txt", [&projRoot](std::string& text) {
-        set_proj_name(text, projRoot);
-      }
-    );
-
-    read_modify_write(project_template_path(projRoot) / relCmakeLocation, [setBuildSysPath](std::string& text) {
-        setBuildSysPath(text);
-      }
-    );
+    testing::init_projects(m_Paths.project_root(), m_NascentProjects, stream());
   }
 }

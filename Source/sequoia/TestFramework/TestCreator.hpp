@@ -40,8 +40,6 @@ namespace sequoia::testing
   [[nodiscard]]
   template_spec generate_template_spec(std::string_view str);
 
-  void set_top_copyright(std::string& text, std::string_view copyright);
-
   class nascent_test_base
   {
   public:

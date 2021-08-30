@@ -14,6 +14,7 @@
 #include "sequoia/TestFramework/TestFamily.hpp"
 
 #include "sequoia/TestFramework/TestCreator.hpp"
+#include "sequoia/TestFramework/ProjectCreator.hpp"
 
 #include "sequoia/Parsing/CommandLineArguments.hpp"
 #include "sequoia/PlatformSpecific/Helpers.hpp"
@@ -91,8 +92,6 @@ namespace sequoia::testing
 
   private:
     enum class output_mode { standard = 0, verbose = 1 };
-    enum class build_invocation { no = 0, yes, launch_ide };
-
 
     struct nascent_test_data
     {
@@ -106,15 +105,6 @@ namespace sequoia::testing
 
       std::string genus, species;
       test_runner& runner;
-    };
-
-    struct project_data
-    {
-      std::string copyright{};
-      std::filesystem::path project_root{};
-      indentation code_indent{"\t"};
-      build_invocation do_build{build_invocation::launch_ide};
-      std::filesystem::path output{};
     };
 
     struct time_stamps
@@ -199,8 +189,6 @@ namespace sequoia::testing
       if constexpr(sizeof...(Tests) > 0) add_tests(f, std::forward<Tests>(tests)...);
     }
 
-    void report(std::string_view prefix, std::string_view message);
-
     [[nodiscard]]
     static std::string stringify(concurrency_mode mode);
 
@@ -213,9 +201,5 @@ namespace sequoia::testing
     {
       return (m_RunnerMode & m) == m;
     }
-
-    void generate_test_main(std::string_view copyright, const std::filesystem::path& projRoot, indentation codeIndent) const;
-
-    void generate_build_system_files(const std::filesystem::path& projRoot) const;
  };
 }

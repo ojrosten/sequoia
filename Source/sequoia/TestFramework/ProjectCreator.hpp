@@ -8,9 +8,29 @@
 #pragma once
 
 #include "sequoia/Runtime/ShellCommands.hpp"
+#include "sequoia/TextProcessing/Indent.hpp"
 
 namespace sequoia::testing
 {
+  enum class build_invocation { no = 0, yes, launch_ide };
+
+  struct project_data
+  {
+    std::string copyright{};
+    std::filesystem::path project_root{};
+    indentation code_indent{"\t"};
+    build_invocation do_build{build_invocation::launch_ide};
+    std::filesystem::path output{};
+  };
+
+  void check_indent(const indentation& ind);
+
+  void generate_test_main(std::string_view copyright, const std::filesystem::path& projRoot, indentation codeIndent);
+
+  void generate_build_system_files(const std::filesystem::path& parentProjRoot, const std::filesystem::path& projRoot);
+
+  void init_projects(const std::filesystem::path& parentProjRoot, const std::vector<project_data>& projects, std::ostream& stream);
+
   [[nodiscard]]
   runtime::shell_command git_first_cmd(const std::filesystem::path& root, const std::filesystem::path& output);
 
