@@ -21,23 +21,6 @@ namespace sequoia::testing
 {
   namespace fs = std::filesystem;
 
-  // TO DO: move this!
-  std::string& to_spaces(std::string& text, std::string_view spacing)
-  {
-    if(spacing != "\t")
-    {
-      constexpr auto npos{std::string::npos};
-      std::string::size_type tabPos{};
-      while((tabPos = text.find('\t', tabPos)) != npos)
-      {
-        text.replace(tabPos, 1, spacing);
-        tabPos += spacing.size();
-      }
-    }
-
-    return text;
-  }
-
   namespace
   {
     void process_namespace(std::string& text, std::string_view nameSpace)
@@ -383,7 +366,7 @@ namespace sequoia::testing
           set_top_copyright(text, copyright);
           process_namespace(text, nameSpace);
           replace_all(text, "?.hpp", rebase_from(headerPath, sourceRoot).generic_string());
-          to_spaces(text, code_indent());
+          tabs_to_spacing(text, code_indent());
         }
     };
 
@@ -515,7 +498,7 @@ namespace sequoia::testing
       }
     }
 
-    to_spaces(text, code_indent());
+    tabs_to_spacing(text, code_indent());
 
     if(!m_EquivalentTypes.empty())
     {
@@ -595,7 +578,7 @@ namespace sequoia::testing
       replace_all(text, "template<?>", templateSpec);
     }
 
-    to_spaces(text, code_indent());
+    tabs_to_spacing(text, code_indent());
   }
 
   //=========================================== nascent_behavioural_test ===========================================//
@@ -641,7 +624,7 @@ namespace sequoia::testing
 
   void nascent_behavioural_test::transform_file(std::string& text) const
   {
-    to_spaces(text, code_indent());
+    tabs_to_spacing(text, code_indent());
 
     replace_all(text, {{"?_behavioural", forename()},
                        {"?Behavioural", camel_name()},
@@ -673,7 +656,7 @@ namespace sequoia::testing
 
   void nascent_allocation_test::transform_file(std::string& text) const
   {
-    to_spaces(text, code_indent());
+    tabs_to_spacing(text, code_indent());
 
     replace_all(text, {{"?_class", forename()},
                        {"?Class", camel_name()},

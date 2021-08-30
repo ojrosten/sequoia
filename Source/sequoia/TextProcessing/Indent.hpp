@@ -131,4 +131,6 @@ namespace sequoia
     std::string str{sv};
     return append_lines(str, std::forward<Ts>(strs)...);
   }
+
+  std::string& tabs_to_spacing(std::string& text, std::string_view spacing);
 }

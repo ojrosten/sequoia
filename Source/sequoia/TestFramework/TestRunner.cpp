@@ -725,7 +725,7 @@ namespace sequoia::testing
 
         set_top_copyright(text, copyright);
 
-        to_spaces(text, codeIndent);
+        tabs_to_spacing(text, codeIndent);
         replace(text, "Oliver J. Rosten", copyright);
 
         const auto indentReplacement{

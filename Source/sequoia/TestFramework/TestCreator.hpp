@@ -14,9 +14,6 @@
 
 namespace sequoia::testing
 {
-  // TO DO: move this!
-  std::string& to_spaces(std::string& text, std::string_view spacing);
-
   [[nodiscard]]
   bool handle_as_ref(std::string_view type);
 

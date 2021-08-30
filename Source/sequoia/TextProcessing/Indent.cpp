@@ -64,4 +64,20 @@ namespace sequoia
     std::string str{sv1};
     return append_indented(str, sv2, std::move(ind));
   }
+
+  std::string& tabs_to_spacing(std::string& text, std::string_view spacing)
+  {
+    if(spacing != "\t")
+    {
+      constexpr auto npos{std::string::npos};
+      std::string::size_type tabPos{};
+      while((tabPos = text.find('\t', tabPos)) != npos)
+      {
+        text.replace(tabPos, 1, spacing);
+        tabPos += spacing.size();
+      }
+    }
+
+    return text;
+  }
 }
