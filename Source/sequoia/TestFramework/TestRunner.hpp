@@ -26,6 +26,12 @@
 
 namespace sequoia::testing
 {
+  enum class runner_mode { none=0, help=1, test=2, create=4, init=8};
+
+  template<>
+  struct as_bitmask<runner_mode> : std::true_type
+  {};
+
   [[nodiscard]]
   std::string report_time(const test_family::summary& s);
 
@@ -84,7 +90,9 @@ namespace sequoia::testing
     concurrency_mode concurrency() const noexcept { return m_ConcurrencyMode; }
 
   private:
+    enum class output_mode { standard = 0, verbose = 1 };
     enum class build_invocation { no = 0, yes, launch_ide };
+
 
     struct nascent_test_data
     {
@@ -145,6 +153,7 @@ namespace sequoia::testing
     std::vector<vessel>       m_NascentTests{};
     std::vector<project_data> m_NascentProjects{};
     recovery_paths            m_Recovery{};
+    runner_mode               m_RunnerMode{runner_mode::none};
     output_mode               m_OutputMode{output_mode::standard};
     update_mode               m_UpdateMode{update_mode::none};
     concurrency_mode          m_ConcurrencyMode{concurrency_mode::serial};
@@ -200,9 +209,9 @@ namespace sequoia::testing
     void init_projects();
 
     [[nodiscard]]
-    bool mode(output_mode m) const noexcept
+    bool mode(runner_mode m) const noexcept
     {
-      return (m_OutputMode & m) == m;
+      return (m_RunnerMode & m) == m;
     }
 
     void generate_test_main(std::string_view copyright, const std::filesystem::path& projRoot, indentation codeIndent) const;

@@ -221,10 +221,14 @@ namespace sequoia::testing
     const auto help{
       parse_invoke_depth_first(argc, argv,
                 { {"test", {"t"}, {"test family name"},
-                    [this](const arg_list& args) { m_SelectedFamilies.emplace(args.front(), false); }
+                    [this](const arg_list& args) {
+                      m_RunnerMode |= runner_mode::test;
+                      m_SelectedFamilies.emplace(args.front(), false);
+                    }
                   },
                   {"select", {"s"}, {"source file name"},
                     [this](const arg_list& args) {
+                      m_RunnerMode |= runner_mode::test;
                       m_SelectedSources.emplace_back(fs::path{args.front()}.lexically_normal(), false);
                     }
                   },
@@ -238,7 +242,7 @@ namespace sequoia::testing
                       }}
                     }
                   },
-                  {"create", {"c"}, {}, [](const arg_list&) {},
+                  {"create", {"c"}, {}, [this](const arg_list&) { m_RunnerMode |= runner_mode::create; },
                    { {"regular_test", {"regular"}, {"qualified::class_name<class T>", "equivalent type"},
                       nascent_test_data{"semantic", "regular", *this}, semanticsOptions
                      },
@@ -268,6 +272,8 @@ namespace sequoia::testing
                   },
                   {"init", {"i"}, {"copyright owner", "path ending with project name", "code indent"},
                     [this](const arg_list& args) {
+                      m_RunnerMode |= runner_mode::init;
+
                       const auto ind{
                         [](std::string arg) {
                           
@@ -310,7 +316,7 @@ namespace sequoia::testing
                       m_ConcurrencyMode = i ? concurrency_mode::test : concurrency_mode::family;
                     }
                   },
-                  {"--verbose",  {"-v"}, {}, [this](const arg_list&) { m_OutputMode |= output_mode::verbose; }},
+                  {"--verbose",  {"-v"}, {}, [this](const arg_list&) { m_OutputMode = output_mode::verbose; }},
                   {"--recovery", {"-r"}, {},
                     [this,recoveryDir{recovery_path(m_Paths.output())}] (const arg_list&) {
                       std::filesystem::create_directory(recoveryDir);
@@ -339,11 +345,14 @@ namespace sequoia::testing
 
     if(!help.empty())
     {
-      m_OutputMode |= output_mode::help;
+      m_RunnerMode &= runner_mode::help;
       stream() << help;
     }
     else
     {
+      if(m_RunnerMode == runner_mode::none)
+        m_RunnerMode = runner_mode::test;
+
       check_argument_consistency();
     }
   }
@@ -444,11 +453,11 @@ namespace sequoia::testing
     const auto detail{summary_detail::failure_messages | summary_detail::timings};
     for(const auto& s : results.logs)
     {
-      if(mode(output_mode::verbose)) output += summarize(s, detail, tab, tab);
+      if(m_OutputMode == output_mode::verbose) output += summarize(s, detail, tab, tab);
       familySummary.log += s;
     }
 
-    if(mode(output_mode::verbose))
+    if(m_OutputMode == output_mode::verbose)
     {
       output.insert(0, report_time(familySummary));
     }
@@ -552,7 +561,7 @@ namespace sequoia::testing
 
   void test_runner::execute([[maybe_unused]] timer_resolution r)
   {
-    if(!mode(output_mode::help))
+    if(!mode(runner_mode::help))
     {
       init_projects();
       create_tests();
@@ -563,7 +572,7 @@ namespace sequoia::testing
   void test_runner::create_tests()
   {
     using namespace runtime;
-    if(!m_NascentTests.empty())
+    if(mode(runner_mode::create))
     {
       if(fs::exists(m_Paths.main_cpp_dir()) && fs::exists(m_Paths.cmade_build_dir()))
       {
@@ -597,9 +606,9 @@ namespace sequoia::testing
 
     finalize_concurrency_mode();
 
-    const bool selected{!m_SelectedFamilies.empty() || !m_SelectedSources.empty()};
-    if((m_NascentTests.empty() && m_NascentProjects.empty()) || selected)
+    if(mode(runner_mode::test))
     {
+      const bool selected{!m_SelectedFamilies.empty() || !m_SelectedSources.empty()};
       log_summary summary{};
       if(!m_Families.empty())
       {
@@ -664,7 +673,7 @@ namespace sequoia::testing
 
   void test_runner::init_projects()
   {
-    if(m_NascentProjects.empty()) return;
+    if(!mode(runner_mode::init)) return;
 
     stream() << "Initializing Project(s)....\n\n";
 

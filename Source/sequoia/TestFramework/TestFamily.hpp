@@ -22,12 +22,7 @@
 
 namespace sequoia::testing
 {
-  enum class output_mode { standard=0, help=1, verbose=2 };
   enum class update_mode { none=0, soft};
-
-  template<>
-  struct as_bitmask<output_mode> : std::true_type
-  {};
 
   /*! \brief Allows tests to be grouped together into a family of related tests
 
