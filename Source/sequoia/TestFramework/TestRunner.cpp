@@ -96,9 +96,10 @@ namespace sequoia::testing
     using namespace parsing::commandline;
 
     std::vector<vessel> nascentTests{};
+    std::vector<project_data> nascentProjects{};
 
     const option familyOption{"--family", {"-f"}, {"family"},
-      [this,&nascentTests](const arg_list& args){
+      [&nascentTests](const arg_list& args){
         if(nascentTests.empty())
           throw std::logic_error{"Unable to find nascent test"};
 
@@ -107,7 +108,7 @@ namespace sequoia::testing
     };
 
     const option equivOption{"--equivalent-type", {"-e"}, {"equivalent_type"},
-      [this,&nascentTests](const arg_list& args){
+      [&nascentTests](const arg_list& args){
         if(nascentTests.empty())
           throw std::logic_error{"Unable to find nascent test"};
 
@@ -123,7 +124,7 @@ namespace sequoia::testing
     };
 
     const option headerOption{"--class-header", {"-ch"}, {"header of class to test"},
-      [this,&nascentTests](const arg_list& args){
+      [&nascentTests](const arg_list& args){
         if(nascentTests.empty())
           throw std::logic_error{"Unable to find nascent test"};
 
@@ -132,7 +133,7 @@ namespace sequoia::testing
     };
 
     const option nameOption{"--forename", {"-name"}, {"forename"},
-      [this,&nascentTests](const arg_list& args){
+      [&nascentTests](const arg_list& args){
         if(nascentTests.empty())
           throw std::logic_error{"Unable to find nascent test"};
 
@@ -141,7 +142,7 @@ namespace sequoia::testing
     };
 
     const option genFreeSourceOption{"gen-source", {"g"}, {"namespace"},
-      [this,&nascentTests](const arg_list& args) {
+      [&nascentTests](const arg_list& args) {
         if(nascentTests.empty())
           throw std::logic_error{"Unable to find nascent test"};
 
@@ -162,7 +163,7 @@ namespace sequoia::testing
     };
 
     const option genSemanticsSourceOption{"gen-source", {"g"}, {"source dir"},
-      [this,&nascentTests](const arg_list& args) {
+      [&nascentTests](const arg_list& args) {
         if(nascentTests.empty())
           throw std::logic_error{"Unable to find nascent test"};
 
@@ -240,7 +241,7 @@ namespace sequoia::testing
                     }
                   },
                   {"init", {"i"}, {"copyright owner", "path ending with project name", "code indent"},
-                    [this](const arg_list& args) {
+                    [this,&nascentProjects](const arg_list& args) {
                       m_RunnerMode |= runner_mode::init;
 
                       const auto ind{
@@ -251,13 +252,15 @@ namespace sequoia::testing
                         }
                       };
 
-                      m_NascentProjects.push_back(project_data{args[0], args[1], ind(args[2])});
+                      nascentProjects.push_back(project_data{args[0], args[1], ind(args[2])});
                     },
-                    { {"--no-build", {}, {}, [this](const arg_list&) { m_NascentProjects.back().do_build = build_invocation::no; }},
-                      {"--to-files",  {}, {"filename (A file of this name will appear in multiple directories)"}, 
-                        [this](const arg_list& args) { m_NascentProjects.back().output = args[0]; }},
-                      {"--no-ide", {}, {}, [this](const arg_list&) {
-                          auto& build{m_NascentProjects.back().do_build};
+                    { {"--no-build", {}, {},
+                        [this,&nascentProjects](const arg_list&) { nascentProjects.back().do_build = build_invocation::no; }},
+                      {"--to-files",  {}, {"filename (A file of this name will appear in multiple directories)"},
+                        [this,&nascentProjects](const arg_list& args) { nascentProjects.back().output = args[0]; }},
+                      {"--no-ide", {}, {},
+                        [this,&nascentProjects](const arg_list&) {
+                          auto& build{nascentProjects.back().do_build};
                           if(build == build_invocation::launch_ide) build = build_invocation::yes;
                         }
                       }
@@ -327,7 +330,7 @@ namespace sequoia::testing
 
       check_argument_consistency();
       finalize_nascent_tests();
-      init_projects();
+      init_projects(nascentProjects);
     }
   }
 
@@ -629,12 +632,12 @@ namespace sequoia::testing
     }
   }
 
-  void test_runner::init_projects()
+  void test_runner::init_projects(const std::vector<project_data>& projects)
   {
     if(!mode(runner_mode::init)) return;
 
     stream() << "Initializing Project(s)....\n\n";
 
-    testing::init_projects(m_Paths.project_root(), m_NascentProjects, stream());
+    testing::init_projects(m_Paths.project_root(), projects, stream());
   }
 }

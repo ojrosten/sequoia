@@ -135,7 +135,6 @@ namespace sequoia::testing
     std::vector<test_family>  m_Families{};
     family_map                m_SelectedFamilies{};
     source_list               m_SelectedSources{};
-    std::vector<project_data> m_NascentProjects{};
     recovery_paths            m_Recovery{};
     runner_mode               m_RunnerMode{runner_mode::none};
     output_mode               m_OutputMode{output_mode::standard};
@@ -188,7 +187,7 @@ namespace sequoia::testing
 
     void finalize_nascent_tests();
 
-    void init_projects();
+    void init_projects(const std::vector<project_data>& projects);
 
     [[nodiscard]]
     bool mode(runner_mode m) const noexcept
