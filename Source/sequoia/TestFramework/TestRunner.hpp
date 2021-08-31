@@ -13,8 +13,6 @@
 
 #include "sequoia/TestFramework/TestFamily.hpp"
 
-#include "sequoia/TestFramework/ProjectCreator.hpp"
-
 #include "sequoia/Parsing/CommandLineArguments.hpp"
 #include "sequoia/PlatformSpecific/Helpers.hpp"
 #include "sequoia/TextProcessing/Indent.hpp"
@@ -172,13 +170,6 @@ namespace sequoia::testing
 
       if constexpr(sizeof...(Tests) > 0) add_tests(f, std::forward<Tests>(tests)...);
     }
-
-    [[nodiscard]]
-    static std::string stringify(concurrency_mode mode);
-
-    void finalize_nascent_tests();
-
-    void init_projects(const std::vector<project_data>& projects);
 
     [[nodiscard]]
     bool mode(runner_mode m) const noexcept

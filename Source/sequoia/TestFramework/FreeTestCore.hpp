@@ -235,6 +235,9 @@ namespace sequoia::testing
     test,      /// tests are executed concurrently, independently of their families
   };
 
+  [[nodiscard]]
+  std::string to_string(concurrency_mode mode);
+
   class test_vessel
   {
   public:

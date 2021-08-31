@@ -11,13 +11,14 @@
 
 #include "sequoia/TestFramework/TestRunner.hpp"
 
-#include "sequoia/TestFramework/TestCreator.hpp"
-#include "sequoia/TestFramework/ProjectCreator.hpp"
-
 #include "sequoia/Parsing/CommandLineArguments.hpp"
-#include "sequoia/TestFramework/Summary.hpp"
-#include "sequoia/TestFramework/FileEditors.hpp"
+
 #include "sequoia/TestFramework/DependencyAnalyzer.hpp"
+#include "sequoia/TestFramework/FileEditors.hpp"
+#include "sequoia/TestFramework/ProjectCreator.hpp"
+#include "sequoia/TestFramework/Summary.hpp"
+#include "sequoia/TestFramework/TestCreator.hpp"
+
 #include "sequoia/TextProcessing/Substitutions.hpp"
 
 #include <fstream>
@@ -345,8 +346,12 @@ namespace sequoia::testing
         m_RunnerMode = runner_mode::test;
 
       check_argument_consistency();
-      finalize_nascent_tests();
-      init_projects(nascentProjects);
+
+      if(mode(runner_mode::create))
+        cmake_nascent_tests(m_Paths.main_cpp_dir(), m_Paths.cmade_build_dir(), stream());
+  
+      if(mode(runner_mode::init))
+        init_projects(m_Paths.project_root(), nascentProjects, stream());
     }
   }
 
@@ -398,24 +403,6 @@ namespace sequoia::testing
         stream() << '[' << dur << unit << "]\n\n";
       }
     }
-  }
-
-  [[nodiscard]]
-  std::string test_runner::stringify(concurrency_mode mode)
-  {
-    switch(mode)
-    {
-    case concurrency_mode::serial:
-      return "Serial";
-    case concurrency_mode::dynamic:
-      return "Dynamic";
-    case concurrency_mode::family:
-      return "Family";
-    case concurrency_mode::test:
-      return "Test";
-    }
-
-    throw std::logic_error{"Unknown option for concurrency_mode"};
   }
 
   [[nodiscard]]
@@ -592,7 +579,7 @@ namespace sequoia::testing
         }
         else
         {
-          stream() << "\n\t--Using asynchronous execution, level: " << stringify(m_ConcurrencyMode) << "\n\n";
+          stream() << "\n\t--Using asynchronous execution, level: " << to_string(m_ConcurrencyMode) << "\n\n";
           std::vector<std::pair<std::string, std::future<test_family::results>>> results{};
           results.reserve(m_Families.size());
 
@@ -638,22 +625,5 @@ namespace sequoia::testing
     }
 
     check_for_missing_tests();
-  }
-
-  void test_runner::finalize_nascent_tests()
-  {
-    if(mode(runner_mode::create))
-    {
-      cmake_nascent_tests(m_Paths.main_cpp_dir(), m_Paths.cmade_build_dir(), stream());
-    }
-  }
-
-  void test_runner::init_projects(const std::vector<project_data>& projects)
-  {
-    if(!mode(runner_mode::init)) return;
-
-    stream() << "Initializing Project(s)....\n\n";
-
-    testing::init_projects(m_Paths.project_root(), projects, stream());
   }
 }

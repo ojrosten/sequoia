@@ -128,7 +128,8 @@ namespace sequoia::testing
 
   void init_projects(const std::filesystem::path& parentProjRoot, const std::vector<project_data>& projects, std::ostream& stream)
   {
-    
+    stream << "Initializing Project(s)....\n\n";
+
     for(const auto& data : projects)
     {
       if(data.project_root.empty())
