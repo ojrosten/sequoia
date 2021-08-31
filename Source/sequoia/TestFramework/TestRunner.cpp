@@ -271,11 +271,11 @@ namespace sequoia::testing
                       nascentProjects.push_back(project_data{args[0], args[1], ind(args[2])});
                     },
                     { {"--no-build", {}, {},
-                        [this,&nascentProjects](const arg_list&) { nascentProjects.back().do_build = build_invocation::no; }},
+                        [&nascentProjects](const arg_list&) { nascentProjects.back().do_build = build_invocation::no; }},
                       {"--to-files",  {}, {"filename (A file of this name will appear in multiple directories)"},
-                        [this,&nascentProjects](const arg_list& args) { nascentProjects.back().output = args[0]; }},
+                        [&nascentProjects](const arg_list& args) { nascentProjects.back().output = args[0]; }},
                       {"--no-ide", {}, {},
-                        [this,&nascentProjects](const arg_list&) {
+                        [&nascentProjects](const arg_list&) {
                           auto& build{nascentProjects.back().do_build};
                           if(build == build_invocation::launch_ide) build = build_invocation::yes;
                         }

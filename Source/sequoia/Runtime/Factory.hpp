@@ -15,6 +15,7 @@
 #include <tuple>
 #include <stdexcept>
 #include <algorithm>
+#include <string>
 
 namespace sequoia::runtime
 {
