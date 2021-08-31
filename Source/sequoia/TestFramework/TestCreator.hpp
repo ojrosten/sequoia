@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include "sequoia/Runtime/Factory.hpp"
 #include "sequoia/TestFramework/FileSystem.hpp"
 #include "sequoia/TextProcessing/Indent.hpp"
 
@@ -254,4 +255,8 @@ namespace sequoia::testing
     [[nodiscard]]
     std::filesystem::path when_header_absent(const std::filesystem::path& filename);
    };
+
+
+  using nascent_test_factory = runtime::factory<nascent_semantics_test, nascent_allocation_test, nascent_behavioural_test>;
+  using nascent_test_vessel = typename nascent_test_factory::vessel;
 }

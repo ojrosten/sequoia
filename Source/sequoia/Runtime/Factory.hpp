@@ -13,6 +13,8 @@
 #include <variant>
 #include <array>
 #include <tuple>
+#include <stdexcept>
+#include <algorithm>
 
 namespace sequoia::runtime
 {

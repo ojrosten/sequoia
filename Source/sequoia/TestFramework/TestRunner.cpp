@@ -11,6 +11,7 @@
 
 #include "sequoia/TestFramework/TestRunner.hpp"
 
+#include "sequoia/TestFramework/TestCreator.hpp"
 #include "sequoia/TestFramework/ProjectCreator.hpp"
 
 #include "sequoia/Parsing/CommandLineArguments.hpp"
@@ -25,6 +26,54 @@ namespace sequoia::testing
 {
   namespace fs = std::filesystem;
 
+  namespace
+  {
+    struct nascent_test_data
+    {
+      nascent_test_data(std::string type, std::string subType, test_runner& r, std::vector<nascent_test_vessel>& nascentTests);
+
+      void operator()(const parsing::commandline::arg_list& args);
+
+      std::string genus, species;
+      test_runner& runner;
+      std::vector<nascent_test_vessel>& nascent_tests;
+    };
+
+
+    nascent_test_data::nascent_test_data(std::string type, std::string subType, test_runner& r, std::vector<nascent_test_vessel>& nascentTests)
+      : genus{std::move(type)}
+      , species{std::move(subType)}
+      , runner{r}
+      , nascent_tests{nascentTests}
+    {}
+
+    void nascent_test_data::operator()(const parsing::commandline::arg_list& args)
+    {
+      nascent_test_factory factory{{"semantic", "allocation", "behavioural"}, runner.paths(), runner.copyright(), runner.code_indent(), runner.stream()};
+      auto nascent{factory.create(genus)};
+
+      std::visit(
+        variant_visitor{
+          [&args,&species = species](nascent_semantics_test& nascent) {
+            nascent.test_type(species);
+            nascent.qualified_name(args[0]);
+            nascent.add_equivalent_type(args[1]);
+          },
+          [&args,&species = species](nascent_allocation_test& nascent) {
+            nascent.test_type(species);
+            nascent.forename(args[0]);
+          },
+          [&args,&species = species](nascent_behavioural_test& nascent) {
+            nascent.test_type(species);
+            nascent.header(args[0]);
+          }
+        },
+        nascent);
+
+      nascent_tests.emplace_back(std::move(nascent));
+    }
+  }
+
   [[nodiscard]]
   std::string report_time(const test_family::summary& s)
   {
@@ -32,39 +81,6 @@ namespace sequoia::testing
   }
 
   //=========================================== test_runner ===========================================//
-
-  test_runner::nascent_test_data::nascent_test_data(std::string type, std::string subType, test_runner& r, std::vector<vessel>& nascentTests)
-    : genus{std::move(type)}
-    , species{std::move(subType)}
-    , runner{r}
-    , nascent_tests{nascentTests}
-  {}
-
-  void test_runner::nascent_test_data::operator()(const parsing::commandline::arg_list& args)
-  {
-    creation_factory factory{{"semantic", "allocation", "behavioural"}, runner.m_Paths, runner.m_Copyright, runner.m_CodeIndent, runner.stream()};
-    auto nascent{factory.create(genus)};
-
-    std::visit(
-        variant_visitor{
-          [&args,&species=species](nascent_semantics_test& nascent){
-            nascent.test_type(species);
-            nascent.qualified_name(args[0]);
-            nascent.add_equivalent_type(args[1]);
-          },
-          [&args,&species=species](nascent_allocation_test& nascent){
-            nascent.test_type(species);
-            nascent.forename(args[0]);
-          },
-          [&args,&species=species](nascent_behavioural_test& nascent){
-            nascent.test_type(species);
-            nascent.header(args[0]);
-          }
-        },
-        nascent);
-
-    nascent_tests.emplace_back(std::move(nascent));
-  }
 
   auto test_runner::time_stamps::from_file(const std::filesystem::path& stampFile) -> stamp
   {
@@ -95,7 +111,7 @@ namespace sequoia::testing
   {
     using namespace parsing::commandline;
 
-    std::vector<vessel> nascentTests{};
+    std::vector<nascent_test_vessel> nascentTests{};
     std::vector<project_data> nascentProjects{};
 
     const option familyOption{"--family", {"-f"}, {"family"},

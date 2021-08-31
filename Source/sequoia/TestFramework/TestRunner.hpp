@@ -13,13 +13,11 @@
 
 #include "sequoia/TestFramework/TestFamily.hpp"
 
-#include "sequoia/TestFramework/TestCreator.hpp"
 #include "sequoia/TestFramework/ProjectCreator.hpp"
 
 #include "sequoia/Parsing/CommandLineArguments.hpp"
 #include "sequoia/PlatformSpecific/Helpers.hpp"
 #include "sequoia/TextProcessing/Indent.hpp"
-#include "sequoia/Runtime/Factory.hpp"
 
 #include <map>
 #include <iostream>
@@ -90,21 +88,16 @@ namespace sequoia::testing
     [[nodiscard]]
     concurrency_mode concurrency() const noexcept { return m_ConcurrencyMode; }
 
+    std::ostream& stream() noexcept { return *m_Stream; }
+
+    const project_paths& paths() const noexcept { return m_Paths; }
+
+    const std::string& copyright() const noexcept { return m_Copyright; }
+
+    const indentation& code_indent() const noexcept { return m_CodeIndent; }
+
   private:
     enum class output_mode { standard = 0, verbose = 1 };
-    using creation_factory = runtime::factory<nascent_semantics_test, nascent_allocation_test, nascent_behavioural_test>;
-    using vessel = typename creation_factory::vessel;
-
-    struct nascent_test_data
-    {
-      nascent_test_data(std::string type, std::string subType, test_runner& r, std::vector<vessel>& nascentTests);
-
-      void operator()(const parsing::commandline::arg_list& args);
-
-      std::string genus, species;
-      test_runner& runner;
-      std::vector<vessel>& nascent_tests;
-    };
 
     struct time_stamps
     {
@@ -142,8 +135,6 @@ namespace sequoia::testing
     concurrency_mode          m_ConcurrencyMode{concurrency_mode::serial};
 
     std::vector<std::filesystem::path> m_FailedTestSourceFiles;
-
-    std::ostream& stream() noexcept { return *m_Stream; }
 
     [[nodiscard]]
     bool pruned() const noexcept;
