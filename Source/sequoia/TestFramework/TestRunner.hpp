@@ -92,19 +92,18 @@ namespace sequoia::testing
 
   private:
     enum class output_mode { standard = 0, verbose = 1 };
+    using creation_factory = runtime::factory<nascent_semantics_test, nascent_allocation_test, nascent_behavioural_test>;
+    using vessel = typename creation_factory::vessel;
 
     struct nascent_test_data
     {
-      nascent_test_data(std::string type, std::string subType, test_runner& r)
-        : genus{std::move(type)}
-        , species{std::move(subType)}
-        , runner{r}
-      {}
+      nascent_test_data(std::string type, std::string subType, test_runner& r, std::vector<vessel>& nascentTests);
 
       void operator()(const parsing::commandline::arg_list& args);
 
       std::string genus, species;
       test_runner& runner;
+      std::vector<vessel>& nascent_tests;
     };
 
     struct time_stamps
@@ -124,12 +123,8 @@ namespace sequoia::testing
       std::string include_cutoff{};
     };
 
-    friend nascent_test_data;
-
     using family_map        = std::map<std::string, bool, std::less<>>;
     using source_list       = std::vector<std::pair<std::filesystem::path, bool>>;
-    using creation_factory  = runtime::factory<nascent_semantics_test, nascent_allocation_test, nascent_behavioural_test>;
-    using vessel            = typename creation_factory::vessel;
 
     std::string               m_Copyright{};
     project_paths             m_Paths;
@@ -140,7 +135,6 @@ namespace sequoia::testing
     std::vector<test_family>  m_Families{};
     family_map                m_SelectedFamilies{};
     source_list               m_SelectedSources{};
-    std::vector<vessel>       m_NascentTests{};
     std::vector<project_data> m_NascentProjects{};
     recovery_paths            m_Recovery{};
     runner_mode               m_RunnerMode{runner_mode::none};
@@ -192,7 +186,7 @@ namespace sequoia::testing
     [[nodiscard]]
     static std::string stringify(concurrency_mode mode);
 
-    void create_tests();
+    void finalize_nascent_tests();
 
     void init_projects();
 

@@ -33,10 +33,15 @@ namespace sequoia::testing
 
   //=========================================== test_runner ===========================================//
 
+  test_runner::nascent_test_data::nascent_test_data(std::string type, std::string subType, test_runner& r, std::vector<vessel>& nascentTests)
+    : genus{std::move(type)}
+    , species{std::move(subType)}
+    , runner{r}
+    , nascent_tests{nascentTests}
+  {}
+
   void test_runner::nascent_test_data::operator()(const parsing::commandline::arg_list& args)
   {
-    auto& nascentTests{runner.m_NascentTests};
-
     creation_factory factory{{"semantic", "allocation", "behavioural"}, runner.m_Paths, runner.m_Copyright, runner.m_CodeIndent, runner.stream()};
     auto nascent{factory.create(genus)};
 
@@ -58,7 +63,7 @@ namespace sequoia::testing
         },
         nascent);
 
-    nascentTests.emplace_back(std::move(nascent));
+    nascent_tests.emplace_back(std::move(nascent));
   }
 
   auto test_runner::time_stamps::from_file(const std::filesystem::path& stampFile) -> stamp
@@ -88,21 +93,22 @@ namespace sequoia::testing
 
   void test_runner::process_args(int argc, char** argv)
   {
-
     using namespace parsing::commandline;
 
+    std::vector<vessel> nascentTests{};
+
     const option familyOption{"--family", {"-f"}, {"family"},
-      [this](const arg_list& args){
-        if(m_NascentTests.empty())
+      [this,&nascentTests](const arg_list& args){
+        if(nascentTests.empty())
           throw std::logic_error{"Unable to find nascent test"};
 
-        std::visit(variant_visitor{[&args](auto& nascent){ nascent.family(args[0]);}}, m_NascentTests.back());
+        std::visit(variant_visitor{[&args](auto& nascent){ nascent.family(args[0]);}}, nascentTests.back());
       }
     };
 
     const option equivOption{"--equivalent-type", {"-e"}, {"equivalent_type"},
-      [this](const arg_list& args){
-        if(m_NascentTests.empty())
+      [this,&nascentTests](const arg_list& args){
+        if(nascentTests.empty())
           throw std::logic_error{"Unable to find nascent test"};
 
         auto visitor{
@@ -112,31 +118,31 @@ namespace sequoia::testing
           }
         };
 
-        std::visit(visitor, m_NascentTests.back());
+        std::visit(visitor, nascentTests.back());
       }
     };
 
     const option headerOption{"--class-header", {"-ch"}, {"header of class to test"},
-      [this](const arg_list& args){
-        if(m_NascentTests.empty())
+      [this,&nascentTests](const arg_list& args){
+        if(nascentTests.empty())
           throw std::logic_error{"Unable to find nascent test"};
 
-        std::visit(variant_visitor{[&args](auto& nascent){ nascent.header(args[0]); }}, m_NascentTests.back());
+        std::visit(variant_visitor{[&args](auto& nascent){ nascent.header(args[0]); }}, nascentTests.back());
       }
     };
 
     const option nameOption{"--forename", {"-name"}, {"forename"},
-      [this](const arg_list& args){
-        if(m_NascentTests.empty())
+      [this,&nascentTests](const arg_list& args){
+        if(nascentTests.empty())
           throw std::logic_error{"Unable to find nascent test"};
 
-        std::visit(variant_visitor{[&args](auto& nascent){ nascent.forename(args[0]); }}, m_NascentTests.back());
+        std::visit(variant_visitor{[&args](auto& nascent){ nascent.forename(args[0]); }}, nascentTests.back());
       }
     };
 
     const option genFreeSourceOption{"gen-source", {"g"}, {"namespace"},
-      [this](const arg_list& args) {
-        if(m_NascentTests.empty())
+      [this,&nascentTests](const arg_list& args) {
+        if(nascentTests.empty())
           throw std::logic_error{"Unable to find nascent test"};
 
         using src_opt = nascent_test_base::gen_source_option;
@@ -151,13 +157,13 @@ namespace sequoia::testing
           }
         };
 
-        std::visit(visitor, m_NascentTests.back());
+        std::visit(visitor, nascentTests.back());
       }
     };
 
     const option genSemanticsSourceOption{"gen-source", {"g"}, {"source dir"},
-      [this](const arg_list& args) {
-        if(m_NascentTests.empty())
+      [this,&nascentTests](const arg_list& args) {
+        if(nascentTests.empty())
           throw std::logic_error{"Unable to find nascent test"};
 
         using src_opt = nascent_test_base::gen_source_option;
@@ -172,12 +178,11 @@ namespace sequoia::testing
           }
         };
 
-        std::visit(visitor, m_NascentTests.back());
+        std::visit(visitor, nascentTests.back());
       }
     };
 
     const std::vector<option> semanticsOptions{equivOption, familyOption, headerOption, genSemanticsSourceOption};
-
     const std::vector<option> allocationOptions{familyOption, headerOption};
 
     const auto help{
@@ -196,6 +201,7 @@ namespace sequoia::testing
                   },
                   {"prune", {"p"}, {},
                     [this](const arg_list&) {
+                      m_RunnerMode |= runner_mode::test;
                       m_PruneInfo.stamps.ondisk = time_stamps::from_file(prune_path(m_Paths.output(), m_Paths.main_cpp_dir()));
                     },
                     {{"--cutoff", {"-c"}, {"Cutoff for #include search e.g. 'namespace'"},
@@ -204,31 +210,32 @@ namespace sequoia::testing
                       }}
                     }
                   },
-                  {"create", {"c"}, {}, [this](const arg_list&) { m_RunnerMode |= runner_mode::create; },
+                  {"create", {"c"}, {}, [](const arg_list&) {},
                    { {"regular_test", {"regular"}, {"qualified::class_name<class T>", "equivalent type"},
-                      nascent_test_data{"semantic", "regular", *this}, semanticsOptions
+                      nascent_test_data{"semantic", "regular", *this, nascentTests}, semanticsOptions
                      },
                      {"move_only_test", {"move_only"}, {"qualified::class_name<class T>", "equivalent type"},
-                      nascent_test_data{"semantic", "move_only", *this}, semanticsOptions
+                      nascent_test_data{"semantic", "move_only", *this, nascentTests}, semanticsOptions
                      },
                      {"regular_allocation_test", {"regular_allocation", "allocation_test"}, {"raw class name"},
-                      nascent_test_data{"allocation", "regular_allocation", *this}, allocationOptions
+                      nascent_test_data{"allocation", "regular_allocation", *this, nascentTests}, allocationOptions
                      },
                      {"move_only_allocation_test", {"move_only_allocation"}, {"raw class name"},
-                      nascent_test_data{"allocation", "move_only_allocation", *this}, allocationOptions
+                      nascent_test_data{"allocation", "move_only_allocation", *this, nascentTests}, allocationOptions
                      },
                      {"free_test", {"free"}, {"header"},
-                      nascent_test_data{"behavioural", "free", *this}, {familyOption, nameOption, genFreeSourceOption}
+                      nascent_test_data{"behavioural", "free", *this, nascentTests}, {familyOption, nameOption, genFreeSourceOption}
                      },
                      {"performance_test", {"performance"}, {"header"},
-                       nascent_test_data{"behavioural", "performance", *this}, {familyOption}
+                       nascent_test_data{"behavioural", "performance", *this, nascentTests}, {familyOption}
                      }
                    },
-                   [this](const arg_list&) {
-                      if(!m_NascentTests.empty())
+                   [this,&nascentTests](const arg_list&) {
+                      if(!nascentTests.empty())
                       {
+                        m_RunnerMode |= runner_mode::create;
                         variant_visitor visitor{ [](auto& nascent) { nascent.finalize(); } };
-                        std::visit(visitor, m_NascentTests.back());
+                        std::visit(visitor, nascentTests.back());
                       }
                     }
                   },
@@ -257,7 +264,10 @@ namespace sequoia::testing
                     }
                   },
                   {"update-materials", {"u"}, {},
-                    [this](const arg_list&) { m_UpdateMode = update_mode::soft; }
+                    [this](const arg_list&) {
+                      m_RunnerMode |= runner_mode::test;
+                      m_UpdateMode = update_mode::soft;
+                    }
                   },
                   {"dump", {}, {},
                     [this, recoveryDir{recovery_path(m_Paths.output())}](const arg_list&) {
@@ -316,6 +326,8 @@ namespace sequoia::testing
         m_RunnerMode = runner_mode::test;
 
       check_argument_consistency();
+      finalize_nascent_tests();
+      init_projects();
     }
   }
 
@@ -525,22 +537,7 @@ namespace sequoia::testing
   {
     if(!mode(runner_mode::help))
     {
-      init_projects();
-      create_tests();
       run_tests();
-    }
-  }
-
-  void test_runner::create_tests()
-  {
-    using namespace runtime;
-    if(mode(runner_mode::create))
-    {
-      if(fs::exists(m_Paths.main_cpp_dir()) && fs::exists(m_Paths.cmade_build_dir()))
-      {
-        stream() << "\n";
-        invoke(cd_cmd(m_Paths.main_cpp_dir()) && cmake_cmd(m_Paths.cmade_build_dir(), {}));
-      }
     }
   }
 
@@ -622,6 +619,14 @@ namespace sequoia::testing
     }
 
     check_for_missing_tests();
+  }
+
+  void test_runner::finalize_nascent_tests()
+  {
+    if(mode(runner_mode::create))
+    {
+      cmake_nascent_tests(m_Paths.main_cpp_dir(), m_Paths.cmade_build_dir(), stream());
+    }
   }
 
   void test_runner::init_projects()

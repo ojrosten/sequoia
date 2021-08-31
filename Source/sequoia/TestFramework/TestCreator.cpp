@@ -11,6 +11,7 @@
 #include "sequoia/TestFramework/TestRunnerUtilities.hpp"
 
 #include "sequoia/Parsing/CommandLineArguments.hpp"
+#include "sequoia/Runtime/ShellCommands.hpp"
 #include "sequoia/Streaming/Streaming.hpp"
 #include "sequoia/TextProcessing/Substitutions.hpp"
 
@@ -81,7 +82,6 @@ namespace sequoia::testing
     return true;
   }
 
-  
   [[nodiscard]]
   std::string to_string(const template_data& data)
   {
@@ -169,6 +169,18 @@ namespace sequoia::testing
 
     return decomposition;
   }
+
+  void cmake_nascent_tests(const std::filesystem::path& mainCppDir, const std::filesystem::path& buildDir, std::ostream& stream)
+  {
+    using namespace runtime;
+
+    if(fs::exists(mainCppDir) && fs::exists(buildDir))
+    {
+      stream << "\n";
+      invoke(cd_cmd(mainCppDir) && cmake_cmd(buildDir, {}));
+    }
+  }
+
 
   //=========================================== nascent_test_base ===========================================//
 
