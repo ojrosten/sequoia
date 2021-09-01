@@ -81,8 +81,6 @@ namespace sequoia::testing
 
   //=========================================== test_runner ===========================================//
 
-
-
   test_runner::test_runner(int argc, char** argv, std::string copyright, project_paths paths, std::string codeIndent, std::ostream& stream)
     : m_Copyright{std::move(copyright)}
     , m_Selector{std::move(paths)}

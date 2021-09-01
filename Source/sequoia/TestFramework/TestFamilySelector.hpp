@@ -7,6 +7,10 @@
 
 #pragma once
 
+/*! \file
+    \brief Mechanism for selecting which test families to run.
+  */
+
 #include "sequoia/TestFramework/FileSystem.hpp"
 #include "sequoia/TestFramework/TestFamily.hpp"
 

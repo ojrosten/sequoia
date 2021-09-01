@@ -7,6 +7,10 @@
 
 #pragma once
 
+/*! \file
+    \brief Utilities for creating new projects, especially from the commandline.
+  */
+
 #include "sequoia/Runtime/ShellCommands.hpp"
 #include "sequoia/TextProcessing/Indent.hpp"
 

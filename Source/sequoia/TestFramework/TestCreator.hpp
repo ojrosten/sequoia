@@ -7,6 +7,10 @@
 
 #pragma once
 
+/*! \file
+    \brief Utilities for creating new tests, especially from the commandline.
+  */
+
 #include "sequoia/Runtime/Factory.hpp"
 #include "sequoia/TestFramework/FileSystem.hpp"
 #include "sequoia/TextProcessing/Indent.hpp"

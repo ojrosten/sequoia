@@ -5,6 +5,10 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
+/*! \file
+    \brief Definitions for ProjectCreator.hpp"
+ */
+
 #include "sequoia/TestFramework/ProjectCreator.hpp"
 #include "sequoia/TestFramework/FileSystem.hpp"
 #include "sequoia/TestFramework/TestRunnerUtilities.hpp"
@@ -148,8 +152,8 @@ namespace sequoia::testing
       if(std::find_if(name.cbegin(), name.cend(), [](char c) { return !std::isalnum(c) || (c == '_') || (c == '-'); }) != name.cend())
       {
         throw std::runtime_error{std::string{"Please ensure the project name '"}
-        .append(name)
-        .append("' consists of just alpha-numeric characters, underscores and dashes\n")};
+          .append(name)
+          .append("' consists of just alpha-numeric characters, underscores and dashes\n")};
       }
 
       check_indent(data.code_indent);
@@ -190,11 +194,9 @@ namespace sequoia::testing
 
     using app_mode = shell_command::append_mode;
     return cd_cmd(root)
-      && shell_command {
-      "Placing under version control...", "git init -b trunk", output
-    }
-    && shell_command{"", "git add . ", output, app_mode::yes}
-    && shell_command{"", "git commit -m \"First commit\"", output, app_mode::yes};
+        && shell_command {"Placing under version control...", "git init -b trunk", output}
+        && shell_command{"", "git add . ", output, app_mode::yes}
+        && shell_command{"", "git commit -m \"First commit\"", output, app_mode::yes};
   }
 
   [[nodiscard]]
