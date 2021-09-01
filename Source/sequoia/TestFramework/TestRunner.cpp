@@ -11,12 +11,11 @@
 
 #include "sequoia/TestFramework/TestRunner.hpp"
 
-#include "sequoia/Parsing/CommandLineArguments.hpp"
-#include "sequoia/TestFramework/FileEditors.hpp"
 #include "sequoia/TestFramework/ProjectCreator.hpp"
 #include "sequoia/TestFramework/Summary.hpp"
 #include "sequoia/TestFramework/TestCreator.hpp"
 
+#include "sequoia/Parsing/CommandLineArguments.hpp"
 #include "sequoia/TextProcessing/Substitutions.hpp"
 
 #include <fstream>

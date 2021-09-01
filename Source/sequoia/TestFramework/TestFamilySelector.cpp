@@ -5,7 +5,7 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#include "sequoia/TestFramework/TestSelector.hpp"
+#include "sequoia/TestFramework/TestFamilySelector.hpp"
 
 #include "sequoia/TestFramework/DependencyAnalyzer.hpp"
 #include "sequoia/Parsing/CommandLineArguments.hpp"

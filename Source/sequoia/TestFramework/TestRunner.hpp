@@ -11,13 +11,11 @@
     \brief Utilities for running tests from the command line.
 */
 
-#include "sequoia/TestFramework/TestFamily.hpp"
-#include "sequoia/TestFramework/TestSelector.hpp"
+#include "sequoia/TestFramework/TestFamilySelector.hpp"
 
 #include "sequoia/PlatformSpecific/Helpers.hpp"
 #include "sequoia/TextProcessing/Indent.hpp"
 
-#include <map>
 #include <iostream>
 #include <chrono>
 
