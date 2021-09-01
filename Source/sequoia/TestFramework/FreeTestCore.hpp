@@ -227,17 +227,6 @@ namespace sequoia::testing
   using free_false_negative_test = basic_free_test<test_mode::false_negative>;
   using free_false_positive_test = basic_free_test<test_mode::false_positive>;
 
-  /*! \brief Specifies the granularity at which concurrent execution is applied */
-  enum class concurrency_mode{
-    serial,    /// serial execution
-    dynamic,   /// determined at runtime
-    family,    /// families of tests are executed concurrently
-    test,      /// tests are executed concurrently, independently of their families
-  };
-
-  [[nodiscard]]
-  std::string to_string(concurrency_mode mode);
-
   class test_vessel
   {
   public:

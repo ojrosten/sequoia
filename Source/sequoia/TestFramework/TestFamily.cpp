@@ -14,10 +14,29 @@
 #include "sequoia/TestFramework/Summary.hpp"
 
 #include <fstream>
+#include <future>
 
 namespace sequoia::testing
 {
   namespace fs = std::filesystem;
+
+  [[nodiscard]]
+  std::string to_string(concurrency_mode mode)
+  {
+    switch(mode)
+    {
+    case concurrency_mode::serial:
+      return "Serial";
+    case concurrency_mode::dynamic:
+      return "Dynamic";
+    case concurrency_mode::family:
+      return "Family";
+    case concurrency_mode::test:
+      return "Test";
+    }
+
+    throw std::logic_error{"Unknown option for concurrency_mode"};
+  }
 
   void test_family::set_materials(test& t)
   {

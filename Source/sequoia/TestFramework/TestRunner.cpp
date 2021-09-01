@@ -12,8 +12,6 @@
 #include "sequoia/TestFramework/TestRunner.hpp"
 
 #include "sequoia/Parsing/CommandLineArguments.hpp"
-
-#include "sequoia/TestFramework/DependencyAnalyzer.hpp"
 #include "sequoia/TestFramework/FileEditors.hpp"
 #include "sequoia/TestFramework/ProjectCreator.hpp"
 #include "sequoia/TestFramework/Summary.hpp"
@@ -22,6 +20,7 @@
 #include "sequoia/TextProcessing/Substitutions.hpp"
 
 #include <fstream>
+#include <future>
 
 namespace sequoia::testing
 {
@@ -50,7 +49,7 @@ namespace sequoia::testing
 
     void nascent_test_data::operator()(const parsing::commandline::arg_list& args)
     {
-      nascent_test_factory factory{{"semantic", "allocation", "behavioural"}, runner.paths(), runner.copyright(), runner.code_indent(), runner.stream()};
+      nascent_test_factory factory{{"semantic", "allocation", "behavioural"}, runner.proj_paths(), runner.copyright(), runner.code_indent(), runner.stream()};
       auto nascent{factory.create(genus)};
 
       std::visit(
@@ -83,19 +82,11 @@ namespace sequoia::testing
 
   //=========================================== test_runner ===========================================//
 
-  auto test_runner::time_stamps::from_file(const std::filesystem::path& stampFile) -> stamp
-  {
-    if(fs::exists(stampFile))
-    {
-      return fs::last_write_time(stampFile);
-    }
 
-    return std::nullopt;
-  }
 
   test_runner::test_runner(int argc, char** argv, std::string copyright, project_paths paths, std::string codeIndent, std::ostream& stream)
     : m_Copyright{std::move(copyright)}
-    , m_Paths{std::move(paths)}
+    , m_Selector{std::move(paths)}
     , m_CodeIndent{std::move(codeIndent)}
     , m_Stream{&stream}
   {
@@ -103,9 +94,9 @@ namespace sequoia::testing
 
     process_args(argc, argv);
 
-    fs::create_directory(m_Paths.output());
-    fs::create_directory(diagnostics_output_path(m_Paths.output()));
-    fs::create_directory(test_summaries_path(m_Paths.output()));
+    fs::create_directory(proj_paths().output());
+    fs::create_directory(diagnostics_output_path(proj_paths().output()));
+    fs::create_directory(test_summaries_path(proj_paths().output()));
   }
 
   void test_runner::process_args(int argc, char** argv)
@@ -208,23 +199,23 @@ namespace sequoia::testing
                 { {"test", {"t"}, {"test family name"},
                     [this](const arg_list& args) {
                       m_RunnerMode |= runner_mode::test;
-                      m_SelectedFamilies.emplace(args.front(), false);
+                      m_Selector.select_family(args.front());
                     }
                   },
                   {"select", {"s"}, {"source file name"},
                     [this](const arg_list& args) {
                       m_RunnerMode |= runner_mode::test;
-                      m_SelectedSources.emplace_back(fs::path{args.front()}.lexically_normal(), false);
+                      m_Selector.select_source_file(fs::path{args.front()});
                     }
                   },
                   {"prune", {"p"}, {},
                     [this](const arg_list&) {
                       m_RunnerMode |= runner_mode::test;
-                      m_PruneInfo.stamps.ondisk = time_stamps::from_file(prune_path(m_Paths.output(), m_Paths.main_cpp_dir()));
+                      m_Selector.enable_prune();
                     },
                     {{"--cutoff", {"-c"}, {"Cutoff for #include search e.g. 'namespace'"},
                       [this](const arg_list& args) {
-                        m_PruneInfo.include_cutoff = args[0];
+                        m_Selector.set_prune_cutoff(args[0]);
                       }}
                     }
                   },
@@ -290,10 +281,10 @@ namespace sequoia::testing
                     }
                   },
                   {"dump", {}, {},
-                    [this, recoveryDir{recovery_path(m_Paths.output())}](const arg_list&) {
+                    [this, recoveryDir{recovery_path(proj_paths().output())}](const arg_list&) {
                       std::filesystem::create_directory(recoveryDir);
-                      m_Recovery.dump_file = recoveryDir / "Dump.txt";
-                      std::filesystem::remove(m_Recovery.dump_file);
+                      m_Selector.dump_file(recoveryDir / "Dump.txt");
+                      std::filesystem::remove(m_Selector.dump_file());
                     }
                   },
                   {"--async", {"-a"}, {},
@@ -310,10 +301,10 @@ namespace sequoia::testing
                   },
                   {"--verbose",  {"-v"}, {}, [this](const arg_list&) { m_OutputMode = output_mode::verbose; }},
                   {"--recovery", {"-r"}, {},
-                    [this,recoveryDir{recovery_path(m_Paths.output())}] (const arg_list&) {
+                    [this,recoveryDir{recovery_path(proj_paths().output())}] (const arg_list&) {
                       std::filesystem::create_directory(recoveryDir);
-                      m_Recovery.recovery_file = recoveryDir / "Recovery.txt";
-                      std::filesystem::remove(m_Recovery.recovery_file);
+                      m_Selector.recovery_file(recoveryDir / "Recovery.txt");
+                      std::filesystem::remove(m_Selector.recovery_file());
                     }
                   }
                 },
@@ -330,8 +321,7 @@ namespace sequoia::testing
                     }()
                   };
 
-                  if(fs::exists(exePath))
-                    m_PruneInfo.stamps.executable = fs::last_write_time(exePath);
+                  m_Selector.executable_time_stamp(exePath);
                 })
         };
 
@@ -348,81 +338,19 @@ namespace sequoia::testing
       check_argument_consistency();
 
       if(mode(runner_mode::create))
-        cmake_nascent_tests(m_Paths.main_cpp_dir(), m_Paths.cmade_build_dir(), stream());
+        cmake_nascent_tests(proj_paths().main_cpp_dir(), proj_paths().cmade_build_dir(), stream());
   
       if(mode(runner_mode::init))
-        init_projects(m_Paths.project_root(), nascentProjects, stream());
+        init_projects(proj_paths().project_root(), nascentProjects, stream());
+
+      if(mode(runner_mode::test))
+        m_Selector.prune(stream());
     }
   }
 
   void test_runner::check_argument_consistency()
   {
-    using parsing::commandline::error;
-    using parsing::commandline::warning;
-
-    if(concurrent_execution() && (!m_Recovery.recovery_file.empty() || !m_Recovery.dump_file.empty()))
-      throw std::runtime_error{error("Can't run asynchronously in recovery/dump mode\n")};
-
-    if(pruned())
-    {
-      if((!m_SelectedFamilies.empty() || !m_SelectedSources.empty()))
-      {
-        stream() << warning("'prune' ignored if either test families or test source files are specified");
-        m_PruneInfo.stamps.ondisk = std::nullopt;
-      }
-      else
-      {
-        stream() << "\nAnalyzing dependencies...\n";
-        const auto start{std::chrono::steady_clock::now()};
-
-        if(auto maybeToRun{tests_to_run(m_Paths.source_root(), m_Paths.tests(), m_Paths.test_materials(), m_PruneInfo.stamps.ondisk, m_PruneInfo.stamps.executable, m_PruneInfo.include_cutoff)})
-        {
-          auto& toRun{maybeToRun.value()};
-
-          if(std::ifstream ifile{prune_path(m_Paths.output(), m_Paths.main_cpp_dir())})
-          {
-            while(ifile)
-            {
-              fs::path source{};
-              ifile >> source;
-              toRun.push_back(source);
-            }
-          }
-
-          std::sort(toRun.begin(), toRun.end());
-          auto last{std::unique(toRun.begin(), toRun.end())};
-          toRun.erase(last, toRun.end());
-
-          std::transform(toRun.begin(), toRun.end(), std::back_inserter(m_SelectedSources),
-            [](const fs::path& file) -> std::pair<fs::path, bool> { return {file, false}; });
-        }
-
-        const auto end{std::chrono::steady_clock::now()};
-
-        const auto [dur, unit]{testing::stringify(end - start)};
-        stream() << '[' << dur << unit << "]\n\n";
-      }
-    }
-  }
-
-  [[nodiscard]]
-  bool test_runner::pruned() const noexcept
-  {
-    return m_PruneInfo.stamps.ondisk.has_value();
-  }
-
-  bool test_runner::mark_family(std::string_view name)
-  {
-    if(m_SelectedFamilies.empty()) return true;
-
-    auto i{m_SelectedFamilies.find(name)};
-    if(i != m_SelectedFamilies.end())
-    {
-      i->second = true;
-      return true;
-    }
-
-    return false;
+    stream() << m_Selector.check_argument_consistency(m_ConcurrencyMode);
   }
 
   [[nodiscard]]
@@ -453,92 +381,6 @@ namespace sequoia::testing
     return familySummary;
   }
 
-  namespace
-  {
-    const std::string& convert(const std::string& s) { return s; }
-    std::string convert(const std::filesystem::path& p) { return p.generic_string(); }
-  }
-
-  void test_runner::check_for_missing_tests()
-  {
-    if(pruned()) return;
-
-    auto check{
-      [&stream=stream()](const auto& tests, std::string_view type, auto fn) {
-        for(const auto& test : tests)
-        {
-          if(!test.second)
-          {
-            using namespace parsing::commandline;
-            stream << warning(std::string{"Test "}.append(type)
-                              .append(" '")
-                              .append(convert(test.first))
-                              .append("' not found\n")
-                              .append(fn(test.first)));
-          }
-        }
-      }
-    };
-
-    check(m_SelectedFamilies, "Family", [](const std::string& name) -> std::string {
-        if(auto pos{name.rfind('.')}; pos < std::string::npos)
-        {
-          return "--If trying to select a source file use 'select' rather than 'test'\n";
-        }
-
-        return "";
-      }
-    );
-
-    check(m_SelectedSources, "File", [](const std::filesystem::path& p) -> std::string {
-        if(!p.has_extension())
-        {
-          return "--If trying to test a family use 'test' rather than 'select'\n";
-        }
-  
-        return "";
-      }
-    );
-  }
-
-  [[nodiscard]]
-  auto test_runner::find_filename(const std::filesystem::path& filename) -> source_list::iterator
-  {
-    return std::find_if(m_SelectedSources.begin(), m_SelectedSources.end(),
-                 [&filename, &repo=m_Paths.tests(), &root=m_Paths.project_root()](const auto& element){
-                   const auto& source{element.first};
-
-                   if(filename.empty() || source.empty() || ((*--source.end()) != (*--filename.end())))
-                     return false;
-
-                   if(filename == source) return true;
-
-                   if(filename.is_absolute())
-                   {
-                     if(rebase_from(filename, root) == rebase_from(source, working_path()))
-                       return true;
-                   }
-
-                   // filename is relative to where compilation was performed which
-                   // cannot be known here. Therefore fallback to assuming the 'selected sources'
-                   // live in the test repository
-
-                   if(!repo.empty())
-                   {
-                     if(rebase_from(source, repo) == rebase_from(filename, repo))
-                       return true;
-
-                     if(const auto path{find_in_tree(repo, source)}; !path.empty())
-                     {
-                       if(rebase_from(path, repo) == rebase_from(filename, repo))
-                         return true;
-                     }
-                   }
-
-                   return false;
-                 });
-  }
-
   void test_runner::execute([[maybe_unused]] timer_resolution r)
   {
     if(!mode(runner_mode::help))
@@ -551,7 +393,7 @@ namespace sequoia::testing
   {
     if(m_ConcurrencyMode == concurrency_mode::dynamic)
     {
-      m_ConcurrencyMode = (m_Families.size() < 4) ? concurrency_mode::test : concurrency_mode::family;
+      m_ConcurrencyMode = (m_Selector.size() < 4) ? concurrency_mode::test : concurrency_mode::family;
     }
   }
 
@@ -564,14 +406,13 @@ namespace sequoia::testing
 
     if(mode(runner_mode::test))
     {
-      const bool selected{!m_SelectedFamilies.empty() || !m_SelectedSources.empty()};
       log_summary summary{};
-      if(!m_Families.empty())
+      if(!m_Selector.empty())
       {
         stream() << "\nRunning tests...\n\n";
         if(!concurrent_execution())
         {
-          for(auto& family : m_Families)
+          for(auto& family : m_Selector)
           {
             stream() << family.name() << ":\n";
             summary += process_family(family.execute(m_UpdateMode, m_ConcurrencyMode)).log;
@@ -581,9 +422,9 @@ namespace sequoia::testing
         {
           stream() << "\n\t--Using asynchronous execution, level: " << to_string(m_ConcurrencyMode) << "\n\n";
           std::vector<std::pair<std::string, std::future<test_family::results>>> results{};
-          results.reserve(m_Families.size());
+          results.reserve(m_Selector.size());
 
-          for(auto& family : m_Families)
+          for(auto& family : m_Selector)
           {
             results.emplace_back(family.name(),
               std::async([&family, umode{m_UpdateMode}, cmode{m_ConcurrencyMode}](){
@@ -599,31 +440,18 @@ namespace sequoia::testing
         stream() << "\n-----------Grand Totals-----------\n";
         stream() << summarize(summary, steady_clock::now() - time, summary_detail::absent_checks | summary_detail::timings, indentation{"\t"}, no_indent);
       }
-      else if(pruned())
+      else if(m_Selector.pruned())
       {
         stream() << "Nothing to do: no changes since the last run, therefore 'prune' has pruned all tests\n";
       }
-      else if(!selected)
+      else if(!m_Selector.bespoke_selection())
       {
         stream() << "Nothing to do; try creating some tests!\nRun with --help to see options\n";
       }
 
-
-      if(!selected || pruned())
-      {
-        const auto stampFile{prune_path(m_Paths.output(), m_Paths.main_cpp_dir())};
-        if(std::ofstream ostream{stampFile})
-        {
-          for(const auto& source : m_FailedTestSourceFiles)
-          {
-            ostream << source.generic_string() << "\n";
-          }
-        }
-
-        fs::last_write_time(stampFile, m_PruneInfo.stamps.current);
-      }
+      m_Selector.update_prune_info(m_FailedTestSourceFiles);
     }
 
-    check_for_missing_tests();
+    stream() << m_Selector.check_for_missing_tests();
   }
 }

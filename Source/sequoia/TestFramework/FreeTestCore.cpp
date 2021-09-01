@@ -10,24 +10,6 @@
 
 namespace sequoia::testing
 {
-  [[nodiscard]]
-  std::string to_string(concurrency_mode mode)
-  {
-    switch(mode)
-    {
-    case concurrency_mode::serial:
-      return "Serial";
-    case concurrency_mode::dynamic:
-      return "Dynamic";
-    case concurrency_mode::family:
-      return "Family";
-    case concurrency_mode::test:
-      return "Test";
-    }
-
-    throw std::logic_error{"Unknown option for concurrency_mode"};
-  }
-
   void test::set_filesystem_data(std::filesystem::path testRepo, const std::filesystem::path& outputDir, std::string_view familyName)
   {
     m_TestRepo = std::move(testRepo);

@@ -17,12 +17,22 @@
 #include "sequoia/TestFramework/Summary.hpp"
 
 #include <vector>
-#include <future>
 #include <set>
 
 namespace sequoia::testing
 {
   enum class update_mode { none=0, soft};
+
+  /*! \brief Specifies the granularity at which concurrent execution is applied */
+  enum class concurrency_mode {
+    serial,    /// serial execution
+    dynamic,   /// determined at runtime
+    family,    /// families of tests are executed concurrently
+    test,      /// tests are executed concurrently, independently of their families
+  };
+
+  [[nodiscard]]
+  std::string to_string(concurrency_mode mode);
 
   /*! \brief Allows tests to be grouped together into a family of related tests
 

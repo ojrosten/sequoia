@@ -12,8 +12,8 @@
 */
 
 #include "sequoia/TestFramework/TestFamily.hpp"
+#include "sequoia/TestFramework/TestSelector.hpp"
 
-#include "sequoia/Parsing/CommandLineArguments.hpp"
 #include "sequoia/PlatformSpecific/Helpers.hpp"
 #include "sequoia/TextProcessing/Indent.hpp"
 
@@ -53,42 +53,14 @@ namespace sequoia::testing
     template<class Test, class... Tests>
     void add_test_family(std::string_view name, Test&& test, Tests&&... tests)
     {
-      const bool done{
-        [this, name](Test&& test, Tests&&... tests){
-          if(!m_SelectedSources.empty())
-          {
-            test_family f{name, m_Paths.tests(), m_Paths.test_materials(), m_Paths.output(), m_Recovery};
-            add_tests(f, std::forward<Test>(test), std::forward<Tests>(tests)...);
-            if(!f.empty())
-            {
-              m_Families.push_back(std::move(f));
-              mark_family(name);
-              return true;
-            }
-          }
-
-          return false;
-        }(std::forward<Test>(test), std::forward<Tests>(tests)...)
-      };
-
-      if(!done && ( (m_SelectedSources.empty() && !pruned()) || !m_SelectedFamilies.empty() ))
-      {
-        if(mark_family(name))
-        {
-          m_Families.emplace_back(name, m_Paths.tests(), m_Paths.test_materials(), m_Paths.output(), m_Recovery,
-                                  std::forward<Test>(test), std::forward<Tests>(tests)...);
-        }
-      }
+      m_Selector.add_test_family(name, std::forward<Test>(test), std::forward<Tests>(tests)...);
     }
 
     void execute([[maybe_unused]] timer_resolution r={});
 
-    [[nodiscard]]
-    concurrency_mode concurrency() const noexcept { return m_ConcurrencyMode; }
-
     std::ostream& stream() noexcept { return *m_Stream; }
 
-    const project_paths& paths() const noexcept { return m_Paths; }
+    const project_paths& proj_paths() const noexcept { return m_Selector.proj_paths(); }
 
     const std::string& copyright() const noexcept { return m_Copyright; }
 
@@ -97,47 +69,17 @@ namespace sequoia::testing
   private:
     enum class output_mode { standard = 0, verbose = 1 };
 
-    struct time_stamps
-    {
-      using time_type = std::filesystem::file_time_type;
-      using stamp = std::optional<time_type>;
+    std::string      m_Copyright{};
+    family_selector  m_Selector;
+    indentation      m_CodeIndent{"  "};
+    std::ostream*    m_Stream;
 
-      static auto from_file(const std::filesystem::path& stampFile) -> stamp;
-
-      time_type current{std::chrono::file_clock::now()};
-      stamp ondisk, executable;
-    };
-
-    struct prune_info
-    {
-      time_stamps stamps{};
-      std::string include_cutoff{};
-    };
-
-    using family_map        = std::map<std::string, bool, std::less<>>;
-    using source_list       = std::vector<std::pair<std::filesystem::path, bool>>;
-
-    std::string               m_Copyright{};
-    project_paths             m_Paths;
-    indentation               m_CodeIndent{"  "};
-    std::ostream*             m_Stream;
-
-    prune_info                m_PruneInfo{};
-    std::vector<test_family>  m_Families{};
-    family_map                m_SelectedFamilies{};
-    source_list               m_SelectedSources{};
-    recovery_paths            m_Recovery{};
-    runner_mode               m_RunnerMode{runner_mode::none};
-    output_mode               m_OutputMode{output_mode::standard};
-    update_mode               m_UpdateMode{update_mode::none};
-    concurrency_mode          m_ConcurrencyMode{concurrency_mode::serial};
+    runner_mode      m_RunnerMode{runner_mode::none};
+    output_mode      m_OutputMode{output_mode::standard};
+    update_mode      m_UpdateMode{update_mode::none};
+    concurrency_mode m_ConcurrencyMode{concurrency_mode::serial};
 
     std::vector<std::filesystem::path> m_FailedTestSourceFiles;
-
-    [[nodiscard]]
-    bool pruned() const noexcept;
-
-    bool mark_family(std::string_view name);
 
     void process_args(int argc, char** argv);
 
@@ -152,24 +94,6 @@ namespace sequoia::testing
     void check_argument_consistency();
 
     void run_tests();
-
-    void check_for_missing_tests();
-
-    [[nodiscard]]
-    auto find_filename(const std::filesystem::path& filename) -> source_list::iterator;
-
-    template<class Test, class... Tests>
-    void add_tests(test_family& f, Test&& test, Tests&&... tests)
-    {
-      auto i{find_filename(test.source_filename())};
-      if(i != m_SelectedSources.end())
-      {
-        f.add_test(std::forward<Test>(test));
-        i->second = true;
-      }
-
-      if constexpr(sizeof...(Tests) > 0) add_tests(f, std::forward<Tests>(tests)...);
-    }
 
     [[nodiscard]]
     bool mode(runner_mode m) const noexcept
