@@ -93,24 +93,11 @@ namespace sequoia::testing
 
     stream << "\nAnalyzing dependencies...\n";
     const auto start{std::chrono::steady_clock::now()};
+    const auto pruneFile{prune_path(proj_paths().output(), proj_paths().main_cpp_dir())};
 
-    if(auto maybeToRun{tests_to_run(proj_paths().source_root(), proj_paths().tests(), proj_paths().test_materials(), m_PruneInfo.stamps.ondisk, m_PruneInfo.stamps.executable, m_PruneInfo.include_cutoff)})
+    if(auto maybeToRun{tests_to_run(proj_paths().source_root(), proj_paths().tests(), proj_paths().test_materials(), pruneFile, m_PruneInfo.stamps.ondisk, m_PruneInfo.stamps.executable, m_PruneInfo.include_cutoff)})
     {
       auto& toRun{maybeToRun.value()};
-
-      if(std::ifstream ifile{prune_path(proj_paths().output(), proj_paths().main_cpp_dir())})
-      {
-        while(ifile)
-        {
-          fs::path source{};
-          ifile >> source;
-          toRun.push_back(source);
-        }
-      }
-
-      std::sort(toRun.begin(), toRun.end());
-      auto last{std::unique(toRun.begin(), toRun.end())};
-      toRun.erase(last, toRun.end());
 
       std::transform(toRun.begin(), toRun.end(), std::back_inserter(m_SelectedSources),
         [](const fs::path& file) -> std::pair<fs::path, bool> { return {file, false}; });

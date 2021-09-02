@@ -6,6 +6,7 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "sequoia/TestFramework/DependencyAnalyzer.hpp"
+#include "sequoia/TestFramework/FileSystem.hpp"
 
 #include "sequoia/Maths/Graph/DynamicGraph.hpp"
 #include "sequoia/Maths/Graph/GraphTraversalFunctions.hpp"
@@ -297,6 +298,7 @@ namespace sequoia::testing
   tests_to_run(const fs::path& sourceRepo,
                const fs::path& testRepo,
                const fs::path& materialsRepo,
+               const std::filesystem::path& previousFailures,
                const std::optional<fs::file_time_type>& timeStamp,
                const std::optional<fs::file_time_type>& exeTimeStamp,
                std::string_view cutoff)
@@ -305,7 +307,7 @@ namespace sequoia::testing
 
     if(!timeStamp) return std::nullopt;
 
-    std::optional<std::vector<std::filesystem::path>> testsToRun{{}};
+    std::vector<std::filesystem::path> testsToRun{};
 
     tests_dependency_graph g{};
 
@@ -348,9 +350,27 @@ namespace sequoia::testing
 
         if(!weight.stale) consider_materials(g, i, relPath, materialsRepo, timeStamp.value());
 
-        if(weight.stale) testsToRun->push_back(relPath);
+        if(weight.stale) testsToRun.push_back(relPath);
       }
     }
+
+    if(std::ifstream ifile{previousFailures})
+    {
+      while(ifile)
+      {
+        fs::path source{};
+        ifile >> source;
+        if(!source.empty())
+        {
+          source = rebase_from(source, testRepo);
+          testsToRun.push_back(source);
+        }
+      }
+    }
+
+    std::sort(testsToRun.begin(), testsToRun.end());
+    auto last{std::unique(testsToRun.begin(), testsToRun.end())};
+    testsToRun.erase(last, testsToRun.end());
 
     return testsToRun;
   }

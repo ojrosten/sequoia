@@ -19,7 +19,7 @@ namespace sequoia::testing
   private:
     struct information
     {
-      std::filesystem::path source_repo, tests_repo, materials;
+      std::filesystem::path source_repo, tests_repo, materials, prune_file;
       std::filesystem::file_time_type reset_time;
       std::optional<std::filesystem::file_time_type> exe_time_stamp;
     };
