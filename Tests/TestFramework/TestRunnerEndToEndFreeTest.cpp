@@ -22,9 +22,9 @@ namespace sequoia::testing
   namespace
   {
     [[nodiscard]]
-    std::vector<int> extract_timings(const fs::path& file)
+    std::vector<double> extract_timings(const fs::path& file)
     {
-      std::vector<int> timings{};
+      std::vector<double> timings{};
 
       if(std::ifstream ifile{file})
       {
@@ -178,22 +178,22 @@ namespace sequoia::testing
     check(append_lines(description, "Build output existance"), fs::exists(b.buildDir / BuildOutput));
   }
 
-  void test_runner_end_to_end_test::check_timings(std::string_view description, const std::filesystem::path& relOutputFile, const int speedupFactor)
+  void test_runner_end_to_end_test::check_timings(std::string_view description, const std::filesystem::path& relOutputFile, const double speedupFactor)
   {
     const auto timings{extract_timings(working_materials() / relOutputFile)};
     if(check(append_lines(description, "At least three timings"), timings.size() > 2))
     {
-      const auto sum{std::accumulate(timings.cbegin(), --timings.cend(), 0)};
+      const double sum{std::accumulate(timings.cbegin(), --timings.cend(), 0.0)};
 
       if(speedupFactor == 1)
       {
-        const auto roundingError{(static_cast<int>(timings.size()) - 1)};
+        const auto roundingError{(static_cast<double>(timings.size()) - 1)};
         check_relation(append_lines(description, "Sum of timings"), within_tolerance{roundingError}, sum, timings.back());
       }
       else
       {
         const auto prediction{sum / speedupFactor};
-        check_relation(append_lines(description, "Sum of timings"), std::less_equal<int>{}, timings.back(), prediction);
+        check_relation(append_lines(description, "Sum of timings"), std::less_equal<double>{}, timings.back(), prediction);
       }
     }
   }
@@ -263,7 +263,7 @@ namespace sequoia::testing
     // --> async depth should be automatically set to "family" since number of families is > 4
 
     run_and_check(LINE("Run asynchronously"), b, "RunAsync", "-a");
-    check_timings(LINE("Async run (level: family)"), fs::path{"RunAsync/TestRunOutput.txt"}, 2);
+    check_timings(LINE("Async run (level: family)"), fs::path{"RunAsync/TestRunOutput.txt"}, 1.8);
 
     //=================== Rerun with async selecting 3 tests from 3 families ===================//
     // --> async depth should be automatically set to "test" since number of families is < 4
@@ -339,7 +339,7 @@ namespace sequoia::testing
     copy_aux_materials("ModifiedTests/Thing",                    "Tests/Utilities/Thing");
 
     rebuild_run_and_check(LINE("Rebuild and run after source/test changes (pruned)"), b, "RebuiltOutput", "CMakeOutput4.txt", "BuildOutput4.txt", "prune --cutoff namespace -a");
-    check_timings(LINE("Async run (level: test)"), fs::path{"RebuiltOutput/TestRunOutput.txt"}, 2);
+    check_timings(LINE("Async run (level: test)"), fs::path{"RebuiltOutput/TestRunOutput.txt"}, 1.8);
 
     check_equivalence(LINE("Test Runner Output"), working_materials() / "RebuiltOutput", predictive_materials() / "RebuiltOutput");
     fs::create_directory(working_materials() / "TestAll");

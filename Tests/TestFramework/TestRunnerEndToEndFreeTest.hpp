@@ -52,6 +52,6 @@ namespace sequoia::testing
 
     void rebuild_run_and_check(std::string_view description, const cmd_builder& b, std::string_view relOutputDir, std::string_view CMakeOutput, std::string_view BuildOutput, std::string_view options);
 
-    void check_timings(std::string_view description, const std::filesystem::path& relOutputFile, const int speedupFactor);
+    void check_timings(std::string_view description, const std::filesystem::path& relOutputFile, const double speedupFactor);
   };
 }
