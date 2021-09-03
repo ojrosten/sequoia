@@ -77,7 +77,7 @@ namespace sequoia::testing
     update_mode      m_UpdateMode{update_mode::none};
     concurrency_mode m_ConcurrencyMode{concurrency_mode::serial};
 
-    std::size_t m_NumRuns{1};
+    int m_NumReps{1};
 
     std::vector<std::filesystem::path> m_FailedTestSourceFiles;
 

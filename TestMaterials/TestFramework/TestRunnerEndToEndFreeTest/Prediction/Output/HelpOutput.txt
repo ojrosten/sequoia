@@ -33,5 +33,6 @@ update-materials | u |
 dump
 --async | -a |
 --async-depth | -ad | depth [0,1]
+--num | n | number of runs >=1
 --verbose | -v |
 --recovery | -r |

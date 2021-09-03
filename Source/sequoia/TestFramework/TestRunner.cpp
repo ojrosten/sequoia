@@ -296,6 +296,16 @@ namespace sequoia::testing
                       m_ConcurrencyMode = i ? concurrency_mode::test : concurrency_mode::family;
                     }
                   },
+                  {"--num", {"n"}, {"number of runs >=1"},
+                    [this] (const arg_list& args) {
+                      using parsing::commandline::error;
+                      const int i{std::stoi(args.front())};
+                      if(i < 1)
+                        throw std::runtime_error{error("Number of repetitions must be >= 1")};
+
+                      m_NumReps = i;
+                    }
+                  },
                   {"--verbose",  {"-v"}, {}, [this](const arg_list&) { m_OutputMode = output_mode::verbose; }},
                   {"--recovery", {"-r"}, {},
                     [this,recoveryDir{recovery_path(proj_paths().output())}] (const arg_list&) {
@@ -382,7 +392,7 @@ namespace sequoia::testing
   {
     finalize_concurrency_mode();
 
-    for(std::size_t i{}; i < m_NumRuns; ++i)
+    for(int i{}; i < m_NumReps; ++i)
     {
       if(!run_tests()) break;
     }
