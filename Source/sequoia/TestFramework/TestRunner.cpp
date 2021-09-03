@@ -380,9 +380,11 @@ namespace sequoia::testing
 
   void test_runner::execute([[maybe_unused]] timer_resolution r)
   {
-    if(!mode(runner_mode::help))
+    finalize_concurrency_mode();
+
+    for(std::size_t i{}; i < m_NumRuns; ++i)
     {
-      run_tests();
+      if(!run_tests()) break;
     }
   }
 
@@ -394,61 +396,61 @@ namespace sequoia::testing
     }
   }
 
-  void test_runner::run_tests()
+  bool test_runner::run_tests()
   {
+    if(!mode(runner_mode::test)) return false;
+
     using namespace std::chrono;
     const auto time{steady_clock::now()};
 
-    finalize_concurrency_mode();
-
-    if(mode(runner_mode::test))
+    log_summary summary{};
+    if(!m_Selector.empty())
     {
-      log_summary summary{};
-      if(!m_Selector.empty())
+      stream() << "\nRunning tests...\n\n";
+      if(!concurrent_execution())
       {
-        stream() << "\nRunning tests...\n\n";
-        if(!concurrent_execution())
+        for(auto& family : m_Selector)
         {
-          for(auto& family : m_Selector)
-          {
-            stream() << family.name() << ":\n";
-            summary += process_family(family.execute(m_UpdateMode, m_ConcurrencyMode)).log;
-          }
+          stream() << family.name() << ":\n";
+          summary += process_family(family.execute(m_UpdateMode, m_ConcurrencyMode)).log;
         }
-        else
+      }
+      else
+      {
+        stream() << "\n\t--Using asynchronous execution, level: " << to_string(m_ConcurrencyMode) << "\n\n";
+        std::vector<std::pair<std::string, std::future<test_family::results>>> results{};
+        results.reserve(m_Selector.size());
+
+        for(auto& family : m_Selector)
         {
-          stream() << "\n\t--Using asynchronous execution, level: " << to_string(m_ConcurrencyMode) << "\n\n";
-          std::vector<std::pair<std::string, std::future<test_family::results>>> results{};
-          results.reserve(m_Selector.size());
-
-          for(auto& family : m_Selector)
-          {
-            results.emplace_back(family.name(),
-              std::async([&family, umode{m_UpdateMode}, cmode{m_ConcurrencyMode}](){
-              return family.execute(umode, cmode); }));
-          }
-
-          for(auto& res : results)
-          {
-            stream() << res.first << ":\n";
-            summary += process_family(res.second.get()).log;
-          }
+          results.emplace_back(family.name(),
+            std::async([&family, umode{m_UpdateMode}, cmode{m_ConcurrencyMode}](){
+            return family.execute(umode, cmode); }));
         }
-        stream() << "\n-----------Grand Totals-----------\n";
-        stream() << summarize(summary, steady_clock::now() - time, summary_detail::absent_checks | summary_detail::timings, indentation{"\t"}, no_indent);
-      }
-      else if(m_Selector.pruned())
-      {
-        stream() << "Nothing to do: no changes since the last run, therefore 'prune' has pruned all tests\n";
-      }
-      else if(!m_Selector.bespoke_selection())
-      {
-        stream() << "Nothing to do; try creating some tests!\nRun with --help to see options\n";
-      }
 
-      m_Selector.update_prune_info(m_FailedTestSourceFiles);
+        for(auto& res : results)
+        {
+          stream() << res.first << ":\n";
+          summary += process_family(res.second.get()).log;
+        }
+      }
+      stream() << "\n-----------Grand Totals-----------\n";
+      stream() << summarize(summary, steady_clock::now() - time, summary_detail::absent_checks | summary_detail::timings, indentation{"\t"}, no_indent);
+    }
+    else if(m_Selector.pruned())
+    {
+      stream() << "Nothing to do: no changes since the last run, therefore 'prune' has pruned all tests\n";
+      return false;
+    }
+    else if(!m_Selector.bespoke_selection())
+    {
+      stream() << "Nothing to do; try creating some tests!\nRun with --help to see options\n";
+      return false;
     }
 
+    m_Selector.update_prune_info(m_FailedTestSourceFiles);
     stream() << m_Selector.check_for_missing_tests();
+
+    return true;
   }
 }
