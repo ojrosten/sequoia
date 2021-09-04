@@ -157,11 +157,12 @@ namespace sequoia::testing
       logger.pop_message();
     }
 
-    sentinel(const sentinel&) = delete;
-    sentinel(sentinel&&)      = default;
+    sentinel(const sentinel&)     = delete;
+    sentinel(sentinel&&) noexcept = default;
 
-    sentinel& operator=(const sentinel&) = delete;
     sentinel& operator=(sentinel&&)      = delete;
+    sentinel& operator=(const sentinel&)     = delete;
+    sentinel& operator=(sentinel&&) noexcept = default;
 
     void log_performance_check()
     {
@@ -228,10 +229,11 @@ namespace sequoia::testing
   public:
     test_logger() = default;
 
-    test_logger(const test_logger&)            = delete;
-    test_logger(test_logger&&) noexcept        = default;
-    test_logger& operator=(const test_logger&) = delete;
-    test_logger& operator=(test_logger&&)      = delete;
+    test_logger(const test_logger&)     = delete;
+    test_logger(test_logger&&) noexcept = default;
+
+    test_logger& operator=(const test_logger&)     = delete;
+    test_logger& operator=(test_logger&&) noexcept = default;
 
     constexpr static test_mode mode{Mode};
 
