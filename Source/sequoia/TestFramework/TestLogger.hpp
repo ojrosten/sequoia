@@ -160,7 +160,6 @@ namespace sequoia::testing
     sentinel(const sentinel&)     = delete;
     sentinel(sentinel&&) noexcept = default;
 
-    sentinel& operator=(sentinel&&)      = delete;
     sentinel& operator=(const sentinel&)     = delete;
     sentinel& operator=(sentinel&&) noexcept = default;
 
