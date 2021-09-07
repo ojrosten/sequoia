@@ -30,19 +30,16 @@ namespace sequoia::testing
   public:
     constexpr static test_mode mode{Mode};
 
-    explicit move_only_allocation_extender(test_logger<Mode>& logger) : m_Logger{logger} {}
+    explicit move_only_allocation_extender(test_logger<Mode>& logger) : m_pLogger{&logger} {}
 
-    move_only_allocation_extender(const move_only_allocation_extender&) = delete;
-    move_only_allocation_extender(move_only_allocation_extender&&)      = delete;
-
+    move_only_allocation_extender(const move_only_allocation_extender&)            = delete;
     move_only_allocation_extender& operator=(const move_only_allocation_extender&) = delete;
-    move_only_allocation_extender& operator=(move_only_allocation_extender&&)      = delete;
 
     template<moveonly T, invocable<T&> Mutator, alloc_getter<T>... Getters>
       requires (!orderable<T>  && (sizeof...(Getters) > 0))
     void check_semantics(std::string_view description, T&& x, T&& y, const T& xClone, const T& yClone, Mutator yMutator, allocation_info<T, Getters>... info)
     {
-      testing::check_semantics(append_lines(description, emphasise("Move-only Semantics")), m_Logger, std::move(x), std::move(y), xClone, yClone, std::move(yMutator), info...);
+      testing::check_semantics(append_lines(description, emphasise("Move-only Semantics")), logger(), std::move(x), std::move(y), xClone, yClone, std::move(yMutator), info...);
     }
 
     template
@@ -56,14 +53,14 @@ namespace sequoia::testing
       requires (!orderable<T>  && (sizeof...(Getters) > 0))
     std::pair<T,T> check_semantics(std::string_view description, xMaker xFn, yMaker yFn, Mutator yMutator, allocation_info<T, Getters>... info)
     {
-      return testing::check_semantics(append_lines(description, emphasise("Move-only Semantics")), m_Logger, std::move(xFn), std::move(yFn), std::move(yMutator), info...);
+      return testing::check_semantics(append_lines(description, emphasise("Move-only Semantics")), logger(), std::move(xFn), std::move(yFn), std::move(yMutator), info...);
     }
 
     template<moveonly T, invocable<T&> Mutator, alloc_getter<T>... Getters>
       requires (orderable<T>  && (sizeof...(Getters) > 0))
     void check_semantics(std::string_view description, T&& x, T&& y, const T& xClone, const T& yClone, std::weak_ordering order, Mutator yMutator, allocation_info<T, Getters>... info)
     {
-      testing::check_semantics(append_lines(description, emphasise("Move-only Semantics")), m_Logger, std::move(x), std::move(y), xClone, yClone, order, std::move(yMutator), info...);
+      testing::check_semantics(append_lines(description, emphasise("Move-only Semantics")), logger(), std::move(x), std::move(y), xClone, yClone, order, std::move(yMutator), info...);
     }
 
     template
@@ -77,13 +74,18 @@ namespace sequoia::testing
       requires (orderable<T>  && (sizeof...(Getters) > 0))
     std::pair<T,T> check_semantics(std::string_view description, xMaker xFn, yMaker yFn, std::weak_ordering order, Mutator yMutator, allocation_info<T, Getters>... info)
     {
-      return testing::check_semantics(append_lines(description, emphasise("Move-only Semantics")), m_Logger, std::move(xFn), std::move(yFn), order, std::move(yMutator), info...);
+      return testing::check_semantics(append_lines(description, emphasise("Move-only Semantics")), logger(), std::move(xFn), std::move(yFn), order, std::move(yMutator), info...);
     }
   protected:
     ~move_only_allocation_extender() = default;
 
+    move_only_allocation_extender(move_only_allocation_extender&&)            noexcept = default;
+    move_only_allocation_extender& operator=(move_only_allocation_extender&&) noexcept = default;
   private:
-    test_logger<Mode>& m_Logger;
+    [[nodiscard]]
+    test_logger<Mode>& logger() noexcept { return *m_pLogger; }
+
+    test_logger<Mode>* m_pLogger;
   };
 
   template<class Test, test_mode Mode>
@@ -121,11 +123,10 @@ namespace sequoia::testing
     using basic_test<checker<Mode, move_only_allocation_extender<Mode>>>::basic_test;
 
     basic_move_only_allocation_test(const basic_move_only_allocation_test&) = delete;
-
     basic_move_only_allocation_test& operator=(const basic_move_only_allocation_test&) = delete;
-    basic_move_only_allocation_test& operator=(basic_move_only_allocation_test&&)      = delete;
   protected:
-    basic_move_only_allocation_test(basic_move_only_allocation_test&&) noexcept = default;
+    basic_move_only_allocation_test(basic_move_only_allocation_test&&)           noexcept = default;
+    basic_move_only_allocation_test& operator=(basic_move_only_allocation_test&&) noexcept = default;
 
     template<move_only_alloc_test<Mode> Test>
     static void do_allocation_tests(Test& test)

@@ -74,7 +74,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string report_time(const test_family::summary& s)
+  std::string report_time(const family_summary& s)
   {
     return report_time(s.log, s.execution_time);
   }
@@ -361,9 +361,9 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  test_family::summary test_runner::process_family(const test_family::results& results)
+  family_summary test_runner::process_family(const family_results& results)
   {
-    test_family::summary familySummary{results.execution_time};
+    family_summary familySummary{results.execution_time};
     std::string output{};
     const auto detail{summary_detail::failure_messages | summary_detail::timings};
     for(const auto& s : results.logs)
@@ -408,6 +408,8 @@ namespace sequoia::testing
 
   bool test_runner::run_tests()
   {
+    // TO DO: reset logger, reset materials and properly treat failed tests
+
     if(!mode(runner_mode::test)) return false;
 
     using namespace std::chrono;
@@ -428,7 +430,7 @@ namespace sequoia::testing
       else
       {
         stream() << "\n\t--Using asynchronous execution, level: " << to_string(m_ConcurrencyMode) << "\n\n";
-        std::vector<std::pair<std::string, std::future<test_family::results>>> results{};
+        std::vector<std::pair<std::string, std::future<family_results>>> results{};
         results.reserve(m_Selector.size());
 
         for(auto& family : m_Selector)

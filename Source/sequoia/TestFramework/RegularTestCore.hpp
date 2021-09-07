@@ -30,7 +30,7 @@ namespace sequoia::testing
   public:
     constexpr static test_mode mode{Mode};
 
-    explicit regular_extender(test_logger<Mode>& logger) : m_Logger{logger} {}
+    explicit regular_extender(test_logger<Mode>& logger) : m_pLogger{&logger} {}
 
     regular_extender(const regular_extender&)            = delete;
     regular_extender& operator=(const regular_extender&) = delete;
@@ -40,7 +40,7 @@ namespace sequoia::testing
       requires (!orderable<T>)
     void check_semantics(std::string_view description, const T& x, const T& y)
     {
-      testing::check_semantics(append_lines(description, emphasise("Regular Semantics")), m_Logger, x, y);
+      testing::check_semantics(append_lines(description, emphasise("Regular Semantics")), logger(), x, y);
     }
 
     /// Precondition: x!=y, with values consistent with order
@@ -48,14 +48,14 @@ namespace sequoia::testing
       requires orderable<T>
     void check_semantics(std::string_view description, const T& x, const T& y, std::weak_ordering order)
     {
-      testing::check_semantics(append_lines(description, emphasise("Regular Semantics")), m_Logger, x, y, order);
+      testing::check_semantics(append_lines(description, emphasise("Regular Semantics")), logger(), x, y, order);
     }
 
     /// Precondition: x!=y
     template<pseudoregular T, invocable<T&> Mutator>
     void check_semantics(std::string_view description, const T& x, const T& y, Mutator m)
     {
-      testing::check_semantics(append_lines(description, emphasise("Regular Semantics")), m_Logger, x, y, std::move(m));
+      testing::check_semantics(append_lines(description, emphasise("Regular Semantics")), logger(), x, y, std::move(m));
     }
 
     /// Precondition: x!=y, with values consistent with order
@@ -63,7 +63,7 @@ namespace sequoia::testing
       requires orderable<T>
     void check_semantics(std::string_view description, const T& x, const T& y, std::weak_ordering order, Mutator m)
     {
-      testing::check_semantics(append_lines(description, emphasise("Regular Semantics")), m_Logger, x, y, order, std::move(m));
+      testing::check_semantics(append_lines(description, emphasise("Regular Semantics")), logger(), x, y, order, std::move(m));
     }
   protected:
     regular_extender(regular_extender&&)            noexcept = default;
@@ -71,7 +71,10 @@ namespace sequoia::testing
 
     ~regular_extender() = default;
   private:
-    test_logger<Mode>& m_Logger;
+    [[nodiscard]]
+    test_logger<Mode>& logger() noexcept { return *m_pLogger; }
+
+    test_logger<Mode>* m_pLogger;
   };
 
   template<test_mode mode>

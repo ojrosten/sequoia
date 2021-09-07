@@ -33,7 +33,7 @@ namespace sequoia::testing
   public:
     constexpr static test_mode mode{Mode};
 
-    explicit move_only_extender(test_logger<Mode>& logger) : m_Logger{logger} {}
+    explicit move_only_extender(test_logger<Mode>& logger) : m_pLogger{&logger} {}
 
     move_only_extender(const move_only_extender&)            = delete;
     move_only_extender& operator=(const move_only_extender&) = delete;
@@ -42,7 +42,7 @@ namespace sequoia::testing
     template<moveonly T>
     void check_semantics(std::string_view description, T&& x, T&& y, const T& xClone, const T& yClone)
     {
-      testing::check_semantics(append_lines(description, emphasise("Move-only Semantics")), m_Logger, std::move(x), std::move(y), xClone, yClone);
+      testing::check_semantics(append_lines(description, emphasise("Move-only Semantics")), logger(), std::move(x), std::move(y), xClone, yClone);
     }
 
     template
@@ -61,7 +61,7 @@ namespace sequoia::testing
       requires orderable<T>
     void check_semantics(std::string_view description, T&& x, T&& y, const T& xClone, const T& yClone, std::weak_ordering order)
     {
-      testing::check_semantics(append_lines(description, emphasise("Move-only Semantics")), m_Logger, std::move(x), std::move(y), xClone, yClone, order);
+      testing::check_semantics(append_lines(description, emphasise("Move-only Semantics")), logger(), std::move(x), std::move(y), xClone, yClone, order);
     }
 
     template
@@ -81,7 +81,10 @@ namespace sequoia::testing
 
     ~move_only_extender() = default;
   private:
-    test_logger<Mode>& m_Logger;
+    [[nodiscard]]
+    test_logger<Mode>& logger() noexcept { return *m_pLogger; }
+
+    test_logger<Mode>* m_pLogger;
   };
 
   template<test_mode mode>

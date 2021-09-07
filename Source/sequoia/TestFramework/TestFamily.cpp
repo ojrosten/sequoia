@@ -14,11 +14,119 @@
 #include "sequoia/TestFramework/Summary.hpp"
 
 #include <fstream>
-#include <future>
 
 namespace sequoia::testing
 {
   namespace fs = std::filesystem;
+
+  namespace
+  {
+    [[nodiscard]]
+    std::filesystem::path test_summary_filename(const fs::path& sourceFile, const std::filesystem::path& outputDir, const std::filesystem::path& testRepo)
+    {
+      const auto name{fs::path{sourceFile}.replace_extension(".txt")};
+      if(name.empty())
+        throw std::logic_error("Source files should have a non-trivial name!");
+
+      if(!name.is_absolute())
+      {
+        if(!testRepo.empty())
+        {
+          auto back{*(--testRepo.end())};
+          return test_summaries_path(outputDir) / back / rebase_from(name, testRepo);
+        }
+      }
+      else
+      {
+        auto summary{test_summaries_path(outputDir)};
+        auto iters{std::mismatch(name.begin(), name.end(), summary.begin(), summary.end())};
+
+        while(iters.first != name.end())
+          summary /= *iters.first++;
+
+        return summary;
+      }
+
+      return name;
+    }
+  }
+
+  paths::paths(const fs::path& sourceFile,
+               const fs::path& workingMaterials,
+               const fs::path& predictiveMaterials,
+               update_mode updateMode,
+               const std::filesystem::path& outputDir,
+               const std::filesystem::path& testRepo)
+    : mode{updateMode}
+    , test_file{sourceFile}
+    , summary{test_summary_filename(sourceFile, outputDir, testRepo)}
+    , workingMaterials{workingMaterials}
+    , predictions{predictiveMaterials}
+  {}
+
+  family_processor::family_processor()
+    : m_Start{std::chrono::steady_clock::now()}
+  {}
+
+  [[nodiscard]]
+  family_results family_processor::finalize_and_acquire()
+  {
+    for(const auto& update : m_Updateables)
+    {
+      soft_update(update.workingMaterials, update.predictions);
+    }
+
+    m_Results.execution_time = std::chrono::steady_clock::now() - m_Start;
+    return std::move(m_Results);
+  }
+
+
+  void family_processor::process(log_summary summary, const paths& files)
+  {
+    if(summary.soft_failures() || summary.critical_failures())
+      m_Results.failed_tests.push_back(files.test_file);
+
+    to_file(files.summary, summary);
+
+    if(files.mode != update_mode::none)
+    {
+      if(summary.soft_failures())
+      {
+        if(fs::exists(files.workingMaterials) && fs::exists(files.predictions))
+        {
+          m_Updateables.insert(files);
+        }
+      }
+    }
+
+    m_Results.logs.push_back(std::move(summary));
+  }
+
+  void family_processor::to_file(const std::filesystem::path& filename, const log_summary& summary)
+  {
+    if(filename.empty()) return;
+
+    auto mode{std::ios_base::out};
+    if(auto found{m_Record.find(filename)}; found != m_Record.end())
+    {
+      mode = std::ios_base::app;
+    }
+    else
+    {
+      m_Record.insert(filename);
+    }
+
+    std::filesystem::create_directories(filename.parent_path());
+
+    if(std::ofstream file{filename, mode})
+    {
+      file << summarize(summary, summary_detail::failure_messages, no_indent, no_indent);
+    }
+    else
+    {
+      throw std::runtime_error{report_failed_write(filename)};
+    }
+  }
 
   [[nodiscard]]
   std::string to_string(concurrency_mode mode)
@@ -38,16 +146,14 @@ namespace sequoia::testing
     throw std::logic_error{"Unknown option for concurrency_mode"};
   }
 
-  void test_family::set_materials(test& t)
+  [[nodiscard]]
+  materials_info family_info::set_materials(const fs::path& sourceFile)
   {
-    t.set_filesystem_data(m_TestRepo, m_OutputDir, name());
-    t.set_recovery_paths(m_Recovery);
-
     const auto rel{
-      [&t, &testRepo=m_TestRepo, &materialsRepo=m_TestMaterialsRepo](){
+      [&sourceFile, &testRepo=m_TestRepo, &materialsRepo=m_TestMaterialsRepo](){
         if(testRepo.empty()) return fs::path{};
 
-        auto folderName{fs::path{t.source_filename()}.replace_extension()};
+        auto folderName{fs::path{sourceFile}.replace_extension()};
         if(folderName.is_absolute())
           folderName = fs::relative(folderName, materialsRepo);
 
@@ -77,8 +183,6 @@ namespace sequoia::testing
         }()
       };
 
-      t.set_materials(workingCopy, prediction, workingAux);
-
       if(std::find(m_MaterialsPaths.cbegin(), m_MaterialsPaths.cend(), workingCopy) == m_MaterialsPaths.cend())
       {
         fs::remove_all(output);
@@ -97,151 +201,15 @@ namespace sequoia::testing
 
         m_MaterialsPaths.emplace_back(workingCopy);
       }
+
+      return {workingCopy, prediction, workingAux};
     }
+
+    return {};
   }
-
-  auto test_family::execute(const update_mode updateMode, const concurrency_mode concurrenyMode) -> results
-  {
-    using namespace std::chrono;
-
-    const auto time{steady_clock::now()};
-
-    results res{};
-
-    res.logs.reserve(m_Tests.size());
-    summary_writer writer{};
-
-    auto compare{
-      [](const paths& lhs, const paths& rhs){
-        return lhs.workingMaterials < rhs.workingMaterials;
-      }
-    };
-
-    std::set<paths, decltype(compare)> updateables{};
-
-    auto process{
-      [&res, &writer, &updateables](log_summary summary, const paths& files){
-        if(summary.soft_failures() || summary.critical_failures())
-          res.failed_tests.push_back(files.test_file);
-
-        writer.to_file(files.summary, summary);
-
-        if(files.mode != update_mode::none)
-        {
-          if(summary.soft_failures())
-          {
-            if(fs::exists(files.workingMaterials) && fs::exists(files.predictions))
-            {
-              updateables.insert(files);
-            }
-          }
-        }
-
-        res.logs.push_back(std::move(summary));
-      }
-    };
-
-    if(concurrenyMode < concurrency_mode::test)
-    {
-      for(auto& pTest : m_Tests)
-      {
-        const auto summary{pTest->execute()};
-        process(summary, paths{*pTest, updateMode, m_OutputDir, m_TestRepo});
-      }
-    }
-    else
-    {
-      using data = std::pair<log_summary, paths>;
-      std::vector<std::future<data>> results{};
-      results.reserve(m_Tests.size());
-      for(auto& pTest : m_Tests)
-      {
-        results.emplace_back(
-          std::async([&test=*pTest, updateMode, outputDir{m_OutputDir}, testRepo{m_TestRepo}](){
-            return std::make_pair(test.execute(), paths{test, updateMode, outputDir, testRepo}); })
-        );
-      }
-
-      for(auto& r : results)
-      {
-        const auto [summary, paths]{r.get()};
-        process(summary, paths);
-      }
-    }
-
-    for(const auto& update : updateables)
-    {
-      soft_update(update.workingMaterials, update.predictions);
-    }
-
-    res.execution_time = steady_clock::now() - time;
-    return res;
-  }
-
-  std::filesystem::path test_family::test_summary_filename(const test& t, const std::filesystem::path& outputDir, const std::filesystem::path& testRepo)
-  {
-    const auto name{t.source_filename().replace_extension(".txt")};
-    if(name.empty())
-      throw std::logic_error("Source files should have a non-trivial name!");
-
-    if(!name.is_absolute())
-    {
-      if(!testRepo.empty())
-      {
-        auto back{*(--testRepo.end())};
-        return test_summaries_path(outputDir) / back / rebase_from(name, testRepo);
-      }
-    }
-    else
-    {
-      auto summary{test_summaries_path(outputDir)};
-      auto iters{std::mismatch(name.begin(), name.end(), summary.begin(), summary.end())};
-
-      while(iters.first != name.end())
-        summary /= *iters.first++;
-
-      return summary;
-    }
-
-    return name;
-  }
-
-  void test_family::summary_writer::to_file(const std::filesystem::path& filename, const log_summary& summary)
-  {
-    if(filename.empty()) return;
-
-    auto mode{std::ios_base::out};
-    if(auto found{m_Record.find(filename)}; found != m_Record.end())
-    {
-      mode = std::ios_base::app;
-    }
-    else
-    {
-      m_Record.insert(filename);
-    }
-
-    std::filesystem::create_directories(filename.parent_path());
-
-    if(std::ofstream file{filename, mode})
-    {
-      file << summarize(summary, summary_detail::failure_messages, no_indent, no_indent);
-    }
-    else
-    {
-      throw std::runtime_error{report_failed_write(filename)};
-    }
-  }
-
-  test_family::paths::paths(const test& t, update_mode updateMode, const std::filesystem::path& outputDir, const std::filesystem::path& testRepo)
-    : mode{updateMode}
-    , test_file{t.source_filename()}
-    , summary{test_summary_filename(t, outputDir, testRepo)}
-    , workingMaterials{t.working_materials()}
-    , predictions{t.predictive_materials()}
-  {}
 
   [[nodiscard]]
-  std::string summarize(const test_family::summary& summary, const summary_detail suppression, indentation ind_0, indentation ind_1)
+  std::string summarize(const family_summary& summary, const summary_detail suppression, indentation ind_0, indentation ind_1)
   {
     return summarize(summary.log, summary.execution_time, suppression, ind_0, ind_1);
   }

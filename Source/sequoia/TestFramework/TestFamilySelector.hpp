@@ -32,7 +32,8 @@ namespace sequoia::testing
         [this, name](Test&& test, Tests&&... tests) {
           if(!m_SelectedSources.empty())
           {
-            test_family f{name, m_Paths.tests(), m_Paths.test_materials(), m_Paths.output(), m_Recovery};
+            using family_t = test_family<std::remove_cvref_t<Test>, std::remove_cvref_t<Tests>...>;
+            family_t f{std::string{name}, m_Paths.tests(), m_Paths.test_materials(), m_Paths.output(), m_Recovery};
             add_tests(f, std::forward<Test>(test), std::forward<Tests>(tests)...);
             if(!f.empty())
             {
@@ -50,8 +51,8 @@ namespace sequoia::testing
       {
         if(mark_family(name))
         {
-          m_Families.emplace_back(name, m_Paths.tests(), m_Paths.test_materials(), m_Paths.output(), m_Recovery,
-            std::forward<Test>(test), std::forward<Tests>(tests)...);
+          m_Families.push_back(test_family{std::string{name}, m_Paths.tests(), m_Paths.test_materials(), m_Paths.output(), m_Recovery,
+            std::forward<Test>(test), std::forward<Tests>(tests)...});
         }
       }
     }
@@ -141,20 +142,20 @@ namespace sequoia::testing
     using family_map = std::map<std::string, bool, std::less<>>;
     using source_list = std::vector<std::pair<std::filesystem::path, bool>>;
 
-    project_paths             m_Paths;
-    recovery_paths            m_Recovery{};
-    prune_info                m_PruneInfo{};
-    std::vector<test_family>  m_Families{};
-    family_map                m_SelectedFamilies{};
-    source_list               m_SelectedSources{};
+    project_paths              m_Paths;
+    recovery_paths             m_Recovery{};
+    prune_info                 m_PruneInfo{};
+    std::vector<family_vessel> m_Families{};
+    family_map                 m_SelectedFamilies{};
+    source_list                m_SelectedSources{};
 
     bool mark_family(std::string_view name);
 
     [[nodiscard]]
     auto find_filename(const std::filesystem::path& filename)->source_list::iterator;
 
-    template<class Test, class... Tests>
-    void add_tests(test_family& f, Test&& test, Tests&&... tests)
+    template<concrete_test... AllTests, concrete_test Test, concrete_test... Tests>
+    void add_tests(test_family<AllTests...>& f, Test&& test, Tests&&... tests)
     {
       auto i{find_filename(test.source_filename())};
       if(i != m_SelectedSources.end())

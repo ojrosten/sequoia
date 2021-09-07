@@ -16,8 +16,11 @@
 #include "sequoia/TestFramework/FileSystem.hpp"
 #include "sequoia/TestFramework/Summary.hpp"
 
-#include <vector>
+#include <chrono>
+#include <future>
 #include <set>
+#include <tuple>
+#include <vector>
 
 namespace sequoia::testing
 {
@@ -34,50 +37,141 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string to_string(concurrency_mode mode);
 
-  /*! \brief Allows tests to be grouped together into a family of related tests
+  struct materials_info
+  {
+    std::filesystem::path working, prediction, auxiliary;
+  };
 
-      When tests are executed, it is possible to specify both the concurrency mode
-      and whether or not output files (which should generally be version controlled)
-      are generated.
-   */
-  class test_family
+  class family_info
   {
   public:
-    struct results
-    {
-      log_summary::duration execution_time{};
-      std::vector<log_summary> logs;
-      std::vector<std::filesystem::path> failed_tests{};
-    };
-
-    struct summary
-    {
-      explicit summary(log_summary::duration t) : execution_time{t}
-      {}
-
-      log_summary::duration execution_time{};
-      log_summary log{};
-    };
-
-    template<concrete_test... Tests>
-    test_family(std::string_view name,
+    family_info(std::string_view name,
                 std::filesystem::path testRepo,
                 std::filesystem::path testMaterialsRepo,
                 std::filesystem::path outputDir,
-                recovery_paths recovery,
-                Tests&&... tests)
+                recovery_paths recovery)
       : m_Name{name}
       , m_TestRepo{std::move(testRepo)}
       , m_TestMaterialsRepo{std::move(testMaterialsRepo)}
       , m_OutputDir{std::move(outputDir)}
       , m_Recovery{std::move(recovery)}
+    {}
+
+    [[nodiscard]]
+    const std::string& name() const noexcept { return m_Name; }
+
+    [[nodiscard]]
+    const std::filesystem::path& test_repo() const noexcept { return m_TestRepo; }
+
+    [[nodiscard]]
+    const std::filesystem::path& output_dir() const noexcept { return m_OutputDir; }
+
+    [[nodiscard]]
+    const recovery_paths& recovery() const noexcept { return m_Recovery; }
+
+    [[nodiscard]]
+    materials_info set_materials(const std::filesystem::path& sourceFile);
+  private:
+    std::string m_Name{};
+    std::filesystem::path m_TestRepo{}, m_TestMaterialsRepo{}, m_OutputDir{};
+    recovery_paths m_Recovery;
+    std::vector<std::filesystem::path> m_MaterialsPaths{};
+  };
+
+  struct family_results
+  {
+    log_summary::duration execution_time{};
+    std::vector<log_summary> logs;
+    std::vector<std::filesystem::path> failed_tests{};
+  };
+
+
+  struct paths
+  {
+#ifdef _MSC_VER
+    // TO DO: remove once there's a Workaround for msvc bug which manifests when
+    // a type lacking a default constructor is used in a std::future.
+    // https://developercommunity.visualstudio.com/content/problem/60897/c-shared-state-futuresstate-default-constructs-the.html
+    paths() = default;
+#endif
+
+    paths(const std::filesystem::path& sourceFile,
+          const std::filesystem::path& workingMaterials,
+          const std::filesystem::path& predictiveMaterials,
+          update_mode updateMode, const std::filesystem::path& outputDir,
+          const std::filesystem::path& testRepo);
+
+    update_mode mode{update_mode::none};
+    std::filesystem::path test_file, summary, workingMaterials, predictions;
+  };
+
+
+  struct paths_comparator
+  {
+    [[nodiscard]]
+    bool operator()(const paths& lhs, const paths& rhs) const noexcept
     {
-      if constexpr(sizeof...(Tests) > 0)
-      {
-        m_Tests.reserve(sizeof...(tests));
-        register_tests(std::forward<Tests>(tests)...);
-      }
+      return lhs.workingMaterials < rhs.workingMaterials;
     }
+  };
+
+
+  struct family_summary
+  {
+    explicit family_summary(log_summary::duration t) : execution_time{t}
+    {}
+
+    log_summary::duration execution_time{};
+    log_summary log{};
+  };
+
+  class family_processor
+  {
+  public:
+    family_processor();
+
+    void process(log_summary summary, const paths& files);
+
+    [[nodiscard]]
+    family_results finalize_and_acquire();
+  private:
+    std::chrono::steady_clock::time_point m_Start;
+    std::set<std::filesystem::path> m_Record{};
+    std::set<paths, paths_comparator> m_Updateables{};
+    family_results m_Results{};
+
+    void to_file(const std::filesystem::path& filename, const log_summary& summary);
+  };
+
+  /*! \brief Allows tests to be grouped together into a family of related tests */
+
+  template<concrete_test... Tests>
+    requires (sizeof...(Tests) > 0)
+  class test_family
+  {
+  public:
+    test_family(std::string name,
+                std::filesystem::path testRepo,
+                std::filesystem::path testMaterialsRepo,
+                std::filesystem::path outputDir,
+                recovery_paths recovery,
+                Tests&&... tests)
+      : m_Info{std::move(name), std::move(testRepo), std::move(testMaterialsRepo), std::move(outputDir), std::move(recovery)}
+      , m_Tests{std::forward<Tests>(tests)...}
+    {
+      std::apply(
+        [this](auto&... t) { (set_materials(t), ... ); },
+        m_Tests
+      );
+    }
+
+    test_family(std::string name,
+                std::filesystem::path testRepo,
+                std::filesystem::path testMaterialsRepo,
+                std::filesystem::path outputDir,
+                recovery_paths recovery)
+      : m_Info{std::move(name), std::move(testRepo), std::move(testMaterialsRepo), std::move(outputDir), std::move(recovery)}
+    {}
 
     test_family(const test_family&)     = delete;
     test_family(test_family&&) noexcept = default;
@@ -85,66 +179,163 @@ namespace sequoia::testing
     test_family& operator=(const test_family&)     = delete;
     test_family& operator=(test_family&&) noexcept = default;
 
-    template<class concrete_test>
-    void add_test(concrete_test&& test)
+    template<concrete_test T>
+    void add_test(T&& test)
     {
-      m_Tests.emplace_back(std::forward<concrete_test>(test));
-      set_materials(*m_Tests.back());
+      using test_type = std::optional<std::remove_cvref_t<T>>;
+
+      auto& t{std::get<test_type>(m_Tests)};
+      t = std::forward<T>(test);
+      set_materials(t);
     }
 
     [[nodiscard]]
-    auto execute(update_mode updateMode, concurrency_mode concurrenyMode) -> results ;
+    family_results execute(update_mode updateMode, concurrency_mode concurrenyMode)
+    {
+      family_processor processor{};
+
+      if(concurrenyMode < concurrency_mode::test)
+      {
+        auto process{
+          [&processor,updateMode,this](auto& optTest) {
+            if(optTest.has_value())
+            {
+              const auto summary{optTest->execute()};
+              processor.process(summary, paths{optTest->source_filename(), optTest->working_materials(), optTest->predictive_materials(), updateMode, m_Info.output_dir(), m_Info.test_repo()});
+            }
+          }
+        };
+
+        std::apply(
+          [process](auto&... optTest) { (process(optTest), ...); },
+          m_Tests
+        );
+      }
+      else
+      {
+        using data = std::pair<log_summary, paths>;
+        std::vector<std::future<data>> results{};
+
+        auto generator{
+          [&results,updateMode,this](auto& optTest) {
+            if(optTest.has_value())
+            {
+              results.emplace_back(
+                std::async([&test = *optTest, updateMode, outputDir{m_Info.output_dir()}, testRepo{m_Info.test_repo()}](){
+                  return std::make_pair(test.execute(), paths{test.source_filename(), test.working_materials(), test.predictive_materials(), updateMode, outputDir, testRepo}); })
+              );
+            }
+          }
+        };
+
+        std::apply(
+          [generator](auto&... optTest) { (generator(optTest), ...); },
+          m_Tests
+        );
+
+        for(auto& r : results)
+        {
+          const auto[summary, paths]{r.get()};
+          processor.process(summary, paths);
+        }
+      }
+
+      return processor.finalize_and_acquire();
+    }
 
     [[nodiscard]]
-    const std::string& name() const noexcept { return m_Name; }
+    const std::string& name() const noexcept { return m_Info.name(); }
 
     [[nodiscard]]
-    bool empty() const noexcept { return m_Tests.empty(); }
+    bool empty() const noexcept
+    {
+      auto has_test{
+        [](auto& optTest) {
+          return optTest != std::nullopt;
+        }
+      };
+
+      return !std::apply(
+        [has_test](const auto&... t){
+          return (has_test(t) || ...);
+        },
+        m_Tests);
+    }
   private:
-    std::vector<test_vessel> m_Tests{};
-    std::string m_Name{};
-    std::filesystem::path m_TestRepo{}, m_TestMaterialsRepo{}, m_OutputDir{};
-    recovery_paths m_Recovery;
-    std::vector<std::filesystem::path> m_MaterialsPaths{};
+    family_info m_Info;
+    std::tuple<std::optional<Tests>...> m_Tests;
+
+    template<concrete_test T>
+    void set_materials(std::optional<T>& t)
+    {
+      if(t.has_value())
+      {
+        t->set_filesystem_data(m_Info.test_repo(), m_Info.output_dir(), name());
+        t->set_recovery_paths(m_Info.recovery());
+
+        const auto info{m_Info.set_materials(t->source_filename())};
+
+        t->set_materials(info.working, info.prediction, info.auxiliary);
+      }
+    }
+  };
+
+  class family_vessel
+  {
+  public:
+    template<concrete_test... Tests>
+    family_vessel(test_family<Tests...>&& f)
+      : m_pFamily{std::make_unique<essence<test_family<Tests...>>>(std::forward<test_family<Tests...>>(f))}
+    {}
+
+    family_vessel(const family_vessel&) = delete;
+    family_vessel(family_vessel&&) noexcept = default;
+
+    family_vessel& operator=(const family_vessel&) = delete;
+    family_vessel& operator=(family_vessel&&) noexcept = default;
 
     [[nodiscard]]
-    static std::filesystem::path test_summary_filename(const test& t, const std::filesystem::path& outputDir, const std::filesystem::path& testRepo);
-
-    template<class Test, class... Tests>
-    void register_tests(Test&& t, Tests&&... tests)
+    const std::string& name() const noexcept
     {
-      add_test(std::forward<Test>(t));
-
-      if constexpr (sizeof...(Tests) > 0)
-        register_tests(std::forward<Tests>(tests)...);
+      return m_pFamily->name();
     }
 
-    void set_materials(test& t);
-
-    class summary_writer
+    [[nodiscard]]
+    family_results execute(update_mode updateMode, concurrency_mode concurrenyMode)
     {
-    public:
-      void to_file(const std::filesystem::path& filename, const log_summary& summary);
-    private:
-      std::set<std::filesystem::path> m_Record{};
+      return m_pFamily->execute(updateMode, concurrenyMode);
+    }
+  private:
+    struct soul
+    {
+      virtual ~soul() = default;
+      virtual const std::string& name() const noexcept = 0;
+      virtual family_results execute(update_mode updateMode, concurrency_mode concurrenyMode) = 0;
     };
 
-    struct paths
+    template<class T>
+    struct essence final : soul
     {
-    #ifdef _MSC_VER
-      // TO DO: remove once there's a Workaround for msvc bug which manifests when
-      // a type lacking a default constructor is used in a std::future.
-      // https://developercommunity.visualstudio.com/content/problem/60897/c-shared-state-futuresstate-default-constructs-the.html
-      paths() = default;
-    #endif
+      essence(T&& t) : m_t{std::forward<T>(t)}
+      {}
 
-      paths(const test& t, update_mode updateMode, const std::filesystem::path& outputDir, const std::filesystem::path& testRepo);
+      const std::string& name() const noexcept final
+      {
+        return m_t.name();
+      }
 
-      update_mode mode{update_mode::none};
-      std::filesystem::path test_file, summary, workingMaterials, predictions;
+      [[nodiscard]]
+      family_results execute(update_mode updateMode, concurrency_mode concurrenyMode) final
+      {
+        return m_t.execute(updateMode, concurrenyMode);
+      }
+
+      T m_t;
     };
+
+    std::unique_ptr<soul> m_pFamily{};
   };
 
   [[nodiscard]]
-  std::string summarize(const test_family::summary& summary, summary_detail suppression, indentation ind_0, indentation ind_1);
+  std::string summarize(const family_summary& summary, summary_detail suppression, indentation ind_0, indentation ind_1);
 }

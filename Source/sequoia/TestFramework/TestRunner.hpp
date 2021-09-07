@@ -28,7 +28,7 @@ namespace sequoia::testing
   {};
 
   [[nodiscard]]
-  std::string report_time(const test_family::summary& s);
+  std::string report_time(const family_summary& s);
 
   /*! \brief Consumes command-line arguments and holds all test families
 
@@ -86,7 +86,7 @@ namespace sequoia::testing
     void finalize_concurrency_mode();
 
     [[nodiscard]]
-    test_family::summary process_family(const test_family::results& results);
+    family_summary process_family(const family_results& results);
 
     [[nodiscard]]
     bool concurrent_execution() const noexcept { return m_ConcurrencyMode != concurrency_mode::serial; }

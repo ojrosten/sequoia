@@ -217,10 +217,9 @@ namespace sequoia::testing
     using checker_t = checker<Mode, Extenders...>;
 
     using checker<Mode, Extenders...>::checker;
-    graph_checker(const graph_checker&) = delete;
 
+    graph_checker(const graph_checker&) = delete;
     graph_checker& operator=(const graph_checker&) = delete;
-    graph_checker& operator=(graph_checker&&)      = delete;
 
     template<class G, class... NodeWeights, class E=typename G::edge_init_type>
     void check_graph(std::string_view description, const G& graph, std::initializer_list<std::initializer_list<E>> edges, const std::tuple<NodeWeights...>& nodeWeights)
@@ -265,6 +264,7 @@ namespace sequoia::testing
     }
   protected:
     graph_checker(graph_checker&&) noexcept = default;
+    graph_checker& operator=(graph_checker&&) noexcept = default;
 
     ~graph_checker() = default;
   };
