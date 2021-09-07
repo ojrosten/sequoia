@@ -226,34 +226,4 @@ namespace sequoia::testing
   using free_test                = basic_free_test<test_mode::standard>;
   using free_false_negative_test = basic_free_test<test_mode::false_negative>;
   using free_false_positive_test = basic_free_test<test_mode::false_positive>;
-
-  class test_vessel
-  {
-  public:
-    template<concrete_test T>
-    test_vessel(T&& t)
-      : m_pTest{std::make_unique<T>(std::forward<T>(t))}
-    {}
-
-    test_vessel(const test_vessel&)     = delete;
-    test_vessel(test_vessel&&) noexcept = default;
-
-    test_vessel& operator=(const test_vessel&)     = delete;
-    test_vessel& operator=(test_vessel&&) noexcept = default;
-
-    [[nodiscard]]
-    test* operator->() noexcept { return m_pTest.get(); }
-
-    [[nodiscard]]
-    const test* operator->() const noexcept { return m_pTest.get(); }
-
-    [[nodiscard]]
-    test& operator*() noexcept { return *m_pTest.get(); }
-
-    [[nodiscard]]
-    const test& operator*() const noexcept { return *m_pTest.get(); }
-  private:
-
-    std::unique_ptr<test> m_pTest{};
-  };
 }
