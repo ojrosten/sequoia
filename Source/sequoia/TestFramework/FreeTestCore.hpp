@@ -16,8 +16,10 @@
 */
 
 #include "sequoia/TestFramework/ConcreteTypeCheckers.hpp"
-#include "sequoia/Core/Meta/Concepts.hpp"
 #include "sequoia/TestFramework/FileSystem.hpp"
+
+#include "sequoia/Core/Meta/Concepts.hpp"
+#include "sequoia/TextProcessing/Substitutions.hpp"
 
 #include <memory>
 #include <chrono>
@@ -227,16 +229,9 @@ namespace sequoia::testing
     {
       namespace fs = std::filesystem;
 
-      auto makeDirName{
-        [](std::string_view name) -> fs::path {
-          std::string n{name};
-          for(auto& c : n) if(c == ' ') c = '_';
-
-          return n;
-        }
-      };
-
-      return diagnostics_output_path(outputDir) / makeDirName(familyName) / output_filename(suffix);
+      return   diagnostics_output_path(outputDir)
+             / fs::path{replace_all(familyName, " ", "_")}
+             / output_filename(suffix);
     }
 
     /// Pure virtual method which should be overridden in a concrete test's cpp file in order to provide the correct __FILE__
