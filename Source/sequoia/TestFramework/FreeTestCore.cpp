@@ -10,6 +10,17 @@
 
 namespace sequoia::testing
 {
+  namespace impl
+  {
+    void write(const std::filesystem::path& file, std::string_view text)
+    {
+      if(!text.empty() || std::filesystem::exists(file))
+      {
+        write_to_file(file, text);
+      }
+    }
+  }
+  
   timer::timer()
     : m_Start{std::chrono::steady_clock::now()}
   {}
@@ -18,95 +29,6 @@ namespace sequoia::testing
   std::chrono::nanoseconds timer::time_elapsed() const
   {
     return std::chrono::steady_clock::now() - m_Start;
-  }
-  
-  void test::set_filesystem_data(std::filesystem::path testRepo, const std::filesystem::path& outputDir, std::string_view familyName)
-  {
-    m_TestRepo = std::move(testRepo);
-    m_DiagnosticsOutput = make_output_filepath(outputDir, familyName, "Output");
-    m_CaughtExceptionsOutput = make_output_filepath(outputDir, familyName, "Exceptions");
-
-    namespace fs = std::filesystem;
-    fs::create_directories(m_DiagnosticsOutput.parent_path());
-  }
-
-  void test::set_materials(std::filesystem::path workingMaterials, std::filesystem::path predictiveMaterials, std::filesystem::path auxiliaryMaterials)
-  {
-    m_WorkingMaterials    = std::move(workingMaterials);
-    m_PredictiveMaterials = std::move(predictiveMaterials);
-    m_AuxiliaryMaterials  = std::move(auxiliaryMaterials);
-  }
-
-  void test::set_recovery_paths(recovery_paths paths)
-  {
-    do_set_recovery_paths(std::move(paths));
-  }
-
-  [[nodiscard]]
-  std::string test::report_line(const std::filesystem::path& file, int line, std::string_view message)
-  {
-    return testing::report_line(file, line, message, test_repository());
-  }
-
-  [[nodiscard]]
-  log_summary test::execute()
-  {
-    const timer t{};
-
-    try
-    {
-      run_tests();
-    }
-    catch(const std::exception& e)
-    {
-      log_critical_failure("Unexpected", e.what());
-    }
-    catch(...)
-    {
-      log_critical_failure("Unknown", "");
-    }
-
-    return write_versioned_output(summarize(t.time_elapsed()));
-  }
-
-  [[nodiscard]]
-  std::filesystem::path test::output_filename(std::string_view suffix) const
-  {
-    namespace fs = std::filesystem;
-    return fs::path{source_file()}.filename().replace_extension().concat("_").concat(mode_tag()).concat(suffix).concat(".txt");
-  }
-
-  [[nodiscard]]
-  std::filesystem::path test::make_output_filepath(const std::filesystem::path& outputDir, std::string_view familyName, std::string_view suffix) const
-  {
-    namespace fs = std::filesystem;
-
-    auto makeDirName{
-      [](std::string_view name) -> fs::path {
-        std::string n{name};
-        for(auto& c : n) if(c == ' ') c = '_';
-
-        return n;
-      }
-    };
-
-    return diagnostics_output_path(outputDir) / makeDirName(familyName) / output_filename(suffix);
-  }
-
-  const log_summary& test::write_versioned_output(const log_summary& summary) const
-  {
-    write(diagnostics_output_filename(), summary.diagnostics_output());
-    write(caught_exceptions_output_filename(), summary.caught_exceptions_output());
-
-    return summary;
-  }
-
-  void test::write(const std::filesystem::path& file, std::string_view text)
-  {
-    if(!text.empty() || std::filesystem::exists(file))
-    {
-      write_to_file(file, text);
-    }
   }
 
   [[nodiscard]]
