@@ -10,6 +10,16 @@
 
 namespace sequoia::testing
 {
+  timer::timer()
+    : m_Start{std::chrono::steady_clock::now()}
+  {}
+
+  [[nodiscard]]
+  std::chrono::nanoseconds timer::time_elapsed() const
+  {
+    return std::chrono::steady_clock::now() - m_Start;
+  }
+  
   void test::set_filesystem_data(std::filesystem::path testRepo, const std::filesystem::path& outputDir, std::string_view familyName)
   {
     m_TestRepo = std::move(testRepo);
@@ -41,8 +51,7 @@ namespace sequoia::testing
   [[nodiscard]]
   log_summary test::execute()
   {
-    using namespace std::chrono;
-    const auto start{steady_clock::now()};
+    const timer t{};
 
     try
     {
@@ -57,8 +66,7 @@ namespace sequoia::testing
       log_critical_failure("Unknown", "");
     }
 
-    const auto end{steady_clock::now()};
-    return write_versioned_output(summarize(end - start));
+    return write_versioned_output(summarize(t.time_elapsed()));
   }
 
   [[nodiscard]]

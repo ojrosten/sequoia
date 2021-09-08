@@ -128,14 +128,14 @@ namespace sequoia::testing
   class family_processor
   {
   public:
-    family_processor();
+    family_processor() = default;
 
     void process(log_summary summary, const paths& files);
 
     [[nodiscard]]
     family_results finalize_and_acquire();
   private:
-    std::chrono::steady_clock::time_point m_Start;
+    timer m_Timer{};
     std::set<std::filesystem::path> m_Record{};
     std::set<paths, paths_comparator> m_Updateables{};
     family_results m_Results{};

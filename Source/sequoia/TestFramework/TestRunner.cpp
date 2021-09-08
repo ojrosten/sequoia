@@ -412,8 +412,7 @@ namespace sequoia::testing
 
     if(!mode(runner_mode::test)) return false;
 
-    using namespace std::chrono;
-    const auto time{steady_clock::now()};
+    const timer t{};
 
     log_summary summary{};
     if(!m_Selector.empty())
@@ -447,7 +446,7 @@ namespace sequoia::testing
         }
       }
       stream() << "\n-----------Grand Totals-----------\n";
-      stream() << summarize(summary, steady_clock::now() - time, summary_detail::absent_checks | summary_detail::timings, indentation{"\t"}, no_indent);
+      stream() << summarize(summary, t.time_elapsed(), summary_detail::absent_checks | summary_detail::timings, indentation{"\t"}, no_indent);
     }
     else if(m_Selector.pruned())
     {

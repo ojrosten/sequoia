@@ -92,7 +92,7 @@ namespace sequoia::testing
     if(!pruned()) return;
 
     stream << "\nAnalyzing dependencies...\n";
-    const auto start{std::chrono::steady_clock::now()};
+    const timer t{};
     const auto pruneFile{prune_path(proj_paths().output(), proj_paths().main_cpp_dir())};
 
     if(auto maybeToRun{tests_to_run(proj_paths().source_root(), proj_paths().tests(), proj_paths().test_materials(), pruneFile, m_PruneInfo.stamps.ondisk, m_PruneInfo.stamps.executable, m_PruneInfo.include_cutoff)})
@@ -103,9 +103,7 @@ namespace sequoia::testing
         [](const fs::path& file) -> std::pair<fs::path, bool> { return {file, false}; });
     }
 
-    const auto end{std::chrono::steady_clock::now()};
-
-    const auto [dur, unit] {testing::stringify(end - start)};
+    const auto [dur, unit] {testing::stringify(t.time_elapsed())};
     stream << "[" << dur << unit << "]\n\n";
   }
 

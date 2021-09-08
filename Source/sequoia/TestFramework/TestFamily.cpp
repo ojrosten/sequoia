@@ -64,10 +64,6 @@ namespace sequoia::testing
     , predictions{predictiveMaterials}
   {}
 
-  family_processor::family_processor()
-    : m_Start{std::chrono::steady_clock::now()}
-  {}
-
   [[nodiscard]]
   family_results family_processor::finalize_and_acquire()
   {
@@ -76,7 +72,7 @@ namespace sequoia::testing
       soft_update(update.workingMaterials, update.predictions);
     }
 
-    m_Results.execution_time = std::chrono::steady_clock::now() - m_Start;
+    m_Results.execution_time = m_Timer.time_elapsed();
     return std::move(m_Results);
   }
 

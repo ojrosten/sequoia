@@ -20,9 +20,23 @@
 #include "sequoia/TestFramework/FileSystem.hpp"
 
 #include <memory>
+#include <chrono>
 
 namespace sequoia::testing
 {
+  class [[nodiscard]] timer
+  {
+  public:
+    timer();
+
+    [[nodiscard]]
+    std::chrono::nanoseconds time_elapsed() const;
+  private:
+    using time_point = std::chrono::steady_clock::time_point;
+
+    time_point m_Start;
+  };
+  
   /*! \brief Abstract base class used for type-erasure of the template class basic_test.
 
       This class allows for convenient, homogeneous treatment of all concrete tests.

@@ -25,12 +25,10 @@ namespace sequoia::testing
   [[nodiscard]]
   std::chrono::duration<double> profile(Task task)
   {
-    using namespace std::chrono;
-    const auto start{steady_clock::now()};
+    const timer t{};
     task();
-    const auto end{steady_clock::now()};
 
-    return end - start;
+    return t.time_elapsed();
   }
 
   /*! \brief Function for comparing the performance of a fast task to a slow task.
