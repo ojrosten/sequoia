@@ -142,11 +142,15 @@ namespace sequoia::testing
     throw std::logic_error{"Unknown option for concurrency_mode"};
   }
 
+  family_info::materials_setter::materials_setter(family_info& info)
+    : m_pInfo{&info}
+  {}
+
   [[nodiscard]]
-  materials_info family_info::set_materials(const fs::path& sourceFile)
+  materials_info family_info::materials_setter::set_materials(const std::filesystem::path& sourceFile)
   {
     const auto rel{
-      [&sourceFile, &testRepo=m_TestRepo, &materialsRepo=m_TestMaterialsRepo](){
+      [&sourceFile, &testRepo=m_pInfo->m_TestRepo, &materialsRepo=m_pInfo->m_TestMaterialsRepo](){
         if(testRepo.empty()) return fs::path{};
 
         auto folderName{fs::path{sourceFile}.replace_extension()};
@@ -157,10 +161,10 @@ namespace sequoia::testing
       }()
     };
 
-    const auto materials{!rel.empty() ? m_TestMaterialsRepo / rel : fs::path{}};
+    const auto materials{!rel.empty() ? m_pInfo->m_TestMaterialsRepo / rel : fs::path{}};
     if(fs::exists(materials))
     {
-      const auto output{tests_temporary_data_path(m_OutputDir) /= rel};
+      const auto output{tests_temporary_data_path(m_pInfo->m_OutputDir) /= rel};
 
       const auto[original, workingCopy, prediction, originalAux, workingAux]{
          [&output,&materials] () -> std::array<fs::path, 5>{
@@ -203,6 +207,18 @@ namespace sequoia::testing
 
     return {};
   }
+
+  family_info::family_info(std::string_view name,
+                std::filesystem::path testRepo,
+                std::filesystem::path testMaterialsRepo,
+                std::filesystem::path outputDir,
+                recovery_paths recovery)
+    : m_Name{name}
+    , m_TestRepo{std::move(testRepo)}
+    , m_TestMaterialsRepo{std::move(testMaterialsRepo)}
+    , m_OutputDir{std::move(outputDir)}
+    , m_Recovery{std::move(recovery)}
+  {}
 
   [[nodiscard]]
   std::string summarize(const family_summary& summary, const summary_detail suppression, indentation ind_0, indentation ind_1)

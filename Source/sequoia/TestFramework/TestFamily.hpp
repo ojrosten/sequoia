@@ -45,17 +45,29 @@ namespace sequoia::testing
   class family_info
   {
   public:
+    class [[nodiscard]] materials_setter
+    {
+    public:
+      explicit materials_setter(family_info& info);
+
+      materials_setter(const materials_setter&)     = delete;
+      materials_setter(materials_setter&&) noexcept = default;
+
+      materials_setter& operator=(const materials_setter&)     = delete;
+      materials_setter& operator=(materials_setter&&) noexcept = default;
+
+      [[nodiscard]]
+      materials_info set_materials(const std::filesystem::path& sourceFile);
+    private:
+      family_info* m_pInfo;
+      std::vector<std::filesystem::path> m_MaterialsPaths{};
+    };
+    
     family_info(std::string_view name,
                 std::filesystem::path testRepo,
                 std::filesystem::path testMaterialsRepo,
                 std::filesystem::path outputDir,
-                recovery_paths recovery)
-      : m_Name{name}
-      , m_TestRepo{std::move(testRepo)}
-      , m_TestMaterialsRepo{std::move(testMaterialsRepo)}
-      , m_OutputDir{std::move(outputDir)}
-      , m_Recovery{std::move(recovery)}
-    {}
+                recovery_paths recovery);
 
     [[nodiscard]]
     const std::string& name() const noexcept { return m_Name; }
@@ -68,16 +80,12 @@ namespace sequoia::testing
 
     [[nodiscard]]
     const recovery_paths& recovery() const noexcept { return m_Recovery; }
-
-    [[nodiscard]]
-    materials_info set_materials(const std::filesystem::path& sourceFile);
-
-    void reset_cache() { m_MaterialsPaths.clear(); }
   private:
+    friend materials_setter;
+    
     std::string m_Name{};
     std::filesystem::path m_TestRepo{}, m_TestMaterialsRepo{}, m_OutputDir{};
     recovery_paths m_Recovery;
-    std::vector<std::filesystem::path> m_MaterialsPaths{};
   };
 
   struct family_results
@@ -161,8 +169,9 @@ namespace sequoia::testing
       : m_Info{std::move(name), std::move(testRepo), std::move(testMaterialsRepo), std::move(outputDir), std::move(recovery)}
       , m_Tests{std::forward<Tests>(tests)...}
     {
+      family_info::materials_setter setter{m_Info};
       std::apply(
-        [this](auto&... t) { (set_materials(t), ... ); },
+        [&setter,this](auto&... t) { ( set_materials(setter, t), ... ); },
         m_Tests
       );
     }
@@ -181,14 +190,20 @@ namespace sequoia::testing
     test_family& operator=(const test_family&)     = delete;
     test_family& operator=(test_family&&) noexcept = default;
 
+    [[nodiscard]]
+    family_info::materials_setter make_materials_setter()
+    {
+      return family_info::materials_setter{m_Info};
+    }
+
     template<concrete_test T>
-    void add_test(T&& test)
+    void add_test(family_info::materials_setter& setter, T&& test)
     {
       using test_type = std::optional<std::remove_cvref_t<T>>;
 
       auto& t{std::get<test_type>(m_Tests)};
       t = std::forward<T>(test);
-      set_materials(t);
+      set_materials(setter, t);
     }
 
     [[nodiscard]]
@@ -266,15 +281,15 @@ namespace sequoia::testing
 
     void reset()
     {
-      m_Info.reset_cache();
+      family_info::materials_setter setter{m_Info};
       
       auto reset{
-        [this](auto& optTest){
+        [&setter,this](auto& optTest){
           if(optTest)
           {
             using type = typename std::remove_cvref_t<decltype(optTest)>::value_type;
             *optTest = type{optTest->name()};
-            set_materials(optTest);
+            set_materials(setter, optTest);
           }
         }
       };
@@ -286,14 +301,14 @@ namespace sequoia::testing
     std::tuple<std::optional<Tests>...> m_Tests;
 
     template<concrete_test T>
-    void set_materials(std::optional<T>& t)
+    void set_materials(family_info::materials_setter& setter, std::optional<T>& t)
     {
       if(t.has_value())
       {
         t->set_filesystem_data(m_Info.test_repo(), m_Info.output_dir(), name());
         t->set_recovery_paths(m_Info.recovery());
 
-        const auto info{m_Info.set_materials(t->source_filename())};
+        const auto info{setter.set_materials(t->source_filename())};
 
         t->set_materials(info.working, info.prediction, info.auxiliary);
       }

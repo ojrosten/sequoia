@@ -34,7 +34,9 @@ namespace sequoia::testing
           {
             using family_t = test_family<std::remove_cvref_t<Test>, std::remove_cvref_t<Tests>...>;
             family_t f{std::string{name}, m_Paths.tests(), m_Paths.test_materials(), m_Paths.output(), m_Recovery};
-            add_tests(f, std::forward<Test>(test), std::forward<Tests>(tests)...);
+            auto setter{f.make_materials_setter()};
+            
+            add_tests(f, setter, std::forward<Test>(test), std::forward<Tests>(tests)...);
             if(!f.empty())
             {
               m_Families.push_back(std::move(f));
@@ -155,16 +157,19 @@ namespace sequoia::testing
     auto find_filename(const std::filesystem::path& filename)->source_list::iterator;
 
     template<concrete_test... AllTests, concrete_test Test, concrete_test... Tests>
-    void add_tests(test_family<AllTests...>& f, Test&& test, Tests&&... tests)
+    void add_tests(test_family<AllTests...>& f,
+                   family_info::materials_setter& setter,
+                   Test&& test,
+                   Tests&&... tests)
     {
       auto i{find_filename(test.source_filename())};
       if(i != m_SelectedSources.end())
       {
-        f.add_test(std::forward<Test>(test));
+        f.add_test(setter, std::forward<Test>(test));
         i->second = true;
       }
 
-      if constexpr(sizeof...(Tests) > 0) add_tests(f, std::forward<Tests>(tests)...);
+      if constexpr(sizeof...(Tests) > 0) add_tests(f, setter, std::forward<Tests>(tests)...);
     }
   };
 }
