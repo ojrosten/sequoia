@@ -394,6 +394,11 @@ namespace sequoia::testing
 
     for(int i{}; i < m_NumReps; ++i)
     {
+      if(i)
+      {
+        for(auto& f : m_Selector) f.reset();
+      }
+      
       if(!run_tests()) break;
     }
   }

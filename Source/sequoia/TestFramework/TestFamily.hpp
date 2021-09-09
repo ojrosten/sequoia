@@ -71,6 +71,8 @@ namespace sequoia::testing
 
     [[nodiscard]]
     materials_info set_materials(const std::filesystem::path& sourceFile);
+
+    void reset_cache() { m_MaterialsPaths.clear(); }
   private:
     std::string m_Name{};
     std::filesystem::path m_TestRepo{}, m_TestMaterialsRepo{}, m_OutputDir{};
@@ -256,10 +258,28 @@ namespace sequoia::testing
       };
 
       return !std::apply(
-        [has_test](const auto&... t){
-          return (has_test(t) || ...);
+        [has_test](const auto&... optTest){
+          return (has_test(optTest) || ...);
         },
         m_Tests);
+    }
+
+    void reset()
+    {
+      m_Info.reset_cache();
+      
+      auto reset{
+        [this](auto& optTest){
+          if(optTest)
+          {
+            using type = typename std::remove_cvref_t<decltype(optTest)>::value_type;
+            *optTest = type{optTest->name()};
+            set_materials(optTest);
+          }
+        }
+      };
+      
+      std::apply([reset](auto&... optTest){ (reset(optTest), ...); }, m_Tests);
     }
   private:
     family_info m_Info;
@@ -305,32 +325,43 @@ namespace sequoia::testing
     {
       return m_pFamily->execute(updateMode, concurrenyMode);
     }
+
+    void reset()
+    {
+      m_pFamily->reset();
+    }
   private:
     struct soul
     {
       virtual ~soul() = default;
       virtual const std::string& name() const noexcept = 0;
       virtual family_results execute(update_mode updateMode, concurrency_mode concurrenyMode) = 0;
+      virtual void reset() = 0;
     };
 
-    template<class T>
+    template<class Family>
     struct essence final : soul
     {
-      essence(T&& t) : m_t{std::forward<T>(t)}
+      essence(Family&& f) : m_Family{std::forward<Family>(f)}
       {}
 
       const std::string& name() const noexcept final
       {
-        return m_t.name();
+        return m_Family.name();
       }
 
       [[nodiscard]]
       family_results execute(update_mode updateMode, concurrency_mode concurrenyMode) final
       {
-        return m_t.execute(updateMode, concurrenyMode);
+        return m_Family.execute(updateMode, concurrenyMode);
       }
 
-      T m_t;
+      void reset()
+      {
+        m_Family.reset();
+      }
+
+      Family m_Family;
     };
 
     std::unique_ptr<soul> m_pFamily{};
