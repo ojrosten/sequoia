@@ -61,6 +61,19 @@ namespace sequoia::testing
     }
   }
 
+  [[nodiscard]]
+  std::string to_string(const failure_output& output)
+  {
+    std::string str{};
+    for(const auto& info : output)
+    {
+      if(!info.message.empty())
+        str.append(info.message).append("\n");
+    }
+
+    return str;
+  }
+
   void log_summary::clear() noexcept
   {
     log_summary clean{""};
@@ -80,7 +93,13 @@ namespace sequoia::testing
 
   log_summary& log_summary::operator+=(const log_summary& rhs)
   {
-    m_FailureMessages += rhs.m_FailureMessages;
+    m_FailureMessages.insert(m_FailureMessages.end(),
+                             rhs.m_FailureMessages.begin(),
+                             rhs.m_FailureMessages.end());
+
+    m_DiagnosticsOutput.insert(m_DiagnosticsOutput.end(),
+                              rhs.m_DiagnosticsOutput.begin(),
+                              rhs.m_DiagnosticsOutput.end());
 
     m_StandardTopLevelChecks         += rhs.m_StandardTopLevelChecks;
     m_StandardDeepChecks             += rhs.m_StandardDeepChecks;
@@ -100,7 +119,6 @@ namespace sequoia::testing
 
     m_CriticalFailures   += rhs.m_CriticalFailures;
     m_ExceptionsInFlight += rhs.m_ExceptionsInFlight;
-    m_DiagnosticsOutput  += rhs.m_DiagnosticsOutput;
     m_Duration           += rhs.m_Duration;
 
     return *this;

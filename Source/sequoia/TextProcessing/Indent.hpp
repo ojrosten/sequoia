@@ -20,6 +20,8 @@ namespace sequoia
   class indentation
   {
   public:
+    using size_type = std::string::size_type;
+
     explicit indentation(std::string s)
       : m_Data{std::move(s)}
     {}
@@ -28,6 +30,18 @@ namespace sequoia
     operator std::string_view() const noexcept
     {
       return m_Data;
+    }
+
+    indentation& append(size_type count, char c)
+    {
+      m_Data.append(count, c);
+      return *this;
+    }
+
+    indentation& append(const std::string& s)
+    {
+      m_Data.append(s);
+      return *this;
     }
 
     [[nodiscard]]

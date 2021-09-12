@@ -103,13 +103,13 @@ namespace sequoia::testing
     if(filename.empty()) return;
 
     auto mode{std::ios_base::out};
-    if(auto found{m_Record.find(filename)}; found != m_Record.end())
+    if(auto found{m_FilesWrittenTo.find(filename)}; found != m_FilesWrittenTo.end())
     {
       mode = std::ios_base::app;
     }
     else
     {
-      m_Record.insert(filename);
+      m_FilesWrittenTo.insert(filename);
     }
 
     std::filesystem::create_directories(filename.parent_path());

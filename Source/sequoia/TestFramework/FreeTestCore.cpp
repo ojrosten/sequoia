@@ -19,6 +19,14 @@ namespace sequoia::testing
         write_to_file(file, text);
       }
     }
+
+    void write(const std::filesystem::path& file, const failure_output& output)
+    {
+      for(const auto& info : output)
+      {
+        write(file, info.message);
+      }
+    }
   }
   
   timer::timer()

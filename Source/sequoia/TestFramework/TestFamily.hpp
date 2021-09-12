@@ -146,7 +146,7 @@ namespace sequoia::testing
     family_results finalize_and_acquire();
   private:
     timer m_Timer{};
-    std::set<std::filesystem::path> m_Record{};
+    std::set<std::filesystem::path> m_FilesWrittenTo{};
     std::set<paths, paths_comparator> m_Updateables{};
     family_results m_Results{};
 

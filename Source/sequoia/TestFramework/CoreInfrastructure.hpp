@@ -174,6 +174,12 @@ namespace sequoia::testing
     return static_cast<T>(static_cast<int>(lhs) ^ static_cast<int>(rhs));
   }
 
+  struct uncaught_exception_info
+  {
+    int num{};
+    std::string top_level_message{};
+  };
+
   [[nodiscard]]
   SPECULATIVE_CONSTEVAL
   std::size_t operator "" _sz(unsigned long long int n) noexcept

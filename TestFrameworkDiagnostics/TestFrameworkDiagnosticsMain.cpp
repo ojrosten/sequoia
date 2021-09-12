@@ -61,7 +61,7 @@ int main(int argc, char** argv)
 
     runner.add_test_family(
       "Allocation Diagnostics",
-      allocation_false_positive_diagnostics{"Alloction False Positive Diagnostics"},
+      allocation_false_positive_diagnostics{"Allocation False Positive Diagnostics"},
       move_only_allocation_false_positive_diagnostics{"Move-Only Alloction False Positive Diagnostics"},
       allocation_false_negative_diagnostics{"Allocation False Negative Diagnostics"},
       move_only_allocation_false_negative_diagnostics{"Move-Only Allocation False Negative Diagnostics"}

@@ -87,7 +87,7 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string footer()
   {
-    return "=======================================\n\n";
+    return "=======================================\n";
   }
 
   void end_block(std::string& s, const std::size_t newlines, std::string_view footer)
@@ -128,13 +128,17 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string exception_message(std::string_view tag, const std::filesystem::path& filename, std::string_view currentMessage, std::string_view exceptionMessage, const bool exceptionsDetected)
+  std::string exception_message(std::string_view tag,
+                                const std::filesystem::path& filename,
+                                const uncaught_exception_info& info,
+                                std::string_view exceptionMessage)
   {
     auto mess{append_lines(std::string{"Error -- "}.append(tag).append(" Exception:"), exceptionMessage).append("\n")};
 
+    const auto& currentMessage{info.top_level_message};
     if(!currentMessage.empty())
     {
-      std::string_view suffix{exceptionsDetected ? "during last check" : "after check completed"};
+      std::string_view suffix{info.num ? "during last check" : "after check completed"};
       append_lines(mess, std::string{"Exception thrown "}.append(suffix), "Last Recorded Message:\n", currentMessage);
     }
     else

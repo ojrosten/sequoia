@@ -91,7 +91,7 @@ namespace sequoia::testing
   {
   public:
     sentinel(test_logger<Mode>& logger, std::string_view message)
-      : m_Logger{logger}
+      : m_pLogger{&logger}
       , m_Message{message}
       , m_PriorFailures{logger.failures()}
       , m_PriorCriticalFailures{logger.critical_failures()}
@@ -100,17 +100,17 @@ namespace sequoia::testing
       if(!logger.depth())
       {
         logger.log_top_level_check();
-        impl::record_check_started(m_Logger.get().recovery().recovery_file, message);
+        impl::record_check_started(get().recovery().recovery_file, message);
       }
 
-      impl::recored_dump_started(m_Logger.get().recovery().dump_file, message);
+      impl::recored_dump_started(get().recovery().dump_file, message);
       logger.push_message(message);
       logger.increment_depth();
     }
 
     ~sentinel()
     {
-      auto& logger{m_Logger.get()};
+      auto& logger{get()};
       logger.decrement_depth();
 
       if(!logger.depth())
@@ -123,7 +123,7 @@ namespace sequoia::testing
         {
           if(failure_detected()) logger.end_message(test_logger<Mode>::critical::no);
 
-          auto messageMaker{
+          auto fpMessageMaker{
             [&logger](){
               auto mess{indent("False Positive Failure:", logger.top_level_message(), tab)};
               end_block(mess, 3, indent(footer(), tab));
@@ -139,18 +139,18 @@ namespace sequoia::testing
 
           if(modeSpecificFailure)
           {
-            logger.log_top_level_failure((Mode == test_mode::false_positive) ? messageMaker() : "");
+            logger.log_top_level_failure((Mode == test_mode::false_positive) ? fpMessageMaker() : "");
           }
           else if constexpr(Mode == test_mode::false_negative)
           {
             if(!critical_failure_detected())
-              logger.append_to_diagnostics_output(messageMaker());
+              logger.append_to_diagnostics_output(fpMessageMaker());
           }
 
-          impl::record_check_ended(m_Logger.get().recovery().recovery_file);
+          impl::record_check_ended(get().recovery().recovery_file);
         }
 
-        impl::recored_dump_ended(m_Logger.get().recovery().dump_file);
+        impl::recored_dump_ended(get().recovery().dump_file);
         logger.exceptions_detected_by_sentinel(std::uncaught_exceptions());
       }
 
@@ -165,53 +165,59 @@ namespace sequoia::testing
 
     void log_performance_check()
     {
-      m_Logger.get().log_performance_check();
+      get().log_performance_check();
     }
 
     void log_check()
     {
-      m_Logger.get().log_check();
+      get().log_check();
     }
 
     void log_failure(std::string_view message)
     {
-      m_Logger.get().log_failure(message);
+      get().log_failure(message);
     }
 
     void log_performance_failure(std::string_view message)
     {
-      m_Logger.get().log_performance_failure(message);
+      get().log_performance_failure(message);
     }
 
     void log_critical_failure(std::string_view message)
     {
-      m_Logger.get().log_critical_failure(message);
+      get().log_critical_failure(message);
     }
 
     void log_caught_exception_message(std::string_view message)
     {
-      m_Logger.get().log_caught_exception_message(message);
+      get().log_caught_exception_message(message);
     }
 
     [[nodiscard]]
     bool critical_failure_detected() const noexcept
     {
-      return m_Logger.get().critical_failures() != m_PriorCriticalFailures;
+      return get().critical_failures() != m_PriorCriticalFailures;
     }
 
     [[nodiscard]]
     bool failure_detected() const noexcept
     {
-      return m_Logger.get().failures() != m_PriorFailures;
+      return get().failures() != m_PriorFailures;
     }
 
     [[nodiscard]]
     bool checks_registered() const noexcept
     {
-      return m_Logger.get().deep_checks() != m_PriorDeepChecks;
+      return get().deep_checks() != m_PriorDeepChecks;
     }
   private:
-    std::reference_wrapper<test_logger<Mode>> m_Logger;
+    [[nodiscard]]
+    test_logger<Mode>& get() noexcept { return *m_pLogger; }
+
+    [[nodiscard]]
+    const test_logger<Mode>& get() const noexcept { return *m_pLogger; }
+
+    test_logger<Mode>* m_pLogger;
     std::string m_Message;
     std::size_t
       m_PriorFailures{},
@@ -219,7 +225,16 @@ namespace sequoia::testing
       m_PriorDeepChecks{};
   };
 
+  struct failure_info
+  {
+    std::size_t check_index;
+    std::string message;
+  };
 
+  using failure_output = std::vector<failure_info>;
+
+  [[nodiscard]]
+  std::string to_string(const failure_output& output);
 
   template<test_mode Mode>
   class test_logger
@@ -258,19 +273,25 @@ namespace sequoia::testing
     std::size_t performance_checks() const noexcept { return m_PerformanceChecks; }
 
     [[nodiscard]]
-    const std::string& failure_messages() const noexcept{ return m_FailureMessages; }
+    const failure_output& failure_messages() const noexcept{ return m_FailureMessages; }
 
     [[nodiscard]]
-    const std::string& diagnostics_output() const noexcept { return m_DiagnosticsOutput; }
+    const failure_output& diagnostics_output() const noexcept { return m_DiagnosticsOutput; }    
 
     [[nodiscard]]
-    int exceptions_detected_by_sentinel() const noexcept { return m_ExceptionsInFlight; }
+    const failure_output& caught_exceptions_output() const noexcept { return m_CaughtExceptionMessages; }
 
     [[nodiscard]]
-    const std::string& top_level_message() const noexcept { return m_TopLevelMessage; }
+    const uncaught_exception_info& exceptions_detected_by_sentinel() const
+    {
+      return m_UncaughtExceptionInfo;
+    }
 
     [[nodiscard]]
-    const std::string& caught_exceptions_output() const noexcept { return m_CaughtExceptionMessages; }
+    std::string_view top_level_message() const noexcept
+    {
+      return !m_LevelMessages.empty() ? std::string_view{m_LevelMessages.front().message} : "";
+    }
 
     [[nodiscard]]
     const recovery_paths& recovery() const noexcept { return m_Recovery; }
@@ -287,20 +308,20 @@ namespace sequoia::testing
       {}
 
       std::string message;
-      bool used{};
+      bool written{};
     };
 
-    enum class critical{ yes, no};
+    enum class critical{yes, no};
+    enum class update_mode{fresh, app};
 
-    std::string
-      m_TopLevelMessage,
+    failure_output
       m_FailureMessages,
       m_DiagnosticsOutput,
       m_CaughtExceptionMessages;
 
     std::vector<level_message> m_LevelMessages;
 
-    int m_ExceptionsInFlight{};
+    uncaught_exception_info m_UncaughtExceptionInfo{};
 
     std::size_t
       m_Failures{},
@@ -335,7 +356,7 @@ namespace sequoia::testing
     {
       std::string msg{};
       auto build{
-        [&msg](auto&& text, indentation ind){
+        [&msg](auto&& text, const indentation& ind){
           if(msg.empty())
           {
             msg = indent(std::forward<decltype(text)>(text), ind);
@@ -347,24 +368,29 @@ namespace sequoia::testing
         }
       };
 
-      std::string ind{tab};
-      int activeLevelMessages{};
+      auto indenter{
+        [](std::size_t depth) -> indentation {
+          return indentation{tab}.append(2*depth, ' ');
+        }
+      };
+
+      indentation ind{tab};
+      std::size_t activeLevels{};
       for(auto& lm : m_LevelMessages)
       {
         if(lm.message.empty()) continue;
 
-        if(activeLevelMessages++ > 0)
-          ind.append("  ");
+        if(activeLevels++ > 0) ind.append("  ");
 
-        if(lm.used) continue;
+        if(lm.written) continue;
 
-        build(lm.message, indentation{ind});
-        lm.used = true;
+        build(lm.message, ind);
+        lm.written = true;
       }
 
-      build(message, indentation{ind});
+      build(message, ind);
 
-      update_output(msg, 2, "", isCritical);
+      update_output(msg, 1, "", isCritical, update_mode::fresh);
     }
 
     void log_failure(std::string_view message)
@@ -386,56 +412,83 @@ namespace sequoia::testing
       impl::recored_critical_failure(m_Recovery.recovery_file, message);
     }
 
-    void log_top_level_failure(std::string_view message)
+    void log_top_level_failure(std::string message)
     {
       ++m_TopLevelFailures;
-      m_FailureMessages.append(message).append("\n");
+      if(m_LevelMessages.empty())
+      {
+        m_LevelMessages.push_back(level_message{""});
+      }
+      else
+      {
+        m_LevelMessages.back().message.append(std::move(message));
+      }
     }
 
     void log_caught_exception_message(std::string_view message)
     {
-      m_CaughtExceptionMessages.append(top_level_message()).append("\n").append(message);
-      end_block(m_CaughtExceptionMessages, 3, indent(footer(), tab));
+      append_to_output(m_CaughtExceptionMessages,
+                       std::string{top_level_message()}.append("\n").append(message),
+                       3,
+                       footer(),
+                       update_mode::fresh);
     }
 
     void exceptions_detected_by_sentinel(const int n)
     {
-      m_ExceptionsInFlight = n;
+      m_UncaughtExceptionInfo = {n, !depth() ? std::string{top_level_message()} : ""};
     }
 
     void append_to_diagnostics_output(std::string message)
     {
-      m_DiagnosticsOutput.append(message);
+      m_DiagnosticsOutput.push_back(failure_info{m_TopLevelChecks, std::move(message)});
     }
 
     void push_message(std::string_view message)
     {
-      if(m_LevelMessages.empty())
-        m_TopLevelMessage = std::string{message};
-
       m_LevelMessages.emplace_back(message);
     }
 
     void pop_message()
     {
+      if(m_LevelMessages.empty())
+        throw std::logic_error{"Cannot pop from TestLogger's empty stack"};
+
       m_LevelMessages.pop_back();
     }
 
     void end_message(const critical isCritical)
     {
-      update_output("", 2, footer(), isCritical);
+      update_output("", 2, footer(), isCritical, update_mode::app);
     }
 
-    void update_output(std::string_view message, std::size_t newLines, std::string_view foot,
-                       critical isCritical)
+    void append_to_output(failure_output& output,
+                          std::string_view message,
+                          std::size_t newLines,
+                          std::string_view foot,
+                          update_mode mode)
     {
-      auto append{
-        [message, newLines, foot](std::string& output) {
-          output.append(message);
-          end_block(output, newLines, indent(foot, tab));
+      switch(mode)
+      {
+      case update_mode::fresh:
+        output.push_back(failure_info{m_TopLevelChecks, std::string{message}});
+        end_block(output.back().message, newLines, indent(foot, tab));
+        break;
+      case update_mode::app:
+        if(!output.empty())
+        {
+          // This is really cryptic! Note that message is unused here!
+          end_block(output.back().message, newLines, indent(foot, tab));
         }
-      };
+      }
+    }
 
+    void update_output(std::string_view message,
+                       std::size_t newLines,
+                       std::string_view foot,
+                       critical isCritical,
+                       update_mode mode)
+    {
       auto toMessages{
         []([[maybe_unused]] critical cr){
           if constexpr(Mode != test_mode::false_positive)
@@ -451,11 +504,23 @@ namespace sequoia::testing
 
       if(toMessages(isCritical))
       {
-        append(m_FailureMessages);
+        append_to_output(m_FailureMessages, message, newLines, foot, mode);
       }
       else
       {
-        append(m_DiagnosticsOutput);
+        append_to_output(m_DiagnosticsOutput, message, newLines, foot, mode);
+      }
+    }
+
+    void add_failure_message(failure_output& output, std::string message)
+    {
+      if(output.empty())
+      {
+        output.emplace_back(m_TopLevelChecks, std::move(message));
+      }
+      else
+      {
+        output.back().message.append(std::move(message));
       }
     }
   };
@@ -477,7 +542,10 @@ namespace sequoia::testing
     template<test_mode Mode>
     log_summary(std::string_view name, const test_logger<Mode>& logger, const duration delta)
       : m_Name{name}
-      , m_FailureMessages{logger.failure_messages()}
+      , m_FailureMessages{to_string(logger.failure_messages())}
+      , m_DiagnosticsOutput{to_string(logger.diagnostics_output())}
+      , m_CaughtExceptionMessages{to_string(logger.caught_exceptions_output())}
+      , m_CriticalFailures{logger.critical_failures()}
       , m_Duration{delta}
     {
       switch(Mode)
@@ -503,10 +571,6 @@ namespace sequoia::testing
         m_FalsePositivePerformanceChecks   = logger.performance_checks();
         break;
       }
-
-      m_CaughtExceptionMessages = logger.caught_exceptions_output();
-      m_DiagnosticsOutput       = logger.diagnostics_output();
-      m_CriticalFailures        = logger.critical_failures();
     }
 
     void clear() noexcept;
@@ -583,7 +647,12 @@ namespace sequoia::testing
 
     friend log_summary operator+(const log_summary& lhs, const log_summary& rhs);
   private:
-    std::string m_Name, m_FailureMessages, m_DiagnosticsOutput, m_CaughtExceptionMessages;
+    std::string
+      m_Name,
+      m_FailureMessages,
+      m_DiagnosticsOutput,
+      m_CaughtExceptionMessages;
+
     std::size_t
       m_StandardTopLevelChecks{},
       m_StandardDeepChecks{},
