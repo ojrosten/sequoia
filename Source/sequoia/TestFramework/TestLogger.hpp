@@ -151,7 +151,6 @@ namespace sequoia::testing
         }
 
         impl::recored_dump_ended(get().recovery().dump_file);
-        logger.exceptions_detected_by_sentinel(std::uncaught_exceptions());
       }
 
       logger.pop_message();
@@ -434,11 +433,6 @@ namespace sequoia::testing
                        update_mode::fresh);
     }
 
-    void exceptions_detected_by_sentinel(const int n)
-    {
-      m_UncaughtExceptionInfo = {n, !depth() ? std::string{top_level_message()} : ""};
-    }
-
     void append_to_diagnostics_output(std::string message)
     {
       m_DiagnosticsOutput.push_back(failure_info{m_TopLevelChecks, std::move(message)});
@@ -454,6 +448,11 @@ namespace sequoia::testing
       if(m_LevelMessages.empty())
         throw std::logic_error{"Cannot pop from TestLogger's empty stack"};
 
+      if(!depth())
+      {
+        m_UncaughtExceptionInfo = {std::uncaught_exceptions(), std::move(m_LevelMessages.front().message)}; 
+      }
+      
       m_LevelMessages.pop_back();
     }
 
