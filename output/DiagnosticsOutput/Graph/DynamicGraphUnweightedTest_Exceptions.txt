@@ -5,7 +5,6 @@ Expected Exception Type:
 [std::out_of_range]
 Node index out of range!
 
-
 	=======================================
 
 Tests/Maths/Graph/DynamicGraphUnweightedTest.cpp, Line 48
@@ -15,7 +14,6 @@ Expected Exception Type:
 [std::out_of_range]
 Node index out of range!
 
-
 	=======================================
 
 Tests/Maths/Graph/DynamicGraphUnweightedTest.cpp, Line 50
@@ -24,7 +22,6 @@ swapping nodes throws for empty graph
 Expected Exception Type:
 [std::out_of_range]
 Connectivity::swap_nodes: indices out of range
-
 
 	=======================================
 
@@ -35,7 +32,6 @@ Expected Exception Type:
 [std::out_of_range]
 Graph::join - index out of range
 
-
 	=======================================
 
 Tests/Maths/Graph/DynamicGraphUnweightedTest.cpp, Line 60
@@ -44,7 +40,6 @@ Index out of range for swapping nodes
 Expected Exception Type:
 [std::out_of_range]
 Connectivity::swap_nodes: indices out of range
-
 
 	=======================================
 
@@ -55,7 +50,6 @@ Expected Exception Type:
 [std::out_of_range]
 Node index out of range!
 
-
 	=======================================
 
 Tests/Maths/Graph/DynamicGraphUnweightedTest.cpp, Line 48
@@ -65,7 +59,6 @@ Expected Exception Type:
 [std::out_of_range]
 Node index out of range!
 
-
 	=======================================
 
 Tests/Maths/Graph/DynamicGraphUnweightedTest.cpp, Line 50
@@ -74,7 +67,6 @@ swapping nodes throws for empty graph
 Expected Exception Type:
 [std::out_of_range]
 Connectivity::swap_nodes: indices out of range
-
 
 	=======================================
 
@@ -85,7 +77,6 @@ Expected Exception Type:
 [std::out_of_range]
 Node index out of range!
 
-
 	=======================================
 
 Tests/Maths/Graph/DynamicGraphUnweightedTest.cpp, Line 60
@@ -94,7 +85,6 @@ Index out of range for swapping nodes
 Expected Exception Type:
 [std::out_of_range]
 Connectivity::swap_nodes: indices out of range
-
 
 	=======================================
 
@@ -105,7 +95,6 @@ Expected Exception Type:
 [std::out_of_range]
 Node index out of range!
 
-
 	=======================================
 
 Tests/Maths/Graph/DynamicGraphUnweightedTest.cpp, Line 48
@@ -115,7 +104,6 @@ Expected Exception Type:
 [std::out_of_range]
 Node index out of range!
 
-
 	=======================================
 
 Tests/Maths/Graph/DynamicGraphUnweightedTest.cpp, Line 50
@@ -124,7 +112,6 @@ swapping nodes throws for empty graph
 Expected Exception Type:
 [std::out_of_range]
 Connectivity::swap_nodes: indices out of range
-
 
 	=======================================
 
@@ -135,7 +122,6 @@ Expected Exception Type:
 [std::out_of_range]
 Graph::join - index out of range
 
-
 	=======================================
 
 Tests/Maths/Graph/DynamicGraphUnweightedTest.cpp, Line 60
@@ -144,7 +130,6 @@ Index out of range for swapping nodes
 Expected Exception Type:
 [std::out_of_range]
 Connectivity::swap_nodes: indices out of range
-
 
 	=======================================
 
@@ -155,7 +140,6 @@ Expected Exception Type:
 [std::out_of_range]
 Node index out of range!
 
-
 	=======================================
 
 Tests/Maths/Graph/DynamicGraphUnweightedTest.cpp, Line 48
@@ -165,7 +149,6 @@ Expected Exception Type:
 [std::out_of_range]
 Node index out of range!
 
-
 	=======================================
 
 Tests/Maths/Graph/DynamicGraphUnweightedTest.cpp, Line 50
@@ -174,7 +157,6 @@ swapping nodes throws for empty graph
 Expected Exception Type:
 [std::out_of_range]
 Connectivity::swap_nodes: indices out of range
-
 
 	=======================================
 
@@ -185,7 +167,6 @@ Expected Exception Type:
 [std::out_of_range]
 Node index out of range!
 
-
 	=======================================
 
 Tests/Maths/Graph/DynamicGraphUnweightedTest.cpp, Line 60
@@ -194,7 +175,6 @@ Index out of range for swapping nodes
 Expected Exception Type:
 [std::out_of_range]
 Connectivity::swap_nodes: indices out of range
-
 
 	=======================================
 
@@ -205,7 +185,6 @@ Expected Exception Type:
 [std::out_of_range]
 Node index out of range!
 
-
 	=======================================
 
 Tests/Maths/Graph/DynamicGraphUnweightedTest.cpp, Line 48
@@ -215,7 +194,6 @@ Expected Exception Type:
 [std::out_of_range]
 Node index out of range!
 
-
 	=======================================
 
 Tests/Maths/Graph/DynamicGraphUnweightedTest.cpp, Line 50
@@ -224,7 +202,6 @@ swapping nodes throws for empty graph
 Expected Exception Type:
 [std::out_of_range]
 Connectivity::swap_nodes: indices out of range
-
 
 	=======================================
 
@@ -235,7 +212,6 @@ Expected Exception Type:
 [std::out_of_range]
 Graph::join - index out of range
 
-
 	=======================================
 
 Tests/Maths/Graph/DynamicGraphUnweightedTest.cpp, Line 60
@@ -244,7 +220,6 @@ Index out of range for swapping nodes
 Expected Exception Type:
 [std::out_of_range]
 Connectivity::swap_nodes: indices out of range
-
 
 	=======================================
 
@@ -255,7 +230,6 @@ Expected Exception Type:
 [std::out_of_range]
 Node index out of range!
 
-
 	=======================================
 
 Tests/Maths/Graph/DynamicGraphUnweightedTest.cpp, Line 48
@@ -265,7 +239,6 @@ Expected Exception Type:
 [std::out_of_range]
 Node index out of range!
 
-
 	=======================================
 
 Tests/Maths/Graph/DynamicGraphUnweightedTest.cpp, Line 50
@@ -274,7 +247,6 @@ swapping nodes throws for empty graph
 Expected Exception Type:
 [std::out_of_range]
 Connectivity::swap_nodes: indices out of range
-
 
 	=======================================
 
@@ -285,7 +257,6 @@ Expected Exception Type:
 [std::out_of_range]
 Node index out of range!
 
-
 	=======================================
 
 Tests/Maths/Graph/DynamicGraphUnweightedTest.cpp, Line 60
@@ -294,7 +265,6 @@ Index out of range for swapping nodes
 Expected Exception Type:
 [std::out_of_range]
 Connectivity::swap_nodes: indices out of range
-
 
 	=======================================
 
@@ -305,7 +275,6 @@ Expected Exception Type:
 [std::out_of_range]
 Node index out of range!
 
-
 	=======================================
 
 Tests/Maths/Graph/DynamicGraphUnweightedTest.cpp, Line 48
@@ -315,7 +284,6 @@ Expected Exception Type:
 [std::out_of_range]
 Node index out of range!
 
-
 	=======================================
 
 Tests/Maths/Graph/DynamicGraphUnweightedTest.cpp, Line 50
@@ -324,7 +292,6 @@ swapping nodes throws for empty graph
 Expected Exception Type:
 [std::out_of_range]
 Connectivity::swap_nodes: indices out of range
-
 
 	=======================================
 
@@ -335,7 +302,6 @@ Expected Exception Type:
 [std::out_of_range]
 Graph::join - index out of range
 
-
 	=======================================
 
 Tests/Maths/Graph/DynamicGraphUnweightedTest.cpp, Line 60
@@ -344,7 +310,6 @@ Index out of range for swapping nodes
 Expected Exception Type:
 [std::out_of_range]
 Connectivity::swap_nodes: indices out of range
-
 
 	=======================================
 
@@ -355,7 +320,6 @@ Expected Exception Type:
 [std::out_of_range]
 Node index out of range!
 
-
 	=======================================
 
 Tests/Maths/Graph/DynamicGraphUnweightedTest.cpp, Line 48
@@ -365,7 +329,6 @@ Expected Exception Type:
 [std::out_of_range]
 Node index out of range!
 
-
 	=======================================
 
 Tests/Maths/Graph/DynamicGraphUnweightedTest.cpp, Line 50
@@ -374,7 +337,6 @@ swapping nodes throws for empty graph
 Expected Exception Type:
 [std::out_of_range]
 Connectivity::swap_nodes: indices out of range
-
 
 	=======================================
 
@@ -385,7 +347,6 @@ Expected Exception Type:
 [std::out_of_range]
 Node index out of range!
 
-
 	=======================================
 
 Tests/Maths/Graph/DynamicGraphUnweightedTest.cpp, Line 60
@@ -394,7 +355,6 @@ Index out of range for swapping nodes
 Expected Exception Type:
 [std::out_of_range]
 Connectivity::swap_nodes: indices out of range
-
 
 	=======================================
 
@@ -405,7 +365,6 @@ Expected Exception Type:
 [std::out_of_range]
 Node index out of range!
 
-
 	=======================================
 
 Tests/Maths/Graph/DynamicGraphUnweightedTest.cpp, Line 48
@@ -415,7 +374,6 @@ Expected Exception Type:
 [std::out_of_range]
 Node index out of range!
 
-
 	=======================================
 
 Tests/Maths/Graph/DynamicGraphUnweightedTest.cpp, Line 50
@@ -424,7 +382,6 @@ swapping nodes throws for empty graph
 Expected Exception Type:
 [std::out_of_range]
 Connectivity::swap_nodes: indices out of range
-
 
 	=======================================
 
@@ -435,7 +392,6 @@ Expected Exception Type:
 [std::out_of_range]
 Graph::join - index out of range
 
-
 	=======================================
 
 Tests/Maths/Graph/DynamicGraphUnweightedTest.cpp, Line 60
@@ -444,7 +400,6 @@ Index out of range for swapping nodes
 Expected Exception Type:
 [std::out_of_range]
 Connectivity::swap_nodes: indices out of range
-
 
 	=======================================
 
@@ -455,7 +410,6 @@ Expected Exception Type:
 [std::out_of_range]
 Node index out of range!
 
-
 	=======================================
 
 Tests/Maths/Graph/DynamicGraphUnweightedTest.cpp, Line 48
@@ -464,7 +418,6 @@ cend_edges throws for empty graph
 Expected Exception Type:
 [std::out_of_range]
 Node index out of range!
-
 
 	=======================================
 
@@ -475,7 +428,6 @@ Expected Exception Type:
 [std::out_of_range]
 Connectivity::swap_nodes: indices out of range
 
-
 	=======================================
 
 Tests/Maths/Graph/DynamicGraphUnweightedTest.cpp, Line 58
@@ -485,7 +437,6 @@ Expected Exception Type:
 [std::out_of_range]
 Node index out of range!
 
-
 	=======================================
 
 Tests/Maths/Graph/DynamicGraphUnweightedTest.cpp, Line 60
@@ -494,7 +445,6 @@ Index out of range for swapping nodes
 Expected Exception Type:
 [std::out_of_range]
 Connectivity::swap_nodes: indices out of range
-
 
 	=======================================
 

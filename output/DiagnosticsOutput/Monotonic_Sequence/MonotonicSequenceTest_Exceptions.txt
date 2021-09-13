@@ -5,7 +5,6 @@ Expected Exception Type:
 [std::logic_error]
 monotonic_sequence_base::monotonic_sequence_base - monotonicity violated
 
-
 	=======================================
 
 Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 39
@@ -13,7 +12,6 @@ Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 39
 Expected Exception Type:
 [std::logic_error]
 monotonic_sequence_base::push_back - monotonicity violated
-
 
 	=======================================
 
@@ -24,7 +22,6 @@ Expected Exception Type:
 [std::logic_error]
 monotonic_sequence_base::insert - monotonicity violated
 
-
 	=======================================
 
 Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 51
@@ -34,7 +31,6 @@ Expected Exception Type:
 [std::logic_error]
 monotonic_sequence_base::insert - monotonicity violated
 
-
 	=======================================
 
 Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 88
@@ -42,7 +38,6 @@ Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 88
 Expected Exception Type:
 [std::logic_error]
 monotonic_sequence::mutate - monotonicity violated
-
 
 	=======================================
 
@@ -53,7 +48,6 @@ Expected Exception Type:
 [std::logic_error]
 monotonic_sequence_base::monotonic_sequence_base - monotonicity violated
 
-
 	=======================================
 
 Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 142
@@ -62,7 +56,6 @@ Expected Exception Type:
 [std::logic_error]
 monotonic_sequence::mutate - monotonicity violated
 
-
 	=======================================
 
 Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 149
@@ -70,7 +63,6 @@ Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 149
 Expected Exception Type:
 [std::logic_error]
 monotonic_sequence::mutate - monotonicity violated
-
 
 	=======================================
 

@@ -5,7 +5,6 @@ Expected Exception Type:
 [std::logic_error]
 Attempting to exceed max stack depth
 
-
 	=======================================
 
 Tests/Core/DataStructures/StaticStackTest.cpp, Line 38
@@ -14,7 +13,6 @@ Can't construct non-null null stack
 Expected Exception Type:
 [std::logic_error]
 initializer_list too big for array
-
 
 	=======================================
 
@@ -25,7 +23,6 @@ Expected Exception Type:
 [std::logic_error]
 Attempting to exceed max stack depth
 
-
 	=======================================
 
 Tests/Core/DataStructures/StaticStackTest.cpp, Line 53
@@ -34,7 +31,6 @@ Can't construct stack of depth 1 with 2 elements
 Expected Exception Type:
 [std::logic_error]
 initializer_list too big for array
-
 
 	=======================================
 
