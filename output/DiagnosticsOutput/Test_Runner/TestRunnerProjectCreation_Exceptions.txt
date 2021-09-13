@@ -5,7 +5,6 @@ Expected Exception Type:
 [std::runtime_error]
 Please ensure the project name 'Generated Project' consists of just alpha-numeric characters, underscores and dashes
 
-
 	=======================================
 
 Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 43
@@ -14,7 +13,6 @@ Project name with $
 Expected Exception Type:
 [std::runtime_error]
 Please ensure the project name 'Generated$Project' consists of just alpha-numeric characters, underscores and dashes
-
 
 	=======================================
 
@@ -25,7 +23,6 @@ Expected Exception Type:
 [std::runtime_error]
 Project path 'Generated_Project' should be absolute
 
-
 	=======================================
 
 Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 65
@@ -34,7 +31,6 @@ Empty project path
 Expected Exception Type:
 [std::runtime_error]
 Project path should not be empty
-
 
 	=======================================
 
@@ -45,7 +41,6 @@ Expected Exception Type:
 [std::runtime_error]
 output/TestsTemporaryData/TestFramework/TestRunnerProjectCreation/WorkingCopy' is in use
 
-
 	=======================================
 
 Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 94
@@ -55,7 +50,6 @@ Expected Exception Type:
 [std::runtime_error]
 Code indent must comprise only spaces or tabs
 
-
 	=======================================
 
 Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 105
@@ -64,7 +58,6 @@ Illegal init indent
 Expected Exception Type:
 [std::runtime_error]
 Code indent must comprise only spaces or tabs
-
 
 	=======================================
 

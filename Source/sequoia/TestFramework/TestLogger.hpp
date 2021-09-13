@@ -216,7 +216,7 @@ namespace sequoia::testing
       bool written{};
     };
 
-    enum class critical{yes, no};
+    enum class is_critical{yes, no};
     enum class update_mode{fresh, app};
 
     failure_output
@@ -248,7 +248,7 @@ namespace sequoia::testing
 
     void log_performance_check() noexcept;
 
-    void failure_message(std::string_view message, const critical isCritical);
+    void failure_message(std::string_view message, is_critical isCritical);
     
     void log_failure(std::string_view message);
 
@@ -266,19 +266,14 @@ namespace sequoia::testing
 
     void decrement_depth();
 
-    void end_message(const critical isCritical);
+    void end_message(is_critical isCritical);
 
-    void append_to_output(failure_output& output,
-                          std::string_view message,
-                          std::size_t newLines,
-                          std::string_view foot,
-                          update_mode uMode);
+    [[nodiscard]]
+    failure_output& output_channel(is_critical isCritical) noexcept;
 
-    void update_output(std::string_view message,
-                       std::size_t newLines,
-                       std::string_view foot,
-                       critical isCritical,
-                       update_mode uMode);
+    failure_output& update_output(std::string_view message, is_critical isCritical, update_mode uMode);
+
+    failure_output& add_to_output(failure_output& output, std::string_view message, update_mode uMode);
   };
 
   extern template class test_logger<test_mode::standard>;

@@ -5,7 +5,6 @@ Expected Exception Type:
 [std::logic_error]
 Empty string detected
 
-
 	=======================================
 
 Tests/Parsing/CommandLineArgumentsTest.cpp, Line 33
@@ -15,7 +14,6 @@ Expected Exception Type:
 [std::logic_error]
 Empty string detected
 
-
 	=======================================
 
 Tests/Parsing/CommandLineArgumentsTest.cpp, Line 34
@@ -24,7 +22,6 @@ Empty parameter
 Expected Exception Type:
 [std::logic_error]
 Empty string detected
-
 
 	=======================================
 
@@ -36,7 +33,6 @@ Expected Exception Type:
 
   Error: unrecognized option '--asyng'
 
-
 	=======================================
 
 Tests/Parsing/CommandLineArgumentsTest.cpp, Line 78
@@ -46,7 +42,6 @@ Expected Exception Type:
 [std::runtime_error]
 
   Error: unrecognized option '-a'
-
 
 	=======================================
 
@@ -58,7 +53,6 @@ Expected Exception Type:
 
   Error: unrecognized option '-ac'
 
-
 	=======================================
 
 Tests/Parsing/CommandLineArgumentsTest.cpp, Line 140
@@ -69,7 +63,6 @@ Expected Exception Type:
 
   Error: while parsing option "test": expected 1 argument, [case], but found 0 arguments
 
-
 	=======================================
 
 Tests/Parsing/CommandLineArgumentsTest.cpp, Line 367
@@ -78,7 +71,6 @@ Expected Exception Type:
 [std::runtime_error]
 
   Error: unrecognized option 'blah'
-
 
 	=======================================
 

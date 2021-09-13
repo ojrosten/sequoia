@@ -103,11 +103,11 @@ namespace sequoia::testing
     {
       if(critical_failure_detected())
       {
-        logger.end_message(test_logger<Mode>::critical::yes);
+        logger.end_message(test_logger<Mode>::is_critical::yes);
       }
       else
       {
-        if(failure_detected()) logger.end_message(test_logger<Mode>::critical::no);
+        if(failure_detected()) logger.end_message(test_logger<Mode>::is_critical::no);
 
         auto fpMessageMaker{
           [&logger](){
@@ -298,7 +298,7 @@ namespace sequoia::testing
   }
 
   template<test_mode Mode>
-  void test_logger<Mode>::failure_message(std::string_view message, const critical isCritical)
+  void test_logger<Mode>::failure_message(std::string_view message, const is_critical isCritical)
   {
     std::string msg{};
     auto build{
@@ -330,14 +330,15 @@ namespace sequoia::testing
 
     build(message, ind);
 
-    update_output(msg, 1, "", isCritical, update_mode::fresh);
+    auto& output{update_output(msg, isCritical, update_mode::fresh)};
+    end_block(output.back().message, 1, "");
   }
 
   template<test_mode Mode>
   void test_logger<Mode>::log_failure(std::string_view message)
   {
     ++m_Failures;
-    failure_message(message, critical::no);
+    failure_message(message, is_critical::no);
   }
 
   template<test_mode Mode>
@@ -351,7 +352,7 @@ namespace sequoia::testing
   void test_logger<Mode>::log_critical_failure(std::string_view message)
   {
     ++m_CriticalFailures;
-    failure_message(message, critical::yes);
+    failure_message(message, is_critical::yes);
     impl::recored_critical_failure(m_Recovery.recovery_file, message);
   }
 
@@ -372,11 +373,10 @@ namespace sequoia::testing
   template<test_mode Mode>
   void test_logger<Mode>::log_caught_exception_message(std::string_view message)
   {
-    append_to_output(m_CaughtExceptionMessages,
-                     std::string{top_level_message()}.append("\n").append(message),
-                     3,
-                     footer(),
-                     update_mode::fresh);
+    auto mess{std::string{top_level_message()}.append("\n").append(message)};
+    end_block(mess, 2, indent(footer(), tab));
+
+    add_to_output(m_CaughtExceptionMessages, mess, update_mode::fresh);
   }
 
   template<test_mode Mode>
@@ -406,61 +406,43 @@ namespace sequoia::testing
   }
 
   template<test_mode Mode>
-  void test_logger<Mode>::end_message(const critical isCritical)
+  void test_logger<Mode>::end_message(const is_critical isCritical)
   {
-    update_output("", 2, footer(), isCritical, update_mode::app);
+    auto& output{output_channel(isCritical)};
+    auto& mess{output.back().message};
+    end_block(mess, 2, indent(footer(), tab));
   }
 
   template<test_mode Mode>
-  void test_logger<Mode>::append_to_output(failure_output& output,
-                                           std::string_view message,
-                                           std::size_t newLines,
-                                           std::string_view foot,
-                                           update_mode uMode)
+  failure_output& test_logger<Mode>::output_channel(is_critical isCritical) noexcept
+  {
+    const bool toMessages{(Mode != test_mode::false_positive) || (isCritical == is_critical::yes)};
+    return toMessages ? m_FailureMessages : m_DiagnosticsOutput;
+  }
+
+  template<test_mode Mode>
+  failure_output& test_logger<Mode>::update_output(std::string_view message, is_critical isCritical, update_mode uMode)
+  {
+    return add_to_output(output_channel(isCritical), message, uMode);
+  }
+
+  template<test_mode Mode>
+  failure_output& test_logger<Mode>::add_to_output(failure_output& output, std::string_view message, update_mode uMode)
   {
     switch(uMode)
     {
     case update_mode::fresh:
       output.push_back(failure_info{m_TopLevelChecks, std::string{message}});
-      end_block(output.back().message, newLines, indent(foot, tab));
       break;
     case update_mode::app:
       if(!output.empty())
       {
-        // This is really cryptic! Note that message is unused here!
-        end_block(output.back().message, newLines, indent(foot, tab));
+        output.back().message.append(message);
       }
+      break;
     }
-  }
 
-  template<test_mode Mode>
-  void test_logger<Mode>::update_output(std::string_view message,
-                                        std::size_t newLines,
-                                        std::string_view foot,
-                                        critical isCritical,
-                                        update_mode uMode)
-  {
-    auto toMessages{
-      []([[maybe_unused]] critical cr){
-        if constexpr(Mode != test_mode::false_positive)
-        {
-          return true;
-        }
-        else
-        {
-          return cr == critical::yes;
-        }
-      }
-    };
-
-    if(toMessages(isCritical))
-    {
-      append_to_output(m_FailureMessages, message, newLines, foot, uMode);
-    }
-    else
-    {
-      append_to_output(m_DiagnosticsOutput, message, newLines, foot, uMode);
-    }
+    return output;
   }
 
   template class test_logger<test_mode::standard>;
