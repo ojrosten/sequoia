@@ -1,6 +1,6 @@
 
 Analyzing dependencies...
-[51ms]
+[12ms]
 
 
 Running tests...
@@ -9,7 +9,7 @@ Running tests...
 	--Using asynchronous execution, level: Test
 
 Useful Things:
-[3 (0)ms]
+[0 (0)ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
 	Tests/Utilities/UsefulThingsFreeTest.cpp, Line 21
@@ -22,9 +22,8 @@ Useful Things:
 	=======================================
 
 
-
 -----------Grand Totals-----------
-[4 (0)ms]
+[1 (0)ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
