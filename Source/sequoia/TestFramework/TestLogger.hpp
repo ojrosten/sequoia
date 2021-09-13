@@ -104,16 +104,14 @@ namespace sequoia::testing
       }
 
       impl::recored_dump_started(get().recovery().dump_file, message);
-      logger.push_message(message);
-      logger.increment_depth();
+      logger.increment_depth(message);
     }
 
     ~sentinel()
     {
       auto& logger{get()};
-      logger.decrement_depth();
 
-      if(!logger.depth())
+      if(logger.depth() == 1)
       {
         if(critical_failure_detected())
         {
@@ -152,8 +150,8 @@ namespace sequoia::testing
 
         impl::recored_dump_ended(get().recovery().dump_file);
       }
-
-      logger.pop_message();
+      
+      logger.decrement_depth();
     }
 
     sentinel(const sentinel&)     = delete;
@@ -289,7 +287,7 @@ namespace sequoia::testing
     [[nodiscard]]
     std::string_view top_level_message() const noexcept
     {
-      return !m_LevelMessages.empty() ? std::string_view{m_LevelMessages.front().message} : "";
+      return !m_SentinelDepth.empty() ? std::string_view{m_SentinelDepth.front().message} : "";
     }
 
     [[nodiscard]]
@@ -318,7 +316,7 @@ namespace sequoia::testing
       m_DiagnosticsOutput,
       m_CaughtExceptionMessages;
 
-    std::vector<level_message> m_LevelMessages;
+    std::vector<level_message> m_SentinelDepth;
 
     uncaught_exception_info m_UncaughtExceptionInfo{};
 
@@ -329,17 +327,12 @@ namespace sequoia::testing
       m_CriticalFailures{},
       m_TopLevelChecks{},
       m_Checks{},
-      m_PerformanceChecks{},
-      m_Depth{};
+      m_PerformanceChecks{};
 
     recovery_paths m_Recovery{};
 
     [[nodiscard]]
-    std::size_t depth() const noexcept { return m_Depth; }
-
-    void increment_depth() noexcept { ++m_Depth; }
-
-    void decrement_depth() noexcept { --m_Depth; }
+    std::size_t depth() const noexcept { return m_SentinelDepth.size(); }
 
     void log_check() noexcept { ++m_Checks; }
 
@@ -375,16 +368,16 @@ namespace sequoia::testing
 
       indentation ind{tab};
       std::size_t activeLevels{};
-      for(auto& lm : m_LevelMessages)
+      for(auto& info : m_SentinelDepth)
       {
-        if(lm.message.empty()) continue;
+        if(info.message.empty()) continue;
 
         if(activeLevels++ > 0) ind.append("  ");
 
-        if(lm.written) continue;
+        if(info.written) continue;
 
-        build(lm.message, ind);
-        lm.written = true;
+        build(info.message, ind);
+        info.written = true;
       }
 
       build(message, ind);
@@ -414,13 +407,13 @@ namespace sequoia::testing
     void log_top_level_failure(std::string message)
     {
       ++m_TopLevelFailures;
-      if(m_LevelMessages.empty())
+      if(m_SentinelDepth.empty())
       {
-        m_LevelMessages.push_back(level_message{""});
+        m_SentinelDepth.push_back(level_message{""});
       }
       else
       {
-        m_LevelMessages.back().message.append(std::move(message));
+        m_SentinelDepth.back().message.append(std::move(message));
       }
     }
 
@@ -438,22 +431,22 @@ namespace sequoia::testing
       m_DiagnosticsOutput.push_back(failure_info{m_TopLevelChecks, std::move(message)});
     }
 
-    void push_message(std::string_view message)
+    void increment_depth(std::string_view message)
     {
-      m_LevelMessages.emplace_back(message);
+      m_SentinelDepth.emplace_back(message);
     }
 
-    void pop_message()
+    void decrement_depth()
     {
-      if(m_LevelMessages.empty())
+      if(m_SentinelDepth.empty())
         throw std::logic_error{"Cannot pop from TestLogger's empty stack"};
 
-      if(!depth())
+      if(depth() == 1)
       {
-        m_UncaughtExceptionInfo = {std::uncaught_exceptions(), std::move(m_LevelMessages.front().message)}; 
+        m_UncaughtExceptionInfo = {std::uncaught_exceptions(), std::move(m_SentinelDepth.front().message)}; 
       }
       
-      m_LevelMessages.pop_back();
+      m_SentinelDepth.pop_back();
     }
 
     void end_message(const critical isCritical)
@@ -465,9 +458,9 @@ namespace sequoia::testing
                           std::string_view message,
                           std::size_t newLines,
                           std::string_view foot,
-                          update_mode mode)
+                          update_mode uMode)
     {
-      switch(mode)
+      switch(uMode)
       {
       case update_mode::fresh:
         output.push_back(failure_info{m_TopLevelChecks, std::string{message}});
@@ -486,7 +479,7 @@ namespace sequoia::testing
                        std::size_t newLines,
                        std::string_view foot,
                        critical isCritical,
-                       update_mode mode)
+                       update_mode uMode)
     {
       auto toMessages{
         []([[maybe_unused]] critical cr){
@@ -503,11 +496,11 @@ namespace sequoia::testing
 
       if(toMessages(isCritical))
       {
-        append_to_output(m_FailureMessages, message, newLines, foot, mode);
+        append_to_output(m_FailureMessages, message, newLines, foot, uMode);
       }
       else
       {
-        append_to_output(m_DiagnosticsOutput, message, newLines, foot, mode);
+        append_to_output(m_DiagnosticsOutput, message, newLines, foot, uMode);
       }
     }
 
