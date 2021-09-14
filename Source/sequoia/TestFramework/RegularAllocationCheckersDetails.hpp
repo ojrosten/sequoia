@@ -98,7 +98,8 @@ namespace sequoia::testing::impl
     requires (sizeof...(Getters) > 0)
   void check_semantics(std::string_view description, test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, Mutator yMutator, const allocation_info<T, Getters>&... info)
   {
-    sentinel<Mode> sentry{logger, add_type_info<T>(description).append("\n")};
+    const auto message{!description.empty() ? add_type_info<T>(description).append("\n") : ""};
+    sentinel<Mode> sentry{logger, message};
 
     if(check_semantics(logger, actions, x, y, yMutator, std::tuple_cat(make_dual_allocation_checkers(info, x, y)...)))
     {
@@ -125,7 +126,7 @@ namespace sequoia::testing::impl
     auto y{yFn()};
 
     check_initialization_allocations(logger, x, y, info...);
-    check_semantics(description, logger, actions, x, y, std::move(yMutator), info...);
+    check_semantics("", logger, actions, x, y, std::move(yMutator), info...);
 
     return {std::move(x), std::move(y)};
   }

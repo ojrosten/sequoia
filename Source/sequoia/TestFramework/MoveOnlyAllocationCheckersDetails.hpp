@@ -77,7 +77,8 @@ namespace sequoia::testing::impl
   template<test_mode Mode, class Actions, moveonly T, invocable<T&> Mutator, alloc_getter<T>... Getters>
   void check_semantics(std::string_view description, test_logger<Mode>& logger, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, Mutator m, const allocation_info<T, Getters>&... info)
   {
-    sentinel<Mode> sentry{logger, add_type_info<T>(description).append("\n")};
+    const auto message{!description.empty() ? add_type_info<T>(description).append("\n") : ""};
+    sentinel<Mode> sentry{logger, message};
 
     if(auto[optx,opty]{check_para_constructor_allocations(logger, std::forward<T>(x), std::forward<T>(y), xClone, yClone, info...)}; (optx != std::nullopt) && (opty != std::nullopt))
     {
@@ -103,7 +104,7 @@ namespace sequoia::testing::impl
     auto y{yFn()};
 
     impl::check_initialization_allocations(logger, x, y, info...);
-    check_semantics(description, logger, actions, xFn(), yFn(), x, y, std::move(m), info...);
+    check_semantics("", logger, actions, xFn(), yFn(), x, y, std::move(m), info...);
 
     return {std::move(x), std::move(y)};
   }
