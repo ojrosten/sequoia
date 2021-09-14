@@ -112,7 +112,7 @@ namespace sequoia::testing
         auto fpMessageMaker{
           [&logger](){
             auto mess{indent("False Positive Failure:", logger.top_level_message(), tab)};
-            end_block(mess, 3, indent(footer(), tab));
+            end_block(mess, 3_linebreaks, indent(footer(), tab));
 
             return mess;
           }
@@ -331,7 +331,7 @@ namespace sequoia::testing
     build(message, ind);
 
     auto& output{update_output(msg, isCritical, update_mode::fresh)};
-    end_block(output.back().message, 1, "");
+    end_block(output.back().message, 1_linebreaks, "");
   }
 
   template<test_mode Mode>
@@ -374,7 +374,7 @@ namespace sequoia::testing
   void test_logger<Mode>::log_caught_exception_message(std::string_view message)
   {
     auto mess{std::string{top_level_message()}.append("\n").append(message)};
-    end_block(mess, 2, indent(footer(), tab));
+    end_block(mess, 2_linebreaks, indent(footer(), tab));
 
     add_to_output(m_CaughtExceptionMessages, mess, update_mode::fresh);
   }
@@ -410,7 +410,7 @@ namespace sequoia::testing
   {
     auto& output{output_channel(isCritical)};
     auto& mess{output.back().message};
-    end_block(mess, 2, indent(footer(), tab));
+    end_block(mess, 2_linebreaks, indent(footer(), tab));
   }
 
   template<test_mode Mode>

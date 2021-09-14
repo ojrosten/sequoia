@@ -13,22 +13,47 @@
 
 #include "sequoia/TestFramework/CoreInfrastructure.hpp"
 #include "sequoia/TextProcessing/Indent.hpp"
+#include "sequoia/PlatformSpecific/Preprocessor.hpp"
 
 #include <filesystem>
 #include <iostream>
 
 namespace sequoia::testing
 {
+  class line_breaks
+  {
+  public:
+    constexpr line_breaks() = default;
+
+    constexpr explicit line_breaks(std::size_t n) : m_Breaks{n}
+    {}
+
+    [[nodiscard]]
+    constexpr std::size_t value() const noexcept
+    {
+      return m_Breaks;
+    }
+  private:
+    std::size_t m_Breaks{};
+  };
+
+  [[nodiscard]]
+  SPECULATIVE_CONSTEVAL
+  line_breaks operator "" _linebreaks(unsigned long long int n) noexcept
+  {
+    return line_breaks{static_cast<std::size_t>(n)};
+  }
+
   [[nodiscard]]
   std::string emphasise(std::string_view s);
 
   [[nodiscard]]
   std::string display_character(char c);
 
-  void end_block(std::string& s, const std::size_t newlines, std::string_view footer="");
+  void end_block(std::string& s, line_breaks newlines, std::string_view footer="");
 
   [[nodiscard]]
-  std::string end_block(std::string_view s, const std::size_t newlines, std::string_view footer="");
+  std::string end_block(std::string_view s, line_breaks newlines, std::string_view footer="");
 
   [[nodiscard]]
   std::string exception_message(std::string_view tag,

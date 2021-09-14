@@ -90,17 +90,17 @@ namespace sequoia::testing
     return "=======================================\n";
   }
 
-  void end_block(std::string& s, const std::size_t newlines, std::string_view footer)
+  void end_block(std::string& s, const line_breaks newlines, std::string_view footer)
   {
     if(!s.empty())
     {
       std::size_t n{};
-      for(; n < std::min(s.size(), newlines); ++n)
+      for(; n < std::min(s.size(), newlines.value()); ++n)
       {
         if(s[s.size() - 1 - n] != '\n') break;
       }
 
-      for(; n<newlines; ++n)
+      for(; n<newlines.value(); ++n)
       {
         s.append("\n");
       }
@@ -110,7 +110,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string end_block(std::string_view s, const std::size_t newlines, std::string_view footer)
+  std::string end_block(std::string_view s, const line_breaks newlines, std::string_view footer)
   {
     std::string text{s};
     end_block(text, newlines, footer);

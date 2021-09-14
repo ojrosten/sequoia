@@ -258,51 +258,29 @@ namespace sequoia::testing
     test_logger<Mode>* m_pLogger;
   };
 
-  template<test_mode mode>
-  using performance_checker = checker<mode, performance_extender<mode>>;
+  template<test_mode Mode>
+  using performance_checker = checker<Mode, performance_extender<Mode>>;
 
   [[nodiscard]]
   std::string_view postprocess(std::string_view testOutput, std::string_view referenceOutput);
 
-  template<test_mode mode>
-  class basic_performance_test : public basic_test<performance_checker<mode>>
+  template<test_mode Mode>
+  class basic_performance_test : public basic_test<performance_checker<Mode>>
   {
   public:
-    using base_t = basic_test<performance_checker<mode>>;
+    using base_t = basic_test<performance_checker<Mode>>;
 
-    using basic_test<performance_checker<mode>>::basic_test;
+    using basic_test<performance_checker<Mode>>::basic_test;
   protected:
     using duration = typename base_t::duration;
 
     [[nodiscard]]
-    log_summary summarize(duration delta) const override
-    {
-      auto summary{base_t::summarize(delta)};
-
-      if constexpr(mode != test_mode::standard)
-      {
-        const auto referenceOutput{
-          [filename{this->diagnostics_output_filename()}]() -> std::string {
-            if(std::filesystem::exists(filename))
-            {
-              if(auto contents{read_to_string(filename)})
-                return contents.value();
-
-
-              throw std::runtime_error{report_failed_read(filename)};
-            }
-
-            return "";
-          }()
-        };
-
-        std::string outputToUse{postprocess(summary.diagnostics_output(), referenceOutput)};
-        summary.diagnostics_output(std::move(outputToUse));
-      }
-
-      return summary;
-    }
+    log_summary summarize(duration delta) const override;
   };
+
+  extern template class basic_performance_test<test_mode::standard>;
+  extern template class basic_performance_test<test_mode::false_positive>;
+  extern template class basic_performance_test<test_mode::false_negative>;
 
   /*! \anchor performance_test_alias */
   using performance_test                = basic_performance_test<test_mode::standard>;

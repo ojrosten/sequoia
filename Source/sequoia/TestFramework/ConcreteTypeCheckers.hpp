@@ -281,7 +281,7 @@ namespace sequoia::testing
           std::vector<fs::path> paths{};
           for(const auto& p : fs::directory_iterator(dir))
           {
-            if(std::find(excluded_files.begin(),      excluded_files.end(),      p.path().filename()) == excluded_files.end()
+            if(    std::find(excluded_files.begin(),      excluded_files.end(),      p.path().filename())  == excluded_files.end()
                 && std::find(excluded_extensions.begin(), excluded_extensions.end(), p.path().extension()) == excluded_extensions.end())
             {
                paths.push_back(p);
