@@ -413,8 +413,6 @@ namespace sequoia::testing
 
   bool test_runner::run_tests()
   {
-    // TO DO: reset logger, reset materials and properly treat failed tests
-
     if(!mode(runner_mode::test)) return false;
 
     const timer t{};

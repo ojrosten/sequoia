@@ -108,7 +108,7 @@ namespace sequoia::testing
     paths(const std::filesystem::path& sourceFile,
           const std::filesystem::path& workingMaterials,
           const std::filesystem::path& predictiveMaterials,
-          update_mode updateMode, const std::filesystem::path& outputDir,
+          const std::filesystem::path& outputDir,
           const std::filesystem::path& testRepo);
 
     update_mode mode{update_mode::none};
@@ -138,13 +138,14 @@ namespace sequoia::testing
   class family_processor
   {
   public:
-    family_processor() = default;
+    explicit family_processor(update_mode mode);
 
     void process(log_summary summary, const paths& files);
 
     [[nodiscard]]
     family_results finalize_and_acquire();
   private:
+    update_mode m_Mode{};
     timer m_Timer{};
     std::set<std::filesystem::path> m_FilesWrittenTo{};
     std::set<paths, paths_comparator> m_Updateables{};
@@ -209,24 +210,30 @@ namespace sequoia::testing
     [[nodiscard]]
     family_results execute(update_mode updateMode, concurrency_mode concurrenyMode)
     {
-      family_processor processor{};
+      family_processor processor{updateMode};
+      auto pathsMaker{
+        [&info=m_Info](auto& test) -> paths {
+          return {test.source_filename(),
+                  test.working_materials(),
+                  test.predictive_materials(),
+                  info.output_dir(),
+                  info.test_repo()};
+        }
+      };
 
       if(concurrenyMode < concurrency_mode::test)
       {
         auto process{
-          [&processor,updateMode,this](auto& optTest) {
+          [&processor,pathsMaker](auto& optTest) {
             if(optTest.has_value())
             {
               const auto summary{optTest->execute()};
-              processor.process(summary, paths{optTest->source_filename(), optTest->working_materials(), optTest->predictive_materials(), updateMode, m_Info.output_dir(), m_Info.test_repo()});
+              processor.process(summary, pathsMaker(*optTest));
             }
           }
         };
 
-        std::apply(
-          [process](auto&... optTest) { (process(optTest), ...); },
-          m_Tests
-        );
+        std::apply([process](auto&... optTest) { (process(optTest), ...); }, m_Tests);
       }
       else
       {
@@ -234,21 +241,18 @@ namespace sequoia::testing
         std::vector<std::future<data>> results{};
 
         auto generator{
-          [&results,updateMode,this](auto& optTest) {
+          [&results,pathsMaker](auto& optTest) {
             if(optTest.has_value())
             {
               results.emplace_back(
-                std::async([&test = *optTest, updateMode, outputDir{m_Info.output_dir()}, testRepo{m_Info.test_repo()}](){
-                  return std::make_pair(test.execute(), paths{test.source_filename(), test.working_materials(), test.predictive_materials(), updateMode, outputDir, testRepo}); })
+                std::async([&test=*optTest, pathsMaker](){
+                  return std::make_pair(test.execute(), pathsMaker(test)); })
               );
             }
           }
         };
 
-        std::apply(
-          [generator](auto&... optTest) { (generator(optTest), ...); },
-          m_Tests
-        );
+        std::apply([generator](auto&... optTest) { (generator(optTest), ...); }, m_Tests);
 
         for(auto& r : results)
         {

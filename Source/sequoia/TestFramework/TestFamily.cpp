@@ -54,11 +54,9 @@ namespace sequoia::testing
   paths::paths(const fs::path& sourceFile,
                const fs::path& workingMaterials,
                const fs::path& predictiveMaterials,
-               update_mode updateMode,
                const std::filesystem::path& outputDir,
                const std::filesystem::path& testRepo)
-    : mode{updateMode}
-    , test_file{sourceFile}
+    : test_file{sourceFile}
     , summary{test_summary_filename(sourceFile, outputDir, testRepo)}
     , workingMaterials{workingMaterials}
     , predictions{predictiveMaterials}
@@ -76,6 +74,9 @@ namespace sequoia::testing
     return std::move(m_Results);
   }
 
+  family_processor::family_processor(update_mode mode)
+    : m_Mode{mode}
+  {}
 
   void family_processor::process(log_summary summary, const paths& files)
   {
@@ -84,7 +85,7 @@ namespace sequoia::testing
 
     to_file(files.summary, summary);
 
-    if(files.mode != update_mode::none)
+    if(m_Mode != update_mode::none)
     {
       if(summary.soft_failures())
       {
