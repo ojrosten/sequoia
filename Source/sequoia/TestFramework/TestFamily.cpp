@@ -22,62 +22,90 @@ namespace sequoia::testing
   namespace
   {
     [[nodiscard]]
-    std::filesystem::path test_summary_filename(const fs::path& sourceFile, const std::filesystem::path& outputDir, const std::filesystem::path& testRepo)
+    std::filesystem::path test_summary_filename(const fs::path& sourceFile,
+                                                const std::filesystem::path& outputDir,
+                                                const std::filesystem::path& testRepo,
+                                                const std::optional<std::size_t> optIndex)
     {
-      const auto name{fs::path{sourceFile}.replace_extension(".txt")};
+      auto name{fs::path{sourceFile}.replace_extension(".txt")};
       if(name.empty())
         throw std::logic_error("Source files should have a non-trivial name!");
 
+      auto dirPath{
+        [&outputDir, optIndex](){
+          return optIndex.has_value() ? temp_test_summaries_path(outputDir)
+                                      : test_summaries_path(outputDir);
+        }
+      };
+
+      auto summaryFile{name};
+      
       if(!name.is_absolute())
       {
         if(!testRepo.empty())
         {
           auto back{*(--testRepo.end())};
-          return test_summaries_path(outputDir) / back / rebase_from(name, testRepo);
+          summaryFile = dirPath() / back / rebase_from(name, testRepo);
         }
       }
       else
       {
-        auto summary{test_summaries_path(outputDir)};
-        auto iters{std::mismatch(name.begin(), name.end(), summary.begin(), summary.end())};
+        summaryFile = dirPath();
+        auto iters{std::mismatch(name.begin(), name.end(), summaryFile.begin(), summaryFile.end())};
 
         while(iters.first != name.end())
-          summary /= *iters.first++;
-
-        return summary;
+          summaryFile /= *iters.first++;
       }
 
-      return name;
+      if(optIndex.has_value())
+      {
+        return   summaryFile.parent_path()
+               / summaryFile.stem().concat(std::to_string(optIndex.value()).append(".txt"));
+      }
+
+      return summaryFile;
     }
   }
+  
+  [[nodiscard]]
+  std::string to_string(concurrency_mode mode)
+  {
+    switch(mode)
+    {
+    case concurrency_mode::serial:
+      return "Serial";
+    case concurrency_mode::dynamic:
+      return "Dynamic";
+    case concurrency_mode::family:
+      return "Family";
+    case concurrency_mode::test:
+      return "Test";
+    }
 
+    throw std::logic_error{"Unknown option for concurrency_mode"};
+  }
+
+  //============================== paths ==============================//
+  
   paths::paths(const fs::path& sourceFile,
                const fs::path& workingMaterials,
                const fs::path& predictiveMaterials,
                const std::filesystem::path& outputDir,
-               const std::filesystem::path& testRepo)
+               const std::filesystem::path& testRepo,
+               const std::optional<std::size_t> index)
     : test_file{sourceFile}
-    , summary{test_summary_filename(sourceFile, outputDir, testRepo)}
+    , summary{test_summary_filename(sourceFile, outputDir, testRepo, std::nullopt)}
     , workingMaterials{workingMaterials}
     , predictions{predictiveMaterials}
+    , temp_summary{index.has_value() ? test_summary_filename(sourceFile, outputDir, testRepo, index) : ""}
   {}
-
-  [[nodiscard]]
-  family_results family_processor::finalize_and_acquire()
-  {
-    for(const auto& update : m_Updateables)
-    {
-      soft_update(update.workingMaterials, update.predictions);
-    }
-
-    m_Results.execution_time = m_Timer.time_elapsed();
-    return std::move(m_Results);
-  }
 
   family_processor::family_processor(update_mode mode)
     : m_Mode{mode}
   {}
 
+  //============================== family_processor ==============================//
+  
   void family_processor::process(log_summary summary, const paths& files)
   {
     if(summary.soft_failures() || summary.critical_failures())
@@ -85,6 +113,9 @@ namespace sequoia::testing
 
     to_file(files.summary, summary);
 
+    to_file(files.temp_summary, summary);
+
+    
     if(m_Mode != update_mode::none)
     {
       if(summary.soft_failures())
@@ -124,24 +155,20 @@ namespace sequoia::testing
       throw std::runtime_error{report_failed_write(filename)};
     }
   }
-
+ 
   [[nodiscard]]
-  std::string to_string(concurrency_mode mode)
+  family_results family_processor::finalize_and_acquire()
   {
-    switch(mode)
+    for(const auto& update : m_Updateables)
     {
-    case concurrency_mode::serial:
-      return "Serial";
-    case concurrency_mode::dynamic:
-      return "Dynamic";
-    case concurrency_mode::family:
-      return "Family";
-    case concurrency_mode::test:
-      return "Test";
+      soft_update(update.workingMaterials, update.predictions);
     }
 
-    throw std::logic_error{"Unknown option for concurrency_mode"};
+    m_Results.execution_time = m_Timer.time_elapsed();
+    return std::move(m_Results);
   }
+
+  //============================== family_info ==============================//
 
   family_info::materials_setter::materials_setter(family_info& info)
     : m_pInfo{&info}

@@ -77,7 +77,7 @@ namespace sequoia::testing
     update_mode      m_UpdateMode{update_mode::none};
     concurrency_mode m_ConcurrencyMode{concurrency_mode::serial};
 
-    int m_NumReps{1};
+    std::size_t m_NumReps{1};
 
     std::vector<std::filesystem::path> m_FailedTestSourceFiles;
 
@@ -93,7 +93,7 @@ namespace sequoia::testing
 
     void check_argument_consistency();
 
-    bool run_tests();
+    bool run_tests(std::optional<std::size_t> index);
 
     [[nodiscard]]
     bool mode(runner_mode m) const noexcept

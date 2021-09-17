@@ -392,14 +392,14 @@ namespace sequoia::testing
   {
     finalize_concurrency_mode();
 
-    for(int i{}; i < m_NumReps; ++i)
+    for(std::size_t i{}; i < m_NumReps; ++i)
     {
       if(i)
       {
         for(auto& f : m_Selector) f.reset();
       }
       
-      if(!run_tests()) break;
+      if(!run_tests(m_NumReps > 1 ? std::optional<std::size_t>{i} : std::nullopt)) break;
     }
   }
 
@@ -411,7 +411,7 @@ namespace sequoia::testing
     }
   }
 
-  bool test_runner::run_tests()
+  bool test_runner::run_tests(const std::optional<std::size_t> index)
   {
     if(!mode(runner_mode::test)) return false;
 
@@ -426,20 +426,23 @@ namespace sequoia::testing
         for(auto& family : m_Selector)
         {
           stream() << family.name() << ":\n";
-          summary += process_family(family.execute(m_UpdateMode, m_ConcurrencyMode)).log;
+          summary += process_family(family.execute(m_UpdateMode, m_ConcurrencyMode, index)).log;
         }
       }
       else
       {
-        stream() << "\n\t--Using asynchronous execution, level: " << to_string(m_ConcurrencyMode) << "\n\n";
+        stream() << "\n\t--Using asynchronous execution, level: "
+                 << to_string(m_ConcurrencyMode)
+                 << "\n\n";
+
         std::vector<std::pair<std::string, std::future<family_results>>> results{};
         results.reserve(m_Selector.size());
 
         for(auto& family : m_Selector)
         {
           results.emplace_back(family.name(),
-            std::async([&family, umode{m_UpdateMode}, cmode{m_ConcurrencyMode}](){
-            return family.execute(umode, cmode); }));
+                               std::async([&family, umode=m_UpdateMode, cmode=m_ConcurrencyMode, index](){
+                                 return family.execute(umode, cmode, index); }));
         }
 
         for(auto& res : results)

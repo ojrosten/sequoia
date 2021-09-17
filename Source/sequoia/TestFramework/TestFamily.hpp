@@ -13,7 +13,6 @@
  */
 
 #include "sequoia/TestFramework/FreeTestCore.hpp"
-#include "sequoia/TestFramework/FileSystem.hpp"
 #include "sequoia/TestFramework/Summary.hpp"
 
 #include <chrono>
@@ -95,7 +94,6 @@ namespace sequoia::testing
     std::vector<std::filesystem::path> failed_tests{};
   };
 
-
   struct paths
   {
 #ifdef _MSC_VER
@@ -109,10 +107,15 @@ namespace sequoia::testing
           const std::filesystem::path& workingMaterials,
           const std::filesystem::path& predictiveMaterials,
           const std::filesystem::path& outputDir,
-          const std::filesystem::path& testRepo);
+          const std::filesystem::path& testRepo,
+          std::optional<std::size_t> index);
 
-    update_mode mode{update_mode::none};
-    std::filesystem::path test_file, summary, workingMaterials, predictions;
+    std::filesystem::path
+      test_file,
+      summary,
+      workingMaterials,
+      predictions,
+      temp_summary;
   };
 
 
@@ -167,7 +170,11 @@ namespace sequoia::testing
                 std::filesystem::path outputDir,
                 recovery_paths recovery,
                 Tests&&... tests)
-      : m_Info{std::move(name), std::move(testRepo), std::move(testMaterialsRepo), std::move(outputDir), std::move(recovery)}
+      : m_Info{std::move(name),
+               std::move(testRepo),
+               std::move(testMaterialsRepo),
+               std::move(outputDir),
+               std::move(recovery)}
       , m_Tests{std::forward<Tests>(tests)...}
     {
       family_info::materials_setter setter{m_Info};
@@ -182,7 +189,11 @@ namespace sequoia::testing
                 std::filesystem::path testMaterialsRepo,
                 std::filesystem::path outputDir,
                 recovery_paths recovery)
-      : m_Info{std::move(name), std::move(testRepo), std::move(testMaterialsRepo), std::move(outputDir), std::move(recovery)}
+      : m_Info{std::move(name),
+               std::move(testRepo),
+               std::move(testMaterialsRepo),
+               std::move(outputDir),
+               std::move(recovery)}
     {}
 
     test_family(const test_family&)     = delete;
@@ -208,16 +219,19 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    family_results execute(update_mode updateMode, concurrency_mode concurrenyMode)
+    family_results execute(update_mode updateMode,
+                           concurrency_mode concurrenyMode,
+                           std::optional<std::size_t> index)
     {
       family_processor processor{updateMode};
       auto pathsMaker{
-        [&info=m_Info](auto& test) -> paths {
+        [&info=m_Info,index](auto& test) -> paths {
           return {test.source_filename(),
                   test.working_materials(),
                   test.predictive_materials(),
                   info.output_dir(),
-                  info.test_repo()};
+                  info.test_repo(),
+                  index};
         }
       };
 
@@ -227,8 +241,7 @@ namespace sequoia::testing
           [&processor,pathsMaker](auto& optTest) {
             if(optTest.has_value())
             {
-              const auto summary{optTest->execute()};
-              processor.process(summary, pathsMaker(*optTest));
+              processor.process(optTest->execute(), pathsMaker(*optTest));
             }
           }
         };
@@ -277,9 +290,7 @@ namespace sequoia::testing
       };
 
       return !std::apply(
-        [has_test](const auto&... optTest){
-          return (has_test(optTest) || ...);
-        },
+        [has_test](const auto&... optTest){ return (has_test(optTest) || ...); },
         m_Tests);
     }
 
@@ -340,9 +351,11 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    family_results execute(update_mode updateMode, concurrency_mode concurrenyMode)
+    family_results execute(update_mode updateMode,
+                           concurrency_mode concurrenyMode,
+                           std::optional<std::size_t> index)
     {
-      return m_pFamily->execute(updateMode, concurrenyMode);
+      return m_pFamily->execute(updateMode, concurrenyMode, index);
     }
 
     void reset()
@@ -354,7 +367,9 @@ namespace sequoia::testing
     {
       virtual ~soul() = default;
       virtual const std::string& name() const noexcept = 0;
-      virtual family_results execute(update_mode updateMode, concurrency_mode concurrenyMode) = 0;
+      virtual family_results execute(update_mode updateMode,
+                                     concurrency_mode concurrenyMode,
+                                     std::optional<std::size_t> index) = 0;
       virtual void reset() = 0;
     };
 
@@ -370,9 +385,11 @@ namespace sequoia::testing
       }
 
       [[nodiscard]]
-      family_results execute(update_mode updateMode, concurrency_mode concurrenyMode) final
+      family_results execute(update_mode updateMode,
+                             concurrency_mode concurrenyMode,
+                             std::optional<std::size_t> index) final
       {
-        return m_Family.execute(updateMode, concurrenyMode);
+        return m_Family.execute(updateMode, concurrenyMode, index);
       }
 
       void reset()

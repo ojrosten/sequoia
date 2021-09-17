@@ -252,6 +252,12 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
+  std::filesystem::path temp_test_summaries_path(std::filesystem::path outputDir)
+  {
+    return outputDir /= "TempTestSummaries";
+  }
+
+  [[nodiscard]]
   std::filesystem::path prune_path(std::filesystem::path outputDir, const std::filesystem::path& testMainDir)
   {
     throw_unless_exists(testMainDir);
