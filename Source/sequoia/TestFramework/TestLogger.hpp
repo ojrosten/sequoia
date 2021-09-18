@@ -28,15 +28,6 @@
 
 namespace sequoia::testing
 {
-  namespace impl
-  {
-    void record_check_started(const std::filesystem::path& file, std::string_view message);
-    void record_check_ended(const std::filesystem::path& file);
-    void recored_dump_started(const std::filesystem::path& file, std::string_view message);
-    void recored_dump_ended(const std::filesystem::path& file);
-    void recored_critical_failure(const std::filesystem::path& file, std::string_view message);
-  }
-
   /*! \brief Holds details of the file to which the last successfully completed test is registered.
 
       If a check causes a crash, the recovery file may be used to provide a clue as to where this
@@ -146,9 +137,6 @@ namespace sequoia::testing
   };
 
   using failure_output = std::vector<failure_info>;
-
-  [[nodiscard]]
-  std::string to_string(const failure_output& output);
 
   template<test_mode Mode>
   class test_logger

@@ -13,8 +13,21 @@
 
 namespace sequoia::testing
 {
-  namespace impl
-  {
+  namespace
+  {    
+    [[nodiscard]]
+    std::string to_reduced_string(const failure_output& output)
+    {
+      std::string str{};
+      for(const auto& info : output)
+      {
+        if(!info.message.empty())
+          str.append(info.message).append("\n");
+      }
+
+      return str;
+    }
+
     void record_check_started(const std::filesystem::path& file, std::string_view message)
     {
       if(!file.empty())
@@ -61,19 +74,6 @@ namespace sequoia::testing
     }
   }
 
-  [[nodiscard]]
-  std::string to_string(const failure_output& output)
-  {
-    std::string str{};
-    for(const auto& info : output)
-    {
-      if(!info.message.empty())
-        str.append(info.message).append("\n");
-    }
-
-    return str;
-  }
-
   //================================== sentinel ==================================//
 
   template<test_mode Mode>
@@ -87,10 +87,10 @@ namespace sequoia::testing
     if(!logger.depth())
     {
       logger.log_top_level_check();
-      impl::record_check_started(get().recovery().recovery_file, message);
+      record_check_started(get().recovery().recovery_file, message);
     }
 
-    impl::recored_dump_started(get().recovery().dump_file, message);
+    recored_dump_started(get().recovery().dump_file, message);
     logger.increment_depth(message);
   }
 
@@ -133,10 +133,10 @@ namespace sequoia::testing
             logger.append_to_diagnostics_output(fpMessageMaker());
         }
 
-        impl::record_check_ended(get().recovery().recovery_file);
+        record_check_ended(get().recovery().recovery_file);
       }
 
-      impl::recored_dump_ended(get().recovery().dump_file);
+      recored_dump_ended(get().recovery().dump_file);
     }
       
     logger.decrement_depth();
@@ -353,7 +353,7 @@ namespace sequoia::testing
   {
     ++m_CriticalFailures;
     failure_message(message, is_critical::yes);
-    impl::recored_critical_failure(m_Recovery.recovery_file, message);
+    recored_critical_failure(m_Recovery.recovery_file, message);
   }
 
   template<test_mode Mode>
@@ -456,9 +456,9 @@ namespace sequoia::testing
   template<test_mode Mode>
   log_summary::log_summary(std::string_view name, const test_logger<Mode>& logger, const duration delta)
     : m_Name{name}
-    , m_FailureMessages{to_string(logger.failure_messages())}
-    , m_DiagnosticsOutput{to_string(logger.diagnostics_output())}
-    , m_CaughtExceptionMessages{to_string(logger.caught_exceptions_output())}
+    , m_FailureMessages{to_reduced_string(logger.failure_messages())}
+    , m_DiagnosticsOutput{to_reduced_string(logger.diagnostics_output())}
+    , m_CaughtExceptionMessages{to_reduced_string(logger.caught_exceptions_output())}
     , m_CriticalFailures{logger.critical_failures()}
     , m_Duration{delta}
   {
