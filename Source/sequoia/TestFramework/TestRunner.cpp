@@ -94,6 +94,7 @@ namespace sequoia::testing
     fs::create_directory(proj_paths().output());
     fs::create_directory(diagnostics_output_path(proj_paths().output()));
     fs::create_directory(test_summaries_path(proj_paths().output()));
+    fs::remove_all(temp_test_summaries_path(proj_paths().output()));
   }
 
   void test_runner::process_args(int argc, char** argv)

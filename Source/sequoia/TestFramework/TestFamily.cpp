@@ -25,16 +25,16 @@ namespace sequoia::testing
     std::filesystem::path test_summary_filename(const fs::path& sourceFile,
                                                 const std::filesystem::path& outputDir,
                                                 const std::filesystem::path& testRepo,
-                                                const std::optional<std::size_t> optIndex)
+                                                const std::optional<std::string> suffix)
     {
       auto name{fs::path{sourceFile}.replace_extension(".txt")};
       if(name.empty())
         throw std::logic_error("Source files should have a non-trivial name!");
 
       auto dirPath{
-        [&outputDir, optIndex](){
-          return optIndex.has_value() ? temp_test_summaries_path(outputDir)
-                                      : test_summaries_path(outputDir);
+        [&outputDir, suffix](){
+          return suffix.has_value() ? temp_test_summaries_path(outputDir)
+                                    : test_summaries_path(outputDir);
         }
       };
 
@@ -57,10 +57,10 @@ namespace sequoia::testing
           summaryFile /= *iters.first++;
       }
 
-      if(optIndex.has_value())
+      if(suffix.has_value())
       {
         return   summaryFile.parent_path()
-               / summaryFile.stem().concat(std::to_string(optIndex.value()).append(".txt"));
+               / summaryFile.stem().concat(suffix.value()).concat(".txt");
       }
 
       return summaryFile;
@@ -97,7 +97,7 @@ namespace sequoia::testing
     , summary{test_summary_filename(sourceFile, outputDir, testRepo, std::nullopt)}
     , workingMaterials{workingMaterials}
     , predictions{predictiveMaterials}
-    , temp_summary{index.has_value() ? test_summary_filename(sourceFile, outputDir, testRepo, index) : ""}
+    , temp_summary{index.has_value() ? test_summary_filename(sourceFile, outputDir, testRepo, std::to_string(index.value())) : ""}
   {}
 
   family_processor::family_processor(update_mode mode)
