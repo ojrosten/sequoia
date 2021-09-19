@@ -231,6 +231,9 @@ namespace sequoia::testing
       if(std::string str{}; (s >> str) && (str ==  "$Check:"))
       {        
         s >> newInfo.check_index;
+        if(s.fail())
+          throw std::runtime_error{"Error while parsing failure_info: unable to determine index"};
+          
         s.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
       }
       else

@@ -17,9 +17,17 @@ namespace sequoia::testing
 
   void failure_info_test::check_exceptions()
   {    
-    check_exception_thrown<std::runtime_error>(LINE("Stream does not start with index"), [](){
+    check_exception_thrown<std::runtime_error>(LINE("Stream does not start with expected pattern"), [](){
       std::stringstream s{};
       s << "foo";
+
+      failure_info x{};
+      s >> x;
+    });
+
+    check_exception_thrown<std::runtime_error>(LINE("Stream does not contain index"), [](){
+      std::stringstream s{};
+      s << "$Check: foo";
 
       failure_info x{};
       s >> x;
