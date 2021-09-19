@@ -32,15 +32,26 @@ namespace sequoia::testing
       failure_info x{};
       s >> x;
     });
+
+    check_exception_thrown<std::runtime_error>(LINE("Stream does not contain message"), [](){
+      std::stringstream s{};
+      s << "$Check: 1\n";
+
+      failure_info x{};
+      s >> x;
+    });
   }
 
   void failure_info_test::check_failure_info()
   {
     failure_info x{}, y{1, "foo"};
-    check_equivalence(LINE("Useful Description"), x, 0, "");
-    check_equivalence(LINE("Useful Description"), y, 1, "foo");
+    check_equivalence(LINE(""), x, 0, "");
+    check_equivalence(LINE(""), y, 1, "foo");
 
-    check_semantics(LINE("Useful Description"), x, y, std::weak_ordering::less);
+    check_semantics(LINE(""), x, y, std::weak_ordering::less);
+
+    failure_info z{42, "..$.."};
+    check_semantics(LINE("Intermediate $"), x, z, std::weak_ordering::less);    
   }
 
   void failure_info_test::run_tests()
