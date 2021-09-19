@@ -21,5 +21,9 @@ namespace sequoia::testing
     std::string_view source_file() const noexcept final;
 
     void run_tests() final;
+
+    void check_exceptions();
+
+    void check_failure_info();
   };
 }

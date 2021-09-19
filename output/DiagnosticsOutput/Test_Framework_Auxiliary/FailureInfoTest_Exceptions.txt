@@ -1,0 +1,9 @@
+Tests/TestFramework/FailureInfoTest.cpp, Line 20
+Stream does not start with index
+
+Expected Exception Type:
+[std::runtime_error]
+Error while parsing failure_info: unable to find $Check:
+
+	=======================================
+
