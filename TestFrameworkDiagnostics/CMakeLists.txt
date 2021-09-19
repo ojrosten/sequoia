@@ -8,18 +8,24 @@ add_executable(TestFrameworkDiagnostics TestFrameworkDiagnosticsMain.cpp)
 set(TestDir "../Tests")
 
 target_sources(TestFrameworkDiagnostics PRIVATE
+               ${TestDir}/Parsing/CommandLineArgumentsDiagnostics.cpp
+               ${TestDir}/Parsing/CommandLineArgumentsTest.cpp
+               ${TestDir}/Runtime/FactoryTest.cpp
+               ${TestDir}/Runtime/FactoryTestingDiagnostics.cpp
                ${TestDir}/TestFramework/CoreDiagnostics.cpp
                ${TestDir}/TestFramework/DependencyAnalyzerFreeTest.cpp
+               ${TestDir}/TestFramework/FailureInfoTest.cpp
+               ${TestDir}/TestFramework/FailureInfoTestingDiagnostics.cpp
                ${TestDir}/TestFramework/FileSystemFreeTest.cpp
                ${TestDir}/TestFramework/MaterialsUpdaterFreeTest.cpp
                ${TestDir}/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp
                ${TestDir}/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp
                ${TestDir}/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp
                ${TestDir}/TestFramework/MoveOnlyTestDiagnostics.cpp
-               ${TestDir}/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp
                ${TestDir}/TestFramework/OrderableMoveOnlyAllocationTestDiagnostics.cpp
-               ${TestDir}/TestFramework/OrderableRegularTestDiagnostics.cpp
+               ${TestDir}/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp
                ${TestDir}/TestFramework/OrderableRegularAllocationTestDiagnostics.cpp
+               ${TestDir}/TestFramework/OrderableRegularTestDiagnostics.cpp
                ${TestDir}/TestFramework/OutputFreeTest.cpp
                ${TestDir}/TestFramework/PerformanceTestDiagnostics.cpp
                ${TestDir}/TestFramework/RegularAllocationTestDiagnostics.cpp
@@ -28,16 +34,12 @@ target_sources(TestFrameworkDiagnostics PRIVATE
                ${TestDir}/TestFramework/ScopedAllocationTestDiagnostics.cpp
                ${TestDir}/TestFramework/TestRunnerDiagnostics.cpp
                ${TestDir}/TestFramework/TestRunnerDiagnosticsUtilities.cpp
+               ${TestDir}/TestFramework/TestRunnerProjectCreation.cpp
                ${TestDir}/TestFramework/TestRunnerTest.cpp
                ${TestDir}/TestFramework/TestRunnerTestCreation.cpp
-               ${TestDir}/TestFramework/TestRunnerProjectCreation.cpp
-               ${TestDir}/Parsing/CommandLineArgumentsTest.cpp
-               ${TestDir}/Parsing/CommandLineArgumentsDiagnostics.cpp
-               ${TestDir}/Runtime/FactoryTestingDiagnostics.cpp
-               ${TestDir}/Runtime/FactoryTest.cpp
                ${TestDir}/TextProcessing/IndentFreeTest.cpp
-               ${TestDir}/TextProcessing/SubstitutionsFreeTest.cpp
-               ${TestDir}/TextProcessing/PatternsFreeTest.cpp)
+               ${TestDir}/TextProcessing/PatternsFreeTest.cpp
+               ${TestDir}/TextProcessing/SubstitutionsFreeTest.cpp)
 
 set(BUILD_SYS ${CMAKE_CURRENT_SOURCE_DIR}/../build_system)
 

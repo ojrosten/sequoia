@@ -134,6 +134,46 @@ namespace sequoia::testing
   {
     std::size_t check_index;
     std::string message;
+
+    [[nodiscard]]
+    friend bool operator==(const failure_info&, const failure_info&) noexcept = default;
+
+    // TO DO: replace with <=> once it lands in libc++
+    [[nodiscard]]
+    friend bool operator!=(const failure_info&, const failure_info&) noexcept = default;
+
+    [[nodiscard]]
+    friend bool operator<(const failure_info& lhs, const failure_info& rhs) noexcept
+    {
+      if(lhs.check_index == rhs.check_index)
+      {
+        return lhs.message < rhs.message;
+      }
+
+      return lhs.check_index < rhs.check_index;
+    }
+
+    [[nodiscard]]
+    friend bool operator<=(const failure_info& lhs, const failure_info& rhs) noexcept
+    {
+      return (lhs == rhs) || (lhs < rhs);
+    }
+
+    [[nodiscard]]
+    friend bool operator>(const failure_info& lhs, const failure_info& rhs) noexcept
+    {
+      return rhs < lhs;
+    }
+
+    [[nodiscard]]
+    friend bool operator>=(const failure_info& lhs, const failure_info& rhs) noexcept
+    {
+      return !(lhs < rhs);
+    }
+    
+    friend std::ostream& operator<<(std::ostream& s, const failure_info& info);
+
+    friend std::istream& operator>>(std::istream& s, failure_info& info);
   };
 
   using failure_output = std::vector<failure_info>;

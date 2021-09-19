@@ -65,7 +65,9 @@ target_sources(TestAll PRIVATE ${TestDir}/Experimental/ExperimentalTest.cpp
                ${TestDir}/Runtime/FactoryTestingDiagnostics.cpp
                ${TestDir}/Streaming/StreamingFreeTest.cpp
                ${TestDir}/TestFramework/CoreDiagnostics.cpp
-               ${TestDir}/TestFramework/DependencyAnalyzerFreeTest.cpp
+               ${TestDir}/TestFramework/DependencyAnalyzerFreeTest.cpp               
+               ${TestDir}/TestFramework/FailureInfoTest.cpp
+               ${TestDir}/TestFramework/FailureInfoTestingDiagnostics.cpp
                ${TestDir}/TestFramework/FileSystemFreeTest.cpp
                ${TestDir}/TestFramework/MaterialsUpdaterFreeTest.cpp
                ${TestDir}/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp

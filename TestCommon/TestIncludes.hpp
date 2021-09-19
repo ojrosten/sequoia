@@ -63,6 +63,8 @@
 #include "Streaming/StreamingFreeTest.hpp"
 #include "TestFramework/CoreDiagnostics.hpp"
 #include "TestFramework/DependencyAnalyzerFreeTest.hpp"
+#include "TestFramework/FailureInfoTest.hpp"
+#include "TestFramework/FailureInfoTestingDiagnostics.hpp"
 #include "TestFramework/FileSystemFreeTest.hpp"
 #include "TestFramework/MaterialsUpdaterFreeTest.hpp"
 #include "TestFramework/MoveOnlyAllocationTestDiagnostics.hpp"
