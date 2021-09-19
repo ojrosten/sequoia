@@ -145,12 +145,9 @@ namespace sequoia::testing
     [[nodiscard]]
     friend bool operator<(const failure_info& lhs, const failure_info& rhs) noexcept
     {
-      if(lhs.check_index == rhs.check_index)
-      {
-        return lhs.message < rhs.message;
-      }
-
-      return lhs.check_index < rhs.check_index;
+      return (lhs.check_index == rhs.check_index)
+           ? lhs.message < rhs.message
+           : lhs.check_index < rhs.check_index;
     }
 
     [[nodiscard]]
