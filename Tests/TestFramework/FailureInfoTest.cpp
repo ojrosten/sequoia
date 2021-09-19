@@ -17,14 +17,10 @@ namespace sequoia::testing
 
   void failure_info_test::run_tests()
   {
-    // For example:
+    failure_info x{}, y{1, "foo"};
+    check_equivalence(LINE("Useful Description"), x, 0, "");
+    check_equivalence(LINE("Useful Description"), y, 1, "foo");
 
-    // sequoia::testing::failure_info x{args}, y{different args};
-    // check_equivalence(LINE("Useful Description"), x, something equivalent);
-    // check_equivalence(LINE("Useful Description"), y, something equivalent);
-    // For orderable type, with x < y:
-    // check_semantics(LINE("Useful Description"), x, y, std::weak_ordering::less);
-    // For equality comparable but not orderable:
-    // check_semantics(LINE("Useful Description"), x, y);
+    check_semantics(LINE("Useful Description"), x, y, std::weak_ordering::less);
   }
 }

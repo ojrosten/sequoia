@@ -231,6 +231,7 @@ namespace sequoia::testing
       if(std::string str{}; (s >> str) && (str ==  "$Check:"))
       {        
         s >> newInfo.check_index;
+        s.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
       }
       else
       {
@@ -242,7 +243,15 @@ namespace sequoia::testing
           std::string line{};
           while(std::getline(s, line))
           {
-            if(line == "$") return true;
+            if(line == "$")
+            {
+              if(auto& mess{newInfo.message}; !mess.empty() && (mess.back() == '\n'))
+              {
+                mess.pop_back();
+              }
+
+              return true;
+            }
 
             newInfo.message.append(line).append("\n");
           }

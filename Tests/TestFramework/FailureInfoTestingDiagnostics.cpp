@@ -17,10 +17,10 @@ namespace sequoia::testing
 
   void failure_info_false_positive_test::run_tests()
   {
-    // For example:
-
-    // sequoia::testing::failure_info x{args}, y{different args};
-    // check_equivalence(LINE("Useful Description"), x, something inequivalent - ordinarily this would fail);
-    // check_equality(LINE("Useful Description"), x, y);
+    failure_info x{}, y{4}, z{0, "foo"};
+    check_equivalence(LINE(""), x, 1, "");
+    check_equivalence(LINE(""), x, 0, "foo");
+    check_equality(LINE("check_index differs"), x, y);
+    check_equality(LINE("message differs"), x, z);
   }
 }
