@@ -32,16 +32,12 @@ namespace sequoia::testing
       }
     }
 
-    void serialize(const std::filesystem::path& file, std::string_view name, const failure_output& output)
+    void serialize(const std::filesystem::path& file, const instability_analysis_info& info)
     {      
       fs::create_directories(file.parent_path());
       if(std::ofstream ofile{file})
       {
-        ofile << name << "\n";
-        for(const auto& info : output)
-        {
-          ofile << info << "\n";
-        }
+        ofile << info;
       }
       else
       {

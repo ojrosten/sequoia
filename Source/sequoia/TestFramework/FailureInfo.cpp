@@ -71,4 +71,29 @@ namespace sequoia::testing
     
     return s;
   }
+
+  std::ostream& operator<<(std::ostream& s, const instability_analysis_info& info)
+  {
+    s << info.name << "\n";
+    for(const auto& output : info.output)
+    {
+      s << output << '\n';
+    }
+    
+    return s;
+  }
+
+   std::istream& operator>>(std::istream& s, instability_analysis_info& info)
+   {
+     s >> info.name;
+
+     while(s)
+     {
+       failure_info finfo{};
+       s >> finfo;
+       info.output.push_back(finfo);
+     }
+     
+     return s;
+   }
 }

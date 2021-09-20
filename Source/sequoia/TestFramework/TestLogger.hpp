@@ -25,7 +25,6 @@
 
 #include <chrono>
 #include <filesystem>
-#include <vector>
 
 namespace sequoia::testing
 {

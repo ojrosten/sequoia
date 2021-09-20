@@ -42,8 +42,9 @@ namespace sequoia::testing
   namespace impl
   {
     void versioned_write(const std::filesystem::path& file, const failure_output& output);
-    void serialize(const std::filesystem::path& file, std::string_view name, const failure_output& output);
     void versioned_write(const std::filesystem::path& file, std::string_view text);
+
+    void serialize(const std::filesystem::path& file, const instability_analysis_info& info);
   }
 
   [[nodiscard]]
@@ -236,7 +237,9 @@ namespace sequoia::testing
         namespace fs = std::filesystem;
 
         const auto file{fs::path{m_InstabilityAnalysisStub}.concat("_" + std::to_string(*index)).concat(".txt")};
-        impl::serialize(file, fs::path{source_file()}.filename().generic_string(), Checker::failure_messages());
+        impl::serialize(file,
+                        {fs::path{source_file()}.filename().generic_string(),
+                         Checker::failure_messages()});
       }
     }
 
