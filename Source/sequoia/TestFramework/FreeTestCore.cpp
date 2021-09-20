@@ -8,11 +8,15 @@
 #include "sequoia/TestFramework/FreeTestCore.hpp"
 #include "sequoia/TestFramework/FileEditors.hpp"
 
+#include <fstream>
+
 namespace sequoia::testing
 {
+  namespace fs = std::filesystem;
+  
   namespace impl
   {
-    void write(const std::filesystem::path& file, std::string_view text)
+    void versioned_write(const std::filesystem::path& file, std::string_view text)
     {
       if(!text.empty() || std::filesystem::exists(file))
       {
@@ -20,11 +24,27 @@ namespace sequoia::testing
       }
     }
 
-    void write(const std::filesystem::path& file, const failure_output& output)
+    void versioned_write(const std::filesystem::path& file, const failure_output& output)
     {
       for(const auto& info : output)
       {
-        write(file, info.message);
+        versioned_write(file, info.message);
+      }
+    }
+
+    void serialize(const std::filesystem::path& file, const failure_output& output)
+    {      
+      fs::create_directories(file.parent_path());
+      if(std::ofstream ofile{file})
+      {
+        for(const auto& info : output)
+        {
+          ofile << info << "\n";
+        }
+      }
+      else
+      {
+        throw std::runtime_error{report_failed_write(file)};
       }
     }
   }

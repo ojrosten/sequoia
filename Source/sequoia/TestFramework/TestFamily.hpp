@@ -107,15 +107,13 @@ namespace sequoia::testing
           const std::filesystem::path& workingMaterials,
           const std::filesystem::path& predictiveMaterials,
           const std::filesystem::path& outputDir,
-          const std::filesystem::path& testRepo,
-          std::optional<std::size_t> index);
+          const std::filesystem::path& testRepo);
 
     std::filesystem::path
       test_file,
       summary,
       workingMaterials,
-      predictions,
-      temp_summary;
+      predictions;
   };
 
 
@@ -225,23 +223,22 @@ namespace sequoia::testing
     {
       family_processor processor{updateMode};
       auto pathsMaker{
-        [&info=m_Info,index](auto& test) -> paths {
+        [&info=m_Info](auto& test) -> paths {
           return {test.source_filename(),
                   test.working_materials(),
                   test.predictive_materials(),
                   info.output_dir(),
-                  info.test_repo(),
-                  index};
+                  info.test_repo()};
         }
       };
 
       if(concurrenyMode < concurrency_mode::test)
       {
         auto process{
-          [&processor,pathsMaker](auto& optTest) {
+          [&processor,pathsMaker,index](auto& optTest) {
             if(optTest.has_value())
             {
-              processor.process(optTest->execute(), pathsMaker(*optTest));
+              processor.process(optTest->execute(index), pathsMaker(*optTest));
             }
           }
         };
@@ -254,12 +251,12 @@ namespace sequoia::testing
         std::vector<std::future<data>> results{};
 
         auto generator{
-          [&results,pathsMaker](auto& optTest) {
+          [&results,pathsMaker,index](auto& optTest) {
             if(optTest.has_value())
             {
               results.emplace_back(
-                std::async([&test=*optTest, pathsMaker](){
-                  return std::make_pair(test.execute(), pathsMaker(test)); })
+                                   std::async([&test=*optTest,pathsMaker,index](){
+                  return std::make_pair(test.execute(index), pathsMaker(test)); })
               );
             }
           }

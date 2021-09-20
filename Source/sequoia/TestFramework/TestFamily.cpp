@@ -24,49 +24,35 @@ namespace sequoia::testing
     [[nodiscard]]
     std::filesystem::path test_summary_filename(const fs::path& sourceFile,
                                                 const std::filesystem::path& outputDir,
-                                                const std::filesystem::path& testRepo,
-                                                const std::optional<std::string> suffix)
+                                                const std::filesystem::path& testRepo)
     {
-      auto name{fs::path{sourceFile}.replace_extension(".txt")};
+      const auto name{fs::path{sourceFile}.replace_extension(".txt")};
       if(name.empty())
         throw std::logic_error("Source files should have a non-trivial name!");
-
-      auto dirPath{
-        [&outputDir, suffix](){
-          return suffix.has_value() ? temp_test_summaries_path(outputDir)
-                                    : test_summaries_path(outputDir);
-        }
-      };
-
-      auto summaryFile{name};
       
       if(!name.is_absolute())
       {
         if(!testRepo.empty())
         {
           auto back{*(--testRepo.end())};
-          summaryFile = dirPath() / back / rebase_from(name, testRepo);
+          return test_summaries_path(outputDir) / back / rebase_from(name, testRepo);
         }
       }
       else
       {
-        summaryFile = dirPath();
+        auto summaryFile{test_summaries_path(outputDir)};
         auto iters{std::mismatch(name.begin(), name.end(), summaryFile.begin(), summaryFile.end())};
 
         while(iters.first != name.end())
           summaryFile /= *iters.first++;
+
+        return summaryFile;
       }
 
-      if(suffix.has_value())
-      {
-        return   summaryFile.parent_path()
-               / summaryFile.stem().concat(suffix.value()).concat(".txt");
-      }
-
-      return summaryFile;
+      return name;
     }
   }
-  
+
   [[nodiscard]]
   std::string to_string(concurrency_mode mode)
   {
@@ -91,13 +77,11 @@ namespace sequoia::testing
                const fs::path& workingMaterials,
                const fs::path& predictiveMaterials,
                const std::filesystem::path& outputDir,
-               const std::filesystem::path& testRepo,
-               const std::optional<std::size_t> index)
+               const std::filesystem::path& testRepo)
     : test_file{sourceFile}
-    , summary{test_summary_filename(sourceFile, outputDir, testRepo, std::nullopt)}
+    , summary{test_summary_filename(sourceFile, outputDir, testRepo)}
     , workingMaterials{workingMaterials}
     , predictions{predictiveMaterials}
-    , temp_summary{index.has_value() ? test_summary_filename(sourceFile, outputDir, testRepo, std::to_string(index.value())) : ""}
   {}
 
   family_processor::family_processor(update_mode mode)
@@ -112,9 +96,6 @@ namespace sequoia::testing
       m_Results.failed_tests.push_back(files.test_file);
 
     to_file(files.summary, summary);
-
-    to_file(files.temp_summary, summary);
-
     
     if(m_Mode != update_mode::none)
     {

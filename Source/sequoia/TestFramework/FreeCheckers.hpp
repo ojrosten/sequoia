@@ -604,6 +604,12 @@ namespace sequoia::testing
       return logger().top_level_message();
     }
 
+    [[nodiscard]]
+    const failure_output& failure_messages() const noexcept
+    {
+      return logger().failure_messages();
+    }
+
     void recovery(recovery_paths paths)
     {
       test_logger<Mode>::recovery(std::move(paths));

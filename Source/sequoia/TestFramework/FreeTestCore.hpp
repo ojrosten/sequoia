@@ -41,8 +41,9 @@ namespace sequoia::testing
 
   namespace impl
   {
-    void write(const std::filesystem::path& file, const failure_output& output);
-    void write(const std::filesystem::path& file, std::string_view text);
+    void versioned_write(const std::filesystem::path& file, const failure_output& output);
+    void serialize(const std::filesystem::path& file, const failure_output& output);
+    void versioned_write(const std::filesystem::path& file, std::string_view text);
   }
 
   [[nodiscard]]
@@ -83,7 +84,7 @@ namespace sequoia::testing
     basic_test& operator=(const basic_test&) = delete;
 
     [[nodiscard]]
-    log_summary execute()
+    log_summary execute(std::optional<std::size_t> index)
     {
       const timer t{};
 
@@ -99,6 +100,8 @@ namespace sequoia::testing
       {
         log_critical_failure("Unknown", "");
       }
+
+      write_instability_analysis_output(index);
 
       return write_versioned_output(summarize(t.time_elapsed()));
     }
@@ -159,11 +162,26 @@ namespace sequoia::testing
 
     void set_filesystem_data(std::filesystem::path testRepo, const std::filesystem::path& outputDir, std::string_view familyName)
     {
-      m_TestRepo = std::move(testRepo);
-      m_DiagnosticsOutput = make_output_filepath(outputDir, familyName, "Output");
-      m_CaughtExceptionsOutput = make_output_filepath(outputDir, familyName, "Exceptions");
-
       namespace fs = std::filesystem;
+
+      auto makePath{
+        [famName{fs::path{replace_all(familyName, " ", "_")}},this](fs::path dir, std::string_view suffix){
+            const auto file{
+              fs::path{source_file()}.filename()
+                                     .replace_extension()
+                                     .concat("_")
+                                     .concat(to_tag(mode))
+                                     .concat(suffix)
+                                     .concat(".txt")};
+            return (dir /= famName) /= file;
+        }
+      };
+
+      m_TestRepo                = std::move(testRepo);
+      m_DiagnosticsOutput       = makePath(diagnostics_output_path(outputDir),  "Output");
+      m_CaughtExceptionsOutput  = makePath(diagnostics_output_path(outputDir),  "Exceptions");
+      m_InstabilityAnalysisStub = makePath(temp_test_summaries_path(outputDir), replace_all(name(), " ", "_")).replace_extension();
+
       fs::create_directories(m_DiagnosticsOutput.parent_path());
     }
 
@@ -198,7 +216,8 @@ namespace sequoia::testing
       m_AuxiliaryMaterials{},
       m_TestRepo{},
       m_DiagnosticsOutput{},
-      m_CaughtExceptionsOutput{};
+      m_CaughtExceptionsOutput{},
+      m_InstabilityAnalysisStub{};
 
     void log_critical_failure(std::string_view tag, std::string_view what)
     {
@@ -210,29 +229,23 @@ namespace sequoia::testing
       sentry.log_critical_failure(message);
     }
 
+    void write_instability_analysis_output(std::optional<std::size_t> index) const
+    {
+      if(index.has_value())
+      {
+        namespace fs = std::filesystem;
+
+        const auto file{fs::path{m_InstabilityAnalysisStub}.concat("_" + std::to_string(*index)).concat(".txt")};
+        impl::serialize(file, Checker::failure_messages());
+      }
+    }
+
     const log_summary& write_versioned_output(const log_summary& summary) const
     {
-      impl::write(diagnostics_output_filename(), summary.diagnostics_output());
-      impl::write(caught_exceptions_output_filename(), summary.caught_exceptions_output());
+      impl::versioned_write(diagnostics_output_filename(), summary.diagnostics_output());
+      impl::versioned_write(caught_exceptions_output_filename(), summary.caught_exceptions_output());
 
       return summary;
-    }
-
-    [[nodiscard]]
-    std::filesystem::path output_filename(std::string_view suffix) const
-    {
-      namespace fs = std::filesystem;
-      return fs::path{source_file()}.filename().replace_extension().concat("_").concat(to_tag(mode)).concat(suffix).concat(".txt");
-    }
-
-    [[nodiscard]]
-    std::filesystem::path make_output_filepath(const std::filesystem::path& outputDir, std::string_view familyName, std::string_view suffix) const
-    {
-      namespace fs = std::filesystem;
-
-      return   diagnostics_output_path(outputDir)
-             / fs::path{replace_all(familyName, " ", "_")}
-             / output_filename(suffix);
     }
 
     /// Pure virtual method which should be overridden in a concrete test's cpp file in order to provide the correct __FILE__
@@ -246,9 +259,9 @@ namespace sequoia::testing
   template<class T>
   concept concrete_test = !std::is_abstract_v<T> && movable<T> && constructible_from<std::string>
     && requires (T& test){
-         { test.execute() }         -> same_as<log_summary>;
-         { test.source_filename() } -> convertible_to<std::filesystem::path>;
-         { test.name() }            -> convertible_to<std::string>;
+         { test.execute(std::nullopt) } -> same_as<log_summary>;
+         { test.source_filename() }     -> convertible_to<std::filesystem::path>;
+         { test.name() }                -> convertible_to<std::string>;
        };
 
   template<test_mode Mode>
