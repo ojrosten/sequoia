@@ -20,6 +20,7 @@
  */
 
 #include "sequoia/Core/Meta/TypeTraits.hpp"
+#include "sequoia/TestFramework/FailureInfo.hpp"
 #include "sequoia/TestFramework/Output.hpp"
 
 #include <chrono>
@@ -129,51 +130,6 @@ namespace sequoia::testing
   extern template class sentinel<test_mode::standard>;
   extern template class sentinel<test_mode::false_positive>;
   extern template class sentinel<test_mode::false_negative>;
-
-  struct failure_info
-  {
-    std::size_t check_index;
-    std::string message;
-
-    [[nodiscard]]
-    friend bool operator==(const failure_info&, const failure_info&) noexcept = default;
-
-    // TO DO: replace with <=> once it lands in libc++
-    [[nodiscard]]
-    friend bool operator!=(const failure_info&, const failure_info&) noexcept = default;
-
-    [[nodiscard]]
-    friend bool operator<(const failure_info& lhs, const failure_info& rhs) noexcept
-    {
-      return (lhs.check_index == rhs.check_index)
-           ? lhs.message < rhs.message
-           : lhs.check_index < rhs.check_index;
-    }
-
-    [[nodiscard]]
-    friend bool operator<=(const failure_info& lhs, const failure_info& rhs) noexcept
-    {
-      return (lhs == rhs) || (lhs < rhs);
-    }
-
-    [[nodiscard]]
-    friend bool operator>(const failure_info& lhs, const failure_info& rhs) noexcept
-    {
-      return rhs < lhs;
-    }
-
-    [[nodiscard]]
-    friend bool operator>=(const failure_info& lhs, const failure_info& rhs) noexcept
-    {
-      return !(lhs < rhs);
-    }
-    
-    friend std::ostream& operator<<(std::ostream& s, const failure_info& info);
-
-    friend std::istream& operator>>(std::istream& s, failure_info& info);
-  };
-
-  using failure_output = std::vector<failure_info>;
 
   template<test_mode Mode>
   class test_logger

@@ -8,7 +8,6 @@
 #pragma once
 
 #include "sequoia/TestFramework/RegularTestCore.hpp"
-#include "sequoia/TestFramework/TestLogger.hpp"
 
 namespace sequoia::testing
 {

@@ -211,69 +211,6 @@ namespace sequoia::testing
   template class sentinel<test_mode::false_positive>;
   template class sentinel<test_mode::false_negative>;
 
-  //================================== failure_info ==================================//
-
-  std::ostream& operator<<(std::ostream& s, const failure_info& info)
-  {
-    s << "$Check: " << info.check_index << '\n';
-    s << info.message << "\n$\n";
-      
-    return s;
-  }
-
-  std::istream& operator>>(std::istream& s, failure_info& info)
-  {
-    while(s && std::isspace(static_cast<unsigned char>(s.peek()))) s.get();
-
-    if(s)
-    {
-      failure_info newInfo{};
-      if(std::string str{}; (s >> str) && (str ==  "$Check:"))
-      {        
-        s >> newInfo.check_index;
-        if(s.fail())
-          throw std::runtime_error{"Error while parsing failure_info: unable to determine index"};
-          
-        s.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-      }
-      else
-      {
-        throw std::runtime_error{"Error while parsing failure_info: unable to find $Check:"};
-      }
-
-      auto messageBuilder{
-        [&s,&newInfo]() -> bool {
-          std::string line{};
-          while(std::getline(s, line))
-          {
-            if(line == "$")
-            {
-              if(auto& mess{newInfo.message}; !mess.empty() && (mess.back() == '\n'))
-              {
-                mess.pop_back();
-              }
-
-              return true;
-            }
-
-            newInfo.message.append(line).append("\n");
-          }
-
-          return false;
-        }
-      };
-
-      if(!messageBuilder())
-      {
-        throw std::runtime_error{"Error while parsing failure_info: unable to find message"};
-      }
-
-      info = std::move(newInfo);
-    }
-    
-    return s;
-  }
-
   //================================== test_logger ==================================//
 
   //================================== public ==================================//
