@@ -254,7 +254,7 @@ namespace sequoia::testing
   [[nodiscard]]
   std::filesystem::path temp_test_summaries_path(std::filesystem::path outputDir)
   {
-    return outputDir /= "TempTestSummaries";
+    return tests_temporary_data_path(outputDir) /= "InstabilityAnalysis";
   }
 
   [[nodiscard]]
