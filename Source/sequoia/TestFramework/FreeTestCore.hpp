@@ -44,7 +44,7 @@ namespace sequoia::testing
     void versioned_write(const std::filesystem::path& file, const failure_output& output);
     void versioned_write(const std::filesystem::path& file, std::string_view text);
 
-    void serialize(const std::filesystem::path& file, const instability_analysis_info& info);
+    void serialize(const std::filesystem::path& file, const failure_output& output);
   }
 
   [[nodiscard]]
@@ -181,7 +181,9 @@ namespace sequoia::testing
       m_TestRepo                = std::move(testRepo);
       m_DiagnosticsOutput       = makePath(diagnostics_output_path(outputDir),  "Output");
       m_CaughtExceptionsOutput  = makePath(diagnostics_output_path(outputDir),  "Exceptions");
-      m_InstabilityAnalysisStub = makePath(temp_test_summaries_path(outputDir), replace_all(name(), " ", "_")).replace_extension();
+      m_InstabilityAnalysisStub =   temp_test_summaries_path(outputDir)
+                                  / fs::path{source_file()}.filename().replace_extension()
+                                  / replace_all(name(), " ", "_");
 
       fs::create_directories(m_DiagnosticsOutput.parent_path());
     }
@@ -236,10 +238,8 @@ namespace sequoia::testing
       {
         namespace fs = std::filesystem;
 
-        const auto file{fs::path{m_InstabilityAnalysisStub}.concat("_" + std::to_string(*index)).concat(".txt")};
-        impl::serialize(file,
-                        {fs::path{source_file()}.filename().generic_string(),
-                         Checker::failure_messages()});
+        const auto file{m_InstabilityAnalysisStub / ("Output_" + std::to_string(*index) + ".txt")};
+        impl::serialize(file, Checker::failure_messages());
       }
     }
 

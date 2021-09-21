@@ -61,20 +61,7 @@ namespace sequoia::testing
 
   using failure_output = std::vector<failure_info>;
 
-  struct instability_analysis_info
-  {
-    std::string name;
-    failure_output output;
+  std::ostream& operator<<(std::ostream& s, const failure_output& output);
 
-    [[nodiscard]]
-    friend bool operator==(const instability_analysis_info&, const instability_analysis_info&) noexcept = default;
-
-    // TO DO: replace with <=> once it lands in libc++
-    [[nodiscard]]
-    friend bool operator!=(const instability_analysis_info&, const instability_analysis_info&) noexcept = default;
-
-    friend std::ostream& operator<<(std::ostream& s, const instability_analysis_info& info);
-
-    friend std::istream& operator>>(std::istream& s, instability_analysis_info& info);
-  };
+  std::istream& operator>>(std::istream& s, failure_output& output);
 }
