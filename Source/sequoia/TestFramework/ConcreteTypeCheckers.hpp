@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include <array>
+
 /*! \file
     \brief Useful specializations for the class templates detailed_equality_checker and equivalence_checker.
 
