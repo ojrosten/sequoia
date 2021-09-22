@@ -18,8 +18,8 @@ namespace sequoia::testing
 {
   struct failure_info
   {
-    std::size_t check_index;
-    std::string message;
+    std::size_t check_index{};
+    std::string message{};
 
     [[nodiscard]]
     friend bool operator==(const failure_info&, const failure_info&) noexcept = default;
