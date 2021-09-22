@@ -45,7 +45,7 @@ namespace sequoia::testing
 
         for(auto c : counts)
         {
-        mess += std::to_string(100*static_cast<double>(c) / failuresFromFiles.size()) += "%,";
+          mess += std::to_string(100*static_cast<double>(c) / failuresFromFiles.size()) += "%,";
         }
 
         mess.back() = ']';
@@ -143,6 +143,8 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string instability_analysis(const std::filesystem::path& root, const std::size_t trials)
   {
+    if(trials <=1) return "";
+
     std::string message{};
 
     const auto files{
@@ -158,9 +160,9 @@ namespace sequoia::testing
               outputFiles.push_back(path);
             }
           }
-
-          std::sort(outputFiles.begin(), outputFiles.end());
         }
+
+        std::sort(outputFiles.begin(), outputFiles.end());
 
         return outputFiles;
       }()

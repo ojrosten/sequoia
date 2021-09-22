@@ -402,6 +402,8 @@ namespace sequoia::testing
       
       if(!run_tests(m_NumReps > 1 ? std::optional<std::size_t>{i} : std::nullopt)) break;
     }
+
+    stream() << instability_analysis(temp_test_summaries_path(m_Selector.proj_paths().output()), m_NumReps);
   }
 
   void test_runner::finalize_concurrency_mode()
