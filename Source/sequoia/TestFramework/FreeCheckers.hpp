@@ -487,7 +487,7 @@ namespace sequoia::testing
    */
 
   template<class T, test_mode Mode>
-  concept extender = requires(test_logger<Mode>& logger) {
+  concept extender = (sizeof(T) == sizeof(void*)) && requires(test_logger<Mode>& logger) {
     new T{logger};
   };
 
@@ -576,7 +576,17 @@ namespace sequoia::testing
       , Extenders{logger()}...
     {}
 
-    checker& operator=(checker&&) noexcept = default;
+    checker& operator=(checker&& other) noexcept
+    {
+      if(&other != this)
+      {
+        static_cast<logger_type&>(*this) = static_cast<logger_type&&>(other);
+        // The only state the Extenders possess is a handle to the logger,
+        // which should not be reset.
+      }
+
+      return *this;
+    }
 
     ~checker() = default;
 
