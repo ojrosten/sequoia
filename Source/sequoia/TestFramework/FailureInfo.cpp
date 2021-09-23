@@ -69,7 +69,7 @@ namespace sequoia::testing
   {
     while(s && std::isspace(static_cast<unsigned char>(s.peek()))) s.get();
 
-    if(s)
+    if(s && (s.peek() != std::istream::traits_type::eof()))
     {
       failure_info newInfo{};
       if(std::string str{}; (s >> str) && (str ==  "$Check:"))

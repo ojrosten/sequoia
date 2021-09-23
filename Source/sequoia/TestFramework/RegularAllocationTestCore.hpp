@@ -31,8 +31,11 @@ namespace sequoia::testing
 
     explicit regular_allocation_extender(test_logger<Mode>& logger) : m_pLogger{&logger} {}
 
-    regular_allocation_extender(const regular_allocation_extender&)            = delete;
+    regular_allocation_extender(const regular_allocation_extender&) = delete;
+    regular_allocation_extender(regular_allocation_extender&&)      = delete;
+
     regular_allocation_extender& operator=(const regular_allocation_extender&) = delete;
+    regular_allocation_extender& operator=(regular_allocation_extender&&)      = delete;
 
     template<pseudoregular T, invocable<T&> Mutator, alloc_getter<T>... Getters>
       requires (!orderable<T> && (sizeof...(Getters) > 0))
@@ -77,9 +80,6 @@ namespace sequoia::testing
     }
   protected:
     ~regular_allocation_extender() = default;
-
-    regular_allocation_extender(regular_allocation_extender&&)            noexcept = default;
-    regular_allocation_extender& operator=(regular_allocation_extender&&) noexcept = default;
   private:
     [[nodiscard]]
     test_logger<Mode>& logger() noexcept { return *m_pLogger; }
