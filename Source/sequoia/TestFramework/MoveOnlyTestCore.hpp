@@ -35,8 +35,11 @@ namespace sequoia::testing
 
     explicit move_only_extender(test_logger<Mode>& logger) : m_pLogger{&logger} {}
 
-    move_only_extender(const move_only_extender&)            = delete;
+    move_only_extender(const move_only_extender&) = delete;
+    move_only_extender(move_only_extender&&)      = delete;
+
     move_only_extender& operator=(const move_only_extender&) = delete;
+    move_only_extender& operator=(move_only_extender&&)      = delete;
 
     /// Preconditions: x!=y; x==xClone, y==yClone
     template<moveonly T>
@@ -76,9 +79,6 @@ namespace sequoia::testing
       check_semantics(description, xFn(), yFn(), xFn(), yFn(), order);
     }
   protected:
-    move_only_extender(move_only_extender&&)            noexcept = default;
-    move_only_extender& operator=(move_only_extender&&) noexcept = default;
-
     ~move_only_extender() = default;
   private:
     [[nodiscard]]

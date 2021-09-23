@@ -32,8 +32,11 @@ namespace sequoia::testing
 
     explicit move_only_allocation_extender(test_logger<Mode>& logger) : m_pLogger{&logger} {}
 
-    move_only_allocation_extender(const move_only_allocation_extender&)            = delete;
+    move_only_allocation_extender(const move_only_allocation_extender&) = delete;
+    move_only_allocation_extender(move_only_allocation_extender&&)      = delete;
+
     move_only_allocation_extender& operator=(const move_only_allocation_extender&) = delete;
+    move_only_allocation_extender& operator=(move_only_allocation_extender&&)      = delete;
 
     template<moveonly T, invocable<T&> Mutator, alloc_getter<T>... Getters>
       requires (!orderable<T>  && (sizeof...(Getters) > 0))
@@ -78,9 +81,6 @@ namespace sequoia::testing
     }
   protected:
     ~move_only_allocation_extender() = default;
-
-    move_only_allocation_extender(move_only_allocation_extender&&)            noexcept = default;
-    move_only_allocation_extender& operator=(move_only_allocation_extender&&) noexcept = default;
   private:
     [[nodiscard]]
     test_logger<Mode>& logger() noexcept { return *m_pLogger; }

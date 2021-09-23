@@ -32,8 +32,11 @@ namespace sequoia::testing
 
     explicit regular_extender(test_logger<Mode>& logger) : m_pLogger{&logger} {}
 
-    regular_extender(const regular_extender&)            = delete;
+    regular_extender(const regular_extender&) = delete;
+    regular_extender(regular_extender&&)      = delete;
+
     regular_extender& operator=(const regular_extender&) = delete;
+    regular_extender& operator=(regular_extender&&)      = delete;
 
     /// Precondition: x!=y
     template<pseudoregular T>
@@ -66,9 +69,6 @@ namespace sequoia::testing
       testing::check_semantics(append_lines(description, emphasise("Regular Semantics")), logger(), x, y, order, std::move(m));
     }
   protected:
-    regular_extender(regular_extender&&)            noexcept = default;
-    regular_extender& operator=(regular_extender&&) noexcept = default;
-
     ~regular_extender() = default;
   private:
     [[nodiscard]]
