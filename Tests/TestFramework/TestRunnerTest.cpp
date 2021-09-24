@@ -108,6 +108,9 @@ namespace sequoia::testing
 
     fs::copy(auxiliary() / "output" / "Recovery" / "Recovery.txt", working_materials() / "RecoveryAndDumpOutput");
     fs::copy(auxiliary() / "output" / "Recovery" / "Dump.txt", working_materials() / "RecoveryAndDumpOutput");
+    fs::copy(auxiliary() / "output" / "TestSummaries",
+             working_materials() / "RecoveryAndDumpOutput" / "TestSummaries",
+             fs::copy_options::recursive);
     
 
     check_equivalence(LINE("Recovery and Dump"),
