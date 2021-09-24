@@ -22,5 +22,10 @@ namespace sequoia::testing
     void run_tests() final;
 
     void test_critical_errors();
+
+    void test_instability_analysis();
+
+    [[nodiscard]]
+    std::filesystem::path aux_project() const;
   };
 }

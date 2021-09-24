@@ -38,6 +38,30 @@ namespace sequoia::testing
         check_equality("Throw during check", foo{}, foo{});
       }
     };
+
+    struct flipper
+    {
+      flipper() { x = !x; }
+
+      inline static bool x{};
+    };
+
+    class flipper_free_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      std::string_view source_file() const noexcept final
+      {
+        return __FILE__;
+      }
+    private:
+      void run_tests() final
+      {
+        check_equivalence("", flipper{}, true);
+      }
+    };
   }
 
   template<>
@@ -50,6 +74,16 @@ namespace sequoia::testing
     }
   };
 
+  template<>
+  struct equivalence_checker<flipper>
+  {
+    template<test_mode Mode>
+    static void check(test_logger<Mode>& logger, const flipper& obtained, bool prediction)
+    {
+      check_equality("Wrapped value", logger, obtained.x, prediction);
+    }
+  };
+
   [[nodiscard]]
   std::string_view test_runner_test::source_file() const noexcept
   {
@@ -59,14 +93,17 @@ namespace sequoia::testing
   void test_runner_test::run_tests()
   {
     test_critical_errors();
+    test_instability_analysis();
+  }
+
+  [[nodiscard]]
+  std::filesystem::path test_runner_test::aux_project() const
+  {
+    return auxiliary_materials() /  "FakeProject";
   }
 
   void test_runner_test::test_critical_errors()
   {
-    auto auxiliary{
-      [&mat{auxiliary_materials()}]() { return mat / "FakeProject"; }
-    };
-
     std::stringstream outputStream{};
 
     // This is scoped to ensure destruction of the runner - and therefore loggers -
@@ -76,10 +113,15 @@ namespace sequoia::testing
                                  "test", "Bar",
                                  "test", "Foo"};
 
-      const auto testMain{auxiliary().append("TestSandbox").append("TestSandbox.cpp")};
-      const auto includeTarget{auxiliary().append("TestShared").append("SharedIncludes.hpp")};
+      const auto testMain{aux_project().append("TestSandbox").append("TestSandbox.cpp")};
+      const auto includeTarget{aux_project().append("TestShared").append("SharedIncludes.hpp")};
   
-      test_runner runner{args.size(), args.get(), "Oliver J. Rosten", project_paths{auxiliary(), testMain, includeTarget}, "  ", outputStream};
+      test_runner runner{args.size(),
+                         args.get(),
+                         "Oliver J. Rosten",
+                         project_paths{aux_project(), testMain, includeTarget},
+                         "  ",
+                         outputStream};
 
       runner.add_test_family(
         "Bar",
@@ -99,16 +141,17 @@ namespace sequoia::testing
       runner.execute();
     }
 
-    fs::create_directory(working_materials() / "RecoveryAndDumpOutput");
+    const auto outputDir{working_materials() / "RecoveryAndDumpOutput"};
+    fs::create_directory(outputDir);
 
-    if(std::ofstream file{working_materials() / "RecoveryAndDumpOutput" / "io.txt"})
+    if(std::ofstream file{outputDir / "io.txt"})
     {
       file << outputStream.str();
     }
 
-    fs::copy(auxiliary() / "output" / "Recovery" / "Recovery.txt", working_materials() / "RecoveryAndDumpOutput");
-    fs::copy(auxiliary() / "output" / "Recovery" / "Dump.txt", working_materials() / "RecoveryAndDumpOutput");
-    fs::copy(auxiliary() / "output" / "TestSummaries",
+    fs::copy(aux_project() / "output" / "Recovery" / "Recovery.txt", working_materials() / "RecoveryAndDumpOutput");
+    fs::copy(aux_project() / "output" / "Recovery" / "Dump.txt", working_materials() / "RecoveryAndDumpOutput");
+    fs::copy(aux_project() / "output" / "TestSummaries",
              working_materials() / "RecoveryAndDumpOutput" / "TestSummaries",
              fs::copy_options::recursive);
     
@@ -116,5 +159,41 @@ namespace sequoia::testing
     check_equivalence(LINE("Recovery and Dump"),
                       working_materials() / "RecoveryAndDumpOutput",
                       predictive_materials() / "RecoveryAndDumpOutput");
+  }
+
+  void test_runner_test::test_instability_analysis()
+  {
+    std::stringstream outputStream{};
+
+    commandline_arguments args{"", "--num", "2"};
+
+    const auto testMain{aux_project().append("TestSandbox").append("TestSandbox.cpp")};
+    const auto includeTarget{aux_project().append("TestShared").append("SharedIncludes.hpp")};
+
+    test_runner runner{args.size(),
+      args.get(),
+      "Oliver J. Rosten",
+      project_paths{aux_project(), testMain, includeTarget},
+      "  ",
+      outputStream};
+
+    runner.add_test_family(
+      "Flipper",
+      flipper_free_test{"Free Test"}
+    );
+
+    runner.execute();
+
+    const auto outputDir{working_materials() / "InstabilityAnalysis"};
+    fs::create_directory(outputDir);
+
+    if(std::ofstream file{outputDir / "io.txt"})
+    {
+      file << outputStream.str();
+    }
+
+    check_equivalence(LINE("Instability Analysis"),
+                      outputDir,
+                      predictive_materials() / "InstabilityAnalysis");
   }
 }
