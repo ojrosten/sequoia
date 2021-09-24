@@ -13,6 +13,8 @@
 
 namespace sequoia::testing
 {
+  namespace fs = std::filesystem;
+
   namespace
   {
     struct foo
@@ -61,23 +63,23 @@ namespace sequoia::testing
 
   void test_runner_test::test_critical_errors()
   {
-    auto working{
-      [&mat{working_materials()}]() { return mat / "FakeProject"; }
+    auto auxiliary{
+      [&mat{auxiliary_materials()}]() { return mat / "FakeProject"; }
     };
 
     std::stringstream outputStream{};
 
     // This is scoped to ensure destruction of the runner - and therefore loggers -
-    // before dumping output to a file. The destructors are not trivial in recovert mode.
+    // before dumping output to a file. The destructors are not trivial in recovery mode.
     {
       commandline_arguments args{"", "-v", "--recovery", "dump",
                                  "test", "Bar",
                                  "test", "Foo"};
 
-      const auto testMain{working().append("TestSandbox").append("TestSandbox.cpp")};
-      const auto includeTarget{working().append("TestShared").append("SharedIncludes.hpp")};
+      const auto testMain{auxiliary().append("TestSandbox").append("TestSandbox.cpp")};
+      const auto includeTarget{auxiliary().append("TestShared").append("SharedIncludes.hpp")};
   
-      test_runner runner{args.size(), args.get(), "Oliver J. Rosten", project_paths{working(), testMain, includeTarget}, "  ", outputStream};
+      test_runner runner{args.size(), args.get(), "Oliver J. Rosten", project_paths{auxiliary(), testMain, includeTarget}, "  ", outputStream};
 
       runner.add_test_family(
         "Bar",
@@ -97,11 +99,19 @@ namespace sequoia::testing
       runner.execute();
     }
 
-    if(std::ofstream file{working() / "output" / "io.txt"})
+    fs::create_directory(working_materials() / "RecoveryAndDumpOutput");
+
+    if(std::ofstream file{working_materials() / "RecoveryAndDumpOutput" / "io.txt"})
     {
       file << outputStream.str();
     }
 
-    check_equivalence(LINE(""), working(), predictive_materials() / "FakeProject");
+    fs::copy(auxiliary() / "output" / "Recovery" / "Recovery.txt", working_materials() / "RecoveryAndDumpOutput");
+    fs::copy(auxiliary() / "output" / "Recovery" / "Dump.txt", working_materials() / "RecoveryAndDumpOutput");
+    
+
+    check_equivalence(LINE("Recovery and Dump"),
+                      working_materials() / "RecoveryAndDumpOutput",
+                      predictive_materials() / "RecoveryAndDumpOutput");
   }
 }
