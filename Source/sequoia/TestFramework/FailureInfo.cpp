@@ -171,10 +171,10 @@ namespace sequoia::testing
     if(files.size() % trials)
       throw std::runtime_error{"Instability analysis: incorrect number of output files"};
 
-    for(auto i{files.begin()}, j{std::next(i, trials)}; j != files.end(); i+=trials, j+=trials)
+    for(auto i{files.begin()}; i != files.end(); i+=trials)
     {
       std::vector<failure_output> failuresFromFiles{};
-      std::transform(i, j, std::back_inserter(failuresFromFiles), [](const fs::path& file){
+      std::transform(i, std::next(i, trials), std::back_inserter(failuresFromFiles), [](const fs::path& file){
         failure_output output{};
         if(std::ifstream ifile{file})
         {
