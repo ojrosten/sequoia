@@ -6,9 +6,11 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "sequoia/TestFramework/FailureInfo.hpp"
+#include "sequoia/TestFramework/Output.hpp"
 #include "sequoia/Streaming/Streaming.hpp"
 
 #include <fstream>
+#include <iomanip>
 
 namespace sequoia::testing
 {
@@ -40,15 +42,19 @@ namespace sequoia::testing
       counts.push_back(std::distance(begin, last));
       if(auto num{counts.size()}; num > 1)
       {
-        std::string mess{"Instability detected, with " + std::to_string(num) + " different outcomes\n"
+        std::string mess{"\nInstability detected, with " + std::to_string(num) + " different outcomes\n"
           "Frequencies: ["};
 
         for(auto c : counts)
         {
-          mess += std::to_string(100*static_cast<double>(c) / failuresFromFiles.size()) += "%,";
+          std::stringstream s{};
+          s << std::setprecision(3) << 100 * static_cast<double>(c) / failuresFromFiles.size();
+          mess += s.str() += "%,";
         }
 
         mess.back() = ']';
+
+        mess.append("\n\n").append(footer());
       
         return mess;
       }
@@ -143,7 +149,7 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string instability_analysis(const std::filesystem::path& root, const std::size_t trials)
   {
-    if(trials <=1) return "";
+    if(trials <= 1) return "";
 
     std::string message{};
 

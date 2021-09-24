@@ -165,7 +165,7 @@ namespace sequoia::testing
   {
     std::stringstream outputStream{};
 
-    commandline_arguments args{"", "--num", "2"};
+    commandline_arguments args{"", "--num", "3"};
 
     const auto testMain{aux_project().append("TestSandbox").append("TestSandbox.cpp")};
     const auto includeTarget{aux_project().append("TestShared").append("SharedIncludes.hpp")};
