@@ -35,7 +35,7 @@ namespace sequoia::testing
            last{failuresFromFiles.end()},
            begin{first};
 
-      std::string mess{};
+      std::string mess{"["};
       while(++first != last)
       {
         if(*first != *begin)
@@ -45,14 +45,10 @@ namespace sequoia::testing
         }
       }
 
-      mess += to_percent(std::distance(begin, last)) += "%";
+      using namespace std::string_literals;
+      mess += to_percent(std::distance(begin, last)) += "%]\n\n"s += footer();
 
-      if(!mess.empty())
-      {
-        return "\nInstability detected. Outcome frequencies:\n[" + mess.append("]\n\n").append(footer());
-      }
-
-      return "";
+      return "\nInstability detected. Outcome frequencies:\n" + mess;
     }
   }
   
