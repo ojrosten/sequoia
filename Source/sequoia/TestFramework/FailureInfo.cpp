@@ -23,40 +23,33 @@ namespace sequoia::testing
     {    
       if(failuresFromFiles.size() <= 1) return "";
 
+      auto to_percent{
+        [&failuresFromFiles](auto num){
+          std::stringstream s{};
+          s << std::setprecision(3) << 100 * static_cast<double>(num) / failuresFromFiles.size();
+          return s.str();
+        }
+      };
+
       auto first{failuresFromFiles.begin()},
            last{failuresFromFiles.end()},
            begin{first};
-    
-      using diff_t = typename std::iterator_traits<decltype(first)>::difference_type;
-      std::vector<diff_t> counts{};
-    
+
+      std::string mess{};
       while(++first != last)
       {
         if(*first != *begin)
         {
-          counts.push_back(std::distance(begin, first));
+          mess += to_percent(std::distance(begin, first)) += "%,";
           begin = first;
         }
       }
 
-      counts.push_back(std::distance(begin, last));
-      if(auto num{counts.size()}; num > 1)
+      mess += to_percent(std::distance(begin, last)) += "%";
+
+      if(!mess.empty())
       {
-        std::string mess{"\nInstability detected, with " + std::to_string(num) + " different outcomes\n"
-          "Frequencies: ["};
-
-        for(auto c : counts)
-        {
-          std::stringstream s{};
-          s << std::setprecision(3) << 100 * static_cast<double>(c) / failuresFromFiles.size();
-          mess += s.str() += "%,";
-        }
-
-        mess.back() = ']';
-
-        mess.append("\n\n").append(footer());
-      
-        return mess;
+        return "\nInstability detected. Outcome frequencies:\n[" + mess.append("]\n\n").append(footer());
       }
 
       return "";
