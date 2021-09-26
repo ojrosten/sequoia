@@ -22,6 +22,8 @@ namespace sequoia::testing
     std::string analyse_output(const std::vector<failure_output>& failuresFromFiles)
     {    
       if(failuresFromFiles.size() <= 1) return "";
+      
+      using namespace std::string_literals;
 
       auto to_percent{
         [&failuresFromFiles](auto num){
@@ -35,20 +37,38 @@ namespace sequoia::testing
            last{failuresFromFiles.end()},
            begin{first};
 
-      std::string mess{"["};
+      std::string freqs{"["};
+      std::string messages{};
       while(++first != last)
       {
         if(*first != *begin)
         {
-          mess += to_percent(std::distance(begin, first)) += "%,";
+          freqs += to_percent(std::distance(begin, first)) += "%,";
+          auto[i,j]{std::mismatch(begin->begin(), begin->end(), first->begin(), first->end())};
+          if((i == begin->end()) && (j == first->end()))
+          {
+            throw std::logic_error{"Unable to identify instability"};
+          }
+          else if(i == begin->end())
+          {
+            messages.append("No failures\n\nvs.\n\n").append(j->message).append("\n\n");
+          }
+          else if(j == first->end())
+          {
+            messages.append(i->message).append("\n\nvs.\n\nNo failures");
+          }
+          else
+          {
+            messages.append(i->message).append("\n\nvs.\n\n").append(j->message);
+          }
+
           begin = first;
         }
       }
 
-      using namespace std::string_literals;
-      mess += to_percent(std::distance(begin, last)) += "%]\n\n"s += footer();
+      freqs += to_percent(std::distance(begin, last)) += "%]\n\n"s;
 
-      return "\nInstability detected. Outcome frequencies:\n" + mess;
+      return ("\nInstability detected. Outcome frequencies:\n" + freqs) += messages += footer();
     }
   }
   
@@ -129,7 +149,8 @@ namespace sequoia::testing
     {
       failure_info info{};
       s >> info;
-      output.push_back(info);
+      if(!s.fail())
+        output.push_back(info);
     }
      
     return s;

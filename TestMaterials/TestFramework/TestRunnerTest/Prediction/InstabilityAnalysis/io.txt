@@ -2,11 +2,11 @@
 Running tests...
 
 Flipper:
-[4 (3)ms]
+[1 (0)ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 
 -----------Grand Totals-----------
-[4 (3)ms]
+[1 (0)ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -44,11 +44,11 @@ Flipper:
 Running tests...
 
 Flipper:
-[0 (0)ms]
+[1 (0)ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 
 -----------Grand Totals-----------
-[0 (0)ms]
+[1 (0)ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -58,5 +58,21 @@ Flipper:
 
 Instability detected. Outcome frequencies:
 [66.7%,33.3%]
+
+No failures
+
+vs.
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<sequoia::testing::(anonymous namespace)::flipper>]
+	With equivalent types:
+	[bool]
+
+	  Wrapped value
+	  [bool]
+	  check failed
+
+	=======================================
+
 
 =======================================
