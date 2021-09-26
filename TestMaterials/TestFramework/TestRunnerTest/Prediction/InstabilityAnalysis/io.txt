@@ -2,11 +2,11 @@
 Running tests...
 
 Flipper:
-[1 (0)ms]
+[1 (1)ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 
 -----------Grand Totals-----------
-[1 (0)ms]
+[1 (1)ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -44,7 +44,7 @@ Flipper:
 Running tests...
 
 Flipper:
-[1 (0)ms]
+[0 (0)ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 
 -----------Grand Totals-----------
@@ -56,7 +56,8 @@ Flipper:
 	False Positive Checks:                     0;  Failures:  0
 	False Positive Performance Checks:         0;  Failures:  0
 
-Instability detected. Outcome frequencies:
+Instability detected in file "TestRunnerTest.cpp"
+Outcome frequencies:
 [66.7%,33.3%]
 
 No failures

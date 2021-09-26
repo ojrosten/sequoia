@@ -6,7 +6,9 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "sequoia/TestFramework/FailureInfo.hpp"
+#include "sequoia/TestFramework/FileSystem.hpp"
 #include "sequoia/TestFramework/Output.hpp"
+#include "sequoia/TextProcessing/Substitutions.hpp"
 #include "sequoia/Streaming/Streaming.hpp"
 
 #include <fstream>
@@ -19,7 +21,7 @@ namespace sequoia::testing
   namespace
   {
     [[nodiscard]]
-    std::string analyse_output(const std::vector<failure_output>& failuresFromFiles)
+    std::string analyse_output(const fs::path& filename, const std::vector<failure_output>& failuresFromFiles)
     {    
       if(failuresFromFiles.size() <= 1) return "";
       
@@ -68,7 +70,11 @@ namespace sequoia::testing
 
       freqs += to_percent(std::distance(begin, last)) += "%]\n\n"s;
 
-      return ("\nInstability detected. Outcome frequencies:\n" + freqs) += messages += footer();
+      return std::string{"\nInstability detected in file \""}
+        .append(filename.string())
+        .append("\"\nOutcome frequencies:\n" + freqs)
+        .append(messages)
+        .append(footer());
     }
   }
   
@@ -157,6 +163,34 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
+  std::filesystem::path directory_for_instability_analysis(const fs::path& outputDir, fs::path source, std::string_view name)
+  {
+    const auto ext{replace(source.filename().extension().string(), ".", "_")};
+
+    return temp_test_summaries_path(outputDir)
+        / source.filename().replace_extension().concat(ext)
+        / replace_all(name, " ", "_");
+  }
+
+  [[nodiscard]]
+  std::filesystem::path source_from_instability_analysis(const fs::path& dir)
+  {
+    auto parent{dir.parent_path()};
+    if(!parent.empty())
+    {
+      std::string str{(--parent.end())->string()};
+      if(auto pos{str.find_last_of('_')}; pos != std::string::npos)
+      {
+        str[pos] = '.';
+      }
+
+      return str;
+    }
+
+    return "";
+  }
+
+  [[nodiscard]]
   std::string instability_analysis(const std::filesystem::path& root, const std::size_t trials)
   {
     if(trials <= 1) return "";
@@ -204,7 +238,7 @@ namespace sequoia::testing
       });
 
       std::sort(failuresFromFiles.begin(), failuresFromFiles.end());
-      message += analyse_output(failuresFromFiles);
+      message += analyse_output(source_from_instability_analysis(i->parent_path()), failuresFromFiles);
     }
 
     return message;
