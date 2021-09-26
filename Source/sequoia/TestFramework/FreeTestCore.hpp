@@ -181,9 +181,18 @@ namespace sequoia::testing
       m_TestRepo                = std::move(testRepo);
       m_DiagnosticsOutput       = makePath(diagnostics_output_path(outputDir),  "Output");
       m_CaughtExceptionsOutput  = makePath(diagnostics_output_path(outputDir),  "Exceptions");
-      m_InstabilityAnalysisStub =   temp_test_summaries_path(outputDir)
-                                  / fs::path{source_file()}.filename().replace_extension()
-                                  / replace_all(name(), " ", "_");
+
+      const auto makeStub{
+        [&outputDir](fs::path source, std::string_view name){
+          const auto ext{replace_all(source.filename().extension().string(), ".", "_")};
+
+          return temp_test_summaries_path(outputDir)
+               / source.filename().replace_extension().concat(ext)
+               / replace_all(name, " ", "_");
+        }
+      };
+        
+      m_InstabilityAnalysisStub = makeStub(source_file(), name());
 
       fs::create_directories(m_DiagnosticsOutput.parent_path());
     }
