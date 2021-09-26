@@ -59,7 +59,7 @@ namespace sequoia::testing
     private:
       void run_tests() final
       {
-        check_equivalence("", flipper{}, true);
+        check_equivalence(LINE(""), flipper{}, true);
       }
     };
   }

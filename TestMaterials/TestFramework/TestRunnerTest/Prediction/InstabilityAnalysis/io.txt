@@ -2,11 +2,11 @@
 Running tests...
 
 Flipper:
-[1 (1)ms]
+[0 (0)ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 
 -----------Grand Totals-----------
-[1 (1)ms]
+[0 (0)ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -17,8 +17,10 @@ Flipper:
 Running tests...
 
 Flipper:
-[1 (0)ms]
+[0 (0)ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
+
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 62
 
 	Comparison performed using:
 	[sequoia::testing::equivalence_checker<sequoia::testing::(anonymous namespace)::flipper>]
@@ -33,7 +35,7 @@ Flipper:
 
 
 -----------Grand Totals-----------
-[1 (0)ms]
+[0 (0)ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -48,7 +50,7 @@ Flipper:
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 
 -----------Grand Totals-----------
-[1 (0)ms]
+[0 (0)ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -63,6 +65,8 @@ Outcome frequencies:
 No failures
 
 vs.
+
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 62
 
 	Comparison performed using:
 	[sequoia::testing::equivalence_checker<sequoia::testing::(anonymous namespace)::flipper>]
