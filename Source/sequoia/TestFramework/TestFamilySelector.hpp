@@ -28,6 +28,8 @@ namespace sequoia::testing
     template<class Test, class... Tests>
     void add_test_family(std::string_view name, Test&& test, Tests&&... tests)
     {
+      check_for_duplicates(name, test, tests...);
+      
       const bool done{
         [this, name](Test&& test, Tests&&... tests) {
           if(!m_SelectedSources.empty())
@@ -156,6 +158,30 @@ namespace sequoia::testing
     [[nodiscard]]
     auto find_filename(const std::filesystem::path& filename)->source_list::iterator;
 
+    using duplicate_set = std::set<std::pair<std::string_view, const std::filesystem::path&>>;
+
+    template<class Test, class... Tests>
+    static void check_for_duplicates(std::string_view name, const Test& test, const Tests&... tests)
+    {
+       duplicate_set namesAndSources{};
+       check_for_duplicates(namesAndSources, name, test, tests...);   
+    }
+
+    template<class Test, class... Tests>
+    static void check_for_duplicates(duplicate_set& namesAndSources,
+                                     std::string_view name,
+                                     const Test& test,
+                                     const Tests&... tests)
+    {
+      if(!namesAndSources.emplace(test.name(), test.source_filename()).second)
+        throw std::runtime_error{duplication_message(name, test.name(), test.source_filename())};
+
+      if constexpr(sizeof...(Tests) > 0)
+      {
+        check_for_duplicates(namesAndSources, name,tests...);
+      }
+    }
+
     template<concrete_test... AllTests, concrete_test Test, concrete_test... Tests>
     void add_tests(test_family<AllTests...>& f,
                    family_info::materials_setter& setter,
@@ -171,5 +197,11 @@ namespace sequoia::testing
 
       if constexpr(sizeof...(Tests) > 0) add_tests(f, setter, std::forward<Tests>(tests)...);
     }
+
+    [[nodiscard]]
+    static 
+    std::string duplication_message(std::string_view familyName,
+                                    std::string_view testName,
+                                    const std::filesystem::path& source);
   };
 }

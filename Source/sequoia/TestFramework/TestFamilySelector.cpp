@@ -255,4 +255,19 @@ namespace sequoia::testing
       return false;
     });
   }
+
+  [[nodiscard]]
+  std::string family_selector::duplication_message(std::string_view familyName,
+                                                   std::string_view testName,
+                                                   const std::filesystem::path& source)
+  {
+    using namespace parsing::commandline;
+    
+    return error(std::string{"Family/Test: \""}
+             .append(familyName).append("/").append(testName).append("\"\n")
+             .append("Source file: \"").append(source.generic_string()).append("\"\n")
+             .append("Please do not include tests in the same family"
+                     " which both have the same name and are defined"
+                     " in the same source file.\n"));
+  }
 }

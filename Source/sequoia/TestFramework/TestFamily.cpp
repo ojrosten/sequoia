@@ -13,6 +13,8 @@
 #include "sequoia/TestFramework/MaterialsUpdater.hpp"
 #include "sequoia/TestFramework/Summary.hpp"
 
+#include "sequoia/Parsing/CommandLineArguments.hpp"
+
 #include <fstream>
 
 namespace sequoia::testing

@@ -92,6 +92,7 @@ namespace sequoia::testing
 
   void test_runner_test::run_tests()
   {
+    test_name_and_source_duplication();
     test_critical_errors();
     test_instability_analysis();
   }
@@ -100,6 +101,31 @@ namespace sequoia::testing
   std::filesystem::path test_runner_test::aux_project() const
   {
     return auxiliary_materials() /  "FakeProject";
+  }
+
+  void test_runner_test::test_name_and_source_duplication()
+  {
+    check_exception_thrown<std::runtime_error>(
+      LINE(""),
+      [=](){
+        commandline_arguments args{""};
+        const auto testMain{aux_project().append("TestSandbox").append("TestSandbox.cpp")};
+        const auto includeTarget{aux_project().append("TestShared").append("SharedIncludes.hpp")};
+        std::stringstream outputStream{};
+  
+        test_runner runner{args.size(),
+                           args.get(),
+                           "Oliver J. Rosten",
+                           project_paths{aux_project(), testMain, includeTarget},
+                           "  ",
+                           outputStream};
+
+        runner.add_test_family(
+          "Duplicates",
+          foo_test{"Free Test"},
+          flipper_free_test{"Free Test"}
+        );
+      });
   }
 
   void test_runner_test::test_critical_errors()
