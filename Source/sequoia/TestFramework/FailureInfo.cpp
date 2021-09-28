@@ -74,7 +74,7 @@ namespace sequoia::testing
         .append(filename.string())
         .append("\"\nOutcome frequencies:\n" + freqs)
         .append(messages)
-        .append(footer());
+        .append(instability_footer());
     }
   }
   

@@ -90,6 +90,12 @@ namespace sequoia::testing
     return "=======================================\n";
   }
 
+  [[nodiscard]]
+  std::string instability_footer()
+  {
+    return "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n";
+  }
+
   void end_block(std::string& s, const line_breaks newlines, std::string_view footer)
   {
     if(!s.empty())

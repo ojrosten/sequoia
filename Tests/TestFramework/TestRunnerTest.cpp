@@ -218,7 +218,7 @@ namespace sequoia::testing
       file << outputStream.str();
     }
 
-    check_equivalence(LINE("Instability Analysis"),
+    check_equivalence(LINE("Instability comprising passes and failures"),
                       outputDir,
                       predictive_materials() / "InstabilityAnalysis");
   }

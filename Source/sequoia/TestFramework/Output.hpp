@@ -100,6 +100,9 @@ namespace sequoia::testing
   std::string footer();
 
   [[nodiscard]]
+  std::string instability_footer();
+
+  [[nodiscard]]
   std::string report_line(const std::filesystem::path& file, int line, std::string_view message, const std::filesystem::path& repository={});
 
   #define LINE(message) report_line(__FILE__, __LINE__, message)
