@@ -2,11 +2,11 @@
 Running tests...
 
 Family:
-[0 (0)ms]
+[2 (0)ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 
 -----------Grand Totals-----------
-[0 (0)ms]
+[2 (0)ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -17,7 +17,7 @@ Family:
 Running tests...
 
 Family:
-[0 (0)ms]
+[1 (0)ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
 	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 86
@@ -37,7 +37,7 @@ Family:
 
 
 -----------Grand Totals-----------
-[0 (0)ms]
+[1 (0)ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -48,7 +48,7 @@ Family:
 Running tests...
 
 Family:
-[0 (0)ms]
+[1 (0)ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
 	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 86
@@ -68,7 +68,7 @@ Family:
 
 
 -----------Grand Totals-----------
-[0 (0)ms]
+[1 (0)ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -79,7 +79,7 @@ Family:
 Running tests...
 
 Family:
-[0 (0)ms]
+[1 (0)ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
 	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 86
@@ -99,7 +99,7 @@ Family:
 
 
 -----------Grand Totals-----------
-[0 (0)ms]
+[1 (0)ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -130,23 +130,6 @@ vs.
 
 	=======================================
 
-
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 86
-
-	Comparison performed using:
-	[sequoia::testing::equivalence_checker<sequoia::testing::(anonymous namespace)::counter>]
-	With equivalent types:
-	[int]
-
-	  Wrapped value
-	  [int]
-	  operator== returned false
-	  Obtained : 2
-	  Predicted: 1
-
-	=======================================
-
-
 vs.
 
 	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 86
@@ -163,21 +146,6 @@ vs.
 	  Predicted: 1
 
 	=======================================
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 86
-
-	Comparison performed using:
-	[sequoia::testing::equivalence_checker<sequoia::testing::(anonymous namespace)::counter>]
-	With equivalent types:
-	[int]
-
-	  Wrapped value
-	  [int]
-	  operator== returned false
-	  Obtained : 3
-	  Predicted: 1
-
-	=======================================
-
 
 vs.
 
@@ -195,4 +163,5 @@ vs.
 	  Predicted: 1
 
 	=======================================
+
 $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$

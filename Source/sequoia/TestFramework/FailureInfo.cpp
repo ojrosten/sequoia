@@ -39,6 +39,8 @@ namespace sequoia::testing
            last{failuresFromFiles.end()},
            begin{first};
 
+      const auto initial{first};
+
       std::string freqs{"["};
       std::string messages{};
       while(++first != last)
@@ -53,7 +55,7 @@ namespace sequoia::testing
           }
           else if(i == begin->end())
           {
-            messages.append("No failures\n\nvs.\n\n").append(j->message).append("\n\n");
+            messages.append("No failures\n\nvs.\n\n").append(j->message);
           }
           else if(j == first->end())
           {
@@ -61,7 +63,10 @@ namespace sequoia::testing
           }
           else
           {
-            messages.append(i->message).append("\n\nvs.\n\n").append(j->message);
+            if(begin == initial)
+              messages.append(i->message);
+
+            messages.append("\nvs.\n\n").append(j->message);
           }
 
           begin = first;
@@ -74,6 +79,7 @@ namespace sequoia::testing
         .append(filename.string())
         .append("\"\nOutcome frequencies:\n" + freqs)
         .append(messages)
+        .append("\n")
         .append(instability_footer());
     }
   }
