@@ -17,7 +17,7 @@ Family:
 Running tests...
 
 Family:
-[1 (0)ms]
+[0 (0)ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
 	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 62
@@ -62,7 +62,7 @@ Instability detected in file "TestRunnerTest.cpp"
 Outcome frequencies:
 [66.7%,33.3%]
 
-No failures
+--No failures--
 
 vs.
 

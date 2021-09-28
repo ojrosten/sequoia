@@ -55,11 +55,11 @@ namespace sequoia::testing
           }
           else if(i == begin->end())
           {
-            messages.append("No failures\n\nvs.\n\n").append(j->message);
+            messages.append("--No failures--\n\nvs.\n\n").append(j->message);
           }
           else if(j == first->end())
           {
-            messages.append(i->message).append("\n\nvs.\n\nNo failures");
+            messages.append(i->message).append("\n\nvs.\n\n--No failures--");
           }
           else
           {
