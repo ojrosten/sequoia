@@ -25,7 +25,11 @@ namespace sequoia::testing
 
     void test_critical_errors();
 
-    void test_instability_analysis();
+    template<concrete_test T>
+    void test_instability_analysis(std::string_view message,
+                                   T t,
+                                   std::string_view outputDirName,
+                                   std::size_t numRuns);
 
     [[nodiscard]]
     std::filesystem::path aux_project() const;

@@ -62,6 +62,30 @@ namespace sequoia::testing
         check_equivalence(LINE(""), flipper{}, true);
       }
     };
+
+    struct counter
+    {
+      counter() { x = ++x; }
+
+      inline static int x{};
+    };
+
+    class counter_free_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      std::string_view source_file() const noexcept final
+      {
+        return __FILE__;
+      }
+    private:
+      void run_tests() final
+      {
+        check_equivalence(LINE(""), counter{}, 1);
+      }
+    };
   }
 
   template<>
@@ -84,6 +108,16 @@ namespace sequoia::testing
     }
   };
 
+  template<>
+  struct equivalence_checker<counter>
+  {
+    template<test_mode Mode>
+    static void check(test_logger<Mode>& logger, const counter& obtained, int prediction)
+    {
+      check_equality("Wrapped value", logger, obtained.x, prediction);
+    }
+  };
+
   [[nodiscard]]
   std::string_view test_runner_test::source_file() const noexcept
   {
@@ -94,7 +128,10 @@ namespace sequoia::testing
   {
     test_name_and_source_duplication();
     test_critical_errors();
-    test_instability_analysis();
+    test_instability_analysis("Instability comprising pass/failure",
+                              flipper_free_test{"Free Test"},
+                              "BinaryInstabilityAnalysis",
+                              3);
   }
 
   [[nodiscard]]
@@ -201,11 +238,15 @@ namespace sequoia::testing
                       predictive_materials() / "RecoveryAndDumpOutput");
   }
 
-  void test_runner_test::test_instability_analysis()
+  template<concrete_test T>
+  void test_runner_test::test_instability_analysis(std::string_view message,
+                                                   T t,
+                                                   std::string_view outputDirName,
+                                                   std::size_t numRuns)
   {
     std::stringstream outputStream{};
 
-    commandline_arguments args{"", "--num", "3"};
+    commandline_arguments args{"", "--num", std::to_string(numRuns)};
 
     const auto testMain{aux_project().append("TestSandbox").append("TestSandbox.cpp")};
     const auto includeTarget{aux_project().append("TestShared").append("SharedIncludes.hpp")};
@@ -218,13 +259,13 @@ namespace sequoia::testing
       outputStream};
 
     runner.add_test_family(
-      "Flipper",
-      flipper_free_test{"Free Test"}
+      "Family",
+      std::move(t)
     );
 
     runner.execute();
 
-    const auto outputDir{working_materials() / "InstabilityAnalysis"};
+    const auto outputDir{working_materials() / outputDirName};
     fs::create_directory(outputDir);
 
     if(std::ofstream file{outputDir / "io.txt"})
@@ -232,8 +273,8 @@ namespace sequoia::testing
       file << outputStream.str();
     }
 
-    check_equivalence(LINE("Instability comprising passes and failures"),
+    check_equivalence(LINE(add_type_info<T>(message)),
                       outputDir,
-                      predictive_materials() / "InstabilityAnalysis");
+                      predictive_materials() / outputDirName);
   }
 }
