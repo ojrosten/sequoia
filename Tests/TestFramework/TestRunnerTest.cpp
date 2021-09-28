@@ -128,10 +128,7 @@ namespace sequoia::testing
   {
     test_name_and_source_duplication();
     test_critical_errors();
-    test_instability_analysis("Instability comprising pass/failure",
-                              flipper_free_test{"Free Test"},
-                              "BinaryInstabilityAnalysis",
-                              3);
+    test_instability_analysis();    
   }
 
   [[nodiscard]]
@@ -236,6 +233,19 @@ namespace sequoia::testing
     check_equivalence(LINE("Recovery and Dump"),
                       working_materials() / "RecoveryAndDumpOutput",
                       predictive_materials() / "RecoveryAndDumpOutput");
+  }
+
+  void test_runner_test::test_instability_analysis()
+  {
+    test_instability_analysis("Instability comprising pass/failure",
+                              flipper_free_test{"Free Test"},
+                              "BinaryInstabilityAnalysis",
+                              3);
+
+    test_instability_analysis("Instability comprising pass/multiple distinct failures",
+                              counter_free_test{"Free Test"},
+                              "MultiInstabilityAnalysis",
+                              4);
   }
 
   template<concrete_test T>

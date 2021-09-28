@@ -1,0 +1,198 @@
+
+Running tests...
+
+Family:
+[0 (0)ms]
+	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
+
+-----------Grand Totals-----------
+[0 (0)ms]
+	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
+	Standard Performance Checks:               0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
+	False Positive Checks:                     0;  Failures:  0
+	False Positive Performance Checks:         0;  Failures:  0
+
+Running tests...
+
+Family:
+[0 (0)ms]
+	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
+
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 86
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<sequoia::testing::(anonymous namespace)::counter>]
+	With equivalent types:
+	[int]
+
+	  Wrapped value
+	  [int]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
+
+	=======================================
+
+
+-----------Grand Totals-----------
+[0 (0)ms]
+	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
+	Standard Performance Checks:               0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
+	False Positive Checks:                     0;  Failures:  0
+	False Positive Performance Checks:         0;  Failures:  0
+
+Running tests...
+
+Family:
+[0 (0)ms]
+	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
+
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 86
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<sequoia::testing::(anonymous namespace)::counter>]
+	With equivalent types:
+	[int]
+
+	  Wrapped value
+	  [int]
+	  operator== returned false
+	  Obtained : 3
+	  Predicted: 1
+
+	=======================================
+
+
+-----------Grand Totals-----------
+[0 (0)ms]
+	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
+	Standard Performance Checks:               0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
+	False Positive Checks:                     0;  Failures:  0
+	False Positive Performance Checks:         0;  Failures:  0
+
+Running tests...
+
+Family:
+[0 (0)ms]
+	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
+
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 86
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<sequoia::testing::(anonymous namespace)::counter>]
+	With equivalent types:
+	[int]
+
+	  Wrapped value
+	  [int]
+	  operator== returned false
+	  Obtained : 4
+	  Predicted: 1
+
+	=======================================
+
+
+-----------Grand Totals-----------
+[0 (0)ms]
+	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
+	Standard Performance Checks:               0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
+	False Positive Checks:                     0;  Failures:  0
+	False Positive Performance Checks:         0;  Failures:  0
+
+Instability detected in file "TestRunnerTest.cpp"
+Outcome frequencies:
+[25%,25%,25%,25%]
+
+No failures
+
+vs.
+
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 86
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<sequoia::testing::(anonymous namespace)::counter>]
+	With equivalent types:
+	[int]
+
+	  Wrapped value
+	  [int]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
+
+	=======================================
+
+
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 86
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<sequoia::testing::(anonymous namespace)::counter>]
+	With equivalent types:
+	[int]
+
+	  Wrapped value
+	  [int]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
+
+	=======================================
+
+
+vs.
+
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 86
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<sequoia::testing::(anonymous namespace)::counter>]
+	With equivalent types:
+	[int]
+
+	  Wrapped value
+	  [int]
+	  operator== returned false
+	  Obtained : 3
+	  Predicted: 1
+
+	=======================================
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 86
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<sequoia::testing::(anonymous namespace)::counter>]
+	With equivalent types:
+	[int]
+
+	  Wrapped value
+	  [int]
+	  operator== returned false
+	  Obtained : 3
+	  Predicted: 1
+
+	=======================================
+
+
+vs.
+
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 86
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<sequoia::testing::(anonymous namespace)::counter>]
+	With equivalent types:
+	[int]
+
+	  Wrapped value
+	  [int]
+	  operator== returned false
+	  Obtained : 4
+	  Predicted: 1
+
+	=======================================
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
