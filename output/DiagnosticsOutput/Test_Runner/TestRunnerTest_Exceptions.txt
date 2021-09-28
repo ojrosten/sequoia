@@ -4,7 +4,7 @@ Expected Exception Type:
 [std::runtime_error]
 
   Error: Family/Test: "Duplicates/Free Test"
-Source file: "/Users/Claire/Dropbox/Sequoia/Tests/TestFramework/TestRunnerTest.cpp"
+Source file: ".../Tests/TestFramework/TestRunnerTest.cpp"
 Please do not include tests in the same family which both have the same name and are defined in the same source file.
 
 	=======================================

@@ -158,7 +158,7 @@ namespace sequoia::testing
     [[nodiscard]]
     auto find_filename(const std::filesystem::path& filename)->source_list::iterator;
 
-    using duplicate_set = std::set<std::pair<std::string_view, const std::filesystem::path&>>;
+    using duplicate_set = std::set<std::pair<std::string_view, std::filesystem::path>>;
 
     template<class Test, class... Tests>
     static void check_for_duplicates(std::string_view name, const Test& test, const Tests&... tests)

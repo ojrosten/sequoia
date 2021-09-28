@@ -125,7 +125,21 @@ namespace sequoia::testing
           foo_test{"Free Test"},
           flipper_free_test{"Free Test"}
         );
-      });
+      },
+      [](std::string mess) {
+        constexpr std::string_view pattern{"Source file: \""};
+        constexpr auto npos{std::string::npos};
+        if(const auto pos{mess.find(pattern)}; pos != npos)
+        {
+          const auto startPos{pos + pattern.size()};
+          if(auto endPos{mess.find("/Tests", startPos)}; endPos != npos)
+          {
+            mess.replace(startPos, endPos - startPos, "...");
+          }
+        }
+        return mess;
+      }
+    );
   }
 
   void test_runner_test::test_critical_errors()
