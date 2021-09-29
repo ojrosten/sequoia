@@ -112,6 +112,25 @@ namespace sequoia::testing
         check(LINE("Pass/Pass/Fail"), periodic<3>{}.x > 0);
       }
     };
+
+    class another_free_test final : public free_test
+    {
+      using free_test::free_test;
+
+      [[nodiscard]]
+      std::string_view source_file() const noexcept final
+      {
+        return __FILE__;
+      }
+    private:
+      void run_tests() final
+      {
+        check(LINE("Always fails"), false);
+
+        flipper::x = false;
+        check_equality(LINE(""), flipper{}.x, true);
+      }
+    };
   }
 
   template<>
@@ -257,6 +276,11 @@ namespace sequoia::testing
                               periodic_free_test{"Free Test"},
                               "MultiCheckInstabilityAnalysis",
                               3);
+
+    test_instability_analysis("Instability following consistent failure",
+                              another_free_test{"Free Test"},
+                              "BinaryInstabilityFollowingFailures",
+                              2);
   }
 
   template<concrete_test T>
