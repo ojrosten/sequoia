@@ -127,7 +127,6 @@ namespace sequoia::testing
       {
         check(LINE("Always fails"), false);
 
-        flipper::x = false;
         check_equality(LINE(""), flipper{}.x, true);
       }
     };

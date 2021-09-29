@@ -2,8 +2,8 @@
 Running tests...
 
 Family:
-[0 (0)ms]
-	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
+[6 (3)ms]
+	Standard Top Level Checks:                 2;  Failures:  2  [Deep checks: 2]
 
 	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 128
 	Always fails
@@ -13,10 +13,17 @@ Family:
 
 	=======================================
 
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 130
+
+	[bool]
+	check failed
+
+	=======================================
+
 
 -----------Grand Totals-----------
-[0 (0)ms]
-	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
+[6 (3)ms]
+	Standard Top Level Checks:                 2;  Failures:  2  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
 	False Negative Performance Checks:         0;  Failures:  0
@@ -26,7 +33,7 @@ Family:
 Running tests...
 
 Family:
-[0 (0)ms]
+[5 (2)ms]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 
 	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 128
@@ -39,7 +46,7 @@ Family:
 
 
 -----------Grand Totals-----------
-[0 (0)ms]
+[6 (2)ms]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -49,7 +56,17 @@ Family:
 
 Instability detected in file "TestRunnerTest.cpp"
 Outcome frequencies:
-[100%]
+[50%,50%]
 
+--No failures--
+
+vs.
+
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 130
+
+	[bool]
+	check failed
+
+	=======================================
 
 $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
