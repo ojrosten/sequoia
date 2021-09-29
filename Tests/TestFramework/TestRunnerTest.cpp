@@ -130,6 +130,38 @@ namespace sequoia::testing
         check_equality(LINE(""), flipper{}.x, true);
       }
     };
+
+    class consistently_failing_free_test : public free_test
+    {
+      using free_test::free_test;
+
+      [[nodiscard]]
+      std::string_view source_file() const noexcept final
+      {
+        return __FILE__;
+      }
+    private:
+      void run_tests() final
+      {
+        check(LINE("Always fails"), false);
+      }
+    };
+
+    class consistently_passing_free_test : public free_test
+    {
+      using free_test::free_test;
+
+      [[nodiscard]]
+      std::string_view source_file() const noexcept final
+      {
+        return __FILE__;
+      }
+    private:
+      void run_tests() final
+      {
+        check(LINE("Always passes"), true);
+      }
+    };
   }
 
   template<>
@@ -279,6 +311,16 @@ namespace sequoia::testing
     test_instability_analysis("Instability following consistent failure",
                               another_free_test{"Free Test"},
                               "BinaryInstabilityFollowingFailures",
+                              2);
+
+    test_instability_analysis("Failure but no instability",
+                              consistently_failing_free_test{"Free Test"},
+                              "ConsistentFailureNoInstability",
+                              2);
+
+    test_instability_analysis("Always passes",
+                              consistently_failing_free_test{"Free Test"},
+                              "ConsistentSuccessNoInstability",
                               2);
   }
 

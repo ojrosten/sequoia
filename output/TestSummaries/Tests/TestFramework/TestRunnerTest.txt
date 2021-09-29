@@ -1,2 +1,2 @@
 Functionality Test
-Standard Top Level Checks:                 6;  Failures:  0  [Deep checks: 70]
+Standard Top Level Checks:                 8;  Failures:  0  [Deep checks: 86]

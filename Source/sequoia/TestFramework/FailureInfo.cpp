@@ -73,14 +73,21 @@ namespace sequoia::testing
         }
       }
 
-      freqs += to_percent(std::distance(begin, last)) += "%]\n\n"s;
+      if(begin != initial)
+      {
+        freqs += to_percent(std::distance(begin, last)) += "%]\n\n"s;
 
-      return std::string{"\nInstability detected in file \""}
-        .append(filename.string())
-        .append("\"\nOutcome frequencies:\n" + freqs)
-        .append(messages)
-        .append("\n")
-        .append(instability_footer());
+        return std::string{"\nInstability detected in file \""}
+          .append(filename.string())
+          .append("\"\nOutcome frequencies:\n" + freqs)
+          .append(messages)
+          .append("\n")
+          .append(instability_footer());
+      }
+      else
+      {
+        return "\nNo instabilities detected\n";
+      }
     }
   }
   
