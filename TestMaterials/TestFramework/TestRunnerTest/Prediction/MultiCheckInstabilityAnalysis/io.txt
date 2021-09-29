@@ -1,0 +1,107 @@
+
+Running tests...
+
+Family:
+[1 (0)ms]
+	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
+
+-----------Grand Totals-----------
+[1 (0)ms]
+	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
+	Standard Performance Checks:               0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
+	False Positive Checks:                     0;  Failures:  0
+	False Positive Performance Checks:         0;  Failures:  0
+
+Running tests...
+
+Family:
+[1 (0)ms]
+	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
+
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 111
+	Pass/Fail/Pass
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<sequoia::testing::(anonymous namespace)::periodic<2> >]
+	With equivalent types:
+	[int]
+
+	  Wrapped value
+	  [int]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	=======================================
+
+
+-----------Grand Totals-----------
+[1 (0)ms]
+	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
+	Standard Performance Checks:               0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
+	False Positive Checks:                     0;  Failures:  0
+	False Positive Performance Checks:         0;  Failures:  0
+
+Running tests...
+
+Family:
+[1 (0)ms]
+	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
+
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 112
+	Pass/Pass/Fail
+
+	[bool]
+	check failed
+
+	=======================================
+
+
+-----------Grand Totals-----------
+[1 (0)ms]
+	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
+	Standard Performance Checks:               0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
+	False Positive Checks:                     0;  Failures:  0
+	False Positive Performance Checks:         0;  Failures:  0
+
+Instability detected in file "TestRunnerTest.cpp"
+Outcome frequencies:
+[33.3%,33.3%,33.3%]
+
+--No failures--
+
+vs.
+
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 111
+	Pass/Fail/Pass
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<sequoia::testing::(anonymous namespace)::periodic<2> >]
+	With equivalent types:
+	[int]
+
+	  Wrapped value
+	  [int]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	=======================================
+
+vs.
+
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 112
+	Pass/Pass/Fail
+
+	[bool]
+	check failed
+
+	=======================================
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$

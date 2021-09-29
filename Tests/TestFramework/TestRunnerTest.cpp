@@ -86,6 +86,32 @@ namespace sequoia::testing
         check_equivalence(LINE(""), counter{}, 1);
       }
     };
+
+    template<std::size_t N>
+    struct periodic
+    {
+      periodic() { x = (++x) % N;}
+      
+      inline static int x{};
+    };
+
+    class periodic_free_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      std::string_view source_file() const noexcept final
+      {
+        return __FILE__;
+      }
+    private:
+      void run_tests() final
+      {
+        check_equivalence(LINE("Pass/Fail/Pass"), periodic<2>{}, 1);
+        check(LINE("Pass/Pass/Fail"), periodic<3>{}.x > 0);
+      }
+    };
   }
 
   template<>
@@ -113,6 +139,16 @@ namespace sequoia::testing
   {
     template<test_mode Mode>
     static void check(test_logger<Mode>& logger, const counter& obtained, int prediction)
+    {
+      check_equality("Wrapped value", logger, obtained.x, prediction);
+    }
+  };
+
+  template<std::size_t N>
+  struct equivalence_checker<periodic<N>>
+  {
+    template<test_mode Mode>
+    static void check(test_logger<Mode>& logger, const periodic<N>& obtained, int prediction)
     {
       check_equality("Wrapped value", logger, obtained.x, prediction);
     }
@@ -246,6 +282,11 @@ namespace sequoia::testing
                               counter_free_test{"Free Test"},
                               "MultiInstabilityAnalysis",
                               4);
+
+    test_instability_analysis("Instability comprising failures from two checks",
+                              periodic_free_test{"Free Test"},
+                              "MultiCheckInstabilityAnalysis",
+                              3);
   }
 
   template<concrete_test T>
