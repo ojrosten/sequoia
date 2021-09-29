@@ -2,7 +2,7 @@
 Running tests...
 
 Family:
-[1 (0)ms]
+[0 (0)ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 
 -----------Grand Totals-----------
@@ -22,14 +22,8 @@ Family:
 
 	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 62
 
-	Comparison performed using:
-	[sequoia::testing::equivalence_checker<sequoia::testing::(anonymous namespace)::flipper>]
-	With equivalent types:
 	[bool]
-
-	  Wrapped value
-	  [bool]
-	  check failed
+	check failed
 
 	=======================================
 
@@ -68,14 +62,8 @@ vs.
 
 	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 62
 
-	Comparison performed using:
-	[sequoia::testing::equivalence_checker<sequoia::testing::(anonymous namespace)::flipper>]
-	With equivalent types:
 	[bool]
-
-	  Wrapped value
-	  [bool]
-	  check failed
+	check failed
 
 	=======================================
 

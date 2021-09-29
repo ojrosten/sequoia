@@ -59,7 +59,7 @@ namespace sequoia::testing
     private:
       void run_tests() final
       {
-        check_equivalence(LINE(""), flipper{}, true);
+        check_equality(LINE(""), flipper{}.x, true);
       }
     };
 
@@ -83,7 +83,7 @@ namespace sequoia::testing
     private:
       void run_tests() final
       {
-        check_equivalence(LINE(""), counter{}, 1);
+        check_equality(LINE(""), counter{}.x, 1);
       }
     };
 
@@ -108,7 +108,7 @@ namespace sequoia::testing
     private:
       void run_tests() final
       {
-        check_equivalence(LINE("Pass/Fail/Pass"), periodic<2>{}, 1);
+        check_equality(LINE("Pass/Fail/Pass"), periodic<2>{}.x, 1);
         check(LINE("Pass/Pass/Fail"), periodic<3>{}.x > 0);
       }
     };
@@ -121,36 +121,6 @@ namespace sequoia::testing
     static void check(test_logger<Mode>&, const foo&, const foo&)
     {
       throw std::runtime_error{"This is bad"};
-    }
-  };
-
-  template<>
-  struct equivalence_checker<flipper>
-  {
-    template<test_mode Mode>
-    static void check(test_logger<Mode>& logger, const flipper& obtained, bool prediction)
-    {
-      check_equality("Wrapped value", logger, obtained.x, prediction);
-    }
-  };
-
-  template<>
-  struct equivalence_checker<counter>
-  {
-    template<test_mode Mode>
-    static void check(test_logger<Mode>& logger, const counter& obtained, int prediction)
-    {
-      check_equality("Wrapped value", logger, obtained.x, prediction);
-    }
-  };
-
-  template<std::size_t N>
-  struct equivalence_checker<periodic<N>>
-  {
-    template<test_mode Mode>
-    static void check(test_logger<Mode>& logger, const periodic<N>& obtained, int prediction)
-    {
-      check_equality("Wrapped value", logger, obtained.x, prediction);
     }
   };
 

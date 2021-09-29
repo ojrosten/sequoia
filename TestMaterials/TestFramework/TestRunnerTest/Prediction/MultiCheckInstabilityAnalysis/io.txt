@@ -2,11 +2,11 @@
 Running tests...
 
 Family:
-[1 (0)ms]
+[0 (0)ms]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 
 -----------Grand Totals-----------
-[1 (0)ms]
+[0 (0)ms]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -17,28 +17,22 @@ Family:
 Running tests...
 
 Family:
-[1 (0)ms]
+[0 (0)ms]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 
 	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 111
 	Pass/Fail/Pass
 
-	Comparison performed using:
-	[sequoia::testing::equivalence_checker<sequoia::testing::(anonymous namespace)::periodic<2> >]
-	With equivalent types:
 	[int]
-
-	  Wrapped value
-	  [int]
-	  operator== returned false
-	  Obtained : 0
-	  Predicted: 1
+	operator== returned false
+	Obtained : 0
+	Predicted: 1
 
 	=======================================
 
 
 -----------Grand Totals-----------
-[1 (0)ms]
+[0 (0)ms]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -49,7 +43,7 @@ Family:
 Running tests...
 
 Family:
-[1 (0)ms]
+[0 (0)ms]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 
 	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 112
@@ -62,7 +56,7 @@ Family:
 
 
 -----------Grand Totals-----------
-[1 (0)ms]
+[0 (0)ms]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -81,16 +75,10 @@ vs.
 	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 111
 	Pass/Fail/Pass
 
-	Comparison performed using:
-	[sequoia::testing::equivalence_checker<sequoia::testing::(anonymous namespace)::periodic<2> >]
-	With equivalent types:
 	[int]
-
-	  Wrapped value
-	  [int]
-	  operator== returned false
-	  Obtained : 0
-	  Predicted: 1
+	operator== returned false
+	Obtained : 0
+	Predicted: 1
 
 	=======================================
 
