@@ -149,7 +149,7 @@ namespace sequoia::testing
     }
     else
     {
-      append_lines(mess, "Exception thrown before any checks performed in file", filename.string());
+      append_lines(mess, "Exception thrown before any checks performed in file", filename.generic_string());
     }
 
     return mess;
