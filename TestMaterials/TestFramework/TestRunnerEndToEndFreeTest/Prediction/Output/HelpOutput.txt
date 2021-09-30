@@ -31,6 +31,8 @@ init | i | copyright owner, path ending with project name, code indent
   --no-ide
 update-materials | u |
 locate-instabilities | locate | number of repetitions >= 2
+  --sandbox | -s |
+  --runner-id private option, best avoided
 dump
 --async | -a |
 --async-depth | -ad | depth [0,1]

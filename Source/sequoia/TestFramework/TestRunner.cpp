@@ -285,7 +285,19 @@ namespace sequoia::testing
                       if(i < 2)
                         throw std::runtime_error{error("Number of repetitions must be >= 2")};
 
+                      m_InstabilityMode = instability_mode::single_instance;
                       m_NumReps = i;
+                    },
+                    { {"--sandbox", {"-s"}, {},
+                        [this](const arg_list&) {
+                          m_InstabilityMode = instability_mode::coordinator;
+                        }},
+                      {"--runner-id", {}, {"private option, best avoided"},
+                        [this](const arg_list& args) {
+                          m_RunnerID = std::stoi(args.front());
+                          m_InstabilityMode = instability_mode::sandbox;
+                          m_NumReps = 1;
+                        }}
                     }
                   },
                   {"dump", {}, {},
@@ -399,7 +411,7 @@ namespace sequoia::testing
       {
         for(auto& f : m_Selector) f.reset();
       }
-      
+
       if(!run_tests(m_NumReps > 1 ? std::optional<std::size_t>{i} : std::nullopt)) break;
     }
 

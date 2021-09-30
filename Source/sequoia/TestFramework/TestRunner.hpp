@@ -66,6 +66,7 @@ namespace sequoia::testing
 
   private:
     enum class output_mode { standard = 0, verbose = 1 };
+    enum class instability_mode { none = 0, single_instance, coordinator, sandbox};
 
     std::string      m_Copyright{};
     family_selector  m_Selector;
@@ -76,8 +77,10 @@ namespace sequoia::testing
     output_mode      m_OutputMode{output_mode::standard};
     update_mode      m_UpdateMode{update_mode::none};
     concurrency_mode m_ConcurrencyMode{concurrency_mode::serial};
+    instability_mode m_InstabilityMode{instability_mode::none};
 
-    std::size_t m_NumReps{1};
+    std::size_t m_NumReps{1},
+                m_RunnerID{};
 
     std::vector<std::filesystem::path> m_FailedTestSourceFiles;
 
