@@ -1,0 +1,62 @@
+
+Running tests...
+
+Family:
+[1 (0)ms]
+
+-----------Grand Totals-----------
+[1 (0)ms]
+	Standard Top Level Checks:                 0;  Failures:  0
+	Standard Performance Checks:               0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
+	False Positive Checks:                     0;  Failures:  0
+	False Positive Performance Checks:         0;  Failures:  0
+
+Running tests...
+
+Family:
+[1 (0)ms]
+	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 0]
+
+******  Critical Failures:  1  ******
+
+
+	Error -- Unexpected Exception:
+	Error
+
+	Exception thrown before any checks performed in file
+	/Users/Claire/Dropbox/Sequoia/Tests/TestFramework/TestRunnerTest.cpp
+
+	=======================================
+
+
+-----------Grand Totals-----------
+[1 (0)ms]
+	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 0]
+	Standard Performance Checks:               0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
+	False Positive Checks:                     0;  Failures:  0
+	False Positive Performance Checks:         0;  Failures:  0
+
+******  Critical Failures:  1  ******
+
+
+Instability detected in file "TestRunnerTest.cpp"
+Outcome frequencies:
+[50%,50%]
+
+--No failures--
+
+vs.
+
+	Error -- Unexpected Exception:
+	Error
+
+	Exception thrown before any checks performed in file
+	/Users/Claire/Dropbox/Sequoia/Tests/TestFramework/TestRunnerTest.cpp
+
+	=======================================
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$

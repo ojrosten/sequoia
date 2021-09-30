@@ -162,6 +162,23 @@ namespace sequoia::testing
         check(LINE("Always passes"), true);
       }
     };
+
+    class critical_free_test : public free_test
+    {
+      using free_test::free_test;
+
+      [[nodiscard]]
+      std::string_view source_file() const noexcept final
+      {
+        return __FILE__;
+      }
+    private:
+      void run_tests() final
+      {
+        if(flipper{}.x)
+          throw std::runtime_error{"Error"};
+      }
+    };
   }
 
   template<>
@@ -321,6 +338,11 @@ namespace sequoia::testing
     test_instability_analysis("Always passes",
                               consistently_failing_free_test{"Free Test"},
                               "ConsistentSuccessNoInstability",
+                              2);
+
+    test_instability_analysis("Critical failure instability",
+                              critical_free_test{"Free Test"},
+                              "CriticalFailureInstability",
                               2);
   }
 
