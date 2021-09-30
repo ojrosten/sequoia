@@ -354,7 +354,7 @@ namespace sequoia::testing
   {
     std::stringstream outputStream{};
 
-    commandline_arguments args{"", "--num", std::to_string(numRuns)};
+    commandline_arguments args{"", "locate-instabilities", std::to_string(numRuns)};
 
     const auto testMain{aux_project().append("TestSandbox").append("TestSandbox.cpp")};
     const auto includeTarget{aux_project().append("TestShared").append("SharedIncludes.hpp")};

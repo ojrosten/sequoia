@@ -30,9 +30,9 @@ init | i | copyright owner, path ending with project name, code indent
   --to-files filename (A file of this name will appear in multiple directories)
   --no-ide
 update-materials | u |
+locate-instabilities | locate | number of repetitions >= 2
 dump
 --async | -a |
 --async-depth | -ad | depth [0,1]
---num | n | number of runs >=1
 --verbose | -v |
 --recovery | -r |

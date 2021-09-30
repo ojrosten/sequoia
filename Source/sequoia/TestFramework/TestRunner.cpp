@@ -278,6 +278,16 @@ namespace sequoia::testing
                       m_UpdateMode = update_mode::soft;
                     }
                   },
+                  {"locate-instabilities", {"locate"}, {"number of repetitions >= 2"},
+                    [this](const arg_list& args) {
+                      using parsing::commandline::error;
+                      const int i{std::stoi(args.front())};
+                      if(i < 2)
+                        throw std::runtime_error{error("Number of repetitions must be >= 2")};
+
+                      m_NumReps = i;
+                    }
+                  },
                   {"dump", {}, {},
                     [this, recoveryDir{recovery_path(proj_paths().output())}](const arg_list&) {
                       std::filesystem::create_directory(recoveryDir);
@@ -295,16 +305,6 @@ namespace sequoia::testing
                     [this](const arg_list& args) {
                       const int i{std::clamp(std::stoi(args.front()), 0, 1)};
                       m_ConcurrencyMode = i ? concurrency_mode::test : concurrency_mode::family;
-                    }
-                  },
-                  {"--num", {"n"}, {"number of runs >=1"},
-                    [this] (const arg_list& args) {
-                      using parsing::commandline::error;
-                      const int i{std::stoi(args.front())};
-                      if(i < 1)
-                        throw std::runtime_error{error("Number of repetitions must be >= 1")};
-
-                      m_NumReps = i;
                     }
                   },
                   {"--verbose",  {"-v"}, {}, [this](const arg_list&) { m_OutputMode = output_mode::verbose; }},
