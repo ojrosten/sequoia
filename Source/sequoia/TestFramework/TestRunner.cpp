@@ -129,7 +129,7 @@ namespace sequoia::testing
       }
     };
 
-    const option headerOption{"--class-header", {"-ch"}, {"header of class to test"},
+    const option headerOption{"--header", {"-h"}, {"header of class to test"},
       [&nascentTests](const arg_list& args){
         if(nascentTests.empty())
           throw std::logic_error{"Unable to find nascent test"};

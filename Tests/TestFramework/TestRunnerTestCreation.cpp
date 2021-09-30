@@ -119,8 +119,8 @@ namespace sequoia::testing
                                  , "create", "regular_test", "stuff::thingummy<class T>", "std::vector<T>", "g", "Thingummies"
                                  , "create", "regular_test", "container<class T>", "const std::vector<T>"
                                  , "create", "regular_test", "other::couple<class S, class T>", "S", "-e", "T",
-                                                "-f", "partners", "-ch", "Couple.hpp"
-                                 , "create", "regular_test", "bar::things", "double", "-ch", "fakeProject/Stuff/Things.hpp"
+                                                "-f", "partners", "-h", "Couple.hpp"
+                                 , "create", "regular_test", "bar::things", "double", "-h", "fakeProject/Stuff/Things.hpp"
                                  , "create", "move_only_test", "bar::baz::foo<maths::floating_point T>", "T", "--family", "Iterator"
                                  , "create", "move_only", "variadic<class... T>", "std::tuple<T...>"
                                  , "create", "move_only_test", "multiple<class... T>", "std::tuple<T...>", "gen-source", "Utilities"
@@ -247,7 +247,7 @@ namespace sequoia::testing
           const auto testMain{working().append("TestSandbox").append("TestSandbox.cpp")};
           const auto includeTarget{working().append("TestShared").append("SharedIncludes.hpp")};
           std::stringstream outputStream{};
-          commandline_arguments args{"", "create", "regular_test", "bar::things", "double", "-ch", "fakeProject/Stuff/Thingz.hpp"};
+          commandline_arguments args{"", "create", "regular_test", "bar::things", "double", "-h", "fakeProject/Stuff/Thingz.hpp"};
           test_runner tr{args.size(), args.get(), "Oliver J. Rosten", project_paths{working(), testMain, includeTarget}, "  ", outputStream};
         });
   }
