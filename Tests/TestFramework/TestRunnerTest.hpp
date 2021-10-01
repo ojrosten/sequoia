@@ -21,7 +21,7 @@ namespace sequoia::testing
   private:
     void run_tests() final;
 
-    void test_name_and_source_duplication();
+    void test_exceptions();
 
     void test_critical_errors();
 

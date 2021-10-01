@@ -199,7 +199,7 @@ namespace sequoia::testing
 
   void test_runner_test::run_tests()
   {
-    test_name_and_source_duplication();
+    test_exceptions();
     test_critical_errors();
     test_instability_analysis();    
   }
@@ -210,10 +210,10 @@ namespace sequoia::testing
     return auxiliary_materials() /  "FakeProject";
   }
 
-  void test_runner_test::test_name_and_source_duplication()
+  void test_runner_test::test_exceptions()
   {
     check_exception_thrown<std::runtime_error>(
-      LINE(""),
+      LINE("Neither name nor source unique"),
       [=](){
         commandline_arguments args{""};
         const auto testMain{aux_project().append("TestSandbox").append("TestSandbox.cpp")};
@@ -245,6 +245,16 @@ namespace sequoia::testing
           }
         }
         return mess;
+      }
+    );
+
+    check_exception_thrown<std::runtime_error>(
+      LINE("Insufficient repetitions for instability analysis"),
+      [this](){
+        test_instability_analysis("",
+                              critical_free_test{"Free Test"},
+                              "",
+                              1);
       }
     );
   }

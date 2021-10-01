@@ -94,7 +94,9 @@ namespace sequoia::testing
     fs::create_directory(proj_paths().output());
     fs::create_directory(diagnostics_output_path(proj_paths().output()));
     fs::create_directory(test_summaries_path(proj_paths().output()));
-    fs::remove_all(temp_test_summaries_path(proj_paths().output()));
+
+    if(m_InstabilityMode != instability_mode::sandbox)
+      fs::remove_all(temp_test_summaries_path(proj_paths().output()));
   }
 
   void test_runner::process_args(int argc, char** argv)
@@ -405,17 +407,33 @@ namespace sequoia::testing
   {
     finalize_concurrency_mode();
 
-    for(std::size_t i{}; i < m_NumReps; ++i)
+    if(m_InstabilityMode == instability_mode::coordinator)
     {
-      if(i)
-      {
-        for(auto& f : m_Selector) f.reset();
-      }
+      // Launch process
+    }
+    else
+    {
+      const bool instabilityAnalysis{
+          (m_InstabilityMode == instability_mode::sandbox) || (m_NumReps > 1)};
 
-      if(!run_tests(m_NumReps > 1 ? std::optional<std::size_t>{i} : std::nullopt)) break;
+      for(std::size_t i{}; i < m_NumReps; ++i)
+      {
+        if(i)
+        {
+          for(auto& f : m_Selector) f.reset();
+        }
+
+        const auto optIndex{instabilityAnalysis ? std::optional<std::size_t>{i} : std::nullopt};
+        if(!run_tests(optIndex)) break;
+      }
     }
 
-    stream() << instability_analysis(temp_test_summaries_path(m_Selector.proj_paths().output()), m_NumReps);
+    if(   (m_InstabilityMode == instability_mode::single_instance)
+       || (m_InstabilityMode == instability_mode::coordinator))
+    {
+      const auto outputDir{temp_test_summaries_path(m_Selector.proj_paths().output())};
+      stream() << instability_analysis(outputDir, m_NumReps);
+    }
   }
 
   void test_runner::finalize_concurrency_mode()
