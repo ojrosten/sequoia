@@ -2,11 +2,11 @@
 Running tests...
 
 Family:
-[3 (3)ms]
+[0 (0)ms]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 
 -----------Grand Totals-----------
-[4 (3)ms]
+[0 (0)ms]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -17,7 +17,7 @@ Family:
 Running tests...
 
 Family:
-[1 (0)ms]
+[0 (0)ms]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 
 	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 105
@@ -32,7 +32,7 @@ Family:
 
 
 -----------Grand Totals-----------
-[1 (0)ms]
+[0 (0)ms]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -43,7 +43,7 @@ Family:
 Running tests...
 
 Family:
-[11 (0)ms]
+[0 (0)ms]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 
 	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 106
@@ -56,7 +56,7 @@ Family:
 
 
 -----------Grand Totals-----------
-[11 (0)ms]
+[0 (0)ms]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -67,7 +67,7 @@ Family:
 Running tests...
 
 Family:
-[1 (0)ms]
+[0 (0)ms]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 
 	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 105
@@ -82,7 +82,7 @@ Family:
 
 
 -----------Grand Totals-----------
-[1 (0)ms]
+[0 (0)ms]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -108,7 +108,7 @@ Family:
 Running tests...
 
 Family:
-[1 (0)ms]
+[0 (0)ms]
 	Standard Top Level Checks:                 2;  Failures:  2  [Deep checks: 2]
 
 	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 105
@@ -131,7 +131,7 @@ Family:
 
 
 -----------Grand Totals-----------
-[1 (0)ms]
+[0 (0)ms]
 	Standard Top Level Checks:                 2;  Failures:  2  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -156,10 +156,28 @@ vs.
 	Predicted: 1
 
 	=======================================
---No failures--
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 105
+	Pass/Fail/Pass
+
+	[int]
+	operator== returned false
+	Obtained : 0
+	Predicted: 1
+
+	=======================================
+
 
 vs.
 
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 105
+	Pass/Fail/Pass
+
+	[int]
+	operator== returned false
+	Obtained : 0
+	Predicted: 1
+
+	=======================================
 	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 106
 	Pass/Pass/Fail
 

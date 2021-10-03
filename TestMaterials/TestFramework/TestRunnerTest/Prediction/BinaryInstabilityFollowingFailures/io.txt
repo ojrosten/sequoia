@@ -58,10 +58,24 @@ Instability detected in file "TestRunnerTest.cpp"
 Outcome frequencies:
 [50%,50%]
 
---No failures--
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 122
+	Always fails
+
+	[bool]
+	check failed
+
+	=======================================
+
 
 vs.
 
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 122
+	Always fails
+
+	[bool]
+	check failed
+
+	=======================================
 	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 124
 
 	[bool]

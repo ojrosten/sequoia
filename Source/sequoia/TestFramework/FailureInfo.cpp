@@ -37,7 +37,7 @@ namespace sequoia::testing
 
       auto first{failuresFromFiles.begin()},
            last{failuresFromFiles.end()},
-           begin{first};
+           current{first};
 
       const auto initial{first};
 
@@ -45,37 +45,55 @@ namespace sequoia::testing
       std::string messages{};
       while(++first != last)
       {
-        if(*first != *begin)
+        if(*first != *current)
         {
-          freqs += to_percent(std::distance(begin, first)) += "%,";
-          auto[i,j]{std::mismatch(begin->begin(), begin->end(), first->begin(), first->end())};
-          if((i == begin->end()) && (j == first->end()))
+          freqs += to_percent(std::distance(current, first)) += "%,";
+          auto[i,j]{std::mismatch(current->begin(), current->end(), first->begin(), first->end())};
+          if(j == first->end())
           {
             throw std::logic_error{"Unable to identify instability"};
           }
-          else if(i == begin->end())
+          else if(i == current->end())
           {
-            messages.append("--No failures--\n\nvs.\n\n").append(j->message);
-          }
-          else if(j == first->end())
-          {
-            messages.append(i->message).append("\n\nvs.\n\n--No failures--");
+            if(current->begin() == current->end())
+            {
+              messages.append("--No failures--\n\nvs.\n\n").append(j->message);
+            }
+            else
+            {
+              const auto commonMessage{
+                [current](){
+                  std::string mess{};
+                  for(auto c{current->begin()}; c != current->end(); ++c)
+                  {
+                    mess.append(c->message);
+                  }
+
+                  return mess;
+                }()
+              };
+
+              messages.append(commonMessage)
+                      .append("\n\nvs.\n\n")
+                      .append(commonMessage)
+                      .append(j->message);
+            }
           }
           else
           {
-            if(begin == initial)
+            if(current == initial)
               messages.append(i->message);
 
             messages.append("\nvs.\n\n").append(j->message);
           }
 
-          begin = first;
+          current = first;
         }
       }
 
-      if(begin != initial)
+      if(current != initial)
       {
-        freqs += to_percent(std::distance(begin, last)) += "%]\n\n"s;
+        freqs += to_percent(std::distance(current, last)) += "%]\n\n"s;
 
         return std::string{"\nInstability detected in file \""}
           .append(filename.string())
