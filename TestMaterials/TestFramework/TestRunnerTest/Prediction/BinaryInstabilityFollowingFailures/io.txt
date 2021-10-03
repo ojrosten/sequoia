@@ -2,18 +2,11 @@
 Running tests...
 
 Family:
-[6 (3)ms]
-	Standard Top Level Checks:                 2;  Failures:  2  [Deep checks: 2]
+[1 (0)ms]
+	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 128
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 122
 	Always fails
-
-	[bool]
-	check failed
-
-	=======================================
-
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 130
 
 	[bool]
 	check failed
@@ -22,8 +15,8 @@ Family:
 
 
 -----------Grand Totals-----------
-[6 (3)ms]
-	Standard Top Level Checks:                 2;  Failures:  2  [Deep checks: 2]
+[1 (0)ms]
+	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
 	False Negative Performance Checks:         0;  Failures:  0
@@ -33,11 +26,18 @@ Family:
 Running tests...
 
 Family:
-[5 (2)ms]
-	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
+[1 (0)ms]
+	Standard Top Level Checks:                 2;  Failures:  2  [Deep checks: 2]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 128
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 122
 	Always fails
+
+	[bool]
+	check failed
+
+	=======================================
+
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 124
 
 	[bool]
 	check failed
@@ -46,8 +46,8 @@ Family:
 
 
 -----------Grand Totals-----------
-[6 (2)ms]
-	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
+[1 (0)ms]
+	Standard Top Level Checks:                 2;  Failures:  2  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
 	False Negative Performance Checks:         0;  Failures:  0
@@ -62,7 +62,7 @@ Outcome frequencies:
 
 vs.
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 130
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 124
 
 	[bool]
 	check failed

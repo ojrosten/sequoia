@@ -2,10 +2,10 @@
 Running tests...
 
 Family:
-[1 (0)ms]
+[1 (1)ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 146
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 140
 	Always fails
 
 	[bool]
@@ -15,7 +15,7 @@ Family:
 
 
 -----------Grand Totals-----------
-[1 (0)ms]
+[1 (1)ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -29,7 +29,7 @@ Family:
 [1 (0)ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 146
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 140
 	Always fails
 
 	[bool]

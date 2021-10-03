@@ -82,6 +82,8 @@ namespace sequoia::testing
     std::size_t m_NumReps{1},
                 m_RunnerID{};
 
+    std::filesystem::path m_Executable{};
+
     std::vector<std::filesystem::path> m_FailedTestSourceFiles;
 
     void process_args(int argc, char** argv);

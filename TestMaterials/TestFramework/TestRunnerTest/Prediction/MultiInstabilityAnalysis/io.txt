@@ -2,11 +2,11 @@
 Running tests...
 
 Family:
-[0 (0)ms]
+[1 (0)ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 
 -----------Grand Totals-----------
-[0 (0)ms]
+[1 (0)ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -20,7 +20,7 @@ Family:
 [0 (0)ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 86
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 87
 
 	[int]
 	operator== returned false
@@ -31,7 +31,7 @@ Family:
 
 
 -----------Grand Totals-----------
-[0 (0)ms]
+[1 (0)ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -45,7 +45,7 @@ Family:
 [0 (0)ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 86
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 87
 
 	[int]
 	operator== returned false
@@ -56,7 +56,7 @@ Family:
 
 
 -----------Grand Totals-----------
-[0 (0)ms]
+[1 (0)ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -70,11 +70,11 @@ Family:
 [0 (0)ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 86
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 87
 
 	[int]
 	operator== returned false
-	Obtained : 4
+	Obtained : 0
 	Predicted: 1
 
 	=======================================
@@ -97,7 +97,18 @@ Outcome frequencies:
 
 vs.
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 86
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 87
+
+	[int]
+	operator== returned false
+	Obtained : 0
+	Predicted: 1
+
+	=======================================
+
+vs.
+
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 87
 
 	[int]
 	operator== returned false
@@ -108,22 +119,11 @@ vs.
 
 vs.
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 86
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 87
 
 	[int]
 	operator== returned false
 	Obtained : 3
-	Predicted: 1
-
-	=======================================
-
-vs.
-
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 86
-
-	[int]
-	operator== returned false
-	Obtained : 4
 	Predicted: 1
 
 	=======================================

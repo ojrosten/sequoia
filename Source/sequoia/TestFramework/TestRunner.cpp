@@ -16,6 +16,7 @@
 #include "sequoia/TestFramework/TestCreator.hpp"
 
 #include "sequoia/Parsing/CommandLineArguments.hpp"
+#include "sequoia/Runtime/ShellCommands.hpp"
 #include "sequoia/TextProcessing/Substitutions.hpp"
 
 #include <fstream>
@@ -331,7 +332,7 @@ namespace sequoia::testing
                   }
                 },
                 [this](std::string_view exe){
-                  const auto exePath{
+                  const auto exeGetter{
                     [exe]() -> fs::path {
                       const fs::path attempt{exe};
                       if(attempt.is_absolute())
@@ -340,10 +341,11 @@ namespace sequoia::testing
                       }
 
                       return working_path_v / attempt;
-                    }()
+                    }
                   };
 
-                  m_Selector.executable_time_stamp(exePath);
+                  m_Executable = exeGetter();
+                  m_Selector.executable_time_stamp(m_Executable);
                 })
         };
 
@@ -409,7 +411,12 @@ namespace sequoia::testing
 
     if(m_InstabilityMode == instability_mode::coordinator)
     {
-      // Launch process
+      if(m_Executable.empty())
+        throw std::runtime_error{"Unable to run in sandbox mode, as executable cannot be found"};
+
+      runtime::shell_command(m_Executable.string() + " --help");
+
+      return;
     }
     else
     {

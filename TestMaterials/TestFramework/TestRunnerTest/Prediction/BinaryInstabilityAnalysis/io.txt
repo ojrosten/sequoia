@@ -2,7 +2,7 @@
 Running tests...
 
 Family:
-[0 (0)ms]
+[1 (0)ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 
 -----------Grand Totals-----------
@@ -37,24 +37,9 @@ Family:
 	False Positive Checks:                     0;  Failures:  0
 	False Positive Performance Checks:         0;  Failures:  0
 
-Running tests...
-
-Family:
-[0 (0)ms]
-	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
-
------------Grand Totals-----------
-[0 (0)ms]
-	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
-	Standard Performance Checks:               0;  Failures:  0
-	False Negative Checks:                     0;  Failures:  0
-	False Negative Performance Checks:         0;  Failures:  0
-	False Positive Checks:                     0;  Failures:  0
-	False Positive Performance Checks:         0;  Failures:  0
-
 Instability detected in file "TestRunnerTest.cpp"
 Outcome frequencies:
-[66.7%,33.3%]
+[50%,50%]
 
 --No failures--
 

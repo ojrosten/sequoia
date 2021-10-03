@@ -2,11 +2,11 @@
 Running tests...
 
 Family:
-[0 (0)ms]
+[3 (3)ms]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 
 -----------Grand Totals-----------
-[0 (0)ms]
+[4 (3)ms]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -17,10 +17,10 @@ Family:
 Running tests...
 
 Family:
-[0 (0)ms]
+[1 (0)ms]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 111
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 105
 	Pass/Fail/Pass
 
 	[int]
@@ -32,7 +32,7 @@ Family:
 
 
 -----------Grand Totals-----------
-[0 (0)ms]
+[1 (0)ms]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -43,10 +43,10 @@ Family:
 Running tests...
 
 Family:
-[0 (0)ms]
+[11 (0)ms]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 112
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 106
 	Pass/Pass/Fail
 
 	[bool]
@@ -56,7 +56,7 @@ Family:
 
 
 -----------Grand Totals-----------
-[0 (0)ms]
+[11 (0)ms]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -64,15 +64,13 @@ Family:
 	False Positive Checks:                     0;  Failures:  0
 	False Positive Performance Checks:         0;  Failures:  0
 
-Instability detected in file "TestRunnerTest.cpp"
-Outcome frequencies:
-[33.3%,33.3%,33.3%]
+Running tests...
 
---No failures--
+Family:
+[1 (0)ms]
+	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 
-vs.
-
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 111
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 105
 	Pass/Fail/Pass
 
 	[int]
@@ -82,9 +80,97 @@ vs.
 
 	=======================================
 
+
+-----------Grand Totals-----------
+[1 (0)ms]
+	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
+	Standard Performance Checks:               0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
+	False Positive Checks:                     0;  Failures:  0
+	False Positive Performance Checks:         0;  Failures:  0
+
+Running tests...
+
+Family:
+[0 (0)ms]
+	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
+
+-----------Grand Totals-----------
+[0 (0)ms]
+	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
+	Standard Performance Checks:               0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
+	False Positive Checks:                     0;  Failures:  0
+	False Positive Performance Checks:         0;  Failures:  0
+
+Running tests...
+
+Family:
+[1 (0)ms]
+	Standard Top Level Checks:                 2;  Failures:  2  [Deep checks: 2]
+
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 105
+	Pass/Fail/Pass
+
+	[int]
+	operator== returned false
+	Obtained : 0
+	Predicted: 1
+
+	=======================================
+
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 106
+	Pass/Pass/Fail
+
+	[bool]
+	check failed
+
+	=======================================
+
+
+-----------Grand Totals-----------
+[1 (0)ms]
+	Standard Top Level Checks:                 2;  Failures:  2  [Deep checks: 2]
+	Standard Performance Checks:               0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
+	False Positive Checks:                     0;  Failures:  0
+	False Positive Performance Checks:         0;  Failures:  0
+
+Instability detected in file "TestRunnerTest.cpp"
+Outcome frequencies:
+[33.3%,33.3%,16.7%,16.7%]
+
+--No failures--
+
 vs.
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 112
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 105
+	Pass/Fail/Pass
+
+	[int]
+	operator== returned false
+	Obtained : 0
+	Predicted: 1
+
+	=======================================
+--No failures--
+
+vs.
+
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 106
+	Pass/Pass/Fail
+
+	[bool]
+	check failed
+
+	=======================================
+
+vs.
+
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 106
 	Pass/Pass/Fail
 
 	[bool]

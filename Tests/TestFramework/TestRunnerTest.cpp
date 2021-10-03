@@ -63,14 +63,15 @@ namespace sequoia::testing
       }
     };
 
-    struct counter
+    template<std::size_t N>
+    struct periodic
     {
-      counter() { x = ++x; }
-
+      periodic() { x = (++x) % N;}
+      
       inline static int x{};
     };
 
-    class counter_free_test final : public free_test
+    class periodic_free_test final : public free_test
     {
     public:
       using free_test::free_test;
@@ -83,19 +84,12 @@ namespace sequoia::testing
     private:
       void run_tests() final
       {
-        check_equality(LINE(""), counter{}.x, 1);
+        check_equality(LINE(""), periodic<4>{}.x, 1);
       }
     };
 
-    template<std::size_t N>
-    struct periodic
-    {
-      periodic() { x = (++x) % N;}
-      
-      inline static int x{};
-    };
 
-    class periodic_free_test final : public free_test
+    class multi_periodic_free_test final : public free_test
     {
     public:
       using free_test::free_test;
@@ -323,17 +317,17 @@ namespace sequoia::testing
     test_instability_analysis("Instability comprising pass/failure",
                               flipper_free_test{"Free Test"},
                               "BinaryInstabilityAnalysis",
-                              3);
+                              2);
 
     test_instability_analysis("Instability comprising pass/multiple distinct failures",
-                              counter_free_test{"Free Test"},
+                              periodic_free_test{"Free Test"},
                               "MultiInstabilityAnalysis",
                               4);
 
     test_instability_analysis("Instability comprising failures from two checks",
-                              periodic_free_test{"Free Test"},
+                              multi_periodic_free_test{"Free Test"},
                               "MultiCheckInstabilityAnalysis",
-                              3);
+                              6);
 
     test_instability_analysis("Instability following consistent failure",
                               another_free_test{"Free Test"},
