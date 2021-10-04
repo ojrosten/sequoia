@@ -352,6 +352,15 @@ namespace sequoia::testing
                               2,
                               consistently_passing_free_test<0>{"Free Test 0"},
                               consistently_passing_free_test<1>{"Free Test 1"});
+
+    test_instability_analysis("Consistent success/consistent failure/instability",
+                              "MixedBag",
+                              3,
+                              consistently_passing_free_test<0>{"Passing Free Test"},
+                              consistently_failing_free_test{"Failing Free Test"},
+                              flipper_free_test{"Flipper Free Test"},
+                              multi_periodic_free_test("Free Test")
+                             );
   }
 
   template<concrete_test... Ts>
