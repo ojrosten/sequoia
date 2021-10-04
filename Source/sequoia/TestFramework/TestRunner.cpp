@@ -299,7 +299,6 @@ namespace sequoia::testing
                         [this](const arg_list& args) {
                           m_RunnerID = std::stoi(args.front());
                           m_InstabilityMode = instability_mode::sandbox;
-                          m_NumReps = 1;
                         }}
                     }
                   },
@@ -414,24 +413,43 @@ namespace sequoia::testing
       if(m_Executable.empty())
         throw std::runtime_error{"Unable to run in sandbox mode, as executable cannot be found"};
 
-      runtime::shell_command(m_Executable.string() + " --help");
+      const auto sources{
+        [&selector{m_Selector}] () -> std::string {
+          std::string srcs{};
+          // TO DO: use ranges when supported by libc++
+          for(auto i{selector.begin_selected_sources()}; i != selector.end_selected_sources(); ++i)
+          {
+            if(i->second) srcs.append(" select " + i->first.generic_string());
+          }
 
-      return;
-    }
-    else
-    {
-      const bool instabilityAnalysis{
-          (m_InstabilityMode == instability_mode::sandbox) || (m_NumReps > 1)};
+          return srcs;
+        }()
+      };
 
       for(std::size_t i{}; i < m_NumReps; ++i)
       {
-        if(i)
+        invoke(runtime::shell_command(m_Executable.string().append(" locate ").append(std::to_string(m_NumReps))
+                                                           .append(" --runner-id ").append(std::to_string(i)).append(sources)));
+      }
+    }
+    else
+    {
+      if(m_InstabilityMode == instability_mode::sandbox)
+      {
+        run_tests(m_RunnerID);
+      }
+      else
+      {
+        for(std::size_t i{}; i < m_NumReps; ++i)
         {
-          for(auto& f : m_Selector) f.reset();
-        }
+          if(i)
+          {
+            for(auto& f : m_Selector) f.reset();
+          }
 
-        const auto optIndex{instabilityAnalysis ? std::optional<std::size_t>{i} : std::nullopt};
-        if(!run_tests(optIndex)) break;
+          const auto optIndex{m_NumReps > 1 ? std::optional<std::size_t>{i} : std::nullopt};
+          if(!run_tests(optIndex)) break;
+        }
       }
     }
 

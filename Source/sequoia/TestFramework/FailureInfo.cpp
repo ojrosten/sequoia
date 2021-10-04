@@ -103,10 +103,8 @@ namespace sequoia::testing
           .append("\n")
           .append(instability_footer());
       }
-      else
-      {
-        return "\nNo instabilities detected\n";
-      }
+
+      return "";
     }
   }
   
@@ -273,6 +271,6 @@ namespace sequoia::testing
       message += analyse_output(source_from_instability_analysis(i->parent_path()), failuresFromFiles);
     }
 
-    return message;
+    return !message.empty() ? message : "\nNo instabilities detected\n";
   }
 }

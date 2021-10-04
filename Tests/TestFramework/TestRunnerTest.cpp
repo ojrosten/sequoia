@@ -107,7 +107,7 @@ namespace sequoia::testing
       }
     };
 
-    class another_free_test final : public free_test
+    class failing_plus_instabilities_free_test final : public free_test
     {
       using free_test::free_test;
 
@@ -141,6 +141,7 @@ namespace sequoia::testing
       }
     };
 
+    template<std::size_t N>
     class consistently_passing_free_test : public free_test
     {
       using free_test::free_test;
@@ -245,10 +246,7 @@ namespace sequoia::testing
     check_exception_thrown<std::runtime_error>(
       LINE("Insufficient repetitions for instability analysis"),
       [this](){
-        test_instability_analysis("",
-                              critical_free_test{"Free Test"},
-                              "",
-                              1);
+        test_instability_analysis("", "",  1, critical_free_test{"Free Test"});
       }
     );
   }
@@ -315,46 +313,52 @@ namespace sequoia::testing
   void test_runner_test::test_instability_analysis()
   {
     test_instability_analysis("Instability comprising pass/failure",
-                              flipper_free_test{"Free Test"},
                               "BinaryInstabilityAnalysis",
-                              2);
+                              2,
+                              flipper_free_test{"Free Test"});
 
     test_instability_analysis("Instability comprising pass/multiple distinct failures",
-                              periodic_free_test{"Free Test"},
                               "MultiInstabilityAnalysis",
-                              4);
+                              4,
+                              periodic_free_test{"Free Test"});
 
     test_instability_analysis("Instability comprising failures from two checks",
-                              multi_periodic_free_test{"Free Test"},
                               "MultiCheckInstabilityAnalysis",
-                              6);
+                              6,
+                              multi_periodic_free_test{"Free Test"});
 
     test_instability_analysis("Instability following consistent failure",
-                              another_free_test{"Free Test"},
                               "BinaryInstabilityFollowingFailures",
-                              2);
+                              2,
+                              failing_plus_instabilities_free_test{"Free Test"});
 
     test_instability_analysis("Failure but no instability",
-                              consistently_failing_free_test{"Free Test"},
                               "ConsistentFailureNoInstability",
-                              2);
+                              2,
+                              consistently_failing_free_test{"Free Test"});
 
     test_instability_analysis("Always passes",
-                              consistently_failing_free_test{"Free Test"},
                               "ConsistentSuccessNoInstability",
-                              2);
+                              2,
+                              consistently_passing_free_test<0>{"Free Test"});
 
     test_instability_analysis("Critical failure instability",
-                              critical_free_test{"Free Test"},
                               "CriticalFailureInstability",
-                              2);
+                              2,
+                              critical_free_test{"Free Test"});
+
+    test_instability_analysis("Two tests always passing",
+                              "ConsistentSuccessTwoTests",
+                              2,
+                              consistently_passing_free_test<0>{"Free Test 0"},
+                              consistently_passing_free_test<1>{"Free Test 1"});
   }
 
-  template<concrete_test T>
+  template<concrete_test... Ts>
   void test_runner_test::test_instability_analysis(std::string_view message,
-                                                   T t,
                                                    std::string_view outputDirName,
-                                                   std::size_t numRuns)
+                                                   std::size_t numRuns,
+                                                   Ts&&... ts)
   {
     std::stringstream outputStream{};
 
@@ -372,7 +376,7 @@ namespace sequoia::testing
 
     runner.add_test_family(
       "Family",
-      std::move(t)
+      std::move(ts)...
     );
 
     runner.execute();
@@ -385,7 +389,7 @@ namespace sequoia::testing
       file << outputStream.str();
     }
 
-    check_equivalence(LINE(add_type_info<T>(message)),
+    check_equivalence(LINE(append_lines(message, make_type_info<Ts...>())),
                       outputDir,
                       predictive_materials() / outputDirName);
   }

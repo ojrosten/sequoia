@@ -125,6 +125,18 @@ namespace sequoia::testing
     {
       return !m_SelectedFamilies.empty() || !m_SelectedSources.empty();
     }
+
+    [[nodiscard]]
+    auto begin_selected_sources() const noexcept
+    {
+      return m_SelectedSources.begin();
+    }
+
+    [[nodiscard]]
+    auto end_selected_sources() const noexcept
+    {
+      return m_SelectedSources.end();
+    }
   private:
     struct time_stamps
     {

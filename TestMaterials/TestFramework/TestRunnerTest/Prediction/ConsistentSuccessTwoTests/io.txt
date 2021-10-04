@@ -2,12 +2,12 @@
 Running tests...
 
 Family:
-[4 (2)ms]
-	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
+[9 (5)ms]
+	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 
 -----------Grand Totals-----------
-[5 (2)ms]
-	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
+[9 (5)ms]
+	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
 	False Negative Performance Checks:         0;  Failures:  0
@@ -17,12 +17,12 @@ Family:
 Running tests...
 
 Family:
-[5 (3)ms]
-	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
+[9 (4)ms]
+	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 
 -----------Grand Totals-----------
-[5 (3)ms]
-	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
+[9 (4)ms]
+	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
 	False Negative Performance Checks:         0;  Failures:  0
