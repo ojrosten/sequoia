@@ -196,7 +196,7 @@ namespace sequoia::testing
   {
     test_exceptions();
     test_critical_errors();
-    test_instability_analysis();    
+    test_instability_analysis();
   }
 
   [[nodiscard]]
@@ -244,9 +244,16 @@ namespace sequoia::testing
     );
 
     check_exception_thrown<std::runtime_error>(
+      LINE("Invalid repetitions for instability analysis"),
+      [this](){
+        test_instability_analysis("", "", "foo", critical_free_test{"Free Test"});
+      }
+    );
+
+    check_exception_thrown<std::runtime_error>(
       LINE("Insufficient repetitions for instability analysis"),
       [this](){
-        test_instability_analysis("", "",  1, critical_free_test{"Free Test"});
+        test_instability_analysis("", "",  "1", critical_free_test{"Free Test"});
       }
     );
   }
@@ -314,48 +321,48 @@ namespace sequoia::testing
   {
     test_instability_analysis("Instability comprising pass/failure",
                               "BinaryInstabilityAnalysis",
-                              2,
+                              "2",
                               flipper_free_test{"Free Test"});
 
     test_instability_analysis("Instability comprising pass/multiple distinct failures",
                               "MultiInstabilityAnalysis",
-                              4,
+                              "4",
                               periodic_free_test{"Free Test"});
 
     test_instability_analysis("Instability comprising failures from two checks",
                               "MultiCheckInstabilityAnalysis",
-                              6,
+                              "6",
                               multi_periodic_free_test{"Free Test"});
 
     test_instability_analysis("Instability following consistent failure",
                               "BinaryInstabilityFollowingFailures",
-                              2,
+                              "2",
                               failing_plus_instabilities_free_test{"Free Test"});
 
     test_instability_analysis("Failure but no instability",
                               "ConsistentFailureNoInstability",
-                              2,
+                              "2",
                               consistently_failing_free_test{"Free Test"});
 
     test_instability_analysis("Always passes",
                               "ConsistentSuccessNoInstability",
-                              2,
+                              "2",
                               consistently_passing_free_test<0>{"Free Test"});
 
     test_instability_analysis("Critical failure instability",
                               "CriticalFailureInstability",
-                              2,
+                              "2",
                               critical_free_test{"Free Test"});
 
     test_instability_analysis("Two tests always passing",
                               "ConsistentSuccessTwoTests",
-                              2,
+                              "2",
                               consistently_passing_free_test<0>{"Free Test 0"},
                               consistently_passing_free_test<1>{"Free Test 1"});
 
     test_instability_analysis("Consistent success/consistent failure/instability",
                               "MixedBag",
-                              3,
+                              "3",
                               consistently_passing_free_test<0>{"Passing Free Test"},
                               consistently_failing_free_test{"Failing Free Test"},
                               flipper_free_test{"Flipper Free Test"},
@@ -366,12 +373,12 @@ namespace sequoia::testing
   template<concrete_test... Ts>
   void test_runner_test::test_instability_analysis(std::string_view message,
                                                    std::string_view outputDirName,
-                                                   std::size_t numRuns,
+                                                   std::string_view numRuns,
                                                    Ts&&... ts)
   {
     std::stringstream outputStream{};
 
-    commandline_arguments args{"", "locate-instabilities", std::to_string(numRuns)};
+    commandline_arguments args{"", "locate-instabilities", numRuns};
 
     const auto testMain{aux_project().append("TestSandbox").append("TestSandbox.cpp")};
     const auto includeTarget{aux_project().append("TestShared").append("SharedIncludes.hpp")};

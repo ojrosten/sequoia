@@ -30,7 +30,7 @@ namespace sequoia::testing
     template<concrete_test... Ts>
     void test_instability_analysis(std::string_view message,
                                    std::string_view outputDirName,
-                                   std::size_t numRuns,
+                                   std::string_view numRuns,
                                    Ts&&... ts);
 
     [[nodiscard]]

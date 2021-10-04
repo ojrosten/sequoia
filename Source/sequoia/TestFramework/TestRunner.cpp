@@ -284,7 +284,19 @@ namespace sequoia::testing
                   {"locate-instabilities", {"locate"}, {"number of repetitions >= 2"},
                     [this](const arg_list& args) {
                       using parsing::commandline::error;
-                      const int i{std::stoi(args.front())};
+                      const int i{
+                        [arg{args.front()}](){
+                          try
+                          {
+                            return std::stoi(arg);
+                          }
+                          catch(const std::exception&)
+                          {
+                            throw std::runtime_error{"locate-instabilities: unable to interpret '" + arg + "' as an integer number of repetitions"};
+                          }
+                        }()
+                      };
+
                       if(i < 2)
                         throw std::runtime_error{error("Number of repetitions must be >= 2")};
 

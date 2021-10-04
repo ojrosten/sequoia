@@ -11,6 +11,15 @@ Please do not include tests in the same family which both have the same name and
 	=======================================
 
 Tests/TestFramework/TestRunnerTest.cpp, Line 247
+Invalid repetitions for instability analysis
+
+Expected Exception Type:
+[std::runtime_error]
+locate-instabilities: unable to interpret 'foo' as an integer number of repetitions
+
+	=======================================
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 254
 Insufficient repetitions for instability analysis
 
 Expected Exception Type:
