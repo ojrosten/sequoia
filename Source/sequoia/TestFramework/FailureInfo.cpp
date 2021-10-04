@@ -22,9 +22,9 @@ namespace sequoia::testing
   {
     [[nodiscard]]
     std::string analyse_output(const fs::path& filename, const std::vector<failure_output>& failuresFromFiles)
-    {    
+    {
       if(failuresFromFiles.size() <= 1) return "";
-      
+
       using namespace std::string_literals;
 
       auto to_percent{
@@ -66,15 +66,16 @@ namespace sequoia::testing
                   std::string mess{};
                   for(auto c{current->begin()}; c != current->end(); ++c)
                   {
-                    mess.append(c->message);
+                    mess.append(c->message).append("\n");
                   }
 
                   return mess;
                 }()
               };
 
-              messages.append(commonMessage)
-                      .append("\n\nvs.\n\n")
+              messages.append(messages.empty() ? commonMessage : "\n");
+
+              messages.append("vs.\n\n")
                       .append(commonMessage)
                       .append(j->message);
             }
