@@ -2,7 +2,7 @@
 Running tests...
 
 Family:
-[27 (14)ms]
+[26 (13)ms]
 	Standard Top Level Checks:                 5;  Failures:  1  [Deep checks: 5]
 
 	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 140
@@ -15,7 +15,7 @@ Family:
 
 
 -----------Grand Totals-----------
-[27 (14)ms]
+[26 (13)ms]
 	Standard Top Level Checks:                 5;  Failures:  1  [Deep checks: 5]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -26,7 +26,7 @@ Family:
 Running tests...
 
 Family:
-[26 (14)ms]
+[23 (11)ms]
 	Standard Top Level Checks:                 5;  Failures:  3  [Deep checks: 5]
 
 	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 140
@@ -56,7 +56,7 @@ Family:
 
 
 -----------Grand Totals-----------
-[26 (14)ms]
+[23 (11)ms]
 	Standard Top Level Checks:                 5;  Failures:  3  [Deep checks: 5]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -67,7 +67,7 @@ Family:
 Running tests...
 
 Family:
-[22 (12)ms]
+[22 (11)ms]
 	Standard Top Level Checks:                 5;  Failures:  2  [Deep checks: 5]
 
 	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 140
@@ -88,8 +88,122 @@ Family:
 
 
 -----------Grand Totals-----------
-[22 (12)ms]
+[22 (11)ms]
 	Standard Top Level Checks:                 5;  Failures:  2  [Deep checks: 5]
+	Standard Performance Checks:               0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
+	False Positive Checks:                     0;  Failures:  0
+	False Positive Performance Checks:         0;  Failures:  0
+
+Running tests...
+
+Family:
+[22 (11)ms]
+	Standard Top Level Checks:                 5;  Failures:  3  [Deep checks: 5]
+
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 140
+	Always fails
+
+	[bool]
+	check failed
+
+	=======================================
+
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 62
+
+	[bool]
+	check failed
+
+	=======================================
+
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 105
+	Pass/Fail/Pass
+
+	[int]
+	operator== returned false
+	Obtained : 0
+	Predicted: 1
+
+	=======================================
+
+
+-----------Grand Totals-----------
+[23 (11)ms]
+	Standard Top Level Checks:                 5;  Failures:  3  [Deep checks: 5]
+	Standard Performance Checks:               0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
+	False Positive Checks:                     0;  Failures:  0
+	False Positive Performance Checks:         0;  Failures:  0
+
+Running tests...
+
+Family:
+[24 (13)ms]
+	Standard Top Level Checks:                 5;  Failures:  1  [Deep checks: 5]
+
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 140
+	Always fails
+
+	[bool]
+	check failed
+
+	=======================================
+
+
+-----------Grand Totals-----------
+[24 (13)ms]
+	Standard Top Level Checks:                 5;  Failures:  1  [Deep checks: 5]
+	Standard Performance Checks:               0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
+	False Positive Checks:                     0;  Failures:  0
+	False Positive Performance Checks:         0;  Failures:  0
+
+Running tests...
+
+Family:
+[24 (12)ms]
+	Standard Top Level Checks:                 5;  Failures:  4  [Deep checks: 5]
+
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 140
+	Always fails
+
+	[bool]
+	check failed
+
+	=======================================
+
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 62
+
+	[bool]
+	check failed
+
+	=======================================
+
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 105
+	Pass/Fail/Pass
+
+	[int]
+	operator== returned false
+	Obtained : 0
+	Predicted: 1
+
+	=======================================
+
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 106
+	Pass/Pass/Fail
+
+	[bool]
+	check failed
+
+	=======================================
+
+
+-----------Grand Totals-----------
+[24 (12)ms]
+	Standard Top Level Checks:                 5;  Failures:  4  [Deep checks: 5]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
 	False Negative Performance Checks:         0;  Failures:  0
@@ -98,7 +212,7 @@ Family:
 
 Instability detected in file "TestRunnerTest.cpp"
 Outcome frequencies:
-[66.7%,33.3%]
+[50%,50%]
 
 --No failures--
 
@@ -115,7 +229,7 @@ $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 Instability detected in file "TestRunnerTest.cpp"
 Outcome frequencies:
-[33.3%,33.3%,33.3%]
+[33.3%,33.3%,16.7%,16.7%]
 
 --No failures--
 
@@ -128,6 +242,26 @@ vs.
 	operator== returned false
 	Obtained : 0
 	Predicted: 1
+
+	=======================================
+
+vs.
+
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 105
+	Pass/Fail/Pass
+
+	[int]
+	operator== returned false
+	Obtained : 0
+	Predicted: 1
+
+	=======================================
+
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 106
+	Pass/Pass/Fail
+
+	[bool]
+	check failed
 
 	=======================================
 

@@ -210,7 +210,7 @@ namespace sequoia::testing
     check_exception_thrown<std::runtime_error>(
       LINE("Neither name nor source unique"),
       [=](){
-        commandline_arguments args{""};
+        commandline_arguments args{one_shot_executable_path("").string()};
         const auto testMain{aux_project().append("TestSandbox").append("TestSandbox.cpp")};
         const auto includeTarget{aux_project().append("TestShared").append("SharedIncludes.hpp")};
         std::stringstream outputStream{};
@@ -265,7 +265,7 @@ namespace sequoia::testing
     // This is scoped to ensure destruction of the runner - and therefore loggers -
     // before dumping output to a file. The destructors are not trivial in recovery mode.
     {
-      commandline_arguments args{"", "-v", "--recovery", "dump",
+      commandline_arguments args{one_shot_executable_path("").string(), "-v", "--recovery", "dump",
                                  "test", "Bar",
                                  "test", "Foo"};
 
@@ -362,23 +362,30 @@ namespace sequoia::testing
 
     test_instability_analysis("Consistent success/consistent failure/instability",
                               "MixedBag",
-                              "3",
+                              "6",
                               consistently_passing_free_test<0>{"Passing Free Test"},
                               consistently_failing_free_test{"Failing Free Test"},
                               flipper_free_test{"Flipper Free Test"},
                               multi_periodic_free_test("Free Test")
                              );
+
+    /*test_instability_analysis("Always passes",
+                              "SandboxConsistentSuccess",
+                              "2",
+                              "--sandbox",
+                              consistently_passing_free_test<0>{"Free Test"});*/
   }
 
   template<concrete_test... Ts>
   void test_runner_test::test_instability_analysis(std::string_view message,
                                                    std::string_view outputDirName,
                                                    std::string_view numRuns,
+                                                   std::string_view extraArgs,
                                                    Ts&&... ts)
   {
     std::stringstream outputStream{};
 
-    commandline_arguments args{"", "locate-instabilities", numRuns};
+    commandline_arguments args{one_shot_executable_path("").string(), "locate-instabilities", numRuns, extraArgs};
 
     const auto testMain{aux_project().append("TestSandbox").append("TestSandbox.cpp")};
     const auto includeTarget{aux_project().append("TestShared").append("SharedIncludes.hpp")};
@@ -392,7 +399,7 @@ namespace sequoia::testing
 
     runner.add_test_family(
       "Family",
-      std::move(ts)...
+      std::forward<Ts>(ts)...
     );
 
     runner.execute();
@@ -408,5 +415,15 @@ namespace sequoia::testing
     check_equivalence(LINE(append_lines(message, make_type_info<Ts...>())),
                       outputDir,
                       predictive_materials() / outputDirName);
+  }
+
+
+  template<concrete_test... Ts>
+  void test_runner_test::test_instability_analysis(std::string_view message,
+                                                   std::string_view outputDirName,
+                                                   std::string_view numRuns,
+                                                   Ts&&... ts)
+  {
+    test_instability_analysis(message, outputDirName, numRuns, "", std::forward<Ts>(ts)...);
   }
 }
