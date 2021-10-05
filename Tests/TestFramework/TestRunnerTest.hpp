@@ -26,13 +26,6 @@ namespace sequoia::testing
     void test_critical_errors();
 
     void test_instability_analysis();
-    
-    template<concrete_test... Ts>
-    void test_instability_analysis(std::string_view message,
-                                   std::string_view outputDirName,
-                                   std::string_view numRuns,
-                                   std::string_view extraArgs,
-                                   Ts&&... ts);
 
     template<concrete_test... Ts>
     void test_instability_analysis(std::string_view message,

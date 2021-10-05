@@ -60,14 +60,6 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  const std::filesystem::path& one_shot_executable_path([[maybe_unused]] const std::filesystem::path& loc)
-  {
-    static const std::filesystem::path file{loc.is_absolute() ? loc : working_path() / loc};
-
-    return file;
-  }
-
-  [[nodiscard]]
   std::filesystem::path project_root(int argc, char** argv, const std::filesystem::path& fallback)
   {
     namespace fs = std::filesystem;

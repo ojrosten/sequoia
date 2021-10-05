@@ -343,8 +343,9 @@ namespace sequoia::testing
                   }
                 },
                 [this](std::string_view exe){
-                  m_Executable = one_shot_executable_path(fs::path{exe});
-                  m_Selector.executable_time_stamp(m_Executable);
+                    const fs::path executable{exe};
+                    m_Executable = executable.is_absolute() ? executable : working_path() / executable;
+                    m_Selector.executable_time_stamp(m_Executable);
                 })
         };
 
