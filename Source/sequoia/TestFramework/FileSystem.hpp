@@ -37,6 +37,9 @@ namespace sequoia::testing
   [[nodiscard]]
   std::filesystem::path working_path();
 
+  [[nodiscard]]
+  const std::filesystem::path& one_shot_executable_path([[maybe_unused]] const std::filesystem::path& loc);
+
   class project_paths
   {
   public:

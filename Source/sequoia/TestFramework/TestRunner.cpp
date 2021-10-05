@@ -343,19 +343,7 @@ namespace sequoia::testing
                   }
                 },
                 [this](std::string_view exe){
-                  const auto exeGetter{
-                    [exe]() -> fs::path {
-                      const fs::path attempt{exe};
-                      if(attempt.is_absolute())
-                      {
-                        return attempt;
-                      }
-
-                      return working_path_v / attempt;
-                    }
-                  };
-
-                  m_Executable = exeGetter();
+                  m_Executable = one_shot_executable_path(fs::path{exe});
                   m_Selector.executable_time_stamp(m_Executable);
                 })
         };
