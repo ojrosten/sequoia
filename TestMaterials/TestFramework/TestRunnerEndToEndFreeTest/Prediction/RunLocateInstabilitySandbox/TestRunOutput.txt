@@ -1,0 +1,66 @@
+
+Running tests...
+
+Utilities:
+[5 (2)ms]
+Useful Things:
+[4 (2)ms]
+Bar:
+[5 (2)ms]
+Maybe:
+[10 (5)ms]
+Oldschool:
+[11 (4)ms]
+Probability:
+[9 (4)ms]
+Foo:
+[9 (4)ms]
+Unique Thing:
+[9 (4)ms]
+Container:
+[9 (4)ms]
+House:
+[5 (2)ms]
+
+-----------Grand Totals-----------
+[81 (40)ms]
+	Standard Top Level Checks:                 0;  Failures:  0
+	Standard Performance Checks:               0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
+	False Positive Checks:                     0;  Failures:  0
+	False Positive Performance Checks:         0;  Failures:  0
+
+Running tests...
+
+Utilities:
+[4 (2)ms]
+Useful Things:
+[4 (2)ms]
+Bar:
+[4 (2)ms]
+Maybe:
+[9 (4)ms]
+Oldschool:
+[9 (4)ms]
+Probability:
+[11 (4)ms]
+Foo:
+[14 (8)ms]
+Unique Thing:
+[10 (4)ms]
+Container:
+[10 (5)ms]
+House:
+[5 (3)ms]
+
+-----------Grand Totals-----------
+[85 (41)ms]
+	Standard Top Level Checks:                 0;  Failures:  0
+	Standard Performance Checks:               0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
+	False Positive Checks:                     0;  Failures:  0
+	False Positive Performance Checks:         0;  Failures:  0
+
+No instabilities detected

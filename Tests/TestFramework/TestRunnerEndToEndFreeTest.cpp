@@ -297,6 +297,11 @@ namespace sequoia::testing
     run_and_check(LINE("Run asynchronously with 1 family"), b, "RunAsyncOneTestOneFamily",
                        "-a test Probability");
 
+    //=================== Rerun, seeking instabilities in sandbox mode ===================//
+
+    run_and_check(LINE("Run in sandbox mode"), b, "RunLocateInstabilitySandbox",
+      "locate 2 --sandbox");
+
     //=================== Change some test materials and run with prune ===================//
 
     fs::copy(auxiliary_materials() / "ModifiedTests" / "FooTest.cpp", generated_project() / "Tests" / "Stuff", fs::copy_options::overwrite_existing);
