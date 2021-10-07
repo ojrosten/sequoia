@@ -1,6 +1,11 @@
-Tests/Utilities/UsefulThingsFreeTest.cpp, Line 21
+Tests/Utilities/UsefulThingsFreeTest.cpp, Line 23
 
 [int]
+
+
+Tests/Utilities/UsefulThingsFreeTest.cpp, Line 24
+
+[bool]
 
 
 Tests/Maths/ProbabilityTestingDiagnostics.cpp, Line 21

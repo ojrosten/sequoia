@@ -10,6 +10,8 @@
 
 namespace sequoia::testing
 {
+  namespace fs = std::filesystem;
+
   [[nodiscard]]
   std::string_view useful_things_free_test::source_file() const noexcept
   {
@@ -19,5 +21,6 @@ namespace sequoia::testing
   void useful_things_free_test::run_tests()
   {
     check_equality(LINE(""), utils::foo(), 42);
+    check(LINE(""), !fs::exists(temp_test_summaries_path(test_repository().parent_path() / "output")));
   }
 }

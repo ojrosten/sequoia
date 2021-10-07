@@ -1,2 +1,199 @@
 End to End Test
-Standard Top Level Checks:                45;  Failures:  0  [Deep checks: 449]
+Standard Top Level Checks:                45;  Failures:  7  [Deep checks: 456]
+
+	Tests/TestFramework/TestRunnerEndToEndFreeTest.cpp, Line 346
+	Rebuild and run after source/test changes (pruned)
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<std::filesystem::path>]
+	With equivalent types:
+	[std::filesystem::path]
+
+	  Contents of
+	  C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/WorkingCopy/RebuiltOutput/TestRunOutput.txt
+	  vs
+	  C:/Users/olive/sequoia/TestMaterials/TestFramework/TestRunnerEndToEndFreeTest/Prediction/RebuiltOutput/TestRunOutput.txt
+
+	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
+	  operator== returned false
+
+	    First difference detected at character 155:
+	    [char]
+	    operator== returned false
+	    Obtained : 2
+	    Predicted: 1
+
+	    Surrounding substring(s):
+	    Obtained : ...Level Checks:                 2;  Failures:  1  [Deep checks: 2]...
+	    Predicted: ...Level Checks:                 1;  Failures:  1  [Deep checks: 1]...
+
+	=======================================
+
+	Tests/TestFramework/TestRunnerEndToEndFreeTest.cpp, Line 349
+	Test Runner Output
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<std::filesystem::path>]
+	With equivalent types:
+	[std::filesystem::path]
+
+	  Contents of
+	  C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/WorkingCopy/RebuiltOutput/TestRunOutput.txt
+	  vs
+	  C:/Users/olive/sequoia/TestMaterials/TestFramework/TestRunnerEndToEndFreeTest/Prediction/RebuiltOutput/TestRunOutput.txt
+
+	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
+	  operator== returned false
+
+	    First difference detected at character 155:
+	    [char]
+	    operator== returned false
+	    Obtained : 2
+	    Predicted: 1
+
+	    Surrounding substring(s):
+	    Obtained : ...Level Checks:                 2;  Failures:  1  [Deep checks: 2]...
+	    Predicted: ...Level Checks:                 1;  Failures:  1  [Deep checks: 1]...
+
+	=======================================
+
+	Tests/TestFramework/TestRunnerEndToEndFreeTest.cpp, Line 362
+	Pruned output, post failures
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<std::filesystem::path>]
+	With equivalent types:
+	[std::filesystem::path]
+
+	  Contents of
+	  C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/WorkingCopy/RunPrunePostFailureOutput/TestRunOutput.txt
+	  vs
+	  C:/Users/olive/sequoia/TestMaterials/TestFramework/TestRunnerEndToEndFreeTest/Prediction/RunPrunePostFailureOutput/TestRunOutput.txt
+
+	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
+	  operator== returned false
+
+	    First difference detected at character 155:
+	    [char]
+	    operator== returned false
+	    Obtained : 2
+	    Predicted: 1
+
+	    Surrounding substring(s):
+	    Obtained : ...Level Checks:                 2;  Failures:  1  [Deep checks: 2]...
+	    Predicted: ...Level Checks:                 1;  Failures:  1  [Deep checks: 1]...
+
+	=======================================
+
+	Tests/TestFramework/TestRunnerEndToEndFreeTest.cpp, Line 366
+	Do a dump
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<std::filesystem::path>]
+	With equivalent types:
+	[std::filesystem::path]
+
+	  Contents of
+	  C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/WorkingCopy/RunPostUpdate/TestRunOutput.txt
+	  vs
+	  C:/Users/olive/sequoia/TestMaterials/TestFramework/TestRunnerEndToEndFreeTest/Prediction/RunPostUpdate/TestRunOutput.txt
+
+	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
+	  operator== returned false
+
+	    First difference detected at character 91:
+	    [char]
+	    operator== returned false
+	    Obtained : 2
+	    Predicted: 1
+
+	    Surrounding substring(s):
+	    Obtained : ...Level Checks:                 2;  Failures:  1  [Deep checks: 2]...
+	    Predicted: ...Level Checks:                 1;  Failures:  1  [Deep checks: 1]...
+
+	=======================================
+
+	Tests/TestFramework/TestRunnerEndToEndFreeTest.cpp, Line 370
+	Dump File
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<std::filesystem::path>]
+	With equivalent types:
+	[std::filesystem::path]
+
+	  Contents of
+	  C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/WorkingCopy/Dump/Dump.txt
+	  vs
+	  C:/Users/olive/sequoia/TestMaterials/TestFramework/TestRunnerEndToEndFreeTest/Prediction/Dump/Dump.txt
+
+	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
+	  operator== returned false
+
+	    First difference detected at character 48:
+	    [char]
+	    operator== returned false
+	    Obtained : 3
+	    Predicted: 1
+
+	    Surrounding substring(s):
+	    Obtained : ...efulThingsFreeTest.cpp, Line 23...
+	    Predicted: ...efulThingsFreeTest.cpp, Line 21...
+
+	=======================================
+
+	Tests/TestFramework/TestRunnerEndToEndFreeTest.cpp, Line 381
+	Recovery mode
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<std::filesystem::path>]
+	With equivalent types:
+	[std::filesystem::path]
+
+	  Contents of
+	  C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/WorkingCopy/RunRecovery/TestRunOutput.txt
+	  vs
+	  C:/Users/olive/sequoia/TestMaterials/TestFramework/TestRunnerEndToEndFreeTest/Prediction/RunRecovery/TestRunOutput.txt
+
+	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
+	  operator== returned false
+
+	    First difference detected at character 91:
+	    [char]
+	    operator== returned false
+	    Obtained : 2
+	    Predicted: 1
+
+	    Surrounding substring(s):
+	    Obtained : ...Level Checks:                 2;  Failures:  1  [Deep checks: 2]...
+	    Predicted: ...Level Checks:                 1;  Failures:  1  [Deep checks: 1]...
+
+	=======================================
+
+	Tests/TestFramework/TestRunnerEndToEndFreeTest.cpp, Line 396
+	Recovery mode, throw mid-check
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<std::filesystem::path>]
+	With equivalent types:
+	[std::filesystem::path]
+
+	  Contents of
+	  C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/WorkingCopy/RunRecoveryMidCheck/TestRunOutput.txt
+	  vs
+	  C:/Users/olive/sequoia/TestMaterials/TestFramework/TestRunnerEndToEndFreeTest/Prediction/RunRecoveryMidCheck/TestRunOutput.txt
+
+	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
+	  operator== returned false
+
+	    First difference detected at character 91:
+	    [char]
+	    operator== returned false
+	    Obtained : 2
+	    Predicted: 1
+
+	    Surrounding substring(s):
+	    Obtained : ...Level Checks:                 2;  Failures:  1  [Deep checks: 2]...
+	    Predicted: ...Level Checks:                 1;  Failures:  1  [Deep checks: 1]...
+
+	=======================================
+

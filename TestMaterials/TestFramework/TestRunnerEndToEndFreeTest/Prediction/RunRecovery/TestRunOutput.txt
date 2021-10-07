@@ -2,12 +2,12 @@
 Running tests...
 
 Utilities:
-[0 (0)ms]
+[2 (0)ms]
 Useful Things:
-[1 (0)ms]
-	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
+[4 (2)ms]
+	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 
-	Tests/Utilities/UsefulThingsFreeTest.cpp, Line 21
+	Tests/Utilities/UsefulThingsFreeTest.cpp, Line 23
 
 	[int]
 	operator== returned false
@@ -17,17 +17,17 @@ Useful Things:
 	=======================================
 
 Bar:
-[0 (0)ms]
+[3 (0)ms]
 Maybe:
-[2 (0)ms]
+[4 (0)ms]
 Oldschool:
-[1 (0)ms]
+[4 (0)ms]
 Probability:
-[6 (4)ms]
+[10 (5)ms]
 	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 39]
 	False Positive Checks:                     2;  Failures:  0
 Foo:
-[6 (4)ms]
+[9 (5)ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
 	Tests/Stuff/FooTest.cpp, Line 41
@@ -38,9 +38,9 @@ Foo:
 	[std::filesystem::path]
 
 	  Path type
-	  /Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases
+	  C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases
 	  vs
-	  /Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases
+	  C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases
 
 	  [std::filesystem::file_type]
 	  operator== returned false
@@ -50,17 +50,17 @@ Foo:
 	=======================================
 
 Unique Thing:
-[9 (4)ms]
+[10 (5)ms]
 	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 35]
 	False Positive Checks:                     2;  Failures:  0
 Container:
-[1 (0)ms]
+[4 (0)ms]
 House:
-[0 (0)ms]
+[2 (0)ms]
 
 -----------Grand Totals-----------
-[31 (14)ms]
-	Standard Top Level Checks:                 8;  Failures:  2  [Deep checks: 76]
+[58 (17)ms]
+	Standard Top Level Checks:                 9;  Failures:  2  [Deep checks: 77]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
 	False Negative Performance Checks:         0;  Failures:  0
