@@ -361,6 +361,10 @@ namespace sequoia::testing
 
     run_and_check(LINE("Pruned output, post failures"), b, "RunPrunePostFailureOutput", "prune -c namespace -a");
 
+    //=================== Rerun with selected, unstable test ===================//
+    run_and_check(LINE("Run in sandbox mode with an explicit selection"), b, "SelectRunLocateInstabilitySandbox",
+      "locate 2 --sandbox select UsefulThingsFreeTest.cpp");
+
     //=================== Rerun and do a dump ===================//
 
     run_and_check(LINE("Do a dump"), b, "RunPostUpdate", "dump");
