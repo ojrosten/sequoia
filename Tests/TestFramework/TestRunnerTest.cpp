@@ -368,17 +368,35 @@ namespace sequoia::testing
                               flipper_free_test{"Flipper Free Test"},
                               multi_periodic_free_test("Free Test")
                              );
+
+    test_instability_analysis("Family selection",
+                              "InstabilityFamilySelection",
+                              "2",
+                              {"test", "Another Family"},
+                              [](test_runner& r){ r.add_test_family("Another Family", flipper_free_test{"Flipper Free Test"}); },
+                              flipper_free_test{"Flipper Free Test"}
+                             );
   }
 
-  template<concrete_test... Ts>
+  template<invocable<test_runner&> Manipulator, concrete_test... Ts>
   void test_runner_test::test_instability_analysis(std::string_view message,
                                                    std::string_view outputDirName,
                                                    std::string_view numRuns,
+                                                   std::initializer_list<std::string_view> extraArgs,
+                                                   Manipulator manipulator,
                                                    Ts&&... ts)
   {
     std::stringstream outputStream{};
 
-    commandline_arguments args{"", "locate-instabilities", numRuns};
+    auto argGenerator{
+      [&extraArgs, numRuns](){
+         std::vector<std::string> argList{"", "locate-instabilities", std::string{numRuns}};
+         argList.insert(argList.end(), extraArgs.begin(), extraArgs.end());
+         return argList;
+      }
+    };
+
+    commandline_arguments args{argGenerator()};
 
     const auto testMain{aux_project().append("TestSandbox").append("TestSandbox.cpp")};
     const auto includeTarget{aux_project().append("TestShared").append("SharedIncludes.hpp")};
@@ -395,6 +413,8 @@ namespace sequoia::testing
       std::forward<Ts>(ts)...
     );
 
+    manipulator(runner);
+
     runner.execute();
 
     const auto outputDir{working_materials() / outputDirName};
@@ -408,5 +428,15 @@ namespace sequoia::testing
     check_equivalence(LINE(append_lines(message, make_type_info<Ts...>())),
                       outputDir,
                       predictive_materials() / outputDirName);
+  }
+
+  
+  template<concrete_test... Ts>
+  void test_runner_test::test_instability_analysis(std::string_view message,
+                                                   std::string_view outputDirName,
+                                                   std::string_view numRuns,
+                                                   Ts&&... ts)
+  {
+    test_instability_analysis(message, outputDirName, numRuns, {}, [](test_runner&){}, std::forward<Ts>(ts)...);
   }
 }

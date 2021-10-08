@@ -11,6 +11,8 @@
 
 namespace sequoia::testing
 {
+  class test_runner;
+
   class test_runner_test final : public free_test
   {
   public:
@@ -26,6 +28,14 @@ namespace sequoia::testing
     void test_critical_errors();
 
     void test_instability_analysis();
+
+    template<invocable<test_runner&> Manipulator, concrete_test... Ts>
+    void test_instability_analysis(std::string_view message,
+                                   std::string_view outputDirName,
+                                   std::string_view numRuns,
+                                   std::initializer_list<std::string_view> extraArgs,
+                                   Manipulator manipulator,
+                                   Ts&&... ts);
 
     template<concrete_test... Ts>
     void test_instability_analysis(std::string_view message,

@@ -61,6 +61,7 @@ target_sources(TestAll PRIVATE ${TestDir}/Experimental/ExperimentalTest.cpp
                ${TestDir}/Maths/Statistics/StatisticalAlgorithmsTest.cpp
                ${TestDir}/Parsing/CommandLineArgumentsDiagnostics.cpp
                ${TestDir}/Parsing/CommandLineArgumentsTest.cpp
+               ${TestDir}/Parsing/CommandLineArgumentsTestingUtilities.cpp
                ${TestDir}/Runtime/FactoryTest.cpp
                ${TestDir}/Runtime/FactoryTestingDiagnostics.cpp
                ${TestDir}/Streaming/StreamingFreeTest.cpp

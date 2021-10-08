@@ -414,13 +414,18 @@ namespace sequoia::testing
       if(m_Executable.empty())
         throw std::runtime_error{"Unable to run in sandbox mode, as executable cannot be found"};
 
-      const auto sources{
+      const auto specified{
         [&selector{m_Selector}] () -> std::string {
           std::string srcs{};
           // TO DO: use ranges when supported by libc++
           for(auto i{selector.begin_selected_sources()}; i != selector.end_selected_sources(); ++i)
           {
             if(i->second) srcs.append(" select " + i->first.generic_string());
+          }
+
+          for(auto i{selector.begin_selected_families()}; i != selector.end_selected_families(); ++i)
+          {
+            if(i->second) srcs.append(" test " + i->first);
           }
 
           return srcs;
@@ -430,7 +435,7 @@ namespace sequoia::testing
       for(std::size_t i{}; i < m_NumReps; ++i)
       {
         invoke(runtime::shell_command(m_Executable.string().append(" locate ").append(std::to_string(m_NumReps))
-                                                           .append(" --runner-id ").append(std::to_string(i)).append(sources)));
+                                                           .append(" --runner-id ").append(std::to_string(i)).append(specified)));
       }
     }
     else

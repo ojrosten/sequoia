@@ -89,12 +89,8 @@ namespace sequoia::testing
       return static_cast<int>(m_Args.size());
     }
 
-    commandline_arguments(std::initializer_list<std::string_view> args)
-      : m_Args(args.begin(), args.end())
-    {
-      m_Ptrs.reserve(m_Args.size());
-      std::transform(m_Args.begin(), m_Args.end(), std::back_inserter(m_Ptrs), [](std::string& s){ return s.data(); });
-    }
+    commandline_arguments(std::initializer_list<std::string_view> args);
+    commandline_arguments(std::vector<std::string> args);
 
     [[nodiscard]]
     char** get() noexcept { return &m_Ptrs[0]; }
