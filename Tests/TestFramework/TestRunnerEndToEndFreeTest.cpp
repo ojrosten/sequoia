@@ -304,9 +304,8 @@ namespace sequoia::testing
 
     //=================== Change some test materials and run with prune ===================//
 
-    fs::copy(auxiliary_materials() / "ModifiedTests" / "FooTest.cpp", generated_project() / "Tests" / "Stuff", fs::copy_options::overwrite_existing);
-    fs::last_write_time(generated_project() / "Tests" / "Stuff" / "FooTest.cpp", fs::file_time_type::clock::now());
-    fs::copy(auxiliary_materials() / "TestMaterials", generated_project() / "TestMaterials", fs::copy_options::recursive | fs::copy_options::overwrite_existing);
+    copy_aux_materials("ModifiedTests/FooTest.cpp", "Tests/Stuff");
+    copy_aux_materials("TestMaterials", "TestMaterials");
 
     rebuild_run_and_check(LINE("Change Materials (pruned)"), b, "RunWithChangedMaterials", "CMakeOutput3.txt", "BuildOutput3.txt", "prune --cutoff namespace");
 
