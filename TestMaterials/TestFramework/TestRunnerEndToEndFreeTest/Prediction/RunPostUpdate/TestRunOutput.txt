@@ -2,12 +2,12 @@
 Running tests...
 
 Utilities:
-[5 (0)ms]
+[2 (0)ms]
 Useful Things:
-[11 (5)ms]
-	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
+[3 (1)ms]
+	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
-	Tests/Utilities/UsefulThingsFreeTest.cpp, Line 23
+	Tests/Utilities/UsefulThingsFreeTest.cpp, Line 21
 
 	[int]
 	operator== returned false
@@ -17,22 +17,23 @@ Useful Things:
 	=======================================
 
 Bar:
-[5 (0)ms]
+[2 (0)ms]
 Unstable:
-[6 (0)ms]
+[5 (2)ms]
+	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 Maybe:
-[11 (0)ms]
+[5 (0)ms]
 Oldschool:
-[12 (0)ms]
+[5 (0)ms]
 Probability:
-[74 (59)ms]
+[31 (26)ms]
 	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 39]
 	False Positive Checks:                     2;  Failures:  0
 Foo:
-[79 (66)ms]
+[31 (26)ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 37]
 Unique Thing:
-[42 (32)ms]
+[24 (19)ms]
 	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 35]
 	False Positive Checks:                     2;  Failures:  0
 Container:
@@ -41,8 +42,8 @@ House:
 [2 (0)ms]
 
 -----------Grand Totals-----------
-[259 (164)ms]
-	Standard Top Level Checks:                 9;  Failures:  1  [Deep checks: 113]
+[121 (76)ms]
+	Standard Top Level Checks:                10;  Failures:  1  [Deep checks: 114]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
 	False Negative Performance Checks:         0;  Failures:  0

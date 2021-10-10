@@ -341,6 +341,7 @@ namespace sequoia::testing
     copy_aux_materials("ModifiedTests/UsefulThingsFreeTest.cpp", "Tests/Utilities");
     copy_aux_materials("ModifiedTests/Maths",                    "Tests/Maths");
     copy_aux_materials("ModifiedTests/Thing",                    "Tests/Utilities/Thing");
+    copy_aux_materials("ModifiedTests/Unstable",                 "Tests/Unstable");
 
     rebuild_run_and_check(LINE("Rebuild and run after source/test changes (pruned)"), b, "RebuiltOutput", "CMakeOutput4.txt", "BuildOutput4.txt", "prune --cutoff namespace -a");
     check_timings(LINE("Async run (level: test)"), fs::path{"RebuiltOutput/TestRunOutput.txt"}, 1.8);
@@ -362,7 +363,7 @@ namespace sequoia::testing
 
     //=================== Rerun with selected, unstable test ===================//
     run_and_check(LINE("Run in sandbox mode with an explicit selection"), b, "SelectRunLocateInstabilitySandbox",
-      "locate 2 --sandbox select UsefulThingsFreeTest.cpp");
+      "locate 2 --sandbox select FlipperFreeTest.cpp");
 
     //=================== Rerun and do a dump ===================//
 

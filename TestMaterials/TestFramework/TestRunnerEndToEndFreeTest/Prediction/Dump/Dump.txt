@@ -1,9 +1,14 @@
-Tests/Utilities/UsefulThingsFreeTest.cpp, Line 23
+Tests/Utilities/UsefulThingsFreeTest.cpp, Line 21
 
 [int]
 
 
-Tests/Utilities/UsefulThingsFreeTest.cpp, Line 24
+Tests/Unstable/FlipperFreeTest.cpp, Line 24
+
+[bool]
+
+
+Tests/Unstable/FlipperFreeTest.cpp, Line 25
 
 [bool]
 

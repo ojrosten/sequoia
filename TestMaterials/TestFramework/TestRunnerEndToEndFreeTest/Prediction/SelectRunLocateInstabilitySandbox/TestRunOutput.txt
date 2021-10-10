@@ -1,23 +1,13 @@
 
 Running tests...
 
-Useful Things:
-[5 (3)ms]
-	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
-
-	Tests/Utilities/UsefulThingsFreeTest.cpp, Line 23
-
-	[int]
-	operator== returned false
-	Obtained : 43
-	Predicted: 42
-
-	=======================================
-
+Unstable:
+[5 (2)ms]
+	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 
 -----------Grand Totals-----------
-[5 (3)ms]
-	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
+[5 (2)ms]
+	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
 	False Negative Performance Checks:         0;  Failures:  0
@@ -26,20 +16,11 @@ Useful Things:
 
 Running tests...
 
-Useful Things:
-[4 (2)ms]
-	Standard Top Level Checks:                 2;  Failures:  2  [Deep checks: 2]
+Unstable:
+[5 (3)ms]
+	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 
-	Tests/Utilities/UsefulThingsFreeTest.cpp, Line 23
-
-	[int]
-	operator== returned false
-	Obtained : 43
-	Predicted: 42
-
-	=======================================
-
-	Tests/Utilities/UsefulThingsFreeTest.cpp, Line 24
+	Tests/Unstable/FlipperFreeTest.cpp, Line 25
 
 	[bool]
 	check failed
@@ -48,39 +29,23 @@ Useful Things:
 
 
 -----------Grand Totals-----------
-[4 (2)ms]
-	Standard Top Level Checks:                 2;  Failures:  2  [Deep checks: 2]
+[5 (3)ms]
+	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
 	False Negative Performance Checks:         0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
 	False Positive Performance Checks:         0;  Failures:  0
 
-Instability detected in file "UsefulThingsFreeTest.cpp"
+Instability detected in file "FlipperFreeTest.cpp"
 Outcome frequencies:
 [50%,50%]
 
-	Tests/Utilities/UsefulThingsFreeTest.cpp, Line 23
-
-	[int]
-	operator== returned false
-	Obtained : 43
-	Predicted: 42
-
-	=======================================
+--No failures--
 
 vs.
 
-	Tests/Utilities/UsefulThingsFreeTest.cpp, Line 23
-
-	[int]
-	operator== returned false
-	Obtained : 43
-	Predicted: 42
-
-	=======================================
-
-	Tests/Utilities/UsefulThingsFreeTest.cpp, Line 24
+	Tests/Unstable/FlipperFreeTest.cpp, Line 25
 
 	[bool]
 	check failed
