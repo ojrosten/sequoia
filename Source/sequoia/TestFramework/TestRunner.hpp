@@ -66,7 +66,7 @@ namespace sequoia::testing
 
   private:
     enum class output_mode { standard = 0, verbose = 1 };
-    enum class instability_mode { none = 0, single_instance, coordinator, sandbox};
+    enum class instability_mode { none = 0, single_instance, coordinator, sandbox };
 
     std::string      m_Copyright{};
     family_selector  m_Selector;
@@ -98,7 +98,7 @@ namespace sequoia::testing
 
     void check_argument_consistency();
 
-    bool run_tests(std::optional<std::size_t> index);
+    void run_tests(std::optional<std::size_t> index);
 
     [[nodiscard]]
     bool mode(runner_mode m) const noexcept

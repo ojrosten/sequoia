@@ -107,17 +107,48 @@ namespace sequoia::testing
     stream << "[" << dur << unit << "]\n\n";
   }
 
-  void family_selector::update_prune_info(const std::vector<std::filesystem::path>& failedTests)
+  template<class Iter>
+  void family_selector::update_prune_info(Iter startFailedTests, Iter endFailedTests)
   {
     if(!bespoke_selection() || pruned())
     {
+      std::sort(startFailedTests, endFailedTests);
+
       const auto stampFile{prune_path(proj_paths().output(), proj_paths().main_cpp_dir())};
-      if(std::ofstream ostream{stampFile})
-      {
-        for(const auto& source : failedTests)
-        {
-          ostream << source.generic_string() << "\n";
+
+      auto write{
+        [&stampFile](Iter start, Iter end){
+          if(std::ofstream ostream{stampFile})
+          {
+            while(start != end)
+            {
+              ostream << (start++)->generic_string() << "\n";
+            }
+          }
         }
+      };
+
+      if(fs::exists(stampFile))
+      {
+        std::vector<fs::path> prevFailures{};
+        if(std::ifstream istream{stampFile})
+        {
+          while(istream)
+          {
+            fs::path file{};
+            istream >> file;
+            if(!file.empty())
+              prevFailures.push_back(std::move(file));
+          }
+        }
+
+        std::vector<fs::path> allFailures{};
+        std::set_union(startFailedTests, endFailedTests, prevFailures.begin(), prevFailures.end(), std::back_inserter(allFailures));
+        write(allFailures.begin(), allFailures.end());
+      }
+      else
+      {
+        write(startFailedTests, endFailedTests);
       }
 
       fs::last_write_time(stampFile, m_PruneInfo.stamps.current);
@@ -270,4 +301,6 @@ namespace sequoia::testing
                      " which both have the same name and are defined"
                      " in the same source file.\n"));
   }
+
+  template void family_selector::update_prune_info<std::vector<fs::path>::iterator>(std::vector<fs::path>::iterator, std::vector<fs::path>::iterator);
 }

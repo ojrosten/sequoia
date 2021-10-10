@@ -407,7 +407,30 @@ namespace sequoia::testing
 
   void test_runner::execute([[maybe_unused]] timer_resolution r)
   {
+    if(!mode(runner_mode::test)) return;
+
+    stream() << m_Selector.check_for_missing_tests();
+
+    if(m_Selector.empty())
+    {
+      if(m_Selector.pruned())
+      {
+        stream() << "Nothing to do: no changes since the last run, therefore 'prune' has pruned all tests\n";
+      }
+      else if(!m_Selector.bespoke_selection())
+      {
+        stream() << "Nothing to do; try creating some tests!\nRun with --help to see options\n";
+      }
+
+      return;
+    }
+
     finalize_concurrency_mode();
+
+    if((m_InstabilityMode != instability_mode::sandbox) && (m_Selector.pruned()))
+    {
+      fs::remove(prune_path(proj_paths().output(), proj_paths().main_cpp_dir()));
+    }
 
     if(m_InstabilityMode == instability_mode::coordinator)
     {
@@ -454,7 +477,7 @@ namespace sequoia::testing
           }
 
           const auto optIndex{m_NumReps > 1 ? std::optional<std::size_t>{i} : std::nullopt};
-          if(!run_tests(optIndex)) break;
+          run_tests(optIndex);
         }
       }
     }
@@ -475,63 +498,45 @@ namespace sequoia::testing
     }
   }
 
-  bool test_runner::run_tests(const std::optional<std::size_t> index)
+  void test_runner::run_tests(const std::optional<std::size_t> index)
   {
-    if(!mode(runner_mode::test)) return false;
-
     const timer t{};
-
     log_summary summary{};
-    if(!m_Selector.empty())
+
+    stream() << "\nRunning tests...\n\n";
+    if(!concurrent_execution())
     {
-      stream() << "\nRunning tests...\n\n";
-      if(!concurrent_execution())
+      for(auto& family : m_Selector)
       {
-        for(auto& family : m_Selector)
-        {
-          stream() << family.name() << ":\n";
-          summary += process_family(family.execute(m_UpdateMode, m_ConcurrencyMode, index)).log;
-        }
+        stream() << family.name() << ":\n";
+        summary += process_family(family.execute(m_UpdateMode, m_ConcurrencyMode, index)).log;
       }
-      else
+    }
+    else
+    {
+      stream() << "\n\t--Using asynchronous execution, level: "
+               << to_string(m_ConcurrencyMode)
+               << "\n\n";
+
+      std::vector<std::pair<std::string, std::future<family_results>>> results{};
+      results.reserve(m_Selector.size());
+
+      for(auto& family : m_Selector)
       {
-        stream() << "\n\t--Using asynchronous execution, level: "
-                 << to_string(m_ConcurrencyMode)
-                 << "\n\n";
-
-        std::vector<std::pair<std::string, std::future<family_results>>> results{};
-        results.reserve(m_Selector.size());
-
-        for(auto& family : m_Selector)
-        {
-          results.emplace_back(family.name(),
-                               std::async([&family, umode=m_UpdateMode, cmode=m_ConcurrencyMode, index](){
-                                 return family.execute(umode, cmode, index); }));
-        }
-
-        for(auto& res : results)
-        {
-          stream() << res.first << ":\n";
-          summary += process_family(res.second.get()).log;
-        }
+        results.emplace_back(family.name(),
+          std::async([&family, umode = m_UpdateMode, cmode = m_ConcurrencyMode, index](){
+            return family.execute(umode, cmode, index); }));
       }
-      stream() << "\n-----------Grand Totals-----------\n";
-      stream() << summarize(summary, t.time_elapsed(), summary_detail::absent_checks | summary_detail::timings, indentation{"\t"}, no_indent);
-    }
-    else if(m_Selector.pruned())
-    {
-      stream() << "Nothing to do: no changes since the last run, therefore 'prune' has pruned all tests\n";
-      return false;
-    }
-    else if(!m_Selector.bespoke_selection())
-    {
-      stream() << "Nothing to do; try creating some tests!\nRun with --help to see options\n";
-      return false;
-    }
 
-    m_Selector.update_prune_info(m_FailedTestSourceFiles);
-    stream() << m_Selector.check_for_missing_tests();
+      for(auto& res : results)
+      {
+        stream() << res.first << ":\n";
+        summary += process_family(res.second.get()).log;
+      }
+    }
+    stream() << "\n-----------Grand Totals-----------\n";
+    stream() << summarize(summary, t.time_elapsed(), summary_detail::absent_checks | summary_detail::timings, indentation{"\t"}, no_indent);
 
-    return true;
+    m_Selector.update_prune_info(m_FailedTestSourceFiles.begin(), m_FailedTestSourceFiles.end());
   }
 }
