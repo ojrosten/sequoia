@@ -361,7 +361,16 @@ namespace sequoia::testing
 
     run_and_check(LINE("Pruned output, post failures"), b, "RunPrunePostFailureOutput", "prune -c namespace -a");
 
-    //=================== Rerun with selected, unstable test ===================//
+    //=================== Rerun and locate instabilities ===================//
+    // --> UsefulThingsFreeTest.cpp will continue to exhibit a stable failure,
+    // whereas  FlipperFreeTest.cpp is unstable
+
+    run_and_check(LINE("Locate instabilities"), b, "RunLocateInstabilities",
+      "locate 2 -a");
+
+    //=================== Rerun with selected, unstable test in sandbox mode ===================//
+    // --> The first of the checks in FlipperFreeTest.cpp is stable in sandbox mode, but the second isn't
+
     run_and_check(LINE("Run in sandbox mode with an explicit selection"), b, "SelectRunLocateInstabilitySandbox",
       "locate 2 --sandbox select FlipperFreeTest.cpp");
 

@@ -1,0 +1,140 @@
+
+Running tests...
+
+
+	--Using asynchronous execution, level: Family
+
+Utilities:
+[12 (5)ms]
+Useful Things:
+[23 (14)ms]
+	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
+
+	Tests/Utilities/UsefulThingsFreeTest.cpp, Line 21
+
+	[int]
+	operator== returned false
+	Obtained : 43
+	Predicted: 42
+
+	=======================================
+
+Bar:
+[14 (10)ms]
+Unstable:
+[22 (3)ms]
+	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
+Maybe:
+[18 (12)ms]
+Oldschool:
+[34 (26)ms]
+Probability:
+[34 (16)ms]
+	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 39]
+	False Positive Checks:                     2;  Failures:  0
+Foo:
+[33 (28)ms]
+	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 37]
+Unique Thing:
+[30 (23)ms]
+	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 35]
+	False Positive Checks:                     2;  Failures:  0
+Container:
+[14 (6)ms]
+House:
+[20 (12)ms]
+
+-----------Grand Totals-----------
+[47 (159)ms]
+	Standard Top Level Checks:                10;  Failures:  1  [Deep checks: 114]
+	Standard Performance Checks:               0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
+	False Positive Checks:                     4;  Failures:  0
+	False Positive Performance Checks:         0;  Failures:  0
+
+Running tests...
+
+
+	--Using asynchronous execution, level: Family
+
+Utilities:
+[5 (2)ms]
+Useful Things:
+[40 (37)ms]
+	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
+
+	Tests/Utilities/UsefulThingsFreeTest.cpp, Line 21
+
+	[int]
+	operator== returned false
+	Obtained : 43
+	Predicted: 42
+
+	=======================================
+
+Bar:
+[29 (22)ms]
+Unstable:
+[6 (3)ms]
+	Standard Top Level Checks:                 2;  Failures:  2  [Deep checks: 2]
+
+	Tests/Unstable/FlipperFreeTest.cpp, Line 24
+
+	[bool]
+	check failed
+
+	=======================================
+
+	Tests/Unstable/FlipperFreeTest.cpp, Line 25
+
+	[bool]
+	check failed
+
+	=======================================
+
+Maybe:
+[43 (30)ms]
+Oldschool:
+[38 (16)ms]
+Probability:
+[38 (28)ms]
+	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 39]
+	False Positive Checks:                     2;  Failures:  0
+Foo:
+[47 (41)ms]
+	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 37]
+Unique Thing:
+[42 (20)ms]
+	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 35]
+	False Positive Checks:                     2;  Failures:  0
+Container:
+[36 (30)ms]
+House:
+[13 (10)ms]
+
+-----------Grand Totals-----------
+[54 (244)ms]
+	Standard Top Level Checks:                10;  Failures:  3  [Deep checks: 114]
+	Standard Performance Checks:               0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
+	False Positive Checks:                     4;  Failures:  0
+	False Positive Performance Checks:         0;  Failures:  0
+
+Instability detected in file "FlipperFreeTest.cpp"
+Outcome frequencies:
+[50%,50%]
+
+--No failures--
+
+vs.
+
+	Tests/Unstable/FlipperFreeTest.cpp, Line 24
+
+	[bool]
+	check failed
+
+	=======================================
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
