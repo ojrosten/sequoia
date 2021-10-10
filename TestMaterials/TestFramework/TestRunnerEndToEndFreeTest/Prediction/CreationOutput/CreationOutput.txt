@@ -13,6 +13,10 @@ Creating files for new test:
 "Tests/Stuff/BarFreeTest.cpp"
 
 Creating files for new test:
+"Tests/Unstable/FlipperFreeTest.hpp"
+"Tests/Unstable/FlipperFreeTest.cpp"
+
+Creating files for new test:
 "Source/generatedProject/Maybe/Maybe.hpp"
 "Tests/Maybe/MaybeTestingUtilities.hpp"
 "Tests/Maybe/MaybeTestingDiagnostics.hpp"
@@ -68,7 +72,7 @@ Creating files for new test:
 
 Running CMake...
 
--- Selecting Windows SDK version 10.0.19041.0 to target Windows 10.0.19043.
+-- Selecting Windows SDK version 10.0.19041.0 to target Windows 10.0.19042.
 -- Configuring done
 -- Generating done
 -- Build files have been written to: C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/build/CMade/win/TestAll

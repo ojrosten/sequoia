@@ -15,6 +15,7 @@
 #include "Stuff/FooTestingDiagnostics.hpp"
 #include "Stuff/OldschoolTest.hpp"
 #include "Stuff/OldschoolTestingDiagnostics.hpp"
+#include "Unstable/FlipperFreeTest.hpp"
 #include "Utilities/ContainerAllocationTest.hpp"
 #include "Utilities/ContainerPerformanceTest.hpp"
 #include "Utilities/Thing/UniqueThingTest.hpp"
@@ -48,6 +49,11 @@ int main(int argc, char** argv)
 		runner.add_test_family(
 			"Bar",
 			bar_free_test("Free Test")
+		);
+
+		runner.add_test_family(
+			"Unstable",
+			flipper_free_test("Free Test")
 		);
 
 		runner.add_test_family(

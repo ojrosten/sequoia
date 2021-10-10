@@ -2,28 +2,30 @@
 Running tests...
 
 Utilities:
-[5 (2)ms]
+[13 (10)ms]
 Useful Things:
-[4 (2)ms]
+[5 (2)ms]
 Bar:
-[5 (2)ms]
+[7 (5)ms]
+Unstable:
+[4 (2)ms]
 Maybe:
-[10 (5)ms]
+[9 (4)ms]
 Oldschool:
-[11 (4)ms]
+[14 (7)ms]
 Probability:
-[9 (4)ms]
+[19 (10)ms]
 Foo:
-[9 (4)ms]
+[20 (10)ms]
 Unique Thing:
-[9 (4)ms]
+[21 (10)ms]
 Container:
-[9 (4)ms]
+[18 (8)ms]
 House:
-[5 (2)ms]
+[10 (5)ms]
 
 -----------Grand Totals-----------
-[81 (40)ms]
+[147 (77)ms]
 	Standard Top Level Checks:                 0;  Failures:  0
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -38,24 +40,26 @@ Utilities:
 Useful Things:
 [4 (2)ms]
 Bar:
-[4 (2)ms]
-Maybe:
-[9 (4)ms]
-Oldschool:
-[9 (4)ms]
-Probability:
-[11 (4)ms]
-Foo:
-[14 (8)ms]
-Unique Thing:
-[10 (4)ms]
-Container:
+[9 (5)ms]
+Unstable:
 [10 (5)ms]
+Maybe:
+[20 (9)ms]
+Oldschool:
+[20 (10)ms]
+Probability:
+[13 (8)ms]
+Foo:
+[17 (10)ms]
+Unique Thing:
+[17 (7)ms]
+Container:
+[19 (9)ms]
 House:
-[5 (3)ms]
+[8 (5)ms]
 
 -----------Grand Totals-----------
-[85 (41)ms]
+[148 (76)ms]
 	Standard Top Level Checks:                 0;  Failures:  0
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

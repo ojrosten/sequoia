@@ -2,28 +2,30 @@
 Running tests...
 
 Utilities:
-[3 (0)ms]
+[2 (0)ms]
 Useful Things:
-[3 (0)ms]
+[2 (0)ms]
 Bar:
-[3 (0)ms]
+[2 (0)ms]
+Unstable:
+[2 (0)ms]
 Maybe:
-[6 (0)ms]
-Oldschool:
-[11 (0)ms]
-Probability:
 [4 (0)ms]
+Oldschool:
+[6 (0)ms]
+Probability:
+[5 (0)ms]
 Foo:
 [4 (0)ms]
 Unique Thing:
-[4 (0)ms]
+[6 (0)ms]
 Container:
-[4 (0)ms]
+[5 (0)ms]
 House:
-[2 (0)ms]
+[3 (0)ms]
 
 -----------Grand Totals-----------
-[50 (0)ms]
+[46 (0)ms]
 	Standard Top Level Checks:                 0;  Failures:  0
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

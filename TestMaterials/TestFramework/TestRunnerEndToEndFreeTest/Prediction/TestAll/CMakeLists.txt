@@ -23,6 +23,7 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Stuff/FooTestingDiagnostics.cpp
                ${TestDir}/Stuff/OldschoolTest.cpp
                ${TestDir}/Stuff/OldschoolTestingDiagnostics.cpp
+               ${TestDir}/Unstable/FlipperFreeTest.cpp
                ${TestDir}/Utilities/ContainerAllocationTest.cpp
                ${TestDir}/Utilities/ContainerPerformanceTest.cpp
                ${TestDir}/Utilities/Thing/UniqueThingTest.cpp

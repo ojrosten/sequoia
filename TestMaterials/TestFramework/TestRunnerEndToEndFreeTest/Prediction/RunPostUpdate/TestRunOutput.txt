@@ -2,9 +2,9 @@
 Running tests...
 
 Utilities:
-[2 (0)ms]
+[5 (0)ms]
 Useful Things:
-[4 (1)ms]
+[11 (5)ms]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 
 	Tests/Utilities/UsefulThingsFreeTest.cpp, Line 23
@@ -17,20 +17,22 @@ Useful Things:
 	=======================================
 
 Bar:
-[2 (0)ms]
-Maybe:
 [5 (0)ms]
-Oldschool:
+Unstable:
+[6 (0)ms]
+Maybe:
 [11 (0)ms]
+Oldschool:
+[12 (0)ms]
 Probability:
-[55 (46)ms]
+[74 (59)ms]
 	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 39]
 	False Positive Checks:                     2;  Failures:  0
 Foo:
-[30 (25)ms]
+[79 (66)ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 37]
 Unique Thing:
-[24 (18)ms]
+[42 (32)ms]
 	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 35]
 	False Positive Checks:                     2;  Failures:  0
 Container:
@@ -39,7 +41,7 @@ House:
 [2 (0)ms]
 
 -----------Grand Totals-----------
-[144 (92)ms]
+[259 (164)ms]
 	Standard Top Level Checks:                 9;  Failures:  1  [Deep checks: 113]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

@@ -61,6 +61,7 @@ namespace sequoia::testing
       return run_cmd().append(" create free_test Utilities.hpp"
                               " create free_test \"Utilities/UsefulThings.hpp\" gen-source utils"
                               " create free_test \"Source/generatedProject/Stuff/Bar.hpp\""
+                              " create free \"Unstable/Flipper.hpp\" -f Unstable"
                               " create regular_test \"other::functional::maybe<class T>\" \"std::optional<T>\" gen-source Maybe"
                               " create regular_test \"stuff::oldschool\" double --header \"NoTemplate.hpp\""
                               " create regular \"maths::probability\" double gen-source Maths"
@@ -299,8 +300,7 @@ namespace sequoia::testing
 
     //=================== Rerun, seeking instabilities in sandbox mode ===================//
 
-    run_and_check(LINE("Run in sandbox mode"), b, "RunLocateInstabilitySandbox",
-      "locate 2 --sandbox");
+    run_and_check(LINE("Run in sandbox mode"), b, "RunLocateInstabilitySandbox", "locate 2 --sandbox");
 
     //=================== Change some test materials and run with prune ===================//
 
