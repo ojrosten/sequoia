@@ -365,8 +365,11 @@ namespace sequoia::testing
     // --> UsefulThingsFreeTest.cpp will continue to exhibit a stable failure,
     // whereas  FlipperFreeTest.cpp is unstable
 
-    run_and_check(LINE("Locate instabilities"), b, "RunLocateInstabilities",
-      "locate 2 -a");
+    run_and_check(LINE("Locate instabilities"), b, "RunLocateInstabilities", "locate 2 -a");
+
+    //=================== Rerun and locate instabilities, with pruning ===================//
+
+    run_and_check(LINE("Locate instabilities"), b, "RunLocateInstabilitiesPrune", "locate 2 -a prune -c namespace");
 
     //=================== Rerun with selected, unstable test in sandbox mode ===================//
     // --> The first of the checks in FlipperFreeTest.cpp is stable in sandbox mode, but the second isn't
