@@ -226,7 +226,6 @@ namespace sequoia::testing
     test_runner tr{args.size(), args.get(), "Oliver J. Rosten", paths, "  ", outputStream};
 
     //=================== Initialize, cmake and build new project ===================//
-    tr.execute();
 
     fs::create_directory(working_materials() / "InitOutput");
     if(std::ofstream file{working_materials() / "InitOutput" / "io.txt"})

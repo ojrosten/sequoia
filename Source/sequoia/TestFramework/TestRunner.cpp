@@ -95,9 +95,6 @@ namespace sequoia::testing
     fs::create_directory(proj_paths().output());
     fs::create_directory(diagnostics_output_path(proj_paths().output()));
     fs::create_directory(test_summaries_path(proj_paths().output()));
-
-    if(m_InstabilityMode != instability_mode::sandbox)
-      fs::remove_all(temp_test_summaries_path(proj_paths().output()));
   }
 
   void test_runner::process_args(int argc, char** argv)
@@ -427,9 +424,11 @@ namespace sequoia::testing
 
     finalize_concurrency_mode();
 
-    if((m_InstabilityMode != instability_mode::sandbox) && (m_Selector.pruned()))
+    if((m_InstabilityMode != instability_mode::sandbox))
     {
-      fs::remove(prune_path(proj_paths().output(), proj_paths().main_cpp_dir()));
+      fs::remove_all(temp_test_summaries_path(proj_paths().output()));
+      if(m_Selector.pruned())
+        fs::remove(prune_path(proj_paths().output(), proj_paths().main_cpp_dir()));
     }
 
     if(m_InstabilityMode == instability_mode::coordinator)
@@ -455,6 +454,7 @@ namespace sequoia::testing
         }()
       };
 
+      // TO DO: async settings
       for(std::size_t i{}; i < m_NumReps; ++i)
       {
         invoke(runtime::shell_command(m_Executable.string().append(" locate ").append(std::to_string(m_NumReps))
