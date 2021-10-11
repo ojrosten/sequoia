@@ -234,8 +234,6 @@ namespace sequoia::testing
     {
       if(index.has_value())
       {
-        namespace fs = std::filesystem;
-
         const auto file{m_InstabilityAnalysisDir / ("Output_" + std::to_string(*index) + ".txt")};
         impl::serialize(file, Checker::failure_messages());
       }
