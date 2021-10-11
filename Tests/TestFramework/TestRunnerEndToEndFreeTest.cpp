@@ -282,14 +282,14 @@ namespace sequoia::testing
     // --> async depth should be overridden to "test"
 
     run_and_check(LINE("Run asynchronously (level: test) with 4 selected tests"), b, "RunAsyncFourTestsDepthTest",
-                       "-a -ad 1 select HouseAllocationTest.cpp select Maths/ProbabilityTest.cpp select Maybe/MaybeTest.cpp"
+                       "-a -ad test select HouseAllocationTest.cpp select Maths/ProbabilityTest.cpp select Maybe/MaybeTest.cpp"
                        " select Stuff/FooTest.cpp");
 
     //=================== Rerun with async, selecting 2 tests, and setting async-depth to family ===================//
     // --> async depth should be overridden to "family"
 
     run_and_check(LINE("Run asynchronously (level: family) with 2 selected tests"), b, "RunAsyncTwoTestsDepthFamily",
-                       "-a -ad 0 select HouseAllocationTest.cpp select Maths/ProbabilityTest.cpp");
+                       "-a -ad family select HouseAllocationTest.cpp select Maths/ProbabilityTest.cpp");
 
     //=================== Rerun with async, selecting one family ===================//
     // --> async depth should be set "family" [May wish to change this!]
@@ -310,6 +310,12 @@ namespace sequoia::testing
 
     // Check materials are unchanged
     fs::copy(generated_project() / "TestMaterials", working_materials() / "OriginalTestMaterials", fs::copy_options::recursive);
+    check_equivalence(LINE("Original Test Materials"), working_materials() / "OriginalTestMaterials", predictive_materials() / "OriginalTestMaterials");
+
+    //=================== Run again, locating instabilities, and try to update ===================//
+    //--> update should be suppressed by instability location
+
+    run_and_check(LINE("Instability location suppressing update"), b, "UpdateSuppressedByInstabilityLocation", "locate 2 prune -c namespace u");
     check_equivalence(LINE("Original Test Materials"), working_materials() / "OriginalTestMaterials", predictive_materials() / "OriginalTestMaterials");
 
     //=================== Rerun with prune but update materials ===================//

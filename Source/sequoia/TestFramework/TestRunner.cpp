@@ -324,10 +324,25 @@ namespace sequoia::testing
                         m_ConcurrencyMode = concurrency_mode::dynamic;
                     }
                   },
-                  {"--async-depth", {"-ad"}, {"depth [0,1]"},
+                  {"--async-depth", {"-ad"}, {"depth [family,test]"},
                     [this](const arg_list& args) {
-                      const int i{std::clamp(std::stoi(args.front()), 0, 1)};
-                      m_ConcurrencyMode = i ? concurrency_mode::test : concurrency_mode::family;
+                      const auto& depth{args.front()};
+                      if(depth == "family")
+                      {
+                        m_ConcurrencyMode = concurrency_mode::family;
+                      }
+                      else if(depth == "test")
+                      {
+                        m_ConcurrencyMode = concurrency_mode::test;
+                      }
+                      else
+                      {
+                        m_ConcurrencyMode = concurrency_mode::dynamic;
+
+                        using parsing::commandline::warning;
+
+                        stream() << warning(std::string{"Unrecognized async depth option "}.append(depth).append(" should be one of [family,test]\n"));
+                      }
                     }
                   },
                   {"--verbose",  {"-v"}, {}, [this](const arg_list&) { m_OutputMode = output_mode::verbose; }},
@@ -371,6 +386,14 @@ namespace sequoia::testing
 
   void test_runner::check_argument_consistency()
   {
+    if((m_InstabilityMode != instability_mode::none) && (m_UpdateMode == update_mode::soft))
+    {
+      using parsing::commandline::warning;
+
+      m_UpdateMode = update_mode::none;
+      stream() << warning("Update of materials suppressed when checking for instabilities\n");
+    }
+
     stream() << m_Selector.check_argument_consistency(m_ConcurrencyMode);
   }
 
@@ -454,11 +477,29 @@ namespace sequoia::testing
         }()
       };
 
-      // TO DO: async settings
+      auto asyncOption{
+        [mode{m_ConcurrencyMode}] (){
+          switch(mode)
+          {
+          case concurrency_mode::serial:
+            return "";
+          case concurrency_mode::dynamic:
+            return " -a";
+          case concurrency_mode::family:
+            return " -ad family";
+          case concurrency_mode::test:
+            return " -ad test";
+          }
+
+          throw std::logic_error{"Illegal option for concurrency_mode"};
+        }
+      };
+
       for(std::size_t i{}; i < m_NumReps; ++i)
       {
         invoke(runtime::shell_command(m_Executable.string().append(" locate ").append(std::to_string(m_NumReps))
-                                                           .append(" --runner-id ").append(std::to_string(i)).append(specified)));
+                                                           .append(" --runner-id ").append(std::to_string(i)).append(specified)
+                                                           .append(asyncOption())));
       }
     }
     else
