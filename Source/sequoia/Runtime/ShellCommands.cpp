@@ -19,6 +19,9 @@ namespace sequoia::runtime
   {
     if(!output.empty())
     {
+      if(!m_Command.empty() && std::isdigit(m_Command.back()))
+        m_Command.append(" ");
+
       m_Command.append(app == append_mode::no ? "> " : ">> ");
       m_Command.append(output.string()).append(" 2>&1");
     }

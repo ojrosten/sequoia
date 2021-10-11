@@ -370,7 +370,7 @@ namespace sequoia::testing
     // --> UsefulThingsFreeTest.cpp will continue to exhibit a stable failure,
     // whereas  FlipperFreeTest.cpp is unstable
 
-    run_and_check(LINE("Locate instabilities"), b, "RunLocateInstabilities", "locate 2 -a");
+    run_and_check(LINE("Locate instabilities"), b, "RunLocateInstabilities", "-a locate 2");
 
     //=================== Rerun and locate instabilities, with pruning ===================//
 
