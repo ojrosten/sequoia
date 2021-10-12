@@ -1,6 +1,9 @@
 
 Running tests...
 
+
+	--Using asynchronous execution, level: Test
+
 Foo:
 [5 (0)ms]
 

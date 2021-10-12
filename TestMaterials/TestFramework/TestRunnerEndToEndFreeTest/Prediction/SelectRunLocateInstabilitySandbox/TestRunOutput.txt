@@ -1,12 +1,15 @@
 
 Running tests...
 
+
+	--Using asynchronous execution, level: Test
+
 Unstable:
-[5 (2)ms]
+[14 (7)ms]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 
 -----------Grand Totals-----------
-[5 (2)ms]
+[15 (7)ms]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -16,8 +19,11 @@ Unstable:
 
 Running tests...
 
+
+	--Using asynchronous execution, level: Test
+
 Unstable:
-[5 (3)ms]
+[14 (7)ms]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 
 	Tests/Unstable/FlipperFreeTest.cpp, Line 25
@@ -29,7 +35,7 @@ Unstable:
 
 
 -----------Grand Totals-----------
-[5 (3)ms]
+[15 (7)ms]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

@@ -1,31 +1,34 @@
 
 Running tests...
 
+
+	--Using asynchronous execution, level: Family
+
 Utilities:
-[13 (10)ms]
+[11 (4)ms]
 Useful Things:
-[5 (2)ms]
+[9 (5)ms]
 Bar:
-[7 (5)ms]
+[9 (5)ms]
 Unstable:
-[4 (2)ms]
+[9 (5)ms]
 Maybe:
-[9 (4)ms]
+[22 (11)ms]
 Oldschool:
-[14 (7)ms]
-Probability:
-[19 (10)ms]
-Foo:
-[20 (10)ms]
-Unique Thing:
 [21 (10)ms]
+Probability:
+[16 (7)ms]
+Foo:
+[20 (13)ms]
+Unique Thing:
+[20 (10)ms]
 Container:
-[18 (8)ms]
+[18 (10)ms]
 House:
-[10 (5)ms]
+[12 (9)ms]
 
 -----------Grand Totals-----------
-[147 (77)ms]
+[31 (96)ms]
 	Standard Top Level Checks:                 0;  Failures:  0
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -35,31 +38,34 @@ House:
 
 Running tests...
 
+
+	--Using asynchronous execution, level: Family
+
 Utilities:
-[4 (2)ms]
+[10 (6)ms]
 Useful Things:
-[4 (2)ms]
-Bar:
-[9 (5)ms]
-Unstable:
 [10 (5)ms]
+Bar:
+[13 (4)ms]
+Unstable:
+[14 (7)ms]
 Maybe:
-[20 (9)ms]
+[18 (11)ms]
 Oldschool:
-[20 (10)ms]
-Probability:
-[13 (8)ms]
-Foo:
 [17 (10)ms]
+Probability:
+[20 (13)ms]
+Foo:
+[22 (15)ms]
 Unique Thing:
-[17 (7)ms]
+[17 (9)ms]
 Container:
-[19 (9)ms]
+[15 (8)ms]
 House:
-[8 (5)ms]
+[13 (10)ms]
 
 -----------Grand Totals-----------
-[148 (76)ms]
+[26 (102)ms]
 	Standard Top Level Checks:                 0;  Failures:  0
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

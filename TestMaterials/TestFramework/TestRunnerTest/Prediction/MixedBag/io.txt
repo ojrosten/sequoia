@@ -1,8 +1,11 @@
 
 Running tests...
 
+
+	--Using asynchronous execution, level: Test
+
 Family:
-[26 (13)ms]
+[23 (22)ms]
 	Standard Top Level Checks:                 5;  Failures:  1  [Deep checks: 5]
 
 	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 140
@@ -15,7 +18,7 @@ Family:
 
 
 -----------Grand Totals-----------
-[26 (13)ms]
+[24 (22)ms]
 	Standard Top Level Checks:                 5;  Failures:  1  [Deep checks: 5]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -25,8 +28,11 @@ Family:
 
 Running tests...
 
+
+	--Using asynchronous execution, level: Test
+
 Family:
-[23 (11)ms]
+[18 (22)ms]
 	Standard Top Level Checks:                 5;  Failures:  3  [Deep checks: 5]
 
 	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 140
@@ -56,7 +62,7 @@ Family:
 
 
 -----------Grand Totals-----------
-[23 (11)ms]
+[19 (22)ms]
 	Standard Top Level Checks:                 5;  Failures:  3  [Deep checks: 5]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -66,8 +72,11 @@ Family:
 
 Running tests...
 
+
+	--Using asynchronous execution, level: Test
+
 Family:
-[22 (11)ms]
+[18 (18)ms]
 	Standard Top Level Checks:                 5;  Failures:  2  [Deep checks: 5]
 
 	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 140
@@ -88,7 +97,7 @@ Family:
 
 
 -----------Grand Totals-----------
-[22 (11)ms]
+[19 (18)ms]
 	Standard Top Level Checks:                 5;  Failures:  2  [Deep checks: 5]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -98,8 +107,11 @@ Family:
 
 Running tests...
 
+
+	--Using asynchronous execution, level: Test
+
 Family:
-[22 (11)ms]
+[20 (21)ms]
 	Standard Top Level Checks:                 5;  Failures:  3  [Deep checks: 5]
 
 	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 140
@@ -129,7 +141,7 @@ Family:
 
 
 -----------Grand Totals-----------
-[23 (11)ms]
+[21 (21)ms]
 	Standard Top Level Checks:                 5;  Failures:  3  [Deep checks: 5]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -139,8 +151,11 @@ Family:
 
 Running tests...
 
+
+	--Using asynchronous execution, level: Test
+
 Family:
-[24 (13)ms]
+[22 (29)ms]
 	Standard Top Level Checks:                 5;  Failures:  1  [Deep checks: 5]
 
 	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 140
@@ -153,7 +168,7 @@ Family:
 
 
 -----------Grand Totals-----------
-[24 (13)ms]
+[23 (29)ms]
 	Standard Top Level Checks:                 5;  Failures:  1  [Deep checks: 5]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -163,8 +178,11 @@ Family:
 
 Running tests...
 
+
+	--Using asynchronous execution, level: Test
+
 Family:
-[24 (12)ms]
+[20 (23)ms]
 	Standard Top Level Checks:                 5;  Failures:  4  [Deep checks: 5]
 
 	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 140
@@ -202,7 +220,7 @@ Family:
 
 
 -----------Grand Totals-----------
-[24 (12)ms]
+[21 (23)ms]
 	Standard Top Level Checks:                 5;  Failures:  4  [Deep checks: 5]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

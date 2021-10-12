@@ -1,8 +1,11 @@
 
 Running tests...
 
+
+	--Using asynchronous execution, level: Test
+
 Family:
-[1 (0)ms]
+[8 (4)ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 0]
 
 ******  Critical Failures:  1  ******
@@ -12,13 +15,13 @@ Family:
 	Error
 
 	Exception thrown before any checks performed in file
-	/Users/Claire/Dropbox/Sequoia/Tests/TestFramework/TestRunnerTest.cpp
+	C:/Users/olive/sequoia/Tests/TestFramework/TestRunnerTest.cpp
 
 	=======================================
 
 
 -----------Grand Totals-----------
-[1 (0)ms]
+[9 (4)ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 0]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -31,11 +34,14 @@ Family:
 
 Running tests...
 
+
+	--Using asynchronous execution, level: Test
+
 Family:
-[0 (0)ms]
+[6 (2)ms]
 
 -----------Grand Totals-----------
-[0 (0)ms]
+[7 (2)ms]
 	Standard Top Level Checks:                 0;  Failures:  0
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -55,7 +61,7 @@ vs.
 	Error
 
 	Exception thrown before any checks performed in file
-	/Users/Claire/Dropbox/Sequoia/Tests/TestFramework/TestRunnerTest.cpp
+	C:/Users/olive/sequoia/Tests/TestFramework/TestRunnerTest.cpp
 
 	=======================================
 

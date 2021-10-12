@@ -76,7 +76,7 @@ namespace sequoia::testing
     runner_mode      m_RunnerMode{runner_mode::none};
     output_mode      m_OutputMode{output_mode::standard};
     update_mode      m_UpdateMode{update_mode::none};
-    concurrency_mode m_ConcurrencyMode{concurrency_mode::serial};
+    concurrency_mode m_ConcurrencyMode{concurrency_mode::dynamic};
     instability_mode m_InstabilityMode{instability_mode::none};
 
     std::size_t m_NumReps{1},

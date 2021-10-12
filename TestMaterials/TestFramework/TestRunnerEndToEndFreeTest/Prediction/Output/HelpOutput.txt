@@ -34,7 +34,6 @@ locate-instabilities | locate | number of repetitions >= 2
   --sandbox | -s |
   --runner-id private option, best avoided
 dump
---async | -a |
---async-depth | -ad | depth [family,test]
+--async-depth | -a | depth [null,family,test]
 --verbose | -v |
 --recovery | -r |

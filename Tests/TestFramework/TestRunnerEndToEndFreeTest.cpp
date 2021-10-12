@@ -257,45 +257,44 @@ namespace sequoia::testing
     //=================== Create tests and run ===================//
 
     create_run_and_check(LINE("Test Runner Creation Output"), b);
-    check_timings("Serial run", fs::path{"Output/TestRunOutput.txt"}, 1);
+    check_timings("Async run (level: family)", fs::path{"Output/TestRunOutput.txt"}, 1.8);
 
     //=================== Rerun with async execution ===================//
     // --> async depth should be automatically set to "family" since number of families is > 4
 
-    run_and_check(LINE("Run asynchronously"), b, "RunAsync", "-a");
-    check_timings(LINE("Async run (level: family)"), fs::path{"RunAsync/TestRunOutput.txt"}, 1.8);
+    run_and_check(LINE("Run synchronously"), b, "RunSynchronous", "-a null");
+    check_timings(LINE("Synchronous run"), fs::path{"RunSynchronous/TestRunOutput.txt"}, 1);
 
     //=================== Rerun with async selecting 3 tests from 3 families ===================//
     // --> async depth should be automatically set to "test" since number of families is < 4
 
     run_and_check(LINE("Run asynchronously with 3 selected tests"), b, "RunAsyncThreeTests",
-                       "-a select HouseAllocationTest.cpp select Maths/ProbabilityTest.cpp select Maybe/MaybeTest.cpp");
+                       "select HouseAllocationTest.cpp select Maths/ProbabilityTest.cpp select Maybe/MaybeTest.cpp");
 
     //=================== Rerun with async selecting 4 tests from 4 families===================//
     // --> async depth should be automatically set to "family"
 
     run_and_check(LINE("Run asynchronously with 4 selected tests"), b, "RunAsyncFourTests",
-                       "-a select HouseAllocationTest.cpp select Maths/ProbabilityTest.cpp select Maybe/MaybeTest.cpp"
+                       "select HouseAllocationTest.cpp select Maths/ProbabilityTest.cpp select Maybe/MaybeTest.cpp"
                        " select Stuff/FooTest.cpp");
 
     //=================== Rerun with async selecting 4 tests from 4 families, and setting async-depth to test===================//
     // --> async depth should be overridden to "test"
 
     run_and_check(LINE("Run asynchronously (level: test) with 4 selected tests"), b, "RunAsyncFourTestsDepthTest",
-                       "-a -ad test select HouseAllocationTest.cpp select Maths/ProbabilityTest.cpp select Maybe/MaybeTest.cpp"
+                       "-a test select HouseAllocationTest.cpp select Maths/ProbabilityTest.cpp select Maybe/MaybeTest.cpp"
                        " select Stuff/FooTest.cpp");
 
     //=================== Rerun with async, selecting 2 tests, and setting async-depth to family ===================//
     // --> async depth should be overridden to "family"
 
     run_and_check(LINE("Run asynchronously (level: family) with 2 selected tests"), b, "RunAsyncTwoTestsDepthFamily",
-                       "-a -ad family select HouseAllocationTest.cpp select Maths/ProbabilityTest.cpp");
+                       "-a family select HouseAllocationTest.cpp select Maths/ProbabilityTest.cpp");
 
     //=================== Rerun with async, selecting one family ===================//
-    // --> async depth should be set "family" [May wish to change this!]
+    // --> async depth should be set "test"
 
-    run_and_check(LINE("Run asynchronously with 1 family"), b, "RunAsyncOneTestOneFamily",
-                       "-a test Probability");
+    run_and_check(LINE("Run asynchronously with 1 family"), b, "RunAsyncOneTestOneFamily", "test Probability");
 
     //=================== Rerun, seeking instabilities in sandbox mode ===================//
 
@@ -348,7 +347,7 @@ namespace sequoia::testing
     copy_aux_materials("ModifiedTests/Thing",                    "Tests/Utilities/Thing");
     copy_aux_materials("ModifiedTests/Unstable",                 "Tests/Unstable");
 
-    rebuild_run_and_check(LINE("Rebuild and run after source/test changes (pruned)"), b, "RebuiltOutput", "CMakeOutput4.txt", "BuildOutput4.txt", "prune --cutoff namespace -a");
+    rebuild_run_and_check(LINE("Rebuild and run after source/test changes (pruned)"), b, "RebuiltOutput", "CMakeOutput4.txt", "BuildOutput4.txt", "prune --cutoff namespace");
     check_timings(LINE("Async run (level: test)"), fs::path{"RebuiltOutput/TestRunOutput.txt"}, 1.8);
 
     check_equivalence(LINE("Test Runner Output"), working_materials() / "RebuiltOutput", predictive_materials() / "RebuiltOutput");
@@ -364,17 +363,17 @@ namespace sequoia::testing
     //=================== Rerun with prune ===================//
     // --> only failing tests should rerun
 
-    run_and_check(LINE("Pruned output, post failures"), b, "RunPrunePostFailureOutput", "prune -c namespace -a");
+    run_and_check(LINE("Pruned output, post failures"), b, "RunPrunePostFailureOutput", "prune -c namespace");
 
     //=================== Rerun and locate instabilities ===================//
     // --> UsefulThingsFreeTest.cpp will continue to exhibit a stable failure,
     // whereas  FlipperFreeTest.cpp is unstable
 
-    run_and_check(LINE("Locate instabilities"), b, "RunLocateInstabilities", "-a locate 2");
+    run_and_check(LINE("Locate instabilities"), b, "RunLocateInstabilities", "locate 2");
 
     //=================== Rerun and locate instabilities, with pruning ===================//
 
-    run_and_check(LINE("Locate instabilities"), b, "RunLocateInstabilitiesPrune", "locate 2 -a prune -c namespace");
+    run_and_check(LINE("Locate instabilities"), b, "RunLocateInstabilitiesPrune", "locate 2 prune -c namespace");
 
     //=================== Rerun with selected, unstable test in sandbox mode ===================//
     // --> The first of the checks in FlipperFreeTest.cpp is stable in sandbox mode, but the second isn't

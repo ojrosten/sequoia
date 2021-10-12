@@ -316,18 +316,17 @@ namespace sequoia::testing
                       std::filesystem::create_directory(recoveryDir);
                       m_Selector.dump_file(recoveryDir / "Dump.txt");
                       std::filesystem::remove(m_Selector.dump_file());
+                      m_ConcurrencyMode = concurrency_mode::serial;
                     }
                   },
-                  {"--async", {"-a"}, {},
-                    [this](const arg_list&) {
-                      if(m_ConcurrencyMode == concurrency_mode::serial)
-                        m_ConcurrencyMode = concurrency_mode::dynamic;
-                    }
-                  },
-                  {"--async-depth", {"-ad"}, {"depth [family,test]"},
+                  {"--async-depth", {"-a"}, {"depth [null,family,test]"},
                     [this](const arg_list& args) {
                       const auto& depth{args.front()};
-                      if(depth == "family")
+                      if(depth == "null")
+                      {
+                        m_ConcurrencyMode = concurrency_mode::serial;
+                      }
+                      else if(depth == "family")
                       {
                         m_ConcurrencyMode = concurrency_mode::family;
                       }
@@ -337,11 +336,9 @@ namespace sequoia::testing
                       }
                       else
                       {
-                        m_ConcurrencyMode = concurrency_mode::dynamic;
-
                         using parsing::commandline::warning;
 
-                        stream() << warning(std::string{"Unrecognized async depth option "}.append(depth).append(" should be one of [family,test]\n"));
+                        stream() << warning(std::string{"Unrecognized async depth option "}.append(depth).append(" should be one of [null, family,test]\n"));
                       }
                     }
                   },
@@ -351,6 +348,7 @@ namespace sequoia::testing
                       std::filesystem::create_directory(recoveryDir);
                       m_Selector.recovery_file(recoveryDir / "Recovery.txt");
                       std::filesystem::remove(m_Selector.recovery_file());
+                      m_ConcurrencyMode = concurrency_mode::serial;
                     }
                   }
                 },
@@ -483,13 +481,11 @@ namespace sequoia::testing
           switch(mode)
           {
           case concurrency_mode::serial:
-            return "";
-          case concurrency_mode::dynamic:
-            return " -a";
+            return " -a null";
           case concurrency_mode::family:
-            return " -ad family";
+            return " -a family";
           case concurrency_mode::test:
-            return " -ad test";
+            return " -a test";
           }
 
           throw std::logic_error{"Illegal option for concurrency_mode"};

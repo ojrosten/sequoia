@@ -1,34 +1,31 @@
 
 Running tests...
 
-
-	--Using asynchronous execution, level: Family
-
 Utilities:
-[3 (0)ms]
+[2 (0)ms]
 Useful Things:
-[3 (0)ms]
+[2 (0)ms]
 Bar:
-[3 (0)ms]
+[2 (0)ms]
 Unstable:
-[3 (0)ms]
+[2 (0)ms]
 Maybe:
-[10 (0)ms]
+[4 (0)ms]
 Oldschool:
-[10 (0)ms]
+[4 (0)ms]
 Probability:
-[12 (0)ms]
+[4 (0)ms]
 Foo:
-[7 (0)ms]
+[5 (0)ms]
 Unique Thing:
-[7 (0)ms]
+[4 (0)ms]
 Container:
-[8 (0)ms]
+[4 (0)ms]
 House:
-[3 (0)ms]
+[2 (0)ms]
 
 -----------Grand Totals-----------
-[14 (0)ms]
+[41 (0)ms]
 	Standard Top Level Checks:                 0;  Failures:  0
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
