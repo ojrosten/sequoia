@@ -1,15 +1,15 @@
 
 Analyzing dependencies...
-[25ms]
+[24ms]
 
 
 Running tests...
 
 
-	--Using asynchronous execution, level: Test
+	--Using asynchronous execution, level: Unit
 
 Useful Things:
-[10 (7)ms]
+[7 (4)ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
 	Tests/Utilities/UsefulThingsFreeTest.cpp, Line 21
@@ -22,11 +22,11 @@ Useful Things:
 	=======================================
 
 Unstable:
-[10 (4)ms]
+[6 (3)ms]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 
 -----------Grand Totals-----------
-[12 (12)ms]
+[7 (7)ms]
 	Standard Top Level Checks:                 3;  Failures:  1  [Deep checks: 3]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -37,10 +37,10 @@ Unstable:
 Running tests...
 
 
-	--Using asynchronous execution, level: Test
+	--Using asynchronous execution, level: Unit
 
 Useful Things:
-[8 (5)ms]
+[6 (3)ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
 	Tests/Utilities/UsefulThingsFreeTest.cpp, Line 21
@@ -53,7 +53,7 @@ Useful Things:
 	=======================================
 
 Unstable:
-[8 (3)ms]
+[5 (2)ms]
 	Standard Top Level Checks:                 2;  Failures:  2  [Deep checks: 2]
 
 	Tests/Unstable/FlipperFreeTest.cpp, Line 24
@@ -72,7 +72,7 @@ Unstable:
 
 
 -----------Grand Totals-----------
-[9 (9)ms]
+[6 (6)ms]
 	Standard Top Level Checks:                 3;  Failures:  3  [Deep checks: 3]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

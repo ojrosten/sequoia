@@ -282,7 +282,7 @@ namespace sequoia::testing
     // --> async depth should be overridden to "test"
 
     run_and_check(LINE("Run asynchronously (level: test) with 4 selected tests"), b, "RunAsyncFourTestsDepthTest",
-                       "-a test select HouseAllocationTest.cpp select Maths/ProbabilityTest.cpp select Maybe/MaybeTest.cpp"
+                       "-a unit select HouseAllocationTest.cpp select Maths/ProbabilityTest.cpp select Maybe/MaybeTest.cpp"
                        " select Stuff/FooTest.cpp");
 
     //=================== Rerun with async, selecting 2 tests, and setting async-depth to family ===================//

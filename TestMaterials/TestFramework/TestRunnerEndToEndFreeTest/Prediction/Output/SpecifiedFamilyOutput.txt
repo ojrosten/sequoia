@@ -2,7 +2,7 @@
 Running tests...
 
 
-	--Using asynchronous execution, level: Test
+	--Using asynchronous execution, level: Unit
 
 Foo:
 [5 (0)ms]

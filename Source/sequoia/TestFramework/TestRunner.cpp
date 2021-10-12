@@ -319,7 +319,7 @@ namespace sequoia::testing
                       m_ConcurrencyMode = concurrency_mode::serial;
                     }
                   },
-                  {"--async-depth", {"-a"}, {"depth [null,family,test]"},
+                  {"--async-depth", {"-a"}, {"depth [null,family,unit]"},
                     [this](const arg_list& args) {
                       const auto& depth{args.front()};
                       if(depth == "null")
@@ -330,15 +330,15 @@ namespace sequoia::testing
                       {
                         m_ConcurrencyMode = concurrency_mode::family;
                       }
-                      else if(depth == "test")
+                      else if(depth == "unit")
                       {
-                        m_ConcurrencyMode = concurrency_mode::test;
+                        m_ConcurrencyMode = concurrency_mode::unit;
                       }
                       else
                       {
                         using parsing::commandline::warning;
 
-                        stream() << warning(std::string{"Unrecognized async depth option "}.append(depth).append(" should be one of [null, family,test]\n"));
+                        stream() << warning(std::string{"Unrecognized async depth option "}.append(depth).append(" should be one of [null,family,unit]\n"));
                       }
                     }
                   },
@@ -484,8 +484,8 @@ namespace sequoia::testing
             return " -a null";
           case concurrency_mode::family:
             return " -a family";
-          case concurrency_mode::test:
-            return " -a test";
+          case concurrency_mode::unit:
+            return " -a unit";
           }
 
           throw std::logic_error{"Illegal option for concurrency_mode"};
@@ -532,7 +532,11 @@ namespace sequoia::testing
   {
     if(m_ConcurrencyMode == concurrency_mode::dynamic)
     {
-      m_ConcurrencyMode = (m_Selector.size() < 4) ? concurrency_mode::test : concurrency_mode::family;
+      const bool serial{(m_Selector.size() == 1) && (m_Selector.begin()->size() == 1)};
+      const bool small{(m_Selector.size() < 4)};
+      m_ConcurrencyMode = serial ? concurrency_mode::serial
+                        : small  ? concurrency_mode::unit
+                                 : concurrency_mode::family;
     }
   }
 

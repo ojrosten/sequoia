@@ -1,19 +1,16 @@
 
 Analyzing dependencies...
-[25ms]
+[21ms]
 
 
 Running tests...
 
-
-	--Using asynchronous execution, level: Test
-
 Foo:
-[15 (12)ms]
+[11 (9)ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 37]
 
 -----------Grand Totals-----------
-[15 (12)ms]
+[11 (9)ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 37]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

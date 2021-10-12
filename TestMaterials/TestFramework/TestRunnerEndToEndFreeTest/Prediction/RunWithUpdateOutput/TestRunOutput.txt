@@ -1,15 +1,12 @@
 
 Analyzing dependencies...
-[67ms]
+[22ms]
 
 
 Running tests...
 
-
-	--Using asynchronous execution, level: Test
-
 Foo:
-[83 (35)ms]
+[24 (10)ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 42]
 
 	Tests/Stuff/FooTest.cpp, Line 41
@@ -113,7 +110,7 @@ Foo:
 
 
 -----------Grand Totals-----------
-[84 (35)ms]
+[24 (10)ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 42]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

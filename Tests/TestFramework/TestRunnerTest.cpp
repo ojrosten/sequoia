@@ -322,47 +322,56 @@ namespace sequoia::testing
     test_instability_analysis("Instability comprising pass/failure",
                               "BinaryInstabilityAnalysis",
                               "2",
+                              {"-a", "null"},
                               flipper_free_test{"Free Test"});
 
     test_instability_analysis("Instability comprising pass/multiple distinct failures",
                               "MultiInstabilityAnalysis",
                               "4",
+                              {"-a", "null"},
                               periodic_free_test{"Free Test"});
 
     test_instability_analysis("Instability comprising failures from two checks",
                               "MultiCheckInstabilityAnalysis",
                               "6",
+                              {"-a", "null"},
                               multi_periodic_free_test{"Free Test"});
 
     test_instability_analysis("Instability following consistent failure",
                               "BinaryInstabilityFollowingFailures",
                               "2",
+                              {"-a", "null"},
                               failing_plus_instabilities_free_test{"Free Test"});
 
     test_instability_analysis("Failure but no instability",
                               "ConsistentFailureNoInstability",
                               "2",
+                              {"-a", "null"},
                               consistently_failing_free_test{"Free Test"});
 
     test_instability_analysis("Always passes",
                               "ConsistentSuccessNoInstability",
                               "2",
+                              {"-a", "null"},
                               consistently_passing_free_test<0>{"Free Test"});
 
     test_instability_analysis("Critical failure instability",
                               "CriticalFailureInstability",
                               "2",
+                              {"-a", "null"},
                               critical_free_test{"Free Test"});
 
     test_instability_analysis("Two tests always passing",
                               "ConsistentSuccessTwoTests",
                               "2",
+                              {"-a", "null"},
                               consistently_passing_free_test<0>{"Free Test 0"},
                               consistently_passing_free_test<1>{"Free Test 1"});
 
     test_instability_analysis("Consistent success/consistent failure/instability",
                               "MixedBag",
                               "6",
+                              {"-a", "null"},
                               consistently_passing_free_test<0>{"Passing Free Test"},
                               consistently_failing_free_test{"Failing Free Test"},
                               flipper_free_test{"Flipper Free Test"},
@@ -430,7 +439,16 @@ namespace sequoia::testing
                       predictive_materials() / outputDirName);
   }
 
-  
+  template<concrete_test... Ts>
+    void test_runner_test::test_instability_analysis(std::string_view message,
+                                                     std::string_view outputDirName,
+                                                     std::string_view numRuns,
+                                                     std::initializer_list<std::string_view> extraArgs,
+                                                     Ts&&... ts)
+    {
+      test_instability_analysis(message, outputDirName, numRuns, extraArgs, [](test_runner&){}, std::forward<Ts>(ts)...);
+    }
+
   template<concrete_test... Ts>
   void test_runner_test::test_instability_analysis(std::string_view message,
                                                    std::string_view outputDirName,

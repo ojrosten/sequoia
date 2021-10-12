@@ -66,8 +66,8 @@ namespace sequoia::testing
       return "Dynamic";
     case concurrency_mode::family:
       return "Family";
-    case concurrency_mode::test:
-      return "Test";
+    case concurrency_mode::unit:
+      return "Unit";
     }
 
     throw std::logic_error{"Unknown option for concurrency_mode"};

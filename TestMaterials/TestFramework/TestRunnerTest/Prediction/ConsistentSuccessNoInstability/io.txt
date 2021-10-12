@@ -1,15 +1,12 @@
 
 Running tests...
 
-
-	--Using asynchronous execution, level: Test
-
 Family:
-[8 (3)ms]
+[4 (2)ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 
 -----------Grand Totals-----------
-[9 (3)ms]
+[4 (2)ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -19,15 +16,12 @@ Family:
 
 Running tests...
 
-
-	--Using asynchronous execution, level: Test
-
 Family:
-[7 (3)ms]
+[4 (2)ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 
 -----------Grand Totals-----------
-[8 (3)ms]
+[4 (2)ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

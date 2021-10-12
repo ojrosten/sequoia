@@ -30,7 +30,7 @@ namespace sequoia::testing
     serial,    /// serial execution
     dynamic,   /// determined at runtime
     family,    /// families of tests are executed concurrently
-    test,      /// tests are executed concurrently, independently of their families
+    unit,      /// tests are executed concurrently, independently of their families
   };
 
   [[nodiscard]]
@@ -232,7 +232,7 @@ namespace sequoia::testing
         }
       };
 
-      if(concurrenyMode < concurrency_mode::test)
+      if(concurrenyMode < concurrency_mode::unit)
       {
         auto process{
           [&processor,pathsMaker,index](auto& optTest) {
@@ -280,14 +280,18 @@ namespace sequoia::testing
     [[nodiscard]]
     bool empty() const noexcept
     {
+      return size() == 0;
+    }
+
+    [[nodiscard]]
+    std::size_t size() const noexcept
+    {
       auto has_test{
-        [](auto& optTest) {
-          return optTest != std::nullopt;
-        }
+        [](auto& optTest) -> std::size_t { return optTest == std::nullopt ? 0 : 1; }
       };
 
-      return !std::apply(
-        [has_test](const auto&... optTest){ return (has_test(optTest) || ...); },
+      return std::apply(
+        [has_test](const auto&... optTest){ return (has_test(optTest) + ...); },
         m_Tests);
     }
 
@@ -348,6 +352,12 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
+    std::size_t size() const noexcept
+    {
+      return m_pFamily->size();
+    }
+
+    [[nodiscard]]
     family_results execute(update_mode updateMode,
                            concurrency_mode concurrenyMode,
                            std::optional<std::size_t> index)
@@ -364,6 +374,7 @@ namespace sequoia::testing
     {
       virtual ~soul() = default;
       virtual const std::string& name() const noexcept = 0;
+      virtual std::size_t size() const noexcept = 0;
       virtual family_results execute(update_mode updateMode,
                                      concurrency_mode concurrenyMode,
                                      std::optional<std::size_t> index) = 0;
@@ -376,9 +387,16 @@ namespace sequoia::testing
       essence(Family&& f) : m_Family{std::forward<Family>(f)}
       {}
 
+      [[nodiscard]]
       const std::string& name() const noexcept final
       {
         return m_Family.name();
+      }
+
+      [[nodiscard]]
+      std::size_t size() const noexcept
+      {
+        return m_Family.size();
       }
 
       [[nodiscard]]
