@@ -34,4 +34,4 @@ target_include_directories(TestFramework PUBLIC .)
 file(GLOB_RECURSE HeaderFiles *.hpp)
 target_sources(TestFramework PRIVATE ${HeaderFiles})
 
-target_compile_features(TestFramework PUBLIC cxx_std_20)
+target_compile_features(TestFramework PUBLIC cxx_std_23)

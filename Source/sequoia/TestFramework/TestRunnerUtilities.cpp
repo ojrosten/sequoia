@@ -10,9 +10,9 @@
 #include <chrono>
 
 // TO DO: remove once libc++ supports <format>
-//#ifdef _MSC_VER
-//  #include <format>
-//#endif
+#ifdef _MSC_VER
+  #include <format>
+#endif
 
 namespace sequoia::testing
 {
@@ -40,13 +40,13 @@ namespace sequoia::testing
       // TO DO: prefer the MSC code once supported by other compilers
       const auto year{
         []() -> std::string {
-//#ifdef _MSC_VER
-//          using namespace std::chrono;
-//          return std::format("{}", year_month_day{floor<days>(system_clock::now())}.year());
-//#else
+#ifdef _MSC_VER
+          using namespace std::chrono;
+          return std::format("{}", year_month_day{floor<days>(system_clock::now())}.year());
+#else
           const auto now{std::chrono::system_clock::to_time_t(std::chrono::system_clock::now())};
           return std::to_string(1900 + std::localtime(&now)->tm_year);
-//#endif
+#endif
         }()
       };
 

@@ -4,7 +4,7 @@ FUNCTION(LINK_LIBRARIES target)
     target_link_libraries(${target} PUBLIC TestFramework)
 
     if(MSVC)
-        target_link_libraries(${target} PRIVATE winmm)		
+        target_link_libraries(${target} PRIVATE winmm)
         set_target_properties(${target} PROPERTIES LINK_FLAGS "/INCREMENTAL:NO")
     endif()
 ENDFUNCTION()
@@ -25,7 +25,7 @@ FUNCTION(FINALIZE target)
     add_subdirectory(${CURRENT_DIR}/../Source TestFramework)
 
     LINK_LIBRARIES(${target})
-    target_compile_features(${target} PUBLIC cxx_std_20)
+    target_compile_features(${target} PUBLIC cxx_std_23)
 ENDFUNCTION()
 
 FUNCTION(FINALIZE_SEQUOIA target)
