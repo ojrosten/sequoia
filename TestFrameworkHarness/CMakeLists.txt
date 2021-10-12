@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.19)
+cmake_minimum_required(VERSION 3.20)
 
 project(SequioaTestFrameworkHarness DESCRIPTION "End-to-end testing of the Sequoia testing framework"
                                     LANGUAGES CXX)

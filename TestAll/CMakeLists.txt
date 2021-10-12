@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.19)
+cmake_minimum_required(VERSION 3.20)
 
 project(SequioaTestAll DESCRIPTION "The Sequoia Library plus all tests"
                        LANGUAGES CXX)
