@@ -482,6 +482,8 @@ namespace sequoia::testing
           {
           case concurrency_mode::serial:
             return " -a null";
+          case concurrency_mode::dynamic:
+            return "";
           case concurrency_mode::family:
             return " -a family";
           case concurrency_mode::unit:
