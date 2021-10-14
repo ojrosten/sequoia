@@ -88,9 +88,9 @@ $(function() {
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;  <span class="keyword">private</span>:</div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <span class="keyword">struct </span>information</div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    {</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;      std::filesystem::path source_repo, tests_repo, materials;</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;      std::filesystem::file_time_type reset_time;</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;      std::optional&lt;std::filesystem::file_time_type&gt; exe_time_stamp;</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;      std::filesystem::path source_repo{}, tests_repo{}, materials{}, prune_file{};</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;      std::filesystem::file_time_type reset_time{};</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;      std::optional&lt;std::filesystem::file_time_type&gt; exe_time_stamp{};</div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    };</div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    information m_Info{};</div>
@@ -111,9 +111,9 @@ $(function() {
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
 <div class="ttc" id="aclasssequoia_1_1testing_1_1dependency__analyzer__free__test_html"><div class="ttname"><a href="../../db/dee/classsequoia_1_1testing_1_1dependency__analyzer__free__test.html">sequoia::testing::dependency_analyzer_free_test</a></div><div class="ttdef"><b>Definition:</b> DependencyAnalyzerFreeTest.hpp:15</div></div>
-<div class="ttc" id="aclasssequoia_1_1testing_1_1basic__test_html"><div class="ttname"><a href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">sequoia::testing::basic_test</a></div><div class="ttdef"><b>Definition:</b> FreeTestCore.hpp:178</div></div>
+<div class="ttc" id="aclasssequoia_1_1testing_1_1basic__test_html"><div class="ttname"><a href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">sequoia::testing::basic_test</a></div><div class="ttdef"><b>Definition:</b> FreeTestCore.hpp:76</div></div>
 <div class="ttc" id="aFreeTestCore_8hpp_html"><div class="ttname"><a href="../../dd/d3e/FreeTestCore_8hpp.html">FreeTestCore.hpp</a></div><div class="ttdoc">Core functionality for the testing framework.</div></div>
-<div class="ttc" id="anamespacesequoia_1_1testing_html_a58ef890d97adcfe24617ac1e9b266133"><div class="ttname"><a href="../../dd/da8/namespacesequoia_1_1testing.html#a58ef890d97adcfe24617ac1e9b266133">sequoia::testing::free_test</a></div><div class="ttdeci">basic_free_test&lt; test_mode::standard &gt; free_test</div><div class="ttdef"><b>Definition:</b> FreeTestCore.hpp:226</div></div>
+<div class="ttc" id="anamespacesequoia_1_1testing_html_a58ef890d97adcfe24617ac1e9b266133"><div class="ttname"><a href="../../dd/da8/namespacesequoia_1_1testing.html#a58ef890d97adcfe24617ac1e9b266133">sequoia::testing::free_test</a></div><div class="ttdeci">basic_free_test&lt; test_mode::standard &gt; free_test</div><div class="ttdef"><b>Definition:</b> FreeTestCore.hpp:270</div></div>
 <div class="ttc" id="anamespacesequoia_1_1testing_html"><div class="ttname"><a href="../../dd/da8/namespacesequoia_1_1testing.html">sequoia::testing</a></div><div class="ttdef"><b>Definition:</b> MyBehaviouralTest.cpp:12</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

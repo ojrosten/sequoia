@@ -69,12 +69,13 @@ $(function() {
 <h1><a class="anchor" id="sec_scale"></a>
 Scalabilty</h1>
 <p>To operate effectively at scale, <code>sequoia</code> incorporates the following features:</p><ul>
-<li>No waste: if a principled structure is adhered to, then running with the <code>--prune</code> option will ensure that only those tests dependent on changes since the last run will be executed. Changes may be either to source files or materials exploited by the test. In particular:<ol type="1">
+<li>No waste: if a principled structure is adhered to, then running with the <code>prune</code> option will ensure that only those tests dependent on changes since the last run will be executed. Changes may be either to source files or materials exploited by the test. In particular:<ol type="1">
 <li>cpp files should supply definitions only for the header of the same name;</li>
 <li>Given a test file <code>Tests/Foo/Bar.cpp</code>, any testing materials should be stored in <code>TestMaterials\Foo\Bar</code>.</li>
 </ol>
 </li>
-<li>Concurrency: running with <code>-a</code> will run tests concurrently. Tests are grouped into families and, by default, concurrency will be at the family level if there are more than three families; otherwise, concurrency is at the level of individual tests. However, there is flexibility. Specifying <code>--async-depth 1</code> forces individual tests to run concurrently, whereas a value of zero will force families to be run concurrently.</li>
+<li>Concurrency: by default, tests run concurrently. Tests are grouped into families and, by default, concurrency will be at the family level if there are more than three families; otherwise, concurrency is at the level of individual tests. However, this may be overridden using <code>--async-depth</code>.</li>
+<li>Instability Detection: <code>locate-instabilities</code> is called with an integer, specifying the number of times tests should be run. Instabilities are pinned down to the line of test code where they first manifest. By default, everything is run within the same program, allowing detection of changes to static data. However, it's conceivable that these changes are desired. To allow false positives, use the <code>--sandbox</code> flag to ensure that each run is done in an independent process.</li>
 </ul>
 <h1><a class="anchor" id="sec_automated"></a>
 Automation</h1>

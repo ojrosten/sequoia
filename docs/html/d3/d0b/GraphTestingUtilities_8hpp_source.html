@@ -286,54 +286,54 @@ $(function() {
 <div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;    <span class="keyword">using</span> <a class="code" href="../../d7/de5/classsequoia_1_1testing_1_1checker.html">checker_t</a> = <a class="code" href="../../d7/de5/classsequoia_1_1testing_1_1checker.html">checker</a>&lt;Mode, Extenders...&gt;;</div>
 <div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160; </div>
 <div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;    <span class="keyword">using</span> <a class="code" href="../../d7/de5/classsequoia_1_1testing_1_1checker.html">checker</a>&lt;Mode, Extenders...&gt;<a class="code" href="../../d7/de5/classsequoia_1_1testing_1_1checker.html">::checker</a>;</div>
-<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;    <a class="code" href="../../d2/d97/classsequoia_1_1testing_1_1graph__checker.html">graph_checker</a>(<span class="keyword">const</span> <a class="code" href="../../d2/d97/classsequoia_1_1testing_1_1graph__checker.html">graph_checker</a>&amp;) = <span class="keyword">delete</span>;</div>
-<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160; </div>
+<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160; </div>
+<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;    <a class="code" href="../../d2/d97/classsequoia_1_1testing_1_1graph__checker.html">graph_checker</a>(<span class="keyword">const</span> <a class="code" href="../../d2/d97/classsequoia_1_1testing_1_1graph__checker.html">graph_checker</a>&amp;) = <span class="keyword">delete</span>;</div>
 <div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;    <a class="code" href="../../d2/d97/classsequoia_1_1testing_1_1graph__checker.html">graph_checker</a>&amp; operator=(<span class="keyword">const</span> <a class="code" href="../../d2/d97/classsequoia_1_1testing_1_1graph__checker.html">graph_checker</a>&amp;) = <span class="keyword">delete</span>;</div>
-<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;    <a class="code" href="../../d2/d97/classsequoia_1_1testing_1_1graph__checker.html">graph_checker</a>&amp; operator=(<a class="code" href="../../d2/d97/classsequoia_1_1testing_1_1graph__checker.html">graph_checker</a>&amp;&amp;)      = <span class="keyword">delete</span>;</div>
-<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160; </div>
-<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class </span>G, <span class="keyword">class</span>... NodeWeights, <span class="keyword">class </span>E=<span class="keyword">typename</span> G::edge_init_type&gt;</div>
-<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;    <span class="keywordtype">void</span> check_graph(std::string_view description, <span class="keyword">const</span> G&amp; graph, std::initializer_list&lt;std::initializer_list&lt;E&gt;&gt; edges, <span class="keyword">const</span> std::tuple&lt;NodeWeights...&gt;&amp; nodeWeights)</div>
-<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;    {</div>
-<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;      checker_t::check_equivalence(description, graph, std::move(edges), nodeWeights);</div>
-<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;    }</div>
-<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160; </div>
-<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;    <span class="keyword">template</span></div>
-<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;    &lt;</div>
-<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;      <span class="keyword">class </span>G,</div>
-<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;      <span class="keyword">class </span>E=<span class="keyword">typename</span> G::edge_init_type</div>
-<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;    &gt;</div>
-<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;      requires (!empty&lt;typename G::node_weight_type&gt;)</div>
-<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;    <span class="keywordtype">void</span> check_graph(std::string_view description, <span class="keyword">const</span> G&amp; graph, std::initializer_list&lt;std::initializer_list&lt;E&gt;&gt; edges, std::initializer_list&lt;typename G::node_weight_type&gt; nodeWeights)</div>
-<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;    {</div>
-<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;      <span class="keywordflow">if</span> constexpr(impl::use_weak_equiv_v&lt;typename G::edge_type&gt;)</div>
-<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;      {</div>
-<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;        checker_t::check_weak_equivalence(description, graph, edges, nodeWeights);</div>
-<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;      }</div>
-<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;      <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;      {</div>
-<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;        checker_t::check_equivalence(description, graph, edges, nodeWeights);</div>
-<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;      }</div>
-<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;    }</div>
-<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160; </div>
-<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;    <span class="keyword">template</span></div>
-<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;    &lt;</div>
-<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;      <span class="keyword">class </span>G,</div>
-<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;      <span class="keyword">class </span>E=<span class="keyword">typename</span> G::edge_init_type</div>
-<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;    &gt;</div>
-<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;      requires empty&lt;typename G::node_weight_type&gt;</div>
-<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;    <span class="keywordtype">void</span> check_graph(std::string_view description, <span class="keyword">const</span> G&amp; graph, std::initializer_list&lt;std::initializer_list&lt;E&gt;&gt; edges)</div>
-<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;    {</div>
-<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;      <span class="keywordflow">if</span> constexpr(impl::use_weak_equiv_v&lt;typename G::edge_type&gt;)</div>
-<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;      {</div>
-<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;        checker_t::check_weak_equivalence(description, graph, std::move(edges));</div>
-<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;      }</div>
-<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;      <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;      {</div>
-<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;        checker_t::check_equivalence(description, graph, std::move(edges));</div>
-<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;      }</div>
-<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;    }</div>
-<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;  <span class="keyword">protected</span>:</div>
-<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;    <a class="code" href="../../d2/d97/classsequoia_1_1testing_1_1graph__checker.html">graph_checker</a>(<a class="code" href="../../d2/d97/classsequoia_1_1testing_1_1graph__checker.html">graph_checker</a>&amp;&amp;) noexcept = <span class="keywordflow">default</span>;</div>
+<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160; </div>
+<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class </span>G, <span class="keyword">class</span>... NodeWeights, <span class="keyword">class </span>E=<span class="keyword">typename</span> G::edge_init_type&gt;</div>
+<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;    <span class="keywordtype">void</span> check_graph(std::string_view description, <span class="keyword">const</span> G&amp; graph, std::initializer_list&lt;std::initializer_list&lt;E&gt;&gt; edges, <span class="keyword">const</span> std::tuple&lt;NodeWeights...&gt;&amp; nodeWeights)</div>
+<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;    {</div>
+<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;      checker_t::check_equivalence(description, graph, std::move(edges), nodeWeights);</div>
+<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;    }</div>
+<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160; </div>
+<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;    <span class="keyword">template</span></div>
+<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;    &lt;</div>
+<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;      <span class="keyword">class </span>G,</div>
+<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;      <span class="keyword">class </span>E=<span class="keyword">typename</span> G::edge_init_type</div>
+<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;    &gt;</div>
+<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;      requires (!empty&lt;typename G::node_weight_type&gt;)</div>
+<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;    <span class="keywordtype">void</span> check_graph(std::string_view description, <span class="keyword">const</span> G&amp; graph, std::initializer_list&lt;std::initializer_list&lt;E&gt;&gt; edges, std::initializer_list&lt;typename G::node_weight_type&gt; nodeWeights)</div>
+<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;    {</div>
+<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;      <span class="keywordflow">if</span> constexpr(impl::use_weak_equiv_v&lt;typename G::edge_type&gt;)</div>
+<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;      {</div>
+<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;        checker_t::check_weak_equivalence(description, graph, edges, nodeWeights);</div>
+<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;      }</div>
+<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;      <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;      {</div>
+<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;        checker_t::check_equivalence(description, graph, edges, nodeWeights);</div>
+<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;      }</div>
+<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;    }</div>
+<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160; </div>
+<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;    <span class="keyword">template</span></div>
+<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;    &lt;</div>
+<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;      <span class="keyword">class </span>G,</div>
+<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;      <span class="keyword">class </span>E=<span class="keyword">typename</span> G::edge_init_type</div>
+<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;    &gt;</div>
+<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;      requires empty&lt;typename G::node_weight_type&gt;</div>
+<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;    <span class="keywordtype">void</span> check_graph(std::string_view description, <span class="keyword">const</span> G&amp; graph, std::initializer_list&lt;std::initializer_list&lt;E&gt;&gt; edges)</div>
+<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;    {</div>
+<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;      <span class="keywordflow">if</span> constexpr(impl::use_weak_equiv_v&lt;typename G::edge_type&gt;)</div>
+<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;      {</div>
+<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;        checker_t::check_weak_equivalence(description, graph, std::move(edges));</div>
+<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;      }</div>
+<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;      <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;      {</div>
+<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;        checker_t::check_equivalence(description, graph, std::move(edges));</div>
+<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;      }</div>
+<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;    }</div>
+<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;  <span class="keyword">protected</span>:</div>
+<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;    <a class="code" href="../../d2/d97/classsequoia_1_1testing_1_1graph__checker.html">graph_checker</a>(<a class="code" href="../../d2/d97/classsequoia_1_1testing_1_1graph__checker.html">graph_checker</a>&amp;&amp;) noexcept = <span class="keywordflow">default</span>;</div>
+<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;    <a class="code" href="../../d2/d97/classsequoia_1_1testing_1_1graph__checker.html">graph_checker</a>&amp; operator=(<a class="code" href="../../d2/d97/classsequoia_1_1testing_1_1graph__checker.html">graph_checker</a>&amp;&amp;) noexcept = <span class="keywordflow">default</span>;</div>
 <div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160; </div>
 <div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;    ~<a class="code" href="../../d2/d97/classsequoia_1_1testing_1_1graph__checker.html">graph_checker</a>() = <span class="keywordflow">default</span>;</div>
 <div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;  };</div>
@@ -394,11 +394,11 @@ $(function() {
 <div class="ttc" id="aPerformanceTestCore_8hpp_html"><div class="ttname"><a href="../../d9/d44/PerformanceTestCore_8hpp.html">PerformanceTestCore.hpp</a></div><div class="ttdoc">Extension of the testing framework for perfomance testing.</div></div>
 <div class="ttc" id="aGraphTraits_8hpp_html"><div class="ttname"><a href="../../d9/d96/GraphTraits_8hpp.html">GraphTraits.hpp</a></div><div class="ttdoc">Traits and Concepts for graphs.</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1checker_html"><div class="ttname"><a href="../../d7/de5/classsequoia_1_1testing_1_1checker.html">sequoia::testing::checker</a></div><div class="ttdef"><b>Definition:</b> FreeCheckers.hpp:496</div></div>
-<div class="ttc" id="aclasssequoia_1_1testing_1_1basic__test_html"><div class="ttname"><a href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">sequoia::testing::basic_test</a></div><div class="ttdef"><b>Definition:</b> FreeTestCore.hpp:178</div></div>
+<div class="ttc" id="aclasssequoia_1_1testing_1_1basic__test_html"><div class="ttname"><a href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">sequoia::testing::basic_test</a></div><div class="ttdef"><b>Definition:</b> FreeTestCore.hpp:76</div></div>
 <div class="ttc" id="astructsequoia_1_1testing_1_1x_html"><div class="ttname"><a href="../../d6/d61/structsequoia_1_1testing_1_1x.html">sequoia::testing::x</a></div><div class="ttdef"><b>Definition:</b> FactoryTest.cpp:21</div></div>
 <div class="ttc" id="astructsequoia_1_1testing_1_1equivalence__checker_html"><div class="ttname"><a href="../../d2/d52/structsequoia_1_1testing_1_1equivalence__checker.html">sequoia::testing::equivalence_checker</a></div><div class="ttdoc">class template, specializations of which implement comparison of two equivalent types</div><div class="ttdef"><b>Definition:</b> CoreInfrastructure.hpp:32</div></div>
 <div class="ttc" id="astructsequoia_1_1testing_1_1weak__equivalence__checker_html"><div class="ttname"><a href="../../df/dff/structsequoia_1_1testing_1_1weak__equivalence__checker.html">sequoia::testing::weak_equivalence_checker</a></div><div class="ttdoc">class template, specializations of which implement comparison of two weakly equivalent types;</div><div class="ttdef"><b>Definition:</b> CoreInfrastructure.hpp:38</div></div>
-<div class="ttc" id="aclasssequoia_1_1testing_1_1test__logger_html"><div class="ttname"><a href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">sequoia::testing::test_logger</a></div><div class="ttdef"><b>Definition:</b> TestLogger.hpp:59</div></div>
+<div class="ttc" id="aclasssequoia_1_1testing_1_1test__logger_html"><div class="ttname"><a href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">sequoia::testing::test_logger</a></div><div class="ttdef"><b>Definition:</b> TestLogger.hpp:55</div></div>
 <div class="ttc" id="astructsequoia_1_1testing_1_1impl_1_1use__weak__equiv_html"><div class="ttname"><a href="../../d6/d29/structsequoia_1_1testing_1_1impl_1_1use__weak__equiv.html">sequoia::testing::impl::use_weak_equiv</a></div><div class="ttdef"><b>Definition:</b> GraphTestingUtilities.hpp:25</div></div>
 <div class="ttc" id="aDataPool_8hpp_html"><div class="ttname"><a href="../../df/d01/DataPool_8hpp.html">DataPool.hpp</a></div><div class="ttdoc">Classes to allow homogenous treatment of pooled/spawned data.</div></div>
 <div class="ttc" id="astructsequoia_1_1testing_1_1impl_1_1graph__detailed__equality__checker_html"><div class="ttname"><a href="../../db/d49/structsequoia_1_1testing_1_1impl_1_1graph__detailed__equality__checker.html">sequoia::testing::impl::graph_detailed_equality_checker</a></div><div class="ttdef"><b>Definition:</b> GraphTestingUtilities.hpp:37</div></div>
@@ -411,7 +411,7 @@ $(function() {
 <div class="ttc" id="anamespacesequoia_1_1testing_html"><div class="ttname"><a href="../../dd/da8/namespacesequoia_1_1testing.html">sequoia::testing</a></div><div class="ttdef"><b>Definition:</b> MyBehaviouralTest.cpp:12</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1graph__basic__test_html"><div class="ttname"><a href="../../d8/db8/classsequoia_1_1testing_1_1graph__basic__test.html">sequoia::testing::graph_basic_test</a></div><div class="ttdef"><b>Definition:</b> GraphTestingUtilities.hpp:274</div></div>
 <div class="ttc" id="astructsequoia_1_1testing_1_1impl_1_1graph__weak__equivalence__checker_html"><div class="ttname"><a href="../../d8/d97/structsequoia_1_1testing_1_1impl_1_1graph__weak__equivalence__checker.html">sequoia::testing::impl::graph_weak_equivalence_checker</a></div><div class="ttdef"><b>Definition:</b> GraphTestingUtilities.hpp:87</div></div>
-<div class="ttc" id="anamespacesequoia_1_1testing_html_ae4e97c9d45a89647799f0d308ba6d244"><div class="ttname"><a href="../../dd/da8/namespacesequoia_1_1testing.html#ae4e97c9d45a89647799f0d308ba6d244">sequoia::testing::test_mode</a></div><div class="ttdeci">test_mode</div><div class="ttdoc">Specifies whether tests are run as standard tests or in false postive/negative mode.</div><div class="ttdef"><b>Definition:</b> TestLogger.hpp:50</div></div>
+<div class="ttc" id="anamespacesequoia_1_1testing_html_ae4e97c9d45a89647799f0d308ba6d244"><div class="ttname"><a href="../../dd/da8/namespacesequoia_1_1testing.html#ae4e97c9d45a89647799f0d308ba6d244">sequoia::testing::test_mode</a></div><div class="ttdeci">test_mode</div><div class="ttdoc">Specifies whether tests are run as standard tests or in false postive/negative mode.</div><div class="ttdef"><b>Definition:</b> TestLogger.hpp:46</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1graph__checker_html"><div class="ttname"><a href="../../d2/d97/classsequoia_1_1testing_1_1graph__checker.html">sequoia::testing::graph_checker</a></div><div class="ttdef"><b>Definition:</b> GraphTestingUtilities.hpp:215</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

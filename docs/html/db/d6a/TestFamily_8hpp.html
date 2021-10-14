@@ -78,24 +78,34 @@ $(function() {
 <p>Utilities for grouping tests into families.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="../../dd/d3e/FreeTestCore_8hpp_source.html">sequoia/TestFramework/FreeTestCore.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d2/dbb/FileSystem_8hpp_source.html">sequoia/TestFramework/FileSystem.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../dc/d7f/Summary_8hpp_source.html">sequoia/TestFramework/Summary.hpp</a>&quot;</code><br />
-<code>#include &lt;vector&gt;</code><br />
+<code>#include &lt;chrono&gt;</code><br />
 <code>#include &lt;future&gt;</code><br />
 <code>#include &lt;set&gt;</code><br />
+<code>#include &lt;tuple&gt;</code><br />
+<code>#include &lt;vector&gt;</code><br />
 </div>
 <p><a href="../../db/d6a/TestFamily_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d3f/structsequoia_1_1testing_1_1as__bitmask_3_01output__mode_01_4.html">sequoia::testing::as_bitmask&lt; output_mode &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d4e/structsequoia_1_1testing_1_1materials__info.html">sequoia::testing::materials_info</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d4a/classsequoia_1_1testing_1_1test__family.html">sequoia::testing::test_family</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allows tests to be grouped together into a family of related tests.  <a href="../../de/d4a/classsequoia_1_1testing_1_1test__family.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d40/classsequoia_1_1testing_1_1family__info.html">sequoia::testing::family_info</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/d17/structsequoia_1_1testing_1_1test__family_1_1results.html">sequoia::testing::test_family::results</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/df0/classsequoia_1_1testing_1_1family__info_1_1materials__setter.html">sequoia::testing::family_info::materials_setter</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d87/structsequoia_1_1testing_1_1test__family_1_1summary.html">sequoia::testing::test_family::summary</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d3d/structsequoia_1_1testing_1_1family__results.html">sequoia::testing::family_results</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/dc9/structsequoia_1_1testing_1_1paths.html">sequoia::testing::paths</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/da9/structsequoia_1_1testing_1_1paths__comparator.html">sequoia::testing::paths_comparator</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d50/structsequoia_1_1testing_1_1family__summary.html">sequoia::testing::family_summary</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/dd0/classsequoia_1_1testing_1_1family__processor.html">sequoia::testing::family_processor</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d63/classsequoia_1_1testing_1_1family__vessel.html">sequoia::testing::family_vessel</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
@@ -105,21 +115,31 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
 Enumerations</h2></td></tr>
-<tr class="memitem:a5a6be1d7f84597f4ac1bae1fe3fc2594"><td class="memItemLeft" align="right" valign="top"><a id="a5a6be1d7f84597f4ac1bae1fe3fc2594"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><b>output_mode</b> { <b>standard</b> =0, 
-<b>help</b> =1, 
-<b>verbose</b> =2
- }</td></tr>
-<tr class="separator:a5a6be1d7f84597f4ac1bae1fe3fc2594"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a14d7a9ca3d0aba3f7e54c1c44d6a7e28"><td class="memItemLeft" align="right" valign="top"><a id="a14d7a9ca3d0aba3f7e54c1c44d6a7e28"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><b>update_mode</b> { <b>none</b> =0, 
 <b>soft</b>
  }</td></tr>
 <tr class="separator:a14d7a9ca3d0aba3f7e54c1c44d6a7e28"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5bf3cc5ec793288c6c7da7ceeb3249a7"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/da8/namespacesequoia_1_1testing.html#a5bf3cc5ec793288c6c7da7ceeb3249a7">sequoia::testing::concurrency_mode</a> { <b>serial</b>, 
+<a class="el" href="../../dd/da8/namespacesequoia_1_1testing.html#a5bf3cc5ec793288c6c7da7ceeb3249a7ab72f3bd391ba731a35708bfd8cd8a68f">sequoia::testing::concurrency_mode::dynamic</a>, 
+<a class="el" href="../../dd/da8/namespacesequoia_1_1testing.html#a5bf3cc5ec793288c6c7da7ceeb3249a7a0d3fda0bdbb9d619e09cdf3eecba7999">sequoia::testing::concurrency_mode::family</a>, 
+<a class="el" href="../../dd/da8/namespacesequoia_1_1testing.html#a5bf3cc5ec793288c6c7da7ceeb3249a7a3e34bdebd9bd5edda27e8728904a2552">sequoia::testing::concurrency_mode::unit</a>
+ }</td></tr>
+<tr class="memdesc:a5bf3cc5ec793288c6c7da7ceeb3249a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specifies the granularity at which concurrent execution is applied.  <a href="../../dd/da8/namespacesequoia_1_1testing.html#a5bf3cc5ec793288c6c7da7ceeb3249a7">More...</a><br /></td></tr>
+<tr class="separator:a5bf3cc5ec793288c6c7da7ceeb3249a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a9402fa844180159e2988289f3d9b7acd"><td class="memItemLeft" align="right" valign="top"><a id="a9402fa844180159e2988289f3d9b7acd"></a>
-std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::summarize</b> (const test_family::summary &amp;summary, const summary_detail suppression, indentation ind_0, indentation ind_1)</td></tr>
-<tr class="separator:a9402fa844180159e2988289f3d9b7acd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a32b78a893c55f5fedc27ccf9bb724290"><td class="memItemLeft" align="right" valign="top"><a id="a32b78a893c55f5fedc27ccf9bb724290"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::to_string</b> (concurrency_mode mode)</td></tr>
+<tr class="separator:a32b78a893c55f5fedc27ccf9bb724290"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a85938e9e22c767c515be03bcf4df0703"><td class="memTemplParams" colspan="2"><a id="a85938e9e22c767c515be03bcf4df0703"></a>
+template&lt;concrete_test... Tests&gt; </td></tr>
+<tr class="memitem:a85938e9e22c767c515be03bcf4df0703"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dd/da8/namespacesequoia_1_1testing.html#a85938e9e22c767c515be03bcf4df0703">sequoia::testing::requires</a> (sizeof...(Tests) &gt; 0) class test_family</td></tr>
+<tr class="memdesc:a85938e9e22c767c515be03bcf4df0703"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allows tests to be grouped together into a family of related tests. <br /></td></tr>
+<tr class="separator:a85938e9e22c767c515be03bcf4df0703"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab5585f51c00bb4da11c431d3f89cec54"><td class="memItemLeft" align="right" valign="top"><a id="ab5585f51c00bb4da11c431d3f89cec54"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::summarize</b> (const family_summary &amp;summary, const summary_detail suppression, indentation ind_0, indentation ind_1)</td></tr>
+<tr class="separator:ab5585f51c00bb4da11c431d3f89cec54"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Utilities for grouping tests into families. </p>

@@ -63,7 +63,7 @@ var searchData=
   ['array_5futilities_5ftest_64',['array_utilities_test',['../d2/dda/classsequoia_1_1testing_1_1array__utilities__test.html',1,'sequoia::testing']]],
   ['arrayutilities_2ehpp_65',['ArrayUtilities.hpp',['../d8/def/ArrayUtilities_8hpp.html',1,'']]],
   ['as_5fbitmask_66',['as_bitmask',['../d4/d5f/structsequoia_1_1testing_1_1as__bitmask.html',1,'sequoia::testing']]],
-  ['as_5fbitmask_3c_20output_5fmode_20_3e_67',['as_bitmask&lt; output_mode &gt;',['../d2/d3f/structsequoia_1_1testing_1_1as__bitmask_3_01output__mode_01_4.html',1,'sequoia::testing']]],
+  ['as_5fbitmask_3c_20runner_5fmode_20_3e_67',['as_bitmask&lt; runner_mode &gt;',['../d7/d43/structsequoia_1_1testing_1_1as__bitmask_3_01runner__mode_01_4.html',1,'sequoia::testing']]],
   ['as_5fbitmask_3c_20summary_5fdetail_20_3e_68',['as_bitmask&lt; summary_detail &gt;',['../db/db3/structsequoia_1_1testing_1_1as__bitmask_3_01summary__detail_01_4.html',1,'sequoia::testing']]],
   ['assignment_5fallocation_5fpredictions_69',['assignment_allocation_predictions',['../dd/db4/structsequoia_1_1testing_1_1assignment__allocation__predictions.html',1,'sequoia::testing']]],
   ['assignment_5fhelper_70',['assignment_helper',['../d6/d69/structsequoia_1_1impl_1_1assignment__helper.html',1,'sequoia::impl']]],
