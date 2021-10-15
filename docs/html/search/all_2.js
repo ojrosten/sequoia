@@ -10,7 +10,7 @@ var searchData=
   ['basic_5ftest_3c_20checker_3c_20mode_2c_20move_5fonly_5fallocation_5fextender_3c_20mode_20_3e_20_3e_20_3e_84',['basic_test&lt; checker&lt; Mode, move_only_allocation_extender&lt; Mode &gt; &gt; &gt;',['../d0/d16/classsequoia_1_1testing_1_1basic__test.html',1,'sequoia::testing']]],
   ['basic_5ftest_3c_20checker_3c_20mode_2c_20regular_5fallocation_5fextender_3c_20mode_20_3e_20_3e_20_3e_85',['basic_test&lt; checker&lt; Mode, regular_allocation_extender&lt; Mode &gt; &gt; &gt;',['../d0/d16/classsequoia_1_1testing_1_1basic__test.html',1,'sequoia::testing']]],
   ['basic_5ftest_3c_20graph_5fchecker_3c_20mode_2c_20extenders_2e_2e_2e_20_3e_20_3e_86',['basic_test&lt; graph_checker&lt; Mode, Extenders... &gt; &gt;',['../d0/d16/classsequoia_1_1testing_1_1basic__test.html',1,'sequoia::testing']]],
-  ['basic_5ftest_3c_20performance_5fchecker_3c_20mode_20_3e_20_3e_87',['basic_test&lt; performance_checker&lt; mode &gt; &gt;',['../d0/d16/classsequoia_1_1testing_1_1basic__test.html',1,'sequoia::testing']]],
+  ['basic_5ftest_3c_20performance_5fchecker_3c_20mode_20_3e_20_3e_87',['basic_test&lt; performance_checker&lt; Mode &gt; &gt;',['../d0/d16/classsequoia_1_1testing_1_1basic__test.html',1,'sequoia::testing']]],
   ['bazagain_5ftest_88',['bazagain_test',['../d4/d0c/classsequoia_1_1testing_1_1bazagain__test.html',1,'sequoia::testing']]],
   ['bazzer_5ftest_89',['bazzer_test',['../de/dcd/classsequoia_1_1testing_1_1bazzer__test.html',1,'sequoia::testing']]],
   ['big_5funsortable_90',['big_unsortable',['../d7/d05/structsequoia_1_1testing_1_1big__unsortable.html',1,'sequoia::testing']]],

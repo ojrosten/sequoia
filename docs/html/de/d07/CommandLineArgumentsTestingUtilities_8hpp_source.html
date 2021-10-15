@@ -158,26 +158,22 @@ $(function() {
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;      <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(m_Args.size());</div>
 <div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    }</div>
 <div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160; </div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <a class="code" href="../../d3/df1/classsequoia_1_1testing_1_1commandline__arguments.html">commandline_arguments</a>(std::initializer_list&lt;std::string_view&gt; args)</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;      : m_Args(args.begin(), args.end())</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    {</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;      m_Ptrs.reserve(m_Args.size());</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;      std::transform(m_Args.begin(), m_Args.end(), std::back_inserter(m_Ptrs), [](std::string&amp; s){ return s.data(); });</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    }</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160; </div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    [[nodiscard]]</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    <span class="keywordtype">char</span>** get() noexcept { <span class="keywordflow">return</span> &amp;m_Ptrs[0]; }</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;  <span class="keyword">private</span>:</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    std::vector&lt;std::string&gt; m_Args;</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    std::vector&lt;char*&gt; m_Ptrs;</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;  };</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;}</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <a class="code" href="../../d3/df1/classsequoia_1_1testing_1_1commandline__arguments.html">commandline_arguments</a>(std::initializer_list&lt;std::string_view&gt; args);</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <a class="code" href="../../d3/df1/classsequoia_1_1testing_1_1commandline__arguments.html">commandline_arguments</a>(std::vector&lt;std::string&gt; args);</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160; </div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    [[nodiscard]]</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <span class="keywordtype">char</span>** get() noexcept { <span class="keywordflow">return</span> &amp;m_Ptrs[0]; }</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;  <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    std::vector&lt;std::string&gt; m_Args;</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    std::vector&lt;char*&gt; m_Ptrs;</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;  };</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
 <div class="ttc" id="aCommandLineArguments_8hpp_html"><div class="ttname"><a href="../../d2/d4b/CommandLineArguments_8hpp.html">CommandLineArguments.hpp</a></div><div class="ttdoc">Parsing of commandline arguments.</div></div>
 <div class="ttc" id="aRegularTestCore_8hpp_html"><div class="ttname"><a href="../../d9/daf/RegularTestCore_8hpp.html">RegularTestCore.hpp</a></div><div class="ttdoc">Utilities for checking regular semantics.</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1commandline__arguments_html"><div class="ttname"><a href="../../d3/df1/classsequoia_1_1testing_1_1commandline__arguments.html">sequoia::testing::commandline_arguments</a></div><div class="ttdef"><b>Definition:</b> CommandLineArgumentsTestingUtilities.hpp:84</div></div>
 <div class="ttc" id="astructsequoia_1_1testing_1_1weak__equivalence__checker_html"><div class="ttname"><a href="../../df/dff/structsequoia_1_1testing_1_1weak__equivalence__checker.html">sequoia::testing::weak_equivalence_checker</a></div><div class="ttdoc">class template, specializations of which implement comparison of two weakly equivalent types;</div><div class="ttdef"><b>Definition:</b> CoreInfrastructure.hpp:38</div></div>
-<div class="ttc" id="aclasssequoia_1_1testing_1_1test__logger_html"><div class="ttname"><a href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">sequoia::testing::test_logger</a></div><div class="ttdef"><b>Definition:</b> TestLogger.hpp:59</div></div>
+<div class="ttc" id="aclasssequoia_1_1testing_1_1test__logger_html"><div class="ttname"><a href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">sequoia::testing::test_logger</a></div><div class="ttdef"><b>Definition:</b> TestLogger.hpp:55</div></div>
 <div class="ttc" id="aclasssequoia_1_1parsing_1_1commandline_1_1argument__parser_html"><div class="ttname"><a href="../../df/dd0/classsequoia_1_1parsing_1_1commandline_1_1argument__parser.html">sequoia::parsing::commandline::argument_parser</a></div><div class="ttdef"><b>Definition:</b> CommandLineArguments.hpp:115</div></div>
 <div class="ttc" id="astructsequoia_1_1parsing_1_1commandline_1_1operation_html"><div class="ttname"><a href="../../d0/d7a/structsequoia_1_1parsing_1_1commandline_1_1operation.html">sequoia::parsing::commandline::operation</a></div><div class="ttdef"><b>Definition:</b> CommandLineArguments.hpp:71</div></div>
 <div class="ttc" id="astructsequoia_1_1parsing_1_1commandline_1_1outcome_html"><div class="ttname"><a href="../../df/dd1/structsequoia_1_1parsing_1_1commandline_1_1outcome.html">sequoia::parsing::commandline::outcome</a></div><div class="ttdef"><b>Definition:</b> CommandLineArguments.hpp:79</div></div>

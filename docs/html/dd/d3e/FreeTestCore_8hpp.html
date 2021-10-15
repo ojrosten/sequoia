@@ -69,7 +69,6 @@ $(function() {
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#namespaces">Namespaces</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
-<a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
@@ -80,20 +79,19 @@ $(function() {
 <p>Core functionality for the testing framework.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="../../dc/d9c/ConcreteTypeCheckers_8hpp_source.html">sequoia/TestFramework/ConcreteTypeCheckers.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d3/d84/Concepts_8hpp_source.html">sequoia/Core/Meta/Concepts.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../d2/dbb/FileSystem_8hpp_source.html">sequoia/TestFramework/FileSystem.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d3/d84/Concepts_8hpp_source.html">sequoia/Core/Meta/Concepts.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d1/d50/Substitutions_8hpp_source.html">sequoia/TextProcessing/Substitutions.hpp</a>&quot;</code><br />
 <code>#include &lt;memory&gt;</code><br />
+<code>#include &lt;chrono&gt;</code><br />
 </div>
 <p><a href="../../dd/d3e/FreeTestCore_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/d6f/classsequoia_1_1testing_1_1test.html">sequoia::testing::test</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Abstract base class used for type-erasure of the template class <a class="el" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">basic_test</a>.  <a href="../../da/d6f/classsequoia_1_1testing_1_1test.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/d25/classsequoia_1_1testing_1_1timer.html">sequoia::testing::timer</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">sequoia::testing::basic_test</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/dce/classsequoia_1_1testing_1_1test__vessel.html">sequoia::testing::test_vessel</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
@@ -116,18 +114,17 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::fr
 using&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::free_false_positive_test</b> = basic_free_test&lt; test_mode::false_positive &gt;</td></tr>
 <tr class="separator:a21184418ea63df343fe440787fc2313a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
-Enumerations</h2></td></tr>
-<tr class="memitem:a5bf3cc5ec793288c6c7da7ceeb3249a7"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/da8/namespacesequoia_1_1testing.html#a5bf3cc5ec793288c6c7da7ceeb3249a7">sequoia::testing::concurrency_mode</a> { <b>serial</b>, 
-<a class="el" href="../../dd/da8/namespacesequoia_1_1testing.html#a5bf3cc5ec793288c6c7da7ceeb3249a7ab72f3bd391ba731a35708bfd8cd8a68f">sequoia::testing::concurrency_mode::dynamic</a>, 
-<a class="el" href="../../dd/da8/namespacesequoia_1_1testing.html#a5bf3cc5ec793288c6c7da7ceeb3249a7a0d3fda0bdbb9d619e09cdf3eecba7999">sequoia::testing::concurrency_mode::family</a>, 
-<a class="el" href="../../dd/da8/namespacesequoia_1_1testing.html#a5bf3cc5ec793288c6c7da7ceeb3249a7a098f6bcd4621d373cade4e832627b4f6">sequoia::testing::concurrency_mode::test</a>
- }</td></tr>
-<tr class="memdesc:a5bf3cc5ec793288c6c7da7ceeb3249a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specifies the granularity at which concurrent execution is applied.  <a href="../../dd/da8/namespacesequoia_1_1testing.html#a5bf3cc5ec793288c6c7da7ceeb3249a7">More...</a><br /></td></tr>
-<tr class="separator:a5bf3cc5ec793288c6c7da7ceeb3249a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:ac8ada0742d8696992775561179bc1c2e"><td class="memItemLeft" align="right" valign="top"><a id="ac8ada0742d8696992775561179bc1c2e"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::impl::versioned_write</b> (const std::filesystem::path &amp;file, const failure_output &amp;output)</td></tr>
+<tr class="separator:ac8ada0742d8696992775561179bc1c2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa968311a331a64001dd5b4046f8ea447"><td class="memItemLeft" align="right" valign="top"><a id="aa968311a331a64001dd5b4046f8ea447"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::impl::versioned_write</b> (const std::filesystem::path &amp;file, std::string_view text)</td></tr>
+<tr class="separator:aa968311a331a64001dd5b4046f8ea447"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad5d787cff08779d5fe0fff406aeb7996"><td class="memItemLeft" align="right" valign="top"><a id="ad5d787cff08779d5fe0fff406aeb7996"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::impl::serialize</b> (const std::filesystem::path &amp;file, const failure_output &amp;output)</td></tr>
+<tr class="separator:ad5d787cff08779d5fe0fff406aeb7996"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1734a3f89713697d6220ad29719b08f7"><td class="memItemLeft" align="right" valign="top"><a id="a1734a3f89713697d6220ad29719b08f7"></a>
 std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::to_tag</b> (test_mode mode)</td></tr>
 <tr class="separator:a1734a3f89713697d6220ad29719b08f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -138,9 +135,8 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testi
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a120e5890beac15289513f384755a9551"><td class="memTemplParams" colspan="2"><a id="a120e5890beac15289513f384755a9551"></a>
-template&lt;class T &gt; </td></tr>
-<tr class="memitem:a120e5890beac15289513f384755a9551"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::concrete_test</b> = derived_from&lt;T, test&gt; &amp;&amp; !std::is_abstract_v&lt;T&gt;</td></tr>
+<tr class="memitem:a120e5890beac15289513f384755a9551"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
+<tr class="memitem:a120e5890beac15289513f384755a9551"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::concrete_test</b></td></tr>
 <tr class="separator:a120e5890beac15289513f384755a9551"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
