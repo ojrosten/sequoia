@@ -170,15 +170,15 @@ namespace sequoia::testing
     using inner_predictions_type = move_only_inner_allocation_predictions;
   };
 
-  template<test_mode Mode, moveonly T, invocable<T&> Mutator, alloc_getter<T>... Getters>
-    requires (!orderable<T> && (sizeof...(Getters) > 0))
+  template<test_mode Mode, moveonly T, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
+    requires (!std::totally_ordered<T> && (sizeof...(Getters) > 0))
   void check_semantics(std::string_view description, test_logger<Mode>& logger, T&& x, T&& y, const T& xClone, const T& yClone, Mutator m, const allocation_info<T, Getters>&... info)
   {
     impl::check_semantics(description, logger, impl::move_only_allocation_actions<T>{}, std::forward<T>(x), std::forward<T>(y), xClone, yClone, std::move(m), info...);
   }
 
-  template<test_mode Mode, moveonly T, invocable<T&> Mutator, alloc_getter<T>... Getters>
-    requires (orderable<T> && (sizeof...(Getters) > 0))
+  template<test_mode Mode, moveonly T, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
+    requires (std::totally_ordered<T> && (sizeof...(Getters) > 0))
   void check_semantics(std::string_view description, test_logger<Mode>& logger, T&& x, T&& y, const T& xClone, const T& yClone, std::weak_ordering order, Mutator m, const allocation_info<T, Getters>&... info)
   {
     impl::check_semantics(description, logger, impl::move_only_allocation_actions<T>{order}, std::forward<T>(x), std::forward<T>(y), xClone, yClone, std::move(m), info...);
@@ -190,10 +190,10 @@ namespace sequoia::testing
     moveonly T,
     invocable_r<T> xMaker,
     invocable_r<T> yMaker,
-    invocable<T&> Mutator,
+    std::invocable<T&> Mutator,
     alloc_getter<T>... Getters
   >
-    requires (!orderable<T> && (sizeof...(Getters) > 0))
+    requires (!std::totally_ordered<T> && (sizeof...(Getters) > 0))
   std::pair<T,T> check_semantics(std::string_view description, test_logger<Mode>& logger, xMaker xFn, yMaker yFn, Mutator m, const allocation_info<T, Getters>&... info)
   {
     return impl::check_semantics(description, logger, impl::move_only_allocation_actions<T>{}, std::move(xFn), std::move(yFn), std::move(m), info...);
@@ -205,10 +205,10 @@ namespace sequoia::testing
     moveonly T,
     invocable_r<T> xMaker,
     invocable_r<T> yMaker,
-    invocable<T&> Mutator,
+    std::invocable<T&> Mutator,
     alloc_getter<T>... Getters
   >
-    requires (orderable<T> && (sizeof...(Getters) > 0))
+    requires (std::totally_ordered<T> && (sizeof...(Getters) > 0))
   std::pair<T,T> check_semantics(std::string_view description, test_logger<Mode>& logger, xMaker xFn, yMaker yFn, std::weak_ordering order, Mutator m, const allocation_info<T, Getters>&... info)
   {
     return impl::check_semantics(description, logger, impl::move_only_allocation_actions<T>{order}, std::move(xFn), std::move(yFn), std::move(m), info...);

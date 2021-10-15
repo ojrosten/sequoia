@@ -13,7 +13,7 @@
 
 namespace sequoia::maths
 {
-  template<class T, integral Index>
+  template<class T, std::integral Index>
   class linear_sequence
   {
   public:
@@ -43,7 +43,7 @@ namespace sequoia::maths
   };
 
 
-  template<class T, T Start, T Step, std::size_t Size, integral Index>
+  template<class T, T Start, T Step, std::size_t Size, std::integral Index>
   struct static_linear_sequence
   {
     using size_type = Index;

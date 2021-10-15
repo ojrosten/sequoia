@@ -45,7 +45,7 @@ namespace sequoia::maths::graph_impl
     graph_flavour GraphFlavour,
     class EdgeWeightCreator,
     class EdgeStorageTraits,
-    integral IndexType
+    std::integral IndexType
   >
     requires ownership::creator<EdgeWeightCreator>
   struct dynamic_edge_traits : public

@@ -426,7 +426,7 @@ namespace sequoia::testing::impl
     check_allocation(logger, checkFn, checker, moreCheckers...);
   }
 
-  template<test_mode Mode, movable_comparable T, invocable<T&> Mutator, alloc_getter<T>... Getters>
+  template<test_mode Mode, movable_comparable T, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
   void check_mutation_after_swap(test_logger<Mode>& logger, T& lhs, const T& rhs, const T& y, Mutator yMutator, dual_allocation_checker<T, Getters>... checkers)
   {
     if(check("Mutation after swap pre-condition violated", logger, lhs == y))
@@ -674,7 +674,7 @@ namespace sequoia::testing::impl
       check_move_y_allocation(logger, y, checkers...);
     }
 
-    template<test_mode Mode, invocable<T&> Mutator, alloc_getter<T>... Getters>
+    template<test_mode Mode, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
     static void post_move_assign_action(test_logger<Mode>& logger, T& y, const T& yClone, Mutator yMutator, const dual_allocation_checker<T, Getters>&... checkers)
     {
       check_move_assign_allocation(logger, y, checkers...);
@@ -740,13 +740,13 @@ namespace sequoia::testing::impl
     return do_check_move_construction(logger, actions, std::forward<T>(z), y, allocation_checker{checkers.info(), z}...);
   }
 
-  template<test_mode Mode, class Actions, movable_comparable T, invocable<T&> Mutator, alloc_getter<T>... Getters>
+  template<test_mode Mode, class Actions, movable_comparable T, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
   void check_move_assign(test_logger<Mode>& logger, const Actions& actions, T& u, T&& v, const T& y, Mutator yMutator, const dual_allocation_checker<T, Getters>&... checkers)
   {
     do_check_move_assign(logger, actions, u, std::forward<T>(v), y, std::move(yMutator), dual_allocation_checker{checkers.info(), u, v}...);
   }
 
-  template<test_mode Mode, movable_comparable T, invocable<T&> Mutator, class... Checkers>
+  template<test_mode Mode, movable_comparable T, std::invocable<T&> Mutator, class... Checkers>
   void check_mutation_after_move(std::string_view moveType, test_logger<Mode>& logger, T& u, const T& y, Mutator yMutator, Checkers... checkers)
   {
     yMutator(u);
@@ -758,13 +758,13 @@ namespace sequoia::testing::impl
     check(mess, logger, u != y);
   }
 
-  template<test_mode Mode, movable_comparable T, invocable<T&> Mutator, class... Checkers, std::size_t... I>
+  template<test_mode Mode, movable_comparable T, std::invocable<T&> Mutator, class... Checkers, std::size_t... I>
   void check_mutation_after_move(std::string_view moveType, test_logger<Mode>& logger, T& u, const T& y, Mutator yMutator, std::tuple<Checkers...> checkers, std::index_sequence<I...>)
   {
     check_mutation_after_move(moveType, logger, u, y, std::move(yMutator), std::get<I>(checkers)...);
   }
 
-  template<test_mode Mode, movable_comparable T, invocable<T&> Mutator, class... Checkers>
+  template<test_mode Mode, movable_comparable T, std::invocable<T&> Mutator, class... Checkers>
   void check_mutation_after_move(std::string_view moveType, test_logger<Mode>& logger, T& u, const T& y, Mutator yMutator, std::tuple<Checkers...> checkers)
   {
     check_mutation_after_move(moveType, logger, u, y, std::move(yMutator), std::move(checkers), std::make_index_sequence<sizeof...(Checkers)>{});

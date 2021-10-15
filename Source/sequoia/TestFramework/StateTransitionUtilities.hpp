@@ -45,7 +45,7 @@ namespace sequoia::testing
     struct transition_info : transition_info_base<T, TransitionFn>
     {};
 
-    template<orderable T, invocable_r<T, const T&> TransitionFn>
+    template<std::totally_ordered T, invocable_r<T, const T&> TransitionFn>
     struct transition_info<T, TransitionFn> : transition_info_base<T, TransitionFn>
     {
       std::weak_ordering ordering;
@@ -84,7 +84,7 @@ namespace sequoia::testing
     using transition_graph = maths::graph<maths::directed_flavour::directed, impl::transition_info<T, TransitionFn>, impl::object_info<T>>;
     using edge = typename transition_graph::edge_type;
 
-    template<invocable<std::string, T, T> CheckFn>
+    template<std::invocable<std::string, T, T> CheckFn>
     static void check(std::string_view description, const transition_graph& g, CheckFn checkFn)
     {
       auto edgeFn{
@@ -102,8 +102,8 @@ namespace sequoia::testing
       check(g, edgeFn);
     }
 
-    template<invocable<std::string, std::function<T()>, std::function<T()>, std::function<T()>, std::weak_ordering> CheckFn>
-      requires orderable<T>
+    template<std::invocable<std::string, std::function<T()>, std::function<T()>, std::function<T()>, std::weak_ordering> CheckFn>
+      requires std::totally_ordered<T>
     static void check(std::string_view description, const transition_graph& g, CheckFn checkFn)
     {
       auto edgeFn{
@@ -123,8 +123,8 @@ namespace sequoia::testing
       check(g, edgeFn);
     }
 
-    template<invocable<std::string, T, T, T, std::weak_ordering> CheckFn>
-      requires (orderable<T> && pseudoregular<T>)
+    template<std::invocable<std::string, T, T, T, std::weak_ordering> CheckFn>
+      requires (std::totally_ordered<T> && pseudoregular<T>)
     static void check(std::string_view description, const transition_graph& g, CheckFn checkFn)
     {
       auto edgeFn{
@@ -147,7 +147,7 @@ namespace sequoia::testing
     using edge_iterator = typename transition_graph::const_edge_iterator;
     using size_type = typename transition_graph::size_type;
 
-    template<invocable<edge_iterator> EdgeFn>
+    template<std::invocable<edge_iterator> EdgeFn>
     static void check(const transition_graph& g, EdgeFn edgeFn)
     {
       using namespace maths;

@@ -16,10 +16,10 @@ namespace sequoia::ownership
 {
   // TO DO: replace with contexpr bool once MSVC can cope with this
   template<class T>
-  concept creator = equality_comparable<T> && requires(T& a) {
+  concept creator = std::equality_comparable<T> && requires(T& a) {
     typename T::proxy;
     typename T::value_type;
 
-    { a.make() } -> same_as<typename T::proxy>;
+    { a.make() } -> std::same_as<typename T::proxy>;
   };
 }

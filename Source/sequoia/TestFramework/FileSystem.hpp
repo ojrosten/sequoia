@@ -137,7 +137,7 @@ namespace sequoia::testing
   std::filesystem::path prune_path(std::filesystem::path outputDir, const std::filesystem::path& testMainDir);
 
   template<class Pred>
-    requires invocable<Pred, std::filesystem::path>
+    requires std::invocable<Pred, std::filesystem::path>
   void throw_if(const std::filesystem::path& p, std::string_view message, Pred pred)
   {
     if(pred(p))

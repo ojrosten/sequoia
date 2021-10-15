@@ -112,7 +112,7 @@ namespace sequoia::testing
     [[nodiscard]]
     std::filesystem::path build_source_path(const std::filesystem::path& filename) const;
 
-    template<invocable_r<std::filesystem::path, std::filesystem::path> WhenAbsent, std::size_t N, invocable<std::string&> FileTransformer>
+    template<invocable_r<std::filesystem::path, std::filesystem::path> WhenAbsent, std::size_t N, std::invocable<std::string&> FileTransformer>
     void finalize(WhenAbsent fn,
                   const std::array<std::string_view, N>& stubs,
                   const std::vector<std::string>& constructors,
@@ -157,7 +157,7 @@ namespace sequoia::testing
 
     void finalize_header(const std::filesystem::path& sourcePath);
 
-    template<invocable<std::string&> FileTransformer>
+    template<std::invocable<std::string&> FileTransformer>
     [[nodiscard]]
     std::string create_file(std::string_view inputNameStub, std::string_view nameEnding, FileTransformer transformer) const;
 

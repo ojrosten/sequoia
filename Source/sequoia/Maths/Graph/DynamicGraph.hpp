@@ -45,7 +45,8 @@ namespace sequoia::maths
     template<class S> using container_type = std::vector<S, std::allocator<S>>;
   };
 
-  template<empty NodeWeight>
+  template<class NodeWeight>
+    requires std::is_empty_v<NodeWeight>
   struct node_weight_storage_traits<NodeWeight>
   {
     constexpr static bool has_allocator{};

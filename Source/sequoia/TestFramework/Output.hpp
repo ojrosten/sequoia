@@ -71,7 +71,7 @@ namespace sequoia::testing
   std::string prediction_message(std::string_view obtained, std::string_view predicted);
 
   template<serializable T>
-    requires (!same_as<T, std::string>)
+    requires (!std::same_as<T, std::string>)
   [[nodiscard]]
   std::string prediction_message(const T& obtained, const T& prediction)
   {

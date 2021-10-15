@@ -38,7 +38,7 @@ namespace sequoia::testing
   };
 
   template<class NodeWeight>
-    requires empty<NodeWeight>
+    requires std::is_empty_v<NodeWeight>
   struct node_traits<NodeWeight>
   {
     constexpr static bool has_allocator{};

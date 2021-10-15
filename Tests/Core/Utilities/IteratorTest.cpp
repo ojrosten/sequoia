@@ -224,7 +224,7 @@ namespace sequoia::testing
 
     CustomIter i{begin, args...};
 
-    static_assert(orderable<CustomIter>);
+    static_assert(std::totally_ordered<CustomIter>);
 
     const auto scale{
       []([[maybe_unused]] CustomIter iter) -> value_type {

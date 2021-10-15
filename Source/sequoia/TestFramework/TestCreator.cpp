@@ -212,7 +212,7 @@ namespace sequoia::testing
     return {};
   }
 
-  template<invocable<std::string&> FileTransformer>
+  template<std::invocable<std::string&> FileTransformer>
   [[nodiscard]]
   std::string nascent_test_base::create_file(std::string_view nameStub, std::string_view nameEnding, FileTransformer transformer) const
   {
@@ -258,7 +258,7 @@ namespace sequoia::testing
     return stringify(outputFile);
   }
 
-  template<invocable_r<std::filesystem::path, std::filesystem::path> WhenAbsent, std::size_t N, invocable<std::string&> FileTransformer>
+  template<invocable_r<std::filesystem::path, std::filesystem::path> WhenAbsent, std::size_t N, std::invocable<std::string&> FileTransformer>
   void nascent_test_base::finalize(WhenAbsent fn,
                                    const std::array<std::string_view, N>& stubs,
                                    const std::vector<std::string>& constructors,

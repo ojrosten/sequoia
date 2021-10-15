@@ -16,7 +16,7 @@
 
 namespace sequoia::testing
 {
-  /*! \brief Extender for testing classes exhibiting regular/orderable semantics.
+  /*! \brief Extender for testing classes exhibiting regular/std::totally_ordered semantics.
 
        This class is designed to be plugged into the
        \ref checker_primary "checker" class template, in order to extend
@@ -40,7 +40,7 @@ namespace sequoia::testing
 
     /// Precondition: x!=y
     template<pseudoregular T>
-      requires (!orderable<T>)
+      requires (!std::totally_ordered<T>)
     void check_semantics(std::string_view description, const T& x, const T& y)
     {
       testing::check_semantics(append_lines(description, emphasise("Regular Semantics")), logger(), x, y);
@@ -48,22 +48,22 @@ namespace sequoia::testing
 
     /// Precondition: x!=y, with values consistent with order
     template<pseudoregular T>
-      requires orderable<T>
+      requires std::totally_ordered<T>
     void check_semantics(std::string_view description, const T& x, const T& y, std::weak_ordering order)
     {
       testing::check_semantics(append_lines(description, emphasise("Regular Semantics")), logger(), x, y, order);
     }
 
     /// Precondition: x!=y
-    template<pseudoregular T, invocable<T&> Mutator>
+    template<pseudoregular T, std::invocable<T&> Mutator>
     void check_semantics(std::string_view description, const T& x, const T& y, Mutator m)
     {
       testing::check_semantics(append_lines(description, emphasise("Regular Semantics")), logger(), x, y, std::move(m));
     }
 
     /// Precondition: x!=y, with values consistent with order
-    template<pseudoregular T, invocable<T&> Mutator>
-      requires orderable<T>
+    template<pseudoregular T, std::invocable<T&> Mutator>
+      requires std::totally_ordered<T>
     void check_semantics(std::string_view description, const T& x, const T& y, std::weak_ordering order, Mutator m)
     {
       testing::check_semantics(append_lines(description, emphasise("Regular Semantics")), logger(), x, y, order, std::move(m));

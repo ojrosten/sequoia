@@ -127,14 +127,14 @@ namespace sequoia::testing
   struct exception_message_extractor;
 
   template<class E>
-    requires derived_from<E, std::exception>
+    requires std::derived_from<E, std::exception>
   struct exception_message_extractor<E>
   {
     static std::string get(const E& e) { return e.what(); }
   };
 
   template<class E>
-    requires (!derived_from<E, std::exception>) && serializable<E>
+    requires (!std::derived_from<E, std::exception>) && serializable<E>
   struct exception_message_extractor<E>
   {
     static std::string get(const E& e) { return to_string(e); }
@@ -223,13 +223,13 @@ namespace sequoia::testing
   {
     constexpr bool delegate{has_detailed_equality_checker_v<T> || range<T>};
 
-    static_assert(delegate || equality_comparable<T>,
+    static_assert(delegate || std::equality_comparable<T>,
                   "Provide either a specialization of detailed_equality_checker or"
                   "ensure operator== and != exists, together with a specialization of serializer");
 
     sentinel<Mode> sentry{logger, add_type_info<T>(description)};
 
-    if constexpr(equality_comparable<T>)
+    if constexpr(std::equality_comparable<T>)
     {
       binary_comparison(sentry, std::equal_to<T>{}, obtained, prediction, advisor);
     }
@@ -265,12 +265,12 @@ namespace sequoia::testing
       The comparison object either implements binary comparison for T or it is fed into check_range.
    */
   template<test_mode Mode, class Compare, class T, class Advisor>
-    requires (invocable<Compare, T, T> || has_parens<Compare>)
+    requires (std::invocable<Compare, T, T> || has_parens<Compare>)
   bool dispatch_check(std::string_view description, test_logger<Mode>& logger, Compare compare, const T& obtained, const T& prediction, tutor<Advisor> advisor)
   {
     sentinel<Mode> sentry{logger, add_type_info<T>(description)};
 
-    if constexpr(invocable<Compare, T, T>)
+    if constexpr(std::invocable<Compare, T, T>)
     {
       binary_comparison(sentry, std::move(compare), obtained, prediction, advisor);
     }

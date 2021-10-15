@@ -93,7 +93,7 @@ namespace sequoia::testing
       const auto message{append_lines(info,  trunc ? "Surrounding substring(s):" : "Full strings:",
                                       prediction_message(obMess, prMess))};
 
-      if constexpr(invocable<tutor<Advisor>, Char, Char>)
+      if constexpr(std::invocable<tutor<Advisor>, Char, Char>)
       {
 
         return tutor{

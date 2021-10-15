@@ -248,10 +248,10 @@ namespace sequoia::maths::graph_impl
       class ESTF,
       class TaskProcessingModel
     >
-      requires (invocable<NBEF, edge_index_type>    )
-            && (invocable<NAEF, edge_index_type>    )
-            && (invocable<EFTF, const_edge_iterator>)
-            && (invocable<ESTF, const_edge_iterator>)
+      requires (std::invocable<NBEF, edge_index_type>    )
+            && (std::invocable<NAEF, edge_index_type>    )
+            && (std::invocable<EFTF, const_edge_iterator>)
+            && (std::invocable<ESTF, const_edge_iterator>)
     constexpr auto traverse(const G& graph,
                             traversal_conditions<FindDisconnected> conditions,
                             NBEF&& nodeBeforeEdgesFn,
@@ -264,7 +264,7 @@ namespace sequoia::maths::graph_impl
       // However, the Fns should not be captured by value as they may have mutable state with
       // external visibility.
 
-      constexpr bool hasEdgeSecondFn{!same_as<std::remove_cvref_t<ESTF>, null_func_obj>};
+      constexpr bool hasEdgeSecondFn{!std::same_as<std::remove_cvref_t<ESTF>, null_func_obj>};
       static_assert(!directed(G::directedness) || !hasEdgeSecondFn,
                     "For a directed graph, edges are traversed only once: the edgeSecondTraversalFn is ignored and so should be the null_func_obj");
 
@@ -317,9 +317,9 @@ namespace sequoia::maths::graph_impl
       class ETUN,
       class TaskProcessingModel
     >
-      requires (invocable<NBEF, edge_index_type>)
-            && (invocable<NAEF, edge_index_type>)
-            && (invocable<ETUN, typename G::const_edge_iterator>)
+      requires (std::invocable<NBEF, edge_index_type>)
+            && (std::invocable<NAEF, edge_index_type>)
+            && (std::invocable<ETUN, typename G::const_edge_iterator>)
     constexpr auto recursive_dfs(const G& graph,
                                  traversal_conditions<FindDisconnected> conditions,
                                  NBEF&& nodeBeforeEdgesFn,
@@ -385,11 +385,11 @@ namespace sequoia::maths::graph_impl
       class ESTF,
       class TaskProcessingModel
     >
-      requires (invocable<NBEF, edge_index_type>)
-            && (invocable<NAEF, edge_index_type>)
-            && (invocable<EFTF, const_edge_iterator>)
-            && (invocable<ESTF, const_edge_iterator>)
-            && (invocable<OnDiscovery, edge_index_type> || same_as<OnDiscovery, recurse>)
+      requires (std::invocable<NBEF, edge_index_type>)
+            && (std::invocable<NAEF, edge_index_type>)
+            && (std::invocable<EFTF, const_edge_iterator>)
+            && (std::invocable<ESTF, const_edge_iterator>)
+            && (std::invocable<OnDiscovery, edge_index_type> || std::same_as<OnDiscovery, recurse>)
       constexpr void inner_loop([[maybe_unused]] const G& graph,
                                 const edge_index_type nodeIndex,
                                 traversal_conditions<FindDisconnected>& conditions,
@@ -404,7 +404,7 @@ namespace sequoia::maths::graph_impl
                                 ESTF&& edgeSecondTraversalFn,
                                 TaskProcessingModel&& taskProcessingModel)
     {
-      constexpr bool hasNodeBeforeFn{!same_as<std::remove_cvref_t<NBEF>, null_func_obj>};
+      constexpr bool hasNodeBeforeFn{!std::same_as<std::remove_cvref_t<NBEF>, null_func_obj>};
       if constexpr(hasNodeBeforeFn)
       {
         taskProcessingModel.push(nodeBeforeEdgesFn, nodeIndex);
@@ -414,8 +414,8 @@ namespace sequoia::maths::graph_impl
       for(auto iter{begin}; iter != end; ++iter)
       {
         const auto nextNode{iter->target_node()};
-        constexpr bool hasEdgeFirstFn{!same_as<std::remove_cvref_t<EFTF>, null_func_obj>};
-        constexpr bool isDFS{same_as<OnDiscovery, recurse>};
+        constexpr bool hasEdgeFirstFn{!std::same_as<std::remove_cvref_t<EFTF>, null_func_obj>};
+        constexpr bool isDFS{std::same_as<OnDiscovery, recurse>};
 
         if constexpr(isDFS)
         {
@@ -426,7 +426,7 @@ namespace sequoia::maths::graph_impl
         }
         else if constexpr(G::flavour != graph_flavour::directed)
         {
-          constexpr bool hasEdgeSecondFn{!same_as<std::remove_cvref_t<ESTF>, null_func_obj>};
+          constexpr bool hasEdgeSecondFn{!std::same_as<std::remove_cvref_t<ESTF>, null_func_obj>};
           if constexpr(G::flavour == graph_flavour::directed_embedded)
           {
             if(is_loop(iter, nodeIndex))
@@ -472,7 +472,7 @@ namespace sequoia::maths::graph_impl
         if(!discovered[nextNode])
         {
           conditions.register_discovered(discovered, nextNode);
-          if constexpr(same_as<OnDiscovery, recurse>)
+          if constexpr(std::same_as<OnDiscovery, recurse>)
           {
             inner_loop(graph,
                        nextNode,
@@ -495,7 +495,7 @@ namespace sequoia::maths::graph_impl
         }
       }
 
-      if constexpr(!same_as<std::remove_cvref_t<NAEF>, null_func_obj>)
+      if constexpr(!std::same_as<std::remove_cvref_t<NAEF>, null_func_obj>)
       {
         taskProcessingModel.push(nodeAfterEdgesFn, nodeIndex);
       }

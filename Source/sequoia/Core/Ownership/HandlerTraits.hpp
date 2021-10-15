@@ -22,9 +22,9 @@ namespace sequoia::ownership
     typename H::handle_type;
     typename H::elementary_type;
 
-    { h.get(x) }      -> same_as<typename H::elementary_type&>;
-    { h.get_ptr(x) }  -> same_as<typename H::elementary_type*>;
-    { h.get(cx) }     -> same_as<const typename H::elementary_type&>;
-    { h.get_ptr(cx) } -> same_as<const typename H::elementary_type*>;
+    { h.get(x) }      -> std::same_as<typename H::elementary_type&>;
+    { h.get_ptr(x) }  -> std::same_as<typename H::elementary_type*>;
+    { h.get(cx) }     -> std::same_as<const typename H::elementary_type&>;
+    { h.get_ptr(cx) } -> std::same_as<const typename H::elementary_type*>;
   };
 }

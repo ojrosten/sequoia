@@ -24,10 +24,10 @@
     Note that a default constructor is not a strict requirement. To distinguish this
     Concept from std::regular, the Concept pseudoregular is used. Types additionally
     possessing the remaining comparison operators will be referred to as being
-    orderable.
+    std::totally_ordered.
 
     This file adds functions to the check_semantics overload set: they are
-    appropriate for testing the behaviour of types with regular/orderable semantics. Inside the
+    appropriate for testing the behaviour of types with regular/std::totally_ordered semantics. Inside the
     functions, consistency of the operators listed above will be checked. One of the overloads
     also accepts a mutator. This will modify a copy of y, checking both that the copy is
     indeed changed and also that y is left alone. The reason for this is to check that classes
@@ -54,7 +54,7 @@ namespace sequoia::testing
 
   /// Precondition: x!=y with values consistent with order
   template<test_mode Mode, pseudoregular T>
-    requires orderable<T>
+    requires std::totally_ordered<T>
   void check_semantics(std::string_view description, test_logger<Mode>& logger, const T& x, const T& y, std::weak_ordering order)
   {
     sentinel<Mode> sentry{logger, add_type_info<T>(description).append("\n")};
@@ -62,7 +62,7 @@ namespace sequoia::testing
   }
 
   /// Precondition: x!=y
-  template<test_mode Mode, pseudoregular T, invocable<T&> Mutator>
+  template<test_mode Mode, pseudoregular T, std::invocable<T&> Mutator>
   void check_semantics(std::string_view description, test_logger<Mode>& logger, const T& x, const T& y, Mutator yMutator)
   {
     sentinel<Mode> sentry{logger, add_type_info<T>(description).append("\n")};
@@ -70,8 +70,8 @@ namespace sequoia::testing
   }
 
   /// Precondition: x!=y, with values consistent with order
-  template<test_mode Mode, pseudoregular T, invocable<T&> Mutator>
-    requires orderable<T>
+  template<test_mode Mode, pseudoregular T, std::invocable<T&> Mutator>
+    requires std::totally_ordered<T>
   void check_semantics(std::string_view description, test_logger<Mode>& logger, const T& x, const T& y, std::weak_ordering order, Mutator yMutator)
   {
     sentinel<Mode> sentry{logger, add_type_info<T>(description).append("\n")};

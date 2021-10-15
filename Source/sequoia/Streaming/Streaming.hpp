@@ -26,7 +26,7 @@ namespace sequoia
 
   void write_to_file(const std::filesystem::path& file, std::string_view text);
 
-  template<invocable<std::string&> Fn>
+  template<std::invocable<std::string&> Fn>
   void read_modify_write(const std::filesystem::path& file, Fn fn)
   {
     if(auto text{read_to_string(file)})

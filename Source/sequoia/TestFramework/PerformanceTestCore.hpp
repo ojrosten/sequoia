@@ -21,7 +21,7 @@
 
 namespace sequoia::testing
 {
-  template<invocable Task>
+  template<std::invocable Task>
   [[nodiscard]]
   std::chrono::duration<double> profile(Task task)
   {
@@ -73,7 +73,7 @@ namespace sequoia::testing
        && (m_s / minSpeedUp >= (m_f - num_sds * sig_f))
 
    */
-  template<test_mode Mode, invocable F, invocable S>
+  template<test_mode Mode, std::invocable F, std::invocable S>
   bool check_relative_performance(std::string_view description, test_logger<Mode>& logger, F fast, S slow, const double minSpeedUp, const double maxSpeedUp, const std::size_t trials, const double num_sds, const std::size_t maxAttempts)
   {
     if((minSpeedUp <= 1) || (maxSpeedUp <= 1))
@@ -244,7 +244,7 @@ namespace sequoia::testing
     performance_extender& operator=(const performance_extender&) = delete;
     performance_extender& operator=(performance_extender&&)      = delete;
 
-    template<invocable F, invocable S>
+    template<std::invocable F, std::invocable S>
     bool check_relative_performance(std::string_view description, F fast, S slow, const double minSpeedUp, const double maxSpeedUp, const std::size_t trials=5, const double num_sds=4)
     {
       return testing::check_relative_performance(description, logger(), fast, slow, minSpeedUp, maxSpeedUp, trials, num_sds, 3);

@@ -387,7 +387,7 @@ namespace sequoia::testing
                              );
   }
 
-  template<invocable<test_runner&> Manipulator, concrete_test... Ts>
+  template<std::invocable<test_runner&> Manipulator, concrete_test... Ts>
   void test_runner_test::test_instability_analysis(std::string_view message,
                                                    std::string_view outputDirName,
                                                    std::string_view numRuns,

@@ -52,7 +52,7 @@ namespace sequoia
         'target node' to which the edge points.
     */
 
-    template<integral IndexType>
+    template<std::integral IndexType>
     class edge_base
     {
     public:
@@ -98,7 +98,7 @@ namespace sequoia
         edges is done at the level of the graph.
     */
 
-    template<class WeightHandler, integral IndexType>
+    template<class WeightHandler, std::integral IndexType>
       requires ownership::handler<WeightHandler>
     class weighting
     {
@@ -169,8 +169,8 @@ namespace sequoia
 
      */
 
-    template<class WeightHandler, integral IndexType>
-      requires (ownership::handler<WeightHandler> && empty<typename WeightHandler::elementary_type::value_type>)
+    template<class WeightHandler, std::integral IndexType>
+      requires (ownership::handler<WeightHandler> && std::is_empty_v<typename WeightHandler::elementary_type::value_type>)
     class weighting<WeightHandler, IndexType>
     {
     public:
@@ -200,7 +200,7 @@ namespace sequoia
 
      */
 
-    template<class WeightHandler, integral IndexType>
+    template<class WeightHandler, std::integral IndexType>
       requires ownership::handler<WeightHandler>
     class partial_edge_base : public edge_base<IndexType>, public weighting<WeightHandler, IndexType>
     {
@@ -245,7 +245,7 @@ namespace sequoia
 
      */
 
-    template<class WeightHandler, integral IndexType=std::size_t>
+    template<class WeightHandler, std::integral IndexType=std::size_t>
       requires ownership::handler<WeightHandler>
     class partial_edge : public partial_edge_base<WeightHandler, IndexType>
     {
@@ -261,7 +261,7 @@ namespace sequoia
 
      */
 
-    template<class WeightHandler, integral IndexType=std::size_t>
+    template<class WeightHandler, std::integral IndexType=std::size_t>
       requires ownership::handler<WeightHandler>
     class decorated_edge_base : public partial_edge_base<WeightHandler, IndexType>
     {
@@ -310,7 +310,7 @@ namespace sequoia
 
      */
 
-    template<class WeightHandler, integral IndexType=std::size_t>
+    template<class WeightHandler, std::integral IndexType=std::size_t>
       requires ownership::handler<WeightHandler>
     class embedded_partial_edge : public decorated_edge_base<WeightHandler, IndexType>
     {
@@ -337,7 +337,7 @@ namespace sequoia
 
      */
 
-    template<class WeightHandler, integral IndexType=std::size_t>
+    template<class WeightHandler, std::integral IndexType=std::size_t>
       requires ownership::handler<WeightHandler>
     class edge : public decorated_edge_base<WeightHandler, IndexType>
     {
@@ -398,7 +398,7 @@ namespace sequoia
 
      */
 
-    template<class WeightHandler, integral IndexType=std::size_t>
+    template<class WeightHandler, std::integral IndexType=std::size_t>
       requires ownership::handler<WeightHandler>
     class embedded_edge : public decorated_edge_base<WeightHandler, IndexType>
     {

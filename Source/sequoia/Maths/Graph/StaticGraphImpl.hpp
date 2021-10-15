@@ -71,7 +71,7 @@ namespace sequoia::maths::graph_impl
     std::size_t Order,
     std::size_t Size,
     class EdgeWeight,
-    integral IndexType
+    std::integral IndexType
   >
   struct static_edge_traits
     : public edge_type_generator<GraphFlavour, ownership::spawner<EdgeWeight>, IndexType, edge_sharing_preference::independent>

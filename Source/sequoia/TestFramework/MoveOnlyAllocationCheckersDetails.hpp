@@ -74,7 +74,7 @@ namespace sequoia::testing::impl
             check_para_constructor_allocations(logger, container_tag_constant<container_tag::y>{}, std::forward<T>(y), yClone, info...)};
   }
 
-  template<test_mode Mode, class Actions, moveonly T, invocable<T&> Mutator, alloc_getter<T>... Getters>
+  template<test_mode Mode, class Actions, moveonly T, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
   void check_semantics(std::string_view description, test_logger<Mode>& logger, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, Mutator m, const allocation_info<T, Getters>&... info)
   {
     const auto message{!description.empty() ? add_type_info<T>(description).append("\n") : ""};
@@ -93,7 +93,7 @@ namespace sequoia::testing::impl
     moveonly T,
     invocable_r<T> xMaker,
     invocable_r<T> yMaker,
-    invocable<T&> Mutator,
+    std::invocable<T&> Mutator,
     alloc_getter<T>... Getters
   >
   std::pair<T,T> check_semantics(std::string_view description, test_logger<Mode>& logger, const Actions& actions, xMaker xFn, yMaker yFn, Mutator m, const allocation_info<T, Getters>&... info)
@@ -110,7 +110,7 @@ namespace sequoia::testing::impl
   }
 
   /// Unpacks the tuple and feeds to the overload of check_semantics defined in MoveOnlyCheckersDetails.hpp
-  template<test_mode Mode, class Actions, moveonly T, invocable<T&> Mutator, alloc_getter<T>... Getters>
+  template<test_mode Mode, class Actions, moveonly T, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
   void check_semantics(test_logger<Mode>& logger, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, Mutator m, std::tuple<dual_allocation_checker<T, Getters>...> checkers)
   {
     auto fn{

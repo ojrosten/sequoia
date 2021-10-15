@@ -56,7 +56,7 @@ namespace sequoia::runtime
     };
 
     template<class... Args>
-      requires (constructible_from<Products, Args...> && ...)
+      requires (std::constructible_from<Products, Args...> && ...)
     factory(const std::array<string_view, size()>& names, Args&&... args)
       : m_Creators{make_array(names, std::make_index_sequence<size()>{}, args...)}
     {

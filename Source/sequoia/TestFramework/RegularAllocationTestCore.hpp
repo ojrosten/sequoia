@@ -37,8 +37,8 @@ namespace sequoia::testing
     regular_allocation_extender& operator=(const regular_allocation_extender&) = delete;
     regular_allocation_extender& operator=(regular_allocation_extender&&)      = delete;
 
-    template<pseudoregular T, invocable<T&> Mutator, alloc_getter<T>... Getters>
-      requires (!orderable<T> && (sizeof...(Getters) > 0))
+    template<pseudoregular T, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
+      requires (!std::totally_ordered<T> && (sizeof...(Getters) > 0))
     void check_semantics(std::string_view description, const T& x, const T& y, Mutator m, allocation_info<T, Getters>... info)
     {
       testing::check_semantics(append_lines(description, emphasise("Regular Semantics")), logger(), x, y, m, info...);
@@ -49,17 +49,17 @@ namespace sequoia::testing
       pseudoregular T,
       invocable_r<T> xMaker,
       invocable_r<T> yMaker,
-      invocable<T&> Mutator,
+      std::invocable<T&> Mutator,
       alloc_getter<T>... Getters
     >
-      requires (!orderable<T> && (sizeof...(Getters) > 0))
+      requires (!std::totally_ordered<T> && (sizeof...(Getters) > 0))
     std::pair<T, T> check_semantics(std::string_view description, xMaker xFn, yMaker yFn, Mutator m, allocation_info<T, Getters>... info)
     {
       return testing::check_semantics(append_lines(description, emphasise("Regular Semantics")), logger(), std::move(xFn), std::move(yFn), m, info...);
     }
 
-    template<pseudoregular T, invocable<T&> Mutator, alloc_getter<T>... Getters>
-      requires (orderable<T> && (sizeof...(Getters) > 0))
+    template<pseudoregular T, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
+      requires (std::totally_ordered<T> && (sizeof...(Getters) > 0))
     void check_semantics(std::string_view description, const T& x, const T& y, std::weak_ordering order, Mutator m, allocation_info<T, Getters>... info)
     {
       testing::check_semantics(append_lines(description, emphasise("Ordered Semantics")), logger(), x, y, order, m, info...);
@@ -70,10 +70,10 @@ namespace sequoia::testing
       pseudoregular T,
       invocable_r<T> xMaker,
       invocable_r<T> yMaker,
-      invocable<T&> Mutator,
+      std::invocable<T&> Mutator,
       alloc_getter<T>... Getters
     >
-      requires (orderable<T> && (sizeof...(Getters) > 0))
+      requires (std::totally_ordered<T> && (sizeof...(Getters) > 0))
     std::pair<T, T> check_semantics(std::string_view description, xMaker xFn, yMaker yFn, std::weak_ordering order, Mutator m, allocation_info<T, Getters>... info)
     {
       return testing::check_semantics(append_lines(description, emphasise("Ordered Semantics")), logger(), std::move(xFn), std::move(yFn), order, m, info...);
@@ -89,7 +89,7 @@ namespace sequoia::testing
 
   template<class Test, test_mode Mode>
   concept reg_alloc_test =
-       derived_from<Test, basic_test<checker<Mode, regular_allocation_extender<Mode>>>>
+       std::derived_from<Test, basic_test<checker<Mode, regular_allocation_extender<Mode>>>>
     && !std::is_abstract_v<Test>
     && requires{
          std::declval<Test>().template test_allocation<true, true, true>();

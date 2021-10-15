@@ -15,7 +15,7 @@
 namespace sequoia::maths
 {
   template<class N>
-  concept network = equality_comparable<N> && requires(const N& n) {
+  concept network = std::equality_comparable<N> && requires(const N& n) {
     typename N::edge_type;
     typename N::edge_weight_type;
     typename N::edge_index_type;
@@ -24,10 +24,10 @@ namespace sequoia::maths
     typename N::const_edge_iterator;
     typename N::const_reverse_edge_iterator;
 
-    { n.size() } -> same_as<typename N::size_type>;
-    { n.order() } -> same_as<typename N::size_type>;
-    { n.cbegin_edges(0) } -> same_as<typename N::const_edge_iterator>;
-    { n.cend_edges(0) } -> same_as<typename N::const_edge_iterator>;
+    { n.size() }          -> std::same_as<typename N::size_type>;
+    { n.order() }         -> std::same_as<typename N::size_type>;
+    { n.cbegin_edges(0) } -> std::same_as<typename N::const_edge_iterator>;
+    { n.cend_edges(0) }   -> std::same_as<typename N::const_edge_iterator>;
   };
 
   // TO DO: replace with constexpr bool once MSVC supports this

@@ -44,7 +44,7 @@ namespace sequoia::utilities
       m_Type = T{std::forward<Args>(args)...};
     }
 
-    template<invocable<T&> Fn>
+    template<std::invocable<T&> Fn>
     constexpr void mutate(Fn fn)
     {
       fn(m_Type);

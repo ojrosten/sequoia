@@ -73,7 +73,8 @@ namespace sequoia::ownership
     using pool_iterator = utilities::iterator<Iterator, pool_deref_policy<Wrapper>>;
   }
 
-  template<stateful T, class Allocator=std::allocator<T>>
+  template<class T, class Allocator=std::allocator<T>>
+    requires (!std::is_empty_v<T>)
   class data_pool
   {
     friend class data_wrapper;

@@ -26,7 +26,7 @@ namespace sequoia::impl
   template<class T>
   struct type_to_type
   {
-    template<invocable<T> AllocGetter>
+    template<std::invocable<T> AllocGetter>
     struct mapper
     {
       using type = std::invoke_result_t<AllocGetter, T>;
@@ -35,14 +35,14 @@ namespace sequoia::impl
 
   struct assignment_helper
   {
-    template<class T, invocable<T>... AllocGetters>
+    template<class T, std::invocable<T>... AllocGetters>
     constexpr static void assign(T& to, const T& from, [[maybe_unused]] AllocGetters... allocGetters)
     {
       invoke_filtered<void, type_to_type<T>::template mapper>([&to, &from](auto... filteredAllocGetters){ assign_filtered(to, from, filteredAllocGetters...); }, allocGetters...);
     }
 
   private:
-    template<class T, invocable<T>... FilteredAllocGetters>
+    template<class T, std::invocable<T>... FilteredAllocGetters>
     constexpr static void assign_filtered(T& to, const T& from, [[maybe_unused]] FilteredAllocGetters... allocGetters)
     {
       if constexpr((naive_treatment<T, FilteredAllocGetters>() && ...))
@@ -75,7 +75,7 @@ namespace sequoia::impl
       }
     }
 
-    template<class T, invocable<T> AllocGetter>
+    template<class T, std::invocable<T> AllocGetter>
     constexpr static bool naive_treatment() noexcept
     {
       using allocator = std::invoke_result_t<AllocGetter, T>;
@@ -89,7 +89,7 @@ namespace sequoia::impl
       }
     }
 
-    template<class T, invocable<T> AllocGetter, invocable<T>... AllocGetters>
+    template<class T, std::invocable<T> AllocGetter, std::invocable<T>... AllocGetters>
     constexpr static bool consistency() noexcept
     {
       if constexpr(sizeof...(AllocGetters) > 0)
@@ -100,7 +100,7 @@ namespace sequoia::impl
       return true;
     }
 
-    template<class T, invocable<T> AllocGetterL, invocable<T> AllocGetterR>
+    template<class T, std::invocable<T> AllocGetterL, std::invocable<T> AllocGetterR>
     constexpr static bool consistent() noexcept
     {
       return (copy_propagation<T, AllocGetterL>() == copy_propagation<T, AllocGetterR>())

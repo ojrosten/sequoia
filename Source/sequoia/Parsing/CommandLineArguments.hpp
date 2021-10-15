@@ -96,7 +96,7 @@ namespace sequoia::parsing::commandline
 
   void invoke_depth_first(const std::vector<operation>& operations);
 
-  template<invocable<std::string> Fn>
+  template<std::invocable<std::string> Fn>
   [[nodiscard]]
   std::string parse_invoke_depth_first(int argc, char** argv, const std::vector<option>& options, Fn zerothArgProcessor)
   {

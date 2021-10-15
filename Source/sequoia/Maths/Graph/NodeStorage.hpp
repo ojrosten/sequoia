@@ -59,7 +59,7 @@ namespace sequoia::maths::graph_impl
   };
 
   template<class T>
-  constexpr bool empty_proxy = ownership::creator<T> && empty<typename T::proxy::value_type>;
+  constexpr bool empty_proxy = ownership::creator<T> && std::is_empty_v<typename T::proxy::value_type>;
 
   // TO DO: remove this indirection if/when clang no longer needs it!
   template<class N>

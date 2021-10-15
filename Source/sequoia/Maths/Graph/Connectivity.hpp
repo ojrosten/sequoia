@@ -944,7 +944,7 @@ namespace sequoia
       }
 
       template<alloc EdgeAllocator, alloc PartitionAllocator>
-        requires constructible_from<edge_storage_type, EdgeAllocator, PartitionAllocator>
+        requires std::constructible_from<edge_storage_type, EdgeAllocator, PartitionAllocator>
       constexpr connectivity(indirect_edge_init_type, init_t edges, const EdgeAllocator& edgeAllocator, const PartitionAllocator& partitionAllocator)
         : m_Edges(edgeAllocator, partitionAllocator)
       {
@@ -981,7 +981,7 @@ namespace sequoia
       }
 
       template<alloc EdgeAllocator, alloc PartitionAllocator>
-        requires constructible_from<edge_storage_type, EdgeAllocator, PartitionAllocator>
+        requires std::constructible_from<edge_storage_type, EdgeAllocator, PartitionAllocator>
       constexpr connectivity(indirect_edge_copy_type, const connectivity& in, const EdgeAllocator& edgeAllocator, const PartitionAllocator& partitionAllocator)
         : m_Edges(std::allocator_traits<EdgeAllocator>::select_on_container_copy_construction(edgeAllocator),
                   std::allocator_traits<PartitionAllocator>::select_on_container_copy_construction(partitionAllocator))
@@ -990,7 +990,7 @@ namespace sequoia
       }
 
       template<alloc EdgeAllocator>
-        requires constructible_from<edge_storage_type, EdgeAllocator>
+        requires std::constructible_from<edge_storage_type, EdgeAllocator>
       constexpr connectivity(indirect_edge_copy_type, const connectivity& in, const EdgeAllocator& edgeAllocator)
         : m_Edges(std::allocator_traits<EdgeAllocator>::select_on_container_copy_construction(edgeAllocator))
       {
@@ -1184,8 +1184,8 @@ namespace sequoia
       template<class Edges, alloc... Allocators>
       constexpr void process_edges(Edges& orderedEdges, const Allocators&... allocs)
       {
-        constexpr bool sortWeights{!std::is_empty_v<edge_weight_type> && orderable<edge_weight_type>};
-        constexpr bool clusterEdges{!std::is_empty_v<edge_weight_type> && !orderable<edge_weight_type>};
+        constexpr bool sortWeights{!std::is_empty_v<edge_weight_type> && std::totally_ordered<edge_weight_type>};
+        constexpr bool clusterEdges{!std::is_empty_v<edge_weight_type> && !std::totally_ordered<edge_weight_type>};
 
         auto edgeComparer{
           [](const auto& e1, const auto& e2){

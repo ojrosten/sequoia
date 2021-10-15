@@ -21,7 +21,7 @@ namespace sequoia::utilities
 {
   namespace impl
   {
-    template<class T, class InitType, invocable<InitType> Fn>
+    template<class T, class InitType, std::invocable<InitType> Fn>
     [[nodiscard]]
     constexpr T to_element(std::initializer_list<InitType> l, const std::size_t i, Fn fn)
     {
@@ -38,7 +38,7 @@ namespace sequoia::utilities
       }
     }
 
-    template<class T, std::size_t N, class InitType, std::size_t... I, invocable<InitType> Fn>
+    template<class T, std::size_t N, class InitType, std::size_t... I, std::invocable<InitType> Fn>
     [[nodiscard]]
     constexpr std::array<T, N> to_array([[maybe_unused]] std::initializer_list<InitType> l, [[maybe_unused]] std::index_sequence<I...>, Fn&& fn)
     {
@@ -56,7 +56,7 @@ namespace sequoia::utilities
   };
 
 
-  template<class T, std::size_t N, class InitType=T, invocable<InitType> Fn=identity_transform<InitType>>
+  template<class T, std::size_t N, class InitType=T, std::invocable<InitType> Fn=identity_transform<InitType>>
   [[nodiscard]]
   constexpr std::array<T, N> to_array(std::initializer_list<InitType> l, Fn fn = Fn{})
   {

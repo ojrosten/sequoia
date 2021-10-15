@@ -50,7 +50,7 @@ namespace sequoia::testing
 
     template
     <
-      invocable<> xMaker,
+      std::invocable<> xMaker,
       moveonly T=std::invoke_result_t<xMaker>,
       invocable_r<T> yMaker
     >
@@ -61,7 +61,7 @@ namespace sequoia::testing
 
      /// Preconditions: x!=y, with values consistent with order; x==xClone, y==yClone
     template<moveonly T>
-      requires orderable<T>
+      requires std::totally_ordered<T>
     void check_semantics(std::string_view description, T&& x, T&& y, const T& xClone, const T& yClone, std::weak_ordering order)
     {
       testing::check_semantics(append_lines(description, emphasise("Move-only Semantics")), logger(), std::move(x), std::move(y), xClone, yClone, order);
@@ -69,11 +69,11 @@ namespace sequoia::testing
 
     template
     <
-      invocable<> xMaker,
+      std::invocable<> xMaker,
       moveonly T=std::invoke_result_t<xMaker>,
       invocable_r<T> yMaker
     >
-      requires orderable<T>
+      requires std::totally_ordered<T>
     void check_semantics(std::string_view description, xMaker xFn, yMaker yFn, std::weak_ordering order)
     {
       check_semantics(description, xFn(), yFn(), xFn(), yFn(), order);

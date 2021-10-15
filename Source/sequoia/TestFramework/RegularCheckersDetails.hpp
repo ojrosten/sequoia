@@ -50,7 +50,7 @@ namespace sequoia::testing::impl
     return do_check_copy_assign(logger, actions, z, y);
   }
 
-  template<test_mode Mode, class Actions, pseudoregular T, invocable<T&> Mutator, class... Args>
+  template<test_mode Mode, class Actions, pseudoregular T, std::invocable<T&> Mutator, class... Args>
   bool check_semantics(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, Mutator yMutator, const Args&... args)
   {
     sentinel<Mode> sentry{logger, ""};

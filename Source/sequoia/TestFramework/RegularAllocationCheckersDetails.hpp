@@ -36,7 +36,7 @@ namespace sequoia::testing::impl
       check_copy_assign_allocation(logger, lhs, rhs, checkers...);
     }
 
-    template<test_mode Mode, invocable<T&> Mutator, alloc_getter<T>... Getters>
+    template<test_mode Mode, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
     static void post_swap_action(test_logger<Mode>& logger, T& x, const T& y, const T& yClone, Mutator yMutator, const dual_allocation_checker<T, Getters>&... checkers)
     {
       allocation_actions<T>::post_swap_action(logger, x, y, yClone, checkers...);
@@ -53,7 +53,7 @@ namespace sequoia::testing::impl
     return do_check_copy_assign(logger, actions, z, y, dual_allocation_checker{checkers.info(), z, y}...);
   }
 
-  template<test_mode Mode, pseudoregular T, invocable<T&> Mutator, alloc_getter<T>... Getters>
+  template<test_mode Mode, pseudoregular T, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
   void check_para_constructor_allocations(test_logger<Mode>& logger, const T& y, Mutator yMutator, const allocation_info<T, Getters>&... info)
   {
     auto make{
@@ -86,7 +86,7 @@ namespace sequoia::testing::impl
     test_mode Mode,
     class Actions,
     pseudoregular T,
-    invocable<T&> Mutator,
+    std::invocable<T&> Mutator,
     alloc_getter<T>... Getters
   >
   bool check_swap(test_logger<Mode>& logger, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, Mutator yMutator, const dual_allocation_checker<T, Getters>&... checkers)
@@ -94,7 +94,7 @@ namespace sequoia::testing::impl
     return do_check_swap(logger, actions, std::move(x), std::move(y), xClone, yClone, std::move(yMutator), dual_allocation_checker{checkers.info(), x, y}...);
   }
 
-  template<test_mode Mode, class Actions, pseudoregular T, invocable<T&> Mutator, alloc_getter<T>... Getters>
+  template<test_mode Mode, class Actions, pseudoregular T, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
     requires (sizeof...(Getters) > 0)
   void check_semantics(std::string_view description, test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, Mutator yMutator, const allocation_info<T, Getters>&... info)
   {
@@ -114,7 +114,7 @@ namespace sequoia::testing::impl
     pseudoregular T,
     invocable_r<T> xMaker,
     invocable_r<T> yMaker,
-    invocable<T&> Mutator,
+    std::invocable<T&> Mutator,
     alloc_getter<T>... Getters
   >
     requires (sizeof...(Getters) > 0)
@@ -137,7 +137,7 @@ namespace sequoia::testing::impl
     test_mode Mode,
     class Actions,
     pseudoregular T,
-    invocable<T&> Mutator,
+    std::invocable<T&> Mutator,
     alloc_getter<T>... Getters
   >
   bool check_semantics(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, Mutator yMutator, std::tuple<dual_allocation_checker<T, Getters>...> checkers)

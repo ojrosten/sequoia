@@ -57,7 +57,7 @@ namespace sequoia::testing
   };
 
   template<class Advisor, class T>
-    requires invocable<Advisor, T, T>
+    requires std::invocable<Advisor, T, T>
   struct advisor_analyser<Advisor, T>
   {
     constexpr static bool utilize{true};
@@ -66,7 +66,7 @@ namespace sequoia::testing
   // For a Advisor with a single operator(), attempt to disallow bindings which involve
   // a narrowing conversion
   template<class Advisor, class T>
-    requires invocable<Advisor, T, T> && requires {
+    requires std::invocable<Advisor, T, T> && requires {
       std::declval<decltype(&Advisor::operator())>();
     }
   struct advisor_analyser<Advisor, T>

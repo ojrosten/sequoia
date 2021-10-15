@@ -36,7 +36,7 @@ namespace sequoia::testing
     };
 
     template<class Nodes>
-      requires empty<typename Nodes::weight_type>
+      requires std::is_empty_v<typename Nodes::weight_type>
     struct node_detailed_equality_checker<Nodes>
     {
       using type = Nodes;
@@ -64,7 +64,7 @@ namespace sequoia::testing
     };
 
     template<class Nodes>
-      requires empty<typename Nodes::weight_type>
+      requires std::is_empty_v<typename Nodes::weight_type>
     struct node_equivalence_checker<Nodes>
     {
       using type = Nodes;

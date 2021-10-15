@@ -60,7 +60,7 @@ namespace sequoia::testing
       using nodes_equivalent_type = std::initializer_list<node_weight_type>;
 
       template<test_mode Mode>
-        requires (!empty<node_weight_type>)
+        requires (!std::is_empty_v<node_weight_type>)
       static void check(test_logger<Mode>& logger, const type& graph, connectivity_equivalent_type connPrediction, nodes_equivalent_type nodesPrediction)
       {
         using connectivity_t = typename type::connectivity_type;
@@ -71,7 +71,7 @@ namespace sequoia::testing
       }
 
       template<test_mode Mode>
-        requires empty<node_weight_type>
+        requires std::is_empty_v<node_weight_type>
       static void check(test_logger<Mode>& logger, const type& graph, connectivity_equivalent_type connPrediction)
       {
         using connectivity_t = typename type::connectivity_type;
@@ -92,7 +92,7 @@ namespace sequoia::testing
       using nodes_equivalent_type = std::initializer_list<node_weight_type>;
 
       template<test_mode Mode>
-        requires (!empty<node_weight_type>)
+        requires (!std::is_empty_v<node_weight_type>)
       static void check(test_logger<Mode>& logger, const type& graph, connectivity_equivalent_type connPrediction, nodes_equivalent_type nodesPrediction)
       {
         using connectivity_t = typename type::connectivity_type;
@@ -103,7 +103,7 @@ namespace sequoia::testing
       }
 
       template<test_mode Mode>
-        requires empty<node_weight_type>
+        requires std::is_empty_v<node_weight_type>
       static void check(test_logger<Mode>& logger, const type& graph, connectivity_equivalent_type connPrediction)
       {
         using connectivity_t = typename type::connectivity_type;
@@ -232,7 +232,7 @@ namespace sequoia::testing
       class G,
       class E=typename G::edge_init_type
     >
-      requires (!empty<typename G::node_weight_type>)
+      requires (!std::is_empty_v<typename G::node_weight_type>)
     void check_graph(std::string_view description, const G& graph, std::initializer_list<std::initializer_list<E>> edges, std::initializer_list<typename G::node_weight_type> nodeWeights)
     {
       if constexpr(impl::use_weak_equiv_v<typename G::edge_type>)
@@ -250,7 +250,7 @@ namespace sequoia::testing
       class G,
       class E=typename G::edge_init_type
     >
-      requires empty<typename G::node_weight_type>
+      requires std::is_empty_v<typename G::node_weight_type>
     void check_graph(std::string_view description, const G& graph, std::initializer_list<std::initializer_list<E>> edges)
     {
       if constexpr(impl::use_weak_equiv_v<typename G::edge_type>)

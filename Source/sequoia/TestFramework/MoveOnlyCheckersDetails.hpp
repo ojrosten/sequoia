@@ -15,7 +15,7 @@
 
 namespace sequoia::testing::impl
 {
-  template<test_mode Mode, class Actions, moveonly T, invocable<T&> Mutator, class... Args>
+  template<test_mode Mode, class Actions, moveonly T, std::invocable<T&> Mutator, class... Args>
   bool check_semantics(test_logger<Mode>& logger, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, Mutator m, const Args&... args)
   {
     sentinel<Mode> sentry{logger, ""};

@@ -159,7 +159,7 @@ namespace sequoia
       }
 
       constexpr graph_primitive(edges_initializer edges, std::initializer_list<node_weight_type> nodeWeights)
-        requires (!empty<node_weight_type> && !same_as<node_weight_type, graph_impl::heterogeneous_tag>)
+        requires (!std::is_empty_v<node_weight_type> && !std::same_as<node_weight_type, graph_impl::heterogeneous_tag>)
         : graph_primitive(homo_init_type{}, edges, nodeWeights)
       {
         if(nodeWeights.size() != edges.size())
@@ -167,7 +167,7 @@ namespace sequoia
       }
 
       template<class... NodeWeights>
-        requires same_as<node_weight_type, graph_impl::heterogeneous_tag>
+        requires std::same_as<node_weight_type, graph_impl::heterogeneous_tag>
       constexpr graph_primitive(edges_initializer edges, NodeWeights&&... nodeWeights)
         : graph_primitive(hetero_init_type{}, edges, std::forward<NodeWeights>(nodeWeights)...)
       {}
@@ -281,7 +281,7 @@ namespace sequoia
         alloc EdgePartitionsAllocator,
         class... NodeWeights
       >
-        requires same_as<node_weight_type, graph_impl::heterogeneous_tag>
+        requires std::same_as<node_weight_type, graph_impl::heterogeneous_tag>
       constexpr graph_primitive(edges_initializer edges, const EdgeAllocator& edgeAlloc, const EdgePartitionsAllocator& edgeParitionsAlloc, NodeWeights&&... nodeWeights)
         : Connectivity{edges, edgeAlloc, edgeParitionsAlloc}
         , Nodes{std::forward<NodeWeights>(nodeWeights)...}
@@ -565,32 +565,32 @@ namespace sequoia
       }
 
       constexpr graph_primitive(homo_init_type, edges_initializer edges, std::initializer_list<node_weight_type> nodeWeights)
-        requires (!same_as<node_weight_type, graph_impl::heterogeneous_tag>)
+        requires (!std::same_as<node_weight_type, graph_impl::heterogeneous_tag>)
         : Connectivity{edges}
         , Nodes{nodeWeights}
       {}
 
       template<class... NodeWeights>
-        requires same_as<node_weight_type, graph_impl::heterogeneous_tag>
+        requires std::same_as<node_weight_type, graph_impl::heterogeneous_tag>
       constexpr graph_primitive(hetero_init_type, edges_initializer edges, NodeWeights&&... nodeWeights)
         : Connectivity{edges}
         , Nodes{std::forward<NodeWeights>(nodeWeights)...}
       {}
 
       constexpr graph_primitive(homo_init_type, edges_initializer edges)
-        requires (!same_as<node_weight_type, graph_impl::heterogeneous_tag> && !empty<node_weight_type>)
+        requires (!std::same_as<node_weight_type, graph_impl::heterogeneous_tag> && !std::is_empty_v<node_weight_type>)
         : Connectivity{edges}
         , Nodes(edges.size())
       {}
 
       constexpr graph_primitive(homo_init_type, edges_initializer edges)
-        requires (!same_as<node_weight_type, graph_impl::heterogeneous_tag>&& empty<node_weight_type>)
+        requires (!std::same_as<node_weight_type, graph_impl::heterogeneous_tag>&& std::is_empty_v<node_weight_type>)
         : Connectivity{edges}
         , Nodes{}
       {}
 
       constexpr graph_primitive(hetero_init_type, edges_initializer edges)
-        requires same_as<node_weight_type, graph_impl::heterogeneous_tag>
+        requires std::same_as<node_weight_type, graph_impl::heterogeneous_tag>
         : Connectivity{edges},
           Nodes{}
       {}
