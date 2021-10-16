@@ -16,6 +16,7 @@
 
 #include "sequoia/Core/Meta/Concepts.hpp"
 
+#include <algorithm>
 #include <functional>
 
 namespace sequoia
