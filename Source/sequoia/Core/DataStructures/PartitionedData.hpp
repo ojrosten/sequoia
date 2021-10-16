@@ -613,7 +613,7 @@ namespace sequoia
         {
           if(i != j)
           {
-            if(i > j) sequoia::swap(i, j);
+            if(i > j) std::swap(i, j);
 
             const auto len_i{distance(begin_partition(i), end_partition(i))};
             const auto len_j{distance(begin_partition(j), end_partition(j))};
@@ -622,16 +622,16 @@ namespace sequoia
             auto end_i{end_partition(i).base_iterator()}, end_j{end_partition(j).base_iterator()};
             for(auto iter_i{begin_i}, iter_j{begin_j}; (iter_i != end_i) && (iter_j != end_j); ++iter_i, ++iter_j)
             {
-              sequoia::iter_swap(iter_i, iter_j);
+              std::iter_swap(iter_i, iter_j);
             }
 
             if(len_i > len_j)
             {
-              sequoia::rotate(begin_i + len_j, begin_i + len_i, end_j);
+              std::rotate(begin_i + len_j, begin_i + len_i, end_j);
             }
             else if(len_j > len_i)
             {
-              sequoia::rotate(begin_i + len_i, begin_j + len_i, end_j);
+              std::rotate(begin_i + len_i, begin_j + len_i, end_j);
             }
 
             if(len_i != len_j)
@@ -709,10 +709,12 @@ namespace sequoia
       }
 
       void swap(partitioned_sequence_base& other)
-        noexcept(noexcept(sequoia::swap(this->m_Partitions, other.m_Partitions)) && noexcept(sequoia::swap(this->m_Storage, other.m_Storage)))
+        // TO DO: Strictly speaking incorrect but will be fine when ranges::swap available
+        noexcept(noexcept(std::swap(this->m_Partitions, other.m_Partitions)) && noexcept(std::swap(this->m_Storage, other.m_Storage)))
       {
-        sequoia::swap(m_Partitions, other.m_Partitions);
-        sequoia::swap(m_Storage, other.m_Storage);
+        using std::swap;
+        swap(m_Partitions, other.m_Partitions);
+        swap(m_Storage, other.m_Storage);
       }
 
       auto get_allocator() const

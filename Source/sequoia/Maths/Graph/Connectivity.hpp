@@ -264,14 +264,16 @@ namespace sequoia
       }
 
       void swap(connectivity& rhs)
-        noexcept(noexcept(this->m_Edges, rhs.m_Edges))
+        // TO DO: Strictly speaking incorrect but will be fine when ranges::swap available
+        noexcept(noexcept(std::swap(this->m_Edges, rhs.m_Edges)))
       {
-        sequoia::swap(m_Edges, rhs.m_Edges);
+        using std::swap;
+        swap(m_Edges, rhs.m_Edges);
       }
 
       constexpr void swap_edges(edge_index_type node, edge_index_type i, edge_index_type j)
       {
-        sequoia::iter_swap(begin_edges(node) + i, begin_edges(node) + j);
+        std::iter_swap(begin_edges(node) + i, begin_edges(node) + j);
       }
 
       constexpr void swap_nodes(size_type i, size_type j)

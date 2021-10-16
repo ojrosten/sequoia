@@ -209,9 +209,12 @@ namespace sequoia::maths::graph_impl
 
     constexpr node_storage& operator=(node_storage&&) = default;
 
-    constexpr void swap(node_storage& rhs) noexcept(noexcept(sequoia::swap(this->m_NodeWeights, rhs.m_NodeWeights)))
+    constexpr void swap(node_storage& rhs)
+      // TO DO: Strictly speaking incorrect but will be fine when ranges::swap available
+      noexcept(noexcept(std::swap(this->m_NodeWeights, rhs.m_NodeWeights)))
     {
-      sequoia::swap(m_NodeWeights, rhs.m_NodeWeights);
+      using std::swap;
+      swap(m_NodeWeights, rhs.m_NodeWeights);
     }
 
     template<alloc Allocator>
@@ -225,7 +228,8 @@ namespace sequoia::maths::graph_impl
     {
       if((i < size()) && (j < size()))
       {
-        sequoia::swap(m_NodeWeights[i], m_NodeWeights[j]);
+        using std::swap;
+        swap(m_NodeWeights[i], m_NodeWeights[j]);
       }
       else if constexpr (throw_on_range_error)
       {

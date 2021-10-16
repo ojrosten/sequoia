@@ -20,26 +20,6 @@
 
 namespace sequoia
 {
-  template<class T> constexpr void swap(T& a, T& b) noexcept(noexcept(std::swap(a,b)))
-  {
-    if constexpr (has_allocator_type<T>)
-    {
-      using std::swap;
-      swap(a,b);
-    }
-    else
-    {
-      auto tmp{std::move(a)};
-      a = std::move(b);
-      b = std::move(tmp);
-    }
-  }
-
-  template<class Iter> constexpr void iter_swap(Iter a, Iter b)
-  {
-    sequoia::swap(*a, *b);
-  }
-
   template<class FwdIter, class Comparer=std::less<std::decay_t<decltype(*FwdIter())>>>
   constexpr void bubble_up(FwdIter begin, FwdIter current, Comparer comp = Comparer{})
   {
@@ -108,7 +88,7 @@ namespace sequoia
     }
   }
 
-  template<class ForwardIt>
+  /*template<class ForwardIt>
   constexpr ForwardIt rotate(ForwardIt first, ForwardIt n_first, ForwardIt last)
   {
     if(first == n_first) return last;
@@ -135,7 +115,7 @@ namespace sequoia
       sequoia::rotate(unswapped, last - dist, last);
 
     return retIter;
-  }
+  }*/
 
   template<class FwdIter, class Comparer=std::equal_to<std::decay_t<decltype(*FwdIter())>>>
   constexpr void cluster(FwdIter begin, FwdIter end, Comparer comp = Comparer{})
