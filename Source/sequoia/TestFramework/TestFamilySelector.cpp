@@ -104,7 +104,7 @@ namespace sequoia::testing
     }
 
     const auto [dur, unit] {testing::stringify(t.time_elapsed())};
-    stream << "[" << dur << unit << "]\n\n";
+    stream << "[" << dur << unit << "]\n" << std::endl;
   }
 
   template<class Iter>
