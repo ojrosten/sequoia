@@ -26,15 +26,5 @@ namespace sequoia::testing
     void sort_partial_edge();
 
     void cluster_basic_type();
-
-    void lower_bound_basic_type();
-    void lower_bound_uniform_wrapper();
-    void lower_bound_partial_edge();
-
-    void upper_bound_basic_type();
-
-    void equal_range_basic_type();
-
-    void equality();
   };
 }

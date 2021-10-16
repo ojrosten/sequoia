@@ -141,7 +141,7 @@ namespace sequoia
     cluster(endOfCluster, end, comp);
   }
 
-  template<class FwdIter, class T, class Comparer=std::less<std::decay_t<decltype(*FwdIter())>>>
+  /*template<class FwdIter, class T, class Comparer = std::less<std::decay_t<decltype(*FwdIter())>>>
   constexpr FwdIter lower_bound(FwdIter begin, FwdIter end, const T& val, Comparer comp = Comparer{})
   {
     while(begin != end)
@@ -186,10 +186,10 @@ namespace sequoia
     if(distance(first1, last1) != distance(first2, last2)) return false;
 
     for(; first1 != last1; ++first1, ++first2)
-      {
-        if(*first1 != *first2) return false;
-      }
+    {
+      if(*first1 != *first2) return false;
+    }
 
     return true;
-  }
+  }*/
 }

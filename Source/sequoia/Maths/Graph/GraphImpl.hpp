@@ -41,9 +41,9 @@ namespace sequoia
       class graph_iterator
       {
       public:
-        using graph_type    = graph_primitive<Connectivity, Nodes>;
-        using index_type    = typename graph_type::edge_index_type;
-        using distance_type = std::make_signed_t<index_type>;
+        using graph_type      = graph_primitive<Connectivity, Nodes>;
+        using index_type      = typename graph_type::edge_index_type;
+        using difference_type = std::make_signed_t<index_type>;
 
         constexpr graph_iterator(graph_type& g, const index_type i)
           : m_Graph{&g}
@@ -51,17 +51,24 @@ namespace sequoia
         {}
 
         [[nodiscard]]
-        graph_type& graph() noexcept
+        constexpr graph_type& graph() noexcept
         {
           return *m_Graph;
         }
 
         [[nodiscard]]
-        index_type index() const noexcept
+        constexpr const graph_type& graph() const noexcept
+        {
+          return *m_Graph;
+        }
+
+        [[nodiscard]]
+        constexpr index_type index() const noexcept
         {
           return m_Index;
         }
 
+        [[nodiscard]]
         constexpr index_type operator*() const
         {
           return m_Index;
@@ -69,10 +76,10 @@ namespace sequoia
 
         constexpr graph_iterator& operator++() { ++m_Index; return *this; }
 
-        constexpr graph_iterator& operator+=(const distance_type n) { m_Index += n; return *this; }
+        constexpr graph_iterator& operator+=(const difference_type n) { m_Index += n; return *this; }
 
         [[nodiscard]]
-        friend constexpr graph_iterator operator+(const graph_iterator& it, const distance_type n)
+        friend constexpr graph_iterator operator+(const graph_iterator& it, const difference_type n)
         {
           graph_iterator tmp{it};
           return tmp += n;
@@ -87,10 +94,10 @@ namespace sequoia
 
         constexpr graph_iterator& operator--() { --m_Index; return *this; }
 
-        constexpr graph_iterator& operator-=(const distance_type n) { m_Index -= n; return *this; }
+        constexpr graph_iterator& operator-=(const difference_type n) { m_Index -= n; return *this; }
 
         [[nodiscard]]
-        friend constexpr graph_iterator operator-(const graph_iterator& it, const distance_type n)
+        friend constexpr graph_iterator operator-(const graph_iterator& it, const difference_type n)
         {
           graph_iterator tmp{it};
           return tmp -= n;
@@ -104,15 +111,15 @@ namespace sequoia
         }
 
         [[nodiscard]]
-        friend bool operator==(const graph_iterator& lhs, const graph_iterator& rhs) noexcept
+        friend auto operator==(const graph_iterator& lhs, const graph_iterator& rhs) noexcept
         {
           return lhs.m_Index == rhs.m_Index;
         }
 
         [[nodiscard]]
-        friend bool operator!=(const graph_iterator& lhs, const graph_iterator& rhs) noexcept
+        friend auto operator<=>(const graph_iterator& lhs, const graph_iterator& rhs) noexcept
         {
-          return !(lhs == rhs);
+          return lhs.m_Index <=> rhs.m_Index;
         }
       private:
         graph_type* m_Graph;
@@ -122,9 +129,9 @@ namespace sequoia
 
     template<network Connectivity, class Nodes>
     constexpr auto distance(graph_impl::graph_iterator<Connectivity, Nodes> a, graph_impl::graph_iterator<Connectivity, Nodes> b)
-      -> typename graph_impl::graph_iterator<Connectivity, Nodes>::distance_type
+      -> typename graph_impl::graph_iterator<Connectivity, Nodes>::difference_type
     {
-      using dist_type = typename graph_impl::graph_iterator<Connectivity, Nodes>::distance_type;
+      using dist_type = typename graph_impl::graph_iterator<Connectivity, Nodes>::difference_type;
       return static_cast<dist_type>(b.index()) - static_cast<dist_type>(a.index());
     }
 

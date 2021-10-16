@@ -1235,7 +1235,7 @@ namespace sequoia
             if(target >= orderedEdges.num_partitions())
               throw std::logic_error("Target index out of range");
 
-            upperIter = sequoia::upper_bound(lowerIter, orderedEdges.cend_partition(i), *lowerIter, edgeComparer);
+            upperIter = std::upper_bound(lowerIter, orderedEdges.cend_partition(i), *lowerIter, edgeComparer);
             if constexpr(clusterEdges)
             {
               upperIter = find_cluster_end(lowerIter, upperIter);
@@ -1273,7 +1273,7 @@ namespace sequoia
               };
 
               auto eqrange{
-                sequoia::equal_range(orderedEdges.cbegin_partition(target), orderedEdges.cend_partition(target), comparisonEdge, edgeComparer)
+                std::equal_range(orderedEdges.cbegin_partition(target), orderedEdges.cend_partition(target), comparisonEdge, edgeComparer)
               };
 
               if(eqrange.first == eqrange.second)
