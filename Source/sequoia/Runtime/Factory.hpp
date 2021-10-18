@@ -32,32 +32,9 @@ namespace sequoia::runtime
       return sizeof...(Products);
     }
 
-    struct string_view
-    {
-      string_view(std::string_view v) : view{v}
-      {
-        if(view.empty())
-          throw std::logic_error{"Factory product names must not be empty!"};
-      }
-
-      string_view(const char* v) : string_view{std::string_view{v}}
-      {}
-
-      string_view(const std::string& s) : string_view{std::string_view{s}}
-      {}
-
-      [[nodiscard]]
-      operator std::string_view() const noexcept
-      {
-        return view;
-      }
-
-      std::string_view view;
-    };
-
     template<class... Args>
       requires (std::constructible_from<Products, Args...> && ...)
-    factory(const std::array<string_view, size()>& names, Args&&... args)
+    factory(const std::array<std::string_view, size()>& names, Args&&... args)
       : m_Creators{make_array(names, std::make_index_sequence<size()>{}, args...)}
     {
       // Note: arguments not forwarded above to void accidentally reusing moved-from objects
@@ -105,16 +82,21 @@ namespace sequoia::runtime
 
     template<std::size_t... I, class... Args>
     [[nodiscard]]
-    std::array<element, size()> make_array(const std::array<string_view, size()>& names, std::index_sequence<I...>, Args&&... args)
+    std::array<element, size()> make_array(const std::array<std::string_view, size()>& names, std::index_sequence<I...>, Args&&... args)
     {
       return {make_element<I, Products>(names, std::forward<Args>(args)...)...};
     }
 
     template<std::size_t I, class Product, class... Args>
     [[nodiscard]]
-    static element make_element(const std::array<string_view, size()>& names, Args&&... args)
+    static element make_element(const std::array<std::string_view, size()>& names, Args&&... args)
     {
-      return {std::string{names[I]}, Product{std::forward<Args>(args)...}};
+      auto view{names[I]};
+
+      if(view.empty())
+        throw std::logic_error{"Factory product names must not be empty!"};
+
+      return {std::string{view}, Product{std::forward<Args>(args)...}};
     }
   };
 }
