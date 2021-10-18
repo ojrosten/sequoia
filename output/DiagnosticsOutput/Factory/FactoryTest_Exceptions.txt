@@ -33,7 +33,7 @@ Factory unable to create product of name 'plurgh'
 
 	=======================================
 
-Tests/Runtime/FactoryTest.cpp, Line 80
+Tests/Runtime/FactoryTest.cpp, Line 83
 Duplicated names
 
 Expected Exception Type:
