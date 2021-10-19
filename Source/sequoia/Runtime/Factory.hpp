@@ -58,7 +58,7 @@ namespace sequoia::runtime
     };
 
     template<class Product>
-     requires (std::is_same_v<Product, Products> || ...)
+      requires (std::is_same_v<Product, Products> || ...)
     [[nodiscard]]
     vessel create_or(std::string_view name) const noexcept
     {

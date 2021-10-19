@@ -7,8 +7,6 @@
 
 #pragma once
 
-#include <array>
-
 /*! \file
     \brief Useful specializations for the class templates detailed_equality_checker and equivalence_checker.
 
@@ -34,8 +32,10 @@
 #include "sequoia/TestFramework/FreeCheckers.hpp"
 #include "sequoia/TestFramework/FileEditors.hpp"
 #include "sequoia/TestFramework/FileSystem.hpp"
+#include "sequoia/Runtime/Factory.hpp"
 #include "sequoia/Streaming/Streaming.hpp"
 
+#include <array>
 #include <tuple>
 #include <optional>
 #include <variant>
@@ -220,14 +220,33 @@ namespace sequoia::testing
 
   public:
     template<test_mode Mode, class... U, class Advisor>
+      requires((sizeof...(T) == sizeof...(U)) && (std::is_same_v<std::remove_cvref_t<T>, std::remove_cvref_t<U>> && ...))
     static void check(test_logger<Mode>& logger, const std::tuple<T...>& value, const std::tuple<U...>& prediction, const tutor<Advisor>& advisor)
     {
-      static_assert(sizeof...(T) == sizeof...(U));
-      static_assert((std::is_same_v<std::remove_cvref_t<T>, std::remove_cvref_t<U>> && ...));
-
       check_tuple_elements(logger, value, prediction, advisor);
     }
   };
+
+  /*! \brief Function object for default checking of files */
+
+  struct default_file_checker
+  {
+    template<test_mode Mode>
+    void operator()(test_logger<Mode>& logger, std::string_view preamble, const std::filesystem::path& file, const std::filesystem::path& prediction) const
+    {
+      const auto [reducedWorking, reducedPrediction] {get_reduced_file_content(file, prediction)};
+
+      testing::check(report_failed_read(file), logger, static_cast<bool>(reducedWorking));
+      testing::check(report_failed_read(prediction), logger, static_cast<bool>(reducedPrediction));
+
+      if(reducedWorking && reducedPrediction)
+      {
+        check_equality(preamble, logger, reducedWorking.value(), reducedPrediction.value());
+      }
+    }
+  };
+
+  using file_checking_factory = runtime::factory<default_file_checker>;
 
   /*! \brief Helper class fo checking (weak) equivalence of file paths */
 
@@ -332,15 +351,10 @@ namespace sequoia::testing
     template<test_mode Mode>
     static void check_file(test_logger<Mode>& logger, const std::filesystem::path& file, const std::filesystem::path& prediction)
     {
-      const auto [reducedWorking, reducedPrediction] {get_reduced_file_content(file, prediction)};
+      file_checking_factory f{{"default"}};
 
-      testing::check(report_failed_read(file), logger, static_cast<bool>(reducedWorking));
-      testing::check(report_failed_read(prediction), logger, static_cast<bool>(reducedPrediction));
-
-      if(reducedWorking && reducedPrediction)
-      {
-        check_equality(preamble("Contents of", file, prediction), logger, reducedWorking.value(), reducedPrediction.value());
-      }
+      auto checker{f.create_or<default_file_checker>(file.extension().string())};
+      std::visit([&logger, &file, &prediction](auto&& fn){ fn(logger, preamble("Contents of", file, prediction), file, prediction); }, checker);
     }
 
     [[nodiscard]]
