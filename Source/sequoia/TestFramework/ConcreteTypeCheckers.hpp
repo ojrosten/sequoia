@@ -227,12 +227,17 @@ namespace sequoia::testing
     }
   };
 
+  enum class file_comparison_mode { basic, customized };
+
+  [[nodiscard]]
+  std::string path_check_preamble(std::string_view prefix, const std::filesystem::path& path, const std::filesystem::path& prediction);
+
   /*! \brief Function object for default checking of files */
 
   struct default_file_checker
   {
     template<test_mode Mode>
-    void operator()(test_logger<Mode>& logger, std::string_view preamble, const std::filesystem::path& file, const std::filesystem::path& prediction) const
+    void operator()(test_logger<Mode>& logger, const std::filesystem::path& file, const std::filesystem::path& prediction) const
     {
       const auto [reducedWorking, reducedPrediction] {get_reduced_file_content(file, prediction)};
 
@@ -241,12 +246,49 @@ namespace sequoia::testing
 
       if(reducedWorking && reducedPrediction)
       {
-        check_equality(preamble, logger, reducedWorking.value(), reducedPrediction.value());
+        check_equality(path_check_preamble("Contents of", file, prediction), logger, reducedWorking.value(), reducedPrediction.value());
       }
     }
   };
 
-  using file_checking_factory = runtime::factory<default_file_checker>;
+  template<file_comparison_mode Mode>
+  struct file_checker;
+
+  template<>
+  struct file_checker<file_comparison_mode::basic>
+  {
+    template<test_mode Mode>
+    static void check_file(test_logger<Mode>& logger, const std::filesystem::path& file, const std::filesystem::path& prediction)
+    {
+      const auto factory{runtime::factory<default_file_checker>{{"default"}}};
+      const auto checker{factory.create_or<default_file_checker>(file.extension().string())};
+      std::visit([&logger, &file, &prediction](auto&& fn){ fn(logger, file, prediction); }, checker);
+    }
+  };
+
+  namespace impl
+  {
+    // TO DO: replace with constexpr bool when supported by MSVC
+
+    template<file_comparison_mode CompMode>
+    concept has_file_checker = requires(const file_checker<CompMode>& c, test_logger<test_mode::standard>& logger) {
+      c.check_file(logger, "", "");
+    };
+
+    template<file_comparison_mode CompMode, test_mode Mode>
+    [[nodiscard]]
+    auto check_file(test_logger<Mode>& logger, const std::filesystem::path& file, const std::filesystem::path& prediction)
+    {
+      if constexpr(has_file_checker<CompMode>)
+      {
+        return file_checker<CompMode>{}.check_file(logger, file, prediction);
+      }
+      else
+      {
+        return file_checker<file_comparison_mode::basic>{}.check_file(logger, file, prediction);
+      }
+    }
+  }
 
   /*! \brief Helper class fo checking (weak) equivalence of file paths */
 
@@ -260,7 +302,7 @@ namespace sequoia::testing
       const auto pathType{fs::status(path).type()};
       const auto predictionType{fs::status(prediction).type()};
 
-      if(check_equality(preamble("Path type", path, prediction), logger, pathType, predictionType))
+      if(check_equality(path_check_preamble("Path type", path, prediction), logger, pathType, predictionType))
       {
         if(!path.empty())
         {
@@ -351,16 +393,7 @@ namespace sequoia::testing
     template<test_mode Mode>
     static void check_file(test_logger<Mode>& logger, const std::filesystem::path& file, const std::filesystem::path& prediction)
     {
-      file_checking_factory f{{"default"}};
-
-      auto checker{f.create_or<default_file_checker>(file.extension().string())};
-      std::visit([&logger, &file, &prediction](auto&& fn){ fn(logger, preamble("Contents of", file, prediction), file, prediction); }, checker);
-    }
-
-    [[nodiscard]]
-    static std::string preamble(std::string_view prefix, const std::filesystem::path& path, const std::filesystem::path& prediction)
-    {
-      return append_lines(prefix, path.generic_string(), "vs", prediction.generic_string()).append("\n");
+      impl::check_file<file_comparison_mode::customized>(logger, file, prediction);
     }
   };
 

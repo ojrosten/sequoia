@@ -6,6 +6,7 @@ set(SourceList sequoia/TestFramework/Advice.cpp
     sequoia/Runtime/ShellCommands.cpp
     sequoia/Streaming/Streaming.cpp
     sequoia/TestFramework/AllocationCheckersDetails.cpp
+    sequoia/TestFramework/ConcreteTypeCheckers.cpp
     sequoia/TestFramework/DependencyAnalyzer.cpp
     sequoia/TestFramework/FailureInfo.cpp
     sequoia/TestFramework/FileEditors.cpp

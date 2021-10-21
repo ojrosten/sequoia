@@ -197,7 +197,7 @@ namespace sequoia::testing
     {
       Checker::recovery(std::move(paths));
     }
-  protected:    
+  protected:
     using duration = std::chrono::steady_clock::duration;
 
     basic_test(basic_test&&)            noexcept = default;
