@@ -303,6 +303,7 @@ namespace sequoia::testing
     //=================== Change some test materials and run with prune ===================//
 
     copy_aux_materials("ModifiedTests/FooTest.cpp", "Tests/Stuff");
+    copy_aux_materials("ModifiedTests/BarFreeTest.cpp", "Tests/Stuff");
     copy_aux_materials("TestMaterials", "TestMaterials");
 
     rebuild_run_and_check(LINE("Change Materials (pruned)"), b, "RunWithChangedMaterials", "CMakeOutput3.txt", "BuildOutput3.txt", "prune --cutoff namespace");
