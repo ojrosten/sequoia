@@ -146,8 +146,8 @@ namespace sequoia::testing
   {};
 
   template<class... U>
-  requires    (sizeof...(U) > 0u)
-           && teacher<decltype(std::get<sizeof...(U) - 1>(std::declval<std::tuple<U...>>()))>
+    requires    (sizeof...(U) > 0u)
+             && teacher<decltype(std::get<sizeof...(U) - 1>(std::declval<std::tuple<U...>>()))>
   struct ends_with_tutor<U...> : std::true_type
   {};
 

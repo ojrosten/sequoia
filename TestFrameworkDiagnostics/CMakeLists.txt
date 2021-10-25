@@ -10,6 +10,7 @@ set(TestDir "../Tests")
 target_sources(TestFrameworkDiagnostics PRIVATE
                ${TestDir}/Parsing/CommandLineArgumentsDiagnostics.cpp
                ${TestDir}/Parsing/CommandLineArgumentsTest.cpp
+               ${TestDir}/Parsing/CommandLineArgumentsTestingUtilities.cpp
                ${TestDir}/Runtime/FactoryTest.cpp
                ${TestDir}/Runtime/FactoryTestingDiagnostics.cpp
                ${TestDir}/TestFramework/CoreDiagnostics.cpp
