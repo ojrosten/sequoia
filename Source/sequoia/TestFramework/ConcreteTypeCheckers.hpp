@@ -227,8 +227,6 @@ namespace sequoia::testing
     }
   };
 
-  enum class file_comparison_mode { basic, customized };
-
   [[nodiscard]]
   std::string path_check_preamble(std::string_view prefix, const std::filesystem::path& path, const std::filesystem::path& prediction);
 
@@ -251,11 +249,7 @@ namespace sequoia::testing
     }
   };
 
-  template<file_comparison_mode Mode>
-  struct file_checker;
-
-  template<>
-  struct file_checker<file_comparison_mode::basic>
+  struct basic_file_checker
   {
     template<test_mode Mode>
     static void check_file(test_logger<Mode>& logger, const std::filesystem::path& file, const std::filesystem::path& prediction)
@@ -266,36 +260,12 @@ namespace sequoia::testing
     }
   };
 
-  namespace impl
-  {
-    // TO DO: replace with constexpr bool when supported by MSVC
-
-    template<file_comparison_mode CompMode>
-    concept has_file_checker = requires(const file_checker<CompMode>& c, test_logger<test_mode::standard>& logger) {
-      c.check_file(logger, "", "");
-    };
-
-    template<file_comparison_mode CompMode, test_mode Mode>
-    [[nodiscard]]
-    auto check_file(test_logger<Mode>& logger, const std::filesystem::path& file, const std::filesystem::path& prediction)
-    {
-      if constexpr(has_file_checker<CompMode>)
-      {
-        return file_checker<CompMode>{}.check_file(logger, file, prediction);
-      }
-      else
-      {
-        return file_checker<file_comparison_mode::basic>{}.check_file(logger, file, prediction);
-      }
-    }
-  }
-
   /*! \brief Helper class fo checking (weak) equivalence of file paths */
 
   struct path_checker
   {
-    template<test_mode Mode, invocable_r<bool, std::filesystem::path, std::filesystem::path> FinalTokenComparison>
-    static void check(test_logger<Mode>& logger, const std::filesystem::path& path, const std::filesystem::path& prediction, FinalTokenComparison compare)
+    template<test_mode Mode, class Customization, invocable_r<bool, std::filesystem::path, std::filesystem::path> FinalTokenComparison>
+    static void check(test_logger<Mode>& logger, const Customization& custom, const std::filesystem::path& path, const std::filesystem::path& prediction, FinalTokenComparison compare)
     {
       namespace fs = std::filesystem;
 
@@ -313,10 +283,10 @@ namespace sequoia::testing
             switch(pathType)
             {
             case fs::file_type::regular:
-              check_file(logger, path, prediction);
+              check_file(logger, custom, path, prediction);
               break;
             case fs::file_type::directory:
-              check_directory(logger, path, prediction, compare);
+              check_directory(logger, custom, path, prediction, compare);
               break;
             default:
               throw std::logic_error{std::string{"Detailed equivalance check for paths of type '"}
@@ -334,8 +304,8 @@ namespace sequoia::testing
     constexpr static std::array<std::string_view, 1>
       excluded_extensions{seqpat};
 
-    template<test_mode Mode, invocable_r<bool, std::filesystem::path, std::filesystem::path> FinalTokenComparison>
-    static void check_directory(test_logger<Mode>& logger, const std::filesystem::path& dir, const std::filesystem::path& prediction, FinalTokenComparison compare)
+    template<test_mode Mode, class Customization, invocable_r<bool, std::filesystem::path, std::filesystem::path> FinalTokenComparison>
+    static void check_directory(test_logger<Mode>& logger, const Customization& custom, const std::filesystem::path& dir, const std::filesystem::path& prediction, FinalTokenComparison compare)
     {
       namespace fs = std::filesystem;
 
@@ -384,16 +354,15 @@ namespace sequoia::testing
       {
         for(std::size_t i{}; i < paths.size(); ++i)
         {
-          check(logger, paths[i], predictedPaths[i], compare);
+          check(logger, custom, paths[i], predictedPaths[i], compare);
         }
       }
     }
 
-
-    template<test_mode Mode>
-    static void check_file(test_logger<Mode>& logger, const std::filesystem::path& file, const std::filesystem::path& prediction)
+    template<test_mode Mode, class Customization>
+    static void check_file(test_logger<Mode>& logger, const Customization& custom, const std::filesystem::path& file, const std::filesystem::path& prediction)
     {
-      impl::check_file<file_comparison_mode::customized>(logger, file, prediction);
+      custom.check_file(logger, file, prediction);
     }
   };
 
@@ -407,8 +376,8 @@ namespace sequoia::testing
   template<>
   struct equivalence_checker<std::filesystem::path>
   {
-    template<test_mode Mode>
-    static void check(test_logger<Mode>& logger, const std::filesystem::path& path, const std::filesystem::path& prediction)
+    template<test_mode Mode, class Customization>
+    static void check(test_logger<Mode>& logger, const Customization& custom, const std::filesystem::path& path, const std::filesystem::path& prediction)
     {
       namespace fs = std::filesystem;
 
@@ -419,8 +388,15 @@ namespace sequoia::testing
         }
       };
 
-      path_checker::check(logger, path, prediction, pred);
+      path_checker::check(logger, custom, path, prediction, pred);
     }
+
+    template<test_mode Mode>
+    static void check(test_logger<Mode>& logger, const std::filesystem::path& path, const std::filesystem::path& prediction)
+    {
+      check(logger, basic_file_checker{}, path, prediction);
+    }
+
   };
 
   /*! \brief Checks equivalence of filesystem paths.
@@ -433,11 +409,17 @@ namespace sequoia::testing
   template<>
   struct weak_equivalence_checker<std::filesystem::path>
   {
+    template<test_mode Mode, class Customization>
+    static void check(test_logger<Mode>& logger, const Customization& custom, const std::filesystem::path& path, const std::filesystem::path& prediction)
+    {
+      namespace fs = std::filesystem;
+      path_checker::check(logger, custom, path, prediction, [](const fs::path&, const fs::path&) { return true; });
+    }
+
     template<test_mode Mode>
     static void check(test_logger<Mode>& logger, const std::filesystem::path& path, const std::filesystem::path& prediction)
     {
-      namespace fs = std::filesystem;
-      path_checker::check(logger, path, prediction, [](const fs::path&, const fs::path&) { return true; });
+      check(logger, basic_file_checker{}, path, prediction);
     }
   };
 

@@ -127,16 +127,19 @@ namespace sequoia::testing
     return working_materials().parent_path() / "GeneratedProject";
   }
 
-  void test_runner_end_to_end_test::copy_aux_materials(const std::filesystem::path& relativeFrom, const std::filesystem::path& relativeDirTo) const
+  void test_runner_end_to_end_test::copy_aux_materials(const std::filesystem::path& relativeFrom, const std::filesystem::path& relativeTo) const
   {
     const auto absoluteFrom{auxiliary_materials() / relativeFrom};
-    const auto absoluteTo{generated_project() / relativeDirTo};
+    const auto absoluteTo{generated_project() / relativeTo};
     fs::copy(absoluteFrom, absoluteTo, fs::copy_options::recursive | fs::copy_options::overwrite_existing);
     const auto now{fs::file_time_type::clock::now()};
 
     if(fs::is_regular_file(absoluteFrom))
     {
-      fs::last_write_time(absoluteTo / relativeFrom.filename(), now);
+      if(fs::is_directory(absoluteTo))
+      {
+        fs::last_write_time(absoluteTo / relativeFrom.filename(), now);
+      }
     }
     else if(fs::is_directory(absoluteFrom))
     {
@@ -302,8 +305,7 @@ namespace sequoia::testing
 
     //=================== Change some test materials and run with prune ===================//
 
-    copy_aux_materials("ModifiedTests/FooTest.cpp", "Tests/Stuff");
-    copy_aux_materials("ModifiedTests/BarFreeTest.cpp", "Tests/Stuff");
+    copy_aux_materials("ModifiedTests/Stuff/FooTest.cpp", "Tests/Stuff");
     copy_aux_materials("TestMaterials", "TestMaterials");
 
     rebuild_run_and_check(LINE("Change Materials (pruned)"), b, "RunWithChangedMaterials", "CMakeOutput3.txt", "BuildOutput3.txt", "prune --cutoff namespace");

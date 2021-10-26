@@ -58,6 +58,10 @@ namespace sequoia::testing
       : m_pAllocs{std::make_shared<int>()}, m_pDeallocs{std::make_shared<int>()}
     {}
 
+    shared_counting_allocator(const shared_counting_allocator&) = default;
+
+    shared_counting_allocator& operator=(const shared_counting_allocator&) = default;
+
     [[nodiscard]] T* allocate(std::size_t n)
     {
       const auto ptr{static_cast<T*>(::operator new(n * sizeof(T)))};
