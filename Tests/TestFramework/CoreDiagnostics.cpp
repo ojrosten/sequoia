@@ -309,6 +309,10 @@ namespace sequoia::testing
     check_weak_equivalence(LINE("Weak inequivalence of directories with some common files"),
                            fs::path{working_materials()}.append("MoreStuff").append("B"),
                            fs::path{working_materials()}.append("Stuff").append("B"));
+
+    check_weak_equivalence(LINE("Inequivalence when default file checking is used"),
+                           fs::path{working_materials()}.append("CustomComparison").append("A"),
+                           fs::path{working_materials()}.append("CustomComparison").append("B"));
   }
 
   void false_positive_diagnostics::test_weak_equivalence_checks()
@@ -451,6 +455,10 @@ namespace sequoia::testing
     check_weak_equivalence(LINE("Weak equivalence of directories in with the same contents but different names"),
                            fs::path{working_materials()}.append("Stuff"),
                            fs::path{working_materials()}.append("SameStuff"));
+
+    check_weak_equivalence<bespoke_file_checker>(LINE("Weak equivalence when .ignore is ignored"),
+                                                 fs::path{working_materials()}.append("CustomComparison").append("A"),
+                                                 fs::path{working_materials()}.append("CustomComparison").append("B"));
   }
 
   void false_negative_diagnostics::test_weak_equivalence_checks()
