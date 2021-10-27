@@ -1360,7 +1360,7 @@
 	=======================================
 
 	Tests/TestFramework/CoreDiagnostics.cpp, Line 309
-	File inequivalence when default checking is used
+	File inequivalence when default file checking is used
 
 	Comparison performed using:
 	[sequoia::testing::equivalence_checker<std::filesystem::path>]
@@ -1387,7 +1387,38 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 317
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 314
+	Range inequivalence when default file checking us used
+
+	[std::vector<std::filesystem::path, std::allocator<std::filesystem::path> >]
+
+	  Element 0 of range incorrect
+	  Comparison performed using:
+	  [sequoia::testing::equivalence_checker<std::filesystem::path>]
+	  With equivalent types:
+	  [std::filesystem::path]
+
+	    Contents of
+	    output/TestsTemporaryData/TestFramework/CoreDiagnostics/CustomComparison/A/DifferingContent.ignore
+	    vs
+	    output/TestsTemporaryData/TestFramework/CoreDiagnostics/CustomComparison/B/DifferingContent.ignore
+
+	    [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
+	    operator== returned false
+
+	      First difference detected at character 39:
+	      [char]
+	      operator== returned false
+	      Obtained : B
+	      Predicted: A
+
+	      Surrounding substring(s):
+	      Obtained : ...iffers from that in directory B
+	      Predicted: ...iffers from that in directory A
+
+	=======================================
+
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 322
 
 	Comparison performed using:
 	[sequoia::testing::weak_equivalence_checker<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > >]
@@ -1402,7 +1433,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 318
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 323
 
 	Comparison performed using:
 	[sequoia::testing::weak_equivalence_checker<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > >]
@@ -1418,7 +1449,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 323
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 328
 
 	[std::vector<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> >, std::allocator<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > > >]
 
@@ -1436,7 +1467,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 324
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 329
 
 	[std::vector<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> >, std::allocator<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > > >]
 
@@ -1455,7 +1486,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 329
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 334
 	Weak inequivalence of directories with some common files
 
 	Comparison performed using:
@@ -1477,7 +1508,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 333
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 338
 	Directory weak inequivalence when default file checking is used
 
 	Comparison performed using:
@@ -1502,6 +1533,37 @@
 	    Surrounding substring(s):
 	    Obtained : ...iffers from that in directory B
 	    Predicted: ...iffers from that in directory A
+
+	=======================================
+
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 343
+	Weak inequivalence of range when default file checking is used
+
+	[std::vector<std::filesystem::path, std::allocator<std::filesystem::path> >]
+
+	  Element 0 of range incorrect
+	  Comparison performed using:
+	  [sequoia::testing::weak_equivalence_checker<std::filesystem::path>]
+	  With equivalent types:
+	  [std::filesystem::path]
+
+	    Contents of
+	    output/TestsTemporaryData/TestFramework/CoreDiagnostics/CustomComparison/A/DifferingContent.ignore
+	    vs
+	    output/TestsTemporaryData/TestFramework/CoreDiagnostics/CustomComparison/B/DifferingContent.ignore
+
+	    [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
+	    operator== returned false
+
+	      First difference detected at character 39:
+	      [char]
+	      operator== returned false
+	      Obtained : B
+	      Predicted: A
+
+	      Surrounding substring(s):
+	      Obtained : ...iffers from that in directory B
+	      Predicted: ...iffers from that in directory A
 
 	=======================================
 
