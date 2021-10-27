@@ -53,7 +53,7 @@ namespace sequoia::testing
     private:
       void run_tests() final
       {
-        check_equality(LINE(""), 43, 42);
+        check_equality("Standard Failure", 43, 42);
       }
     };
 
@@ -71,7 +71,7 @@ namespace sequoia::testing
     private:
       void run_tests() final
       {
-        check_equality(LINE(""), 42, 42);
+        check_equality("False positive failure", 42, 42);
       }
     };
 
@@ -89,7 +89,7 @@ namespace sequoia::testing
     private:
       void run_tests() final
       {
-        check_equality(LINE(""), 43, 42);
+        check_equality("False negative failure", 43, 42);
       }
     };
 
@@ -113,7 +113,7 @@ namespace sequoia::testing
     private:
       void run_tests() final
       {
-        check_equality(LINE(""), flipper{}.x, true);
+        check_equality("Flipper", flipper{}.x, true);
       }
     };
 
@@ -138,7 +138,7 @@ namespace sequoia::testing
     private:
       void run_tests() final
       {
-        check_equality(LINE(""), periodic<4>{}.x, 1);
+        check_equality("Period 4", periodic<4>{}.x, 1);
       }
     };
 
@@ -156,8 +156,8 @@ namespace sequoia::testing
     private:
       void run_tests() final
       {
-        check_equality(LINE("Pass/Fail/Pass"), periodic<2>{}.x, 1);
-        check(LINE("Pass/Pass/Fail"), periodic<3>{}.x > 0);
+        check_equality("Period 2: Pass/Fail/Pass", periodic<2>{}.x, 1);
+        check("Period 3: Pass/Pass/Fail", periodic<3>{}.x > 0);
       }
     };
 
@@ -173,9 +173,9 @@ namespace sequoia::testing
     private:
       void run_tests() final
       {
-        check(LINE("Always fails"), false);
+        check("Always fails", false);
 
-        check_equality(LINE(""), flipper{}.x, true);
+        check_equality("Flipper", flipper{}.x, true);
       }
     };
 
@@ -191,7 +191,7 @@ namespace sequoia::testing
     private:
       void run_tests() final
       {
-        check(LINE("Always fails"), false);
+        check("Always fails", false);
       }
     };
 
@@ -208,7 +208,7 @@ namespace sequoia::testing
     private:
       void run_tests() final
       {
-        check(LINE("Always passes"), true);
+        check("Always passes", true);
       }
     };
 
