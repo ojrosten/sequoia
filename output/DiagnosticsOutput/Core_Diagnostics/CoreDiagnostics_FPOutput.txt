@@ -1360,32 +1360,10 @@
 	=======================================
 
 	Tests/TestFramework/CoreDiagnostics.cpp, Line 309
-	Weak inequivalence of directories with some common files
+	File inequivalence when default checking is used
 
 	Comparison performed using:
-	[sequoia::testing::weak_equivalence_checker<std::filesystem::path>]
-	With equivalent types:
-	[std::filesystem::path]
-
-	  Number of directory entries for output/TestsTemporaryData/TestFramework/CoreDiagnostics/MoreStuff/B
-	  [unsigned long long]
-	  operator== returned false
-	  Obtained : 2
-	  Predicted: 1
-
-	  First directory entry mismatch
-	  [std::filesystem::path]
-	  operator== returned false
-	  Obtained : output/TestsTemporaryData/TestFramework/CoreDiagnostics/MoreStuff/B/bar.txt
-	  Predicted: output/TestsTemporaryData/TestFramework/CoreDiagnostics/Stuff/B/foo.txt
-
-	=======================================
-
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 313
-	Directory weak inequivalence when default file checking is used
-
-	Comparison performed using:
-	[sequoia::testing::weak_equivalence_checker<std::filesystem::path>]
+	[sequoia::testing::equivalence_checker<std::filesystem::path>]
 	With equivalent types:
 	[std::filesystem::path]
 
@@ -1409,11 +1387,33 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 317
-	File inequivalence when default checking is used
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 313
+	Weak inequivalence of directories with some common files
 
 	Comparison performed using:
-	[sequoia::testing::equivalence_checker<std::filesystem::path>]
+	[sequoia::testing::weak_equivalence_checker<std::filesystem::path>]
+	With equivalent types:
+	[std::filesystem::path]
+
+	  Number of directory entries for output/TestsTemporaryData/TestFramework/CoreDiagnostics/MoreStuff/B
+	  [unsigned long long]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
+
+	  First directory entry mismatch
+	  [std::filesystem::path]
+	  operator== returned false
+	  Obtained : output/TestsTemporaryData/TestFramework/CoreDiagnostics/MoreStuff/B/bar.txt
+	  Predicted: output/TestsTemporaryData/TestFramework/CoreDiagnostics/Stuff/B/foo.txt
+
+	=======================================
+
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 317
+	Directory weak inequivalence when default file checking is used
+
+	Comparison performed using:
+	[sequoia::testing::weak_equivalence_checker<std::filesystem::path>]
 	With equivalent types:
 	[std::filesystem::path]
 
