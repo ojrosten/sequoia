@@ -2,11 +2,11 @@
 Running tests...
 
 Family:
-[4 (2)ms]
+[7 (4)ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 
 -----------Grand Totals-----------
-[4 (2)ms]
+[8 (4)ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -17,10 +17,10 @@ Family:
 Running tests...
 
 Family:
-[4 (2)ms]
+[7 (3)ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 87
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 141
 
 	[int]
 	operator== returned false
@@ -31,7 +31,7 @@ Family:
 
 
 -----------Grand Totals-----------
-[4 (2)ms]
+[7 (3)ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -42,10 +42,10 @@ Family:
 Running tests...
 
 Family:
-[5 (2)ms]
+[7 (3)ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 87
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 141
 
 	[int]
 	operator== returned false
@@ -56,7 +56,7 @@ Family:
 
 
 -----------Grand Totals-----------
-[5 (2)ms]
+[7 (3)ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -67,10 +67,10 @@ Family:
 Running tests...
 
 Family:
-[4 (2)ms]
+[7 (4)ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 87
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 141
 
 	[int]
 	operator== returned false
@@ -81,7 +81,7 @@ Family:
 
 
 -----------Grand Totals-----------
-[4 (2)ms]
+[7 (4)ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -97,7 +97,7 @@ Outcome frequencies:
 
 vs.
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 87
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 141
 
 	[int]
 	operator== returned false
@@ -108,7 +108,7 @@ vs.
 
 vs.
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 87
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 141
 
 	[int]
 	operator== returned false
@@ -119,7 +119,7 @@ vs.
 
 vs.
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 87
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 141
 
 	[int]
 	operator== returned false

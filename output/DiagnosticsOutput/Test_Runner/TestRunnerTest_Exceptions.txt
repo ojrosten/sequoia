@@ -1,4 +1,4 @@
-Tests/TestFramework/TestRunnerTest.cpp, Line 211
+Tests/TestFramework/TestRunnerTest.cpp, Line 266
 Neither name nor source unique
 
 Expected Exception Type:
@@ -10,7 +10,7 @@ Please do not include tests in the same family which both have the same name and
 
 	=======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 247
+Tests/TestFramework/TestRunnerTest.cpp, Line 302
 Invalid repetitions for instability analysis
 
 Expected Exception Type:
@@ -19,7 +19,7 @@ locate-instabilities: unable to interpret 'foo' as an integer number of repetiti
 
 	=======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 254
+Tests/TestFramework/TestRunnerTest.cpp, Line 309
 Insufficient repetitions for instability analysis
 
 Expected Exception Type:

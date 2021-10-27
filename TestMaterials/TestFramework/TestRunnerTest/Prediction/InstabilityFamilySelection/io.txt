@@ -2,11 +2,11 @@
 Running tests...
 
 Another Family:
-[4 (2)ms]
+[8 (3)ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 
 -----------Grand Totals-----------
-[4 (2)ms]
+[8 (3)ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -17,10 +17,10 @@ Another Family:
 Running tests...
 
 Another Family:
-[3 (2)ms]
+[8 (4)ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 62
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 116
 
 	[bool]
 	check failed
@@ -29,7 +29,7 @@ Another Family:
 
 
 -----------Grand Totals-----------
-[4 (2)ms]
+[8 (4)ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -45,7 +45,7 @@ Outcome frequencies:
 
 vs.
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 62
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 116
 
 	[bool]
 	check failed

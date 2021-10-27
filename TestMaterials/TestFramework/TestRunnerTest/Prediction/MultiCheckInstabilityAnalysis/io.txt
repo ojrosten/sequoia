@@ -2,11 +2,11 @@
 Running tests...
 
 Family:
-[4 (2)ms]
+[7 (4)ms]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 
 -----------Grand Totals-----------
-[5 (2)ms]
+[7 (4)ms]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -17,10 +17,10 @@ Family:
 Running tests...
 
 Family:
-[4 (2)ms]
+[7 (3)ms]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 105
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 159
 	Pass/Fail/Pass
 
 	[int]
@@ -32,7 +32,7 @@ Family:
 
 
 -----------Grand Totals-----------
-[5 (2)ms]
+[7 (3)ms]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -43,10 +43,10 @@ Family:
 Running tests...
 
 Family:
-[4 (2)ms]
+[12 (6)ms]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 106
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 160
 	Pass/Pass/Fail
 
 	[bool]
@@ -56,7 +56,7 @@ Family:
 
 
 -----------Grand Totals-----------
-[5 (2)ms]
+[12 (6)ms]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -67,10 +67,10 @@ Family:
 Running tests...
 
 Family:
-[5 (2)ms]
+[11 (6)ms]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 105
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 159
 	Pass/Fail/Pass
 
 	[int]
@@ -82,7 +82,7 @@ Family:
 
 
 -----------Grand Totals-----------
-[5 (2)ms]
+[11 (6)ms]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -93,11 +93,11 @@ Family:
 Running tests...
 
 Family:
-[4 (2)ms]
+[7 (3)ms]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 
 -----------Grand Totals-----------
-[4 (2)ms]
+[7 (3)ms]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -108,10 +108,10 @@ Family:
 Running tests...
 
 Family:
-[4 (2)ms]
+[14 (8)ms]
 	Standard Top Level Checks:                 2;  Failures:  2  [Deep checks: 2]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 105
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 159
 	Pass/Fail/Pass
 
 	[int]
@@ -121,7 +121,7 @@ Family:
 
 	=======================================
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 106
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 160
 	Pass/Pass/Fail
 
 	[bool]
@@ -131,7 +131,7 @@ Family:
 
 
 -----------Grand Totals-----------
-[4 (2)ms]
+[15 (8)ms]
 	Standard Top Level Checks:                 2;  Failures:  2  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -147,7 +147,7 @@ Outcome frequencies:
 
 vs.
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 105
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 159
 	Pass/Fail/Pass
 
 	[int]
@@ -159,7 +159,7 @@ vs.
 
 vs.
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 105
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 159
 	Pass/Fail/Pass
 
 	[int]
@@ -169,7 +169,7 @@ vs.
 
 	=======================================
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 106
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 160
 	Pass/Pass/Fail
 
 	[bool]
@@ -179,7 +179,7 @@ vs.
 
 vs.
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 106
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 160
 	Pass/Pass/Fail
 
 	[bool]

@@ -39,6 +39,60 @@ namespace sequoia::testing
       }
     };
 
+    class failing_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      std::string_view source_file() const noexcept final
+      {
+        return __FILE__;
+      }
+
+    private:
+      void run_tests() final
+      {
+        check_equality(LINE(""), 43, 42);
+      }
+    };
+
+    class failing_fp_test final : public free_false_positive_test
+    {
+    public:
+      using free_false_positive_test::free_false_positive_test;
+
+      [[nodiscard]]
+      std::string_view source_file() const noexcept final
+      {
+        return __FILE__;
+      }
+
+    private:
+      void run_tests() final
+      {
+        check_equality(LINE(""), 42, 42);
+      }
+    };
+
+    class failing_fn_test final : public free_false_negative_test
+    {
+    public:
+      using free_false_negative_test::free_false_negative_test;
+
+      [[nodiscard]]
+      std::string_view source_file() const noexcept final
+      {
+        return __FILE__;
+      }
+
+    private:
+      void run_tests() final
+      {
+        check_equality(LINE(""), 43, 42);
+      }
+    };
+
     struct flipper
     {
       flipper() { x = !x; }
@@ -196,6 +250,7 @@ namespace sequoia::testing
   {
     test_exceptions();
     test_critical_errors();
+    test_basic_output();
     test_instability_analysis();
   }
 
@@ -310,11 +365,45 @@ namespace sequoia::testing
     fs::copy(aux_project() / "output" / "TestSummaries",
              working_materials() / "RecoveryAndDumpOutput" / "TestSummaries",
              fs::copy_options::recursive);
-    
 
     check_equivalence(LINE("Recovery and Dump"),
                       working_materials() / "RecoveryAndDumpOutput",
                       predictive_materials() / "RecoveryAndDumpOutput");
+  }
+
+  void test_runner_test::test_basic_output()
+  {
+    std::stringstream outputStream{};
+    commandline_arguments args{""};
+
+    const auto testMain{aux_project().append("TestSandbox").append("TestSandbox.cpp")};
+    const auto includeTarget{aux_project().append("TestShared").append("SharedIncludes.hpp")};
+
+    test_runner runner{args.size(),
+                       args.get(),
+                       "Oliver J. Rosten",
+                       project_paths{aux_project(), testMain, includeTarget},
+                       "  ",
+                       outputStream};
+
+    runner.add_test_family(
+      "Failing Family",
+      failing_test{"Free Test"},
+      failing_fp_test{"False positive Test"},
+      failing_fn_test{"False negative Test"}
+    );
+
+    runner.execute();
+
+    const auto outputDir{working_materials() / "BasicOutput"};
+    fs::create_directory(outputDir);
+
+    if(std::ofstream file{outputDir / "io.txt"})
+    {
+      file << outputStream.str();
+    }
+
+    check_equivalence(LINE("Basic Output"), working_materials() / "BasicOutput",  predictive_materials() / "BasicOutput");
   }
 
   void test_runner_test::test_instability_analysis()
