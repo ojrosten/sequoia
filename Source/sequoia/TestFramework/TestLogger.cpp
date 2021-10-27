@@ -368,6 +368,11 @@ namespace sequoia::testing
     {
       m_SentinelDepth.back().message.append(std::move(message));
     }
+
+    if constexpr(Mode == test_mode::false_positive)
+    {
+      m_FailureMessages.push_back(failure_info{m_TopLevelChecks, std::string{message}});
+    }
   }
 
   template<test_mode Mode>
@@ -414,7 +419,7 @@ namespace sequoia::testing
   }
 
   template<test_mode Mode>
-  failure_output& test_logger<Mode>::output_channel(is_critical isCritical) noexcept
+  failure_output& test_logger<Mode>::output_channel(const is_critical isCritical) noexcept
   {
     const bool toMessages{(Mode != test_mode::false_positive) || (isCritical == is_critical::yes)};
     return toMessages ? m_FailureMessages : m_DiagnosticsOutput;
