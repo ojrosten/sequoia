@@ -201,7 +201,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 443
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 441
 	Equivalence of a file to itself
 
 	Comparison performed using:
@@ -213,7 +213,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 447
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 445
 	Equivalence of a directory to itself
 
 	Comparison performed using:
@@ -225,7 +225,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 451
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 449
 	Equivalence of a directory, with sub-directories to itself
 
 	Comparison performed using:
@@ -237,7 +237,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 455
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 453
 	Equivalence of identical directories in different locations
 
 	Comparison performed using:
@@ -249,7 +249,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 459
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 457
 	File equivalence when .ignore is ignored
 
 	Comparison performed using:
@@ -261,7 +261,26 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 463
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 465
+
+	Comparison performed using:
+	[sequoia::testing::weak_equivalence_checker<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > >]
+	With equivalent types:
+	[std::initializer_list<int>]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 468
+
+	[std::vector<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> >, std::allocator<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > > >]
+
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 470
 	Weak equivalence of directories in with the same contents but different names
 
 	Comparison performed using:
@@ -273,32 +292,13 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 467
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 474
 	Weak equivalence when .ignore is ignored
 
 	Comparison performed using:
 	[sequoia::testing::weak_equivalence_checker<std::filesystem::path>]
 	With equivalent types:
 	[std::filesystem::path]
-
-
-	=======================================
-
-	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 475
-
-	Comparison performed using:
-	[sequoia::testing::weak_equivalence_checker<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > >]
-	With equivalent types:
-	[std::initializer_list<int>]
-
-
-	=======================================
-
-	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 478
-
-	[std::vector<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> >, std::allocator<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > > >]
 
 
 	=======================================

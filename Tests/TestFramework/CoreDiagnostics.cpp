@@ -18,6 +18,8 @@
 
 namespace sequoia::testing
 {
+  namespace fs = std::filesystem;
+
   namespace
   {
       struct bland
@@ -265,8 +267,6 @@ namespace sequoia::testing
         return "Ah, chars. So easy to get wrong.";
     }});
 
-    namespace fs = std::filesystem;
-
     check_equivalence(LINE(""), std::pair<const int&, double>{5, 7.8}, std::pair<int, const double&>{-5, 6.8});
     check_equivalence(LINE(""), std::tuple<const int&, double>{5, 7.8}, std::tuple<int, const double&>{-5, 6.8});
 
@@ -309,14 +309,6 @@ namespace sequoia::testing
     check_equivalence(LINE("File inequivalence when default checking is used"),
                       fs::path{working_materials()}.append("CustomComparison").append("A").append("DifferingContent.ignore"),
                       fs::path{working_materials()}.append("CustomComparison").append("B").append("DifferingContent.ignore"));
-
-    check_weak_equivalence(LINE("Weak inequivalence of directories with some common files"),
-                           fs::path{working_materials()}.append("MoreStuff").append("B"),
-                           fs::path{working_materials()}.append("Stuff").append("B"));
-
-    check_weak_equivalence(LINE("Directory weak inequivalence when default file checking is used"),
-                           fs::path{working_materials()}.append("CustomComparison").append("A"),
-                           fs::path{working_materials()}.append("CustomComparison").append("B"));
   }
 
   void false_positive_diagnostics::test_weak_equivalence_checks()
@@ -333,6 +325,14 @@ namespace sequoia::testing
                            tutor{[](int, int){
                              return "Or at least don't mess with a vector of beasts.";
                            }});
+
+    check_weak_equivalence(LINE("Weak inequivalence of directories with some common files"),
+                           fs::path{working_materials()}.append("MoreStuff").append("B"),
+                           fs::path{working_materials()}.append("Stuff").append("B"));
+
+    check_weak_equivalence(LINE("Directory weak inequivalence when default file checking is used"),
+                           fs::path{working_materials()}.append("CustomComparison").append("A"),
+                           fs::path{working_materials()}.append("CustomComparison").append("B"));
   }
 
   [[nodiscard]]
@@ -438,8 +438,6 @@ namespace sequoia::testing
 
     check_equivalence(LINE(""), std::vector<std::string>{{"a"}, {"b"}}, std::initializer_list<std::string_view>{"a", "b"});
 
-    namespace fs = std::filesystem;
-
     check_equivalence(LINE("Equivalence of a file to itself"),
                       fs::path{working_materials()}.append("Stuff").append("A").append("foo.txt"),
                       fs::path{working_materials()}.append("Stuff").append("A").append("foo.txt"));
@@ -459,14 +457,6 @@ namespace sequoia::testing
     check_equivalence<bespoke_file_checker>(LINE("File equivalence when .ignore is ignored"),
                                             fs::path{working_materials()}.append("CustomComparison").append("A").append("DifferingContent.ignore"),
                                             fs::path{working_materials()}.append("CustomComparison").append("B").append("DifferingContent.ignore"));
-
-    check_weak_equivalence(LINE("Weak equivalence of directories in with the same contents but different names"),
-                           fs::path{working_materials()}.append("Stuff"),
-                           fs::path{working_materials()}.append("SameStuff"));
-
-    check_weak_equivalence<bespoke_file_checker>(LINE("Weak equivalence when .ignore is ignored"),
-                                                 fs::path{working_materials()}.append("CustomComparison").append("A"),
-                                                 fs::path{working_materials()}.append("CustomComparison").append("B"));
   }
 
   void false_negative_diagnostics::test_weak_equivalence_checks()
@@ -476,5 +466,13 @@ namespace sequoia::testing
 
     using prediction = std::initializer_list<std::initializer_list<int>>;
     check_weak_equivalence(LINE(""), std::vector<beast>{{1, 2}, {3, 4}}, prediction{{1, 2}, {3, 4}});
+
+    check_weak_equivalence(LINE("Weak equivalence of directories in with the same contents but different names"),
+                           fs::path{working_materials()}.append("Stuff"),
+                           fs::path{working_materials()}.append("SameStuff"));
+
+    check_weak_equivalence<bespoke_file_checker>(LINE("Weak equivalence when .ignore is ignored"),
+                                                 fs::path{working_materials()}.append("CustomComparison").append("A"),
+                                                 fs::path{working_materials()}.append("CustomComparison").append("B"));
   }
 }
