@@ -310,9 +310,13 @@ namespace sequoia::testing
                            fs::path{working_materials()}.append("MoreStuff").append("B"),
                            fs::path{working_materials()}.append("Stuff").append("B"));
 
-    check_weak_equivalence(LINE("Inequivalence when default file checking is used"),
+    check_weak_equivalence(LINE("Directory weak inequivalence when default file checking is used"),
                            fs::path{working_materials()}.append("CustomComparison").append("A"),
                            fs::path{working_materials()}.append("CustomComparison").append("B"));
+
+    check_equivalence(LINE("File inequivalence when default checking is used"),
+                           fs::path{working_materials()}.append("CustomComparison").append("A").append("DifferingContent.ignore"),
+                           fs::path{working_materials()}.append("CustomComparison").append("B").append("DifferingContent.ignore"));
   }
 
   void false_positive_diagnostics::test_weak_equivalence_checks()
@@ -459,6 +463,10 @@ namespace sequoia::testing
     check_weak_equivalence<bespoke_file_checker>(LINE("Weak equivalence when .ignore is ignored"),
                                                  fs::path{working_materials()}.append("CustomComparison").append("A"),
                                                  fs::path{working_materials()}.append("CustomComparison").append("B"));
+
+    check_equivalence<bespoke_file_checker>(LINE("File equivalence when .ignore is ignored"),
+                                            fs::path{working_materials()}.append("CustomComparison").append("A").append("DifferingContent.ignore"),
+                                            fs::path{working_materials()}.append("CustomComparison").append("B").append("DifferingContent.ignore"));
   }
 
   void false_negative_diagnostics::test_weak_equivalence_checks()
