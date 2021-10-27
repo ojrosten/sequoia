@@ -4,7 +4,6 @@
 	--Ordered Semantics--
 	[sequoia::testing::orderable_regular_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
 
-
 	=======================================
 
 	False Positive Failure:
@@ -13,7 +12,6 @@
 	--Ordered Semantics--
 	[sequoia::testing::orderable_regular_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
 
-
 	=======================================
 
 	False Positive Failure:
@@ -22,7 +20,6 @@
 	--Ordered Semantics--
 	[sequoia::testing::orderable_regular_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
 
-
 	=======================================
 
 	False Positive Failure:
@@ -30,7 +27,6 @@
 
 	--Ordered Semantics--
 	[sequoia::testing::orderable_regular_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
-
 
 	=======================================
 
@@ -40,7 +36,6 @@
 	--Ordered Semantics--
 	[sequoia::testing::orderable_regular_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
 
-
 	=======================================
 
 	False Positive Failure:
@@ -49,7 +44,6 @@
 	--Ordered Semantics--
 	[sequoia::testing::orderable_regular_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
 
-
 	=======================================
 
 	False Positive Failure:
@@ -58,7 +52,6 @@
 	--Ordered Semantics--
 	[sequoia::testing::orderable_regular_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
 
-
 	=======================================
 
 	False Positive Failure:
@@ -66,7 +59,6 @@
 
 	--Ordered Semantics--
 	[sequoia::testing::orderable_regular_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
-
 
 	=======================================
 
@@ -76,7 +68,6 @@
 	--Ordered Semantics--
 	[sequoia::testing::orderable_regular_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 
-
 	=======================================
 
 	False Positive Failure:
@@ -85,7 +76,6 @@
 	--Ordered Semantics--
 	[sequoia::testing::orderable_regular_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 
-
 	=======================================
 
 	False Positive Failure:
@@ -94,7 +84,6 @@
 	--Ordered Semantics--
 	[sequoia::testing::orderable_regular_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 
-
 	=======================================
 
 	False Positive Failure:
@@ -102,7 +91,6 @@
 
 	--Ordered Semantics--
 	[sequoia::testing::orderable_regular_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
-
 
 	=======================================
 
@@ -112,7 +100,6 @@
 	--Ordered Semantics--
 	[sequoia::testing::orderable_regular_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 
-
 	=======================================
 
 	False Positive Failure:
@@ -120,7 +107,6 @@
 
 	--Ordered Semantics--
 	[sequoia::testing::orderable_regular_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
-
 
 	=======================================
 
@@ -130,7 +116,6 @@
 	--Ordered Semantics--
 	[sequoia::testing::orderable_regular_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 
-
 	=======================================
 
 	False Positive Failure:
@@ -138,7 +123,6 @@
 
 	--Ordered Semantics--
 	[sequoia::testing::orderable_regular_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
-
 
 	=======================================
 

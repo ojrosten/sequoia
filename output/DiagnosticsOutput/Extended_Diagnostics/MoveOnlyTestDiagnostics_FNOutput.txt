@@ -4,7 +4,6 @@
 	--Move-only Semantics--
 	[sequoia::testing::move_only_beast<int, std::allocator<int> >]
 
-
 	=======================================
 
 	False Positive Failure:
@@ -13,7 +12,6 @@
 
 	--Move-only Semantics--
 	[sequoia::testing::move_only_beast<int, std::allocator<int> >]
-
 
 	=======================================
 

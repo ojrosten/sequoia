@@ -3,7 +3,6 @@
 
 	[bool]
 
-
 	=======================================
 
 	False Positive Failure:
@@ -11,14 +10,12 @@
 
 	[int]
 
-
 	=======================================
 
 	False Positive Failure:
 	Tests/TestFramework/CoreDiagnostics.cpp, Line 374
 
 	[double]
-
 
 	=======================================
 
@@ -28,7 +25,6 @@
 	Expected Exception Type:
 	[std::runtime_error]
 
-
 	=======================================
 
 	False Positive Failure:
@@ -37,14 +33,12 @@
 	Expected Exception Type:
 	[int]
 
-
 	=======================================
 
 	False Positive Failure:
 	Tests/TestFramework/CoreDiagnostics.cpp, Line 386
 
 	[std::pair<int, double>]
-
 
 	=======================================
 
@@ -53,14 +47,12 @@
 
 	[std::tuple<int, double, float>]
 
-
 	=======================================
 
 	False Positive Failure:
 	Tests/TestFramework/CoreDiagnostics.cpp, Line 395
 
 	[std::variant<int, double>]
-
 
 	=======================================
 
@@ -69,14 +61,12 @@
 
 	[std::variant<int, double>]
 
-
 	=======================================
 
 	False Positive Failure:
 	Tests/TestFramework/CoreDiagnostics.cpp, Line 397
 
 	[std::variant<int, double>]
-
 
 	=======================================
 
@@ -85,14 +75,12 @@
 
 	[std::variant<int, double>]
 
-
 	=======================================
 
 	False Positive Failure:
 	Tests/TestFramework/CoreDiagnostics.cpp, Line 404
 
 	[std::optional<int>]
-
 
 	=======================================
 
@@ -101,14 +89,12 @@
 
 	[std::optional<int>]
 
-
 	=======================================
 
 	False Positive Failure:
 	Tests/TestFramework/CoreDiagnostics.cpp, Line 406
 
 	[std::optional<int>]
-
 
 	=======================================
 
@@ -118,7 +104,6 @@
 
 	[std::vector<double, std::allocator<double> >]
 
-
 	=======================================
 
 	False Positive Failure:
@@ -126,7 +111,6 @@
 	One element vector check which should pass
 
 	[std::vector<double, std::allocator<double> >]
-
 
 	=======================================
 
@@ -136,13 +120,11 @@
 
 	[std::vector<double, std::allocator<double> >]
 
-
 	=======================================
 
 	False Positive Failure:
 	Tests/TestFramework/CoreDiagnostics.cpp, Line 417
 	Iterators demarcate identical elements
-
 
 	=======================================
 
@@ -152,14 +134,12 @@
 
 	[std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
 
-
 	=======================================
 
 	False Positive Failure:
 	Tests/TestFramework/CoreDiagnostics.cpp, Line 436
 
 	[std::tuple<std::vector<std::pair<int, float>, std::allocator<std::pair<int, float> > >, std::set<double, std::less<double>, std::allocator<double> >, std::complex<double> >]
-
 
 	=======================================
 
@@ -169,7 +149,6 @@
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<int, std::allocator<int> >]
 
-
 	=======================================
 
 	False Positive Failure:
@@ -177,7 +156,6 @@
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_stringy_beast<char, std::allocator<char> >]
-
 
 	=======================================
 
@@ -189,14 +167,12 @@
 	With equivalent types:
 	[char [4]]
 
-
 	=======================================
 
 	False Positive Failure:
 	Tests/TestFramework/CoreDiagnostics.cpp, Line 449
 
 	[std::vector<std::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::basic_string<char, std::char_traits<char>, std::allocator<char> > > >]
-
 
 	=======================================
 
@@ -209,7 +185,6 @@
 	With equivalent types:
 	[std::filesystem::path]
 
-
 	=======================================
 
 	False Positive Failure:
@@ -220,7 +195,6 @@
 	[sequoia::testing::equivalence_checker<std::filesystem::path>]
 	With equivalent types:
 	[std::filesystem::path]
-
 
 	=======================================
 
@@ -233,7 +207,6 @@
 	With equivalent types:
 	[std::filesystem::path]
 
-
 	=======================================
 
 	False Positive Failure:
@@ -244,7 +217,6 @@
 	[sequoia::testing::equivalence_checker<std::filesystem::path>]
 	With equivalent types:
 	[std::filesystem::path]
-
 
 	=======================================
 
@@ -257,7 +229,6 @@
 	With equivalent types:
 	[std::filesystem::path]
 
-
 	=======================================
 
 	False Positive Failure:
@@ -265,7 +236,6 @@
 	Range equivalence when .ignore is ignored
 
 	[std::vector<std::filesystem::path, std::allocator<std::filesystem::path> >]
-
 
 	=======================================
 
@@ -277,14 +247,12 @@
 	With equivalent types:
 	[std::initializer_list<int>]
 
-
 	=======================================
 
 	False Positive Failure:
 	Tests/TestFramework/CoreDiagnostics.cpp, Line 483
 
 	[std::vector<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> >, std::allocator<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > > >]
-
 
 	=======================================
 
@@ -297,7 +265,6 @@
 	With equivalent types:
 	[std::filesystem::path]
 
-
 	=======================================
 
 	False Positive Failure:
@@ -309,7 +276,6 @@
 	With equivalent types:
 	[std::filesystem::path]
 
-
 	=======================================
 
 	False Positive Failure:
@@ -317,7 +283,6 @@
 	Weak equivalence of range when .ignore is ignored
 
 	[std::vector<std::filesystem::path, std::allocator<std::filesystem::path> >]
-
 
 	=======================================
 

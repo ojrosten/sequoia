@@ -5,7 +5,7 @@ Running tests...
 	--Using asynchronous execution, level: Unit
 
 Failing Family:
-[9 (1)ms]
+[30 (2)ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	False Negative Checks:                     1;  Failures:  1
 	False Positive Checks:                     1;  Failures:  1
@@ -24,7 +24,6 @@ Failing Family:
 
 	[int]
 
-
 	=======================================
 
 	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 92
@@ -38,7 +37,7 @@ Failing Family:
 
 
 -----------Grand Totals-----------
-[10 (1)ms]
+[386 (2)ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     1;  Failures:  1

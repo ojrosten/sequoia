@@ -3,14 +3,12 @@
 
 	[double]
 
-
 	=======================================
 
 	False Positive Failure:
 	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 83
 
 	[double]
-
 
 	=======================================
 
@@ -19,14 +17,12 @@
 
 	[double]
 
-
 	=======================================
 
 	False Positive Failure:
 	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 86
 
 	[double]
-
 
 	=======================================
 
@@ -36,7 +32,6 @@
 
 	[int]
 
-
 	=======================================
 
 	False Positive Failure:
@@ -44,7 +39,6 @@
 	<=
 
 	[int]
-
 
 	=======================================
 
@@ -54,7 +48,6 @@
 
 	[int]
 
-
 	=======================================
 
 	False Positive Failure:
@@ -63,19 +56,16 @@
 
 	[int]
 
-
 	=======================================
 
 	False Positive Failure:
 	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 98
-
 
 	=======================================
 
 	False Positive Failure:
 	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 103
 	<
-
 
 	=======================================
 
@@ -84,14 +74,12 @@
 
 	[std::vector<double, std::allocator<double> >]
 
-
 	=======================================
 
 	False Positive Failure:
 	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 112
 
 	[std::vector<std::vector<double, std::allocator<double> >, std::allocator<std::vector<double, std::allocator<double> > > >]
-
 
 	=======================================
 

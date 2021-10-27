@@ -5,7 +5,6 @@
 	Adding 1.1
 	[sequoia::testing::(anonymous namespace)::foo]
 
-
 	=======================================
 
 	False Positive Failure:
@@ -15,7 +14,6 @@
 	Adding 1.1
 	[sequoia::testing::(anonymous namespace)::foo]
 
-
 	=======================================
 
 	False Positive Failure:
@@ -26,7 +24,6 @@
 	--Regular Semantics--
 	[sequoia::testing::(anonymous namespace)::foo]
 
-
 	=======================================
 
 	False Positive Failure:
@@ -36,7 +33,6 @@
 	Subtracting 1.1
 	[sequoia::testing::(anonymous namespace)::foo]
 
-
 	=======================================
 
 	False Positive Failure:
@@ -45,7 +41,6 @@
 	Transition from node 1 to 0
 	Subtracting 1.1
 	[sequoia::testing::(anonymous namespace)::foo]
-
 
 	=======================================
 
@@ -57,7 +52,6 @@
 	--Regular Semantics--
 	[sequoia::testing::(anonymous namespace)::foo]
 
-
 	=======================================
 
 	False Positive Failure:
@@ -67,7 +61,6 @@
 	Multiplying by 2
 	[sequoia::testing::(anonymous namespace)::foo]
 
-
 	=======================================
 
 	False Positive Failure:
@@ -76,7 +69,6 @@
 	Transition from node 1 to 2
 	Multiplying by 2
 	[sequoia::testing::(anonymous namespace)::foo]
-
 
 	=======================================
 
@@ -88,7 +80,6 @@
 	--Regular Semantics--
 	[sequoia::testing::(anonymous namespace)::foo]
 
-
 	=======================================
 
 	False Positive Failure:
@@ -98,7 +89,6 @@
 	Dividing by 2
 	[sequoia::testing::(anonymous namespace)::foo]
 
-
 	=======================================
 
 	False Positive Failure:
@@ -107,7 +97,6 @@
 	Transition from node 2 to 1
 	Dividing by 2
 	[sequoia::testing::(anonymous namespace)::foo]
-
 
 	=======================================
 
@@ -118,7 +107,6 @@
 	Dividing by 2
 	--Regular Semantics--
 	[sequoia::testing::(anonymous namespace)::foo]
-
 
 	=======================================
 
@@ -129,7 +117,6 @@
 	Adding 1.1
 	[sequoia::testing::(anonymous namespace)::foo]
 
-
 	=======================================
 
 	False Positive Failure:
@@ -138,7 +125,6 @@
 	Transition from node 0 to 1
 	Adding 1.1
 	[sequoia::testing::(anonymous namespace)::foo]
-
 
 	=======================================
 
@@ -150,7 +136,6 @@
 	--Regular Semantics--
 	[sequoia::testing::(anonymous namespace)::foo]
 
-
 	=======================================
 
 	False Positive Failure:
@@ -160,7 +145,6 @@
 	Subtracting 1.1
 	[sequoia::testing::(anonymous namespace)::foo]
 
-
 	=======================================
 
 	False Positive Failure:
@@ -169,7 +153,6 @@
 	Transition from node 1 to 0
 	Subtracting 1.1
 	[sequoia::testing::(anonymous namespace)::foo]
-
 
 	=======================================
 
@@ -181,7 +164,6 @@
 	--Regular Semantics--
 	[sequoia::testing::(anonymous namespace)::foo]
 
-
 	=======================================
 
 	False Positive Failure:
@@ -191,7 +173,6 @@
 	Multiplying by 2
 	[sequoia::testing::(anonymous namespace)::foo]
 
-
 	=======================================
 
 	False Positive Failure:
@@ -200,7 +181,6 @@
 	Transition from node 1 to 2
 	Multiplying by 2
 	[sequoia::testing::(anonymous namespace)::foo]
-
 
 	=======================================
 
@@ -212,7 +192,6 @@
 	--Regular Semantics--
 	[sequoia::testing::(anonymous namespace)::foo]
 
-
 	=======================================
 
 	False Positive Failure:
@@ -222,7 +201,6 @@
 	Dividing by 2
 	[sequoia::testing::(anonymous namespace)::foo]
 
-
 	=======================================
 
 	False Positive Failure:
@@ -231,7 +209,6 @@
 	Transition from node 2 to 1
 	Dividing by 2
 	[sequoia::testing::(anonymous namespace)::foo]
-
 
 	=======================================
 
@@ -242,7 +219,6 @@
 	Dividing by 2
 	--Regular Semantics--
 	[sequoia::testing::(anonymous namespace)::foo]
-
 
 	=======================================
 
@@ -253,7 +229,6 @@
 	Adding 1.1
 	[sequoia::testing::(anonymous namespace)::foo]
 
-
 	=======================================
 
 	False Positive Failure:
@@ -263,6 +238,14 @@
 	Adding 1.1
 	[sequoia::testing::(anonymous namespace)::foo]
 
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 104
+
+	Transition from node 1 to 0
+	Subtracting 1.1
+	[sequoia::testing::(anonymous namespace)::foo]
 
 	=======================================
 
@@ -273,16 +256,14 @@
 	Subtracting 1.1
 	[sequoia::testing::(anonymous namespace)::foo]
 
-
 	=======================================
 
 	False Positive Failure:
 	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 104
 
-	Transition from node 1 to 0
-	Subtracting 1.1
+	Transition from node 1 to 2
+	Multiplying by 2
 	[sequoia::testing::(anonymous namespace)::foo]
-
 
 	=======================================
 
@@ -293,17 +274,6 @@
 	Multiplying by 2
 	[sequoia::testing::(anonymous namespace)::foo]
 
-
-	=======================================
-
-	False Positive Failure:
-	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 104
-
-	Transition from node 1 to 2
-	Multiplying by 2
-	[sequoia::testing::(anonymous namespace)::foo]
-
-
 	=======================================
 
 	False Positive Failure:
@@ -313,7 +283,6 @@
 	Dividing by 2
 	[sequoia::testing::(anonymous namespace)::foo]
 
-
 	=======================================
 
 	False Positive Failure:
@@ -322,7 +291,6 @@
 	Transition from node 2 to 1
 	Dividing by 2
 	[sequoia::testing::(anonymous namespace)::foo]
-
 
 	=======================================
 

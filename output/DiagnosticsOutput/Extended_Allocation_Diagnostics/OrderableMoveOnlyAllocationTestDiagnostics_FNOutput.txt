@@ -4,7 +4,6 @@
 	--Move-only Semantics--
 	[sequoia::testing::orderable_move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 
-
 	=======================================
 
 	False Positive Failure:
@@ -13,7 +12,6 @@
 	--Move-only Semantics--
 	[sequoia::testing::orderable_move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 
-
 	=======================================
 
 	False Positive Failure:
@@ -22,7 +20,6 @@
 	--Move-only Semantics--
 	[sequoia::testing::orderable_move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 
-
 	=======================================
 
 	False Positive Failure:
@@ -30,7 +27,6 @@
 
 	--Move-only Semantics--
 	[sequoia::testing::orderable_move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
-
 
 	=======================================
 
@@ -40,7 +36,6 @@
 	--Move-only Semantics--
 	[sequoia::testing::orderable_move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 
-
 	=======================================
 
 	False Positive Failure:
@@ -48,7 +43,6 @@
 
 	--Move-only Semantics--
 	[sequoia::testing::orderable_move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
-
 
 	=======================================
 
@@ -58,7 +52,6 @@
 	--Move-only Semantics--
 	[sequoia::testing::orderable_move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 
-
 	=======================================
 
 	False Positive Failure:
@@ -66,7 +59,6 @@
 
 	--Move-only Semantics--
 	[sequoia::testing::orderable_move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
-
 
 	=======================================
 

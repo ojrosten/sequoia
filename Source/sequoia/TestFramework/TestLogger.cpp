@@ -112,7 +112,7 @@ namespace sequoia::testing
         auto fpMessageMaker{
           [&logger](){
             auto mess{indent("False Positive Failure:", logger.top_level_message(), tab)};
-            end_block(mess, 3_linebreaks, indent(footer(), tab));
+            end_block(mess, 2_linebreaks, indent(footer(), tab));
 
             return mess;
           }

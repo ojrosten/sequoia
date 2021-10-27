@@ -4,7 +4,6 @@
 	--Move-only Semantics--
 	[sequoia::testing::move_only_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >, 1, 0, 0>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> > >]
 
-
 	=======================================
 
 	False Positive Failure:
@@ -13,7 +12,6 @@
 	--Move-only Semantics--
 	[sequoia::testing::move_only_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >, 1, 0, 0>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> > >]
 
-
 	=======================================
 
 	False Positive Failure:
@@ -21,7 +19,6 @@
 	check_semantics return value (x)
 
 	[sequoia::testing::move_only_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >, 1, 0, 0>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> > >]
-
 
 	=======================================
 
@@ -31,7 +28,6 @@
 
 	[sequoia::testing::move_only_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >, 1, 0, 0>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> > >]
 
-
 	=======================================
 
 	False Positive Failure:
@@ -39,7 +35,6 @@
 
 	--Move-only Semantics--
 	[sequoia::testing::move_only_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >, 1, 0, 1>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> > >]
-
 
 	=======================================
 
@@ -49,7 +44,6 @@
 	--Move-only Semantics--
 	[sequoia::testing::move_only_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >, 1, 0, 1>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> > >]
 
-
 	=======================================
 
 	False Positive Failure:
@@ -58,7 +52,6 @@
 
 	[sequoia::testing::move_only_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >, 1, 0, 1>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> > >]
 
-
 	=======================================
 
 	False Positive Failure:
@@ -66,7 +59,6 @@
 	check_semantics return value (y)
 
 	[sequoia::testing::move_only_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >, 1, 0, 1>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> > >]
-
 
 	=======================================
 
@@ -76,7 +68,6 @@
 	--Move-only Semantics--
 	[sequoia::testing::move_only_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >, 1, 1, 0>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0> > >]
 
-
 	=======================================
 
 	False Positive Failure:
@@ -84,7 +75,6 @@
 
 	--Move-only Semantics--
 	[sequoia::testing::move_only_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >, 1, 1, 0>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0> > >]
-
 
 	=======================================
 
@@ -94,7 +84,6 @@
 
 	[sequoia::testing::move_only_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >, 1, 1, 0>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0> > >]
 
-
 	=======================================
 
 	False Positive Failure:
@@ -102,7 +91,6 @@
 	check_semantics return value (y)
 
 	[sequoia::testing::move_only_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >, 1, 1, 0>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0> > >]
-
 
 	=======================================
 
@@ -112,7 +100,6 @@
 	--Move-only Semantics--
 	[sequoia::testing::move_only_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >, 1, 1, 1>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1> > >]
 
-
 	=======================================
 
 	False Positive Failure:
@@ -120,7 +107,6 @@
 
 	--Move-only Semantics--
 	[sequoia::testing::move_only_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >, 1, 1, 1>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1> > >]
-
 
 	=======================================
 
@@ -130,7 +116,6 @@
 
 	[sequoia::testing::move_only_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >, 1, 1, 1>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1> > >]
 
-
 	=======================================
 
 	False Positive Failure:
@@ -138,7 +123,6 @@
 	check_semantics return value (y)
 
 	[sequoia::testing::move_only_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >, 1, 1, 1>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1> > >]
-
 
 	=======================================
 
