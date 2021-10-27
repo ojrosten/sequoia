@@ -197,7 +197,6 @@ namespace sequoia::testing
     };
 
     enum class is_critical{yes, no};
-    enum class update_mode{fresh, app};
 
     failure_output
       m_FailureMessages,
@@ -251,9 +250,7 @@ namespace sequoia::testing
     [[nodiscard]]
     failure_output& output_channel(is_critical isCritical) noexcept;
 
-    failure_output& update_output(std::string_view message, is_critical isCritical, update_mode uMode);
-
-    failure_output& add_to_output(failure_output& output, std::string_view message, update_mode uMode);
+    failure_output& add_to_output(failure_output& output, std::string_view message);
   };
 
   extern template class test_logger<test_mode::standard>;

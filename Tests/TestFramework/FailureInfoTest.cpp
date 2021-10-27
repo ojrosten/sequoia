@@ -16,7 +16,7 @@ namespace sequoia::testing
   }
 
   void failure_info_test::check_exceptions()
-  {    
+  {
     check_exception_thrown<std::runtime_error>(LINE("Stream does not start with expected pattern"), [](){
       std::stringstream s{};
       s << "foo";
@@ -51,7 +51,7 @@ namespace sequoia::testing
     check_semantics(LINE(""), x, y, std::weak_ordering::less);
 
     failure_info z{42, "..$.."};
-    check_semantics(LINE("Intermediate $"), x, z, std::weak_ordering::less);    
+    check_semantics(LINE("Intermediate $"), x, z, std::weak_ordering::less);
   }
 
   void failure_info_test::run_tests()

@@ -14,7 +14,7 @@
 namespace sequoia::testing
 {
   namespace
-  {    
+  {
     [[nodiscard]]
     std::string to_reduced_string(const failure_output& output)
     {
@@ -119,7 +119,7 @@ namespace sequoia::testing
         };
 
         const bool modeSpecificFailure{
-          ((Mode == test_mode::false_positive) && !failure_detected())
+             ((Mode == test_mode::false_positive) && !failure_detected())
           || ((Mode != test_mode::false_positive) &&  failure_detected())
         };
 
@@ -138,7 +138,7 @@ namespace sequoia::testing
 
       recored_dump_ended(get().recovery().dump_file);
     }
-      
+
     logger.decrement_depth();
   }
 
@@ -330,7 +330,7 @@ namespace sequoia::testing
 
     build(message, ind);
 
-    auto& output{update_output(msg, isCritical, update_mode::fresh)};
+    auto& output{add_to_output(output_channel(isCritical), msg)};
     end_block(output.back().message, 1_linebreaks, "");
   }
 
@@ -362,7 +362,7 @@ namespace sequoia::testing
     ++m_TopLevelFailures;
     if(m_SentinelDepth.empty())
     {
-      m_SentinelDepth.push_back(level_message{""});
+      m_SentinelDepth.push_back(level_message{message});
     }
     else
     {
@@ -376,7 +376,7 @@ namespace sequoia::testing
     auto mess{std::string{top_level_message()}.append("\n").append(message)};
     end_block(mess, 2_linebreaks, indent(footer(), tab));
 
-    add_to_output(m_CaughtExceptionMessages, mess, update_mode::fresh);
+    add_to_output(m_CaughtExceptionMessages, mess);
   }
 
   template<test_mode Mode>
@@ -421,27 +421,9 @@ namespace sequoia::testing
   }
 
   template<test_mode Mode>
-  failure_output& test_logger<Mode>::update_output(std::string_view message, is_critical isCritical, update_mode uMode)
+  failure_output& test_logger<Mode>::add_to_output(failure_output& output, std::string_view message)
   {
-    return add_to_output(output_channel(isCritical), message, uMode);
-  }
-
-  template<test_mode Mode>
-  failure_output& test_logger<Mode>::add_to_output(failure_output& output, std::string_view message, update_mode uMode)
-  {
-    switch(uMode)
-    {
-    case update_mode::fresh:
-      output.push_back(failure_info{m_TopLevelChecks, std::string{message}});
-      break;
-    case update_mode::app:
-      if(!output.empty())
-      {
-        output.back().message.append(message);
-      }
-      break;
-    }
-
+    output.push_back(failure_info{m_TopLevelChecks, std::string{message}});
     return output;
   }
 
