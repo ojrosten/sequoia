@@ -34,6 +34,24 @@ namespace sequoia::testing
           return {"Double advice"};
         }
       };
+
+      struct dummy_file_checker
+      {
+        template<test_mode Mode>
+        void operator()(test_logger<Mode>&, const std::filesystem::path&, const std::filesystem::path&) const
+        {}
+      };
+
+      struct bespoke_file_checker
+      {
+        template<test_mode Mode>
+        static void check_file(test_logger<Mode>& logger, const std::filesystem::path& file, const std::filesystem::path& prediction)
+        {
+          const auto factory{runtime::factory<default_file_checker, dummy_file_checker>{{"default", ".ignore"}}};
+          const auto checker{factory.create_or<default_file_checker>(file.extension().string())};
+          std::visit([&logger, &file, &prediction](auto&& fn){ fn(logger, file, prediction); }, checker);
+        }
+      };
   }
   
   log_summary& postprocess(log_summary& summary, const std::filesystem::path& testRepo)
@@ -428,9 +446,9 @@ namespace sequoia::testing
 
     check_equivalence(LINE("Equivalence of identical directories in different locations"),
                       fs::path{working_materials()}.append("Stuff").append("C"),
-                      fs::path{working_materials()}.append("Stuff").append("C"));
+                      fs::path{working_materials()}.append("SameStuff").append("C"));
 
-    check_weak_equivalence(LINE("Equivalence of directories in different locations"),
+    check_weak_equivalence(LINE("Weak equivalence of directories in with the same contents but different names"),
                            fs::path{working_materials()}.append("Stuff"),
                            fs::path{working_materials()}.append("SameStuff"));
   }
