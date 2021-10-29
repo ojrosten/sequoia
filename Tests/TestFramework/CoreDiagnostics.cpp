@@ -464,14 +464,15 @@ namespace sequoia::testing
                       fs::path{working_materials()}.append("Stuff/C"),
                       fs::path{working_materials()}.append("SameStuff/C"));
 
-    check_equivalence<bespoke_file_checker>(LINE("File equivalence when .ignore is ignored"),
-                                            fs::path{working_materials()}.append("CustomComparison/A/DifferingContent.ignore"),
-                                            fs::path{working_materials()}.append("CustomComparison/B/DifferingContent.ignore"));
+    check_equivalence(LINE("File equivalence when .ignore is ignored"),
+                      value_based_customization<bespoke_file_checker>{},
+                      fs::path{working_materials()}.append("CustomComparison/A/DifferingContent.ignore"),
+                      fs::path{working_materials()}.append("CustomComparison/B/DifferingContent.ignore"));
 
-    check_equivalence<bespoke_file_checker>(
-      LINE("Range equivalence when .ignore is ignored"),
-      std::vector<fs::path>{fs::path{working_materials()}.append("CustomComparison/A/DifferingContent.ignore")},
-      std::vector<fs::path>{fs::path{working_materials()}.append("CustomComparison/B/DifferingContent.ignore")});
+    check_equivalence(LINE("Range equivalence when .ignore is ignored"),
+                      value_based_customization<bespoke_file_checker>{},
+                      std::vector<fs::path>{fs::path{working_materials()}.append("CustomComparison/A/DifferingContent.ignore")},
+                      std::vector<fs::path>{fs::path{working_materials()}.append("CustomComparison/B/DifferingContent.ignore")});
   }
 
   void false_negative_diagnostics::test_weak_equivalence_checks()
@@ -486,12 +487,14 @@ namespace sequoia::testing
                            fs::path{working_materials()}.append("Stuff"),
                            fs::path{working_materials()}.append("SameStuff"));
 
-    check_weak_equivalence<bespoke_file_checker>(LINE("Weak equivalence when .ignore is ignored"),
-                                                 fs::path{working_materials()}.append("CustomComparison/A"),
-                                                 fs::path{working_materials()}.append("CustomComparison/B"));
+    check_weak_equivalence<>(LINE("Weak equivalence when .ignore is ignored"),
+                             value_based_customization<bespoke_file_checker>{},
+                             fs::path{working_materials()}.append("CustomComparison/A"),
+                             fs::path{working_materials()}.append("CustomComparison/B"));
 
-    check_weak_equivalence<bespoke_file_checker>(LINE("Weak equivalence of range when .ignore is ignored"),
-                                                 std::vector<fs::path>{{fs::path{working_materials()}.append("CustomComparison/A")}},
-                                                 std::vector<fs::path>{{fs::path{working_materials()}.append("CustomComparison/B")}});
+    check_weak_equivalence(LINE("Weak equivalence of range when .ignore is ignored"),
+                           value_based_customization<bespoke_file_checker>{},
+                           std::vector<fs::path>{{fs::path{working_materials()}.append("CustomComparison/A")}},
+                           std::vector<fs::path>{{fs::path{working_materials()}.append("CustomComparison/B")}});
   }
 }
