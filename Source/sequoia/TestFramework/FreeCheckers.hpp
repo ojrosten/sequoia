@@ -392,8 +392,7 @@ namespace sequoia::testing
       for(; predictionIter != predictionLast; advance(predictionIter, 1), advance(iter, 1))
       {
         const auto dist{distance(predictionFirst, predictionIter)};
-        auto mess{std::string{"Element "}
-            .append(std::to_string(dist)).append(" of range incorrect")};
+        auto mess{("Element " + std::to_string(dist)).append(" of range incorrect")};
         if(!dispatch_check(std::move(mess), logger, discriminator, customization, *iter, *predictionIter, advisor)) equal = false;
       }
     }
@@ -531,10 +530,9 @@ namespace sequoia::testing
   }
 
   template<class Customization, test_mode Mode, class Iter, class PredictionIter>
-  bool check_range_equivalence(std::string_view description, test_logger<Mode>& logger, value_based_customization<Customization>&& customization, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast)
+  bool check_range_equivalence(std::string_view description, test_logger<Mode>& logger, const value_based_customization<Customization>& customization, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast)
   {
-    using vbc = value_based_customization<Customization>;
-    return check_range(description, logger, equivalence_tag{}, std::forward<vbc>(customization), first, last, predictionFirst, predictionLast);
+    return check_range(description, logger, equivalence_tag{}, customization, first, last, predictionFirst, predictionLast);
   }
 
   template<test_mode Mode, class Iter, class PredictionIter>
@@ -544,10 +542,9 @@ namespace sequoia::testing
   }
 
   template<class Customization, test_mode Mode, class Iter, class PredictionIter>
-  bool check_range_weak_equivalence(std::string_view description, test_logger<Mode>& logger, value_based_customization<Customization>&& customization, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast)
+  bool check_range_weak_equivalence(std::string_view description, test_logger<Mode>& logger, const value_based_customization<Customization>& customization, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast)
   {
-    using vbc = value_based_customization<Customization>;
-    return check_range<Customization>(description, logger, weak_equivalence_tag{}, std::forward<vbc>(customization), first, last, predictionFirst, predictionLast);
+    return check_range<Customization>(description, logger, weak_equivalence_tag{}, customization, first, last, predictionFirst, predictionLast);
   }
 
   /*! \brief Exposes elementary check methods, with the option to plug in arbitrary Extenders to compose functionality.
@@ -607,7 +604,7 @@ namespace sequoia::testing
     template<class Customization, class T, class S, class... U>
     bool check_equivalence(std::string_view description, const value_based_customization<Customization>& customization, const T& value, S&& s, U&&... u)
     {
-      return testing::check_equivalence<Customization>(description, logger(), customization, value, std::forward<S>(s), std::forward<U>(u)...);
+      return testing::check_equivalence(description, logger(), customization, value, std::forward<S>(s), std::forward<U>(u)...);
     }
 
     template<class T, class S, class... U>
@@ -620,7 +617,7 @@ namespace sequoia::testing
     template<class Customization, class T, class S, class... U>
     bool check_weak_equivalence(std::string_view description, const value_based_customization<Customization>&customization, const T& value, S&& s, U&&... u)
     {
-      return testing::check_weak_equivalence<Customization>(description, logger(), customization, value, std::forward<S>(s), std::forward<U>(u)...);
+      return testing::check_weak_equivalence(description, logger(), customization, value, std::forward<S>(s), std::forward<U>(u)...);
     }
 
     template<class Advisor=null_advisor>
