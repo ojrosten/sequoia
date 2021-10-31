@@ -24,7 +24,7 @@ namespace sequoia::testing
   struct as_bitmask<summary_detail> : std::true_type
   {};
 
-  template<class Iter> void pad_right(Iter begin, Iter end, std::string_view suffix)
+  template<std::forward_iterator Iter> void pad_right(Iter begin, Iter end, std::string_view suffix)
   {
     auto maxIter{
       std::max_element(begin, end, [](const std::string& lhs, const std::string& rhs) {
@@ -42,7 +42,7 @@ namespace sequoia::testing
     }
   }
 
-  template<class Iter> void pad_left(Iter begin, Iter end, const std::size_t minChars)
+  template<std::forward_iterator Iter> void pad_left(Iter begin, Iter end, const std::size_t minChars)
   {
     auto maxIter{std::max_element(begin, end, [](const std::string& lhs, const std::string& rhs) {
           return lhs.size() < rhs.size();

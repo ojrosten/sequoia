@@ -37,7 +37,7 @@ namespace sequoia::utilities
     friend constexpr bool operator!=(const null_data_policy&, const null_data_policy&) noexcept = default;
   };
 
-  template<class Iterator, class AuxiliaryDataPolicy=null_data_policy>
+  template<std::input_or_output_iterator Iterator, class AuxiliaryDataPolicy=null_data_policy>
   struct identity_dereference_policy : public AuxiliaryDataPolicy
   {
     using base_iterator_type    = Iterator;
@@ -85,7 +85,7 @@ namespace sequoia::utilities
       be rather confusing. However, for const iterators this is tacitly allowed.
    */
 
-  template<class Iterator, dereference_policy DereferencePolicy>
+  template<std::input_or_output_iterator Iterator, dereference_policy DereferencePolicy>
   class iterator : public DereferencePolicy
   {
   public:
@@ -108,7 +108,7 @@ namespace sequoia::utilities
       , m_BaseIterator{std::forward<Arg>(baseIterArg)}
     {}
 
-    template<class Iter, class DerefPol>
+    template<std::input_or_output_iterator Iter, class DerefPol>
       requires (   !std::is_same_v<Iter, Iterator>
                 && std::is_convertible_v<Iter, base_iterator_type>
                 && impl::are_compatible_v<DereferencePolicy, DerefPol>

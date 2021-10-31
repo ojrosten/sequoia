@@ -107,7 +107,7 @@ namespace sequoia::testing
     stream << "[" << dur << unit << "]\n\n";
   }
 
-  template<class Iter>
+  template<std::input_or_output_iterator Iter>
   void family_selector::update_prune_info(Iter startFailedTests, Iter endFailedTests)
   {
     if(!bespoke_selection() || pruned())

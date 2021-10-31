@@ -86,7 +86,7 @@ namespace sequoia::testing
 
     void prune(std::ostream& stream);
 
-    template<class Iter>
+    template<std::input_or_output_iterator Iter>
     void update_prune_info(Iter startFailedTests, Iter endFailedTests);
 
     void executable_time_stamp(const std::filesystem::path& exe);
