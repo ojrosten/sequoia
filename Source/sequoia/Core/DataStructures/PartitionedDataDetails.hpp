@@ -68,12 +68,13 @@ namespace sequoia::data_structures::partition_impl
     using iterator = typename storage_type_generator<Traits, Handler>::container_type::const_reverse_iterator;
   };
 
-  template<bool Reversed, class IndexType>
+  template<bool Reversed, std::integral IndexType>
   class partition_index_policy
   {
   public:
     using index_type = IndexType;
 
+    constexpr partition_index_policy() = default;
     constexpr explicit partition_index_policy(const index_type n) : m_Partition{n} {}
     constexpr partition_index_policy(const partition_index_policy&) = default;
 
@@ -98,7 +99,7 @@ namespace sequoia::data_structures::partition_impl
     constexpr partition_index_policy& operator=(const partition_index_policy&)     = default;
     constexpr partition_index_policy& operator=(partition_index_policy&&) noexcept = default;
   private:
-    IndexType m_Partition;
+    IndexType m_Partition{};
   };
 
   template

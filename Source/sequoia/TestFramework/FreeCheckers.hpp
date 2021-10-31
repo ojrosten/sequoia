@@ -367,8 +367,25 @@ namespace sequoia::testing
     }
   }
 
-  template<test_mode Mode, class ElementDispatchDiscriminator, class Customization, class Iter, class PredictionIter, class Advisor=null_advisor>
-  bool check_range(std::string_view description, test_logger<Mode>& logger, ElementDispatchDiscriminator discriminator, const value_based_customization<Customization>& customization, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast, tutor<Advisor> advisor={})
+  template<
+    test_mode Mode,
+    class ElementDispatchDiscriminator,
+    class Customization,
+    std::input_or_output_iterator Iter,
+    std::sentinel_for<Iter> Sentinel,
+    std::input_or_output_iterator PredictionIter,
+    std::sentinel_for<PredictionIter> PredictionSentinel,
+    class Advisor=null_advisor
+  >
+  bool check_range(std::string_view description,
+                   test_logger<Mode>& logger,
+                   ElementDispatchDiscriminator discriminator,
+                   const value_based_customization<Customization>& customization,
+                   Iter first,
+                   Sentinel last,
+                   PredictionIter predictionFirst,
+                   PredictionSentinel predictionLast,
+                   tutor<Advisor> advisor={})
   {
     auto info{
       [description](){
@@ -517,34 +534,95 @@ namespace sequoia::testing
     return check_equality(description, logger, value, true, std::move(advisor));
   }
 
-  template<test_mode Mode, class Iter, class PredictionIter, class Advisor=null_advisor>
-  bool check_range(std::string_view description, test_logger<Mode>& logger, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast, tutor<Advisor> advisor={})
+  template<
+    test_mode Mode,
+    std::input_or_output_iterator Iter,
+    std::sentinel_for<Iter> Sentinel,
+    std::input_or_output_iterator PredictionIter,
+    std::sentinel_for<PredictionIter> PredictionSentinel,
+    class Advisor = null_advisor
+  >
+  bool check_range(std::string_view description,
+                   test_logger<Mode>& logger,
+                   Iter first,
+                   Sentinel last,
+                   PredictionIter predictionFirst,
+                   PredictionSentinel predictionLast,
+                   tutor<Advisor> advisor={})
   {
     return check_range(description, logger, equality_tag{}, value_based_customization<void>{}, first, last, predictionFirst, predictionLast, std::move(advisor));
   }
 
-  template<test_mode Mode, class Iter, class PredictionIter>
-  bool check_range_equivalence(std::string_view description, test_logger<Mode>& logger, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast)
+  template<
+    test_mode Mode,
+    std::input_or_output_iterator Iter,
+    std::sentinel_for<Iter> Sentinel,
+    std::input_or_output_iterator PredictionIter,
+    std::sentinel_for<PredictionIter> PredictionSentinel
+  >
+  bool check_range_equivalence(std::string_view description,
+                               test_logger<Mode>& logger,
+                               Iter first,
+                               Sentinel last,
+                               PredictionIter predictionFirst,
+                               PredictionSentinel predictionLast)
   {
     return check_range(description, logger, equivalence_tag{}, value_based_customization<void>{}, first, last, predictionFirst, predictionLast);
   }
 
-  template<class Customization, test_mode Mode, class Iter, class PredictionIter>
-  bool check_range_equivalence(std::string_view description, test_logger<Mode>& logger, const value_based_customization<Customization>& customization, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast)
+  template<
+    test_mode Mode,
+    class Customization,
+    std::input_or_output_iterator Iter,
+    std::sentinel_for<Iter> Sentinel,
+    std::input_or_output_iterator PredictionIter,
+    std::sentinel_for<PredictionIter> PredictionSentinel
+  >
+  bool check_range_equivalence(std::string_view description,
+                               test_logger<Mode>& logger,
+                               const value_based_customization<Customization>& customization,
+                               Iter first,
+                               Sentinel last,
+                               PredictionIter predictionFirst,
+                               PredictionSentinel predictionLast)
   {
     return check_range(description, logger, equivalence_tag{}, customization, first, last, predictionFirst, predictionLast);
   }
 
-  template<test_mode Mode, class Iter, class PredictionIter>
-  bool check_range_weak_equivalence(std::string_view description, test_logger<Mode>& logger, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast)
+  template<
+    test_mode Mode,
+    std::input_or_output_iterator Iter,
+    std::sentinel_for<Iter> Sentinel,
+    std::input_or_output_iterator PredictionIter,
+    std::sentinel_for<PredictionIter> PredictionSentinel
+  >
+  bool check_range_weak_equivalence(std::string_view description,
+                                    test_logger<Mode>& logger,
+                                    Iter first,
+                                    Sentinel last,
+                                    PredictionIter predictionFirst,
+                                    PredictionSentinel predictionLast)
   {
     return check_range(description, logger, weak_equivalence_tag{}, value_based_customization<void>{}, first, last, predictionFirst, predictionLast);
   }
 
-  template<class Customization, test_mode Mode, class Iter, class PredictionIter>
-  bool check_range_weak_equivalence(std::string_view description, test_logger<Mode>& logger, const value_based_customization<Customization>& customization, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast)
+  template<
+    test_mode Mode,
+    class Customization,
+    std::input_or_output_iterator Iter,
+    std::sentinel_for<Iter> Sentinel,
+    std::input_or_output_iterator PredictionIter,
+    std::sentinel_for<PredictionIter> PredictionSentinel
+  >
+    bool check_range_weak_equivalence(std::string_view description,
+                                      test_logger<Mode>& logger,
+                                      const value_based_customization<Customization>& customization,
+                                      Iter first,
+                                      Sentinel last,
+                                      PredictionIter predictionFirst,
+                                      PredictionSentinel predictionLast)
   {
-    return check_range<Customization>(description, logger, weak_equivalence_tag{}, customization, first, last, predictionFirst, predictionLast);
+    return check_range(description, logger, weak_equivalence_tag{}, customization, first, last, predictionFirst, predictionLast);
   }
 
   /*! \brief Exposes elementary check methods, with the option to plug in arbitrary Extenders to compose functionality.
@@ -637,14 +715,38 @@ namespace sequoia::testing
       return testing::check_exception_thrown<E>(description, logger(), std::forward<Fn>(function), std::move(postprocessor));
     }
 
-    template<class Iter, class PredictionIter, class Advisor=null_advisor>
-    bool check_range(std::string_view description, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast, tutor<Advisor> advisor={})
+    template<
+      std::input_or_output_iterator Iter,
+      std::sentinel_for<Iter> Sentinel,
+      std::input_or_output_iterator PredictionIter,
+      std::sentinel_for<PredictionIter> PredictionSentinel,
+      class Advisor=null_advisor
+    >
+    bool check_range(std::string_view description,
+                     Iter first,
+                     Sentinel last,
+                     PredictionIter predictionFirst,
+                     PredictionSentinel predictionLast,
+                     tutor<Advisor> advisor={})
     {
       return testing::check_range(description, logger(), first, last, predictionFirst, predictionLast, std::move(advisor));
     }
 
-    template<class Iter, class PredictionIter, class Compare, class Advisor=null_advisor>
-    bool check_range(std::string_view description, Compare compare, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast, tutor<Advisor> advisor={})
+    template<
+      std::input_or_output_iterator Iter,
+      std::sentinel_for<Iter> Sentinel,
+      std::input_or_output_iterator PredictionIter,
+      std::sentinel_for<PredictionIter> PredictionSentinel,
+      class Compare,
+      class Advisor = null_advisor
+    >
+    bool check_range(std::string_view description,
+                     Compare compare,
+                     Iter first,
+                     Sentinel last,
+                     PredictionIter predictionFirst,
+                     PredictionSentinel predictionLast,
+                     tutor<Advisor> advisor = {})
     {
       return testing::check_range(description, logger(), std::move(compare), value_based_customization<void>{}, first, last, predictionFirst, predictionLast, std::move(advisor));
     }

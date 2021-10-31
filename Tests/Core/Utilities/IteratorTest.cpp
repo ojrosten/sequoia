@@ -47,7 +47,6 @@ namespace sequoia::testing
     static_assert(std::is_same_v<custom_iter_t::reference, int&>);
     static_assert(std::is_same_v<custom_iter_t::const_dereference_type, const int&>);
 
-
     std::array<int, 3> a{3, 0, 1};
     basic_checks<custom_iter_t>(a.begin(), a.end(), &*a.begin(), "Custom iterator from iterator");
 

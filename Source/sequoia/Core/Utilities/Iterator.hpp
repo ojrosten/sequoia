@@ -17,7 +17,6 @@
 
 namespace sequoia::utilities
 {
-
   struct null_data_policy
   {
   protected:
@@ -99,6 +98,8 @@ namespace sequoia::utilities
     using pointer                = typename DereferencePolicy::pointer;
     using reference              = typename DereferencePolicy::reference;
     using const_dereference_type = impl::type_generator_t<DereferencePolicy>;
+
+    constexpr iterator() = default;
 
     template<class Arg, class... Args>
       requires (!resolve_to_copy_v<iterator, Arg, Args...>)
