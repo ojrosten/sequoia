@@ -98,7 +98,7 @@ namespace sequoia::testing
       m_Graph.node_weight(iter, newWeight);
     }
 
-    template<class Iter>
+    template<std::input_or_output_iterator Iter>
     void firstEdgeTraversal(Iter citer)
     {
       const auto newWeight = 10 + m_EdgeTraversalIndex + citer->weight();
@@ -107,7 +107,7 @@ namespace sequoia::testing
       ++m_EdgeTraversalIndex;
     }
 
-    template<class Iter>
+    template<std::input_or_output_iterator Iter>
     void secondEdgeTraversal(Iter citer)
     {
       --m_EdgeTraversalIndex;

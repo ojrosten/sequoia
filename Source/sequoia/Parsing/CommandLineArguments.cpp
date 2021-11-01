@@ -172,8 +172,8 @@ namespace sequoia::parsing::commandline
     return help;
   }
 
-  template<std::input_or_output_iterator Iter>
-  std::optional<Iter> argument_parser::process_option(Iter optionsIter, Iter optionsEnd, std::string_view arg, std::vector<operation>& operations)
+  template<std::input_or_output_iterator Iter, std::sentinel_for<Iter> Sentinel>
+  std::optional<Iter> argument_parser::process_option(Iter optionsIter, Sentinel optionsEnd, std::string_view arg, std::vector<operation>& operations)
   {
     if(optionsIter == optionsEnd)
     {
@@ -201,8 +201,8 @@ namespace sequoia::parsing::commandline
   }
 
 
-  template<std::input_iterator Iter>
-  bool argument_parser::process_concatenated_aliases(Iter optionsIter, Iter optionsBegin, Iter optionsEnd, std::string_view arg, std::vector<operation>& operations)
+  template<std::input_iterator Iter, std::sentinel_for<Iter> Sentinel>
+  bool argument_parser::process_concatenated_aliases(Iter optionsIter, Sentinel optionsBegin, Iter optionsEnd, std::string_view arg, std::vector<operation>& operations)
   {
     if(optionsIter != optionsEnd) return false;
 
@@ -226,8 +226,8 @@ namespace sequoia::parsing::commandline
     return optionsIter != optionsEnd;
   }
 
-  template<std::input_or_output_iterator Iter>
-  Iter argument_parser::process_nested_options(Iter optionsIter, Iter optionsEnd, operation& currentOp)
+  template<std::input_or_output_iterator Iter, std::sentinel_for<Iter> Sentinel>
+  Iter argument_parser::process_nested_options(Iter optionsIter, Sentinel optionsEnd, operation& currentOp)
   {
     if(!optionsIter->nested_options.empty())
     {

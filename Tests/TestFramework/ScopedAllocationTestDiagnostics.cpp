@@ -11,15 +11,15 @@
 
 namespace sequoia::testing
 {
-  template<class InnerAllocator>
+  template<alloc InnerAllocator>
   using perfectly_scoped_beast
     = typename scoped_beast_builder<perfectly_normal_beast, std::basic_string<char, std::char_traits<char>, InnerAllocator>>::beast;
 
-  template<class InnerAllocator>
+  template<alloc InnerAllocator>
   using perfectly_mixed_beast
     = typename scoped_beast_builder<perfectly_normal_beast, perfectly_sharing_beast<int, std::shared_ptr<int>, InnerAllocator>>::beast;
 
-  template<class InnerAllocator>
+  template<alloc InnerAllocator>
   using weirdly_mixed_beast
     = typename scoped_beast_builder<perfectly_normal_beast, inefficient_para_copy<int, InnerAllocator>>::beast;
 

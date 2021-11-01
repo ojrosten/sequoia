@@ -11,7 +11,7 @@
 
 namespace sequoia::testing
 {
-  template<class InnerAllocator>
+  template<alloc InnerAllocator>
   using move_only_scoped_beast
     = typename scoped_beast_builder<move_only_beast, std::basic_string<char, std::char_traits<char>, InnerAllocator>>::beast;
 

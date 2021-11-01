@@ -22,12 +22,13 @@ namespace sequoia::testing
     void run_tests() final;
 
     template<
-      class CustomIter,
-      class Iter,
+      std::input_or_output_iterator CustomIter,
+      std::input_or_output_iterator Iter,
+      std::sentinel_for<Iter> Sentinel,
       class... Args,
       class Pointer=typename CustomIter::pointer
     >
-    void basic_checks(Iter begin, Iter end, Pointer pBegin, std::string_view message, Args... args);
+    void basic_checks(Iter begin, Sentinel end, Pointer pBegin, std::string_view message, Args... args);
 
     void test_iterator();
     void test_const_iterator();
@@ -38,7 +39,7 @@ namespace sequoia::testing
     void test_const_reverse_scaling_iterator();
   };
 
-  template<class Iterator>
+  template<std::input_or_output_iterator Iterator>
   class scaling_dereference_policy
   {
   public:
@@ -47,6 +48,7 @@ namespace sequoia::testing
     using pointer    = typename std::iterator_traits<Iterator>::pointer;
     using reference  = typename std::iterator_traits<Iterator>::reference;
 
+    constexpr scaling_dereference_policy() = default;
     constexpr scaling_dereference_policy(const value_type scale) : m_Scale{scale} {}
     constexpr scaling_dereference_policy(const scaling_dereference_policy&) = default;
 

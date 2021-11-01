@@ -24,7 +24,7 @@ namespace sequoia::testing
   {
     template<class Edge> struct use_weak_equiv : std::false_type {};
 
-    template<class WeightHandler, class IndexType>
+    template<class WeightHandler, std::integral IndexType>
       requires ownership::handler<WeightHandler>
     struct use_weak_equiv<maths::edge<WeightHandler, IndexType>> : std::true_type {};
 

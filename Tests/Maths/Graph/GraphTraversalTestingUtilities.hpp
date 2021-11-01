@@ -121,7 +121,7 @@ namespace sequoia::testing
 
     void clear() noexcept { m_Order.clear(); }
 
-    template<class I> void operator()(I iter)
+    template<std::input_or_output_iterator I> void operator()(I iter)
     {
       const auto pos{dist(traversal_constant<Flavour>{}, iter)};
       m_Order.emplace_back(iter.partition_index(), static_cast<std::size_t>(pos));
@@ -142,17 +142,17 @@ namespace sequoia::testing
     result_type m_Order;
     const G& m_Graph;
 
-    template<class I> [[nodiscard]] auto dist(pdfs_type, I iter)
+    template<std::input_or_output_iterator I> [[nodiscard]] auto dist(pdfs_type, I iter)
     {
       return distance(m_Graph.crbegin_edges(iter.partition_index()), iter);
     }
 
-    template<class I> [[nodiscard]] auto dist(bfs_type, I iter)
+    template<std::input_or_output_iterator I> [[nodiscard]] auto dist(bfs_type, I iter)
     {
       return distance(m_Graph.cbegin_edges(iter.partition_index()), iter);
     }
 
-    template<class I> [[nodiscard]] auto dist(dfs_type, I iter)
+    template<std::input_or_output_iterator I> [[nodiscard]] auto dist(dfs_type, I iter)
     {
       return distance(m_Graph.cbegin_edges(iter.partition_index()), iter);
     }

@@ -1665,7 +1665,8 @@ namespace sequoia
         return citer1;
       }
 
-      template<std::input_or_output_iterator Iter, class Fn> constexpr void modify_comp_indices(Iter first, Iter last, Fn fn) noexcept
+      template<std::input_or_output_iterator Iter, std::sentinel_for<Iter> Sentinel, class Fn>
+      constexpr void modify_comp_indices(Iter first, Sentinel last, Fn fn) noexcept
       {
         const auto start{first};
         while(first != last)
@@ -1708,7 +1709,8 @@ namespace sequoia
         }
       }
 
-      template<std::input_or_output_iterator Iter> constexpr void decrement_comp_indices(Iter first, Iter last, const edge_index_type num) noexcept
+      template<std::input_or_output_iterator Iter, std::sentinel_for<Iter> Sentinel>
+      constexpr void decrement_comp_indices(Iter first, Sentinel last, const edge_index_type num) noexcept
       {
         auto decrementer{
           [num](const auto compIndex){
@@ -1718,7 +1720,8 @@ namespace sequoia
         modify_comp_indices(first, last, decrementer);
       }
 
-      template<std::input_or_output_iterator Iter> constexpr void increment_comp_indices(Iter first, Iter last, const edge_index_type num) noexcept
+      template<std::input_or_output_iterator Iter, std::sentinel_for<Iter> Sentinel>
+      constexpr void increment_comp_indices(Iter first, Sentinel last, const edge_index_type num) noexcept
       {
         modify_comp_indices(first, last, [num](const auto compIndex) { return compIndex + num; });
       }

@@ -210,8 +210,14 @@ namespace sequoia::testing
     check(LINE("Custom reverse iterators should compare equal if they point to the same thing, irrespective of any other state"), i == j);
   }
 
-  template<class CustomIter, class Iter, class... Args, class Pointer>
-  void iterator_test::basic_checks(Iter begin, Iter end, Pointer pBegin, std::string_view message, Args... args)
+  template<
+    std::input_or_output_iterator CustomIter,
+    std::input_or_output_iterator Iter,
+    std::sentinel_for<Iter> Sentinel,
+    class... Args,
+    class Pointer
+  >
+  void iterator_test::basic_checks(Iter begin, Sentinel end, Pointer pBegin, std::string_view message, Args... args)
   {
     using namespace std;
 

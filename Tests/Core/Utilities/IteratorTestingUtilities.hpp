@@ -11,7 +11,7 @@
 
 namespace sequoia::testing
 {
-  template<class Iterator, class DereferencePolicy>
+  template<std::input_or_output_iterator Iterator, class DereferencePolicy>
   struct serializer<utilities::iterator<Iterator, DereferencePolicy>>
   {
     using iter_type = utilities::iterator<Iterator, DereferencePolicy>;
