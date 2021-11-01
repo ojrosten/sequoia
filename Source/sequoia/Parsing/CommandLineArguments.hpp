@@ -128,13 +128,13 @@ namespace sequoia::parsing::commandline
 
     bool parse(const std::vector<option>& options, std::vector<operation>& operations);
 
-    template<class Iter>
+    template<std::input_or_output_iterator Iter>
     std::optional<Iter> process_option(Iter optionsIter, Iter optionsEnd, std::string_view arg, std::vector<operation>& operations);
 
-    template<class Iter>
+    template<std::input_iterator Iter>
     bool process_concatenated_aliases(Iter optionsIter, Iter optionsBegin, Iter optionsEnd, std::string_view arg, std::vector<operation>& operations);
 
-    template<class Iter>
+    template<std::input_or_output_iterator Iter>
     Iter process_nested_options(Iter optionsIter, Iter optionsEnd, operation& currentOp);
 
     [[nodiscard]]

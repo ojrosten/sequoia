@@ -18,11 +18,12 @@
 
 #include <algorithm>
 #include <functional>
+#include <iterator>
 
 namespace sequoia
 {
-  template<class FwdIter, class Comparer=std::less<std::decay_t<decltype(*FwdIter())>>>
-  constexpr void bubble_up(FwdIter begin, FwdIter current, Comparer comp = Comparer{})
+  template<class Iter, class Comparer=std::less<std::decay_t<decltype(*Iter())>>>
+  constexpr void bubble_up(Iter begin, Iter current, Comparer comp = Comparer{})
   {
     if(current == begin) return;
 
@@ -36,8 +37,8 @@ namespace sequoia
     }
   }
 
-  template<class FwdIter, class Comparer=std::less<std::decay_t<decltype(*FwdIter())>>>
-  constexpr void bubble_down(FwdIter begin, FwdIter current, FwdIter end, Comparer comp = Comparer{})
+  template<class Iter, class Comparer=std::less<std::decay_t<decltype(*Iter())>>>
+  constexpr void bubble_down(Iter begin, Iter current, Iter end, Comparer comp = Comparer{})
   {
     using namespace std;
     if(distance(begin, end) <= 1) return;
@@ -63,8 +64,8 @@ namespace sequoia
     }
   }
 
-  template<class FwdIter, class Comparer=std::less<std::decay_t<decltype(*FwdIter())>>>
-  constexpr void make_heap(FwdIter begin, FwdIter end, Comparer comp = Comparer{})
+  template<class Iter, class Comparer=std::less<std::decay_t<decltype(*Iter())>>>
+  constexpr void make_heap(Iter begin, Iter end, Comparer comp = Comparer{})
   {
     using namespace std;
     if(distance(begin, end) <= 1) return;
@@ -80,8 +81,8 @@ namespace sequoia
   // One reason to retain this is that it uses iter_swap internally.
   // This means that the behaviour can be customized by specializing
   // the latter. Currently, this is exploited to sort graph nodes.
-  template<class FwdIter, class Comparer=std::less<std::decay_t<decltype(*FwdIter())>>>
-  constexpr void sort(FwdIter begin, FwdIter end, Comparer comp = Comparer{})
+  template<class Iter, class Comparer=std::less<std::decay_t<decltype(*Iter())>>>
+  constexpr void sort(Iter begin, Iter end, Comparer comp = Comparer{})
   {
     using std::distance;
     if(distance(begin, end) <= 1) return;
@@ -125,8 +126,8 @@ namespace sequoia
     return retIter;
   }*/
 
-  template<class FwdIter, class Comparer=std::equal_to<std::decay_t<decltype(*FwdIter())>>>
-  constexpr void cluster(FwdIter begin, FwdIter end, Comparer comp = Comparer{})
+  template<std::forward_iterator Iter, class Comparer=std::equal_to<std::decay_t<decltype(*Iter())>>>
+  constexpr void cluster(Iter begin, Iter end, Comparer comp = Comparer{})
   {
     if(begin == end) return;
 
@@ -150,8 +151,8 @@ namespace sequoia
     cluster(endOfCluster, end, comp);
   }
 
-  /*template<class FwdIter, class T, class Comparer = std::less<std::decay_t<decltype(*FwdIter())>>>
-  constexpr FwdIter lower_bound(FwdIter begin, FwdIter end, const T& val, Comparer comp = Comparer{})
+  /*template<class Iter, class T, class Comparer = std::less<std::decay_t<decltype(*Iter())>>>
+  constexpr Iter lower_bound(Iter begin, Iter end, const T& val, Comparer comp = Comparer{})
   {
     while(begin != end)
     {
@@ -170,8 +171,8 @@ namespace sequoia
     return end;
   }
 
-  template<class FwdIter, class T, class Comparer=std::less<std::decay_t<decltype(*FwdIter())>>>
-  constexpr FwdIter upper_bound(FwdIter begin, FwdIter end, const T& val, Comparer comp = Comparer{})
+  template<class Iter, class T, class Comparer=std::less<std::decay_t<decltype(*Iter())>>>
+  constexpr Iter upper_bound(Iter begin, Iter end, const T& val, Comparer comp = Comparer{})
   {
     auto notComp{
       [comp](const auto& lhs, const auto& rhs){
@@ -182,8 +183,8 @@ namespace sequoia
     return sequoia::lower_bound(begin, end, val, notComp);
   }
 
-  template<class FwdIter, class T, class Comparer=std::less<std::decay_t<decltype(*FwdIter())>>>
-  constexpr std::pair<FwdIter, FwdIter> equal_range(FwdIter begin, FwdIter end, const T& val, Comparer comp = Comparer{})
+  template<class Iter, class T, class Comparer=std::less<std::decay_t<decltype(*Iter())>>>
+  constexpr std::pair<Iter, Iter> equal_range(Iter begin, Iter end, const T& val, Comparer comp = Comparer{})
   {
     return {sequoia::lower_bound(begin, end, val, comp), sequoia::upper_bound(begin, end, val, comp)};
   }

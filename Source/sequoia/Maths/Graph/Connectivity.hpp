@@ -32,7 +32,7 @@ namespace sequoia
     template <class, class H>        requires ownership::handler<H> struct bucketed_storage_traits;
     template <class, class H, class> requires ownership::handler<H> class partitioned_sequence;
     template <class, class H>        requires ownership::handler<H> struct partitioned_sequence_traits;
-    template <class, std::size_t, std::size_t, class> class static_partitioned_sequence;
+    template <class, std::size_t, std::size_t, std::integral> class static_partitioned_sequence;
     class static_data_base;
   }
 
@@ -1665,7 +1665,7 @@ namespace sequoia
         return citer1;
       }
 
-      template<class Iter, class Fn> constexpr void modify_comp_indices(Iter first, Iter last, Fn fn) noexcept
+      template<std::input_or_output_iterator Iter, class Fn> constexpr void modify_comp_indices(Iter first, Iter last, Fn fn) noexcept
       {
         const auto start{first};
         while(first != last)
@@ -1708,7 +1708,7 @@ namespace sequoia
         }
       }
 
-      template<class Iter> constexpr void decrement_comp_indices(Iter first, Iter last, const edge_index_type num) noexcept
+      template<std::input_or_output_iterator Iter> constexpr void decrement_comp_indices(Iter first, Iter last, const edge_index_type num) noexcept
       {
         auto decrementer{
           [num](const auto compIndex){
@@ -1718,7 +1718,7 @@ namespace sequoia
         modify_comp_indices(first, last, decrementer);
       }
 
-      template<class Iter> constexpr void increment_comp_indices(Iter first, Iter last, const edge_index_type num) noexcept
+      template<std::input_or_output_iterator Iter> constexpr void increment_comp_indices(Iter first, Iter last, const edge_index_type num) noexcept
       {
         modify_comp_indices(first, last, [num](const auto compIndex) { return compIndex + num; });
       }

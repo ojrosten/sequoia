@@ -181,7 +181,7 @@ namespace sequoia::maths::graph_impl
   class loop_processor
   {
   public:
-    template<class Iter>
+    template<std::forward_iterator Iter>
     [[nodiscard]]
     constexpr static bool loop_matched(Iter begin, Iter current)
     {
@@ -201,7 +201,7 @@ namespace sequoia::maths::graph_impl
   class loop_processor<G, GraphFlavour>
   {
   public:
-    template<class Iter>
+    template<std::forward_iterator Iter>
     [[nodiscard]]
     constexpr static bool loop_matched(Iter begin, Iter current)
     {
@@ -363,7 +363,7 @@ namespace sequoia::maths::graph_impl
   private:
     struct recurse {};
 
-    template<class Iter>
+    template<std::input_or_output_iterator Iter>
     [[nodiscard]]
     constexpr static bool is_loop(Iter iter, [[maybe_unused]] const edge_index_type currentNodeIndex)
     {

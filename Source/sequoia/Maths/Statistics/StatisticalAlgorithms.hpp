@@ -14,12 +14,13 @@
 #include <cmath>
 #include <numeric>
 #include <optional>
+#include <iterator>
 
 namespace sequoia::maths
 {
-  template<class InputIt, class T = typename std::iterator_traits<InputIt>::value_type>
+  template<std::input_iterator Iter, class T = typename std::iterator_traits<Iter>::value_type>
   [[nodiscard]]
-  std::optional<T> mean(InputIt first, InputIt last)
+  std::optional<T> mean(Iter first, Iter last)
   {
     using std::distance;
 
@@ -33,10 +34,10 @@ namespace sequoia::maths
     return m;
   }
 
-  template<class InputIt, class T = typename std::iterator_traits<InputIt>::value_type>
+  template<std::input_iterator Iter, class T = typename std::iterator_traits<Iter>::value_type>
   [[nodiscard]]
   std::pair<std::optional<T>, std::optional<T>>
-    cummulative_square_diffs(InputIt first, InputIt last)
+    cummulative_square_diffs(Iter first, Iter last)
   {
     using std::distance;
 
@@ -56,10 +57,10 @@ namespace sequoia::maths
     return {{}, {}};
   }
 
-  template<class InputIt, class T = typename std::iterator_traits<InputIt>::value_type>
+  template<std::input_iterator Iter, class T = typename std::iterator_traits<Iter>::value_type>
   [[nodiscard]]
   std::pair<std::optional<T>, std::optional<T>>
-    variance(InputIt first, InputIt last)
+    variance(Iter first, Iter last)
   {
     using std::distance;
 
@@ -73,10 +74,10 @@ namespace sequoia::maths
     return {{}, {}};
   }
 
-  template<class InputIt, class T = typename std::iterator_traits<InputIt>::value_type>
+  template<std::input_iterator Iter, class T = typename std::iterator_traits<Iter>::value_type>
   [[nodiscard]]
   std::pair<std::optional<T>, std::optional<T>>
-    sample_variance(InputIt first, InputIt last)
+    sample_variance(Iter first, Iter last)
   {
     using std::distance;
 
@@ -96,10 +97,10 @@ namespace sequoia::maths
     }
   }
 
-  template<class InputIt, class T = typename std::iterator_traits<InputIt>::value_type>
+  template<std::input_iterator Iter, class T = typename std::iterator_traits<Iter>::value_type>
   [[nodiscard]]
   std::pair<std::optional<T>, std::optional<T>>
-    standard_deviation(InputIt first, InputIt last)
+    standard_deviation(Iter first, Iter last)
   {
     using std::distance;
 
@@ -117,10 +118,10 @@ namespace sequoia::maths
   {
     struct gaussian_approx_estimator
     {
-      template<class InputIt, class T = typename std::iterator_traits<InputIt>::value_type>
+      template<std::input_iterator Iter, class T = typename std::iterator_traits<Iter>::value_type>
       [[nodiscard]]
       std::pair<std::optional<T>, std::optional<T>>
-        operator()(InputIt first, InputIt last) const
+        operator()(Iter first, Iter last) const
       {
         using std::distance;
 
@@ -142,10 +143,10 @@ namespace sequoia::maths
     };
   }
 
-  template<class InputIt, class Estimator = bias::gaussian_approx_estimator, class T = typename std::iterator_traits<InputIt>::value_type>
+  template<std::input_iterator Iter, class Estimator = bias::gaussian_approx_estimator, class T = typename std::iterator_traits<Iter>::value_type>
   [[nodiscard]]
   std::pair<std::optional<T>, std::optional<T>>
-  sample_standard_deviation(InputIt first, InputIt last, Estimator estimator = Estimator{})
+  sample_standard_deviation(Iter first, Iter last, Estimator estimator = Estimator{})
   {
     return estimator(first, last);
   }

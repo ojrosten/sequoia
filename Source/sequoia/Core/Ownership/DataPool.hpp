@@ -69,7 +69,7 @@ namespace sequoia::ownership
       }
     };
 
-    template<class Iterator, class Wrapper>
+    template<std::input_or_output_iterator Iterator, class Wrapper>
     using pool_iterator = utilities::iterator<Iterator, pool_deref_policy<Wrapper>>;
   }
 

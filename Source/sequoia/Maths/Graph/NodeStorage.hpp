@@ -32,11 +32,11 @@ namespace sequoia::maths::graph_impl
 {
   //===================================Storage for the list of nodes===================================//
 
-  template<class Iterator>
+  template<std::input_or_output_iterator Iterator>
   struct proxy_dereference_policy
   {
     using proxy_reference = typename std::iterator_traits<Iterator>::reference;
-    using proxy_pointer = typename std::iterator_traits<Iterator>::pointer;
+    using proxy_pointer   = typename std::iterator_traits<Iterator>::pointer;
 
     using reference = decltype(std::declval<proxy_reference>().get());
     using pointer = std::add_pointer_t<reference>;

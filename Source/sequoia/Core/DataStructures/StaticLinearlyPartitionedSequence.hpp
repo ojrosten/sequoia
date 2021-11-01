@@ -16,7 +16,7 @@
 
 namespace sequoia::data_structures
 {
-  template<class T, std::size_t Npartitions, std::size_t NelementsPerPartition, class IndexType>
+  template<class T, std::size_t Npartitions, std::size_t NelementsPerPartition, std::integral IndexType>
   struct static_linearly_partitioned_sequence_traits
   {
     constexpr static bool static_storage_v{true};
@@ -36,7 +36,7 @@ namespace sequoia::data_structures
     }
   };
 
-  template<class T, std::size_t Npartitions, std::size_t NelementsPerPartition, class IndexType=std::size_t>
+  template<class T, std::size_t Npartitions, std::size_t NelementsPerPartition, std::integral IndexType=std::size_t>
   class static_linearly_partitioned_sequence :
     public partitioned_sequence_base<T, ownership::independent<T>, static_linearly_partitioned_sequence_traits<T, Npartitions, NelementsPerPartition, IndexType>>
   {

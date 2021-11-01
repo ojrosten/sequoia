@@ -13,7 +13,7 @@
 
 namespace sequoia::testing
 {
-  template<class T, std::size_t Npartitions, std::size_t NelementsPerPartition, class IndexType>
+  template<class T, std::size_t Npartitions, std::size_t NelementsPerPartition, std::integral IndexType>
   struct detailed_equality_checker<sequoia::data_structures::static_linearly_partitioned_sequence<T, Npartitions, NelementsPerPartition, IndexType>>
   {
     using type = sequoia::data_structures::static_linearly_partitioned_sequence<T, Npartitions, NelementsPerPartition, IndexType>;
@@ -25,7 +25,7 @@ namespace sequoia::testing
     }
   };
 
-  template<class T, std::size_t Npartitions, std::size_t NelementsPerPartition, class IndexType>
+  template<class T, std::size_t Npartitions, std::size_t NelementsPerPartition, std::integral IndexType>
   struct equivalence_checker<sequoia::data_structures::static_linearly_partitioned_sequence<T, Npartitions, NelementsPerPartition, IndexType>>
   {
     using type = sequoia::data_structures::static_linearly_partitioned_sequence<T, Npartitions, NelementsPerPartition, IndexType>;

@@ -29,7 +29,7 @@ namespace sequoia
   {
     //===================================A Custom Iterator===================================//
 
-    template<class Traits, class Handler, class IndexType>
+    template<class Traits, class Handler, std::integral IndexType>
       requires ownership::handler<Handler>
     using partition_iterator
       = utilities::iterator<
@@ -37,7 +37,7 @@ namespace sequoia
           partition_impl::dereference_policy<Handler, partition_impl::mutable_reference, partition_impl::partition_index_policy<false, IndexType>>
         >;
 
-    template<class Traits, class Handler, class IndexType>
+    template<class Traits, class Handler, std::integral IndexType>
       requires ownership::handler<Handler>
     using const_partition_iterator
       = utilities::iterator<
@@ -45,7 +45,7 @@ namespace sequoia
         partition_impl::dereference_policy<Handler, partition_impl::const_reference, partition_impl::partition_index_policy<false, IndexType>>
       >;
 
-    template<class Traits, class Handler, class IndexType>
+    template<class Traits, class Handler, std::integral IndexType>
       requires ownership::handler<Handler>
     using reverse_partition_iterator
       = utilities::iterator<
@@ -53,7 +53,7 @@ namespace sequoia
         partition_impl::dereference_policy<Handler, partition_impl::mutable_reference, partition_impl::partition_index_policy<true, IndexType>>
       >;
 
-    template<class Traits, class Handler, class IndexType>
+    template<class Traits, class Handler, std::integral IndexType>
       requires ownership::handler<Handler>
     using const_reverse_partition_iterator
       = utilities::iterator<
@@ -1088,7 +1088,7 @@ namespace sequoia
         return partition_iterator{iter, soure};
       }
 
-      template<class PartitionIterator, class Iterator>
+      template<class PartitionIterator, std::input_or_output_iterator Iterator>
       constexpr PartitionIterator get_begin_iterator(const index_type i, Iterator iter) const noexcept
       {
         const index_type index{i >= m_Partitions.size() ? npos : i};
@@ -1096,7 +1096,7 @@ namespace sequoia
         return PartitionIterator::reversed() ? PartitionIterator{iter, index} - offset : PartitionIterator{iter, index} + offset;
       }
 
-      template<class PartitionIterator, class Iterator>
+      template<class PartitionIterator, std::input_or_output_iterator Iterator>
       constexpr PartitionIterator get_end_iterator(const index_type i, Iterator iter) const noexcept
       {
         index_type index{PartitionIterator::reversed() ? index_type{} : npos};
@@ -1202,7 +1202,7 @@ namespace sequoia
       using base_t::erase_from_partition;
     };
 
-    template<class T, std::size_t Npartitions, std::size_t Nelements, class IndexType>
+    template<class T, std::size_t Npartitions, std::size_t Nelements, std::integral IndexType>
     struct static_partitioned_sequence_traits
     {
       constexpr static bool static_storage_v{true};
@@ -1247,7 +1247,7 @@ namespace sequoia
       }
     };
 
-    template<class T, std::size_t Npartitions, std::size_t Nelements, class IndexType=std::size_t>
+    template<class T, std::size_t Npartitions, std::size_t Nelements, std::integral IndexType=std::size_t>
     class static_partitioned_sequence :
       public partitioned_sequence_base<T, ownership::independent<T>, static_partitioned_sequence_traits<T, Npartitions, Nelements,IndexType>>
     {
@@ -1290,7 +1290,7 @@ namespace sequoia
     }
   }
 
-  template<class PartitionedData, class Pred, class Index=typename PartitionedData::index_type>
+  template<class PartitionedData, class Pred, std::integral Index=typename PartitionedData::index_type>
   void erase_from_partition_if(PartitionedData& data, const Index partitionIndex, Pred pred)
   {
     auto i{data.begin_partition(partitionIndex)};
