@@ -136,8 +136,7 @@ namespace sequoia::testing
   [[nodiscard]]
   std::filesystem::path prune_path(std::filesystem::path outputDir, const std::filesystem::path& testMainDir);
 
-  template<class Pred>
-    requires std::invocable<Pred, std::filesystem::path>
+  template<std::predicate<std::filesystem::path> Pred>
   void throw_if(const std::filesystem::path& p, std::string_view message, Pred pred)
   {
     if(pred(p))
