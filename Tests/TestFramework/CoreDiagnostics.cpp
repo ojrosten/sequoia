@@ -10,11 +10,12 @@
 #include "sequoia/TextProcessing/Substitutions.hpp"
 
 #include <complex>
-#include <vector>
-#include <set>
+#include <list>
 #include <filesystem>
-#include <variant>
 #include <optional>
+#include <set>
+#include <variant>
+#include <vector>
 
 namespace sequoia::testing
 {
@@ -57,10 +58,16 @@ namespace sequoia::testing
 
     struct foo
     {
-      int x{};
+      int i{};
 
       [[nodiscard]]
       friend constexpr auto operator<=>(const foo&, const foo&) = default;
+    };
+
+    struct bar
+    {
+      int i{};
+      double x{};
     };
   }
 
@@ -71,7 +78,7 @@ namespace sequoia::testing
     template<test_mode Mode>
     static void check(test_logger<Mode>& logger, const foo& f, int i, tutor<bland> advisor)
     {
-      check_equality("Wrapped value", logger, f.x, i, advisor);
+      check_equality("Wrapped value", logger, f.i, i, advisor);
     }
   };
 
@@ -83,6 +90,30 @@ namespace sequoia::testing
     static void check(test_logger<Mode>& logger, const std::vector<foo>& f, const std::vector<int>& i, tutor<bland> advisor)
     {
       check_range_equivalence("Vector equivalence", logger, f.begin(), f.end(), i.begin(), i.end(), advisor);
+    }
+  };
+
+  template<>
+  struct weak_equivalence_checker<bar>
+  {
+    template<test_mode Mode>
+    static void check(test_logger<Mode>& logger, const bar& b, const std::pair<int, double>& prediction, tutor<bland> advisor)
+    {
+      check_equality("Wrapped int", logger, b.i, prediction.first, advisor);
+      check_equality("Wrapped double", logger, b.x, prediction.second, advisor);
+    }
+  };
+
+  // Explicit container specialization to testing propagation of tutor through check_range_equivalence
+  template<>
+  struct weak_equivalence_checker<std::vector<foo>>
+  {
+    using prediction_t = std::vector<std::pair<int, double>>;
+
+    template<test_mode Mode>
+    static void check(test_logger<Mode>& logger, const std::vector<foo>& f, const prediction_t& p, tutor<bland> advisor)
+    {
+      check_range_equivalence("Vector equivalence", logger, f.begin(), f.end(), p.begin(), p.end(), advisor);
     }
   };
 
@@ -347,10 +378,10 @@ namespace sequoia::testing
 
     check_equivalence(LINE("Advice for equivalence checking"), foo{42}, 41, tutor{bland{}});
 
-    check_equivalence(LINE("Advice for range equivalence, where the containorized form is explicitly specialized"),
+    check_equivalence(LINE("Advice for range equivalence, where the containerized form is explicitly specialized"),
                       std::vector<foo>{{42}}, std::vector<int>{{41}}, tutor{bland{}});
 
-    check_equivalence(LINE("Advice for range equivalence, where the containorized form is not explicitly specialized"),
+    check_equivalence(LINE("Advice for range equivalence, where the containerized form is not explicitly specialized"),
                       std::set<foo>{{42}}, std::set<int>{{41}}, tutor{bland{}});
   }
 
@@ -381,6 +412,17 @@ namespace sequoia::testing
       LINE("Weak inequivalence of range when default file checking is used"),
       std::vector<fs::path>{{fs::path{working_materials()}.append("CustomComparison/A")}},
       std::vector<fs::path>{{fs::path{working_materials()}.append("CustomComparison/B")}});
+
+    check_weak_equivalence(LINE("Advice for weak equivalence checking"),
+                           bar{42, 3.14}, std::pair<int, double>{41, 3.13}, tutor{bland{}});
+
+    check_weak_equivalence(
+      LINE("Advice for range weak equivalence, where the containerized form is explicitly specialized"),
+      std::vector<bar>{{42, 3.14}}, std::vector<std::pair<int, double>>{{41, 3.13}}, tutor{bland{}});
+
+    check_weak_equivalence(
+      LINE("Advice for range weak equivalence, where the containerized form is not explicitly specialized"),
+      std::list<bar>{{42, 3.14}}, std::list<std::pair<int, double>>{{41, 3.13}}, tutor{bland{}});
   }
 
   [[nodiscard]]
@@ -514,10 +556,10 @@ namespace sequoia::testing
 
     check_equivalence(LINE("Advice for equivalence checking"), foo{42}, 42, tutor{bland{}});
 
-    check_equivalence(LINE("Advice for range equivalence, where the containorized for is explicitly specialized"), 
+    check_equivalence(LINE("Advice for range equivalence, where the containerized for is explicitly specialized"), 
                       std::vector<foo>{{42}}, std::vector<int>{{42}}, tutor{bland{}});
 
-    check_equivalence(LINE("Advice for range equivalence, where the containorized for is not explicitly specialized"),
+    check_equivalence(LINE("Advice for range equivalence, where the containerized for is not explicitly specialized"),
       std::set<foo>{{42}}, std::set<int>{{42}}, tutor{bland{}});
   }
 
@@ -542,5 +584,15 @@ namespace sequoia::testing
                            value_based_customization<bespoke_file_checker>{},
                            std::vector<fs::path>{{fs::path{working_materials()}.append("CustomComparison/A")}},
                            std::vector<fs::path>{{fs::path{working_materials()}.append("CustomComparison/B")}});
+
+    check_weak_equivalence(LINE("Advice for weak equivalence checking"), bar{42, 3.14}, std::pair<int, double>{42, 3.14}, tutor{bland{}});
+
+    check_weak_equivalence(
+      LINE("Advice for range weak equivalence, where the containerized form is explicitly specialized"),
+      std::vector<bar>{{42, 3.14}}, std::vector<std::pair<int, double>>{{42, 3.14}}, tutor{bland{}});
+
+    check_weak_equivalence(
+      LINE("Advice for range weak equivalence, where the containerized form is not explicitly specialized"),
+      std::list<bar>{{42, 3.14}}, std::list<std::pair<int, double>>{{42, 3.14}}, tutor{bland{}});
   }
 }
