@@ -22,40 +22,67 @@ namespace sequoia::testing
 
   namespace
   {
-      struct bland
+    struct bland
+    {
+      [[nodiscard]]
+      std::string operator()(int, int) const
       {
-        [[nodiscard]]
-        std::string operator()(int, int) const
-        {
-          return {"Integer advice"};
-        }
+        return {"Integer advice"};
+      }
 
-        [[nodiscard]]
-        std::string operator()(double, double) const
-        {
-          return {"Double advice"};
-        }
-      };
-
-      struct dummy_file_checker
+      [[nodiscard]]
+      std::string operator()(double, double) const
       {
-        template<test_mode Mode>
-        void operator()(test_logger<Mode>&, const std::filesystem::path&, const std::filesystem::path&) const
-        {}
-      };
+        return {"Double advice"};
+      }
+    };
 
-      struct bespoke_file_checker
+    struct dummy_file_checker
+    {
+      template<test_mode Mode>
+      void operator()(test_logger<Mode>&, const std::filesystem::path&, const std::filesystem::path&) const
+      {}
+    };
+
+    struct bespoke_file_checker
+    {
+      template<test_mode Mode>
+      static void check_file(test_logger<Mode>& logger, const std::filesystem::path& file, const std::filesystem::path& prediction)
       {
-        template<test_mode Mode>
-        static void check_file(test_logger<Mode>& logger, const std::filesystem::path& file, const std::filesystem::path& prediction)
-        {
-          const auto factory{runtime::factory<default_file_checker, dummy_file_checker>{{"default", ".ignore"}}};
-          const auto checker{factory.create_or<default_file_checker>(file.extension().string())};
-          std::visit([&logger, &file, &prediction](auto&& fn){ fn(logger, file, prediction); }, checker);
-        }
-      };
+        const auto factory{runtime::factory<default_file_checker, dummy_file_checker>{{"default", ".ignore"}}};
+        const auto checker{factory.create_or<default_file_checker>(file.extension().string())};
+        std::visit([&logger, &file, &prediction](auto&& fn){ fn(logger, file, prediction); }, checker);
+      }
+    };
+
+    struct foo
+    {
+      int x;
+    };
   }
-  
+
+
+  template<>
+  struct equivalence_checker<foo>
+  {
+    template<test_mode Mode>
+    static void check(test_logger<Mode>& logger, const foo& f, int i, tutor<bland> advisor)
+    {
+      check_equality("Wrapped value", logger, f.x, i, advisor);
+    }
+  };
+
+  // Explicit container specialization to testing propagation of tutor through check_range_equivalence
+  template<>
+  struct equivalence_checker<std::vector<foo>>
+  {
+    template<test_mode Mode>
+    static void check(test_logger<Mode>& logger, const std::vector<foo>& f, const std::vector<int>& i, tutor<bland> advisor)
+    {
+      check_range_equivalence("Vector equivalence", logger, f.begin(), f.end(), i.begin(), i.end(), advisor);
+    }
+  };
+
   log_summary& postprocess(log_summary& summary, const std::filesystem::path& testRepo)
   {
     std::string updatedOutput{summary.diagnostics_output()};
@@ -314,6 +341,11 @@ namespace sequoia::testing
       LINE("Range inequivalence when default file checking us used"),
       std::vector<fs::path>{fs::path{working_materials()}.append("CustomComparison/A/DifferingContent.ignore")},
       std::vector<fs::path>{fs::path{working_materials()}.append("CustomComparison/B/DifferingContent.ignore")});
+
+    check_equivalence(LINE("Advice for equivalence checking"), foo{42}, 41, bland{});
+
+    check_equivalence(LINE("Advice for range equivalence, where the containized for is explicitly specialized"),
+      std::vector<foo>{{42}}, std::vector<int>{{41}}, bland{});
   }
 
   void false_positive_diagnostics::test_weak_equivalence_checks()
@@ -473,6 +505,11 @@ namespace sequoia::testing
                       value_based_customization<bespoke_file_checker>{},
                       std::vector<fs::path>{fs::path{working_materials()}.append("CustomComparison/A/DifferingContent.ignore")},
                       std::vector<fs::path>{fs::path{working_materials()}.append("CustomComparison/B/DifferingContent.ignore")});
+
+    check_equivalence(LINE("Advice for equivalence checking"), foo{42}, 42, bland{});
+
+    check_equivalence(LINE("Advice for range equivalence, where the containized for is explicitly specialized"), 
+                      std::vector<foo>{{42}}, std::vector<int>{{42}}, bland{});
   }
 
   void false_negative_diagnostics::test_weak_equivalence_checks()

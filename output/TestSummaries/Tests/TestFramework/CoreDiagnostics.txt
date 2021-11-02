@@ -1,4 +1,4 @@
 False Positive Diagnostics
-False Positive Checks:                    92;  Failures:  0
+False Positive Checks:                    94;  Failures:  0
 False Negative Diagnostics
-False Negative Checks:                    35;  Failures:  0
+False Negative Checks:                    37;  Failures:  0

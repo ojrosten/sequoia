@@ -558,16 +558,18 @@ namespace sequoia::testing
     std::input_or_output_iterator Iter,
     std::sentinel_for<Iter> Sentinel,
     std::input_or_output_iterator PredictionIter,
-    std::sentinel_for<PredictionIter> PredictionSentinel
+    std::sentinel_for<PredictionIter> PredictionSentinel,
+    class Advisor = null_advisor
   >
   bool check_range_equivalence(std::string_view description,
                                test_logger<Mode>& logger,
                                Iter first,
                                Sentinel last,
                                PredictionIter predictionFirst,
-                               PredictionSentinel predictionLast)
+                               PredictionSentinel predictionLast,
+                               tutor<Advisor> advisor={})
   {
-    return check_range(description, logger, equivalence_tag{}, value_based_customization<void>{}, first, last, predictionFirst, predictionLast);
+    return check_range(description, logger, equivalence_tag{}, value_based_customization<void>{}, first, last, predictionFirst, predictionLast, std::move(advisor));
   }
 
   template<
@@ -576,7 +578,8 @@ namespace sequoia::testing
     std::input_or_output_iterator Iter,
     std::sentinel_for<Iter> Sentinel,
     std::input_or_output_iterator PredictionIter,
-    std::sentinel_for<PredictionIter> PredictionSentinel
+    std::sentinel_for<PredictionIter> PredictionSentinel,
+    class Advisor = null_advisor
   >
   bool check_range_equivalence(std::string_view description,
                                test_logger<Mode>& logger,
@@ -584,9 +587,10 @@ namespace sequoia::testing
                                Iter first,
                                Sentinel last,
                                PredictionIter predictionFirst,
-                               PredictionSentinel predictionLast)
+                               PredictionSentinel predictionLast,
+                               tutor<Advisor> advisor={})
   {
-    return check_range(description, logger, equivalence_tag{}, customization, first, last, predictionFirst, predictionLast);
+    return check_range(description, logger, equivalence_tag{}, customization, first, last, predictionFirst, predictionLast, std::move(advisor));
   }
 
   template<
@@ -746,7 +750,7 @@ namespace sequoia::testing
                      Sentinel last,
                      PredictionIter predictionFirst,
                      PredictionSentinel predictionLast,
-                     tutor<Advisor> advisor = {})
+                     tutor<Advisor> advisor={})
     {
       return testing::check_range(description, logger(), std::move(compare), value_based_customization<void>{}, first, last, predictionFirst, predictionLast, std::move(advisor));
     }

@@ -1,11 +1,11 @@
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 109
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 136
 
 	[bool]
 	check failed
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 110
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 137
 
 	[bool]
 	check failed
@@ -13,7 +13,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 113
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 140
 	Advisor ignored
 
 	[bool]
@@ -21,7 +21,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 117
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 144
 	Integers which should compare different
 
 	[int]
@@ -31,7 +31,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 118
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 145
 
 	[double]
 	operator== returned false
@@ -41,7 +41,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 125
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 152
 	Exception expected but nothing thrown
 
 	Expected Exception Type:
@@ -50,7 +50,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 126
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 153
 	Exception thrown but of wrong type
 
 	Expected Exception Type:
@@ -60,7 +60,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 127
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 154
 	Exception thrown but of unknown type
 
 	Expected Exception Type:
@@ -69,7 +69,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 132
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 159
 
 	[std::pair<int, double>]
 	operator== returned false
@@ -82,7 +82,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 133
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 160
 
 	[std::pair<int, double>]
 	operator== returned false
@@ -95,7 +95,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 134
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 161
 
 	[std::pair<int, double>]
 	operator== returned false
@@ -116,7 +116,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 136
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 163
 
 	[std::tuple<int, double, float>]
 	operator== returned false
@@ -129,7 +129,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 137
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 164
 
 	[std::tuple<int, double, float>]
 	operator== returned false
@@ -143,7 +143,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 138
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 165
 
 	[std::tuple<int, double, float>]
 	operator== returned false
@@ -156,7 +156,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 145
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 172
 
 	[std::variant<int, double>]
 	operator== returned false
@@ -169,7 +169,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 146
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 173
 
 	[std::variant<int, double>]
 	operator== returned false
@@ -182,7 +182,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 147
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 174
 
 	[std::variant<int, double>]
 	operator== returned false
@@ -195,7 +195,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 153
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 180
 
 	[std::optional<int>]
 	operator== returned false
@@ -206,7 +206,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 154
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 181
 
 	[std::optional<int>]
 	operator== returned false
@@ -217,7 +217,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 155
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 182
 
 	[std::optional<int>]
 	operator== returned false
@@ -230,7 +230,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 160
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 187
 	Empty vector check which should fail
 
 	[std::vector<double, std::allocator<double> >]
@@ -244,7 +244,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 161
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 188
 	One element vector check which should fail due to wrong value
 
 	[std::vector<double, std::allocator<double> >]
@@ -259,7 +259,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 163
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 190
 	One element vector check which should fail due to differing sizes
 
 	[std::vector<double, std::allocator<double> >]
@@ -273,7 +273,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 164
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 191
 	Multi-element vector comparison which should fail due to last element
 
 	[std::vector<double, std::allocator<double> >]
@@ -287,7 +287,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 165
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 192
 	Multi-element vector comparison which should fail due to first element
 
 	[std::vector<double, std::allocator<double> >]
@@ -301,7 +301,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 166
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 193
 	Multi-element vector comparison which should fail due to middle element
 
 	[std::vector<double, std::allocator<double> >]
@@ -315,7 +315,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 167
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 194
 	Multi-element vector comparison which should fail due to different sizes
 
 	[std::vector<double, std::allocator<double> >]
@@ -329,7 +329,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 171
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 198
 	Iterators demarcate differing numbers of elements
 
 	  Container size wrong
@@ -340,7 +340,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 172
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 199
 	Iterators demarcate differing elements
 
 	  Element 0 of range incorrect
@@ -369,7 +369,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 178
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 205
 	Empty and non-empty strings
 
 	[std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
@@ -389,7 +389,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 179
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 206
 	Empty and non-empty strings
 
 	[std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
@@ -409,7 +409,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 180
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 207
 	Strings of differing length
 
 	[std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
@@ -427,7 +427,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 181
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 208
 	Differing strings of same length
 
 	[std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
@@ -445,7 +445,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 185
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 212
 	Empty string compared with long string
 
 	[std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
@@ -465,7 +465,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 186
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 213
 	Long string with empty string
 
 	[std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
@@ -485,7 +485,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 188
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 215
 	Short string compared with long string
 
 	[std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
@@ -505,7 +505,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 189
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 216
 	Long string with short string
 
 	[std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
@@ -525,7 +525,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 191
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 218
 	Strings differing by a newline
 
 	[std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
@@ -543,7 +543,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 192
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 219
 	Strings differing by a newline
 
 	[std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
@@ -561,7 +561,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 193
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 220
 	Strings differing by a newline at the start
 
 	[std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
@@ -579,7 +579,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 194
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 221
 	Strings differing by a newline at the start
 
 	[std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
@@ -597,7 +597,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 195
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 222
 	Empty string compared with newline
 
 	[std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
@@ -617,7 +617,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 196
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 223
 	Empty string compared with newline
 
 	[std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
@@ -637,7 +637,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 197
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 224
 	Strings differing from newline onwards
 
 	[std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
@@ -655,7 +655,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 198
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 225
 	Strings differing from newline onwards
 
 	[std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
@@ -673,7 +673,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 199
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 226
 	Strings differing from newline onwards
 
 	[std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
@@ -691,7 +691,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 200
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 227
 	Strings differing from newline onwards
 
 	[std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
@@ -709,7 +709,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 201
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 228
 	Output suppressed by a new line
 
 	[std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
@@ -727,7 +727,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 206
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 233
 	Long strings compared with difference near middle
 
 	[std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
@@ -745,7 +745,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 207
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 234
 	Long strings compared with difference near middle
 
 	[std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
@@ -763,7 +763,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 212
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 239
 	Long strings compared with difference near end
 
 	[std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
@@ -781,7 +781,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 213
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 240
 	Long strings compared with difference near end
 
 	[std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
@@ -799,7 +799,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 227
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 254
 
 	[std::tuple<std::vector<std::pair<int, float>, std::allocator<std::pair<int, float> > >, std::set<double, std::less<double>, std::allocator<double> >, std::complex<double> >]
 	operator== returned false
@@ -821,7 +821,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 232
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 259
 
 	[std::tuple<std::vector<std::pair<int, float>, std::allocator<std::pair<int, float> > >, std::set<double, std::less<double>, std::allocator<double> >, std::complex<double> >]
 	operator== returned false
@@ -839,7 +839,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 240
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 267
 	Broken check invariant
 
 	--Regular Semantics--
@@ -851,7 +851,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 241
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 268
 	Broken equality
 
 	--Regular Semantics--
@@ -867,7 +867,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 242
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 269
 	Broken inequality
 
 	--Regular Semantics--
@@ -883,7 +883,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 243
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 270
 	Broken copy
 
 	--Regular Semantics--
@@ -897,7 +897,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 244
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 271
 	Broken move
 
 	--Regular Semantics--
@@ -911,7 +911,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 245
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 272
 	Broken copy assignment
 
 	--Regular Semantics--
@@ -925,7 +925,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 246
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 273
 	Broken move assignment
 
 	--Regular Semantics--
@@ -939,7 +939,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 247
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 274
 	Broken self copy assignment
 
 	--Regular Semantics--
@@ -953,7 +953,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 248
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 275
 	Broken swap
 
 	--Regular Semantics--
@@ -973,7 +973,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 249
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 276
 	Broken self swap
 
 	--Regular Semantics--
@@ -987,7 +987,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 250
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 277
 	Broken copy value semantics
 
 	--Regular Semantics--
@@ -999,7 +999,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 251
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 278
 	Broken copy assignment value semantics
 
 	--Regular Semantics--
@@ -1011,7 +1011,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 253
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 280
 	Broken serialization
 
 	--Regular Semantics--
@@ -1025,7 +1025,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 254
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 281
 	Broken deserialization
 
 	--Regular Semantics--
@@ -1039,7 +1039,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 259
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 286
 
 	Comparison performed using:
 	[sequoia::testing::equivalence_checker<std::basic_string<char, std::char_traits<char>, std::allocator<char> > >]
@@ -1060,7 +1060,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 260
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 287
 
 	Comparison performed using:
 	[sequoia::testing::equivalence_checker<std::basic_string<char, std::char_traits<char>, std::allocator<char> > >]
@@ -1080,7 +1080,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 264
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 291
 
 	[std::vector<std::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::basic_string<char, std::char_traits<char>, std::allocator<char> > > >]
 
@@ -1102,7 +1102,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 266
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 293
 
 	[std::vector<std::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::basic_string<char, std::char_traits<char>, std::allocator<char> > > >]
 
@@ -1125,7 +1125,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 270
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 297
 
 	Comparison performed using:
 	[sequoia::testing::equivalence_checker<std::pair<int const&, double> >]
@@ -1146,7 +1146,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 271
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 298
 
 	Comparison performed using:
 	[sequoia::testing::equivalence_checker<std::tuple<int const&, double> >]
@@ -1167,7 +1167,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 273
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 300
 	Inequivalence of two different paths, neither of which exists
 
 	Comparison performed using:
@@ -1183,7 +1183,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 277
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 304
 	Inequivalence of two different paths, one of which exists
 
 	Comparison performed using:
@@ -1203,7 +1203,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 281
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 308
 	Inequivalence of directory/file
 
 	Comparison performed using:
@@ -1223,7 +1223,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 285
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 312
 	Inequivalence of differently named files
 
 	Comparison performed using:
@@ -1243,7 +1243,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 289
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 316
 	Inequivalence of file contents
 
 	Comparison performed using:
@@ -1271,7 +1271,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 293
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 320
 	Inequivalence of differently named directories with the same contents
 
 	Comparison performed using:
@@ -1287,7 +1287,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 297
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 324
 	Inequivalence of directories with the same files but different contents
 
 	Comparison performed using:
@@ -1315,7 +1315,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 301
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 328
 	Inequivalence of directories with some common files
 
 	Comparison performed using:
@@ -1337,7 +1337,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 305
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 332
 	Inequivalence of directories with some common files
 
 	Comparison performed using:
@@ -1359,7 +1359,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 309
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 336
 	File inequivalence when default file checking is used
 
 	Comparison performed using:
@@ -1387,7 +1387,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 314
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 341
 	Range inequivalence when default file checking us used
 
 	[std::vector<std::filesystem::path, std::allocator<std::filesystem::path> >]
@@ -1418,7 +1418,51 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 322
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 345
+	Advice for equivalence checking
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<sequoia::testing::(anonymous namespace)::foo>]
+	With equivalent types:
+	[int,
+	sequoia::testing::(anonymous namespace)::bland]
+
+	  Wrapped value
+	  [int]
+	  operator== returned false
+	  Obtained : 42
+	  Predicted: 41
+	  Advice: Integer advice
+
+	=======================================
+
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 347
+	Advice for range equivalence, where the containized for is explicitly specialized
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<std::vector<sequoia::testing::(anonymous namespace)::foo, std::allocator<sequoia::testing::(anonymous namespace)::foo> > >]
+	With equivalent types:
+	[std::vector<int, std::allocator<int> >,
+	sequoia::testing::(anonymous namespace)::bland]
+
+	  Vector equivalence
+
+	    Element 0 of range incorrect
+	    Comparison performed using:
+	    [sequoia::testing::equivalence_checker<sequoia::testing::(anonymous namespace)::foo>]
+	    With equivalent types:
+	    [int]
+
+	      Wrapped value
+	      [int]
+	      operator== returned false
+	      Obtained : 42
+	      Predicted: 41
+	      Advice: Integer advice
+
+	=======================================
+
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 354
 
 	Comparison performed using:
 	[sequoia::testing::weak_equivalence_checker<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > >]
@@ -1433,7 +1477,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 323
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 355
 
 	Comparison performed using:
 	[sequoia::testing::weak_equivalence_checker<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > >]
@@ -1449,7 +1493,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 328
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 360
 
 	[std::vector<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> >, std::allocator<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > > >]
 
@@ -1467,7 +1511,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 329
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 361
 
 	[std::vector<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> >, std::allocator<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > > >]
 
@@ -1486,7 +1530,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 334
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 366
 	Weak inequivalence of directories with some common files
 
 	Comparison performed using:
@@ -1508,7 +1552,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 338
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 370
 	Directory weak inequivalence when default file checking is used
 
 	Comparison performed using:
@@ -1536,7 +1580,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 343
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 375
 	Weak inequivalence of range when default file checking is used
 
 	[std::vector<std::filesystem::path, std::allocator<std::filesystem::path> >]
