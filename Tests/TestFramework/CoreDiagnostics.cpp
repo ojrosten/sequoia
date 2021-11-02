@@ -57,7 +57,10 @@ namespace sequoia::testing
 
     struct foo
     {
-      int x;
+      int x{};
+
+      [[nodiscard]]
+      friend constexpr auto operator<=>(const foo&, const foo&) = default;
     };
   }
 
@@ -342,10 +345,13 @@ namespace sequoia::testing
       std::vector<fs::path>{fs::path{working_materials()}.append("CustomComparison/A/DifferingContent.ignore")},
       std::vector<fs::path>{fs::path{working_materials()}.append("CustomComparison/B/DifferingContent.ignore")});
 
-    check_equivalence(LINE("Advice for equivalence checking"), foo{42}, 41, bland{});
+    check_equivalence(LINE("Advice for equivalence checking"), foo{42}, 41, tutor{bland{}});
 
-    check_equivalence(LINE("Advice for range equivalence, where the containized for is explicitly specialized"),
-      std::vector<foo>{{42}}, std::vector<int>{{41}}, bland{});
+    check_equivalence(LINE("Advice for range equivalence, where the containorized form is explicitly specialized"),
+                      std::vector<foo>{{42}}, std::vector<int>{{41}}, tutor{bland{}});
+
+    check_equivalence(LINE("Advice for range equivalence, where the containorized form is not explicitly specialized"),
+                      std::set<foo>{{42}}, std::set<int>{{41}}, tutor{bland{}});
   }
 
   void false_positive_diagnostics::test_weak_equivalence_checks()
@@ -506,10 +512,13 @@ namespace sequoia::testing
                       std::vector<fs::path>{fs::path{working_materials()}.append("CustomComparison/A/DifferingContent.ignore")},
                       std::vector<fs::path>{fs::path{working_materials()}.append("CustomComparison/B/DifferingContent.ignore")});
 
-    check_equivalence(LINE("Advice for equivalence checking"), foo{42}, 42, bland{});
+    check_equivalence(LINE("Advice for equivalence checking"), foo{42}, 42, tutor{bland{}});
 
-    check_equivalence(LINE("Advice for range equivalence, where the containized for is explicitly specialized"), 
-                      std::vector<foo>{{42}}, std::vector<int>{{42}}, bland{});
+    check_equivalence(LINE("Advice for range equivalence, where the containorized for is explicitly specialized"), 
+                      std::vector<foo>{{42}}, std::vector<int>{{42}}, tutor{bland{}});
+
+    check_equivalence(LINE("Advice for range equivalence, where the containorized for is not explicitly specialized"),
+      std::set<foo>{{42}}, std::set<int>{{42}}, tutor{bland{}});
   }
 
   void false_negative_diagnostics::test_weak_equivalence_checks()
