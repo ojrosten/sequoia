@@ -141,6 +141,22 @@ namespace sequoia
       a.graph().swap_nodes(a.index(), b.index());
     }
 
+    template<class N>
+    struct tree_initializer
+    {
+      N node;
+      std::initializer_list<tree_initializer> children;
+    };
+
+    enum class tree_direction {symmetric, forward, backward};
+
+    template<tree_direction d>
+    struct tree_direction_constant : std::integral_constant<tree_direction, d> {};
+
+    using symmetric_tree_type = tree_direction_constant<tree_direction::symmetric>;
+    using forward_tree_type  = tree_direction_constant<tree_direction::forward>;
+    using backward_tree_type = tree_direction_constant<tree_direction::backward>;
+
     template<network Connectivity, class Nodes>
     class MSVC_EMPTY_BASE_HACK graph_primitive : public Connectivity, public Nodes
     {
@@ -178,6 +194,17 @@ namespace sequoia
       constexpr graph_primitive(edges_initializer edges, NodeWeights&&... nodeWeights)
         : graph_primitive(hetero_init_type{}, edges, std::forward<NodeWeights>(nodeWeights)...)
       {}
+
+      template<tree_direction dir>
+        requires    (!std::is_empty_v<node_weight_type> && !std::same_as<node_weight_type, graph_impl::heterogeneous_tag>
+                 && (dir == tree_direction::symmetric) || (Connectivity::directedness == directed_flavour::directed))
+      constexpr graph_primitive(std::initializer_list<tree_initializer<node_weight_type>> forest, tree_direction_constant<dir> tdc)
+      {
+        for(const auto& tree : forest)
+        {
+          build_tree(std::numeric_limits<size_type>::max(), tree, tdc);
+        }
+      }
 
       constexpr graph_primitive(const graph_primitive& in)
         : Connectivity{static_cast<const Connectivity&>(in)}
@@ -601,6 +628,30 @@ namespace sequoia
         : Connectivity{edges},
           Nodes{}
       {}
+
+      template<tree_direction dir>
+        requires (!std::is_empty_v<node_weight_type> && !std::same_as<node_weight_type, graph_impl::heterogeneous_tag>)
+      constexpr void build_tree(size_type root, tree_initializer<node_weight_type> tree, tree_direction_constant<dir> tdc)
+      {
+        if(root >= Connectivity::order()) root = add_node(tree.node);
+
+        for(const auto& child : tree.children)
+        {
+          const auto n{add_node(child.node)};
+
+          if constexpr(dir != tree_direction::backward)
+          {
+            join(root, n);
+          }
+
+          if constexpr(dir != tree_direction::forward)
+          {
+            join(n, root);
+          }
+
+          build_tree(n, child, tdc);
+        }
+      }
 
       [[nodiscard]]
       graph_impl::graph_iterator<Connectivity, Nodes> begin()

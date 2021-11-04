@@ -130,6 +130,12 @@ namespace sequoia::maths
       : primitive_type{edges, edgeAllocator, edgePartitionsAllocator}
     {}
 
+    template<tree_direction dir>
+      requires ((dir == tree_direction::symmetric) || (primitive_type::connectivity::directedness == directed_flavour::directed))
+    constexpr graph_base(std::initializer_list<tree_initializer<node_weight_type>> forest, tree_direction_constant<dir> tdc)
+      : primitive_type{forest, tdc}
+    {}
+
     graph_base(const graph_base&) = default;
 
     graph_base(const graph_base& in, const edge_allocator_type& edgeAllocator)
@@ -278,6 +284,12 @@ namespace sequoia::maths
       requires allocatable_partitions<edge_traits_type>
     graph_base(edges_initializer edges, const edge_allocator_type& edgeAllocator, const EdgePartitionsAllocator& edgePartitionsAllocator, std::initializer_list<node_weight_type> nodeWeights, const node_weight_allocator_type& nodeWeightAllocator)
       : primitive_type{edges, edgeAllocator, edgePartitionsAllocator, nodeWeights, nodeWeightAllocator}
+    {}
+
+    template<tree_direction dir>
+      requires ((dir == tree_direction::symmetric) || (primitive_type::connectivity::directedness == directed_flavour::directed))
+    constexpr graph_base(std::initializer_list<tree_initializer<node_weight_type>> forest, tree_direction_constant<dir> tdc)
+      : primitive_type{forest, tdc}
     {}
 
      graph_base(const graph_base& in, const edge_allocator_type& edgeAllocator, const node_weight_allocator_type& nodeWeightAllocator)
