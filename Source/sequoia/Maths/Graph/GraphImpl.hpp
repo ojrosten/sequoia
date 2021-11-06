@@ -196,14 +196,22 @@ namespace sequoia
       {}
 
       template<tree_direction dir>
-        requires    (!std::is_empty_v<node_weight_type> && !std::same_as<node_weight_type, graph_impl::heterogeneous_tag>
-                 && (dir == tree_direction::symmetric) || (Connectivity::directedness == directed_flavour::directed))
+        requires (    !std::is_empty_v<node_weight_type> && !std::same_as<node_weight_type, graph_impl::heterogeneous_tag>
+                   && ((dir == tree_direction::symmetric) || (Connectivity::directedness == directed_flavour::directed)))
       constexpr graph_primitive(std::initializer_list<tree_initializer<node_weight_type>> forest, tree_direction_constant<dir> tdc)
       {
         for(const auto& tree : forest)
         {
           build_tree(std::numeric_limits<size_type>::max(), tree, tdc);
         }
+      }
+
+      template<tree_direction dir>
+      requires (    !std::is_empty_v<node_weight_type> && !std::same_as<node_weight_type, graph_impl::heterogeneous_tag>
+                 && ((dir == tree_direction::symmetric) || (Connectivity::directedness == directed_flavour::directed)))
+      constexpr graph_primitive(tree_initializer<node_weight_type> tree, tree_direction_constant<dir> tdc)
+      {
+        build_tree(std::numeric_limits<size_type>::max(), tree, tdc);
       }
 
       constexpr graph_primitive(const graph_primitive& in)

@@ -22,6 +22,8 @@ namespace sequoia
   public:
     using size_type = std::string::size_type;
 
+    indentation() = default;
+
     explicit indentation(std::string s)
       : m_Data{std::move(s)}
     {}
@@ -41,6 +43,13 @@ namespace sequoia
     indentation& append(const std::string& s)
     {
       m_Data.append(s);
+      return *this;
+    }
+
+    indentation& trim(size_type count)
+    {
+      const auto pos{m_Data.size() - std::min(count, m_Data.size())};
+      m_Data.erase(pos);
       return *this;
     }
 

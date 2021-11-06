@@ -42,6 +42,12 @@ namespace sequoia::parsing::commandline
     }
 
     [[nodiscard]]
+    operator std::string_view() const noexcept
+    {
+      return m_String;
+    }
+
+    [[nodiscard]]
     friend bool operator==(const proper_string&, const proper_string&) noexcept = default;
 
     [[nodiscard]]
@@ -116,6 +122,7 @@ namespace sequoia::parsing::commandline
   public:
     argument_parser(int argc, char** argv, const std::vector<option>& options);
 
+    [[nodiscard]]
     outcome get() const
     {
       return {m_ZerothArg, m_Operations, m_Help};
@@ -132,7 +139,7 @@ namespace sequoia::parsing::commandline
     std::optional<Iter> process_option(Iter optionsIter, Sentinel optionsEnd, std::string_view arg, std::vector<operation>& operations);
 
     template<std::input_iterator Iter, std::sentinel_for<Iter> Sentinel>
-    bool process_concatenated_aliases(Iter optionsIter, Sentinel optionsBegin, Iter optionsEnd, std::string_view arg, std::vector<operation>& operations);
+    bool process_concatenated_aliases(Iter optionsIter, Iter optionsBegin, Sentinel optionsEnd, std::string_view arg, std::vector<operation>& operations);
 
     template<std::input_or_output_iterator Iter, std::sentinel_for<Iter> Sentinel>
     Iter process_nested_options(Iter optionsIter, Sentinel optionsEnd, operation& currentOp);

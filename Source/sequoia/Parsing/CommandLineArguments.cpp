@@ -202,7 +202,7 @@ namespace sequoia::parsing::commandline
 
 
   template<std::input_iterator Iter, std::sentinel_for<Iter> Sentinel>
-  bool argument_parser::process_concatenated_aliases(Iter optionsIter, Sentinel optionsBegin, Iter optionsEnd, std::string_view arg, std::vector<operation>& operations)
+  bool argument_parser::process_concatenated_aliases(Iter optionsIter, Iter optionsBegin, Sentinel optionsEnd, std::string_view arg, std::vector<operation>& operations)
   {
     if(optionsIter != optionsEnd) return false;
 
@@ -268,6 +268,7 @@ namespace sequoia::parsing::commandline
     return &m_Operations == &operations;
   }
 
+  [[nodiscard]]
   bool argument_parser::is_alias(const option& opt, const std::string& s)
   {
     return std::find(opt.aliases.begin(), opt.aliases.end(), s) != opt.aliases.end();
