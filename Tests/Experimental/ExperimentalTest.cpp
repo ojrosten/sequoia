@@ -134,15 +134,11 @@ namespace sequoia::testing
 
             if(optionsIter == options.end())
             {
-             /* optionsIter = std::find_if(options.begin(), options.end(),
-               [&arg](const auto& tree) { return is_alias(root(tree), arg); });*/
-
               if(arg == "--help")
               {
                 m_Help = generate_help(options);
                 return true;
               }
-
 
               if(process_concatenated_aliases(optionsIter, options.begin(), options.end(), arg, operations))
                 continue;
@@ -239,9 +235,7 @@ namespace sequoia::testing
       if(top_level(operations) && !root(optionsIter).early && !root(optionsIter).late)
         throw std::logic_error{error("Commandline option not bound to a function object")};
 
-      operation op{root(optionsIter).early, root(optionsIter).late, {}};
-      operations_tree t{tree_initializer{op}, forward_tree_type{}};
-      operations.emplace_back(t);
+      operations.push_back({{root(optionsIter).early, root(optionsIter).late, {}}, forward_tree_type{}});
       if(root(optionsIter).parameters.empty())
       {
         /*if(!root(optionsIter).nested_options.empty())
