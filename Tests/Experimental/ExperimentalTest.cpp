@@ -168,9 +168,9 @@ namespace sequoia::testing
         }
       }
 
-      if(!operations.empty()
-        && (optionsIter != options.end())
-        && (root(operations.back()).arguments.size() != root(optionsIter).parameters.size()))
+      if(    !operations.empty()
+         && (optionsIter != options.end())
+         && (root(operations.back()).arguments.size() != root(optionsIter).parameters.size()))
       {
         const auto& params{root(optionsIter).parameters};
         const auto expected{params.size()};
@@ -252,8 +252,37 @@ namespace sequoia::testing
     template<std::input_or_output_iterator Iter, std::sentinel_for<Iter> Sentinel>
     Iter argument_parser::process_nested_options(Iter optionsIter, Sentinel optionsEnd, operations_tree& currentOp)
     {
-      // TO DO
-      return optionsIter;
+      /*if(!optionsIter->nested_options.empty())
+      {
+        if(m_Index + 1 < m_ArgCount)
+        {
+          ++m_Index;
+          const bool isNestedOption{parse(optionsIter->nested_options, currentOp.nested_operations)};
+
+          auto& nestedOperations{currentOp.nested_operations};
+          auto i{nestedOperations.begin()};
+          while(i != nestedOperations.end())
+          {
+            if(!i->early && !i->late)
+            {
+              auto& args{currentOp.arguments};
+              const auto& nestedArgs{i->arguments};
+              std::copy(nestedArgs.begin(), nestedArgs.end(), std::back_inserter(args));
+
+              i = nestedOperations.erase(i);
+            }
+            else
+            {
+              ++i;
+            }
+          }
+
+          if(!isNestedOption)
+            --m_Index;
+        }
+      }*/
+
+      return optionsEnd;
     }
 
     [[nodiscard]]

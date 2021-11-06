@@ -185,12 +185,7 @@ namespace sequoia::parsing::commandline
     operations.push_back(operation{optionsIter->early, optionsIter->late, {}});
     if(optionsIter->parameters.empty())
     {
-      if(!optionsIter->nested_options.empty())
-      {
-        process_nested_options(optionsIter, optionsEnd, operations.back());
-      }
-
-      optionsIter = optionsEnd;
+      optionsIter = process_nested_options(optionsIter, optionsEnd, operations.back());
     }
 
     return optionsIter;
