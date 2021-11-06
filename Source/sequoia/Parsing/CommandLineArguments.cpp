@@ -71,19 +71,15 @@ namespace sequoia::parsing::commandline
         if(!arg.empty())
         {
           optionsIter = std::find_if(options.begin(), options.end(),
-                                     [&arg](const auto& opt) { return opt.name == arg; });
+                                     [&arg](const auto& opt) { return (opt.name == arg) || is_alias(opt, arg); });
 
           if(optionsIter == options.end())
           {
-            optionsIter = std::find_if(options.begin(), options.end(),
-              [&arg](const auto& opt) { return is_alias(opt, arg); });
-
             if(arg == "--help")
             {
               m_Help = generate_help(options);
               return true;
             }
-
 
             if(process_concatenated_aliases(optionsIter, options.begin(), options.end(), arg, operations))
               continue;
