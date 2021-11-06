@@ -76,7 +76,8 @@ namespace sequoia::testing
     class argument_parser
     {
     public:
-      using options_forest = std::vector<maths::graph<maths::directed_flavour::directed, maths::null_weight, option>>;
+      using options_tree = maths::graph<maths::directed_flavour::directed, maths::null_weight, option>;
+      using options_forest = std::vector<options_tree>;
 
       argument_parser(int argc, char** argv, const options_forest& options);
 
@@ -92,6 +93,7 @@ namespace sequoia::testing
       std::string m_ZerothArg{}, m_Help{};
 
       bool parse(const options_forest& options, operations_forest& operations);
+      bool parse(const options_tree& options, operations_tree& operations);
 
       template<std::input_or_output_iterator Iter, std::sentinel_for<Iter> Sentinel>
       std::optional<Iter> process_option(Iter optionsIter, Sentinel optionsEnd, std::string_view arg, operations_forest& operations);
@@ -119,9 +121,41 @@ namespace sequoia::testing
       parse(options, m_Operations);
     }
 
-    bool argument_parser::parse(const options_forest& options, operations_forest& operations)
+    bool argument_parser::parse(const options_forest& options, operations_forest& opsForest)
     {
-      auto optionsIter{options.end()};
+      while(m_Index < m_ArgCount)
+      {
+        if(const std::string arg{m_Argv[m_Index++]}; !arg.empty())
+        {
+          const auto optionsIter{std::find_if(options.begin(), options.end(),
+            [&arg](const auto& tree) { return (root(tree).name == arg) || is_alias(root(tree), arg); })};
+
+          if(optionsIter == options.end())
+          {
+            // TO DO: concatenated alias
+
+            if(arg == "--help")
+            {
+              m_Help = generate_help(options);
+              return true;
+            }
+
+            throw std::runtime_error{error(std::string{"unrecognized option '"}.append(arg).append("'"))};
+          }
+
+          const auto& optTreeRoot{root(optionsIter)};
+
+          if(!optTreeRoot.early && !optTreeRoot.late)
+            throw std::logic_error{error("Commandline option not bound to a function object")};
+
+          opsForest.push_back({{optTreeRoot.early, optTreeRoot.late, {}}, forward_tree_type{}});
+
+          parse(*optionsIter, opsForest.back());
+        }
+      }
+
+
+      /*auto optionsIter{options.end()};
       for(; m_Index < m_ArgCount; ++m_Index)
       {
         const std::string arg{m_Argv[m_Index]};
@@ -191,6 +225,16 @@ namespace sequoia::testing
         mess.append("], but found ").append(std::to_string(actual)).append(pluralize(actual, "argument"));
 
         throw std::runtime_error{error(mess)};
+      }*/
+
+      return true;
+    }
+
+    bool argument_parser::parse(const options_tree& options, operations_tree& operations)
+    {
+      while(m_Index < m_ArgCount)
+      {
+        // TO DO
       }
 
       return true;
@@ -238,12 +282,7 @@ namespace sequoia::testing
       operations.push_back({{root(optionsIter).early, root(optionsIter).late, {}}, forward_tree_type{}});
       if(root(optionsIter).parameters.empty())
       {
-        /*if(!root(optionsIter).nested_options.empty())
-        {
-          process_nested_options(optionsIter, optionsEnd, operations.back());
-        }*/
-
-        optionsIter = optionsEnd;
+//        optionsIter = process_nested_options(optionsIter, optionsEnd, operations.back());
       }
 
       return optionsIter;
