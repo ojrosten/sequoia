@@ -113,18 +113,65 @@ namespace sequoia::testing
       }
 
       [[nodiscard]]
-      auto weight_iter() const
+      auto root_weight_iter() const
       {
         return m_pTree->cbegin_node_weights() + m_Node;
       }
 
       [[nodiscard]]
-      const auto& weight() const
+      const auto& root_weight() const
       {
         return m_pTree->cbegin_node_weights()[m_Node];
       }
     private:
       Tree* m_pTree{};
+      size_type m_Node{Tree::npos};
+    };
+
+    template<class Tree>
+    class const_tree_adaptor
+    {
+    public:
+      using size_type = Tree::size_type;
+
+      const_tree_adaptor() = default;
+
+      const_tree_adaptor(const Tree& tree, size_type node)
+        : m_pTree{&tree}
+        , m_Node{node}
+      {};
+
+      [[nodiscard]]
+      const Tree& tree() const noexcept
+      {
+        return *m_pTree;
+      }
+
+      [[nodiscard]]
+      size_type node() const noexcept
+      {
+        return m_Node;
+      }
+
+      [[nodiscard]]
+      operator bool() const noexcept
+      {
+        return (m_pTree != nullptr) && (m_Node < m_pTree->order());
+      }
+
+      [[nodiscard]]
+      auto root_weight_iter() const
+      {
+        return m_pTree->cbegin_node_weights() + m_Node;
+      }
+
+      [[nodiscard]]
+      const auto& root_weight() const
+      {
+        return m_pTree->cbegin_node_weights()[m_Node];
+      }
+    private:
+      const Tree* m_pTree{};
       size_type m_Node{Tree::npos};
     };
 
@@ -154,7 +201,7 @@ namespace sequoia::testing
     public:
       using options_tree   = maths::graph<maths::directed_flavour::directed, maths::null_weight, option>;
       using options_forest = std::vector<options_tree>;
-      using current_option = tree_adaptor<options_tree>;
+      using current_option = const_tree_adaptor<options_tree>;
 
       argument_parser(int argc, char** argv, const options_forest& options);
 
@@ -170,7 +217,7 @@ namespace sequoia::testing
       std::string m_ZerothArg{}, m_Help{};
 
       template<std::input_or_output_iterator Iter, std::sentinel_for<Iter> Sentinel>
-      bool parse(Iter beginOptions, Sentinel endOptions, const current_option currentOption, current_operation currentOperation);
+      bool parse(Iter beginOptions, Sentinel endOptions, current_option currentOptionTree, current_operation currentOperationTree);
 
       template<std::input_or_output_iterator Iter, std::sentinel_for<Iter> Sentinel>
       std::optional<Iter> process_option(Iter optionsIter, Sentinel optionsEnd, std::string_view arg, operations_forest& operations);
@@ -200,19 +247,19 @@ namespace sequoia::testing
     }
 
     template<std::input_or_output_iterator Iter, std::sentinel_for<Iter> Sentinel>
-    bool argument_parser::parse(Iter beginOptions, Sentinel endOptions, const current_option currentOption, current_operation currentOperation)
+    bool argument_parser::parse(Iter beginOptions, Sentinel endOptions, current_option currentOptionTree, current_operation currentOperationTree)
     {
       while(m_Index < m_ArgCount)
       {
         if(const std::string arg{m_Argv[m_Index++]}; !arg.empty())
         {
-          if(currentOperation)
+          if(currentOperationTree)
           {
-            if(!currentOption) throw std::logic_error{"Current option not found"};
+            if(!currentOptionTree) throw std::logic_error{"Current option not found"};
 
-            if(currentOperation.weight().arguments.size() < currentOption.weight().parameters.size())
+            if(currentOperationTree.root_weight().arguments.size() < currentOptionTree.root_weight().parameters.size())
             {
-              currentOperation.tree().mutate_node_weight(currentOperation.weight_iter(),
+              currentOperationTree.tree().mutate_node_weight(currentOperationTree.root_weight_iter(),
                 [&arg](auto& w){ w.arguments.push_back(arg); });
             }
             else
@@ -226,7 +273,7 @@ namespace sequoia::testing
               [&arg](const auto& optTree) {
                 const tree_adaptor tree{optTree, 0};
 
-                return (tree.weight().name == arg) || is_alias(tree.weight(), arg);
+                return (tree.root_weight().name == arg) || is_alias(tree.root_weight(), arg);
               })
             };
 
@@ -243,12 +290,12 @@ namespace sequoia::testing
               throw std::runtime_error{error(std::string{"unrecognized option '"}.append(arg).append("'"))};
             }
 
-            tree_adaptor optTree{*optionsIter, 0}; // index 0 needs fixing
+            currentOptionTree = {*optionsIter, 0};
 
-            if(!optTree.weight().early && !optTree.weight().late)
+            if(!currentOptionTree.root_weight().early && !currentOptionTree.root_weight().late)
               throw std::logic_error{error("Commandline option not bound to a function object")};
 
-            m_Operations.push_back({{optTree.weight().early, optTree.weight().late, {}}, forward_tree_type{}});
+            m_Operations.push_back({{currentOptionTree.root_weight().early, currentOptionTree.root_weight().late, {}}, forward_tree_type{}});
 
             // etc
           }
