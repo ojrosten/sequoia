@@ -123,6 +123,12 @@ namespace sequoia::testing
       {
         return m_pTree->cbegin_node_weights()[m_Node];
       }
+
+      template<std::invocable<operation&> Fn>
+      void mutate_root_weight(Fn fn)
+      {
+        m_pTree->mutate_node_weight(root_weight_iter(), fn);
+      }
     private:
       Tree* m_pTree{};
       size_type m_Node{Tree::npos};
@@ -175,33 +181,64 @@ namespace sequoia::testing
       size_type m_Node{Tree::npos};
     };
 
-    using current_operation = tree_adaptor<operations_tree>;
 
-    //struct current_operation
-    //{
-    //  [[nodiscard]]
-    //  operator bool() const noexcept
-    //  {
-    //    return (tree != nullptr) && (node < tree->order());
-    //  }
+    template<std::input_or_output_iterator Iterator, class TreeAdaptor>
+    class forest_dereference_policy
+    {
+    public:
+      using value_type = typename std::iterator_traits<Iterator>::value_type;
+      using proxy      = TreeAdaptor;
+      using pointer    = typename std::iterator_traits<Iterator>::pointer;
+      using reference  = typename std::iterator_traits<Iterator>::reference;
 
-    //  operations_tree* tree{};
-    //  //operations_tree::size_type node{operations_tree::npos};
-    //};
+      constexpr forest_dereference_policy() = default;
+      constexpr forest_dereference_policy(TreeAdaptor adaptor) : m_Adaptor{adaptor} {}
+      constexpr forest_dereference_policy(const forest_dereference_policy&) = default;
 
-    //const operation& weight(const current_operation& op)
-    //{
-    //  if(!op) throw std::logic_error{"Operation is null"};
+      [[nodiscard]]
+      constexpr proxy adaptor() const noexcept { return m_Adaptor; }
 
-    //  return op.tree->cbegin_node_weights()[op.node];
-    //}
+      [[nodiscard]]
+      friend constexpr bool operator==(const forest_dereference_policy&, const forest_dereference_policy&) noexcept = default;
+
+      [[nodiscard]]
+      friend constexpr bool operator!=(const forest_dereference_policy&, const forest_dereference_policy&) noexcept = default;
+    protected:
+      constexpr forest_dereference_policy(forest_dereference_policy&&) = default;
+
+      ~forest_dereference_policy() = default;
+
+      constexpr forest_dereference_policy& operator=(const forest_dereference_policy&) = default;
+      constexpr forest_dereference_policy& operator=(forest_dereference_policy&&) = default;
+
+      [[nodiscard]]
+      constexpr proxy get(reference ref) const noexcept
+      {
+        // won't work in general
+        return {ref};
+      }
+
+      [[nodiscard]]
+      static constexpr pointer get_ptr(reference ref) noexcept { return &ref; }
+    private:
+      TreeAdaptor m_Adaptor{};
+    };
+
+    template<std::input_or_output_iterator Iterator, class Adaptor>
+    using forest_iterator = utilities::iterator<Iterator, forest_dereference_policy<Iterator, Adaptor>>;
+
+    struct current_operation
+    {
+      tree_adaptor<operations_tree> tree{};
+      bool current_op_complete{};
+    };
 
     class argument_parser
     {
     public:
       using options_tree   = maths::graph<maths::directed_flavour::directed, maths::null_weight, option>;
       using options_forest = std::vector<options_tree>;
-      using current_option = const_tree_adaptor<options_tree>;
+      using current_option_tree = const_tree_adaptor<options_tree>;
 
       argument_parser(int argc, char** argv, const options_forest& options);
 
@@ -217,7 +254,7 @@ namespace sequoia::testing
       std::string m_ZerothArg{}, m_Help{};
 
       template<std::input_or_output_iterator Iter, std::sentinel_for<Iter> Sentinel>
-      bool parse(Iter beginOptions, Sentinel endOptions, current_option currentOptionTree, current_operation currentOperationTree);
+      bool parse(Iter beginOptions, Sentinel endOptions, current_operation currentOperation);
 
       template<std::input_or_output_iterator Iter, std::sentinel_for<Iter> Sentinel>
       std::optional<Iter> process_option(Iter optionsIter, Sentinel optionsEnd, std::string_view arg, operations_forest& operations);
@@ -243,31 +280,21 @@ namespace sequoia::testing
       , m_Argv{argv}
       , m_ZerothArg{m_ArgCount ? m_Argv[0] : ""}
     {
-      parse(options.begin(), options.end(), {}, {});
+      using iter_t = decltype(options.begin());
+      using forest_iter = forest_iterator<iter_t, const_tree_adaptor<options_tree>>;
+
+      parse(options.begin(), options.end(), {});
     }
 
     template<std::input_or_output_iterator Iter, std::sentinel_for<Iter> Sentinel>
-    bool argument_parser::parse(Iter beginOptions, Sentinel endOptions, current_option currentOptionTree, current_operation currentOperationTree)
+    bool argument_parser::parse(Iter beginOptions, Sentinel endOptions, current_operation currentOperation)
     {
+      current_option_tree currentOptionTree{};
       while(m_Index < m_ArgCount)
       {
         if(const std::string arg{m_Argv[m_Index++]}; !arg.empty())
         {
-          if(currentOperationTree)
-          {
-            if(!currentOptionTree) throw std::logic_error{"Current option not found"};
-
-            if(currentOperationTree.root_weight().arguments.size() < currentOptionTree.root_weight().parameters.size())
-            {
-              currentOperationTree.tree().mutate_node_weight(currentOperationTree.root_weight_iter(),
-                [&arg](auto& w){ w.arguments.push_back(arg); });
-            }
-            else
-            {
-              // parse; remember to decrement m_Index
-            }
-          }
-          else
+          if(!currentOperation.tree || currentOperation.current_op_complete)
           {
             const auto optionsIter{std::find_if(beginOptions, endOptions,
               [&arg](const auto& optTree) {
@@ -290,6 +317,7 @@ namespace sequoia::testing
               throw std::runtime_error{error(std::string{"unrecognized option '"}.append(arg).append("'"))};
             }
 
+            // TO DO: fix index of 0
             currentOptionTree = {*optionsIter, 0};
 
             if(!currentOptionTree.root_weight().early && !currentOptionTree.root_weight().late)
@@ -297,7 +325,28 @@ namespace sequoia::testing
 
             m_Operations.push_back({{currentOptionTree.root_weight().early, currentOptionTree.root_weight().late, {}}, forward_tree_type{}});
 
+            // TO DO: fix index of 0
+            currentOperation = {{m_Operations.back(), 0}};
             // etc
+          }
+          else
+          {
+            if(!currentOptionTree) throw std::logic_error{"Current option not found"};
+
+            if(currentOperation.tree.root_weight().arguments.size() < currentOptionTree.root_weight().parameters.size())
+            {
+              currentOperation.tree.mutate_root_weight([&arg](auto& w){ w.arguments.push_back(arg); });
+
+              if(currentOperation.tree.root_weight().arguments.size() == currentOptionTree.root_weight().parameters.size())
+                currentOperation.current_op_complete = true;
+            }
+            else
+            {
+              --m_Index;
+              const auto node{currentOptionTree.node()};
+              // set intermediate construction complete
+              //parse(currentOptionTree.tree().cbegin_edges(node), currentOptionTree.tree().cend_edges(node), currentOperation);
+            }
           }
         }
       }
