@@ -302,7 +302,7 @@ namespace sequoia::testing
       std::string m_ZerothArg{}, m_Help{};
 
       template<std::input_or_output_iterator Iter, std::sentinel_for<Iter> Sentinel>
-      bool parse(Iter beginOptions, Sentinel endOptions, current_operation currentOperation, top_level topLevel);
+      void parse(Iter beginOptions, Sentinel endOptions, current_operation currentOperation, top_level topLevel);
 
       template<std::input_iterator Iter, std::sentinel_for<Iter> Sentinel>
       bool process_concatenated_aliases(Iter optionsIter, Iter optionsBegin, Sentinel optionsEnd, std::string_view arg, operations_forest& operations);
@@ -329,7 +329,7 @@ namespace sequoia::testing
     }
 
     template<std::input_or_output_iterator Iter, std::sentinel_for<Iter> Sentinel>
-    bool argument_parser::parse(Iter beginOptions, Sentinel endOptions, current_operation currentOperation, top_level topLevel)
+    void argument_parser::parse(Iter beginOptions, Sentinel endOptions, current_operation currentOperation, top_level topLevel)
     {
       current_option_tree currentOptionTree{};
       while(m_Index < m_ArgCount)
@@ -339,7 +339,7 @@ namespace sequoia::testing
           if(!currentOperation.tree || currentOperation.current_op_complete)
           {
             const auto optionsIter{std::find_if(beginOptions, endOptions,
-              [&arg](const auto& tree) {
+              [arg](const auto& tree) {
                 return (tree.root_weight().name == arg) || is_alias(tree.root_weight(), arg);
               })
             };
@@ -351,24 +351,39 @@ namespace sequoia::testing
               if(arg == "--help")
               {
                 m_Help = generate_help(beginOptions, endOptions);
-                return true;
+                return;
               }
 
               if(topLevel == top_level::yes)
                 throw std::runtime_error{error(std::string{"unrecognized option '"}.append(arg).append("'"))};
+
+              // Roll back and see if the current argument makes sense at the previous level
+              --m_Index;
+              return;
             }
 
-            // TO DO: fix index of 0
             currentOptionTree = *optionsIter;
 
-            // Only throw if top level
-            if(!currentOptionTree.root_weight().early && !currentOptionTree.root_weight().late)
-              throw std::logic_error{error("Commandline option not bound to a function object")};
+            if(topLevel == top_level::yes)
+            {
+              if(!currentOptionTree.root_weight().early && !currentOptionTree.root_weight().late)
+                throw std::logic_error{error("Commandline option not bound to a function object")};
 
-            m_Operations.push_back({{currentOptionTree.root_weight().early, currentOptionTree.root_weight().late, {}}, forward_tree_type{}});
+              m_Operations.push_back({{currentOptionTree.root_weight().early, currentOptionTree.root_weight().late, {}}, forward_tree_type{}});
+              currentOperation = {{m_Operations.back(), 0}};
+            }
+            else
+            {
+              if(m_Operations.empty() || !currentOperation.tree)
+                throw std::logic_error{"Unable to find commandline operation"};
 
-            // TO DO: fix index of 0
-            currentOperation = {{m_Operations.back(), 0}};
+              auto& operationTree{m_Operations.back()};
+
+              // need to amend this using old pattern
+              const auto node{operationTree.add_node(currentOptionTree.root_weight().early, currentOptionTree.root_weight().late)};
+              operationTree.join(currentOptionTree.node(), node);
+              currentOperation = {{m_Operations.back(), node}};
+            }
           }
           else
           {
@@ -396,62 +411,14 @@ namespace sequoia::testing
         }
       }
 
-
-      /*auto optionsIter{options.end()};
-      for(; m_Index < m_ArgCount; ++m_Index)
+      if(    !m_Operations.empty()
+         && currentOptionTree
+         && (currentOperation.tree.root_weight().arguments.size() != currentOptionTree.root_weight().parameters.size()))
       {
-        const std::string arg{m_Argv[m_Index]};
-        if(optionsIter == options.end())
-        {
-          if(!arg.empty())
-          {
-            optionsIter = std::find_if(options.begin(), options.end(),
-              [&arg](const auto& tree) { return (root(tree).name == arg) || is_alias(root(tree), arg); });
-
-            if(optionsIter == options.end())
-            {
-              if(arg == "--help")
-              {
-                m_Help = generate_help(options);
-                return true;
-              }
-
-              if(process_concatenated_aliases(optionsIter, options.begin(), options.end(), arg, operations))
-                continue;
-            }
-
-            if(auto maybeIter{process_option(optionsIter, options.end(), arg, operations)})
-            {
-              optionsIter = *maybeIter;
-            }
-            else
-            {
-              return false;
-            }
-          }
-        }
-        else
-        {
-          auto& currentOperation{operations.back()};
-          currentOperation.mutate_node_weight(currentOperation.cbegin_node_weights(), [&arg](auto& w){ w.arguments.push_back(arg); });
-
-          const auto& arguments{currentOperation.cbegin_node_weights()->arguments};
-
-          if(arguments.size() == optionsIter->cbegin_node_weights()->parameters.size())
-          {
-            optionsIter = process_nested_options(optionsIter, options.end(), currentOperation);
-          }
-        }
-      }
-
-      if(    !operations.empty()
-         && (optionsIter != options.end())
-         && (root(operations.back()).arguments.size() != root(optionsIter).parameters.size()))
-      {
-        const auto& params{root(optionsIter).parameters};
+        const auto& params{currentOptionTree.root_weight().parameters};
         const auto expected{params.size()};
         auto mess{std::string{"while parsing option \""}
-                    .append(root(optionsIter).name)
+                    .append(currentOptionTree.root_weight().name)
                     .append("\": expected ")
                     .append(std::to_string(expected))
                     .append(pluralize(expected, "argument"))
@@ -463,13 +430,11 @@ namespace sequoia::testing
           if(std::distance(i, params.end()) > 1) mess.append(", ");
         }
 
-        const auto actual{root(operations.back()).arguments.size()};
+        const auto actual{currentOperation.tree.root_weight().arguments.size()};
         mess.append("], but found ").append(std::to_string(actual)).append(pluralize(actual, "argument"));
 
         throw std::runtime_error{error(mess)};
-      }*/
-
-      return true;
+      }
     }
 
     template<std::input_iterator Iter, std::sentinel_for<Iter> Sentinel>
@@ -603,7 +568,7 @@ namespace sequoia::testing
 
     options opts{{ {"create", {"c"}, {}, [](const cmd::arg_list&) {}} }, forward_tree_type{}};
 
-    //options opt{{"create", {"c"}, {}, [](const cmd::arg_list&) {}}, symmetric_tree_type{}};
+    options opt{{"create", {"c"}, {}, [](const cmd::arg_list&) {}}, symmetric_tree_type{}};
 
   }
 }
