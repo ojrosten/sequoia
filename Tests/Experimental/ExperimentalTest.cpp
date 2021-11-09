@@ -379,10 +379,26 @@ namespace sequoia::testing
 
               auto& operationTree{m_Operations.back()};
 
-              // need to amend this using old pattern
               const auto node{operationTree.add_node(currentOptionTree.root_weight().early, currentOptionTree.root_weight().late)};
               operationTree.join(currentOptionTree.node(), node);
               currentOperation = {{m_Operations.back(), node}};
+
+              // TO DO: incorporate this
+              /*while(i != nestedOperations.end())
+              {
+                if(!i->early && !i->late)
+                {
+                  auto& args{currentOp.arguments};
+                  const auto& nestedArgs{i->arguments};
+                  std::copy(nestedArgs.begin(), nestedArgs.end(), std::back_inserter(args));
+
+                  i = nestedOperations.erase(i);
+                }
+                else
+                {
+                  ++i;
+                }
+              }*/
             }
           }
           else
@@ -454,7 +470,7 @@ namespace sequoia::testing
             optionsIter = std::find_if(optionsBegin, optionsEnd,
               [&arg](const auto& tree) { return is_alias(root(tree), arg); });
 
-            process_option(optionsIter, optionsEnd, arg, operations);
+            //process_option(optionsIter, optionsEnd, arg, operations);
           }
         }
       }
@@ -462,42 +478,6 @@ namespace sequoia::testing
       return optionsIter != optionsEnd;
     }
 
-
-    template<std::input_or_output_iterator Iter, std::sentinel_for<Iter> Sentinel>
-    Iter argument_parser::process_nested_options(Iter optionsIter, Sentinel optionsEnd, operations_tree& currentOp)
-    {
-      /*if(!optionsIter->nested_options.empty())
-      {
-        if(m_Index + 1 < m_ArgCount)
-        {
-          ++m_Index;
-          const bool isNestedOption{parse(optionsIter->nested_options, currentOp.nested_operations)};
-
-          auto& nestedOperations{currentOp.nested_operations};
-          auto i{nestedOperations.begin()};
-          while(i != nestedOperations.end())
-          {
-            if(!i->early && !i->late)
-            {
-              auto& args{currentOp.arguments};
-              const auto& nestedArgs{i->arguments};
-              std::copy(nestedArgs.begin(), nestedArgs.end(), std::back_inserter(args));
-
-              i = nestedOperations.erase(i);
-            }
-            else
-            {
-              ++i;
-            }
-          }
-
-          if(!isNestedOption)
-            --m_Index;
-        }
-      }*/
-
-      return optionsEnd;
-    }
 
     [[nodiscard]]
     bool argument_parser::is_alias(const option& opt, std::string_view s)
