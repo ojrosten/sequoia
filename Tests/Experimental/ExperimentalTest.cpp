@@ -61,20 +61,6 @@ namespace sequoia::testing
       std::string help{};
     };
 
-    template<std::input_or_output_iterator Iter>
-    [[nodiscard]]
-    auto root(Iter i)
-    {
-      return *(i->cbegin_node_weights());
-    }
-
-    template<maths::network N>
-    [[nodiscard]]
-    auto& root(N& tree)
-    {
-      return *tree.cbegin_node_weights();
-    }
-
     template<class Tree>
     class tree_adaptor
     {
@@ -194,11 +180,7 @@ namespace sequoia::testing
       using reference  = typename std::iterator_traits<Iterator>::reference;
 
       constexpr forest_dereference_policy() = default;
-      //constexpr forest_dereference_policy(TreeAdaptor adaptor) : m_Adaptor{adaptor} {}
       constexpr forest_dereference_policy(const forest_dereference_policy&) = default;
-
-      //[[nodiscard]]
-      //constexpr proxy adaptor() const noexcept { return m_Adaptor; }
 
       [[nodiscard]]
       friend constexpr bool operator==(const forest_dereference_policy&, const forest_dereference_policy&) noexcept = default;
@@ -221,8 +203,6 @@ namespace sequoia::testing
 
       [[nodiscard]]
       static constexpr pointer get_ptr(reference ref) noexcept { return &ref; }
-    private:
-      //TreeAdaptor m_Adaptor{};
     };
 
     template<std::input_or_output_iterator Iterator, class TreeAdaptor>
@@ -306,9 +286,6 @@ namespace sequoia::testing
 
       template<std::input_iterator Iter, std::sentinel_for<Iter> Sentinel>
       bool process_concatenated_aliases(Iter optionsIter, Iter optionsBegin, Sentinel optionsEnd, std::string_view arg, operations_forest& operations);
-
-      template<std::input_or_output_iterator Iter, std::sentinel_for<Iter> Sentinel>
-      Iter process_nested_options(Iter optionsIter, Sentinel optionsEnd, operations_tree& currentOp);
 
       template<std::input_or_output_iterator Iter, std::sentinel_for<Iter> Sentinel>
       [[nodiscard]]
@@ -465,12 +442,12 @@ namespace sequoia::testing
           const auto c{*j};
           if(c != '-')
           {
-            const auto alias{std::string{'-'} + c};
+            /*const auto alias{std::string{'-'} + c};
 
             optionsIter = std::find_if(optionsBegin, optionsEnd,
               [&arg](const auto& tree) { return is_alias(root(tree), arg); });
 
-            //process_option(optionsIter, optionsEnd, arg, operations);
+            process_option(optionsIter, optionsEnd, arg, operations);*/
           }
         }
       }
