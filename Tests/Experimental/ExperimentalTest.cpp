@@ -140,6 +140,8 @@ namespace sequoia::testing
     public:
       using size_type = Tree::size_type;
 
+      using tree_reference_type = const Tree&;
+
       const_tree_adaptor() = default;
 
       const_tree_adaptor(const Tree& tree, size_type node)
@@ -192,11 +194,11 @@ namespace sequoia::testing
       using reference  = typename std::iterator_traits<Iterator>::reference;
 
       constexpr forest_dereference_policy() = default;
-      constexpr forest_dereference_policy(TreeAdaptor adaptor) : m_Adaptor{adaptor} {}
+      //constexpr forest_dereference_policy(TreeAdaptor adaptor) : m_Adaptor{adaptor} {}
       constexpr forest_dereference_policy(const forest_dereference_policy&) = default;
 
-      [[nodiscard]]
-      constexpr proxy adaptor() const noexcept { return m_Adaptor; }
+      //[[nodiscard]]
+      //constexpr proxy adaptor() const noexcept { return m_Adaptor; }
 
       [[nodiscard]]
       friend constexpr bool operator==(const forest_dereference_policy&, const forest_dereference_policy&) noexcept = default;
@@ -214,18 +216,62 @@ namespace sequoia::testing
       [[nodiscard]]
       constexpr proxy get(reference ref) const noexcept
       {
-        // won't work in general
-        return {ref};
+        return {ref, 0};
       }
 
       [[nodiscard]]
       static constexpr pointer get_ptr(reference ref) noexcept { return &ref; }
     private:
-      TreeAdaptor m_Adaptor{};
+      //TreeAdaptor m_Adaptor{};
+    };
+
+    template<std::input_or_output_iterator Iterator, class TreeAdaptor>
+    class forest_from_tree_dereference_policy
+    {
+    public:
+      using value_type = typename std::iterator_traits<Iterator>::value_type;
+      using proxy      = TreeAdaptor;
+      using pointer    = typename std::iterator_traits<Iterator>::pointer;
+      using reference  = typename std::iterator_traits<Iterator>::reference;
+      using tree_reference_type = typename TreeAdaptor::tree_reference_type;
+
+      // Hopefully get rid of this once MSVC bug fixed
+      constexpr forest_from_tree_dereference_policy() = default;
+      constexpr forest_from_tree_dereference_policy(tree_reference_type tree) : m_pTree{&tree} {}
+      constexpr forest_from_tree_dereference_policy(const forest_from_tree_dereference_policy&) = default;
+
+      [[nodiscard]]
+      friend constexpr bool operator==(const forest_from_tree_dereference_policy&, const forest_from_tree_dereference_policy&) noexcept = default;
+
+      [[nodiscard]]
+      friend constexpr bool operator!=(const forest_from_tree_dereference_policy&, const forest_from_tree_dereference_policy&) noexcept = default;
+    protected:
+      constexpr forest_from_tree_dereference_policy(forest_from_tree_dereference_policy&&) = default;
+
+      ~forest_from_tree_dereference_policy() = default;
+
+      constexpr forest_from_tree_dereference_policy& operator=(const forest_from_tree_dereference_policy&) = default;
+      constexpr forest_from_tree_dereference_policy& operator=(forest_from_tree_dereference_policy&&) = default;
+
+      [[nodiscard]]
+      constexpr proxy get(reference ref) const
+      {
+        return {*m_pTree, ref.target_node()};
+      }
+
+      [[nodiscard]]
+      static constexpr pointer get_ptr(reference ref) noexcept { return &ref; }
+    private:
+      using tree_pointer_type = std::remove_reference_t<tree_reference_type>*;
+
+      tree_pointer_type m_pTree{};
     };
 
     template<std::input_or_output_iterator Iterator, class Adaptor>
     using forest_iterator = utilities::iterator<Iterator, forest_dereference_policy<Iterator, Adaptor>>;
+
+    template<std::input_or_output_iterator Iterator, class Adaptor>
+    using forest_from_tree_iterator = utilities::iterator<Iterator, forest_from_tree_dereference_policy<Iterator, Adaptor>>;
 
     struct current_operation
     {
@@ -248,25 +294,21 @@ namespace sequoia::testing
         return {m_ZerothArg, m_Operations, m_Help};
       }
     private:
+      enum class top_level {yes, no};
+
       operations_forest m_Operations{};
       int m_Index{1}, m_ArgCount{};
       char** m_Argv{};
       std::string m_ZerothArg{}, m_Help{};
 
       template<std::input_or_output_iterator Iter, std::sentinel_for<Iter> Sentinel>
-      bool parse(Iter beginOptions, Sentinel endOptions, current_operation currentOperation);
-
-      template<std::input_or_output_iterator Iter, std::sentinel_for<Iter> Sentinel>
-      std::optional<Iter> process_option(Iter optionsIter, Sentinel optionsEnd, std::string_view arg, operations_forest& operations);
+      bool parse(Iter beginOptions, Sentinel endOptions, current_operation currentOperation, top_level topLevel);
 
       template<std::input_iterator Iter, std::sentinel_for<Iter> Sentinel>
       bool process_concatenated_aliases(Iter optionsIter, Iter optionsBegin, Sentinel optionsEnd, std::string_view arg, operations_forest& operations);
 
       template<std::input_or_output_iterator Iter, std::sentinel_for<Iter> Sentinel>
       Iter process_nested_options(Iter optionsIter, Sentinel optionsEnd, operations_tree& currentOp);
-
-      [[nodiscard]]
-      bool top_level(const operations_forest& operations) const noexcept;
 
       template<std::input_or_output_iterator Iter, std::sentinel_for<Iter> Sentinel>
       [[nodiscard]]
@@ -283,23 +325,21 @@ namespace sequoia::testing
       using iter_t = decltype(options.begin());
       using forest_iter = forest_iterator<iter_t, const_tree_adaptor<options_tree>>;
 
-      parse(options.begin(), options.end(), {});
+      parse(forest_iter{options.begin()}, forest_iter{options.end()}, {}, top_level::yes);
     }
 
     template<std::input_or_output_iterator Iter, std::sentinel_for<Iter> Sentinel>
-    bool argument_parser::parse(Iter beginOptions, Sentinel endOptions, current_operation currentOperation)
+    bool argument_parser::parse(Iter beginOptions, Sentinel endOptions, current_operation currentOperation, top_level topLevel)
     {
       current_option_tree currentOptionTree{};
       while(m_Index < m_ArgCount)
       {
-        if(const std::string arg{m_Argv[m_Index++]}; !arg.empty())
+        if(std::string_view arg{m_Argv[m_Index++]}; !arg.empty())
         {
           if(!currentOperation.tree || currentOperation.current_op_complete)
           {
             const auto optionsIter{std::find_if(beginOptions, endOptions,
-              [&arg](const auto& optTree) {
-                const tree_adaptor tree{optTree, 0};
-
+              [&arg](const auto& tree) {
                 return (tree.root_weight().name == arg) || is_alias(tree.root_weight(), arg);
               })
             };
@@ -314,12 +354,14 @@ namespace sequoia::testing
                 return true;
               }
 
-              throw std::runtime_error{error(std::string{"unrecognized option '"}.append(arg).append("'"))};
+              if(topLevel == top_level::yes)
+                throw std::runtime_error{error(std::string{"unrecognized option '"}.append(arg).append("'"))};
             }
 
             // TO DO: fix index of 0
-            currentOptionTree = {*optionsIter, 0};
+            currentOptionTree = *optionsIter;
 
+            // Only throw if top level
             if(!currentOptionTree.root_weight().early && !currentOptionTree.root_weight().late)
               throw std::logic_error{error("Commandline option not bound to a function object")};
 
@@ -327,7 +369,6 @@ namespace sequoia::testing
 
             // TO DO: fix index of 0
             currentOperation = {{m_Operations.back(), 0}};
-            // etc
           }
           else
           {
@@ -335,18 +376,22 @@ namespace sequoia::testing
 
             if(currentOperation.tree.root_weight().arguments.size() < currentOptionTree.root_weight().parameters.size())
             {
-              currentOperation.tree.mutate_root_weight([&arg](auto& w){ w.arguments.push_back(arg); });
+              currentOperation.tree.mutate_root_weight([arg](auto& w){ w.arguments.emplace_back(arg); });
+            }
+          }
 
-              if(currentOperation.tree.root_weight().arguments.size() == currentOptionTree.root_weight().parameters.size())
-                currentOperation.current_op_complete = true;
-            }
-            else
-            {
-              --m_Index;
-              const auto node{currentOptionTree.node()};
-              // set intermediate construction complete
-              //parse(currentOptionTree.tree().cbegin_edges(node), currentOptionTree.tree().cend_edges(node), currentOperation);
-            }
+          if(currentOperation.tree.root_weight().arguments.size() == currentOptionTree.root_weight().parameters.size())
+          {
+            currentOperation.current_op_complete = true;
+            const auto node{currentOptionTree.node()};
+
+            using iter_t = decltype(currentOptionTree.tree().cbegin_edges(node));
+            using forest_iter = forest_from_tree_iterator<iter_t, const_tree_adaptor<options_tree>>;
+
+            parse(forest_iter{currentOptionTree.tree().cbegin_edges(node), currentOptionTree.tree()},
+                  forest_iter{currentOptionTree.tree().cend_edges(node), currentOptionTree.tree()},
+                  currentOperation,
+                  top_level::no);
           }
         }
       }
@@ -452,28 +497,6 @@ namespace sequoia::testing
       return optionsIter != optionsEnd;
     }
 
-    template<std::input_or_output_iterator Iter, std::sentinel_for<Iter> Sentinel>
-    std::optional<Iter> argument_parser::process_option(Iter optionsIter, Sentinel optionsEnd, std::string_view arg, operations_forest& operations)
-    {
-      if(optionsIter == optionsEnd)
-      {
-        if(top_level(operations))
-          throw std::runtime_error{error(std::string{"unrecognized option '"}.append(arg).append("'"))};
-
-        return {};
-      }
-
-      if(top_level(operations) && !root(optionsIter).early && !root(optionsIter).late)
-        throw std::logic_error{error("Commandline option not bound to a function object")};
-
-      operations.push_back({{root(optionsIter).early, root(optionsIter).late, {}}, forward_tree_type{}});
-      if(root(optionsIter).parameters.empty())
-      {
-//        optionsIter = process_nested_options(optionsIter, optionsEnd, operations.back());
-      }
-
-      return optionsIter;
-    }
 
     template<std::input_or_output_iterator Iter, std::sentinel_for<Iter> Sentinel>
     Iter argument_parser::process_nested_options(Iter optionsIter, Sentinel optionsEnd, operations_tree& currentOp)
@@ -512,12 +535,6 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    bool argument_parser::top_level(const operations_forest& operations) const noexcept
-    {
-      return &m_Operations == &operations;
-    }
-
-    [[nodiscard]]
     bool argument_parser::is_alias(const option& opt, std::string_view s)
     {
       return std::find(opt.aliases.begin(), opt.aliases.end(), s) != opt.aliases.end();
@@ -532,7 +549,7 @@ namespace sequoia::testing
 
       while(beginOptions != endOptions)
       {
-        const auto& optTree{*(beginOptions++)};
+        const auto& optTree{(*(beginOptions++)).tree()};
 
         auto nodeEarly{
           [&](const auto n){
