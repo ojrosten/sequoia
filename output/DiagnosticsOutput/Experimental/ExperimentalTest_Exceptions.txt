@@ -1,4 +1,4 @@
-Tests/Experimental/ExperimentalTest.cpp, Line 553
+Tests/Experimental/ExperimentalTest.cpp, Line 591
 Empty name
 
 Expected Exception Type:
@@ -7,7 +7,7 @@ Empty string detected
 
 	=======================================
 
-Tests/Experimental/ExperimentalTest.cpp, Line 554
+Tests/Experimental/ExperimentalTest.cpp, Line 592
 Empty alias
 
 Expected Exception Type:
@@ -16,32 +16,12 @@ Empty string detected
 
 	=======================================
 
-Tests/Experimental/ExperimentalTest.cpp, Line 555
+Tests/Experimental/ExperimentalTest.cpp, Line 593
 Empty parameter
 
 Expected Exception Type:
 [std::logic_error]
 Empty string detected
-
-	=======================================
-
-Tests/Experimental/ExperimentalTest.cpp, Line 591
-Unexpected argument
-
-Expected Exception Type:
-[std::runtime_error]
-
-  Error: unrecognized option '--asyng'
-
-	=======================================
-
-Tests/Experimental/ExperimentalTest.cpp, Line 599
-Unexpected argument
-
-Expected Exception Type:
-[std::runtime_error]
-
-  Error: unrecognized option '-a'
 
 	=======================================
 
