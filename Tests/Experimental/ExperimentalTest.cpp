@@ -6,6 +6,7 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "ExperimentalTest.hpp"
+#include "../Parsing/CommandLineArgumentsTestingUtilities.hpp"
 
 #include "sequoia/Parsing/CommandLineArguments.hpp"
 #include "sequoia/Maths/Graph/DynamicGraph.hpp"
@@ -284,8 +285,11 @@ namespace sequoia::testing
       template<std::input_or_output_iterator Iter, std::sentinel_for<Iter> Sentinel>
       void parse(Iter beginOptions, Sentinel endOptions, current_operation currentOperation, top_level topLevel);
 
-      template<std::input_iterator Iter, std::sentinel_for<Iter> Sentinel>
-      bool process_concatenated_aliases(Iter optionsIter, Iter optionsBegin, Sentinel optionsEnd, std::string_view arg, operations_forest& operations);
+      template<std::input_or_output_iterator Iter, std::sentinel_for<Iter> Sentinel>
+      [[nodiscard]]
+      bool process_concatenated_aliases(Iter beginOptions, Sentinel endOptions, std::string_view arg, current_operation currentOperation, top_level topLevel);
+
+      current_operation process_option(current_option_tree currentOptionTree, current_operation currentOperation, top_level topLevel);
 
       template<std::input_or_output_iterator Iter, std::sentinel_for<Iter> Sentinel>
       [[nodiscard]]
@@ -308,9 +312,13 @@ namespace sequoia::testing
     template<std::input_or_output_iterator Iter, std::sentinel_for<Iter> Sentinel>
     void argument_parser::parse(Iter beginOptions, Sentinel endOptions, current_operation currentOperation, top_level topLevel)
     {
+      if(!m_Help.empty()) return;
+
       current_option_tree currentOptionTree{};
       while(m_Index < m_ArgCount)
       {
+        currentOptionTree = {};
+
         if(std::string_view arg{m_Argv[m_Index++]}; !arg.empty())
         {
           if(!currentOperation.tree || currentOperation.current_op_complete)
@@ -323,13 +331,14 @@ namespace sequoia::testing
 
             if(optionsIter == endOptions)
             {
-              // TO DO: concatenated alias
-
               if(arg == "--help")
               {
                 m_Help = generate_help(beginOptions, endOptions);
                 return;
               }
+
+              if(process_concatenated_aliases(beginOptions, endOptions, arg, currentOperation, topLevel))
+                continue;
 
               if(topLevel == top_level::yes)
                 throw std::runtime_error{error(std::string{"unrecognized option '"}.append(arg).append("'"))};
@@ -340,43 +349,7 @@ namespace sequoia::testing
             }
 
             currentOptionTree = *optionsIter;
-
-            if(topLevel == top_level::yes)
-            {
-              if(!currentOptionTree.root_weight().early && !currentOptionTree.root_weight().late)
-                throw std::logic_error{error("Commandline option not bound to a function object")};
-
-              m_Operations.push_back({{currentOptionTree.root_weight().early, currentOptionTree.root_weight().late, {}}, forward_tree_type{}});
-              currentOperation = {{m_Operations.back(), 0}};
-            }
-            else
-            {
-              if(m_Operations.empty() || !currentOperation.tree)
-                throw std::logic_error{"Unable to find commandline operation"};
-
-              auto& operationTree{m_Operations.back()};
-
-              const auto node{operationTree.add_node(currentOptionTree.root_weight().early, currentOptionTree.root_weight().late)};
-              operationTree.join(currentOptionTree.node(), node);
-              currentOperation = {{m_Operations.back(), node}};
-
-              // TO DO: incorporate this
-              /*while(i != nestedOperations.end())
-              {
-                if(!i->early && !i->late)
-                {
-                  auto& args{currentOp.arguments};
-                  const auto& nestedArgs{i->arguments};
-                  std::copy(nestedArgs.begin(), nestedArgs.end(), std::back_inserter(args));
-
-                  i = nestedOperations.erase(i);
-                }
-                else
-                {
-                  ++i;
-                }
-              }*/
-            }
+            currentOperation = process_option(currentOptionTree, currentOperation, topLevel);
           }
           else
           {
@@ -430,11 +403,52 @@ namespace sequoia::testing
       }
     }
 
-    template<std::input_iterator Iter, std::sentinel_for<Iter> Sentinel>
-    bool argument_parser::process_concatenated_aliases(Iter optionsIter, Iter optionsBegin, Sentinel optionsEnd, std::string_view arg, operations_forest& operations)
+    current_operation argument_parser::process_option(current_option_tree currentOptionTree, current_operation currentOperation, top_level topLevel)
     {
-      if(optionsIter != optionsEnd) return false;
+      if(topLevel == top_level::yes)
+      {
+        if(!currentOptionTree.root_weight().early && !currentOptionTree.root_weight().late)
+          throw std::logic_error{error("Commandline option not bound to a function object")};
 
+        m_Operations.push_back({{currentOptionTree.root_weight().early, currentOptionTree.root_weight().late, {}}, forward_tree_type{}});
+        currentOperation = {{m_Operations.back(), 0}};
+      }
+      else
+      {
+        if(m_Operations.empty() || !currentOperation.tree)
+          throw std::logic_error{"Unable to find commandline operation"};
+
+        auto& operationTree{m_Operations.back()};
+
+        const auto node{operationTree.add_node(currentOptionTree.root_weight().early, currentOptionTree.root_weight().late)};
+        operationTree.join(currentOptionTree.node(), node);
+        currentOperation = {{m_Operations.back(), node}};
+
+        // TO DO: incorporate this
+        /*while(i != nestedOperations.end())
+        {
+          if(!i->early && !i->late)
+          {
+            auto& args{currentOp.arguments};
+            const auto& nestedArgs{i->arguments};
+            std::copy(nestedArgs.begin(), nestedArgs.end(), std::back_inserter(args));
+
+            i = nestedOperations.erase(i);
+          }
+          else
+          {
+            ++i;
+          }
+        }*/
+      }
+
+      return currentOperation;
+    }
+
+    template<std::input_or_output_iterator Iter, std::sentinel_for<Iter> Sentinel>
+    [[nodiscard]]
+    bool argument_parser::process_concatenated_aliases(Iter beginOptions, Sentinel endOptions, std::string_view arg, current_operation currentOperation, top_level topLevel)
+    {
       if((arg.size() > 2) && (arg[0] == '-') && (arg[1] != ' '))
       {
         for(auto j{arg.cbegin() + 1}; j != arg.cend(); ++j)
@@ -442,17 +456,24 @@ namespace sequoia::testing
           const auto c{*j};
           if(c != '-')
           {
-            /*const auto alias{std::string{'-'} + c};
+            const auto alias{std::string{'-'} + c};
 
-            optionsIter = std::find_if(optionsBegin, optionsEnd,
-              [&arg](const auto& tree) { return is_alias(root(tree), arg); });
+            auto optionsIter{std::find_if(beginOptions, endOptions,
+              [arg](const auto& tree) { return tree.root_weight().name == arg; })};
 
-            process_option(optionsIter, optionsEnd, arg, operations);*/
+            // need to deal with the case where rollback is allowed
+            if(optionsIter == endOptions)
+            {
+              throw std::runtime_error{"Unrecognized concatenated alias: " + std::string{arg}};
+            }
+
+            const current_option_tree currentOptionTree{*optionsIter};
+            process_option(currentOptionTree, currentOperation, topLevel);
           }
         }
       }
 
-      return optionsIter != optionsEnd;
+      return true;
     }
 
 
@@ -519,13 +540,155 @@ namespace sequoia::testing
 
   void experimental_test::run_tests()
   {
-    using namespace maths;
-    namespace cmd = parsing::commandline;
-    using options = graph<directed_flavour::directed, null_weight, experimental::option>;
+    test_flat_parsing();
 
-    options opts{{ {"create", {"c"}, {}, [](const cmd::arg_list&) {}} }, forward_tree_type{}};
+  }
 
-    options opt{{"create", {"c"}, {}, [](const cmd::arg_list&) {}}, symmetric_tree_type{}};
+  void experimental_test::test_flat_parsing()
+  {
+    using namespace sequoia::parsing::commandline;
+    using fo = function_object;
 
+    {
+      check_exception_thrown<std::logic_error>(LINE("Empty name"), []() { return option{"", {}, {}, fo{}}; });
+      check_exception_thrown<std::logic_error>(LINE("Empty alias"), []() { return option{"test", {""}, {}, fo{}}; });
+      check_exception_thrown<std::logic_error>(LINE("Empty parameter"), []() { return option{"test", {}, {""}, fo{}}; });
+    }
+
+    {
+      check_weak_equivalence(LINE(""), parse(0, nullptr, {}), outcome{});
+    }
+
+    {
+      commandline_arguments a{"foo", "--async"};
+
+      check_weak_equivalence(LINE("Early"), parse(a.size(), a.get(), {{"--async", {}, {}, fo{}}}), outcome{"foo", {{fo{}, nullptr, {}}}});
+      check_weak_equivalence(LINE("Late"), parse(a.size(), a.get(), {{"--async", {}, {}, nullptr, {}, fo{}}}), outcome{"foo", {{nullptr, fo{}, {}}}});
+      check_weak_equivalence(LINE("Both"), parse(a.size(), a.get(), {{"--async", {}, {}, fo{"x"}, {}, fo{"y"}}}), outcome{"foo", {{fo{"x"}, fo{"y"}, {}}}});
+    }
+
+    {
+      commandline_arguments a{"bar", "-a"};
+
+      check_weak_equivalence(LINE(""), parse(a.size(), a.get(), {{"--async", {"-a"}, {}, fo{}}}), outcome{"bar", {{fo{}, nullptr, {}}}});
+    }
+
+    {
+      commandline_arguments a{"bar", "", "-a"};
+
+      check_weak_equivalence(LINE("Ignored empty option"), parse(a.size(), a.get(), {{"--async", {"-a"}, {}, fo{}}}), outcome{"bar", {{fo{}, nullptr, {}}}});
+    }
+
+    {
+      commandline_arguments a{"foo", "-a"};
+
+      check_weak_equivalence(LINE(""), parse(a.size(), a.get(), {{"--async", {"-as", "-a"}, {}, fo{}}}), outcome{"foo", {{fo{}, nullptr, {}}}});
+    }
+
+    {
+      commandline_arguments a{"foo", "--asyng"};
+
+      check_exception_thrown<std::runtime_error>(LINE("Unexpected argument"), [&a](){
+        return parse(a.size(), a.get(), {{"--async", {}, {}, fo{}}});
+        });
+    }
+
+    {
+      commandline_arguments a{"foo", "-a"};
+
+      check_exception_thrown<std::runtime_error>(LINE("Unexpected argument"), [&a](){
+        return parse(a.size(), a.get(), {{"--async", {"-as"}, {}, fo{}}});
+        });
+    }
+/*
+    {
+      commandline_arguments a{"foo", "-av"};
+
+      check_weak_equivalence(LINE(""),
+        parse(a.size(), a.get(), {{"--async", {"-a"}, {}, fo{}},
+                                 {"--verbose", {"-v"}, {}, fo{}}}),
+        outcome{"foo", {{fo{}, nullptr, {}}, {fo{}, nullptr, {}}}});
+    }
+
+    {
+      commandline_arguments a{"foo", "-a-v"};
+
+      check_weak_equivalence(LINE(""),
+        parse(a.size(), a.get(), {{"--async", {"-a"}, {}, fo{}},
+                                 {"--verbose", {"-v"}, {}, fo{}}}),
+        outcome{"foo", {{fo{}, nullptr, {}}, {fo{}, nullptr, {}}}});
+    }
+
+    {
+      commandline_arguments a{"foo", "-av", "-p"};
+
+      check_weak_equivalence(LINE(""),
+        parse(a.size(), a.get(), {{"--async",   {"-a"}, {}, fo{}},
+                                 {"--verbose", {"-v"}, {}, fo{}},
+                                 {"--pause",   {"-p"}, {}, fo{}}}),
+        outcome{"foo", {{fo{}, nullptr, {}}, {fo{}, nullptr, {}}, {fo{}, nullptr, {}}}});
+    }
+
+    {
+      commandline_arguments a{"foo", "-ac"};
+
+      check_exception_thrown<std::runtime_error>(LINE("Unexpected argument"), [&a](){
+        return parse(a.size(), a.get(), {{"--async", {"-a"}, {}, fo{}}});
+        });
+    }
+
+    {
+      commandline_arguments a{"foo", "test", "thing"};
+
+      check_weak_equivalence(LINE(""), parse(a.size(), a.get(), {{"test", {}, {"case"}, fo{}}}), outcome{"foo", {{fo{}, nullptr, {"thing"}}}});
+    }
+
+    {
+      commandline_arguments a{"foo", "t", "thing"};
+
+      check_weak_equivalence(LINE(""), parse(a.size(), a.get(), {{"test", {"t"}, {"case"}, fo{}}}), outcome{"foo", {{fo{}, nullptr, {"thing"}}}});
+    }
+
+    {
+      commandline_arguments a{"foo", "test", ""};
+
+      check_weak_equivalence(LINE("Empty parameter"), parse(a.size(), a.get(), {{"test", {}, {"case"}, fo{}}}), outcome{"foo", {{fo{}, nullptr, {""}}}});
+    }
+
+    {
+      commandline_arguments a{"foo", "test"};
+
+      check_exception_thrown<std::runtime_error>(LINE("Final argument missing"),
+        [&a](){
+          return parse(a.size(), a.get(), {{"test", {}, {"case"}, fo{}}});
+        });
+    }
+
+    {
+      commandline_arguments a{"foo", "create", "class", "dir"};
+
+      check_weak_equivalence(LINE(""),
+        parse(a.size(), a.get(), {{"create", {}, {"class_name", "directory"}, fo{}}}),
+        outcome{"foo", {{fo{}, nullptr, {"class", "dir"}}}});
+    }
+
+    {
+      commandline_arguments a{"foo", "--async", "create", "class", "dir"};
+
+      check_weak_equivalence(LINE(""),
+        parse(a.size(), a.get(), {{"create",  {}, {"class_name", "directory"}, fo{}},
+                                   {"--async", {}, {}, fo{}}}),
+        outcome{"foo", {{fo{}, nullptr, {}}, {fo{}, nullptr, {"class", "dir"}}}});
+    }
+
+    {
+      commandline_arguments a{"foo", "--async", "create", "class", "dir"};
+
+      check_weak_equivalence(LINE(""),
+        argument_parser{a.size(), a.get(), { {"create",  {}, {"class_name", "directory"}, fo{}},
+                                   {"--async", {}, {}, fo{}} }},
+        outcome{"foo", {{fo{}, nullptr, {}}, {fo{}, nullptr, {"class", "dir"}}}});
+    }
+    */
   }
 }
