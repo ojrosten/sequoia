@@ -652,7 +652,7 @@ namespace sequoia
             join(root, n);
           }
 
-          if constexpr(dir != tree_link_direction::forward)
+          if constexpr((dir != tree_link_direction::forward) && (Connectivity::directedness != directed_flavour::undirected))
           {
             join(n, root);
           }

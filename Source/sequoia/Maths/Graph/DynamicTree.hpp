@@ -53,6 +53,10 @@ namespace sequoia::maths
         NodeWeightStorageTraits
       >;
 
+    using size_type = typename base_type::size_type;
+
+    constexpr static tree_link_direction link_dir{TreeLinkDir};
+
     tree(const tree&)     = default;
     tree(tree&&) noexcept = default;
 
@@ -72,5 +76,24 @@ namespace sequoia::maths
     {
       lhs.swap(rhs);
     }
+
+    template<class... Args>
+    size_type add_node(size_type parent, Args&&... args)
+    {
+      if(const auto node{base_type::add_node(std::forward<Args>(args)...)})
+      {
+        if constexpr(link_dir != tree_link_direction::backward)
+        {
+          join(parent, node);
+        }
+        
+        if constexpr((link_dir != tree_link_direction::forward) && (Directedness != directed_flavour::undirected))
+        {
+          join(node, parent);
+        }
+      }
+    }
+
+    // prune (subtle for backward edges)
   };
 }
