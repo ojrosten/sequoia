@@ -9,7 +9,7 @@
 #include "../Parsing/CommandLineArgumentsTestingUtilities.hpp"
 
 #include "sequoia/Parsing/CommandLineArguments.hpp"
-#include "sequoia/Maths/Graph/DynamicGraph.hpp"
+#include "sequoia/Maths/Graph/DynamicTree.hpp"
 #include "sequoia/Maths/Graph/GraphTraversalFunctions.hpp"
 
 #include <functional>
@@ -542,6 +542,36 @@ namespace sequoia::testing
     }
   }
 
+  template<>
+  struct weak_equivalence_checker<experimental::operation>
+  {
+    using type = experimental::operation;
+
+    template<test_mode Mode>
+    static void check(test_logger<Mode>& logger, const type& operation, const type& prediction)
+    {
+      check(logger, operation.early, prediction.early, "early");
+      check(logger, operation.late, prediction.late, "late");
+      check_equality("Operation Parameters differ", logger, operation.arguments, prediction.arguments);
+    }
+  private:
+    using executor = experimental::executor;
+
+    template<test_mode Mode>
+    static void check(test_logger<Mode>& logger, const executor& operation, const executor& prediction, std::string_view tag)
+    {
+      const bool consistent{(operation && prediction) || (!operation && !prediction)};
+      testing::check(std::string{"Existence of"}.append(tag).append(" function objects differs"), logger, consistent);
+
+      if(operation && prediction)
+      {
+        check_equality("Function object tag", logger,
+          operation.target<function_object>()->tag,
+          prediction.target<function_object>()->tag);
+      }
+    }
+  };
+
 
   template<>
   struct weak_equivalence_checker<experimental::outcome>
@@ -552,6 +582,7 @@ namespace sequoia::testing
     static void check(test_logger<Mode>& logger, const type& obtained, const type& prediction)
     {
       check_equality("Zeroth Argument", logger, obtained.zeroth_arg, prediction.zeroth_arg);
+      // TO DO fix this!!
       //check_weak_equivalence("Operations", logger, obtained.operations, prediction.operations);
       check_equality("Help", logger, obtained.help, prediction.help);
     }
@@ -584,7 +615,7 @@ namespace sequoia::testing
 
   void experimental_test::test_flat_parsing()
   {
-    using namespace sequoia::parsing::commandline;
+    using namespace experimental;
     using fo = function_object;
 
     {
@@ -596,15 +627,17 @@ namespace sequoia::testing
     {
       check_weak_equivalence(LINE(""), experimental::parse(0, nullptr, {}), experimental::outcome{});
     }
-/*
+
     {
       commandline_arguments a{"foo", "--async"};
 
-      check_weak_equivalence(LINE("Early"), experimental::parse(a.size(), a.get(), {{"--async", {}, {}, fo{}}}), experimental::outcome{"foo", {{fo{}, nullptr, {}}}});
-      check_weak_equivalence(LINE("Late"), experimental::parse(a.size(), a.get(), {{"--async", {}, {}, nullptr, {}, fo{}}}), experimental::outcome{"foo", {{nullptr, fo{}, {}}}});
-      check_weak_equivalence(LINE("Both"), experimental::parse(a.size(), a.get(), {{"--async", {}, {}, fo{"x"}, {}, fo{"y"}}}), experimental::outcome{"foo", {{fo{"x"}, fo{"y"}, {}}}});
-    }
+      options_tree t{tree_initializer<option>{"--async", {}, {}, fo{}}, forward_tree_type{}};
 
+     // check_weak_equivalence(LINE("Early"), experimental::parse(a.size(), a.get(), {{"--async", {}, {}, fo{}}}), experimental::outcome{"foo", {{fo{}, nullptr, {}}}});
+     // check_weak_equivalence(LINE("Late"), experimental::parse(a.size(), a.get(), {{"--async", {}, {}, nullptr, {}, fo{}}}), experimental::outcome{"foo", {{nullptr, fo{}, {}}}});
+     // check_weak_equivalence(LINE("Both"), experimental::parse(a.size(), a.get(), {{"--async", {}, {}, fo{"x"}, {}, fo{"y"}}}), experimental::outcome{"foo", {{fo{"x"}, fo{"y"}, {}}}});
+    }
+/*
     {
       commandline_arguments a{"bar", "-a"};
 

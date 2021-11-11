@@ -130,16 +130,16 @@ namespace sequoia::maths
       : primitive_type{edges, edgeAllocator, edgePartitionsAllocator}
     {}
 
-    template<tree_direction dir>
-      requires ((dir == tree_direction::symmetric) || (primitive_type::connectivity::directedness == directed_flavour::directed))
-    constexpr graph_base(std::initializer_list<tree_initializer<node_weight_type>> forest, tree_direction_constant<dir> tdc)
+    template<tree_link_direction dir>
+      requires ((dir == tree_link_direction::symmetric) || (primitive_type::connectivity::directedness == directed_flavour::directed))
+    graph_base(std::initializer_list<tree_initializer<node_weight_type>> forest, tree_link_direction_constant<dir> tdc)
       : primitive_type{forest, tdc}
     {}
 
-    template<tree_direction dir>
+    template<tree_link_direction dir>
       requires (    !std::is_empty_v<node_weight_type> && !std::same_as<node_weight_type, graph_impl::heterogeneous_tag>
-                 && ((dir == tree_direction::symmetric) || (primitive_type::connectivity::directedness == directed_flavour::directed)))
-    constexpr graph_base(tree_initializer<node_weight_type> tree, tree_direction_constant<dir> tdc)
+                 && ((dir == tree_link_direction::symmetric) || (primitive_type::connectivity::directedness == directed_flavour::directed)))
+    graph_base(tree_initializer<node_weight_type> tree, tree_link_direction_constant<dir> tdc)
       : primitive_type{tree, tdc}
     {}
 
@@ -172,19 +172,9 @@ namespace sequoia::maths
     graph_base& operator=(graph_base&&) = default;
 
     using primitive_type::swap;
-    using primitive_type::swap_nodes;
-
-    using primitive_type::get_edge_allocator;
-
-    using primitive_type::add_node;
-    using primitive_type::insert_node;
-    using primitive_type::erase_node;
-
-    using primitive_type::join;
-    using primitive_type::erase_edge;
-
     using primitive_type::clear;
 
+    using primitive_type::get_edge_allocator;
     using primitive_type::reserve_edges;
     using primitive_type::edges_capacity;
     using primitive_type::reserve_nodes;
@@ -293,16 +283,16 @@ namespace sequoia::maths
       : primitive_type{edges, edgeAllocator, edgePartitionsAllocator, nodeWeights, nodeWeightAllocator}
     {}
 
-    template<tree_direction dir>
-      requires ((dir == tree_direction::symmetric) || (primitive_type::connectivity::directedness == directed_flavour::directed))
-    constexpr graph_base(std::initializer_list<tree_initializer<node_weight_type>> forest, tree_direction_constant<dir> tdc)
+    template<tree_link_direction dir>
+      requires ((dir == tree_link_direction::symmetric) || (primitive_type::connectivity::directedness == directed_flavour::directed))
+    graph_base(std::initializer_list<tree_initializer<node_weight_type>> forest, tree_link_direction_constant<dir> tdc)
       : primitive_type{forest, tdc}
     {}
 
-    template<tree_direction dir>
+    template<tree_link_direction dir>
       requires (    !std::is_empty_v<node_weight_type> && !std::same_as<node_weight_type, graph_impl::heterogeneous_tag>
-                 && ((dir == tree_direction::symmetric) || (primitive_type::connectivity::directedness == directed_flavour::directed)))
-    constexpr graph_base(tree_initializer<node_weight_type> tree, tree_direction_constant<dir> tdc)
+                 && ((dir == tree_link_direction::symmetric) || (primitive_type::connectivity::directedness == directed_flavour::directed)))
+    graph_base(tree_initializer<node_weight_type> tree, tree_link_direction_constant<dir> tdc)
       : primitive_type{tree, tdc}
     {}
 
@@ -334,18 +324,9 @@ namespace sequoia::maths
     graph_base& operator=(graph_base&&) noexcept = default;
 
     using primitive_type::swap;
-    using primitive_type::swap_nodes;
-    using primitive_type::get_edge_allocator;
-
-    using primitive_type::add_node;
-    using primitive_type::insert_node;
-    using primitive_type::erase_node;
-
-    using primitive_type::join;
-    using primitive_type::erase_edge;
-
     using primitive_type::clear;
 
+    using primitive_type::get_edge_allocator;
     using primitive_type::reserve_edges;
     using primitive_type::edges_capacity;
     using primitive_type::reserve_nodes;
@@ -409,11 +390,13 @@ namespace sequoia::maths
         NodeWeightStorageTraits
       >;
 
-    graph(const graph&) = default;
-    graph(graph&&) noexcept = default;
+    using base_type::swap_nodes;
+    using base_type::add_node;
+    using base_type::insert_node;
+    using base_type::erase_node;
 
-    graph& operator=(const graph&) = default;
-    graph& operator=(graph&&) = default;
+    using base_type::join;
+    using base_type::erase_edge;
 
     using base_type::sort_edges;
     using base_type::swap_edges;
@@ -478,6 +461,14 @@ namespace sequoia::maths
           EdgeStorageTraits,
           NodeWeightStorageTraits
         >;
+
+      using base_type::swap_nodes;
+      using base_type::add_node;
+      using base_type::insert_node;
+      using base_type::erase_node;
+
+      using base_type::join;
+      using base_type::erase_edge;
 
       using base_type::primitive_type::insert_join;
 
