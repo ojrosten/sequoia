@@ -583,6 +583,27 @@ namespace sequoia
         if constexpr (!emptyNodes) Nodes::clear();
         Connectivity::clear();
       }
+
+      template<tree_link_direction dir, class... Args>
+      size_type tree_join(tree_link_direction_constant<dir>, size_type parent, Args&&... args)
+      {
+        const auto n{add_node(std::forward<Args>(args)...)};
+
+        if(n)
+        {
+          if constexpr(dir != tree_link_direction::backward)
+          {
+            join(parent, n);
+          }
+
+          if constexpr((dir != tree_link_direction::forward) && (Connectivity::directedness != directed_flavour::undirected))
+          {
+            join(n, parent);
+          }
+        }
+
+        return n;
+      }
     private:
       constexpr static bool emptyNodes{std::is_empty_v<typename Nodes::weight_type>};
       constexpr static bool heteroNodes{std::is_same_v<node_weight_type, graph_impl::heterogeneous_tag>};
@@ -645,18 +666,7 @@ namespace sequoia
 
         for(const auto& child : tree.children)
         {
-          const auto n{add_node(child.node)};
-
-          if constexpr(dir != tree_link_direction::backward)
-          {
-            join(root, n);
-          }
-
-          if constexpr((dir != tree_link_direction::forward) && (Connectivity::directedness != directed_flavour::undirected))
-          {
-            join(n, root);
-          }
-
+          const auto n{tree_join(tdc, root, child.node)};
           build_tree(n, child, tdc);
         }
       }

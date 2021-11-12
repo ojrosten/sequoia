@@ -80,18 +80,7 @@ namespace sequoia::maths
     template<class... Args>
     size_type add_node(size_type parent, Args&&... args)
     {
-      if(const auto node{base_type::add_node(std::forward<Args>(args)...)})
-      {
-        if constexpr(link_dir != tree_link_direction::backward)
-        {
-          join(parent, node);
-        }
-        
-        if constexpr((link_dir != tree_link_direction::forward) && (Directedness != directed_flavour::undirected))
-        {
-          join(node, parent);
-        }
-      }
+      base_type::tree_join(tree_link_direction_constant<TreeLinkDir>{}, parent, std::forward<Args>(args)...);
     }
 
     // prune (subtle for backward edges)
