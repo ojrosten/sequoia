@@ -495,9 +495,7 @@ namespace sequoia::testing
     {
       commandline_arguments a{"foo", "--async"};
 
-      options_tree t{tree_initializer<option>{"--async", {}, {}, fo{}}};
-
-     // check_weak_equivalence(LINE("Early"), experimental::parse(a.size(), a.get(), {{"--async", {}, {}, fo{}}}), experimental::outcome{"foo", {{fo{}, nullptr, {}}}});
+      check_weak_equivalence(LINE("Early"), experimental::parse(a.size(), a.get(), {{{"--async", {}, {}, fo{}}}}), experimental::outcome{"foo", {{{fo{}, nullptr, {}}}}});
      // check_weak_equivalence(LINE("Late"), experimental::parse(a.size(), a.get(), {{"--async", {}, {}, nullptr, {}, fo{}}}), experimental::outcome{"foo", {{nullptr, fo{}, {}}}});
      // check_weak_equivalence(LINE("Both"), experimental::parse(a.size(), a.get(), {{"--async", {}, {}, fo{"x"}, {}, fo{"y"}}}), experimental::outcome{"foo", {{fo{"x"}, fo{"y"}, {}}}});
     }
