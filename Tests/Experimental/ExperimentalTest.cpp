@@ -52,7 +52,7 @@ namespace sequoia::testing
 
     };
 
-    using operations_tree = maths::graph<maths::directed_flavour::directed, maths::null_weight, operation>;
+    using operations_tree = maths::tree<maths::directed_flavour::directed, maths::tree_link_direction::forward, maths::null_weight, operation>;
     using operations_forest = std::vector<operations_tree>;
 
     struct outcome
@@ -62,114 +62,25 @@ namespace sequoia::testing
       std::string help{};
     };
 
-    template<class Tree>
-    class tree_adaptor
+    template<dynamic_tree T>
+    [[nodiscard]]
+    auto root_weight_iter(const basic_tree_adaptor<T>& adaptor)
     {
-    public:
-      using size_type = Tree::size_type;
-
-      tree_adaptor() = default;
-
-      tree_adaptor(Tree& tree, size_type node)
-        : m_pTree{&tree}
-        , m_Node{node}
-      {};
-
-      [[nodiscard]]
-      Tree& tree() noexcept
-      {
-        return *m_pTree;
-      }
-
-      [[nodiscard]]
-      const Tree& tree() const noexcept
-      {
-        return *m_pTree;
-      }
-
-      [[nodiscard]]
-      size_type node() const noexcept
-      {
-        return m_Node;
-      }
-
-      [[nodiscard]]
-      operator bool() const noexcept
-      {
-        return (m_pTree != nullptr) && (m_Node < m_pTree->order());
-      }
-
-      [[nodiscard]]
-      auto root_weight_iter() const
-      {
-        return m_pTree->cbegin_node_weights() + m_Node;
-      }
-
-      [[nodiscard]]
-      const auto& root_weight() const
-      {
-        return m_pTree->cbegin_node_weights()[m_Node];
-      }
-
-      template<std::invocable<operation&> Fn>
-      void mutate_root_weight(Fn fn)
-      {
-        m_pTree->mutate_node_weight(root_weight_iter(), fn);
-      }
-    private:
-      Tree* m_pTree{};
-      size_type m_Node{Tree::npos};
-    };
-
-    template<class Tree>
-    class const_tree_adaptor
+      return adaptor.tree().cbegin_node_weights() + adaptor.node();
+    }
+    
+    template<dynamic_tree T>
+    [[nodiscard]]
+    const auto& root_weight(const basic_tree_adaptor<T>& adaptor)
     {
-    public:
-      using size_type = Tree::size_type;
-
-      using tree_reference_type = const Tree&;
-
-      const_tree_adaptor() = default;
-
-      const_tree_adaptor(const Tree& tree, size_type node)
-        : m_pTree{&tree}
-        , m_Node{node}
-      {};
-
-      [[nodiscard]]
-      const Tree& tree() const noexcept
-      {
-        return *m_pTree;
-      }
-
-      [[nodiscard]]
-      size_type node() const noexcept
-      {
-        return m_Node;
-      }
-
-      [[nodiscard]]
-      operator bool() const noexcept
-      {
-        return (m_pTree != nullptr) && (m_Node < m_pTree->order());
-      }
-
-      [[nodiscard]]
-      auto root_weight_iter() const
-      {
-        return m_pTree->cbegin_node_weights() + m_Node;
-      }
-
-      [[nodiscard]]
-      const auto& root_weight() const
-      {
-        return m_pTree->cbegin_node_weights()[m_Node];
-      }
-    private:
-      const Tree* m_pTree{};
-      size_type m_Node{Tree::npos};
-    };
-
+      return adaptor.tree().cbegin_node_weights()[adaptor.node()];
+    }
+    
+    template<dynamic_tree T, std::invocable<operation&> Fn>
+    void mutate_root_weight(basic_tree_adaptor<T>& adaptor, Fn fn)
+    {
+      adaptor.tree().mutate_node_weight(root_weight_iter(adaptor), fn);
+    }
 
     template<std::input_or_output_iterator Iterator, class TreeAdaptor>
     class forest_dereference_policy
@@ -206,53 +117,8 @@ namespace sequoia::testing
       static constexpr pointer get_ptr(reference ref) noexcept { return &ref; }
     };
 
-    template<std::input_or_output_iterator Iterator, class TreeAdaptor>
-    class forest_from_tree_dereference_policy
-    {
-    public:
-      using value_type = typename std::iterator_traits<Iterator>::value_type;
-      using proxy      = TreeAdaptor;
-      using pointer    = typename std::iterator_traits<Iterator>::pointer;
-      using reference  = typename std::iterator_traits<Iterator>::reference;
-      using tree_reference_type = typename TreeAdaptor::tree_reference_type;
-
-      // Hopefully get rid of this once MSVC bug fixed
-      constexpr forest_from_tree_dereference_policy() = default;
-      constexpr forest_from_tree_dereference_policy(tree_reference_type tree) : m_pTree{&tree} {}
-      constexpr forest_from_tree_dereference_policy(const forest_from_tree_dereference_policy&) = default;
-
-      [[nodiscard]]
-      friend constexpr bool operator==(const forest_from_tree_dereference_policy&, const forest_from_tree_dereference_policy&) noexcept = default;
-
-      [[nodiscard]]
-      friend constexpr bool operator!=(const forest_from_tree_dereference_policy&, const forest_from_tree_dereference_policy&) noexcept = default;
-    protected:
-      constexpr forest_from_tree_dereference_policy(forest_from_tree_dereference_policy&&) = default;
-
-      ~forest_from_tree_dereference_policy() = default;
-
-      constexpr forest_from_tree_dereference_policy& operator=(const forest_from_tree_dereference_policy&) = default;
-      constexpr forest_from_tree_dereference_policy& operator=(forest_from_tree_dereference_policy&&) = default;
-
-      [[nodiscard]]
-      constexpr proxy get(reference ref) const
-      {
-        return {*m_pTree, ref.target_node()};
-      }
-
-      [[nodiscard]]
-      static constexpr pointer get_ptr(reference ref) noexcept { return &ref; }
-    private:
-      using tree_pointer_type = std::remove_reference_t<tree_reference_type>*;
-
-      tree_pointer_type m_pTree{};
-    };
-
     template<std::input_or_output_iterator Iterator, class Adaptor>
     using forest_iterator = utilities::iterator<Iterator, forest_dereference_policy<Iterator, Adaptor>>;
-
-    template<std::input_or_output_iterator Iterator, class Adaptor>
-    using forest_from_tree_iterator = utilities::iterator<Iterator, forest_from_tree_dereference_policy<Iterator, Adaptor>>;
 
     struct current_operation
     {
@@ -260,9 +126,8 @@ namespace sequoia::testing
       bool current_op_complete{};
     };
 
-
-    using options_tree = maths::graph<maths::directed_flavour::directed, maths::null_weight, option>;
-    using options_forest = std::vector<options_tree>;
+    using options_tree        = maths::tree<maths::directed_flavour::directed, maths::tree_link_direction::forward, maths::null_weight, option>;
+    using options_forest      = std::vector<options_tree>;
     using current_option_tree = const_tree_adaptor<options_tree>;
 
     class argument_parser
@@ -327,7 +192,7 @@ namespace sequoia::testing
           {
             const auto optionsIter{std::find_if(beginOptions, endOptions,
               [arg](const auto& tree) {
-                return (tree.root_weight().name == arg) || is_alias(tree.root_weight(), arg);
+                return (root_weight(tree).name == arg) || is_alias(root_weight(tree), arg);
               })
             };
 
@@ -357,13 +222,13 @@ namespace sequoia::testing
           {
             if(!currentOptionTree) throw std::logic_error{"Current option not found"};
 
-            if(currentOperation.tree.root_weight().arguments.size() < currentOptionTree.root_weight().parameters.size())
+            if(root_weight(currentOperation.tree).arguments.size() < root_weight(currentOptionTree).parameters.size())
             {
-              currentOperation.tree.mutate_root_weight([arg](auto& w){ w.arguments.emplace_back(arg); });
+              mutate_root_weight(currentOperation.tree, [arg](auto& w){ w.arguments.emplace_back(arg); });
             }
           }
 
-          if(currentOperation.tree.root_weight().arguments.size() == currentOptionTree.root_weight().parameters.size())
+          if(root_weight(currentOperation.tree).arguments.size() == root_weight(currentOptionTree).parameters.size())
           {
             currentOperation.current_op_complete = true;
             const auto node{currentOptionTree.node()};
@@ -381,12 +246,12 @@ namespace sequoia::testing
 
       if(    !m_Operations.empty()
          && currentOptionTree
-         && (currentOperation.tree.root_weight().arguments.size() != currentOptionTree.root_weight().parameters.size()))
+         && (root_weight(currentOperation.tree).arguments.size() != root_weight(currentOptionTree).parameters.size()))
       {
-        const auto& params{currentOptionTree.root_weight().parameters};
+        const auto& params{root_weight(currentOptionTree).parameters};
         const auto expected{params.size()};
         auto mess{std::string{"while parsing option \""}
-                    .append(currentOptionTree.root_weight().name)
+                    .append(root_weight(currentOptionTree).name)
                     .append("\": expected ")
                     .append(std::to_string(expected))
                     .append(pluralize(expected, "argument"))
@@ -398,7 +263,7 @@ namespace sequoia::testing
           if(std::distance(i, params.end()) > 1) mess.append(", ");
         }
 
-        const auto actual{currentOperation.tree.root_weight().arguments.size()};
+        const auto actual{root_weight(currentOperation.tree).arguments.size()};
         mess.append("], but found ").append(std::to_string(actual)).append(pluralize(actual, "argument"));
 
         throw std::runtime_error{error(mess)};
@@ -409,10 +274,10 @@ namespace sequoia::testing
     {
       if(topLevel == top_level::yes)
       {
-        if(!currentOptionTree.root_weight().early && !currentOptionTree.root_weight().late)
+        if(!root_weight(currentOptionTree).early && !root_weight(currentOptionTree).late)
           throw std::logic_error{error("Commandline option not bound to a function object")};
 
-        m_Operations.push_back({{currentOptionTree.root_weight().early, currentOptionTree.root_weight().late, {}}, forward_tree_type{}});
+        m_Operations.push_back({{root_weight(currentOptionTree).early, root_weight(currentOptionTree).late, {}}});
         currentOperation = {{m_Operations.back(), 0}};
       }
       else
@@ -422,8 +287,7 @@ namespace sequoia::testing
 
         auto& operationTree{m_Operations.back()};
 
-        const auto node{operationTree.add_node(currentOptionTree.root_weight().early, currentOptionTree.root_weight().late)};
-        operationTree.join(currentOptionTree.node(), node);
+        const auto node{operationTree.add_node(currentOptionTree.node(), root_weight(currentOptionTree).early, root_weight(currentOptionTree).late)};
         currentOperation = {{m_Operations.back(), node}};
 
         // TO DO: incorporate this
@@ -461,7 +325,7 @@ namespace sequoia::testing
             const auto alias{std::string{'-'} + c};
 
             auto optionsIter{std::find_if(beginOptions, endOptions,
-              [arg](const auto& tree) { return tree.root_weight().name == arg; })};
+              [arg](const auto& tree) { return root_weight(tree).name == arg; })};
 
             // TO DO need to deal with the case where rollback is allowed
             if(optionsIter == endOptions)
@@ -631,7 +495,7 @@ namespace sequoia::testing
     {
       commandline_arguments a{"foo", "--async"};
 
-      options_tree t{tree_initializer<option>{"--async", {}, {}, fo{}}, forward_tree_type{}};
+      options_tree t{tree_initializer<option>{"--async", {}, {}, fo{}}};
 
      // check_weak_equivalence(LINE("Early"), experimental::parse(a.size(), a.get(), {{"--async", {}, {}, fo{}}}), experimental::outcome{"foo", {{fo{}, nullptr, {}}}});
      // check_weak_equivalence(LINE("Late"), experimental::parse(a.size(), a.get(), {{"--async", {}, {}, nullptr, {}, fo{}}}), experimental::outcome{"foo", {{nullptr, fo{}, {}}}});

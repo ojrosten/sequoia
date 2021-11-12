@@ -12,6 +12,50 @@
 
 namespace sequoia::testing
 {
+  namespace
+  {
+    template<std::input_or_output_iterator Iterator>
+    class scaling_dereference_policy
+    {
+    public:
+      using value_type = typename std::iterator_traits<Iterator>::value_type;
+      using proxy      = value_type;
+      using pointer    = typename std::iterator_traits<Iterator>::pointer;
+      using reference  = typename std::iterator_traits<Iterator>::reference;
+
+      constexpr scaling_dereference_policy() = default;
+      constexpr scaling_dereference_policy(const value_type scale) : m_Scale{scale} {}
+      constexpr scaling_dereference_policy(const scaling_dereference_policy&) = default;
+
+      [[nodiscard]]
+      constexpr value_type scale() const noexcept { return m_Scale; }
+
+      [[nodiscard]]
+      friend constexpr bool operator==(const scaling_dereference_policy&, const scaling_dereference_policy&) noexcept = default;
+
+      [[nodiscard]]
+      friend constexpr bool operator!=(const scaling_dereference_policy&, const scaling_dereference_policy&) noexcept = default;
+    protected:
+      constexpr scaling_dereference_policy(scaling_dereference_policy&&) noexcept = default;
+
+      ~scaling_dereference_policy() = default;
+
+      constexpr scaling_dereference_policy& operator=(const scaling_dereference_policy&)     = default;
+      constexpr scaling_dereference_policy& operator=(scaling_dereference_policy&&) noexcept = default;
+
+      [[nodiscard]]
+      constexpr proxy get(typename std::iterator_traits<Iterator>::reference ref) const noexcept
+      {
+        return ref * m_Scale;
+      }
+
+      [[nodiscard]]
+      static constexpr pointer get_ptr(reference ref) noexcept { return &ref; }
+    private:
+      value_type m_Scale{1};
+    };
+  }
+
   template<class DerefPolicy>
   concept scaling = sequoia::utilities::dereference_policy<DerefPolicy>
     && requires(DerefPolicy& d) { d.scale(); };

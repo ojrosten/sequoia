@@ -32,9 +32,8 @@ namespace sequoia::maths
 
   // TO DO: replace with constexpr bool once MSVC supports this
   template<class G>
-  concept dynamic_nodes = requires(G& g) {
-     g.add_node();
-  };
+  concept dynamic_nodes =    requires(std::remove_const_t<G>& g) { g.add_node(); } 
+                          || requires(std::remove_const_t<G> & g) { g.add_node(0); };
 
   // TO DO: replace with constexpr bool once MSVC supports this
   template<class G>
@@ -45,4 +44,10 @@ namespace sequoia::maths
 
   template<class G>
   concept static_network = network<G> && static_nodes<G>;
+
+  template<class T>
+  concept dynamic_tree = dynamic_network<T> && requires {
+    T::link_dir;
+  };
+
 }

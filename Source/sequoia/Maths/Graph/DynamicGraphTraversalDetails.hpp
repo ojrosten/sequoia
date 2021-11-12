@@ -30,6 +30,18 @@ namespace sequoia::maths::graph_impl
     }
   };
 
+  // TO DO: refine this
+  template<dynamic_tree G> struct traversal_tracking_traits<G>
+  {
+    using bitset = std::vector<bool>;
+
+    [[nodiscard]]
+    static bitset make_bitset(const G& g)
+    {
+      return bitset(g.order(), false);
+    }
+  };
+
   template<class Container, class Compare>
   struct traversal_traits_base<std::priority_queue<std::size_t, Container, Compare>>
   {
