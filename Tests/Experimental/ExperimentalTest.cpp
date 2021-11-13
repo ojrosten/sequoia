@@ -34,22 +34,6 @@ namespace sequoia::testing
     {
       executor early, late;
       arg_list arguments;
-
-      // Hack
-      [[nodiscard]]
-      friend auto operator==(const operation& lhs, const operation& rhs) noexcept
-      {
-        return (static_cast<bool>(lhs.early) == static_cast<bool>(rhs.early))
-          && (static_cast<bool>(lhs.late) == static_cast<bool>(rhs.late))
-          && (lhs.arguments == rhs.arguments);
-      }
-
-      [[nodiscard]]
-      friend auto operator!=(const operation& lhs, const operation& rhs) noexcept
-      {
-        return !(lhs == rhs);
-      }
-
     };
 
     using operations_tree = maths::tree<maths::directed_flavour::directed, maths::tree_link_direction::forward, maths::null_weight, operation>;
@@ -75,7 +59,7 @@ namespace sequoia::testing
     {
       return adaptor.tree().cbegin_node_weights()[adaptor.node()];
     }
-    
+
     template<dynamic_tree T, std::invocable<operation&> Fn>
     void mutate_root_weight(basic_tree_adaptor<T>& adaptor, Fn fn)
     {
