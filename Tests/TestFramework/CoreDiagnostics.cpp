@@ -379,10 +379,10 @@ namespace sequoia::testing
     check_equivalence(LINE("Advice for equivalence checking"), foo{42}, 41, tutor{bland{}});
 
     check_equivalence(LINE("Advice for range equivalence, where the containerized form is explicitly specialized"),
-                      std::vector<foo>{{42}}, std::vector<int>{{41}}, tutor{bland{}});
+                      std::vector<foo>{{42}}, std::vector<int>{41}, tutor{bland{}});
 
     check_equivalence(LINE("Advice for range equivalence, where the containerized form is not explicitly specialized"),
-                      std::set<foo>{{42}}, std::set<int>{{41}}, tutor{bland{}});
+                      std::set<foo>{{42}}, std::set<int>{41}, tutor{bland{}});
   }
 
   void false_positive_diagnostics::test_weak_equivalence_checks()
@@ -557,10 +557,10 @@ namespace sequoia::testing
     check_equivalence(LINE("Advice for equivalence checking"), foo{42}, 42, tutor{bland{}});
 
     check_equivalence(LINE("Advice for range equivalence, where the containerized for is explicitly specialized"), 
-                      std::vector<foo>{{42}}, std::vector<int>{{42}}, tutor{bland{}});
+                      std::vector<foo>{{42}}, std::vector<int>{42}, tutor{bland{}});
 
     check_equivalence(LINE("Advice for range equivalence, where the containerized for is not explicitly specialized"),
-      std::set<foo>{{42}}, std::set<int>{{42}}, tutor{bland{}});
+      std::set<foo>{{42}}, std::set<int>{42}, tutor{bland{}});
   }
 
   void false_negative_diagnostics::test_weak_equivalence_checks()

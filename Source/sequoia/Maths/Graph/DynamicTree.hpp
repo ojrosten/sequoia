@@ -92,7 +92,7 @@ namespace sequoia::maths
   public:
     using value_type = Tree;
 
-    using size_type = Tree::size_type;
+    using size_type = typename Tree::size_type;
 
     basic_tree_adaptor() = default;
 
