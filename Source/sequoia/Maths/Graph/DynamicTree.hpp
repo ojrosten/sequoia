@@ -102,14 +102,14 @@ namespace sequoia::maths
     {};
 
     [[nodiscard]]
-    Tree& tree() noexcept
+    Tree& tree()
       requires (!std::is_const_v<Tree>)
     {
       return *m_pTree;
     }
 
     [[nodiscard]]
-    const Tree& tree() const noexcept
+    const Tree& tree() const
     {
       return *m_pTree;
     }
@@ -129,7 +129,7 @@ namespace sequoia::maths
     [[nodiscard]]
     explicit operator bool() const noexcept
     {
-      return (m_pTree != nullptr) && (m_Node < m_pTree->order());
+      return !empty() && (m_Node < m_pTree->order());
     }
 
     [[nodiscard]]
