@@ -260,6 +260,12 @@ int main(int argc, char** argv)
       streaming_free_test("Free Test")
     );
 
+    runner.add_test_family(
+      "Tree",
+      tree_false_positive_test("False Positive Test"),
+      tree_test("Unit Test")
+    );
+
     runner.execute(timer_resolution{1ms});
   }
   catch(const std::exception& e)

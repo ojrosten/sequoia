@@ -53,6 +53,8 @@ target_sources(TestAll PRIVATE ${TestDir}/Experimental/ExperimentalTest.cpp
                ${TestDir}/Maths/Graph/StaticGraphInitializationTest.cpp
                ${TestDir}/Maths/Graph/StaticGraphManipulationsTest.cpp
                ${TestDir}/Maths/Graph/StaticGraphTraversalsTest.cpp
+               ${TestDir}/Maths/Graph/TreeTest.cpp
+               ${TestDir}/Maths/Graph/TreeTestingDiagnostics.cpp
                ${TestDir}/Maths/Sequences/LinearSequenceTest.cpp
                ${TestDir}/Maths/Sequences/LinearSequenceTestingDiagnostics.cpp
                ${TestDir}/Maths/Sequences/MonotonicSequenceAllocationTest.cpp

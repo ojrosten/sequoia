@@ -50,6 +50,8 @@
 #include "Maths/Graph/StaticGraphInitializationTest.hpp"
 #include "Maths/Graph/StaticGraphManipulationsTest.hpp"
 #include "Maths/Graph/StaticGraphTraversalsTest.hpp"
+#include "Maths/Graph/TreeTest.hpp"
+#include "Maths/Graph/TreeTestingDiagnostics.hpp"
 #include "Maths/Sequences/LinearSequenceTest.hpp"
 #include "Maths/Sequences/LinearSequenceTestingDiagnostics.hpp"
 #include "Maths/Sequences/MonotonicSequenceAllocationTest.hpp"
