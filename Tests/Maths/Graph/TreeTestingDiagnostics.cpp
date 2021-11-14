@@ -9,6 +9,8 @@
 
 namespace sequoia::testing
 {
+  using namespace maths;
+
   [[nodiscard]]
   std::string_view tree_false_positive_test::source_file() const noexcept
   {
@@ -17,10 +19,10 @@ namespace sequoia::testing
 
   void tree_false_positive_test::run_tests()
   {
-    // For example:
+    tree<directed_flavour::directed, tree_link_direction::forward, null_weight, int> x{}, y{{1}};
 
-    // sequoia::maths::tree<Directedness, TreeLinkDir, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits> x{args}, y{different args};
     // check_equivalence(LINE("Useful Description"), x, something inequivalent - ordinarily this would fail);
-    // check_equality(LINE("Useful Description"), x, y);
+
+    check_equality(LINE(""), x, y);
   }
 }

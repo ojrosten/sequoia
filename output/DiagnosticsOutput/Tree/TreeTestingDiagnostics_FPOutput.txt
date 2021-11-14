@@ -1,0 +1,7 @@
+	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 26
+
+	[sequoia::maths::tree<1, 1, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> >]
+	operator== returned false
+
+	=======================================
+

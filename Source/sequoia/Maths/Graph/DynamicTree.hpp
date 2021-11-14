@@ -63,6 +63,8 @@ namespace sequoia::maths
     tree& operator=(const tree&)     = default;
     tree& operator=(tree&&) noexcept = default;
 
+    tree() = default;
+
     tree(tree_initializer<NodeWeight> tree)
       : base_type{tree, tree_link_direction_constant<TreeLinkDir>{}}
     {}
