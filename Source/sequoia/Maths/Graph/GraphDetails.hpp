@@ -28,6 +28,13 @@ namespace sequoia
   {
     enum class directed_flavour { undirected, directed };
 
+    template<directed_flavour Directedness>
+    struct directed_flavour_constant : std::integral_constant<directed_flavour, Directedness>
+    {};
+
+    using undirected_type = directed_flavour_constant<directed_flavour::undirected>;
+    using directed_type   = directed_flavour_constant<directed_flavour::directed>;
+
     [[nodiscard]]
     constexpr bool directed(const directed_flavour directedness) noexcept
     {
