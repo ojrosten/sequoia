@@ -1,7 +1,160 @@
-	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 26
+	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 35
+	Empty vs non-empty
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<sequoia::maths::tree<1, 1, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+	With equivalent types:
+	[sequoia::maths::tree_initializer<int>]
+
+	  Insufficient nodes detected while checking node 0
+	  [bool]
+	  check failed
+
+	=======================================
+
+	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 36
+	Incorrect weight
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<sequoia::maths::tree<1, 1, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+	With equivalent types:
+	[sequoia::maths::tree_initializer<int>]
+
+	  Node weight for node 0
+	  [int]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
+
+	=======================================
+
+	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 37
+	Too many children
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<sequoia::maths::tree<1, 1, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+	With equivalent types:
+	[sequoia::maths::tree_initializer<int>]
+
+	  Number of children for node 0
+	  [unsigned long long]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
+
+	=======================================
+
+	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 38
+	Incorrect child weight
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<sequoia::maths::tree<1, 1, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+	With equivalent types:
+	[sequoia::maths::tree_initializer<int>]
+
+	  Node weight for node 1
+	  [int]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 3
+
+	=======================================
+
+	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 39
+	Too few children
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<sequoia::maths::tree<1, 1, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+	With equivalent types:
+	[sequoia::maths::tree_initializer<int>]
+
+	  Number of children for node 0
+	  [unsigned long long]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 41
+	Too many grand children
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<sequoia::maths::tree<1, 1, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+	With equivalent types:
+	[sequoia::maths::tree_initializer<int>]
+
+	  Number of children for node 1
+	  [unsigned long long]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 42
+	Incorrect grand child weight
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<sequoia::maths::tree<1, 1, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+	With equivalent types:
+	[sequoia::maths::tree_initializer<int>]
+
+	  Node weight for node 2
+	  [int]
+	  operator== returned false
+	  Obtained : 4
+	  Predicted: 3
+
+	  Node weight for node 3
+	  [int]
+	  operator== returned false
+	  Obtained : 5
+	  Predicted: 4
+
+	=======================================
+
+	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 43
+	Too few grand children
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<sequoia::maths::tree<1, 1, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+	With equivalent types:
+	[sequoia::maths::tree_initializer<int>]
+
+	  Number of children for node 1
+	  [unsigned long long]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 3
+
+	=======================================
+
+	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 45
 
 	[sequoia::maths::tree<1, 1, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> >]
 	operator== returned false
+
+	=======================================
+
+	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 46
+
+	[sequoia::maths::tree<1, 1, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> >]
+	operator== returned false
+
+	=======================================
+
+	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 62
+	Empty vs non-empty
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+	With equivalent types:
+	[sequoia::maths::tree_initializer<int>]
+
+	  Insufficient nodes detected while checking node 0
+	  [bool]
+	  check failed
 
 	=======================================
 

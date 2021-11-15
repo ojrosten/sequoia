@@ -141,10 +141,10 @@ namespace sequoia
       a.graph().swap_nodes(a.index(), b.index());
     }
 
-    template<class N>
+    template<class NodeWeight>
     struct tree_initializer
     {
-      N node;
+      NodeWeight node;
       std::initializer_list<tree_initializer> children;
     };
 

@@ -19,5 +19,10 @@ namespace sequoia::testing
     std::string_view source_file() const noexcept final;
 
     void run_tests() final;
+
+    void test_forward_link_tree();
+    void test_backward_link_tree();
+    void test_symmetric_link_tree();
+    void test_undirected_tree();
   };
 }

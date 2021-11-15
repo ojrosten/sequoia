@@ -12,27 +12,138 @@
 
 namespace sequoia::testing
 {
-  template<maths::directed_flavour Directedness, maths::tree_link_direction TreeLinkDir, class EdgeWeight, class NodeWeight, class EdgeWeightCreator, class NodeWeightCreator, class EdgeStorageTraits, class NodeWeightStorageTraits >
+  template
+  <
+    maths::directed_flavour Directedness,
+    maths::tree_link_direction TreeLinkDir,
+    class EdgeWeight,
+    class NodeWeight,
+    class EdgeWeightCreator,
+    class NodeWeightCreator,
+    class EdgeStorageTraits,
+    class NodeWeightStorageTraits
+  >
+    requires (ownership::creator<EdgeWeightCreator> && ownership::creator<NodeWeightCreator>)
   struct detailed_equality_checker<sequoia::maths::tree<Directedness, TreeLinkDir, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>>
   {
-    using type = sequoia::maths::tree<Directedness, TreeLinkDir, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>;
+    using tree_type = sequoia::maths::tree<Directedness, TreeLinkDir, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>;
 
     template<test_mode Mode>
-    static void check(test_logger<Mode>& logger, const type& actual, const type& prediction)
+    static void check(test_logger<Mode>& logger, const tree_type& actual, const tree_type& prediction)
     {
       // e.g. check_equality("Description", logger, actual.method(), prediction.method());
     }
   };
 
-  template<maths::directed_flavour Directedness, maths::tree_link_direction TreeLinkDir, class EdgeWeight, class NodeWeight, class EdgeWeightCreator, class NodeWeightCreator, class EdgeStorageTraits, class NodeWeightStorageTraits>
+  template
+  <
+    maths::directed_flavour Directedness,
+    maths::tree_link_direction TreeLinkDir,
+    class EdgeWeight,
+    class NodeWeight,
+    class EdgeWeightCreator,
+    class NodeWeightCreator,
+    class EdgeStorageTraits,
+    class NodeWeightStorageTraits
+  >
+    requires (ownership::creator<EdgeWeightCreator> && ownership::creator<NodeWeightCreator>)
   struct equivalence_checker<sequoia::maths::tree<Directedness, TreeLinkDir, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>>
   {
-    using type = sequoia::maths::tree<Directedness, TreeLinkDir, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>;
+    using tree_type = sequoia::maths::tree<Directedness, TreeLinkDir, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>;
+    using size_type = typename tree_type::size_type;
 
     template<test_mode Mode>
-    static void check(test_logger<Mode>& logger, const type& actual, const maths::tree_initializer<NodeWeight>& prediction)
+    static void check(test_logger<Mode>& logger, const tree_type& actual, const maths::tree_initializer<NodeWeight>& prediction)
     {
-      // e.g. check_equality("Description", logger, actual.method(), prediction);
+      check_node(logger, 0, actual, prediction);
+    }
+  private:
+    template<test_mode Mode>
+    static size_type check_node(test_logger<Mode>& logger, size_type node, const tree_type& actual, const maths::tree_initializer<NodeWeight>& prediction)
+    {
+      if(node == tree_type::npos) return node;
+
+      if(testing::check("Insufficient nodes detected while checking node " + std::to_string(node), logger, node < actual.order()))
+      {
+        check_equality("Node weight for node " + std::to_string(node), logger, actual.cbegin_node_weights()[node], prediction.node);
+
+        if(check_num_edges(logger, node, actual, prediction))
+        {
+          auto edgeIter{actual.cbegin_edges(node)};
+          const auto parent{node};
+          for(const auto& child : prediction.children)
+          {
+            if(!check_edge(logger, edgeIter++, parent, ++node, actual))
+              return tree_type::npos;
+
+            node = check_node(logger, node, actual, child);
+
+            if(node == tree_type::npos) break;
+          }
+
+          return node;
+        }
+      }
+
+      return tree_type::npos;
+    }
+
+    template<test_mode Mode>
+    static bool check_num_edges(test_logger<Mode>& logger, size_type node, const tree_type& actual, const maths::tree_initializer<NodeWeight>& prediction)
+    {
+      using std::distance;
+
+      if constexpr(TreeLinkDir == maths::tree_link_direction::forward)
+      {
+        return check_equality("Number of children for node " + std::to_string(node), logger, fixed_width_unsigned_cast(distance(actual.cbegin_edges(node), actual.cend_edges(node))), prediction.children.size());
+      }
+      else if constexpr(TreeLinkDir == maths::tree_link_direction::backward)
+      {
+        static_assert(dependent_false<tree_type>::value, "Not yet implemented");
+      }
+      else if constexpr(TreeLinkDir == maths::tree_link_direction::symmetric)
+      {
+        const auto dist{
+          [&actual,&logger,node](){
+            const auto d{fixed_width_unsigned_cast(distance(actual.cbegin_edges(node), actual.cend_edges(node)))};
+            return (node && testing::check("Return edge detected", logger, d > 0)) ? d - 1 : d;
+          }()
+        };
+
+        return check_equality("Number of children for node " + std::to_string(node), logger, dist, prediction.children.size());
+      }
+      else
+      {
+        static_assert(dependent_false<tree_type>::value);
+      }
+    }
+
+    template<test_mode Mode, std::input_or_output_iterator EdgeIter>
+    static bool check_edge(test_logger<Mode>& logger, EdgeIter iter, size_type parent, size_type nodeCounter, const tree_type& actual)
+    {
+      using std::distance;
+
+      if constexpr(TreeLinkDir == maths::tree_link_direction::forward)
+      {
+        const auto dist{distance(actual.cbegin_edges(parent), iter)};
+        const auto mess{std::string{"Index for child "}.append(std::to_string(dist)).append(" of node ").append(std::to_string(parent))};
+
+        return check_equality(mess, logger, iter->target_node(), nodeCounter);
+      }
+      else if constexpr(TreeLinkDir == maths::tree_link_direction::backward)
+      {
+        static_assert(dependent_false<tree_type>::value, "Not yet implemented");
+      }
+      else if constexpr(TreeLinkDir == maths::tree_link_direction::symmetric)
+      {
+        return true;
+      }
+      else
+      {
+        static_assert(dependent_false<tree_type>::value);
+      }
     }
   };
+
+  // TO DO: non-null edge weights
 }
