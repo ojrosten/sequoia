@@ -70,10 +70,9 @@ namespace sequoia::testing
         if(check_num_edges(logger, node, actual, prediction))
         {
           auto edgeIter{actual.cbegin_edges(node)};
-          const auto parent{node};
           for(const auto& child : prediction.children)
           {
-            if(!check_edge(logger, edgeIter++, parent, ++node, actual))
+            if(!check_edge(logger, edgeIter++, ++node, actual))
               return tree_type::npos;
 
             node = check_node(logger, node, actual, child);
@@ -119,12 +118,13 @@ namespace sequoia::testing
     }
 
     template<test_mode Mode, std::input_or_output_iterator EdgeIter>
-    static bool check_edge(test_logger<Mode>& logger, EdgeIter iter, size_type parent, size_type nodeCounter, const tree_type& actual)
+    static bool check_edge(test_logger<Mode>& logger, EdgeIter iter, size_type nodeCounter, const tree_type& actual)
     {
       using std::distance;
 
       if constexpr(TreeLinkDir == maths::tree_link_direction::forward)
       {
+        const auto parent{iter.partition_index()};
         const auto dist{distance(actual.cbegin_edges(parent), iter)};
         const auto mess{std::string{"Index for child "}.append(std::to_string(dist)).append(" of node ").append(std::to_string(parent))};
 
