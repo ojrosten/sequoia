@@ -591,14 +591,14 @@ namespace sequoia
 
         if(n)
         {
+          if constexpr((dir != tree_link_direction::forward) && (Connectivity::directedness == directed_flavour::directed))
+          {
+            join(n, parent);
+          }
+
           if constexpr(dir != tree_link_direction::backward)
           {
             join(parent, n);
-          }
-
-          if constexpr((dir != tree_link_direction::forward) && (Connectivity::directedness != directed_flavour::undirected))
-          {
-            join(n, parent);
           }
         }
 

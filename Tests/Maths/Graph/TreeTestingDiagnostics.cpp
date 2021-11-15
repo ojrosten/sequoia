@@ -60,7 +60,7 @@ namespace sequoia::testing
     tree w{{1, {{2, {{4}, {5}}}, {3}}}};
 
     check_equivalence(LINE("Empty vs non-empty"), x, initializer{1, {}});
-    /*check_equivalence(LINE("Incorrect weight"), y, initializer{0, {}});
+    check_equivalence(LINE("Incorrect weight"), y, initializer{0, {}});
     check_equivalence(LINE("Too many children"), z, initializer{1, {}});
     check_equivalence(LINE("Incorrect child weight"), z, initializer{1, {{3}}});
     check_equivalence(LINE("Too few children"), z, initializer{1, {{2}, {3}}});
@@ -70,7 +70,7 @@ namespace sequoia::testing
     check_equivalence(LINE("Too few grand children"), w, initializer{1, {{2, {{4}, {5}, {6}}}, {3}}});
 
     check_equality(LINE(""), x, y);
-    check_equality(LINE(""), y, z);*/
+    check_equality(LINE(""), y, z);
   }
 
   void tree_false_positive_test::test_undirected_tree()

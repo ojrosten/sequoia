@@ -70,6 +70,12 @@ namespace sequoia::testing
         if(check_num_edges(logger, node, actual, prediction))
         {
           auto edgeIter{actual.cbegin_edges(node)};
+          if constexpr(TreeLinkDir == maths::tree_link_direction::symmetric)
+          {
+            if(node && (edgeIter != actual.cend_edges(node)))
+              ++edgeIter;
+          }
+
           for(const auto& child : prediction.children)
           {
             if(!check_edge(logger, edgeIter++, ++node, actual))
@@ -102,14 +108,14 @@ namespace sequoia::testing
       }
       else if constexpr(TreeLinkDir == maths::tree_link_direction::symmetric)
       {
-        const auto dist{
+        const auto num{
           [&actual,&logger,node](){
-            const auto d{fixed_width_unsigned_cast(distance(actual.cbegin_edges(node), actual.cend_edges(node)))};
-            return (node && testing::check("Return edge detected", logger, d > 0)) ? d - 1 : d;
+            const auto dist{fixed_width_unsigned_cast(distance(actual.cbegin_edges(node), actual.cend_edges(node)))};
+            return (node && testing::check("Return edge detected", logger, dist > 0)) ? dist - 1 : dist;
           }()
         };
 
-        return check_equality("Number of children for node " + std::to_string(node), logger, dist, prediction.children.size());
+        return check_equality("Number of children for node " + std::to_string(node), logger, num, prediction.children.size());
       }
       else
       {
@@ -136,7 +142,11 @@ namespace sequoia::testing
       }
       else if constexpr(TreeLinkDir == maths::tree_link_direction::symmetric)
       {
-        return true;
+        const auto parent{iter.partition_index()};
+        const auto dist{distance(actual.cbegin_edges(parent), iter)};
+        const auto mess{std::string{"Index for child "}.append(std::to_string(dist)).append(" of node ").append(std::to_string(parent))};
+
+        return check_equality(mess, logger, iter->target_node(), nodeCounter);
       }
       else
       {
