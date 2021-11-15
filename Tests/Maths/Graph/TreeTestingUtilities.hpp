@@ -55,13 +55,13 @@ namespace sequoia::testing
     template<test_mode Mode>
     static void check(test_logger<Mode>& logger, const tree_type& actual, const maths::tree_initializer<NodeWeight>& prediction)
     {
-      check_node(logger, 0, actual, prediction);
+      check_node(logger, 0, tree_type::npos, actual, prediction);
     }
   private:
     using edge_iterator = typename tree_type::const_edge_iterator;
 
     template<test_mode Mode>
-    static size_type check_node(test_logger<Mode>& logger, size_type node, const tree_type& actual, const maths::tree_initializer<NodeWeight>& prediction)
+    static size_type check_node(test_logger<Mode>& logger, size_type node, size_type parent, const tree_type& actual, const maths::tree_initializer<NodeWeight>& prediction)
     {
       if(node == tree_type::npos) return node;
 
@@ -69,14 +69,14 @@ namespace sequoia::testing
       {
         check_equality("Node weight for node " + std::to_string(node), logger, actual.cbegin_node_weights()[node], prediction.node);
 
-        if(auto optIter{check_num_edges(logger, node, actual, prediction)})
+        if(auto optIter{check_num_edges(logger, node, parent, actual, prediction)})
         {
           for(const auto& child : prediction.children)
           {
             if(!check_edge(logger, (*optIter)++, ++node, actual))
               return tree_type::npos;
 
-            node = check_node(logger, node, actual, child);
+            node = check_node(logger, node, (*optIter).partition_index(), actual, child);
 
             if(node == tree_type::npos) break;
           }
@@ -89,7 +89,7 @@ namespace sequoia::testing
     }
 
     template<test_mode Mode>
-    static std::optional<edge_iterator> check_num_edges(test_logger<Mode>& logger, size_type node, const tree_type& actual, const maths::tree_initializer<NodeWeight>& prediction)
+    static std::optional<edge_iterator> check_num_edges(test_logger<Mode>& logger, size_type node, [[maybe_unused]] size_type parent, const tree_type& actual, const maths::tree_initializer<NodeWeight>& prediction)
     {
       using std::distance;
 
@@ -106,14 +106,22 @@ namespace sequoia::testing
       {
         const auto begin{actual.cbegin_edges(node)};
         const auto dist{fixed_width_unsigned_cast(distance(begin, actual.cend_edges(node)))};
+        using dist_t = decltype(dist);
 
         const auto num{
-          [&logger,node,dist](){
-            return (node && testing::check("Return edge detected", logger, dist > 0)) ? dist - 1 : dist;
+          [&logger,parent,dist,begin]() -> std::optional<dist_t> {
+            if(parent == tree_type::npos) return dist;
+
+            if(   testing::check("Return edge detected", logger, dist > 0)
+               && check_equality("Return edge target", logger, begin->target_node(), parent))
+              return dist - 1;
+
+            return std::nullopt;
           }()
         };
 
-        if(check_equality("Number of children for node " + std::to_string(node), logger, num, prediction.children.size()))
+        if(    num.has_value()
+            && check_equality("Number of children for node " + std::to_string(node), logger, num.value(), prediction.children.size()))
         {
           return num < dist ? std::next(begin) : begin;
         }
