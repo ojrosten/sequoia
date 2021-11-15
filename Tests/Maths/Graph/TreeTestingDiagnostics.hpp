@@ -24,5 +24,8 @@ namespace sequoia::testing
     void test_backward_link_tree();
     void test_symmetric_link_tree();
     void test_undirected_tree();
+
+    template<maths::tree_link_direction TreeLinkDir>
+    void test_tree(maths::tree_link_direction_constant<TreeLinkDir>);
   };
 }
