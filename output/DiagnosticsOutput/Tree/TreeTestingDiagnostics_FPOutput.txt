@@ -1,4 +1,4 @@
-	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 106
+	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 86
 	Directedness: directed / Tree Link Dir: forward - Empty vs non-empty
 
 	Comparison performed using:
@@ -12,7 +12,7 @@
 
 	=======================================
 
-	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 107
+	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 87
 	Directedness: directed / Tree Link Dir: forward - Incorrect weight
 
 	Comparison performed using:
@@ -28,7 +28,7 @@
 
 	=======================================
 
-	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 108
+	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 88
 	Directedness: directed / Tree Link Dir: forward - Too many children
 
 	Comparison performed using:
@@ -44,7 +44,7 @@
 
 	=======================================
 
-	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 109
+	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 89
 	Directedness: directed / Tree Link Dir: forward - Incorrect child weight
 
 	Comparison performed using:
@@ -60,7 +60,7 @@
 
 	=======================================
 
-	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 110
+	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 90
 	Directedness: directed / Tree Link Dir: forward - Too few children
 
 	Comparison performed using:
@@ -76,7 +76,7 @@
 
 	=======================================
 
-	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 112
+	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 92
 	Directedness: directed / Tree Link Dir: forward - Too many grand children
 
 	Comparison performed using:
@@ -92,7 +92,7 @@
 
 	=======================================
 
-	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 113
+	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 93
 	Directedness: directed / Tree Link Dir: forward - Incorrect grand child weight
 
 	Comparison performed using:
@@ -114,7 +114,7 @@
 
 	=======================================
 
-	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 114
+	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 94
 	Directedness: directed / Tree Link Dir: forward - Too few grand children
 
 	Comparison performed using:
@@ -130,7 +130,7 @@
 
 	=======================================
 
-	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 116
+	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 96
 	Directedness: directed / Tree Link Dir: forward
 
 	[sequoia::maths::tree<1, 1, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> >]
@@ -138,7 +138,7 @@
 
 	=======================================
 
-	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 117
+	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 97
 	Directedness: directed / Tree Link Dir: forward
 
 	[sequoia::maths::tree<1, 1, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> >]
@@ -146,7 +146,149 @@
 
 	=======================================
 
-	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 106
+	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 86
+	Directedness: directed / Tree Link Dir: backward - Empty vs non-empty
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<sequoia::maths::tree<1, 2, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+	With equivalent types:
+	[sequoia::maths::tree_initializer<int>]
+
+	  Insufficient nodes detected while checking node 0
+	  [bool]
+	  check failed
+
+	=======================================
+
+	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 87
+	Directedness: directed / Tree Link Dir: backward - Incorrect weight
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<sequoia::maths::tree<1, 2, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+	With equivalent types:
+	[sequoia::maths::tree_initializer<int>]
+
+	  Node weight for node 0
+	  [int]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
+
+	=======================================
+
+	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 88
+	Directedness: directed / Tree Link Dir: backward - Too many children
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<sequoia::maths::tree<1, 2, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+	With equivalent types:
+	[sequoia::maths::tree_initializer<int>]
+
+	  Extraneous nodes joined to node 0
+	  [bool]
+	  check failed
+
+	=======================================
+
+	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 89
+	Directedness: directed / Tree Link Dir: backward - Incorrect child weight
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<sequoia::maths::tree<1, 2, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+	With equivalent types:
+	[sequoia::maths::tree_initializer<int>]
+
+	  Node weight for node 1
+	  [int]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 3
+
+	=======================================
+
+	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 90
+	Directedness: directed / Tree Link Dir: backward - Too few children
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<sequoia::maths::tree<1, 2, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+	With equivalent types:
+	[sequoia::maths::tree_initializer<int>]
+
+	  Insufficient nodes detected while checking node 2
+	  [bool]
+	  check failed
+
+	=======================================
+
+	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 92
+	Directedness: directed / Tree Link Dir: backward - Too many grand children
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<sequoia::maths::tree<1, 2, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+	With equivalent types:
+	[sequoia::maths::tree_initializer<int>]
+
+	  Extraneous nodes joined to node 2
+	  [bool]
+	  check failed
+
+	=======================================
+
+	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 93
+	Directedness: directed / Tree Link Dir: backward - Incorrect grand child weight
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<sequoia::maths::tree<1, 2, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+	With equivalent types:
+	[sequoia::maths::tree_initializer<int>]
+
+	  Node weight for node 2
+	  [int]
+	  operator== returned false
+	  Obtained : 4
+	  Predicted: 3
+
+	  Node weight for node 3
+	  [int]
+	  operator== returned false
+	  Obtained : 5
+	  Predicted: 4
+
+	=======================================
+
+	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 94
+	Directedness: directed / Tree Link Dir: backward - Too few grand children
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<sequoia::maths::tree<1, 2, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+	With equivalent types:
+	[sequoia::maths::tree_initializer<int>]
+
+	  Return edge target
+	  [unsigned long long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 96
+	Directedness: directed / Tree Link Dir: backward
+
+	[sequoia::maths::tree<1, 2, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> >]
+	operator== returned false
+
+	=======================================
+
+	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 97
+	Directedness: directed / Tree Link Dir: backward
+
+	[sequoia::maths::tree<1, 2, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> >]
+	operator== returned false
+
+	=======================================
+
+	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 86
 	Directedness: directed / Tree Link Dir: symmetric - Empty vs non-empty
 
 	Comparison performed using:
@@ -160,7 +302,7 @@
 
 	=======================================
 
-	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 107
+	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 87
 	Directedness: directed / Tree Link Dir: symmetric - Incorrect weight
 
 	Comparison performed using:
@@ -176,7 +318,7 @@
 
 	=======================================
 
-	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 108
+	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 88
 	Directedness: directed / Tree Link Dir: symmetric - Too many children
 
 	Comparison performed using:
@@ -192,7 +334,7 @@
 
 	=======================================
 
-	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 109
+	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 89
 	Directedness: directed / Tree Link Dir: symmetric - Incorrect child weight
 
 	Comparison performed using:
@@ -208,7 +350,7 @@
 
 	=======================================
 
-	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 110
+	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 90
 	Directedness: directed / Tree Link Dir: symmetric - Too few children
 
 	Comparison performed using:
@@ -224,7 +366,7 @@
 
 	=======================================
 
-	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 112
+	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 92
 	Directedness: directed / Tree Link Dir: symmetric - Too many grand children
 
 	Comparison performed using:
@@ -240,7 +382,7 @@
 
 	=======================================
 
-	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 113
+	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 93
 	Directedness: directed / Tree Link Dir: symmetric - Incorrect grand child weight
 
 	Comparison performed using:
@@ -262,7 +404,7 @@
 
 	=======================================
 
-	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 114
+	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 94
 	Directedness: directed / Tree Link Dir: symmetric - Too few grand children
 
 	Comparison performed using:
@@ -278,7 +420,7 @@
 
 	=======================================
 
-	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 116
+	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 96
 	Directedness: directed / Tree Link Dir: symmetric
 
 	[sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> >]
@@ -286,7 +428,7 @@
 
 	=======================================
 
-	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 117
+	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 97
 	Directedness: directed / Tree Link Dir: symmetric
 
 	[sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> >]
@@ -294,7 +436,7 @@
 
 	=======================================
 
-	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 106
+	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 86
 	Directedness: undirected / Tree Link Dir: symmetric - Empty vs non-empty
 
 	Comparison performed using:
@@ -308,7 +450,7 @@
 
 	=======================================
 
-	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 107
+	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 87
 	Directedness: undirected / Tree Link Dir: symmetric - Incorrect weight
 
 	Comparison performed using:
@@ -324,7 +466,7 @@
 
 	=======================================
 
-	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 108
+	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 88
 	Directedness: undirected / Tree Link Dir: symmetric - Too many children
 
 	Comparison performed using:
@@ -340,7 +482,7 @@
 
 	=======================================
 
-	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 109
+	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 89
 	Directedness: undirected / Tree Link Dir: symmetric - Incorrect child weight
 
 	Comparison performed using:
@@ -356,7 +498,7 @@
 
 	=======================================
 
-	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 110
+	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 90
 	Directedness: undirected / Tree Link Dir: symmetric - Too few children
 
 	Comparison performed using:
@@ -372,7 +514,7 @@
 
 	=======================================
 
-	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 112
+	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 92
 	Directedness: undirected / Tree Link Dir: symmetric - Too many grand children
 
 	Comparison performed using:
@@ -388,7 +530,7 @@
 
 	=======================================
 
-	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 113
+	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 93
 	Directedness: undirected / Tree Link Dir: symmetric - Incorrect grand child weight
 
 	Comparison performed using:
@@ -410,7 +552,7 @@
 
 	=======================================
 
-	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 114
+	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 94
 	Directedness: undirected / Tree Link Dir: symmetric - Too few grand children
 
 	Comparison performed using:
@@ -426,7 +568,7 @@
 
 	=======================================
 
-	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 116
+	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 96
 	Directedness: undirected / Tree Link Dir: symmetric
 
 	[sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> >]
@@ -434,7 +576,7 @@
 
 	=======================================
 
-	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 117
+	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 97
 	Directedness: undirected / Tree Link Dir: symmetric
 
 	[sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> >]

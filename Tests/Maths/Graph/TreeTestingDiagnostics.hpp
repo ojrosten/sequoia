@@ -20,11 +20,6 @@ namespace sequoia::testing
 
     void run_tests() final;
 
-    void test_forward_link_tree();
-    void test_backward_link_tree();
-    void test_symmetric_link_tree();
-    void test_undirected_tree();
-
     template<maths::directed_flavour Directedness, maths::tree_link_direction TreeLinkDir>
     void test_tree(maths::directed_flavour_constant<Directedness>, maths::tree_link_direction_constant<TreeLinkDir>);
   };

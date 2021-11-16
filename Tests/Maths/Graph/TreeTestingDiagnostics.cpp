@@ -49,7 +49,7 @@ namespace sequoia::testing
     {
       auto message{std::string{"Directedness: "}.append(to_string(Directedness))
                .append(" / Tree Link Dir: ").append(to_string(TreeLinkDir))};
-      
+
       if(!m.empty()) message.append(" - ").append(m);
 
       return message;
@@ -64,29 +64,9 @@ namespace sequoia::testing
 
   void tree_false_positive_test::run_tests()
   {
-    test_forward_link_tree();
-    test_backward_link_tree();
-    test_symmetric_link_tree();
-    test_undirected_tree(); 
-  }
-
-  void tree_false_positive_test::test_forward_link_tree()
-  {
-    test_tree(directed_type{}, forward_tree_type{});
-  }
-
-  void tree_false_positive_test::test_backward_link_tree()
-  {
-
-  }
-
-  void tree_false_positive_test::test_symmetric_link_tree()
-  {
-    test_tree(directed_type{}, symmetric_tree_type{});
-  }
-
-  void tree_false_positive_test::test_undirected_tree()
-  {
+    test_tree(directed_type{},   forward_tree_type{});
+    test_tree(directed_type{},   backward_tree_type{});
+    test_tree(directed_type{},   symmetric_tree_type{});
     test_tree(undirected_type{}, symmetric_tree_type{});
   }
 

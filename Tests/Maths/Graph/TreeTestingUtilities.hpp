@@ -67,21 +67,51 @@ namespace sequoia::testing
 
       if(testing::check("Insufficient nodes detected while checking node " + std::to_string(node), logger, node < actual.order()))
       {
-        check_equality("Node weight for node " + std::to_string(node), logger, actual.cbegin_node_weights()[node], prediction.node);
-
-        if(auto optIter{check_num_edges(logger, node, parent, actual, prediction)})
+        if constexpr(TreeLinkDir != maths::tree_link_direction::backward)
         {
-          for(const auto& child : prediction.children)
+          check_equality("Node weight for node " + std::to_string(node), logger, actual.cbegin_node_weights()[node], prediction.node);
+
+          if(auto optIter{check_num_edges(logger, node, parent, actual, prediction)})
           {
-            if(!check_edge(logger, (*optIter)++, ++node, actual))
-              return tree_type::npos;
+            for(const auto& child : prediction.children)
+            {
+              if(!check_edge(logger, (*optIter)++, ++node, actual))
+                return tree_type::npos;
 
-            node = check_node(logger, node, (*optIter).partition_index(), actual, child);
+              node = check_node(logger, node, optIter->partition_index(), actual, child);
 
-            if(node == tree_type::npos) break;
+              if(node == tree_type::npos) return tree_type::npos;
+            }
+
+            return node;
           }
+        }
+        else
+        {
+          if(auto optIter{check_num_edges(logger, node, parent, actual, prediction)})
+          {
+            check_equality("Node weight for node " + std::to_string(node), logger, actual.cbegin_node_weights()[node], prediction.node);
 
-          return node;
+            for(const auto& child : prediction.children)
+            {
+              node = check_node(logger, ++node, optIter->partition_index(), actual, child);
+
+              if(node == tree_type::npos) return tree_type::npos;
+            }
+
+            if(const auto next{node + 1}; next < actual.order())
+            {
+              if(auto begin{actual.cbegin_edges(next)}; begin != actual.cend_edges(next))
+              {
+                if(!testing::check("Extraneous nodes joined to node " + std::to_string(node), logger, begin->target_node() != optIter->partition_index()))
+                {
+                  return tree_type::npos;
+                }
+              }
+            }
+
+            return node;
+          }
         }
       }
 
@@ -98,11 +128,7 @@ namespace sequoia::testing
         if(check_equality("Number of children for node " + std::to_string(node), logger, fixed_width_unsigned_cast(distance(actual.cbegin_edges(node), actual.cend_edges(node))), prediction.children.size()))
           return actual.cbegin_edges(node);
       }
-      else if constexpr(TreeLinkDir == maths::tree_link_direction::backward)
-      {
-        static_assert(dependent_false<tree_type>::value, "Not yet implemented");
-      }
-      else if constexpr(TreeLinkDir == maths::tree_link_direction::symmetric)
+      else
       {
         const auto begin{actual.cbegin_edges(node)};
         const auto dist{fixed_width_unsigned_cast(distance(begin, actual.cend_edges(node)))};
@@ -120,15 +146,19 @@ namespace sequoia::testing
           }()
         };
 
-        if(    num.has_value()
-            && check_equality("Number of children for node " + std::to_string(node), logger, num.value(), prediction.children.size()))
+        if(num.has_value())
         {
-          return num < dist ? std::next(begin) : begin;
+          if constexpr(TreeLinkDir == maths::tree_link_direction::symmetric)
+          {
+            if(check_equality("Number of children for node " + std::to_string(node), logger, num.value(), prediction.children.size()))
+              return num < dist ? std::next(begin) : begin;
+          }
+          else
+          {
+            if(check_equality("No reachable children for node " + std::to_string(node), logger, num.value(), size_type{}))
+              return num < dist ? std::next(begin) : begin;
+          }
         }
-      }
-      else
-      {
-        static_assert(dependent_false<tree_type>::value);
       }
 
       return std::nullopt;
