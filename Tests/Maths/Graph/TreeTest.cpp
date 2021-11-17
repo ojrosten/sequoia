@@ -28,10 +28,15 @@ namespace sequoia::testing
   template<maths::directed_flavour Directedness, maths::tree_link_direction TreeLinkDir>
   void tree_test::test_tree(maths::directed_flavour_constant<Directedness>, maths::tree_link_direction_constant<TreeLinkDir>)
   {
-    tree<Directedness, TreeLinkDir, null_weight, int> x{}, y{{1}};
+    using tree_type = tree<Directedness, TreeLinkDir, null_weight, int>;
+    using initializer = tree_initializer<int>;
+    
+    tree_type x{}, y{{1}}, z{{1, {{2}}}};
 
-    check_equivalence(LINE(""), y, tree_initializer<int>{{1}});
+    check_equivalence(LINE(""), y, initializer{{1}});
+    check_equivalence(LINE(""), z, initializer{1, {{2}}});
 
     check_semantics(LINE(""), x, y);
+    check_semantics(LINE(""), z, y);
   }
 }

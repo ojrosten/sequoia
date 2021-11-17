@@ -73,11 +73,10 @@ namespace sequoia::testing
   template<maths::directed_flavour Directedness, maths::tree_link_direction TreeLinkDir>
   void tree_false_positive_test::test_tree(directed_flavour_constant<Directedness>, maths::tree_link_direction_constant<TreeLinkDir>)
   {
-    using tree = tree<directed_flavour::directed, TreeLinkDir, null_weight, int>;
+    using tree_type = tree<directed_flavour::directed, TreeLinkDir, null_weight, int>;
     using initializer = tree_initializer<int>;
 
-    tree x{}, y{{1}}, z{{1, {{2}}}};
-    tree w{{1, {{2, {{4}, {5}}}, {3}}}};
+    tree_type x{}, y{{1}}, z{{1, {{2}}}}, w{{1, {{2, {{4}, {5}}}, {3}}}};
 
     auto message{
       [](std::string_view m){ return make_message<Directedness, TreeLinkDir>(m); }
