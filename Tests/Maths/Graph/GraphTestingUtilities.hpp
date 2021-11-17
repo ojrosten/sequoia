@@ -32,7 +32,7 @@ namespace sequoia::testing
 
     // Details Checker
 
-    template<class Graph>
+    template<maths::network Graph>
     struct graph_detailed_equality_checker
     {
       using type = Graph;

@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include "GraphTestingUtilities.hpp"
+
 #include "sequoia/TestFramework/RegularTestCore.hpp"
 #include "sequoia/Maths/Graph/DynamicTree.hpp"
 
@@ -24,16 +26,9 @@ namespace sequoia::testing
     class NodeWeightStorageTraits
   >
     requires (ownership::creator<EdgeWeightCreator> && ownership::creator<NodeWeightCreator>)
-  struct detailed_equality_checker<sequoia::maths::tree<Directedness, TreeLinkDir, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>>
-  {
-    using tree_type = sequoia::maths::tree<Directedness, TreeLinkDir, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>;
-
-    template<test_mode Mode>
-    static void check(test_logger<Mode>& logger, const tree_type& actual, const tree_type& prediction)
-    {
-      // e.g. check_equality("Description", logger, actual.method(), prediction.method());
-    }
-  };
+  struct detailed_equality_checker<maths::tree<Directedness, TreeLinkDir, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>>
+    : impl::graph_detailed_equality_checker<maths::tree<Directedness, TreeLinkDir, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>>
+  {};
 
   template
   <

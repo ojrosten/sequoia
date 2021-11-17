@@ -65,6 +65,7 @@ namespace sequoia::maths
 
     tree() = default;
 
+    // TO DO: think about depth-like vs breadth-like initialization
     tree(tree_initializer<NodeWeight> tree)
       : base_type{tree, tree_link_direction_constant<TreeLinkDir>{}}
     {}
@@ -79,11 +80,14 @@ namespace sequoia::maths
       lhs.swap(rhs);
     }
 
+    // TO DO: think about whether this should/should not preserve initialization structure
     template<class... Args>
     size_type add_node(size_type parent, Args&&... args)
     {
       return base_type::tree_join(tree_link_direction_constant<TreeLinkDir>{}, parent, std::forward<Args>(args)...);
     }
+
+    // insert_node
 
     // prune (subtle for backward edges)
   };

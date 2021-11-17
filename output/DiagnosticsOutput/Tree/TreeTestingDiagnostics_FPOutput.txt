@@ -136,6 +136,40 @@
 	[sequoia::maths::tree<1, 1, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> >]
 	operator== returned false
 
+	  [sequoia::maths::connectivity<1, sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::maths::bucketed_edge_storage_traits, unsigned long long>, sequoia::ownership::spawner<sequoia::maths::null_weight> >]
+	  operator== returned false
+
+	    Connectivity order incorrect
+	    [unsigned long long]
+	    operator== returned false
+	    Obtained : 0
+	    Predicted: 1
+
+	  [sequoia::maths::graph_impl::node_storage<sequoia::ownership::spawner<int>, sequoia::maths::node_weight_storage_traits<int> >]
+	  operator== returned false
+
+	    Sizes different
+	    [unsigned long long]
+	    operator== returned false
+	    Obtained : 0
+	    Predicted: 1
+
+	    const_node_iter
+
+	      Container size wrong
+	      [unsigned long long]
+	      operator== returned false
+	      Obtained : 0
+	      Predicted: 1
+
+	    const_reverse_node_iter
+
+	      Container size wrong
+	      [unsigned long long]
+	      operator== returned false
+	      Obtained : 0
+	      Predicted: 1
+
 	=======================================
 
 	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 97
@@ -143,6 +177,46 @@
 
 	[sequoia::maths::tree<1, 1, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> >]
 	operator== returned false
+
+	  [sequoia::maths::connectivity<1, sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::maths::bucketed_edge_storage_traits, unsigned long long>, sequoia::ownership::spawner<sequoia::maths::null_weight> >]
+	  operator== returned false
+
+	    Connectivity size incorrect
+	    [unsigned long long]
+	    operator== returned false
+	    Obtained : 0
+	    Predicted: 1
+
+	    Connectivity order incorrect
+	    [unsigned long long]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 2
+
+	  [sequoia::maths::graph_impl::node_storage<sequoia::ownership::spawner<int>, sequoia::maths::node_weight_storage_traits<int> >]
+	  operator== returned false
+
+	    Sizes different
+	    [unsigned long long]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 2
+
+	    const_node_iter
+
+	      Container size wrong
+	      [unsigned long long]
+	      operator== returned false
+	      Obtained : 1
+	      Predicted: 2
+
+	    const_reverse_node_iter
+
+	      Container size wrong
+	      [unsigned long long]
+	      operator== returned false
+	      Obtained : 1
+	      Predicted: 2
 
 	=======================================
 
@@ -278,6 +352,40 @@
 	[sequoia::maths::tree<1, 2, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> >]
 	operator== returned false
 
+	  [sequoia::maths::connectivity<1, sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::maths::bucketed_edge_storage_traits, unsigned long long>, sequoia::ownership::spawner<sequoia::maths::null_weight> >]
+	  operator== returned false
+
+	    Connectivity order incorrect
+	    [unsigned long long]
+	    operator== returned false
+	    Obtained : 0
+	    Predicted: 1
+
+	  [sequoia::maths::graph_impl::node_storage<sequoia::ownership::spawner<int>, sequoia::maths::node_weight_storage_traits<int> >]
+	  operator== returned false
+
+	    Sizes different
+	    [unsigned long long]
+	    operator== returned false
+	    Obtained : 0
+	    Predicted: 1
+
+	    const_node_iter
+
+	      Container size wrong
+	      [unsigned long long]
+	      operator== returned false
+	      Obtained : 0
+	      Predicted: 1
+
+	    const_reverse_node_iter
+
+	      Container size wrong
+	      [unsigned long long]
+	      operator== returned false
+	      Obtained : 0
+	      Predicted: 1
+
 	=======================================
 
 	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 97
@@ -285,6 +393,46 @@
 
 	[sequoia::maths::tree<1, 2, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> >]
 	operator== returned false
+
+	  [sequoia::maths::connectivity<1, sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::maths::bucketed_edge_storage_traits, unsigned long long>, sequoia::ownership::spawner<sequoia::maths::null_weight> >]
+	  operator== returned false
+
+	    Connectivity size incorrect
+	    [unsigned long long]
+	    operator== returned false
+	    Obtained : 0
+	    Predicted: 1
+
+	    Connectivity order incorrect
+	    [unsigned long long]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 2
+
+	  [sequoia::maths::graph_impl::node_storage<sequoia::ownership::spawner<int>, sequoia::maths::node_weight_storage_traits<int> >]
+	  operator== returned false
+
+	    Sizes different
+	    [unsigned long long]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 2
+
+	    const_node_iter
+
+	      Container size wrong
+	      [unsigned long long]
+	      operator== returned false
+	      Obtained : 1
+	      Predicted: 2
+
+	    const_reverse_node_iter
+
+	      Container size wrong
+	      [unsigned long long]
+	      operator== returned false
+	      Obtained : 1
+	      Predicted: 2
 
 	=======================================
 
@@ -426,6 +574,40 @@
 	[sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> >]
 	operator== returned false
 
+	  [sequoia::maths::connectivity<1, sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::maths::bucketed_edge_storage_traits, unsigned long long>, sequoia::ownership::spawner<sequoia::maths::null_weight> >]
+	  operator== returned false
+
+	    Connectivity order incorrect
+	    [unsigned long long]
+	    operator== returned false
+	    Obtained : 0
+	    Predicted: 1
+
+	  [sequoia::maths::graph_impl::node_storage<sequoia::ownership::spawner<int>, sequoia::maths::node_weight_storage_traits<int> >]
+	  operator== returned false
+
+	    Sizes different
+	    [unsigned long long]
+	    operator== returned false
+	    Obtained : 0
+	    Predicted: 1
+
+	    const_node_iter
+
+	      Container size wrong
+	      [unsigned long long]
+	      operator== returned false
+	      Obtained : 0
+	      Predicted: 1
+
+	    const_reverse_node_iter
+
+	      Container size wrong
+	      [unsigned long long]
+	      operator== returned false
+	      Obtained : 0
+	      Predicted: 1
+
 	=======================================
 
 	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 97
@@ -433,6 +615,46 @@
 
 	[sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> >]
 	operator== returned false
+
+	  [sequoia::maths::connectivity<1, sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::maths::bucketed_edge_storage_traits, unsigned long long>, sequoia::ownership::spawner<sequoia::maths::null_weight> >]
+	  operator== returned false
+
+	    Connectivity size incorrect
+	    [unsigned long long]
+	    operator== returned false
+	    Obtained : 0
+	    Predicted: 2
+
+	    Connectivity order incorrect
+	    [unsigned long long]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 2
+
+	  [sequoia::maths::graph_impl::node_storage<sequoia::ownership::spawner<int>, sequoia::maths::node_weight_storage_traits<int> >]
+	  operator== returned false
+
+	    Sizes different
+	    [unsigned long long]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 2
+
+	    const_node_iter
+
+	      Container size wrong
+	      [unsigned long long]
+	      operator== returned false
+	      Obtained : 1
+	      Predicted: 2
+
+	    const_reverse_node_iter
+
+	      Container size wrong
+	      [unsigned long long]
+	      operator== returned false
+	      Obtained : 1
+	      Predicted: 2
 
 	=======================================
 
@@ -574,6 +796,40 @@
 	[sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> >]
 	operator== returned false
 
+	  [sequoia::maths::connectivity<1, sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::maths::bucketed_edge_storage_traits, unsigned long long>, sequoia::ownership::spawner<sequoia::maths::null_weight> >]
+	  operator== returned false
+
+	    Connectivity order incorrect
+	    [unsigned long long]
+	    operator== returned false
+	    Obtained : 0
+	    Predicted: 1
+
+	  [sequoia::maths::graph_impl::node_storage<sequoia::ownership::spawner<int>, sequoia::maths::node_weight_storage_traits<int> >]
+	  operator== returned false
+
+	    Sizes different
+	    [unsigned long long]
+	    operator== returned false
+	    Obtained : 0
+	    Predicted: 1
+
+	    const_node_iter
+
+	      Container size wrong
+	      [unsigned long long]
+	      operator== returned false
+	      Obtained : 0
+	      Predicted: 1
+
+	    const_reverse_node_iter
+
+	      Container size wrong
+	      [unsigned long long]
+	      operator== returned false
+	      Obtained : 0
+	      Predicted: 1
+
 	=======================================
 
 	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 97
@@ -581,6 +837,46 @@
 
 	[sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> >]
 	operator== returned false
+
+	  [sequoia::maths::connectivity<1, sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::maths::bucketed_edge_storage_traits, unsigned long long>, sequoia::ownership::spawner<sequoia::maths::null_weight> >]
+	  operator== returned false
+
+	    Connectivity size incorrect
+	    [unsigned long long]
+	    operator== returned false
+	    Obtained : 0
+	    Predicted: 2
+
+	    Connectivity order incorrect
+	    [unsigned long long]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 2
+
+	  [sequoia::maths::graph_impl::node_storage<sequoia::ownership::spawner<int>, sequoia::maths::node_weight_storage_traits<int> >]
+	  operator== returned false
+
+	    Sizes different
+	    [unsigned long long]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 2
+
+	    const_node_iter
+
+	      Container size wrong
+	      [unsigned long long]
+	      operator== returned false
+	      Obtained : 1
+	      Predicted: 2
+
+	    const_reverse_node_iter
+
+	      Container size wrong
+	      [unsigned long long]
+	      operator== returned false
+	      Obtained : 1
+	      Predicted: 2
 
 	=======================================
 
