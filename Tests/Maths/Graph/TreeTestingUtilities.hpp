@@ -120,13 +120,13 @@ namespace sequoia::testing
 
       if constexpr(TreeLinkDir == maths::tree_link_direction::forward)
       {
-        if(check_equality("Number of children for node " + std::to_string(node), logger, fixed_width_unsigned_cast(distance(actual.cbegin_edges(node), actual.cend_edges(node))), prediction.children.size()))
+        if(check_equality("Number of children for node " + std::to_string(node), logger, static_cast<std::size_t>(distance(actual.cbegin_edges(node), actual.cend_edges(node))), prediction.children.size()))
           return actual.cbegin_edges(node);
       }
       else
       {
         const auto begin{actual.cbegin_edges(node)};
-        const auto dist{fixed_width_unsigned_cast(distance(begin, actual.cend_edges(node)))};
+        const auto dist{static_cast<std::size_t>(distance(begin, actual.cend_edges(node)))};
         using dist_t = decltype(dist);
 
         const auto num{

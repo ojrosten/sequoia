@@ -33,7 +33,7 @@ namespace sequoia::testing
     
     tree_type x{}, y{{1}}, z{{1, {{2}}}};
 
-    check_equivalence(LINE(""), y, initializer{{1}});
+    check_equivalence(LINE(""), y, initializer{1});
     check_equivalence(LINE(""), z, initializer{1, {{2}}});
 
     check_semantics(LINE(""), x, y);
