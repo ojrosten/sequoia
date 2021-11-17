@@ -50,7 +50,7 @@ namespace sequoia::testing
 
     // Equivalence Checker
 
-    template<class Graph>
+    template<maths::network Graph>
     struct graph_equivalence_checker
     {
       using type = Graph;
@@ -82,7 +82,7 @@ namespace sequoia::testing
 
     // Weak Equivalence Checker
 
-    template<class Graph>
+    template<maths::network Graph>
     struct graph_weak_equivalence_checker
     {
       using type = Graph;
