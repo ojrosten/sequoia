@@ -21,5 +21,8 @@ namespace sequoia::testing
     std::string_view source_file() const noexcept final;
 
     void run_tests() final;
+
+    template<maths::directed_flavour Directedness, maths::tree_link_direction TreeLinkDir>
+    void test_tree(maths::directed_flavour_constant<Directedness>, maths::tree_link_direction_constant<TreeLinkDir>);
   };
 }

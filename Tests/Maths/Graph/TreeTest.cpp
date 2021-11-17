@@ -19,10 +19,18 @@ namespace sequoia::testing
 
   void tree_test::run_tests()
   {
-    tree<directed_flavour::directed, tree_link_direction::forward, null_weight, int> x{}, y{{1}};
+    test_tree(directed_type{},   forward_tree_type{});
+    test_tree(directed_type{},   backward_tree_type{});
+    test_tree(directed_type{},   symmetric_tree_type{});
+    test_tree(undirected_type{}, symmetric_tree_type{});
+  }
 
-    // check_equivalence(LINE("Useful Description"), x, something equivalent);
-    // check_equivalence(LINE("Useful Description"), y, something equivalent);
+  template<maths::directed_flavour Directedness, maths::tree_link_direction TreeLinkDir>
+  void tree_test::test_tree(maths::directed_flavour_constant<Directedness>, maths::tree_link_direction_constant<TreeLinkDir>)
+  {
+    tree<Directedness, TreeLinkDir, null_weight, int> x{}, y{{1}};
+
+    check_equivalence(LINE(""), y, tree_initializer<int>{{1}});
 
     check_semantics(LINE(""), x, y);
   }
