@@ -48,8 +48,8 @@ namespace sequoia::testing
       using nodes_equivalent_type = std::initializer_list<node_weight_type>;
 
       template<test_mode Mode>
-      requires (!std::is_empty_v<node_weight_type>)
-        static void check(test_logger<Mode>& logger, const type& graph, connectivity_equivalent_type connPrediction, nodes_equivalent_type nodesPrediction)
+        requires (!std::is_empty_v<node_weight_type>)
+      static void check(test_logger<Mode>& logger, const type& graph, connectivity_equivalent_type connPrediction, nodes_equivalent_type nodesPrediction)
       {
         using connectivity_t = typename type::connectivity_type;
         using nodes_t = typename type::nodes_type;
@@ -59,8 +59,8 @@ namespace sequoia::testing
       }
 
       template<test_mode Mode>
-      requires std::is_empty_v<node_weight_type>
-        static void check(test_logger<Mode>& logger, const type& graph, connectivity_equivalent_type connPrediction)
+        requires std::is_empty_v<node_weight_type>
+      static void check(test_logger<Mode>& logger, const type& graph, connectivity_equivalent_type connPrediction)
       {
         using connectivity_t = typename type::connectivity_type;
 
