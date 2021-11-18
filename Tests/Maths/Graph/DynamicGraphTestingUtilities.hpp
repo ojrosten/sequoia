@@ -26,13 +26,13 @@ namespace sequoia::testing
     maths::directed_flavour Directedness,
     class EdgeWeight,
     class NodeWeight,
-    class EdgeWeightPooling,
-    class NodeWeightPooling,
+    class EdgeWeightCreator,
+    class NodeWeightCreator,
     class EdgeStorageTraits,
     class NodeWeightStorageTraits
   >
-  struct detailed_equality_checker<maths::graph<Directedness, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>>
-    : impl::graph_detailed_equality_checker<maths::graph<Directedness, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>>
+  struct detailed_equality_checker<maths::graph<Directedness, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>>
+    : impl::graph_detailed_equality_checker<maths::graph<Directedness, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>>
   {};
 
   template
@@ -40,13 +40,13 @@ namespace sequoia::testing
     maths::directed_flavour Directedness,
     class EdgeWeight,
     class NodeWeight,
-    class EdgeWeightPooling,
-    class NodeWeightPooling,
+    class EdgeWeightCreator,
+    class NodeWeightCreator,
     class EdgeStorageTraits,
     class NodeWeightStorageTraits
   >
-  struct detailed_equality_checker<maths::embedded_graph<Directedness, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>>
-    : impl::graph_detailed_equality_checker<maths::embedded_graph<Directedness, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>>
+  struct detailed_equality_checker<maths::embedded_graph<Directedness, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>>
+    : impl::graph_detailed_equality_checker<maths::embedded_graph<Directedness, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>>
   {};
 
   // Equivalence Checkers
@@ -56,13 +56,13 @@ namespace sequoia::testing
     maths::directed_flavour Directedness,
     class EdgeWeight,
     class NodeWeight,
-    class EdgeWeightPooling,
-    class NodeWeightPooling,
+    class EdgeWeightCreator,
+    class NodeWeightCreator,
     class EdgeStorageTraits,
     class NodeWeightStorageTraits
   >
-  struct equivalence_checker<maths::graph<Directedness, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>>
-    : impl::graph_equivalence_checker<maths::graph<Directedness, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>>
+  struct equivalence_checker<maths::graph<Directedness, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>>
+    : impl::graph_equivalence_checker<maths::graph<Directedness, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>>
   {};
 
   template
@@ -70,13 +70,13 @@ namespace sequoia::testing
     maths::directed_flavour Directedness,
     class EdgeWeight,
     class NodeWeight,
-    class EdgeWeightPooling,
-    class NodeWeightPooling,
+    class EdgeWeightCreator,
+    class NodeWeightCreator,
     class EdgeStorageTraits,
     class NodeWeightStorageTraits
   >
-  struct equivalence_checker<maths::embedded_graph<Directedness, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>>
-    : impl::graph_equivalence_checker<maths::embedded_graph<Directedness, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>>
+  struct equivalence_checker<maths::embedded_graph<Directedness, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>>
+    : impl::graph_equivalence_checker<maths::embedded_graph<Directedness, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>>
   {};
 
   // Weak Equivalence
@@ -86,13 +86,13 @@ namespace sequoia::testing
     maths::directed_flavour Directedness,
     class EdgeWeight,
     class NodeWeight,
-    class EdgeWeightPooling,
-    class NodeWeightPooling,
+    class EdgeWeightCreator,
+    class NodeWeightCreator,
     class EdgeStorageTraits,
     class NodeWeightStorageTraits
   >
-  struct weak_equivalence_checker<maths::embedded_graph<Directedness, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>>
-    : impl::graph_weak_equivalence_checker<maths::embedded_graph<Directedness, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>>
+  struct weak_equivalence_checker<maths::embedded_graph<Directedness, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>>
+    : impl::graph_weak_equivalence_checker<maths::embedded_graph<Directedness, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>>
   {};
 
   // Edge Storage Traits
@@ -143,7 +143,7 @@ namespace sequoia::testing
     maths::graph_flavour GraphFlavour,
     class EdgeWeight,
     class NodeWeight,
-    class EdgeWeightPooling,
+    class EdgeWeightCreator,
     class NodeWeightStorage,
     class EdgeStorageTraits,
     class NodeWeightStorageTraits,
@@ -151,7 +151,7 @@ namespace sequoia::testing
   >
   struct graph_type_generator
   {
-    using graph_type = maths::graph<maths::to_directedness(GraphFlavour), EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightStorage, EdgeStorageTraits, NodeWeightStorageTraits>;
+    using graph_type = maths::graph<maths::to_directedness(GraphFlavour), EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightStorage, EdgeStorageTraits, NodeWeightStorageTraits>;
   };
 
   template
@@ -159,14 +159,14 @@ namespace sequoia::testing
     maths::graph_flavour GraphFlavour,
     class EdgeWeight,
     class NodeWeight,
-    class EdgeWeightPooling,
-    class NodeWeightPooling,
+    class EdgeWeightCreator,
+    class NodeWeightCreator,
     class EdgeStorageTraits,
     class NodeWeightStorageTraits
   >
-  struct graph_type_generator<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits, true>
+  struct graph_type_generator<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits, true>
   {
-    using graph_type = maths::embedded_graph<maths::to_directedness(GraphFlavour), EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>;
+    using graph_type = maths::embedded_graph<maths::to_directedness(GraphFlavour), EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>;
   };
 
   template
@@ -174,12 +174,12 @@ namespace sequoia::testing
     maths::graph_flavour GraphFlavour,
     class EdgeWeight,
     class NodeWeight,
-    class EdgeWeightPooling,
-    class NodeWeightPooling,
+    class EdgeWeightCreator,
+    class NodeWeightCreator,
     class EdgeStorageTraits,
     class NodeWeightStorageTraits
   >
-  using graph_type_generator_t = typename graph_type_generator<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>::graph_type;
+  using graph_type_generator_t = typename graph_type_generator<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>::graph_type;
 
   template <class EdgeWeight, class NodeWeight, class Test>
   class graph_test_helper
