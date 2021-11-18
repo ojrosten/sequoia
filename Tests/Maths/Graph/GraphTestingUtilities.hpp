@@ -22,8 +22,6 @@ namespace sequoia::testing
 {
   namespace impl
   {
-    // Detailed Equality Checker
-
     template<maths::network Graph>
     struct graph_detailed_equality_checker
     {
@@ -40,10 +38,8 @@ namespace sequoia::testing
       }
     };
 
-    // Equivalence Checker
-
-    template<maths::network Graph>
-    struct graph_equivalence_checker
+    template<maths::network Graph, class CheckFn>
+    struct graph_general_equivalence_checker
     {
       using type = Graph;
 
@@ -52,63 +48,40 @@ namespace sequoia::testing
       using nodes_equivalent_type = std::initializer_list<node_weight_type>;
 
       template<test_mode Mode>
-        requires (!std::is_empty_v<node_weight_type>)
-      static void check(test_logger<Mode>& logger, const type& graph, connectivity_equivalent_type connPrediction, nodes_equivalent_type nodesPrediction)
+      requires (!std::is_empty_v<node_weight_type>)
+        static void check(test_logger<Mode>& logger, const type& graph, connectivity_equivalent_type connPrediction, nodes_equivalent_type nodesPrediction)
       {
         using connectivity_t = typename type::connectivity_type;
         using nodes_t = typename type::nodes_type;
 
-        check_equivalence("", logger, static_cast<const connectivity_t&>(graph), connPrediction);
-        check_equivalence("", logger, static_cast<const nodes_t&>(graph), nodesPrediction);
+        CheckFn{}("", logger, static_cast<const connectivity_t&>(graph), connPrediction);
+        CheckFn{}("", logger, static_cast<const nodes_t&>(graph), nodesPrediction);
       }
 
       template<test_mode Mode>
-        requires std::is_empty_v<node_weight_type>
-      static void check(test_logger<Mode>& logger, const type& graph, connectivity_equivalent_type connPrediction)
+      requires std::is_empty_v<node_weight_type>
+        static void check(test_logger<Mode>& logger, const type& graph, connectivity_equivalent_type connPrediction)
       {
         using connectivity_t = typename type::connectivity_type;
 
-        check_equivalence("", logger, static_cast<const connectivity_t&>(graph), connPrediction);
+        CheckFn{}("", logger, static_cast<const connectivity_t&>(graph), connPrediction);
       }
     };
-
-    // Weak Equivalence Checker
 
     template<maths::network Graph>
-    struct graph_weak_equivalence_checker
-    {
-      using type = Graph;
+    using graph_equivalence_checker
+      = graph_general_equivalence_checker<Graph, decltype([](auto&&... args){ check_weak_equivalence(std::forward<decltype(args)>(args)...); })>;
 
-      using connectivity_equivalent_type = std::initializer_list<std::initializer_list<typename type::edge_init_type>>;
-      using node_weight_type = typename type::node_weight_type;
-      using nodes_equivalent_type = std::initializer_list<node_weight_type>;
-
-      template<test_mode Mode>
-        requires (!std::is_empty_v<node_weight_type>)
-      static void check(test_logger<Mode>& logger, const type& graph, connectivity_equivalent_type connPrediction, nodes_equivalent_type nodesPrediction)
-      {
-        using connectivity_t = typename type::connectivity_type;
-        using nodes_t = typename type::nodes_type;
-
-        check_weak_equivalence("", logger, static_cast<const connectivity_t&>(graph), connPrediction);
-        check_weak_equivalence("", logger, static_cast<const nodes_t&>(graph), nodesPrediction);
-      }
-
-      template<test_mode Mode>
-        requires std::is_empty_v<node_weight_type>
-      static void check(test_logger<Mode>& logger, const type& graph, connectivity_equivalent_type connPrediction)
-      {
-        using connectivity_t = typename type::connectivity_type;
-
-        check_weak_equivalence("", logger, static_cast<const connectivity_t&>(graph), connPrediction);
-      }
-    };
+    template<maths::network Graph>
+    using graph_weak_equivalence_checker
+      = graph_general_equivalence_checker<Graph, decltype([](auto&&... args){ check_weak_equivalence(std::forward<decltype(args)>(args)...); })>;
 
     template
     <
       maths::directed_flavour Directedness,
       class EdgeTraits,
-      class WeightMaker
+      class WeightMaker,
+      class CheckFn
     >
     struct connectivity_general_equivalence_checker
     {
@@ -118,15 +91,15 @@ namespace sequoia::testing
       using edge_type       = typename type::edge_type;
       using equivalent_type = std::initializer_list<std::initializer_list<edge_init_type>>;
 
-      template<test_mode Mode, class CheckFn>
-      static void check(test_logger<Mode>& logger, const type& connectivity, equivalent_type prediction, CheckFn fn)
+      template<test_mode Mode>
+      static void check(test_logger<Mode>& logger, const type& connectivity, equivalent_type prediction)
       {
         if(check_equality("Connectivity order incorrect", logger, connectivity.order(), prediction.size()))
         {
           for(edge_index_type i{}; i < connectivity.order(); ++i)
           {
             const auto message{"Partition " + std::to_string(i)};
-            fn(append_lines(message, "cedge_iterator"), logger, connectivity.cbegin_edges(i), connectivity.cend_edges(i), (prediction.begin() + i)->begin(), (prediction.begin() + i)->end());
+            CheckFn{}(append_lines(message, "cedge_iterator"), logger, connectivity.cbegin_edges(i), connectivity.cend_edges(i), (prediction.begin() + i)->begin(), (prediction.begin() + i)->end());
           }
         }
       }
@@ -155,7 +128,6 @@ namespace sequoia::testing
         {
           const auto message{std::string{"Partition "}.append(std::to_string(i))};
           check_range(append_lines(message, "cedge_iterator"), logger, connectivity.cbegin_edges(i), connectivity.cend_edges(i), prediction.cbegin_edges(i), prediction.cend_edges(i));
-
           check_range(append_lines(message, "credge_iterator"), logger, connectivity.crbegin_edges(i), connectivity.crend_edges(i), prediction.crbegin_edges(i), prediction.crend_edges(i));
         }
       }
@@ -169,19 +141,13 @@ namespace sequoia::testing
     class WeightMaker
   >
   struct equivalence_checker<maths::connectivity<Directedness, EdgeTraits, WeightMaker>>
-    : impl::connectivity_general_equivalence_checker<Directedness, EdgeTraits, WeightMaker>
-  {
-    using base_t = impl::connectivity_general_equivalence_checker<Directedness, EdgeTraits, WeightMaker>;
-
-    using type            = typename base_t::type;
-    using equivalent_type = typename base_t::equivalent_type;
-
-    template<test_mode Mode>
-    static void check(test_logger<Mode>& logger, const type& connectivity, equivalent_type prediction)
-    {
-      base_t::check(logger, connectivity, prediction, [](auto&&... args){ check_range_equivalence(std::forward<decltype(args)>(args)...); });
-    }
-  };
+    : impl::connectivity_general_equivalence_checker<
+        Directedness,
+        EdgeTraits,
+        WeightMaker,
+        decltype([](auto&&... args){ check_range_equivalence(std::forward<decltype(args)>(args)...); })
+      >
+  {};
 
   template
   <
@@ -190,19 +156,13 @@ namespace sequoia::testing
     class WeightMaker
   >
   struct weak_equivalence_checker<maths::connectivity<Directedness, EdgeTraits, WeightMaker>>
-    : impl::connectivity_general_equivalence_checker<Directedness, EdgeTraits, WeightMaker>
-  {
-    using base_t = impl::connectivity_general_equivalence_checker<Directedness, EdgeTraits, WeightMaker>;
-
-    using type            = typename base_t::type;
-    using equivalent_type = typename base_t::equivalent_type;
-
-    template<test_mode Mode>
-    static void check(test_logger<Mode>& logger, const type& connectivity, equivalent_type prediction)
-    {
-      base_t::check(logger, connectivity, prediction, [](auto&&... args){ check_range_weak_equivalence(std::forward<decltype(args)>(args)...); });
-    }
-  };
+    : impl::connectivity_general_equivalence_checker<
+        Directedness,
+        EdgeTraits,
+        WeightMaker,
+        decltype([](auto&&... args){ check_range_weak_equivalence(std::forward<decltype(args)>(args)...); })
+      >
+  {};
 
   constexpr bool mutual_info(const maths::graph_flavour flavour) noexcept
   {
