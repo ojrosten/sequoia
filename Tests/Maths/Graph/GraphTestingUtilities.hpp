@@ -103,6 +103,34 @@ namespace sequoia::testing
         check_weak_equivalence("", logger, static_cast<const connectivity_t&>(graph), connPrediction);
       }
     };
+
+    template
+    <
+      maths::directed_flavour Directedness,
+      class EdgeTraits,
+      class WeightMaker
+    >
+    struct connectivity_general_equivalence_checker
+    {
+      using type            = maths::connectivity<Directedness, EdgeTraits, WeightMaker>;
+      using edge_init_type  = typename type::edge_init_type;
+      using edge_index_type = typename type::edge_index_type;
+      using edge_type       = typename type::edge_type;
+      using equivalent_type = std::initializer_list<std::initializer_list<edge_init_type>>;
+
+      template<test_mode Mode, class CheckFn>
+      static void check(test_logger<Mode>& logger, const type& connectivity, equivalent_type prediction, CheckFn fn)
+      {
+        if(check_equality("Connectivity order incorrect", logger, connectivity.order(), prediction.size()))
+        {
+          for(edge_index_type i{}; i < connectivity.order(); ++i)
+          {
+            const auto message{"Partition " + std::to_string(i)};
+            fn(append_lines(message, "cedge_iterator"), logger, connectivity.cbegin_edges(i), connectivity.cend_edges(i), (prediction.begin() + i)->begin(), (prediction.begin() + i)->end());
+          }
+        }
+      }
+    };
   }
 
   template
@@ -141,24 +169,17 @@ namespace sequoia::testing
     class WeightMaker
   >
   struct equivalence_checker<maths::connectivity<Directedness, EdgeTraits, WeightMaker>>
+    : impl::connectivity_general_equivalence_checker<Directedness, EdgeTraits, WeightMaker>
   {
-    using type            = maths::connectivity<Directedness, EdgeTraits, WeightMaker>;
-    using edge_init_type  = typename type::edge_init_type;
-    using edge_index_type = typename type::edge_index_type;
-    using edge_type       = typename type::edge_type;
-    using equivalent_type = std::initializer_list<std::initializer_list<edge_init_type>>;
+    using base_t = impl::connectivity_general_equivalence_checker<Directedness, EdgeTraits, WeightMaker>;
+
+    using type            = typename base_t::type;
+    using equivalent_type = typename base_t::equivalent_type;
 
     template<test_mode Mode>
     static void check(test_logger<Mode>& logger, const type& connectivity, equivalent_type prediction)
     {
-      if(check_equality("Connectivity order incorrect", logger, connectivity.order(), prediction.size()))
-      {
-        for(edge_index_type i{}; i<connectivity.order(); ++i)
-        {
-          const auto message{"Partition " + std::to_string(i)};
-          check_range_equivalence(append_lines(message, "cedge_iterator"), logger, connectivity.cbegin_edges(i), connectivity.cend_edges(i), (prediction.begin() + i)->begin(), (prediction.begin() + i)->end());
-        }
-      }
+      base_t::check(logger, connectivity, prediction, [](auto&&... args){ check_range_equivalence(std::forward<decltype(args)>(args)...); });
     }
   };
 
@@ -169,23 +190,17 @@ namespace sequoia::testing
     class WeightMaker
   >
   struct weak_equivalence_checker<maths::connectivity<Directedness, EdgeTraits, WeightMaker>>
+    : impl::connectivity_general_equivalence_checker<Directedness, EdgeTraits, WeightMaker>
   {
-    using type            = maths::connectivity<Directedness, EdgeTraits, WeightMaker>;
-    using edge_init_type  = typename type::edge_init_type;
-    using edge_type       = typename type::edge_type;
-    using equivalent_type = std::initializer_list<std::initializer_list<edge_init_type>>;
+    using base_t = impl::connectivity_general_equivalence_checker<Directedness, EdgeTraits, WeightMaker>;
+
+    using type            = typename base_t::type;
+    using equivalent_type = typename base_t::equivalent_type;
 
     template<test_mode Mode>
     static void check(test_logger<Mode>& logger, const type& connectivity, equivalent_type prediction)
     {
-      if(check_equality("Connectivity order incorrect", logger, connectivity.order(), prediction.size()))
-      {
-        for(std::size_t i{}; i<connectivity.order(); ++i)
-        {
-          const std::string message{"Partition " + std::to_string(i)};
-          check_range_weak_equivalence(append_lines(message, "cedge_iterator"), logger, connectivity.cbegin_edges(i), connectivity.cend_edges(i), (prediction.begin()+i)->begin(), (prediction.begin() + i)->end());
-        }
-      }
+      base_t::check(logger, connectivity, prediction, [](auto&&... args){ check_range_weak_equivalence(std::forward<decltype(args)>(args)...); });
     }
   };
 
