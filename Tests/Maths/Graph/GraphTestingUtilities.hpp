@@ -22,15 +22,7 @@ namespace sequoia::testing
 {
   namespace impl
   {
-    template<class Edge> struct use_weak_equiv : std::false_type {};
-
-    template<class WeightHandler, std::integral IndexType>
-      requires ownership::handler<WeightHandler>
-    struct use_weak_equiv<maths::edge<WeightHandler, IndexType>> : std::true_type {};
-
-    template<class Edge> constexpr bool use_weak_equiv_v{use_weak_equiv<Edge>::value};
-
-    // Details Checker
+    // Detailed Equality Checker
 
     template<maths::network Graph>
     struct graph_detailed_equality_checker
@@ -163,16 +155,8 @@ namespace sequoia::testing
       {
         for(edge_index_type i{}; i<connectivity.order(); ++i)
         {
-          const auto message{std::string{"Partition "}.append(std::to_string(i))};
-
-          if constexpr(std::is_same_v<edge_type, edge_init_type>)
-          {
-            check_range(append_lines(message, "cedge_iterator"), logger, connectivity.cbegin_edges(i), connectivity.cend_edges(i), (prediction.begin()+i)->begin(), (prediction.begin() + i)->end());
-          }
-          else
-          {
-            check_range_equivalence(append_lines(message, "cedge_iterator"), logger, connectivity.cbegin_edges(i), connectivity.cend_edges(i), (prediction.begin()+i)->begin(), (prediction.begin() + i)->end());
-          }
+          const auto message{"Partition " + std::to_string(i)};
+          check_range_equivalence(append_lines(message, "cedge_iterator"), logger, connectivity.cbegin_edges(i), connectivity.cend_edges(i), (prediction.begin() + i)->begin(), (prediction.begin() + i)->end());
         }
       }
     }
@@ -235,14 +219,7 @@ namespace sequoia::testing
       requires (!std::is_empty_v<typename G::node_weight_type>)
     void check_graph(std::string_view description, const G& graph, std::initializer_list<std::initializer_list<E>> edges, std::initializer_list<typename G::node_weight_type> nodeWeights)
     {
-      if constexpr(impl::use_weak_equiv_v<typename G::edge_type>)
-      {
-        checker_t::check_weak_equivalence(description, graph, edges, nodeWeights);
-      }
-      else
-      {
-        checker_t::check_equivalence(description, graph, edges, nodeWeights);
-      }
+      checker_t::check_weak_equivalence(description, graph, edges, nodeWeights);
     }
 
     template
@@ -253,17 +230,10 @@ namespace sequoia::testing
       requires std::is_empty_v<typename G::node_weight_type>
     void check_graph(std::string_view description, const G& graph, std::initializer_list<std::initializer_list<E>> edges)
     {
-      if constexpr(impl::use_weak_equiv_v<typename G::edge_type>)
-      {
-        checker_t::check_weak_equivalence(description, graph, std::move(edges));
-      }
-      else
-      {
-        checker_t::check_equivalence(description, graph, std::move(edges));
-      }
+      checker_t::check_weak_equivalence(description, graph, edges);
     }
   protected:
-    graph_checker(graph_checker&&) noexcept = default;
+    graph_checker(graph_checker&&)            noexcept = default;
     graph_checker& operator=(graph_checker&&) noexcept = default;
 
     ~graph_checker() = default;
