@@ -70,7 +70,7 @@ namespace sequoia::testing
 
     template<maths::network Graph>
     using graph_equivalence_checker
-      = graph_general_equivalence_checker<Graph, decltype([](auto&&... args){ check_weak_equivalence(std::forward<decltype(args)>(args)...); })>;
+      = graph_general_equivalence_checker<Graph, decltype([](auto&&... args){ check_equivalence(std::forward<decltype(args)>(args)...); })>;
 
     template<maths::network Graph>
     using graph_weak_equivalence_checker
