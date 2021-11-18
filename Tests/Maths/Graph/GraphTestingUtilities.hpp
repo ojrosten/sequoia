@@ -99,7 +99,7 @@ namespace sequoia::testing
         using nodes_t = typename type::nodes_type;
 
         check_weak_equivalence("", logger, static_cast<const connectivity_t&>(graph), connPrediction);
-        check_equivalence("", logger, static_cast<const nodes_t&>(graph), nodesPrediction);
+        check_weak_equivalence("", logger, static_cast<const nodes_t&>(graph), nodesPrediction);
       }
 
       template<test_mode Mode>

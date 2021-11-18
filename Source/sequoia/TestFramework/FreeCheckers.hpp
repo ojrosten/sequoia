@@ -31,7 +31,7 @@
 
     If a detailed_equality_checker is supplied, then compile-time logic will ignore any attempt to
     serialize objects of type T. Typically, clients may expect a notification that operator== has returned
-    false (and, for consistency, notification that operator!= has returned true). There will then be a series of
+    false. There will then be a series of
     subsequent checks which will reveal the precise nature of the failure. For example, for vectors, one
     will be told whether the sizes differ and, if not, the element which is causing the difference
     between the two supposedly equal instances. If the vector holds a user-defined type then, so long as
@@ -158,6 +158,7 @@ namespace sequoia::testing
   requires std::derived_from<E, std::exception>
     struct exception_message_extractor<E>
   {
+    [[nodiscard]]
     static std::string get(const E& e) { return e.what(); }
   };
 
@@ -165,6 +166,7 @@ namespace sequoia::testing
   requires (!std::derived_from<E, std::exception>) && serializable<E>
     struct exception_message_extractor<E>
   {
+    [[nodiscard]]
     static std::string get(const E& e) { return to_string(e); }
   };
 
@@ -349,7 +351,7 @@ namespace sequoia::testing
    */
 
   template<test_mode Mode, class Customization, class Tag, class T, class S, class... U>
-    requires requires { Tag::template checker<T>; }
+  requires requires { Tag::template checker<T>;  Tag::fallback; }
   bool dispatch_check(std::string_view description, test_logger<Mode>& logger, Tag, const value_based_customization<Customization>& customization, const T& value, S&& s, U&&... u)
   {
     if constexpr(class_template_is_default_instantiable<Tag::template checker, T>)
@@ -363,7 +365,8 @@ namespace sequoia::testing
     }
     else
     {
-      static_assert(dependent_false<T>::value, "Unable to find an appropriate specialization of the equivalence_checker");
+      using fallback = typename Tag::fallback;
+      return dispatch_check(description, logger, fallback{}, customization, value, std::forward<S>(s), std::forward<U>(u)...);
     }
   }
 
@@ -507,24 +510,28 @@ namespace sequoia::testing
   template<test_mode Mode, class T, class S, class... U>
   bool check_equivalence(std::string_view description, test_logger<Mode>& logger, const T& value, S&& s, U&&... u)
   {
+    // Want this to fall back to equality if possible
     return dispatch_check(description, logger, equivalence_tag{}, value_based_customization<void>{}, value, std::forward<S>(s), std::forward<U>(u)...);
   }
 
   template<class Customization, test_mode Mode, class T, class S, class... U>
   bool check_equivalence(std::string_view description, test_logger<Mode>& logger, const value_based_customization<Customization>& customization, const T& value, S&& s, U&&... u)
   {
+    // Want this to fall back to equality if possible
     return dispatch_check(description, logger, equivalence_tag{}, customization, value, std::forward<S>(s), std::forward<U>(u)...);
   }
 
   template<test_mode Mode, class T, class S, class... U>
   bool check_weak_equivalence(std::string_view description, test_logger<Mode>& logger, const T& value, S&& s, U&&... u)
   {
+    // Want this to fall back to equiv if possible
     return dispatch_check(description, logger, weak_equivalence_tag{}, value_based_customization<void>{}, value, std::forward<S>(s), std::forward<U>(u)...);
   }
 
   template<class Customization, test_mode Mode, class T, class S, class... U>
   bool check_weak_equivalence(std::string_view description, test_logger<Mode>& logger, const value_based_customization<Customization>& customization, const T& value, S&& s, U&&... u)
   {
+    // Want this to fall back to equiv if possible
     return dispatch_check(description, logger, weak_equivalence_tag{}, customization, value, std::forward<S>(s), std::forward<U>(u)...);
   }
 

@@ -21,21 +21,20 @@
 
 namespace sequoia::testing
 {
-  /*! \brief class template, specializations of which implement detailed comparison of two instantiations of T;
+  /*! \brief class template, specializations of which implement detailed comparison of two instantiations of T.
       \anchor detailed_equality_checker_primary
    */
   template<class T> struct detailed_equality_checker;
 
-  /*! \brief class template, specializations of which implement comparison of two equivalent types
+  /*! \brief class template, specializations of which implement comparison between T and one or more equivalent types.
       \anchor equivalence_checker_primary
    */
-  template<class T, class... Us> struct equivalence_checker;
+  template<class T> struct equivalence_checker;
 
-
-  /*! \brief class template, specializations of which implement comparison of two weakly equivalent types;
+  /*! \brief class template, specializations of which implement comparison between T and one or more weakly equivalent types.
       \anchor weak_equivalence_checker_primary
    */
-  template<class T, class... Us> struct weak_equivalence_checker;
+  template<class T> struct weak_equivalence_checker;
 
   template<class T>
   inline constexpr bool has_equivalence_checker_v{class_template_is_default_instantiable<equivalence_checker, T>};
@@ -52,12 +51,16 @@ namespace sequoia::testing
   {
     template<class T>
     using checker = equivalence_checker<T>;
+
+    using fallback = equality_tag;
   };
 
   struct weak_equivalence_tag
   {
     template<class T>
     using checker = weak_equivalence_checker<T>;
+
+    using fallback = equivalence_tag;
   };
 
 

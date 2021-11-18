@@ -430,7 +430,7 @@ namespace sequoia::testing
     static void check(test_logger<Mode>& logger, const type& obtained, const type& prediction)
     {
       check_equality("Zeroth Argument", logger, obtained.zeroth_arg, prediction.zeroth_arg);
-      // TO DO fix this!!
+      // TO DO: fix this!!
       //check_weak_equivalence("Operations", logger, obtained.operations, prediction.operations);
       check_equality("Help", logger, obtained.help, prediction.help);
     }
