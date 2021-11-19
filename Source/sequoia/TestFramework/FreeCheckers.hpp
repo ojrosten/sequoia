@@ -280,8 +280,12 @@ namespace sequoia::testing
     constexpr bool delegate{has_detailed_equality_checker_v<T> || range<T>};
 
     static_assert(delegate || std::equality_comparable<T>,
-                  "Provide either a specialization of detailed_equality_checker or"
-                  "ensure operator== and != exists, together with a specialization of serializer");
+                  "If this is invoked directly from check_equality of check_range then"
+                  "provide either a specialization of detailed_equality_checker or"
+                  "ensure operator== and != exists, together with a specialization of serializer."
+                  "However, if this invoked via a fallback from either check_equivalence or"
+                  "check_weak_equivalence then consider specializing either equivalence_checker or"
+                  "weak_equivalence_checker");
 
     sentinel<Mode> sentry{logger, add_type_info<T>(description)};
 

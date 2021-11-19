@@ -46,7 +46,7 @@ namespace sequoia
       class EdgeTraits,
       class WeightMaker
     >
-    class connectivity : private WeightMaker
+    class connectivity
     {
       friend struct sequoia::impl::assignment_helper;
     protected:
@@ -927,6 +927,7 @@ namespace sequoia
       };
 
       // private data
+      [[no_unique_address]] WeightMaker m_WeightMaker{};
       edge_storage_type m_Edges;
 
       // constructor implementations
@@ -1002,7 +1003,7 @@ namespace sequoia
       [[nodiscard]]
       decltype(auto) make_edge_weight(Args&&... args)
       {
-        return WeightMaker::make(std::forward<Args>(args)...);
+        return m_WeightMaker.make(std::forward<Args>(args)...);
       }
 
       [[nodiscard]]

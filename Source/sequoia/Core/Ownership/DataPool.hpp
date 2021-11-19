@@ -144,15 +144,13 @@ namespace sequoia::ownership
 
       [[nodiscard]]
       friend bool operator==(const proxy& lhs, const proxy& rhs) noexcept
+        requires std::equality_comparable<T>
       {
         return lhs.get() == rhs.get();
       }
 
       [[nodiscard]]
-      friend bool operator!=(const proxy& lhs, const proxy& rhs) noexcept
-      {
-        return !(lhs == rhs);
-      }
+      friend bool operator!=(const proxy& lhs, const proxy& rhs) noexcept = default;
     private:
       std::shared_ptr<data_wrapper> m_Handle;
 

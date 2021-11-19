@@ -73,7 +73,7 @@ namespace sequoia::maths::graph_impl
   }
 
   template<class WeightMaker, class Traits>
-  class node_storage : private WeightMaker
+  class node_storage
   {
     friend struct sequoia::impl::assignment_helper;
 
@@ -324,6 +324,7 @@ namespace sequoia::maths::graph_impl
     }
 
     // private data
+    [[no_unique_address]] WeightMaker m_WeightMaker{};
     node_weight_container_type m_NodeWeights;
 
     // constructors impl
@@ -427,7 +428,7 @@ namespace sequoia::maths::graph_impl
     [[nodiscard]]
     decltype(auto) make_node_weight(Args&&... args)
     {
-      return WeightMaker::make(std::forward<Args>(args)...);
+      return m_WeightMaker.make(std::forward<Args>(args)...);
     }
   };
 
