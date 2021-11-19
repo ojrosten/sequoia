@@ -351,7 +351,7 @@ namespace sequoia::testing
    */
 
   template<test_mode Mode, class Customization, class Tag, class T, class S, class... U>
-  requires requires { Tag::template checker<T>;  Tag::fallback; }
+  requires requires { Tag::template checker<T>;  typename Tag::fallback; }
   bool dispatch_check(std::string_view description, test_logger<Mode>& logger, Tag, const value_based_customization<Customization>& customization, const T& value, S&& s, U&&... u)
   {
     if constexpr(class_template_is_default_instantiable<Tag::template checker, T>)
