@@ -1,13 +1,2 @@
 Static Graph Init
-Standard Top Level Checks:               956;  Failures:  1  [Deep checks: 15618]
-
-	Tests/Maths/Graph/StaticGraphInitializationTest.cpp, Line 101
-	2 bytes for each half edge and 2 for the partition data
-
-	[unsigned long long]
-	operator== returned false
-	Obtained : 5
-	Predicted: 4
-
-	=======================================
-
+Standard Top Level Checks:               956;  Failures:  0  [Deep checks: 15618]
