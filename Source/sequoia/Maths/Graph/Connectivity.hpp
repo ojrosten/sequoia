@@ -196,15 +196,13 @@ namespace sequoia
 
       [[nodiscard]]
       friend constexpr bool operator==(const connectivity& lhs, const connectivity& rhs) noexcept
+        requires std::equality_comparable<edge_type>
       {
         return lhs.m_Edges == rhs.m_Edges;
       }
 
       [[nodiscard]]
-      friend constexpr bool operator!=(const connectivity& lhs, const connectivity& rhs) noexcept
-      {
-        return !(lhs == rhs);
-      }
+      friend constexpr bool operator!=(const connectivity& lhs, const connectivity& rhs) noexcept = default;
     protected:
       using edge_iterator = typename edge_storage_type::partition_iterator;
       using init_t = std::initializer_list<std::initializer_list<edge_init_type>>;

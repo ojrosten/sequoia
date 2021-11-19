@@ -351,7 +351,7 @@ namespace sequoia::testing
    */
 
   template<test_mode Mode, class Customization, class Tag, class T, class S, class... U>
-  requires requires { Tag::template checker<T>;  typename Tag::fallback; }
+    requires requires { Tag::template checker<T>;  typename Tag::fallback; }
   bool dispatch_check(std::string_view description, test_logger<Mode>& logger, Tag, const value_based_customization<Customization>& customization, const T& value, S&& s, U&&... u)
   {
     if constexpr(class_template_is_default_instantiable<Tag::template checker, T>)
@@ -510,28 +510,24 @@ namespace sequoia::testing
   template<test_mode Mode, class T, class S, class... U>
   bool check_equivalence(std::string_view description, test_logger<Mode>& logger, const T& value, S&& s, U&&... u)
   {
-    // Want this to fall back to equality if possible
     return dispatch_check(description, logger, equivalence_tag{}, value_based_customization<void>{}, value, std::forward<S>(s), std::forward<U>(u)...);
   }
 
   template<class Customization, test_mode Mode, class T, class S, class... U>
   bool check_equivalence(std::string_view description, test_logger<Mode>& logger, const value_based_customization<Customization>& customization, const T& value, S&& s, U&&... u)
   {
-    // Want this to fall back to equality if possible
     return dispatch_check(description, logger, equivalence_tag{}, customization, value, std::forward<S>(s), std::forward<U>(u)...);
   }
 
   template<test_mode Mode, class T, class S, class... U>
   bool check_weak_equivalence(std::string_view description, test_logger<Mode>& logger, const T& value, S&& s, U&&... u)
   {
-    // Want this to fall back to equiv if possible
     return dispatch_check(description, logger, weak_equivalence_tag{}, value_based_customization<void>{}, value, std::forward<S>(s), std::forward<U>(u)...);
   }
 
   template<class Customization, test_mode Mode, class T, class S, class... U>
   bool check_weak_equivalence(std::string_view description, test_logger<Mode>& logger, const value_based_customization<Customization>& customization, const T& value, S&& s, U&&... u)
   {
-    // Want this to fall back to equiv if possible
     return dispatch_check(description, logger, weak_equivalence_tag{}, customization, value, std::forward<S>(s), std::forward<U>(u)...);
   }
 
