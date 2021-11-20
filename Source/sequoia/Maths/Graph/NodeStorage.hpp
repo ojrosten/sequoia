@@ -24,6 +24,7 @@
 #include "sequoia/Core/Utilities/UniformWrapper.hpp"
 #include "sequoia/Core/Ownership/DataPoolTraits.hpp"
 #include "sequoia/Maths/Graph/EdgesAndNodesUtilities.hpp"
+#include "sequoia/PlatformSpecific/Preprocessor.hpp"
 
 #include <type_traits>
 #include <algorithm>
@@ -324,7 +325,7 @@ namespace sequoia::maths::graph_impl
     }
 
     // private data
-    [[no_unique_address]] WeightMaker m_WeightMaker{};
+    NO_UNIQUE_ADDRESS WeightMaker m_WeightMaker{};
     node_weight_container_type m_NodeWeights;
 
     // constructors impl

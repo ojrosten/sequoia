@@ -18,6 +18,7 @@
 #include "sequoia/Core/Meta/TypeTraits.hpp"
 #include "sequoia/Core/Utilities/AssignmentUtilities.hpp"
 #include "sequoia/Core/Ownership/HandlerTraits.hpp"
+#include "sequoia/PlatformSpecific/Preprocessor.hpp"
 
 #include <limits>
 #include <set>
@@ -927,7 +928,7 @@ namespace sequoia
       };
 
       // private data
-      [[no_unique_address]] WeightMaker m_WeightMaker{};
+      NO_UNIQUE_ADDRESS WeightMaker m_WeightMaker{};
       edge_storage_type m_Edges;
 
       // constructor implementations

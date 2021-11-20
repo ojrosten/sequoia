@@ -15,7 +15,6 @@
 #include "sequoia/Maths/Graph/Connectivity.hpp"
 #include "sequoia/Maths/Graph/HeterogeneousNodeDetails.hpp"
 #include "sequoia/Core/Utilities/AssignmentUtilities.hpp"
-#include "sequoia/PlatformSpecific/Preprocessor.hpp"
 
 namespace sequoia
 {

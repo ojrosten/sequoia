@@ -36,6 +36,8 @@ namespace sequoia
     }
 
     #define MSVC_EMPTY_BASE_HACK __declspec(empty_bases)
+
+    #define NO_UNIQUE_ADDRESS [[msvc::no_unique_address]]
   #else
     #if defined(__clang__)
       using compiler_constant = clang_type;
@@ -50,6 +52,8 @@ namespace sequoia
     int iterator_debug_level() noexcept;
 
     #define MSVC_EMPTY_BASE_HACK
+
+    #define NO_UNIQUE_ADDRESS [[no_unique_address]]
   #endif
 
   inline constexpr bool with_msvc_v{std::is_same_v<compiler_constant, msvc_type>};
