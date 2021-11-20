@@ -115,9 +115,6 @@ namespace sequoia::testing
     };
   }
 
-  template<class Compare>
-  inline constexpr bool has_parens = requires() { &Compare::operator(); };
-
   template<class... Ts>
   struct equivalent_type_processor
   {
@@ -320,7 +317,7 @@ namespace sequoia::testing
       The comparison object either implements binary comparison for T or it is fed into check_range.
    */
   template<test_mode Mode, class Customization, class Compare, class T, class Advisor>
-    requires (std::invocable<Compare, T, T> || has_parens<Compare>)
+    requires (std::invocable<Compare, T, T> || sequoia::range<T>)
   bool dispatch_check(std::string_view description, test_logger<Mode>& logger, Compare compare, const value_based_customization<Customization>&, const T& obtained, const T& prediction, tutor<Advisor> advisor)
   {
     sentinel<Mode> sentry{logger, add_type_info<T>(description)};
@@ -329,13 +326,9 @@ namespace sequoia::testing
     {
       binary_comparison(sentry, std::move(compare), obtained, prediction, advisor);
     }
-    else if constexpr(sequoia::range<T>)
-    {
-      check_range("", logger, std::move(compare), value_based_customization<void>{}, obtained.begin(), obtained.end(), prediction.begin(), prediction.end(), advisor);
-    }
     else
     {
-      static_assert(dependent_false<T>::value, "Compare cannot consume T directly nor interpret as a range");
+      check_range("", logger, std::move(compare), value_based_customization<void>{}, obtained.begin(), obtained.end(), prediction.begin(), prediction.end(), advisor);
     }
 
     return !sentry.failure_detected();
@@ -371,7 +364,8 @@ namespace sequoia::testing
     }
   }
 
-  template<
+  template
+  <
     test_mode Mode,
     class ElementDispatchDiscriminator,
     class Customization,
@@ -538,7 +532,8 @@ namespace sequoia::testing
     return check_equality(description, logger, value, true, std::move(advisor));
   }
 
-  template<
+  template
+  <
     test_mode Mode,
     std::input_or_output_iterator Iter,
     std::sentinel_for<Iter> Sentinel,
@@ -557,7 +552,8 @@ namespace sequoia::testing
     return check_range(description, logger, equality_tag{}, value_based_customization<void>{}, first, last, predictionFirst, predictionLast, std::move(advisor));
   }
 
-  template<
+  template
+  <
     test_mode Mode,
     std::input_or_output_iterator Iter,
     std::sentinel_for<Iter> Sentinel,
@@ -576,7 +572,8 @@ namespace sequoia::testing
     return check_range(description, logger, equivalence_tag{}, value_based_customization<void>{}, first, last, predictionFirst, predictionLast, std::move(advisor));
   }
 
-  template<
+  template
+  <
     test_mode Mode,
     class Customization,
     std::input_or_output_iterator Iter,
@@ -597,7 +594,8 @@ namespace sequoia::testing
     return check_range(description, logger, equivalence_tag{}, customization, first, last, predictionFirst, predictionLast, std::move(advisor));
   }
 
-  template<
+  template
+  <
     test_mode Mode,
     std::input_or_output_iterator Iter,
     std::sentinel_for<Iter> Sentinel,
@@ -614,7 +612,8 @@ namespace sequoia::testing
     return check_range(description, logger, weak_equivalence_tag{}, value_based_customization<void>{}, first, last, predictionFirst, predictionLast);
   }
 
-  template<
+  template
+  <
     test_mode Mode,
     class Customization,
     std::input_or_output_iterator Iter,
@@ -622,13 +621,13 @@ namespace sequoia::testing
     std::input_or_output_iterator PredictionIter,
     std::sentinel_for<PredictionIter> PredictionSentinel
   >
-    bool check_range_weak_equivalence(std::string_view description,
-                                      test_logger<Mode>& logger,
-                                      const value_based_customization<Customization>& customization,
-                                      Iter first,
-                                      Sentinel last,
-                                      PredictionIter predictionFirst,
-                                      PredictionSentinel predictionLast)
+  bool check_range_weak_equivalence(std::string_view description,
+                                    test_logger<Mode>& logger,
+                                    const value_based_customization<Customization>& customization,
+                                    Iter first,
+                                    Sentinel last,
+                                    PredictionIter predictionFirst,
+                                    PredictionSentinel predictionLast)
   {
     return check_range(description, logger, weak_equivalence_tag{}, customization, first, last, predictionFirst, predictionLast);
   }
@@ -723,7 +722,8 @@ namespace sequoia::testing
       return testing::check_exception_thrown<E>(description, logger(), std::forward<Fn>(function), std::move(postprocessor));
     }
 
-    template<
+    template
+    <
       std::input_or_output_iterator Iter,
       std::sentinel_for<Iter> Sentinel,
       std::input_or_output_iterator PredictionIter,
@@ -740,7 +740,8 @@ namespace sequoia::testing
       return testing::check_range(description, logger(), first, last, predictionFirst, predictionLast, std::move(advisor));
     }
 
-    template<
+    template
+    <
       std::input_or_output_iterator Iter,
       std::sentinel_for<Iter> Sentinel,
       std::input_or_output_iterator PredictionIter,
