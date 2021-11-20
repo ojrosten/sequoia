@@ -266,24 +266,25 @@ namespace sequoia::testing
   /*! \brief The workhorse of equality checking, which takes responsibility for reflecting upon types
       and then dispatching, appropriately.
 
-      The input type, T, must either be equality comparable or possess a detailed_equality_checker, or both.
-      Generally, it will be the case that T does indeed overload operator==; anything beyond
-      the simplest user-defined types should be furnished with a detailed_equality_checker.
+      The input type, T, must either
+      
+       1. be equality comparable and/or possess a detailed_equality_checker;
+       2. be a range.
+
+      If this constraint is not satisfied there are several possible remedies:
+
+        1. Provide a specialization of detailed_equality_checker or ensure operator== and !=
+           exist, together with a specialization of serializer.
+
+        2. If the invocation arises from a fallback from either check_equivalence or
+           check_weak_equivalence then consider specializing either equivalence_checker or
+           weak_equivalence_checker.
    */
 
   template<test_mode Mode, class Customization, class T, class Advisor=null_advisor>
+    requires (has_detailed_equality_checker_v<T> || sequoia::range<T> || std::equality_comparable<T>)
   bool dispatch_check(std::string_view description, test_logger<Mode>& logger, equality_tag, const value_based_customization<Customization>&, const T& obtained, const T& prediction, [[maybe_unused]] tutor<Advisor> advisor={})
   {
-    constexpr bool delegate{has_detailed_equality_checker_v<T> || range<T>};
-
-    static_assert(delegate || std::equality_comparable<T>,
-                  "If this is invoked directly from check_equality of check_range then"
-                  "provide either a specialization of detailed_equality_checker or"
-                  "ensure operator== and != exists, together with a specialization of serializer."
-                  "However, if this invoked via a fallback from either check_equivalence or"
-                  "check_weak_equivalence then consider specializing either equivalence_checker or"
-                  "weak_equivalence_checker");
-
     sentinel<Mode> sentry{logger, add_type_info<T>(description)};
 
     if constexpr(std::equality_comparable<T>)
@@ -291,27 +292,24 @@ namespace sequoia::testing
       binary_comparison(sentry, std::equal_to<T>{}, obtained, prediction, advisor);
     }
 
-    if constexpr(delegate)
+    if constexpr (has_detailed_equality_checker_v<T>)
     {
-      if constexpr(has_detailed_equality_checker_v<T>)
+      if constexpr (checker_for<detailed_equality_checker<T>, Mode, T, T, tutor<Advisor>>)
       {
-        if constexpr(checker_for<detailed_equality_checker<T>, Mode, T, T, tutor<Advisor>>)
-        {
-          detailed_equality_checker<T>::check(logger, obtained, prediction, advisor);
-        }
-        else
-        {
-          detailed_equality_checker<T>::check(logger, obtained, prediction);
-        }
+        detailed_equality_checker<T>::check(logger, obtained, prediction, advisor);
       }
-      else if constexpr(range<T>)
+      else if constexpr (checker_for<detailed_equality_checker<T>, Mode, T, T>)
       {
-        check_range("", logger, std::begin(obtained), std::end(obtained), std::begin(prediction), std::end(prediction), advisor);
+        detailed_equality_checker<T>::check(logger, obtained, prediction);
       }
       else
       {
         static_assert(dependent_false<T>::value, "Unable to check detailed equality for Type");
       }
+    }
+    else if constexpr (sequoia::range<T>)
+    {
+      check_range("", logger, std::begin(obtained), std::end(obtained), std::begin(prediction), std::end(prediction), advisor);
     }
 
     return !sentry.failure_detected();
@@ -331,7 +329,7 @@ namespace sequoia::testing
     {
       binary_comparison(sentry, std::move(compare), obtained, prediction, advisor);
     }
-    else if constexpr(range<T>)
+    else if constexpr(sequoia::range<T>)
     {
       check_range("", logger, std::move(compare), value_based_customization<void>{}, obtained.begin(), obtained.end(), prediction.begin(), prediction.end(), advisor);
     }
@@ -360,7 +358,7 @@ namespace sequoia::testing
       using checker = typename Tag::template checker<T>;
       return general_equivalence_check<checker>(description, logger, customization, value, std::forward<S>(s), std::forward<U>(u)...);
     }
-    else if constexpr(range<T>)
+    else if constexpr(sequoia::range<T>)
     {
       return check_range(add_type_info<T>(description), logger, Tag{}, customization, std::begin(value), std::end(value), std::begin(std::forward<S>(s)), std::end(std::forward<S>(s)), std::forward<U>(u)...);
     }
