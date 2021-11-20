@@ -73,7 +73,7 @@ namespace sequoia::runtime
 
     if constexpr(with_msvc_v)
     {
-      cmd.append("-G \"Visual Studio 16 2019\"");
+      cmd.append("-G \"Visual Studio 17 2022\"");
     }
     else if constexpr(with_clang_v)
     {
