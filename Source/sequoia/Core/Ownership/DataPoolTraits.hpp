@@ -15,7 +15,7 @@
 namespace sequoia::ownership
 {
   template<class T>
-  inline constexpr bool creator = requires(T & a) {
+  concept creator = requires(T & a) {
     typename T::proxy;
     typename T::value_type;
 
