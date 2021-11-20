@@ -47,20 +47,6 @@ namespace sequoia::testing
       {}
 
       std::function<T()> fn;
-
-      // TO DO: investigate why MSVC requires this but clang does not
-      [[nodiscard]]
-      friend bool operator==(const object_info& lhs, const object_info& rhs) noexcept
-      {
-        return ((lhs.fn == nullptr) && (rhs.fn == nullptr)) || ((lhs.fn != nullptr) && (rhs.fn != nullptr));
-      }
-
-      [[nodiscard]]
-      friend bool operator!=(const object_info& lhs, const object_info& rhs) noexcept
-      {
-        return !(lhs == rhs);
-      }
-
     };
   }
 
