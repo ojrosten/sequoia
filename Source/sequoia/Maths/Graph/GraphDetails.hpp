@@ -196,7 +196,7 @@ namespace sequoia
 
       // TO DO: replace with contexpr bool once MSVC can cope with this
       template<class T>
-      concept has_reservable_partitions = requires(T& t) {
+      inline constexpr bool has_reservable_partitions = requires(T& t) {
         t.reserve_partition(0, 0);
       };
     }

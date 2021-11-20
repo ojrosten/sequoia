@@ -135,23 +135,21 @@ namespace sequoia::testing::impl
   {
     using auxiliary_data_policy<T>::auxiliary_data_policy;
   };
-
-  // TO DO: convert these 'concepts' to constexpr bools once MSVC stops bellyaching
   
   template<class Actions>
-  concept has_post_comparison_action = requires { &Actions::post_comparison_action; };
+  inline constexpr bool has_post_comparison_action = requires { &Actions::post_comparison_action; };
 
   template<class Actions>
-  concept has_post_move_action = requires { &Actions::post_move_action; };
+  inline constexpr bool has_post_move_action = requires { &Actions::post_move_action; };
 
   template<class Actions>
-  concept has_post_move_assign_action = requires { &Actions::post_move_assign_action; };
+  inline constexpr bool has_post_move_assign_action = requires { &Actions::post_move_assign_action; };
 
   template<class Actions>
-  concept has_post_swap_action = requires { &Actions::post_swap_action; };
+  inline constexpr bool has_post_swap_action = requires { &Actions::post_swap_action; };
 
   template<class Actions>
-  concept has_post_serialization_action = requires { &Actions::post_serialization_action; };
+  inline constexpr bool has_post_serialization_action = requires { &Actions::post_serialization_action; };
 
   //================================ comparisons ================================//
 

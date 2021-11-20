@@ -16,9 +16,8 @@
 
 namespace sequoia::ownership
 {
-  // TO DO: replace with contexpr bool once MSVC can cope with this
   template<class H>
-  concept handler = requires(H& h, typename H::handle_type& x, const typename H::handle_type& cx){
+  inline constexpr bool handler = requires(H& h, typename H::handle_type& x, const typename H::handle_type& cx){
     typename H::handle_type;
     typename H::elementary_type;
 

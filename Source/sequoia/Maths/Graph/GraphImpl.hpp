@@ -25,16 +25,10 @@ namespace sequoia
 
     namespace graph_impl
     {
-      // TO DO: trade below for adhoc if constexpr (requires ...) once supported by MSVC
-
       template<class N>
-      struct nodes_allocate : std::false_type
-      {};
-
-      template<class N>
-        requires requires { has_allocator_type<typename N::node_weight_container_type>; }
-      struct nodes_allocate<N> : std::true_type
-      {};
+      inline constexpr bool has_allocating_nodes = requires {
+        has_allocator_type<typename N::node_weight_container_type>;
+      };
 
       template<network Connectivity, class Nodes>
       class graph_iterator
@@ -494,7 +488,7 @@ namespace sequoia
             []([[maybe_unused]] const graph_primitive& in){
               if constexpr(!heteroNodes && !emptyNodes)
               {
-                if constexpr(graph_impl::nodes_allocate<Nodes>::value)
+                if constexpr(graph_impl::has_allocating_nodes<Nodes>)
                 {
                   return in.get_node_allocator();
                 }

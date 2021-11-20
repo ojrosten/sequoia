@@ -103,23 +103,20 @@ namespace sequoia::testing
     using value_type = void;
   };
 
-  // TO DO: trade for bool when supported by MSVC
   template<class T>
-  concept is_value_customizer = T::is_customizer_v;
+  inline constexpr bool is_value_customizer = requires { T::is_customizer_v; };
 
   namespace impl
   {
-    // TO DO: trade for bool when supported by MSVC
+    // TO DO: investigate if this 'concept' can be traded for a constexpr bool
     template<class Fn, class... Args>
     concept invocable_without_last_arg = (sizeof...(Args) > 0) && requires(Fn && fn, Args&&... args) {
       invoke_with_specified_args(fn, std::make_index_sequence<sizeof...(Args) - 1>(), std::forward<Args>(args)...);
     };
   }
 
-  // TO DO: trade for bool when supported by MSVC
-
   template<class Compare>
-  concept has_parens = requires() { &Compare::operator(); };
+  inline constexpr bool has_parens = requires() { &Compare::operator(); };
 
   template<class... Ts>
   struct equivalent_type_processor

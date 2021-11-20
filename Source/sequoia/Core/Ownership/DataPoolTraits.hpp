@@ -14,9 +14,8 @@
 
 namespace sequoia::ownership
 {
-  // TO DO: replace with contexpr bool once MSVC can cope with this
   template<class T>
-  concept creator = requires(T & a) {
+  inline constexpr bool creator = requires(T & a) {
     typename T::proxy;
     typename T::value_type;
 

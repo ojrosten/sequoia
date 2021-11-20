@@ -16,14 +16,11 @@
 
 namespace sequoia::testing::impl
 {
-  // TO DO: convert these 'concepts' to constexpr bools once MSVC stops bellyaching
+  template<class Actions>
+  inline constexpr bool has_post_copy_action = requires { &Actions::post_copy_action; };
 
   template<class Actions>
-  concept has_post_copy_action = requires { &Actions::post_copy_action; };
-
-  template<class Actions>
-  concept has_post_copy_assign_action = requires { &Actions::post_copy_assign_action; };
-
+  inline constexpr bool has_post_copy_assign_action = requires { &Actions::post_copy_assign_action; };
 
   template<test_mode Mode, class Actions, pseudoregular T, class... Args>
   bool do_check_copy_assign(test_logger<Mode>& logger, [[maybe_unused]] const Actions& actions, T& z, const T& y, const Args&... args)
