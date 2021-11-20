@@ -164,7 +164,6 @@ namespace sequoia::maths
     using reference           = typename std::iterator_traits<Iterator>::reference;
     using tree_reference_type = typename TreeAdaptor::value_type&;
 
-    // TO DO: Hopefully get rid of this once MSVC bug fixed
     constexpr forest_from_tree_dereference_policy() = default;
     constexpr forest_from_tree_dereference_policy(tree_reference_type tree) : m_pTree{&tree} {}
     constexpr forest_from_tree_dereference_policy(const forest_from_tree_dereference_policy&) = default;
