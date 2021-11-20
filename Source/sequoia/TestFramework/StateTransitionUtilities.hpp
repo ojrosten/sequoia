@@ -25,20 +25,6 @@ namespace sequoia::testing
     {
       std::string description;
       TransitionFn fn;
-
-      // TO DO: investigate why MSVC requires this but clang does not
-      [[nodiscard]]
-      friend bool operator==(const transition_info_base& lhs, const transition_info_base& rhs) noexcept
-      {
-        return (lhs.description == rhs.description) &&
-               (((lhs.fn == nullptr) && (rhs.fn == nullptr)) || ((lhs.fn != nullptr) && (rhs.fn != nullptr)));
-      }
-
-      [[nodiscard]]
-      friend bool operator!=(const transition_info_base& lhs, const transition_info_base& rhs) noexcept
-      {
-        return !(lhs == rhs);
-      }
     };
 
     template<class T, invocable_r<T, const T&> TransitionFn>
