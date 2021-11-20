@@ -344,8 +344,10 @@ namespace sequoia::testing
   /*! \brief The workhorse for (weak) equivalence checking
 
       This function will reflect on whether an appropriate specialization of (weak_) equivalence_checker exists.
-      If so, it will be used and if not it will attempt to interpret T as a range. Only if this fails
-      then a static assertion will terminate compilation.
+      If so, it will be used and if not it will attempt to interpret T as a range. If both of these fail then:
+      
+      1. A weak equivalence check will attempt to fall back to an equivalence check;
+      2. An equivalence check will attemp to fall back to a detailed equality check.
 
    */
 
