@@ -372,7 +372,7 @@ namespace sequoia::testing
   bool dispatch_check(std::string_view description, test_logger<Mode>& logger, Tag, const value_based_customization<Customization>& customization, const T& value, S&& s, U&&... u)
   {
     auto fallback{
-      [description,&logger,&customization] <class T, class S, class... U>(const T & value, S && s, U&&... u) {
+      [description,&logger,&customization](const T & value, S && s, U&&... u) {
         if constexpr (sequoia::range<T>)
         {
           return check_range(add_type_info<T>(description), logger, Tag{}, customization, std::begin(value), std::end(value), std::begin(std::forward<S>(s)), std::end(std::forward<S>(s)), std::forward<U>(u)...);
