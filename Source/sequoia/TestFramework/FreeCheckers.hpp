@@ -110,7 +110,7 @@ namespace sequoia::testing
   {
     // TO DO: investigate if this 'concept' can be traded for a constexpr bool
     template<class Fn, class... Args>
-    concept invocable_without_last_arg = (sizeof...(Args) > 0) && requires(Fn && fn, Args&&... args) {
+    concept invocable_without_last_arg = (sizeof...(Args) > 0) && requires(Fn&& fn, Args&&... args) {
       invoke_with_specified_args(fn, std::make_index_sequence<sizeof...(Args) - 1>(), std::forward<Args>(args)...);
     };
   }
@@ -120,6 +120,7 @@ namespace sequoia::testing
   {
     static constexpr bool ends_with_tutor{};
 
+    [[nodiscard]]
     static std::string info()
     {
       return make_type_info<Ts...>();
@@ -127,11 +128,12 @@ namespace sequoia::testing
   };
 
   template<class... Ts>
-  requires ends_with_tutor_v<Ts...>
-    struct equivalent_type_processor<Ts...>
+    requires ends_with_tutor_v<Ts...>
+  struct equivalent_type_processor<Ts...>
   {
     static constexpr bool ends_with_tutor{true};
 
+    [[nodiscard]]
     static std::string info()
     {
       return info(std::make_index_sequence<sizeof...(Ts) - 1>{});
@@ -157,11 +159,35 @@ namespace sequoia::testing
   };
 
   template<class E>
-  requires (!std::derived_from<E, std::exception>) && serializable<E>
-    struct exception_message_extractor<E>
+    requires (!std::derived_from<E, std::exception>) && serializable<E>
+  struct exception_message_extractor<E>
   {
     [[nodiscard]]
     static std::string get(const E& e) { return to_string(e); }
+  };
+
+  template<class EquivChecker>
+  struct equivalence_checker_delegator
+  {
+    template<test_mode Mode, class... Args>
+    void operator()(test_logger<Mode>& logger, Args&&... args) const
+    {
+      EquivChecker::check(logger, std::forward<Args>(args)...);
+    }
+  };
+
+  template<class EquivChecker, test_mode Mode, class Customization, class T, class S, class... U>
+  inline constexpr bool implements_general_equivalence_check{
+    requires {
+      requires (    checker_for<EquivChecker, Mode, Customization, T, S, U...>
+                 || checker_for<EquivChecker, Mode, T, S, U...>
+                 || (         equivalent_type_processor<S, U...>::ends_with_tutor
+                       && (    impl::invocable_without_last_arg<equivalence_checker_delegator<EquivChecker>, test_logger<Mode>&, Customization, T, S, U...>
+                            || impl::invocable_without_last_arg<equivalence_checker_delegator<EquivChecker>, test_logger<Mode>&, T, S, U...>))
+                 || checker_for<EquivChecker, Mode, Customization, T, S, U..., tutor<null_advisor>>
+                 || checker_for<EquivChecker, Mode, T, S, U..., tutor<null_advisor>>
+      );
+    }
   };
 
   /*! \brief generic function that generates a check from any class providing a static check method.
@@ -170,6 +196,7 @@ namespace sequoia::testing
    */
 
   template<class EquivChecker, test_mode Mode, class Customization, class T, class S, class... U>
+    requires implements_general_equivalence_check<EquivChecker, Mode, Customization, T, S, U...>
   bool general_equivalence_check(std::string_view description, test_logger<Mode>& logger, [[maybe_unused]] const value_based_customization<Customization>& customization, const T& value, const S& s, const U&... u)
   {
     using processor = equivalent_type_processor<S, U...>;
@@ -193,23 +220,19 @@ namespace sequoia::testing
     }
     else if constexpr(processor::ends_with_tutor)
     {
-      auto fn{
-        [&logger](auto&&... args){
-          EquivChecker::check(logger, std::forward<decltype(args)>(args)...);
-        }
-      };
+      using delegator = equivalence_checker_delegator<EquivChecker>;
 
-      if constexpr(impl::invocable_without_last_arg<decltype(fn), Customization, T, S, U...>)
+      if constexpr(impl::invocable_without_last_arg<delegator, test_logger<Mode>&, Customization, T, S, U...>)
       {
-        invoke_with_specified_args(fn, std::make_index_sequence<sizeof...(U) + 2>(), customization.customizer, value, s, u...);
+        invoke_with_specified_args(delegator{}, std::make_index_sequence<sizeof...(U) + 3>(), logger, customization.customizer, value, s, u...);
       }
-      else if constexpr(impl::invocable_without_last_arg<decltype(fn), T, S, U...>)
+      else if constexpr(impl::invocable_without_last_arg<delegator, test_logger<Mode>&, T, S, U...>)
       {
-        invoke_with_specified_args(fn, std::make_index_sequence<sizeof...(U) + 1>(), value, s, u...);
+        invoke_with_specified_args(delegator{}, std::make_index_sequence<sizeof...(U) + 2>(), logger, value, s, u...);
       }
       else
       {
-        static_assert(dependent_false<EquivChecker>::value);
+        static_assert(dependent_false<EquivChecker>::value, "Should never be triggered; indicates mismatch between requirement and logic");
       }
     }
     else
@@ -224,7 +247,7 @@ namespace sequoia::testing
       }
       else
       {
-        static_assert(dependent_false<EquivChecker>::value);
+        static_assert(dependent_false<EquivChecker>::value, "Should never be triggered; indicates mismatch between requirement and logic");
       }
     }
 
@@ -345,22 +368,39 @@ namespace sequoia::testing
    */
 
   template<test_mode Mode, class Customization, class Tag, class T, class S, class... U>
-    requires requires { Tag::template checker<T>;  typename Tag::fallback; }
+    requires requires { Tag::template checker<T>; typename Tag::fallback; }
   bool dispatch_check(std::string_view description, test_logger<Mode>& logger, Tag, const value_based_customization<Customization>& customization, const T& value, S&& s, U&&... u)
   {
-    if constexpr(class_template_is_default_instantiable<Tag::template checker, T>)
+    auto fallback{
+      [description,&logger,&customization] <class T, class S, class... U>(const T & value, S && s, U&&... u) {
+        if constexpr (sequoia::range<T>)
+        {
+          return check_range(add_type_info<T>(description), logger, Tag{}, customization, std::begin(value), std::end(value), std::begin(std::forward<S>(s)), std::end(std::forward<S>(s)), std::forward<U>(u)...);
+        }
+        else
+        {
+          using fallback = typename Tag::fallback;
+          return dispatch_check(description, logger, fallback{}, customization, value, std::forward<S>(s), std::forward<U>(u)...);
+        }
+      }
+    };
+
+    if constexpr (class_template_is_default_instantiable<Tag::template checker, T>)
     {
-      using checker = typename Tag::template checker<T>;
-      return general_equivalence_check<checker>(description, logger, customization, value, std::forward<S>(s), std::forward<U>(u)...);
-    }
-    else if constexpr(sequoia::range<T>)
-    {
-      return check_range(add_type_info<T>(description), logger, Tag{}, customization, std::begin(value), std::end(value), std::begin(std::forward<S>(s)), std::end(std::forward<S>(s)), std::forward<U>(u)...);
+      // Nesting necessary as checker_t may not be a complete type.
+      using checker_t = typename Tag::template checker<T>;
+      if constexpr (implements_general_equivalence_check<checker_t, Mode, Customization, T, S, U...>)
+      {
+        return general_equivalence_check<checker_t>(description, logger, customization, value, std::forward<S>(s), std::forward<U>(u)...);
+      }
+      else
+      {
+        return fallback(value, std::forward<S>(s), std::forward<U>(u)...);
+      }
     }
     else
     {
-      using fallback = typename Tag::fallback;
-      return dispatch_check(description, logger, fallback{}, customization, value, std::forward<S>(s), std::forward<U>(u)...);
+      return fallback(value, std::forward<S>(s), std::forward<U>(u)...);
     }
   }
 

@@ -75,6 +75,7 @@ namespace sequoia::testing
     class EdgeStorageTraits,
     class NodeWeightStorageTraits
   >
+    requires (ownership::creator<EdgeWeightCreator> && ownership::creator<NodeWeightCreator>)
   struct equivalence_checker<maths::embedded_graph<Directedness, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>>
     : impl::graph_equivalence_checker<maths::embedded_graph<Directedness, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>>
   {};
@@ -91,6 +92,7 @@ namespace sequoia::testing
     class EdgeStorageTraits,
     class NodeWeightStorageTraits
   >
+    requires (ownership::creator<EdgeWeightCreator> && ownership::creator<NodeWeightCreator>)
   struct weak_equivalence_checker<maths::embedded_graph<Directedness, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>>
     : impl::graph_weak_equivalence_checker<maths::embedded_graph<Directedness, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>>
   {};
@@ -149,6 +151,7 @@ namespace sequoia::testing
     class NodeWeightStorageTraits,
     bool=embedded(GraphFlavour)
   >
+    requires ownership::creator<EdgeWeightCreator>
   struct graph_type_generator
   {
     using graph_type = maths::graph<maths::to_directedness(GraphFlavour), EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightStorage, EdgeStorageTraits, NodeWeightStorageTraits>;
@@ -164,6 +167,7 @@ namespace sequoia::testing
     class EdgeStorageTraits,
     class NodeWeightStorageTraits
   >
+    requires (ownership::creator<EdgeWeightCreator> && ownership::creator<NodeWeightCreator>)
   struct graph_type_generator<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits, true>
   {
     using graph_type = maths::embedded_graph<maths::to_directedness(GraphFlavour), EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>;
@@ -179,6 +183,7 @@ namespace sequoia::testing
     class EdgeStorageTraits,
     class NodeWeightStorageTraits
   >
+    requires (ownership::creator<EdgeWeightCreator> && ownership::creator<NodeWeightCreator>)
   using graph_type_generator_t = typename graph_type_generator<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>::graph_type;
 
   template <class EdgeWeight, class NodeWeight, class Test>

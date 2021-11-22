@@ -66,6 +66,16 @@ namespace sequoia::testing
 
         CheckFn{}("", logger, static_cast<const connectivity_t&>(graph), connPrediction);
       }
+
+      template<test_mode Mode>
+      static void check(test_logger<Mode>& logger, const Graph& graph, const Graph& prediction)
+      {
+        using connectivity_t = typename type::connectivity_type;
+        using nodes_t = typename type::nodes_type;
+
+        CheckFn{}("", logger, static_cast<const connectivity_t&>(graph), static_cast<const connectivity_t&>(prediction));
+        CheckFn{}("", logger, static_cast<const nodes_t&>(graph), static_cast<const nodes_t&>(prediction));
+      }
     };
 
     template<maths::network Graph>

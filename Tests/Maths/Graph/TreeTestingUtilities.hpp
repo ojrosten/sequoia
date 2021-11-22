@@ -42,9 +42,9 @@ namespace sequoia::testing
     class NodeWeightStorageTraits
   >
     requires (ownership::creator<EdgeWeightCreator> && ownership::creator<NodeWeightCreator>)
-  struct equivalence_checker<sequoia::maths::tree<Directedness, TreeLinkDir, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>>
+  struct equivalence_checker<maths::tree<Directedness, TreeLinkDir, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>>
   {
-    using tree_type = sequoia::maths::tree<Directedness, TreeLinkDir, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>;
+    using tree_type = maths::tree<Directedness, TreeLinkDir, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>;
     using size_type = typename tree_type::size_type;
 
     template<test_mode Mode>
@@ -192,4 +192,20 @@ namespace sequoia::testing
   };
 
   // TO DO: non-null edge weights
+
+  template
+  <
+    maths::directed_flavour Directedness,
+    maths::tree_link_direction TreeLinkDir,
+    class EdgeWeight,
+    class NodeWeight,
+    class EdgeWeightCreator,
+    class NodeWeightCreator,
+    class EdgeStorageTraits,
+    class NodeWeightStorageTraits
+  >
+    requires (ownership::creator<EdgeWeightCreator> && ownership::creator<NodeWeightCreator>)
+  struct weak_equivalence_checker<maths::tree<Directedness, TreeLinkDir, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>>
+    : impl::graph_weak_equivalence_checker<maths::tree<Directedness, TreeLinkDir, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>>
+  {};
 }
