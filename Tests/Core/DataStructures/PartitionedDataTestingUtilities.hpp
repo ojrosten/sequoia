@@ -76,7 +76,7 @@ namespace sequoia::testing
   }
 
   template<class T, class Handler, class Traits>
-  struct detailed_equality_checker<data_structures::bucketed_storage<T, Handler, Traits>>
+  struct value_checker<data_structures::bucketed_storage<T, Handler, Traits>>
   {
     using type = data_structures::bucketed_storage<T, Handler, Traits>;
 
@@ -100,7 +100,7 @@ namespace sequoia::testing
   };
 
   template<class T, class Handler, class Traits>
-  struct detailed_equality_checker<data_structures::partitioned_sequence<T, Handler, Traits>>
+  struct value_checker<data_structures::partitioned_sequence<T, Handler, Traits>>
   {
     using type = data_structures::partitioned_sequence<T, Handler, Traits>;
 
@@ -125,7 +125,7 @@ namespace sequoia::testing
   };
 
   template<class T, std::size_t Npartitions, std::size_t Nelements, std::integral IndexType>
-  struct detailed_equality_checker<data_structures::static_partitioned_sequence<T, Npartitions, Nelements, IndexType>>
+  struct value_checker<data_structures::static_partitioned_sequence<T, Npartitions, Nelements, IndexType>>
   {
     using type = data_structures::static_partitioned_sequence<T, Npartitions, Nelements, IndexType>;
 

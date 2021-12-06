@@ -137,10 +137,10 @@ std::filesystem::path&#160;</td><td class="memItemRight" valign="bottom"><b>sequ
 <tr class="memitem:a5cbf6725e100aa60d398a7d3d721932f"><td class="memItemLeft" align="right" valign="top"><a id="a5cbf6725e100aa60d398a7d3d721932f"></a>
 std::filesystem::path&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::prune_path</b> (std::filesystem::path outputDir, const std::filesystem::path &amp;testMainDir)</td></tr>
 <tr class="separator:a5cbf6725e100aa60d398a7d3d721932f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a394c2455c82ed8057fcc50135b1bc782"><td class="memTemplParams" colspan="2"><a id="a394c2455c82ed8057fcc50135b1bc782"></a>
-template&lt;class Pred &gt; </td></tr>
-<tr class="memitem:a394c2455c82ed8057fcc50135b1bc782"><td class="memTemplItemLeft" align="right" valign="top">requires invocable&lt; Pred, std::filesystem::path &gt; void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::throw_if</b> (const std::filesystem::path &amp;p, std::string_view message, Pred pred)</td></tr>
-<tr class="separator:a394c2455c82ed8057fcc50135b1bc782"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0840df681dd2454885b3edbd35d16dce"><td class="memTemplParams" colspan="2"><a id="a0840df681dd2454885b3edbd35d16dce"></a>
+template&lt;std::predicate&lt; std::filesystem::path &gt; Pred&gt; </td></tr>
+<tr class="memitem:a0840df681dd2454885b3edbd35d16dce"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::throw_if</b> (const std::filesystem::path &amp;p, std::string_view message, Pred pred)</td></tr>
+<tr class="separator:a0840df681dd2454885b3edbd35d16dce"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3d71fd03d668676c5d637fd6fef001c0"><td class="memItemLeft" align="right" valign="top"><a id="a3d71fd03d668676c5d637fd6fef001c0"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::throw_unless_exists</b> (const std::filesystem::path &amp;p, std::string_view message)</td></tr>
 <tr class="separator:a3d71fd03d668676c5d637fd6fef001c0"><td class="memSeparator" colspan="2">&#160;</td></tr>

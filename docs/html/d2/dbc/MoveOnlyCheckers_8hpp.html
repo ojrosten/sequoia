@@ -90,9 +90,9 @@ Functions</h2></td></tr>
 <tr class="memitem:ac338b82e4f6a44a8a02400da454e953c"><td class="memTemplParams" colspan="2">template&lt;test_mode Mode, moveonly T&gt; </td></tr>
 <tr class="memitem:ac338b82e4f6a44a8a02400da454e953c"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dd/da8/namespacesequoia_1_1testing.html#ac338b82e4f6a44a8a02400da454e953c">sequoia::testing::check_semantics</a> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, T &amp;&amp;x, T &amp;&amp;y, const T &amp;xClone, const T &amp;yClone)</td></tr>
 <tr class="separator:ac338b82e4f6a44a8a02400da454e953c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a686ab76100284cf4605931f5dc5fabdc"><td class="memTemplParams" colspan="2">template&lt;test_mode Mode, moveonly T&gt; </td></tr>
-<tr class="memitem:a686ab76100284cf4605931f5dc5fabdc"><td class="memTemplItemLeft" align="right" valign="top">requires orderable&lt; T &gt; void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dd/da8/namespacesequoia_1_1testing.html#a686ab76100284cf4605931f5dc5fabdc">sequoia::testing::check_semantics</a> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, T &amp;&amp;x, T &amp;&amp;y, const T &amp;xClone, const T &amp;yClone, std::weak_ordering order)</td></tr>
-<tr class="separator:a686ab76100284cf4605931f5dc5fabdc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1496915db19191d34e119775ad01c52c"><td class="memTemplParams" colspan="2">template&lt;test_mode Mode, moveonly T&gt; </td></tr>
+<tr class="memitem:a1496915db19191d34e119775ad01c52c"><td class="memTemplItemLeft" align="right" valign="top">requires std::totally_ordered&lt; T &gt; void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dd/da8/namespacesequoia_1_1testing.html#a1496915db19191d34e119775ad01c52c">sequoia::testing::check_semantics</a> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, T &amp;&amp;x, T &amp;&amp;y, const T &amp;xClone, const T &amp;yClone, std::weak_ordering order)</td></tr>
+<tr class="separator:a1496915db19191d34e119775ad01c52c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Functions for checking semantics of types lacking copy semantics but which are otherwise regular. </p>

@@ -84,7 +84,7 @@ namespace sequoia::testing
   };
 
   template<class T, class Allocator>
-  struct detailed_equality_checker<perfectly_normal_beast<T, Allocator>>
+  struct value_checker<perfectly_normal_beast<T, Allocator>>
   {
     template<test_mode Mode>
     static void check(test_logger<Mode>& logger, const perfectly_normal_beast<T, Allocator>& obtained, const perfectly_normal_beast<T, Allocator>& prediction)

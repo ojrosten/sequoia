@@ -190,7 +190,7 @@ $(function() {
 <div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160; </div>
 <div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    <span class="keywordtype">void</span> clear() noexcept { m_Order.clear(); }</div>
 <div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160; </div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> I&gt; <span class="keywordtype">void</span> operator()(I iter)</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    <span class="keyword">template</span>&lt;std::input_or_output_iterator I&gt; <span class="keywordtype">void</span> operator()(I iter)</div>
 <div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;    {</div>
 <div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;      <span class="keyword">const</span> <span class="keyword">auto</span> pos{dist(<a class="code" href="../../d9/d67/structsequoia_1_1testing_1_1traversal__constant.html">traversal_constant&lt;Flavour&gt;</a>{}, iter)};</div>
 <div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;      m_Order.emplace_back(iter.partition_index(), <span class="keyword">static_cast&lt;</span>std::size_t<span class="keyword">&gt;</span>(pos));</div>
@@ -211,17 +211,17 @@ $(function() {
 <div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;    result_type m_Order;</div>
 <div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;    <span class="keyword">const</span> G&amp; m_Graph;</div>
 <div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160; </div>
-<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> I&gt; [[nodiscard]] <span class="keyword">auto</span> dist(<a class="code" href="../../d9/d67/structsequoia_1_1testing_1_1traversal__constant.html">pdfs_type</a>, I iter)</div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;    <span class="keyword">template</span>&lt;std::input_or_output_iterator I&gt; [[nodiscard]] <span class="keyword">auto</span> dist(<a class="code" href="../../d9/d67/structsequoia_1_1testing_1_1traversal__constant.html">pdfs_type</a>, I iter)</div>
 <div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;    {</div>
 <div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;      <span class="keywordflow">return</span> distance(m_Graph.crbegin_edges(iter.partition_index()), iter);</div>
 <div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;    }</div>
 <div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160; </div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> I&gt; [[nodiscard]] <span class="keyword">auto</span> dist(<a class="code" href="../../d9/d67/structsequoia_1_1testing_1_1traversal__constant.html">bfs_type</a>, I iter)</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;    <span class="keyword">template</span>&lt;std::input_or_output_iterator I&gt; [[nodiscard]] <span class="keyword">auto</span> dist(<a class="code" href="../../d9/d67/structsequoia_1_1testing_1_1traversal__constant.html">bfs_type</a>, I iter)</div>
 <div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;    {</div>
 <div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;      <span class="keywordflow">return</span> distance(m_Graph.cbegin_edges(iter.partition_index()), iter);</div>
 <div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;    }</div>
 <div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160; </div>
-<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> I&gt; [[nodiscard]] <span class="keyword">auto</span> dist(<a class="code" href="../../d9/d67/structsequoia_1_1testing_1_1traversal__constant.html">dfs_type</a>, I iter)</div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;    <span class="keyword">template</span>&lt;std::input_or_output_iterator I&gt; [[nodiscard]] <span class="keyword">auto</span> dist(<a class="code" href="../../d9/d67/structsequoia_1_1testing_1_1traversal__constant.html">dfs_type</a>, I iter)</div>
 <div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;    {</div>
 <div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;      <span class="keywordflow">return</span> distance(m_Graph.cbegin_edges(iter.partition_index()), iter);</div>
 <div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;    }</div>
@@ -255,7 +255,7 @@ $(function() {
 <div class="ttc" id="aDynamicGraphTraversals_8hpp_html"><div class="ttname"><a href="../../db/d71/DynamicGraphTraversals_8hpp.html">DynamicGraphTraversals.hpp</a></div><div class="ttdoc">Headers for traversals of dynamic graphs.</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1edge__tracker_html"><div class="ttname"><a href="../../d3/dc1/classsequoia_1_1testing_1_1edge__tracker.html">sequoia::testing::edge_tracker</a></div><div class="ttdef"><b>Definition:</b> GraphTraversalTestingUtilities.hpp:116</div></div>
 <div class="ttc" id="aclasssequoia_1_1maths_1_1traversal__conditions_html"><div class="ttname"><a href="../../de/d9a/classsequoia_1_1maths_1_1traversal__conditions.html">sequoia::maths::traversal_conditions</a></div><div class="ttdef"><b>Definition:</b> GraphTraversalDetails.hpp:56</div></div>
-<div class="ttc" id="astructsequoia_1_1testing_1_1equivalence__checker_html"><div class="ttname"><a href="../../d2/d52/structsequoia_1_1testing_1_1equivalence__checker.html">sequoia::testing::equivalence_checker</a></div><div class="ttdoc">class template, specializations of which implement comparison of two equivalent types</div><div class="ttdef"><b>Definition:</b> CoreInfrastructure.hpp:32</div></div>
+<div class="ttc" id="astructsequoia_1_1testing_1_1equivalence__checker_html"><div class="ttname"><a href="../../d2/d52/structsequoia_1_1testing_1_1equivalence__checker.html">sequoia::testing::equivalence_checker</a></div><div class="ttdoc">class template, specializations of which implement comparison between T and one or more equivalent ty...</div><div class="ttdef"><b>Definition:</b> CoreInfrastructure.hpp:32</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1test__logger_html"><div class="ttname"><a href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">sequoia::testing::test_logger</a></div><div class="ttdef"><b>Definition:</b> TestLogger.hpp:55</div></div>
 <div class="ttc" id="astructsequoia_1_1testing_1_1Traverser_html"><div class="ttname"><a href="../../d4/dc0/structsequoia_1_1testing_1_1Traverser.html">sequoia::testing::Traverser</a></div><div class="ttdef"><b>Definition:</b> GraphTraversalTestingUtilities.hpp:30</div></div>
 <div class="ttc" id="anamespacesequoia_1_1testing_html"><div class="ttname"><a href="../../dd/da8/namespacesequoia_1_1testing.html">sequoia::testing</a></div><div class="ttdef"><b>Definition:</b> MyBehaviouralTest.cpp:12</div></div>

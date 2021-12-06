@@ -13,7 +13,7 @@
 namespace sequoia::testing
 {
     template<maths::floating_point T>
-    struct detailed_equality_checker<bar::baz::foo<T>>
+    struct value_checker<bar::baz::foo<T>>
     {
         using type = bar::baz::foo<T>;
 

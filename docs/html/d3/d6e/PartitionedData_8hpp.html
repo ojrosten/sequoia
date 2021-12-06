@@ -83,6 +83,7 @@ $(function() {
 <code>#include &quot;<a class="el" href="../../d6/d07/Algorithms_8hpp_source.html">sequoia/Algorithms/Algorithms.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../d7/d1c/MonotonicSequence_8hpp_source.html">sequoia/Maths/Sequences/MonotonicSequence.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../d0/dbb/AssignmentUtilities_8hpp_source.html">sequoia/Core/Utilities/AssignmentUtilities.hpp</a>&quot;</code><br />
+<code>#include &quot;sequoia/PlatformSpecific/Preprocessor.hpp&quot;</code><br />
 <code>#include &lt;string&gt;</code><br />
 <code>#include &lt;numeric&gt;</code><br />
 <code>#include &lt;stdexcept&gt;</code><br />
@@ -109,19 +110,19 @@ Classes</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
 <tr class="memitem:a9451dcf04a982b37149b1e705c20ca91"><td class="memTemplParams" colspan="2"><a id="a9451dcf04a982b37149b1e705c20ca91"></a>
-template&lt;class Traits , class Handler , class IndexType &gt; </td></tr>
+template&lt;class Traits , class Handler , std::integral IndexType&gt; </td></tr>
 <tr class="memitem:a9451dcf04a982b37149b1e705c20ca91"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::data_structures::partition_iterator</b> = utilities::iterator&lt; typename partition_impl::partition_iterator_generator&lt; Traits, Handler, partition_impl::mutable_reference, false &gt;::iterator, partition_impl::dereference_policy&lt; Handler, partition_impl::mutable_reference, partition_impl::partition_index_policy&lt; false, IndexType &gt; &gt; &gt;</td></tr>
 <tr class="separator:a9451dcf04a982b37149b1e705c20ca91"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a484b1c0b27410d2a41bd0189e45946a0"><td class="memTemplParams" colspan="2"><a id="a484b1c0b27410d2a41bd0189e45946a0"></a>
-template&lt;class Traits , class Handler , class IndexType &gt; </td></tr>
+template&lt;class Traits , class Handler , std::integral IndexType&gt; </td></tr>
 <tr class="memitem:a484b1c0b27410d2a41bd0189e45946a0"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::data_structures::const_partition_iterator</b> = utilities::iterator&lt; typename partition_impl::partition_iterator_generator&lt; Traits, Handler, partition_impl::const_reference, false &gt;::iterator, partition_impl::dereference_policy&lt; Handler, partition_impl::const_reference, partition_impl::partition_index_policy&lt; false, IndexType &gt; &gt; &gt;</td></tr>
 <tr class="separator:a484b1c0b27410d2a41bd0189e45946a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1657010fc2c834b3f51763a9c03cdd7b"><td class="memTemplParams" colspan="2"><a id="a1657010fc2c834b3f51763a9c03cdd7b"></a>
-template&lt;class Traits , class Handler , class IndexType &gt; </td></tr>
+template&lt;class Traits , class Handler , std::integral IndexType&gt; </td></tr>
 <tr class="memitem:a1657010fc2c834b3f51763a9c03cdd7b"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::data_structures::reverse_partition_iterator</b> = utilities::iterator&lt; typename partition_impl::partition_iterator_generator&lt; Traits, Handler, partition_impl::mutable_reference, true &gt;::iterator, partition_impl::dereference_policy&lt; Handler, partition_impl::mutable_reference, partition_impl::partition_index_policy&lt; true, IndexType &gt; &gt; &gt;</td></tr>
 <tr class="separator:a1657010fc2c834b3f51763a9c03cdd7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a99c91bb91771b9ca88483e90d37449aa"><td class="memTemplParams" colspan="2"><a id="a99c91bb91771b9ca88483e90d37449aa"></a>
-template&lt;class Traits , class Handler , class IndexType &gt; </td></tr>
+template&lt;class Traits , class Handler , std::integral IndexType&gt; </td></tr>
 <tr class="memitem:a99c91bb91771b9ca88483e90d37449aa"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::data_structures::const_reverse_partition_iterator</b> = utilities::iterator&lt; typename partition_impl::partition_iterator_generator&lt; Traits, Handler, partition_impl::const_reference, true &gt;::iterator, partition_impl::dereference_policy&lt; Handler, partition_impl::const_reference, partition_impl::partition_index_policy&lt; true, IndexType &gt; &gt; &gt;</td></tr>
 <tr class="separator:a99c91bb91771b9ca88483e90d37449aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -132,7 +133,7 @@ template&lt;class Storage1 , class Storage2 &gt; </td></tr>
 <tr class="memitem:a57fadabb5f32efac101d8bf97c4a8869"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::data_structures::isomorphic</b> (const Storage1 &amp;lhs, const Storage2 &amp;rhs) noexcept</td></tr>
 <tr class="separator:a57fadabb5f32efac101d8bf97c4a8869"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6257799193c895fb0382fb21adf4ddb5"><td class="memTemplParams" colspan="2"><a id="a6257799193c895fb0382fb21adf4ddb5"></a>
-template&lt;class PartitionedData , class Pred , class Index  = typename PartitionedData::index_type&gt; </td></tr>
+template&lt;class PartitionedData , class Pred , std::integral Index = typename PartitionedData::index_type&gt; </td></tr>
 <tr class="memitem:a6257799193c895fb0382fb21adf4ddb5"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::erase_from_partition_if</b> (PartitionedData &amp;data, const Index partitionIndex, Pred pred)</td></tr>
 <tr class="separator:a6257799193c895fb0382fb21adf4ddb5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>

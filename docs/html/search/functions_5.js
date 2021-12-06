@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['indent_1816',['indent',['../d1/d2a/Indent_8cpp.html#a58589720af605df26d2b003c85de659c',1,'sequoia']]]
+  ['requires_1837',['requires',['../d4/d5d/classsequoia_1_1testing_1_1regular__extender.html#ad220edcd38af4431f0b117b6b1baf56b',1,'sequoia::testing::regular_extender::requires()'],['../dd/da8/namespacesequoia_1_1testing.html#adb337f52732959b7ac769497c5a6bc33',1,'sequoia::testing::requires(has_value_checker_v&lt; T &gt;||sequoia::range&lt; T &gt;||std::equality_comparable&lt; T &gt;) bool dispatch_check(std'],['../dd/da8/namespacesequoia_1_1testing.html#a9d81c642c83b1ef5c4c09a22c71dd9e2',1,'sequoia::testing::requires(std::invocable&lt; Compare, T, T &gt;||sequoia::range&lt; T &gt;) bool dispatch_check(std'],['../dd/da8/namespacesequoia_1_1testing.html#ac7174ab6daad7e3e2533d048af6f22ff',1,'sequoia::testing::requires()'],['../dd/da8/namespacesequoia_1_1testing.html#a85938e9e22c767c515be03bcf4df0703',1,'sequoia::testing::requires(sizeof...(Tests) &gt; 0) class test_family']]]
 ];

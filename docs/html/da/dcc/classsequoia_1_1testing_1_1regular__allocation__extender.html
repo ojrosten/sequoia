@@ -96,22 +96,22 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a8e261ef8b8d414b4fcbc69364ce3d6a0"><td class="memItemLeft" align="right" valign="top"><a id="a8e261ef8b8d414b4fcbc69364ce3d6a0"></a>
 <a class="el" href="../../da/dcc/classsequoia_1_1testing_1_1regular__allocation__extender.html">regular_allocation_extender</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="../../da/dcc/classsequoia_1_1testing_1_1regular__allocation__extender.html">regular_allocation_extender</a> &amp;&amp;)=delete</td></tr>
 <tr class="separator:a8e261ef8b8d414b4fcbc69364ce3d6a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae886ceb1d382685edaf9fd1b44340772"><td class="memTemplParams" colspan="2"><a id="ae886ceb1d382685edaf9fd1b44340772"></a>
-template&lt;pseudoregular T, invocable&lt; T &amp; &gt; Mutator, alloc_getter&lt; T &gt;... Getters&gt; </td></tr>
-<tr class="memitem:ae886ceb1d382685edaf9fd1b44340772"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires</b> (!orderable&lt; T &gt; &amp;&amp;(sizeof...(Getters) &gt; 0)) void <a class="el" href="../../dd/da8/namespacesequoia_1_1testing.html#ac338b82e4f6a44a8a02400da454e953c">check_semantics</a>(std</td></tr>
-<tr class="separator:ae886ceb1d382685edaf9fd1b44340772"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0b22c9f482882ebe101bc07d7e412d06"><td class="memTemplParams" colspan="2"><a id="a0b22c9f482882ebe101bc07d7e412d06"></a>
-template&lt;pseudoregular T, invocable_r&lt; T &gt; xMaker, invocable_r&lt; T &gt; yMaker, invocable&lt; T &amp; &gt; Mutator, alloc_getter&lt; T &gt;... Getters&gt; </td></tr>
-<tr class="memitem:a0b22c9f482882ebe101bc07d7e412d06"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires</b> (!orderable&lt; T &gt; &amp;&amp;(sizeof...(Getters) &gt; 0)) std</td></tr>
-<tr class="separator:a0b22c9f482882ebe101bc07d7e412d06"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2ac62cf62b2d3f6cab0ab117aac4e4aa"><td class="memTemplParams" colspan="2"><a id="a2ac62cf62b2d3f6cab0ab117aac4e4aa"></a>
-template&lt;pseudoregular T, invocable&lt; T &amp; &gt; Mutator, alloc_getter&lt; T &gt;... Getters&gt; </td></tr>
-<tr class="memitem:a2ac62cf62b2d3f6cab0ab117aac4e4aa"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires</b> (orderable&lt; T &gt; &amp;&amp;(sizeof...(Getters) &gt; 0)) void <a class="el" href="../../dd/da8/namespacesequoia_1_1testing.html#ac338b82e4f6a44a8a02400da454e953c">check_semantics</a>(std</td></tr>
-<tr class="separator:a2ac62cf62b2d3f6cab0ab117aac4e4aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3b60b81ff251bfa8e5ca8a037b1cd91f"><td class="memTemplParams" colspan="2"><a id="a3b60b81ff251bfa8e5ca8a037b1cd91f"></a>
-template&lt;pseudoregular T, invocable_r&lt; T &gt; xMaker, invocable_r&lt; T &gt; yMaker, invocable&lt; T &amp; &gt; Mutator, alloc_getter&lt; T &gt;... Getters&gt; </td></tr>
-<tr class="memitem:a3b60b81ff251bfa8e5ca8a037b1cd91f"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires</b> (orderable&lt; T &gt; &amp;&amp;(sizeof...(Getters) &gt; 0)) std</td></tr>
-<tr class="separator:a3b60b81ff251bfa8e5ca8a037b1cd91f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3d67abebbe3a6e7b71dd01f093340580"><td class="memTemplParams" colspan="2"><a id="a3d67abebbe3a6e7b71dd01f093340580"></a>
+template&lt;pseudoregular T, std::invocable&lt; T &amp; &gt; Mutator, alloc_getter&lt; T &gt;... Getters&gt; </td></tr>
+<tr class="memitem:a3d67abebbe3a6e7b71dd01f093340580"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires</b> (!std::totally_ordered&lt; T &gt; &amp;&amp;(sizeof...(Getters) &gt; 0)) void <a class="el" href="../../dd/da8/namespacesequoia_1_1testing.html#ac338b82e4f6a44a8a02400da454e953c">check_semantics</a>(std</td></tr>
+<tr class="separator:a3d67abebbe3a6e7b71dd01f093340580"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7edde4a757affb5625270fd94ba6ff7f"><td class="memTemplParams" colspan="2"><a id="a7edde4a757affb5625270fd94ba6ff7f"></a>
+template&lt;pseudoregular T, invocable_r&lt; T &gt; xMaker, invocable_r&lt; T &gt; yMaker, std::invocable&lt; T &amp; &gt; Mutator, alloc_getter&lt; T &gt;... Getters&gt; </td></tr>
+<tr class="memitem:a7edde4a757affb5625270fd94ba6ff7f"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires</b> (!std::totally_ordered&lt; T &gt; &amp;&amp;(sizeof...(Getters) &gt; 0)) std</td></tr>
+<tr class="separator:a7edde4a757affb5625270fd94ba6ff7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5e36eb631149fc35dcea153aae23801f"><td class="memTemplParams" colspan="2"><a id="a5e36eb631149fc35dcea153aae23801f"></a>
+template&lt;pseudoregular T, std::invocable&lt; T &amp; &gt; Mutator, alloc_getter&lt; T &gt;... Getters&gt; </td></tr>
+<tr class="memitem:a5e36eb631149fc35dcea153aae23801f"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires</b> (std::totally_ordered&lt; T &gt; &amp;&amp;(sizeof...(Getters) &gt; 0)) void <a class="el" href="../../dd/da8/namespacesequoia_1_1testing.html#ac338b82e4f6a44a8a02400da454e953c">check_semantics</a>(std</td></tr>
+<tr class="separator:a5e36eb631149fc35dcea153aae23801f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9aa8057daa6d5cc26ab8a19ead76cfef"><td class="memTemplParams" colspan="2"><a id="a9aa8057daa6d5cc26ab8a19ead76cfef"></a>
+template&lt;pseudoregular T, invocable_r&lt; T &gt; xMaker, invocable_r&lt; T &gt; yMaker, std::invocable&lt; T &amp; &gt; Mutator, alloc_getter&lt; T &gt;... Getters&gt; </td></tr>
+<tr class="memitem:a9aa8057daa6d5cc26ab8a19ead76cfef"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires</b> (std::totally_ordered&lt; T &gt; &amp;&amp;(sizeof...(Getters) &gt; 0)) std</td></tr>
+<tr class="separator:a9aa8057daa6d5cc26ab8a19ead76cfef"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>

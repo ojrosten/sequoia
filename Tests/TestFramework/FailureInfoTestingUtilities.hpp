@@ -11,7 +11,7 @@
 
 namespace sequoia::testing
 {
-  template<> struct detailed_equality_checker<sequoia::testing::failure_info>
+  template<> struct value_checker<sequoia::testing::failure_info>
   {
     using type = sequoia::testing::failure_info;
 

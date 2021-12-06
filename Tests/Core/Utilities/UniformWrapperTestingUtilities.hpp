@@ -14,7 +14,7 @@
 namespace sequoia::testing
 {
   template<class T>
-  struct detailed_equality_checker<utilities::uniform_wrapper<T>>
+  struct value_checker<utilities::uniform_wrapper<T>>
   {
     using type = utilities::uniform_wrapper<T>;
 

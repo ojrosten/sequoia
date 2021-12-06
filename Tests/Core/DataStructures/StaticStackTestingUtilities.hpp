@@ -14,7 +14,7 @@
 namespace sequoia::testing
 {
   template<class T, std::size_t MaxDepth>
-  struct detailed_equality_checker<data_structures::static_stack<T, MaxDepth>>
+  struct value_checker<data_structures::static_stack<T, MaxDepth>>
   {
     using type = data_structures::static_stack<T, MaxDepth>;
 

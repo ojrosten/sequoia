@@ -82,13 +82,13 @@ Variables</h2></td></tr>
 <tr class="memitem:ae3eee248fa1522c983a323f8c8ac1ea1"><td class="memTemplParams" colspan="2">template&lt;class N &gt; </td></tr>
 <tr class="memitem:ae3eee248fa1522c983a323f8c8ac1ea1"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::network</b></td></tr>
 <tr class="separator:ae3eee248fa1522c983a323f8c8ac1ea1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a15d525d373b0bf0c4bdf95f3463c2322"><td class="memTemplParams" colspan="2">template&lt;class G &gt; </td></tr>
-<tr class="memitem:a15d525d373b0bf0c4bdf95f3463c2322"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::dynamic_nodes</b></td></tr>
-<tr class="separator:a15d525d373b0bf0c4bdf95f3463c2322"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a75eb6110f8fae01278836b35fa6f7a03"><td class="memTemplParams" colspan="2"><a id="a75eb6110f8fae01278836b35fa6f7a03"></a>
+<tr class="memitem:a4bac85c22dbac34c01c82f7efab6b2ab"><td class="memTemplParams" colspan="2">template&lt;class G &gt; </td></tr>
+<tr class="memitem:a4bac85c22dbac34c01c82f7efab6b2ab"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::dynamic_nodes</b></td></tr>
+<tr class="separator:a4bac85c22dbac34c01c82f7efab6b2ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac6966ce4df0ca9916e7be6dee40b10af"><td class="memTemplParams" colspan="2"><a id="ac6966ce4df0ca9916e7be6dee40b10af"></a>
 template&lt;class G &gt; </td></tr>
-<tr class="memitem:a75eb6110f8fae01278836b35fa6f7a03"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::static_nodes</b> = (!dynamic_nodes&lt;G&gt;)</td></tr>
-<tr class="separator:a75eb6110f8fae01278836b35fa6f7a03"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac6966ce4df0ca9916e7be6dee40b10af"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::static_nodes</b> = (!dynamic_nodes&lt;G&gt;)</td></tr>
+<tr class="separator:ac6966ce4df0ca9916e7be6dee40b10af"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a82c2d74ccb63c325acb2dd25f8b9a234"><td class="memTemplParams" colspan="2"><a id="a82c2d74ccb63c325acb2dd25f8b9a234"></a>
 template&lt;class G &gt; </td></tr>
 <tr class="memitem:a82c2d74ccb63c325acb2dd25f8b9a234"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::dynamic_network</b> = network&lt;G&gt; &amp;&amp; dynamic_nodes&lt;G&gt;</td></tr>
@@ -97,25 +97,54 @@ template&lt;class G &gt; </td></tr>
 template&lt;class G &gt; </td></tr>
 <tr class="memitem:a7b74164b5c90e4c41105450e361035f4"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::static_network</b> = network&lt;G&gt; &amp;&amp; static_nodes&lt;G&gt;</td></tr>
 <tr class="separator:a7b74164b5c90e4c41105450e361035f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa74ec495bd897f4e7fbba3b89d801eed"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
+<tr class="memitem:aa74ec495bd897f4e7fbba3b89d801eed"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::dynamic_tree</b></td></tr>
+<tr class="separator:aa74ec495bd897f4e7fbba3b89d801eed"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Traits and Concepts for graphs. </p>
 </div><h2 class="groupheader">Variable Documentation</h2>
-<a id="a15d525d373b0bf0c4bdf95f3463c2322"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a15d525d373b0bf0c4bdf95f3463c2322">&#9670;&nbsp;</a></span>dynamic_nodes</h2>
+<a id="a4bac85c22dbac34c01c82f7efab6b2ab"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4bac85c22dbac34c01c82f7efab6b2ab">&#9670;&nbsp;</a></span>dynamic_nodes</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class G &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">concept sequoia::maths::dynamic_nodes</td>
+          <td class="memname">constexpr bool sequoia::maths::dynamic_nodes</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">= requires(std::remove_const_t&lt;G&gt;&amp; g) { g.add_node(); } </div>
+<div class="line">                          || requires(std::remove_const_t&lt;G&gt; &amp; g) { g.add_node(0); }</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="aa74ec495bd897f4e7fbba3b89d801eed"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa74ec495bd897f4e7fbba3b89d801eed">&#9670;&nbsp;</a></span>dynamic_tree</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">concept sequoia::maths::dynamic_tree</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">= requires(G&amp; g) {</div>
-<div class="line">     g.add_node();</div>
+<b>Initial value:</b><div class="fragment"><div class="line">= dynamic_network&lt;T&gt; &amp;&amp; requires {</div>
+<div class="line">    T::link_dir;</div>
 <div class="line">  }</div>
 </div><!-- fragment -->
 </div>
@@ -133,7 +162,7 @@ template&lt;class N &gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">= equality_comparable&lt;N&gt; &amp;&amp; requires(<span class="keyword">const</span> N&amp; n) {</div>
+<b>Initial value:</b><div class="fragment"><div class="line">= requires(<span class="keyword">const</span> N&amp; n) {</div>
 <div class="line">    <span class="keyword">typename</span> N::edge_type;</div>
 <div class="line">    <span class="keyword">typename</span> N::edge_weight_type;</div>
 <div class="line">    <span class="keyword">typename</span> N::edge_index_type;</div>
@@ -142,10 +171,10 @@ template&lt;class N &gt; </div>
 <div class="line">    <span class="keyword">typename</span> N::const_edge_iterator;</div>
 <div class="line">    <span class="keyword">typename</span> N::const_reverse_edge_iterator;</div>
 <div class="line"> </div>
-<div class="line">    { n.size() } -&gt; same_as&lt;typename N::size_type&gt;;</div>
-<div class="line">    { n.order() } -&gt; same_as&lt;typename N::size_type&gt;;</div>
-<div class="line">    { n.cbegin_edges(0) } -&gt; same_as&lt;typename N::const_edge_iterator&gt;;</div>
-<div class="line">    { n.cend_edges(0) } -&gt; same_as&lt;typename N::const_edge_iterator&gt;;</div>
+<div class="line">    { n.size() }          -&gt; std::same_as&lt;typename N::size_type&gt;;</div>
+<div class="line">    { n.order() }         -&gt; std::same_as&lt;typename N::size_type&gt;;</div>
+<div class="line">    { n.cbegin_edges(0) } -&gt; std::same_as&lt;typename N::const_edge_iterator&gt;;</div>
+<div class="line">    { n.cend_edges(0) }   -&gt; std::same_as&lt;typename N::const_edge_iterator&gt;;</div>
 <div class="line">  }</div>
 </div><!-- fragment -->
 </div>

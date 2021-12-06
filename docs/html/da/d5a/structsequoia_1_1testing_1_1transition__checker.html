@@ -87,21 +87,21 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>edge</b> = typename 
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a242692e81c4e1ea429689db18cb54c4f"><td class="memTemplParams" colspan="2"><a id="a242692e81c4e1ea429689db18cb54c4f"></a>
-template&lt;invocable&lt; std::string, T, T, T, std::weak_ordering &gt; CheckFn&gt; </td></tr>
-<tr class="memitem:a242692e81c4e1ea429689db18cb54c4f"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires</b> (orderable&lt; T &gt; &amp;&amp;pseudoregular&lt; T &gt;) static void check(std</td></tr>
-<tr class="separator:a242692e81c4e1ea429689db18cb54c4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac89624b9d0bf05e253b123b098176633"><td class="memTemplParams" colspan="2"><a id="ac89624b9d0bf05e253b123b098176633"></a>
+template&lt;std::invocable&lt; std::string, T, T, T, std::weak_ordering &gt; CheckFn&gt; </td></tr>
+<tr class="memitem:ac89624b9d0bf05e253b123b098176633"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires</b> (std::totally_ordered&lt; T &gt; &amp;&amp;pseudoregular&lt; T &gt;) static void check(std</td></tr>
+<tr class="separator:ac89624b9d0bf05e253b123b098176633"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a456db367bcdb1c22ac229b90dafbfa51"><td class="memTemplParams" colspan="2"><a id="a456db367bcdb1c22ac229b90dafbfa51"></a>
-template&lt;invocable&lt; std::string, T, T &gt; CheckFn&gt; </td></tr>
+template&lt;std::invocable&lt; std::string, T, T &gt; CheckFn&gt; </td></tr>
 <tr class="memitem:a456db367bcdb1c22ac229b90dafbfa51"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check</b> (std::string_view description, const transition_graph &amp;g, CheckFn checkFn)</td></tr>
 <tr class="separator:a456db367bcdb1c22ac229b90dafbfa51"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a73963355eb52a0db73f67873f078fc60"><td class="memTemplParams" colspan="2"><a id="a73963355eb52a0db73f67873f078fc60"></a>
-template&lt;invocable&lt; std::string, std::function&lt; T()&gt;, std::function&lt; T()&gt;, std::function&lt; T()&gt;, std::weak_ordering &gt; CheckFn&gt; </td></tr>
-<tr class="memitem:a73963355eb52a0db73f67873f078fc60"><td class="memTemplItemLeft" align="right" valign="top">requires static orderable&lt; T &gt; void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check</b> (std::string_view description, const transition_graph &amp;g, CheckFn checkFn)</td></tr>
-<tr class="separator:a73963355eb52a0db73f67873f078fc60"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a12ae17b7c4e08a3716aeb67abb85cd30"><td class="memTemplParams" colspan="2"><a id="a12ae17b7c4e08a3716aeb67abb85cd30"></a>
+template&lt;std::invocable&lt; std::string, std::function&lt; T()&gt;, std::function&lt; T()&gt;, std::function&lt; T()&gt;, std::weak_ordering &gt; CheckFn&gt; </td></tr>
+<tr class="memitem:a12ae17b7c4e08a3716aeb67abb85cd30"><td class="memTemplItemLeft" align="right" valign="top">requires static std::totally_ordered&lt; T &gt; void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check</b> (std::string_view description, const transition_graph &amp;g, CheckFn checkFn)</td></tr>
+<tr class="separator:a12ae17b7c4e08a3716aeb67abb85cd30"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this struct was generated from the following file:<ul>
 <li>/Users/Claire/Dropbox/Sequoia/Source/sequoia/TestFramework/<a class="el" href="../../d8/d43/StateTransitionUtilities_8hpp_source.html">StateTransitionUtilities.hpp</a></li>

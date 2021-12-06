@@ -12,7 +12,7 @@
 
 namespace sequoia::testing
 {
-	template<> struct detailed_equality_checker<stuff::unique_thing>
+	template<> struct value_checker<stuff::unique_thing>
 	{
 		using type = stuff::unique_thing;
 

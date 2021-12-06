@@ -42,7 +42,7 @@ namespace sequoia::testing
 
   template<class WeightHandler, std::integral IndexType>
     requires ownership::handler<WeightHandler>
-  struct detailed_equality_checker<maths::partial_edge<WeightHandler, IndexType>>
+  struct value_checker<maths::partial_edge<WeightHandler, IndexType>>
   {
     using type = maths::partial_edge<WeightHandler, IndexType>;
 
@@ -71,7 +71,7 @@ namespace sequoia::testing
 
   template<class WeightHandler, std::integral IndexType>
     requires ownership::handler<WeightHandler>
-  struct detailed_equality_checker<maths::embedded_partial_edge<WeightHandler, IndexType>>
+  struct value_checker<maths::embedded_partial_edge<WeightHandler, IndexType>>
   {
     using type = maths::embedded_partial_edge<WeightHandler, IndexType>;
 
@@ -100,7 +100,7 @@ namespace sequoia::testing
 
   template<class WeightHandler, std::integral IndexType>
     requires ownership::handler<WeightHandler>
-  struct detailed_equality_checker<maths::edge<WeightHandler, IndexType>>
+  struct value_checker<maths::edge<WeightHandler, IndexType>>
   {
     using type = maths::edge<WeightHandler, IndexType>;
 
@@ -129,7 +129,7 @@ namespace sequoia::testing
 
   template<class WeightHandler, std::integral IndexType>
     requires ownership::handler<WeightHandler>
-  struct detailed_equality_checker<maths::embedded_edge<WeightHandler, IndexType>>
+  struct value_checker<maths::embedded_edge<WeightHandler, IndexType>>
   {
     using type = maths::embedded_edge<WeightHandler, IndexType>;
 

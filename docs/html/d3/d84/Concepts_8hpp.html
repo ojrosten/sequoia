@@ -77,103 +77,30 @@ $(function() {
 <div class="textblock"><code>#include &lt;type_traits&gt;</code><br />
 <code>#include &lt;utility&gt;</code><br />
 <code>#include &lt;functional&gt;</code><br />
+<code>#include &lt;concepts&gt;</code><br />
 </div>
 <p><a href="../../d3/d84/Concepts_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:af4a4360f87149f2ae9f030d1a18560b8"><td class="memTemplParams" colspan="2"><a id="af4a4360f87149f2ae9f030d1a18560b8"></a>
-template&lt;class T , class U &gt; </td></tr>
-<tr class="memitem:af4a4360f87149f2ae9f030d1a18560b8"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::same_as</b> = std::is_same_v&lt;T, U&gt;</td></tr>
-<tr class="separator:af4a4360f87149f2ae9f030d1a18560b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad2cd4e701f36f8e59f2b9894ea82d736"><td class="memTemplParams" colspan="2"><a id="ad2cd4e701f36f8e59f2b9894ea82d736"></a>
-template&lt;class T &gt; </td></tr>
-<tr class="memitem:ad2cd4e701f36f8e59f2b9894ea82d736"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::destructible</b> = std::is_nothrow_destructible_v&lt;T&gt;</td></tr>
-<tr class="separator:ad2cd4e701f36f8e59f2b9894ea82d736"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1b96197e2127f5b005ec99c28f5e01f8"><td class="memTemplParams" colspan="2">template&lt;class T , class... Args&gt; </td></tr>
-<tr class="memitem:a1b96197e2127f5b005ec99c28f5e01f8"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::constructible_from</b></td></tr>
-<tr class="separator:a1b96197e2127f5b005ec99c28f5e01f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af0c20b12197f8f028cd9bab2c52bfdfb"><td class="memTemplParams" colspan="2">template&lt;class From , class To &gt; </td></tr>
-<tr class="memitem:af0c20b12197f8f028cd9bab2c52bfdfb"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::convertible_to</b></td></tr>
-<tr class="separator:af0c20b12197f8f028cd9bab2c52bfdfb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7cd8e7636570d83865517c9bda63f4c9"><td class="memTemplParams" colspan="2">template&lt;class LHS , class RHS &gt; </td></tr>
-<tr class="memitem:a7cd8e7636570d83865517c9bda63f4c9"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::assignable_from</b></td></tr>
-<tr class="separator:a7cd8e7636570d83865517c9bda63f4c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae491b9c3ca1785ea8cf77d0b0e590365"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
-<tr class="memitem:ae491b9c3ca1785ea8cf77d0b0e590365"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::move_constructible</b></td></tr>
-<tr class="separator:ae491b9c3ca1785ea8cf77d0b0e590365"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ada5d4d37aaf764f682a9da7cf7f6c53b"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
-<tr class="memitem:ada5d4d37aaf764f682a9da7cf7f6c53b"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::swappable</b></td></tr>
-<tr class="separator:ada5d4d37aaf764f682a9da7cf7f6c53b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a86c44292cdcd951fcfa78b29a4e9988a"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
-<tr class="memitem:a86c44292cdcd951fcfa78b29a4e9988a"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::movable</b></td></tr>
-<tr class="separator:a86c44292cdcd951fcfa78b29a4e9988a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9898241c4104a0f4db617b56ff93dd02"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
-<tr class="memitem:a9898241c4104a0f4db617b56ff93dd02"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::copy_constructible</b></td></tr>
-<tr class="separator:a9898241c4104a0f4db617b56ff93dd02"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2924582fa5576b49d3a03f60a58f9210"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
-<tr class="memitem:a2924582fa5576b49d3a03f60a58f9210"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::copyable</b></td></tr>
-<tr class="separator:a2924582fa5576b49d3a03f60a58f9210"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a887cd579a81b7ea66f78d755ffca3f8c"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
-<tr class="memitem:a887cd579a81b7ea66f78d755ffca3f8c"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::default_initializable</b></td></tr>
-<tr class="separator:a887cd579a81b7ea66f78d755ffca3f8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a433151c5ac97acd810d0576d51f196fe"><td class="memTemplParams" colspan="2">template&lt;class B &gt; </td></tr>
-<tr class="memitem:a433151c5ac97acd810d0576d51f196fe"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::boolean</b></td></tr>
-<tr class="separator:a433151c5ac97acd810d0576d51f196fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a58b743265921dff61190c6ba90d5a2bd"><td class="memTemplParams" colspan="2">template&lt;class T , class U &gt; </td></tr>
-<tr class="memitem:a58b743265921dff61190c6ba90d5a2bd"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::weak_equality_comparable_with</b></td></tr>
-<tr class="separator:a58b743265921dff61190c6ba90d5a2bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a20f598ad7ed3986aebf70e6d54c3ef0c"><td class="memTemplParams" colspan="2"><a id="a20f598ad7ed3986aebf70e6d54c3ef0c"></a>
-template&lt;class T &gt; </td></tr>
-<tr class="memitem:a20f598ad7ed3986aebf70e6d54c3ef0c"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::equality_comparable</b> = weak_equality_comparable_with&lt;T, T&gt;</td></tr>
-<tr class="separator:a20f598ad7ed3986aebf70e6d54c3ef0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a15dfd9c0022de6f65e1a4115032e4c4e"><td class="memTemplParams" colspan="2"><a id="a15dfd9c0022de6f65e1a4115032e4c4e"></a>
-template&lt;class T &gt; </td></tr>
-<tr class="memitem:a15dfd9c0022de6f65e1a4115032e4c4e"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::semiregular</b> = copyable&lt;T&gt; &amp;&amp; default_initializable&lt;T&gt;</td></tr>
-<tr class="separator:a15dfd9c0022de6f65e1a4115032e4c4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7fbf2d0635d125dce8ec46a896e3da84"><td class="memTemplParams" colspan="2"><a id="a7fbf2d0635d125dce8ec46a896e3da84"></a>
-template&lt;class T &gt; </td></tr>
-<tr class="memitem:a7fbf2d0635d125dce8ec46a896e3da84"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::regular</b> = semiregular&lt;T&gt; &amp;&amp; equality_comparable&lt;T&gt;</td></tr>
-<tr class="separator:a7fbf2d0635d125dce8ec46a896e3da84"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae2f8510db5875827881ff4248dc5eae5"><td class="memTemplParams" colspan="2">template&lt;class Derived , class Base &gt; </td></tr>
-<tr class="memitem:ae2f8510db5875827881ff4248dc5eae5"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::derived_from</b></td></tr>
-<tr class="separator:ae2f8510db5875827881ff4248dc5eae5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a57bd22ecb817be5340e1d5158db19d70"><td class="memTemplParams" colspan="2">template&lt;class F , class... Args&gt; </td></tr>
-<tr class="memitem:a57bd22ecb817be5340e1d5158db19d70"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::invocable</b></td></tr>
-<tr class="separator:a57bd22ecb817be5340e1d5158db19d70"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a06de8f1c4629496c866e45efb4b168e9"><td class="memTemplParams" colspan="2"><a id="a06de8f1c4629496c866e45efb4b168e9"></a>
-template&lt;class T &gt; </td></tr>
-<tr class="memitem:a06de8f1c4629496c866e45efb4b168e9"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::integral</b> = std::is_integral_v&lt;T&gt;</td></tr>
-<tr class="separator:a06de8f1c4629496c866e45efb4b168e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4d4ebd9cc8b98c9b3f7aa89c3a5779d3"><td class="memTemplParams" colspan="2"><a id="a4d4ebd9cc8b98c9b3f7aa89c3a5779d3"></a>
-template&lt;class T &gt; </td></tr>
-<tr class="memitem:a4d4ebd9cc8b98c9b3f7aa89c3a5779d3"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::empty</b> = std::is_empty_v&lt;T&gt;</td></tr>
-<tr class="separator:a4d4ebd9cc8b98c9b3f7aa89c3a5779d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac2485b8f6ef28434e29041786b74eee8"><td class="memTemplParams" colspan="2">template&lt;class F , class R , class... Args&gt; </td></tr>
-<tr class="memitem:ac2485b8f6ef28434e29041786b74eee8"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::invocable_r</b></td></tr>
-<tr class="separator:ac2485b8f6ef28434e29041786b74eee8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:affcbc72378c7730177a854dfbdb6d727"><td class="memTemplParams" colspan="2"><a id="affcbc72378c7730177a854dfbdb6d727"></a>
-template&lt;class T &gt; </td></tr>
-<tr class="memitem:affcbc72378c7730177a854dfbdb6d727"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::stateful</b> = !empty&lt;T&gt;</td></tr>
-<tr class="separator:affcbc72378c7730177a854dfbdb6d727"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2baf39013db8bd2730a063a6c3f7d954"><td class="memTemplParams" colspan="2"><a id="a2baf39013db8bd2730a063a6c3f7d954"></a>
-template&lt;class T &gt; </td></tr>
-<tr class="memitem:a2baf39013db8bd2730a063a6c3f7d954"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::pseudoregular</b> = copyable&lt;T&gt; &amp;&amp; equality_comparable&lt;T&gt;</td></tr>
-<tr class="separator:a2baf39013db8bd2730a063a6c3f7d954"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0547a7f828b6468aca6f23352fec88d6"><td class="memTemplParams" colspan="2"><a id="a0547a7f828b6468aca6f23352fec88d6"></a>
-template&lt;class T &gt; </td></tr>
-<tr class="memitem:a0547a7f828b6468aca6f23352fec88d6"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::moveonly</b> = movable&lt;T&gt; &amp;&amp; !copyable&lt;T&gt; &amp;&amp; equality_comparable&lt;T&gt;</td></tr>
-<tr class="separator:a0547a7f828b6468aca6f23352fec88d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa18cfc2b5401eba3f3d88a86d42b780a"><td class="memTemplParams" colspan="2"><a id="aa18cfc2b5401eba3f3d88a86d42b780a"></a>
-template&lt;class T &gt; </td></tr>
-<tr class="memitem:aa18cfc2b5401eba3f3d88a86d42b780a"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::movable_comparable</b> = movable&lt;T&gt; &amp;&amp; equality_comparable&lt;T&gt;</td></tr>
-<tr class="separator:aa18cfc2b5401eba3f3d88a86d42b780a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa357cbe1c1963af53fa63609ef6966cb"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
-<tr class="memitem:aa357cbe1c1963af53fa63609ef6966cb"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::orderable</b></td></tr>
-<tr class="separator:aa357cbe1c1963af53fa63609ef6966cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a25e4c7caffa3402740d4838d87ef9528"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
 <tr class="memitem:a25e4c7caffa3402740d4838d87ef9528"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::three_way_comparable</b></td></tr>
 <tr class="separator:a25e4c7caffa3402740d4838d87ef9528"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac2485b8f6ef28434e29041786b74eee8"><td class="memTemplParams" colspan="2">template&lt;class F , class R , class... Args&gt; </td></tr>
+<tr class="memitem:ac2485b8f6ef28434e29041786b74eee8"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::invocable_r</b></td></tr>
+<tr class="separator:ac2485b8f6ef28434e29041786b74eee8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2baf39013db8bd2730a063a6c3f7d954"><td class="memTemplParams" colspan="2"><a id="a2baf39013db8bd2730a063a6c3f7d954"></a>
+template&lt;class T &gt; </td></tr>
+<tr class="memitem:a2baf39013db8bd2730a063a6c3f7d954"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::pseudoregular</b> = std::copyable&lt;T&gt; &amp;&amp; std::equality_comparable&lt;T&gt;</td></tr>
+<tr class="separator:a2baf39013db8bd2730a063a6c3f7d954"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0547a7f828b6468aca6f23352fec88d6"><td class="memTemplParams" colspan="2"><a id="a0547a7f828b6468aca6f23352fec88d6"></a>
+template&lt;class T &gt; </td></tr>
+<tr class="memitem:a0547a7f828b6468aca6f23352fec88d6"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::moveonly</b> = std::movable&lt;T&gt; &amp;&amp; !std::copyable&lt;T&gt; &amp;&amp; std::equality_comparable&lt;T&gt;</td></tr>
+<tr class="separator:a0547a7f828b6468aca6f23352fec88d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa18cfc2b5401eba3f3d88a86d42b780a"><td class="memTemplParams" colspan="2"><a id="aa18cfc2b5401eba3f3d88a86d42b780a"></a>
+template&lt;class T &gt; </td></tr>
+<tr class="memitem:aa18cfc2b5401eba3f3d88a86d42b780a"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::movable_comparable</b> = std::movable&lt;T&gt; &amp;&amp; std::equality_comparable&lt;T&gt;</td></tr>
+<tr class="separator:aa18cfc2b5401eba3f3d88a86d42b780a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6565d46b3cd3a40598191fa9a618e132"><td class="memTemplParams" colspan="2">template&lt;class A &gt; </td></tr>
 <tr class="memitem:a6565d46b3cd3a40598191fa9a618e132"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::alloc</b></td></tr>
 <tr class="separator:a6565d46b3cd3a40598191fa9a618e132"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -219,184 +146,6 @@ template&lt;class A &gt; </div>
 </div><!-- fragment -->
 </div>
 </div>
-<a id="a7cd8e7636570d83865517c9bda63f4c9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7cd8e7636570d83865517c9bda63f4c9">&#9670;&nbsp;</a></span>assignable_from</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class LHS , class RHS &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">concept sequoia::assignable_from</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">=</div>
-<div class="line">       std::is_lvalue_reference_v&lt;LHS&gt;</div>
-<div class="line">    </div>
-<div class="line">    &amp;&amp; requires(LHS lhs, RHS&amp;&amp; rhs) {</div>
-<div class="line">         { lhs = std::forward&lt;RHS&gt;(rhs) } -&gt; same_as&lt;LHS&gt;;</div>
-<div class="line">       }</div>
-</div><!-- fragment -->
-</div>
-</div>
-<a id="a433151c5ac97acd810d0576d51f196fe"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a433151c5ac97acd810d0576d51f196fe">&#9670;&nbsp;</a></span>boolean</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class B &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">concept sequoia::boolean</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">=</div>
-<div class="line">       movable&lt;std::remove_cvref_t&lt;B&gt;&gt;</div>
-<div class="line">    &amp;&amp; requires(<span class="keyword">const</span> std::remove_reference_t&lt;B&gt;&amp; b1,</div>
-<div class="line">                <span class="keyword">const</span> std::remove_reference_t&lt;B&gt;&amp; b2, <span class="keyword">const</span> <span class="keywordtype">bool</span> a) {</div>
-<div class="line">      { b1 }       -&gt; convertible_to&lt;bool&gt;;</div>
-<div class="line">      { !b1 }      -&gt; convertible_to&lt;bool&gt;;</div>
-<div class="line">      { b1 &amp;&amp; b2 } -&gt; same_as&lt;bool&gt;;</div>
-<div class="line">      { b1 &amp;&amp;  a } -&gt; same_as&lt;bool&gt;;</div>
-<div class="line">      {  a &amp;&amp; b2 } -&gt; same_as&lt;bool&gt;;</div>
-<div class="line">      { b1 || b2 } -&gt; same_as&lt;bool&gt;;</div>
-<div class="line">      { b1 ||  a } -&gt; same_as&lt;bool&gt;;</div>
-<div class="line">      {  a || b2 } -&gt; same_as&lt;bool&gt;;</div>
-<div class="line">      { b1 == b2 } -&gt; convertible_to&lt;bool&gt;;</div>
-<div class="line">      { b1 ==  a } -&gt; convertible_to&lt;bool&gt;;</div>
-<div class="line">      {  a == b2 } -&gt; convertible_to&lt;bool&gt;;</div>
-<div class="line">      { b1 != b2 } -&gt; convertible_to&lt;bool&gt;;</div>
-<div class="line">      { b1 !=  a } -&gt; convertible_to&lt;bool&gt;;</div>
-<div class="line">      {  a != b2 } -&gt; convertible_to&lt;bool&gt;;</div>
-<div class="line">    }</div>
-</div><!-- fragment -->
-</div>
-</div>
-<a id="a1b96197e2127f5b005ec99c28f5e01f8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1b96197e2127f5b005ec99c28f5e01f8">&#9670;&nbsp;</a></span>constructible_from</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class T , class... Args&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">concept sequoia::constructible_from</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">=</div>
-<div class="line">    destructible&lt;T&gt; &amp;&amp; std::is_constructible_v&lt;T, Args...&gt;</div>
-</div><!-- fragment -->
-</div>
-</div>
-<a id="af0c20b12197f8f028cd9bab2c52bfdfb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af0c20b12197f8f028cd9bab2c52bfdfb">&#9670;&nbsp;</a></span>convertible_to</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class From , class To &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">concept sequoia::convertible_to</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">=</div>
-<div class="line">       std::is_convertible_v&lt;From, To&gt;</div>
-<div class="line">    &amp;&amp; requires(std::add_rvalue_reference_t&lt;From&gt; (&amp;f)()) {</div>
-<div class="line">         <span class="keyword">static_cast&lt;</span>To<span class="keyword">&gt;</span>(f());</div>
-<div class="line">       }</div>
-</div><!-- fragment -->
-</div>
-</div>
-<a id="a9898241c4104a0f4db617b56ff93dd02"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9898241c4104a0f4db617b56ff93dd02">&#9670;&nbsp;</a></span>copy_constructible</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class T &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">concept sequoia::copy_constructible</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">=</div>
-<div class="line">       move_constructible&lt;T&gt;</div>
-<div class="line">    &amp;&amp; constructible_from&lt;T, T&amp;&gt;       &amp;&amp; convertible_to&lt;T&amp;, T&gt;</div>
-<div class="line">    &amp;&amp; constructible_from&lt;T, const T&amp;&gt; &amp;&amp; convertible_to&lt;const T&amp;, T&gt;</div>
-<div class="line">    &amp;&amp; constructible_from&lt;T, const T&gt;  &amp;&amp; convertible_to&lt;const T, T&gt;</div>
-</div><!-- fragment -->
-</div>
-</div>
-<a id="a2924582fa5576b49d3a03f60a58f9210"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2924582fa5576b49d3a03f60a58f9210">&#9670;&nbsp;</a></span>copyable</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class T &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">concept sequoia::copyable</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">=</div>
-<div class="line">       copy_constructible&lt;T&gt;</div>
-<div class="line">    &amp;&amp; movable&lt;T&gt;</div>
-<div class="line">    &amp;&amp; assignable_from&lt;T&amp;, T&amp;&gt;</div>
-<div class="line">    &amp;&amp; assignable_from&lt;T&amp;, const T&amp;&gt;</div>
-<div class="line">    &amp;&amp; assignable_from&lt;T&amp;, const T&gt;</div>
-</div><!-- fragment -->
-</div>
-</div>
-<a id="a887cd579a81b7ea66f78d755ffca3f8c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a887cd579a81b7ea66f78d755ffca3f8c">&#9670;&nbsp;</a></span>default_initializable</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class T &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">concept sequoia::default_initializable</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">=</div>
-<div class="line">       constructible_from&lt;T&gt;</div>
-<div class="line">    &amp;&amp; requires { T{}; }</div>
-<div class="line">    &amp;&amp; requires { ::new (<span class="keyword">static_cast&lt;</span><span class="keywordtype">void</span>*<span class="keyword">&gt;</span>(<span class="keyword">nullptr</span>)) T; }</div>
-</div><!-- fragment -->
-</div>
-</div>
-<a id="ae2f8510db5875827881ff4248dc5eae5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae2f8510db5875827881ff4248dc5eae5">&#9670;&nbsp;</a></span>derived_from</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class Derived , class Base &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">concept sequoia::derived_from</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">=</div>
-<div class="line">       std::is_base_of_v&lt;Base, Derived&gt;</div>
-<div class="line">    &amp;&amp; std::is_convertible_v&lt;const volatile Derived*, const volatile Base*&gt;</div>
-</div><!-- fragment -->
-</div>
-</div>
 <a id="a1c290b01c60ee0847bf9f715cb50e54c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1c290b01c60ee0847bf9f715cb50e54c">&#9670;&nbsp;</a></span>deserializable_from</h2>
 
@@ -435,26 +184,6 @@ template&lt;class T &gt; </div>
 </div><!-- fragment -->
 </div>
 </div>
-<a id="a57bd22ecb817be5340e1d5158db19d70"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a57bd22ecb817be5340e1d5158db19d70">&#9670;&nbsp;</a></span>invocable</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class F , class... Args&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">concept sequoia::invocable</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">=</div>
-<div class="line">    requires(F&amp;&amp; f, Args&amp;&amp;... args) {</div>
-<div class="line">      std::invoke(std::forward&lt;F&gt;(f), std::forward&lt;Args&gt;(args)...);</div>
-<div class="line">  }</div>
-</div><!-- fragment -->
-</div>
-</div>
 <a id="ac2485b8f6ef28434e29041786b74eee8"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac2485b8f6ef28434e29041786b74eee8">&#9670;&nbsp;</a></span>invocable_r</h2>
 
@@ -470,70 +199,7 @@ template&lt;class F , class R , class... Args&gt; </div>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">=</div>
 <div class="line">    requires(F&amp;&amp; f, Args&amp;&amp;... args) {</div>
-<div class="line">      { std::invoke(std::forward&lt;F&gt;(f), std::forward&lt;Args&gt;(args)...) } -&gt; same_as&lt;R&gt;;</div>
-<div class="line">  }</div>
-</div><!-- fragment -->
-</div>
-</div>
-<a id="a86c44292cdcd951fcfa78b29a4e9988a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a86c44292cdcd951fcfa78b29a4e9988a">&#9670;&nbsp;</a></span>movable</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class T &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">concept sequoia::movable</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">=</div>
-<div class="line">       std::is_object_v&lt;T&gt;</div>
-<div class="line">    &amp;&amp; move_constructible&lt;T&gt;</div>
-<div class="line">    &amp;&amp; assignable_from&lt;T&amp;, T&gt;</div>
-<div class="line">    &amp;&amp; swappable&lt;T&gt;</div>
-</div><!-- fragment -->
-</div>
-</div>
-<a id="ae491b9c3ca1785ea8cf77d0b0e590365"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae491b9c3ca1785ea8cf77d0b0e590365">&#9670;&nbsp;</a></span>move_constructible</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class T &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">concept sequoia::move_constructible</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">=</div>
-<div class="line">    constructible_from&lt;T, T&gt; &amp;&amp; convertible_to&lt;T, T&gt;</div>
-</div><!-- fragment -->
-</div>
-</div>
-<a id="aa357cbe1c1963af53fa63609ef6966cb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa357cbe1c1963af53fa63609ef6966cb">&#9670;&nbsp;</a></span>orderable</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class T &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">concept sequoia::orderable</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">= equality_comparable&lt;T&gt; &amp;&amp;</div>
-<div class="line">    requires(<span class="keyword">const</span> std::remove_reference_t&lt;T&gt;&amp; t,<span class="keyword">const</span> std::remove_reference_t&lt;T&gt;&amp; u)</div>
-<div class="line">  {</div>
-<div class="line">    { t &lt; u  } -&gt; boolean;</div>
-<div class="line">    { t &lt;= u } -&gt; boolean;</div>
-<div class="line">    { t &gt; u  } -&gt; boolean;</div>
-<div class="line">    { t &gt;= u } -&gt; boolean;</div>
+<div class="line">      { std::invoke(std::forward&lt;F&gt;(f), std::forward&lt;Args&gt;(args)...) } -&gt; std::same_as&lt;R&gt;;</div>
 <div class="line">  }</div>
 </div><!-- fragment -->
 </div>
@@ -555,7 +221,7 @@ template&lt;class T &gt; </div>
 <div class="line">    std::begin(t);</div>
 <div class="line">    std::end(t);</div>
 <div class="line"> </div>
-<div class="line">    requires (!same_as&lt;std::remove_cvref_t&lt;decltype(*std::begin(t))&gt;, std::remove_cvref_t&lt;T&gt;&gt;);</div>
+<div class="line">    requires (!std::same_as&lt;std::remove_cvref_t&lt;decltype(*std::begin(t))&gt;, std::remove_cvref_t&lt;T&gt;&gt;);</div>
 <div class="line">  }</div>
 </div><!-- fragment -->
 </div>
@@ -599,26 +265,6 @@ template&lt;class T , class Stream &gt; </div>
 </div><!-- fragment -->
 </div>
 </div>
-<a id="ada5d4d37aaf764f682a9da7cf7f6c53b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ada5d4d37aaf764f682a9da7cf7f6c53b">&#9670;&nbsp;</a></span>swappable</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class T &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">concept sequoia::swappable</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">=</div>
-<div class="line">    requires(T&amp; a, T&amp; b) {</div>
-<div class="line">      std::swap(a, b);</div>
-<div class="line">    }</div>
-</div><!-- fragment -->
-</div>
-</div>
 <a id="a25e4c7caffa3402740d4838d87ef9528"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a25e4c7caffa3402740d4838d87ef9528">&#9670;&nbsp;</a></span>three_way_comparable</h2>
 
@@ -632,35 +278,11 @@ template&lt;class T &gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">= requires(<span class="keyword">const</span> std::remove_reference_t&lt;T&gt;&amp; t,</div>
-<div class="line">                                          <span class="keyword">const</span> std::remove_reference_t&lt;T&gt;&amp; u)</div>
+<b>Initial value:</b><div class="fragment"><div class="line">= requires(<span class="keyword">const</span> std::remove_reference_t&lt;T&gt;&amp;t,</div>
+<div class="line">                                          <span class="keyword">const</span> std::remove_reference_t&lt;T&gt;&amp;u)</div>
 <div class="line">  {</div>
 <div class="line">    t &lt;=&gt; u;</div>
 <div class="line">  }</div>
-</div><!-- fragment -->
-</div>
-</div>
-<a id="a58b743265921dff61190c6ba90d5a2bd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a58b743265921dff61190c6ba90d5a2bd">&#9670;&nbsp;</a></span>weak_equality_comparable_with</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class T , class U &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">concept sequoia::weak_equality_comparable_with</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">=</div>
-<div class="line">    requires(<span class="keyword">const</span> std::remove_reference_t&lt;T&gt;&amp; t,</div>
-<div class="line">             <span class="keyword">const</span> std::remove_reference_t&lt;U&gt;&amp; u) {</div>
-<div class="line">      { t == u } -&gt; boolean;</div>
-<div class="line">      { t != u } -&gt; boolean;</div>
-<div class="line">      { u == t } -&gt; boolean;</div>
-<div class="line">      { u != t } -&gt; boolean;</div>
-<div class="line">    }</div>
 </div><!-- fragment -->
 </div>
 </div>

@@ -78,6 +78,7 @@ $(function() {
 <div class="textblock"><code>#include &lt;cmath&gt;</code><br />
 <code>#include &lt;numeric&gt;</code><br />
 <code>#include &lt;optional&gt;</code><br />
+<code>#include &lt;iterator&gt;</code><br />
 </div>
 <p><a href="../../dd/d02/StatisticalAlgorithms_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -88,30 +89,30 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a0e47f449fddd847f135b6bc876e53dea"><td class="memTemplParams" colspan="2"><a id="a0e47f449fddd847f135b6bc876e53dea"></a>
-template&lt;class InputIt , class T  = typename std::iterator_traits&lt;InputIt&gt;::value_type&gt; </td></tr>
-<tr class="memitem:a0e47f449fddd847f135b6bc876e53dea"><td class="memTemplItemLeft" align="right" valign="top">std::optional&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::mean</b> (InputIt first, InputIt last)</td></tr>
-<tr class="separator:a0e47f449fddd847f135b6bc876e53dea"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aded0763171b8958a101b18fbe02c53eb"><td class="memTemplParams" colspan="2"><a id="aded0763171b8958a101b18fbe02c53eb"></a>
-template&lt;class InputIt , class T  = typename std::iterator_traits&lt;InputIt&gt;::value_type&gt; </td></tr>
-<tr class="memitem:aded0763171b8958a101b18fbe02c53eb"><td class="memTemplItemLeft" align="right" valign="top">std::pair&lt; std::optional&lt; T &gt;, std::optional&lt; T &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::cummulative_square_diffs</b> (InputIt first, InputIt last)</td></tr>
-<tr class="separator:aded0763171b8958a101b18fbe02c53eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6cbfa3d74f4987a73b270563e7686ce0"><td class="memTemplParams" colspan="2"><a id="a6cbfa3d74f4987a73b270563e7686ce0"></a>
-template&lt;class InputIt , class T  = typename std::iterator_traits&lt;InputIt&gt;::value_type&gt; </td></tr>
-<tr class="memitem:a6cbfa3d74f4987a73b270563e7686ce0"><td class="memTemplItemLeft" align="right" valign="top">std::pair&lt; std::optional&lt; T &gt;, std::optional&lt; T &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::variance</b> (InputIt first, InputIt last)</td></tr>
-<tr class="separator:a6cbfa3d74f4987a73b270563e7686ce0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5553de7a13fd812bde6551abca9993ab"><td class="memTemplParams" colspan="2"><a id="a5553de7a13fd812bde6551abca9993ab"></a>
-template&lt;class InputIt , class T  = typename std::iterator_traits&lt;InputIt&gt;::value_type&gt; </td></tr>
-<tr class="memitem:a5553de7a13fd812bde6551abca9993ab"><td class="memTemplItemLeft" align="right" valign="top">std::pair&lt; std::optional&lt; T &gt;, std::optional&lt; T &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::sample_variance</b> (InputIt first, InputIt last)</td></tr>
-<tr class="separator:a5553de7a13fd812bde6551abca9993ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9bf1082b9b2ba61dc4c7f110514a9631"><td class="memTemplParams" colspan="2"><a id="a9bf1082b9b2ba61dc4c7f110514a9631"></a>
-template&lt;class InputIt , class T  = typename std::iterator_traits&lt;InputIt&gt;::value_type&gt; </td></tr>
-<tr class="memitem:a9bf1082b9b2ba61dc4c7f110514a9631"><td class="memTemplItemLeft" align="right" valign="top">std::pair&lt; std::optional&lt; T &gt;, std::optional&lt; T &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::standard_deviation</b> (InputIt first, InputIt last)</td></tr>
-<tr class="separator:a9bf1082b9b2ba61dc4c7f110514a9631"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac00c0484ead6a7c7a91722ee5dbd4f9e"><td class="memTemplParams" colspan="2"><a id="ac00c0484ead6a7c7a91722ee5dbd4f9e"></a>
-template&lt;class InputIt , class Estimator  = bias::gaussian_approx_estimator, class T  = typename std::iterator_traits&lt;InputIt&gt;::value_type&gt; </td></tr>
-<tr class="memitem:ac00c0484ead6a7c7a91722ee5dbd4f9e"><td class="memTemplItemLeft" align="right" valign="top">std::pair&lt; std::optional&lt; T &gt;, std::optional&lt; T &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::sample_standard_deviation</b> (InputIt first, InputIt last, Estimator estimator=Estimator{})</td></tr>
-<tr class="separator:ac00c0484ead6a7c7a91722ee5dbd4f9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4da18c851ca36f64bd4416886f149f61"><td class="memTemplParams" colspan="2"><a id="a4da18c851ca36f64bd4416886f149f61"></a>
+template&lt;std::input_iterator Iter, class T  = typename std::iterator_traits&lt;Iter&gt;::value_type&gt; </td></tr>
+<tr class="memitem:a4da18c851ca36f64bd4416886f149f61"><td class="memTemplItemLeft" align="right" valign="top">std::optional&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::mean</b> (Iter first, Iter last)</td></tr>
+<tr class="separator:a4da18c851ca36f64bd4416886f149f61"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a90e3715fdaff4cc674a6d5978e47559e"><td class="memTemplParams" colspan="2"><a id="a90e3715fdaff4cc674a6d5978e47559e"></a>
+template&lt;std::input_iterator Iter, class T  = typename std::iterator_traits&lt;Iter&gt;::value_type&gt; </td></tr>
+<tr class="memitem:a90e3715fdaff4cc674a6d5978e47559e"><td class="memTemplItemLeft" align="right" valign="top">std::pair&lt; std::optional&lt; T &gt;, std::optional&lt; T &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::cummulative_square_diffs</b> (Iter first, Iter last)</td></tr>
+<tr class="separator:a90e3715fdaff4cc674a6d5978e47559e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac1ed1f1c4180d9b1155c311ea40b979f"><td class="memTemplParams" colspan="2"><a id="ac1ed1f1c4180d9b1155c311ea40b979f"></a>
+template&lt;std::input_iterator Iter, class T  = typename std::iterator_traits&lt;Iter&gt;::value_type&gt; </td></tr>
+<tr class="memitem:ac1ed1f1c4180d9b1155c311ea40b979f"><td class="memTemplItemLeft" align="right" valign="top">std::pair&lt; std::optional&lt; T &gt;, std::optional&lt; T &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::variance</b> (Iter first, Iter last)</td></tr>
+<tr class="separator:ac1ed1f1c4180d9b1155c311ea40b979f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a044f9d9fb2240c1bbc4ce71c10a252e8"><td class="memTemplParams" colspan="2"><a id="a044f9d9fb2240c1bbc4ce71c10a252e8"></a>
+template&lt;std::input_iterator Iter, class T  = typename std::iterator_traits&lt;Iter&gt;::value_type&gt; </td></tr>
+<tr class="memitem:a044f9d9fb2240c1bbc4ce71c10a252e8"><td class="memTemplItemLeft" align="right" valign="top">std::pair&lt; std::optional&lt; T &gt;, std::optional&lt; T &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::sample_variance</b> (Iter first, Iter last)</td></tr>
+<tr class="separator:a044f9d9fb2240c1bbc4ce71c10a252e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab8ac5e1c8ced0d473c5f3951dc03fe3d"><td class="memTemplParams" colspan="2"><a id="ab8ac5e1c8ced0d473c5f3951dc03fe3d"></a>
+template&lt;std::input_iterator Iter, class T  = typename std::iterator_traits&lt;Iter&gt;::value_type&gt; </td></tr>
+<tr class="memitem:ab8ac5e1c8ced0d473c5f3951dc03fe3d"><td class="memTemplItemLeft" align="right" valign="top">std::pair&lt; std::optional&lt; T &gt;, std::optional&lt; T &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::standard_deviation</b> (Iter first, Iter last)</td></tr>
+<tr class="separator:ab8ac5e1c8ced0d473c5f3951dc03fe3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9c7fc92c3170b41d8856b65401232dbe"><td class="memTemplParams" colspan="2"><a id="a9c7fc92c3170b41d8856b65401232dbe"></a>
+template&lt;std::input_iterator Iter, class Estimator  = bias::gaussian_approx_estimator, class T  = typename std::iterator_traits&lt;Iter&gt;::value_type&gt; </td></tr>
+<tr class="memitem:a9c7fc92c3170b41d8856b65401232dbe"><td class="memTemplItemLeft" align="right" valign="top">std::pair&lt; std::optional&lt; T &gt;, std::optional&lt; T &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::sample_standard_deviation</b> (Iter first, Iter last, Estimator estimator=Estimator{})</td></tr>
+<tr class="separator:a9c7fc92c3170b41d8856b65401232dbe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Tools for statistical analysis. </p>

@@ -90,6 +90,8 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/db9/structsequoia_1_1ownership_1_1independent.html">sequoia::ownership::independent&lt; T &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d61/structsequoia_1_1maths_1_1directed__flavour__constant.html">sequoia::maths::directed_flavour_constant&lt; Directedness &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/deb/structsequoia_1_1maths_1_1graph__impl_1_1sharing__traits.html">sequoia::maths::graph_impl::sharing_traits&lt; GraphFlavour, SharingPreference, EdgeWeightCreator &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d9f/structsequoia_1_1maths_1_1graph__impl_1_1flavour__to__edge.html">sequoia::maths::graph_impl::flavour_to_edge&lt; GraphFlavour, Handler, IndexType, SharedEdge &gt;</a></td></tr>
@@ -105,6 +107,12 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
+<tr class="memitem:a2cb4ad87d09f61230b9519bcf80ba78d"><td class="memItemLeft" align="right" valign="top"><a id="a2cb4ad87d09f61230b9519bcf80ba78d"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::maths::undirected_type</b> = directed_flavour_constant&lt; directed_flavour::undirected &gt;</td></tr>
+<tr class="separator:a2cb4ad87d09f61230b9519bcf80ba78d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a303b9824624e1220b8aaf41ae13b2374"><td class="memItemLeft" align="right" valign="top"><a id="a303b9824624e1220b8aaf41ae13b2374"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::maths::directed_type</b> = directed_flavour_constant&lt; directed_flavour::directed &gt;</td></tr>
+<tr class="separator:a303b9824624e1220b8aaf41ae13b2374"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0c0ceb49d9ca91eb5c90313a6929d438"><td class="memTemplParams" colspan="2"><a id="a0c0ceb49d9ca91eb5c90313a6929d438"></a>
 template&lt;bool Shared, class Proxy &gt; </td></tr>
 <tr class="memitem:a0c0ceb49d9ca91eb5c90313a6929d438"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::graph_impl::shared_to_handler_t</b> = std::conditional_t&lt; Shared, ownership::shared&lt; Proxy &gt;, ownership::independent&lt; Proxy &gt; &gt;</td></tr>
@@ -114,7 +122,7 @@ template&lt;class EdgeWeightCreator &gt; </td></tr>
 <tr class="memitem:a2272d8b0afa4364d6a5638849b7c57aa"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::graph_impl::edge_weight_proxy_t</b> = typename EdgeWeightCreator::proxy</td></tr>
 <tr class="separator:a2272d8b0afa4364d6a5638849b7c57aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2506496299159e25adaedd91e3060d36"><td class="memTemplParams" colspan="2"><a id="a2506496299159e25adaedd91e3060d36"></a>
-template&lt;graph_flavour GraphFlavour, class Handler , integral IndexType, bool SharedEdge&gt; </td></tr>
+template&lt;graph_flavour GraphFlavour, class Handler , std::integral IndexType, bool SharedEdge&gt; </td></tr>
 <tr class="memitem:a2506496299159e25adaedd91e3060d36"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::graph_impl::flavour_to_edge_t</b> = typename flavour_to_edge&lt; GraphFlavour, Handler, IndexType, SharedEdge &gt;::edge_type</td></tr>
 <tr class="separator:a2506496299159e25adaedd91e3060d36"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a28b8bc088555e2525795af9fb8e6ba81"><td class="memTemplParams" colspan="2"><a id="a28b8bc088555e2525795af9fb8e6ba81"></a>
@@ -166,25 +174,33 @@ template&lt;class EdgeWeightCreator &gt; </td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a853d2e40a68a9b1820d2e567c8cab7e8"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
-<tr class="memitem:a853d2e40a68a9b1820d2e567c8cab7e8"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::graph_impl::has_reservable_partitions</b></td></tr>
-<tr class="separator:a853d2e40a68a9b1820d2e567c8cab7e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa22664e75936ead3113247c3b65402af"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
+<tr class="memitem:aa22664e75936ead3113247c3b65402af"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::graph_impl::has_reservable_partitions</b></td></tr>
+<tr class="separator:aa22664e75936ead3113247c3b65402af"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Meta-programming elements for graph implementation. </p>
 </div><h2 class="groupheader">Variable Documentation</h2>
-<a id="a853d2e40a68a9b1820d2e567c8cab7e8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a853d2e40a68a9b1820d2e567c8cab7e8">&#9670;&nbsp;</a></span>has_reservable_partitions</h2>
+<a id="aa22664e75936ead3113247c3b65402af"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa22664e75936ead3113247c3b65402af">&#9670;&nbsp;</a></span>has_reservable_partitions</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">concept sequoia::maths::graph_impl::has_reservable_partitions</td>
+          <td class="memname">constexpr bool sequoia::maths::graph_impl::has_reservable_partitions</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">= requires(T&amp; t) {</div>
 <div class="line">        t.reserve_partition(0, 0);</div>

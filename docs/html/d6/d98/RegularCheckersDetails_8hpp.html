@@ -96,20 +96,20 @@ template&lt;test_mode Mode, class Actions , pseudoregular T&gt; </td></tr>
 <tr class="memitem:a38899daf8317ecac1b9aa65c1c8f6f5d"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_copy_assign</b> (test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, T &amp;z, const T &amp;y)</td></tr>
 <tr class="separator:a38899daf8317ecac1b9aa65c1c8f6f5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae7d4fff05f9d664829fc5e65969f8911"><td class="memTemplParams" colspan="2"><a id="ae7d4fff05f9d664829fc5e65969f8911"></a>
-template&lt;test_mode Mode, class Actions , pseudoregular T, invocable&lt; T &amp; &gt; Mutator, class... Args&gt; </td></tr>
+template&lt;test_mode Mode, class Actions , pseudoregular T, std::invocable&lt; T &amp; &gt; Mutator, class... Args&gt; </td></tr>
 <tr class="memitem:ae7d4fff05f9d664829fc5e65969f8911"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_semantics</b> (test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, const T &amp;x, const T &amp;y, Mutator yMutator, const Args &amp;... args)</td></tr>
 <tr class="separator:ae7d4fff05f9d664829fc5e65969f8911"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:ac4443b6bf79ac2af43c772c09a8e1cb4"><td class="memTemplParams" colspan="2"><a id="ac4443b6bf79ac2af43c772c09a8e1cb4"></a>
+<tr class="memitem:a1a590c61cdb1e4b79634d250f7a1d868"><td class="memTemplParams" colspan="2"><a id="a1a590c61cdb1e4b79634d250f7a1d868"></a>
 template&lt;class Actions &gt; </td></tr>
-<tr class="memitem:ac4443b6bf79ac2af43c772c09a8e1cb4"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::has_post_copy_action</b> = requires { &amp;Actions::post_copy_action; }</td></tr>
-<tr class="separator:ac4443b6bf79ac2af43c772c09a8e1cb4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af8e87e2ef3d779c3d61177de7b31a55e"><td class="memTemplParams" colspan="2"><a id="af8e87e2ef3d779c3d61177de7b31a55e"></a>
+<tr class="memitem:a1a590c61cdb1e4b79634d250f7a1d868"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::has_post_copy_action</b> = requires { &amp;Actions::post_copy_action; }</td></tr>
+<tr class="separator:a1a590c61cdb1e4b79634d250f7a1d868"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2938a5c086df3544a6b2cb2b97e23629"><td class="memTemplParams" colspan="2"><a id="a2938a5c086df3544a6b2cb2b97e23629"></a>
 template&lt;class Actions &gt; </td></tr>
-<tr class="memitem:af8e87e2ef3d779c3d61177de7b31a55e"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::has_post_copy_assign_action</b> = requires { &amp;Actions::post_copy_assign_action; }</td></tr>
-<tr class="separator:af8e87e2ef3d779c3d61177de7b31a55e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2938a5c086df3544a6b2cb2b97e23629"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::has_post_copy_assign_action</b> = requires { &amp;Actions::post_copy_assign_action; }</td></tr>
+<tr class="separator:a2938a5c086df3544a6b2cb2b97e23629"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Implementation details for checking regular semantics. </p>

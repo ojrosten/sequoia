@@ -75,60 +75,34 @@ $(function() {
 <p>A collection of constexpr algorithms.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="../../d3/d84/Concepts_8hpp_source.html">sequoia/Core/Meta/Concepts.hpp</a>&quot;</code><br />
+<code>#include &lt;algorithm&gt;</code><br />
 <code>#include &lt;functional&gt;</code><br />
+<code>#include &lt;iterator&gt;</code><br />
 </div>
 <p><a href="../../d6/d07/Algorithms_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a683cf18120cb353ed0b5bea64145278e"><td class="memTemplParams" colspan="2"><a id="a683cf18120cb353ed0b5bea64145278e"></a>
-template&lt;class T &gt; </td></tr>
-<tr class="memitem:a683cf18120cb353ed0b5bea64145278e"><td class="memTemplItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::swap</b> (T &amp;a, T &amp;b) noexcept(noexcept(std::swap(a, b)))</td></tr>
-<tr class="separator:a683cf18120cb353ed0b5bea64145278e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3c76b567c9b9db3ea221ebf5aa5174a9"><td class="memTemplParams" colspan="2"><a id="a3c76b567c9b9db3ea221ebf5aa5174a9"></a>
-template&lt;class Iter &gt; </td></tr>
-<tr class="memitem:a3c76b567c9b9db3ea221ebf5aa5174a9"><td class="memTemplItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::iter_swap</b> (Iter a, Iter b)</td></tr>
-<tr class="separator:a3c76b567c9b9db3ea221ebf5aa5174a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6f92f99d98834b387c91364ed27945db"><td class="memTemplParams" colspan="2"><a id="a6f92f99d98834b387c91364ed27945db"></a>
-template&lt;class FwdIter , class Comparer  = std::less&lt;std::decay_t&lt;decltype(*FwdIter())&gt;&gt;&gt; </td></tr>
-<tr class="memitem:a6f92f99d98834b387c91364ed27945db"><td class="memTemplItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::bubble_up</b> (FwdIter begin, FwdIter current, Comparer comp=Comparer{})</td></tr>
-<tr class="separator:a6f92f99d98834b387c91364ed27945db"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a263ce9cc9773bd10d1d4f798f9f09d52"><td class="memTemplParams" colspan="2"><a id="a263ce9cc9773bd10d1d4f798f9f09d52"></a>
-template&lt;class FwdIter , class Comparer  = std::less&lt;std::decay_t&lt;decltype(*FwdIter())&gt;&gt;&gt; </td></tr>
-<tr class="memitem:a263ce9cc9773bd10d1d4f798f9f09d52"><td class="memTemplItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::bubble_down</b> (FwdIter begin, FwdIter current, FwdIter end, Comparer comp=Comparer{})</td></tr>
-<tr class="separator:a263ce9cc9773bd10d1d4f798f9f09d52"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a11ac8e287bc135a4097d4fd94c1e9461"><td class="memTemplParams" colspan="2"><a id="a11ac8e287bc135a4097d4fd94c1e9461"></a>
-template&lt;class FwdIter , class Comparer  = std::less&lt;std::decay_t&lt;decltype(*FwdIter())&gt;&gt;&gt; </td></tr>
-<tr class="memitem:a11ac8e287bc135a4097d4fd94c1e9461"><td class="memTemplItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::make_heap</b> (FwdIter begin, FwdIter end, Comparer comp=Comparer{})</td></tr>
-<tr class="separator:a11ac8e287bc135a4097d4fd94c1e9461"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a85f4e9bb50033d7889996c5866d3c489"><td class="memTemplParams" colspan="2"><a id="a85f4e9bb50033d7889996c5866d3c489"></a>
-template&lt;class FwdIter , class Comparer  = std::less&lt;std::decay_t&lt;decltype(*FwdIter())&gt;&gt;&gt; </td></tr>
-<tr class="memitem:a85f4e9bb50033d7889996c5866d3c489"><td class="memTemplItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::sort</b> (FwdIter begin, FwdIter end, Comparer comp=Comparer{})</td></tr>
-<tr class="separator:a85f4e9bb50033d7889996c5866d3c489"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7494324a9943fe3cb0da375acf4a1587"><td class="memTemplParams" colspan="2"><a id="a7494324a9943fe3cb0da375acf4a1587"></a>
-template&lt;class ForwardIt &gt; </td></tr>
-<tr class="memitem:a7494324a9943fe3cb0da375acf4a1587"><td class="memTemplItemLeft" align="right" valign="top">constexpr ForwardIt&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::rotate</b> (ForwardIt first, ForwardIt n_first, ForwardIt last)</td></tr>
-<tr class="separator:a7494324a9943fe3cb0da375acf4a1587"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9e4fe271be1a66cb822625d3e8e49a96"><td class="memTemplParams" colspan="2"><a id="a9e4fe271be1a66cb822625d3e8e49a96"></a>
-template&lt;class FwdIter , class Comparer  = std::equal_to&lt;std::decay_t&lt;decltype(*FwdIter())&gt;&gt;&gt; </td></tr>
-<tr class="memitem:a9e4fe271be1a66cb822625d3e8e49a96"><td class="memTemplItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::cluster</b> (FwdIter begin, FwdIter end, Comparer comp=Comparer{})</td></tr>
-<tr class="separator:a9e4fe271be1a66cb822625d3e8e49a96"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac6199e7a0752808fae2c6dffa02dfb10"><td class="memTemplParams" colspan="2"><a id="ac6199e7a0752808fae2c6dffa02dfb10"></a>
-template&lt;class FwdIter , class T , class Comparer  = std::less&lt;std::decay_t&lt;decltype(*FwdIter())&gt;&gt;&gt; </td></tr>
-<tr class="memitem:ac6199e7a0752808fae2c6dffa02dfb10"><td class="memTemplItemLeft" align="right" valign="top">constexpr FwdIter&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::lower_bound</b> (FwdIter begin, FwdIter end, const T &amp;val, Comparer comp=Comparer{})</td></tr>
-<tr class="separator:ac6199e7a0752808fae2c6dffa02dfb10"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a06248f773be025dcd2695fa1b0cde8c6"><td class="memTemplParams" colspan="2"><a id="a06248f773be025dcd2695fa1b0cde8c6"></a>
-template&lt;class FwdIter , class T , class Comparer  = std::less&lt;std::decay_t&lt;decltype(*FwdIter())&gt;&gt;&gt; </td></tr>
-<tr class="memitem:a06248f773be025dcd2695fa1b0cde8c6"><td class="memTemplItemLeft" align="right" valign="top">constexpr FwdIter&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::upper_bound</b> (FwdIter begin, FwdIter end, const T &amp;val, Comparer comp=Comparer{})</td></tr>
-<tr class="separator:a06248f773be025dcd2695fa1b0cde8c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab79ad0504b8777477cf4d002c5897466"><td class="memTemplParams" colspan="2"><a id="ab79ad0504b8777477cf4d002c5897466"></a>
-template&lt;class FwdIter , class T , class Comparer  = std::less&lt;std::decay_t&lt;decltype(*FwdIter())&gt;&gt;&gt; </td></tr>
-<tr class="memitem:ab79ad0504b8777477cf4d002c5897466"><td class="memTemplItemLeft" align="right" valign="top">constexpr std::pair&lt; FwdIter, FwdIter &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::equal_range</b> (FwdIter begin, FwdIter end, const T &amp;val, Comparer comp=Comparer{})</td></tr>
-<tr class="separator:ab79ad0504b8777477cf4d002c5897466"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad446f3b790daab9e8d01ea2bdb80ccd5"><td class="memTemplParams" colspan="2"><a id="ad446f3b790daab9e8d01ea2bdb80ccd5"></a>
-template&lt;class InputIt1 , class InputIt2 &gt; </td></tr>
-<tr class="memitem:ad446f3b790daab9e8d01ea2bdb80ccd5"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::equal</b> (InputIt1 first1, InputIt2 last1, InputIt2 first2, InputIt2 last2)</td></tr>
-<tr class="separator:ad446f3b790daab9e8d01ea2bdb80ccd5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8a1de9cfc55531152caaf04df1b64c56"><td class="memTemplParams" colspan="2"><a id="a8a1de9cfc55531152caaf04df1b64c56"></a>
+template&lt;class Iter , class Comparer  = std::less&lt;std::decay_t&lt;decltype(*Iter())&gt;&gt;&gt; </td></tr>
+<tr class="memitem:a8a1de9cfc55531152caaf04df1b64c56"><td class="memTemplItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::bubble_up</b> (Iter begin, Iter current, Comparer comp=Comparer{})</td></tr>
+<tr class="separator:a8a1de9cfc55531152caaf04df1b64c56"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad27f84dc19e16c619d9a916055d7cf24"><td class="memTemplParams" colspan="2"><a id="ad27f84dc19e16c619d9a916055d7cf24"></a>
+template&lt;class Iter , class Comparer  = std::less&lt;std::decay_t&lt;decltype(*Iter())&gt;&gt;&gt; </td></tr>
+<tr class="memitem:ad27f84dc19e16c619d9a916055d7cf24"><td class="memTemplItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::bubble_down</b> (Iter begin, Iter current, Iter end, Comparer comp=Comparer{})</td></tr>
+<tr class="separator:ad27f84dc19e16c619d9a916055d7cf24"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab73c98ad481fcb3e45305f0bf0129b54"><td class="memTemplParams" colspan="2"><a id="ab73c98ad481fcb3e45305f0bf0129b54"></a>
+template&lt;class Iter , class Comparer  = std::less&lt;std::decay_t&lt;decltype(*Iter())&gt;&gt;&gt; </td></tr>
+<tr class="memitem:ab73c98ad481fcb3e45305f0bf0129b54"><td class="memTemplItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::make_heap</b> (Iter begin, Iter end, Comparer comp=Comparer{})</td></tr>
+<tr class="separator:ab73c98ad481fcb3e45305f0bf0129b54"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acea3d5784387d9a7cf99326563ed0a5c"><td class="memTemplParams" colspan="2"><a id="acea3d5784387d9a7cf99326563ed0a5c"></a>
+template&lt;class Iter , class Comparer  = std::less&lt;std::decay_t&lt;decltype(*Iter())&gt;&gt;&gt; </td></tr>
+<tr class="memitem:acea3d5784387d9a7cf99326563ed0a5c"><td class="memTemplItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::sort</b> (Iter begin, Iter end, Comparer comp=Comparer{})</td></tr>
+<tr class="separator:acea3d5784387d9a7cf99326563ed0a5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8c86fc959d9b9d2f4393c0c118a31f55"><td class="memTemplParams" colspan="2"><a id="a8c86fc959d9b9d2f4393c0c118a31f55"></a>
+template&lt;std::forward_iterator Iter, class Comparer  = std::equal_to&lt;std::decay_t&lt;decltype(*Iter())&gt;&gt;&gt; </td></tr>
+<tr class="memitem:a8c86fc959d9b9d2f4393c0c118a31f55"><td class="memTemplItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::cluster</b> (Iter begin, Iter end, Comparer comp=Comparer{})</td></tr>
+<tr class="separator:a8c86fc959d9b9d2f4393c0c118a31f55"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>A collection of constexpr algorithms. </p>

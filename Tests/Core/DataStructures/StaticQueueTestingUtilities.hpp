@@ -14,7 +14,7 @@
 namespace sequoia::testing
 {
   template<class T, std::size_t MaxPushes>
-  struct detailed_equality_checker<data_structures::static_queue<T, MaxPushes>>
+  struct value_checker<data_structures::static_queue<T, MaxPushes>>
   {
     using type = data_structures::static_queue<T, MaxPushes>;
 

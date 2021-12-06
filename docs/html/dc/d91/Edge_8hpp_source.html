@@ -92,7 +92,7 @@ $(function() {
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;  <span class="keyword">namespace </span>maths</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;  {</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keyword">template</span>&lt;<span class="keywordtype">int</span>egral IndexType&gt;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keyword">template</span>&lt;std::<span class="keywordtype">int</span>egral IndexType&gt;</div>
 <div class="line"><a name="l00056"></a><span class="lineno"><a class="line" href="../../d2/d60/classsequoia_1_1maths_1_1edge__base.html">   56</a></span>&#160;    <span class="keyword">class </span><a class="code" href="../../d2/d60/classsequoia_1_1maths_1_1edge__base.html">edge_base</a></div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    {</div>
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="keyword">public</span>:</div>
@@ -127,7 +127,7 @@ $(function() {
 <div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;      IndexType m_Target;</div>
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    };</div>
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160; </div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> WeightHandler, <span class="keywordtype">int</span>egral IndexType&gt;</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> WeightHandler, std::<span class="keywordtype">int</span>egral IndexType&gt;</div>
 <div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;      requires ownership::handler&lt;WeightHandler&gt;</div>
 <div class="line"><a name="l00103"></a><span class="lineno"><a class="line" href="../../dc/de5/classsequoia_1_1maths_1_1weighting.html">  103</a></span>&#160;    <span class="keyword">class </span><a class="code" href="../../dc/de5/classsequoia_1_1maths_1_1weighting.html">weighting</a></div>
 <div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    {</div>
@@ -193,8 +193,8 @@ $(function() {
 <div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;      <span class="keyword">typename</span> WeightHandler::handle_type m_Weight;</div>
 <div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;    };</div>
 <div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160; </div>
-<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> WeightHandler, <span class="keywordtype">int</span>egral IndexType&gt;</div>
-<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;      requires (ownership::handler&lt;WeightHandler&gt; &amp;&amp; empty&lt;typename WeightHandler::elementary_type::value_type&gt;)</div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> WeightHandler, std::<span class="keywordtype">int</span>egral IndexType&gt;</div>
+<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;      requires (ownership::handler&lt;WeightHandler&gt; &amp;&amp; std::is_empty_v&lt;typename WeightHandler::elementary_type::value_type&gt;)</div>
 <div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;    <span class="keyword">class </span><a class="code" href="../../dc/de5/classsequoia_1_1maths_1_1weighting.html">weighting</a>&lt;WeightHandler, IndexType&gt;</div>
 <div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;    {</div>
 <div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;    <span class="keyword">public</span>:</div>
@@ -219,7 +219,7 @@ $(function() {
 <div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160; </div>
 <div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;    <span class="comment">//===================================Partial Edge Base===================================//</span></div>
 <div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160; </div>
-<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> WeightHandler, <span class="keywordtype">int</span>egral IndexType&gt;</div>
+<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> WeightHandler, std::<span class="keywordtype">int</span>egral IndexType&gt;</div>
 <div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;      requires ownership::handler&lt;WeightHandler&gt;</div>
 <div class="line"><a name="l00205"></a><span class="lineno"><a class="line" href="../../d5/de0/classsequoia_1_1maths_1_1partial__edge__base.html">  205</a></span>&#160;    <span class="keyword">class </span><a class="code" href="../../d5/de0/classsequoia_1_1maths_1_1partial__edge__base.html">partial_edge_base</a> : <span class="keyword">public</span> <a class="code" href="../../d2/d60/classsequoia_1_1maths_1_1edge__base.html">edge_base</a>&lt;IndexType&gt;, <span class="keyword">public</span> <a class="code" href="../../dc/de5/classsequoia_1_1maths_1_1weighting.html">weighting</a>&lt;WeightHandler, IndexType&gt;</div>
 <div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;    {</div>
@@ -259,7 +259,7 @@ $(function() {
 <div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160; </div>
 <div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;    <span class="comment">//===================================Partial Edge===================================//</span></div>
 <div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160; </div>
-<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> WeightHandler, <span class="keywordtype">int</span>egral IndexType=std::<span class="keywordtype">size_t</span>&gt;</div>
+<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> WeightHandler, std::<span class="keywordtype">int</span>egral IndexType=std::<span class="keywordtype">size_t</span>&gt;</div>
 <div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;      requires ownership::handler&lt;WeightHandler&gt;</div>
 <div class="line"><a name="l00250"></a><span class="lineno"><a class="line" href="../../da/d14/classsequoia_1_1maths_1_1partial__edge.html">  250</a></span>&#160;    <span class="keyword">class </span><a class="code" href="../../da/d14/classsequoia_1_1maths_1_1partial__edge.html">partial_edge</a> : <span class="keyword">public</span> <a class="code" href="../../d5/de0/classsequoia_1_1maths_1_1partial__edge__base.html">partial_edge_base</a>&lt;WeightHandler, IndexType&gt;</div>
 <div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;    {</div>
@@ -270,7 +270,7 @@ $(function() {
 <div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160; </div>
 <div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;    <span class="comment">//===================================Decorated Partial Edge Base===================================//</span></div>
 <div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160; </div>
-<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> WeightHandler, <span class="keywordtype">int</span>egral IndexType=std::<span class="keywordtype">size_t</span>&gt;</div>
+<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> WeightHandler, std::<span class="keywordtype">int</span>egral IndexType=std::<span class="keywordtype">size_t</span>&gt;</div>
 <div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;      requires ownership::handler&lt;WeightHandler&gt;</div>
 <div class="line"><a name="l00266"></a><span class="lineno"><a class="line" href="../../d4/d41/classsequoia_1_1maths_1_1decorated__edge__base.html">  266</a></span>&#160;    <span class="keyword">class </span><a class="code" href="../../d4/d41/classsequoia_1_1maths_1_1decorated__edge__base.html">decorated_edge_base</a> : <span class="keyword">public</span> <a class="code" href="../../d5/de0/classsequoia_1_1maths_1_1partial__edge__base.html">partial_edge_base</a>&lt;WeightHandler, IndexType&gt;</div>
 <div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;    {</div>
@@ -313,7 +313,7 @@ $(function() {
 <div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160; </div>
 <div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;    <span class="comment">//===================================Embedded Partial Edge===================================//</span></div>
 <div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160; </div>
-<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> WeightHandler, <span class="keywordtype">int</span>egral IndexType=std::<span class="keywordtype">size_t</span>&gt;</div>
+<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> WeightHandler, std::<span class="keywordtype">int</span>egral IndexType=std::<span class="keywordtype">size_t</span>&gt;</div>
 <div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;      requires ownership::handler&lt;WeightHandler&gt;</div>
 <div class="line"><a name="l00315"></a><span class="lineno"><a class="line" href="../../d8/d4d/classsequoia_1_1maths_1_1embedded__partial__edge.html">  315</a></span>&#160;    <span class="keyword">class </span><a class="code" href="../../d8/d4d/classsequoia_1_1maths_1_1embedded__partial__edge.html">embedded_partial_edge</a> : <span class="keyword">public</span> <a class="code" href="../../d4/d41/classsequoia_1_1maths_1_1decorated__edge__base.html">decorated_edge_base</a>&lt;WeightHandler, IndexType&gt;</div>
 <div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;    {</div>
@@ -335,7 +335,7 @@ $(function() {
 <div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160; </div>
 <div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;    <span class="keyword">template</span>&lt;<span class="keywordtype">bool</span> Inverted&gt; constexpr <span class="keywordtype">bool</span> inversion_v{<a class="code" href="../../d8/dc0/structsequoia_1_1maths_1_1inversion__constant.html">inversion_constant&lt;Inverted&gt;::value</a>};</div>
 <div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160; </div>
-<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> WeightHandler, <span class="keywordtype">int</span>egral IndexType=std::<span class="keywordtype">size_t</span>&gt;</div>
+<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> WeightHandler, std::<span class="keywordtype">int</span>egral IndexType=std::<span class="keywordtype">size_t</span>&gt;</div>
 <div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;      requires ownership::handler&lt;WeightHandler&gt;</div>
 <div class="line"><a name="l00342"></a><span class="lineno"><a class="line" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">  342</a></span>&#160;    <span class="keyword">class </span><a class="code" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a> : <span class="keyword">public</span> <a class="code" href="../../d4/d41/classsequoia_1_1maths_1_1decorated__edge__base.html">decorated_edge_base</a>&lt;WeightHandler, IndexType&gt;</div>
 <div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160;    {</div>
@@ -390,7 +390,7 @@ $(function() {
 <div class="line"><a name="l00392"></a><span class="lineno">  392</span>&#160; </div>
 <div class="line"><a name="l00393"></a><span class="lineno">  393</span>&#160;    <span class="comment">//===================================Full Embedded Edge===================================//</span></div>
 <div class="line"><a name="l00394"></a><span class="lineno">  394</span>&#160; </div>
-<div class="line"><a name="l00401"></a><span class="lineno">  401</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> WeightHandler, <span class="keywordtype">int</span>egral IndexType=std::<span class="keywordtype">size_t</span>&gt;</div>
+<div class="line"><a name="l00401"></a><span class="lineno">  401</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> WeightHandler, std::<span class="keywordtype">int</span>egral IndexType=std::<span class="keywordtype">size_t</span>&gt;</div>
 <div class="line"><a name="l00402"></a><span class="lineno">  402</span>&#160;      requires ownership::handler&lt;WeightHandler&gt;</div>
 <div class="line"><a name="l00403"></a><span class="lineno"><a class="line" href="../../db/db0/classsequoia_1_1maths_1_1embedded__edge.html">  403</a></span>&#160;    <span class="keyword">class </span><a class="code" href="../../db/db0/classsequoia_1_1maths_1_1embedded__edge.html">embedded_edge</a> : <span class="keyword">public</span> <a class="code" href="../../d4/d41/classsequoia_1_1maths_1_1decorated__edge__base.html">decorated_edge_base</a>&lt;WeightHandler, IndexType&gt;</div>
 <div class="line"><a name="l00404"></a><span class="lineno">  404</span>&#160;    {</div>

@@ -167,27 +167,27 @@ template&lt;test_mode Mode, comparison_flavour C, class Actions , movable_compar
 <tr class="memitem:a4bcf67e893704838671753f319a8470f"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_comparison_consistency</b> (test_logger&lt; Mode &gt; &amp;logger, comparison_constant&lt; C &gt; comparison, const Actions &amp;actions, const T &amp;x, const T &amp;y, Fn fn)</td></tr>
 <tr class="separator:a4bcf67e893704838671753f319a8470f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3bd54ef147a44e2f0523a0b15b1bee9e"><td class="memTemplParams" colspan="2"><a id="a3bd54ef147a44e2f0523a0b15b1bee9e"></a>
-template&lt;test_mode Mode, class Actions , orderable T, class... Args&gt; </td></tr>
+template&lt;test_mode Mode, class Actions , std::totally_ordered T, class... Args&gt; </td></tr>
 <tr class="memitem:a3bd54ef147a44e2f0523a0b15b1bee9e"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_ordering_operators</b> (test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, const T &amp;x, const T &amp;y, const Args &amp;... args)</td></tr>
 <tr class="separator:a3bd54ef147a44e2f0523a0b15b1bee9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afa9f43b07d74260e6c8bde70a175b094"><td class="memTemplParams" colspan="2"><a id="afa9f43b07d74260e6c8bde70a175b094"></a>
-template&lt;test_mode Mode, class Actions , orderable T, class... Args&gt; </td></tr>
+template&lt;test_mode Mode, class Actions , std::totally_ordered T, class... Args&gt; </td></tr>
 <tr class="memitem:afa9f43b07d74260e6c8bde70a175b094"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_ordering_consistency</b> (test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, const T &amp;x, const T &amp;y, const Args &amp;... args)</td></tr>
 <tr class="separator:afa9f43b07d74260e6c8bde70a175b094"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8e0e0c7d2e0a0d451e25eed69a595e85"><td class="memTemplParams" colspan="2"><a id="a8e0e0c7d2e0a0d451e25eed69a595e85"></a>
-template&lt;test_mode Mode, class Actions , orderable T, class... Args&gt; </td></tr>
+template&lt;test_mode Mode, class Actions , std::totally_ordered T, class... Args&gt; </td></tr>
 <tr class="memitem:a8e0e0c7d2e0a0d451e25eed69a595e85"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_ordering_consistency</b> (test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, const T &amp;x, const T &amp;y, const T &amp;, const T &amp;, const Args &amp;... args)</td></tr>
 <tr class="separator:a8e0e0c7d2e0a0d451e25eed69a595e85"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1d397b32168cbc433317ab6a195f763d"><td class="memTemplParams" colspan="2"><a id="a1d397b32168cbc433317ab6a195f763d"></a>
-template&lt;test_mode Mode, class Actions , equality_comparable T, class... Args&gt; </td></tr>
+template&lt;test_mode Mode, class Actions , std::equality_comparable T, class... Args&gt; </td></tr>
 <tr class="memitem:a1d397b32168cbc433317ab6a195f763d"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_equality_preconditions</b> (test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, const T &amp;x, const T &amp;y, const Args &amp;... args)</td></tr>
 <tr class="separator:a1d397b32168cbc433317ab6a195f763d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a895edff45914323c5819f25cbbb28311"><td class="memTemplParams" colspan="2"><a id="a895edff45914323c5819f25cbbb28311"></a>
-template&lt;test_mode Mode, class Actions , equality_comparable T, class... Args&gt; </td></tr>
+template&lt;test_mode Mode, class Actions , std::equality_comparable T, class... Args&gt; </td></tr>
 <tr class="memitem:a895edff45914323c5819f25cbbb28311"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_equality_preconditions</b> (test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, const T &amp;x, const T &amp;y, const T &amp;xClone, const T &amp;yClone, const Args &amp;... args)</td></tr>
 <tr class="separator:a895edff45914323c5819f25cbbb28311"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab67f703cee85be85863943c7c487021f"><td class="memTemplParams" colspan="2"><a id="ab67f703cee85be85863943c7c487021f"></a>
-template&lt;test_mode Mode, class Actions , orderable T, class... Args&gt; </td></tr>
+template&lt;test_mode Mode, class Actions , std::totally_ordered T, class... Args&gt; </td></tr>
 <tr class="memitem:ab67f703cee85be85863943c7c487021f"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_orderable_preconditions</b> (test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, const T &amp;x, const T &amp;y, const Args &amp;... args)</td></tr>
 <tr class="separator:ab67f703cee85be85863943c7c487021f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a70d57c7876344cdab9c9cc004c6f89ce"><td class="memTemplParams" colspan="2"><a id="a70d57c7876344cdab9c9cc004c6f89ce"></a>
@@ -199,11 +199,11 @@ template&lt;test_mode Mode, class Actions , movable_comparable T&gt; </td></tr>
 <tr class="memitem:aee94956438911210680607e578cc4919"><td class="memTemplItemLeft" align="right" valign="top">std::optional&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_move_construction</b> (test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, T &amp;&amp;z, const T &amp;y)</td></tr>
 <tr class="separator:aee94956438911210680607e578cc4919"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af56393f760cbcaad1b1fc2b5ae676fd4"><td class="memTemplParams" colspan="2"><a id="af56393f760cbcaad1b1fc2b5ae676fd4"></a>
-template&lt;test_mode Mode, class Actions , movable_comparable T, invocable&lt; T &amp; &gt; Mutator, class... Args&gt; </td></tr>
+template&lt;test_mode Mode, class Actions , movable_comparable T, std::invocable&lt; T &amp; &gt; Mutator, class... Args&gt; </td></tr>
 <tr class="memitem:af56393f760cbcaad1b1fc2b5ae676fd4"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::do_check_move_assign</b> (test_logger&lt; Mode &gt; &amp;logger, [[maybe_unused]] const Actions &amp;actions, T &amp;z, T &amp;&amp;y, const T &amp;yClone, [[maybe_unused]] Mutator &amp;&amp;yMutator, const Args &amp;... args)</td></tr>
 <tr class="separator:af56393f760cbcaad1b1fc2b5ae676fd4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4c847adee18aa1d62200928672437ec7"><td class="memTemplParams" colspan="2"><a id="a4c847adee18aa1d62200928672437ec7"></a>
-template&lt;test_mode Mode, class Actions , movable_comparable T, invocable&lt; T &amp; &gt; Mutator&gt; </td></tr>
+template&lt;test_mode Mode, class Actions , movable_comparable T, std::invocable&lt; T &amp; &gt; Mutator&gt; </td></tr>
 <tr class="memitem:a4c847adee18aa1d62200928672437ec7"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_move_assign</b> (test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, T &amp;z, T &amp;&amp;y, const T &amp;yClone, Mutator m)</td></tr>
 <tr class="separator:a4c847adee18aa1d62200928672437ec7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aede008810d4ba03d326faa23d2b57c88"><td class="memTemplParams" colspan="2"><a id="aede008810d4ba03d326faa23d2b57c88"></a>
@@ -215,7 +215,7 @@ template&lt;test_mode Mode, class Actions , movable_comparable T&gt; </td></tr>
 <tr class="memitem:a9fcedc4faa4f98451a4e1ccb2156fdb4"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_swap</b> (test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, T &amp;&amp;x, T &amp;&amp;y, const T &amp;xClone, const T &amp;yClone)</td></tr>
 <tr class="separator:a9fcedc4faa4f98451a4e1ccb2156fdb4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6b24869a102f17ac0a5f23b857f1f756"><td class="memTemplParams" colspan="2"><a id="a6b24869a102f17ac0a5f23b857f1f756"></a>
-template&lt;test_mode Mode, class Actions , pseudoregular T, invocable&lt; T &amp; &gt; Mutator&gt; </td></tr>
+template&lt;test_mode Mode, class Actions , pseudoregular T, std::invocable&lt; T &amp; &gt; Mutator&gt; </td></tr>
 <tr class="memitem:a6b24869a102f17ac0a5f23b857f1f756"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_swap</b> (test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, T &amp;&amp;x, T &amp;&amp;y, const T &amp;xClone, const T &amp;yClone, Mutator yMutator)</td></tr>
 <tr class="separator:a6b24869a102f17ac0a5f23b857f1f756"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a74689d1276697cc52452ae98a5c1ee08"><td class="memTemplParams" colspan="2"><a id="a74689d1276697cc52452ae98a5c1ee08"></a>
@@ -232,26 +232,26 @@ template&lt;test_mode Mode, class Actions , movable_comparable T&gt; </td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a01fc4075e23666c6e447bf4bbddff687"><td class="memTemplParams" colspan="2"><a id="a01fc4075e23666c6e447bf4bbddff687"></a>
+<tr class="memitem:ab52d420c854acfb4f806caf486ce1db3"><td class="memTemplParams" colspan="2"><a id="ab52d420c854acfb4f806caf486ce1db3"></a>
 template&lt;class Actions &gt; </td></tr>
-<tr class="memitem:a01fc4075e23666c6e447bf4bbddff687"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::has_post_comparison_action</b> = requires { &amp;Actions::post_comparison_action; }</td></tr>
-<tr class="separator:a01fc4075e23666c6e447bf4bbddff687"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af53d9d5b5b1e860e91ea31c32084e813"><td class="memTemplParams" colspan="2"><a id="af53d9d5b5b1e860e91ea31c32084e813"></a>
+<tr class="memitem:ab52d420c854acfb4f806caf486ce1db3"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::has_post_comparison_action</b> = requires { &amp;Actions::post_comparison_action; }</td></tr>
+<tr class="separator:ab52d420c854acfb4f806caf486ce1db3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aca5bb197510343c10a38a907feb44d9e"><td class="memTemplParams" colspan="2"><a id="aca5bb197510343c10a38a907feb44d9e"></a>
 template&lt;class Actions &gt; </td></tr>
-<tr class="memitem:af53d9d5b5b1e860e91ea31c32084e813"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::has_post_move_action</b> = requires { &amp;Actions::post_move_action; }</td></tr>
-<tr class="separator:af53d9d5b5b1e860e91ea31c32084e813"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad10df5dd4245394fa5791a2d3cf5726d"><td class="memTemplParams" colspan="2"><a id="ad10df5dd4245394fa5791a2d3cf5726d"></a>
+<tr class="memitem:aca5bb197510343c10a38a907feb44d9e"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::has_post_move_action</b> = requires { &amp;Actions::post_move_action; }</td></tr>
+<tr class="separator:aca5bb197510343c10a38a907feb44d9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6a9c6667405cd1a08507cf3fc3f200c7"><td class="memTemplParams" colspan="2"><a id="a6a9c6667405cd1a08507cf3fc3f200c7"></a>
 template&lt;class Actions &gt; </td></tr>
-<tr class="memitem:ad10df5dd4245394fa5791a2d3cf5726d"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::has_post_move_assign_action</b> = requires { &amp;Actions::post_move_assign_action; }</td></tr>
-<tr class="separator:ad10df5dd4245394fa5791a2d3cf5726d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae99163dceacb890f2a6ab8445c2193a3"><td class="memTemplParams" colspan="2"><a id="ae99163dceacb890f2a6ab8445c2193a3"></a>
+<tr class="memitem:a6a9c6667405cd1a08507cf3fc3f200c7"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::has_post_move_assign_action</b> = requires { &amp;Actions::post_move_assign_action; }</td></tr>
+<tr class="separator:a6a9c6667405cd1a08507cf3fc3f200c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2510e4af8f646b1af43f8b7f7fe3fe5b"><td class="memTemplParams" colspan="2"><a id="a2510e4af8f646b1af43f8b7f7fe3fe5b"></a>
 template&lt;class Actions &gt; </td></tr>
-<tr class="memitem:ae99163dceacb890f2a6ab8445c2193a3"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::has_post_swap_action</b> = requires { &amp;Actions::post_swap_action; }</td></tr>
-<tr class="separator:ae99163dceacb890f2a6ab8445c2193a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af3deaaad923fa434927b2916fb207c48"><td class="memTemplParams" colspan="2"><a id="af3deaaad923fa434927b2916fb207c48"></a>
+<tr class="memitem:a2510e4af8f646b1af43f8b7f7fe3fe5b"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::has_post_swap_action</b> = requires { &amp;Actions::post_swap_action; }</td></tr>
+<tr class="separator:a2510e4af8f646b1af43f8b7f7fe3fe5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab612f7cf88f8af6baaefd3929a4dfb9d"><td class="memTemplParams" colspan="2"><a id="ab612f7cf88f8af6baaefd3929a4dfb9d"></a>
 template&lt;class Actions &gt; </td></tr>
-<tr class="memitem:af3deaaad923fa434927b2916fb207c48"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::has_post_serialization_action</b> = requires { &amp;Actions::post_serialization_action; }</td></tr>
-<tr class="separator:af3deaaad923fa434927b2916fb207c48"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab612f7cf88f8af6baaefd3929a4dfb9d"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::has_post_serialization_action</b> = requires { &amp;Actions::post_serialization_action; }</td></tr>
+<tr class="separator:ab612f7cf88f8af6baaefd3929a4dfb9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae52d70a488fc1e3c1e45f3ebca38d472"><td class="memItemLeft" align="right" valign="top"><a id="ae52d70a488fc1e3c1e45f3ebca38d472"></a>
 const Actions &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::impl::actions</b></td></tr>
 <tr class="separator:ae52d70a488fc1e3c1e45f3ebca38d472"><td class="memSeparator" colspan="2">&#160;</td></tr>

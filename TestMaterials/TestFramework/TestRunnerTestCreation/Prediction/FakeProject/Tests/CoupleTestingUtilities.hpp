@@ -13,7 +13,7 @@
 namespace sequoia::testing
 {
     template<class S, class T>
-    struct detailed_equality_checker<other::couple<S, T>>
+    struct value_checker<other::couple<S, T>>
     {
         using type = other::couple<S, T>;
 

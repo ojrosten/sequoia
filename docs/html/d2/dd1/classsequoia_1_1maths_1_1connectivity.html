@@ -78,12 +78,6 @@ $(function() {
 <div class="title">sequoia::maths::connectivity&lt; Directedness, EdgeTraits, WeightMaker &gt; Class Template Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="dynheader">
-Inheritance diagram for sequoia::maths::connectivity&lt; Directedness, EdgeTraits, WeightMaker &gt;:</div>
-<div class="dyncontent">
- <div class="center">
-  <img src="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.png" alt=""/>
- </div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
@@ -206,9 +200,9 @@ constexpr <a class="el" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity
 <tr class="memitem:a3493dd0d2822cf9bcdd4d3937e333a5a"><td class="memItemLeft" align="right" valign="top"><a id="a3493dd0d2822cf9bcdd4d3937e333a5a"></a>
 constexpr <a class="el" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">connectivity</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">connectivity</a> &amp;in)</td></tr>
 <tr class="separator:a3493dd0d2822cf9bcdd4d3937e333a5a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3c4c28e0cf08c482becff2d16d812f66"><td class="memItemLeft" align="right" valign="top"><a id="a3c4c28e0cf08c482becff2d16d812f66"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>swap</b> (<a class="el" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">connectivity</a> &amp;rhs) noexcept(noexcept(this-&gt;m_Edges, rhs.m_Edges))</td></tr>
-<tr class="separator:a3c4c28e0cf08c482becff2d16d812f66"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa8f4ef75e2200bf396e8d405a8878b00"><td class="memItemLeft" align="right" valign="top"><a id="aa8f4ef75e2200bf396e8d405a8878b00"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>swap</b> (<a class="el" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">connectivity</a> &amp;rhs) noexcept(noexcept(std::swap(this-&gt;m_Edges, rhs.m_Edges)))</td></tr>
+<tr class="separator:aa8f4ef75e2200bf396e8d405a8878b00"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a83e213ed368909f00f87b3eee18f115c"><td class="memItemLeft" align="right" valign="top"><a id="a83e213ed368909f00f87b3eee18f115c"></a>
 constexpr void&#160;</td><td class="memItemRight" valign="bottom"><b>swap_edges</b> (edge_index_type node, edge_index_type i, edge_index_type j)</td></tr>
 <tr class="separator:a83e213ed368909f00f87b3eee18f115c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -282,12 +276,6 @@ Friends</h2></td></tr>
 <tr class="memitem:a5340821c92b106e0c3e9960b9235d08a"><td class="memItemLeft" align="right" valign="top"><a id="a5340821c92b106e0c3e9960b9235d08a"></a>
 struct&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::impl::assignment_helper</b></td></tr>
 <tr class="separator:a5340821c92b106e0c3e9960b9235d08a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0f6296edbda22afe125c86cfb1155b20"><td class="memItemLeft" align="right" valign="top"><a id="a0f6296edbda22afe125c86cfb1155b20"></a>
-constexpr friend bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator==</b> (const <a class="el" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">connectivity</a> &amp;lhs, const <a class="el" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">connectivity</a> &amp;rhs) noexcept</td></tr>
-<tr class="separator:a0f6296edbda22afe125c86cfb1155b20"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7611772c0e21183250f4adf4cd8308a0"><td class="memItemLeft" align="right" valign="top"><a id="a7611772c0e21183250f4adf4cd8308a0"></a>
-constexpr friend bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator!=</b> (const <a class="el" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">connectivity</a> &amp;lhs, const <a class="el" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">connectivity</a> &amp;rhs) noexcept</td></tr>
-<tr class="separator:a7611772c0e21183250f4adf4cd8308a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>/Users/Claire/Dropbox/Sequoia/Source/sequoia/Maths/Graph/<a class="el" href="../../d5/d2d/Connectivity_8hpp_source.html">Connectivity.hpp</a></li>

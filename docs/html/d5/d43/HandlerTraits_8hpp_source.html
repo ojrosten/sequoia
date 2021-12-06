@@ -80,18 +80,17 @@ $(function() {
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160; </div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="keyword">namespace </span>sequoia::ownership</div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;{</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;  <span class="comment">// TO DO: replace with contexpr bool once MSVC can cope with this</span></div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> H&gt;</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;  concept handler = requires(H&amp; h, <span class="keyword">typename</span> H::handle_type&amp; x, <span class="keyword">const</span> <span class="keyword">typename</span> H::handle_type&amp; cx){</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <span class="keyword">typename</span> H::handle_type;</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    <span class="keyword">typename</span> H::elementary_type;</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    { h.get(x) }      -&gt; same_as&lt;typename H::elementary_type&amp;&gt;;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    { h.get_ptr(x) }  -&gt; same_as&lt;typename H::elementary_type*&gt;;</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    { h.get(cx) }     -&gt; same_as&lt;const typename H::elementary_type&amp;&gt;;</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    { h.get_ptr(cx) } -&gt; same_as&lt;const typename H::elementary_type*&gt;;</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;  };</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;}</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> H&gt;</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;  concept handler = requires(H&amp; h, <span class="keyword">typename</span> H::handle_type&amp; x, <span class="keyword">const</span> <span class="keyword">typename</span> H::handle_type&amp; cx){</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <span class="keyword">typename</span> H::handle_type;</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <span class="keyword">typename</span> H::elementary_type;</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    { h.get(x) }      -&gt; std::same_as&lt;typename H::elementary_type&amp;&gt;;</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    { h.get_ptr(x) }  -&gt; std::same_as&lt;typename H::elementary_type*&gt;;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    { h.get(cx) }     -&gt; std::same_as&lt;const typename H::elementary_type&amp;&gt;;</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    { h.get_ptr(cx) } -&gt; std::same_as&lt;const typename H::elementary_type*&gt;;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;  };</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
 <div class="ttc" id="aConcepts_8hpp_html"><div class="ttname"><a href="../../d3/d84/Concepts_8hpp.html">Concepts.hpp</a></div><div class="ttdoc">Concepts mostly, but not exclusively, replicating things which will appear in std at some point.</div></div>
 <!-- start footer part -->

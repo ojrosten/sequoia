@@ -23,8 +23,8 @@ namespace sequoia::testing
     class NodeWeight,
     class Traits
   >
-  struct detailed_equality_checker<maths::static_graph<Directedness, Size, Order, EdgeWeight, NodeWeight, Traits>>
-    : impl::graph_detailed_equality_checker<maths::static_graph<Directedness, Size, Order, EdgeWeight, NodeWeight, Traits>>
+  struct value_checker<maths::static_graph<Directedness, Size, Order, EdgeWeight, NodeWeight, Traits>>
+    : impl::graph_value_checker<maths::static_graph<Directedness, Size, Order, EdgeWeight, NodeWeight, Traits>>
   {
   };
 
@@ -37,8 +37,8 @@ namespace sequoia::testing
     class NodeWeight,
     class Traits
   >
-  struct detailed_equality_checker<maths::static_embedded_graph<Directedness, Size, Order, EdgeWeight, NodeWeight, Traits>>
-    : impl::graph_detailed_equality_checker<maths::static_embedded_graph<Directedness, Size, Order, EdgeWeight, NodeWeight, Traits>>
+  struct value_checker<maths::static_embedded_graph<Directedness, Size, Order, EdgeWeight, NodeWeight, Traits>>
+    : impl::graph_value_checker<maths::static_embedded_graph<Directedness, Size, Order, EdgeWeight, NodeWeight, Traits>>
   {
   };
 

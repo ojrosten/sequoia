@@ -91,7 +91,7 @@ $(function() {
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> T&gt;</div>
 <div class="line"><a name="l00027"></a><span class="lineno"><a class="line" href="../../d4/df3/structsequoia_1_1impl_1_1type__to__type.html">   27</a></span>&#160;  <span class="keyword">struct </span><a class="code" href="../../d4/df3/structsequoia_1_1impl_1_1type__to__type.html">type_to_type</a></div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;  {</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <span class="keyword">template</span>&lt;invocable&lt;T&gt; AllocGetter&gt;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <span class="keyword">template</span>&lt;std::invocable&lt;T&gt; AllocGetter&gt;</div>
 <div class="line"><a name="l00030"></a><span class="lineno"><a class="line" href="../../d7/df1/structsequoia_1_1impl_1_1type__to__type_1_1mapper.html">   30</a></span>&#160;    <span class="keyword">struct </span><a class="code" href="../../d7/df1/structsequoia_1_1impl_1_1type__to__type_1_1mapper.html">mapper</a></div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    {</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;      <span class="keyword">using</span> type = std::invoke_result_t&lt;AllocGetter, T&gt;;</div>
@@ -100,14 +100,14 @@ $(function() {
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
 <div class="line"><a name="l00036"></a><span class="lineno"><a class="line" href="../../d6/d69/structsequoia_1_1impl_1_1assignment__helper.html">   36</a></span>&#160;  <span class="keyword">struct </span><a class="code" href="../../d6/d69/structsequoia_1_1impl_1_1assignment__helper.html">assignment_helper</a></div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;  {</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> T, invocable&lt;T&gt;... AllocGetters&gt;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> T, std::invocable&lt;T&gt;... AllocGetters&gt;</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    constexpr <span class="keyword">static</span> <span class="keywordtype">void</span> assign(T&amp; to, <span class="keyword">const</span> T&amp; from, [[maybe_unused]] AllocGetters... allocGetters)</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    {</div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;      invoke_filtered&lt;void, type_to_type&lt;T&gt;::template mapper&gt;([&amp;to, &amp;from](<span class="keyword">auto</span>... filteredAllocGetters){ assign_filtered(to, from, filteredAllocGetters...); }, allocGetters...);</div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    }</div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;  <span class="keyword">private</span>:</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> T, invocable&lt;T&gt;... FilteredAllocGetters&gt;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> T, std::invocable&lt;T&gt;... FilteredAllocGetters&gt;</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    constexpr <span class="keyword">static</span> <span class="keywordtype">void</span> assign_filtered(T&amp; to, <span class="keyword">const</span> T&amp; from, [[maybe_unused]] FilteredAllocGetters... allocGetters)</div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    {</div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;      <span class="keywordflow">if</span> constexpr((naive_treatment&lt;T, FilteredAllocGetters&gt;() &amp;&amp; ...))</div>
@@ -140,7 +140,7 @@ $(function() {
 <div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;      }</div>
 <div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    }</div>
 <div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160; </div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> T, invocable&lt;T&gt; AllocGetter&gt;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> T, std::invocable&lt;T&gt; AllocGetter&gt;</div>
 <div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    constexpr <span class="keyword">static</span> <span class="keywordtype">bool</span> naive_treatment() noexcept</div>
 <div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    {</div>
 <div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;      <span class="keyword">using</span> allocator = std::invoke_result_t&lt;AllocGetter, T&gt;;</div>
@@ -154,7 +154,7 @@ $(function() {
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;      }</div>
 <div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    }</div>
 <div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160; </div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> T, invocable&lt;T&gt; AllocGetter, invocable&lt;T&gt;... AllocGetters&gt;</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> T, std::invocable&lt;T&gt; AllocGetter, std::invocable&lt;T&gt;... AllocGetters&gt;</div>
 <div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    constexpr <span class="keyword">static</span> <span class="keywordtype">bool</span> consistency() noexcept</div>
 <div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    {</div>
 <div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;      <span class="keywordflow">if</span> constexpr(<span class="keyword">sizeof</span>...(AllocGetters) &gt; 0)</div>
@@ -165,7 +165,7 @@ $(function() {
 <div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;      <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
 <div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    }</div>
 <div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160; </div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> T, invocable&lt;T&gt; AllocGetterL, invocable&lt;T&gt; AllocGetterR&gt;</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> T, std::invocable&lt;T&gt; AllocGetterL, std::invocable&lt;T&gt; AllocGetterR&gt;</div>
 <div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    constexpr <span class="keyword">static</span> <span class="keywordtype">bool</span> consistent() noexcept</div>
 <div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    {</div>
 <div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;      <span class="keywordflow">return</span> (copy_propagation&lt;T, AllocGetterL&gt;() == copy_propagation&lt;T, AllocGetterR&gt;())</div>

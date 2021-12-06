@@ -167,7 +167,7 @@ $(function() {
 <div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;      m_Graph.node_weight(iter, newWeight);</div>
 <div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    }</div>
 <div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160; </div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> Iter&gt;</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    <span class="keyword">template</span>&lt;std::input_or_output_iterator Iter&gt;</div>
 <div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    <span class="keywordtype">void</span> firstEdgeTraversal(Iter citer)</div>
 <div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    {</div>
 <div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;      <span class="keyword">const</span> <span class="keyword">auto</span> newWeight = 10 + m_EdgeTraversalIndex + citer-&gt;weight();</div>
@@ -176,7 +176,7 @@ $(function() {
 <div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;      ++m_EdgeTraversalIndex;</div>
 <div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    }</div>
 <div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160; </div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> Iter&gt;</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    <span class="keyword">template</span>&lt;std::input_or_output_iterator Iter&gt;</div>
 <div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    <span class="keywordtype">void</span> secondEdgeTraversal(Iter citer)</div>
 <div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    {</div>
 <div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;      --m_EdgeTraversalIndex;</div>
@@ -196,7 +196,7 @@ $(function() {
 <div class="ttc" id="aclasssequoia_1_1testing_1_1basic__test_html"><div class="ttname"><a href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">sequoia::testing::basic_test</a></div><div class="ttdef"><b>Definition:</b> FreeTestCore.hpp:76</div></div>
 <div class="ttc" id="anamespacesequoia_1_1testing_html_a58ef890d97adcfe24617ac1e9b266133"><div class="ttname"><a href="../../dd/da8/namespacesequoia_1_1testing.html#a58ef890d97adcfe24617ac1e9b266133">sequoia::testing::free_test</a></div><div class="ttdeci">basic_free_test&lt; test_mode::standard &gt; free_test</div><div class="ttdef"><b>Definition:</b> FreeTestCore.hpp:270</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1test__graph__update_html_aa7c31c36a4eaf406e7c3329216b9a5e7"><div class="ttname"><a href="../../d9/d45/classsequoia_1_1testing_1_1test__graph__update.html#aa7c31c36a4eaf406e7c3329216b9a5e7">sequoia::testing::test_graph_update::source_file</a></div><div class="ttdeci">std::string_view source_file() const noexcept final</div><div class="ttdoc">Pure virtual method which should be overridden in a concrete test's cpp file in order to provide the ...</div><div class="ttdef"><b>Definition:</b> DynamicGraphUpdateTest.cpp:36</div></div>
-<div class="ttc" id="aclasssequoia_1_1testing_1_1graph__test__helper_html"><div class="ttname"><a href="../../da/de0/classsequoia_1_1testing_1_1graph__test__helper.html">sequoia::testing::graph_test_helper</a></div><div class="ttdef"><b>Definition:</b> DynamicGraphTestingUtilities.hpp:186</div></div>
+<div class="ttc" id="aclasssequoia_1_1testing_1_1graph__test__helper_html"><div class="ttname"><a href="../../da/de0/classsequoia_1_1testing_1_1graph__test__helper.html">sequoia::testing::graph_test_helper</a></div><div class="ttdef"><b>Definition:</b> DynamicGraphTestingUtilities.hpp:191</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1graph__updater_html"><div class="ttname"><a href="../../df/dd9/classsequoia_1_1testing_1_1graph__updater.html">sequoia::testing::graph_updater</a></div><div class="ttdef"><b>Definition:</b> DynamicGraphUpdateTest.hpp:80</div></div>
 <div class="ttc" id="anamespacesequoia_1_1testing_html"><div class="ttname"><a href="../../dd/da8/namespacesequoia_1_1testing.html">sequoia::testing</a></div><div class="ttdef"><b>Definition:</b> MyBehaviouralTest.cpp:12</div></div>
 <!-- start footer part -->

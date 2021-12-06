@@ -8,11 +8,11 @@
 #pragma once
 
 /*! \file
-    \brief Useful specializations for the class templates detailed_equality_checker and equivalence_checker.
+    \brief Useful specializations for the class templates value_checker and equivalence_checker.
 
     The specializations in this header are for various types defined in std. Internally,
     check_equality/check_equivalnce is used meaning that there will be automatic, recursive dispatch to
-    other specializations of detailed_equality_checker, if appropriate. For example,
+    other specializations of value_checker, if appropriate. For example,
     consider two instances of std::pair<my_type1, mytype2>, x and y. The utilities in this
     header means the call
 
@@ -23,10 +23,10 @@
     check_equality("automatically enhanced desciption", logger, x.first, y,first)
 
     and similarly for the second element. In turn, this nested check_equality will use
-    a specialization of the detailed_equality_checker of my_type1, should it exist. As
+    a specialization of the value_checker of my_type1, should it exist. As
     usual, if the specialization for T does not exist, but T may be interpreted as
     a container holding a type U, then everything will simply work, provided either that
-    there exists a specialization of the detailed_equality_checker for U or U is serializable.
+    there exists a specialization of the value_checker for U or U is serializable.
  */
 
 #include "sequoia/TestFramework/FreeCheckers.hpp"
@@ -44,7 +44,7 @@ namespace sequoia::testing
 {
   /*! \brief Checks equality of std::basic_string */
   template<class Char, class Traits>
-  struct detailed_equality_checker<std::basic_string_view<Char, Traits>>
+  struct value_checker<std::basic_string_view<Char, Traits>>
   {
     using string_view_type = std::basic_string_view<Char, Traits>;
   private:
@@ -166,7 +166,7 @@ namespace sequoia::testing
     template<test_mode Mode, std::size_t N, class Advisor>
     static void check(test_logger<Mode>& logger, const string_type& obtained, char const (&prediction)[N], tutor<Advisor> advisor)
     {
-       using checker = detailed_equality_checker<std::basic_string_view<Char, Traits>>;
+       using checker = value_checker<std::basic_string_view<Char, Traits>>;
 
        checker::check(logger, std::string_view{obtained}, std::string_view{prediction}, std::move(advisor));
     }
@@ -174,7 +174,7 @@ namespace sequoia::testing
     template<test_mode Mode, class Advisor>
     static void check(test_logger<Mode>& logger, const string_type& obtained, std::basic_string_view<Char, Traits> prediction, tutor<Advisor> advisor)
     {
-       using checker = detailed_equality_checker<std::basic_string_view<Char, Traits>>;
+       using checker = value_checker<std::basic_string_view<Char, Traits>>;
 
       checker::check(logger, std::string_view{obtained}, std::string_view{prediction}, std::move(advisor));
     }
@@ -426,34 +426,34 @@ namespace sequoia::testing
   /*! \brief Detailed comparison of the elements of two instances of std::pair<S,T>
 
       The elements of a std::pair<S,T> are checked using check_equality; this will recursively
-      dispatch to other specializations detailed_equality_checker if appropriate for either
+      dispatch to other specializations value_checker if appropriate for either
       S or T.
    */
   template<class T, class S>
-  struct detailed_equality_checker<std::pair<T, S>> : equivalence_checker<std::pair<T, S>>
+  struct value_checker<std::pair<T, S>> : equivalence_checker<std::pair<T, S>>
   {};
 
   /*! \brief Detailed comparison of the elements of two instances of std::pair<T...> */
   template<class... T>
-  struct detailed_equality_checker<std::tuple<T...>> : equivalence_checker<std::tuple<T...>>
+  struct value_checker<std::tuple<T...>> : equivalence_checker<std::tuple<T...>>
   {};
 
   template<class Char, class Traits, alloc Allocator>
-  struct detailed_equality_checker<std::basic_string<Char, Traits, Allocator>>
+  struct value_checker<std::basic_string<Char, Traits, Allocator>>
   {
     using string_type = std::basic_string<Char, Traits, Allocator>;
 
     template<test_mode Mode, class Advisor>
     static void check(test_logger<Mode>& logger, const string_type& obtained, const string_type& prediction, tutor<Advisor> advisor)
     {
-      using checker = detailed_equality_checker<std::basic_string_view<Char, Traits>>;
+      using checker = value_checker<std::basic_string_view<Char, Traits>>;
 
       checker::check(logger, std::string_view{obtained}, std::string_view{prediction}, std::move(advisor));
     }
   };
 
   template<class... Ts>
-  struct detailed_equality_checker<std::variant<Ts...>>
+  struct value_checker<std::variant<Ts...>>
   {
     using type = std::variant<Ts...>;
 
@@ -490,7 +490,7 @@ namespace sequoia::testing
   };
 
   template<class T>
-  struct detailed_equality_checker<std::optional<T>>
+  struct value_checker<std::optional<T>>
   {
     using type = std::optional<T>;
 

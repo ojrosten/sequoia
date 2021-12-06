@@ -58,7 +58,7 @@ namespace sequoia::testing
   }
 
   template<class T, class C, class Compare>
-  struct detailed_equality_checker<maths::monotonic_sequence<T, C, Compare>>
+  struct value_checker<maths::monotonic_sequence<T, C, Compare>>
   {
     using type = maths::monotonic_sequence<T, C, Compare>;
 
@@ -82,7 +82,7 @@ namespace sequoia::testing
   };
 
   template<class T, std::size_t N, class Compare>
-  struct detailed_equality_checker<maths::static_monotonic_sequence<T, N, Compare>>
+  struct value_checker<maths::static_monotonic_sequence<T, N, Compare>>
   {
     using type = maths::static_monotonic_sequence<T, N, Compare>;
 

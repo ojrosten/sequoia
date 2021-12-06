@@ -119,87 +119,88 @@ $(function() {
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="keyword">namespace </span>sequoia</div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;{</div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class </span>Fn, <span class="keyword">class</span>... Ts, std::size_t... I&gt;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;  <span class="keyword">auto</span> invoke_with_specified_args(Fn f, std::index_sequence&lt;I...&gt;, [[maybe_unused]] Ts&amp;&amp;... ts)</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;  {</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="keywordflow">return</span> f(std::get&lt;I&gt;(std::tuple&lt;Ts&amp;&amp;...&gt;{std::forward&lt;Ts&gt;(ts)...})...);</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;  }</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160; </div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> Excluded, <span class="keyword">template</span>&lt;<span class="keyword">class</span>&gt; <span class="keyword">class </span>TypeToType, <span class="keyword">class</span>... Ts&gt;</div>
-<div class="line"><a name="l00063"></a><span class="lineno"><a class="line" href="../../db/d1d/structsequoia_1_1filtered__sequence.html">   63</a></span>&#160;  <span class="keyword">struct </span><a class="code" href="../../db/d1d/structsequoia_1_1filtered__sequence.html">filtered_sequence</a></div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;  {</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keyword">using</span> type = <span class="keyword">typename</span> <a class="code" href="../../d5/de6/structsequoia_1_1impl_1_1aggregate.html">impl::aggregate&lt;std::index_sequence&lt;&gt;</a>, <span class="keyword">sizeof</span>...(Ts), Excluded, TypeToType, Ts...&gt;::type;</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;  };</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160; </div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> Excluded, <span class="keyword">template</span>&lt;<span class="keyword">class</span>&gt; <span class="keyword">class </span>TypeToType, <span class="keyword">class</span>... Ts&gt;</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;  <span class="keyword">using</span> make_filtered_sequence = <span class="keyword">typename</span> <a class="code" href="../../db/d1d/structsequoia_1_1filtered__sequence.html">filtered_sequence</a>&lt;Excluded, TypeToType, Ts...&gt;::type;</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160; </div>
-<div class="line"><a name="l00071"></a><span class="lineno"><a class="line" href="../../d4/d7c/structsequoia_1_1function__signature.html">   71</a></span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> F&gt; <span class="keyword">struct </span><a class="code" href="../../d4/d7c/structsequoia_1_1function__signature.html">function_signature</a>;</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160; </div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> R, <span class="keyword">class</span> L, <span class="keyword">class</span> T&gt;</div>
-<div class="line"><a name="l00074"></a><span class="lineno"><a class="line" href="../../de/d03/structsequoia_1_1function__signature_3_01R_07L_1_1_5_08_07T_08_4.html">   74</a></span>&#160;  <span class="keyword">struct </span><a class="code" href="../../d4/d7c/structsequoia_1_1function__signature.html">function_signature</a>&lt;R(L::*) (T)&gt;</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;  {</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="keyword">using</span> ret = R;</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="keyword">using</span> arg = T;</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;  };</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160; </div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> R, <span class="keyword">class</span> L, <span class="keyword">class</span> T&gt;</div>
-<div class="line"><a name="l00081"></a><span class="lineno"><a class="line" href="../../d2/de8/structsequoia_1_1function__signature_3_01R_07L_1_1_5_08_07T_08_01const_01_4.html">   81</a></span>&#160;  <span class="keyword">struct </span><a class="code" href="../../d4/d7c/structsequoia_1_1function__signature.html">function_signature</a>&lt;R(L::*) (T) const&gt;</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;  {</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <span class="keyword">using</span> ret = R;</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="keyword">using</span> arg = T;</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;  };</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160; </div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> R, <span class="keyword">class</span> L, <span class="keyword">class</span> T&gt;</div>
-<div class="line"><a name="l00088"></a><span class="lineno"><a class="line" href="../../da/d16/structsequoia_1_1function__signature_3_01R_07L_1_1_5_08_07T_08_01noexcept_01_4.html">   88</a></span>&#160;  <span class="keyword">struct </span><a class="code" href="../../d4/d7c/structsequoia_1_1function__signature.html">function_signature</a>&lt;R(L::*) (T) noexcept&gt;</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;  {</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <span class="keyword">using</span> ret = R;</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    <span class="keyword">using</span> arg = T;</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;  };</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160; </div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> R, <span class="keyword">class</span> L, <span class="keyword">class</span> T&gt;</div>
-<div class="line"><a name="l00095"></a><span class="lineno"><a class="line" href="../../de/dbf/structsequoia_1_1function__signature_3_01R_07L_1_1_5_08_07T_08_01const_01noexcept_01_4.html">   95</a></span>&#160;  <span class="keyword">struct </span><a class="code" href="../../d4/d7c/structsequoia_1_1function__signature.html">function_signature</a>&lt;R(L::*) (T) const noexcept&gt;</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;  {</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <span class="keyword">using</span> ret = R;</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    <span class="keyword">using</span> arg = T;</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;  };</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160; </div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> R, <span class="keyword">class</span> T&gt;</div>
-<div class="line"><a name="l00102"></a><span class="lineno"><a class="line" href="../../d0/dd9/structsequoia_1_1function__signature_3_01R_07_5_08_07T_08_4.html">  102</a></span>&#160;  <span class="keyword">struct </span><a class="code" href="../../d4/d7c/structsequoia_1_1function__signature.html">function_signature</a>&lt;R(*) (T)&gt;</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;  {</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    <span class="keyword">using</span> ret = R;</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    <span class="keyword">using</span> arg = T;</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;  };</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160; </div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> R, <span class="keyword">class</span> T&gt;</div>
-<div class="line"><a name="l00109"></a><span class="lineno"><a class="line" href="../../de/dca/structsequoia_1_1function__signature_3_01R_07_5_08_07T_08_01noexcept_01_4.html">  109</a></span>&#160;  <span class="keyword">struct </span><a class="code" href="../../d4/d7c/structsequoia_1_1function__signature.html">function_signature</a>&lt;R(*) (T) noexcept&gt;</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;  {</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    <span class="keyword">using</span> ret = R;</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    <span class="keyword">using</span> arg = T;</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;  };</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160; </div>
-<div class="line"><a name="l00115"></a><span class="lineno"><a class="line" href="../../dc/daf/structsequoia_1_1variant__visitor.html">  115</a></span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span>... Ts&gt; <span class="keyword">struct </span><a class="code" href="../../dc/daf/structsequoia_1_1variant__visitor.html">variant_visitor</a> : Ts... { <span class="keyword">using</span> Ts::operator()...; };</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span>... Ts&gt; <a class="code" href="../../dc/daf/structsequoia_1_1variant__visitor.html">variant_visitor</a>(Ts...) -&gt; <a class="code" href="../../dc/daf/structsequoia_1_1variant__visitor.html">variant_visitor</a>&lt;Ts...&gt;;</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160; </div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;  <span class="keyword">template</span>&lt;alloc A&gt;</div>
-<div class="line"><a name="l00119"></a><span class="lineno"><a class="line" href="../../d0/d25/structsequoia_1_1alloc__count.html">  119</a></span>&#160;  <span class="keyword">struct </span><a class="code" href="../../d0/d25/structsequoia_1_1alloc__count.html">alloc_count</a></div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;  {</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    <span class="keyword">static</span> constexpr std::size_t size{1};</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;  };</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160; </div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;  <span class="keyword">template</span>&lt;alloc OuterAlloc, alloc... InnerAlloc&gt;</div>
-<div class="line"><a name="l00125"></a><span class="lineno"><a class="line" href="../../d5/d19/structsequoia_1_1alloc__count_3_01std_1_1scoped__allocator__adaptor_3_01OuterAlloc_00_01InnerAlloc_8_8_8_01_4_01_4.html">  125</a></span>&#160;  <span class="keyword">struct </span><a class="code" href="../../d0/d25/structsequoia_1_1alloc__count.html">alloc_count</a>&lt;std::scoped_allocator_adaptor&lt;OuterAlloc, InnerAlloc...&gt;&gt;</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;  {</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;    <span class="keyword">static</span> constexpr std::size_t size{1 + <span class="keyword">sizeof</span>...(InnerAlloc)};</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;  };</div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;}</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    requires std::invocable&lt;Fn, decltype(std::get&lt;I&gt;(std::declval&lt;std::tuple&lt;Ts&amp;&amp;...&gt;&gt;()))...&gt;</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;  <span class="keyword">auto</span> invoke_with_specified_args(Fn f, std::index_sequence&lt;I...&gt;, [[maybe_unused]] Ts&amp;&amp;... ts)</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;  {</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="keywordflow">return</span> f(std::get&lt;I&gt;(std::tuple&lt;Ts&amp;&amp;...&gt;{std::forward&lt;Ts&gt;(ts)...})...);</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;  }</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> Excluded, <span class="keyword">template</span>&lt;<span class="keyword">class</span>&gt; <span class="keyword">class </span>TypeToType, <span class="keyword">class</span>... Ts&gt;</div>
+<div class="line"><a name="l00064"></a><span class="lineno"><a class="line" href="../../db/d1d/structsequoia_1_1filtered__sequence.html">   64</a></span>&#160;  <span class="keyword">struct </span><a class="code" href="../../db/d1d/structsequoia_1_1filtered__sequence.html">filtered_sequence</a></div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;  {</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <span class="keyword">using</span> type = <span class="keyword">typename</span> <a class="code" href="../../d5/de6/structsequoia_1_1impl_1_1aggregate.html">impl::aggregate&lt;std::index_sequence&lt;&gt;</a>, <span class="keyword">sizeof</span>...(Ts), Excluded, TypeToType, Ts...&gt;::type;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;  };</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160; </div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> Excluded, <span class="keyword">template</span>&lt;<span class="keyword">class</span>&gt; <span class="keyword">class </span>TypeToType, <span class="keyword">class</span>... Ts&gt;</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;  <span class="keyword">using</span> make_filtered_sequence = <span class="keyword">typename</span> <a class="code" href="../../db/d1d/structsequoia_1_1filtered__sequence.html">filtered_sequence</a>&lt;Excluded, TypeToType, Ts...&gt;::type;</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160; </div>
+<div class="line"><a name="l00072"></a><span class="lineno"><a class="line" href="../../d4/d7c/structsequoia_1_1function__signature.html">   72</a></span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> F&gt; <span class="keyword">struct </span><a class="code" href="../../d4/d7c/structsequoia_1_1function__signature.html">function_signature</a>;</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160; </div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> R, <span class="keyword">class</span> L, <span class="keyword">class</span> T&gt;</div>
+<div class="line"><a name="l00075"></a><span class="lineno"><a class="line" href="../../de/d03/structsequoia_1_1function__signature_3_01R_07L_1_1_5_08_07T_08_4.html">   75</a></span>&#160;  <span class="keyword">struct </span><a class="code" href="../../d4/d7c/structsequoia_1_1function__signature.html">function_signature</a>&lt;R(L::*) (T)&gt;</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;  {</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="keyword">using</span> ret = R;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <span class="keyword">using</span> arg = T;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;  };</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160; </div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> R, <span class="keyword">class</span> L, <span class="keyword">class</span> T&gt;</div>
+<div class="line"><a name="l00082"></a><span class="lineno"><a class="line" href="../../d2/de8/structsequoia_1_1function__signature_3_01R_07L_1_1_5_08_07T_08_01const_01_4.html">   82</a></span>&#160;  <span class="keyword">struct </span><a class="code" href="../../d4/d7c/structsequoia_1_1function__signature.html">function_signature</a>&lt;R(L::*) (T) const&gt;</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;  {</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="keyword">using</span> ret = R;</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <span class="keyword">using</span> arg = T;</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;  };</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160; </div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> R, <span class="keyword">class</span> L, <span class="keyword">class</span> T&gt;</div>
+<div class="line"><a name="l00089"></a><span class="lineno"><a class="line" href="../../da/d16/structsequoia_1_1function__signature_3_01R_07L_1_1_5_08_07T_08_01noexcept_01_4.html">   89</a></span>&#160;  <span class="keyword">struct </span><a class="code" href="../../d4/d7c/structsequoia_1_1function__signature.html">function_signature</a>&lt;R(L::*) (T) noexcept&gt;</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;  {</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    <span class="keyword">using</span> ret = R;</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <span class="keyword">using</span> arg = T;</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;  };</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160; </div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> R, <span class="keyword">class</span> L, <span class="keyword">class</span> T&gt;</div>
+<div class="line"><a name="l00096"></a><span class="lineno"><a class="line" href="../../de/dbf/structsequoia_1_1function__signature_3_01R_07L_1_1_5_08_07T_08_01const_01noexcept_01_4.html">   96</a></span>&#160;  <span class="keyword">struct </span><a class="code" href="../../d4/d7c/structsequoia_1_1function__signature.html">function_signature</a>&lt;R(L::*) (T) const noexcept&gt;</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;  {</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    <span class="keyword">using</span> ret = R;</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    <span class="keyword">using</span> arg = T;</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;  };</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160; </div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> R, <span class="keyword">class</span> T&gt;</div>
+<div class="line"><a name="l00103"></a><span class="lineno"><a class="line" href="../../d0/dd9/structsequoia_1_1function__signature_3_01R_07_5_08_07T_08_4.html">  103</a></span>&#160;  <span class="keyword">struct </span><a class="code" href="../../d4/d7c/structsequoia_1_1function__signature.html">function_signature</a>&lt;R(*) (T)&gt;</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;  {</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    <span class="keyword">using</span> ret = R;</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    <span class="keyword">using</span> arg = T;</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;  };</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160; </div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> R, <span class="keyword">class</span> T&gt;</div>
+<div class="line"><a name="l00110"></a><span class="lineno"><a class="line" href="../../de/dca/structsequoia_1_1function__signature_3_01R_07_5_08_07T_08_01noexcept_01_4.html">  110</a></span>&#160;  <span class="keyword">struct </span><a class="code" href="../../d4/d7c/structsequoia_1_1function__signature.html">function_signature</a>&lt;R(*) (T) noexcept&gt;</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;  {</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    <span class="keyword">using</span> ret = R;</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    <span class="keyword">using</span> arg = T;</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;  };</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160; </div>
+<div class="line"><a name="l00116"></a><span class="lineno"><a class="line" href="../../dc/daf/structsequoia_1_1variant__visitor.html">  116</a></span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span>... Ts&gt; <span class="keyword">struct </span><a class="code" href="../../dc/daf/structsequoia_1_1variant__visitor.html">variant_visitor</a> : Ts... { <span class="keyword">using</span> Ts::operator()...; };</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span>... Ts&gt; <a class="code" href="../../dc/daf/structsequoia_1_1variant__visitor.html">variant_visitor</a>(Ts...) -&gt; <a class="code" href="../../dc/daf/structsequoia_1_1variant__visitor.html">variant_visitor</a>&lt;Ts...&gt;;</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160; </div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;  <span class="keyword">template</span>&lt;alloc A&gt;</div>
+<div class="line"><a name="l00120"></a><span class="lineno"><a class="line" href="../../d0/d25/structsequoia_1_1alloc__count.html">  120</a></span>&#160;  <span class="keyword">struct </span><a class="code" href="../../d0/d25/structsequoia_1_1alloc__count.html">alloc_count</a></div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;  {</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    <span class="keyword">static</span> constexpr std::size_t size{1};</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;  };</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160; </div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;  <span class="keyword">template</span>&lt;alloc OuterAlloc, alloc... InnerAlloc&gt;</div>
+<div class="line"><a name="l00126"></a><span class="lineno"><a class="line" href="../../d5/d19/structsequoia_1_1alloc__count_3_01std_1_1scoped__allocator__adaptor_3_01OuterAlloc_00_01InnerAlloc_8_8_8_01_4_01_4.html">  126</a></span>&#160;  <span class="keyword">struct </span><a class="code" href="../../d0/d25/structsequoia_1_1alloc__count.html">alloc_count</a>&lt;std::scoped_allocator_adaptor&lt;OuterAlloc, InnerAlloc...&gt;&gt;</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;  {</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;    <span class="keyword">static</span> constexpr std::size_t size{1 + <span class="keyword">sizeof</span>...(InnerAlloc)};</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;  };</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
 <div class="ttc" id="aConcepts_8hpp_html"><div class="ttname"><a href="../../d3/d84/Concepts_8hpp.html">Concepts.hpp</a></div><div class="ttdoc">Concepts mostly, but not exclusively, replicating things which will appear in std at some point.</div></div>
-<div class="ttc" id="astructsequoia_1_1filtered__sequence_html"><div class="ttname"><a href="../../db/d1d/structsequoia_1_1filtered__sequence.html">sequoia::filtered_sequence</a></div><div class="ttdef"><b>Definition:</b> Utilities.hpp:64</div></div>
+<div class="ttc" id="astructsequoia_1_1filtered__sequence_html"><div class="ttname"><a href="../../db/d1d/structsequoia_1_1filtered__sequence.html">sequoia::filtered_sequence</a></div><div class="ttdef"><b>Definition:</b> Utilities.hpp:65</div></div>
 <div class="ttc" id="astructsequoia_1_1impl_1_1append__to__sequence_html"><div class="ttname"><a href="../../da/d23/structsequoia_1_1impl_1_1append__to__sequence.html">sequoia::impl::append_to_sequence</a></div><div class="ttdef"><b>Definition:</b> Utilities.hpp:23</div></div>
-<div class="ttc" id="astructsequoia_1_1function__signature_html"><div class="ttname"><a href="../../d4/d7c/structsequoia_1_1function__signature.html">sequoia::function_signature</a></div><div class="ttdef"><b>Definition:</b> Utilities.hpp:71</div></div>
-<div class="ttc" id="astructsequoia_1_1alloc__count_html"><div class="ttname"><a href="../../d0/d25/structsequoia_1_1alloc__count.html">sequoia::alloc_count</a></div><div class="ttdef"><b>Definition:</b> Utilities.hpp:120</div></div>
+<div class="ttc" id="astructsequoia_1_1function__signature_html"><div class="ttname"><a href="../../d4/d7c/structsequoia_1_1function__signature.html">sequoia::function_signature</a></div><div class="ttdef"><b>Definition:</b> Utilities.hpp:72</div></div>
+<div class="ttc" id="astructsequoia_1_1alloc__count_html"><div class="ttname"><a href="../../d0/d25/structsequoia_1_1alloc__count.html">sequoia::alloc_count</a></div><div class="ttdef"><b>Definition:</b> Utilities.hpp:121</div></div>
 <div class="ttc" id="astructsequoia_1_1impl_1_1aggregate_html"><div class="ttname"><a href="../../d5/de6/structsequoia_1_1impl_1_1aggregate.html">sequoia::impl::aggregate</a></div><div class="ttdef"><b>Definition:</b> Utilities.hpp:33</div></div>
-<div class="ttc" id="astructsequoia_1_1variant__visitor_html"><div class="ttname"><a href="../../dc/daf/structsequoia_1_1variant__visitor.html">sequoia::variant_visitor</a></div><div class="ttdef"><b>Definition:</b> Utilities.hpp:115</div></div>
+<div class="ttc" id="astructsequoia_1_1variant__visitor_html"><div class="ttname"><a href="../../dc/daf/structsequoia_1_1variant__visitor.html">sequoia::variant_visitor</a></div><div class="ttdef"><b>Definition:</b> Utilities.hpp:116</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

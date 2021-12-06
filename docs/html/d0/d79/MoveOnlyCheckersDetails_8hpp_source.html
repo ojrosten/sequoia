@@ -80,7 +80,7 @@ $(function() {
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160; </div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="keyword">namespace </span>sequoia::testing::impl</div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;{</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;  <span class="keyword">template</span>&lt;test_mode Mode, <span class="keyword">class</span> Actions, moveonly T, invocable&lt;T&amp;&gt; Mutator, <span class="keyword">class</span>... Args&gt;</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;  <span class="keyword">template</span>&lt;test_mode Mode, <span class="keyword">class</span> Actions, moveonly T, std::invocable&lt;T&amp;&gt; Mutator, <span class="keyword">class</span>... Args&gt;</div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;  <span class="keywordtype">bool</span> <a class="code" href="../../dd/da8/namespacesequoia_1_1testing.html#ac338b82e4f6a44a8a02400da454e953c">check_semantics</a>(test_logger&lt;Mode&gt;&amp; logger, <span class="keyword">const</span> Actions&amp; actions, T&amp;&amp; x, T&amp;&amp; y, <span class="keyword">const</span> T&amp; xClone, <span class="keyword">const</span> T&amp; yClone, Mutator m, <span class="keyword">const</span> Args&amp;... args)</div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;  {</div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    sentinel&lt;Mode&gt; sentry{logger, <span class="stringliteral">&quot;&quot;</span>};</div>

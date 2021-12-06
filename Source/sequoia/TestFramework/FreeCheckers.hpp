@@ -21,41 +21,41 @@
     However, there is an alternative which may be superior. Consider trying to implement vector.
     This class has various const accessors suggesting that, if operator== returns false, then the
     accessors can be used to probe the exact nature of the inequality. To this end, a class template
-    \ref detailed_equality_checker_primary "detailed_equality_checker" is defined. Specializations
+    \ref value_checker_primary "value_checker" is defined. Specializations
     perform a detailed check of the equality
     of the state of two supposedly equal instance of a class. Note that there is no need for the
-    detailed_equality_checker to include checks of operator== or operator!=, since these will be done,
-    regardless. Indeed, the detailed_equality_checker will be triggered independently of whether operator==
+    value_checker to include checks of operator== or operator!=, since these will be done,
+    regardless. Indeed, the value_checker will be triggered independently of whether operator==
     fails since either the latter or the accessors may have bugs, and introducing unnecessary dependencies
     would reduce the fidelity of the testing framework.
 
-    If a detailed_equality_checker is supplied, then compile-time logic will ignore any attempt to
+    If a value_checker is supplied, then compile-time logic will ignore any attempt to
     serialize objects of type T. Typically, clients may expect a notification that operator== has returned
     false. There will then be a series of
     subsequent checks which will reveal the precise nature of the failure. For example, for vectors, one
     will be told whether the sizes differ and, if not, the element which is causing the difference
     between the two supposedly equal instances. If the vector holds a user-defined type then, so long as
-    this has its own detailed_equality_checker, the process will continue until a type is reached without
-    a detailed_equality_checker; typically this will be a sufficiently simple type that serialization is
+    this has its own value_checker, the process will continue until a type is reached without
+    a value_checker; typically this will be a sufficiently simple type that serialization is
     the appropriate solution (as is the case for may built-in types).
 
     Suppose a client wishes to compare instance of some_container<T>. If some_container has a specialization
-    of \ref detailed_equality_checker_primary "detailed_equality_checker" then this will be used; if it does
+    of \ref value_checker_primary "value_checker" then this will be used; if it does
     not then reflection is used to
     determine if some_container overloads begin and end. If so, then it is treated as a range and
-    all that is required is to implement a detailed_equality_checker for T (unless serialization is prefered).
+    all that is required is to implement a value_checker for T (unless serialization is prefered).
     If some_container is user-defined, it is wisest to provide an overload of the
-    \ref detailed_equality_checker_primary "detailed_equality_checker".
+    \ref value_checker_primary "value_checker".
     However, if the container is part of std, it is probably safe to assume it works correctly and so
     instead effort can be directed focused on T.
 
     With this in mind, imagine creating a container. One of the first things one may wish to do is to check
     that it is correctly initialized. It would be a mistake to use the
-    \ref detailed_equality_checker_primary "detailed_equality_checker" for this
+    \ref value_checker_primary "value_checker" for this
     since, to do so, a second, identical instance would need to be created. This is circular and prone to
     false positives. Consequently, the testing framework also defines a pair of class templates that
     complement
-    \ref detailed_equality_checker_primary "detailed_equality_checker":
+    \ref value_checker_primary "value_checker":
     \ref equivalence_checker_primary "equivalence_checker" and
     \ref weak_equivalence_checker_primary "weak_equivalence_checker". We may
     consider a value for std::vector to be equivalent to an initializer_list in the sense that they hold (at
@@ -104,7 +104,9 @@ namespace sequoia::testing
   };
 
   template<class T>
-  inline constexpr bool is_value_customizer = requires { T::is_customizer_v; };
+  inline constexpr bool is_value_customizer{
+    requires { T::is_customizer_v; }
+  };
 
   namespace impl
   {
@@ -307,12 +309,12 @@ namespace sequoia::testing
 
       The input type, T, must either
       
-       1. be equality comparable and/or possess a detailed_equality_checker;
+       1. be equality comparable and/or possess a value_checker;
        2. be a range.
 
       If this constraint is not satisfied there are several possible remedies:
 
-        1. Provide a specialization of detailed_equality_checker or ensure operator== and !=
+        1. Provide a specialization of value_checker or ensure operator== and !=
            exist, together with a specialization of serializer.
 
         2. If the invocation arises from a fallback from either check_equivalence or
@@ -321,7 +323,7 @@ namespace sequoia::testing
    */
 
   template<test_mode Mode, class Customization, class T, class Advisor=null_advisor>
-    requires (has_detailed_equality_checker_v<T> || sequoia::range<T> || std::equality_comparable<T>)
+    requires (has_value_checker_v<T> || sequoia::range<T> || std::equality_comparable<T>)
   bool dispatch_check(std::string_view description, test_logger<Mode>& logger, equality_tag, const value_based_customization<Customization>&, const T& obtained, const T& prediction, [[maybe_unused]] tutor<Advisor> advisor={})
   {
     sentinel<Mode> sentry{logger, add_type_info<T>(description)};
@@ -331,15 +333,15 @@ namespace sequoia::testing
       binary_comparison(sentry, std::equal_to<T>{}, obtained, prediction, advisor);
     }
 
-    if constexpr (has_detailed_equality_checker_v<T>)
+    if constexpr (has_value_checker_v<T>)
     {
-      if constexpr (checker_for<detailed_equality_checker<T>, Mode, T, T, tutor<Advisor>>)
+      if constexpr (checker_for<value_checker<T>, Mode, T, T, tutor<Advisor>>)
       {
-        detailed_equality_checker<T>::check(logger, obtained, prediction, advisor);
+        value_checker<T>::check(logger, obtained, prediction, advisor);
       }
-      else if constexpr (checker_for<detailed_equality_checker<T>, Mode, T, T>)
+      else if constexpr (checker_for<value_checker<T>, Mode, T, T>)
       {
-        detailed_equality_checker<T>::check(logger, obtained, prediction);
+        value_checker<T>::check(logger, obtained, prediction);
       }
       else
       {

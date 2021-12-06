@@ -128,22 +128,22 @@ template&lt;class T &gt; </td></tr>
 template&lt;class T &gt; </td></tr>
 <tr class="memitem:a778f657902e4e6874f5c2f556b635e2f"><td class="memTemplItemLeft" align="right" valign="top">constexpr move_only_inner_allocation_predictions&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::shift</b> (const move_only_inner_allocation_predictions &amp;predictions)</td></tr>
 <tr class="separator:a778f657902e4e6874f5c2f556b635e2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aad2ca6e68f25e0939ecc72f855b78b85"><td class="memTemplParams" colspan="2"><a id="aad2ca6e68f25e0939ecc72f855b78b85"></a>
-template&lt;test_mode Mode, moveonly T, invocable&lt; T &amp; &gt; Mutator, alloc_getter&lt; T &gt;... Getters&gt; </td></tr>
-<tr class="memitem:aad2ca6e68f25e0939ecc72f855b78b85"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::requires</b> (!orderable&lt; T &gt; &amp;&amp;(sizeof...(Getters) &gt; 0)) void check_semantics(std</td></tr>
-<tr class="separator:aad2ca6e68f25e0939ecc72f855b78b85"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a75968b1dabfabba2d272dcb58e769ac9"><td class="memTemplParams" colspan="2"><a id="a75968b1dabfabba2d272dcb58e769ac9"></a>
-template&lt;test_mode Mode, moveonly T, invocable&lt; T &amp; &gt; Mutator, alloc_getter&lt; T &gt;... Getters&gt; </td></tr>
-<tr class="memitem:a75968b1dabfabba2d272dcb58e769ac9"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::requires</b> (orderable&lt; T &gt; &amp;&amp;(sizeof...(Getters) &gt; 0)) void check_semantics(std</td></tr>
-<tr class="separator:a75968b1dabfabba2d272dcb58e769ac9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab693eba7800d184193c2400c7d40b160"><td class="memTemplParams" colspan="2"><a id="ab693eba7800d184193c2400c7d40b160"></a>
-template&lt;test_mode Mode, moveonly T, invocable_r&lt; T &gt; xMaker, invocable_r&lt; T &gt; yMaker, invocable&lt; T &amp; &gt; Mutator, alloc_getter&lt; T &gt;... Getters&gt; </td></tr>
-<tr class="memitem:ab693eba7800d184193c2400c7d40b160"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::requires</b> (!orderable&lt; T &gt; &amp;&amp;(sizeof...(Getters) &gt; 0)) std</td></tr>
-<tr class="separator:ab693eba7800d184193c2400c7d40b160"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8e09685521b4f123852b3fa275f333e9"><td class="memTemplParams" colspan="2"><a id="a8e09685521b4f123852b3fa275f333e9"></a>
-template&lt;test_mode Mode, moveonly T, invocable_r&lt; T &gt; xMaker, invocable_r&lt; T &gt; yMaker, invocable&lt; T &amp; &gt; Mutator, alloc_getter&lt; T &gt;... Getters&gt; </td></tr>
-<tr class="memitem:a8e09685521b4f123852b3fa275f333e9"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::requires</b> (orderable&lt; T &gt; &amp;&amp;(sizeof...(Getters) &gt; 0)) std</td></tr>
-<tr class="separator:a8e09685521b4f123852b3fa275f333e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a163513706a8bcb69872f591861904469"><td class="memTemplParams" colspan="2"><a id="a163513706a8bcb69872f591861904469"></a>
+template&lt;test_mode Mode, moveonly T, std::invocable&lt; T &amp; &gt; Mutator, alloc_getter&lt; T &gt;... Getters&gt; </td></tr>
+<tr class="memitem:a163513706a8bcb69872f591861904469"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::requires</b> (!std::totally_ordered&lt; T &gt; &amp;&amp;(sizeof...(Getters) &gt; 0)) void check_semantics(std</td></tr>
+<tr class="separator:a163513706a8bcb69872f591861904469"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a443f8303c742e49b657d8885ad3b3d9d"><td class="memTemplParams" colspan="2"><a id="a443f8303c742e49b657d8885ad3b3d9d"></a>
+template&lt;test_mode Mode, moveonly T, std::invocable&lt; T &amp; &gt; Mutator, alloc_getter&lt; T &gt;... Getters&gt; </td></tr>
+<tr class="memitem:a443f8303c742e49b657d8885ad3b3d9d"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::requires</b> (std::totally_ordered&lt; T &gt; &amp;&amp;(sizeof...(Getters) &gt; 0)) void check_semantics(std</td></tr>
+<tr class="separator:a443f8303c742e49b657d8885ad3b3d9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9815c68eff8b406dd91a69e60aba69ac"><td class="memTemplParams" colspan="2"><a id="a9815c68eff8b406dd91a69e60aba69ac"></a>
+template&lt;test_mode Mode, moveonly T, invocable_r&lt; T &gt; xMaker, invocable_r&lt; T &gt; yMaker, std::invocable&lt; T &amp; &gt; Mutator, alloc_getter&lt; T &gt;... Getters&gt; </td></tr>
+<tr class="memitem:a9815c68eff8b406dd91a69e60aba69ac"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::requires</b> (!std::totally_ordered&lt; T &gt; &amp;&amp;(sizeof...(Getters) &gt; 0)) std</td></tr>
+<tr class="separator:a9815c68eff8b406dd91a69e60aba69ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a75eaa88d93b85db25b4462827d549939"><td class="memTemplParams" colspan="2"><a id="a75eaa88d93b85db25b4462827d549939"></a>
+template&lt;test_mode Mode, moveonly T, invocable_r&lt; T &gt; xMaker, invocable_r&lt; T &gt; yMaker, std::invocable&lt; T &amp; &gt; Mutator, alloc_getter&lt; T &gt;... Getters&gt; </td></tr>
+<tr class="memitem:a75eaa88d93b85db25b4462827d549939"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::requires</b> (std::totally_ordered&lt; T &gt; &amp;&amp;(sizeof...(Getters) &gt; 0)) std</td></tr>
+<tr class="separator:a75eaa88d93b85db25b4462827d549939"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Utilities for performing allocation checks of move-only types. </p>

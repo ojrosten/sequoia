@@ -83,57 +83,60 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>graph_type</b> = <a 
 <tr class="memitem:a470e4e3a3a6c73193f68001034624b3b"><td class="memItemLeft" align="right" valign="top"><a id="a470e4e3a3a6c73193f68001034624b3b"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>index_type</b> = typename graph_type::edge_index_type</td></tr>
 <tr class="separator:a470e4e3a3a6c73193f68001034624b3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa6dd3007fdb8feb8f26e2c3474d216b8"><td class="memItemLeft" align="right" valign="top"><a id="aa6dd3007fdb8feb8f26e2c3474d216b8"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>distance_type</b> = std::make_signed_t&lt; index_type &gt;</td></tr>
-<tr class="separator:aa6dd3007fdb8feb8f26e2c3474d216b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af2351b76b493442a9b60ae640ce5fd8f"><td class="memItemLeft" align="right" valign="top"><a id="af2351b76b493442a9b60ae640ce5fd8f"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>difference_type</b> = std::make_signed_t&lt; index_type &gt;</td></tr>
+<tr class="separator:af2351b76b493442a9b60ae640ce5fd8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:acda3c9e48b54c7a3546ddb3d9096d323"><td class="memItemLeft" align="right" valign="top"><a id="acda3c9e48b54c7a3546ddb3d9096d323"></a>
 constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>graph_iterator</b> (<a class="el" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_type</a> &amp;g, const index_type i)</td></tr>
 <tr class="separator:acda3c9e48b54c7a3546ddb3d9096d323"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af98205805bade3316df3fc979e13eead"><td class="memItemLeft" align="right" valign="top"><a id="af98205805bade3316df3fc979e13eead"></a>
-<a class="el" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_type</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>graph</b> () noexcept</td></tr>
-<tr class="separator:af98205805bade3316df3fc979e13eead"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a46768a6efeb3634b1c879e64d94b0e26"><td class="memItemLeft" align="right" valign="top"><a id="a46768a6efeb3634b1c879e64d94b0e26"></a>
-index_type&#160;</td><td class="memItemRight" valign="bottom"><b>index</b> () const noexcept</td></tr>
-<tr class="separator:a46768a6efeb3634b1c879e64d94b0e26"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a04e215d4b1f5de6bb75f0f613727e07c"><td class="memItemLeft" align="right" valign="top"><a id="a04e215d4b1f5de6bb75f0f613727e07c"></a>
+constexpr <a class="el" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_type</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>graph</b> () noexcept</td></tr>
+<tr class="separator:a04e215d4b1f5de6bb75f0f613727e07c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9e9db7b1bd534da59df209713807fef3"><td class="memItemLeft" align="right" valign="top"><a id="a9e9db7b1bd534da59df209713807fef3"></a>
+constexpr const <a class="el" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_type</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>graph</b> () const noexcept</td></tr>
+<tr class="separator:a9e9db7b1bd534da59df209713807fef3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae26b31032c2a1b3bb719f32ae6a6df31"><td class="memItemLeft" align="right" valign="top"><a id="ae26b31032c2a1b3bb719f32ae6a6df31"></a>
+constexpr index_type&#160;</td><td class="memItemRight" valign="bottom"><b>index</b> () const noexcept</td></tr>
+<tr class="separator:ae26b31032c2a1b3bb719f32ae6a6df31"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a31eddfd96d8229b0741aa8a022deebf7"><td class="memItemLeft" align="right" valign="top"><a id="a31eddfd96d8229b0741aa8a022deebf7"></a>
 constexpr index_type&#160;</td><td class="memItemRight" valign="bottom"><b>operator*</b> () const</td></tr>
 <tr class="separator:a31eddfd96d8229b0741aa8a022deebf7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaa8c203faaab5e264890257f4892b6a1"><td class="memItemLeft" align="right" valign="top"><a id="aaa8c203faaab5e264890257f4892b6a1"></a>
 constexpr <a class="el" href="../../d0/dec/classsequoia_1_1maths_1_1graph__impl_1_1graph__iterator.html">graph_iterator</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator++</b> ()</td></tr>
 <tr class="separator:aaa8c203faaab5e264890257f4892b6a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a72ba687991fb511aa998f688349e2887"><td class="memItemLeft" align="right" valign="top"><a id="a72ba687991fb511aa998f688349e2887"></a>
-constexpr <a class="el" href="../../d0/dec/classsequoia_1_1maths_1_1graph__impl_1_1graph__iterator.html">graph_iterator</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator+=</b> (const distance_type n)</td></tr>
-<tr class="separator:a72ba687991fb511aa998f688349e2887"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab0fabae7ca0040d1979dafbdc53f8b19"><td class="memItemLeft" align="right" valign="top"><a id="ab0fabae7ca0040d1979dafbdc53f8b19"></a>
+constexpr <a class="el" href="../../d0/dec/classsequoia_1_1maths_1_1graph__impl_1_1graph__iterator.html">graph_iterator</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator+=</b> (const difference_type n)</td></tr>
+<tr class="separator:ab0fabae7ca0040d1979dafbdc53f8b19"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3a24e760712580b1741cbfa36d5e9910"><td class="memItemLeft" align="right" valign="top"><a id="a3a24e760712580b1741cbfa36d5e9910"></a>
 constexpr <a class="el" href="../../d0/dec/classsequoia_1_1maths_1_1graph__impl_1_1graph__iterator.html">graph_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>operator++</b> (int)</td></tr>
 <tr class="separator:a3a24e760712580b1741cbfa36d5e9910"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a31603d741937a4d95e5cc69daa135854"><td class="memItemLeft" align="right" valign="top"><a id="a31603d741937a4d95e5cc69daa135854"></a>
 constexpr <a class="el" href="../../d0/dec/classsequoia_1_1maths_1_1graph__impl_1_1graph__iterator.html">graph_iterator</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator--</b> ()</td></tr>
 <tr class="separator:a31603d741937a4d95e5cc69daa135854"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a53cfeefe1424d7fef66b3e080e6a19ee"><td class="memItemLeft" align="right" valign="top"><a id="a53cfeefe1424d7fef66b3e080e6a19ee"></a>
-constexpr <a class="el" href="../../d0/dec/classsequoia_1_1maths_1_1graph__impl_1_1graph__iterator.html">graph_iterator</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator-=</b> (const distance_type n)</td></tr>
-<tr class="separator:a53cfeefe1424d7fef66b3e080e6a19ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aad7b210353eed8fc8a14dd1f779bd349"><td class="memItemLeft" align="right" valign="top"><a id="aad7b210353eed8fc8a14dd1f779bd349"></a>
+constexpr <a class="el" href="../../d0/dec/classsequoia_1_1maths_1_1graph__impl_1_1graph__iterator.html">graph_iterator</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator-=</b> (const difference_type n)</td></tr>
+<tr class="separator:aad7b210353eed8fc8a14dd1f779bd349"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a101e23b922a9d569702b47aee84a80f7"><td class="memItemLeft" align="right" valign="top"><a id="a101e23b922a9d569702b47aee84a80f7"></a>
 constexpr <a class="el" href="../../d0/dec/classsequoia_1_1maths_1_1graph__impl_1_1graph__iterator.html">graph_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>operator--</b> (int)</td></tr>
 <tr class="separator:a101e23b922a9d569702b47aee84a80f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="friends"></a>
 Friends</h2></td></tr>
-<tr class="memitem:aa8dd88d11854c3b87a99912a97e0f6fb"><td class="memItemLeft" align="right" valign="top"><a id="aa8dd88d11854c3b87a99912a97e0f6fb"></a>
-constexpr friend <a class="el" href="../../d0/dec/classsequoia_1_1maths_1_1graph__impl_1_1graph__iterator.html">graph_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>operator+</b> (const <a class="el" href="../../d0/dec/classsequoia_1_1maths_1_1graph__impl_1_1graph__iterator.html">graph_iterator</a> &amp;it, const distance_type n)</td></tr>
-<tr class="separator:aa8dd88d11854c3b87a99912a97e0f6fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9023213730a02515967b695bf890ae0c"><td class="memItemLeft" align="right" valign="top"><a id="a9023213730a02515967b695bf890ae0c"></a>
-constexpr friend <a class="el" href="../../d0/dec/classsequoia_1_1maths_1_1graph__impl_1_1graph__iterator.html">graph_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>operator-</b> (const <a class="el" href="../../d0/dec/classsequoia_1_1maths_1_1graph__impl_1_1graph__iterator.html">graph_iterator</a> &amp;it, const distance_type n)</td></tr>
-<tr class="separator:a9023213730a02515967b695bf890ae0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5760160c38007ec9790157ea32a0477d"><td class="memItemLeft" align="right" valign="top"><a id="a5760160c38007ec9790157ea32a0477d"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator==</b> (const <a class="el" href="../../d0/dec/classsequoia_1_1maths_1_1graph__impl_1_1graph__iterator.html">graph_iterator</a> &amp;lhs, const <a class="el" href="../../d0/dec/classsequoia_1_1maths_1_1graph__impl_1_1graph__iterator.html">graph_iterator</a> &amp;rhs) noexcept</td></tr>
-<tr class="separator:a5760160c38007ec9790157ea32a0477d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4ca171601aa2fddfc08853904468c137"><td class="memItemLeft" align="right" valign="top"><a id="a4ca171601aa2fddfc08853904468c137"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator!=</b> (const <a class="el" href="../../d0/dec/classsequoia_1_1maths_1_1graph__impl_1_1graph__iterator.html">graph_iterator</a> &amp;lhs, const <a class="el" href="../../d0/dec/classsequoia_1_1maths_1_1graph__impl_1_1graph__iterator.html">graph_iterator</a> &amp;rhs) noexcept</td></tr>
-<tr class="separator:a4ca171601aa2fddfc08853904468c137"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4473cb1c4246cfcf77c36674a1154cbe"><td class="memItemLeft" align="right" valign="top"><a id="a4473cb1c4246cfcf77c36674a1154cbe"></a>
+constexpr friend <a class="el" href="../../d0/dec/classsequoia_1_1maths_1_1graph__impl_1_1graph__iterator.html">graph_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>operator+</b> (const <a class="el" href="../../d0/dec/classsequoia_1_1maths_1_1graph__impl_1_1graph__iterator.html">graph_iterator</a> &amp;it, const difference_type n)</td></tr>
+<tr class="separator:a4473cb1c4246cfcf77c36674a1154cbe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8d85157dc25528e5bed48710685715ba"><td class="memItemLeft" align="right" valign="top"><a id="a8d85157dc25528e5bed48710685715ba"></a>
+constexpr friend <a class="el" href="../../d0/dec/classsequoia_1_1maths_1_1graph__impl_1_1graph__iterator.html">graph_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>operator-</b> (const <a class="el" href="../../d0/dec/classsequoia_1_1maths_1_1graph__impl_1_1graph__iterator.html">graph_iterator</a> &amp;it, const difference_type n)</td></tr>
+<tr class="separator:a8d85157dc25528e5bed48710685715ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6f72510d9e4e6e3c402a75343a92cf2f"><td class="memItemLeft" align="right" valign="top"><a id="a6f72510d9e4e6e3c402a75343a92cf2f"></a>
+auto&#160;</td><td class="memItemRight" valign="bottom"><b>operator==</b> (const <a class="el" href="../../d0/dec/classsequoia_1_1maths_1_1graph__impl_1_1graph__iterator.html">graph_iterator</a> &amp;lhs, const <a class="el" href="../../d0/dec/classsequoia_1_1maths_1_1graph__impl_1_1graph__iterator.html">graph_iterator</a> &amp;rhs) noexcept</td></tr>
+<tr class="separator:a6f72510d9e4e6e3c402a75343a92cf2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a00661241bb9a733e3b114a3e6f45e865"><td class="memItemLeft" align="right" valign="top"><a id="a00661241bb9a733e3b114a3e6f45e865"></a>
+auto&#160;</td><td class="memItemRight" valign="bottom"><b>operator</b> (const <a class="el" href="../../d0/dec/classsequoia_1_1maths_1_1graph__impl_1_1graph__iterator.html">graph_iterator</a> &amp;lhs, const <a class="el" href="../../d0/dec/classsequoia_1_1maths_1_1graph__impl_1_1graph__iterator.html">graph_iterator</a> &amp;rhs) noexcept</td></tr>
+<tr class="separator:a00661241bb9a733e3b114a3e6f45e865"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>/Users/Claire/Dropbox/Sequoia/Source/sequoia/Maths/Graph/<a class="el" href="../../d8/d78/GraphImpl_8hpp_source.html">GraphImpl.hpp</a></li>

@@ -23,7 +23,7 @@ namespace sequoia::testing
   namespace impl
   {
     template<maths::network Graph>
-    struct graph_detailed_equality_checker
+    struct graph_value_checker
     {
       using type = Graph;
 
@@ -122,7 +122,7 @@ namespace sequoia::testing
     class EdgeTraits,
     class WeightMaker
   >
-  struct detailed_equality_checker<maths::connectivity<Directedness, EdgeTraits, WeightMaker>>
+  struct value_checker<maths::connectivity<Directedness, EdgeTraits, WeightMaker>>
   {
     using type = maths::connectivity<Directedness, EdgeTraits, WeightMaker>;
     using edge_index_type = typename type::edge_index_type;

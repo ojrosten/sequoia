@@ -231,7 +231,7 @@ namespace sequoia::testing
   }
 
   template<>
-  struct detailed_equality_checker<foo>
+  struct value_checker<foo>
   {
     template<test_mode Mode>
     static void check(test_logger<Mode>&, const foo&, const foo&)

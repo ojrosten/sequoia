@@ -238,7 +238,7 @@ $(function() {
 <div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;    {</div>
 <div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;      Checker::recovery(std::move(<a class="code" href="../../d3/dc9/structsequoia_1_1testing_1_1paths.html">paths</a>));</div>
 <div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;    }</div>
-<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;  <span class="keyword">protected</span>:    </div>
+<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;  <span class="keyword">protected</span>:</div>
 <div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;    <span class="keyword">using</span> duration = std::chrono::steady_clock::duration;</div>
 <div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160; </div>
 <div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;    <a class="code" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">basic_test</a>(<a class="code" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">basic_test</a>&amp;&amp;)            noexcept = <span class="keywordflow">default</span>;</div>
@@ -294,11 +294,11 @@ $(function() {
 <div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;  };  </div>
 <div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160; </div>
 <div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;  template&lt;class T&gt;</div>
-<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;  concept concrete_test = !std::is_abstract_v&lt;T&gt; &amp;&amp; movable&lt;T&gt; &amp;&amp; constructible_from&lt;std::<span class="keywordtype">string</span>&gt;</div>
+<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;  concept concrete_test = !std::is_abstract_v&lt;T&gt; &amp;&amp; std::movable&lt;T&gt; &amp;&amp; std::constructible_from&lt;std::<span class="keywordtype">string</span>&gt;</div>
 <div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;    &amp;&amp; <a class="code" href="../../dd/da8/namespacesequoia_1_1testing.html#a8692d8909870cdcc497f3684d94385a6">requires</a> (T&amp; test){</div>
-<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;         { test.execute(std::nullopt) } -&gt; same_as&lt;log_summary&gt;;</div>
-<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;         { test.source_filename() }     -&gt; convertible_to&lt;std::filesystem::path&gt;;</div>
-<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;         { test.name() }                -&gt; convertible_to&lt;std::string&gt;;</div>
+<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;         { test.execute(std::nullopt) } -&gt; std::same_as&lt;log_summary&gt;;</div>
+<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;         { test.source_filename() }     -&gt; std::convertible_to&lt;std::filesystem::path&gt;;</div>
+<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;         { test.name() }                -&gt; std::convertible_to&lt;std::string&gt;;</div>
 <div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;       };</div>
 <div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160; </div>
 <div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;  <span class="keyword">template</span>&lt;test_mode Mode&gt;</div>
@@ -310,11 +310,11 @@ $(function() {
 <div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
 <div class="ttc" id="aclasssequoia_1_1testing_1_1basic__test_html_a1dbc7d24e8c0b8e846fc5635ac3c8cda"><div class="ttname"><a href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html#a1dbc7d24e8c0b8e846fc5635ac3c8cda">sequoia::testing::basic_test::summarize</a></div><div class="ttdeci">virtual log_summary summarize(duration delta) const</div><div class="ttdoc">Any override of this is likely to call this first and potentially append to the log_summary.</div><div class="ttdef"><b>Definition:</b> FreeTestCore.hpp:208</div></div>
-<div class="ttc" id="anamespacesequoia_1_1testing_html_a8692d8909870cdcc497f3684d94385a6"><div class="ttname"><a href="../../dd/da8/namespacesequoia_1_1testing.html#a8692d8909870cdcc497f3684d94385a6">sequoia::testing::requires</a></div><div class="ttdeci">requires invocable&lt; Advisor, T, T &gt; &amp;&amp; requires</div><div class="ttdoc">The workhorse for (weak) equivalence checking.</div><div class="ttdef"><b>Definition:</b> Advice.hpp:69</div></div>
+<div class="ttc" id="anamespacesequoia_1_1testing_html_a8692d8909870cdcc497f3684d94385a6"><div class="ttname"><a href="../../dd/da8/namespacesequoia_1_1testing.html#a8692d8909870cdcc497f3684d94385a6">sequoia::testing::requires</a></div><div class="ttdeci">requires std::invocable&lt; Advisor, T, T &gt; &amp;&amp; requires</div><div class="ttdoc">The workhorse for (weak) equivalence checking.</div><div class="ttdef"><b>Definition:</b> Advice.hpp:69</div></div>
 <div class="ttc" id="astructsequoia_1_1testing_1_1recovery__paths_html"><div class="ttname"><a href="../../da/d58/structsequoia_1_1testing_1_1recovery__paths.html">sequoia::testing::recovery_paths</a></div><div class="ttdoc">Holds details of the file to which the last successfully completed test is registered.</div><div class="ttdef"><b>Definition:</b> TestLogger.hpp:37</div></div>
-<div class="ttc" id="aConcreteTypeCheckers_8hpp_html"><div class="ttname"><a href="../../dc/d9c/ConcreteTypeCheckers_8hpp.html">ConcreteTypeCheckers.hpp</a></div><div class="ttdoc">Useful specializations for the class templates detailed_equality_checker and equivalence_checker.</div></div>
+<div class="ttc" id="aConcreteTypeCheckers_8hpp_html"><div class="ttname"><a href="../../dc/d9c/ConcreteTypeCheckers_8hpp.html">ConcreteTypeCheckers.hpp</a></div><div class="ttdoc">Useful specializations for the class templates value_checker and equivalence_checker.</div></div>
 <div class="ttc" id="aConcepts_8hpp_html"><div class="ttname"><a href="../../d3/d84/Concepts_8hpp.html">Concepts.hpp</a></div><div class="ttdoc">Concepts mostly, but not exclusively, replicating things which will appear in std at some point.</div></div>
-<div class="ttc" id="aclasssequoia_1_1testing_1_1log__summary_html"><div class="ttname"><a href="../../d2/daa/classsequoia_1_1testing_1_1log__summary.html">sequoia::testing::log_summary</a></div><div class="ttdoc">Summaries data generated by the logger, for the purposes of reporting.</div><div class="ttdef"><b>Definition:</b> TestLogger.hpp:269</div></div>
+<div class="ttc" id="aclasssequoia_1_1testing_1_1log__summary_html"><div class="ttname"><a href="../../d2/daa/classsequoia_1_1testing_1_1log__summary.html">sequoia::testing::log_summary</a></div><div class="ttdoc">Summaries data generated by the logger, for the purposes of reporting.</div><div class="ttdef"><b>Definition:</b> TestLogger.hpp:266</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1basic__test_html"><div class="ttname"><a href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">sequoia::testing::basic_test</a></div><div class="ttdef"><b>Definition:</b> FreeTestCore.hpp:76</div></div>
 <div class="ttc" id="aFileSystem_8hpp_html"><div class="ttname"><a href="../../d2/dbb/FileSystem_8hpp.html">FileSystem.hpp</a></div><div class="ttdoc">File paths and related utilities.</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1timer_html"><div class="ttname"><a href="../../d4/d25/classsequoia_1_1testing_1_1timer.html">sequoia::testing::timer</a></div><div class="ttdef"><b>Definition:</b> FreeTestCore.hpp:30</div></div>

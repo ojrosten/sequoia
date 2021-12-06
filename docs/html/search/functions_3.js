@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['find_5fmatched_5fdelimiters_1814',['find_matched_delimiters',['../dd/da8/Patterns_8cpp.html#a2ab6cca5e3974201f4190e1bcefac697',1,'sequoia']]]
+  ['general_5fequivalence_5fcheck_1835',['general_equivalence_check',['../dd/da8/namespacesequoia_1_1testing.html#ad8278d9ecb6065fa491616aa51d27efb',1,'sequoia::testing']]]
 ];

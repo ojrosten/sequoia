@@ -26,8 +26,8 @@ namespace sequoia::testing
     class NodeWeightStorageTraits
   >
     requires (ownership::creator<EdgeWeightCreator> && ownership::creator<NodeWeightCreator>)
-  struct detailed_equality_checker<maths::tree<Directedness, TreeLinkDir, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>>
-    : impl::graph_detailed_equality_checker<maths::tree<Directedness, TreeLinkDir, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>>
+  struct value_checker<maths::tree<Directedness, TreeLinkDir, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>>
+    : impl::graph_value_checker<maths::tree<Directedness, TreeLinkDir, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>>
   {};
 
   template

@@ -96,39 +96,41 @@ $(function() {
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <span class="keywordtype">void</span> test_critical_errors();</div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="keywordtype">void</span> test_instability_analysis();</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="keywordtype">void</span> test_basic_output();</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <span class="keyword">template</span>&lt;invocable&lt;test_runner&amp;&gt; Manipulator, concrete_test... Ts&gt;</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="keywordtype">void</span> test_instability_analysis(std::string_view message,</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;                                   std::string_view outputDirName,</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;                                   std::string_view numRuns,</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;                                   std::initializer_list&lt;std::string_view&gt; extraArgs,</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;                                   Manipulator manipulator,</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;                                   Ts&amp;&amp;... ts);</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keyword">template</span>&lt;concrete_test... Ts&gt;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keywordtype">void</span> test_instability_analysis(std::string_view message,</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;                                   std::string_view outputDirName,</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;                                   std::string_view numRuns,</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;                                   std::initializer_list&lt;std::string_view&gt; extraArgs,</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;                                   Ts&amp;&amp;... ts);</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keyword">template</span>&lt;concrete_test... Ts&gt;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keywordtype">void</span> test_instability_analysis(std::string_view message,</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;                                   std::string_view outputDirName,</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;                                   std::string_view numRuns,</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;                                   Ts&amp;&amp;... ts);</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    [[nodiscard]]</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    std::filesystem::path aux_project() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;  };</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;}</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <span class="keywordtype">void</span> test_instability_analysis();</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keyword">template</span>&lt;std::invocable&lt;test_runner&amp;&gt; Manipulator, concrete_test... Ts&gt;</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keywordtype">void</span> test_instability_analysis(std::string_view message,</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;                                   std::string_view outputDirName,</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;                                   std::string_view numRuns,</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;                                   std::initializer_list&lt;std::string_view&gt; extraArgs,</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;                                   Manipulator manipulator,</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;                                   Ts&amp;&amp;... ts);</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keyword">template</span>&lt;concrete_test... Ts&gt;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keywordtype">void</span> test_instability_analysis(std::string_view message,</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;                                   std::string_view outputDirName,</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;                                   std::string_view numRuns,</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;                                   std::initializer_list&lt;std::string_view&gt; extraArgs,</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;                                   Ts&amp;&amp;... ts);</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keyword">template</span>&lt;concrete_test... Ts&gt;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="keywordtype">void</span> test_instability_analysis(std::string_view message,</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;                                   std::string_view outputDirName,</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;                                   std::string_view numRuns,</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;                                   Ts&amp;&amp;... ts);</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    [[nodiscard]]</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    std::filesystem::path aux_project() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;  };</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
 <div class="ttc" id="aclasssequoia_1_1testing_1_1basic__test_html"><div class="ttname"><a href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">sequoia::testing::basic_test</a></div><div class="ttdef"><b>Definition:</b> FreeTestCore.hpp:76</div></div>
 <div class="ttc" id="aFreeTestCore_8hpp_html"><div class="ttname"><a href="../../dd/d3e/FreeTestCore_8hpp.html">FreeTestCore.hpp</a></div><div class="ttdoc">Core functionality for the testing framework.</div></div>
 <div class="ttc" id="anamespacesequoia_1_1testing_html_a58ef890d97adcfe24617ac1e9b266133"><div class="ttname"><a href="../../dd/da8/namespacesequoia_1_1testing.html#a58ef890d97adcfe24617ac1e9b266133">sequoia::testing::free_test</a></div><div class="ttdeci">basic_free_test&lt; test_mode::standard &gt; free_test</div><div class="ttdef"><b>Definition:</b> FreeTestCore.hpp:270</div></div>
 <div class="ttc" id="anamespacesequoia_1_1testing_html"><div class="ttname"><a href="../../dd/da8/namespacesequoia_1_1testing.html">sequoia::testing</a></div><div class="ttdef"><b>Definition:</b> MyBehaviouralTest.cpp:12</div></div>
-<div class="ttc" id="aclasssequoia_1_1testing_1_1test__runner__test_html_a64f081399ae5ec7d04f8b908794ff8eb"><div class="ttname"><a href="../../d5/dde/classsequoia_1_1testing_1_1test__runner__test.html#a64f081399ae5ec7d04f8b908794ff8eb">sequoia::testing::test_runner_test::source_file</a></div><div class="ttdeci">std::string_view source_file() const noexcept final</div><div class="ttdoc">Pure virtual method which should be overridden in a concrete test's cpp file in order to provide the ...</div><div class="ttdef"><b>Definition:</b> TestRunnerTest.cpp:190</div></div>
+<div class="ttc" id="aclasssequoia_1_1testing_1_1test__runner__test_html_a64f081399ae5ec7d04f8b908794ff8eb"><div class="ttname"><a href="../../d5/dde/classsequoia_1_1testing_1_1test__runner__test.html#a64f081399ae5ec7d04f8b908794ff8eb">sequoia::testing::test_runner_test::source_file</a></div><div class="ttdeci">std::string_view source_file() const noexcept final</div><div class="ttdoc">Pure virtual method which should be overridden in a concrete test's cpp file in order to provide the ...</div><div class="ttdef"><b>Definition:</b> TestRunnerTest.cpp:244</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1test__runner__test_html"><div class="ttname"><a href="../../d5/dde/classsequoia_1_1testing_1_1test__runner__test.html">sequoia::testing::test_runner_test</a></div><div class="ttdef"><b>Definition:</b> TestRunnerTest.hpp:17</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

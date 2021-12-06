@@ -101,7 +101,7 @@
     framework generates output.
 
     Clients may extend the testing framework to conveniently test their types, for example
-    by specializing the \ref detailed_equality_checker_primary "detailed_equality_checker"
+    by specializing the \ref value_checker_primary "value_checker"
     (see \ref sec_extensible). This is a perfect
     opportunity to write some false-positive tests to give confidence that the newly-added code
     is not spuriously reporting success.
@@ -131,7 +131,7 @@
     a superior alternative.
 
     `sequoia` defines a class template,
-    \ref detailed_equality_checker_primary "detailed_equality_checker".
+    \ref value_checker_primary "value_checker".
     The purpose of this is to
     use the `const` accessors of two instances of a class to probe their purported equality.
     Suppose that a client has created a new container and consider comparing two instances.
@@ -143,7 +143,7 @@
     returns `true`; after all, the aim is to test with high fidelity and it may be that `operator==`
     has a bug; or perhaps it is fine but there's a bug in the const accessors. Either way,
     a well designed specialization of the
-    \ref detailed_equality_checker_primary "detailed_equality_checker" will catch these
+    \ref value_checker_primary "value_checker" will catch these
     potential inconsistencies.
 
     However, there is a gap here. Consider the the first time a type is instantiated in
@@ -161,7 +161,7 @@
     </pre>
 
     Therefore, in addition to the
-    \ref detailed_equality_checker_primary "detailed_equality_checker", the framework defines two class
+    \ref value_checker_primary "value_checker", the framework defines two class
     templates,
     \ref equivalence_checker_primary "equivalence_checker" and
     \ref weak_equivalence_checker_primary "weak_equivalence_checker".

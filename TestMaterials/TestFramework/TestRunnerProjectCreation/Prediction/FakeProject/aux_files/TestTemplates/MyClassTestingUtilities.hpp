@@ -12,7 +12,7 @@
 
 namespace sequoia::testing
 {
-	template<?> struct detailed_equality_checker<::?_class>
+	template<?> struct value_checker<::?_class>
 	{
 		using type = ::?_class;
 

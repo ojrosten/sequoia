@@ -67,7 +67,8 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#typedef-members">Typedefs</a>  </div>
+<a href="#typedef-members">Typedefs</a> &#124;
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">DataPool.hpp File Reference</div>  </div>
 </div><!--header-->
@@ -90,19 +91,20 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/dbd/structsequoia_1_1ownership_1_1impl_1_1pool__deref__policy.html">sequoia::ownership::impl::pool_deref_policy&lt; Wrapper &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d2a/classsequoia_1_1ownership_1_1data__pool.html">sequoia::ownership::data_pool&lt; T, Allocator &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d72/classsequoia_1_1ownership_1_1data__pool_1_1data__wrapper.html">sequoia::ownership::data_pool&lt; T, Allocator &gt;::data_wrapper</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/db5/classsequoia_1_1ownership_1_1data__pool_1_1proxy.html">sequoia::ownership::data_pool&lt; T, Allocator &gt;::proxy</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
 <tr class="memitem:ad186de5bdcbf82a4e4cd906c859c1a40"><td class="memTemplParams" colspan="2"><a id="ad186de5bdcbf82a4e4cd906c859c1a40"></a>
-template&lt;class Iterator , class Wrapper &gt; </td></tr>
+template&lt;std::input_or_output_iterator Iterator, class Wrapper &gt; </td></tr>
 <tr class="memitem:ad186de5bdcbf82a4e4cd906c859c1a40"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::ownership::impl::pool_iterator</b> = utilities::iterator&lt; Iterator, pool_deref_policy&lt; Wrapper &gt; &gt;</td></tr>
 <tr class="separator:ad186de5bdcbf82a4e4cd906c859c1a40"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:ac21d52a9e4c4a2328e7d5c831fd21887"><td class="memTemplParams" colspan="2"><a id="ac21d52a9e4c4a2328e7d5c831fd21887"></a>
+template&lt;class T , class Allocator  = std::allocator&lt;T&gt;&gt; </td></tr>
+<tr class="memitem:ac21d52a9e4c4a2328e7d5c831fd21887"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::ownership::requires</b> (!std::is_empty_v&lt; T &gt;) class data_pool</td></tr>
+<tr class="separator:ac21d52a9e4c4a2328e7d5c831fd21887"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Classes to allow homogenous treatment of pooled/spawned data. </p>

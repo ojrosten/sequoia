@@ -22,9 +22,9 @@
 namespace sequoia::testing
 {
   /*! \brief class template, specializations of which implement detailed comparison of two instantiations of T.
-      \anchor detailed_equality_checker_primary
+      \anchor value_checker_primary
    */
-  template<class T> struct detailed_equality_checker;
+  template<class T> struct value_checker;
 
   /*! \brief class template, specializations of which implement comparison between T and one or more equivalent types.
       \anchor equivalence_checker_primary
@@ -43,7 +43,9 @@ namespace sequoia::testing
   inline constexpr bool has_weak_equivalence_checker_v{class_template_is_default_instantiable<weak_equivalence_checker, T>};
 
   template<class T>
-  inline constexpr bool has_detailed_equality_checker_v{class_template_is_default_instantiable<detailed_equality_checker, T>};
+  inline constexpr bool has_value_checker_v{
+    requires{ &value_checker<T>::check; }
+  };
 
   struct equality_tag{};
  

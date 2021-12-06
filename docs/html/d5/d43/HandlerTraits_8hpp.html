@@ -104,10 +104,10 @@ template&lt;class H &gt; </div>
 <div class="line">    <span class="keyword">typename</span> H::handle_type;</div>
 <div class="line">    <span class="keyword">typename</span> H::elementary_type;</div>
 <div class="line"> </div>
-<div class="line">    { h.get(x) }      -&gt; same_as&lt;typename H::elementary_type&amp;&gt;;</div>
-<div class="line">    { h.get_ptr(x) }  -&gt; same_as&lt;typename H::elementary_type*&gt;;</div>
-<div class="line">    { h.get(cx) }     -&gt; same_as&lt;const typename H::elementary_type&amp;&gt;;</div>
-<div class="line">    { h.get_ptr(cx) } -&gt; same_as&lt;const typename H::elementary_type*&gt;;</div>
+<div class="line">    { h.get(x) }      -&gt; std::same_as&lt;typename H::elementary_type&amp;&gt;;</div>
+<div class="line">    { h.get_ptr(x) }  -&gt; std::same_as&lt;typename H::elementary_type*&gt;;</div>
+<div class="line">    { h.get(cx) }     -&gt; std::same_as&lt;const typename H::elementary_type&amp;&gt;;</div>
+<div class="line">    { h.get_ptr(cx) } -&gt; std::same_as&lt;const typename H::elementary_type*&gt;;</div>
 <div class="line">  }</div>
 </div><!-- fragment -->
 </div>

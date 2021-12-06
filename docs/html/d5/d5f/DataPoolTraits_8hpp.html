@@ -99,11 +99,11 @@ template&lt;class T &gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">= equality_comparable&lt;T&gt; &amp;&amp; requires(T&amp; a) {</div>
+<b>Initial value:</b><div class="fragment"><div class="line">= requires(T &amp; a) {</div>
 <div class="line">    <span class="keyword">typename</span> T::proxy;</div>
 <div class="line">    <span class="keyword">typename</span> T::value_type;</div>
 <div class="line"> </div>
-<div class="line">    { a.make() } -&gt; same_as&lt;typename T::proxy&gt;;</div>
+<div class="line">    { a.make() } -&gt; std::same_as&lt;typename T::proxy&gt;;</div>
 <div class="line">  }</div>
 </div><!-- fragment -->
 </div>

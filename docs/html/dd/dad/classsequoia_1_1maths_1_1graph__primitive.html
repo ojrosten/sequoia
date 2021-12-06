@@ -112,13 +112,21 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a535b169acc5152ea76d416fbd05c7219"><td class="memItemLeft" align="right" valign="top"><a id="a535b169acc5152ea76d416fbd05c7219"></a>
 constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>graph_primitive</b> (edges_initializer edges)</td></tr>
 <tr class="separator:a535b169acc5152ea76d416fbd05c7219"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab3b8382b648d7d137c3d208f6a47d8e4"><td class="memItemLeft" align="right" valign="top"><a id="ab3b8382b648d7d137c3d208f6a47d8e4"></a>
-constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>graph_primitive</b> (edges_initializer edges, std::initializer_list&lt; node_weight_type &gt; nodeWeights) requires(!empty&lt; node_weight_type &gt; &amp;&amp;!same_as&lt; node_weight_type</td></tr>
-<tr class="separator:ab3b8382b648d7d137c3d208f6a47d8e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aee116c39d966217e01f99fd4b9df7ce4"><td class="memTemplParams" colspan="2"><a id="aee116c39d966217e01f99fd4b9df7ce4"></a>
+<tr class="memitem:a8e88a4e21f65752ea43fa713d67c6eb9"><td class="memItemLeft" align="right" valign="top"><a id="a8e88a4e21f65752ea43fa713d67c6eb9"></a>
+constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>graph_primitive</b> (edges_initializer edges, std::initializer_list&lt; node_weight_type &gt; nodeWeights) requires(!std</td></tr>
+<tr class="separator:a8e88a4e21f65752ea43fa713d67c6eb9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae5bed7b805aceeddd5e76461c7acd6ed"><td class="memTemplParams" colspan="2"><a id="ae5bed7b805aceeddd5e76461c7acd6ed"></a>
 template&lt;class... NodeWeights&gt; </td></tr>
-<tr class="memitem:aee116c39d966217e01f99fd4b9df7ce4"><td class="memTemplItemLeft" align="right" valign="top">requires constexpr same_as&lt; node_weight_type, <a class="el" href="../../d2/d94/structsequoia_1_1maths_1_1graph__impl_1_1heterogeneous__tag.html">graph_impl::heterogeneous_tag</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>graph_primitive</b> (edges_initializer edges, NodeWeights &amp;&amp;... nodeWeights)</td></tr>
-<tr class="separator:aee116c39d966217e01f99fd4b9df7ce4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae5bed7b805aceeddd5e76461c7acd6ed"><td class="memTemplItemLeft" align="right" valign="top">requires constexpr std::same_as&lt; node_weight_type, <a class="el" href="../../d2/d94/structsequoia_1_1maths_1_1graph__impl_1_1heterogeneous__tag.html">graph_impl::heterogeneous_tag</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>graph_primitive</b> (edges_initializer edges, NodeWeights &amp;&amp;... nodeWeights)</td></tr>
+<tr class="separator:ae5bed7b805aceeddd5e76461c7acd6ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad012a7f5d1b21ca11a4b729ffa51ad3c"><td class="memTemplParams" colspan="2"><a id="ad012a7f5d1b21ca11a4b729ffa51ad3c"></a>
+template&lt;tree_link_direction dir&gt; </td></tr>
+<tr class="memitem:ad012a7f5d1b21ca11a4b729ffa51ad3c"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires</b> (!std::is_empty_v&lt; node_weight_type &gt; &amp;&amp;!std::same_as&lt; node_weight_type, <a class="el" href="../../d2/d94/structsequoia_1_1maths_1_1graph__impl_1_1heterogeneous__tag.html">graph_impl::heterogeneous_tag</a> &gt; &amp;&amp;((dir==tree_link_direction::symmetric)||(Connectivity::directedness==directed_flavour::directed))) const expr <a class="el" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a>(std</td></tr>
+<tr class="separator:ad012a7f5d1b21ca11a4b729ffa51ad3c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a098417c5eec36c76bb9b0f8fcd6ff138"><td class="memTemplParams" colspan="2"><a id="a098417c5eec36c76bb9b0f8fcd6ff138"></a>
+template&lt;tree_link_direction dir&gt; </td></tr>
+<tr class="memitem:a098417c5eec36c76bb9b0f8fcd6ff138"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires</b> (!std::is_empty_v&lt; node_weight_type &gt; &amp;&amp;!std::same_as&lt; node_weight_type, <a class="el" href="../../d2/d94/structsequoia_1_1maths_1_1graph__impl_1_1heterogeneous__tag.html">graph_impl::heterogeneous_tag</a> &gt; &amp;&amp;((dir==tree_link_direction::symmetric)||(Connectivity::directedness==directed_flavour::directed))) const expr <a class="el" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a>(<a class="el" href="../../d2/d81/structsequoia_1_1maths_1_1tree__initializer.html">tree_initializer</a>&lt; node_weight_type &gt; tree</td></tr>
+<tr class="separator:a098417c5eec36c76bb9b0f8fcd6ff138"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a389dfd57deed1b3ba694c6ca68805f91"><td class="memItemLeft" align="right" valign="top"><a id="a389dfd57deed1b3ba694c6ca68805f91"></a>
 constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>graph_primitive</b> (const <a class="el" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a> &amp;in)</td></tr>
 <tr class="separator:a389dfd57deed1b3ba694c6ca68805f91"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -135,11 +143,8 @@ template&lt;class Compare &gt; </td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a3801a20d6bc89181464bfbb1f41b6c31"><td class="memItemLeft" align="right" valign="top"><a id="a3801a20d6bc89181464bfbb1f41b6c31"></a>
-constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>edges</b></td></tr>
-<tr class="separator:a3801a20d6bc89181464bfbb1f41b6c31"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3b5138309ad2d3ec332e1bdb7d92cbb3"><td class="memItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>nodeWeights</b></td></tr>
-<tr class="separator:a3b5138309ad2d3ec332e1bdb7d92cbb3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af188480a52b948d6cbf2f7bfbd76a043"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d1/de4/structsequoia_1_1maths_1_1tree__link__direction__constant.html">tree_link_direction_constant</a>&lt; dir &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>tdc</b></td></tr>
+<tr class="separator:af188480a52b948d6cbf2f7bfbd76a043"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
@@ -221,6 +226,10 @@ template&lt;class... Args&gt; </td></tr>
 <tr class="memitem:a61a928017e2d6a9f5843a70ba67787be"><td class="memItemLeft" align="right" valign="top"><a id="a61a928017e2d6a9f5843a70ba67787be"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>clear</b> () noexcept</td></tr>
 <tr class="separator:a61a928017e2d6a9f5843a70ba67787be"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9d7f56bda7e7dcada771cd4829581f4c"><td class="memTemplParams" colspan="2"><a id="a9d7f56bda7e7dcada771cd4829581f4c"></a>
+template&lt;tree_link_direction dir, class... Args&gt; </td></tr>
+<tr class="memitem:a9d7f56bda7e7dcada771cd4829581f4c"><td class="memTemplItemLeft" align="right" valign="top">size_type&#160;</td><td class="memTemplItemRight" valign="bottom"><b>tree_join</b> (<a class="el" href="../../d1/de4/structsequoia_1_1maths_1_1tree__link__direction__constant.html">tree_link_direction_constant</a>&lt; dir &gt;, size_type parent, Args &amp;&amp;... args)</td></tr>
+<tr class="separator:a9d7f56bda7e7dcada771cd4829581f4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
@@ -235,8 +244,8 @@ const EdgePartitionsAllocator const NodeAllocator&#160;</td><td class="memItemRi
 <tr class="separator:ac78967a2bd8dde40bad6bccfbb24b53a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a19bf595d81c0cd6cab94b1fc15a519c4"><td class="memItemLeft" align="right" valign="top">const EdgePartitionsAllocator&#160;</td><td class="memItemRight" valign="bottom"><b>edgeParitionsAlloc</b></td></tr>
 <tr class="separator:a19bf595d81c0cd6cab94b1fc15a519c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a52f3abe80c0a82f38252da548622a0f2"><td class="memItemLeft" align="right" valign="top">const EdgePartitionsAllocator&#160;</td><td class="memItemRight" valign="bottom"><b>Nodes</b></td></tr>
-<tr class="separator:a52f3abe80c0a82f38252da548622a0f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a52a62cf0ec4178de4fa1eb328a7d6269"><td class="memItemLeft" align="right" valign="top">const EdgePartitionsAllocator&#160;</td><td class="memItemRight" valign="bottom"><b>Nodes</b></td></tr>
+<tr class="separator:a52a62cf0ec4178de4fa1eb328a7d6269"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a05624a3e6028296ea152cf2dfbce8072"><td class="memItemLeft" align="right" valign="top"><a id="a05624a3e6028296ea152cf2dfbce8072"></a>
 const EdgeAllocator &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>edgeAlloc</b></td></tr>
 <tr class="separator:a05624a3e6028296ea152cf2dfbce8072"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -306,8 +315,8 @@ template&lt;network Connectivity, class Nodes &gt; </div>
 </div><!-- fragment -->
 </div>
 </div>
-<a id="a52f3abe80c0a82f38252da548622a0f2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a52f3abe80c0a82f38252da548622a0f2">&#9670;&nbsp;</a></span>Nodes <span class="overload">[1/2]</span></h2>
+<a id="a52a62cf0ec4178de4fa1eb328a7d6269"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a52a62cf0ec4178de4fa1eb328a7d6269">&#9670;&nbsp;</a></span>Nodes <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -318,7 +327,7 @@ template&lt;network Connectivity, class Nodes &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr <a class="el" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">sequoia::maths::graph_primitive</a>&lt; Connectivity, Nodes &gt;::Nodes</td>
+          <td class="memname">const EdgeAllocator const EdgePartitionsAllocator <a class="el" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">sequoia::maths::graph_primitive</a>&lt; Connectivity, Nodes &gt;::Nodes</td>
         </tr>
       </table>
   </td>
@@ -373,8 +382,8 @@ template&lt;network Connectivity, class Nodes &gt; </div>
 </div><!-- fragment -->
 </div>
 </div>
-<a id="a3b5138309ad2d3ec332e1bdb7d92cbb3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3b5138309ad2d3ec332e1bdb7d92cbb3">&#9670;&nbsp;</a></span>nodeWeights</h2>
+<a id="af188480a52b948d6cbf2f7bfbd76a043"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af188480a52b948d6cbf2f7bfbd76a043">&#9670;&nbsp;</a></span>tdc</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -382,13 +391,12 @@ template&lt;network Connectivity, class Nodes &gt; </div>
 template&lt;network Connectivity, class Nodes &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">constexpr <a class="el" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">sequoia::maths::graph_primitive</a>&lt; Connectivity, Nodes &gt;::nodeWeights</td>
+          <td class="memname"><a class="el" href="../../d1/de4/structsequoia_1_1maths_1_1tree__link__direction__constant.html">tree_link_direction_constant</a>&lt;dir&gt; <a class="el" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">sequoia::maths::graph_primitive</a>&lt; Connectivity, Nodes &gt;::tdc</td>
         </tr>
       </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">{</div>
-<div class="line">        <span class="keywordflow">if</span>(nodeWeights.size() != edges.size())</div>
-<div class="line">          <span class="keywordflow">throw</span> std::logic_error(<span class="stringliteral">&quot;Node weight initializer and edges top-level initializer must be of same size&quot;</span>)</div>
+<div class="line">        build_tree(std::numeric_limits&lt;size_type&gt;::max(), tree, tdc)</div>
 </div><!-- fragment -->
 </div>
 </div>

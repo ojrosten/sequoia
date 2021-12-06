@@ -272,15 +272,15 @@ $(function() {
 <div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;    <span class="keyword">using</span> inner_predictions_type = inner_allocation_predictions;</div>
 <div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;  };</div>
 <div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160; </div>
-<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;  <span class="keyword">template</span>&lt;test_mode Mode, pseudoregular T, invocable&lt;T&amp;&gt; Mutator, alloc_getter&lt;T&gt;... Getters&gt;</div>
-<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;    <a class="code" href="../../dd/da8/namespacesequoia_1_1testing.html#a8692d8909870cdcc497f3684d94385a6">requires</a> (!orderable&lt;T&gt; &amp;&amp; (<span class="keyword">sizeof</span>...(Getters) &gt; 0))</div>
+<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;  <span class="keyword">template</span>&lt;test_mode Mode, pseudoregular T, std::invocable&lt;T&amp;&gt; Mutator, alloc_getter&lt;T&gt;... Getters&gt;</div>
+<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;    <a class="code" href="../../dd/da8/namespacesequoia_1_1testing.html#a8692d8909870cdcc497f3684d94385a6">requires</a> (!std::totally_ordered&lt;T&gt; &amp;&amp; (<span class="keyword">sizeof</span>...(Getters) &gt; 0))</div>
 <div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;  void <a class="code" href="../../dd/da8/namespacesequoia_1_1testing.html#ac338b82e4f6a44a8a02400da454e953c">check_semantics</a>(std::string_view description, test_logger&lt;Mode&gt;&amp; logger, const T&amp; x, const T&amp; y, Mutator yMutator, const allocation_info&lt;T, Getters&gt;&amp;... info)</div>
 <div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;  {</div>
 <div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;    impl::check_semantics(description, logger, impl::regular_allocation_actions&lt;T&gt;{}, x, y, std::move(yMutator), info...);</div>
 <div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;  }</div>
 <div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160; </div>
-<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;  <span class="keyword">template</span>&lt;test_mode Mode, pseudoregular T, invocable&lt;T&amp;&gt; Mutator, alloc_getter&lt;T&gt;... Getters&gt;</div>
-<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;    <a class="code" href="../../dd/da8/namespacesequoia_1_1testing.html#a8692d8909870cdcc497f3684d94385a6">requires</a> (orderable&lt;T&gt; &amp;&amp; (<span class="keyword">sizeof</span>...(Getters) &gt; 0))</div>
+<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;  <span class="keyword">template</span>&lt;test_mode Mode, pseudoregular T, std::invocable&lt;T&amp;&gt; Mutator, alloc_getter&lt;T&gt;... Getters&gt;</div>
+<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;    <a class="code" href="../../dd/da8/namespacesequoia_1_1testing.html#a8692d8909870cdcc497f3684d94385a6">requires</a> (std::totally_ordered&lt;T&gt; &amp;&amp; (<span class="keyword">sizeof</span>...(Getters) &gt; 0))</div>
 <div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;  void <a class="code" href="../../dd/da8/namespacesequoia_1_1testing.html#ac338b82e4f6a44a8a02400da454e953c">check_semantics</a>(std::string_view description, test_logger&lt;Mode&gt;&amp; logger, const T&amp; x, const T&amp; y, std::weak_ordering order, Mutator yMutator, const allocation_info&lt;T, Getters&gt;&amp;... info)</div>
 <div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;  {</div>
 <div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;    impl::check_semantics(description, logger, impl::regular_allocation_actions&lt;T&gt;{order}, x, y, std::move(yMutator), info...);</div>
@@ -292,10 +292,10 @@ $(function() {
 <div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;    pseudoregular T,</div>
 <div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;    invocable_r&lt;T&gt; xMaker,</div>
 <div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;    invocable_r&lt;T&gt; yMaker,</div>
-<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;    invocable&lt;T&amp;&gt; Mutator,</div>
+<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;    std::invocable&lt;T&amp;&gt; Mutator,</div>
 <div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;    alloc_getter&lt;T&gt;... Getters</div>
 <div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;  &gt;</div>
-<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;    <a class="code" href="../../dd/da8/namespacesequoia_1_1testing.html#a8692d8909870cdcc497f3684d94385a6">requires</a> (!orderable&lt;T&gt; &amp;&amp; <span class="keyword">sizeof</span>...(Getters) &gt; 0)</div>
+<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;    <a class="code" href="../../dd/da8/namespacesequoia_1_1testing.html#a8692d8909870cdcc497f3684d94385a6">requires</a> (!std::totally_ordered&lt;T&gt; &amp;&amp; <span class="keyword">sizeof</span>...(Getters) &gt; 0)</div>
 <div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;  std::pair&lt;T, T&gt; <a class="code" href="../../dd/da8/namespacesequoia_1_1testing.html#ac338b82e4f6a44a8a02400da454e953c">check_semantics</a>(std::string_view description, test_logger&lt;Mode&gt;&amp; logger, xMaker xFn, yMaker yFn, Mutator yMutator, const allocation_info&lt;T, Getters&gt;&amp;... info)</div>
 <div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;  {</div>
 <div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;    <span class="keywordflow">return</span> impl::check_semantics(description, logger, impl::regular_allocation_actions&lt;T&gt;{}, std::move(xFn), std::move(yFn), std::move(yMutator), info...);</div>
@@ -307,17 +307,17 @@ $(function() {
 <div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;    pseudoregular T,</div>
 <div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;    invocable_r&lt;T&gt; xMaker,</div>
 <div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;    invocable_r&lt;T&gt; yMaker,</div>
-<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;    invocable&lt;T&amp;&gt; Mutator,</div>
+<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;    std::invocable&lt;T&amp;&gt; Mutator,</div>
 <div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;    alloc_getter&lt;T&gt;... Getters</div>
 <div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;  &gt;</div>
-<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;    <a class="code" href="../../dd/da8/namespacesequoia_1_1testing.html#a8692d8909870cdcc497f3684d94385a6">requires</a> (orderable&lt;T&gt; &amp;&amp; <span class="keyword">sizeof</span>...(Getters) &gt; 0)</div>
+<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;    <a class="code" href="../../dd/da8/namespacesequoia_1_1testing.html#a8692d8909870cdcc497f3684d94385a6">requires</a> (std::totally_ordered&lt;T&gt; &amp;&amp; <span class="keyword">sizeof</span>...(Getters) &gt; 0)</div>
 <div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;  std::pair&lt;T, T&gt; <a class="code" href="../../dd/da8/namespacesequoia_1_1testing.html#ac338b82e4f6a44a8a02400da454e953c">check_semantics</a>(std::string_view description, test_logger&lt;Mode&gt;&amp; logger, xMaker xFn, yMaker yFn, std::weak_ordering order, Mutator yMutator, const allocation_info&lt;T, Getters&gt;&amp;... info)</div>
 <div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;  {</div>
 <div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;    <span class="keywordflow">return</span> impl::check_semantics(description, logger, impl::regular_allocation_actions&lt;T&gt;{order}, std::move(xFn), std::move(yFn), std::move(yMutator), info...);</div>
 <div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;  }</div>
 <div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
-<div class="ttc" id="anamespacesequoia_1_1testing_html_a8692d8909870cdcc497f3684d94385a6"><div class="ttname"><a href="../../dd/da8/namespacesequoia_1_1testing.html#a8692d8909870cdcc497f3684d94385a6">sequoia::testing::requires</a></div><div class="ttdeci">requires invocable&lt; Advisor, T, T &gt; &amp;&amp; requires</div><div class="ttdoc">The workhorse for (weak) equivalence checking.</div><div class="ttdef"><b>Definition:</b> Advice.hpp:69</div></div>
+<div class="ttc" id="anamespacesequoia_1_1testing_html_a8692d8909870cdcc497f3684d94385a6"><div class="ttname"><a href="../../dd/da8/namespacesequoia_1_1testing.html#a8692d8909870cdcc497f3684d94385a6">sequoia::testing::requires</a></div><div class="ttdeci">requires std::invocable&lt; Advisor, T, T &gt; &amp;&amp; requires</div><div class="ttdoc">The workhorse for (weak) equivalence checking.</div><div class="ttdef"><b>Definition:</b> Advice.hpp:69</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1basic__allocation__predictions_html"><div class="ttname"><a href="../../d9/de6/classsequoia_1_1testing_1_1basic__allocation__predictions.html">sequoia::testing::basic_allocation_predictions</a></div><div class="ttdef"><b>Definition:</b> RegularAllocationCheckers.hpp:107</div></div>
 <div class="ttc" id="aRegularAllocationCheckersDetails_8hpp_html"><div class="ttname"><a href="../../d0/dce/RegularAllocationCheckersDetails_8hpp.html">RegularAllocationCheckersDetails.hpp</a></div><div class="ttdoc">Implementation details for allocation checks of regular types.</div></div>
 <div class="ttc" id="astructsequoia_1_1testing_1_1individual__allocation__predictions_html"><div class="ttname"><a href="../../d3/d2d/structsequoia_1_1testing_1_1individual__allocation__predictions.html">sequoia::testing::individual_allocation_predictions</a></div><div class="ttdef"><b>Definition:</b> RegularAllocationCheckers.hpp:21</div></div>

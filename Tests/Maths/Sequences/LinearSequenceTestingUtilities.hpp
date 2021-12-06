@@ -14,7 +14,7 @@
 namespace sequoia::testing
 {
   template<class T, std::integral Index>
-  struct detailed_equality_checker<maths::linear_sequence<T, Index>>
+  struct value_checker<maths::linear_sequence<T, Index>>
   {
     using type = maths::linear_sequence<T, Index>;
 

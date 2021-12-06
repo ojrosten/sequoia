@@ -86,20 +86,14 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>const_edge_iterator<
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a18145b06bb28e483d2eb1027369f956f"><td class="memTemplParams" colspan="2"><a id="a18145b06bb28e483d2eb1027369f956f"></a>
+<tr class="memitem:adfc4bd92fdb41029bd0f2d12877c4a5c"><td class="memTemplParams" colspan="2"><a id="adfc4bd92fdb41029bd0f2d12877c4a5c"></a>
 template&lt;disconnected_discovery_mode FindDisconnected, class NBEF , class NAEF , class EFTF , class ESTF , class TaskProcessingModel &gt; </td></tr>
-<tr class="memitem:a18145b06bb28e483d2eb1027369f956f"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires</b> (invocable&lt; NBEF, edge_index_type &gt;) &amp;&amp;(invocable&lt; NAEF</td></tr>
-<tr class="separator:a18145b06bb28e483d2eb1027369f956f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a956135d88322e93baefbfc3f892d4f42"><td class="memItemLeft" align="right" valign="top"><a id="a956135d88322e93baefbfc3f892d4f42"></a>
-edge_index_type &amp;&amp;invocable&lt; EFTF, const_edge_iterator &gt; &amp;&amp;constexpr invocable&lt; ESTF, const_edge_iterator &gt; auto&#160;</td><td class="memItemRight" valign="bottom"><b>traverse</b> (const G &amp;graph, <a class="el" href="../../de/d9a/classsequoia_1_1maths_1_1traversal__conditions.html">traversal_conditions</a>&lt; FindDisconnected &gt; conditions, NBEF &amp;&amp;nodeBeforeEdgesFn, NAEF &amp;&amp;nodeAfterEdgesFn, EFTF &amp;&amp;edgeFirstTraversalFn, ESTF &amp;&amp;edgeSecondTraversalFn, TaskProcessingModel &amp;&amp;taskProcessingModel)</td></tr>
-<tr class="separator:a956135d88322e93baefbfc3f892d4f42"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a12e37ac13f5ad96d348007483c94042c"><td class="memTemplParams" colspan="2"><a id="a12e37ac13f5ad96d348007483c94042c"></a>
+<tr class="memitem:adfc4bd92fdb41029bd0f2d12877c4a5c"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires</b> (std::invocable&lt; NBEF, edge_index_type &gt;) &amp;&amp;(std</td></tr>
+<tr class="separator:adfc4bd92fdb41029bd0f2d12877c4a5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8768cf60559f3de0998bcb43390277f3"><td class="memTemplParams" colspan="2"><a id="a8768cf60559f3de0998bcb43390277f3"></a>
 template&lt;disconnected_discovery_mode FindDisconnected, class NBEF , class NAEF , class ETUN , class TaskProcessingModel &gt; </td></tr>
-<tr class="memitem:a12e37ac13f5ad96d348007483c94042c"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires</b> (invocable&lt; NBEF, edge_index_type &gt;) &amp;&amp;(invocable&lt; NAEF</td></tr>
-<tr class="separator:a12e37ac13f5ad96d348007483c94042c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af04b043bd6717ee2b053125bc45c6fc2"><td class="memItemLeft" align="right" valign="top"><a id="af04b043bd6717ee2b053125bc45c6fc2"></a>
-edge_index_type &amp;&amp;constexpr invocable&lt; ETUN, typename G::const_edge_iterator &gt; auto&#160;</td><td class="memItemRight" valign="bottom"><b>recursive_dfs</b> (const G &amp;graph, <a class="el" href="../../de/d9a/classsequoia_1_1maths_1_1traversal__conditions.html">traversal_conditions</a>&lt; FindDisconnected &gt; conditions, NBEF &amp;&amp;nodeBeforeEdgesFn, NAEF &amp;&amp;nodeAfterEdgesFn, ETUN &amp;&amp;edgeToUndiscoveredNodeFn, TaskProcessingModel &amp;&amp;taskProcessingModel)</td></tr>
-<tr class="separator:af04b043bd6717ee2b053125bc45c6fc2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8768cf60559f3de0998bcb43390277f3"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires</b> (std::invocable&lt; NBEF, edge_index_type &gt;) &amp;&amp;(std</td></tr>
+<tr class="separator:a8768cf60559f3de0998bcb43390277f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>/Users/Claire/Dropbox/Sequoia/Source/sequoia/Maths/Graph/<a class="el" href="../../d1/d4d/GraphTraversalDetails_8hpp_source.html">GraphTraversalDetails.hpp</a></li>

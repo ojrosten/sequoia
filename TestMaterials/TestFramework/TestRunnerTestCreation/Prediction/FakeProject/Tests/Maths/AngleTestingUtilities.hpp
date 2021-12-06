@@ -12,7 +12,7 @@
 
 namespace sequoia::testing
 {
-    template<> struct detailed_equality_checker<maths::angle>
+    template<> struct value_checker<maths::angle>
     {
         using type = maths::angle;
 

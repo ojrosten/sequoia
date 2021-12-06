@@ -128,22 +128,22 @@ template&lt;class T &gt; </td></tr>
 template&lt;class T &gt; </td></tr>
 <tr class="memitem:a6ce6f303a2a290db640c509142100e9d"><td class="memTemplItemLeft" align="right" valign="top">constexpr inner_allocation_predictions&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::shift</b> (const inner_allocation_predictions &amp;predictions)</td></tr>
 <tr class="separator:a6ce6f303a2a290db640c509142100e9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aad2ca6e68f25e0939ecc72f855b78b85"><td class="memTemplParams" colspan="2"><a id="aad2ca6e68f25e0939ecc72f855b78b85"></a>
-template&lt;test_mode Mode, moveonly T, invocable&lt; T &amp; &gt; Mutator, alloc_getter&lt; T &gt;... Getters&gt; </td></tr>
-<tr class="memitem:aad2ca6e68f25e0939ecc72f855b78b85"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::requires</b> (!orderable&lt; T &gt; &amp;&amp;(sizeof...(Getters) &gt; 0)) void check_semantics(std</td></tr>
-<tr class="separator:aad2ca6e68f25e0939ecc72f855b78b85"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a75968b1dabfabba2d272dcb58e769ac9"><td class="memTemplParams" colspan="2"><a id="a75968b1dabfabba2d272dcb58e769ac9"></a>
-template&lt;test_mode Mode, moveonly T, invocable&lt; T &amp; &gt; Mutator, alloc_getter&lt; T &gt;... Getters&gt; </td></tr>
-<tr class="memitem:a75968b1dabfabba2d272dcb58e769ac9"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::requires</b> (orderable&lt; T &gt; &amp;&amp;(sizeof...(Getters) &gt; 0)) void check_semantics(std</td></tr>
-<tr class="separator:a75968b1dabfabba2d272dcb58e769ac9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1db24b6f07926c8f0a30fb81678dfd30"><td class="memTemplParams" colspan="2"><a id="a1db24b6f07926c8f0a30fb81678dfd30"></a>
-template&lt;test_mode Mode, pseudoregular T, invocable_r&lt; T &gt; xMaker, invocable_r&lt; T &gt; yMaker, invocable&lt; T &amp; &gt; Mutator, alloc_getter&lt; T &gt;... Getters&gt; </td></tr>
-<tr class="memitem:a1db24b6f07926c8f0a30fb81678dfd30"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::requires</b> (!orderable&lt; T &gt; &amp;&amp;sizeof...(Getters) &gt; 0) std</td></tr>
-<tr class="separator:a1db24b6f07926c8f0a30fb81678dfd30"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae5d372dbe58bf7281bf053a7ebe85b8b"><td class="memTemplParams" colspan="2"><a id="ae5d372dbe58bf7281bf053a7ebe85b8b"></a>
-template&lt;test_mode Mode, pseudoregular T, invocable_r&lt; T &gt; xMaker, invocable_r&lt; T &gt; yMaker, invocable&lt; T &amp; &gt; Mutator, alloc_getter&lt; T &gt;... Getters&gt; </td></tr>
-<tr class="memitem:ae5d372dbe58bf7281bf053a7ebe85b8b"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::requires</b> (orderable&lt; T &gt; &amp;&amp;sizeof...(Getters) &gt; 0) std</td></tr>
-<tr class="separator:ae5d372dbe58bf7281bf053a7ebe85b8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a163513706a8bcb69872f591861904469"><td class="memTemplParams" colspan="2"><a id="a163513706a8bcb69872f591861904469"></a>
+template&lt;test_mode Mode, moveonly T, std::invocable&lt; T &amp; &gt; Mutator, alloc_getter&lt; T &gt;... Getters&gt; </td></tr>
+<tr class="memitem:a163513706a8bcb69872f591861904469"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::requires</b> (!std::totally_ordered&lt; T &gt; &amp;&amp;(sizeof...(Getters) &gt; 0)) void check_semantics(std</td></tr>
+<tr class="separator:a163513706a8bcb69872f591861904469"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a443f8303c742e49b657d8885ad3b3d9d"><td class="memTemplParams" colspan="2"><a id="a443f8303c742e49b657d8885ad3b3d9d"></a>
+template&lt;test_mode Mode, moveonly T, std::invocable&lt; T &amp; &gt; Mutator, alloc_getter&lt; T &gt;... Getters&gt; </td></tr>
+<tr class="memitem:a443f8303c742e49b657d8885ad3b3d9d"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::requires</b> (std::totally_ordered&lt; T &gt; &amp;&amp;(sizeof...(Getters) &gt; 0)) void check_semantics(std</td></tr>
+<tr class="separator:a443f8303c742e49b657d8885ad3b3d9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7c933370a9bdcdfbb110337e94ddfa2e"><td class="memTemplParams" colspan="2"><a id="a7c933370a9bdcdfbb110337e94ddfa2e"></a>
+template&lt;test_mode Mode, pseudoregular T, invocable_r&lt; T &gt; xMaker, invocable_r&lt; T &gt; yMaker, std::invocable&lt; T &amp; &gt; Mutator, alloc_getter&lt; T &gt;... Getters&gt; </td></tr>
+<tr class="memitem:a7c933370a9bdcdfbb110337e94ddfa2e"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::requires</b> (!std::totally_ordered&lt; T &gt; &amp;&amp;sizeof...(Getters) &gt; 0) std</td></tr>
+<tr class="separator:a7c933370a9bdcdfbb110337e94ddfa2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a10e54d104ddc97b0b9d1fbe1c3f0e0de"><td class="memTemplParams" colspan="2"><a id="a10e54d104ddc97b0b9d1fbe1c3f0e0de"></a>
+template&lt;test_mode Mode, pseudoregular T, invocable_r&lt; T &gt; xMaker, invocable_r&lt; T &gt; yMaker, std::invocable&lt; T &amp; &gt; Mutator, alloc_getter&lt; T &gt;... Getters&gt; </td></tr>
+<tr class="memitem:a10e54d104ddc97b0b9d1fbe1c3f0e0de"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::requires</b> (std::totally_ordered&lt; T &gt; &amp;&amp;sizeof...(Getters) &gt; 0) std</td></tr>
+<tr class="separator:a10e54d104ddc97b0b9d1fbe1c3f0e0de"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Utilities for performing allocation checks for regular types, see <a class="el" href="../../d1/db7/RegularCheckers_8hpp.html#regular_semantics_definition">here</a>. </p>

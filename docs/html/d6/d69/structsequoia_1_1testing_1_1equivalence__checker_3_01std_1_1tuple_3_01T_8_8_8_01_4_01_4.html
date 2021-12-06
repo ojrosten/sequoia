@@ -66,7 +66,7 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
+<a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="../../d3/d82/structsequoia_1_1testing_1_1equivalence__checker_3_01std_1_1tuple_3_01T_8_8_8_01_4_01_4-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">sequoia::testing::equivalence_checker&lt; std::tuple&lt; T... &gt; &gt; Struct Template Reference</div>  </div>
@@ -83,16 +83,16 @@ Inheritance diagram for sequoia::testing::equivalence_checker&lt; std::tuple&lt;
  <div class="center">
   <img src="../../d6/d69/structsequoia_1_1testing_1_1equivalence__checker_3_01std_1_1tuple_3_01T_8_8_8_01_4_01_4.png" usemap="#sequoia::testing::equivalence_5Fchecker_3C_20std::tuple_3C_20T..._20_3E_20_3E_map" alt=""/>
   <map id="sequoia::testing::equivalence_5Fchecker_3C_20std::tuple_3C_20T..._20_3E_20_3E_map" name="sequoia::testing::equivalence_5Fchecker_3C_20std::tuple_3C_20T..._20_3E_20_3E_map">
-<area href="../../db/df2/structsequoia_1_1testing_1_1detailed__equality__checker_3_01std_1_1tuple_3_01T_8_8_8_01_4_01_4.html" title="Detailed comparison of the elements of two instances of std::pair&lt;T...&gt;" alt="sequoia::testing::detailed_equality_checker&lt; std::tuple&lt; T... &gt; &gt;" shape="rect" coords="0,56,366,80"/>
+<area href="../../db/d49/structsequoia_1_1testing_1_1value__checker_3_01std_1_1tuple_3_01T_8_8_8_01_4_01_4.html" title="Detailed comparison of the elements of two instances of std::pair&lt;T...&gt;" alt="sequoia::testing::value_checker&lt; std::tuple&lt; T... &gt; &gt;" shape="rect" coords="0,56,340,80"/>
   </map>
 </div></div>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
-Static Public Member Functions</h2></td></tr>
-<tr class="memitem:aa234136577afc2cee0e5d2e0bda0535f"><td class="memTemplParams" colspan="2"><a id="aa234136577afc2cee0e5d2e0bda0535f"></a>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:ada600ea06ec3479fc3c262af6cd81b8e"><td class="memTemplParams" colspan="2"><a id="ada600ea06ec3479fc3c262af6cd81b8e"></a>
 template&lt;test_mode Mode, class... U, class Advisor &gt; </td></tr>
-<tr class="memitem:aa234136577afc2cee0e5d2e0bda0535f"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check</b> (<a class="el" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger</a>&lt; Mode &gt; &amp;logger, const std::tuple&lt; T... &gt; &amp;value, const std::tuple&lt; U... &gt; &amp;prediction, const <a class="el" href="../../d6/d71/classsequoia_1_1testing_1_1tutor.html">tutor</a>&lt; Advisor &gt; &amp;advisor)</td></tr>
-<tr class="separator:aa234136577afc2cee0e5d2e0bda0535f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ada600ea06ec3479fc3c262af6cd81b8e"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires</b> ((sizeof...(T)==sizeof...(U)) &amp;&amp;(std::is_same_v&lt; std::remove_cvref_t&lt; T &gt;, std::remove_cvref_t&lt; U &gt;&gt; &amp;&amp;...)) static void check(<a class="el" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger</a>&lt; Mode &gt; &amp;logger</td></tr>
+<tr class="separator:ada600ea06ec3479fc3c262af6cd81b8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><h3>template&lt;class... T&gt;<br />

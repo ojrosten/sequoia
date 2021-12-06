@@ -88,14 +88,14 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d6d/structsequoia_1_1testing_1_1detailed__equality__checker.html">sequoia::testing::detailed_equality_checker&lt; T &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">class template, specializations of which implement detailed comparison of two instantiations of T;  <a href="../../d9/d6d/structsequoia_1_1testing_1_1detailed__equality__checker.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/dc4/structsequoia_1_1testing_1_1value__checker.html">sequoia::testing::value_checker&lt; T &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">class template, specializations of which implement detailed comparison of two instantiations of T.  <a href="../../da/dc4/structsequoia_1_1testing_1_1value__checker.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d52/structsequoia_1_1testing_1_1equivalence__checker.html">sequoia::testing::equivalence_checker&lt; T, Us &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">class template, specializations of which implement comparison of two equivalent types  <a href="../../d2/d52/structsequoia_1_1testing_1_1equivalence__checker.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d52/structsequoia_1_1testing_1_1equivalence__checker.html">sequoia::testing::equivalence_checker&lt; T &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">class template, specializations of which implement comparison between T and one or more equivalent types.  <a href="../../d2/d52/structsequoia_1_1testing_1_1equivalence__checker.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/dff/structsequoia_1_1testing_1_1weak__equivalence__checker.html">sequoia::testing::weak_equivalence_checker&lt; T, Us &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">class template, specializations of which implement comparison of two weakly equivalent types;  <a href="../../df/dff/structsequoia_1_1testing_1_1weak__equivalence__checker.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/dff/structsequoia_1_1testing_1_1weak__equivalence__checker.html">sequoia::testing::weak_equivalence_checker&lt; T &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">class template, specializations of which implement comparison between T and one or more weakly equivalent types.  <a href="../../df/dff/structsequoia_1_1testing_1_1weak__equivalence__checker.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/dfd/structsequoia_1_1testing_1_1equality__tag.html">sequoia::testing::equality_tag</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -173,10 +173,9 @@ template&lt;class T &gt; </td></tr>
 template&lt;class T &gt; </td></tr>
 <tr class="memitem:a50f2f6cc877b3b0d37cd63f0bfca5ff0"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::has_weak_equivalence_checker_v</b> {class_template_is_default_instantiable&lt;weak_equivalence_checker, T&gt;}</td></tr>
 <tr class="separator:a50f2f6cc877b3b0d37cd63f0bfca5ff0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8d2e512e2b7c131257657ebf885f0b95"><td class="memTemplParams" colspan="2"><a id="a8d2e512e2b7c131257657ebf885f0b95"></a>
-template&lt;class T &gt; </td></tr>
-<tr class="memitem:a8d2e512e2b7c131257657ebf885f0b95"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::has_detailed_equality_checker_v</b> {class_template_is_default_instantiable&lt;detailed_equality_checker, T&gt;}</td></tr>
-<tr class="separator:a8d2e512e2b7c131257657ebf885f0b95"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac7d8d4f2f942fc9b57b61e4a1581676a"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
+<tr class="memitem:ac7d8d4f2f942fc9b57b61e4a1581676a"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::has_value_checker_v</b></td></tr>
+<tr class="separator:ac7d8d4f2f942fc9b57b61e4a1581676a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a43030c18e842a994dccaca455298f67c"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
 <tr class="memitem:a43030c18e842a994dccaca455298f67c"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::serializable</b></td></tr>
 <tr class="separator:a43030c18e842a994dccaca455298f67c"><td class="memSeparator" colspan="2">&#160;</td></tr>

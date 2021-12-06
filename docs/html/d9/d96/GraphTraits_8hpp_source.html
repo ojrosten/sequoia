@@ -79,7 +79,7 @@ $(function() {
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="keyword">namespace </span>sequoia::maths</div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;{</div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> N&gt;</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;  concept network = equality_comparable&lt;N&gt; &amp;&amp; requires(<span class="keyword">const</span> N&amp; n) {</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;  concept network = requires(<span class="keyword">const</span> N&amp; n) {</div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <span class="keyword">typename</span> N::edge_type;</div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <span class="keyword">typename</span> N::edge_weight_type;</div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <span class="keyword">typename</span> N::edge_index_type;</div>
@@ -88,28 +88,31 @@ $(function() {
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <span class="keyword">typename</span> N::const_edge_iterator;</div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <span class="keyword">typename</span> N::const_reverse_edge_iterator;</div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    { n.size() } -&gt; same_as&lt;typename N::size_type&gt;;</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    { n.order() } -&gt; same_as&lt;typename N::size_type&gt;;</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    { n.cbegin_edges(0) } -&gt; same_as&lt;typename N::const_edge_iterator&gt;;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    { n.cend_edges(0) } -&gt; same_as&lt;typename N::const_edge_iterator&gt;;</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    { n.size() }          -&gt; std::same_as&lt;typename N::size_type&gt;;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    { n.order() }         -&gt; std::same_as&lt;typename N::size_type&gt;;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    { n.cbegin_edges(0) } -&gt; std::same_as&lt;typename N::const_edge_iterator&gt;;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    { n.cend_edges(0) }   -&gt; std::same_as&lt;typename N::const_edge_iterator&gt;;</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;  };</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;  <span class="comment">// TO DO: replace with constexpr bool once MSVC supports this</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> G&gt;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;  concept dynamic_nodes = requires(G&amp; g) {</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;     g.add_node();</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;  };</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;  <span class="comment">// TO DO: replace with constexpr bool once MSVC supports this</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> G&gt;</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;  <span class="keyword">inline</span> constexpr <span class="keywordtype">bool</span> dynamic_nodes = requires(std::remove_const_t&lt;G&gt;&amp; g) { g.add_node(); } </div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;                          || requires(std::remove_const_t&lt;G&gt; &amp; g) { g.add_node(0); };</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> G&gt;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;  <span class="keyword">inline</span> constexpr <span class="keywordtype">bool</span> static_nodes = (!dynamic_nodes&lt;G&gt;);</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> G&gt;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;  concept static_nodes = (!dynamic_nodes&lt;G&gt;);</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;  concept dynamic_network = network&lt;G&gt; &amp;&amp; dynamic_nodes&lt;G&gt;;</div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> G&gt;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;  concept dynamic_network = network&lt;G&gt; &amp;&amp; dynamic_nodes&lt;G&gt;;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;  concept static_network = network&lt;G&gt; &amp;&amp; static_nodes&lt;G&gt;;</div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> G&gt;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;  concept static_network = network&lt;G&gt; &amp;&amp; static_nodes&lt;G&gt;;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;}</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> T&gt;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;  concept dynamic_tree = dynamic_network&lt;T&gt; &amp;&amp; requires {</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    T::link_dir;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;  };</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

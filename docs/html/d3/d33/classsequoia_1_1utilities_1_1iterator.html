@@ -199,7 +199,7 @@ constexpr friend auto&#160;</td><td class="memItemRight" valign="bottom"><b>dist
 <tr class="separator:a52fb6d1400e9cbdb87a7d6b26545f8ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><h3>template&lt;class Iterator, dereference_policy DereferencePolicy&gt;<br />
+<div class="textblock"><h3>template&lt;std::input_or_output_iterator Iterator, dereference_policy DereferencePolicy&gt;<br />
 class sequoia::utilities::iterator&lt; Iterator, DereferencePolicy &gt;</h3>
 
 <p>An iterator with policies controlling dereferencing and auxiliary data. </p>
@@ -211,7 +211,7 @@ class sequoia::utilities::iterator&lt; Iterator, DereferencePolicy &gt;</h3>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class Iterator , dereference_policy DereferencePolicy&gt; </div>
+template&lt;std::input_or_output_iterator Iterator, dereference_policy DereferencePolicy&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">Args <a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">sequoia::utilities::iterator</a>&lt; Iterator, DereferencePolicy &gt;::m_BaseIterator</td>
@@ -221,7 +221,7 @@ template&lt;class Iterator , dereference_policy DereferencePolicy&gt; </div>
 <b>Initial value:</b><div class="fragment"><div class="line">{std::forward&lt;Arg&gt;(baseIterArg)}</div>
 <div class="line">    {}</div>
 <div class="line"> </div>
-<div class="line">    <span class="keyword">template</span>&lt;<span class="keyword">class</span> Iter, <span class="keyword">class</span> DerefPol&gt;</div>
+<div class="line">    <span class="keyword">template</span>&lt;std::input_or_output_iterator Iter, <span class="keyword">class</span> DerefPol&gt;</div>
 <div class="line">      requires (   !std::is_same_v&lt;Iter, Iterator&gt;</div>
 <div class="line">                &amp;&amp; std::is_convertible_v&lt;Iter, base_iterator_type&gt;</div>
 <div class="line">                &amp;&amp; impl::are_compatible_v&lt;DereferencePolicy, DerefPol&gt;</div>

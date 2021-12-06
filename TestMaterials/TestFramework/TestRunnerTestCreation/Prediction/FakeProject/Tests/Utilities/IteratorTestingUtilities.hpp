@@ -12,7 +12,7 @@
 
 namespace sequoia::testing
 {
-    template<> struct detailed_equality_checker<utilities::iterator>
+    template<> struct value_checker<utilities::iterator>
     {
         using type = utilities::iterator;
 

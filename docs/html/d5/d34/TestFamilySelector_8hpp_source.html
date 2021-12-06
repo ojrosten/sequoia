@@ -151,8 +151,8 @@ $(function() {
 <div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160; </div>
 <div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="keywordtype">void</span> prune(std::ostream&amp; stream);</div>
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160; </div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> Iter&gt;</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <span class="keywordtype">void</span> update_prune_info(Iter startFailedTests, Iter endFailedTests);</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <span class="keyword">template</span>&lt;std::input_or_output_iterator Iter, std::sentinel_for&lt;Iter&gt; Sentinel&gt;</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <span class="keywordtype">void</span> update_prune_info(Iter startFailedTests, Sentinel endFailedTests);</div>
 <div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160; </div>
 <div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <span class="keywordtype">void</span> executable_time_stamp(<span class="keyword">const</span> std::filesystem::path&amp; exe);</div>
 <div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160; </div>

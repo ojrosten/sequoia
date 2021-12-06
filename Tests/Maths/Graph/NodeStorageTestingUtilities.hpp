@@ -20,7 +20,7 @@ namespace sequoia::testing
   namespace impl
   {
     template<class Nodes>
-    struct node_detailed_equality_checker
+    struct node_value_checker
     {
       using type = Nodes;
 
@@ -37,7 +37,7 @@ namespace sequoia::testing
 
     template<class Nodes>
       requires std::is_empty_v<typename Nodes::weight_type>
-    struct node_detailed_equality_checker<Nodes>
+    struct node_value_checker<Nodes>
     {
       using type = Nodes;
 
@@ -82,8 +82,8 @@ namespace sequoia::testing
   // Details Checkers
 
   template<class WeightMaker, class Traits>
-  struct detailed_equality_checker<maths::graph_impl::node_storage<WeightMaker, Traits>>
-    : impl::node_detailed_equality_checker<maths::graph_impl::node_storage<WeightMaker, Traits>>
+  struct value_checker<maths::graph_impl::node_storage<WeightMaker, Traits>>
+    : impl::node_value_checker<maths::graph_impl::node_storage<WeightMaker, Traits>>
   {
   };
 
@@ -98,8 +98,8 @@ namespace sequoia::testing
   // Static
 
   template<class WeightMaker, std::size_t N>
-  struct detailed_equality_checker<maths::graph_impl::static_node_storage<WeightMaker, N>>
-    : impl::node_detailed_equality_checker<maths::graph_impl::static_node_storage<WeightMaker, N>>
+  struct value_checker<maths::graph_impl::static_node_storage<WeightMaker, N>>
+    : impl::node_value_checker<maths::graph_impl::static_node_storage<WeightMaker, N>>
   {
   };
 
@@ -112,7 +112,7 @@ namespace sequoia::testing
   // Heterogeneous
 
   template<class... Ts>
-  struct detailed_equality_checker<maths::graph_impl::heterogeneous_node_storage<Ts...>>
+  struct value_checker<maths::graph_impl::heterogeneous_node_storage<Ts...>>
   {
     using type = maths::graph_impl::heterogeneous_node_storage<Ts...>;
 
@@ -253,8 +253,8 @@ namespace sequoia::testing
 
 
   template<class WeightMaker, bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
-  struct detailed_equality_checker<node_storage_tester<WeightMaker, PropagateCopy, PropagateMove, PropagateSwap>>
-    : public detailed_equality_checker<maths::graph_impl::node_storage<WeightMaker, node_storage_traits<PropagateCopy, PropagateMove, PropagateSwap>>>
+  struct value_checker<node_storage_tester<WeightMaker, PropagateCopy, PropagateMove, PropagateSwap>>
+    : public value_checker<maths::graph_impl::node_storage<WeightMaker, node_storage_traits<PropagateCopy, PropagateMove, PropagateSwap>>>
   {
   };
 
@@ -265,8 +265,8 @@ namespace sequoia::testing
   };
 
   template<class WeightMaker, std::size_t N>
-  struct detailed_equality_checker<static_node_storage_tester<WeightMaker, N>>
-    : public detailed_equality_checker<maths::graph_impl::static_node_storage<WeightMaker, N>>
+  struct value_checker<static_node_storage_tester<WeightMaker, N>>
+    : public value_checker<maths::graph_impl::static_node_storage<WeightMaker, N>>
   {
   };
 

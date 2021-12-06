@@ -59,7 +59,7 @@ var searchData=
   ['append_5findented_60',['append_indented',['../d1/d2a/Indent_8cpp.html#a722e619d7be0b7615041b70bbfd1242f',1,'sequoia']]],
   ['append_5fto_5fsequence_61',['append_to_sequence',['../da/d23/structsequoia_1_1impl_1_1append__to__sequence.html',1,'sequoia::impl']]],
   ['append_5fto_5fsequence_3c_20std_3a_3aindex_5fsequence_3c_20m_2e_2e_2e_20_3e_2c_20std_3a_3aindex_5fsequence_3c_20x_2e_2e_2e_20_3e_20_3e_62',['append_to_sequence&lt; std::index_sequence&lt; M... &gt;, std::index_sequence&lt; X... &gt; &gt;',['../db/d00/structsequoia_1_1impl_1_1append__to__sequence_3_01std_1_1index__sequence_3_01M_8_8_8_01_4_00_01sf171ecf8f186cd5bbb82b93d0ba412c8.html',1,'sequoia::impl']]],
-  ['argument_5fparser_63',['argument_parser',['../df/dd0/classsequoia_1_1parsing_1_1commandline_1_1argument__parser.html',1,'sequoia::parsing::commandline']]],
+  ['argument_5fparser_63',['argument_parser',['../d4/d39/classsequoia_1_1testing_1_1experimental_1_1argument__parser.html',1,'sequoia::testing::experimental::argument_parser'],['../df/dd0/classsequoia_1_1parsing_1_1commandline_1_1argument__parser.html',1,'sequoia::parsing::commandline::argument_parser']]],
   ['array_5futilities_5ftest_64',['array_utilities_test',['../d2/dda/classsequoia_1_1testing_1_1array__utilities__test.html',1,'sequoia::testing']]],
   ['arrayutilities_2ehpp_65',['ArrayUtilities.hpp',['../d8/def/ArrayUtilities_8hpp.html',1,'']]],
   ['as_5fbitmask_66',['as_bitmask',['../d4/d5f/structsequoia_1_1testing_1_1as__bitmask.html',1,'sequoia::testing']]],

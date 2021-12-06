@@ -12,7 +12,7 @@
 
 namespace sequoia::testing
 {
-	template<> struct detailed_equality_checker<maths::probability>
+	template<> struct value_checker<maths::probability>
 	{
 		using type = maths::probability;
 

@@ -177,7 +177,7 @@ $(function() {
 <div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    [[nodiscard]]</div>
 <div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    std::filesystem::path build_source_path(<span class="keyword">const</span> std::filesystem::path&amp; filename) <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160; </div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    <span class="keyword">template</span>&lt;invocable_r&lt;std::filesystem::path, std::filesystem::path&gt; WhenAbsent, std::<span class="keywordtype">size_t</span> N, invocable&lt;std::<span class="keywordtype">string</span>&amp;&gt; FileTransformer&gt;</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    <span class="keyword">template</span>&lt;invocable_r&lt;std::filesystem::path, std::filesystem::path&gt; WhenAbsent, std::<span class="keywordtype">size_t</span> N, std::invocable&lt;std::<span class="keywordtype">string</span>&amp;&gt; FileTransformer&gt;</div>
 <div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    <span class="keywordtype">void</span> finalize(WhenAbsent fn,</div>
 <div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;                  <span class="keyword">const</span> std::array&lt;std::string_view, N&gt;&amp; stubs,</div>
 <div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;                  <span class="keyword">const</span> std::vector&lt;std::string&gt;&amp; constructors,</div>
@@ -222,7 +222,7 @@ $(function() {
 <div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160; </div>
 <div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;    <span class="keywordtype">void</span> finalize_header(<span class="keyword">const</span> std::filesystem::path&amp; sourcePath);</div>
 <div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160; </div>
-<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;    <span class="keyword">template</span>&lt;invocable&lt;std::<span class="keywordtype">string</span>&amp;&gt; FileTransformer&gt;</div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;    <span class="keyword">template</span>&lt;std::invocable&lt;std::<span class="keywordtype">string</span>&amp;&gt; FileTransformer&gt;</div>
 <div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;    [[nodiscard]]</div>
 <div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;    std::string create_file(std::string_view inputNameStub, std::string_view nameEnding, FileTransformer transformer) <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160; </div>
