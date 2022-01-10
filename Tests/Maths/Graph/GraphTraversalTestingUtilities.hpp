@@ -159,23 +159,23 @@ namespace sequoia::testing
   };
 
   template<>
-  struct equivalence_checker<node_tracker>
+  struct value_tester<node_tracker>
   {
     template<test_mode Mode>
-    static void check(test_logger<Mode>& logger, const node_tracker& tracker, const std::vector<std::size_t>& prediction)
+    static void test_equivalence(test_logger<Mode>& logger, const node_tracker& tracker, const std::vector<std::size_t>& prediction)
     {
       check_range("Visitation Order", logger, tracker.begin(), tracker.end(), prediction.begin(), prediction.end());
     }
   };
 
   template<maths::network G, traversal_flavour Flavour>
-  struct equivalence_checker<edge_tracker<G, Flavour>>
+  struct value_tester<edge_tracker<G, Flavour>>
   {
     using type = edge_tracker<G, Flavour>;
     using prediction_type = typename type::result_type;
 
     template<test_mode Mode>
-    static void check(test_logger<Mode>& logger, const type& tracker, const prediction_type& prediction)
+    static void test_equivalence(test_logger<Mode>& logger, const type& tracker, const prediction_type& prediction)
     {
       check_range("Visitation Order", logger, tracker.begin(), tracker.end(), prediction.begin(), prediction.end());
     }

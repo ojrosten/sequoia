@@ -76,73 +76,55 @@ namespace sequoia::testing
   }
 
   template<class T, class Handler, class Traits>
-  struct value_checker<data_structures::bucketed_storage<T, Handler, Traits>>
+  struct value_tester<data_structures::bucketed_storage<T, Handler, Traits>>
   {
     using type = data_structures::bucketed_storage<T, Handler, Traits>;
 
     template<test_mode Mode>
-    static void check(test_logger<Mode>& logger, const type& data, const type& prediction)
+    static void test_equality(test_logger<Mode>& logger, const type& data, const type& prediction)
     {
       impl::check_details(logger, data, prediction);
     }
-  };
-
-  template<class T, class Handler, class Traits>
-  struct equivalence_checker<data_structures::bucketed_storage<T, Handler, Traits>>
-  {
-    using type = data_structures::bucketed_storage<T, Handler, Traits>;
 
     template<test_mode Mode>
-    static void check(test_logger<Mode>& logger, const type& data, std::initializer_list<std::initializer_list<T>> prediction)
+    static void test_equivalence(test_logger<Mode>& logger, const type& data, std::initializer_list<std::initializer_list<T>> prediction)
     {
       impl::check_equivalence(logger, data, prediction);
     }
   };
 
   template<class T, class Handler, class Traits>
-  struct value_checker<data_structures::partitioned_sequence<T, Handler, Traits>>
-  {
-    using type = data_structures::partitioned_sequence<T, Handler, Traits>;
-
-    template<test_mode Mode>
-    static void check(test_logger<Mode>& logger, const type& data, const type& prediction)
-    {
-      impl::check_details(logger, data, prediction);
-    }
-  };
-
-  template<class T, class Handler, class Traits>
-  struct equivalence_checker<data_structures::partitioned_sequence<T, Handler, Traits>>
+  struct value_tester<data_structures::partitioned_sequence<T, Handler, Traits>>
   {
     using type = data_structures::partitioned_sequence<T, Handler, Traits>;
     using equivalent_type = std::initializer_list<std::initializer_list<T>>;
 
     template<test_mode Mode>
-    static void check(test_logger<Mode>& logger, const type& data, equivalent_type prediction)
+    static void test_equality(test_logger<Mode>& logger, const type& data, const type& prediction)
+    {
+      impl::check_details(logger, data, prediction);
+    }
+
+    template<test_mode Mode>
+    static void test_equivalence(test_logger<Mode>& logger, const type& data, equivalent_type prediction)
     {
       impl::check_equivalence(logger, data, prediction);
     }
   };
 
   template<class T, std::size_t Npartitions, std::size_t Nelements, std::integral IndexType>
-  struct value_checker<data_structures::static_partitioned_sequence<T, Npartitions, Nelements, IndexType>>
+  struct value_tester<data_structures::static_partitioned_sequence<T, Npartitions, Nelements, IndexType>>
   {
     using type = data_structures::static_partitioned_sequence<T, Npartitions, Nelements, IndexType>;
 
     template<test_mode Mode>
-    static void check(test_logger<Mode>& logger, const type& data, const type& prediction)
+    static void test_equality(test_logger<Mode>& logger, const type& data, const type& prediction)
     {
       impl::check_details(logger, data, prediction);
     }
-  };
-
-  template<class T, std::size_t Npartitions, std::size_t Nelements, std::integral IndexType>
-  struct equivalence_checker<data_structures::static_partitioned_sequence<T, Npartitions, Nelements, IndexType>>
-  {
-    using type = data_structures::static_partitioned_sequence<T, Npartitions, Nelements, IndexType>;
 
     template<test_mode Mode>
-    static void check(test_logger<Mode>& logger, const type& data, std::initializer_list<std::initializer_list<T>> prediction)
+    static void test_equivalence(test_logger<Mode>& logger, const type& data, std::initializer_list<std::initializer_list<T>> prediction)
     {
       impl::check_equivalence(logger, data, prediction);
     }

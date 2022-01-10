@@ -1,9 +1,9 @@
 
 Placing under version control...
 
-Initialized empty Git repository in /Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/.git/
-[trunk (root-commit) 7b036a9] First commit
- 27 files changed, 1869 insertions(+)
+Initialized empty Git repository in C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/.git/
+[trunk (root-commit) 8cf957d] First commit
+ 27 files changed, 1864 insertions(+)
  create mode 100644 .gitignore
  create mode 100644 LICENSE.md
  create mode 100644 Source/CMakeLists.txt

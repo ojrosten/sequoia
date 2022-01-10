@@ -58,48 +58,36 @@ namespace sequoia::testing
   }
 
   template<class T, class C, class Compare>
-  struct value_checker<maths::monotonic_sequence<T, C, Compare>>
+  struct value_tester<maths::monotonic_sequence<T, C, Compare>>
   {
     using type = maths::monotonic_sequence<T, C, Compare>;
 
     template<test_mode Mode>
-    static void check(test_logger<Mode>& logger, const type& sequence, const type& prediction)
+    static void test_equality(test_logger<Mode>& logger, const type& sequence, const type& prediction)
     {
       impl::check(logger, sequence, prediction);
     }
-  };
-
-  template<class T, class C, class Compare>
-  struct equivalence_checker<maths::monotonic_sequence<T, C, Compare>>
-  {
-    using type = maths::monotonic_sequence<T, C, Compare>;
 
     template<test_mode Mode>
-    static void check(test_logger<Mode>& logger, const type& sequence, std::initializer_list<T> prediction)
+    static void test_equivalence(test_logger<Mode>& logger, const type& sequence, std::initializer_list<T> prediction)
     {
       check_range("", logger, sequence.begin(), sequence.end(), prediction.begin(), prediction.end());
     }
   };
 
   template<class T, std::size_t N, class Compare>
-  struct value_checker<maths::static_monotonic_sequence<T, N, Compare>>
+  struct value_tester<maths::static_monotonic_sequence<T, N, Compare>>
   {
     using type = maths::static_monotonic_sequence<T, N, Compare>;
 
     template<test_mode Mode>
-    static void check(test_logger<Mode>& logger, const type& sequence, const type& prediction)
+    static void test_equality(test_logger<Mode>& logger, const type& sequence, const type& prediction)
     {
       impl::check(logger, sequence, prediction);
     }
-  };
-
-  template<class T, std::size_t N, class Compare>
-  struct equivalence_checker<maths::static_monotonic_sequence<T, N, Compare>>
-  {
-    using type = maths::static_monotonic_sequence<T, N, Compare>;
 
     template<test_mode Mode>
-    static void check(test_logger<Mode>& logger, const type& sequence, std::initializer_list<T> prediction)
+    static void test_equivalence(test_logger<Mode>& logger, const type& sequence, std::initializer_list<T> prediction)
     {
       check_range("", logger, sequence.begin(), sequence.end(), prediction.begin(), prediction.end());
     }

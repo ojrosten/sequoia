@@ -12,23 +12,18 @@
 
 namespace sequoia::testing
 {
-	template<> struct value_checker<stuff::unique_thing>
+	template<> struct value_tester<stuff::unique_thing>
 	{
 		using type = stuff::unique_thing;
 
 		template<test_mode Mode>
-		static void check(test_logger<Mode>& logger, const type& actual, const type& prediction)
+		static void test_equality(test_logger<Mode>& logger, const type& actual, const type& prediction)
 		{
 			check_equality("Description", logger, actual.get(), prediction.get());
 		}
-	};
-
-	template<> struct equivalence_checker<stuff::unique_thing>
-	{
-		using type = stuff::unique_thing;
-
+		
 		template<test_mode Mode>
-		static void check(test_logger<Mode>& logger, const type& actual, const double& prediction)
+		static void test_equivalence(test_logger<Mode>& logger, const type& actual, const double& prediction)
 		{
 			check_equality("Description", logger, actual.get(), prediction);
 		}

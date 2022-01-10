@@ -46,7 +46,7 @@
 	Mismatched zeroth argument
 
 	Comparison performed using:
-	[sequoia::testing::weak_equivalence_checker<sequoia::parsing::commandline::outcome>]
+	[sequoia::testing::value_tester<sequoia::parsing::commandline::outcome>]
 	With equivalent types:
 	[sequoia::parsing::commandline::outcome]
 
@@ -72,7 +72,7 @@
 	Early function object not generated
 
 	Comparison performed using:
-	[sequoia::testing::weak_equivalence_checker<sequoia::parsing::commandline::outcome>]
+	[sequoia::testing::value_tester<sequoia::parsing::commandline::outcome>]
 	With equivalent types:
 	[sequoia::parsing::commandline::outcome]
 
@@ -81,7 +81,7 @@
 
 	    Element 0 of range incorrect
 	    Comparison performed using:
-	    [sequoia::testing::weak_equivalence_checker<sequoia::parsing::commandline::operation>]
+	    [sequoia::testing::value_tester<sequoia::parsing::commandline::operation>]
 	    With equivalent types:
 	    [sequoia::parsing::commandline::operation]
 
@@ -95,7 +95,7 @@
 	Late function object not generated
 
 	Comparison performed using:
-	[sequoia::testing::weak_equivalence_checker<sequoia::parsing::commandline::outcome>]
+	[sequoia::testing::value_tester<sequoia::parsing::commandline::outcome>]
 	With equivalent types:
 	[sequoia::parsing::commandline::outcome]
 
@@ -104,7 +104,7 @@
 
 	    Element 0 of range incorrect
 	    Comparison performed using:
-	    [sequoia::testing::weak_equivalence_checker<sequoia::parsing::commandline::operation>]
+	    [sequoia::testing::value_tester<sequoia::parsing::commandline::operation>]
 	    With equivalent types:
 	    [sequoia::parsing::commandline::operation]
 
@@ -118,7 +118,7 @@
 	Unexpected early function object
 
 	Comparison performed using:
-	[sequoia::testing::weak_equivalence_checker<sequoia::parsing::commandline::outcome>]
+	[sequoia::testing::value_tester<sequoia::parsing::commandline::outcome>]
 	With equivalent types:
 	[sequoia::parsing::commandline::outcome]
 
@@ -127,7 +127,7 @@
 
 	    Element 0 of range incorrect
 	    Comparison performed using:
-	    [sequoia::testing::weak_equivalence_checker<sequoia::parsing::commandline::operation>]
+	    [sequoia::testing::value_tester<sequoia::parsing::commandline::operation>]
 	    With equivalent types:
 	    [sequoia::parsing::commandline::operation]
 
@@ -153,7 +153,7 @@
 	Unexpected late function object
 
 	Comparison performed using:
-	[sequoia::testing::weak_equivalence_checker<sequoia::parsing::commandline::outcome>]
+	[sequoia::testing::value_tester<sequoia::parsing::commandline::outcome>]
 	With equivalent types:
 	[sequoia::parsing::commandline::outcome]
 
@@ -162,7 +162,7 @@
 
 	    Element 0 of range incorrect
 	    Comparison performed using:
-	    [sequoia::testing::weak_equivalence_checker<sequoia::parsing::commandline::operation>]
+	    [sequoia::testing::value_tester<sequoia::parsing::commandline::operation>]
 	    With equivalent types:
 	    [sequoia::parsing::commandline::operation]
 
@@ -188,7 +188,7 @@
 	Mixed-up function objects
 
 	Comparison performed using:
-	[sequoia::testing::weak_equivalence_checker<sequoia::parsing::commandline::outcome>]
+	[sequoia::testing::value_tester<sequoia::parsing::commandline::outcome>]
 	With equivalent types:
 	[sequoia::parsing::commandline::outcome]
 
@@ -197,7 +197,7 @@
 
 	    Element 0 of range incorrect
 	    Comparison performed using:
-	    [sequoia::testing::weak_equivalence_checker<sequoia::parsing::commandline::operation>]
+	    [sequoia::testing::value_tester<sequoia::parsing::commandline::operation>]
 	    With equivalent types:
 	    [sequoia::parsing::commandline::operation]
 
@@ -235,7 +235,7 @@
 	Help not generated
 
 	Comparison performed using:
-	[sequoia::testing::weak_equivalence_checker<sequoia::parsing::commandline::outcome>]
+	[sequoia::testing::value_tester<sequoia::parsing::commandline::outcome>]
 	With equivalent types:
 	[sequoia::parsing::commandline::outcome]
 

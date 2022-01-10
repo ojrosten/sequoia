@@ -11,24 +11,19 @@
 
 namespace sequoia::testing
 {
-  template<> struct value_checker<sequoia::testing::failure_info>
+  template<> struct value_tester<sequoia::testing::failure_info>
   {
     using type = sequoia::testing::failure_info;
 
     template<test_mode Mode>
-    static void check(test_logger<Mode>& logger, const type& actual, const type& prediction)
+    static void test_equality(test_logger<Mode>& logger, const type& actual, const type& prediction)
     {
       check_equality("Check index", logger, actual.check_index, prediction.check_index);
       check_equality("Message", logger, actual.message, prediction.message);
     }
-  };
-
-  template<> struct equivalence_checker<sequoia::testing::failure_info>
-  {
-    using type = sequoia::testing::failure_info;
 
     template<test_mode Mode>
-    static void check(test_logger<Mode>& logger, const type& actual, const std::size_t checkIndex, const std::string& message)
+    static void test_equivalence(test_logger<Mode>& logger, const type& actual, const std::size_t checkIndex, const std::string& message)
     {
       check_equality("Check index", logger, actual.check_index, checkIndex);
       check_equality("Message", logger, actual.message, message);

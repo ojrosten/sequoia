@@ -31,9 +31,53 @@ namespace sequoia::testing
     class EdgeStorageTraits,
     class NodeWeightStorageTraits
   >
-  struct value_checker<maths::graph<Directedness, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>>
-    : impl::graph_value_checker<maths::graph<Directedness, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>>
-  {};
+  struct value_tester<maths::graph<Directedness, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>>
+  {
+    using graph_type = maths::graph<Directedness, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>;
+    using connectivity_equivalent_type = std::initializer_list<std::initializer_list<typename graph_type::edge_init_type>>;
+    using nodes_equivalent_type = std::initializer_list<NodeWeight>;
+
+    template<test_mode Mode>
+    static void test_equality(test_logger<Mode>& logger, const graph_type& graph, const graph_type& prediction)
+    {
+      graph_equality_tester::test_equality(logger, graph, prediction);
+    }
+
+    template<test_mode Mode>
+      requires (!std::is_empty_v<NodeWeight>)
+    static void test_equivalence(test_logger<Mode>& logger, const graph_type& graph, connectivity_equivalent_type connPrediction, nodes_equivalent_type nodesPrediction)
+    {
+      graph_equivalence_tester::test_general_equivalence(logger, graph, connPrediction, nodesPrediction);
+    }
+
+    template<test_mode Mode>
+      requires (std::is_empty_v<NodeWeight>)
+    static void test_equivalence(test_logger<Mode>& logger, const graph_type& graph, connectivity_equivalent_type connPrediction)
+    {
+      graph_equivalence_tester::test_general_equivalence(logger, graph, connPrediction);
+    }
+
+    template<test_mode Mode>
+      requires (!std::is_empty_v<NodeWeight>)
+    static void test_weak_equivalence(test_logger<Mode>& logger, const graph_type& graph, connectivity_equivalent_type connPrediction, nodes_equivalent_type nodesPrediction)
+    {
+      graph_weak_equivalence_tester::test_general_equivalence(logger, graph, connPrediction, nodesPrediction);
+    }
+
+    template<test_mode Mode>
+      requires (std::is_empty_v<NodeWeight>)
+    static void test_weak_equivalence(test_logger<Mode>& logger, const graph_type& graph, connectivity_equivalent_type connPrediction)
+    {
+      graph_weak_equivalence_tester::test_general_equivalence(logger, graph, connPrediction);
+    }
+  private:
+    using graph_equality_tester = impl::graph_value_tester<graph_type>;
+
+    using graph_equivalence_tester = impl::graph_equivalence_checker<graph_type>;
+
+
+    using graph_weak_equivalence_tester = impl::graph_weak_equivalence_checker<graph_type>;
+  };
 
   template
   <
@@ -45,57 +89,54 @@ namespace sequoia::testing
     class EdgeStorageTraits,
     class NodeWeightStorageTraits
   >
-  struct value_checker<maths::embedded_graph<Directedness, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>>
-    : impl::graph_value_checker<maths::embedded_graph<Directedness, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>>
-  {};
+  struct value_tester<maths::embedded_graph<Directedness, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>>
+  {
+    using graph_type = maths::embedded_graph<Directedness, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>;
+    using connectivity_equivalent_type = std::initializer_list<std::initializer_list<typename graph_type::edge_init_type>>;
+    using nodes_equivalent_type = std::initializer_list<NodeWeight>;
 
-  // Equivalence Checkers
+    template<test_mode Mode>
+    static void test_equality(test_logger<Mode>& logger, const graph_type& graph, const graph_type& prediction)
+    {
+      graph_equality_tester::test_equality(logger, graph, prediction);
+    }
 
-  template
-  <
-    maths::directed_flavour Directedness,
-    class EdgeWeight,
-    class NodeWeight,
-    class EdgeWeightCreator,
-    class NodeWeightCreator,
-    class EdgeStorageTraits,
-    class NodeWeightStorageTraits
-  >
-  struct equivalence_checker<maths::graph<Directedness, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>>
-    : impl::graph_equivalence_checker<maths::graph<Directedness, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>>
-  {};
+    template<test_mode Mode>
+      requires (!std::is_empty_v<NodeWeight>)
+    static void test_equivalence(test_logger<Mode>& logger, const graph_type& graph, connectivity_equivalent_type connPrediction, nodes_equivalent_type nodesPrediction)
+    {
+      graph_equivalence_tester::test_general_equivalence(logger, graph, connPrediction, nodesPrediction);
+    }
 
-  template
-  <
-    maths::directed_flavour Directedness,
-    class EdgeWeight,
-    class NodeWeight,
-    class EdgeWeightCreator,
-    class NodeWeightCreator,
-    class EdgeStorageTraits,
-    class NodeWeightStorageTraits
-  >
-    requires (ownership::creator<EdgeWeightCreator> && ownership::creator<NodeWeightCreator>)
-  struct equivalence_checker<maths::embedded_graph<Directedness, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>>
-    : impl::graph_equivalence_checker<maths::embedded_graph<Directedness, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>>
-  {};
+    template<test_mode Mode>
+      requires (std::is_empty_v<NodeWeight>)
+    static void test_equivalence(test_logger<Mode>& logger, const graph_type& graph, connectivity_equivalent_type connPrediction)
+    {
+      graph_equivalence_tester::test_general_equivalence(logger, graph, connPrediction);
+    }
 
-  // Weak Equivalence
+    template<test_mode Mode>
+      requires (!std::is_empty_v<NodeWeight>)
+    static void test_weak_equivalence(test_logger<Mode>& logger, const graph_type& graph, connectivity_equivalent_type connPrediction, nodes_equivalent_type nodesPrediction)
+    {
+      graph_weak_equivalence_tester::test_general_equivalence(logger, graph, connPrediction, nodesPrediction);
+    }
 
-  template
-  <
-    maths::directed_flavour Directedness,
-    class EdgeWeight,
-    class NodeWeight,
-    class EdgeWeightCreator,
-    class NodeWeightCreator,
-    class EdgeStorageTraits,
-    class NodeWeightStorageTraits
-  >
-    requires (ownership::creator<EdgeWeightCreator> && ownership::creator<NodeWeightCreator>)
-  struct weak_equivalence_checker<maths::embedded_graph<Directedness, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>>
-    : impl::graph_weak_equivalence_checker<maths::embedded_graph<Directedness, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>>
-  {};
+    template<test_mode Mode>
+      requires (std::is_empty_v<NodeWeight>)
+    static void test_weak_equivalence(test_logger<Mode>& logger, const graph_type& graph, connectivity_equivalent_type connPrediction)
+    {
+      graph_weak_equivalence_tester::test_general_equivalence(logger, graph, connPrediction);
+    }
+
+    // overload for testing (weak) equivalance of graph-vs-graph can be supplied via graph_equivalence_checker etc
+  private:
+    using graph_equality_tester = impl::graph_value_tester<graph_type>;
+
+    using graph_equivalence_tester = impl::graph_equivalence_checker<graph_type>;
+
+    using graph_weak_equivalence_tester = impl::graph_weak_equivalence_checker<graph_type>;
+  };
 
   // Edge Storage Traits
 

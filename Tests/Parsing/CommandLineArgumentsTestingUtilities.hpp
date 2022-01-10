@@ -24,12 +24,12 @@ namespace sequoia::testing
   };
 
   template<>
-  struct weak_equivalence_checker<parsing::commandline::operation>
+  struct value_tester<parsing::commandline::operation>
   {
     using type = sequoia::parsing::commandline::operation;
 
     template<test_mode Mode>
-    static void check(test_logger<Mode>& logger, const type& operation, const type& prediction)
+    static void test_weak_equivalence(test_logger<Mode>& logger, const type& operation, const type& prediction)
     {
       check(logger, operation.early, prediction.early, "early");
       check(logger, operation.late, prediction.late, "late");
@@ -54,12 +54,12 @@ namespace sequoia::testing
   };
 
   template<>
-  struct weak_equivalence_checker<parsing::commandline::outcome>
+  struct value_tester<parsing::commandline::outcome>
   {
     using type = sequoia::parsing::commandline::outcome;
 
     template<test_mode Mode>
-    static void check(test_logger<Mode>& logger, const type& obtained, const type& prediction)
+    static void test_weak_equivalence(test_logger<Mode>& logger, const type& obtained, const type& prediction)
     {
       check_equality("Zeroth Argument", logger, obtained.zeroth_arg, prediction.zeroth_arg);
       check_weak_equivalence("Operations", logger, obtained.operations, prediction.operations);
@@ -68,13 +68,13 @@ namespace sequoia::testing
   };
 
   template<>
-  struct weak_equivalence_checker<parsing::commandline::argument_parser>
+  struct value_tester<parsing::commandline::argument_parser>
   {
     using type = parsing::commandline::argument_parser;
     using prediction_type = sequoia::parsing::commandline::outcome;
 
     template<test_mode Mode>
-    static void check(test_logger<Mode>& logger, const type& obtained, const prediction_type& prediction)
+    static void test_weak_equivalence(test_logger<Mode>& logger, const type& obtained, const prediction_type& prediction)
     {
       check_weak_equivalence("", logger, obtained.get(), prediction);
     }

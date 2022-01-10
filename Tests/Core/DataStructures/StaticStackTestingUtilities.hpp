@@ -14,12 +14,12 @@
 namespace sequoia::testing
 {
   template<class T, std::size_t MaxDepth>
-  struct value_checker<data_structures::static_stack<T, MaxDepth>>
+  struct value_tester<data_structures::static_stack<T, MaxDepth>>
   {
     using type = data_structures::static_stack<T, MaxDepth>;
 
     template<test_mode Mode>
-    static void check(test_logger<Mode>& logger, const type& stack, const type& prediction)
+    static void test_equality(test_logger<Mode>& logger, const type& stack, const type& prediction)
     {
       check_equality("Emptiness incorrect", logger, stack.empty(), prediction.empty());
       check_equality("Size incorrect", logger, stack.size(), prediction.size());

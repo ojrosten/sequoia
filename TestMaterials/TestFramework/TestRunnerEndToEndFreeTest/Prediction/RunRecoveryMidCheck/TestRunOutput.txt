@@ -2,9 +2,9 @@
 Running tests...
 
 Utilities:
-[2 (0)ms]
+[1 (0)ms]
 Useful Things:
-[4 (2)ms]
+[2 (1)ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
 	Tests/Utilities/UsefulThingsFreeTest.cpp, Line 21
@@ -17,20 +17,20 @@ Useful Things:
 	=======================================
 
 Bar:
-[5 (0)ms]
+[1 (0)ms]
 Unstable:
-[8 (3)ms]
+[8 (7)ms]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 Maybe:
-[7 (0)ms]
+[1 (0)ms]
 Oldschool:
-[8 (0)ms]
+[2 (0)ms]
 Probability:
-[16 (9)ms]
+[6 (4)ms]
 	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 39]
 	False Positive Checks:                     2;  Failures:  0
 Foo:
-[16 (8)ms]
+[9 (7)ms]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 
 ******  Critical Failures:  1  ******
@@ -45,23 +45,23 @@ Foo:
 	Tests/Stuff/FooTest.cpp, Line 41
 
 	Comparison performed using:
-	[sequoia::testing::equivalence_checker<std::filesystem::path>]
+	[sequoia::testing::value_tester<std::filesystem::path>]
 	With equivalent types:
 	[std::filesystem::path]
 
 	=======================================
 
 Unique Thing:
-[18 (9)ms]
+[6 (3)ms]
 	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 35]
 	False Positive Checks:                     2;  Failures:  0
 Container:
-[11 (0)ms]
+[1 (0)ms]
 House:
-[5 (0)ms]
+[0 (0)ms]
 
 -----------Grand Totals-----------
-[107 (33)ms]
+[43 (23)ms]
 	Standard Top Level Checks:                11;  Failures:  1  [Deep checks: 79]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

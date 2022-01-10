@@ -20,12 +20,12 @@ namespace sequoia::testing
   namespace impl
   {
     template<class Nodes>
-    struct node_value_checker
+    struct node_value_tester
     {
       using type = Nodes;
 
       template<test_mode Mode>
-      static void check(test_logger<Mode>& logger, const Nodes& nodes, const Nodes& prediction)
+      static void test_equality(test_logger<Mode>& logger, const Nodes& nodes, const Nodes& prediction)
       {
         check_equality("Sizes different", logger, nodes.size(), prediction.size());
 
@@ -37,12 +37,12 @@ namespace sequoia::testing
 
     template<class Nodes>
       requires std::is_empty_v<typename Nodes::weight_type>
-    struct node_value_checker<Nodes>
+    struct node_value_tester<Nodes>
     {
       using type = Nodes;
 
       template<test_mode Mode>
-      static void check(test_logger<Mode>&, const Nodes&, const Nodes&)
+      static void test_equality(test_logger<Mode>&, const Nodes&, const Nodes&)
       {
       }
     };
@@ -55,7 +55,7 @@ namespace sequoia::testing
       using equivalent_type = std::initializer_list<typename type::weight_type>;
 
       template<test_mode Mode>
-      static void check(test_logger<Mode>& logger, const Nodes& nodes, equivalent_type prediction)
+      static void test_equivalence(test_logger<Mode>& logger, const Nodes& nodes, equivalent_type prediction)
       {
         check_equality("Sizes different", logger, nodes.size(), prediction.size());
 
@@ -72,7 +72,7 @@ namespace sequoia::testing
       using equivalent_type = std::initializer_list<typename type::weight_type>;
 
       template<test_mode Mode>
-      static void check(test_logger<Mode>& logger, const Nodes& nodes, equivalent_type)
+      static void test_equivalence(test_logger<Mode>& logger, const Nodes& nodes, equivalent_type)
       {
         testing::check("Node storage should have zero size for empty node weights", logger, nodes.empty());
       }
@@ -82,42 +82,31 @@ namespace sequoia::testing
   // Details Checkers
 
   template<class WeightMaker, class Traits>
-  struct value_checker<maths::graph_impl::node_storage<WeightMaker, Traits>>
-    : impl::node_value_checker<maths::graph_impl::node_storage<WeightMaker, Traits>>
-  {
-  };
-
-  // Equivalence Checkers
-
-  template<class WeightMaker, class Traits>
-  struct equivalence_checker<maths::graph_impl::node_storage<WeightMaker, Traits>>
-    : impl::node_equivalence_checker<maths::graph_impl::node_storage<WeightMaker, Traits>>
+  struct value_tester<maths::graph_impl::node_storage<WeightMaker, Traits>>
+    : impl::node_value_tester<maths::graph_impl::node_storage<WeightMaker, Traits>>
+    , impl::node_equivalence_checker<maths::graph_impl::node_storage<WeightMaker, Traits>>
   {
   };
 
   // Static
 
   template<class WeightMaker, std::size_t N>
-  struct value_checker<maths::graph_impl::static_node_storage<WeightMaker, N>>
-    : impl::node_value_checker<maths::graph_impl::static_node_storage<WeightMaker, N>>
-  {
-  };
-
-  template<class WeightMaker, std::size_t N>
-  struct equivalence_checker<maths::graph_impl::static_node_storage<WeightMaker, N>>
-    : impl::node_equivalence_checker<maths::graph_impl::static_node_storage<WeightMaker, N>>
+  struct value_tester<maths::graph_impl::static_node_storage<WeightMaker, N>>
+    : impl::node_value_tester<maths::graph_impl::static_node_storage<WeightMaker, N>>
+    , impl::node_equivalence_checker<maths::graph_impl::static_node_storage<WeightMaker, N>>
   {
   };
 
   // Heterogeneous
 
   template<class... Ts>
-  struct value_checker<maths::graph_impl::heterogeneous_node_storage<Ts...>>
+  struct value_tester<maths::graph_impl::heterogeneous_node_storage<Ts...>>
   {
     using type = maths::graph_impl::heterogeneous_node_storage<Ts...>;
+    using equivalent_type = std::tuple<Ts...>;
 
     template<test_mode Mode>
-    static void check(test_logger<Mode>& logger, const type& nodes, const type& prediction)
+    static void test_equality(test_logger<Mode>& logger, const type& nodes, const type& prediction)
     {
       if(check_equality("Node storaage sizes different", logger, nodes.size(), prediction.size()))
       {
@@ -125,29 +114,10 @@ namespace sequoia::testing
       }
     }
 
-  private:
-    template<test_mode Mode, std::size_t I=0>
-    static void check_elements(test_logger<Mode>& logger, const type& nodes, const type& prediction)
-    {
-      if constexpr(I < sizeof...(Ts))
-      {
-        const std::string message{std::to_string(I) + "th element incorrect"};
-        check_equality(message, logger, nodes.template node_weight<I>(), prediction.template node_weight<I>());
-        check_elements<Mode, I+1>(logger, nodes, prediction);
-      }
-    }
-  };
-
-  template<class... Ts>
-  struct equivalence_checker<maths::graph_impl::heterogeneous_node_storage<Ts...>>
-  {
-    using type = maths::graph_impl::heterogeneous_node_storage<Ts...>;
-    using equivalent_type = std::tuple<Ts...>;
-
     template<test_mode Mode>
-    static void check(test_logger<Mode>& logger, const type& nodes, const equivalent_type& prediction)
+    static void test_equivalence(test_logger<Mode>& logger, const type& nodes, const equivalent_type& prediction)
     {
-      if(check_equality("Node storage sizes different", logger, nodes.size(), sizeof...(Ts)))
+      if (check_equality("Node storage sizes different", logger, nodes.size(), sizeof...(Ts)))
       {
         check_elements(logger, nodes, prediction);
       }
@@ -157,16 +127,30 @@ namespace sequoia::testing
     template<test_mode Mode, std::size_t I=0>
     static void check_elements([[maybe_unused]] test_logger<Mode>& logger,
                                [[maybe_unused]] const type& nodes,
-                               [[maybe_unused]] const equivalent_type& prediction)
+                               [[maybe_unused]] const type& prediction)
     {
       if constexpr(I < sizeof...(Ts))
       {
-        const auto message{std::to_string(I).append("th element incorrect")};
-        check_equality(message, logger, nodes.template node_weight<I>(), std::get<I>(prediction));
+        const std::string message{std::to_string(I) + "th element incorrect"};
+        check_equality(message, logger, nodes.template node_weight<I>(), prediction.template node_weight<I>());
         check_elements<Mode, I+1>(logger, nodes, prediction);
       }
     }
+
+    template<test_mode Mode, std::size_t I = 0>
+    static void check_elements([[maybe_unused]] test_logger<Mode>& logger,
+                               [[maybe_unused]] const type& nodes,
+                               [[maybe_unused]] const equivalent_type& prediction)
+    {
+      if constexpr (I < sizeof...(Ts))
+      {
+        const auto message{ std::to_string(I).append("th element incorrect") };
+        check_equality(message, logger, nodes.template node_weight<I>(), std::get<I>(prediction));
+        check_elements<Mode, I + 1>(logger, nodes, prediction);
+      }
+    }
   };
+
 
   template<bool PropagateCopy=true, bool PropagateMove=true, bool PropagateSwap=true>
   struct node_storage_traits
@@ -253,26 +237,14 @@ namespace sequoia::testing
 
 
   template<class WeightMaker, bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
-  struct value_checker<node_storage_tester<WeightMaker, PropagateCopy, PropagateMove, PropagateSwap>>
-    : public value_checker<maths::graph_impl::node_storage<WeightMaker, node_storage_traits<PropagateCopy, PropagateMove, PropagateSwap>>>
-  {
-  };
-
-  template<class WeightMaker, bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
-  struct equivalence_checker<node_storage_tester<WeightMaker, PropagateCopy, PropagateMove, PropagateSwap>>
-    : public equivalence_checker<maths::graph_impl::node_storage<WeightMaker, node_storage_traits<PropagateCopy, PropagateMove, PropagateSwap>>>
+  struct value_tester<node_storage_tester<WeightMaker, PropagateCopy, PropagateMove, PropagateSwap>>
+    : public value_tester<maths::graph_impl::node_storage<WeightMaker, node_storage_traits<PropagateCopy, PropagateMove, PropagateSwap>>>
   {
   };
 
   template<class WeightMaker, std::size_t N>
-  struct value_checker<static_node_storage_tester<WeightMaker, N>>
-    : public value_checker<maths::graph_impl::static_node_storage<WeightMaker, N>>
-  {
-  };
-
-  template<class WeightMaker, std::size_t N>
-  struct equivalence_checker<static_node_storage_tester<WeightMaker, N>>
-    : public equivalence_checker<maths::graph_impl::static_node_storage<WeightMaker, N>>
+  struct value_tester<static_node_storage_tester<WeightMaker, N>>
+    : public value_tester<maths::graph_impl::static_node_storage<WeightMaker, N>>
   {
   };
 }

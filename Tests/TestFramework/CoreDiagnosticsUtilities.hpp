@@ -84,12 +84,24 @@ namespace sequoia::testing
   };
 
   template<class T, class Allocator>
-  struct value_checker<perfectly_normal_beast<T, Allocator>>
+  struct value_tester<perfectly_normal_beast<T, Allocator>>
   {
     template<test_mode Mode>
-    static void check(test_logger<Mode>& logger, const perfectly_normal_beast<T, Allocator>& obtained, const perfectly_normal_beast<T, Allocator>& prediction)
+    static void test_equality(test_logger<Mode>& logger, const perfectly_normal_beast<T, Allocator>& obtained, const perfectly_normal_beast<T, Allocator>& prediction)
     {
       check_equality("", logger, obtained.x, prediction.x);
+    }
+
+    template<class Logger>
+    static void test_weak_equivalence(Logger& logger, const perfectly_normal_beast<T>& beast, std::initializer_list<T> prediction)
+    {
+      check_range("", logger, std::begin(beast.x), std::end(beast.x), std::begin(prediction), std::end(prediction));
+    }
+
+    template<class Logger, class Advisor>
+    static void test_weak_equivalence(Logger& logger, const perfectly_normal_beast<T>& beast, std::initializer_list<T> prediction, tutor<Advisor> advisor)
+    {
+      check_range("", logger, std::begin(beast.x), std::end(beast.x), std::begin(prediction), std::end(prediction), std::move(advisor));
     }
   };
 

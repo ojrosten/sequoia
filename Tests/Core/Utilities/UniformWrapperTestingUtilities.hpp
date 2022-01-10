@@ -14,12 +14,12 @@
 namespace sequoia::testing
 {
   template<class T>
-  struct value_checker<utilities::uniform_wrapper<T>>
+  struct value_tester<utilities::uniform_wrapper<T>>
   {
     using type = utilities::uniform_wrapper<T>;
 
     template<test_mode Mode>
-    static void check(test_logger<Mode>& logger, const type& wrapper, const type& prediction)
+    static void test_equality(test_logger<Mode>& logger, const type& wrapper, const type& prediction)
     {
       check_equality("", logger, wrapper.get(), prediction.get());
     }

@@ -28,7 +28,7 @@ namespace sequoia::testing
     using namespace ownership;
     using pool_t = data_pool<int>;
 
-    using prediction_t = typename weak_equivalence_checker<pool_t>::prediction_type;
+    using prediction_t = typename value_tester<pool_t>::prediction_type;
 
     pool_t pool{};
 
@@ -48,7 +48,7 @@ namespace sequoia::testing
     using namespace ownership;
     using pool_t = data_pool<int>;
 
-    using prediction_t = typename weak_equivalence_checker<pool_t>::prediction_type;
+    using prediction_t = typename value_tester<pool_t>::prediction_type;
 
     pool_t pool{make_int_pool(5)};
     check_weak_equivalence(LINE("Proxy created in function call goes out of scope, decreasing count to 0"), pool, prediction_t{{5, 0}});
@@ -122,7 +122,7 @@ namespace sequoia::testing
     using namespace ownership;
     using pool_t = data_pool<int>;
 
-    using prediction_t = typename weak_equivalence_checker<pool_t>::prediction_type;
+    using prediction_t = typename value_tester<pool_t>::prediction_type;
     pool_t pool{};
     check_weak_equivalence(LINE(""), pool, prediction_t{});
 

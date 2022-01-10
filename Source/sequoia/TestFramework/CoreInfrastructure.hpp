@@ -22,48 +22,56 @@
 namespace sequoia::testing
 {
   /*! \brief class template, specializations of which implement detailed comparison of two instantiations of T.
-      \anchor value_checker_primary
+      \anchor value_tester_primary
    */
-  template<class T> struct value_checker;
-
-  /*! \brief class template, specializations of which implement comparison between T and one or more equivalent types.
-      \anchor equivalence_checker_primary
-   */
-  template<class T> struct equivalence_checker;
-
-  /*! \brief class template, specializations of which implement comparison between T and one or more weakly equivalent types.
-      \anchor weak_equivalence_checker_primary
-   */
-  template<class T> struct weak_equivalence_checker;
+  template<class T> struct value_tester;
 
   template<class T>
-  inline constexpr bool has_equivalence_checker_v{class_template_is_default_instantiable<equivalence_checker, T>};
-
-  template<class T>
-  inline constexpr bool has_weak_equivalence_checker_v{class_template_is_default_instantiable<weak_equivalence_checker, T>};
-
-  template<class T>
-  inline constexpr bool has_value_checker_v{
-    requires{ &value_checker<T>::check; }
+  inline constexpr bool has_equality_tester_v{
+    requires{ &value_tester<T>::test_equality; }
   };
+
+  template<class T>
+  inline constexpr bool has_equivalence_tester_v{
+    requires{ &value_tester<T>::test_equivalence; }
+  };
+
+  template<class T>
+  inline constexpr bool has_weak_equivalence_tester_v{
+    requires{ &value_tester<T>::test_weak_equivalence; }
+  };
+
 
   struct equality_tag{};
  
   struct equivalence_tag
   {
-    template<class T>
-    using checker = equivalence_checker<T>;
-
     using fallback = equality_tag;
   };
 
   struct weak_equivalence_tag
   {
-    template<class T>
-    using checker = weak_equivalence_checker<T>;
-
     using fallback = equivalence_tag;
   };
+
+  template<class T>
+  inline constexpr bool is_equivalence_disambiguator_v{
+    requires { typename T::fallback; }
+  };
+
+  template<class T>
+  [[nodiscard]]
+  constexpr bool defines_test_for(equivalence_tag) noexcept
+  {
+    return has_equivalence_tester_v<T>;
+  }
+
+  template<class T>
+  [[nodiscard]]
+  constexpr bool defines_test_for(weak_equivalence_tag) noexcept
+  {
+    return has_weak_equivalence_tester_v<T>;
+  }
 
 
   /*! \brief Specialize this struct template to provide custom serialization of a given class.

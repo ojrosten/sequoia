@@ -12,13 +12,13 @@
 namespace sequoia::testing
 {
   template<class T, class Allocator>
-  struct weak_equivalence_checker<ownership::data_pool<T, Allocator>>
+  struct value_tester<ownership::data_pool<T, Allocator>>
   {
     using type = ownership::data_pool<T, Allocator>;
     using prediction_type = std::initializer_list<std::pair<T, long>>;
 
     template<test_mode Mode>
-    static void check(test_logger<Mode>& logger, const type& pool, prediction_type prediction)
+    static void test_weak_equivalence(test_logger<Mode>& logger, const type& pool, prediction_type prediction)
     {
       check_equality("empty", logger, pool.empty(), prediction.size() == 0);
       check_equality("size", logger, pool.size(), prediction.size());

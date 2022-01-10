@@ -1,7 +1,7 @@
 	Tests/TestFramework/FailureInfoTestingDiagnostics.cpp, Line 21
 
 	Comparison performed using:
-	[sequoia::testing::equivalence_checker<sequoia::testing::failure_info>]
+	[sequoia::testing::value_tester<sequoia::testing::failure_info>]
 	With equivalent types:
 	[int,
 	char [1]]
@@ -17,7 +17,7 @@
 	Tests/TestFramework/FailureInfoTestingDiagnostics.cpp, Line 22
 
 	Comparison performed using:
-	[sequoia::testing::equivalence_checker<sequoia::testing::failure_info>]
+	[sequoia::testing::value_tester<sequoia::testing::failure_info>]
 	With equivalent types:
 	[int,
 	char [4]]

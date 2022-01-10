@@ -14,25 +14,19 @@
 namespace sequoia::testing
 {
   template<class T, std::integral Index>
-  struct value_checker<maths::linear_sequence<T, Index>>
+  struct value_tester<maths::linear_sequence<T, Index>>
   {
     using type = maths::linear_sequence<T, Index>;
 
     template<test_mode Mode>
-    static void check(test_logger<Mode>& logger, const type& sequence, const type& prediction)
+    static void test_equality(test_logger<Mode>& logger, const type& sequence, const type& prediction)
     {
       check_equality("Start", logger, sequence.start(), prediction.start());
       check_equality("Step", logger, sequence.step(), prediction.step());
     }
-  };
-
-  template<class T, std::integral Index>
-  struct equivalence_checker<maths::linear_sequence<T, Index>>
-  {
-    using type = maths::linear_sequence<T, Index>;
 
     template<test_mode Mode>
-    static void check(test_logger<Mode>& logger, const type& sequence, const T& start, const T& step)
+    static void test_equivalence(test_logger<Mode>& logger, const type& sequence, const T& start, const T& step)
     {
       check_equality("Start wrong", logger, sequence.start(), start);
       check_equality("Step wrong", logger, sequence.step(), step);

@@ -75,7 +75,12 @@ namespace sequoia::testing
         while((std::distance(p.begin(), p.end()) > 1))
         {
           const auto last{back(p)};
-          p = p.parent_path();
+          const auto parent{p.parent_path()};
+
+          if(p == parent)
+            throw std::runtime_error{"Unable to locate project root; please ensure that the build directory is a subdirectory of sequoia/build!"};
+
+          p = parent;
           if(last == "build") break;
         }
 

@@ -13,24 +13,18 @@
 namespace sequoia::testing
 {
     template<maths::floating_point T>
-    struct value_checker<bar::baz::foo<T>>
+    struct value_tester<bar::baz::foo<T>>
     {
         using type = bar::baz::foo<T>;
 
         template<test_mode Mode>
-        static void check(test_logger<Mode>& logger, const type& actual, const type& prediction)
+        static void test_equality(test_logger<Mode>& logger, const type& actual, const type& prediction)
         {
             // e.g. check_equality("Description", logger, actual.method(), prediction.method());
         }
-    };
-
-    template<maths::floating_point T>
-    struct equivalence_checker<bar::baz::foo<T>>
-    {
-        using type = bar::baz::foo<T>;
-
+        
         template<test_mode Mode>
-        static void check(test_logger<Mode>& logger, const type& actual, const T& prediction)
+        static void test_equivalence(test_logger<Mode>& logger, const type& actual, const T& prediction)
         {
             // e.g. check_equality("Description", logger, actual.method(), prediction);
         }

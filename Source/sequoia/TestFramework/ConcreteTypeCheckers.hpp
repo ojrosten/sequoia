@@ -8,11 +8,11 @@
 #pragma once
 
 /*! \file
-    \brief Useful specializations for the class templates value_checker and equivalence_checker.
+    \brief Useful specializations for the class template value_tester.
 
     The specializations in this header are for various types defined in std. Internally,
     check_equality/check_equivalnce is used meaning that there will be automatic, recursive dispatch to
-    other specializations of value_checker, if appropriate. For example,
+    other specializations of value_tester, if appropriate. For example,
     consider two instances of std::pair<my_type1, mytype2>, x and y. The utilities in this
     header means the call
 
@@ -23,10 +23,10 @@
     check_equality("automatically enhanced desciption", logger, x.first, y,first)
 
     and similarly for the second element. In turn, this nested check_equality will use
-    a specialization of the value_checker of my_type1, should it exist. As
+    a specialization of the value_tester of my_type1, should it exist. As
     usual, if the specialization for T does not exist, but T may be interpreted as
     a container holding a type U, then everything will simply work, provided either that
-    there exists a specialization of the value_checker for U or U is serializable.
+    there exists a specialization of the value_tester for U or U is serializable.
  */
 
 #include "sequoia/TestFramework/FreeCheckers.hpp"
@@ -44,7 +44,7 @@ namespace sequoia::testing
 {
   /*! \brief Checks equality of std::basic_string */
   template<class Char, class Traits>
-  struct value_checker<std::basic_string_view<Char, Traits>>
+  struct value_tester<std::basic_string_view<Char, Traits>>
   {
     using string_view_type = std::basic_string_view<Char, Traits>;
   private:
@@ -114,7 +114,7 @@ namespace sequoia::testing
     }
   public:
     template<test_mode Mode, class Advisor>
-    static void check(test_logger<Mode>& logger, string_view_type obtained, string_view_type prediction, const tutor<Advisor>& advisor)
+    static void test_equality(test_logger<Mode>& logger, string_view_type obtained, string_view_type prediction, const tutor<Advisor>& advisor)
     {
       auto iters{std::mismatch(obtained.begin(), obtained.end(), prediction.begin(), prediction.end())};
 
@@ -156,27 +156,33 @@ namespace sequoia::testing
     }
   };
 
-
-  /*! \brief Checks equivalence of std::basic_string to char[] and string_view */
   template<class Char, class Traits, alloc Allocator>
-  struct equivalence_checker<std::basic_string<Char, Traits, Allocator>>
+  struct value_tester<std::basic_string<Char, Traits, Allocator>>
   {
     using string_type = std::basic_string<Char, Traits, Allocator>;
 
-    template<test_mode Mode, std::size_t N, class Advisor>
-    static void check(test_logger<Mode>& logger, const string_type& obtained, char const (&prediction)[N], tutor<Advisor> advisor)
+    template<test_mode Mode, class Advisor>
+    static void test_equality(test_logger<Mode>& logger, const string_type& obtained, const string_type& prediction, tutor<Advisor> advisor)
     {
-       using checker = value_checker<std::basic_string_view<Char, Traits>>;
+      using tester = value_tester<std::basic_string_view<Char, Traits>>;
 
-       checker::check(logger, std::string_view{obtained}, std::string_view{prediction}, std::move(advisor));
+      tester::test_equality(logger, std::string_view{ obtained }, std::string_view{ prediction }, std::move(advisor));
+    }
+
+    template<test_mode Mode, std::size_t N, class Advisor>
+    static void test_equivalence(test_logger<Mode>& logger, const string_type& obtained, char const (&prediction)[N], tutor<Advisor> advisor)
+    {
+       using tester = value_tester<std::basic_string_view<Char, Traits>>;
+
+       tester::test_equality(logger, std::string_view{obtained}, std::string_view{prediction}, std::move(advisor));
     }
 
     template<test_mode Mode, class Advisor>
-    static void check(test_logger<Mode>& logger, const string_type& obtained, std::basic_string_view<Char, Traits> prediction, tutor<Advisor> advisor)
+    static void test_equivalence(test_logger<Mode>& logger, const string_type& obtained, std::basic_string_view<Char, Traits> prediction, tutor<Advisor> advisor)
     {
-       using checker = value_checker<std::basic_string_view<Char, Traits>>;
+       using tester = value_tester<std::basic_string_view<Char, Traits>>;
 
-      checker::check(logger, std::string_view{obtained}, std::string_view{prediction}, std::move(advisor));
+       tester::test_equality(logger, std::string_view{obtained}, std::string_view{prediction}, std::move(advisor));
     }
   };
 
@@ -184,16 +190,22 @@ namespace sequoia::testing
       after removing references and cv-qualifiers, S,U and T,V are each the same
    */
   template<class S, class T>
-  struct equivalence_checker<std::pair<S, T>>
+  struct value_tester<std::pair<S, T>>
   {
     template<test_mode Mode, class U, class V, class Advisor>
-    static void check(test_logger<Mode>& logger, const std::pair<S, T>& value, const std::pair<U, V>& prediction, tutor<Advisor> advisor)
+    static void test_equivalence(test_logger<Mode>& logger, const std::pair<S, T>& value, const std::pair<U, V>& prediction, const tutor<Advisor>& advisor)
     {
       static_assert(   std::is_same_v<std::remove_cvref_t<S>, std::remove_cvref_t<U>>
                     && std::is_same_v<std::remove_cvref_t<T>, std::remove_cvref_t<V>>);
 
       check_equality("First element of pair is incorrect", logger, value.first, prediction.first, advisor);
       check_equality("Second element of pair is incorrect", logger, value.second, prediction.second, advisor);
+    }
+
+    template<test_mode Mode, class Advisor>
+    static void test_equality(test_logger<Mode>& logger, const std::pair<S, T>& value, const std::pair<S, T>& prediction, const tutor<Advisor>& advisor)
+    {
+      test_equivalence(logger, value, prediction, advisor);
     }
   };
 
@@ -202,7 +214,7 @@ namespace sequoia::testing
       are of the same type
    */
   template<class... T>
-  struct equivalence_checker<std::tuple<T...>>
+  struct value_tester<std::tuple<T...>>
   {
   private:
     template<test_mode Mode, std::size_t I = 0, class... U, class Advisor>
@@ -221,9 +233,15 @@ namespace sequoia::testing
   public:
     template<test_mode Mode, class... U, class Advisor>
       requires((sizeof...(T) == sizeof...(U)) && (std::is_same_v<std::remove_cvref_t<T>, std::remove_cvref_t<U>> && ...))
-    static void check(test_logger<Mode>& logger, const std::tuple<T...>& value, const std::tuple<U...>& prediction, const tutor<Advisor>& advisor)
+    static void test_equivalence(test_logger<Mode>& logger, const std::tuple<T...>& value, const std::tuple<U...>& prediction, const tutor<Advisor>& advisor)
     {
       check_tuple_elements(logger, value, prediction, advisor);
+    }
+
+    template<test_mode Mode, class Advisor>
+    static void test_equality(test_logger<Mode>& logger, const std::tuple<T...>& value, const std::tuple<T...>& prediction, const tutor<Advisor>& advisor)
+    {
+      test_equivalence(logger, value, prediction, advisor);
     }
   };
 
@@ -371,13 +389,16 @@ namespace sequoia::testing
     Files are considered equivalent if they have the same name and the same contents;
     similarly directories.
 
+    Files are considered weakly equivalent if they have the same contents;
+    similarly directories. The names of both are ignored.
+
    */
 
   template<>
-  struct equivalence_checker<std::filesystem::path>
+  struct value_tester<std::filesystem::path>
   {
     template<test_mode Mode, class Customization>
-    static void check(test_logger<Mode>& logger, const Customization& custom, const std::filesystem::path& path, const std::filesystem::path& prediction)
+    static void test_equivalence(test_logger<Mode>& logger, const Customization& custom, const std::filesystem::path& path, const std::filesystem::path& prediction)
     {
       namespace fs = std::filesystem;
 
@@ -392,73 +413,32 @@ namespace sequoia::testing
     }
 
     template<test_mode Mode>
-    static void check(test_logger<Mode>& logger, const std::filesystem::path& path, const std::filesystem::path& prediction)
+    static void test_equivalence(test_logger<Mode>& logger, const std::filesystem::path& path, const std::filesystem::path& prediction)
     {
-      check(logger, basic_file_checker{}, path, prediction);
+      test_equivalence(logger, basic_file_checker{}, path, prediction);
     }
 
-  };
-
-  /*! \brief Checks equivalence of filesystem paths.
-
-    Files are considered equivalent if they have the same contents;
-    similarly directories. The names of both are ignored.
-
-   */
-
-  template<>
-  struct weak_equivalence_checker<std::filesystem::path>
-  {
     template<test_mode Mode, class Customization>
-    static void check(test_logger<Mode>& logger, const Customization& custom, const std::filesystem::path& path, const std::filesystem::path& prediction)
+    static void test_weak_equivalence(test_logger<Mode>& logger, const Customization& custom, const std::filesystem::path& path, const std::filesystem::path& prediction)
     {
       namespace fs = std::filesystem;
       path_checker::check(logger, custom, path, prediction, [](const fs::path&, const fs::path&) { return true; });
     }
 
     template<test_mode Mode>
-    static void check(test_logger<Mode>& logger, const std::filesystem::path& path, const std::filesystem::path& prediction)
+    static void test_weak_equivalence(test_logger<Mode>& logger, const std::filesystem::path& path, const std::filesystem::path& prediction)
     {
-      check(logger, basic_file_checker{}, path, prediction);
-    }
-  };
-
-  /*! \brief Detailed comparison of the elements of two instances of std::pair<S,T>
-
-      The elements of a std::pair<S,T> are checked using check_equality; this will recursively
-      dispatch to other specializations value_checker if appropriate for either
-      S or T.
-   */
-  template<class T, class S>
-  struct value_checker<std::pair<T, S>> : equivalence_checker<std::pair<T, S>>
-  {};
-
-  /*! \brief Detailed comparison of the elements of two instances of std::pair<T...> */
-  template<class... T>
-  struct value_checker<std::tuple<T...>> : equivalence_checker<std::tuple<T...>>
-  {};
-
-  template<class Char, class Traits, alloc Allocator>
-  struct value_checker<std::basic_string<Char, Traits, Allocator>>
-  {
-    using string_type = std::basic_string<Char, Traits, Allocator>;
-
-    template<test_mode Mode, class Advisor>
-    static void check(test_logger<Mode>& logger, const string_type& obtained, const string_type& prediction, tutor<Advisor> advisor)
-    {
-      using checker = value_checker<std::basic_string_view<Char, Traits>>;
-
-      checker::check(logger, std::string_view{obtained}, std::string_view{prediction}, std::move(advisor));
+      test_weak_equivalence(logger, basic_file_checker{}, path, prediction);
     }
   };
 
   template<class... Ts>
-  struct value_checker<std::variant<Ts...>>
+  struct value_tester<std::variant<Ts...>>
   {
     using type = std::variant<Ts...>;
 
     template<test_mode Mode, class Advisor>
-    static void check(test_logger<Mode>& logger, const type& obtained, const type& prediction, tutor<Advisor> advisor)
+    static void test_equality(test_logger<Mode>& logger, const type& obtained, const type& prediction, tutor<Advisor> advisor)
     {
       if(check_equality("Variant Index", logger, obtained.index(), prediction.index()))
       {
@@ -490,12 +470,12 @@ namespace sequoia::testing
   };
 
   template<class T>
-  struct value_checker<std::optional<T>>
+  struct value_tester<std::optional<T>>
   {
     using type = std::optional<T>;
 
     template<test_mode Mode, class Advisor>
-    static void check(test_logger<Mode>& logger, const type& obtained, const type& prediction, tutor<Advisor> advisor)
+    static void test_equality(test_logger<Mode>& logger, const type& obtained, const type& prediction, tutor<Advisor> advisor)
     {
       if(check_equality("Has value", logger, obtained.has_value(), prediction.has_value()))
       {

@@ -2,9 +2,9 @@
 Running tests...
 
 Utilities:
-[2 (0)ms]
+[1 (0)ms]
 Useful Things:
-[4 (1)ms]
+[1 (0)ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
 	Tests/Utilities/UsefulThingsFreeTest.cpp, Line 21
@@ -17,33 +17,33 @@ Useful Things:
 	=======================================
 
 Bar:
-[4 (0)ms]
+[0 (0)ms]
 Unstable:
-[5 (2)ms]
+[16 (15)ms]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 Maybe:
-[5 (0)ms]
+[2 (0)ms]
 Oldschool:
-[5 (0)ms]
+[2 (0)ms]
 Probability:
-[13 (6)ms]
+[17 (14)ms]
 	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 39]
 	False Positive Checks:                     2;  Failures:  0
 Foo:
-[19 (9)ms]
+[5 (3)ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
 	Tests/Stuff/FooTest.cpp, Line 41
 
 	Comparison performed using:
-	[sequoia::testing::equivalence_checker<std::filesystem::path>]
+	[sequoia::testing::value_tester<std::filesystem::path>]
 	With equivalent types:
 	[std::filesystem::path]
 
 	  Path type
-	  C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases
+	  C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases
 	  vs
-	  C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases
+	  C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases
 
 	  [std::filesystem::file_type]
 	  operator== returned false
@@ -53,16 +53,16 @@ Foo:
 	=======================================
 
 Unique Thing:
-[16 (8)ms]
+[15 (12)ms]
 	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 35]
 	False Positive Checks:                     2;  Failures:  0
 Container:
-[8 (0)ms]
+[1 (0)ms]
 House:
-[2 (0)ms]
+[1 (0)ms]
 
 -----------Grand Totals-----------
-[90 (28)ms]
+[65 (45)ms]
 	Standard Top Level Checks:                10;  Failures:  2  [Deep checks: 78]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

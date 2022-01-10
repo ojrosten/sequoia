@@ -15,13 +15,13 @@
 namespace sequoia::testing
 {
   template<class... Products>
-  struct equivalence_checker<sequoia::runtime::factory<Products...>>
+  struct value_tester<sequoia::runtime::factory<Products...>>
   {
     using type = sequoia::runtime::factory<Products...>;
     using element = std::pair<std::string, std::variant<Products...>>;
 
     template<test_mode Mode>
-    static void check(test_logger<Mode>& logger, const type& actual, const std::array<element, sizeof...(Products)>& prediction)
+    static void test_equivalence(test_logger<Mode>& logger, const type& actual, const std::array<element, sizeof...(Products)>& prediction)
     {
       for(const auto&[name, product] : prediction)
       {

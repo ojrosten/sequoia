@@ -23,12 +23,12 @@ namespace sequoia::testing
   namespace impl
   {
     template<maths::network Graph>
-    struct graph_value_checker
+    struct graph_value_tester
     {
       using type = Graph;
 
       template<test_mode Mode>
-      static void check(test_logger<Mode>& logger, const Graph& graph, const Graph& prediction)
+      static void test_equality(test_logger<Mode>& logger, const Graph& graph, const Graph& prediction)
       {
         using connectivity_t = typename type::connectivity_type;
         using nodes_t = typename type::nodes_type;
@@ -49,7 +49,7 @@ namespace sequoia::testing
 
       template<test_mode Mode>
         requires (!std::is_empty_v<node_weight_type>)
-      static void check(test_logger<Mode>& logger, const type& graph, connectivity_equivalent_type connPrediction, nodes_equivalent_type nodesPrediction)
+      static void test_general_equivalence(test_logger<Mode>& logger, const type& graph, connectivity_equivalent_type connPrediction, nodes_equivalent_type nodesPrediction)
       {
         using connectivity_t = typename type::connectivity_type;
         using nodes_t = typename type::nodes_type;
@@ -60,7 +60,7 @@ namespace sequoia::testing
 
       template<test_mode Mode>
         requires std::is_empty_v<node_weight_type>
-      static void check(test_logger<Mode>& logger, const type& graph, connectivity_equivalent_type connPrediction)
+      static void test_general_equivalence(test_logger<Mode>& logger, const type& graph, connectivity_equivalent_type connPrediction)
       {
         using connectivity_t = typename type::connectivity_type;
 
@@ -122,13 +122,14 @@ namespace sequoia::testing
     class EdgeTraits,
     class WeightMaker
   >
-  struct value_checker<maths::connectivity<Directedness, EdgeTraits, WeightMaker>>
+  struct value_tester<maths::connectivity<Directedness, EdgeTraits, WeightMaker>>
   {
     using type = maths::connectivity<Directedness, EdgeTraits, WeightMaker>;
     using edge_index_type = typename type::edge_index_type;
+    using connectivity_equivalent_type = std::initializer_list<std::initializer_list<typename type::edge_init_type>>;
 
     template<test_mode Mode>
-    static void check(test_logger<Mode>& logger, const type& connectivity, const type& prediction)
+    static void test_equality(test_logger<Mode>& logger, const type& connectivity, const type& prediction)
     {
       check_equality("Connectivity size incorrect", logger, connectivity.size(), prediction.size());
 
@@ -142,37 +143,35 @@ namespace sequoia::testing
         }
       }
     }
+
+    template<test_mode Mode>
+    static void test_equivalence(test_logger<Mode>& logger, const type& connectivity, connectivity_equivalent_type prediction)
+    {
+      graph_equivalence_tester::check(logger, connectivity, prediction);
+    }
+
+    template<test_mode Mode>
+    static void test_weak_equivalence(test_logger<Mode>& logger, const type& connectivity, connectivity_equivalent_type prediction)
+    {
+      graph_weak_equivalence_tester::check(logger, connectivity, prediction);
+    }
+  private:
+    using graph_equivalence_tester =
+      impl::connectivity_general_equivalence_checker<
+        Directedness,
+        EdgeTraits,
+        WeightMaker,
+        decltype([](auto&&... args) { check_range_equivalence(std::forward<decltype(args)>(args)...); })
+      >;
+
+    using graph_weak_equivalence_tester =
+      impl::connectivity_general_equivalence_checker<
+        Directedness,
+        EdgeTraits,
+        WeightMaker,
+        decltype([](auto&&... args) { check_range_weak_equivalence(std::forward<decltype(args)>(args)...); })
+      >;
   };
-
-  template
-  <
-    maths::directed_flavour Directedness,
-    class EdgeTraits,
-    class WeightMaker
-  >
-  struct equivalence_checker<maths::connectivity<Directedness, EdgeTraits, WeightMaker>>
-    : impl::connectivity_general_equivalence_checker<
-        Directedness,
-        EdgeTraits,
-        WeightMaker,
-        decltype([](auto&&... args){ check_range_equivalence(std::forward<decltype(args)>(args)...); })
-      >
-  {};
-
-  template
-  <
-    maths::directed_flavour Directedness,
-    class EdgeTraits,
-    class WeightMaker
-  >
-  struct weak_equivalence_checker<maths::connectivity<Directedness, EdgeTraits, WeightMaker>>
-    : impl::connectivity_general_equivalence_checker<
-        Directedness,
-        EdgeTraits,
-        WeightMaker,
-        decltype([](auto&&... args){ check_range_weak_equivalence(std::forward<decltype(args)>(args)...); })
-      >
-  {};
 
   constexpr bool mutual_info(const maths::graph_flavour flavour) noexcept
   {

@@ -2,7 +2,7 @@
 	Empty sequence inequivalent to a single value
 
 	Comparison performed using:
-	[sequoia::testing::equivalence_checker<sequoia::maths::monotonic_sequence<int, std::less<int>, std::vector<int, std::allocator<int> > > >]
+	[sequoia::testing::value_tester<sequoia::maths::monotonic_sequence<int, std::less<int>, std::vector<int, std::allocator<int> > > >]
 	With equivalent types:
 	[std::initializer_list<int>]
 
@@ -18,7 +18,7 @@
 	Non-empty sequence inequivalent to empty list
 
 	Comparison performed using:
-	[sequoia::testing::equivalence_checker<sequoia::maths::monotonic_sequence<int, std::less<int>, std::vector<int, std::allocator<int> > > >]
+	[sequoia::testing::value_tester<sequoia::maths::monotonic_sequence<int, std::less<int>, std::vector<int, std::allocator<int> > > >]
 	With equivalent types:
 	[std::initializer_list<int>]
 
@@ -34,7 +34,7 @@
 	Sequence of size one inequivalent to list with different value
 
 	Comparison performed using:
-	[sequoia::testing::equivalence_checker<sequoia::maths::monotonic_sequence<int, std::less<int>, std::vector<int, std::allocator<int> > > >]
+	[sequoia::testing::value_tester<sequoia::maths::monotonic_sequence<int, std::less<int>, std::vector<int, std::allocator<int> > > >]
 	With equivalent types:
 	[std::initializer_list<int>]
 

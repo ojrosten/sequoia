@@ -71,12 +71,11 @@ namespace sequoia::testing
     };
   }
 
-
   template<>
-  struct equivalence_checker<foo>
+  struct value_tester<foo>
   {
     template<test_mode Mode>
-    static void check(test_logger<Mode>& logger, const foo& f, int i, tutor<bland> advisor)
+    static void test_equivalence(test_logger<Mode>& logger, const foo& f, int i, tutor<bland> advisor)
     {
       check_equality("Wrapped value", logger, f.i, i, advisor);
     }
@@ -84,36 +83,31 @@ namespace sequoia::testing
 
   // Explicit container specialization to testing propagation of tutor through check_range_equivalence
   template<>
-  struct equivalence_checker<std::vector<foo>>
+  struct value_tester<std::vector<foo>>
   {
     template<test_mode Mode>
-    static void check(test_logger<Mode>& logger, const std::vector<foo>& f, const std::vector<int>& i, tutor<bland> advisor)
+    static void test_equivalence(test_logger<Mode>& logger, const std::vector<foo>& f, const std::vector<int>& i, tutor<bland> advisor)
     {
       check_range_equivalence("Vector equivalence", logger, f.begin(), f.end(), i.begin(), i.end(), advisor);
     }
-  };
 
-  template<>
-  struct weak_equivalence_checker<bar>
-  {
-    template<test_mode Mode>
-    static void check(test_logger<Mode>& logger, const bar& b, const std::pair<int, double>& prediction, tutor<bland> advisor)
-    {
-      check_equality("Wrapped int", logger, b.i, prediction.first, advisor);
-      check_equality("Wrapped double", logger, b.x, prediction.second, advisor);
-    }
-  };
-
-  // Explicit container specialization to testing propagation of tutor through check_range_equivalence
-  template<>
-  struct weak_equivalence_checker<std::vector<foo>>
-  {
     using prediction_t = std::vector<std::pair<int, double>>;
 
     template<test_mode Mode>
-    static void check(test_logger<Mode>& logger, const std::vector<foo>& f, const prediction_t& p, tutor<bland> advisor)
+    static void test_weak_equivalence(test_logger<Mode>& logger, const std::vector<foo>& f, const prediction_t& p, tutor<bland> advisor)
     {
       check_range_equivalence("Vector equivalence", logger, f.begin(), f.end(), p.begin(), p.end(), advisor);
+    }
+  };
+
+  template<>
+  struct value_tester<bar>
+  {
+    template<test_mode Mode>
+    static void test_weak_equivalence(test_logger<Mode>& logger, const bar& b, const std::pair<int, double>& prediction, tutor<bland> advisor)
+    {
+      check_equality("Wrapped int", logger, b.i, prediction.first, advisor);
+      check_equality("Wrapped double", logger, b.x, prediction.second, advisor);
     }
   };
 
@@ -127,22 +121,6 @@ namespace sequoia::testing
 
     return summary;
   }
-
-  template<class T>
-  struct weak_equivalence_checker<perfectly_normal_beast<T>>
-  {
-    template<class Logger>
-    static void check(Logger& logger, const perfectly_normal_beast<T>& beast, std::initializer_list<T> prediction)
-    {
-      check_range("", logger, std::begin(beast.x), std::end(beast.x), std::begin(prediction), std::end(prediction));
-    }
-
-    template<class Logger, class Advisor>
-    static void check(Logger& logger, const perfectly_normal_beast<T>& beast, std::initializer_list<T> prediction, tutor<Advisor> advisor)
-    {
-      check_range("", logger, std::begin(beast.x), std::end(beast.x), std::begin(prediction), std::end(prediction), std::move(advisor));
-    }
-  };
 
   [[nodiscard]]
   std::string_view false_positive_diagnostics::source_file() const noexcept

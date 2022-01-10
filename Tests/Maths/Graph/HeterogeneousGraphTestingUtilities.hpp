@@ -25,7 +25,7 @@ namespace sequoia::testing
       using nodes_equivalent_type = std::tuple<NodeWeights...>;
 
       template<test_mode Mode>
-      static void check(test_logger<Mode>& logger, const type& graph, connectivity_equivalent_type connPrediction, const nodes_equivalent_type& nodesPrediction)
+      static void test_equivalence(test_logger<Mode>& logger, const type& graph, connectivity_equivalent_type connPrediction, const nodes_equivalent_type& nodesPrediction)
       {
         using connectivity_t = typename type::connectivity_type;
         using nodes_t = typename type::nodes_type;
@@ -46,9 +46,28 @@ namespace sequoia::testing
     class EdgeWeight,
     class... NodeWeights
   >
-  struct value_checker<maths::heterogeneous_static_graph<Directedness, Size, Order, EdgeWeight, NodeWeights...>>
-    : impl::graph_value_checker<maths::heterogeneous_static_graph<Directedness, Size, Order, EdgeWeight, NodeWeights...>>
+  struct value_tester<maths::heterogeneous_static_graph<Directedness, Size, Order, EdgeWeight, NodeWeights...>>
   {
+    using graph_type = maths::heterogeneous_static_graph<Directedness, Size, Order, EdgeWeight, NodeWeights...>;
+
+    using connectivity_equivalent_type = std::initializer_list<std::initializer_list<typename graph_type::edge_init_type>>;
+    using nodes_equivalent_type        = std::tuple<NodeWeights...>;
+
+    template<test_mode Mode>
+    static void test_equality(test_logger<Mode>& logger, const graph_type& graph, const graph_type& prediction)
+    {
+      graph_equality_tester::test_equality(logger, graph, prediction);
+    }
+
+    template<test_mode Mode>
+    static void test_equivalence(test_logger<Mode>& logger, const graph_type& graph, connectivity_equivalent_type connPrediction, const nodes_equivalent_type& nodesPrediction)
+    {
+      graph_equivalence_tester::test_equivalence(logger, graph, connPrediction, nodesPrediction);
+    }
+  private:
+    using graph_equality_tester = impl::graph_value_tester<graph_type>;
+
+    using graph_equivalence_tester = impl::heterogeneous_graph_equivalence_checker<graph_type, NodeWeights...>;
   };
 
   template
@@ -59,36 +78,27 @@ namespace sequoia::testing
     class EdgeWeight,
     class... NodeWeights
   >
-  struct value_checker<maths::heterogeneous_embedded_static_graph<Directedness, Size, Order, EdgeWeight, NodeWeights...>>
-    : impl::graph_value_checker<maths::heterogeneous_embedded_static_graph<Directedness, Size, Order, EdgeWeight, NodeWeights...>>
+  struct value_tester<maths::heterogeneous_embedded_static_graph<Directedness, Size, Order, EdgeWeight, NodeWeights...>>
   {
-  };
+    using graph_type = maths::heterogeneous_embedded_static_graph<Directedness, Size, Order, EdgeWeight, NodeWeights...>;
 
-  // Equivalence Checkers
+    using connectivity_equivalent_type = std::initializer_list<std::initializer_list<typename graph_type::edge_init_type>>;
+    using nodes_equivalent_type        = std::tuple<NodeWeights...>;
 
-  template
-  <
-    maths::directed_flavour Directedness,
-    std::size_t Size,
-    std::size_t Order,
-    class EdgeWeight,
-    class... NodeWeights
-  >
-  struct equivalence_checker<maths::heterogeneous_static_graph<Directedness, Size, Order, EdgeWeight, NodeWeights...>>
-    : impl::heterogeneous_graph_equivalence_checker<maths::heterogeneous_static_graph<Directedness, Size, Order, EdgeWeight, NodeWeights...>, NodeWeights...>
-  {
-  };
+    template<test_mode Mode>
+    static void test_equality(test_logger<Mode>& logger, const graph_type& graph, const graph_type& prediction)
+    {
+      graph_equality_tester::test_equality(logger, graph, prediction);
+    }
 
-  template
-  <
-    maths::directed_flavour Directedness,
-    std::size_t Size,
-    std::size_t Order,
-    class EdgeWeight,
-    class... NodeWeights
-  >
-  struct equivalence_checker<maths::heterogeneous_embedded_static_graph<Directedness, Size, Order, EdgeWeight, NodeWeights...>>
-    : impl::heterogeneous_graph_equivalence_checker<maths::heterogeneous_embedded_static_graph<Directedness, Size, Order, EdgeWeight, NodeWeights...>, NodeWeights...>
-  {
+    template<test_mode Mode>
+    static void test_equivalence(test_logger<Mode>& logger, const graph_type& graph, connectivity_equivalent_type connPrediction, const nodes_equivalent_type& nodesPrediction)
+    {
+      graph_equivalence_tester::test_equivalence(logger, graph, connPrediction, nodesPrediction);
+    }
+  private:
+    using graph_equality_tester  = impl::graph_value_tester<graph_type>;
+
+    using graph_equivalence_tester = impl::heterogeneous_graph_equivalence_checker<graph_type, NodeWeights...>;
   };
 }
