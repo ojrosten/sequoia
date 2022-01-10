@@ -525,6 +525,24 @@ namespace sequoia::testing
     }
   }
 
+  struct type_normalizer
+  {
+    template<class T>
+    [[nodiscard]]
+    const T& operator()(const T& val) const noexcept
+    {
+      return val;
+    }
+
+    template<class T>
+      requires (!std::is_same_v<T, bool> && std::is_unsigned_v<T>)
+    [[nodiscard]]
+    T operator()(T val) const noexcept
+    {
+      return fixed_width_unsigned_cast(val);
+    }
+  };
+
   //================= namespace-level convenience functions =================//
 
   template<test_mode Mode, class Compare, class T, class Advisor=null_advisor>
@@ -545,16 +563,7 @@ namespace sequoia::testing
                       const T& prediction,
                       tutor<Advisor> advisor={})
   {
-    auto transformer{
-      [](const T& val) -> decltype(auto) {
-        if constexpr(!std::is_same_v<T, bool> && std::is_unsigned_v<T>)
-           return fixed_width_unsigned_cast(val);
-        else
-          return val;
-      }
-    };
-
-    return dispatch_check(description, logger, equality_tag{}, value_based_customization<void>{}, transformer(value), transformer(prediction), std::move(advisor));
+    return dispatch_check(description, logger, equality_tag{}, value_based_customization<void>{}, type_normalizer{}(value), type_normalizer{}(prediction), std::move(advisor));
   }
 
   template<test_mode Mode, class T, class S, class... U>

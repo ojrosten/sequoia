@@ -106,11 +106,11 @@ namespace sequoia::testing
     return serializer<T>::make(value);
   }
 
-  template<class T>
-    requires std::is_integral_v<T>
+  template<std::integral T>
+  [[nodiscard]]
   auto fixed_width_unsigned_cast(T x)
   {
-    using U = std::make_unsigned_t<decltype(x)>;
+    using U = std::make_unsigned_t<T>;
 
     if constexpr(sizeof(U) == sizeof(uint64_t))
     {
