@@ -615,7 +615,7 @@ namespace sequoia::testing
     template<class T>
       requires (!std::is_same_v<T, bool> && std::is_unsigned_v<T>)
     [[nodiscard]]
-    T operator()(T val) const noexcept
+    auto operator()(T val) const noexcept
     {
       return fixed_width_unsigned_cast(val);
     }
