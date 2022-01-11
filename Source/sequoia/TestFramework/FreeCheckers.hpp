@@ -359,7 +359,10 @@ namespace sequoia::testing
    */
 
   template<test_mode Mode, class Customization, class T, class Advisor=null_advisor>
-    requires (has_test_equality_v<T> || sequoia::range<T> || std::equality_comparable<T>)
+    requires (    equality_tester_for<Mode, T, T, T, tutor<Advisor>>
+               || equality_tester_for<Mode, T, T, T>
+               || sequoia::range<T>
+               || std::equality_comparable<T>)
   bool dispatch_check(std::string_view description, test_logger<Mode>& logger, equality_tag, const value_based_customization<Customization>&, const T& obtained, const T& prediction, [[maybe_unused]] tutor<Advisor> advisor={})
   {
     sentinel<Mode> sentry{logger, add_type_info<T>(description)};
@@ -369,20 +372,13 @@ namespace sequoia::testing
       binary_comparison(sentry, std::equal_to<T>{}, obtained, prediction, advisor);
     }
 
-    if constexpr (has_test_equality_v<T>)
+    if constexpr (equality_tester_for<Mode, T, T, T, tutor<Advisor>>)
     {
-      if constexpr (equality_tester_for<Mode, T, T, T, tutor<Advisor>>)
-      {
-        value_tester<T>::test_equality(logger, obtained, prediction, advisor);
-      }
-      else if constexpr (equality_tester_for<Mode, T, T, T>)
-      {
-        value_tester<T>::test_equality(logger, obtained, prediction);
-      }
-      else
-      {
-        static_assert(dependent_false<T>::value, "Unable to check detailed equality for Type");
-      }
+      value_tester<T>::test_equality(logger, obtained, prediction, advisor);
+    }
+    else if constexpr(equality_tester_for<Mode, T, T, T>)
+    {
+      value_tester<T>::test_equality(logger, obtained, prediction);
     }
     else if constexpr (sequoia::range<T>)
     {
