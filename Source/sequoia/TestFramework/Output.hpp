@@ -87,7 +87,7 @@ namespace sequoia::testing
   {
     auto message{operator_message("==", "false")};
 
-    constexpr bool delegate{has_equality_tester_v<T> || sequoia::range<T>};
+    constexpr bool delegate{has_test_equality_v<T> || sequoia::range<T>};
     if constexpr(!delegate)
     {
       append_lines(message, prediction_message(obtained, prediction));

@@ -27,22 +27,26 @@ namespace sequoia::testing
   template<class T> struct value_tester;
 
   template<class T>
-  inline constexpr bool has_equality_tester_v{
+  inline constexpr bool has_test_equality_v{
     requires{ &value_tester<T>::test_equality; }
   };
 
   template<class T>
-  inline constexpr bool has_equivalence_tester_v{
+  inline constexpr bool has_test_equivalence_v{
     requires{ &value_tester<T>::test_equivalence; }
   };
 
   template<class T>
-  inline constexpr bool has_weak_equivalence_tester_v{
+  inline constexpr bool has_test_weak_equivalence_v{
     requires{ &value_tester<T>::test_weak_equivalence; }
   };
 
+  template<class T>
+  inline constexpr bool has_test_agnostic_v{
+    requires{ &value_tester<T>::test_agnostic; }
+  };
 
-  struct equality_tag{};
+  struct equality_tag {};
  
   struct equivalence_tag
   {
@@ -54,6 +58,8 @@ namespace sequoia::testing
     using fallback = equivalence_tag;
   };
 
+  struct agnostic_tag {};
+
   template<class T>
   inline constexpr bool is_equivalence_disambiguator_v{
     requires { typename T::fallback; }
@@ -61,16 +67,30 @@ namespace sequoia::testing
 
   template<class T>
   [[nodiscard]]
+  constexpr bool defines_test_for(equality_tag) noexcept
+  {
+    return has_test_equality_v<T>;
+  }
+
+  template<class T>
+  [[nodiscard]]
   constexpr bool defines_test_for(equivalence_tag) noexcept
   {
-    return has_equivalence_tester_v<T>;
+    return has_test_equivalence_v<T>;
   }
 
   template<class T>
   [[nodiscard]]
   constexpr bool defines_test_for(weak_equivalence_tag) noexcept
   {
-    return has_weak_equivalence_tester_v<T>;
+    return has_test_weak_equivalence_v<T>;
+  }
+
+  template<class T>
+  [[nodiscard]]
+  constexpr bool defines_test_for(agnostic_tag) noexcept
+  {
+    return has_test_agnostic_v<T>;
   }
 
 

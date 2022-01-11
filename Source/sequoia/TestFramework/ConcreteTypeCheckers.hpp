@@ -192,20 +192,26 @@ namespace sequoia::testing
   template<class S, class T>
   struct value_tester<std::pair<S, T>>
   {
-    template<test_mode Mode, class U, class V, class Advisor>
-    static void test_equivalence(test_logger<Mode>& logger, const std::pair<S, T>& value, const std::pair<U, V>& prediction, const tutor<Advisor>& advisor)
+    template<test_mode Mode, class Advisor>
+    static void test_equality(test_logger<Mode>& logger, const std::pair<S, T>& value, const std::pair<S, T>& prediction, const tutor<Advisor>& advisor)
     {
-      static_assert(   std::is_same_v<std::remove_cvref_t<S>, std::remove_cvref_t<U>>
-                    && std::is_same_v<std::remove_cvref_t<T>, std::remove_cvref_t<V>>);
-
-      check_equality("First element of pair is incorrect", logger, value.first, prediction.first, advisor);
+      check_equality("First element of pair is incorrect",  logger, value.first,  prediction.first,  advisor);
       check_equality("Second element of pair is incorrect", logger, value.second, prediction.second, advisor);
     }
 
     template<test_mode Mode, class Advisor>
-    static void test_equality(test_logger<Mode>& logger, const std::pair<S, T>& value, const std::pair<S, T>& prediction, const tutor<Advisor>& advisor)
+    static void test_agnostic(test_logger<Mode>& logger, const std::pair<S, T>& value, const std::pair<S, T>& prediction, const tutor<Advisor>& advisor)
     {
-      test_equivalence(logger, value, prediction, advisor);
+      check_agnostic("First element of pair is incorrect",  logger, value.first,  prediction.first,  advisor);
+      check_agnostic("Second element of pair is incorrect", logger, value.second, prediction.second, advisor);
+    }
+
+    template<test_mode Mode, class U, class V, class Advisor>
+      requires (   std::is_same_v<std::remove_cvref_t<S>, std::remove_cvref_t<U>>
+                && std::is_same_v<std::remove_cvref_t<T>, std::remove_cvref_t<V>>)
+    static void test_equivalence(test_logger<Mode>& logger, const std::pair<S, T>& value, const std::pair<U, V>& prediction, const tutor<Advisor>& advisor)
+    {
+      test_agnostic(logger, value, prediction, advisor);
     }
   };
 
