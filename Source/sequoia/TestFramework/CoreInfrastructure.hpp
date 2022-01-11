@@ -65,35 +65,6 @@ namespace sequoia::testing
     requires { typename T::fallback; }
   };
 
-  template<class T>
-  [[nodiscard]]
-  constexpr bool defines_test_for(equality_tag) noexcept
-  {
-    return has_test_equality_v<T>;
-  }
-
-  template<class T>
-  [[nodiscard]]
-  constexpr bool defines_test_for(equivalence_tag) noexcept
-  {
-    return has_test_equivalence_v<T>;
-  }
-
-  template<class T>
-  [[nodiscard]]
-  constexpr bool defines_test_for(weak_equivalence_tag) noexcept
-  {
-    return has_test_weak_equivalence_v<T>;
-  }
-
-  template<class T>
-  [[nodiscard]]
-  constexpr bool defines_test_for(agnostic_tag) noexcept
-  {
-    return has_test_agnostic_v<T>;
-  }
-
-
   /*! \brief Specialize this struct template to provide custom serialization of a given class.
       \anchor serializer_primary
    */

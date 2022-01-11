@@ -428,7 +428,7 @@ namespace sequoia::testing
     requires is_equivalence_disambiguator_v<Tag>
   bool dispatch_check(std::string_view description, test_logger<Mode>& logger, Tag, const value_based_customization<Customization>& customization, const T& value, S&& s, U&&... u)
   {
-    if constexpr (defines_test_for<T>(Tag{}))
+    if constexpr (implements_general_equivalence_check<Mode, Tag, Customization, T, S, U...>)
     {
       return general_equivalence_check(description, logger, Tag{}, customization, value, std::forward<S>(s), std::forward<U>(u)...);
     }
@@ -443,9 +443,9 @@ namespace sequoia::testing
     }
   }
 
- template<test_mode Mode, class Tag, class T, class Advisor>
+ template<class Tag, test_mode Mode, class T, class Advisor>
    requires binary_tester_for<Tag, Mode, T, tutor<Advisor>>
- void dispatch_test(Tag, test_logger<Mode>& logger, const T& obtained, const T& prediction, [[maybe_unused]] tutor<Advisor> advisor)
+ void select_test(Tag, test_logger<Mode>& logger, const T& obtained, const T& prediction, [[maybe_unused]] tutor<Advisor> advisor)
  {
    if constexpr(tester_for<Tag, Mode, T, T, T, tutor<Advisor>>)
    {
@@ -479,19 +479,19 @@ namespace sequoia::testing
 
     if constexpr(binary_tester_for<agnostic_tag, Mode, T, tutor<Advisor>>)
     {
-      dispatch_test(agnostic_tag{}, logger, obtained, prediction, advisor);
+      select_test(agnostic_tag{}, logger, obtained, prediction, advisor);
     }
     else if constexpr(binary_tester_for<equality_tag, Mode, T, tutor<Advisor>>)
     {
-      dispatch_test(equality_tag{}, logger, obtained, prediction, advisor);
+      select_test(equality_tag{}, logger, obtained, prediction, advisor);
     }
     else if constexpr(binary_tester_for<equivalence_tag, Mode, T, tutor<Advisor>>)
     {
-      dispatch_test(equivalence_tag{}, logger, obtained, prediction, advisor);
+      select_test(equivalence_tag{}, logger, obtained, prediction, advisor);
     }
     else if constexpr(binary_tester_for<weak_equivalence_tag, Mode, T, tutor<Advisor>>)
     {
-      dispatch_test(weak_equivalence_tag{}, logger, obtained, prediction, advisor);
+      select_test(weak_equivalence_tag{}, logger, obtained, prediction, advisor);
     }
     else if constexpr(sequoia::range<T>)
     {
