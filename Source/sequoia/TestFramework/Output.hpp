@@ -65,36 +65,61 @@ namespace sequoia::testing
   std::string operator_message(std::string_view op, std::string_view retVal);
 
   [[nodiscard]]
-  std::string prediction_message(char obtained, char predicted);
+  std::string equality_operator_failure_message();
 
   [[nodiscard]]
-  std::string prediction_message(std::string_view obtained, std::string_view predicted);
+  std::string default_prediction_message(std::string_view obtained, std::string_view predicted);
+
+  [[nodiscard]]
+  std::string prediction_message(char obtained, char predicted);
 
   template<serializable T>
-    requires (!std::same_as<T, std::string>)
   [[nodiscard]]
   std::string prediction_message(const T& obtained, const T& prediction)
   {
-    return prediction_message(to_string(obtained), to_string(prediction));
+    return default_prediction_message(to_string(obtained), to_string(prediction));
   }
+
+  template<class T>
+  inline constexpr bool has_prediction_message{requires(const T& obtained, const T& prediction) { prediction_message(obtained, prediction); }};
 
   [[nodiscard]]
   std::string failure_message(bool, bool);
+
+  template<class CharT, class Traits, class Allocator>
+  [[nodiscard]]
+  std::string failure_message(const std::basic_string<CharT, Traits, Allocator>&, const std::basic_string<CharT, Traits, Allocator>&)
+  {
+    return equality_operator_failure_message();
+  }
+
+  template<class CharT, class Traits>
+  [[nodiscard]]
+  std::string failure_message(const std::basic_string_view<CharT, Traits>&, const std::basic_string_view<CharT, Traits>&)
+  {
+    return equality_operator_failure_message();
+  }
+
+  template<class T>
+    requires has_prediction_message<T>
+  [[nodiscard]]
+  std::string failure_message([[maybe_unused]] const T& obtained, [[maybe_unused]] const T& prediction)
+  {
+    auto message{equality_operator_failure_message()};
+
+    append_lines(message, prediction_message(obtained, prediction));
+
+    return message;
+  }
 
   template<class T>
   [[nodiscard]]
   std::string failure_message([[maybe_unused]] const T& obtained, [[maybe_unused]] const T& prediction)
   {
-    auto message{operator_message("==", "false")};
-
-    constexpr bool delegate{has_test_equality_v<T> || sequoia::range<T>};
-    if constexpr(!delegate)
-    {
-      append_lines(message, prediction_message(obtained, prediction));
-    }
-
-    return message;
+    return equality_operator_failure_message();
   }
+
+
 
   [[nodiscard]]
   std::string footer();

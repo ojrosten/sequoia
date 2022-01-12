@@ -162,7 +162,13 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string prediction_message(std::string_view obtained, std::string_view predicted)
+  std::string equality_operator_failure_message()
+  {
+    return operator_message("==", "false");
+  }
+
+  [[nodiscard]]
+  std::string default_prediction_message(std::string_view obtained, std::string_view predicted)
   {
     return append_lines(std::string{"Obtained : "}.append(obtained), std::string{"Predicted: "}.append(predicted));
   }

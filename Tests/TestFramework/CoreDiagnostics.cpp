@@ -215,10 +215,13 @@ namespace sequoia::testing
   void false_positive_diagnostics::test_strings()
   {
     using namespace std::string_literals;
+    using namespace std::literals::string_view_literals;
     check_equality(LINE("Empty and non-empty strings"), ""s, "Hello, World!"s);
     check_equality(LINE("Empty and non-empty strings"), "Hello, World!"s, ""s);
     check_equality(LINE("Strings of differing length"), "what?!"s, "Hello, World!"s);
     check_equality(LINE("Differing strings of same length"), "Hello, world?"s, "Hello, World!"s);
+    check_equality(LINE("Differing string views of same length"), "Hello, world?"sv, "Hello, World!"sv);
+    check_equality(LINE("Advice"), "Foo"s, "Bar"s, tutor{[](const std::string&, const std::string&) { return "Foo, my old nemesis"; }});
 
     const std::string longMessage{"This is a message which is sufficiently long for only a segment to be included when a string diff is performed"};
 

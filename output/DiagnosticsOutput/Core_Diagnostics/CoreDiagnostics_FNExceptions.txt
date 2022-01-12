@@ -1,4 +1,4 @@
-Tests/TestFramework/CoreDiagnostics.cpp, Line 438
+Tests/TestFramework/CoreDiagnostics.cpp, Line 441
 
 Expected Exception Type:
 [std::runtime_error]
@@ -6,7 +6,7 @@ Error
 
 	=======================================
 
-Tests/TestFramework/CoreDiagnostics.cpp, Line 440
+Tests/TestFramework/CoreDiagnostics.cpp, Line 443
 
 Expected Exception Type:
 [int]
