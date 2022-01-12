@@ -359,10 +359,9 @@ namespace sequoia::testing
    */
 
   template<test_mode Mode, class Customization, class T, class Advisor=null_advisor>
-    requires (    equality_tester_for<Mode, T, T, T, tutor<Advisor>>
-               || equality_tester_for<Mode, T, T, T>
-               || sequoia::range<T>
-               || std::equality_comparable<T>)
+    requires (    std::equality_comparable<T>
+               || binary_tester_for<equality_tag, Mode, T, tutor<Advisor>>
+               || sequoia::range<T>)
   bool dispatch_check(std::string_view description, test_logger<Mode>& logger, equality_tag, const value_based_customization<Customization>&, const T& obtained, const T& prediction, [[maybe_unused]] tutor<Advisor> advisor={})
   {
     sentinel<Mode> sentry{logger, add_type_info<T>(description)};
@@ -372,13 +371,9 @@ namespace sequoia::testing
       binary_comparison(sentry, std::equal_to<T>{}, obtained, prediction, advisor);
     }
 
-    if constexpr (equality_tester_for<Mode, T, T, T, tutor<Advisor>>)
+    if constexpr(binary_tester_for<equality_tag, Mode, T, tutor<Advisor>>)
     {
-      value_tester<T>::test_equality(logger, obtained, prediction, advisor);
-    }
-    else if constexpr(equality_tester_for<Mode, T, T, T>)
-    {
-      value_tester<T>::test_equality(logger, obtained, prediction);
+      select_test(equality_tag{}, logger, obtained, prediction, advisor);
     }
     else if constexpr (sequoia::range<T>)
     {
