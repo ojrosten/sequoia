@@ -59,7 +59,7 @@ namespace sequoia::testing::impl
     auto make{
       [&logger, &y](auto&... info){
         T u{y, info.make_allocator()...};
-        if(check_equality("Inconsistent para-copy construction", logger, u, y))
+        if(check(equality, "Inconsistent para-copy construction", logger, u, y))
         {
           check_para_copy_y_allocation(logger, u, std::tuple_cat(make_allocation_checkers(info)...));
           return std::optional<T>{u};
@@ -72,7 +72,7 @@ namespace sequoia::testing::impl
     {
       T v{std::move(*c), info.make_allocator()...};
 
-      if(check_equality("Inconsistent para-move construction", logger, v, y))
+      if(check(equality, "Inconsistent para-move construction", logger, v, y))
       {
         using ctag = container_tag_constant<container_tag::y>;
         check_para_move_allocation(logger, ctag{}, v, std::tuple_cat(make_allocation_checkers(info)...));

@@ -66,8 +66,8 @@ namespace sequoia::testing
                                       mutator,
                                       allocation_info{allocGetter, {0_pm, {2_pm, 1_mu}, {1_manp}}})};
 
-      check_equality(LINE("check_semantics return value (x)"), x, beast{2});
-      check_equality(LINE("check_semantics return value (y)"), y, beast{});
+      check(equality, LINE("check_semantics return value (x)"), x, beast{2});
+      check(equality, LINE("check_semantics return value (y)"), y, beast{});
     }
 
     {
@@ -199,8 +199,8 @@ namespace sequoia::testing
                                       mutator,
                                       allocation_info{allocGetter, {0_pm, {1_pm, 1_mu}, {1_manp}}})};
 
-      check_equality(LINE("check_semantics return value (x)"), x, beast{});
-      check_equality(LINE("check_semantics return value (y)"), y, beast{2});
+      check(equality, LINE("check_semantics return value (x)"), x, beast{});
+      check(equality, LINE("check_semantics return value (y)"), y, beast{2});
     }
   }
 }

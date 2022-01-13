@@ -19,8 +19,8 @@ namespace sequoia::testing
     template<test_mode Mode>
     static void test_equality(test_logger<Mode>& logger, const template_spec& obtained, const template_spec& prediction)
     {
-      check_equality("Species", logger, obtained.species, prediction.species);
-      check_equality("Symbol",  logger, obtained.symbol,  prediction.symbol);
+      check(equality, "Species", logger, obtained.species, prediction.species);
+      check(equality, "Symbol",  logger, obtained.symbol,  prediction.symbol);
     }
   };
 
@@ -34,7 +34,7 @@ namespace sequoia::testing
   private:
     void run_tests() final
     {
-      check_equality("Phoney equality check", 1, 1);
+      check(equality, "Phoney equality check", 1, 1);
       throw std::runtime_error{"Throw after check"};
     }
   };

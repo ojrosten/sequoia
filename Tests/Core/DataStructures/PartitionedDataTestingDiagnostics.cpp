@@ -51,63 +51,63 @@ namespace sequoia::testing
       ch{{value_type{1}}, {value_type{2}}};
 
 
-    check_equivalence(LINE("Empty data inequivalent to non-empty data "), d, expected_t{{value_type{1}}});
-    check_equivalence(LINE("Non-empty data inequivalent to empty data "), e, expected_t{{}});
-    check_equivalence(LINE("Single partitions holding different elements compare not equal"), f, expected_t{{value_type{1}}});
-    check_equivalence(LINE("Identical elements divided between different partitions compare notequal"), g, expected_t{{value_type{1}}, {value_type{2}}});
-    check_equivalence(LINE("Identical elements divided between different partitions compare notequal"), h, expected_t{{value_type{1}, value_type{2}}});
+    check(equivalence, LINE("Empty data inequivalent to non-empty data "), d, expected_t{{value_type{1}}});
+    check(equivalence, LINE("Non-empty data inequivalent to empty data "), e, expected_t{{}});
+    check(equivalence, LINE("Single partitions holding different elements compare not equal"), f, expected_t{{value_type{1}}});
+    check(equivalence, LINE("Identical elements divided between different partitions compare notequal"), g, expected_t{{value_type{1}}, {value_type{2}}});
+    check(equivalence, LINE("Identical elements divided between different partitions compare notequal"), h, expected_t{{value_type{1}, value_type{2}}});
 
-    check_equality(LINE(""), d, e);
-    check_equality(LINE(""), e, f);
-    check_equality(LINE(""), g, h);
+    check(equality, LINE(""), d, e);
+    check(equality, LINE(""), e, f);
+    check(equality, LINE(""), g, h);
 
-    check_equality(LINE("Size 0 should not compare equal to 1"), d.size(), 1_sz);
-    check_equality(LINE("Size 1 should not compare equal to 0"), e.size(), 0_sz);
+    check(equality, LINE("Size 0 should not compare equal to 1"), d.size(), 1_sz);
+    check(equality, LINE("Size 1 should not compare equal to 0"), e.size(), 0_sz);
 
-    check_equality(LINE(""), d.num_partitions(), 1_sz);
-    check_equality(LINE(""), e.num_partitions(), 0_sz);
-    check_equality(LINE(""), g.num_partitions(), 2_sz);
-    check_equality(LINE(""), h.num_partitions(), 1_sz);
+    check(equality, LINE(""), d.num_partitions(), 1_sz);
+    check(equality, LINE(""), e.num_partitions(), 0_sz);
+    check(equality, LINE(""), g.num_partitions(), 2_sz);
+    check(equality, LINE(""), h.num_partitions(), 1_sz);
 
-    check_equality(LINE(""), *e.begin_partition(0), value_type{2});
-    check_equality(LINE(""), *e.cbegin_partition(0), value_type{2});
-    check_equality(LINE(""), *e.rbegin_partition(0), value_type{2});
-    check_equality(LINE(""), *e.crbegin_partition(0), value_type{2});
-    check_equality(LINE(""), e[0][0], value_type{2});
+    check(equality, LINE(""), *e.begin_partition(0), value_type{2});
+    check(equality, LINE(""), *e.cbegin_partition(0), value_type{2});
+    check(equality, LINE(""), *e.rbegin_partition(0), value_type{2});
+    check(equality, LINE(""), *e.crbegin_partition(0), value_type{2});
+    check(equality, LINE(""), e[0][0], value_type{2});
 
-    check_equality(LINE(""), *(g.end_partition(0) -1), value_type{1});
-    check_equality(LINE(""), *(g.cend_partition(0) -1), value_type{1});
-    check_equality(LINE(""), *(g.rend_partition(0) - 1), value_type{2});
-    check_equality(LINE(""), *(g.crend_partition(0) - 1), value_type{2});
-    check_equality(LINE(""), g[0][1], value_type{1});
+    check(equality, LINE(""), *(g.end_partition(0) -1), value_type{1});
+    check(equality, LINE(""), *(g.cend_partition(0) -1), value_type{1});
+    check(equality, LINE(""), *(g.rend_partition(0) - 1), value_type{2});
+    check(equality, LINE(""), *(g.crend_partition(0) - 1), value_type{2});
+    check(equality, LINE(""), g[0][1], value_type{1});
 
-    check_equality(LINE(""), *h.begin_partition(0), value_type{2});
-    check_equality(LINE(""), *h.cbegin_partition(0), value_type{2});
-    check_equality(LINE(""), *h.rbegin_partition(0), value_type{2});
-    check_equality(LINE(""), *h.crbegin_partition(0), value_type{2});
-    check_equality(LINE(""), h[0][0], value_type{2});
+    check(equality, LINE(""), *h.begin_partition(0), value_type{2});
+    check(equality, LINE(""), *h.cbegin_partition(0), value_type{2});
+    check(equality, LINE(""), *h.rbegin_partition(0), value_type{2});
+    check(equality, LINE(""), *h.crbegin_partition(0), value_type{2});
+    check(equality, LINE(""), h[0][0], value_type{2});
 
-    check_equality(LINE(""), *h.begin_partition(1), value_type{1});
-    check_equality(LINE(""), *h.cbegin_partition(1), value_type{1});
-    check_equality(LINE(""), *h.rbegin_partition(1), value_type{1});
-    check_equality(LINE(""), *h.crbegin_partition(1), value_type{1});
-    check_equality(LINE(""), h[1][0], value_type{1});
+    check(equality, LINE(""), *h.begin_partition(1), value_type{1});
+    check(equality, LINE(""), *h.cbegin_partition(1), value_type{1});
+    check(equality, LINE(""), *h.rbegin_partition(1), value_type{1});
+    check(equality, LINE(""), *h.crbegin_partition(1), value_type{1});
+    check(equality, LINE(""), h[1][0], value_type{1});
 
 
-    check_equality(LINE(""), *ce.begin_partition(0), value_type{2});
-    check_equality(LINE(""), *ce.rbegin_partition(0), value_type{2});
-    check_equality(LINE(""), ce[0][0], value_type{2});
+    check(equality, LINE(""), *ce.begin_partition(0), value_type{2});
+    check(equality, LINE(""), *ce.rbegin_partition(0), value_type{2});
+    check(equality, LINE(""), ce[0][0], value_type{2});
 
-    check_equality(LINE(""), *(cg.end_partition(0) -1), value_type{1});
-    check_equality(LINE(""), *(cg.rend_partition(0) - 1), value_type{2});
-    check_equality(LINE(""), cg[0][1], value_type{1});
+    check(equality, LINE(""), *(cg.end_partition(0) -1), value_type{1});
+    check(equality, LINE(""), *(cg.rend_partition(0) - 1), value_type{2});
+    check(equality, LINE(""), cg[0][1], value_type{1});
 
-    check_equality(LINE(""), *ch.begin_partition(0), value_type{2});
-    check_equality(LINE(""), *ch.rbegin_partition(0), value_type{2});
-    check_equality(LINE(""), ch[0][0], value_type{2});
+    check(equality, LINE(""), *ch.begin_partition(0), value_type{2});
+    check(equality, LINE(""), *ch.rbegin_partition(0), value_type{2});
+    check(equality, LINE(""), ch[0][0], value_type{2});
 
-    check_equality(LINE(""), *ch.begin_partition(1), value_type{1});
-    check_equality(LINE(""), *h.crbegin_partition(1), value_type{1});
-    check_equality(LINE(""), ch[1][0], value_type{1});
+    check(equality, LINE(""), *ch.begin_partition(1), value_type{1});
+    check(equality, LINE(""), *h.crbegin_partition(1), value_type{1});
+    check(equality, LINE(""), ch[1][0], value_type{1});
   }
 }

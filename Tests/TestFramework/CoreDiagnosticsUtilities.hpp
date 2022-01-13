@@ -89,7 +89,7 @@ namespace sequoia::testing
     template<test_mode Mode>
     static void test_equality(test_logger<Mode>& logger, const perfectly_normal_beast<T, Allocator>& obtained, const perfectly_normal_beast<T, Allocator>& prediction)
     {
-      check_equality("", logger, obtained.x, prediction.x);
+      check(equality, "", logger, obtained.x, prediction.x);
     }
 
     template<class Logger>

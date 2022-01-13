@@ -30,13 +30,13 @@ namespace sequoia::testing
 
     pool_t pool{};
     auto elt{pool.make(-1)};
-    check_weak_equivalence(LINE(""), pool, prediction_t{{-1, 1}});
-    check_equality(LINE(""), elt.get(), -1);
+    check(weak_equivalence, LINE(""), pool, prediction_t{{-1, 1}});
+    check(equality, LINE(""), elt.get(), -1);
 
     pool_t clonePool{};
     auto cloneElt{clonePool.make(-1)};
-    check_weak_equivalence(LINE(""), clonePool, prediction_t{{-1, 1}});
-    check_equality(LINE(""), cloneElt.get(), -1);
+    check(weak_equivalence, LINE(""), clonePool, prediction_t{{-1, 1}});
+    check(equality, LINE(""), cloneElt.get(), -1);
 
     auto allocGetter{
       [](const pool_t& pool){

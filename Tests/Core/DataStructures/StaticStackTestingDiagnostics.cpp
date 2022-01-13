@@ -28,7 +28,7 @@ namespace sequoia::testing
 
     constexpr static_stack<int, 0> s{};
     check(LINE("Empty stack"), !s.empty());
-    check_equality(LINE(""), s.size(), 1_sz);
+    check(equality, LINE(""), s.size(), 1_sz);
   }
 
   void test_static_stack_false_positives::check_depth_1()
@@ -45,12 +45,12 @@ namespace sequoia::testing
     check(LINE("Empty stack"), !s.empty());
     check(LINE("Non-empty stack"), t.empty());
 
-    check_equality(LINE("Empty stack versus populated stack"), s, t);
+    check(equality, LINE("Empty stack versus populated stack"), s, t);
 
     s.push(2);
-    check_equality(LINE("Differing elements"), s, t);
+    check(equality, LINE("Differing elements"), s, t);
 
     s.pop();
-    check_equality(LINE("Empty stack versus populated stack"), s, t);
+    check(equality, LINE("Empty stack versus populated stack"), s, t);
   }
 }

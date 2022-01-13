@@ -33,8 +33,8 @@ namespace sequoia::testing
         using connectivity_t = typename type::connectivity_type;
         using nodes_t = typename type::nodes_type;
 
-        check_equality("", logger, static_cast<const connectivity_t&>(graph), static_cast<const connectivity_t&>(prediction));
-        check_equality("", logger, static_cast<const nodes_t&>(graph), static_cast<const nodes_t&>(prediction));
+        check(equality, "", logger, static_cast<const connectivity_t&>(graph), static_cast<const connectivity_t&>(prediction));
+        check(equality, "", logger, static_cast<const nodes_t&>(graph), static_cast<const nodes_t&>(prediction));
       }
     };
 
@@ -80,11 +80,11 @@ namespace sequoia::testing
 
     template<maths::network Graph>
     using graph_equivalence_checker
-      = graph_general_equivalence_checker<Graph, decltype([](auto&&... args){ check_equivalence(std::forward<decltype(args)>(args)...); })>;
+      = graph_general_equivalence_checker<Graph, decltype([](auto&&... args){ check(equivalence, std::forward<decltype(args)>(args)...); })>;
 
     template<maths::network Graph>
     using graph_weak_equivalence_checker
-      = graph_general_equivalence_checker<Graph, decltype([](auto&&... args){ check_weak_equivalence(std::forward<decltype(args)>(args)...); })>;
+      = graph_general_equivalence_checker<Graph, decltype([](auto&&... args){ check(weak_equivalence, std::forward<decltype(args)>(args)...); })>;
 
     template
     <
@@ -102,9 +102,9 @@ namespace sequoia::testing
       using equivalent_type = std::initializer_list<std::initializer_list<edge_init_type>>;
 
       template<test_mode Mode>
-      static void check(test_logger<Mode>& logger, const type& connectivity, equivalent_type prediction)
+      static void check_connectivity(test_logger<Mode>& logger, const type& connectivity, equivalent_type prediction)
       {
-        if(check_equality("Connectivity order incorrect", logger, connectivity.order(), prediction.size()))
+        if(check(equality, "Connectivity order incorrect", logger, connectivity.order(), prediction.size()))
         {
           for(edge_index_type i{}; i < connectivity.order(); ++i)
           {
@@ -131,9 +131,9 @@ namespace sequoia::testing
     template<test_mode Mode>
     static void test_equality(test_logger<Mode>& logger, const type& connectivity, const type& prediction)
     {
-      check_equality("Connectivity size incorrect", logger, connectivity.size(), prediction.size());
+      check(equality, "Connectivity size incorrect", logger, connectivity.size(), prediction.size());
 
-      if(check_equality("Connectivity order incorrect", logger, connectivity.order(), prediction.order()))
+      if(check(equality, "Connectivity order incorrect", logger, connectivity.order(), prediction.order()))
       {
         for(edge_index_type i{}; i<connectivity.order(); ++i)
         {
@@ -147,13 +147,13 @@ namespace sequoia::testing
     template<test_mode Mode>
     static void test_equivalence(test_logger<Mode>& logger, const type& connectivity, connectivity_equivalent_type prediction)
     {
-      graph_equivalence_tester::check(logger, connectivity, prediction);
+      graph_equivalence_tester::check_connectivity(logger, connectivity, prediction);
     }
 
     template<test_mode Mode>
     static void test_weak_equivalence(test_logger<Mode>& logger, const type& connectivity, connectivity_equivalent_type prediction)
     {
-      graph_weak_equivalence_tester::check(logger, connectivity, prediction);
+      graph_weak_equivalence_tester::check_connectivity(logger, connectivity, prediction);
     }
   private:
     using graph_equivalence_tester =
@@ -192,7 +192,7 @@ namespace sequoia::testing
     template<class G, class... NodeWeights, class E=typename G::edge_init_type>
     void check_graph(std::string_view description, const G& graph, std::initializer_list<std::initializer_list<E>> edges, const std::tuple<NodeWeights...>& nodeWeights)
     {
-      checker_t::check_equivalence(description, graph, std::move(edges), nodeWeights);
+      checker_t::check(equivalence, description, graph, std::move(edges), nodeWeights);
     }
 
     template
@@ -203,7 +203,7 @@ namespace sequoia::testing
       requires (!std::is_empty_v<typename G::node_weight_type>)
     void check_graph(std::string_view description, const G& graph, std::initializer_list<std::initializer_list<E>> edges, std::initializer_list<typename G::node_weight_type> nodeWeights)
     {
-      checker_t::check_weak_equivalence(description, graph, edges, nodeWeights);
+      checker_t::check(weak_equivalence, description, graph, edges, nodeWeights);
     }
 
     template
@@ -214,7 +214,7 @@ namespace sequoia::testing
       requires std::is_empty_v<typename G::node_weight_type>
     void check_graph(std::string_view description, const G& graph, std::initializer_list<std::initializer_list<E>> edges)
     {
-      checker_t::check_weak_equivalence(description, graph, edges);
+      checker_t::check(weak_equivalence, description, graph, edges);
     }
   protected:
     graph_checker(graph_checker&&)            noexcept = default;

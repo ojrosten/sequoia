@@ -401,7 +401,7 @@ namespace sequoia::testing
     {
       check(logger, operation.early, prediction.early, "early");
       check(logger, operation.late, prediction.late, "late");
-      check_equality("Operation Parameters differ", logger, operation.arguments, prediction.arguments);
+      check(equality, "Operation Parameters differ", logger, operation.arguments, prediction.arguments);
     }
   private:
     using executor = experimental::executor;
@@ -414,7 +414,7 @@ namespace sequoia::testing
 
       if(operation && prediction)
       {
-        check_equality("Function object tag", logger,
+        check(equality, "Function object tag", logger,
           operation.target<function_object>()->tag,
           prediction.target<function_object>()->tag);
       }
@@ -430,9 +430,9 @@ namespace sequoia::testing
     template<test_mode Mode>
     static void test_weak_equivalence(test_logger<Mode>& logger, const type& obtained, const type& prediction)
     {
-      check_equality("Zeroth Argument", logger, obtained.zeroth_arg, prediction.zeroth_arg);
-      //check_weak_equivalence("Operations", logger, obtained.operations, prediction.operations);
-      check_equality("Help", logger, obtained.help, prediction.help);
+      check(equality, "Zeroth Argument", logger, obtained.zeroth_arg, prediction.zeroth_arg);
+      //check(weak_equivalence, "Operations", logger, obtained.operations, prediction.operations);
+      check(equality, "Help", logger, obtained.help, prediction.help);
     }
   };
 
@@ -445,7 +445,7 @@ namespace sequoia::testing
     template<test_mode Mode>
     static void test_weak_equivalence(test_logger<Mode>& logger, const type& obtained, const prediction_type& prediction)
     {
-      check_weak_equivalence("", logger, obtained.get(), prediction);
+      check(weak_equivalence, "", logger, obtained.get(), prediction);
     }
   };
 
@@ -473,33 +473,33 @@ namespace sequoia::testing
     }
 
     {
-      check_weak_equivalence(LINE(""), experimental::parse(0, nullptr, {}), experimental::outcome{});
+      check(weak_equivalence, LINE(""), experimental::parse(0, nullptr, {}), experimental::outcome{});
     }
 
     {
       commandline_arguments a{"foo", "--async"};
 
-      check_weak_equivalence(LINE("Early"), experimental::parse(a.size(), a.get(), {{{"--async", {}, {}, fo{}}}}), experimental::outcome{"foo", {{{fo{}, nullptr, {}}}}});
-     // check_weak_equivalence(LINE("Late"), experimental::parse(a.size(), a.get(), {{"--async", {}, {}, nullptr, {}, fo{}}}), experimental::outcome{"foo", {{nullptr, fo{}, {}}}});
-     // check_weak_equivalence(LINE("Both"), experimental::parse(a.size(), a.get(), {{"--async", {}, {}, fo{"x"}, {}, fo{"y"}}}), experimental::outcome{"foo", {{fo{"x"}, fo{"y"}, {}}}});
+      check(weak_equivalence, LINE("Early"), experimental::parse(a.size(), a.get(), {{{"--async", {}, {}, fo{}}}}), experimental::outcome{"foo", {{{fo{}, nullptr, {}}}}});
+     // check(weak_equivalence, LINE("Late"), experimental::parse(a.size(), a.get(), {{"--async", {}, {}, nullptr, {}, fo{}}}), experimental::outcome{"foo", {{nullptr, fo{}, {}}}});
+     // check(weak_equivalence, LINE("Both"), experimental::parse(a.size(), a.get(), {{"--async", {}, {}, fo{"x"}, {}, fo{"y"}}}), experimental::outcome{"foo", {{fo{"x"}, fo{"y"}, {}}}});
     }
 /*
     {
       commandline_arguments a{"bar", "-a"};
 
-      check_weak_equivalence(LINE(""), experimental::parse(a.size(), a.get(), {{"--async", {"-a"}, {}, fo{}}}), experimental::outcome{"bar", {{fo{}, nullptr, {}}}});
+      check(weak_equivalence, LINE(""), experimental::parse(a.size(), a.get(), {{"--async", {"-a"}, {}, fo{}}}), experimental::outcome{"bar", {{fo{}, nullptr, {}}}});
     }
 
     {
       commandline_arguments a{"bar", "", "-a"};
 
-      check_weak_equivalence(LINE("Ignored empty option"), experimental::parse(a.size(), a.get(), {{"--async", {"-a"}, {}, fo{}}}), experimental::outcome{"bar", {{fo{}, nullptr, {}}}});
+      check(weak_equivalence, LINE("Ignored empty option"), experimental::parse(a.size(), a.get(), {{"--async", {"-a"}, {}, fo{}}}), experimental::outcome{"bar", {{fo{}, nullptr, {}}}});
     }
 
     {
       commandline_arguments a{"foo", "-a"};
 
-      check_weak_equivalence(LINE(""), experimental::parse(a.size(), a.get(), {{"--async", {"-as", "-a"}, {}, fo{}}}), experimental::outcome{"foo", {{fo{}, nullptr, {}}}});
+      check(weak_equivalence, LINE(""), experimental::parse(a.size(), a.get(), {{"--async", {"-as", "-a"}, {}, fo{}}}), experimental::outcome{"foo", {{fo{}, nullptr, {}}}});
     }
 
     {
@@ -521,7 +521,7 @@ namespace sequoia::testing
     {
       commandline_arguments a{"foo", "-av"};
 
-      check_weak_equivalence(LINE(""),
+      check(weak_equivalence, LINE(""),
         experimental::parse(a.size(), a.get(), {{"--async", {"-a"}, {}, fo{}},
                                  {"--verbose", {"-v"}, {}, fo{}}}),
         experimental::outcome{"foo", {{fo{}, nullptr, {}}, {fo{}, nullptr, {}}}});
@@ -530,7 +530,7 @@ namespace sequoia::testing
     {
       commandline_arguments a{"foo", "-a-v"};
 
-      check_weak_equivalence(LINE(""),
+      check(weak_equivalence, LINE(""),
         experimental::parse(a.size(), a.get(), {{"--async", {"-a"}, {}, fo{}},
                                  {"--verbose", {"-v"}, {}, fo{}}}),
         experimental::outcome{"foo", {{fo{}, nullptr, {}}, {fo{}, nullptr, {}}}});
@@ -539,7 +539,7 @@ namespace sequoia::testing
     {
       commandline_arguments a{"foo", "-av", "-p"};
 
-      check_weak_equivalence(LINE(""),
+      check(weak_equivalence, LINE(""),
         experimental::parse(a.size(), a.get(), {{"--async",   {"-a"}, {}, fo{}},
                                  {"--verbose", {"-v"}, {}, fo{}},
                                  {"--pause",   {"-p"}, {}, fo{}}}),
@@ -557,19 +557,19 @@ namespace sequoia::testing
     {
       commandline_arguments a{"foo", "test", "thing"};
 
-      check_weak_equivalence(LINE(""), experimental::parse(a.size(), a.get(), {{"test", {}, {"case"}, fo{}}}), experimental::outcome{"foo", {{fo{}, nullptr, {"thing"}}}});
+      check(weak_equivalence, LINE(""), experimental::parse(a.size(), a.get(), {{"test", {}, {"case"}, fo{}}}), experimental::outcome{"foo", {{fo{}, nullptr, {"thing"}}}});
     }
 
     {
       commandline_arguments a{"foo", "t", "thing"};
 
-      check_weak_equivalence(LINE(""), experimental::parse(a.size(), a.get(), {{"test", {"t"}, {"case"}, fo{}}}), experimental::outcome{"foo", {{fo{}, nullptr, {"thing"}}}});
+      check(weak_equivalence, LINE(""), experimental::parse(a.size(), a.get(), {{"test", {"t"}, {"case"}, fo{}}}), experimental::outcome{"foo", {{fo{}, nullptr, {"thing"}}}});
     }
 
     {
       commandline_arguments a{"foo", "test", ""};
 
-      check_weak_equivalence(LINE("Empty parameter"), experimental::parse(a.size(), a.get(), {{"test", {}, {"case"}, fo{}}}), experimental::outcome{"foo", {{fo{}, nullptr, {""}}}});
+      check(weak_equivalence, LINE("Empty parameter"), experimental::parse(a.size(), a.get(), {{"test", {}, {"case"}, fo{}}}), experimental::outcome{"foo", {{fo{}, nullptr, {""}}}});
     }
 
     {
@@ -584,7 +584,7 @@ namespace sequoia::testing
     {
       commandline_arguments a{"foo", "create", "class", "dir"};
 
-      check_weak_equivalence(LINE(""),
+      check(weak_equivalence, LINE(""),
         experimental::parse(a.size(), a.get(), {{"create", {}, {"class_name", "directory"}, fo{}}}),
         experimental::outcome{"foo", {{fo{}, nullptr, {"class", "dir"}}}});
     }
@@ -592,7 +592,7 @@ namespace sequoia::testing
     {
       commandline_arguments a{"foo", "--async", "create", "class", "dir"};
 
-      check_weak_equivalence(LINE(""),
+      check(weak_equivalence, LINE(""),
         experimental::parse(a.size(), a.get(), {{"create",  {}, {"class_name", "directory"}, fo{}},
                                    {"--async", {}, {}, fo{}}}),
         experimental::outcome{"foo", {{fo{}, nullptr, {}}, {fo{}, nullptr, {"class", "dir"}}}});
@@ -601,7 +601,7 @@ namespace sequoia::testing
     {
       commandline_arguments a{"foo", "--async", "create", "class", "dir"};
 
-      check_weak_equivalence(LINE(""),
+      check(weak_equivalence, LINE(""),
         experimental::argument_parser{a.size(), a.get(), { {"create",  {}, {"class_name", "directory"}, fo{}},
                                    {"--async", {}, {}, fo{}} }},
         experimental::outcome{"foo", {{fo{}, nullptr, {}}, {fo{}, nullptr, {"class", "dir"}}}});

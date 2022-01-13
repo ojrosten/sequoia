@@ -90,7 +90,7 @@ namespace sequoia::testing
       final argument of many of the check methods. For example, consider an int, x:
 
       <pre>
-      check_equality(LINE(""), x, 41, tutor{[](double value, double prediction) {
+      check(equality, LINE(""), x, 41, tutor{[](double value, double prediction) {
           return value == 42 ? "Are you sure the universe isn't trying to tell you something?" : "";
       }});
       </pre>

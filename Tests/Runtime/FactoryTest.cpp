@@ -64,15 +64,15 @@ namespace sequoia::testing
 
       factory<int, double> f{{"int", "double"}}, g{{"bar", std::string{"foo"}}};
 
-      check_equivalence(LINE(""), f, prediction_type{{{"int", 0}, {"double", 0.0}}});
-      check_equivalence(LINE(""), g, prediction_type{{{"bar", 0}, {"foo", 0.0}}});
+      check(equivalence, LINE(""), f, prediction_type{{{"int", 0}, {"double", 0.0}}});
+      check(equivalence, LINE(""), g, prediction_type{{{"bar", 0}, {"foo", 0.0}}});
 
       check_semantics(LINE(""), f, g);
 
       check_exception_thrown<std::runtime_error>(LINE(""), [&f](){ return f.create("plurgh"); });
 
       const auto created{f.create_or<int>("plurgh")};
-      check_equality(LINE(""), created, std::variant<int, double>{0});
+      check(equality, LINE(""), created, std::variant<int, double>{0});
     }
 
     {
@@ -85,10 +85,10 @@ namespace sequoia::testing
 
       factory_type f{{"vec", "int", "complex", "double"}}, g{{"baz", "foo", "bar", "huh"}};
 
-      check_equivalence(LINE(""), f,
+      check(equivalence, LINE(""), f,
                         prediction_type{{{"vec", std::vector<int>{}}, {"int", 0}, {"complex", std::complex<float>{}}, {"double", 0.0}}});
 
-      check_equivalence(LINE(""), g,
+      check(equivalence, LINE(""), g,
                         prediction_type{{{"baz", std::vector<int>{}}, {"foo", 0}, {"bar", std::complex<float>{}}, {"huh", 0.0}}});
 
       check_semantics(LINE(""), f, g);
@@ -99,8 +99,8 @@ namespace sequoia::testing
 
       factory<x, y> f{{"x", "y"}, 1}, g{{"x", "y"}, 2};
 
-      check_equivalence(LINE(""), f, prediction_type{{{"x", x{1}}, {"y", y{1}}}});
-      check_equivalence(LINE(""), g, prediction_type{{{"x", x{2}}, {"y", y{2}}}});
+      check(equivalence, LINE(""), f, prediction_type{{{"x", x{1}}, {"y", y{1}}}});
+      check(equivalence, LINE(""), g, prediction_type{{{"x", x{2}}, {"y", y{2}}}});
 
       check_semantics(LINE(""), f, g);
     }

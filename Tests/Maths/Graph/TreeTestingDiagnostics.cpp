@@ -82,17 +82,17 @@ namespace sequoia::testing
       [](std::string_view m){ return make_message<Directedness, TreeLinkDir>(m); }
     };
 
-    check_equivalence(LINE(message("Empty vs non-empty")), x, initializer{1, {}});
-    check_equivalence(LINE(message("Incorrect weight")), y, initializer{0, {}});
-    check_equivalence(LINE(message("Too many children")), z, initializer{1, {}});
-    check_equivalence(LINE(message("Incorrect child weight")), z, initializer{1, {{3}}});
-    check_equivalence(LINE(message("Too few children")), z, initializer{1, {{2}, {3}}});
+    check(equivalence, LINE(message("Empty vs non-empty")), x, initializer{1, {}});
+    check(equivalence, LINE(message("Incorrect weight")), y, initializer{0, {}});
+    check(equivalence, LINE(message("Too many children")), z, initializer{1, {}});
+    check(equivalence, LINE(message("Incorrect child weight")), z, initializer{1, {{3}}});
+    check(equivalence, LINE(message("Too few children")), z, initializer{1, {{2}, {3}}});
 
-    check_equivalence(LINE(message("Too many grand children")), w, initializer{1, {{2, {{4}}}, {3}}});
-    check_equivalence(LINE(message("Incorrect grand child weight")), w, initializer{1, {{2, {{3}, {4}}}, {3}}});
-    check_equivalence(LINE(message("Too few grand children")), w, initializer{1, {{2, {{4}, {5}, {6}}}, {3}}});
+    check(equivalence, LINE(message("Too many grand children")), w, initializer{1, {{2, {{4}}}, {3}}});
+    check(equivalence, LINE(message("Incorrect grand child weight")), w, initializer{1, {{2, {{3}, {4}}}, {3}}});
+    check(equivalence, LINE(message("Too few grand children")), w, initializer{1, {{2, {{4}, {5}, {6}}}, {3}}});
 
-    check_equality(LINE(message("")), x, y);
-    check_equality(LINE(message("")), y, z);
+    check(equality, LINE(message("")), x, y);
+    check(equality, LINE(message("")), y, z);
   }
 }

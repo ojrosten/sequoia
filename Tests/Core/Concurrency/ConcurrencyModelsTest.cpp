@@ -54,13 +54,13 @@ namespace sequoia::testing
       auto t{q.pop(std::try_to_lock)};
 
       t();
-      check_equality(LINE(""), a, 1);
+      check(equality, LINE(""), a, 1);
 
       q.push(task_t{[&a](){ a+= 2; }});
       t = q.pop();
 
       t();
-      check_equality(LINE(""), a, 3);
+      check(equality, LINE(""), a, 3);
 
       q.finish();
     }
@@ -77,7 +77,7 @@ namespace sequoia::testing
       auto fut{t.get_future()};
       t();
 
-      check_equality(LINE(""), fut.get(), 1);
+      check(equality, LINE(""), fut.get(), 1);
 
       q.push(task_t{[](){ return 2;}});
       t = q.pop();
@@ -85,7 +85,7 @@ namespace sequoia::testing
       fut = t.get_future();
       t();
 
-      check_equality(LINE(""), fut.get(), 2);
+      check(equality, LINE(""), fut.get(), 2);
 
       q.finish();
     }
@@ -113,6 +113,6 @@ namespace sequoia::testing
 
     threadModel.get();
 	
-    check_equality(LINE(""), u.get_data(), std::vector<int>{0});
+    check(equality, LINE(""), u.get_data(), std::vector<int>{0});
   }
 }

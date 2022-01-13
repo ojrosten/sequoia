@@ -65,25 +65,25 @@ namespace sequoia::testing
     check_exception_thrown<std::runtime_error>(LINE("Missing symbol"),
                                                [](){ return generate_template_data("< class>"); });
 
-    check_equality(LINE("Specialization"), generate_template_data("<>"), template_data{{}});
-    check_equality(LINE("Class template parameter"),
+    check(equality, LINE("Specialization"), generate_template_data("<>"), template_data{{}});
+    check(equality, LINE("Class template parameter"),
                    generate_template_data("<class T>"), template_data{{"class", "T"}});
-    check_equality(LINE("Class template parameter"),
+    check(equality, LINE("Class template parameter"),
                    generate_template_data("<class T >"), template_data{{"class", "T"}});
-    check_equality(LINE("Class template parameter"),
+    check(equality, LINE("Class template parameter"),
                    generate_template_data("< class T>"), template_data{{"class", "T"}});
 
-    check_equality(LINE("Two template parameters"),
+    check(equality, LINE("Two template parameters"),
                    generate_template_data("<class T, typename S>"),
                    template_data{{"class", "T"}, {"typename", "S"}});
-    check_equality(LINE("Two template parameters"),
+    check(equality, LINE("Two template parameters"),
                    generate_template_data("< class  T,  typename S >"),
                    template_data{{"class", "T"}, {"typename", "S"}});
 
-    check_equality(LINE("Variadic template"),
+    check(equality, LINE("Variadic template"),
                    generate_template_data("<class... T>"), template_data{{"class...", "T"}});
 
-    check_equality(LINE("Variadic template"),
+    check(equality, LINE("Variadic template"),
                    generate_template_data("<class ... T>"), template_data{{"class ...", "T"}});
   }
 
@@ -146,7 +146,7 @@ namespace sequoia::testing
       file << outputStream.str();
     }
 
-    check_equivalence(LINE(""), working(), predictive_materials() / "FakeProject");
+    check(equivalence, LINE(""), working(), predictive_materials() / "FakeProject");
   }
 
   void test_runner_test_creation::test_creation_failure()

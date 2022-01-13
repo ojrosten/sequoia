@@ -21,15 +21,15 @@ namespace sequoia::testing
     template<test_mode Mode>
     static void test_equality(test_logger<Mode>& logger, const type& sequence, const type& prediction)
     {
-      check_equality("Start", logger, sequence.start(), prediction.start());
-      check_equality("Step", logger, sequence.step(), prediction.step());
+      check(equality, "Start", logger, sequence.start(), prediction.start());
+      check(equality, "Step", logger, sequence.step(), prediction.step());
     }
 
     template<test_mode Mode>
     static void test_equivalence(test_logger<Mode>& logger, const type& sequence, const T& start, const T& step)
     {
-      check_equality("Start wrong", logger, sequence.start(), start);
-      check_equality("Step wrong", logger, sequence.step(), step);
+      check(equality, "Start wrong", logger, sequence.start(), start);
+      check(equality, "Step wrong", logger, sequence.step(), step);
     }
   };
 }

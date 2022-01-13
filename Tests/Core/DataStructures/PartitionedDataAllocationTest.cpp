@@ -60,13 +60,13 @@ namespace sequoia::testing
                                     { {0_c, {2_c,0_mu}, {2_anp,2_awp}, {0_containers, 2_containers, 3_postmutation}} }
                     })};
 
-    check_equivalence(LINE(makeMessage("")), s, prediction{});
-    check_equivalence(LINE(makeMessage("")), t, prediction{{0,2}, {1}});
+    check(equivalence, LINE(makeMessage("")), s, prediction{});
+    check(equivalence, LINE(makeMessage("")), t, prediction{{0,2}, {1}});
 
     s.add_slot();
     // []
 
-    check_equality(LINE(makeMessage("")), s, storage{{{}}, allocator{}});
+    check(equality, LINE(makeMessage("")), s, storage{{{}}, allocator{}});
 
     auto mutator{
       [](storage& s) {
@@ -110,12 +110,12 @@ namespace sequoia::testing
                               allocation_info{contiguous_alloc_getter<storage>{}, {0_c, {1_c,0_mu}, {1_anp, 1_awp}}},
                               allocation_info{partitions_alloc_getter<storage>{}, {0_c, {1_c,1_mu}, {1_anp, 1_awp}}})};
 
-    check_equivalence(LINE(makeMessage("")), s, prediction{});
-    check_equivalence(LINE(makeMessage("")), t, prediction{{0,2}, {1}});
+    check(equivalence, LINE(makeMessage("")), s, prediction{});
+    check(equivalence, LINE(makeMessage("")), t, prediction{{0,2}, {1}});
 
     s.add_slot();
     // []
 
-    check_equality(LINE(makeMessage("")), s, storage{{{}}, allocator{}, partitions_allocator{}});
+    check(equality, LINE(makeMessage("")), s, storage{{{}}, allocator{}, partitions_allocator{}});
   }
 }

@@ -28,7 +28,7 @@ namespace sequoia::testing
       check_semantics(LINE(""), a, b);
 
       b[0][0] = 2;
-      check_equality(LINE(""), b, sequence{{2}});
+      check(equality, LINE(""), b, sequence{{2}});
     }
 
     {
@@ -41,7 +41,7 @@ namespace sequoia::testing
       check_semantics(LINE(""), a, b);
 
       b[1][2] = 1;
-      check_equality(LINE(""), b, {{0, 0, 0}, {0, 0, 1}});
+      check(equality, LINE(""), b, {{0, 0, 0}, {0, 0, 1}});
     }
   }
 }

@@ -333,7 +333,7 @@ namespace sequoia::testing::impl
   std::optional<T> do_check_move_construction(test_logger<Mode>& logger, [[maybe_unused]] const Actions& actions, T&& z, const T& y, const Args&... args)
   {
     T w{std::move(z)};
-    if(!check_equality("Inconsistent move construction", logger, w, y))
+    if(!check(equality, "Inconsistent move construction", logger, w, y))
       return {};
 
     if constexpr(has_post_move_action<Actions>)
@@ -356,7 +356,7 @@ namespace sequoia::testing::impl
   void do_check_move_assign(test_logger<Mode>& logger, [[maybe_unused]] const Actions& actions, T& z, T&& y, const T& yClone, [[maybe_unused]] Mutator&& yMutator, const Args&... args)
   {
     z = std::move(y);
-    if(!check_equality("Inconsistent move assignment (from y)", logger, z, yClone))
+    if(!check(equality, "Inconsistent move assignment (from y)", logger, z, yClone))
        return;
 
     if constexpr(has_post_move_assign_action<Actions>)
@@ -380,11 +380,11 @@ namespace sequoia::testing::impl
     swap(x, y);
 
     const bool swapy{
-      check_equality("Inconsistent Swap (y)", logger, y, xClone)
+      check(equality, "Inconsistent Swap (y)", logger, y, xClone)
     };
 
     const bool swapx{
-      check_equality("Inconsistent Swap (x)", logger, x, yClone)
+      check(equality, "Inconsistent Swap (x)", logger, x, yClone)
     };
 
     if(swapx && swapy)
@@ -395,7 +395,7 @@ namespace sequoia::testing::impl
       }
 
       swap(y,y);
-      return check_equality("Inconsistent Self Swap", logger, y, xClone);
+      return check(equality, "Inconsistent Self Swap", logger, y, xClone);
     }
 
     return false;
@@ -433,7 +433,7 @@ namespace sequoia::testing::impl
 
     s >> u;
 
-    return check_equality("Inconsistent (de)serialization", logger, u, y);
+    return check(equality, "Inconsistent (de)serialization", logger, u, y);
   }
 
   template<test_mode Mode, class Actions, movable_comparable T>

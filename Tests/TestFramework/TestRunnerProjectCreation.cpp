@@ -150,8 +150,8 @@ namespace sequoia::testing
         file << outputStream.rdbuf();
       }
 
-      check_equivalence(LINE(""), generated(), predictive_materials() / "GeneratedProject");
-      check_equivalence(LINE(""), fake_project(), predictive_materials() / "FakeProject");
+      check(equivalence, LINE(""), generated(), predictive_materials() / "GeneratedProject");
+      check(equivalence, LINE(""), fake_project(), predictive_materials() / "FakeProject");
     }
 
     {
@@ -163,7 +163,7 @@ namespace sequoia::testing
 
       tr.execute();
 
-      check_equivalence(LINE(""), hostDir, predictive_materials() / "AnotherGeneratedProject");
+      check(equivalence, LINE(""), hostDir, predictive_materials() / "AnotherGeneratedProject");
     }
   }
 }

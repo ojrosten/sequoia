@@ -35,7 +35,7 @@ namespace sequoia::testing
     private:
       void run_tests() final
       {
-        check_equality("Throw during check", foo{}, foo{});
+        check(equality, "Throw during check", foo{}, foo{});
       }
     };
 
@@ -53,7 +53,7 @@ namespace sequoia::testing
     private:
       void run_tests() final
       {
-        check_equality("Standard Failure", 43, 42);
+        check(equality, "Standard Failure", 43, 42);
       }
     };
 
@@ -71,7 +71,7 @@ namespace sequoia::testing
     private:
       void run_tests() final
       {
-        check_equality("False positive failure", 42, 42);
+        check(equality, "False positive failure", 42, 42);
       }
     };
 
@@ -89,7 +89,7 @@ namespace sequoia::testing
     private:
       void run_tests() final
       {
-        check_equality("False negative failure", 43, 42);
+        check(equality, "False negative failure", 43, 42);
       }
     };
 
@@ -113,7 +113,7 @@ namespace sequoia::testing
     private:
       void run_tests() final
       {
-        check_equality("Flipper", flipper{}.x, true);
+        check(equality, "Flipper", flipper{}.x, true);
       }
     };
 
@@ -138,7 +138,7 @@ namespace sequoia::testing
     private:
       void run_tests() final
       {
-        check_equality("Period 4", periodic<4>{}.x, 1);
+        check(equality, "Period 4", periodic<4>{}.x, 1);
       }
     };
 
@@ -156,7 +156,7 @@ namespace sequoia::testing
     private:
       void run_tests() final
       {
-        check_equality("Period 2: Pass/Fail/Pass", periodic<2>{}.x, 1);
+        check(equality, "Period 2: Pass/Fail/Pass", periodic<2>{}.x, 1);
         check("Period 3: Pass/Pass/Fail", periodic<3>{}.x > 0);
       }
     };
@@ -175,7 +175,7 @@ namespace sequoia::testing
       {
         check("Always fails", false);
 
-        check_equality("Flipper", flipper{}.x, true);
+        check(equality, "Flipper", flipper{}.x, true);
       }
     };
 
@@ -366,7 +366,7 @@ namespace sequoia::testing
              working_materials() / "RecoveryAndDumpOutput" / "TestSummaries",
              fs::copy_options::recursive);
 
-    check_equivalence(LINE("Recovery and Dump"),
+    check(equivalence, LINE("Recovery and Dump"),
                       working_materials() / "RecoveryAndDumpOutput",
                       predictive_materials() / "RecoveryAndDumpOutput");
   }
@@ -403,7 +403,7 @@ namespace sequoia::testing
       file << outputStream.str();
     }
 
-    check_equivalence(LINE("Basic Output"), working_materials() / "BasicOutput",  predictive_materials() / "BasicOutput");
+    check(equivalence, LINE("Basic Output"), working_materials() / "BasicOutput",  predictive_materials() / "BasicOutput");
   }
 
   void test_runner_test::test_instability_analysis()
@@ -523,7 +523,7 @@ namespace sequoia::testing
       file << outputStream.str();
     }
 
-    check_equivalence(LINE(append_lines(message, make_type_info<Ts...>())),
+    check(equivalence, LINE(append_lines(message, make_type_info<Ts...>())),
                       outputDir,
                       predictive_materials() / outputDirName);
   }

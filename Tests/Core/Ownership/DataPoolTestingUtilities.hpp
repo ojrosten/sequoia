@@ -20,8 +20,8 @@ namespace sequoia::testing
     template<test_mode Mode>
     static void test_weak_equivalence(test_logger<Mode>& logger, const type& pool, prediction_type prediction)
     {
-      check_equality("empty", logger, pool.empty(), prediction.size() == 0);
-      check_equality("size", logger, pool.size(), prediction.size());
+      check(equality, "empty", logger, pool.empty(), prediction.size() == 0);
+      check(equality, "size", logger, pool.size(), prediction.size());
 
       check_range_equivalence("iterator", logger, pool.begin(), pool.end(), prediction.begin(), prediction.end());
       check_range_equivalence("citerator", logger, pool.cbegin(), pool.cend(), prediction.begin(), prediction.end());

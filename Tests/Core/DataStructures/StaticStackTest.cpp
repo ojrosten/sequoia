@@ -32,7 +32,7 @@ namespace sequoia::testing
     constexpr static_stack<int, 0> s{};
     static_stack<int, 0> t{};
 
-    check_equality(LINE("Equality of null queues"), t, s);
+    check(equality, LINE("Equality of null queues"), t, s);
 
     check_exception_thrown<std::logic_error>(LINE("Can't push to null stack"), [&t]() { t.push(1); });
     check_exception_thrown<std::logic_error>(LINE("Can't construct non-null null stack"), []() { static_stack<int, 0>{1}; });
@@ -53,10 +53,10 @@ namespace sequoia::testing
     check_exception_thrown<std::logic_error>(LINE("Can't construct stack of depth 1 with 2 elements"), []() { static_stack<int, 1>{1, 2}; });
 
     t.pop();
-    check_equality(LINE(""), t, stack_t{});
+    check(equality, LINE(""), t, stack_t{});
 
     t.push(1);
-    check_equality(LINE(""), t, stack_t{1});
+    check(equality, LINE(""), t, stack_t{1});
   }
 
   constexpr auto test_static_stack::make_static_stack_2()
@@ -81,12 +81,12 @@ namespace sequoia::testing
     constexpr stack_t s{make_static_stack_2()};
     auto t{s};
 
-    check_equality(LINE(""), t, stack_t{11, 12});
+    check(equality, LINE(""), t, stack_t{11, 12});
 
     t.pop();
-    check_equality(LINE(""), t, stack_t{11});
+    check(equality, LINE(""), t, stack_t{11});
 
     t.pop();
-    check_equality(LINE(""), t, stack_t{});
+    check(equality, LINE(""), t, stack_t{});
   }
 }

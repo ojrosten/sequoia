@@ -105,28 +105,28 @@ namespace sequoia::testing
 
   template<class T, test_mode Mode, class... Args>
     requires equality_tester_for<Mode, T, Args...>
-  void dispatch_test(equality_tag, test_logger<Mode>& logger, Args&&... args)
+  void dispatch_test(equality_check_t, test_logger<Mode>& logger, Args&&... args)
   {
     value_tester<T>::test_equality(logger, std::forward<Args>(args)...);
   };
 
   template<class T, test_mode Mode, class... Args>
     requires equivalence_tester_for<Mode, T, Args...>
-  void dispatch_test(equivalence_tag, test_logger<Mode>& logger, Args&&... args)
+  void dispatch_test(equivalence_check_t, test_logger<Mode>& logger, Args&&... args)
   {
     value_tester<T>::test_equivalence(logger, std::forward<Args>(args)...);
   };
 
   template<class T, test_mode Mode, class... Args>
     requires weak_equivalence_tester_for<Mode, T, Args...>
-  void dispatch_test(weak_equivalence_tag, test_logger<Mode>& logger, Args&&... args)
+  void dispatch_test(weak_equivalence_check_t, test_logger<Mode>& logger, Args&&... args)
   {
     value_tester<T>::test_weak_equivalence(logger, std::forward<Args>(args)...);
   };
 
   template<class T, test_mode Mode, class... Args>
     requires agnostic_tester_for<Mode, T, Args...>
-  void dispatch_test(agnostic_tag, test_logger<Mode>& logger, Args&&... args)
+  void dispatch_test(agnostic_check_t, test_logger<Mode>& logger, Args&&... args)
   {
     value_tester<T>::test_agnostic(logger, std::forward<Args>(args)...);
   };
@@ -360,21 +360,21 @@ namespace sequoia::testing
 
   template<test_mode Mode, class Customization, class T, class Advisor=null_advisor>
     requires (    std::equality_comparable<T>
-               || binary_tester_for<equality_tag, Mode, T, tutor<Advisor>>
+               || binary_tester_for<equality_check_t, Mode, T, tutor<Advisor>>
                || sequoia::range<T>)
-  bool dispatch_check(std::string_view description, test_logger<Mode>& logger, equality_tag, const value_based_customization<Customization>&, const T& obtained, const T& prediction, [[maybe_unused]] tutor<Advisor> advisor={})
+  bool dispatch_check(std::string_view description, test_logger<Mode>& logger, equality_check_t, const value_based_customization<Customization>&, const T& obtained, const T& prediction, [[maybe_unused]] tutor<Advisor> advisor={})
   {
     sentinel<Mode> sentry{logger, add_type_info<T>(description)};
 
     if constexpr(std::equality_comparable<T>)
     {
-      using finality = final_message_constant<!(binary_tester_for<equality_tag, Mode, T, tutor<Advisor>> || sequoia::range<T>)>;
+      using finality = final_message_constant<!(binary_tester_for<equality_check_t, Mode, T, tutor<Advisor>> || sequoia::range<T>)>;
       binary_comparison(finality{}, sentry, std::equal_to<T>{}, obtained, prediction, advisor);
     }
 
-    if constexpr(binary_tester_for<equality_tag, Mode, T, tutor<Advisor>>)
+    if constexpr(binary_tester_for<equality_check_t, Mode, T, tutor<Advisor>>)
     {
-      select_test(equality_tag{}, logger, obtained, prediction, advisor);
+      select_test(equality_check_t{}, logger, obtained, prediction, advisor);
     }
     else if constexpr (sequoia::range<T>)
     {
@@ -452,10 +452,10 @@ namespace sequoia::testing
 
  template<test_mode Mode, class T, class Advisor>
  inline constexpr bool does_detailed_agnostic_check{
-      binary_tester_for<equality_tag, Mode, T, tutor<Advisor>>
-   || binary_tester_for<equivalence_tag, Mode, T, tutor<Advisor>>
-   || binary_tester_for<weak_equivalence_tag, Mode, T, tutor<Advisor>>
-   || binary_tester_for<agnostic_tag, Mode, T, tutor<Advisor>>
+      binary_tester_for<equality_check_t, Mode, T, tutor<Advisor>>
+   || binary_tester_for<equivalence_check_t, Mode, T, tutor<Advisor>>
+   || binary_tester_for<weak_equivalence_check_t, Mode, T, tutor<Advisor>>
+   || binary_tester_for<agnostic_check_t, Mode, T, tutor<Advisor>>
  };
 
   /*! \brief The workhorse for generically dispatching checks to nested types.
@@ -464,7 +464,7 @@ namespace sequoia::testing
 
   template<test_mode Mode, class Customization, class T, class Advisor = null_advisor>
     requires (   std::equality_comparable<T> || does_detailed_agnostic_check<Mode, T, Advisor> || sequoia::range<T>)
-  bool dispatch_check(std::string_view description, test_logger<Mode>& logger, agnostic_tag, const value_based_customization<Customization>&, const T& obtained, const T& prediction, [[maybe_unused]] tutor<Advisor> advisor = {})
+  bool dispatch_check(std::string_view description, test_logger<Mode>& logger, agnostic_check_t, const value_based_customization<Customization>&, const T& obtained, const T& prediction, [[maybe_unused]] tutor<Advisor> advisor = {})
   {
     sentinel<Mode> sentry{logger, add_type_info<T>(description)};
 
@@ -474,25 +474,25 @@ namespace sequoia::testing
       binary_comparison(finality{}, sentry, std::equal_to<T>{}, obtained, prediction, advisor);
     }
 
-    if constexpr(binary_tester_for<agnostic_tag, Mode, T, tutor<Advisor>>)
+    if constexpr(binary_tester_for<agnostic_check_t, Mode, T, tutor<Advisor>>)
     {
-      select_test(agnostic_tag{}, logger, obtained, prediction, advisor);
+      select_test(agnostic_check_t{}, logger, obtained, prediction, advisor);
     }
-    else if constexpr(binary_tester_for<equality_tag, Mode, T, tutor<Advisor>>)
+    else if constexpr(binary_tester_for<equality_check_t, Mode, T, tutor<Advisor>>)
     {
-      select_test(equality_tag{}, logger, obtained, prediction, advisor);
+      select_test(equality_check_t{}, logger, obtained, prediction, advisor);
     }
-    else if constexpr(binary_tester_for<equivalence_tag, Mode, T, tutor<Advisor>>)
+    else if constexpr(binary_tester_for<equivalence_check_t, Mode, T, tutor<Advisor>>)
     {
-      select_test(equivalence_tag{}, logger, obtained, prediction, advisor);
+      select_test(equivalence_check_t{}, logger, obtained, prediction, advisor);
     }
-    else if constexpr(binary_tester_for<weak_equivalence_tag, Mode, T, tutor<Advisor>>)
+    else if constexpr(binary_tester_for<weak_equivalence_check_t, Mode, T, tutor<Advisor>>)
     {
-      select_test(weak_equivalence_tag{}, logger, obtained, prediction, advisor);
+      select_test(weak_equivalence_check_t{}, logger, obtained, prediction, advisor);
     }
     else if constexpr(sequoia::range<T>)
     {
-      check_range("", logger, agnostic_tag{}, std::begin(obtained), std::end(obtained), std::begin(prediction), std::end(prediction), advisor);
+      check_range("", logger, agnostic_check_t{}, std::begin(obtained), std::end(obtained), std::begin(prediction), std::end(prediction), advisor);
     }
 
     return !sentry.failure_detected();
@@ -534,7 +534,7 @@ namespace sequoia::testing
 
     const auto actualSize{fixed_width_unsigned_cast(distance(first, last))};
     const auto predictedSize{fixed_width_unsigned_cast(distance(predictionFirst, predictionLast))};
-    if(check_equality("Container size wrong", logger, actualSize, predictedSize))
+    if(check(equality, "Container size wrong", logger, actualSize, predictedSize))
     {
       auto predictionIter{predictionFirst};
       auto iter{first};
@@ -634,55 +634,57 @@ namespace sequoia::testing
   {
     return dispatch_check(description, logger, std::forward<Compare>(compare), value_based_customization<void>{}, obtained, prediction, std::move(advisor));
   }
-  
+
   template<test_mode Mode, class T, class Advisor=null_advisor>
-  bool check_equality(std::string_view description,
-                      test_logger<Mode>& logger,
-                      const T& value,
-                      const T& prediction,
-                      tutor<Advisor> advisor={})
+  bool check(equality_check_t,
+             std::string_view description,
+             test_logger<Mode>& logger,
+             const T& value,
+             const T& prediction,
+             tutor<Advisor> advisor={})
   {
-    return dispatch_check(description, logger, equality_tag{}, value_based_customization<void>{}, type_normalizer{}(value), type_normalizer{}(prediction), std::move(advisor));
+    return dispatch_check(description, logger, equality_check_t{}, value_based_customization<void>{}, type_normalizer{}(value), type_normalizer{}(prediction), std::move(advisor));
   }
 
   template<test_mode Mode, class T, class S, class... U>
-  bool check_equivalence(std::string_view description, test_logger<Mode>& logger, const T& value, S&& s, U&&... u)
+  bool check(equivalence_check_t, std::string_view description, test_logger<Mode>& logger, const T& value, S&& s, U&&... u)
   {
-    return dispatch_check(description, logger, equivalence_tag{}, value_based_customization<void>{}, value, std::forward<S>(s), std::forward<U>(u)...);
+    return dispatch_check(description, logger, equivalence_check_t{}, value_based_customization<void>{}, value, std::forward<S>(s), std::forward<U>(u)...);
   }
 
   template<class Customization, test_mode Mode, class T, class S, class... U>
-  bool check_equivalence(std::string_view description, test_logger<Mode>& logger, const value_based_customization<Customization>& customization, const T& value, S&& s, U&&... u)
+  bool check(equivalence_check_t, std::string_view description, test_logger<Mode>& logger, const value_based_customization<Customization>& customization, const T& value, S&& s, U&&... u)
   {
-    return dispatch_check(description, logger, equivalence_tag{}, customization, value, std::forward<S>(s), std::forward<U>(u)...);
+    return dispatch_check(description, logger, equivalence_check_t{}, customization, value, std::forward<S>(s), std::forward<U>(u)...);
   }
 
   template<test_mode Mode, class T, class S, class... U>
-  bool check_weak_equivalence(std::string_view description, test_logger<Mode>& logger, const T& value, S&& s, U&&... u)
+  bool check(weak_equivalence_check_t, std::string_view description, test_logger<Mode>& logger, const T& value, S&& s, U&&... u)
   {
-    return dispatch_check(description, logger, weak_equivalence_tag{}, value_based_customization<void>{}, value, std::forward<S>(s), std::forward<U>(u)...);
+    return dispatch_check(description, logger, weak_equivalence_check_t{}, value_based_customization<void>{}, value, std::forward<S>(s), std::forward<U>(u)...);
   }
 
   template<class Customization, test_mode Mode, class T, class S, class... U>
-  bool check_weak_equivalence(std::string_view description, test_logger<Mode>& logger, const value_based_customization<Customization>& customization, const T& value, S&& s, U&&... u)
+  bool check(weak_equivalence_check_t, std::string_view description, test_logger<Mode>& logger, const value_based_customization<Customization>& customization, const T& value, S&& s, U&&... u)
   {
-    return dispatch_check(description, logger, weak_equivalence_tag{}, customization, value, std::forward<S>(s), std::forward<U>(u)...);
+    return dispatch_check(description, logger, weak_equivalence_check_t{}, customization, value, std::forward<S>(s), std::forward<U>(u)...);
   }
 
   template<test_mode Mode, class T, class Advisor=null_advisor>
-  bool check_agnostic(std::string_view description,
-                      test_logger<Mode>& logger,
-                      const T& value,
-                      const T& prediction,
-                      tutor<Advisor> advisor={})
+  bool check(agnostic_check_t,
+             std::string_view description,
+             test_logger<Mode>& logger,
+             const T& value,
+             const T& prediction,
+             tutor<Advisor> advisor={})
   {
-    return dispatch_check(description, logger, agnostic_tag{}, value_based_customization<void>{}, type_normalizer{}(value), type_normalizer{}(prediction), std::move(advisor));
+    return dispatch_check(description, logger, agnostic_check_t{}, value_based_customization<void>{}, type_normalizer{}(value), type_normalizer{}(prediction), std::move(advisor));
   }
 
   template<test_mode Mode, class Advisor=null_advisor>
   bool check(std::string_view description, test_logger<Mode>& logger, const bool value, tutor<Advisor> advisor={})
   {
-    return check_equality(description, logger, value, true, std::move(advisor));
+    return check(equality, description, logger, value, true, std::move(advisor));
   }
 
   template
@@ -702,7 +704,7 @@ namespace sequoia::testing
                    PredictionSentinel predictionLast,
                    tutor<Advisor> advisor={})
   {
-    return check_range(description, logger, equality_tag{}, value_based_customization<void>{}, first, last, predictionFirst, predictionLast, std::move(advisor));
+    return check_range(description, logger, equality_check_t{}, value_based_customization<void>{}, first, last, predictionFirst, predictionLast, std::move(advisor));
   }
 
   template
@@ -722,7 +724,7 @@ namespace sequoia::testing
                                PredictionSentinel predictionLast,
                                tutor<Advisor> advisor={})
   {
-    return check_range(description, logger, equivalence_tag{}, value_based_customization<void>{}, first, last, predictionFirst, predictionLast, std::move(advisor));
+    return check_range(description, logger, equivalence_check_t{}, value_based_customization<void>{}, first, last, predictionFirst, predictionLast, std::move(advisor));
   }
 
   template
@@ -744,7 +746,7 @@ namespace sequoia::testing
                                PredictionSentinel predictionLast,
                                tutor<Advisor> advisor={})
   {
-    return check_range(description, logger, equivalence_tag{}, customization, first, last, predictionFirst, predictionLast, std::move(advisor));
+    return check_range(description, logger, equivalence_check_t{}, customization, first, last, predictionFirst, predictionLast, std::move(advisor));
   }
 
   template
@@ -762,7 +764,7 @@ namespace sequoia::testing
                                     PredictionIter predictionFirst,
                                     PredictionSentinel predictionLast)
   {
-    return check_range(description, logger, weak_equivalence_tag{}, value_based_customization<void>{}, first, last, predictionFirst, predictionLast);
+    return check_range(description, logger, weak_equivalence_check_t{}, value_based_customization<void>{}, first, last, predictionFirst, predictionLast);
   }
 
   template
@@ -782,7 +784,7 @@ namespace sequoia::testing
                                     PredictionIter predictionFirst,
                                     PredictionSentinel predictionLast)
   {
-    return check_range(description, logger, weak_equivalence_tag{}, customization, first, last, predictionFirst, predictionLast);
+    return check_range(description, logger, weak_equivalence_check_t{}, customization, first, last, predictionFirst, predictionLast);
   }
 
   template
@@ -802,7 +804,7 @@ namespace sequoia::testing
                    PredictionSentinel predictionLast,
                    tutor<Advisor> advisor={})
   {
-    return check_range(description, logger, agnostic_tag{}, value_based_customization<void>{}, first, last, predictionFirst, predictionLast, std::move(advisor));
+    return check_range(description, logger, agnostic_check_t{}, value_based_customization<void>{}, first, last, predictionFirst, predictionLast, std::move(advisor));
   }
 
   /*! \brief Exposes elementary check methods, with the option to plug in arbitrary Extenders to compose functionality.
@@ -841,9 +843,9 @@ namespace sequoia::testing
     checker& operator=(const checker&) = delete;
 
     template<class T, class Advisor=null_advisor>
-    bool check_equality(std::string_view description, const T& value, const T& prediction, tutor<Advisor> advisor={})
+    bool check(equality_check_t, std::string_view description, const T& value, const T& prediction, tutor<Advisor> advisor={})
     {
-      return testing::check_equality(description, logger(), value, prediction, std::move(advisor));
+      return testing::check(equality, description, logger(), value, prediction, std::move(advisor));
     }
 
     template<class T, class Compare, class Advisor=null_advisor>
@@ -854,34 +856,34 @@ namespace sequoia::testing
 
     template<class T, class S, class... U>
       requires (!is_value_customizer<T>)
-    bool check_equivalence(std::string_view description, const T& value, S&& s, U&&... u)
+    bool check(equivalence_check_t, std::string_view description, const T& value, S&& s, U&&... u)
     {
-      return testing::check_equivalence(description, logger(), value_based_customization<void>{}, value, std::forward<S>(s), std::forward<U>(u)...);
+      return testing::check(equivalence, description, logger(), value_based_customization<void>{}, value, std::forward<S>(s), std::forward<U>(u)...);
     }
 
     template<class Customization, class T, class S, class... U>
-    bool check_equivalence(std::string_view description, const value_based_customization<Customization>& customization, const T& value, S&& s, U&&... u)
+    bool check(equivalence_check_t, std::string_view description, const value_based_customization<Customization>& customization, const T& value, S&& s, U&&... u)
     {
-      return testing::check_equivalence(description, logger(), customization, value, std::forward<S>(s), std::forward<U>(u)...);
+      return testing::check(equivalence, description, logger(), customization, value, std::forward<S>(s), std::forward<U>(u)...);
     }
 
     template<class T, class S, class... U>
       requires (!is_value_customizer<T>)
-    bool check_weak_equivalence(std::string_view description, const T& value, S&& s, U&&... u)
+    bool check(weak_equivalence_check_t, std::string_view description, const T& value, S&& s, U&&... u)
     {
-      return testing::check_weak_equivalence(description, logger(), value_based_customization<void>{}, value, std::forward<S>(s), std::forward<U>(u)...);
+      return testing::check(weak_equivalence, description, logger(), value_based_customization<void>{}, value, std::forward<S>(s), std::forward<U>(u)...);
     }
 
     template<class Customization, class T, class S, class... U>
-    bool check_weak_equivalence(std::string_view description, const value_based_customization<Customization>&customization, const T& value, S&& s, U&&... u)
+    bool check(weak_equivalence_check_t, std::string_view description, const value_based_customization<Customization>&customization, const T& value, S&& s, U&&... u)
     {
-      return testing::check_weak_equivalence(description, logger(), customization, value, std::forward<S>(s), std::forward<U>(u)...);
+      return testing::check(weak_equivalence, description, logger(), customization, value, std::forward<S>(s), std::forward<U>(u)...);
     }
 
     template<class T, class Advisor = null_advisor>
-    bool check_agnostic(std::string_view description, const T& value, const T& prediction, tutor<Advisor> advisor = {})
+    bool check(agnostic_check_t, std::string_view description, const T& value, const T& prediction, tutor<Advisor> advisor = {})
     {
-      return testing::check_agnostic(description, logger(), value, prediction, std::move(advisor));
+      return testing::check(agnostic, description, logger(), value, prediction, std::move(advisor));
     }
 
     template<class Advisor=null_advisor>

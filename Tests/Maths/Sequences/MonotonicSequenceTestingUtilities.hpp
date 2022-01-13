@@ -18,14 +18,14 @@ namespace sequoia::testing
     template<test_mode Mode, class T>
     void check(test_logger<Mode>& logger, const T& sequence, const T& prediction)
     {
-      check_equality("Emptiness incorrect", logger, sequence.empty(), prediction.empty());
+      check(equality, "Emptiness incorrect", logger, sequence.empty(), prediction.empty());
 
-      if(check_equality("Size incorrect", logger, sequence.size(), prediction.size()))
+      if(check(equality, "Size incorrect", logger, sequence.size(), prediction.size()))
       {
         if(!prediction.empty())
         {
-          check_equality("Back element wrong", logger, sequence.back(), prediction.back());
-          check_equality("Front element wrong", logger, sequence.front(), prediction.front());
+          check(equality, "Back element wrong", logger, sequence.back(), prediction.back());
+          check(equality, "Front element wrong", logger, sequence.front(), prediction.front());
         }
 
         auto i_prediction{prediction.begin()}, i{sequence.begin()};
@@ -39,14 +39,14 @@ namespace sequoia::testing
           const auto d{distance(prediction.begin(), i_prediction)};
           const auto mess{std::string{" for index "}.append(std::to_string(d))};
 
-          check_equality(std::string{"Dereferenced iterator wrong"}.append(mess), logger, *i, *i_prediction);
-          check_equality(std::string{"Dereferenced citerator wrong"}.append(mess), logger, *ci, *ci_prediction);
+          check(equality, std::string{"Dereferenced iterator wrong"}.append(mess), logger, *i, *i_prediction);
+          check(equality, std::string{"Dereferenced citerator wrong"}.append(mess), logger, *ci, *ci_prediction);
 
-          check_equality(std::string{"operator[] wrong"}.append(mess), logger, sequence[d], prediction[d]);
+          check(equality, std::string{"operator[] wrong"}.append(mess), logger, sequence[d], prediction[d]);
 
           const auto shift{static_cast<int64_t>(prediction.size()) - d - 1};
-          check_equality(std::string{"Dereferenced riterator wrong"}.append(mess), logger, *(ri + shift), *(ri_prediction + shift));
-          check_equality(std::string{"Dereferenced criterator wrong"}.append(mess), logger, *(cri + shift), *(cri_prediction + shift));
+          check(equality, std::string{"Dereferenced riterator wrong"}.append(mess), logger, *(ri + shift), *(ri_prediction + shift));
+          check(equality, std::string{"Dereferenced criterator wrong"}.append(mess), logger, *(cri + shift), *(cri_prediction + shift));
         }
 
         testing::check("iterator location wrong", logger, i_prediction == prediction.end());

@@ -18,15 +18,15 @@ namespace sequoia::testing
     template<test_mode Mode>
     static void test_equality(test_logger<Mode>& logger, const type& actual, const type& prediction)
     {
-      check_equality("Check index", logger, actual.check_index, prediction.check_index);
-      check_equality("Message", logger, actual.message, prediction.message);
+      check(equality, "Check index", logger, actual.check_index, prediction.check_index);
+      check(equality, "Message", logger, actual.message, prediction.message);
     }
 
     template<test_mode Mode>
     static void test_equivalence(test_logger<Mode>& logger, const type& actual, const std::size_t checkIndex, const std::string& message)
     {
-      check_equality("Check index", logger, actual.check_index, checkIndex);
-      check_equality("Message", logger, actual.message, message);
+      check(equality, "Check index", logger, actual.check_index, checkIndex);
+      check(equality, "Message", logger, actual.message, message);
     }
   };
 }

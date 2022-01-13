@@ -402,8 +402,8 @@ namespace sequoia::testing
                       mutator,
                       allocation_info{allocGetter, {1_c, {1_c,1_mu}, {0_anp,1_awp}}})};
 
-      check_equality(LINE("check_semantics return value (x)"), x, beast{{1,2}});
-      check_equality(LINE("check_semantics return value (y)"), y, beast{{5}});
+      check(equality, LINE("check_semantics return value (x)"), x, beast{{1,2}});
+      check(equality, LINE("check_semantics return value (y)"), y, beast{{5}});
     }
 
     {

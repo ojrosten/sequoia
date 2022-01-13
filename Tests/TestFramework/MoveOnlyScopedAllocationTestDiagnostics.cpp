@@ -75,8 +75,8 @@ namespace sequoia::testing
               )
     };
 
-    check_equality(LINE("check_semantics return value (x)"), x, beast{});
-    check_equality(LINE("check_semantics return value (y)"), y, beast{{"something too long for small string optimization"}});
+    check(equality, LINE("check_semantics return value (x)"), x, beast{});
+    check(equality, LINE("check_semantics return value (y)"), y, beast{{"something too long for small string optimization"}});
   }
 
 

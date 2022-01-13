@@ -19,13 +19,13 @@ namespace sequoia::testing
 		template<test_mode Mode>
 		static void test_equality(test_logger<Mode>& logger, const type& actual, const type& prediction)
 		{
-			check_equality("", logger, actual.raw_value(), prediction.raw_value());
+			check(equality, "", logger, actual.raw_value(), prediction.raw_value());
 		}
 		
 		template<test_mode Mode>
 		static void test_equivalence(test_logger<Mode>& logger, const type& actual, const double& prediction)
 		{
-			check_equality("Description", logger, actual.raw_value(), prediction);
+			check(equality, "Description", logger, actual.raw_value(), prediction);
 		}
 	};
 }

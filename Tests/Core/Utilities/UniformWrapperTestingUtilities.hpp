@@ -21,7 +21,7 @@ namespace sequoia::testing
     template<test_mode Mode>
     static void test_equality(test_logger<Mode>& logger, const type& wrapper, const type& prediction)
     {
-      check_equality("", logger, wrapper.get(), prediction.get());
+      check(equality, "", logger, wrapper.get(), prediction.get());
     }
   };
 

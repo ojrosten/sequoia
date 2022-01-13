@@ -77,7 +77,7 @@ namespace sequoia::testing
     template<test_mode Mode>
     static void test_equivalence(test_logger<Mode>& logger, const foo& f, int i, tutor<bland> advisor)
     {
-      check_equality("Wrapped value", logger, f.i, i, advisor);
+      check(equality, "Wrapped value", logger, f.i, i, advisor);
     }
   };
 
@@ -106,8 +106,8 @@ namespace sequoia::testing
     template<test_mode Mode>
     static void test_weak_equivalence(test_logger<Mode>& logger, const bar& b, const std::pair<int, double>& prediction, tutor<bland> advisor)
     {
-      check_equality("Wrapped int", logger, b.i, prediction.first, advisor);
-      check_equality("Wrapped double", logger, b.x, prediction.second, advisor);
+      check(equality, "Wrapped int", logger, b.i, prediction.first, advisor);
+      check(equality, "Wrapped double", logger, b.x, prediction.second, advisor);
     }
   };
 
@@ -153,8 +153,8 @@ namespace sequoia::testing
         return std::string{"I pity the fool who confuses the bool."};}
       });
 
-    check_equality(LINE("Integers which should compare different"), 5, 4);
-    check_equality(LINE(""), 6.5, 5.6, tutor{[](double, double){
+    check(equality, LINE("Integers which should compare different"), 5, 4);
+    check(equality, LINE(""), 6.5, 5.6, tutor{[](double, double){
         return std::string{"Double, double, toil and trouble"};
       }});
   }
@@ -168,43 +168,43 @@ namespace sequoia::testing
 
   void false_positive_diagnostics::test_heterogeneous()
   {
-    check_equality(LINE(""), std::pair<int, double>{5, 7.8}, std::pair<int, double>{5, -7.8});
-    check_equality(LINE(""), std::pair<int, double>{5, 7.8}, std::pair<int, double>{-5, 7.8});
-    check_equality(LINE(""), std::pair<int, double>{5, 7.8}, std::pair<int, double>{-5, 6.8}, tutor{bland{}});
-    check_agnostic(LINE(""), std::pair<int, double>{5, 7.8}, std::pair<int, double>{5, -7.8});
+    check(equality, LINE(""), std::pair<int, double>{5, 7.8}, std::pair<int, double>{5, -7.8});
+    check(equality, LINE(""), std::pair<int, double>{5, 7.8}, std::pair<int, double>{-5, 7.8});
+    check(equality, LINE(""), std::pair<int, double>{5, 7.8}, std::pair<int, double>{-5, 6.8}, tutor{bland{}});
+    check(agnostic, LINE(""), std::pair<int, double>{5, 7.8}, std::pair<int, double>{5, -7.8});
 
-    check_equality(LINE(""), std::tuple<int, double, float>{4, 3.4, -9.2f}, std::tuple<int, double, float>{0, 3.4, -9.2f});
-    check_equality(LINE(""), std::tuple<int, double, float>{4, 3.4, -9.2f}, std::tuple<int, double, float>{4, 0.0, -9.2f}, tutor{bland{}});
-    check_equality(LINE(""), std::tuple<int, double, float>{4, 3.4, -9.2f}, std::tuple<int, double, float>{4, 3.4, -0.0f});
+    check(equality, LINE(""), std::tuple<int, double, float>{4, 3.4, -9.2f}, std::tuple<int, double, float>{0, 3.4, -9.2f});
+    check(equality, LINE(""), std::tuple<int, double, float>{4, 3.4, -9.2f}, std::tuple<int, double, float>{4, 0.0, -9.2f}, tutor{bland{}});
+    check(equality, LINE(""), std::tuple<int, double, float>{4, 3.4, -9.2f}, std::tuple<int, double, float>{4, 3.4, -0.0f});
   }
 
   void false_positive_diagnostics::test_variant()
   {
     using var = std::variant<int, double>;
 
-    check_equality(LINE(""), var{0}, var{0.0});
-    check_equality(LINE(""), var{1}, var{2});
-    check_equality(LINE(""), var{-0.1}, var{0.0});
+    check(equality, LINE(""), var{0}, var{0.0});
+    check(equality, LINE(""), var{1}, var{2});
+    check(equality, LINE(""), var{-0.1}, var{0.0});
   }
 
   void false_positive_diagnostics::test_optional()
   {
     using opt = std::optional<int>;
-    check_equality(LINE(""), opt{}, opt{0});
-    check_equality(LINE(""), opt{0}, opt{});
-    check_equality(LINE(""), opt{2}, opt{0});
+    check(equality, LINE(""), opt{}, opt{0});
+    check(equality, LINE(""), opt{0}, opt{});
+    check(equality, LINE(""), opt{2}, opt{0});
   }
 
   void false_positive_diagnostics::test_container_checks()
   {
-    check_equality(LINE("Empty vector check which should fail"), std::vector<double>{}, std::vector<double>{1});
-    check_equality(LINE("One element vector check which should fail due to wrong value"), std::vector<double>{1}, std::vector<double>{2},
+    check(equality, LINE("Empty vector check which should fail"), std::vector<double>{}, std::vector<double>{1});
+    check(equality, LINE("One element vector check which should fail due to wrong value"), std::vector<double>{1}, std::vector<double>{2},
                    tutor{[](double, double) { return "Vector element advice"; }});
-    check_equality(LINE("One element vector check which should fail due to differing sizes"), std::vector<double>{1}, std::vector<double>{1,2});
-    check_equality(LINE("Multi-element vector comparison which should fail due to last element"), std::vector<double>{1,5}, std::vector<double>{1,4});
-    check_equality(LINE("Multi-element vector comparison which should fail due to first element"), std::vector<double>{1,5}, std::vector<double>{0,5});
-    check_equality(LINE("Multi-element vector comparison which should fail due to middle element"), std::vector<double>{1,3.2,5}, std::vector<double>{1,3.3,5});
-    check_equality(LINE("Multi-element vector comparison which should fail due to different sizes"), std::vector<double>{1,5,3.2}, std::vector<double>{5,3.2});
+    check(equality, LINE("One element vector check which should fail due to differing sizes"), std::vector<double>{1}, std::vector<double>{1,2});
+    check(equality, LINE("Multi-element vector comparison which should fail due to last element"), std::vector<double>{1,5}, std::vector<double>{1,4});
+    check(equality, LINE("Multi-element vector comparison which should fail due to first element"), std::vector<double>{1,5}, std::vector<double>{0,5});
+    check(equality, LINE("Multi-element vector comparison which should fail due to middle element"), std::vector<double>{1,3.2,5}, std::vector<double>{1,3.3,5});
+    check(equality, LINE("Multi-element vector comparison which should fail due to different sizes"), std::vector<double>{1,5,3.2}, std::vector<double>{5,3.2});
 
     std::vector<float> refs{-4.3f, 2.8f, 6.2f, 7.3f}, ans{1.1f, -4.3f, 2.8f, 6.2f, 8.4f, 7.3f};
 
@@ -216,44 +216,44 @@ namespace sequoia::testing
   {
     using namespace std::string_literals;
     using namespace std::literals::string_view_literals;
-    check_equality(LINE("Empty and non-empty strings"), ""s, "Hello, World!"s);
-    check_equality(LINE("Empty and non-empty strings"), "Hello, World!"s, ""s);
-    check_equality(LINE("Strings of differing length"), "what?!"s, "Hello, World!"s);
-    check_equality(LINE("Differing strings of same length"), "Hello, world?"s, "Hello, World!"s);
-    check_equality(LINE("Differing string views of same length"), "Hello, world?"sv, "Hello, World!"sv);
-    check_equality(LINE("Advice"), "Foo"s, "Bar"s, tutor{[](const std::string&, const std::string&) { return "Foo, my old nemesis"; }});
+    check(equality, LINE("Empty and non-empty strings"), ""s, "Hello, World!"s);
+    check(equality, LINE("Empty and non-empty strings"), "Hello, World!"s, ""s);
+    check(equality, LINE("Strings of differing length"), "what?!"s, "Hello, World!"s);
+    check(equality, LINE("Differing strings of same length"), "Hello, world?"s, "Hello, World!"s);
+    check(equality, LINE("Differing string views of same length"), "Hello, world?"sv, "Hello, World!"sv);
+    check(equality, LINE("Advice"), "Foo"s, "Bar"s, tutor{[](const std::string&, const std::string&) { return "Foo, my old nemesis"; }});
 
     const std::string longMessage{"This is a message which is sufficiently long for only a segment to be included when a string diff is performed"};
 
-    check_equality(LINE("Empty string compared with long string"), ""s, longMessage);
-    check_equality(LINE("Long string with empty string"), longMessage, ""s);
+    check(equality, LINE("Empty string compared with long string"), ""s, longMessage);
+    check(equality, LINE("Long string with empty string"), longMessage, ""s);
 
-    check_equality(LINE("Short string compared with long string"), "This is a mess"s, longMessage);
-    check_equality(LINE("Long string with short string"), longMessage, "This is a mess"s);
+    check(equality, LINE("Short string compared with long string"), "This is a mess"s, longMessage);
+    check(equality, LINE("Long string with short string"), longMessage, "This is a mess"s);
 
-    check_equality(LINE("Strings differing by a newline"), "Hello\nWorld"s, "Hello, World"s);
-    check_equality(LINE("Strings differing by a newline"), "Hello, World"s, "Hello\nWorld"s);
-    check_equality(LINE("Strings differing by a newline at the start"), "\nHello, World"s, "Hello, World"s);
-    check_equality(LINE("Strings differing by a newline at the start"), "Hello, World"s, "\nHello, World"s);
-    check_equality(LINE("Empty string compared with newline"), ""s, "\n"s);
-    check_equality(LINE("Empty string compared with newline"), "\n"s, ""s);
-    check_equality(LINE("Strings differing from newline onwards"), "Hello, World"s, "Hello\n"s);
-    check_equality(LINE("Strings differing from newline onwards"), "Hello\n"s, "Hello, World"s);
-    check_equality(LINE("Strings differing from newline onwards"), "Hello, World"s, "Hello\nPeople"s);
-    check_equality(LINE("Strings differing from newline onwards"), "Hello\nPeople"s, "Hello, World"s);
-    check_equality(LINE("Output suppressed by a new line"), "Hello  World\nAnd so forth"s, "Hello, World\nAnd so forth"s);
+    check(equality, LINE("Strings differing by a newline"), "Hello\nWorld"s, "Hello, World"s);
+    check(equality, LINE("Strings differing by a newline"), "Hello, World"s, "Hello\nWorld"s);
+    check(equality, LINE("Strings differing by a newline at the start"), "\nHello, World"s, "Hello, World"s);
+    check(equality, LINE("Strings differing by a newline at the start"), "Hello, World"s, "\nHello, World"s);
+    check(equality, LINE("Empty string compared with newline"), ""s, "\n"s);
+    check(equality, LINE("Empty string compared with newline"), "\n"s, ""s);
+    check(equality, LINE("Strings differing from newline onwards"), "Hello, World"s, "Hello\n"s);
+    check(equality, LINE("Strings differing from newline onwards"), "Hello\n"s, "Hello, World"s);
+    check(equality, LINE("Strings differing from newline onwards"), "Hello, World"s, "Hello\nPeople"s);
+    check(equality, LINE("Strings differing from newline onwards"), "Hello\nPeople"s, "Hello, World"s);
+    check(equality, LINE("Output suppressed by a new line"), "Hello  World\nAnd so forth"s, "Hello, World\nAnd so forth"s);
 
     std::string corruptedMessage{longMessage};
     corruptedMessage[75] = 'x';
 
-    check_equality(LINE("Long strings compared with difference near middle"), corruptedMessage, longMessage);
-    check_equality(LINE("Long strings compared with difference near middle"), longMessage, corruptedMessage);
+    check(equality, LINE("Long strings compared with difference near middle"), corruptedMessage, longMessage);
+    check(equality, LINE("Long strings compared with difference near middle"), longMessage, corruptedMessage);
 
     corruptedMessage[75] = 'd';
     corruptedMessage[100] = 'x';
 
-    check_equality(LINE("Long strings compared with difference near end"), corruptedMessage, longMessage);
-    check_equality(LINE("Long strings compared with difference near end"), longMessage, corruptedMessage);
+    check(equality, LINE("Long strings compared with difference near end"), corruptedMessage, longMessage);
+    check(equality, LINE("Long strings compared with difference near end"), longMessage, corruptedMessage);
   }
 
   void false_positive_diagnostics::test_mixed()
@@ -267,12 +267,12 @@ namespace sequoia::testing
 
     {
       type b{t_0{{2, 2.1f}, {2, 2.8f}}, {3.3, -9.6, 3.2}, {1.1, 0.2}};
-      check_equality(LINE(""), a, b, tutor{[](int, int){ return "Nested int advice";}});
+      check(equality, LINE(""), a, b, tutor{[](int, int){ return "Nested int advice";}});
     }
 
     {
       type b{t_0{{1, 2.1f}, {2, 2.8f}}, {3.4, -9.6, 3.2}, {1.1, 0.2}};
-      check_equality(LINE(""), a, b, tutor{[](const std::set<double>&, const std::set<double>&){
+      check(equality, LINE(""), a, b, tutor{[](const std::set<double>&, const std::set<double>&){
                                        return "Note reordering of elements upon set construction";
                                      }});
     }
@@ -299,110 +299,110 @@ namespace sequoia::testing
 
   void false_positive_diagnostics::test_equivalence_checks()
   {
-    check_equivalence(LINE(""), std::string{"foo"}, "fo");
-    check_equivalence(LINE(""), std::string{"foo"}, "fob", tutor{[](char, char){
+    check(equivalence, LINE(""), std::string{"foo"}, "fo");
+    check(equivalence, LINE(""), std::string{"foo"}, "fob", tutor{[](char, char){
         return "Sort your chars out!";
       }});
 
-    check_equivalence(LINE(""), std::vector<std::string>{{"a"}, {"b"}}, std::initializer_list<std::string_view>{"a", "c"});
+    check(equivalence, LINE(""), std::vector<std::string>{{"a"}, {"b"}}, std::initializer_list<std::string_view>{"a", "c"});
 
-    check_equivalence(LINE(""), std::vector<std::string>{{"a"}, {"b"}}, std::initializer_list<std::string_view>{"a", "c"}, tutor{[](char, char){
+    check(equivalence, LINE(""), std::vector<std::string>{{"a"}, {"b"}}, std::initializer_list<std::string_view>{"a", "c"}, tutor{[](char, char){
         return "Ah, chars. So easy to get wrong.";
     }});
 
-    check_equivalence(LINE(""), std::pair<const int&, double>{5, 7.8}, std::pair<int, const double&>{-5, 6.8});
-    check_equivalence(LINE(""), std::tuple<const int&, double>{5, 7.8}, std::tuple<int, const double&>{-5, 6.8});
+    check(equivalence, LINE(""), std::pair<const int&, double>{5, 7.8}, std::pair<int, const double&>{-5, 6.8});
+    check(equivalence, LINE(""), std::tuple<const int&, double>{5, 7.8}, std::tuple<int, const double&>{-5, 6.8});
 
-    check_equivalence(LINE("Inequivalence of two different paths, neither of which exists"),
+    check(equivalence, LINE("Inequivalence of two different paths, neither of which exists"),
                       fs::path{working_materials()}.append("Stuff/Blah"),
                       fs::path{working_materials()}.append("Stuff/Blurg"));
 
-    check_equivalence(LINE("Inequivalence of two different paths, one of which exists"),
+    check(equivalence, LINE("Inequivalence of two different paths, one of which exists"),
                       fs::path{working_materials()}.append("Stuff/Blah"),
                       fs::path{working_materials()}.append("Stuff/A"));
 
-    check_equivalence(LINE("Inequivalence of directory/file"),
+    check(equivalence, LINE("Inequivalence of directory/file"),
                       fs::path{working_materials()}.append("Stuff/A"),
                       fs::path{working_materials()}.append("Stuff/A/foo.txt"));
 
-    check_equivalence(LINE("Inequivalence of differently named files"),
+    check(equivalence, LINE("Inequivalence of differently named files"),
                       fs::path{working_materials()}.append("Stuff/B/foo.txt"),
                       fs::path{working_materials()}.append("Stuff/B/bar.txt"));
 
-    check_equivalence(LINE("Inequivalence of file contents"),
+    check(equivalence, LINE("Inequivalence of file contents"),
                       fs::path{working_materials()}.append("Stuff/A/foo.txt"),
                       fs::path{working_materials()}.append("Stuff/B/foo.txt"));
 
-    check_equivalence(LINE("Inequivalence of differently named directories with the same contents"),
+    check(equivalence, LINE("Inequivalence of differently named directories with the same contents"),
                       fs::path{working_materials()}.append("Stuff/A"),
                       fs::path{working_materials()}.append("Stuff/C"));
 
-    check_equivalence(LINE("Inequivalence of directories with the same files but different contents"),
+    check(equivalence, LINE("Inequivalence of directories with the same files but different contents"),
                       fs::path{working_materials()}.append("Stuff/A"),
                       fs::path{working_materials()}.append("MoreStuff/A"));
 
-    check_equivalence(LINE("Inequivalence of directories with some common files"),
+    check(equivalence, LINE("Inequivalence of directories with some common files"),
                       fs::path{working_materials()}.append("Stuff/B"),
                       fs::path{working_materials()}.append("MoreStuff/B"));
 
-    check_equivalence(LINE("Inequivalence of directories with some common files"),
+    check(equivalence, LINE("Inequivalence of directories with some common files"),
                       fs::path{working_materials()}.append("MoreStuff/B"),
                       fs::path{working_materials()}.append("Stuff/B"));
 
-    check_equivalence(LINE("File inequivalence when default file checking is used"),
+    check(equivalence, LINE("File inequivalence when default file checking is used"),
                       fs::path{working_materials()}.append("CustomComparison/A/DifferingContent.ignore"),
                       fs::path{working_materials()}.append("CustomComparison/B/DifferingContent.ignore"));
 
-    check_equivalence(
+    check(equivalence, 
       LINE("Range inequivalence when default file checking us used"),
       std::vector<fs::path>{fs::path{working_materials()}.append("CustomComparison/A/DifferingContent.ignore")},
       std::vector<fs::path>{fs::path{working_materials()}.append("CustomComparison/B/DifferingContent.ignore")});
 
-    check_equivalence(LINE("Advice for equivalence checking"), foo{42}, 41, tutor{bland{}});
+    check(equivalence, LINE("Advice for equivalence checking"), foo{42}, 41, tutor{bland{}});
 
-    check_equivalence(LINE("Advice for range equivalence, where the containerized form is explicitly specialized"),
+    check(equivalence, LINE("Advice for range equivalence, where the containerized form is explicitly specialized"),
                       std::vector<foo>{{42}}, std::vector<int>{41}, tutor{bland{}});
 
-    check_equivalence(LINE("Advice for range equivalence, where the containerized form is not explicitly specialized"),
+    check(equivalence, LINE("Advice for range equivalence, where the containerized form is not explicitly specialized"),
                       std::set<foo>{{42}}, std::set<int>{41}, tutor{bland{}});
   }
 
   void false_positive_diagnostics::test_weak_equivalence_checks()
   {
     using beast = perfectly_normal_beast<int>;
-    check_weak_equivalence(LINE(""), beast{1, 2}, std::initializer_list<int>{1, 1});
-    check_weak_equivalence(LINE(""), beast{1, 2}, std::initializer_list<int>{1, 1}, tutor{[](int, int){
+    check(weak_equivalence, LINE(""), beast{1, 2}, std::initializer_list<int>{1, 1});
+    check(weak_equivalence, LINE(""), beast{1, 2}, std::initializer_list<int>{1, 1}, tutor{[](int, int){
         return "Don't mess with the beast.";
       }});
 
     using prediction = std::initializer_list<std::initializer_list<int>>;
-    check_weak_equivalence(LINE(""), std::vector<beast>{{1, 2}, {3, 4}}, prediction{{1, 2}, {3, 5}});
-    check_weak_equivalence(LINE(""), std::vector<beast>{{1, 2}, {3, 4}}, prediction{{1, 2}, {3, 5}},
+    check(weak_equivalence, LINE(""), std::vector<beast>{{1, 2}, {3, 4}}, prediction{{1, 2}, {3, 5}});
+    check(weak_equivalence, LINE(""), std::vector<beast>{{1, 2}, {3, 4}}, prediction{{1, 2}, {3, 5}},
                            tutor{[](int, int){
                              return "Or at least don't mess with a vector of beasts.";
                            }});
 
-    check_weak_equivalence(LINE("Weak inequivalence of directories with some common files"),
+    check(weak_equivalence, LINE("Weak inequivalence of directories with some common files"),
                            fs::path{working_materials()}.append("MoreStuff/B"),
                            fs::path{working_materials()}.append("Stuff/B"));
 
-    check_weak_equivalence(LINE("Directory weak inequivalence when default file checking is used"),
+    check(weak_equivalence, LINE("Directory weak inequivalence when default file checking is used"),
                            fs::path{working_materials()}.append("CustomComparison/A"),
                            fs::path{working_materials()}.append("CustomComparison/B"));
 
-    check_weak_equivalence(
+    check(weak_equivalence, 
       LINE("Weak inequivalence of range when default file checking is used"),
       std::vector<fs::path>{{fs::path{working_materials()}.append("CustomComparison/A")}},
       std::vector<fs::path>{{fs::path{working_materials()}.append("CustomComparison/B")}});
 
-    check_weak_equivalence(LINE("Advice for weak equivalence checking"),
+    check(weak_equivalence, LINE("Advice for weak equivalence checking"),
                            bar{42, 3.14}, std::pair<int, double>{41, 3.13}, tutor{bland{}});
 
-    check_weak_equivalence(
+    check(weak_equivalence, 
       LINE("Advice for range weak equivalence, where the containerized form is explicitly specialized"),
       std::vector<bar>{{42, 3.14}}, std::vector<std::pair<int, double>>{{41, 3.13}}, tutor{bland{}});
 
-    check_weak_equivalence(
+    check(weak_equivalence, 
       LINE("Advice for range weak equivalence, where the containerized form is not explicitly specialized"),
       std::list<bar>{{42, 3.14}}, std::list<std::pair<int, double>>{{41, 3.13}}, tutor{bland{}});
   }
@@ -432,8 +432,8 @@ namespace sequoia::testing
   {
     check(LINE(""), true);
 
-    check_equality(LINE(""), 5, 5);
-    check_equality(LINE(""), 5.0, 5.0);
+    check(equality, LINE(""), 5, 5);
+    check(equality, LINE(""), 5.0, 5.0);
   }
 
   void false_negative_diagnostics::test_exceptions()
@@ -445,34 +445,34 @@ namespace sequoia::testing
 
   void false_negative_diagnostics::test_heterogeneous()
   {
-    check_equality(LINE(""), std::pair<int, double>{5, 7.8}, std::pair<int, double>{5, 7.8});
+    check(equality, LINE(""), std::pair<int, double>{5, 7.8}, std::pair<int, double>{5, 7.8});
 
-    check_equality(LINE(""), std::tuple<int, double, float>{4, 3.4, -9.2f}, std::tuple<int, double, float>{4, 3.4, -9.2f});
+    check(equality, LINE(""), std::tuple<int, double, float>{4, 3.4, -9.2f}, std::tuple<int, double, float>{4, 3.4, -9.2f});
   }
 
   void false_negative_diagnostics::test_variant()
   {
     using var = std::variant<int, double>;
 
-    check_equality(LINE(""), var{0}, var{0});
-    check_equality(LINE(""), var{0.0}, var{0.0});
-    check_equality(LINE(""), var{3}, var{3});
-    check_equality(LINE(""), var{4.0}, var{4.0});
+    check(equality, LINE(""), var{0}, var{0});
+    check(equality, LINE(""), var{0.0}, var{0.0});
+    check(equality, LINE(""), var{3}, var{3});
+    check(equality, LINE(""), var{4.0}, var{4.0});
   }
 
   void false_negative_diagnostics::test_optional()
   {
     using opt = std::optional<int>;
-    check_equality(LINE(""), opt{}, opt{});
-    check_equality(LINE(""), opt{0}, opt{0});
-    check_equality(LINE(""), opt{-1}, opt{-1});
+    check(equality, LINE(""), opt{}, opt{});
+    check(equality, LINE(""), opt{0}, opt{0});
+    check(equality, LINE(""), opt{-1}, opt{-1});
   }
 
   void false_negative_diagnostics::test_container_checks()
   {
-    check_equality(LINE("Empty vector check which should pass"), std::vector<double>{}, std::vector<double>{});
-    check_equality(LINE("One element vector check which should pass"), std::vector<double>{2}, std::vector<double>{2});
-    check_equality(LINE("Multi-element vector comparison which should pass"), std::vector<double>{1,5}, std::vector<double>{1,5});
+    check(equality, LINE("Empty vector check which should pass"), std::vector<double>{}, std::vector<double>{});
+    check(equality, LINE("One element vector check which should pass"), std::vector<double>{2}, std::vector<double>{2});
+    check(equality, LINE("Multi-element vector comparison which should pass"), std::vector<double>{1,5}, std::vector<double>{1,5});
 
     std::vector<float> refs{-4.3f, 2.8f, 6.2f, 7.3f}, ans{1.1f, -4.3f, 2.8f, 6.2f, 8.4f, 7.3f};
 
@@ -482,7 +482,7 @@ namespace sequoia::testing
 
   void false_negative_diagnostics::test_strings()
   {
-    check_equality(LINE("Differing strings"), std::string{"Hello, World!"}, std::string{"Hello, World!"});
+    check(equality, LINE("Differing strings"), std::string{"Hello, World!"}, std::string{"Hello, World!"});
   }
 
   void false_negative_diagnostics::test_mixed()
@@ -495,7 +495,7 @@ namespace sequoia::testing
     type a{t_0{{1, 2.1f}, {2, 2.8f}}, {3.3, -9.6, 3.2}, {1.1, 0.2}};
     type b{t_0{{1, 2.1f}, {2, 2.8f}}, {3.3, -9.6, 3.2}, {1.1, 0.2}};
 
-    check_equality(LINE(""), a, b);
+    check(equality, LINE(""), a, b);
   }
 
   void false_negative_diagnostics::test_regular_semantics()
@@ -506,74 +506,74 @@ namespace sequoia::testing
 
   void false_negative_diagnostics::test_equivalence_checks()
   {
-    check_equivalence(LINE(""), std::string{"foo"}, "foo");
+    check(equivalence, LINE(""), std::string{"foo"}, "foo");
 
-    check_equivalence(LINE(""), std::vector<std::string>{{"a"}, {"b"}}, std::initializer_list<std::string_view>{"a", "b"});
+    check(equivalence, LINE(""), std::vector<std::string>{{"a"}, {"b"}}, std::initializer_list<std::string_view>{"a", "b"});
 
-    check_equivalence(LINE("Equivalence of a file to itself"),
+    check(equivalence, LINE("Equivalence of a file to itself"),
                       fs::path{working_materials()}.append("Stuff/A/foo.txt"),
                       fs::path{working_materials()}.append("Stuff/A/foo.txt"));
 
-    check_equivalence(LINE("Equivalence of a directory to itself"),
+    check(equivalence, LINE("Equivalence of a directory to itself"),
                       fs::path{working_materials()}.append("Stuff/A"),
                       fs::path{working_materials()}.append("Stuff/A"));
 
-    check_equivalence(LINE("Equivalence of a directory, with sub-directories to itself"),
+    check(equivalence, LINE("Equivalence of a directory, with sub-directories to itself"),
                       fs::path{working_materials()}.append("Stuff"),
                       fs::path{working_materials()}.append("Stuff"));
 
-    check_equivalence(LINE("Equivalence of identical directories in different locations"),
+    check(equivalence, LINE("Equivalence of identical directories in different locations"),
                       fs::path{working_materials()}.append("Stuff/C"),
                       fs::path{working_materials()}.append("SameStuff/C"));
 
-    check_equivalence(LINE("File equivalence when .ignore is ignored"),
+    check(equivalence, LINE("File equivalence when .ignore is ignored"),
                       value_based_customization<bespoke_file_checker>{},
                       fs::path{working_materials()}.append("CustomComparison/A/DifferingContent.ignore"),
                       fs::path{working_materials()}.append("CustomComparison/B/DifferingContent.ignore"));
 
-    check_equivalence(LINE("Range equivalence when .ignore is ignored"),
+    check(equivalence, LINE("Range equivalence when .ignore is ignored"),
                       value_based_customization<bespoke_file_checker>{},
                       std::vector<fs::path>{fs::path{working_materials()}.append("CustomComparison/A/DifferingContent.ignore")},
                       std::vector<fs::path>{fs::path{working_materials()}.append("CustomComparison/B/DifferingContent.ignore")});
 
-    check_equivalence(LINE("Advice for equivalence checking"), foo{42}, 42, tutor{bland{}});
+    check(equivalence, LINE("Advice for equivalence checking"), foo{42}, 42, tutor{bland{}});
 
-    check_equivalence(LINE("Advice for range equivalence, where the containerized for is explicitly specialized"), 
+    check(equivalence, LINE("Advice for range equivalence, where the containerized for is explicitly specialized"), 
                       std::vector<foo>{{42}}, std::vector<int>{42}, tutor{bland{}});
 
-    check_equivalence(LINE("Advice for range equivalence, where the containerized for is not explicitly specialized"),
+    check(equivalence, LINE("Advice for range equivalence, where the containerized for is not explicitly specialized"),
       std::set<foo>{{42}}, std::set<int>{42}, tutor{bland{}});
   }
 
   void false_negative_diagnostics::test_weak_equivalence_checks()
   {
     using beast = perfectly_normal_beast<int>;
-    check_weak_equivalence(LINE(""), beast{1, 2}, std::initializer_list<int>{1, 2});
+    check(weak_equivalence, LINE(""), beast{1, 2}, std::initializer_list<int>{1, 2});
 
     using prediction = std::initializer_list<std::initializer_list<int>>;
-    check_weak_equivalence(LINE(""), std::vector<beast>{{1, 2}, {3, 4}}, prediction{{1, 2}, {3, 4}});
+    check(weak_equivalence, LINE(""), std::vector<beast>{{1, 2}, {3, 4}}, prediction{{1, 2}, {3, 4}});
 
-    check_weak_equivalence(LINE("Weak equivalence of directories in with the same contents but different names"),
+    check(weak_equivalence, LINE("Weak equivalence of directories in with the same contents but different names"),
                            fs::path{working_materials()}.append("Stuff"),
                            fs::path{working_materials()}.append("SameStuff"));
 
-    check_weak_equivalence<>(LINE("Weak equivalence when .ignore is ignored"),
-                             value_based_customization<bespoke_file_checker>{},
-                             fs::path{working_materials()}.append("CustomComparison/A"),
-                             fs::path{working_materials()}.append("CustomComparison/B"));
+    check(weak_equivalence, LINE("Weak equivalence when .ignore is ignored"),
+                            value_based_customization<bespoke_file_checker>{},
+                            fs::path{working_materials()}.append("CustomComparison/A"),
+                            fs::path{working_materials()}.append("CustomComparison/B"));
 
-    check_weak_equivalence(LINE("Weak equivalence of range when .ignore is ignored"),
+    check(weak_equivalence, LINE("Weak equivalence of range when .ignore is ignored"),
                            value_based_customization<bespoke_file_checker>{},
                            std::vector<fs::path>{{fs::path{working_materials()}.append("CustomComparison/A")}},
                            std::vector<fs::path>{{fs::path{working_materials()}.append("CustomComparison/B")}});
 
-    check_weak_equivalence(LINE("Advice for weak equivalence checking"), bar{42, 3.14}, std::pair<int, double>{42, 3.14}, tutor{bland{}});
+    check(weak_equivalence, LINE("Advice for weak equivalence checking"), bar{42, 3.14}, std::pair<int, double>{42, 3.14}, tutor{bland{}});
 
-    check_weak_equivalence(
+    check(weak_equivalence, 
       LINE("Advice for range weak equivalence, where the containerized form is explicitly specialized"),
       std::vector<bar>{{42, 3.14}}, std::vector<std::pair<int, double>>{{42, 3.14}}, tutor{bland{}});
 
-    check_weak_equivalence(
+    check(weak_equivalence, 
       LINE("Advice for range weak equivalence, where the containerized form is not explicitly specialized"),
       std::list<bar>{{42, 3.14}}, std::list<std::pair<int, double>>{{42, 3.14}}, tutor{bland{}});
   }

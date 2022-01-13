@@ -18,8 +18,8 @@ namespace sequoia::testing
 	void probability_test::run_tests()
 	{
 		maths::probability x{0.5}, y{1.0};
-		check_equivalence(LINE(""), x, 0.5);
-		check_equivalence(LINE(""), y, 1.0);
+		check(equivalence, LINE(""), x, 0.5);
+		check(equivalence, LINE(""), y, 1.0);
 		check_semantics(LINE(""), x, y, std::weak_ordering::less);
 	}
 }

@@ -31,22 +31,22 @@ namespace sequoia::testing
     template<test_mode Mode>
     static void test_weak_equivalence(test_logger<Mode>& logger, const type& operation, const type& prediction)
     {
-      check(logger, operation.early, prediction.early, "early");
-      check(logger, operation.late, prediction.late, "late");
-      check_equality("Operation Parameters differ", logger, operation.arguments, prediction.arguments);
+      check_executor(logger, operation.early, prediction.early, "early");
+      check_executor(logger, operation.late, prediction.late, "late");
+      check(equality, "Operation Parameters differ", logger, operation.arguments, prediction.arguments);
     }
   private:
     using executor = sequoia::parsing::commandline::executor;
 
     template<test_mode Mode>
-    static void check(test_logger<Mode>& logger, const executor& operation, const executor& prediction, std::string_view tag)
+    static void check_executor(test_logger<Mode>& logger, const executor& operation, const executor& prediction, std::string_view tag)
     {
       const bool consistent{(operation && prediction) || (!operation && !prediction)};
       testing::check(std::string{"Existence of" }.append(tag).append(" function objects differs"), logger, consistent);
 
       if(operation && prediction)
       {
-        check_equality("Function object tag", logger,
+        check(equality, "Function object tag", logger,
                        operation.target<function_object>()->tag,
                        prediction.target<function_object>()->tag);
       }
@@ -61,9 +61,9 @@ namespace sequoia::testing
     template<test_mode Mode>
     static void test_weak_equivalence(test_logger<Mode>& logger, const type& obtained, const type& prediction)
     {
-      check_equality("Zeroth Argument", logger, obtained.zeroth_arg, prediction.zeroth_arg);
-      check_weak_equivalence("Operations", logger, obtained.operations, prediction.operations);
-      check_equality("Help", logger, obtained.help, prediction.help);
+      check(equality, "Zeroth Argument", logger, obtained.zeroth_arg, prediction.zeroth_arg);
+      check(weak_equivalence, "Operations", logger, obtained.operations, prediction.operations);
+      check(equality, "Help", logger, obtained.help, prediction.help);
     }
   };
 
@@ -76,7 +76,7 @@ namespace sequoia::testing
     template<test_mode Mode>
     static void test_weak_equivalence(test_logger<Mode>& logger, const type& obtained, const prediction_type& prediction)
     {
-      check_weak_equivalence("", logger, obtained.get(), prediction);
+      check(weak_equivalence, "", logger, obtained.get(), prediction);
     }
   };
 

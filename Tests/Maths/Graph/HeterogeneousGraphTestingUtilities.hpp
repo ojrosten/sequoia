@@ -30,8 +30,8 @@ namespace sequoia::testing
         using connectivity_t = typename type::connectivity_type;
         using nodes_t = typename type::nodes_type;
 
-        check_equivalence("", logger, static_cast<const connectivity_t&>(graph), connPrediction);
-        check_equivalence("", logger, static_cast<const nodes_t&>(graph), nodesPrediction);
+        check(equivalence, "", logger, static_cast<const connectivity_t&>(graph), connPrediction);
+        check(equivalence, "", logger, static_cast<const nodes_t&>(graph), nodesPrediction);
       }
     };
   }

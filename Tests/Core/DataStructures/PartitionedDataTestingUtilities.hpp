@@ -18,11 +18,11 @@ namespace sequoia::testing
     template<test_mode Mode, class PartitionedData>
     void check_details(test_logger<Mode>& logger, const PartitionedData& data, const PartitionedData& prediction)
     {
-      check_equality("Emptiness incorrect", logger, data.empty(), prediction.empty());
+      check(equality, "Emptiness incorrect", logger, data.empty(), prediction.empty());
 
-      check_equality("Size incorrect", logger, data.size(), prediction.size());
+      check(equality, "Size incorrect", logger, data.size(), prediction.size());
 
-      if(check_equality("Number of partitions incorrect", logger, data.num_partitions(), prediction.num_partitions()))
+      if(check(equality, "Number of partitions incorrect", logger, data.num_partitions(), prediction.num_partitions()))
       {
         for(std::size_t i{}; i<prediction.num_partitions(); ++i)
         {
@@ -31,7 +31,7 @@ namespace sequoia::testing
           {
             for(int64_t j{}; j<distance(prediction.begin_partition(i), prediction.end_partition(i)); ++j)
             {
-              check_equality(append_lines(message,"[] (const)"), logger, data[i][j], prediction[i][j]);
+              check(equality, append_lines(message,"[] (const)"), logger, data[i][j], prediction[i][j]);
             }
           }
 
@@ -45,7 +45,7 @@ namespace sequoia::testing
           {
             for(int64_t j{}; j<distance(r.begin_partition(i), r.end_partition(i)); ++j)
             {
-              check_equality(append_lines(message,"[]"), logger, d[i][j], r[i][j]);
+              check(equality, append_lines(message,"[]"), logger, d[i][j], r[i][j]);
             }
           }
 
@@ -55,14 +55,14 @@ namespace sequoia::testing
     }
 
     template<test_mode Mode, class PartitionedData, class T=typename PartitionedData::value_type>
-    void check_equivalence(test_logger<Mode>& logger, const PartitionedData& data, std::initializer_list<std::initializer_list<T>> prediction)
+    void check(equivalence_check_t, test_logger<Mode>& logger, const PartitionedData& data, std::initializer_list<std::initializer_list<T>> prediction)
     {
       const auto numElements{std::accumulate(prediction.begin(), prediction.end(), std::size_t{},
         [](std::size_t val, std::initializer_list<T> partition) { return val += partition.size();})};
 
-      check_equality("Number of elements incorrect", logger, data.size(), numElements);
+      check(equality, "Number of elements incorrect", logger, data.size(), numElements);
 
-      if(check_equality("Number of partitions incorrect", logger, data.num_partitions(), prediction.size()))
+      if(check(equality, "Number of partitions incorrect", logger, data.num_partitions(), prediction.size()))
       {
         for(std::size_t i{}; i<prediction.size(); ++i)
         {
@@ -89,7 +89,7 @@ namespace sequoia::testing
     template<test_mode Mode>
     static void test_equivalence(test_logger<Mode>& logger, const type& data, std::initializer_list<std::initializer_list<T>> prediction)
     {
-      impl::check_equivalence(logger, data, prediction);
+      impl::check(equivalence, logger, data, prediction);
     }
   };
 
@@ -108,7 +108,7 @@ namespace sequoia::testing
     template<test_mode Mode>
     static void test_equivalence(test_logger<Mode>& logger, const type& data, equivalent_type prediction)
     {
-      impl::check_equivalence(logger, data, prediction);
+      impl::check(equivalence, logger, data, prediction);
     }
   };
 
@@ -126,7 +126,7 @@ namespace sequoia::testing
     template<test_mode Mode>
     static void test_equivalence(test_logger<Mode>& logger, const type& data, std::initializer_list<std::initializer_list<T>> prediction)
     {
-      impl::check_equivalence(logger, data, prediction);
+      impl::check(equivalence, logger, data, prediction);
     }
   };
 }

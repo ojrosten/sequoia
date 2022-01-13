@@ -35,14 +35,14 @@ namespace sequoia::testing
     test_list prediction{toRun};
     std::sort(prediction->begin(), prediction->end());
 
-    check_equality(description, actual, prediction);
+    check(equality, description, actual, prediction);
 
     for(const auto& f : makeStale)
     {
       fs::last_write_time(f, info.reset_time);
     }
 
-    check_equality(append_lines(description, "Nothing Stale"), tests_to_run(info.source_repo, info.tests_repo, info.materials, "", info.reset_time, info.exe_time_stamp, cutoff), test_list{{}});
+    check(equality, append_lines(description, "Nothing Stale"), tests_to_run(info.source_repo, info.tests_repo, info.materials, "", info.reset_time, info.exe_time_stamp, cutoff), test_list{{}});
   }
 
   void dependency_analyzer_free_test::run_tests()
@@ -71,8 +71,8 @@ namespace sequoia::testing
 #
   void dependency_analyzer_free_test::test_dependencies()
   {
-    check_equality(LINE("No timestamp"), tests_to_run(m_Info.source_repo, m_Info.tests_repo, m_Info.materials, "", std::nullopt, std::nullopt, ""), test_list{});
-    check_equality(LINE("Nothing stale"), tests_to_run(m_Info.source_repo, m_Info.tests_repo, m_Info.materials, "", std::chrono::file_clock::now(), std::nullopt, ""), test_list{{}});
+    check(equality, LINE("No timestamp"), tests_to_run(m_Info.source_repo, m_Info.tests_repo, m_Info.materials, "", std::nullopt, std::nullopt, ""), test_list{});
+    check(equality, LINE("Nothing stale"), tests_to_run(m_Info.source_repo, m_Info.tests_repo, m_Info.materials, "", std::chrono::file_clock::now(), std::nullopt, ""), test_list{{}});
 
     check_tests_to_run(LINE("Test cpp stale (no cutoff)"),
                        m_Info,

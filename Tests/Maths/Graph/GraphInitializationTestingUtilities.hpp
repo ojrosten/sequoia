@@ -953,10 +953,10 @@ namespace sequoia
             check_2_1(g);
 
             constexpr auto o{g.order()};
-            m_Checker.template check_equality<size_t>(LINE("Check constexpr order"), o, 2u);
+            m_Checker.check(equality, LINE("Check constexpr order"), o, 2_sz);
 
             constexpr auto s{g.size()};
-            m_Checker.template check_equality<size_t>(LINE("Check constexpr size"), s, 1u);
+            m_Checker.check(equality, LINE("Check constexpr size"), s, 1_sz);
           }
 
           if constexpr(!std::is_empty_v<edge_weight>)
@@ -965,10 +965,10 @@ namespace sequoia
             check_2_1w(g);
 
             constexpr auto o{g.order()};
-            m_Checker.template check_equality<size_t>(LINE("Check constexpr order"), o, 2u);
+            m_Checker.check(equality, LINE("Check constexpr order"), o, 2_sz);
 
             constexpr auto s{g.size()};
-            m_Checker.template check_equality<size_t>(LINE("Check constexpr size"), s, 1u);
+            m_Checker.check(equality, LINE("Check constexpr size"), s, 1_sz);
           }
         }
         else

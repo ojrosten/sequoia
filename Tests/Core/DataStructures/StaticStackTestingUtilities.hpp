@@ -21,15 +21,15 @@ namespace sequoia::testing
     template<test_mode Mode>
     static void test_equality(test_logger<Mode>& logger, const type& stack, const type& prediction)
     {
-      check_equality("Emptiness incorrect", logger, stack.empty(), prediction.empty());
-      check_equality("Size incorrect", logger, stack.size(), prediction.size());
+      check(equality, "Emptiness incorrect", logger, stack.empty(), prediction.empty());
+      check(equality, "Size incorrect", logger, stack.size(), prediction.size());
 
       if(!prediction.empty() && !stack.empty())
       {
-        check_equality("Top element incorrect", logger, stack.top(), prediction.top());
+        check(equality, "Top element incorrect", logger, stack.top(), prediction.top());
       }
 
-      check_equality("Hidden state incorrect", logger, prediction == stack, true);
+      check(equality, "Hidden state incorrect", logger, prediction == stack, true);
     }
   };
 }

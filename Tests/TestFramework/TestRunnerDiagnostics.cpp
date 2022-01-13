@@ -23,10 +23,10 @@ namespace sequoia::testing
 
   void test_runner_false_positive_test::test_template_data_generation()
   {
-    check_equality(LINE("Wrong species"),
+    check(equality, LINE("Wrong species"),
                    generate_template_data("<class T>"), template_data{{"typename", "T"}});
 
-    check_equality(LINE("Wrong symbol"),
+    check(equality, LINE("Wrong symbol"),
                    generate_template_data("<class S>"), template_data{{"class", "T"}});
   }
 }

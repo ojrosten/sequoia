@@ -88,7 +88,7 @@ namespace sequoia
 
       //   X
       g.add_node();
-      check_equality(LINE(""), g, {{}});
+      check(equality, LINE(""), g, {{}});
 
       g.insert_join(g.cbegin_edges(0), 0);
       //  /<\
@@ -97,11 +97,11 @@ namespace sequoia
 
       if constexpr(GraphFlavour == graph_flavour::undirected_embedded)
       {
-        check_equality(LINE(""), g, {{{0,1}, {0,0}}});
+        check(equality, LINE(""), g, {{{0,1}, {0,0}}});
       }
       else
       {
-        check_equality(LINE(""), g, {{{0,inv_t{},1}, {0,inv_t{},0}}});
+        check(equality, LINE(""), g, {{{0,inv_t{},1}, {0,inv_t{},0}}});
         check_semantics(LINE("Regular semantics"), g, {{{0,0,1}, {0,0,0}}});
       }
 
@@ -115,11 +115,11 @@ namespace sequoia
 
       if constexpr(GraphFlavour == graph_flavour::undirected_embedded)
       {
-        check_equality(LINE(""), g, {{{0,2}, {0,3}, {0,0}, {0,1}}});
+        check(equality, LINE(""), g, {{{0,2}, {0,3}, {0,0}, {0,1}}});
       }
       else
       {
-        check_equality(LINE(""), g, {{{0,inv_t{},2}, {0,0,3}, {0,inv_t{},0}, {0,0,1}}});
+        check(equality, LINE(""), g, {{{0,inv_t{},2}, {0,0,3}, {0,inv_t{},0}, {0,0,1}}});
       }
 
       g.insert_join(g.cbegin_edges(0), g.cbegin_edges(0));
@@ -134,11 +134,11 @@ namespace sequoia
 
       if constexpr(GraphFlavour == graph_flavour::undirected_embedded)
       {
-        check_equality(LINE(""), g, {{{0,1}, {0,0}, {0,4}, {0,5}, {0,2}, {0,3}}});
+        check(equality, LINE(""), g, {{{0,1}, {0,0}, {0,4}, {0,5}, {0,2}, {0,3}}});
       }
       else
       {
-        check_equality(LINE(""), g, {{{0,inv_t{},1}, {0,inv_t{},0}, {0,inv_t{},4}, {0,0,5}, {0,inv_t{},2}, {0,0,3}}});
+        check(equality, LINE(""), g, {{{0,inv_t{},1}, {0,inv_t{},0}, {0,inv_t{},4}, {0,0,5}, {0,inv_t{},2}, {0,0,3}}});
       }
 
       g.insert_node(0);
@@ -150,11 +150,11 @@ namespace sequoia
 
       if constexpr(GraphFlavour == graph_flavour::undirected_embedded)
       {
-        check_equality(LINE(""), g, {{}, {{1,1}, {1,0}, {1,4}, {1,5}, {1,2}, {1,3}}});
+        check(equality, LINE(""), g, {{}, {{1,1}, {1,0}, {1,4}, {1,5}, {1,2}, {1,3}}});
       }
       else
       {
-        check_equality(LINE(""), g, {{}, {{1,inv_t{},1}, {1,inv_t{},0}, {1,inv_t{},4}, {1,1,5}, {1,inv_t{},2}, {1,1,3}}});
+        check(equality, LINE(""), g, {{}, {{1,inv_t{},1}, {1,inv_t{},0}, {1,inv_t{},4}, {1,1,5}, {1,inv_t{},2}, {1,1,3}}});
       }
 
       g.insert_join(g.cbegin_edges(0), g.cbegin_edges(1));
@@ -165,11 +165,11 @@ namespace sequoia
 
       if constexpr(GraphFlavour == graph_flavour::undirected_embedded)
       {
-        check_equality(LINE(""), g, {{{1,0}}, {{0,0}, {1,2}, {1,1}, {1,5}, {1,6}, {1,3}, {1,4}}});
+        check(equality, LINE(""), g, {{{1,0}}, {{0,0}, {1,2}, {1,1}, {1,5}, {1,6}, {1,3}, {1,4}}});
       }
       else
       {
-        check_equality(LINE(""), g, {{{0,1,0}}, {{0,1,0}, {1,inv_t{},2}, {1,inv_t{},1}, {1,inv_t{},5}, {1,1,6}, {1,inv_t{},3}, {1,1,4}}});
+        check(equality, LINE(""), g, {{{0,1,0}}, {{0,1,0}, {1,inv_t{},2}, {1,inv_t{},1}, {1,inv_t{},5}, {1,1,6}, {1,inv_t{},3}, {1,1,4}}});
       }
 
       g.insert_join(g.cbegin_edges(1)+1, g.cbegin_edges(0));
@@ -181,14 +181,14 @@ namespace sequoia
 
       if constexpr(GraphFlavour == graph_flavour::undirected_embedded)
       {
-        check_equality(
+        check(equality, 
           LINE(""),
           g,
           {{{1,1}, {1,0}}, {{0,1}, {0,0}, {1,3}, {1,2}, {1,6}, {1,7}, {1,4}, {1,5}}});
       }
       else
       {
-        check_equality(
+        check(equality, 
           LINE(""),
           g,
           {{{1,0,1}, {0,1,0}}, {{0,1,1}, {1,0,0}, {1,inv_t{},3}, {1,inv_t{},2}, {1,inv_t{},6}, {1,1,7}, {1,inv_t{},4}, {1,1,5}}});
@@ -211,11 +211,11 @@ namespace sequoia
 
       if constexpr(GraphFlavour == graph_flavour::undirected_embedded)
       {
-        check_equality(LINE(""), g, {{{1,0,5}}, {{0,0,5}}});
+        check(equality, LINE(""), g, {{{1,0,5}}, {{0,0,5}}});
       }
       else
       {
-        check_equality(LINE(""), g, {{{0,1,0,5}}, {{0,1,0,5}}});
+        check(equality, LINE(""), g, {{{0,1,0,5}}, {{0,1,0,5}}});
       }
 
       g.insert_join(g.cend_edges(1), 0, 6);
@@ -226,12 +226,12 @@ namespace sequoia
 
       if constexpr(GraphFlavour == graph_flavour::undirected_embedded)
       {
-        check_equality(LINE(""), g, {{{1,1,5}}, {{1,2,6}, {0,0,5}, {1,0,6}}});
+        check(equality, LINE(""), g, {{{1,1,5}}, {{1,2,6}, {0,0,5}, {1,0,6}}});
         check_semantics(LINE("Regular semantics"), g, {{{1,0,5}}, {{0,0,5}, {1,2,6}, {1,1,6}}});
       }
       else
       {
-        check_equality(LINE(""), g, {{{0,1,1,5}}, {{1,inversion_constant<true>{},2,6}, {0,1,0,5}, {1,inversion_constant<true>{},0,6}}});
+        check(equality, LINE(""), g, {{{0,1,1,5}}, {{1,inversion_constant<true>{},2,6}, {0,1,0,5}, {1,inversion_constant<true>{},0,6}}});
         check_semantics(LINE("Regular semantics"), g, {{{0,1,1,5}}, {{1,1,2,6}, {0,1,0,5}, {1,1,0,6}}});
       }
 

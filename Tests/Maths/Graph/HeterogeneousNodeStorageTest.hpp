@@ -21,8 +21,6 @@ namespace sequoia::testing
     [[nodiscard]]
     std::string_view source_file() const noexcept final;
   private:
-    using regular_test::check_equality;
-
     void run_tests() final;
 
     template<class... Ts>

@@ -60,22 +60,22 @@ namespace sequoia::testing
     sd = standard_deviation(data.begin(), data.end());
     ssd = sample_standard_deviation(data.begin(), data.end());
 
-    check_equality(LINE(""), m.value(), 2.0);
+    check(equality, LINE(""), m.value(), 2.0);
 
-    check_equality(LINE(""), sq.first.value(), 0.0);
-    check_equality(LINE(""), sq.second.value(), 2.0);
+    check(equality, LINE(""), sq.first.value(), 0.0);
+    check(equality, LINE(""), sq.second.value(), 2.0);
 
-    check_equality(LINE(""), var.first.value(), 0.0);
-    check_equality(LINE(""), var.second.value(), 2.0);
+    check(equality, LINE(""), var.first.value(), 0.0);
+    check(equality, LINE(""), var.second.value(), 2.0);
 
     check(LINE(""), !uvar.first.has_value());
-    check_equality(LINE(""), uvar.second.value(), 2.0);
+    check(equality, LINE(""), uvar.second.value(), 2.0);
 
-    check_equality(LINE(""), sd.first.value(), 0.0);
-    check_equality(LINE(""), sd.second.value(), 2.0);
+    check(equality, LINE(""), sd.first.value(), 0.0);
+    check(equality, LINE(""), sd.second.value(), 2.0);
 
     check(LINE(""), !ssd.first.has_value());
-    check_equality(LINE(""), ssd.second.value(), 2.0);
+    check(equality, LINE(""), ssd.second.value(), 2.0);
 
     // [2][4]
     data.push_back(4);
@@ -87,22 +87,22 @@ namespace sequoia::testing
     sd = standard_deviation(data.begin(), data.end());
     ssd = sample_standard_deviation(data.begin(), data.end());
 
-    check_equality(LINE(""), m.value(), 3.0);
+    check(equality, LINE(""), m.value(), 3.0);
 
-    check_equality(LINE(""), sq.first.value(), 2.0);
-    check_equality(LINE(""), sq.second.value(), 3.0);
+    check(equality, LINE(""), sq.first.value(), 2.0);
+    check(equality, LINE(""), sq.second.value(), 3.0);
 
-    check_equality(LINE(""), var.first.value(), 1.0);
-    check_equality(LINE(""), var.second.value(), 3.0);
+    check(equality, LINE(""), var.first.value(), 1.0);
+    check(equality, LINE(""), var.second.value(), 3.0);
 
-    check_equality(LINE(""), uvar.first.value(), 2.0);
-    check_equality(LINE(""), uvar.second.value(), 3.0);
+    check(equality, LINE(""), uvar.first.value(), 2.0);
+    check(equality, LINE(""), uvar.second.value(), 3.0);
 
-    check_equality(LINE(""), sd.first.value(), 1.0);
-    check_equality(LINE(""), sd.second.value(), 3.0);
+    check(equality, LINE(""), sd.first.value(), 1.0);
+    check(equality, LINE(""), sd.second.value(), 3.0);
 
-    check_equality(LINE(""), ssd.first.value(), 2.0);
-    check_equality(LINE(""), ssd.second.value(), 3.0);
+    check(equality, LINE(""), ssd.first.value(), 2.0);
+    check(equality, LINE(""), ssd.second.value(), 3.0);
 
     // [2][4][9]
     data.push_back(9);
@@ -114,21 +114,21 @@ namespace sequoia::testing
     sd = standard_deviation(data.begin(), data.end());
     ssd = sample_standard_deviation(data.begin(), data.end());
 
-    check_equality(LINE(""), m.value(), 5.0);
+    check(equality, LINE(""), m.value(), 5.0);
 
-    check_equality(LINE(""), sq.first.value(), 26.0);
-    check_equality(LINE(""), sq.second.value(), 5.0);
+    check(equality, LINE(""), sq.first.value(), 26.0);
+    check(equality, LINE(""), sq.second.value(), 5.0);
 
-    check_equality(LINE(""), var.first.value(), 26.0/3);
-    check_equality(LINE(""), var.second.value(), 5.0);
+    check(equality, LINE(""), var.first.value(), 26.0/3);
+    check(equality, LINE(""), var.second.value(), 5.0);
 
-    check_equality(LINE(""), uvar.first.value(), 13.0);
-    check_equality(LINE(""), uvar.second.value(), 5.0);
+    check(equality, LINE(""), uvar.first.value(), 13.0);
+    check(equality, LINE(""), uvar.second.value(), 5.0);
 
-    check_equality(LINE(""), sd.first.value(), std::sqrt(26.0/3.0));
-    check_equality(LINE(""), sd.second.value(), 5.0);
+    check(equality, LINE(""), sd.first.value(), std::sqrt(26.0/3.0));
+    check(equality, LINE(""), sd.second.value(), 5.0);
 
-    check_equality(LINE(""), ssd.first.value(), std::sqrt(26.0/1.5));
-    check_equality(LINE(""), ssd.second.value(), 5.0);
+    check(equality, LINE(""), ssd.first.value(), std::sqrt(26.0/1.5));
+    check(equality, LINE(""), ssd.second.value(), 5.0);
   }
 }

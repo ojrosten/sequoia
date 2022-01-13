@@ -49,10 +49,10 @@ namespace sequoia::testing::impl
 
     using ctag = container_tag_constant<tag>;
     check_para_move_allocation(logger, ctag{}, v, std::tuple_cat(make_allocation_checkers(info)...));
-    if(check_equality("Inonsistent para-move constructor", logger, v, zClone))
+    if(check(equality, "Inonsistent para-move constructor", logger, v, zClone))
     {
       std::optional<T> w{std::move(v)};
-      if(check_equality("Inconsistent move construction", logger, *w, zClone))
+      if(check(equality, "Inconsistent move construction", logger, *w, zClone))
       {
         return std::move(w);
       }

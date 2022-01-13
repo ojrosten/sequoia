@@ -50,11 +50,11 @@ namespace sequoia::testing
 
     w.set(2);
 
-    check_equality(LINE(""), w, wrapper{2});
+    check(equality, LINE(""), w, wrapper{2});
 
     w.mutate([](auto& u) { u *=2; });
 
-    check_equality(LINE(""), w, wrapper{4});
+    check(equality, LINE(""), w, wrapper{4});
   }
   
   void uniform_wrapper_test::test_container_type()
@@ -76,7 +76,7 @@ namespace sequoia::testing
 
     w.set(2);
 
-    check_equality(LINE(""), w, wrapper{std::vector<int>{2}});
+    check(equality, LINE(""), w, wrapper{std::vector<int>{2}});
 
     // TO DO: prefer MSVC version once the spaceship fully lands elsewhere
 #ifdef _MSC_VER
@@ -87,7 +87,7 @@ namespace sequoia::testing
 
     v.mutate([](auto& u) { u.push_back(3); });
 
-    check_equality(LINE(""), v, wrapper{std::vector<int>{1, 3}});
+    check(equality, LINE(""), v, wrapper{std::vector<int>{1, 3}});
 
     // TO DO: prefer MSVC version once the spaceship fully lands elsewhere
 #ifdef _MSC_VER
@@ -108,7 +108,7 @@ namespace sequoia::testing
     wrapper w{};
     constexpr wrapper v{make(1, 2.0)};
 
-    check_equality(LINE(""), v, wrapper{2, 4.0});
+    check(equality, LINE(""), v, wrapper{2, 4.0});
 
     check_semantics(LINE("Regular semantics"), w, v);
   }

@@ -128,7 +128,7 @@ namespace sequoia::testing
 
       expected.swap_edges(0, 1, 2);
       expected.swap_edges(2, 0, 2);
-      check_equality(LINE(""), graph, expected);
+      check(equality, LINE(""), graph, expected);
     }
     else if constexpr(GraphFlavour == flavour::directed)
     {
@@ -140,7 +140,7 @@ namespace sequoia::testing
         {5_sz, 2_sz, 10_sz, 4_sz}
       };
 
-      check_equality(LINE(""), graph, expected);
+      check(equality, LINE(""), graph, expected);
     }
     else if constexpr(GraphFlavour == flavour::undirected_embedded)
     {
@@ -152,7 +152,7 @@ namespace sequoia::testing
         {5_sz, 2_sz, 10_sz, 4_sz}
       };
 
-      check_equality(LINE(""), graph, expected);
+      check(equality, LINE(""), graph, expected);
     }
     else if constexpr(GraphFlavour == flavour::directed_embedded)
     {
@@ -164,7 +164,7 @@ namespace sequoia::testing
         {5_sz, 2_sz, 10_sz, 4_sz}
       };
 
-      check_equality(LINE(""), graph, expected);
+      check(equality, LINE(""), graph, expected);
     }
     else
     {
@@ -244,7 +244,7 @@ namespace sequoia::testing
 
       expected.swap_edges(0, 1, 2);
       expected.swap_edges(2, 0, 2);
-      check_equality(LINE(""), graph, expected);
+      check(equality, LINE(""), graph, expected);
     }
     else if constexpr(GraphFlavour == flavour::directed)
     {
@@ -256,7 +256,7 @@ namespace sequoia::testing
         {5_sz, 2_sz, 10_sz, 4_sz}
       };
 
-      check_equality(LINE(""), graph, expected);
+      check(equality, LINE(""), graph, expected);
     }
     else if constexpr(GraphFlavour == flavour::undirected_embedded)
     {
@@ -268,7 +268,7 @@ namespace sequoia::testing
         {5_sz, 2_sz, 10_sz, 4_sz}
       };
 
-      check_equality(LINE(""), graph, expected);
+      check(equality, LINE(""), graph, expected);
     }
     else if constexpr(GraphFlavour == flavour::directed_embedded)
     {
@@ -280,7 +280,7 @@ namespace sequoia::testing
         {5_sz, 2_sz, 10_sz, 4_sz}
       };
 
-      check_equality(LINE(""), graph, expected);
+      check(equality, LINE(""), graph, expected);
     }
     else
     {
@@ -321,7 +321,7 @@ namespace sequoia::testing
 
       expected.swap_edges(0, 1, 2);
       expected.swap_edges(2, 0, 2);
-      check_equality(LINE(""), graph, expected);
+      check(equality, LINE(""), graph, expected);
     }
     else if constexpr(GraphFlavour == flavour::directed)
     {
@@ -333,7 +333,7 @@ namespace sequoia::testing
         {5_sz, 2_sz, 10_sz, 4_sz}
       };
 
-      check_equality(LINE(""), graph, expected);
+      check(equality, LINE(""), graph, expected);
     }
     else if constexpr(GraphFlavour == flavour::undirected_embedded)
     {
@@ -345,7 +345,7 @@ namespace sequoia::testing
         {5_sz, 2_sz, 10_sz, 4_sz}
       };
 
-      check_equality(LINE(""), graph, expected);
+      check(equality, LINE(""), graph, expected);
     }
     else if constexpr(GraphFlavour == flavour::directed_embedded)
     {
@@ -357,7 +357,7 @@ namespace sequoia::testing
         {5_sz, 2_sz, 10_sz, 4_sz}
       };
 
-      check_equality(LINE(""), graph, expected);
+      check(equality, LINE(""), graph, expected);
     }
     else
     {
@@ -435,7 +435,7 @@ namespace sequoia::testing
 
       expected.swap_edges(0, 1, 2);
       expected.swap_edges(2, 0, 2);
-      check_equality(LINE(""), graph, expected);
+      check(equality, LINE(""), graph, expected);
     }
     else if constexpr(GraphFlavour == flavour::directed)
     {
@@ -447,7 +447,7 @@ namespace sequoia::testing
         {5_sz, 2_sz, 10_sz, 4_sz}
       };
 
-      check_equality(LINE(""), graph, expected);
+      check(equality, LINE(""), graph, expected);
     }
     else if constexpr(GraphFlavour == flavour::undirected_embedded)
     {
@@ -459,7 +459,7 @@ namespace sequoia::testing
         {5_sz, 2_sz, 10_sz, 4_sz}
       };
 
-      check_equality(LINE(""), graph, expected);
+      check(equality, LINE(""), graph, expected);
     }
     else if constexpr(GraphFlavour == flavour::directed_embedded)
     {
@@ -471,7 +471,7 @@ namespace sequoia::testing
         {5_sz, 2_sz, 10_sz, 4_sz}
       };
 
-      check_equality(LINE(""), graph, expected);
+      check(equality, LINE(""), graph, expected);
     }
     else
     {
@@ -572,7 +572,7 @@ namespace sequoia::testing
 
       expected.swap_edges(0, 1, 2);
       expected.swap_edges(2, 0, 2);
-      check_equality(LINE(""), graph, expected);
+      check(equality, LINE(""), graph, expected);
     }
     else if constexpr(GraphFlavour == flavour::directed)
     {
@@ -584,7 +584,7 @@ namespace sequoia::testing
         {5_sz, 2_sz, 10_sz, 4_sz}
       };
 
-      check_equality(LINE(""), graph, expected);
+      check(equality, LINE(""), graph, expected);
     }
     else if constexpr(GraphFlavour == flavour::undirected_embedded)
     {
@@ -596,7 +596,7 @@ namespace sequoia::testing
         {5_sz, 2_sz, 10_sz, 4_sz}
       };
 
-      check_equality(LINE(""), graph, expected);
+      check(equality, LINE(""), graph, expected);
     }
     else if constexpr(GraphFlavour == flavour::directed_embedded)
     {
@@ -608,7 +608,7 @@ namespace sequoia::testing
         {5_sz, 2_sz, 10_sz, 4_sz}
       };
 
-      check_equality(LINE(""), graph, expected);
+      check(equality, LINE(""), graph, expected);
     }
     else
     {
@@ -650,7 +650,7 @@ namespace sequoia::testing
 
       expected.swap_edges(0, 1, 2);
       expected.swap_edges(2, 0, 2);
-      check_equality(LINE(""), graph, expected);
+      check(equality, LINE(""), graph, expected);
     }
     else if constexpr(GraphFlavour == flavour::directed)
     {
@@ -662,7 +662,7 @@ namespace sequoia::testing
         {5_sz, 2_sz, 10_sz, 4_sz}
       };
 
-      check_equality(LINE(""), graph, expected);
+      check(equality, LINE(""), graph, expected);
     }
     else if constexpr(GraphFlavour == flavour::undirected_embedded)
     {
@@ -675,7 +675,7 @@ namespace sequoia::testing
         {5_sz, 2_sz, 10_sz, 4_sz}
       };
 
-      check_equality(LINE(""), graph, expected);
+      check(equality, LINE(""), graph, expected);
     }
     else if constexpr(GraphFlavour == flavour::directed_embedded)
     {
@@ -687,7 +687,7 @@ namespace sequoia::testing
         {5_sz, 2_sz, 10_sz, 4_sz}
       };
 
-      check_equality(LINE(""), graph, expected);
+      check(equality, LINE(""), graph, expected);
     }
     else
     {
@@ -755,7 +755,7 @@ namespace sequoia::testing
       };
 
       expected.swap_edges(2, 0, 1);
-      check_equality(LINE(""), graph, expected);
+      check(equality, LINE(""), graph, expected);
     }
     else if constexpr(GraphFlavour == graph_flavour::directed)
     {
@@ -766,7 +766,7 @@ namespace sequoia::testing
         {std::vector<int>{}, std::vector<int>{}, std::vector<int>{}}
       };
 
-      check_equality(LINE(""), graph, expected);
+      check(equality, LINE(""), graph, expected);
     }
     else if constexpr(GraphFlavour == graph_flavour::undirected_embedded)
     {
@@ -777,7 +777,7 @@ namespace sequoia::testing
         {std::vector<int>{}, std::vector<int>{}, std::vector<int>{}}
       };
 
-      check_equality(LINE(""), graph, expected);
+      check(equality, LINE(""), graph, expected);
     }
     else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
     {
@@ -788,7 +788,7 @@ namespace sequoia::testing
         {std::vector<int>{}, std::vector<int>{}, std::vector<int>{}}
       };
 
-      check_equality(LINE(""), graph, expected);
+      check(equality, LINE(""), graph, expected);
     }
     else
     {
@@ -829,7 +829,7 @@ namespace sequoia::testing
       };
 
       expected.swap_edges(2, 0, 1);
-      check_equality(LINE(""), graph, expected);
+      check(equality, LINE(""), graph, expected);
     }
     else if constexpr(GraphFlavour == graph_flavour::directed)
     {
@@ -840,7 +840,7 @@ namespace sequoia::testing
         {std::vector<int>{3}, std::vector<int>{2}, std::vector<int>{1}}
       };
 
-      check_equality(LINE(""), graph, expected);
+      check(equality, LINE(""), graph, expected);
     }
     else if constexpr(GraphFlavour == graph_flavour::undirected_embedded)
     {
@@ -851,7 +851,7 @@ namespace sequoia::testing
         {std::vector<int>{3}, std::vector<int>{2}, std::vector<int>{1}}
       };
 
-      check_equality(LINE(""), graph, expected);
+      check(equality, LINE(""), graph, expected);
     }
     else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
     {
@@ -862,7 +862,7 @@ namespace sequoia::testing
         {std::vector<int>{3}, std::vector<int>{2}, std::vector<int>{1}}
       };
 
-      check_equality(LINE(""), graph, expected);
+      check(equality, LINE(""), graph, expected);
     }
     else
     {
@@ -907,7 +907,7 @@ namespace sequoia::testing
       };
 
       expected.swap_edges(2, 0, 1);
-      check_equality(LINE(""), graph, expected);
+      check(equality, LINE(""), graph, expected);
     }
     else if constexpr(GraphFlavour == graph_flavour::undirected_embedded)
     {
@@ -918,7 +918,7 @@ namespace sequoia::testing
         {std::vector<int>{3}, std::vector<int>{2}, std::vector<int>{1}}
       };
 
-      check_equality(LINE(""), graph, expected);
+      check(equality, LINE(""), graph, expected);
     }
     else
     {

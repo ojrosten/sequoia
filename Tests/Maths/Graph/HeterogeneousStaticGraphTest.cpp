@@ -123,7 +123,7 @@ namespace sequoia::testing
       using edge = typename graph_t::edge_init_type;
 
       constexpr graph_t g{ {{edge{0, 0.2f}, edge{0, 0.2f}}}, function_object{}};
-      check_equality(LINE(""), 4, g.node_weight<0>()(2));
+      check(equality, LINE(""), 4, g.node_weight<0>()(2));
     }
   }
 

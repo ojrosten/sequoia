@@ -191,7 +191,7 @@ namespace sequoia
 
         if constexpr(std::is_empty_v<NodeWeight>)
         {
-          m_Checker.check_equality( LINE(""), g,
+          m_Checker.check(equality,  LINE(""), g,
             {
               {edge{1,1}, edge{1,0}, edge{0, -2}, edge{1,3}},
               {edge{2,8}, edge{0,9}, edge{1,6}},
@@ -200,7 +200,7 @@ namespace sequoia
         }
         else
         {
-          m_Checker.check_equality( LINE(""), g,
+          m_Checker.check(equality,  LINE(""), g,
             {{
               {edge{1,1}, edge{1,0}, edge{0, -2}, edge{1,3}},
               {edge{2,8}, edge{0,9}, edge{1,6}},
@@ -274,11 +274,11 @@ namespace sequoia
 
         if constexpr(std::is_empty_v<NodeWeight>)
         {
-          m_Checker.check_equality(LINE(""), g, {{}, {edge{1,2,3}, edge{1,3,-2}, edge{1,0,3}, edge{1,1,-2}}});
+          m_Checker.check(equality, LINE(""), g, {{}, {edge{1,2,3}, edge{1,3,-2}, edge{1,0,3}, edge{1,1,-2}}});
         }
         else
         {
-          m_Checker.check_equality(LINE(""), g, {{{}, {edge{1,2,3}, edge{1,3,-2}, edge{1,0,3}, edge{1,1,-2}}}, {NodeWeight{2}, NodeWeight{-3}}});
+          m_Checker.check(equality, LINE(""), g, {{{}, {edge{1,2,3}, edge{1,3,-2}, edge{1,0,3}, edge{1,1,-2}}}, {NodeWeight{2}, NodeWeight{-3}}});
         }
       }
     };
@@ -349,11 +349,11 @@ namespace sequoia
 
         if constexpr(std::is_empty_v<NodeWeight>)
         {
-          m_Checker.check_equality(LINE(""), g, {{edge{0,inversion_constant<true>{},2,3}, edge{0,0,3,6}, edge{0,inversion_constant<true>{},0,3}, edge{0,0,1,6}}, {}});
+          m_Checker.check(equality, LINE(""), g, {{edge{0,inversion_constant<true>{},2,3}, edge{0,0,3,6}, edge{0,inversion_constant<true>{},0,3}, edge{0,0,1,6}}, {}});
         }
         else
         {
-          m_Checker.check_equality(LINE(""), g, {{{edge{0,inversion_constant<true>{},2,3}, edge{0,0,3,6}, edge{0,inversion_constant<true>{},0,3}, edge{0,0,1,6}}, {}}, {NodeWeight{2}, NodeWeight{-3}}});
+          m_Checker.check(equality, LINE(""), g, {{{edge{0,inversion_constant<true>{},2,3}, edge{0,0,3,6}, edge{0,inversion_constant<true>{},0,3}, edge{0,0,1,6}}, {}}, {NodeWeight{2}, NodeWeight{-3}}});
         }
       }
     };

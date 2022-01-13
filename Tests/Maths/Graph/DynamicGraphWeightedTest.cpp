@@ -65,9 +65,9 @@ namespace sequoia::testing
     graph_t graph;
 
     graph.reserve_nodes(4);
-    check_equality(LINE(""), graph.node_capacity(), 4_sz);
+    check(equality, LINE(""), graph.node_capacity(), 4_sz);
     graph.shrink_to_fit();
-    check_equality(LINE("May fail if stl implementation doesn't actually shrink to fit!"), graph.node_capacity(), 0_sz);
+    check(equality, LINE("May fail if stl implementation doesn't actually shrink to fit!"), graph.node_capacity(), 0_sz);
 
     // NULL
     check_exception_thrown<std::out_of_range>(LINE("No nodes to erase"), [&graph](){ graph.erase_node(0); });
@@ -75,12 +75,12 @@ namespace sequoia::testing
     check_exception_thrown<std::out_of_range>(LINE("No nodes to set weight"), [&graph](){ graph.node_weight(graph.cend_node_weights(), 1.0); });
     check_exception_thrown<std::out_of_range>(LINE("No edges to set weight"), [&graph](){ graph.set_edge_weight(graph.cbegin_edges(0), 1); });
 
-    check_equality(LINE(""), graph, graph_t{});
+    check(equality, LINE(""), graph, graph_t{});
 
-    check_equality(LINE("Node added with weight i"), graph.add_node(0.0, 1.0), 0_sz);
+    check(equality, LINE("Node added with weight i"), graph.add_node(0.0, 1.0), 0_sz);
     //   (i)
 
-    check_equality(LINE(""), graph, graph_t{edge_init_list_t{{}}, {{0,1}}});
+    check(equality, LINE(""), graph, graph_t{edge_init_list_t{{}}, {{0,1}}});
     check_semantics(LINE("Regular semantics"), graph, graph_t{});
     check_semantics(LINE("Regular semantics"), graph, graph_t{edge_init_list_t{{}}, {{1,0}}});
 
@@ -89,17 +89,17 @@ namespace sequoia::testing
     graph.erase_node(0);
     //    NULL
 
-    check_equality(LINE(""), graph, graph_t{});
+    check(equality, LINE(""), graph, graph_t{});
 
-    check_equality(LINE("Node of weight i recreated"), graph.add_node(0.0, 1.0), 0_sz);
+    check(equality, LINE("Node of weight i recreated"), graph.add_node(0.0, 1.0), 0_sz);
     //    (i)
 
-    check_equality(LINE(""), graph, graph_t{edge_init_list_t{{}}, {{0,1}}});
+    check(equality, LINE(""), graph, graph_t{edge_init_list_t{{}}, {{0,1}}});
 
     graph.node_weight(graph.cbegin_node_weights(), 1.1, -4.3);
     // (1.1-i4.3)
 
-    check_equality(LINE(""), graph, graph_t{edge_init_list_t{{}}, {{1.1,-4.3}}});
+    check(equality, LINE(""), graph, graph_t{edge_init_list_t{{}}, {{1.1,-4.3}}});
 
     graph.join(0, 0, 1);
     //   /\ 1
@@ -108,25 +108,25 @@ namespace sequoia::testing
 
     if constexpr (GraphFlavour == graph_flavour::directed)
     {
-      check_equality(LINE(""), graph, graph_t{edge_init_list_t{{{edge_init_t{0,1}}}}, {{1.1,-4.3}}});
+      check(equality, LINE(""), graph, graph_t{edge_init_list_t{{{edge_init_t{0,1}}}}, {{1.1,-4.3}}});
       check_semantics(LINE("Regular semantics"), graph, graph_t{edge_init_list_t{{{edge_init_t{0,2}}}}, {{1.1,-4.3}}});
       check_semantics(LINE("Regular semantics"), graph, graph_t{edge_init_list_t{{{edge_init_t{0,1}}}}, {{-4.3, 1.1}}});
     }
     else if constexpr(GraphFlavour == graph_flavour::undirected)
     {
-      check_equality(LINE(""), graph, graph_t{{{edge_init_t{0,1}, edge_init_t{0,1}}}, {{1.1,-4.3}}});
+      check(equality, LINE(""), graph, graph_t{{{edge_init_t{0,1}, edge_init_t{0,1}}}, {{1.1,-4.3}}});
       check_semantics(LINE("Regular semantics"), graph, graph_t{{{edge_init_t{0,2}, edge_init_t{0,2}}}, {{1.1,-4.3}}});
       check_semantics(LINE("Regular semantics"), graph, graph_t{{{edge_init_t{0,1}, edge_init_t{0,1}}}, {{-4.3,1.1}}});
     }
     else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
     {
-      check_equality(LINE(""), graph, graph_t{{{edge_init_t{0,0,1,1}, edge_init_t{0,0,0,1}}}, {{1.1,-4.3}}});
+      check(equality, LINE(""), graph, graph_t{{{edge_init_t{0,0,1,1}, edge_init_t{0,0,0,1}}}, {{1.1,-4.3}}});
       check_semantics(LINE(""), graph, graph_t{{{edge_init_t{0,0,1,2}, edge_init_t{0,0,0,2}}}, {{1.1,-4.3}}});
       check_semantics(LINE(""), graph, graph_t{{{edge_init_t{0,0,1,1}, edge_init_t{0,0,0,1}}}, {{-4.3,1.1}}});
     }
     else
     {
-      check_equality(LINE(""), graph, graph_t{{{edge_init_t{0,1,1}, edge_init_t{0,0,1}}}, {{1.1,-4.3}}});
+      check(equality, LINE(""), graph, graph_t{{{edge_init_t{0,1,1}, edge_init_t{0,0,1}}}, {{1.1,-4.3}}});
       check_semantics(LINE(""), graph, graph_t{{{edge_init_t{0,1,2}, edge_init_t{0,0,2}}}, {{1.1,-4.3}}});
       check_semantics(LINE(""), graph, graph_t{{{edge_init_t{0,1,1}, edge_init_t{0,0,1}}}, {{-4.3,1.1}}});
     }
@@ -140,19 +140,19 @@ namespace sequoia::testing
 
     if constexpr (GraphFlavour == graph_flavour::directed)
     {
-      check_equality(LINE(""), graph, graph_t{edge_init_list_t{{{edge_init_t{0,-2}}}}, {{1.1,-4.3}}});
+      check(equality, LINE(""), graph, graph_t{edge_init_list_t{{{edge_init_t{0,-2}}}}, {{1.1,-4.3}}});
     }
     else if constexpr(GraphFlavour == graph_flavour::undirected)
     {
-      check_equality(LINE(""), graph, graph_t{edge_init_list_t{{edge_init_t{0,-2}, edge_init_t{0,-2}}}, {{1.1,-4.3}}});
+      check(equality, LINE(""), graph, graph_t{edge_init_list_t{{edge_init_t{0,-2}, edge_init_t{0,-2}}}, {{1.1,-4.3}}});
     }
     else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
     {
-      check_equality(LINE(""), graph, graph_t{edge_init_list_t{{edge_init_t{0,0,1,-2}, edge_init_t{0,0,0,-2}}}, {{1.1,-4.3}}});
+      check(equality, LINE(""), graph, graph_t{edge_init_list_t{{edge_init_t{0,0,1,-2}, edge_init_t{0,0,0,-2}}}, {{1.1,-4.3}}});
     }
     else
     {
-      check_equality(LINE(""), graph, graph_t{edge_init_list_t{{edge_init_t{0,1,-2}, edge_init_t{0,0,-2}}}, {{1.1,-4.3}}});
+      check(equality, LINE(""), graph, graph_t{edge_init_list_t{{edge_init_t{0,1,-2}, edge_init_t{0,0,-2}}}, {{1.1,-4.3}}});
     }
 
     graph.set_edge_weight(graph.crbegin_edges(0), -4);
@@ -162,19 +162,19 @@ namespace sequoia::testing
 
     if constexpr (GraphFlavour == graph_flavour::directed)
     {
-      check_equality(LINE(""), graph, graph_t{edge_init_list_t{{{edge_init_t{0,-4}}}}, {{1.1,-4.3}}});
+      check(equality, LINE(""), graph, graph_t{edge_init_list_t{{{edge_init_t{0,-4}}}}, {{1.1,-4.3}}});
     }
     else if constexpr(GraphFlavour == graph_flavour::undirected)
     {
-      check_equality(LINE(""), graph, graph_t{edge_init_list_t{{edge_init_t{0,-4}, edge_init_t{0,-4}}}, {{1.1,-4.3}}});
+      check(equality, LINE(""), graph, graph_t{edge_init_list_t{{edge_init_t{0,-4}, edge_init_t{0,-4}}}, {{1.1,-4.3}}});
     }
     else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
     {
-      check_equality(LINE(""), graph, graph_t{edge_init_list_t{{edge_init_t{0,0,1,-4}, edge_init_t{0,0,0,-4}}}, {{1.1,-4.3}}});
+      check(equality, LINE(""), graph, graph_t{edge_init_list_t{{edge_init_t{0,0,1,-4}, edge_init_t{0,0,0,-4}}}, {{1.1,-4.3}}});
     }
     else
     {
-      check_equality(LINE(""), graph, graph_t{edge_init_list_t{{edge_init_t{0,1,-4}, edge_init_t{0,0,-4}}}, {{1.1,-4.3}}});
+      check(equality, LINE(""), graph, graph_t{edge_init_list_t{{edge_init_t{0,1,-4}, edge_init_t{0,0,-4}}}, {{1.1,-4.3}}});
     }
 
     graph.mutate_edge_weight(graph.cbegin_edges(0),
@@ -196,25 +196,25 @@ namespace sequoia::testing
 
     if constexpr (GraphFlavour == graph_flavour::directed)
     {
-      check_equality(LINE(""), graph, graph_t{edge_init_list_t{{{edge_init_t{0,-8}}}}, {{1.1,-4.3}}});
+      check(equality, LINE(""), graph, graph_t{edge_init_list_t{{{edge_init_t{0,-8}}}}, {{1.1,-4.3}}});
     }
     else if constexpr(GraphFlavour == graph_flavour::undirected)
     {
-      check_equality(LINE(""), graph, graph_t{edge_init_list_t{{edge_init_t{0,-8}, edge_init_t{0,-8}}}, {{1.1,-4.3}}});
+      check(equality, LINE(""), graph, graph_t{edge_init_list_t{{edge_init_t{0,-8}, edge_init_t{0,-8}}}, {{1.1,-4.3}}});
     }
     else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
     {
-      check_equality(LINE(""), graph, graph_t{edge_init_list_t{{edge_init_t{0,0,1,-8}, edge_init_t{0,0,0,-8}}}, {{1.1,-4.3}}});
+      check(equality, LINE(""), graph, graph_t{edge_init_list_t{{edge_init_t{0,0,1,-8}, edge_init_t{0,0,0,-8}}}, {{1.1,-4.3}}});
     }
     else
     {
-      check_equality(LINE(""), graph, graph_t{edge_init_list_t{{edge_init_t{0,1,-8}, edge_init_t{0,0,-8}}}, {{1.1,-4.3}}});
+      check(equality, LINE(""), graph, graph_t{edge_init_list_t{{edge_init_t{0,1,-8}, edge_init_t{0,0,-8}}}, {{1.1,-4.3}}});
     }
 
     graph.erase_edge(graph.cbegin_edges(0));
     //  (1.1-i4.3)
 
-    check_equality(LINE(""), graph, graph_t{edge_init_list_t{{}}, {{1.1,-4.3}}});
+    check(equality, LINE(""), graph, graph_t{edge_init_list_t{{}}, {{1.1,-4.3}}});
 
     graph.join(0, 0, 1);
     //   /\ 1
@@ -223,19 +223,19 @@ namespace sequoia::testing
 
     if constexpr (GraphFlavour == graph_flavour::directed)
     {
-      check_equality(LINE(""), graph, graph_t{edge_init_list_t{{{edge_init_t{0,1}}}}, {{1.1,-4.3}}});
+      check(equality, LINE(""), graph, graph_t{edge_init_list_t{{{edge_init_t{0,1}}}}, {{1.1,-4.3}}});
     }
     else if constexpr(GraphFlavour == graph_flavour::undirected)
     {
-      check_equality(LINE(""), graph, graph_t{{{edge_init_t{0,1}, edge_init_t{0,1}}}, {{1.1,-4.3}}});
+      check(equality, LINE(""), graph, graph_t{{{edge_init_t{0,1}, edge_init_t{0,1}}}, {{1.1,-4.3}}});
     }
     else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
     {
-      check_equality(LINE(""), graph, graph_t{{{edge_init_t{0,0,1,1}, edge_init_t{0,0,0,1}}}, {{1.1,-4.3}}});
+      check(equality, LINE(""), graph, graph_t{{{edge_init_t{0,0,1,1}, edge_init_t{0,0,0,1}}}, {{1.1,-4.3}}});
     }
     else
     {
-      check_equality(LINE(""), graph, graph_t{{{edge_init_t{0,1,1}, edge_init_t{0,0,1}}}, {{1.1,-4.3}}});
+      check(equality, LINE(""), graph, graph_t{{{edge_init_t{0,1,1}, edge_init_t{0,0,1}}}, {{1.1,-4.3}}});
     }
 
     graph.join(0, 0, -1);
@@ -247,7 +247,7 @@ namespace sequoia::testing
 
     if constexpr (GraphFlavour == graph_flavour::directed)
     {
-      check_equality(LINE(""), graph, graph_t{{{edge_init_t{0,1}, edge_init_t{0,-1}}}, {{1.1,-4.3}}});
+      check(equality, LINE(""), graph, graph_t{{{edge_init_t{0,1}, edge_init_t{0,-1}}}, {{1.1,-4.3}}});
     }
     else if constexpr(GraphFlavour == graph_flavour::undirected)
     {
@@ -259,15 +259,15 @@ namespace sequoia::testing
                    [](const auto& l , const auto& r){ return l.weight() > r.weight(); }
         );
       }
-      check_equality(LINE(""), graph, g);
+      check(equality, LINE(""), graph, g);
     }
     else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
     {
-      check_equality(LINE(""), graph, graph_t{{{edge_init_t{0,0,1,1}, edge_init_t{0,0,0,1}, edge_init_t{0,0,3,-1}, edge_init_t{0,0,2,-1}}}, {{1.1,-4.3}}});
+      check(equality, LINE(""), graph, graph_t{{{edge_init_t{0,0,1,1}, edge_init_t{0,0,0,1}, edge_init_t{0,0,3,-1}, edge_init_t{0,0,2,-1}}}, {{1.1,-4.3}}});
     }
     else
     {
-      check_equality(LINE(""), graph, graph_t{{{edge_init_t{0,1,1}, edge_init_t{0,0,1}, edge_init_t{0,3,-1}, edge_init_t{0,2,-1}}}, {{1.1,-4.3}}});
+      check(equality, LINE(""), graph, graph_t{{{edge_init_t{0,1,1}, edge_init_t{0,0,1}, edge_init_t{0,3,-1}, edge_init_t{0,2,-1}}}, {{1.1,-4.3}}});
     }
 
     mutual_info(GraphFlavour) ? graph.set_edge_weight(graph.cbegin_edges(0) + 2, -4) : graph.set_edge_weight(++graph.cbegin_edges(0), -4);
@@ -279,7 +279,7 @@ namespace sequoia::testing
 
     if constexpr (GraphFlavour == graph_flavour::directed)
     {
-      check_equality(LINE(""), graph, graph_t{{{edge_init_t{0,1}, edge_init_t{0,-4}}}, {{1.1,-4.3}}});
+      check(equality, LINE(""), graph, graph_t{{{edge_init_t{0,1}, edge_init_t{0,-4}}}, {{1.1,-4.3}}});
     }
     else if constexpr(GraphFlavour == graph_flavour::undirected)
     {
@@ -291,19 +291,19 @@ namespace sequoia::testing
                    [](const auto& l , const auto& r){ return l.weight() > r.weight(); }
         );
       }
-      check_equality(LINE(""), graph, g);
+      check(equality, LINE(""), graph, g);
     }
     else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
     {
-      check_equality(LINE(""), graph, graph_t{{{edge_init_t{0,0,1,1}, edge_init_t{0,0,0,1}, edge_init_t{0,0,3,-4}, edge_init_t{0,0,2,-4}}}, {{1.1,-4.3}}});
+      check(equality, LINE(""), graph, graph_t{{{edge_init_t{0,0,1,1}, edge_init_t{0,0,0,1}, edge_init_t{0,0,3,-4}, edge_init_t{0,0,2,-4}}}, {{1.1,-4.3}}});
     }
     else
     {
-      check_equality(LINE(""), graph, graph_t{{{edge_init_t{0,1,1}, edge_init_t{0,0,1}, edge_init_t{0,3,-4}, edge_init_t{0,2,-4}}}, {{1.1,-4.3}}});
+      check(equality, LINE(""), graph, graph_t{{{edge_init_t{0,1,1}, edge_init_t{0,0,1}, edge_init_t{0,3,-4}, edge_init_t{0,2,-4}}}, {{1.1,-4.3}}});
     }
 
 
-    check_equality(LINE(""), graph.add_node(), 1_sz);
+    check(equality, LINE(""), graph.add_node(), 1_sz);
     //   /\ 1
     //   \/
     // (1.1-i4.3)   (0)
@@ -312,7 +312,7 @@ namespace sequoia::testing
 
     if constexpr (GraphFlavour == graph_flavour::directed)
     {
-      check_equality(LINE(""), graph, graph_t{{{edge_init_t{0,1}, edge_init_t{0,-4}}, {}}, {{1.1,-4.3}, {}}});
+      check(equality, LINE(""), graph, graph_t{{{edge_init_t{0,1}, edge_init_t{0,-4}}, {}}, {{1.1,-4.3}, {}}});
     }
     else if constexpr(GraphFlavour == graph_flavour::undirected)
     {
@@ -324,15 +324,15 @@ namespace sequoia::testing
                    [](const auto& l , const auto& r){ return l.weight() > r.weight(); }
         );
       }
-      check_equality(LINE(""), graph, g);
+      check(equality, LINE(""), graph, g);
     }
     else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
     {
-      check_equality(LINE(""), graph, graph_t{{{edge_init_t{0,0,1,1}, edge_init_t{0,0,0,1}, edge_init_t{0,0,3,-4}, edge_init_t{0,0,2,-4}}, {}}, {{1.1,-4.3}, {}}});
+      check(equality, LINE(""), graph, graph_t{{{edge_init_t{0,0,1,1}, edge_init_t{0,0,0,1}, edge_init_t{0,0,3,-4}, edge_init_t{0,0,2,-4}}, {}}, {{1.1,-4.3}, {}}});
     }
     else
     {
-      check_equality(LINE(""), graph, graph_t{{{edge_init_t{0,1,1}, edge_init_t{0,0,1}, edge_init_t{0,3,-4}, edge_init_t{0,2,-4}}, {}}, {{1.1,-4.3}, {}}});
+      check(equality, LINE(""), graph, graph_t{{{edge_init_t{0,1,1}, edge_init_t{0,0,1}, edge_init_t{0,3,-4}, edge_init_t{0,2,-4}}, {}}, {{1.1,-4.3}, {}}});
     }
 
     graph.join(0, 1, 6);
@@ -344,7 +344,7 @@ namespace sequoia::testing
 
     if constexpr (GraphFlavour == graph_flavour::directed)
     {
-      check_equality(LINE(""), graph, graph_t{{{edge_init_t{0,1}, edge_init_t{0,-4}, edge_init_t{1, 6}}, {}}, {{1.1,-4.3}, {}}});
+      check(equality, LINE(""), graph, graph_t{{{edge_init_t{0,1}, edge_init_t{0,-4}, edge_init_t{1, 6}}, {}}, {{1.1,-4.3}, {}}});
     }
     else if constexpr(GraphFlavour == graph_flavour::undirected)
     {
@@ -358,18 +358,18 @@ namespace sequoia::testing
                    [](const auto& l , const auto& r){ return l.weight() > r.weight(); }
         );
       }
-      check_equality(LINE(""), graph, g);
+      check(equality, LINE(""), graph, g);
     }
     else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
     {
-      check_equality(LINE(""), graph,
+      check(equality, LINE(""), graph,
                      graph_t{{{edge_init_t{0,0,1,1}, edge_init_t{0,0,0,1}, edge_init_t{0,0,3,-4}, edge_init_t{0,0,2,-4}, edge_init_t{0,1,0,6}},
                              {edge_init_t{0,1,4,6}}
                               }, {{1.1,-4.3}, {}}});
     }
     else
     {
-      check_equality(LINE(""), graph,
+      check(equality, LINE(""), graph,
                      graph_t{{{edge_init_t{0,1,1}, edge_init_t{0,0,1}, edge_init_t{0,3,-4}, edge_init_t{0,2,-4}, edge_init_t{1,0,6}},
                              {edge_init_t{0,4,6}}
                                }, {{1.1,-4.3}, {}}});
@@ -379,7 +379,7 @@ namespace sequoia::testing
 
     if constexpr (GraphFlavour == graph_flavour::directed)
     {
-      check_equality(LINE(""), graph, graph_t{{{}, {edge_init_t{1,1}, edge_init_t{1,-4}, edge_init_t{0, 6}}}, {{}, {1.1,-4.3}}});
+      check(equality, LINE(""), graph, graph_t{{{}, {edge_init_t{1,1}, edge_init_t{1,-4}, edge_init_t{0, 6}}}, {{}, {1.1,-4.3}}});
     }
     else if constexpr(GraphFlavour == graph_flavour::undirected)
     {
@@ -400,18 +400,18 @@ namespace sequoia::testing
                    }
       );
 
-      check_equality(LINE(""), graph, g);
+      check(equality, LINE(""), graph, g);
     }
     else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
     {
-      check_equality(LINE(""), graph,
+      check(equality, LINE(""), graph,
                      graph_t{{{edge_init_t{1,0,4,6}},
                              {edge_init_t{1,1,1,1}, edge_init_t{1,1,0,1}, edge_init_t{1,1,3,-4}, edge_init_t{1,1,2,-4}, edge_init_t{1,0,0,6}}
                             }, {{}, {1.1,-4.3}}});
     }
     else
     {
-      check_equality(LINE(""), graph,
+      check(equality, LINE(""), graph,
                      graph_t{{{edge_init_t{1,4,6}},
                              {edge_init_t{1,1,1}, edge_init_t{1,0,1}, edge_init_t{1,3,-4}, edge_init_t{1,2,-4}, edge_init_t{0,0,6}}
                        }, {{}, {1.1,-4.3}}});
@@ -421,7 +421,7 @@ namespace sequoia::testing
 
     if constexpr (GraphFlavour == graph_flavour::directed)
     {
-      check_equality(LINE(""), graph, graph_t{{{edge_init_t{0,1}, edge_init_t{0,-4}, edge_init_t{1, 6}}, {}}, {{1.1,-4.3}, {}}});
+      check(equality, LINE(""), graph, graph_t{{{edge_init_t{0,1}, edge_init_t{0,-4}, edge_init_t{1, 6}}, {}}, {{1.1,-4.3}, {}}});
     }
     else if constexpr(GraphFlavour == graph_flavour::undirected)
     {
@@ -435,18 +435,18 @@ namespace sequoia::testing
                    [](const auto& l , const auto& r){ return l.weight() > r.weight(); }
         );
       }
-      check_equality(LINE(""), graph, g);
+      check(equality, LINE(""), graph, g);
     }
     else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
     {
-      check_equality(LINE(""), graph,
+      check(equality, LINE(""), graph,
                      graph_t{{{edge_init_t{0,0,1,1}, edge_init_t{0,0,0,1}, edge_init_t{0,0,3,-4}, edge_init_t{0,0,2,-4}, edge_init_t{0,1,0,6}},
                              {edge_init_t{0,1,4,6}}
                             }, {{1.1,-4.3}, {}}});
     }
     else
     {
-      check_equality(LINE(""), graph,
+      check(equality, LINE(""), graph,
                      graph_t{{{edge_init_t{0,1,1}, edge_init_t{0,0,1}, edge_init_t{0,3,-4}, edge_init_t{0,2,-4}, edge_init_t{1,0,6}},
                              {edge_init_t{0,4,6}}
                             }, {{1.1,-4.3}, {}}});
@@ -461,7 +461,7 @@ namespace sequoia::testing
 
     if constexpr (GraphFlavour == graph_flavour::directed)
     {
-      check_equality(LINE(""), graph, graph_t{{{edge_init_t{0,1}, edge_init_t{0,-4}, edge_init_t{1, 7}}, {}}, {{1.1,-4.3}, {}}});
+      check(equality, LINE(""), graph, graph_t{{{edge_init_t{0,1}, edge_init_t{0,-4}, edge_init_t{1, 7}}, {}}, {{1.1,-4.3}, {}}});
     }
     else if constexpr(GraphFlavour == graph_flavour::undirected)
     {
@@ -475,18 +475,18 @@ namespace sequoia::testing
                    [](const auto& l , const auto& r){ return l.weight() > r.weight(); }
         );
       }
-      check_equality(LINE(""), graph, g);
+      check(equality, LINE(""), graph, g);
     }
     else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
     {
-      check_equality(LINE(""), graph,
+      check(equality, LINE(""), graph,
                      graph_t{{{edge_init_t{0,0,1,1}, edge_init_t{0,0,0,1}, edge_init_t{0,0,3,-4}, edge_init_t{0,0,2,-4}, edge_init_t{0,1,0,7}},
                              {edge_init_t{0,1,4,7}}
                             }, {{1.1,-4.3}, {}}});
     }
     else
     {
-      check_equality(LINE(""), graph,
+      check(equality, LINE(""), graph,
                      graph_t{{{edge_init_t{0,1,1}, edge_init_t{0,0,1}, edge_init_t{0,3,-4}, edge_init_t{0,2,-4}, edge_init_t{1,0,7}},
                              {edge_init_t{0,4,7}}
                             }, {{1.1,-4.3}, {}}});
@@ -501,7 +501,7 @@ namespace sequoia::testing
 
     if constexpr (GraphFlavour == graph_flavour::directed)
     {
-      check_equality(LINE(""), graph, graph_t{{{edge_init_t{0,1}, edge_init_t{0,-4}, edge_init_t{1, 6}}, {}}, {{1.1,-4.3}, {}}});
+      check(equality, LINE(""), graph, graph_t{{{edge_init_t{0,1}, edge_init_t{0,-4}, edge_init_t{1, 6}}, {}}, {{1.1,-4.3}, {}}});
     }
     else if constexpr(GraphFlavour == graph_flavour::undirected)
     {
@@ -515,18 +515,18 @@ namespace sequoia::testing
                    [](const auto& l , const auto& r){ return l.weight() > r.weight(); }
         );
       }
-      check_equality(LINE(""), graph, g);
+      check(equality, LINE(""), graph, g);
     }
     else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
     {
-      check_equality(LINE(""), graph,
+      check(equality, LINE(""), graph,
                      graph_t{{{edge_init_t{0,0,1,1}, edge_init_t{0,0,0,1}, edge_init_t{0,0,3,-4}, edge_init_t{0,0,2,-4}, edge_init_t{0,1,0,6}},
                              {edge_init_t{0,1,4,6}}
                             }, {{1.1,-4.3}, {}}});
     }
     else
     {
-      check_equality(LINE(""), graph,
+      check(equality, LINE(""), graph,
                      graph_t{{{edge_init_t{0,1,1}, edge_init_t{0,0,1}, edge_init_t{0,3,-4}, edge_init_t{0,2,-4}, edge_init_t{1,0,6}},
                              {edge_init_t{0,4,6}}
                             }, {{1.1,-4.3}, {}}});
@@ -541,7 +541,7 @@ namespace sequoia::testing
 
     if constexpr (GraphFlavour == graph_flavour::directed)
     {
-      check_equality(LINE(""), graph, graph_t{{{edge_init_t{0,1}, edge_init_t{0,-4}, edge_init_t{1, 6}}, {edge_init_t{0, 7}}}, {{1.1,-4.3}, {}}});
+      check(equality, LINE(""), graph, graph_t{{{edge_init_t{0,1}, edge_init_t{0,-4}, edge_init_t{1, 6}}, {edge_init_t{0, 7}}}, {{1.1,-4.3}, {}}});
     }
     else if constexpr(GraphFlavour == graph_flavour::undirected)
     {
@@ -556,18 +556,18 @@ namespace sequoia::testing
         );
       }
 
-      check_equality(LINE(""), graph, g);
+      check(equality, LINE(""), graph, g);
     }
     else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
     {
-      check_equality(LINE(""), graph,
+      check(equality, LINE(""), graph,
                      graph_t{{{edge_init_t{0,0,1,1}, edge_init_t{0,0,0,1}, edge_init_t{0,0,3,-4}, edge_init_t{0,0,2,-4}, edge_init_t{0,1,0,6}, edge_init_t{1,0,1,7}},
                              {edge_init_t{0,1,4,6}, edge_init_t{1,0,5,7}}
                             }, {{1.1,-4.3}, {}}});
     }
     else
     {
-      check_equality(LINE(""), graph,
+      check(equality, LINE(""), graph,
                      graph_t{{{edge_init_t{0,1,1}, edge_init_t{0,0,1}, edge_init_t{0,3,-4}, edge_init_t{0,2,-4}, edge_init_t{1,0,6}, edge_init_t{1,1,7}},
                              {edge_init_t{0,4,6}, edge_init_t{0,5,7}}
                             }, {{1.1,-4.3}, {}}});
@@ -583,7 +583,7 @@ namespace sequoia::testing
 
     if constexpr (GraphFlavour == graph_flavour::directed)
     {
-      check_equality(LINE(""), graph,
+      check(equality, LINE(""), graph,
                      graph_t{{{edge_init_t{0,1}, edge_init_t{0,-4}, edge_init_t{1, 6}, edge_init_t{1,8}},
                               {edge_init_t{0, 7}}
                              }, {{1.1,-4.3}, {}}});
@@ -601,18 +601,18 @@ namespace sequoia::testing
         );
       }
 
-      check_equality(LINE(""), graph, g);
+      check(equality, LINE(""), graph, g);
     }
     else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
     {
-      check_equality(LINE(""), graph,
+      check(equality, LINE(""), graph,
                      graph_t{{{edge_init_t{0,0,1,1}, edge_init_t{0,0,0,1}, edge_init_t{0,0,3,-4}, edge_init_t{0,0,2,-4}, edge_init_t{0,1,0,6}, edge_init_t{1,0,1,7}, edge_init_t{0,1,2,8}},
                            {edge_init_t{0,1,4,6}, edge_init_t{1,0,5,7}, edge_init_t{0,1,6,8}}
                             }, {{1.1,-4.3}, {}}});
     }
     else
     {
-      check_equality(LINE(""), graph,
+      check(equality, LINE(""), graph,
                      graph_t{{{edge_init_t{0,1,1}, edge_init_t{0,0,1}, edge_init_t{0,3,-4}, edge_init_t{0,2,-4}, edge_init_t{1,0,6}, edge_init_t{1,1,7}, edge_init_t{1,2,8}},
                              {edge_init_t{0,4,6}, edge_init_t{0,5,7}, edge_init_t{0,6,8}}
                             }, {{1.1,-4.3}, {}}});
@@ -628,7 +628,7 @@ namespace sequoia::testing
 
     if constexpr (GraphFlavour == graph_flavour::directed)
     {
-      check_equality(LINE(""), graph,
+      check(equality, LINE(""), graph,
                      graph_t{{{edge_init_t{0,-4}, edge_init_t{1, 6}, edge_init_t{1,8}},
                              {edge_init_t{0, 7}}
                            }, {{1.1,-4.3}, {}}});
@@ -639,18 +639,18 @@ namespace sequoia::testing
                 {edge_init_t{0,8}, edge_init_t{0,6}, edge_init_t{0,7}}
                }, {{1.1,-4.3}, {}}};
 
-      check_equality(LINE(""), graph, g);
+      check(equality, LINE(""), graph, g);
     }
     else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
     {
-      check_equality(LINE(""), graph,
+      check(equality, LINE(""), graph,
                      graph_t{{{edge_init_t{0,0,1,-4}, edge_init_t{0,0,0,-4}, edge_init_t{0,1,0,6}, edge_init_t{1,0,1,7}, edge_init_t{0,1,2,8}},
                              {edge_init_t{0,1,2,6}, edge_init_t{1,0,3,7}, edge_init_t{0,1,4,8}}
                             }, {{1.1,-4.3}, {}}});
     }
     else
     {
-      check_equality(LINE(""), graph,
+      check(equality, LINE(""), graph,
                      graph_t{{{edge_init_t{0,1,-4}, edge_init_t{0,0,-4}, edge_init_t{1,0,6}, edge_init_t{1,1,7}, edge_init_t{1,2,8}},
                              {edge_init_t{0,2,6}, edge_init_t{0,3,7}, edge_init_t{0,4,8}}
                             }, {{1.1,-4.3}, {}}});
@@ -678,7 +678,7 @@ namespace sequoia::testing
 
     if constexpr (GraphFlavour == graph_flavour::directed)
     {
-      check_equality(LINE(""), graph,
+      check(equality, LINE(""), graph,
                      graph_t{{{edge_init_t{0,-4}, edge_init_t{1, 6}, edge_init_t{1,6}},
                              {edge_init_t{0, 7}}
                            }, {{1.1,-4.3}, {}}});
@@ -689,18 +689,18 @@ namespace sequoia::testing
                 {edge_init_t{0,8}, edge_init_t{0,6}, edge_init_t{0,6}}
                }, {{1.1,-4.3}, {}}};
 
-      check_equality(LINE(""), graph, g);
+      check(equality, LINE(""), graph, g);
     }
     else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
     {
-      check_equality(LINE(""), graph,
+      check(equality, LINE(""), graph,
                      graph_t{{{edge_init_t{0,0,1,-4}, edge_init_t{0,0,0,-4}, edge_init_t{0,1,0,6}, edge_init_t{1,0,1,6}, edge_init_t{0,1,2,8}},
                              {edge_init_t{0,1,2,6}, edge_init_t{1,0,3,6}, edge_init_t{0,1,4,8}}
                             }, {{1.1,-4.3}, {}}});
     }
     else
     {
-      check_equality(LINE(""), graph,
+      check(equality, LINE(""), graph,
                      graph_t{{{edge_init_t{0,1,-4}, edge_init_t{0,0,-4}, edge_init_t{1,0,6}, edge_init_t{1,1,6}, edge_init_t{1,2,8}},
                              {edge_init_t{0,2,6}, edge_init_t{0,3,6}, edge_init_t{0,4,8}}
                             }, {{1.1,-4.3}, {}}});
@@ -716,7 +716,7 @@ namespace sequoia::testing
 
     if constexpr (GraphFlavour == graph_flavour::directed)
     {
-      check_equality(LINE(""), graph,
+      check(equality, LINE(""), graph,
                      graph_t{{{edge_init_t{0,-4}, edge_init_t{1, 6}, edge_init_t{1,10}},
                              {edge_init_t{0, 7}}
                            }, {{1.1,-4.3}, {}}});
@@ -747,18 +747,18 @@ namespace sequoia::testing
         g.swap_edges(1, 0, 1);
       }
 
-      check_equality(LINE(""), graph, g);
+      check(equality, LINE(""), graph, g);
     }
     else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
     {
-      check_equality(LINE(""), graph,
+      check(equality, LINE(""), graph,
                      graph_t{{{edge_init_t{0,0,1,-4}, edge_init_t{0,0,0,-4}, edge_init_t{0,1,0,6}, edge_init_t{1,0,1,10}, edge_init_t{0,1,2,8}},
                              {edge_init_t{0,1,2,6}, edge_init_t{1,0,3,10}, edge_init_t{0,1,4,8}}
                             }, {{1.1,-4.3}, {}}});
     }
     else
     {
-      check_equality(LINE(""), graph,
+      check(equality, LINE(""), graph,
                      graph_t{{{edge_init_t{0,1,-4}, edge_init_t{0,0,-4}, edge_init_t{1,0,6}, edge_init_t{1,1,10}, edge_init_t{1,2,8}},
                              {edge_init_t{0,2,6}, edge_init_t{0,3,10}, edge_init_t{0,4,8}}
                             }, {{1.1,-4.3}, {}}});
@@ -786,7 +786,7 @@ namespace sequoia::testing
 
     if constexpr (GraphFlavour == graph_flavour::directed)
     {
-      check_equality(LINE(""), graph,
+      check(equality, LINE(""), graph,
                      graph_t{{{edge_init_t{0,-4}, edge_init_t{1, 10}, edge_init_t{1,10}},
                              {edge_init_t{0, 7}}
                            }, {{1.1,-4.3}, {}}});
@@ -813,18 +813,18 @@ namespace sequoia::testing
         g.swap_edges(1, 1, 2);
       }
 
-      check_equality(LINE(""), graph, g);
+      check(equality, LINE(""), graph, g);
     }
     else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
     {
-      check_equality(LINE(""), graph,
+      check(equality, LINE(""), graph,
                      graph_t{{{edge_init_t{0,0,1,-4}, edge_init_t{0,0,0,-4}, edge_init_t{0,1,0,6}, edge_init_t{1,0,1,10}, edge_init_t{0,1,2,10}},
                              {edge_init_t{0,1,2,6}, edge_init_t{1,0,3,10}, edge_init_t{0,1,4,10}}
                             }, {{1.1,-4.3}, {}}});
     }
     else
     {
-      check_equality(LINE(""), graph,
+      check(equality, LINE(""), graph,
                      graph_t{{{edge_init_t{0,1,-4}, edge_init_t{0,0,-4}, edge_init_t{1,0,6}, edge_init_t{1,1,10}, edge_init_t{1,2,10}},
                              {edge_init_t{0,2,6}, edge_init_t{0,3,10}, edge_init_t{0,4,10}}
                             }, {{1.1,-4.3}, {}}});
@@ -851,7 +851,7 @@ namespace sequoia::testing
 
     if constexpr (GraphFlavour == graph_flavour::directed)
     {
-      check_equality(LINE(""), graph,
+      check(equality, LINE(""), graph,
                      graph_t{{{edge_init_t{0,-4}, edge_init_t{1, 10}, edge_init_t{1,7}},
                              {edge_init_t{0, 7}}
                            }, {{1.1,-4.3}, {}}});
@@ -887,18 +887,18 @@ namespace sequoia::testing
       }
 
 
-      check_equality(LINE(""), graph, g);
+      check(equality, LINE(""), graph, g);
     }
     else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
     {
-      check_equality(LINE(""), graph,
+      check(equality, LINE(""), graph,
                      graph_t{{{edge_init_t{0,0,1,-4}, edge_init_t{0,0,0,-4}, edge_init_t{0,1,0,6}, edge_init_t{1,0,1,10}, edge_init_t{0,1,2,7}},
                              {edge_init_t{0,1,2,6}, edge_init_t{1,0,3,10}, edge_init_t{0,1,4,7}}
                             }, {{1.1,-4.3}, {}}});
     }
     else
     {
-      check_equality(LINE(""), graph,
+      check(equality, LINE(""), graph,
                      graph_t{{{edge_init_t{0,1,-4}, edge_init_t{0,0,-4}, edge_init_t{1,0,6}, edge_init_t{1,1,10}, edge_init_t{1,2,7}},
                              {edge_init_t{0,2,6}, edge_init_t{0,3,10}, edge_init_t{0,4,7}}
                             }, {{1.1,-4.3}, {}}});
@@ -907,7 +907,7 @@ namespace sequoia::testing
     graph.erase_node(0);
     //  (0)
 
-    check_equality(LINE(""), graph, graph_t{edge_init_list_t{{}}, {{}}});
+    check(equality, LINE(""), graph, graph_t{edge_init_list_t{{}}, {{}}});
 
 
     graph.join(0, 0, 1);
@@ -917,41 +917,41 @@ namespace sequoia::testing
 
     if constexpr (GraphFlavour == graph_flavour::directed)
     {
-      check_equality(LINE(""), graph, graph_t{edge_init_list_t{{edge_init_t{0,1}}}, {{}}});
+      check(equality, LINE(""), graph, graph_t{edge_init_list_t{{edge_init_t{0,1}}}, {{}}});
     }
     else if constexpr(GraphFlavour == graph_flavour::undirected)
     {
-      check_equality(LINE(""), graph, graph_t{{{edge_init_t{0,1}, edge_init_t{0,1}}}, {{}}});
+      check(equality, LINE(""), graph, graph_t{{{edge_init_t{0,1}, edge_init_t{0,1}}}, {{}}});
     }
     else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
     {
-      check_equality(LINE(""), graph, graph_t{{{edge_init_t{0,0,1,1}, edge_init_t{0,0,0,1}}}, {{}}});
+      check(equality, LINE(""), graph, graph_t{{{edge_init_t{0,0,1,1}, edge_init_t{0,0,0,1}}}, {{}}});
     }
     else
     {
-      check_equality(LINE(""), graph, graph_t{{{edge_init_t{0,1,1}, edge_init_t{0,0,1}}}, {{}}});
+      check(equality, LINE(""), graph, graph_t{{{edge_init_t{0,1,1}, edge_init_t{0,0,1}}}, {{}}});
     }
 
-    check_equality(LINE("Node with weight 1+i inserted into slot 0"), graph.insert_node(0, 1.0, 1.0), 0_sz);
+    check(equality, LINE("Node with weight 1+i inserted into slot 0"), graph.insert_node(0, 1.0, 1.0), 0_sz);
     //       /\ 1
     //       \/
     // (1+i) (0)
 
     if constexpr (GraphFlavour == graph_flavour::directed)
     {
-      check_equality(LINE(""), graph, graph_t{edge_init_list_t{{}, {edge_init_t{1,1}}}, {{1, 1}, {}}});
+      check(equality, LINE(""), graph, graph_t{edge_init_list_t{{}, {edge_init_t{1,1}}}, {{1, 1}, {}}});
     }
     else if constexpr(GraphFlavour == graph_flavour::undirected)
     {
-      check_equality(LINE(""), graph, graph_t{edge_init_list_t{{}, {edge_init_t{1,1}, edge_init_t{1,1}}}, {{1, 1}, {}}});
+      check(equality, LINE(""), graph, graph_t{edge_init_list_t{{}, {edge_init_t{1,1}, edge_init_t{1,1}}}, {{1, 1}, {}}});
     }
     else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
     {
-      check_equality(LINE(""), graph, graph_t{edge_init_list_t{{}, {edge_init_t{1,1,1,1}, edge_init_t{1,1,0,1}}}, {{1, 1}, {}}});
+      check(equality, LINE(""), graph, graph_t{edge_init_list_t{{}, {edge_init_t{1,1,1,1}, edge_init_t{1,1,0,1}}}, {{1, 1}, {}}});
     }
     else
     {
-      check_equality(LINE(""), graph, graph_t{edge_init_list_t{{}, {edge_init_t{1,1,1}, edge_init_t{1,0,1}}}, {{1, 1}, {}}});
+      check(equality, LINE(""), graph, graph_t{edge_init_list_t{{}, {edge_init_t{1,1,1}, edge_init_t{1,0,1}}}, {{1, 1}, {}}});
     }
 
     graph.mutate_node_weight(graph.cbegin_node_weights(), [](auto& val){
@@ -969,19 +969,19 @@ namespace sequoia::testing
 
     if constexpr (GraphFlavour == graph_flavour::directed)
     {
-      check_equality(LINE(""), graph, graph_t{edge_init_list_t{{}, {edge_init_t{1,1}}}, {{2, 2}, {}}});
+      check(equality, LINE(""), graph, graph_t{edge_init_list_t{{}, {edge_init_t{1,1}}}, {{2, 2}, {}}});
     }
     else if constexpr(GraphFlavour == graph_flavour::undirected)
     {
-      check_equality(LINE(""), graph, graph_t{edge_init_list_t{{}, {edge_init_t{1,1}, edge_init_t{1,1}}}, {{2, 2}, {}}});
+      check(equality, LINE(""), graph, graph_t{edge_init_list_t{{}, {edge_init_t{1,1}, edge_init_t{1,1}}}, {{2, 2}, {}}});
     }
     else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
     {
-      check_equality(LINE(""), graph, graph_t{edge_init_list_t{{}, {edge_init_t{1,1,1,1}, edge_init_t{1,1,0,1}}}, {{2, 2}, {}}});
+      check(equality, LINE(""), graph, graph_t{edge_init_list_t{{}, {edge_init_t{1,1,1,1}, edge_init_t{1,1,0,1}}}, {{2, 2}, {}}});
     }
     else
     {
-      check_equality(LINE(""), graph, graph_t{edge_init_list_t{{}, {edge_init_t{1,1,1}, edge_init_t{1,0,1}}}, {{2, 2}, {}}});
+      check(equality, LINE(""), graph, graph_t{edge_init_list_t{{}, {edge_init_t{1,1,1}, edge_init_t{1,0,1}}}, {{2, 2}, {}}});
     }
   }
 }

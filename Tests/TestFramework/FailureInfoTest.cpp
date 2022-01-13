@@ -45,8 +45,8 @@ namespace sequoia::testing
   void failure_info_test::check_failure_info()
   {
     failure_info x{}, y{1, "foo"};
-    check_equivalence(LINE(""), x, 0, "");
-    check_equivalence(LINE(""), y, 1, "foo");
+    check(equivalence, LINE(""), x, 0, "");
+    check(equivalence, LINE(""), y, 1, "foo");
 
     check_semantics(LINE(""), x, y, std::weak_ordering::less);
 

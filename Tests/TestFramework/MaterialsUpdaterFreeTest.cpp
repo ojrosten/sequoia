@@ -24,9 +24,9 @@ namespace sequoia::testing
     check_exception_thrown<std::runtime_error>(LINE("Empty 'from' path"), [&]() { soft_update(auxiliary, ""); });
 
     soft_update(auxiliary, working);
-    check_weak_equivalence(LINE("Soft update"), working, predictive);
+    check(weak_equivalence, LINE("Soft update"), working, predictive);
 
-    check_equality(LINE("Ensure that a target file equivalent to its replacement is not replaced"),
+    check(equality, LINE("Ensure that a target file equivalent to its replacement is not replaced"),
                    read_to_string(working_materials() / "DirToBeKept" / "Comments.txt"),
                    read_to_string(predictive_materials() / "DirToBeKept" / "Comments.txt"));
 

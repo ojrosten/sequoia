@@ -79,14 +79,14 @@ namespace sequoia::testing
       std::string_view latest{"Task duration: 1.45e-3s +- 3 * 0.0014\n"};
       std::string_view reference{"Task duration: 1.47e-3s +- 3 * 0.0011\n"};
 
-      check_equality(LINE(""), postprocess(latest, reference), reference);
+      check(equality, LINE(""), postprocess(latest, reference), reference);
     }
 
     {
       std::string_view latest{"foo Task duration: 1.45e-3s +- 3 * 0.0014\n"};
       std::string_view reference{"bar Task duration: 1.47e-3s +- 3 * 0.0011\n"};
 
-      check_equality(LINE(""), postprocess(latest, reference), latest);
+      check(equality, LINE(""), postprocess(latest, reference), latest);
     }
 
     {
@@ -95,7 +95,7 @@ namespace sequoia::testing
       std::string_view reference{"foo Task duration: 1.47e-3s +- 3 * 0.0011\n"
                                  "bar Task duration: 1.51e-3s +- 3 * 0.0016\n"};
 
-      check_equality(LINE(""), postprocess(latest, reference), reference);
+      check(equality, LINE(""), postprocess(latest, reference), reference);
     }
 
     {
@@ -104,21 +104,21 @@ namespace sequoia::testing
       std::string_view reference{"foo Task duration: 1.47e-3s +- 3 * 0.0011\n"
                                  "baz Task duration: 1.51e-3s +- 3 * 0.0016\n"};
 
-      check_equality(LINE(""), postprocess(latest, reference), latest);
+      check(equality, LINE(""), postprocess(latest, reference), latest);
     }
 
     {
       std::string_view latest{"Task duration: 1.45e-3s +- 3 * 0.0014\n"};
       std::string_view reference{""};
 
-      check_equality(LINE(""), postprocess(latest, reference), latest);
+      check(equality, LINE(""), postprocess(latest, reference), latest);
     }
 
     {
       std::string_view latest{""};
       std::string_view reference{"Task duration: 1.45e-3s +- 3 * 0.0014\n"};
 
-      check_equality(LINE(""), postprocess(latest, reference), latest);
+      check(equality, LINE(""), postprocess(latest, reference), latest);
     }
 
     {
@@ -126,7 +126,7 @@ namespace sequoia::testing
                               "bar Task duration: 1.50e-3s +- 3 * 0.0019\n"};
       std::string_view reference{"Task duration: 1.47e-3s +- 3 * 0.0011\n"};
 
-      check_equality(LINE(""), postprocess(latest, reference), latest);
+      check(equality, LINE(""), postprocess(latest, reference), latest);
     }
 
     {
@@ -134,42 +134,42 @@ namespace sequoia::testing
       std::string_view reference{"Task duration: 1.47e-3s +- 3 * 0.0011\n"
                                  "bar Task duration: 1.50e-3s +- 3 * 0.0019\n"};
 
-      check_equality(LINE(""), postprocess(latest, reference), latest);
+      check(equality, LINE(""), postprocess(latest, reference), latest);
     }
 
     {
       std::string_view latest{"Task duration: 1.45e-3s +- 3 * 0.0014 [3.4; (2.9, 4.1))]\n"};
       std::string_view reference{"Task duration: 1.47e-3s +- 3 * 0.0011 [3.4; (2.9, 4.1))]\n"};
 
-      check_equality(LINE(""), postprocess(latest, reference), reference);
+      check(equality, LINE(""), postprocess(latest, reference), reference);
     }
 
     {
       std::string_view latest{"Task duration: 1.45e-3s +- 3 * 0.0014 [3.4; (2.9, 4.1))]\n"};
       std::string_view reference{"Task duration: 1.47e-3s +- 3 * 0.001 [3.4; (2.9, 4.1))]\n"};
 
-      check_equality(LINE(""), postprocess(latest, reference), reference);
+      check(equality, LINE(""), postprocess(latest, reference), reference);
     }
 
     {
       std::string_view latest{"Task duration: 1.45e-3s +- 3 * 0.0014 [3.4; (2.8, 4.1))]\n"};
       std::string_view reference{"Task duration: 1.47e-3s +- 3 * 0.0011 [3.4; (2.9, 4.1))]\n"};
 
-      check_equality(LINE(""), postprocess(latest, reference), latest);
+      check(equality, LINE(""), postprocess(latest, reference), latest);
     }
 
     {
       std::string_view latest{"Task duration: 1.45e-3s +- 3 * 0.0014 [3.4; (2.8, 4.1))]\n"};
       std::string_view reference{"Task duration: 1.47e-3s +- 3 * 0.0011 [3.4; (2.9, 4.0))]\n"};
 
-      check_equality(LINE(""), postprocess(latest, reference), latest);
+      check(equality, LINE(""), postprocess(latest, reference), latest);
     }
 
     {
       std::string_view latest{"Task duration: 1.45e-3s +- 3 * 0.0014\n"};
       std::string_view reference{"Task duration: 1.47e-3s +- 4 * 0.0011\n"};
 
-      check_equality(LINE(""), postprocess(latest, reference), latest);
+      check(equality, LINE(""), postprocess(latest, reference), latest);
     }
   }
 }

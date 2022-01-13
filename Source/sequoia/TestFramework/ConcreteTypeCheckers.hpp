@@ -16,11 +16,11 @@
     consider two instances of std::pair<my_type1, mytype2>, x and y. The utilities in this
     header means the call
 
-    check_equality("descripion", logger, x, y);
+    check(equality, "descripion", logger, x, y);
 
     will automatically call
 
-    check_equality("automatically enhanced desciption", logger, x.first, y,first)
+    check(equality, "automatically enhanced desciption", logger, x.first, y,first)
 
     and similarly for the second element. In turn, this nested check_equality will use
     a specialization of the value_tester of my_type1, should it exist. As
@@ -128,11 +128,11 @@ namespace sequoia::testing
             .append(std::to_string(dist)).append(":")
         };
 
-        check_equality(mess, logger, *(iters.first), *(iters.second), adv);
+        check(equality, mess, logger, *(iters.first), *(iters.second), adv);
       }
       else if((iters.first != obtained.end()) || (iters.second != prediction.end()))
       {
-        auto check{
+        auto checker{
           [&logger, obtained, prediction, &advisor](auto begin, auto iter, std::string_view state, std::string_view adjective){
             const auto dist{std::distance(begin, iter)};
             const auto info{std::string{"First "}.append(state).append(" character: ").append(display_character(*iter))};
@@ -140,17 +140,17 @@ namespace sequoia::testing
 
             const auto mess{append_lines("Lengths differ", std::string{"Obtained string is too "}.append(adjective))};
 
-            check_equality(mess, logger, obtained.size(), prediction.size(), adv);
+            check(equality, mess, logger, obtained.size(), prediction.size(), adv);
           }
         };
 
         if(iters.second != prediction.end())
         {
-          check(prediction.begin(), iters.second, "missing", "short");
+          checker(prediction.begin(), iters.second, "missing", "short");
         }
         else if(iters.first != obtained.end())
         {
-          check(obtained.begin(), iters.first, "excess", "long");
+          checker(obtained.begin(), iters.first, "excess", "long");
         }
       }
     }
@@ -195,15 +195,15 @@ namespace sequoia::testing
     template<test_mode Mode, class Advisor>
     static void test_equality(test_logger<Mode>& logger, const std::pair<S, T>& value, const std::pair<S, T>& prediction, const tutor<Advisor>& advisor)
     {
-      check_equality("First element of pair is incorrect",  logger, value.first,  prediction.first,  advisor);
-      check_equality("Second element of pair is incorrect", logger, value.second, prediction.second, advisor);
+      check(equality, "First element of pair is incorrect",  logger, value.first,  prediction.first,  advisor);
+      check(equality, "Second element of pair is incorrect", logger, value.second, prediction.second, advisor);
     }
 
     template<test_mode Mode, class Advisor>
     static void test_agnostic(test_logger<Mode>& logger, const std::pair<S, T>& value, const std::pair<S, T>& prediction, const tutor<Advisor>& advisor)
     {
-      check_agnostic("First element of pair is incorrect",  logger, value.first,  prediction.first,  advisor);
-      check_agnostic("Second element of pair is incorrect", logger, value.second, prediction.second, advisor);
+      check(agnostic, "First element of pair is incorrect",  logger, value.first,  prediction.first,  advisor);
+      check(agnostic, "Second element of pair is incorrect", logger, value.second, prediction.second, advisor);
     }
 
     template<test_mode Mode, class U, class V, class Advisor>
@@ -228,7 +228,7 @@ namespace sequoia::testing
     static void check_tuple_elements(test_logger<Mode>& logger, const std::tuple<T...>& value, const std::tuple<U...>& prediction, const tutor<Advisor>& advisor)
     {
       const std::string message{"Element " + std::to_string(I) + " of tuple incorrect"};
-      check_equality(message, logger, std::get<I>(value), std::get<I>(prediction), advisor);
+      check(equality, message, logger, std::get<I>(value), std::get<I>(prediction), advisor);
       check_tuple_elements<Mode, I+1>(logger, value, prediction, advisor);
     }
 
@@ -268,7 +268,7 @@ namespace sequoia::testing
 
       if(reducedWorking && reducedPrediction)
       {
-        check_equality(path_check_preamble("Contents of", file, prediction), logger, reducedWorking.value(), reducedPrediction.value());
+        check(equality, path_check_preamble("Contents of", file, prediction), logger, reducedWorking.value(), reducedPrediction.value());
       }
     }
   };
@@ -289,14 +289,14 @@ namespace sequoia::testing
   struct path_checker
   {
     template<test_mode Mode, class Customization, invocable_r<bool, std::filesystem::path, std::filesystem::path> FinalTokenComparison>
-    static void check(test_logger<Mode>& logger, const Customization& custom, const std::filesystem::path& path, const std::filesystem::path& prediction, FinalTokenComparison compare)
+    static void check_path(test_logger<Mode>& logger, const Customization& custom, const std::filesystem::path& path, const std::filesystem::path& prediction, FinalTokenComparison compare)
     {
       namespace fs = std::filesystem;
 
       const auto pathType{fs::status(path).type()};
       const auto predictionType{fs::status(prediction).type()};
 
-      if(check_equality(path_check_preamble("Path type", path, prediction), logger, pathType, predictionType))
+      if(check(equality, path_check_preamble("Path type", path, prediction), logger, pathType, predictionType))
       {
         if(!path.empty())
         {
@@ -353,7 +353,7 @@ namespace sequoia::testing
 
       const std::vector<fs::path> paths{generator(dir)}, predictedPaths{generator(prediction)};
 
-      check_equality(std::string{"Number of directory entries for "}.append(dir.generic_string()),
+      check(equality, std::string{"Number of directory entries for "}.append(dir.generic_string()),
         logger,
         paths.size(),
         predictedPaths.size());
@@ -364,21 +364,21 @@ namespace sequoia::testing
           })};
       if((iters.first != paths.end()) && (iters.second != predictedPaths.end()))
       {
-        check_equality("First directory entry mismatch", logger, *iters.first, *iters.second);
+        check(equality, "First directory entry mismatch", logger, *iters.first, *iters.second);
       }
       else if(iters.first != paths.end())
       {
-        check_equality("First directory entry mismatch", logger, *iters.first, fs::path{});
+        check(equality, "First directory entry mismatch", logger, *iters.first, fs::path{});
       }
       else if(iters.second != predictedPaths.end())
       {
-        check_equality("First directory entry mismatch", logger, fs::path{}, *iters.second);
+        check(equality, "First directory entry mismatch", logger, fs::path{}, *iters.second);
       }
       else
       {
         for(std::size_t i{}; i < paths.size(); ++i)
         {
-          check(logger, custom, paths[i], predictedPaths[i], compare);
+          check_path(logger, custom, paths[i], predictedPaths[i], compare);
         }
       }
     }
@@ -411,11 +411,11 @@ namespace sequoia::testing
       auto pred{
         [&logger](const fs::path& pathFinalToken, const fs::path& predictionFinalToken)
         {
-           return check_equality("Final path token", logger, pathFinalToken, predictionFinalToken);
+           return check(equality, "Final path token", logger, pathFinalToken, predictionFinalToken);
         }
       };
 
-      path_checker::check(logger, custom, path, prediction, pred);
+      path_checker::check_path(logger, custom, path, prediction, pred);
     }
 
     template<test_mode Mode>
@@ -428,7 +428,7 @@ namespace sequoia::testing
     static void test_weak_equivalence(test_logger<Mode>& logger, const Customization& custom, const std::filesystem::path& path, const std::filesystem::path& prediction)
     {
       namespace fs = std::filesystem;
-      path_checker::check(logger, custom, path, prediction, [](const fs::path&, const fs::path&) { return true; });
+      path_checker::check_path(logger, custom, path, prediction, [](const fs::path&, const fs::path&) { return true; });
     }
 
     template<test_mode Mode>
@@ -446,26 +446,26 @@ namespace sequoia::testing
     template<test_mode Mode, class Advisor>
     static void test_equality(test_logger<Mode>& logger, const type& obtained, const type& prediction, tutor<Advisor> advisor)
     {
-      if(check_equality("Variant Index", logger, obtained.index(), prediction.index()))
+      if(check(equality, "Variant Index", logger, obtained.index(), prediction.index()))
       {
-        check(logger, obtained, prediction, advisor, std::make_index_sequence<sizeof...(Ts)>());
+        check_value(logger, obtained, prediction, advisor, std::make_index_sequence<sizeof...(Ts)>());
       }
     }
   private:
     template<test_mode Mode, class Advisor, std::size_t... I>
-    static void check(test_logger<Mode>& logger, const type& obtained, const type& prediction, const tutor<Advisor>& advisor, std::index_sequence<I...>)
+    static void check_value(test_logger<Mode>& logger, const type& obtained, const type& prediction, const tutor<Advisor>& advisor, std::index_sequence<I...>)
     {
-      (check<I>(logger, obtained, prediction, advisor), ...);
+      (check_value<I>(logger, obtained, prediction, advisor), ...);
     }
 
     template<std::size_t I, test_mode Mode, class Advisor>
-    static void check(test_logger<Mode>& logger, const type& obtained, const type& prediction, const tutor<Advisor>& advisor)
+    static void check_value(test_logger<Mode>& logger, const type& obtained, const type& prediction, const tutor<Advisor>& advisor)
     {
       if(auto pObtained{std::get_if<I>(&obtained)})
       {
         if(auto pPrediction{std::get_if<I>(&prediction)})
         {
-          check_equality("Variant Contents", logger, *pObtained, *pPrediction, advisor);
+          check(equality, "Variant Contents", logger, *pObtained, *pPrediction, advisor);
         }
         else
         {
@@ -483,11 +483,11 @@ namespace sequoia::testing
     template<test_mode Mode, class Advisor>
     static void test_equality(test_logger<Mode>& logger, const type& obtained, const type& prediction, tutor<Advisor> advisor)
     {
-      if(check_equality("Has value", logger, obtained.has_value(), prediction.has_value()))
+      if(check(equality, "Has value", logger, obtained.has_value(), prediction.has_value()))
       {
         if(obtained && prediction)
         {
-          check_equality("Contents of optional", logger, *obtained, *prediction, advisor);
+          check(equality, "Contents of optional", logger, *obtained, *prediction, advisor);
         }
       }
     }

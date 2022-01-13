@@ -38,6 +38,6 @@ namespace sequoia::testing
     }
 
     const fs::path folder{"RepresentativeCases"};
-    check_equivalence(LINE(""), working_materials() / folder, predictive_materials() / folder);
+    check(equivalence, LINE(""), working_materials() / folder, predictive_materials() / folder);
   }
 }

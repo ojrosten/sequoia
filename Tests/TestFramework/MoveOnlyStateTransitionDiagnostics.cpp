@@ -84,7 +84,7 @@ namespace sequoia::testing
     {
       auto checker{
         [this](std::string_view description, std::function<bar()> obtained, std::function<bar()> prediction, std::function<bar()> parent, std::weak_ordering ordering) {
-          check_equality(description, obtained(), prediction());
+          check(equality, description, obtained(), prediction());
           check_relation(description, within_tolerance{bar{0.1}}, obtained(), prediction());
           check_semantics(description, prediction, parent, ordering);
         }
@@ -96,7 +96,7 @@ namespace sequoia::testing
     {
       auto checker{
         [this](std::string_view description, const bar& obtained, const bar& prediction) {
-          check_equality(description, obtained, prediction);
+          check(equality, description, obtained, prediction);
           check_relation(description, within_tolerance{bar{0.1}}, obtained, prediction);
         }
       };
@@ -128,7 +128,7 @@ namespace sequoia::testing
 
     auto checker{
         [this](std::string_view description, const bar& obtained, const bar& prediction) {
-          check_equality(description, obtained, prediction);
+          check(equality, description, obtained, prediction);
         }
     };
 

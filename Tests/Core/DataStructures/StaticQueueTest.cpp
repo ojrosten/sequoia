@@ -32,7 +32,7 @@ namespace sequoia::testing
     constexpr static_queue<int, 0> s{};
     static_queue<int, 0> t{};
 
-    check_equality(LINE("Equality of null queues"), t, s);
+    check(equality, LINE("Equality of null queues"), t, s);
 
     check_exception_thrown<std::logic_error>(LINE("Can't push to null queue"), [&t]() { t.push(1); });
     check_exception_thrown<std::logic_error>(LINE("Can't construct non-null null queue"), []() { static_queue<int, 0>{1}; });
@@ -53,7 +53,7 @@ namespace sequoia::testing
 
     t.pop();
     t.push(1);
-    check_equality(LINE(""), t, s);
+    check(equality, LINE(""), t, s);
   }
 
   constexpr auto test_static_queue::make_static_queue_2()
@@ -83,27 +83,27 @@ namespace sequoia::testing
 
     check_exception_thrown<std::logic_error>(LINE("Can't construct queue of depth 2 with 3 elements"), []() { static_queue<int, 2>{1, 2, 3}; });
 
-    check_equality(LINE(""), a.size(), 0_sz);
+    check(equality, LINE(""), a.size(), 0_sz);
     check(LINE(""), a.empty());
 
     a.push(5);
     a.push(7);
-    check_equality(LINE(""), a, static_queue<int, 2>{5, 7});
+    check(equality, LINE(""), a, static_queue<int, 2>{5, 7});
 
     check_exception_thrown<std::logic_error>(LINE("Trying to push 3 elements to a queue of depth 2"), [&a]() { a.push(0); });
 
     a.pop();
-    check_equality(LINE(""), a, static_queue<int, 2>{7});
+    check(equality, LINE(""), a, static_queue<int, 2>{7});
 
     a.push(4);
-    check_equality(LINE(""), a, static_queue<int, 2>{7, 4});
+    check(equality, LINE(""), a, static_queue<int, 2>{7, 4});
 
     check_exception_thrown<std::logic_error>(LINE("Trying to push 3 elements to a queue of depth 2"), [&a]() { a.push(0); });
 
     a.pop();
-    check_equality(LINE(""), a, static_queue<int, 2>{4});
+    check(equality, LINE(""), a, static_queue<int, 2>{4});
 
     a.pop();
-    check_equality(LINE(""), a, static_queue<int, 2>{});
+    check(equality, LINE(""), a, static_queue<int, 2>{});
   }
 }

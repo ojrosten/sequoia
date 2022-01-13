@@ -26,23 +26,23 @@ namespace sequoia::testing
   void output_free_test::test_emphasise()
   {
     using namespace std::string_literals;
-    check_equality(LINE("Emphasis"), emphasise("foo"), "--foo--"s);
-    check_equality(LINE("Nothing to emphasise"), emphasise(""), ""s);
+    check(equality, LINE("Emphasis"), emphasise("foo"), "--foo--"s);
+    check(equality, LINE("Nothing to emphasise"), emphasise(""), ""s);
   }
 
   void output_free_test::test_display_character()
   {
     using namespace std::string_literals;
-    check_equality(LINE(""), display_character('\n'), "'\\n'"s);
-    check_equality(LINE(""), display_character('\t'), "'\\t'"s);
-    check_equality(LINE(""), display_character('\0'), "'\\0'"s);
-    check_equality(LINE(""), display_character(' '), "' '"s);
+    check(equality, LINE(""), display_character('\n'), "'\\n'"s);
+    check(equality, LINE(""), display_character('\t'), "'\\t'"s);
+    check(equality, LINE(""), display_character('\0'), "'\\0'"s);
+    check(equality, LINE(""), display_character(' '), "' '"s);
   }
 
   void output_free_test::test_tidy_name()
   {
     using namespace std::string_literals;
-    check_equality(LINE(""), tidy_name("(some enum)0", clang_type{}), "0"s);
-    check_equality(LINE(""), tidy_name("struct foo", msvc_type{}), "foo"s);
+    check(equality, LINE(""), tidy_name("(some enum)0", clang_type{}), "0"s);
+    check(equality, LINE(""), tidy_name("struct foo", msvc_type{}), "foo"s);
   }
 }

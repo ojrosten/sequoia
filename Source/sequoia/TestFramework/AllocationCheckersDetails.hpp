@@ -86,7 +86,7 @@ namespace sequoia::testing::impl
     using allocator = decltype(std::declval<Getter>()(container));
     const auto message{append_lines(make_type_info<allocator>(), detail)};
 
-    return check_equality(message, logger, current - previous - delta, unshifted, tutor{allocation_advice{}});
+    return check(equality, message, logger, current - previous - delta, unshifted, tutor{allocation_advice{}});
   }
 
   /*! \brief Wraps allocation_info, together with two prior allocation counts.

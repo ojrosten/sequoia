@@ -26,7 +26,7 @@ namespace sequoia::testing::impl
   bool do_check_copy_assign(test_logger<Mode>& logger, [[maybe_unused]] const Actions& actions, T& z, const T& y, const Args&... args)
   {
     z = y;
-    if(check_equality("Inconsistent copy assignment (from y)", logger, z, y))
+    if(check(equality, "Inconsistent copy assignment (from y)", logger, z, y))
     {
       if constexpr(has_post_copy_assign_action<Actions>)
       {
@@ -35,7 +35,7 @@ namespace sequoia::testing::impl
 
       auto& w{z};
       z = w;
-      return check_equality("Inconsistent self copy assignment", logger, z, y);
+      return check(equality, "Inconsistent self copy assignment", logger, z, y);
     }
 
     return false;
@@ -57,7 +57,7 @@ namespace sequoia::testing::impl
 
     T z{x};
     const bool consistentCopy{
-      check_equality("Inconsistent copy constructor (x)", logger, z, x)
+      check(equality, "Inconsistent copy constructor (x)", logger, z, x)
     };
 
     if constexpr(has_post_copy_action<Actions>)
@@ -103,7 +103,7 @@ namespace sequoia::testing::impl
           " the object from which it was copied", logger, v != y))
         {
           v = y;
-          if(check_equality("Inconsistent copy assignment (from mutated y)", logger, v, y))
+          if(check(equality, "Inconsistent copy assignment (from mutated y)", logger, v, y))
           {
             yMutator(v);
 

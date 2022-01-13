@@ -59,27 +59,27 @@ namespace sequoia::testing
     }
 
     {
-      check_weak_equivalence(LINE("Mismatched zeroth argument"), parse(0, nullptr, {}), outcome{"foo", {}});
+      check(weak_equivalence, LINE("Mismatched zeroth argument"), parse(0, nullptr, {}), outcome{"foo", {}});
     }
 
     {
       commandline_arguments a{"foo", "--async"};
 
-      check_weak_equivalence(LINE("Early function object not generated"), parse(a.size(), a.get(), { {"--async", {}, {}, fo{}} }), outcome{"foo", {{nullptr, nullptr, {}}}});
+      check(weak_equivalence, LINE("Early function object not generated"), parse(a.size(), a.get(), { {"--async", {}, {}, fo{}} }), outcome{"foo", {{nullptr, nullptr, {}}}});
 
-      check_weak_equivalence(LINE("Late function object not generated"), parse(a.size(), a.get(), { {"--async", {}, {}, nullptr, {}, fo{}} }), outcome{"foo", {{nullptr, nullptr, {}}}});
+      check(weak_equivalence, LINE("Late function object not generated"), parse(a.size(), a.get(), { {"--async", {}, {}, nullptr, {}, fo{}} }), outcome{"foo", {{nullptr, nullptr, {}}}});
 
-      check_weak_equivalence(LINE("Unexpected early function object"), parse(a.size(), a.get(), { {"--async", {}, {}, fo{}} }), outcome{"foo", {{fo{"x"}, nullptr, {}}}});
+      check(weak_equivalence, LINE("Unexpected early function object"), parse(a.size(), a.get(), { {"--async", {}, {}, fo{}} }), outcome{"foo", {{fo{"x"}, nullptr, {}}}});
 
-      check_weak_equivalence(LINE("Unexpected late function object"), parse(a.size(), a.get(), { {"--async", {}, {}, nullptr, {}, fo{}} }), outcome{"foo", {{nullptr, fo{"y"}, {}}}});
+      check(weak_equivalence, LINE("Unexpected late function object"), parse(a.size(), a.get(), { {"--async", {}, {}, nullptr, {}, fo{}} }), outcome{"foo", {{nullptr, fo{"y"}, {}}}});
 
-      check_weak_equivalence(LINE("Mixed-up function objects"), parse(a.size(), a.get(), { {"--async", {}, {}, fo{"x"}, {}, fo{"y"}} }), outcome{"foo", {{fo{"y"}, fo{"x"}, {}}}});
+      check(weak_equivalence, LINE("Mixed-up function objects"), parse(a.size(), a.get(), { {"--async", {}, {}, fo{"x"}, {}, fo{"y"}} }), outcome{"foo", {{fo{"y"}, fo{"x"}, {}}}});
     }
 
     {
       commandline_arguments a{"foo", "--help"};
 
-      check_weak_equivalence(LINE("Help not generated"), parse(a.size(), a.get(), { {"--async", {}, {}, fo{}} }), outcome{"foo", {}, ""});
+      check(weak_equivalence, LINE("Help not generated"), parse(a.size(), a.get(), { {"--async", {}, {}, fo{}} }), outcome{"foo", {}, ""});
     }
   }
 }

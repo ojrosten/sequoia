@@ -28,18 +28,18 @@ namespace sequoia::testing
     using namespace maths;
 
     linear_sequence<int, int> s{1, 3}, t{0,2};
-    check_equivalence(LINE(""), s, 1, 3);
-    check_equivalence(LINE(""), t, 0, 2);
+    check(equivalence, LINE(""), s, 1, 3);
+    check(equivalence, LINE(""), t, 0, 2);
 
     check_semantics(LINE(""), s, t);
 
-    check_equality(LINE(""), s[0], 1);
-    check_equality(LINE(""), s[-1], -2);
-    check_equality(LINE(""), s[1], 4);
+    check(equality, LINE(""), s[0], 1);
+    check(equality, LINE(""), s[-1], -2);
+    check(equality, LINE(""), s[1], 4);
 
-    check_equality(LINE(""), t[0], 0);
-    check_equality(LINE(""), t[-1], -2);
-    check_equality(LINE(""), t[1], 2);
+    check(equality, LINE(""), t[0], 0);
+    check(equality, LINE(""), t[-1], -2);
+    check(equality, LINE(""), t[1], 2);
   }
 
   void linear_sequence_test::test_static_linear_sequence()
@@ -53,6 +53,6 @@ namespace sequoia::testing
 
 
     constexpr auto val{s[2]};
-    check_equality(LINE(""), val, 7_sz);
+    check(equality, LINE(""), val, 7_sz);
   }
 }

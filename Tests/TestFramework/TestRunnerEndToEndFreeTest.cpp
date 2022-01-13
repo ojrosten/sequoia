@@ -161,15 +161,15 @@ namespace sequoia::testing
     b.create_build_run(working_materials() / "CreationOutput", "BuildOutput2.txt", working_materials() / "Output");
 
     // Note: the act of creation invokes cmake, and so the first check implicitly checks the cmake output
-    check_equivalence(description, working_materials() / "CreationOutput", predictive_materials() / "CreationOutput");
+    check(equivalence, description, working_materials() / "CreationOutput", predictive_materials() / "CreationOutput");
     check(append_lines(description, "Second build output existance"), fs::exists(b.buildDir / "BuildOutput2.txt"));
-    check_equivalence(append_lines(description, "Test Runner Output"), working_materials() / "Output", predictive_materials() / "Output");
+    check(equivalence, append_lines(description, "Test Runner Output"), working_materials() / "Output", predictive_materials() / "Output");
   }
 
   void test_runner_end_to_end_test::run_and_check(std::string_view description, const cmd_builder& b, std::string_view relOutputDir, std::string_view options)
   {
     b.run_executable(working_materials() / relOutputDir, options);
-    check_equivalence(description, working_materials() / relOutputDir, predictive_materials() / relOutputDir);
+    check(equivalence, description, working_materials() / relOutputDir, predictive_materials() / relOutputDir);
   }
 
   void test_runner_end_to_end_test::rebuild_run_and_check(std::string_view description, const cmd_builder& b, std::string_view relOutputDir, std::string_view CMakeOutput, std::string_view BuildOutput, std::string_view options)
@@ -177,7 +177,7 @@ namespace sequoia::testing
     fs::create_directory(working_materials() / relOutputDir);
 
     b.rebuild_run(working_materials() / relOutputDir, CMakeOutput, BuildOutput, options);
-    check_equivalence(description, working_materials() / relOutputDir, predictive_materials() / relOutputDir);
+    check(equivalence, description, working_materials() / relOutputDir, predictive_materials() / relOutputDir);
     check(append_lines(description, "CMake output existance"), fs::exists(b.mainDir / CMakeOutput));
     check(append_lines(description, "Build output existance"), fs::exists(b.buildDir / BuildOutput));
   }
@@ -244,7 +244,7 @@ namespace sequoia::testing
     check(LINE(".git existance"), fs::exists(generated_project() / ".git"));
 
     fs::copy(generated_project() / "GenerationOutput.txt", working_materials() / "InitOutput");
-    check_equivalence(LINE(""), working_materials() / "InitOutput", predictive_materials() / "InitOutput");
+    check(equivalence, LINE(""), working_materials() / "InitOutput", predictive_materials() / "InitOutput");
 
     //=================== Run the test executable ===================//
 
@@ -305,20 +305,20 @@ namespace sequoia::testing
 
     // Check materials are unchanged
     fs::copy(generated_project() / "TestMaterials", working_materials() / "OriginalTestMaterials", fs::copy_options::recursive);
-    check_equivalence(LINE("Original Test Materials"), working_materials() / "OriginalTestMaterials", predictive_materials() / "OriginalTestMaterials");
+    check(equivalence, LINE("Original Test Materials"), working_materials() / "OriginalTestMaterials", predictive_materials() / "OriginalTestMaterials");
 
     //=================== Run again, locating instabilities, and try to update ===================//
     //--> update should be suppressed by instability location
 
     run_and_check(LINE("Instability location suppressing update"), b, "UpdateSuppressedByInstabilityLocation", "locate 2 prune -c namespace u");
-    check_equivalence(LINE("Original Test Materials"), working_materials() / "OriginalTestMaterials", predictive_materials() / "OriginalTestMaterials");
+    check(equivalence, LINE("Original Test Materials"), working_materials() / "OriginalTestMaterials", predictive_materials() / "OriginalTestMaterials");
 
     //=================== Rerun with prune but update materials ===================//
 
     run_and_check(LINE("Updated Materials"), b, "RunWithUpdateOutput", "prune --cutoff namespace u");
 
     fs::copy(generated_project() / "TestMaterials", working_materials() / "UpdatedTestMaterials", fs::copy_options::recursive);
-    check_equivalence(LINE("Updated Test Materials"), working_materials() / "UpdatedTestMaterials", predictive_materials() / "UpdatedTestMaterials");
+    check(equivalence, LINE("Updated Test Materials"), working_materials() / "UpdatedTestMaterials", predictive_materials() / "UpdatedTestMaterials");
 
     //=================== Rerun with prune, which should detect the change to materials ===================//
 
@@ -346,15 +346,15 @@ namespace sequoia::testing
     rebuild_run_and_check(LINE("Rebuild and run after source/test changes (pruned)"), b, "RebuiltOutput", "CMakeOutput4.txt", "BuildOutput4.txt", "prune --cutoff namespace");
     check_timings(LINE("Async run (level: test)"), fs::path{"RebuiltOutput/TestRunOutput.txt"}, 1.8);
 
-    check_equivalence(LINE("Test Runner Output"), working_materials() / "RebuiltOutput", predictive_materials() / "RebuiltOutput");
+    check(equivalence, LINE("Test Runner Output"), working_materials() / "RebuiltOutput", predictive_materials() / "RebuiltOutput");
     fs::create_directory(working_materials() / "TestAll");
     const auto generatedProject{working_materials().parent_path() / "GeneratedProject"};
 
     const fs::path mainCpp{"TestAll/TestAllMain.cpp"}, mainCmake{"TestAll/CMakeLists.txt"};
     fs::copy_file(generatedProject / mainCpp,   working_materials() / mainCpp);
     fs::copy_file(generatedProject / mainCmake, working_materials() / mainCmake);
-    check_equivalence(LINE("TestAllMain.cpp"),  working_materials() / mainCpp,   predictive_materials() / mainCpp);
-    check_equivalence(LINE("CMakeLists.tt"), working_materials() / mainCmake, predictive_materials() / mainCmake);
+    check(equivalence, LINE("TestAllMain.cpp"),  working_materials() / mainCpp,   predictive_materials() / mainCpp);
+    check(equivalence, LINE("CMakeLists.tt"), working_materials() / mainCmake, predictive_materials() / mainCmake);
 
     //=================== Rerun with prune ===================//
     // --> only failing tests should rerun
@@ -383,7 +383,7 @@ namespace sequoia::testing
 
     fs::create_directory(working_materials() / "Dump");
     fs::copy(generated_project() / "output" / "Recovery" / "Dump.txt", working_materials() / "Dump");
-    check_equivalence(LINE("Dump File"), working_materials() / "Dump", predictive_materials() / "Dump");
+    check(equivalence, LINE("Dump File"), working_materials() / "Dump", predictive_materials() / "Dump");
 
     //=================== Rerun in the presence of an exception ===================//
     // Rename generated_project() / TestMaterials / Stuff / FooTest / WorkingCopy / RepresentativeCases,
@@ -398,7 +398,7 @@ namespace sequoia::testing
 
     fs::create_directory(working_materials() / "Recovery");
     fs::copy(generated_project() / "output" / "Recovery" / "Recovery.txt", working_materials() / "Recovery");
-    check_equivalence(LINE("Recovery File"), working_materials() / "Recovery", predictive_materials() / "Recovery");
+    check(equivalence, LINE("Recovery File"), working_materials() / "Recovery", predictive_materials() / "Recovery");
 
     //=================== Rerun in the presence of an exception mid-check ===================//
     // Rename generated_project() / TestMaterials / Stuff / FooTest / Prediction / RepresentativeCases,
@@ -413,6 +413,6 @@ namespace sequoia::testing
 
     fs::create_directory(working_materials() / "RecoveryMidCheck");
     fs::copy(generated_project() / "output" / "Recovery" / "Recovery.txt", working_materials() / "RecoveryMidCheck");
-    check_equivalence(LINE("Recovery File"), working_materials() / "RecoveryMidCheck", predictive_materials() / "RecoveryMidCheck");
+    check(equivalence, LINE("Recovery File"), working_materials() / "RecoveryMidCheck", predictive_materials() / "RecoveryMidCheck");
   }
 }
