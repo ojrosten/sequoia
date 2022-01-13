@@ -311,13 +311,13 @@ namespace sequoia::testing
     return !sentry.failure_detected();
   }
 
-  template<test_mode Mode, class Compare, class T, class Advisor>
-  void binary_comparison(sentinel<Mode>& sentry, Compare compare, const T& obtained, const T& prediction, tutor<Advisor> advisor)
+  template<bool IsFinalMessage, test_mode Mode, class Compare, class T, class Advisor>
+  void binary_comparison(final_message_constant<IsFinalMessage>, sentinel<Mode>& sentry, Compare compare, const T& obtained, const T& prediction, tutor<Advisor> advisor)
   {
     sentry.log_check();
     if(!compare(obtained, prediction))
     {
-      std::string message{failure_reporter<Compare>::report(compare, obtained, prediction)};
+      std::string message{failure_reporter<Compare>::report(final_message_constant<IsFinalMessage>{}, compare, obtained, prediction)};
       append_advice(message, {advisor, obtained, prediction});
 
       sentry.log_failure(message);
@@ -368,7 +368,8 @@ namespace sequoia::testing
 
     if constexpr(std::equality_comparable<T>)
     {
-      binary_comparison(sentry, std::equal_to<T>{}, obtained, prediction, advisor);
+      using finality = final_message_constant<!(binary_tester_for<equality_tag, Mode, T, tutor<Advisor>> || sequoia::range<T>)>;
+      binary_comparison(finality{}, sentry, std::equal_to<T>{}, obtained, prediction, advisor);
     }
 
     if constexpr(binary_tester_for<equality_tag, Mode, T, tutor<Advisor>>)
@@ -395,7 +396,8 @@ namespace sequoia::testing
 
     if constexpr(std::invocable<Compare, T, T>)
     {
-      binary_comparison(sentry, std::move(compare), obtained, prediction, advisor);
+      using finality = final_message_constant<!sequoia::range<T>>;
+      binary_comparison(finality{}, sentry, std::move(compare), obtained, prediction, advisor);
     }
     else
     {
@@ -448,24 +450,28 @@ namespace sequoia::testing
    }
  }
 
+ template<test_mode Mode, class T, class Advisor>
+ inline constexpr bool does_detailed_agnostic_check{
+      binary_tester_for<equality_tag, Mode, T, tutor<Advisor>>
+   || binary_tester_for<equivalence_tag, Mode, T, tutor<Advisor>>
+   || binary_tester_for<weak_equivalence_tag, Mode, T, tutor<Advisor>>
+   || binary_tester_for<agnostic_tag, Mode, T, tutor<Advisor>>
+ };
+
   /*! \brief The workhorse for generically dispatching checks to nested types.
   
    */
 
   template<test_mode Mode, class Customization, class T, class Advisor = null_advisor>
-    requires (   std::equality_comparable<T>
-              || binary_tester_for<equality_tag, Mode, T, tutor<Advisor>>
-              || binary_tester_for<equivalence_tag, Mode, T, tutor<Advisor>>
-              || binary_tester_for<weak_equivalence_tag, Mode, T, tutor<Advisor>>
-              || binary_tester_for<agnostic_tag, Mode, T, tutor<Advisor>>
-              || sequoia::range<T>)
+    requires (   std::equality_comparable<T> || does_detailed_agnostic_check<Mode, T, Advisor> || sequoia::range<T>)
   bool dispatch_check(std::string_view description, test_logger<Mode>& logger, agnostic_tag, const value_based_customization<Customization>&, const T& obtained, const T& prediction, [[maybe_unused]] tutor<Advisor> advisor = {})
   {
     sentinel<Mode> sentry{logger, add_type_info<T>(description)};
 
     if constexpr(std::equality_comparable<T>)
     {
-      binary_comparison(sentry, std::equal_to<T>{}, obtained, prediction, advisor);
+      using finality = final_message_constant<!(does_detailed_agnostic_check<Mode, T, Advisor> || sequoia::range<T>)>;
+      binary_comparison(finality{}, sentry, std::equal_to<T>{}, obtained, prediction, advisor);
     }
 
     if constexpr(binary_tester_for<agnostic_tag, Mode, T, tutor<Advisor>>)

@@ -196,7 +196,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string failure_message(bool, bool)
+  std::string failure_message(is_final_message_t, bool, bool)
   {
     return "check failed";
   }

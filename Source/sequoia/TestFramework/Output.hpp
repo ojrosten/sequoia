@@ -80,30 +80,25 @@ namespace sequoia::testing
     return default_prediction_message(to_string(obtained), to_string(prediction));
   }
 
+  template<bool IsFinalMessage>
+  struct final_message_constant : std::bool_constant<IsFinalMessage> {};
+
+  using is_final_message_t     = final_message_constant<true>;
+  using is_not_final_message_t = final_message_constant<false>;
+
+  inline constexpr is_final_message_t is_final_message{};
+  inline constexpr is_not_final_message_t is_not_final_message{};
+
   template<class T>
   inline constexpr bool has_prediction_message{requires(const T& obtained, const T& prediction) { prediction_message(obtained, prediction); }};
 
   [[nodiscard]]
-  std::string failure_message(bool, bool);
-
-  template<class CharT, class Traits, class Allocator>
-  [[nodiscard]]
-  std::string failure_message(const std::basic_string<CharT, Traits, Allocator>&, const std::basic_string<CharT, Traits, Allocator>&)
-  {
-    return equality_operator_failure_message();
-  }
-
-  template<class CharT, class Traits>
-  [[nodiscard]]
-  std::string failure_message(const std::basic_string_view<CharT, Traits>&, const std::basic_string_view<CharT, Traits>&)
-  {
-    return equality_operator_failure_message();
-  }
+  std::string failure_message(is_final_message_t, bool, bool);
 
   template<class T>
-    requires has_prediction_message<T>
+    requires has_prediction_message<T> // satisfied if the type is serializable
   [[nodiscard]]
-  std::string failure_message([[maybe_unused]] const T& obtained, [[maybe_unused]] const T& prediction)
+  std::string failure_message(is_final_message_t, const T& obtained, const T& prediction)
   {
     auto message{equality_operator_failure_message()};
 
@@ -114,12 +109,10 @@ namespace sequoia::testing
 
   template<class T>
   [[nodiscard]]
-  std::string failure_message([[maybe_unused]] const T& obtained, [[maybe_unused]] const T& prediction)
+  std::string failure_message(is_not_final_message_t, const T&, const T&)
   {
     return equality_operator_failure_message();
   }
-
-
 
   [[nodiscard]]
   std::string footer();
