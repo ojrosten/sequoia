@@ -93,13 +93,13 @@ namespace sequoia::testing
     }
 
     template<class Logger>
-    static void test(weak_equivalence_check_t, Logger& logger, const perfectly_normal_beast<T>& beast, std::initializer_list<T> prediction)
+    static void test(weak_equivalence_check_t, Logger& logger, const perfectly_normal_beast<T, Allocator>& beast, std::initializer_list<T> prediction)
     {
       check_range("", logger, std::begin(beast.x), std::end(beast.x), std::begin(prediction), std::end(prediction));
     }
 
     template<class Logger, class Advisor>
-    static void test(weak_equivalence_check_t, Logger& logger, const perfectly_normal_beast<T>& beast, std::initializer_list<T> prediction, tutor<Advisor> advisor)
+    static void test(weak_equivalence_check_t, Logger& logger, const perfectly_normal_beast<T, Allocator>& beast, std::initializer_list<T> prediction, tutor<Advisor> advisor)
     {
       check_range("", logger, std::begin(beast.x), std::end(beast.x), std::begin(prediction), std::end(prediction), std::move(advisor));
     }
