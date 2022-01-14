@@ -8,8 +8,9 @@
 #pragma once
 
 #include "GraphTestingUtilities.hpp"
-#include "sequoia/Maths/Graph/HeterogeneousStaticGraph.hpp"
 #include "NodeStorageTestingUtilities.hpp"
+
+#include "sequoia/Maths/Graph/HeterogeneousStaticGraph.hpp"
 
 namespace sequoia::testing
 {
@@ -56,7 +57,7 @@ namespace sequoia::testing
     template<test_mode Mode>
     static void test(equality_check_t, test_logger<Mode>& logger, const graph_type& graph, const graph_type& prediction)
     {
-      graph_equality_tester::test(equality_check_t, logger, graph, prediction);
+      graph_equality_tester::test(equality, logger, graph, prediction);
     }
 
     template<test_mode Mode>
@@ -88,7 +89,7 @@ namespace sequoia::testing
     template<test_mode Mode>
     static void test(equality_check_t, test_logger<Mode>& logger, const graph_type& graph, const graph_type& prediction)
     {
-      graph_equality_tester::test(equality_check_t, logger, graph, prediction);
+      graph_equality_tester::test(equality, logger, graph, prediction);
     }
 
     template<test_mode Mode>
