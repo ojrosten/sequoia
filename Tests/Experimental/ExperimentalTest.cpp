@@ -397,7 +397,7 @@ namespace sequoia::testing
     using type = experimental::operation;
 
     template<test_mode Mode>
-    static void test_weak_equivalence(test_logger<Mode>& logger, const type& operation, const type& prediction)
+    static void test(weak_equivalence_check_t, test_logger<Mode>& logger, const type& operation, const type& prediction)
     {
       check(logger, operation.early, prediction.early, "early");
       check(logger, operation.late, prediction.late, "late");
@@ -428,7 +428,7 @@ namespace sequoia::testing
     using type = experimental::outcome;
 
     template<test_mode Mode>
-    static void test_weak_equivalence(test_logger<Mode>& logger, const type& obtained, const type& prediction)
+    static void test(weak_equivalence_check_t, test_logger<Mode>& logger, const type& obtained, const type& prediction)
     {
       check(equality, "Zeroth Argument", logger, obtained.zeroth_arg, prediction.zeroth_arg);
       //check(weak_equivalence, "Operations", logger, obtained.operations, prediction.operations);
@@ -443,7 +443,7 @@ namespace sequoia::testing
     using prediction_type = experimental::outcome;
 
     template<test_mode Mode>
-    static void test_weak_equivalence(test_logger<Mode>& logger, const type& obtained, const prediction_type& prediction)
+    static void test(weak_equivalence_check_t, test_logger<Mode>& logger, const type& obtained, const prediction_type& prediction)
     {
       check(weak_equivalence, "", logger, obtained.get(), prediction);
     }

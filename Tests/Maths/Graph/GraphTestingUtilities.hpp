@@ -28,7 +28,7 @@ namespace sequoia::testing
       using type = Graph;
 
       template<test_mode Mode>
-      static void test_equality(test_logger<Mode>& logger, const Graph& graph, const Graph& prediction)
+      static void test(equality_check_t, test_logger<Mode>& logger, const Graph& graph, const Graph& prediction)
       {
         using connectivity_t = typename type::connectivity_type;
         using nodes_t = typename type::nodes_type;
@@ -129,7 +129,7 @@ namespace sequoia::testing
     using connectivity_equivalent_type = std::initializer_list<std::initializer_list<typename type::edge_init_type>>;
 
     template<test_mode Mode>
-    static void test_equality(test_logger<Mode>& logger, const type& connectivity, const type& prediction)
+    static void test(equality_check_t, test_logger<Mode>& logger, const type& connectivity, const type& prediction)
     {
       check(equality, "Connectivity size incorrect", logger, connectivity.size(), prediction.size());
 
@@ -145,13 +145,13 @@ namespace sequoia::testing
     }
 
     template<test_mode Mode>
-    static void test_equivalence(test_logger<Mode>& logger, const type& connectivity, connectivity_equivalent_type prediction)
+    static void test(equivalence_check_t, test_logger<Mode>& logger, const type& connectivity, connectivity_equivalent_type prediction)
     {
       graph_equivalence_tester::check_connectivity(logger, connectivity, prediction);
     }
 
     template<test_mode Mode>
-    static void test_weak_equivalence(test_logger<Mode>& logger, const type& connectivity, connectivity_equivalent_type prediction)
+    static void test(weak_equivalence_check_t, test_logger<Mode>& logger, const type& connectivity, connectivity_equivalent_type prediction)
     {
       graph_weak_equivalence_tester::check_connectivity(logger, connectivity, prediction);
     }

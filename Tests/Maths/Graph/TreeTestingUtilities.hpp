@@ -32,13 +32,13 @@ namespace sequoia::testing
     using size_type = typename tree_type::size_type;
 
     template<test_mode Mode>
-    static void test_equality(test_logger<Mode>& logger, const tree_type& graph, const tree_type& prediction)
+    static void test(equality_check_t, test_logger<Mode>& logger, const tree_type& graph, const tree_type& prediction)
     {
-      graph_equality_tester::test_equality(logger, graph, prediction);
+      graph_equality_tester::test(equality_check_t{}, logger, graph, prediction);
     }
 
     template<test_mode Mode>
-    static void test_equivalence(test_logger<Mode>& logger, const tree_type& actual, const maths::tree_initializer<NodeWeight>& prediction)
+    static void test(equivalence_check_t, test_logger<Mode>& logger, const tree_type& actual, const maths::tree_initializer<NodeWeight>& prediction)
     {
       check_node(logger, 0, tree_type::npos, actual, prediction);
     }

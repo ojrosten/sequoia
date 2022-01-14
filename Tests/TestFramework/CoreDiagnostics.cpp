@@ -75,7 +75,7 @@ namespace sequoia::testing
   struct value_tester<foo>
   {
     template<test_mode Mode>
-    static void test_equivalence(test_logger<Mode>& logger, const foo& f, int i, tutor<bland> advisor)
+    static void test(equivalence_check_t, test_logger<Mode>& logger, const foo& f, int i, tutor<bland> advisor)
     {
       check(equality, "Wrapped value", logger, f.i, i, advisor);
     }
@@ -86,7 +86,7 @@ namespace sequoia::testing
   struct value_tester<std::vector<foo>>
   {
     template<test_mode Mode>
-    static void test_equivalence(test_logger<Mode>& logger, const std::vector<foo>& f, const std::vector<int>& i, tutor<bland> advisor)
+    static void test(equivalence_check_t, test_logger<Mode>& logger, const std::vector<foo>& f, const std::vector<int>& i, tutor<bland> advisor)
     {
       check_range_equivalence("Vector equivalence", logger, f.begin(), f.end(), i.begin(), i.end(), advisor);
     }
@@ -94,7 +94,7 @@ namespace sequoia::testing
     using prediction_t = std::vector<std::pair<int, double>>;
 
     template<test_mode Mode>
-    static void test_weak_equivalence(test_logger<Mode>& logger, const std::vector<foo>& f, const prediction_t& p, tutor<bland> advisor)
+    static void test(weak_equivalence_check_t, test_logger<Mode>& logger, const std::vector<foo>& f, const prediction_t& p, tutor<bland> advisor)
     {
       check_range_equivalence("Vector equivalence", logger, f.begin(), f.end(), p.begin(), p.end(), advisor);
     }
@@ -104,7 +104,7 @@ namespace sequoia::testing
   struct value_tester<bar>
   {
     template<test_mode Mode>
-    static void test_weak_equivalence(test_logger<Mode>& logger, const bar& b, const std::pair<int, double>& prediction, tutor<bland> advisor)
+    static void test(weak_equivalence_check_t, test_logger<Mode>& logger, const bar& b, const std::pair<int, double>& prediction, tutor<bland> advisor)
     {
       check(equality, "Wrapped int", logger, b.i, prediction.first, advisor);
       check(equality, "Wrapped double", logger, b.x, prediction.second, advisor);

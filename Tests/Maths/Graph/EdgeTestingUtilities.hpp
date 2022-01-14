@@ -47,14 +47,14 @@ namespace sequoia::testing
     using type = maths::partial_edge<WeightHandler, IndexType>;
 
     template<test_mode Mode>
-    static void test_equality(test_logger<Mode>& logger, const type& edge, const type& prediction)
+    static void test(equality_check_t, test_logger<Mode>& logger, const type& edge, const type& prediction)
     {
       impl::check_partial(logger, edge, prediction);
     }
 
     template<test_mode Mode, class OtherHandler>
       requires ownership::handler<OtherHandler>
-    static void test_equivalence(test_logger<Mode>& logger, const type& edge, const maths::partial_edge<OtherHandler, IndexType>& prediction)
+    static void test(equivalence_check_t, test_logger<Mode>& logger, const type& edge, const maths::partial_edge<OtherHandler, IndexType>& prediction)
     {
       impl::check_partial(logger, edge, prediction);
     }
@@ -67,7 +67,7 @@ namespace sequoia::testing
     using type = maths::embedded_partial_edge<WeightHandler, IndexType>;
 
     template<test_mode Mode>
-    static void test_equality(test_logger<Mode>& logger, const type& edge, const type& prediction)
+    static void test(equality_check_t, test_logger<Mode>& logger, const type& edge, const type& prediction)
     {
       impl::check_partial(logger, edge, prediction);
       impl::check_complementary(logger, edge, prediction);
@@ -75,7 +75,7 @@ namespace sequoia::testing
 
     template<test_mode Mode, class OtherHandler>
       requires ownership::handler<OtherHandler>
-    static void test_equivalence(test_logger<Mode>& logger, const type& edge, const maths::embedded_partial_edge<OtherHandler, IndexType>& prediction)
+    static void test(equivalence_check_t, test_logger<Mode>& logger, const type& edge, const maths::embedded_partial_edge<OtherHandler, IndexType>& prediction)
     {
       impl::check_partial(logger, edge, prediction);
       impl::check_complementary(logger, edge, prediction);
@@ -89,7 +89,7 @@ namespace sequoia::testing
     using type = maths::edge<WeightHandler, IndexType>;
 
     template<test_mode Mode>
-    static void test_equality(test_logger<Mode>& logger, const type& edge, const type& prediction)
+    static void test(equality_check_t, test_logger<Mode>& logger, const type& edge, const type& prediction)
     {
       impl::check_partial(logger, edge, prediction);
       impl::check_source(logger, edge, prediction);
@@ -97,14 +97,14 @@ namespace sequoia::testing
 
     template<test_mode Mode, class OtherHandler>
       requires ownership::handler<OtherHandler>
-    static void test_equivalence(test_logger<Mode>& logger, const type& edge, const maths::edge<OtherHandler, IndexType>& prediction)
+    static void test(equivalence_check_t, test_logger<Mode>& logger, const type& edge, const maths::edge<OtherHandler, IndexType>& prediction)
     {
       impl::check_partial(logger, edge, prediction);
       impl::check_source(logger, edge, prediction);
     }
 
     template<test_mode Mode, class PredictionType>
-    static void test_weak_equivalence(test_logger<Mode>& logger, const type& edge, const PredictionType& prediction)
+    static void test(weak_equivalence_check_t, test_logger<Mode>& logger, const type& edge, const PredictionType& prediction)
     {
       impl::check_partial(logger, edge, prediction);
       impl::check_source(logger, edge, prediction);
@@ -118,7 +118,7 @@ namespace sequoia::testing
     using type = maths::embedded_edge<WeightHandler, IndexType>;
 
     template<test_mode Mode>
-    static void test_equality(test_logger<Mode>& logger, const type& edge, const type& prediction)
+    static void test(equality_check_t, test_logger<Mode>& logger, const type& edge, const type& prediction)
     {
       impl::check_partial(logger, edge, prediction);
       impl::check_complementary(logger, edge, prediction);
@@ -127,7 +127,7 @@ namespace sequoia::testing
 
     template<test_mode Mode, class OtherHandler>
       requires ownership::handler<OtherHandler>
-    static void test_equivalence(test_logger<Mode>& logger, const type& edge, const maths::embedded_edge<OtherHandler, IndexType>& prediction)
+    static void test(equivalence_check_t, test_logger<Mode>& logger, const type& edge, const maths::embedded_edge<OtherHandler, IndexType>& prediction)
     {
       impl::check_partial(logger, edge, prediction);
       impl::check_complementary(logger, edge, prediction);

@@ -18,7 +18,7 @@ namespace sequoia::testing
     using prediction_type = std::initializer_list<std::pair<T, long>>;
 
     template<test_mode Mode>
-    static void test_weak_equivalence(test_logger<Mode>& logger, const type& pool, prediction_type prediction)
+    static void test(weak_equivalence_check_t, test_logger<Mode>& logger, const type& pool, prediction_type prediction)
     {
       check(equality, "empty", logger, pool.empty(), prediction.size() == 0);
       check(equality, "size", logger, pool.size(), prediction.size());

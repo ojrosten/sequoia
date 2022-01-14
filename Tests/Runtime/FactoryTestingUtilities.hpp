@@ -21,7 +21,7 @@ namespace sequoia::testing
     using element = std::pair<std::string, std::variant<Products...>>;
 
     template<test_mode Mode>
-    static void test_equivalence(test_logger<Mode>& logger, const type& actual, const std::array<element, sizeof...(Products)>& prediction)
+    static void test(equivalence_check_t, test_logger<Mode>& logger, const type& actual, const std::array<element, sizeof...(Products)>& prediction)
     {
       for(const auto&[name, product] : prediction)
       {

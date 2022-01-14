@@ -17,7 +17,7 @@ namespace sequoia::testing
   struct value_tester<template_spec>
   {
     template<test_mode Mode>
-    static void test_equality(test_logger<Mode>& logger, const template_spec& obtained, const template_spec& prediction)
+    static void test(equality_check_t, test_logger<Mode>& logger, const template_spec& obtained, const template_spec& prediction)
     {
       check(equality, "Species", logger, obtained.species, prediction.species);
       check(equality, "Symbol",  logger, obtained.symbol,  prediction.symbol);

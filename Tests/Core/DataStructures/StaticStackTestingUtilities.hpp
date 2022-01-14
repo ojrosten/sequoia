@@ -19,7 +19,7 @@ namespace sequoia::testing
     using type = data_structures::static_stack<T, MaxDepth>;
 
     template<test_mode Mode>
-    static void test_equality(test_logger<Mode>& logger, const type& stack, const type& prediction)
+    static void test(equality_check_t, test_logger<Mode>& logger, const type& stack, const type& prediction)
     {
       check(equality, "Emptiness incorrect", logger, stack.empty(), prediction.empty());
       check(equality, "Size incorrect", logger, stack.size(), prediction.size());

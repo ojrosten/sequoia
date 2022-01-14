@@ -162,7 +162,7 @@ namespace sequoia::testing
   struct value_tester<node_tracker>
   {
     template<test_mode Mode>
-    static void test_equivalence(test_logger<Mode>& logger, const node_tracker& tracker, const std::vector<std::size_t>& prediction)
+    static void test(equivalence_check_t, test_logger<Mode>& logger, const node_tracker& tracker, const std::vector<std::size_t>& prediction)
     {
       check_range("Visitation Order", logger, tracker.begin(), tracker.end(), prediction.begin(), prediction.end());
     }
@@ -175,7 +175,7 @@ namespace sequoia::testing
     using prediction_type = typename type::result_type;
 
     template<test_mode Mode>
-    static void test_equivalence(test_logger<Mode>& logger, const type& tracker, const prediction_type& prediction)
+    static void test(equivalence_check_t, test_logger<Mode>& logger, const type& tracker, const prediction_type& prediction)
     {
       check_range("Visitation Order", logger, tracker.begin(), tracker.end(), prediction.begin(), prediction.end());
     }

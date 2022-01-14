@@ -19,13 +19,13 @@ namespace sequoia::testing
     using type = sequoia::data_structures::static_linearly_partitioned_sequence<T, Npartitions, NelementsPerPartition, IndexType>;
 
     template<test_mode Mode>
-    static void test_equality(test_logger<Mode>& logger, const type& actual, const type& prediction)
+    static void test(equality_check_t, test_logger<Mode>& logger, const type& actual, const type& prediction)
     {
       impl::check_details(logger, actual, prediction);
     }
 
     template<test_mode Mode>
-    static void test_equivalence(test_logger<Mode>& logger, const type& actual, const std::array<std::array<T, NelementsPerPartition>, Npartitions>& prediction)
+    static void test(equivalence_check_t, test_logger<Mode>& logger, const type& actual, const std::array<std::array<T, NelementsPerPartition>, Npartitions>& prediction)
     {
       for (std::size_t i{}; i < prediction.size(); ++i)
       {

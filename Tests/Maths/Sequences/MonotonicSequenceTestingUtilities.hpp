@@ -63,13 +63,13 @@ namespace sequoia::testing
     using type = maths::monotonic_sequence<T, C, Compare>;
 
     template<test_mode Mode>
-    static void test_equality(test_logger<Mode>& logger, const type& sequence, const type& prediction)
+    static void test(equality_check_t, test_logger<Mode>& logger, const type& sequence, const type& prediction)
     {
       impl::check(logger, sequence, prediction);
     }
 
     template<test_mode Mode>
-    static void test_equivalence(test_logger<Mode>& logger, const type& sequence, std::initializer_list<T> prediction)
+    static void test(equivalence_check_t, test_logger<Mode>& logger, const type& sequence, std::initializer_list<T> prediction)
     {
       check_range("", logger, sequence.begin(), sequence.end(), prediction.begin(), prediction.end());
     }
@@ -81,13 +81,13 @@ namespace sequoia::testing
     using type = maths::static_monotonic_sequence<T, N, Compare>;
 
     template<test_mode Mode>
-    static void test_equality(test_logger<Mode>& logger, const type& sequence, const type& prediction)
+    static void test(equality_check_t, test_logger<Mode>& logger, const type& sequence, const type& prediction)
     {
       impl::check(logger, sequence, prediction);
     }
 
     template<test_mode Mode>
-    static void test_equivalence(test_logger<Mode>& logger, const type& sequence, std::initializer_list<T> prediction)
+    static void test(equivalence_check_t, test_logger<Mode>& logger, const type& sequence, std::initializer_list<T> prediction)
     {
       check_range("", logger, sequence.begin(), sequence.end(), prediction.begin(), prediction.end());
     }

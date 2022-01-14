@@ -25,7 +25,7 @@ namespace sequoia::testing
       using type = Nodes;
 
       template<test_mode Mode>
-      static void test_equality(test_logger<Mode>& logger, const Nodes& nodes, const Nodes& prediction)
+      static void test(equality_check_t, test_logger<Mode>& logger, const Nodes& nodes, const Nodes& prediction)
       {
         check(equality, "Sizes different", logger, nodes.size(), prediction.size());
 
@@ -42,7 +42,7 @@ namespace sequoia::testing
       using type = Nodes;
 
       template<test_mode Mode>
-      static void test_equality(test_logger<Mode>&, const Nodes&, const Nodes&)
+      static void test(equality_check_t, test_logger<Mode>&, const Nodes&, const Nodes&)
       {
       }
     };
@@ -55,7 +55,7 @@ namespace sequoia::testing
       using equivalent_type = std::initializer_list<typename type::weight_type>;
 
       template<test_mode Mode>
-      static void test_equivalence(test_logger<Mode>& logger, const Nodes& nodes, equivalent_type prediction)
+      static void test(equivalence_check_t, test_logger<Mode>& logger, const Nodes& nodes, equivalent_type prediction)
       {
         check(equality, "Sizes different", logger, nodes.size(), prediction.size());
 
@@ -72,7 +72,7 @@ namespace sequoia::testing
       using equivalent_type = std::initializer_list<typename type::weight_type>;
 
       template<test_mode Mode>
-      static void test_equivalence(test_logger<Mode>& logger, const Nodes& nodes, equivalent_type)
+      static void test(equivalence_check_t, test_logger<Mode>& logger, const Nodes& nodes, equivalent_type)
       {
         testing::check("Node storage should have zero size for empty node weights", logger, nodes.empty());
       }
@@ -86,6 +86,8 @@ namespace sequoia::testing
     : impl::node_value_tester<maths::graph_impl::node_storage<WeightMaker, Traits>>
     , impl::node_equivalence_checker<maths::graph_impl::node_storage<WeightMaker, Traits>>
   {
+    using impl::node_value_tester<maths::graph_impl::node_storage<WeightMaker, Traits>>::test;
+    using impl::node_equivalence_checker<maths::graph_impl::node_storage<WeightMaker, Traits>>::test;
   };
 
   // Static
@@ -95,6 +97,8 @@ namespace sequoia::testing
     : impl::node_value_tester<maths::graph_impl::static_node_storage<WeightMaker, N>>
     , impl::node_equivalence_checker<maths::graph_impl::static_node_storage<WeightMaker, N>>
   {
+    using impl::node_value_tester<maths::graph_impl::static_node_storage<WeightMaker, N>>::test;
+    using impl::node_equivalence_checker<maths::graph_impl::static_node_storage<WeightMaker, N>>::test;
   };
 
   // Heterogeneous
@@ -106,7 +110,7 @@ namespace sequoia::testing
     using equivalent_type = std::tuple<Ts...>;
 
     template<test_mode Mode>
-    static void test_equality(test_logger<Mode>& logger, const type& nodes, const type& prediction)
+    static void test(equality_check_t, test_logger<Mode>& logger, const type& nodes, const type& prediction)
     {
       if(check(equality, "Node storaage sizes different", logger, nodes.size(), prediction.size()))
       {
@@ -115,7 +119,7 @@ namespace sequoia::testing
     }
 
     template<test_mode Mode>
-    static void test_equivalence(test_logger<Mode>& logger, const type& nodes, const equivalent_type& prediction)
+    static void test(equivalence_check_t, test_logger<Mode>& logger, const type& nodes, const equivalent_type& prediction)
     {
       if (check(equality, "Node storage sizes different", logger, nodes.size(), sizeof...(Ts)))
       {

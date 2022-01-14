@@ -38,35 +38,35 @@ namespace sequoia::testing
     using nodes_equivalent_type = std::initializer_list<NodeWeight>;
 
     template<test_mode Mode>
-    static void test_equality(test_logger<Mode>& logger, const graph_type& graph, const graph_type& prediction)
+    static void test(equality_check_t, test_logger<Mode>& logger, const graph_type& graph, const graph_type& prediction)
     {
-      graph_equality_tester::test_equality(logger, graph, prediction);
+      graph_equality_tester::test(equality_check_t{}, logger, graph, prediction);
     }
 
     template<test_mode Mode>
       requires (!std::is_empty_v<NodeWeight>)
-    static void test_equivalence(test_logger<Mode>& logger, const graph_type& graph, connectivity_equivalent_type connPrediction, nodes_equivalent_type nodesPrediction)
+    static void test(equivalence_check_t, test_logger<Mode>& logger, const graph_type& graph, connectivity_equivalent_type connPrediction, nodes_equivalent_type nodesPrediction)
     {
       graph_equivalence_tester::test_general_equivalence(logger, graph, connPrediction, nodesPrediction);
     }
 
     template<test_mode Mode>
       requires (std::is_empty_v<NodeWeight>)
-    static void test_equivalence(test_logger<Mode>& logger, const graph_type& graph, connectivity_equivalent_type connPrediction)
+    static void test(equivalence_check_t, test_logger<Mode>& logger, const graph_type& graph, connectivity_equivalent_type connPrediction)
     {
       graph_equivalence_tester::test_general_equivalence(logger, graph, connPrediction);
     }
 
     template<test_mode Mode>
       requires (!std::is_empty_v<NodeWeight>)
-    static void test_weak_equivalence(test_logger<Mode>& logger, const graph_type& graph, connectivity_equivalent_type connPrediction, nodes_equivalent_type nodesPrediction)
+    static void test(weak_equivalence_check_t, test_logger<Mode>& logger, const graph_type& graph, connectivity_equivalent_type connPrediction, nodes_equivalent_type nodesPrediction)
     {
       graph_weak_equivalence_tester::test_general_equivalence(logger, graph, connPrediction, nodesPrediction);
     }
 
     template<test_mode Mode>
       requires (std::is_empty_v<NodeWeight>)
-    static void test_weak_equivalence(test_logger<Mode>& logger, const graph_type& graph, connectivity_equivalent_type connPrediction)
+    static void test(weak_equivalence_check_t, test_logger<Mode>& logger, const graph_type& graph, connectivity_equivalent_type connPrediction)
     {
       graph_weak_equivalence_tester::test_general_equivalence(logger, graph, connPrediction);
     }
@@ -96,35 +96,35 @@ namespace sequoia::testing
     using nodes_equivalent_type = std::initializer_list<NodeWeight>;
 
     template<test_mode Mode>
-    static void test_equality(test_logger<Mode>& logger, const graph_type& graph, const graph_type& prediction)
+    static void test(equality_check_t, test_logger<Mode>& logger, const graph_type& graph, const graph_type& prediction)
     {
-      graph_equality_tester::test_equality(logger, graph, prediction);
+      graph_equality_tester::test(equality_check_t{}, logger, graph, prediction);
     }
 
     template<test_mode Mode>
       requires (!std::is_empty_v<NodeWeight>)
-    static void test_equivalence(test_logger<Mode>& logger, const graph_type& graph, connectivity_equivalent_type connPrediction, nodes_equivalent_type nodesPrediction)
+    static void test(equivalence_check_t, test_logger<Mode>& logger, const graph_type& graph, connectivity_equivalent_type connPrediction, nodes_equivalent_type nodesPrediction)
     {
       graph_equivalence_tester::test_general_equivalence(logger, graph, connPrediction, nodesPrediction);
     }
 
     template<test_mode Mode>
       requires (std::is_empty_v<NodeWeight>)
-    static void test_equivalence(test_logger<Mode>& logger, const graph_type& graph, connectivity_equivalent_type connPrediction)
+    static void test(equivalence_check_t, test_logger<Mode>& logger, const graph_type& graph, connectivity_equivalent_type connPrediction)
     {
       graph_equivalence_tester::test_general_equivalence(logger, graph, connPrediction);
     }
 
     template<test_mode Mode>
       requires (!std::is_empty_v<NodeWeight>)
-    static void test_weak_equivalence(test_logger<Mode>& logger, const graph_type& graph, connectivity_equivalent_type connPrediction, nodes_equivalent_type nodesPrediction)
+    static void test(weak_equivalence_check_t, test_logger<Mode>& logger, const graph_type& graph, connectivity_equivalent_type connPrediction, nodes_equivalent_type nodesPrediction)
     {
       graph_weak_equivalence_tester::test_general_equivalence(logger, graph, connPrediction, nodesPrediction);
     }
 
     template<test_mode Mode>
       requires (std::is_empty_v<NodeWeight>)
-    static void test_weak_equivalence(test_logger<Mode>& logger, const graph_type& graph, connectivity_equivalent_type connPrediction)
+    static void test(weak_equivalence_check_t, test_logger<Mode>& logger, const graph_type& graph, connectivity_equivalent_type connPrediction)
     {
       graph_weak_equivalence_tester::test_general_equivalence(logger, graph, connPrediction);
     }

@@ -17,13 +17,13 @@ namespace sequoia::testing
 		using type = maths::probability;
 
 		template<test_mode Mode>
-		static void test_equality(test_logger<Mode>& logger, const type& actual, const type& prediction)
+		static void test(equality_check_t, test_logger<Mode>& logger, const type& actual, const type& prediction)
 		{
 			check(equality, "", logger, actual.raw_value(), prediction.raw_value());
 		}
 		
 		template<test_mode Mode>
-		static void test_equivalence(test_logger<Mode>& logger, const type& actual, const double& prediction)
+		static void test(equivalence_check_t, test_logger<Mode>& logger, const type& actual, const double& prediction)
 		{
 			check(equality, "Description", logger, actual.raw_value(), prediction);
 		}

@@ -19,7 +19,7 @@ namespace sequoia::testing
     using type = utilities::uniform_wrapper<T>;
 
     template<test_mode Mode>
-    static void test_equality(test_logger<Mode>& logger, const type& wrapper, const type& prediction)
+    static void test(equality_check_t, test_logger<Mode>& logger, const type& wrapper, const type& prediction)
     {
       check(equality, "", logger, wrapper.get(), prediction.get());
     }

@@ -19,14 +19,14 @@ namespace sequoia::testing
     using type = maths::linear_sequence<T, Index>;
 
     template<test_mode Mode>
-    static void test_equality(test_logger<Mode>& logger, const type& sequence, const type& prediction)
+    static void test(equality_check_t, test_logger<Mode>& logger, const type& sequence, const type& prediction)
     {
       check(equality, "Start", logger, sequence.start(), prediction.start());
       check(equality, "Step", logger, sequence.step(), prediction.step());
     }
 
     template<test_mode Mode>
-    static void test_equivalence(test_logger<Mode>& logger, const type& sequence, const T& start, const T& step)
+    static void test(equivalence_check_t, test_logger<Mode>& logger, const type& sequence, const T& start, const T& step)
     {
       check(equality, "Start wrong", logger, sequence.start(), start);
       check(equality, "Step wrong", logger, sequence.step(), step);

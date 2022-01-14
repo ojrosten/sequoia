@@ -234,7 +234,7 @@ namespace sequoia::testing
   struct value_tester<foo>
   {
     template<test_mode Mode>
-    static void test_equality(test_logger<Mode>&, const foo&, const foo&)
+    static void test(equality_check_t, test_logger<Mode>&, const foo&, const foo&)
     {
       throw std::runtime_error{"This is bad"};
     }

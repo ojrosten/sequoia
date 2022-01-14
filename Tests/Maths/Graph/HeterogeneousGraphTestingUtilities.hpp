@@ -25,7 +25,7 @@ namespace sequoia::testing
       using nodes_equivalent_type = std::tuple<NodeWeights...>;
 
       template<test_mode Mode>
-      static void test_equivalence(test_logger<Mode>& logger, const type& graph, connectivity_equivalent_type connPrediction, const nodes_equivalent_type& nodesPrediction)
+      static void test(equivalence_check_t, test_logger<Mode>& logger, const type& graph, connectivity_equivalent_type connPrediction, const nodes_equivalent_type& nodesPrediction)
       {
         using connectivity_t = typename type::connectivity_type;
         using nodes_t = typename type::nodes_type;
@@ -54,15 +54,15 @@ namespace sequoia::testing
     using nodes_equivalent_type        = std::tuple<NodeWeights...>;
 
     template<test_mode Mode>
-    static void test_equality(test_logger<Mode>& logger, const graph_type& graph, const graph_type& prediction)
+    static void test(equality_check_t, test_logger<Mode>& logger, const graph_type& graph, const graph_type& prediction)
     {
-      graph_equality_tester::test_equality(logger, graph, prediction);
+      graph_equality_tester::test(equality_check_t, logger, graph, prediction);
     }
 
     template<test_mode Mode>
-    static void test_equivalence(test_logger<Mode>& logger, const graph_type& graph, connectivity_equivalent_type connPrediction, const nodes_equivalent_type& nodesPrediction)
+    static void test(equivalence_check_t, test_logger<Mode>& logger, const graph_type& graph, connectivity_equivalent_type connPrediction, const nodes_equivalent_type& nodesPrediction)
     {
-      graph_equivalence_tester::test_equivalence(logger, graph, connPrediction, nodesPrediction);
+      graph_equivalence_tester::test(equivalence_check_t{}, logger, graph, connPrediction, nodesPrediction);
     }
   private:
     using graph_equality_tester = impl::graph_value_tester<graph_type>;
@@ -86,15 +86,15 @@ namespace sequoia::testing
     using nodes_equivalent_type        = std::tuple<NodeWeights...>;
 
     template<test_mode Mode>
-    static void test_equality(test_logger<Mode>& logger, const graph_type& graph, const graph_type& prediction)
+    static void test(equality_check_t, test_logger<Mode>& logger, const graph_type& graph, const graph_type& prediction)
     {
-      graph_equality_tester::test_equality(logger, graph, prediction);
+      graph_equality_tester::test(equality_check_t, logger, graph, prediction);
     }
 
     template<test_mode Mode>
-    static void test_equivalence(test_logger<Mode>& logger, const graph_type& graph, connectivity_equivalent_type connPrediction, const nodes_equivalent_type& nodesPrediction)
+    static void test(equivalence_check_t, test_logger<Mode>& logger, const graph_type& graph, connectivity_equivalent_type connPrediction, const nodes_equivalent_type& nodesPrediction)
     {
-      graph_equivalence_tester::test_equivalence(logger, graph, connPrediction, nodesPrediction);
+      graph_equivalence_tester::test(equivalence_check_t{}, logger, graph, connPrediction, nodesPrediction);
     }
   private:
     using graph_equality_tester  = impl::graph_value_tester<graph_type>;

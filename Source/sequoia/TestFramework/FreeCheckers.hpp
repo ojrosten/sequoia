@@ -83,57 +83,9 @@
 
 namespace sequoia::testing
 {
-  template<test_mode Mode, class T, class... Args>
-  concept equality_tester_for = requires(test_logger<Mode>&logger, Args&&... args) {
-    value_tester<T>::test_equality(logger, std::forward<Args>(args)...);
-  };
-
-  template<test_mode Mode, class T, class... Args>
-  concept equivalence_tester_for = requires(test_logger<Mode>&logger, Args&&... args) {
-    value_tester<T>::test_equivalence(logger, std::forward<Args>(args)...);
-  };
-
-  template<test_mode Mode, class T, class... Args>
-  concept weak_equivalence_tester_for = requires(test_logger<Mode>&logger, Args&&... args) {
-    value_tester<T>::test_weak_equivalence(logger, std::forward<Args>(args)...);
-  };
-
-  template<test_mode Mode, class T, class... Args>
-  concept agnostic_tester_for = requires(test_logger<Mode>&logger, Args&&... args) {
-    value_tester<T>::test_agnostic(logger, std::forward<Args>(args)...);
-  };
-
-  template<class T, test_mode Mode, class... Args>
-    requires equality_tester_for<Mode, T, Args...>
-  void dispatch_test(equality_check_t, test_logger<Mode>& logger, Args&&... args)
-  {
-    value_tester<T>::test_equality(logger, std::forward<Args>(args)...);
-  };
-
-  template<class T, test_mode Mode, class... Args>
-    requires equivalence_tester_for<Mode, T, Args...>
-  void dispatch_test(equivalence_check_t, test_logger<Mode>& logger, Args&&... args)
-  {
-    value_tester<T>::test_equivalence(logger, std::forward<Args>(args)...);
-  };
-
-  template<class T, test_mode Mode, class... Args>
-    requires weak_equivalence_tester_for<Mode, T, Args...>
-  void dispatch_test(weak_equivalence_check_t, test_logger<Mode>& logger, Args&&... args)
-  {
-    value_tester<T>::test_weak_equivalence(logger, std::forward<Args>(args)...);
-  };
-
-  template<class T, test_mode Mode, class... Args>
-    requires agnostic_tester_for<Mode, T, Args...>
-  void dispatch_test(agnostic_check_t, test_logger<Mode>& logger, Args&&... args)
-  {
-    value_tester<T>::test_agnostic(logger, std::forward<Args>(args)...);
-  };
-
   template<class Tag, test_mode Mode, class T, class... Args>
   concept tester_for = requires(test_logger<Mode>&logger, Args&&... args) {
-    dispatch_test<T>(Tag{}, logger, std::forward<Args>(args)...);
+    value_tester<T>::test(Tag{}, logger, std::forward<Args>(args)...);
   };
 
   template<class Tag, test_mode Mode, class T, class Advisor>
@@ -229,7 +181,7 @@ namespace sequoia::testing
       requires tester_for<Tag, Mode, T, Args...>
     void operator()(test_logger<Mode>& logger, Args&&... args) const
     {
-      dispatch_test<T>(Tag{}, logger, std::forward<Args>(args)...);
+      value_tester<T>::test(Tag{}, logger, std::forward<Args>(args)...);
     }
   };
 
@@ -269,11 +221,11 @@ namespace sequoia::testing
 
     if constexpr(tester_for<Tag, Mode, T, Customization, T, S, U...>)
     {
-      dispatch_test<T>(Tag{}, logger, customization.customizer, value, s, u...);
+      value_tester<T>::test(Tag{}, logger, customization.customizer, value, s, u...);
     }
     else if constexpr(tester_for<Tag, Mode, T, T, S, U...>)
     {
-      dispatch_test<T>(Tag{}, logger, value, s, u...);
+      value_tester<T>::test(Tag{}, logger, value, s, u...);
     }
     else if constexpr(processor::ends_with_tutor)
     {
@@ -296,11 +248,11 @@ namespace sequoia::testing
     {
       if constexpr(tester_for<Tag, Mode, T, Customization, T, S, U..., tutor<null_advisor>>)
       {
-        dispatch_test<T>(Tag{}, logger, customization.customizer, value, s, u..., tutor<null_advisor>{});
+        value_tester<T>::test(Tag{}, logger, customization.customizer, value, s, u..., tutor<null_advisor>{});
       }
       else if constexpr(tester_for<Tag, Mode, T, T, S, U..., tutor<null_advisor>>)
       {
-        dispatch_test<T>(Tag{}, logger, value, s, u..., tutor<null_advisor>{});
+        value_tester<T>::test(Tag{}, logger, value, s, u..., tutor<null_advisor>{});
       }
       else
       {
@@ -442,11 +394,11 @@ namespace sequoia::testing
  {
    if constexpr(tester_for<Tag, Mode, T, T, T, tutor<Advisor>>)
    {
-     dispatch_test<T>(Tag{}, logger, obtained, prediction, advisor);
+     value_tester<T>::test(Tag{}, logger, obtained, prediction, advisor);
    }
    else if constexpr(tester_for<Tag, Mode, T, T, T>)
    {
-     dispatch_test<T>(Tag{}, logger, obtained, prediction);
+     value_tester<T>::test(Tag{}, logger, obtained, prediction);
    }
  }
 

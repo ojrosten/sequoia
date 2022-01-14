@@ -19,7 +19,7 @@ namespace sequoia::testing
     using type = data_structures::static_priority_queue<T, MaxDepth, Compare>;
 
     template<test_mode Mode>
-    static void test_equality(test_logger<Mode>& logger, const type& queue, const type& prediction)
+    static void test(equality_check_t, test_logger<Mode>& logger, const type& queue, const type& prediction)
     {
       check(equality, "Emptiness incorrect", logger, queue.empty(), prediction.empty());
       check(equality, "Size incorrect", logger, queue.size(), prediction.size());
