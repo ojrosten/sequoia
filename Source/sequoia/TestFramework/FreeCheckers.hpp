@@ -84,12 +84,12 @@
 namespace sequoia::testing
 {
   template<class Tag, test_mode Mode, class T, class... Args>
-  concept tester_for = requires(test_logger<Mode>&logger, Args&&... args) {
+  concept tester_for = requires(test_logger<Mode>& logger, Args&&... args) {
     value_tester<T>::test(Tag{}, logger, std::forward<Args>(args)...);
   };
 
   template<class Tag, test_mode Mode, class T, class Advisor>
-  concept binary_tester_for = requires(test_logger<Mode>&logger, const T & value, const T & prediction, Advisor advisor) {
+  concept binary_tester_for = requires(test_logger<Mode>&logger, const T& value, const T& prediction, Advisor advisor) {
     requires (tester_for<Tag, Mode, T, T, T, tutor<Advisor>> || tester_for<Tag, Mode, T, T, T>);
   };
 
