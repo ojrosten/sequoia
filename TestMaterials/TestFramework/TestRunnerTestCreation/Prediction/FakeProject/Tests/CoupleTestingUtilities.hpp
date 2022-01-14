@@ -18,13 +18,13 @@ namespace sequoia::testing
         using type = other::couple<S, T>;
 
         template<test_mode Mode>
-        static void test_equality(test_logger<Mode>& logger, const type& actual, const type& prediction)
+        static void test(equality_check_t, test_logger<Mode>& logger, const type& actual, const type& prediction)
         {
             // e.g. check_equality("Description", logger, actual.method(), prediction.method());
         }
         
         template<test_mode Mode>
-        static void test_equivalence(test_logger<Mode>& logger, const type& actual, const S& prediction_0, const T& prediction_1)
+        static void test(equivalence_check_t, test_logger<Mode>& logger, const type& actual, const S& prediction_0, const T& prediction_1)
         {
             // e.g. check_equality("Description", logger, actual.method(), prediction_0);
         }

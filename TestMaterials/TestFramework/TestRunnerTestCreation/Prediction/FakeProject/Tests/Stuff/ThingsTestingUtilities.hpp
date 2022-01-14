@@ -17,13 +17,13 @@ namespace sequoia::testing
         using type = bar::things;
 
         template<test_mode Mode>
-        static void test_equality(test_logger<Mode>& logger, const type& actual, const type& prediction)
+        static void test(equality_check_t, test_logger<Mode>& logger, const type& actual, const type& prediction)
         {
             // e.g. check_equality("Description", logger, actual.method(), prediction.method());
         }
         
         template<test_mode Mode>
-        static void test_equivalence(test_logger<Mode>& logger, const type& actual, const double prediction)
+        static void test(equivalence_check_t, test_logger<Mode>& logger, const type& actual, const double prediction)
         {
             // e.g. check_equality("Description", logger, actual.method(), prediction);
         }
