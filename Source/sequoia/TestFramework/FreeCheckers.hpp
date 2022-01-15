@@ -83,6 +83,36 @@
 
 namespace sequoia::testing
 {
+
+  /*! \brief class template, specializations of which implement detailed comparison of two instantiations of T.
+      \anchor value_tester_primary
+   */
+  template<class T> struct value_tester;
+
+  struct equality_check_t {};
+
+  struct equivalence_check_t
+  {
+    using fallback = equality_check_t;
+  };
+
+  struct weak_equivalence_check_t
+  {
+    using fallback = equivalence_check_t;
+  };
+
+  struct with_best_available_check_t {};
+
+  inline constexpr equality_check_t equality{};
+  inline constexpr equivalence_check_t equivalence{};
+  inline constexpr weak_equivalence_check_t weak_equivalence{};
+  inline constexpr with_best_available_check_t with_best_available{};
+
+  template<class T>
+  inline constexpr bool is_equivalence_disambiguator_v{
+    requires { typename T::fallback; }
+  };
+
   template<class Tag, test_mode Mode, class T, class... Args>
   concept tester_for = requires(test_logger<Mode>& logger, Args&&... args) {
     value_tester<T>::test(Tag{}, logger, std::forward<Args>(args)...);
@@ -407,7 +437,7 @@ namespace sequoia::testing
       binary_tester_for<equality_check_t, Mode, T, tutor<Advisor>>
    || binary_tester_for<equivalence_check_t, Mode, T, tutor<Advisor>>
    || binary_tester_for<weak_equivalence_check_t, Mode, T, tutor<Advisor>>
-   || binary_tester_for<agnostic_check_t, Mode, T, tutor<Advisor>>
+   || binary_tester_for<with_best_available_check_t, Mode, T, tutor<Advisor>>
  };
 
   /*! \brief The workhorse for generically dispatching checks to nested types.
@@ -416,7 +446,7 @@ namespace sequoia::testing
 
   template<test_mode Mode, class Customization, class T, class Advisor = null_advisor>
     requires (   std::equality_comparable<T> || does_detailed_agnostic_check<Mode, T, Advisor> || sequoia::range<T>)
-  bool dispatch_check(std::string_view description, test_logger<Mode>& logger, agnostic_check_t, const value_based_customization<Customization>&, const T& obtained, const T& prediction, [[maybe_unused]] tutor<Advisor> advisor = {})
+  bool dispatch_check(std::string_view description, test_logger<Mode>& logger, with_best_available_check_t, const value_based_customization<Customization>&, const T& obtained, const T& prediction, [[maybe_unused]] tutor<Advisor> advisor = {})
   {
     sentinel<Mode> sentry{logger, add_type_info<T>(description)};
 
@@ -426,9 +456,9 @@ namespace sequoia::testing
       binary_comparison(finality{}, sentry, std::equal_to<T>{}, obtained, prediction, advisor);
     }
 
-    if constexpr(binary_tester_for<agnostic_check_t, Mode, T, tutor<Advisor>>)
+    if constexpr(binary_tester_for<with_best_available_check_t, Mode, T, tutor<Advisor>>)
     {
-      select_test(agnostic_check_t{}, logger, obtained, prediction, advisor);
+      select_test(with_best_available_check_t{}, logger, obtained, prediction, advisor);
     }
     else if constexpr(binary_tester_for<equality_check_t, Mode, T, tutor<Advisor>>)
     {
@@ -444,7 +474,7 @@ namespace sequoia::testing
     }
     else if constexpr(sequoia::range<T>)
     {
-      check_range("", logger, agnostic_check_t{}, std::begin(obtained), std::end(obtained), std::begin(prediction), std::end(prediction), advisor);
+      check_range("", logger, with_best_available_check_t{}, std::begin(obtained), std::end(obtained), std::begin(prediction), std::end(prediction), advisor);
     }
 
     return !sentry.failure_detected();
@@ -623,14 +653,14 @@ namespace sequoia::testing
   }
 
   template<test_mode Mode, class T, class Advisor=null_advisor>
-  bool check(agnostic_check_t,
+  bool check(with_best_available_check_t,
              std::string_view description,
              test_logger<Mode>& logger,
              const T& value,
              const T& prediction,
              tutor<Advisor> advisor={})
   {
-    return dispatch_check(description, logger, agnostic_check_t{}, value_based_customization<void>{}, type_normalizer{}(value), type_normalizer{}(prediction), std::move(advisor));
+    return dispatch_check(description, logger, with_best_available_check_t{}, value_based_customization<void>{}, type_normalizer{}(value), type_normalizer{}(prediction), std::move(advisor));
   }
 
   template<test_mode Mode, class Advisor=null_advisor>
@@ -756,7 +786,7 @@ namespace sequoia::testing
                    PredictionSentinel predictionLast,
                    tutor<Advisor> advisor={})
   {
-    return check_range(description, logger, agnostic_check_t{}, value_based_customization<void>{}, first, last, predictionFirst, predictionLast, std::move(advisor));
+    return check_range(description, logger, with_best_available_check_t{}, value_based_customization<void>{}, first, last, predictionFirst, predictionLast, std::move(advisor));
   }
 
   /*! \brief Exposes elementary check methods, with the option to plug in arbitrary Extenders to compose functionality.
@@ -833,9 +863,9 @@ namespace sequoia::testing
     }
 
     template<class T, class Advisor = null_advisor>
-    bool check(agnostic_check_t, std::string_view description, const T& value, const T& prediction, tutor<Advisor> advisor = {})
+    bool check(with_best_available_check_t, std::string_view description, const T& value, const T& prediction, tutor<Advisor> advisor = {})
     {
-      return testing::check(agnostic, description, logger(), value, prediction, std::move(advisor));
+      return testing::check(with_best_available, description, logger(), value, prediction, std::move(advisor));
     }
 
     template<class Advisor=null_advisor>

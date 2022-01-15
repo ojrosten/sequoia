@@ -21,35 +21,6 @@
 
 namespace sequoia::testing
 {
-  /*! \brief class template, specializations of which implement detailed comparison of two instantiations of T.
-      \anchor value_tester_primary
-   */
-  template<class T> struct value_tester;
-
-  struct equality_check_t {};
- 
-  struct equivalence_check_t
-  {
-    using fallback = equality_check_t;
-  };
-
-  struct weak_equivalence_check_t
-  {
-    using fallback = equivalence_check_t;
-  };
-
-  struct agnostic_check_t {};
-
-  inline constexpr equality_check_t equality{};
-  inline constexpr equivalence_check_t equivalence{};
-  inline constexpr weak_equivalence_check_t weak_equivalence{};
-  inline constexpr agnostic_check_t agnostic{};
-
-  template<class T>
-  inline constexpr bool is_equivalence_disambiguator_v{
-    requires { typename T::fallback; }
-  };
-
   /*! \brief Specialize this struct template to provide custom serialization of a given class.
       \anchor serializer_primary
    */

@@ -192,26 +192,13 @@ namespace sequoia::testing
   template<class S, class T>
   struct value_tester<std::pair<S, T>>
   {
-    template<test_mode Mode, class Advisor>
-    static void test(equality_check_t, test_logger<Mode>& logger, const std::pair<S, T>& value, const std::pair<S, T>& prediction, const tutor<Advisor>& advisor)
-    {
-      check(equality, "First element of pair is incorrect",  logger, value.first,  prediction.first,  advisor);
-      check(equality, "Second element of pair is incorrect", logger, value.second, prediction.second, advisor);
-    }
-
-    template<test_mode Mode, class Advisor>
-    static void test(agnostic_check_t, test_logger<Mode>& logger, const std::pair<S, T>& value, const std::pair<S, T>& prediction, const tutor<Advisor>& advisor)
-    {
-      check(agnostic, "First element of pair is incorrect",  logger, value.first,  prediction.first,  advisor);
-      check(agnostic, "Second element of pair is incorrect", logger, value.second, prediction.second, advisor);
-    }
-
-    template<test_mode Mode, class U, class V, class Advisor>
+    template<class CheckFlavour, test_mode Mode, class U, class V, class Advisor>
       requires (   std::is_same_v<std::remove_cvref_t<S>, std::remove_cvref_t<U>>
                 && std::is_same_v<std::remove_cvref_t<T>, std::remove_cvref_t<V>>)
-    static void test(equivalence_check_t, test_logger<Mode>& logger, const std::pair<S, T>& value, const std::pair<U, V>& prediction, const tutor<Advisor>& advisor)
+    static void test(CheckFlavour, test_logger<Mode>& logger, const std::pair<S, T>& value, const std::pair<U, V>& prediction, const tutor<Advisor>& advisor)
     {
-      test(agnostic_check_t{}, logger, value, prediction, advisor);
+      check(CheckFlavour{}, "First element of pair is incorrect",  logger, value.first, prediction.first, advisor);
+      check(CheckFlavour{}, "Second element of pair is incorrect", logger, value.second, prediction.second, advisor);
     }
   };
 
