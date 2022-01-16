@@ -134,7 +134,6 @@ namespace sequoia::testing
   template<class T>
   struct value_based_customization
   {
-    constexpr static bool is_customizer_v{true};
     using value_type = T;
 
     T customizer;
@@ -144,11 +143,6 @@ namespace sequoia::testing
   struct value_based_customization<void>
   {
     using value_type = void;
-  };
-
-  template<class T>
-  inline constexpr bool is_value_customizer{
-    requires { T::is_customizer_v; }
   };
 
   namespace impl
