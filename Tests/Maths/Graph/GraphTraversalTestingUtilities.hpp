@@ -164,7 +164,7 @@ namespace sequoia::testing
     template<test_mode Mode>
     static void test(equivalence_check_t, test_logger<Mode>& logger, const node_tracker& tracker, const std::vector<std::size_t>& prediction)
     {
-      check_range("Visitation Order", logger, tracker.begin(), tracker.end(), prediction.begin(), prediction.end());
+      check(equality, "Visitation Order", logger, tracker.begin(), tracker.end(), prediction.begin(), prediction.end());
     }
   };
 
@@ -177,7 +177,7 @@ namespace sequoia::testing
     template<test_mode Mode>
     static void test(equivalence_check_t, test_logger<Mode>& logger, const type& tracker, const prediction_type& prediction)
     {
-      check_range("Visitation Order", logger, tracker.begin(), tracker.end(), prediction.begin(), prediction.end());
+      check(equality, "Visitation Order", logger, tracker.begin(), tracker.end(), prediction.begin(), prediction.end());
     }
   };
 }

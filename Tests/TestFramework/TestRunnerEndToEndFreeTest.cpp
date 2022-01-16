@@ -192,12 +192,12 @@ namespace sequoia::testing
       if(speedupFactor == 1)
       {
         const auto roundingError{(static_cast<double>(timings.size()) - 1)};
-        check_relation(append_lines(description, "Sum of timings"), within_tolerance{roundingError}, sum, timings.back());
+        check(within_tolerance{roundingError}, append_lines(description, "Sum of timings"), sum, timings.back());
       }
       else
       {
         const auto prediction{sum / speedupFactor};
-        check_relation(append_lines(description, "Sum of timings"), std::less_equal<double>{}, timings.back(), prediction);
+        check(std::less_equal<double>{}, append_lines(description, "Sum of timings"), timings.back(), prediction);
       }
     }
   }

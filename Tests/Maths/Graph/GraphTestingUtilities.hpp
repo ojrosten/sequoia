@@ -138,8 +138,8 @@ namespace sequoia::testing
         for(edge_index_type i{}; i<connectivity.order(); ++i)
         {
           const auto message{std::string{"Partition "}.append(std::to_string(i))};
-          check_range(append_lines(message, "cedge_iterator"), logger, connectivity.cbegin_edges(i), connectivity.cend_edges(i), prediction.cbegin_edges(i), prediction.cend_edges(i));
-          check_range(append_lines(message, "credge_iterator"), logger, connectivity.crbegin_edges(i), connectivity.crend_edges(i), prediction.crbegin_edges(i), prediction.crend_edges(i));
+          check(with_best_available, append_lines(message, "cedge_iterator"), logger, connectivity.cbegin_edges(i), connectivity.cend_edges(i), prediction.cbegin_edges(i), prediction.cend_edges(i));
+          check(with_best_available, append_lines(message, "credge_iterator"), logger, connectivity.crbegin_edges(i), connectivity.crend_edges(i), prediction.crbegin_edges(i), prediction.crend_edges(i));
         }
       }
     }
@@ -161,7 +161,7 @@ namespace sequoia::testing
         Directedness,
         EdgeTraits,
         WeightMaker,
-        decltype([](auto&&... args) { check_range_equivalence(std::forward<decltype(args)>(args)...); })
+        decltype([](auto&&... args) { check(equivalence, std::forward<decltype(args)>(args)...); })
       >;
 
     using graph_weak_equivalence_tester =
@@ -169,7 +169,7 @@ namespace sequoia::testing
         Directedness,
         EdgeTraits,
         WeightMaker,
-        decltype([](auto&&... args) { check_range_weak_equivalence(std::forward<decltype(args)>(args)...); })
+        decltype([](auto&&... args) { check(weak_equivalence, std::forward<decltype(args)>(args)...); })
       >;
   };
 

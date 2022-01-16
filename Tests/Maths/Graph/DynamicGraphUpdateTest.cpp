@@ -194,7 +194,7 @@ namespace sequoia::testing
     //        3
 
     std::array<std::size_t, 4> expectedNodeWeights{10,6,50,16};
-    check_range(LINE(""), graph.cbegin_node_weights(), graph.cend_node_weights(), expectedNodeWeights.cbegin(), expectedNodeWeights.cend());
+    check(equality, LINE(""), graph.cbegin_node_weights(), graph.cend_node_weights(), expectedNodeWeights.cbegin(), expectedNodeWeights.cend());
 
     auto secondNodeFn = [&updater](const std::size_t index){ updater.secondNodeTraversal(index); };
     pseudo_depth_first_search(graph, find_disconnected_t{}, null_func_obj{}, secondNodeFn);
@@ -210,7 +210,7 @@ namespace sequoia::testing
     //       3
 
     expectedNodeWeights = {5,2,10,4};
-    check_range(LINE(""), graph.cbegin_node_weights(), graph.cend_node_weights(), expectedNodeWeights.cbegin(), expectedNodeWeights.cend());
+    check(equality, LINE(""), graph.cbegin_node_weights(), graph.cend_node_weights(), expectedNodeWeights.cbegin(), expectedNodeWeights.cend());
 
     auto firstEdgeFn = [&updater](auto citer) { updater.firstEdgeTraversal(citer); };
     pseudo_depth_first_search(graph, find_disconnected_t{}, null_func_obj{}, null_func_obj{}, firstEdgeFn);
@@ -386,7 +386,7 @@ namespace sequoia::testing
     //        3
 
     std::array<std::size_t, 4> expectedNodeWeights{10,6,40,20};
-    check_range(LINE(""), graph.cbegin_node_weights(), graph.cend_node_weights(), expectedNodeWeights.cbegin(), expectedNodeWeights.cend());
+    check(equality, LINE(""), graph.cbegin_node_weights(), graph.cend_node_weights(), expectedNodeWeights.cbegin(), expectedNodeWeights.cend());
 
     auto secondNodeFn = [&updater](const std::size_t index){ updater.secondNodeTraversal(index); };
     breadth_first_search(graph, find_disconnected_t{}, null_func_obj{}, secondNodeFn);
@@ -402,7 +402,7 @@ namespace sequoia::testing
     //       3
 
     expectedNodeWeights = {5,2,10,4};
-    check_range(LINE(""), graph.cbegin_node_weights(), graph.cend_node_weights(), expectedNodeWeights.cbegin(), expectedNodeWeights.cend());
+    check(equality, LINE(""), graph.cbegin_node_weights(), graph.cend_node_weights(), expectedNodeWeights.cbegin(), expectedNodeWeights.cend());
 
     auto firstEdgeFn = [&updater](auto citer) { updater.firstEdgeTraversal(citer); };
     breadth_first_search(graph, find_disconnected_t{}, null_func_obj{}, null_func_obj{}, firstEdgeFn);
@@ -524,7 +524,7 @@ namespace sequoia::testing
 
     auto expectedNodeWeights =
       undirected(Graph::flavour) ? std::array<std::size_t, 4>{10,10,30,16} : std::array<std::size_t, 4>{10,8,30,20};
-    check_range(LINE(""), graph.cbegin_node_weights(), graph.cend_node_weights(), expectedNodeWeights.cbegin(), expectedNodeWeights.cend());
+    check(equality, LINE(""), graph.cbegin_node_weights(), graph.cend_node_weights(), expectedNodeWeights.cbegin(), expectedNodeWeights.cend());
 
     auto secondNodeFn = [&updater](const std::size_t index){ updater.secondNodeTraversal(index); };
     priority_search(graph, find_disconnected_t{}, null_func_obj{}, secondNodeFn);
@@ -540,7 +540,7 @@ namespace sequoia::testing
     //       3
 
     expectedNodeWeights = {5,2,10,4};
-    check_range(LINE(""), graph.cbegin_node_weights(), graph.cend_node_weights(), expectedNodeWeights.cbegin(), expectedNodeWeights.cend());
+    check(equality, LINE(""), graph.cbegin_node_weights(), graph.cend_node_weights(), expectedNodeWeights.cbegin(), expectedNodeWeights.cend());
 
     auto firstEdgeFn = [&updater](auto citer) { updater.firstEdgeTraversal(citer); };
     priority_search(graph, find_disconnected_t{}, null_func_obj{}, null_func_obj{}, firstEdgeFn);
@@ -800,13 +800,13 @@ namespace sequoia::testing
     breadth_first_search(graph, find_disconnected_t{}, nodeFn1);
 
     std::vector<std::vector<int>> expectedNodeWeights{{0}, {1}, {2}};
-    check_range(LINE(""), graph.cbegin_node_weights(), graph.cend_node_weights(), expectedNodeWeights.cbegin(), expectedNodeWeights.cend());
+    check(equality, LINE(""), graph.cbegin_node_weights(), graph.cend_node_weights(), expectedNodeWeights.cbegin(), expectedNodeWeights.cend());
 
     auto nodeFn2 = [&graph](const std::size_t index) { graph.node_weight(graph.cbegin_node_weights() + index, std::vector<int>{3 - static_cast<int>(index)}); };
     maths::breadth_first_search(graph, find_disconnected_t{}, null_func_obj{}, nodeFn2);
 
     expectedNodeWeights = std::vector<std::vector<int>>{{3}, {2}, {1}};
-    check_range(LINE(""), graph.cbegin_node_weights(), graph.cend_node_weights(), expectedNodeWeights.cbegin(), expectedNodeWeights.cend());
+    check(equality, LINE(""), graph.cbegin_node_weights(), graph.cend_node_weights(), expectedNodeWeights.cbegin(), expectedNodeWeights.cend());
 
     auto edgeFn1 = [&graph](auto edgeIter) {
       const std::size_t node{edgeIter.partition_index()};

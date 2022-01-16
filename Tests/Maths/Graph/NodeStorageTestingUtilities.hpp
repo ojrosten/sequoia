@@ -29,9 +29,9 @@ namespace sequoia::testing
       {
         check(equality, "Sizes different", logger, nodes.size(), prediction.size());
 
-        check_range("const_node_iter", logger, nodes.cbegin_node_weights(), nodes.cend_node_weights(), prediction.cbegin_node_weights(), prediction.cend_node_weights());
+        check(with_best_available, "const_node_iter", logger, nodes.cbegin_node_weights(), nodes.cend_node_weights(), prediction.cbegin_node_weights(), prediction.cend_node_weights());
 
-        check_range("const_reverse_node_iter", logger, nodes.crbegin_node_weights(), nodes.crend_node_weights(), prediction.crbegin_node_weights(), prediction.crend_node_weights());
+        check(with_best_available, "const_reverse_node_iter", logger, nodes.crbegin_node_weights(), nodes.crend_node_weights(), prediction.crbegin_node_weights(), prediction.crend_node_weights());
       }
     };
 
@@ -59,7 +59,7 @@ namespace sequoia::testing
       {
         check(equality, "Sizes different", logger, nodes.size(), prediction.size());
 
-        check_range("const_node_iter", logger, nodes.cbegin_node_weights(), nodes.cend_node_weights(), prediction.begin(), prediction.end());
+        check(with_best_available, "const_node_iter", logger, nodes.cbegin_node_weights(), nodes.cend_node_weights(), prediction.begin(), prediction.end());
       }
     };
 

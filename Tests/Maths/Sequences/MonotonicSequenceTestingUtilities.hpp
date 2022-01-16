@@ -71,7 +71,7 @@ namespace sequoia::testing
     template<test_mode Mode>
     static void test(equivalence_check_t, test_logger<Mode>& logger, const type& sequence, std::initializer_list<T> prediction)
     {
-      check_range("", logger, sequence.begin(), sequence.end(), prediction.begin(), prediction.end());
+      check(equality, "", logger, sequence.begin(), sequence.end(), prediction.begin(), prediction.end());
     }
   };
 
@@ -89,7 +89,7 @@ namespace sequoia::testing
     template<test_mode Mode>
     static void test(equivalence_check_t, test_logger<Mode>& logger, const type& sequence, std::initializer_list<T> prediction)
     {
-      check_range("", logger, sequence.begin(), sequence.end(), prediction.begin(), prediction.end());
+      check(equality, "", logger, sequence.begin(), sequence.end(), prediction.begin(), prediction.end());
     }
   };
 }

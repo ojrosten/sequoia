@@ -88,7 +88,7 @@ namespace sequoia::testing
     template<test_mode Mode>
     static void test(equivalence_check_t, test_logger<Mode>& logger, const std::vector<foo>& f, const std::vector<int>& i, tutor<bland> advisor)
     {
-      check_range_equivalence("Vector equivalence", logger, f.begin(), f.end(), i.begin(), i.end(), advisor);
+      check(equivalence, "Vector equivalence", logger, f.begin(), f.end(), i.begin(), i.end(), advisor);
     }
 
     using prediction_t = std::vector<std::pair<int, double>>;
@@ -96,7 +96,7 @@ namespace sequoia::testing
     template<test_mode Mode>
     static void test(weak_equivalence_check_t, test_logger<Mode>& logger, const std::vector<foo>& f, const prediction_t& p, tutor<bland> advisor)
     {
-      check_range_equivalence("Vector equivalence", logger, f.begin(), f.end(), p.begin(), p.end(), advisor);
+      check(equivalence, "Vector equivalence", logger, f.begin(), f.end(), p.begin(), p.end(), advisor);
     }
   };
 
@@ -208,8 +208,8 @@ namespace sequoia::testing
 
     std::vector<float> refs{-4.3f, 2.8f, 6.2f, 7.3f}, ans{1.1f, -4.3f, 2.8f, 6.2f, 8.4f, 7.3f};
 
-    check_range(LINE("Iterators demarcate differing numbers of elements"), refs.cbegin(), refs.cend(), ans.cbegin(), ans.cend());
-    check_range(LINE("Iterators demarcate differing elements"), refs.cbegin(), refs.cend(), ans.cbegin(), ans.cbegin() + 4);
+    check(equality, LINE("Iterators demarcate differing numbers of elements"), refs.cbegin(), refs.cend(), ans.cbegin(), ans.cend());
+    check(equality, LINE("Iterators demarcate differing elements"), refs.cbegin(), refs.cend(), ans.cbegin(), ans.cbegin() + 4);
   }
 
   void false_positive_diagnostics::test_strings()
@@ -476,7 +476,7 @@ namespace sequoia::testing
 
     std::vector<float> refs{-4.3f, 2.8f, 6.2f, 7.3f}, ans{1.1f, -4.3f, 2.8f, 6.2f, 8.4f, 7.3f};
 
-    check_range(LINE("Iterators demarcate identical elements"), refs.cbegin(), refs.cbegin()+3, ans.cbegin()+1, ans.cbegin()+4);
+    check(equality, LINE("Iterators demarcate identical elements"), refs.cbegin(), refs.cbegin()+3, ans.cbegin()+1, ans.cbegin()+4);
   }
 
 
@@ -526,15 +526,17 @@ namespace sequoia::testing
                       fs::path{working_materials()}.append("Stuff/C"),
                       fs::path{working_materials()}.append("SameStuff/C"));
 
-    check(equivalence, LINE("File equivalence when .ignore is ignored"),
-                      value_based_customization<bespoke_file_checker>{},
-                      fs::path{working_materials()}.append("CustomComparison/A/DifferingContent.ignore"),
-                      fs::path{working_materials()}.append("CustomComparison/B/DifferingContent.ignore"));
+    check(equivalence,
+          value_based_customization<bespoke_file_checker>{},
+          LINE("File equivalence when .ignore is ignored"),
+          fs::path{working_materials()}.append("CustomComparison/A/DifferingContent.ignore"),
+          fs::path{working_materials()}.append("CustomComparison/B/DifferingContent.ignore"));
 
-    check(equivalence, LINE("Range equivalence when .ignore is ignored"),
-                      value_based_customization<bespoke_file_checker>{},
-                      std::vector<fs::path>{fs::path{working_materials()}.append("CustomComparison/A/DifferingContent.ignore")},
-                      std::vector<fs::path>{fs::path{working_materials()}.append("CustomComparison/B/DifferingContent.ignore")});
+    check(equivalence,
+          value_based_customization<bespoke_file_checker>{},
+          LINE("Range equivalence when .ignore is ignored"),
+          std::vector<fs::path>{fs::path{working_materials()}.append("CustomComparison/A/DifferingContent.ignore")},
+          std::vector<fs::path>{fs::path{working_materials()}.append("CustomComparison/B/DifferingContent.ignore")});
 
     check(equivalence, LINE("Advice for equivalence checking"), foo{42}, 42, tutor{bland{}});
 
@@ -557,15 +559,17 @@ namespace sequoia::testing
                            fs::path{working_materials()}.append("Stuff"),
                            fs::path{working_materials()}.append("SameStuff"));
 
-    check(weak_equivalence, LINE("Weak equivalence when .ignore is ignored"),
-                            value_based_customization<bespoke_file_checker>{},
-                            fs::path{working_materials()}.append("CustomComparison/A"),
-                            fs::path{working_materials()}.append("CustomComparison/B"));
+    check(weak_equivalence,
+          value_based_customization<bespoke_file_checker>{},
+          LINE("Weak equivalence when .ignore is ignored"),
+          fs::path{working_materials()}.append("CustomComparison/A"),
+          fs::path{working_materials()}.append("CustomComparison/B"));
 
-    check(weak_equivalence, LINE("Weak equivalence of range when .ignore is ignored"),
-                           value_based_customization<bespoke_file_checker>{},
-                           std::vector<fs::path>{{fs::path{working_materials()}.append("CustomComparison/A")}},
-                           std::vector<fs::path>{{fs::path{working_materials()}.append("CustomComparison/B")}});
+    check(weak_equivalence,
+          value_based_customization<bespoke_file_checker>{},
+          LINE("Weak equivalence of range when .ignore is ignored"),
+          std::vector<fs::path>{{fs::path{working_materials()}.append("CustomComparison/A")}},
+          std::vector<fs::path>{{fs::path{working_materials()}.append("CustomComparison/B")}});
 
     check(weak_equivalence, LINE("Advice for weak equivalence checking"), bar{42, 3.14}, std::pair<int, double>{42, 3.14}, tutor{bland{}});
 
