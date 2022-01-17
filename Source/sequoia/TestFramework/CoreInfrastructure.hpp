@@ -53,24 +53,36 @@ namespace sequoia::testing
     return serializer<T>::make(value);
   }
 
+  template<class T>
+  struct type_normalizer
+  {
+    using type = T;
+  };
+
+  template<class T>
+    requires (std::is_unsigned_v<T> && (sizeof(T) == sizeof(uint64_t)))
+  struct type_normalizer<T>
+  {
+    using type = uint64_t;
+  };
+
+  template<class T>
+    requires (std::is_unsigned_v<T> && (sizeof(T) == sizeof(uint32_t)))
+  struct type_normalizer<T>
+  {
+    using type = uint32_t;
+  };
+
+  template<class T>
+  using type_normalizer_t = typename type_normalizer<T>::type;
+
   template<std::integral T>
   [[nodiscard]]
   auto fixed_width_unsigned_cast(T x)
   {
     using U = std::make_unsigned_t<T>;
 
-    if constexpr(sizeof(U) == sizeof(uint64_t))
-    {
-      return static_cast<uint64_t>(x);
-    }
-    else if constexpr(sizeof(U) == sizeof(uint32_t))
-    {
-      return static_cast<uint32_t>(x);
-    }
-    else
-    {
-      return x;
-    }
+    return static_cast<type_normalizer_t<U>>(x);
   }
 
   template<class T>

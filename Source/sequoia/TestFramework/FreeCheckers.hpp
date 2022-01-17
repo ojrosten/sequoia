@@ -10,28 +10,26 @@
 /*! \file
     \brief Free functions for performing checks, together with the 'checker' class template which wraps them.
 
-    Given a type, T, any reasonable testing framework must provide a mechanism for checking whether or
-    not two instances of T are, in some sense, the same. If the type implements operator== then it
+    Given a type, `T`, any reasonable testing framework must provide a mechanism for checking whether or
+    not two instances of `T` are, in some sense, the same. If the type implements `operator==` then it
     is natural to utilize this. However, there is much more to the story. First of all, if this check
-    fails then, in order to be useful, there must be some way of serializing the state of T. This may
-    be done by specializing the class template
-    \ref string_maker_primary "string_maker" for cases where operator<< is not appropriately
-    overloaded.
+    fails then, in order to be useful, there must be some way of serializing the state of `T`. This may
+    be done by specializing the class template \ref serializer_primary "serializer" for cases where
+    operator<< is not appropriately overloaded.
 
     However, there is an alternative which may be superior. Consider trying to implement vector.
-    This class has various const accessors suggesting that, if operator== returns false, then the
+    This class has various const accessors suggesting that, if `operator==` returns `false`, then the
     accessors can be used to probe the exact nature of the inequality. To this end, a class template
-    \ref value_tester_primary "value_tester" is defined. Specializations
-    perform a detailed check of the equality
+    \ref value_tester_primary "value_tester" is defined. Specializations that provide an implementation
+    for the static method `void test(equality_check_t, ...)` perform a detailed check of the equality
     of the state of two supposedly equal instance of a class. Note that there is no need for the
-    value_tester to include checks of operator== or operator!=, since these will be done,
-    regardless. Indeed, the value_tester will be triggered independently of whether operator==
+    value_tester to include checks of `operator==` or `operator!=`, since these will be done,
+    regardless. Indeed, the value_tester will be triggered independently of whether `operator==`
     fails since either the latter or the accessors may have bugs, and introducing unnecessary dependencies
     would reduce the fidelity of the testing framework.
 
-    If a value_tester is supplied, then compile-time logic will ignore any attempt to
-    serialize objects of type T. Typically, clients may expect a notification that operator== has returned
-    false. There will then be a series of
+    If a value_tester is supplied, clients may typically expect a notification that `operator==` has returned
+    `false`. There will then be a series of
     subsequent checks which will reveal the precise nature of the failure. For example, for vectors, one
     will be told whether the sizes differ and, if not, the element which is causing the difference
     between the two supposedly equal instances. If the vector holds a user-defined type then, so long as
@@ -39,40 +37,33 @@
     a value_tester; typically this will be a sufficiently simple type that serialization is
     the appropriate solution (as is the case for may built-in types).
 
-    Suppose a client wishes to compare instance of some_container<T>. If some_container has a specialization
+    Suppose a client wishes to compare instance of `some_container<T>`. If some_container has a specialization
     of \ref value_tester_primary "value_tester" then this will be used; if it does
-    not then reflection is used to
-    determine if some_container overloads begin and end. If so, then it is treated as a range and
-    all that is required is to implement a value_tester for T (unless serialization is prefered).
+    not then reflection is used to determine if some_container overloads begin and end.
+    If so, then it is treated as a range and
+    all that is required is to implement a `value_tester` for `T` (unless serialization is prefered).
     If some_container is user-defined, it is wisest to provide an overload of the
     \ref value_tester_primary "value_tester".
     However, if the container is part of std, it is probably safe to assume it works correctly and so
     instead effort can be directed focused on T.
 
-    With this in mind, imagine creating a container. One of the first things one may wish to do is to check
-    that it is correctly initialized. It would be a mistake to use the
-    \ref value_tester_primary "value_tester" for this
+    With this in mind, imagine creating a container, `C`. One of the first things one may wish to do is to check
+    that it is correctly initialized. It would be a mistake to use the `value_tester<C>::test(equality_check_t, ...)` for this
     since, to do so, a second, identical instance would need to be created. This is circular and prone to
-    false positives. Consequently, the testing framework also defines a pair of class templates that
-    complement
-    \ref value_tester_primary "value_tester":
-    \ref equivalence_checker_primary "equivalence_checker" and
-    \ref weak_equivalence_checker_primary "weak_equivalence_checker". We may
-    consider a value for std::vector to be equivalent to an initializer_list in the sense that they hold (at
-    the relevant point of the program) the same elements. Thus, a specialization
-    equivalence_checker<vector, initializer_list> is supplied. Of course, there is more to a vector than the
+    false positives. However, one may instead furnish `value_tester<C>` with methods
+    `test(equivalence_check_t, ...)` and/or `test(weak_equivalence_check_t, ...)`.
+    
+    We may consider a value for e.g. `std::vector<int>` to be equivalent to an 
+    `initializer_list<int>` in the sense that they hold (at
+    the relevant point of the program) the same elements. Thus, an appropriate defintion of
+    `test(equivalence_check_t, ...)`
+    is supplied. Of course, there is more to a vector than the
     values it holds: there is the entire allocator framework too. In this case, however, it is not part of
-    the logical structure and, indeed, the state of the allocator is not considered in vector::operator==.
-    Thus it is philosophically reasonable to consider equivalence of vector and initializer_list. However,
-    sometimes is is useful to check the equivalence of the state of an instance of T to a proper subset of
-    the logical state of an instance of some S. For this purpose, the class template
-    \ref weak_equivalence_checker_primary "weak_equivalence_checker" is supplied.
-
-    Both the \ref equivalence_checker_primary "equivalence_checker" and its weak counterpart can be fed >=2
-    template type arguments. While for
-    a vector we would just feed in two types (vector and initializer_list), in some cases we may need more.
-    For example, a graph has both nodes and edges and so a graph may be considered equivalent to two
-    types representing these structures.
+    the logical structure and, indeed, the state of the allocator is not considered in `vector<T>::operator==`.
+    Thus it is philosophically reasonable to consider equivalence of `vector` and `initializer_list`. However,
+    sometimes is is useful to check the equivalence of the state of an instance of `T` to a proper subset of
+    the logical state of an instance of some S. For this purpose, an appropriate defintion of
+    `test(weak_equivalence_check_t, ...)`.
 */
 
 #include "sequoia/TestFramework/CoreInfrastructure.hpp"
@@ -88,6 +79,8 @@ namespace sequoia::testing
       \anchor value_tester_primary
    */
   template<class T> struct value_tester;
+
+  //=========================== Types used to generate overload sets ===========================//
 
   struct equality_check_t {};
 
@@ -123,6 +116,8 @@ namespace sequoia::testing
 
   struct with_best_available_check_t {};
 
+  //=========================== Values defined for convenience ===========================//
+
   inline constexpr equality_check_t equality{};
   inline constexpr equivalence_check_t equivalence{};
   inline constexpr weak_equivalence_check_t weak_equivalence{};
@@ -156,14 +151,7 @@ namespace sequoia::testing
   concept binary_tester_for =
     tester_for<CheckFlavour, Mode, T, T, T, tutor<Advisor>> || tester_for<CheckFlavour, Mode, T, T, T>;
 
-  namespace impl
-  {
-    // TO DO: investigate if this 'concept' can be traded for a constexpr bool
-    template<class Fn, class... Args>
-    concept invocable_without_last_arg = (sizeof...(Args) > 0) && requires(Fn&& fn, Args&&... args) {
-      invoke_with_specified_args(fn, std::make_index_sequence<sizeof...(Args) - 1>(), std::forward<Args>(args)...);
-    };
-  }
+
 
   template<class... Ts>
   struct equivalent_type_processor
@@ -226,6 +214,15 @@ namespace sequoia::testing
       value_tester<T>::test(CheckFlavour{}, logger, std::forward<Args>(args)...);
     }
   };
+
+  namespace impl
+  {
+    // TO DO: investigate if this 'concept' can be traded for a constexpr bool
+    template<class Fn, class... Args>
+    concept invocable_without_last_arg = (sizeof...(Args) > 0) && requires(Fn && fn, Args&&... args) {
+      invoke_with_specified_args(fn, std::make_index_sequence<sizeof...(Args) - 1>(), std::forward<Args>(args)...);
+    };
+  }
 
   template<test_mode Mode, class CheckFlavour, class T, class S, class... U>
   inline constexpr bool implements_general_equivalence_check{
@@ -342,7 +339,6 @@ namespace sequoia::testing
       return mess;
     }
   };
-
   template
   <
     class E,
@@ -384,24 +380,6 @@ namespace sequoia::testing
       return false;
     }
   }
-
-  struct type_normalizer
-  {
-    template<class T>
-    [[nodiscard]]
-    const T& operator()(const T& val) const noexcept
-    {
-      return val;
-    }
-
-    template<class T>
-      requires (!std::is_same_v<T, bool> && std::is_unsigned_v<T>)
-    [[nodiscard]]
-    auto operator()(T val) const noexcept
-    {
-      return fixed_width_unsigned_cast(val);
-    }
-  };
 
   //================= namespace-level convenience functions =================//
 

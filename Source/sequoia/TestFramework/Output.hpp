@@ -151,7 +151,7 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string demangle()
   {
-    return demangle<T>([](std::string name) -> std::string { return tidy_name(name, compiler_constant{}); });
+    return demangle<type_normalizer_t<T>>([](std::string name) -> std::string { return tidy_name(name, compiler_constant{}); });
   }
 
   /*! \brief Specialize this struct template to customize the way in which type info is generated for a given class.
