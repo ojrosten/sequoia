@@ -390,8 +390,8 @@ namespace sequoia::testing
   template<>
   struct value_tester<std::filesystem::path>
   {
-    template<test_mode Mode, class Customization>
-    static void test(equivalence_check_t, test_logger<Mode>& logger, const Customization& custom, const std::filesystem::path& path, const std::filesystem::path& prediction)
+    template<class ValueBasedCustomization, test_mode Mode>
+    static void test(general_equivalence_check_t<ValueBasedCustomization> checker, test_logger<Mode>& logger, const std::filesystem::path& path, const std::filesystem::path& prediction)
     {
       namespace fs = std::filesystem;
 
@@ -402,26 +402,26 @@ namespace sequoia::testing
         }
       };
 
-      path_checker::check_path(logger, custom, path, prediction, pred);
+      path_checker::check_path(logger, checker.customizer, path, prediction, pred);
     }
 
     template<test_mode Mode>
     static void test(equivalence_check_t, test_logger<Mode>& logger, const std::filesystem::path& path, const std::filesystem::path& prediction)
     {
-      test(equivalence_check_t{}, logger, basic_file_checker{}, path, prediction);
+      test(general_equivalence_check_t<basic_file_checker>{}, logger, path, prediction);
     }
 
-    template<test_mode Mode, class Customization>
-    static void test(weak_equivalence_check_t, test_logger<Mode>& logger, const Customization& custom, const std::filesystem::path& path, const std::filesystem::path& prediction)
+    template<class ValueBasedCustomization, test_mode Mode>
+    static void test(general_weak_equivalence_check_t<ValueBasedCustomization> checker, test_logger<Mode>& logger, const std::filesystem::path& path, const std::filesystem::path& prediction)
     {
       namespace fs = std::filesystem;
-      path_checker::check_path(logger, custom, path, prediction, [](const fs::path&, const fs::path&) { return true; });
+      path_checker::check_path(logger, checker.customizer, path, prediction, [](const fs::path&, const fs::path&) { return true; });
     }
 
     template<test_mode Mode>
     static void test(weak_equivalence_check_t, test_logger<Mode>& logger, const std::filesystem::path& path, const std::filesystem::path& prediction)
     {
-      test(weak_equivalence_check_t{}, logger, basic_file_checker{}, path, prediction);
+      test(general_weak_equivalence_check_t<basic_file_checker>{}, logger, path, prediction);
     }
   };
 
