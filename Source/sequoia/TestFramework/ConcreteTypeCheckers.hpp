@@ -246,8 +246,7 @@ namespace sequoia::testing
     }
 
     template<class CheckFlavour, test_mode Mode, class Advisor>
-      requires (sizeof...(T) == sizeof...(U))
-    static void test(equality_check_t flavour, test_logger<Mode>& logger, const std::tuple<T...>& value, const std::tuple<T...>& prediction, const tutor<Advisor>& advisor)
+    static void test(equality_check_t, test_logger<Mode>& logger, const std::tuple<T...>& value, const std::tuple<T...>& prediction, const tutor<Advisor>& advisor)
     {
       check_tuple_elements(equality, logger, value, prediction, advisor);
     }

@@ -151,10 +151,13 @@ namespace sequoia::testing
   inline constexpr bool is_customized_check{
     requires{
       typename T::customizer_type;
-      T::template rebind_check_type<typename T::customizer_type>;
-      requires std::is_same_v<T::template rebind_check_type<typename T::customizer_type>, T>;
+      typename T::template rebind_check_type<typename T::customizer_type>;
+      requires std::is_same_v<typename T::template rebind_check_type<typename T::customizer_type>, T>;
     }
   };
+
+  static_assert(is_customized_check<general_equivalence_check_t<int>>);
+  static_assert(is_customized_check<general_weak_equivalence_check_t<int>>);
 
   template<class Compare, class T>
   inline constexpr bool maybe_comparison_type{
