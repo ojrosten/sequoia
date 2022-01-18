@@ -18,18 +18,18 @@ namespace sequoia::testing
   {
     using type = data_structures::static_stack<T, MaxDepth>;
 
-    template<test_mode Mode>
-    static void test(equality_check_t, test_logger<Mode>& logger, const type& stack, const type& prediction)
+    template<class CheckerType, test_mode Mode>
+    static void test(CheckerType flavour, test_logger<Mode>& logger, const type& stack, const type& prediction)
     {
       check(equality, "Emptiness incorrect", logger, stack.empty(), prediction.empty());
       check(equality, "Size incorrect", logger, stack.size(), prediction.size());
 
       if(!prediction.empty() && !stack.empty())
       {
-        check(equality, "Top element incorrect", logger, stack.top(), prediction.top());
+        check(flavour, "Top element incorrect", logger, stack.top(), prediction.top());
       }
 
-      check(equality, "Hidden state incorrect", logger, prediction == stack, true);
+      check("Hidden state incorrect", logger, prediction == stack);
     }
   };
 }

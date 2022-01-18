@@ -18,21 +18,21 @@ namespace sequoia::testing
   {
     using type = data_structures::static_queue<T, MaxPushes>;
 
-    template<test_mode Mode>
-    static void test(equality_check_t, test_logger<Mode>& logger, const type& queue, const type& prediction)
+    template<class CheckerType, test_mode Mode>
+    static void test(CheckerType flavour, test_logger<Mode>& logger, const type& queue, const type& prediction)
     {
       check(equality, "Emptiness incorrect", logger, queue.empty(), prediction.empty());
       check(equality, "Size incorrect", logger, queue.size(), prediction.size());
 
       if(!prediction.empty() && !queue.empty())
       {
-        check(equality, "Front element incorrect", logger, queue.front(), prediction.front());
+        check(flavour, "Front element incorrect", logger, queue.front(), prediction.front());
 
-        check(equality, "Back element incorrect", logger, queue.back(), prediction.back());
+        check(flavour, "Back element incorrect", logger, queue.back(), prediction.back());
       }
 
-      check(equality, "Hidden state incorrect", logger, prediction == queue, true);
-      check(equality, "Hidden state, symmetry of operator== incorrect", logger, queue == prediction, true);
+      check("Hidden state incorrect", logger, prediction == queue);
+      check("Hidden state, symmetry of operator== incorrect", logger, queue == prediction);
     }
   };
 }

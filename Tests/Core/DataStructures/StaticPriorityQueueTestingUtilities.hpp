@@ -18,19 +18,19 @@ namespace sequoia::testing
   {
     using type = data_structures::static_priority_queue<T, MaxDepth, Compare>;
 
-    template<test_mode Mode>
-    static void test(equality_check_t, test_logger<Mode>& logger, const type& queue, const type& prediction)
+    template<class CheckerType, test_mode Mode>
+    static void test(CheckerType flavour, test_logger<Mode>& logger, const type& queue, const type& prediction)
     {
       check(equality, "Emptiness incorrect", logger, queue.empty(), prediction.empty());
       check(equality, "Size incorrect", logger, queue.size(), prediction.size());
 
       if(!prediction.empty() && !queue.empty())
       {
-        check(equality, "Top element incorrect", logger, queue.top(), prediction.top());
+        check(flavour, "Top element incorrect", logger, queue.top(), prediction.top());
       }
 
-      check(equality, "Hidden state incorrect", logger, prediction == queue, true);
-      check(equality, "Hidden state, symmetry of == incorrect", logger, queue == prediction, true);
+      check("Hidden state incorrect", logger, prediction == queue);
+      check("Hidden state, symmetry of == incorrect", logger, queue == prediction);
     }
   };
 }
