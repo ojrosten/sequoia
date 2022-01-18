@@ -202,14 +202,14 @@ namespace sequoia::testing
     static std::string get(const E& e) { return to_string(e); }
   };
 
-  template<class CheckFlavour, class T>
+  template<class T>
   struct equivalence_checker_delegator
   {
-    template<test_mode Mode, class... Args>
+    template<class CheckFlavour, test_mode Mode, class... Args>
       requires tester_for<CheckFlavour, Mode, T, Args...>
-    void operator()(test_logger<Mode>& logger, Args&&... args) const
+    void operator()(CheckFlavour flavour, test_logger<Mode>& logger, Args&&... args) const
     {
-      value_tester<T>::test(CheckFlavour{}, logger, std::forward<Args>(args)...);
+      value_tester<T>::test(flavour, logger, std::forward<Args>(args)...);
     }
   };
 
@@ -226,7 +226,7 @@ namespace sequoia::testing
   inline constexpr bool implements_general_equivalence_check{
             tester_for<CheckFlavour, Mode, T, T, S, U...>
     || (    equivalent_type_processor<S, U...>::ends_with_tutor
-         && impl::invocable_without_last_arg<equivalence_checker_delegator<CheckFlavour, T>, test_logger<Mode>&, T, S, U...>)
+         && impl::invocable_without_last_arg<equivalence_checker_delegator<T>, CheckFlavour, test_logger<Mode>&, T, S, U...>)
     ||      tester_for<CheckFlavour, Mode, T, T, S, U..., tutor<null_advisor>>
   };
 
@@ -237,7 +237,7 @@ namespace sequoia::testing
 
   template<class CheckFlavour, test_mode Mode, class T, class S, class... U>
     requires implements_general_equivalence_check<Mode, CheckFlavour, T, S, U...>
-  bool general_equivalence_check(CheckFlavour, std::string_view description, test_logger<Mode>& logger, const T& obtained, const S& s, const U&... u)
+  bool general_equivalence_check(CheckFlavour flavour, std::string_view description, test_logger<Mode>& logger, const T& obtained, const S& s, const U&... u)
   {
     using processor = equivalent_type_processor<S, U...>;
 
@@ -252,15 +252,15 @@ namespace sequoia::testing
 
     if constexpr(tester_for<CheckFlavour, Mode, T, T, S, U...>)
     {
-      value_tester<T>::test(CheckFlavour{}, logger,  obtained, s, u...);
+      value_tester<T>::test(flavour, logger,  obtained, s, u...);
     }
     else if constexpr(processor::ends_with_tutor)
     {
-      using delegator = equivalence_checker_delegator<CheckFlavour, T>;
+      using delegator = equivalence_checker_delegator<T>;
 
-      if constexpr(impl::invocable_without_last_arg<delegator, test_logger<Mode>&, T, S, U...>)
+      if constexpr(impl::invocable_without_last_arg<delegator, CheckFlavour, test_logger<Mode>&, T, S, U...>)
       {
-        invoke_with_specified_args(delegator{}, std::make_index_sequence<sizeof...(U) + 2>(), logger, obtained, s, u...);
+        invoke_with_specified_args(delegator{}, std::make_index_sequence<sizeof...(U) + 3>(), flavour, logger, obtained, s, u...);
       }
       else
       {
@@ -269,7 +269,7 @@ namespace sequoia::testing
     }
     else if constexpr(tester_for<CheckFlavour, Mode, T, T, S, U..., tutor<null_advisor>>)
     {
-      value_tester<T>::test(CheckFlavour{}, logger, obtained, s, u..., tutor<null_advisor>{});
+      value_tester<T>::test(flavour, logger, obtained, s, u..., tutor<null_advisor>{});
     }
     else
     {
@@ -305,15 +305,15 @@ namespace sequoia::testing
 
   template<class CheckFlavour, test_mode Mode, class T, class Advisor>
     requires binary_tester_for<CheckFlavour, Mode, T, tutor<Advisor>>
-  void select_test(CheckFlavour, test_logger<Mode>& logger, const T& obtained, const T& prediction, [[maybe_unused]] tutor<Advisor> advisor)
+  void select_test(CheckFlavour flavour, test_logger<Mode>& logger, const T& obtained, const T& prediction, [[maybe_unused]] tutor<Advisor> advisor)
   {
     if constexpr(tester_for<CheckFlavour, Mode, T, T, T, tutor<Advisor>>)
     {
-      value_tester<T>::test(CheckFlavour{}, logger, obtained, prediction, advisor);
+      value_tester<T>::test(flavour, logger, obtained, prediction, advisor);
     }
     else if constexpr(tester_for<CheckFlavour, Mode, T, T, T>)
     {
-      value_tester<T>::test(CheckFlavour{}, logger, obtained, prediction);
+      value_tester<T>::test(flavour, logger, obtained, prediction);
     }
     else
     {
@@ -395,7 +395,7 @@ namespace sequoia::testing
     std::sentinel_for<PredictionIter> PredictionSentinel,
     class Advisor = null_advisor
   >
-  bool check(CheckFlavour checkFlavour,
+  bool check(CheckFlavour flavour,
       std::string_view description,
       test_logger<Mode>& logger,
       Iter first,
@@ -427,7 +427,7 @@ namespace sequoia::testing
       {
         const auto dist{distance(predictionFirst, predictionIter)};
         auto mess{("Element " + std::to_string(dist)).append(" of range incorrect")};
-        if(!check(checkFlavour, std::move(mess), logger, *iter, *predictionIter, advisor)) equal = false;
+        if(!check(flavour, std::move(mess), logger, *iter, *predictionIter, advisor)) equal = false;
       }
     }
     else
@@ -531,15 +531,15 @@ namespace sequoia::testing
 
   template<class CheckFlavour, test_mode Mode, class T, class S, class... U>
     requires (has_generalized_equivalence_check<CheckFlavour, Mode, T, S, U...> && !std::input_or_output_iterator<T>)
-  bool check(CheckFlavour, std::string_view description, test_logger<Mode>& logger, const T& obtained, S&& s, U&&... u)
+  bool check(CheckFlavour flavour, std::string_view description, test_logger<Mode>& logger, const T& obtained, S&& s, U&&... u)
   {
     if constexpr(implements_general_equivalence_check<Mode, CheckFlavour, T, S, U...>)
     {
-      return general_equivalence_check(CheckFlavour{}, description, logger, obtained, std::forward<S>(s), std::forward<U>(u)...);
+      return general_equivalence_check(flavour, description, logger, obtained, std::forward<S>(s), std::forward<U>(u)...);
     }
     else if constexpr(sequoia::range<T>)
     {
-      return check(CheckFlavour{}, add_type_info<T>(description), logger, std::begin(obtained), std::end(obtained), std::begin(std::forward<S>(s)), std::end(std::forward<S>(s)), std::forward<U>(u)...);
+      return check(flavour, add_type_info<T>(description), logger, std::begin(obtained), std::end(obtained), std::begin(std::forward<S>(s)), std::end(std::forward<S>(s)), std::forward<U>(u)...);
     }
     else if constexpr(has_fallback<CheckFlavour>)
     {

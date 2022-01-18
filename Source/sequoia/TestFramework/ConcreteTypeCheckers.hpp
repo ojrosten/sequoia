@@ -11,7 +11,8 @@
     \brief Useful specializations for the class template value_tester.
 
     The specializations in this header are for various types defined in std. Internally,
-    check_equality/check_equivalnce is used meaning that there will be automatic, recursive dispatch to
+    check(equality,...) / (check,equivalence,...) is used meaning that there will be automatic,
+    recursive dispatch to
     other specializations of value_tester, if appropriate. For example,
     consider two instances of std::pair<my_type1, mytype2>, x and y. The utilities in this
     header means the call
@@ -210,31 +211,25 @@ namespace sequoia::testing
   struct value_tester<std::tuple<T...>>
   {
   private:
-    template<test_mode Mode, std::size_t I = 0, class... U, class Advisor>
+    template<std::size_t I = 0, class CheckFlavour, test_mode Mode, class... U, class Advisor>
       requires (I < sizeof...(T))
-    static void check_tuple_elements(test_logger<Mode>& logger, const std::tuple<T...>& value, const std::tuple<U...>& prediction, const tutor<Advisor>& advisor)
+    static void check_tuple_elements(CheckFlavour flavour, test_logger<Mode>& logger, const std::tuple<T...>& value, const std::tuple<U...>& prediction, const tutor<Advisor>& advisor)
     {
       const std::string message{"Element " + std::to_string(I) + " of tuple incorrect"};
       check(equality, message, logger, std::get<I>(value), std::get<I>(prediction), advisor);
-      check_tuple_elements<Mode, I+1>(logger, value, prediction, advisor);
+      check_tuple_elements<I+1>(flavour, logger, value, prediction, advisor);
     }
 
-    template<test_mode Mode, std::size_t I = 0, class... U, class Advisor>
-    static void check_tuple_elements(test_logger<Mode>&, const std::tuple<T...>&, const std::tuple<U...>&, const tutor<Advisor>&)
+    template<std::size_t I = 0, class CheckFlavour, test_mode Mode, class... U, class Advisor>
+    static void check_tuple_elements(CheckFlavour, test_logger<Mode>&, const std::tuple<T...>&, const std::tuple<U...>&, const tutor<Advisor>&)
     {}
 
   public:
-    template<test_mode Mode, class... U, class Advisor>
+    template<class CheckFlavour, test_mode Mode, class... U, class Advisor>
       requires((sizeof...(T) == sizeof...(U)) && (std::is_same_v<std::remove_cvref_t<T>, std::remove_cvref_t<U>> && ...))
-    static void test(equivalence_check_t, test_logger<Mode>& logger, const std::tuple<T...>& value, const std::tuple<U...>& prediction, const tutor<Advisor>& advisor)
+    static void test(CheckFlavour flavour, test_logger<Mode>& logger, const std::tuple<T...>& value, const std::tuple<U...>& prediction, const tutor<Advisor>& advisor)
     {
-      check_tuple_elements(logger, value, prediction, advisor);
-    }
-
-    template<test_mode Mode, class Advisor>
-    static void test(equality_check_t, test_logger<Mode>& logger, const std::tuple<T...>& value, const std::tuple<T...>& prediction, const tutor<Advisor>& advisor)
-    {
-      test(equivalence_check_t{}, logger, value, prediction, advisor);
+      check_tuple_elements(flavour, logger, value, prediction, advisor);
     }
   };
 
