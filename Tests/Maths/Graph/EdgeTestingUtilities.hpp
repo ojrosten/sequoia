@@ -14,14 +14,14 @@ namespace sequoia::testing
 {
   namespace impl
   {
-    template<test_mode Mode, class Edge, class Prediction>
-    void check_partial(test_logger<Mode>& logger, const Edge& edge, const Prediction& prediction)
+    template<class CheckerType, test_mode Mode, class Edge, class Prediction>
+    void check_partial([[maybe_unused]] CheckerType flavour, test_logger<Mode>& logger, const Edge& edge, const Prediction& prediction)
     {
       check(equality, "Target node incorrect", logger, edge.target_node(), prediction.target_node());
 
       if constexpr (!std::is_empty_v<typename Edge::weight_type>)
       {
-        check(equality, "Weight incorrect", logger, edge.weight(), prediction.weight());
+        check(flavour, "Weight incorrect", logger, edge.weight(), prediction.weight());
       }
     }
 
@@ -36,7 +36,6 @@ namespace sequoia::testing
     {
       check(equality, "Host node incorrect", logger, edge.source_node(), prediction.source_node());
       check(equality, "Inversion flag incorrect", logger, edge.inverted(), prediction.inverted());
-
     }
   }
 
@@ -46,17 +45,17 @@ namespace sequoia::testing
   {
     using type = maths::partial_edge<WeightHandler, IndexType>;
 
-    template<test_mode Mode>
-    static void test(equality_check_t, test_logger<Mode>& logger, const type& edge, const type& prediction)
+    template<class CheckerType, test_mode Mode>
+    static void test(CheckerType flavour, test_logger<Mode>& logger, const type& edge, const type& prediction)
     {
-      impl::check_partial(logger, edge, prediction);
+      impl::check_partial(flavour, logger, edge, prediction);
     }
 
     template<test_mode Mode, class OtherHandler>
       requires ownership::handler<OtherHandler>
     static void test(equivalence_check_t, test_logger<Mode>& logger, const type& edge, const maths::partial_edge<OtherHandler, IndexType>& prediction)
     {
-      impl::check_partial(logger, edge, prediction);
+      impl::check_partial(with_best_available, logger, edge, prediction);
     }
   };
 
@@ -66,10 +65,10 @@ namespace sequoia::testing
   {
     using type = maths::embedded_partial_edge<WeightHandler, IndexType>;
 
-    template<test_mode Mode>
-    static void test(equality_check_t, test_logger<Mode>& logger, const type& edge, const type& prediction)
+    template<class CheckerType, test_mode Mode>
+    static void test(CheckerType flavour, test_logger<Mode>& logger, const type& edge, const type& prediction)
     {
-      impl::check_partial(logger, edge, prediction);
+      impl::check_partial(flavour, logger, edge, prediction);
       impl::check_complementary(logger, edge, prediction);
     }
 
@@ -77,7 +76,7 @@ namespace sequoia::testing
       requires ownership::handler<OtherHandler>
     static void test(equivalence_check_t, test_logger<Mode>& logger, const type& edge, const maths::embedded_partial_edge<OtherHandler, IndexType>& prediction)
     {
-      impl::check_partial(logger, edge, prediction);
+      impl::check_partial(with_best_available, logger, edge, prediction);
       impl::check_complementary(logger, edge, prediction);
     }
   };
@@ -88,10 +87,10 @@ namespace sequoia::testing
   {
     using type = maths::edge<WeightHandler, IndexType>;
 
-    template<test_mode Mode>
-    static void test(equality_check_t, test_logger<Mode>& logger, const type& edge, const type& prediction)
+    template<class CheckerType, test_mode Mode>
+    static void test(CheckerType flavour, test_logger<Mode>& logger, const type& edge, const type& prediction)
     {
-      impl::check_partial(logger, edge, prediction);
+      impl::check_partial(flavour, logger, edge, prediction);
       impl::check_source(logger, edge, prediction);
     }
 
@@ -99,14 +98,14 @@ namespace sequoia::testing
       requires ownership::handler<OtherHandler>
     static void test(equivalence_check_t, test_logger<Mode>& logger, const type& edge, const maths::edge<OtherHandler, IndexType>& prediction)
     {
-      impl::check_partial(logger, edge, prediction);
+      impl::check_partial(with_best_available, logger, edge, prediction);
       impl::check_source(logger, edge, prediction);
     }
 
     template<test_mode Mode, class PredictionType>
     static void test(weak_equivalence_check_t, test_logger<Mode>& logger, const type& edge, const PredictionType& prediction)
     {
-      impl::check_partial(logger, edge, prediction);
+      impl::check_partial(with_best_available, logger, edge, prediction);
       impl::check_source(logger, edge, prediction);
     }
   };
@@ -117,10 +116,10 @@ namespace sequoia::testing
   {
     using type = maths::embedded_edge<WeightHandler, IndexType>;
 
-    template<test_mode Mode>
-    static void test(equality_check_t, test_logger<Mode>& logger, const type& edge, const type& prediction)
+    template<class CheckerType, test_mode Mode>
+    static void test(CheckerType flavour, test_logger<Mode>& logger, const type& edge, const type& prediction)
     {
-      impl::check_partial(logger, edge, prediction);
+      impl::check_partial(flavour, logger, edge, prediction);
       impl::check_complementary(logger, edge, prediction);
       impl::check_source(logger, edge, prediction);
     }
@@ -129,7 +128,7 @@ namespace sequoia::testing
       requires ownership::handler<OtherHandler>
     static void test(equivalence_check_t, test_logger<Mode>& logger, const type& edge, const maths::embedded_edge<OtherHandler, IndexType>& prediction)
     {
-      impl::check_partial(logger, edge, prediction);
+      impl::check_partial(with_best_available, logger, edge, prediction);
       impl::check_complementary(logger, edge, prediction);
       impl::check_source(logger, edge, prediction);
     }
