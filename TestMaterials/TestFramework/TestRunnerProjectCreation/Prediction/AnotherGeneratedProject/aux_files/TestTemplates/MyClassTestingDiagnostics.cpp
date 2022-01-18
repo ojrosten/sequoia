@@ -20,13 +20,13 @@ namespace sequoia::testing
 		// For example:
 $Regular
 		// ::?_class x{args}, y{different args};
-		// check_equivalence(LINE("Useful Description"), x, something inequivalent - ordinarily this would fail);
-		// check_equality(LINE("Useful Description"), x, y);
+		// check(equivalence, LINE("Useful Description"), x, something inequivalent - ordinarily this would fail);
+		// check(equality, LINE("Useful Description"), x, y);
 $Move
 		// auto x = []() { return ::?_class{args}; };
 		// auto y = []() { return ::?_class{different args}; };
-		// check_equivalence(LINE("Useful Description"), x(), something inequivalent - ordinarily this would fail);
-		// check_equality(LINE("Useful Description"), x(), y());
+		// check(equivalence, LINE("Useful Description"), x(), something inequivalent - ordinarily this would fail);
+		// check(equality, LINE("Useful Description"), x(), y());
 $
 	}
 }

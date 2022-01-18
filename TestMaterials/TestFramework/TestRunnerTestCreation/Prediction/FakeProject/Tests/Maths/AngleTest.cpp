@@ -20,8 +20,8 @@ namespace sequoia::testing
         // For example:
 
         // maths::angle x{args}, y{different args};
-        // check_equivalence(LINE("Useful Description"), x, something equivalent);
-        // check_equivalence(LINE("Useful Description"), y, something equivalent);
+        // check(equivalence, LINE("Useful Description"), x, something equivalent);
+        // check(equivalence,LINE("Useful Description"), y, something equivalent);
         // For orderable type, with x < y:
         // check_semantics(LINE("Useful Description"), x, y, std::weak_ordering::less);
         // For equality comparable but not orderable:

@@ -15,9 +15,9 @@
     is natural to utilize this. However, there is much more to the story. First of all, if this check
     fails then, in order to be useful, there must be some way of serializing the state of `T`. This may
     be done by specializing the class template \ref serializer_primary "serializer" for cases where
-    operator<< is not appropriately overloaded.
+    `operator<<` is not appropriately overloaded.
 
-    However, there is an alternative which may be superior. Consider trying to implement vector.
+    However, there is an alternative which may be superior. Consider trying to implement `vector`.
     This class has various const accessors suggesting that, if `operator==` returns `false`, then the
     accessors can be used to probe the exact nature of the inequality. To this end, a class template
     \ref value_tester_primary "value_tester" is defined. Specializations that provide an implementation
@@ -37,18 +37,18 @@
     a value_tester; typically this will be a sufficiently simple type that serialization is
     the appropriate solution (as is the case for may built-in types).
 
-    Suppose a client wishes to compare instance of `some_container<T>`. If some_container has a specialization
+    Suppose a client wishes to compare instances of `some_container<T>`. If `some_container<T>` has a specialization
     of \ref value_tester_primary "value_tester" then this will be used; if it does
-    not then reflection is used to determine if some_container overloads begin and end.
+    not then reflection is used to determine if `some_container` overloads `begin` and `end`.
     If so, then it is treated as a range and
     all that is required is to implement a `value_tester` for `T` (unless serialization is prefered).
-    If some_container is user-defined, it is wisest to provide an overload of the
+    If `some_container` is user-defined, it is wisest to provide an overload of the
     \ref value_tester_primary "value_tester".
     However, if the container is part of std, it is probably safe to assume it works correctly and so
     instead effort can be directed focused on T.
 
     With this in mind, imagine creating a container, `C`. One of the first things one may wish to do is to check
-    that it is correctly initialized. It would be a mistake to use the `value_tester<C>::test(equality_check_t, ...)` for this
+    that it is correctly initialized. It would be a mistake to use `value_tester<C>::test(equality_check_t, ...)` for this
     since, to do so, a second, identical instance would need to be created. This is circular and prone to
     false positives. However, one may instead furnish `value_tester<C>` with methods
     `test(equivalence_check_t, ...)` and/or `test(weak_equivalence_check_t, ...)`.
@@ -150,8 +150,6 @@ namespace sequoia::testing
   template<class CheckFlavour, test_mode Mode, class T, class Advisor>
   concept binary_tester_for =
     tester_for<CheckFlavour, Mode, T, T, T, tutor<Advisor>> || tester_for<CheckFlavour, Mode, T, T, T>;
-
-
 
   template<class... Ts>
   struct equivalent_type_processor
@@ -483,9 +481,9 @@ namespace sequoia::testing
         1. Provide a specialization of value_tester or ensure operator== and !=
            exist, together with a specialization of serializer.
 
-        2. If the invocation arises from a fallback from either check_equivalence or
-           check_weak_equivalence then consider specializing either equivalence_checker or
-           weak_equivalence_checker.
+        2. If the invocation arises from a fallback from a failed attempt to invoke 
+           either `check(equivalence_check_t,...)` or `check(weak_equivalence_check_t,...)`
+           then consider furnishing either of these with an implementation.
    */
 
   template<test_mode Mode, class T, class Advisor=null_advisor>
@@ -521,11 +519,13 @@ namespace sequoia::testing
 
   /*! \brief The workhorse for (weak) equivalence checking
 
-      This function will reflect on whether an appropriate specialization of (weak_) equivalence_checker exists.
-      If so, it will be used and if not it will attempt to interpret T as a range. If both of these fail then:
+      This function will reflect on whether an appropriate invocation of 
+      `check(equivalence_check_t,...)` or `check(weak_equivalence_check_t,...)` exists.
+      If so, it will be used and if not the method will attempt to interpret T as a range.
+      If both of these fail then:
       
       1. A weak equivalence check will attempt to fall back to an equivalence check;
-      2. An equivalence check will attemp to fall back to a detailed equality check.
+      2. An equivalence check will attemp to fall back to a equality check.
 
    */
 
@@ -552,9 +552,9 @@ namespace sequoia::testing
     }
   }
 
-  /*! \brief The workhorse for generically dispatching checks to nested types.
-
- */
+  /*! \brief The workhorse for dispatching to the strongest available type of check.
+  
+   */
 
   template<test_mode Mode, class T, class Advisor=null_advisor>
     requires (std::equality_comparable<T> || has_detailed_agnostic_check<Mode, T, Advisor> || sequoia::range<T>)

@@ -21,8 +21,8 @@ namespace sequoia::testing
 
         // auto x = []() { return bar::baz::foo<T>{args}; };
         // auto y = []() { return bar::baz::foo<T>{different args}; };
-        // check_equivalence(LINE("Useful Description"), x(), something equivalent);
-        // check_equivalence(LINE("Useful Description"), y(), something equivalent);
+        // check(equivalence, LINE("Useful Description"), x(), something equivalent);
+        // check(equivalence, LINE("Useful Description"), y(), something equivalent);
         // For orderable type, with x < y:
         // check_semantics(LINE("Useful Description"), x, y, std::weak_ordering::less);
         // For equality comparable but not orderable:
