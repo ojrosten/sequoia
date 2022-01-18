@@ -196,9 +196,22 @@ namespace sequoia::testing
     template<class CheckFlavour, test_mode Mode, class U, class V, class Advisor>
       requires (   std::is_same_v<std::remove_cvref_t<S>, std::remove_cvref_t<U>>
                 && std::is_same_v<std::remove_cvref_t<T>, std::remove_cvref_t<V>>)
-    static void test(CheckFlavour, test_logger<Mode>& logger, const std::pair<S, T>& value, const std::pair<U, V>& prediction, const tutor<Advisor>& advisor)
+    static void test(CheckFlavour flavour, test_logger<Mode>& logger, const std::pair<S, T>& value, const std::pair<U, V>& prediction, const tutor<Advisor>& advisor)
     {
-      check(CheckFlavour{}, "First element of pair is incorrect",  logger, value.first, prediction.first, advisor);
+      check_elements(flavour, logger, value, prediction, std::move(advisor));
+    }
+
+  template<class CheckFlavour, test_mode Mode, class Advisor>
+  static void test(equality_check_t, test_logger<Mode>& logger, const std::pair<S, T>& value, const std::pair<S, T>& prediction, const tutor<Advisor>& advisor)
+  {
+    check_elements(equality, logger, value, prediction, std::move(advisor));
+  }
+
+  private:
+    template<class CheckFlavour, test_mode Mode, class U, class V, class Advisor>
+    static void check_elements(CheckFlavour, test_logger<Mode>& logger, const std::pair<S, T>& value, const std::pair<U, V>& prediction, const tutor<Advisor>& advisor)
+    {
+      check(CheckFlavour{}, "First element of pair is incorrect", logger, value.first, prediction.first, advisor);
       check(CheckFlavour{}, "Second element of pair is incorrect", logger, value.second, prediction.second, advisor);
     }
   };
@@ -226,10 +239,17 @@ namespace sequoia::testing
 
   public:
     template<class CheckFlavour, test_mode Mode, class... U, class Advisor>
-      requires((sizeof...(T) == sizeof...(U)) && (std::is_same_v<std::remove_cvref_t<T>, std::remove_cvref_t<U>> && ...))
+      requires ((sizeof...(T) == sizeof...(U)) && (std::is_same_v<std::remove_cvref_t<T>, std::remove_cvref_t<U>> && ...))
     static void test(CheckFlavour flavour, test_logger<Mode>& logger, const std::tuple<T...>& value, const std::tuple<U...>& prediction, const tutor<Advisor>& advisor)
     {
       check_tuple_elements(flavour, logger, value, prediction, advisor);
+    }
+
+    template<class CheckFlavour, test_mode Mode, class Advisor>
+      requires (sizeof...(T) == sizeof...(U))
+    static void test(equality_check_t flavour, test_logger<Mode>& logger, const std::tuple<T...>& value, const std::tuple<T...>& prediction, const tutor<Advisor>& advisor)
+    {
+      check_tuple_elements(equality, logger, value, prediction, advisor);
     }
   };
 
@@ -266,10 +286,59 @@ namespace sequoia::testing
     }
   };
 
-  /*! \brief Helper class fo checking (weak) equivalence of file paths */
+  /*! \brief Checks equivalence of filesystem paths.
 
-  struct path_checker
+    Files are considered equivalent if they have the same name and the same contents;
+    similarly directories.
+
+    Files are considered weakly equivalent if they have the same contents;
+    similarly directories. The names of both are ignored.
+
+   */
+
+  template<>
+  struct value_tester<std::filesystem::path>
   {
+    template<class ValueBasedCustomization, test_mode Mode>
+    static void test(general_equivalence_check_t<ValueBasedCustomization> checker, test_logger<Mode>& logger, const std::filesystem::path& path, const std::filesystem::path& prediction)
+    {
+      namespace fs = std::filesystem;
+
+      auto pred{
+        [&logger](const fs::path& pathFinalToken, const fs::path& predictionFinalToken)
+        {
+           return check(equality, "Final path token", logger, pathFinalToken, predictionFinalToken);
+        }
+      };
+
+      check_path(logger, checker.customizer, path, prediction, pred);
+    }
+
+    template<test_mode Mode>
+    static void test(equivalence_check_t, test_logger<Mode>& logger, const std::filesystem::path& path, const std::filesystem::path& prediction)
+    {
+      test(general_equivalence_check_t<basic_file_checker>{}, logger, path, prediction);
+    }
+
+    template<class ValueBasedCustomization, test_mode Mode>
+    static void test(general_weak_equivalence_check_t<ValueBasedCustomization> checker, test_logger<Mode>& logger, const std::filesystem::path& path, const std::filesystem::path& prediction)
+    {
+      namespace fs = std::filesystem;
+      check_path(logger, checker.customizer, path, prediction, [](const fs::path&, const fs::path&) { return true; });
+    }
+
+    template<test_mode Mode>
+    static void test(weak_equivalence_check_t, test_logger<Mode>& logger, const std::filesystem::path& path, const std::filesystem::path& prediction)
+    {
+      test(general_weak_equivalence_check_t<basic_file_checker>{}, logger, path, prediction);
+    }
+  private:
+    constexpr static std::array<std::string_view, 2>
+      excluded_files{".DS_Store", ".keep"};
+
+    constexpr static std::array<std::string_view, 1>
+      excluded_extensions{seqpat};
+
     template<test_mode Mode, class Customization, invocable_r<bool, std::filesystem::path, std::filesystem::path> FinalTokenComparison>
     static void check_path(test_logger<Mode>& logger, const Customization& custom, const std::filesystem::path& path, const std::filesystem::path& prediction, FinalTokenComparison compare)
     {
@@ -303,13 +372,6 @@ namespace sequoia::testing
       }
     }
 
-  private:
-    constexpr static std::array<std::string_view, 2>
-      excluded_files{".DS_Store", ".keep"};
-
-    constexpr static std::array<std::string_view, 1>
-      excluded_extensions{seqpat};
-
     template<test_mode Mode, class Customization, invocable_r<bool, std::filesystem::path, std::filesystem::path> FinalTokenComparison>
     static void check_directory(test_logger<Mode>& logger, const Customization& custom, const std::filesystem::path& dir, const std::filesystem::path& prediction, FinalTokenComparison compare)
     {
@@ -320,7 +382,7 @@ namespace sequoia::testing
           std::vector<fs::path> paths{};
           for(const auto& p : fs::directory_iterator(dir))
           {
-            if(    std::find(excluded_files.begin(),      excluded_files.end(),      p.path().filename())  == excluded_files.end()
+            if(std::find(excluded_files.begin(),      excluded_files.end(),      p.path().filename()) == excluded_files.end()
                 && std::find(excluded_extensions.begin(), excluded_extensions.end(), p.path().extension()) == excluded_extensions.end())
             {
                paths.push_back(p);
@@ -372,82 +434,34 @@ namespace sequoia::testing
     }
   };
 
-  /*! \brief Checks equivalence of filesystem paths.
-
-    Files are considered equivalent if they have the same name and the same contents;
-    similarly directories.
-
-    Files are considered weakly equivalent if they have the same contents;
-    similarly directories. The names of both are ignored.
-
-   */
-
-  template<>
-  struct value_tester<std::filesystem::path>
-  {
-    template<class ValueBasedCustomization, test_mode Mode>
-    static void test(general_equivalence_check_t<ValueBasedCustomization> checker, test_logger<Mode>& logger, const std::filesystem::path& path, const std::filesystem::path& prediction)
-    {
-      namespace fs = std::filesystem;
-
-      auto pred{
-        [&logger](const fs::path& pathFinalToken, const fs::path& predictionFinalToken)
-        {
-           return check(equality, "Final path token", logger, pathFinalToken, predictionFinalToken);
-        }
-      };
-
-      path_checker::check_path(logger, checker.customizer, path, prediction, pred);
-    }
-
-    template<test_mode Mode>
-    static void test(equivalence_check_t, test_logger<Mode>& logger, const std::filesystem::path& path, const std::filesystem::path& prediction)
-    {
-      test(general_equivalence_check_t<basic_file_checker>{}, logger, path, prediction);
-    }
-
-    template<class ValueBasedCustomization, test_mode Mode>
-    static void test(general_weak_equivalence_check_t<ValueBasedCustomization> checker, test_logger<Mode>& logger, const std::filesystem::path& path, const std::filesystem::path& prediction)
-    {
-      namespace fs = std::filesystem;
-      path_checker::check_path(logger, checker.customizer, path, prediction, [](const fs::path&, const fs::path&) { return true; });
-    }
-
-    template<test_mode Mode>
-    static void test(weak_equivalence_check_t, test_logger<Mode>& logger, const std::filesystem::path& path, const std::filesystem::path& prediction)
-    {
-      test(general_weak_equivalence_check_t<basic_file_checker>{}, logger, path, prediction);
-    }
-  };
-
   template<class... Ts>
   struct value_tester<std::variant<Ts...>>
   {
     using type = std::variant<Ts...>;
 
-    template<test_mode Mode, class Advisor>
-    static void test(equality_check_t, test_logger<Mode>& logger, const type& obtained, const type& prediction, tutor<Advisor> advisor)
+    template<class CheckFlavour, test_mode Mode, class Advisor>
+    static void test(CheckFlavour flavour, test_logger<Mode>& logger, const type& obtained, const type& prediction, tutor<Advisor> advisor)
     {
-      if(check(equality, "Variant Index", logger, obtained.index(), prediction.index()))
+      if(check(flavour, "Variant Index", logger, obtained.index(), prediction.index()))
       {
-        check_value(logger, obtained, prediction, advisor, std::make_index_sequence<sizeof...(Ts)>());
+        check_value(flavour, logger, obtained, prediction, advisor, std::make_index_sequence<sizeof...(Ts)>());
       }
     }
   private:
-    template<test_mode Mode, class Advisor, std::size_t... I>
-    static void check_value(test_logger<Mode>& logger, const type& obtained, const type& prediction, const tutor<Advisor>& advisor, std::index_sequence<I...>)
+    template<class CheckFlavour, test_mode Mode, class Advisor, std::size_t... I>
+    static void check_value(CheckFlavour flavour, test_logger<Mode>& logger, const type& obtained, const type& prediction, const tutor<Advisor>& advisor, std::index_sequence<I...>)
     {
-      (check_value<I>(logger, obtained, prediction, advisor), ...);
+      (check_value<I>(flavour, logger, obtained, prediction, advisor), ...);
     }
 
-    template<std::size_t I, test_mode Mode, class Advisor>
-    static void check_value(test_logger<Mode>& logger, const type& obtained, const type& prediction, const tutor<Advisor>& advisor)
+    template<std::size_t I, class CheckFlavour, test_mode Mode, class Advisor>
+    static void check_value(CheckFlavour flavour, test_logger<Mode>& logger, const type& obtained, const type& prediction, const tutor<Advisor>& advisor)
     {
       if(auto pObtained{std::get_if<I>(&obtained)})
       {
         if(auto pPrediction{std::get_if<I>(&prediction)})
         {
-          check(equality, "Variant Contents", logger, *pObtained, *pPrediction, advisor);
+          check(flavour, "Variant Contents", logger, *pObtained, *pPrediction, advisor);
         }
         else
         {
@@ -462,14 +476,14 @@ namespace sequoia::testing
   {
     using type = std::optional<T>;
 
-    template<test_mode Mode, class Advisor>
-    static void test(equality_check_t, test_logger<Mode>& logger, const type& obtained, const type& prediction, tutor<Advisor> advisor)
+    template<class CheckFlavour, test_mode Mode, class Advisor>
+    static void test(CheckFlavour flavour, test_logger<Mode>& logger, const type& obtained, const type& prediction, tutor<Advisor> advisor)
     {
-      if(check(equality, "Has value", logger, obtained.has_value(), prediction.has_value()))
+      if(check(flavour, "Has value", logger, obtained.has_value(), prediction.has_value()))
       {
         if(obtained && prediction)
         {
-          check(equality, "Contents of optional", logger, *obtained, *prediction, advisor);
+          check(flavour, "Contents of optional", logger, *obtained, *prediction, advisor);
         }
       }
     }

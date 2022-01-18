@@ -87,7 +87,12 @@ namespace sequoia::testing
   template<class ValueBasedCustomizer>
   struct general_equivalence_check_t
   {
-    ValueBasedCustomizer customizer;
+    using customizer_type = ValueBasedCustomizer;
+
+    template<class Customizer>
+    using rebind_check_type = general_equivalence_check_t<Customizer>;
+
+    customizer_type customizer;
   };
 
   template<class ValueBasedCustomizer>
@@ -102,7 +107,12 @@ namespace sequoia::testing
   template<class ValueBasedCustomizer>
   struct general_weak_equivalence_check_t
   {
-    ValueBasedCustomizer customizer;
+    using customizer_type = ValueBasedCustomizer;
+
+    template<class Customizer>
+    using rebind_check_type = general_weak_equivalence_check_t<Customizer>;
+
+    customizer_type customizer;
   };
 
   template<class ValueBasedCustomizer>
@@ -135,6 +145,20 @@ namespace sequoia::testing
     || std::is_same_v<std::remove_cvref_t<T>, equivalence_check_t>
     || std::is_same_v<std::remove_cvref_t<T>, weak_equivalence_check_t>
     || std::is_same_v<std::remove_cvref_t<T>, with_best_available_check_t>
+  };
+
+  template<class T>
+  inline constexpr bool is_customized_check{
+    requires{
+      typename T::customizer_type;
+      T::template rebind_check_type<typename T::customizer_type>;
+      requires std::is_same_v<T::template rebind_check_type<typename T::customizer_type>, T>;
+    }
+  };
+
+  template<class Compare, class T>
+  inline constexpr bool maybe_comparison_type{
+    (std::invocable<Compare, T, T> || sequoia::range<T>) && !(is_elementary_check<Compare> || is_customized_check<Compare>)
   };
 
   template<class T>
@@ -444,7 +468,7 @@ namespace sequoia::testing
    */
 
   template<class Compare, test_mode Mode, class T, class Advisor=null_advisor>
-    requires ((std::invocable<Compare, T, T> || sequoia::range<T>) && !(is_elementary_check<Compare>))
+    requires maybe_comparison_type<Compare, T>
   bool check(Compare compare,
              std::string_view description,
              test_logger<Mode>& logger,
@@ -530,7 +554,7 @@ namespace sequoia::testing
    */
 
   template<class CheckFlavour, test_mode Mode, class T, class S, class... U>
-    requires (has_generalized_equivalence_check<CheckFlavour, Mode, T, S, U...> && !std::input_or_output_iterator<T>)
+    requires has_generalized_equivalence_check<CheckFlavour, Mode, T, S, U...>
   bool check(CheckFlavour flavour, std::string_view description, test_logger<Mode>& logger, const T& obtained, S&& s, U&&... u)
   {
     if constexpr(implements_general_equivalence_check<Mode, CheckFlavour, T, S, U...>)
@@ -663,7 +687,7 @@ namespace sequoia::testing
     }
 
     template<class Compare, class T, class Advisor = null_advisor>
-      requires ((std::invocable<Compare, T, T> || sequoia::range<T>) && !(is_elementary_check<Compare>))
+      requires maybe_comparison_type<Compare, T>
     bool check(Compare compare, std::string_view description, const T& obtained, const T& prediction, tutor<Advisor> advisor = {})
     {
       return testing::check(std::move(compare), description, logger(), obtained, prediction, std::move(advisor));
@@ -714,8 +738,7 @@ namespace sequoia::testing
       std::sentinel_for<PredictionIter> PredictionSentinel,
       class Advisor = null_advisor
     >
-      requires (     (std::invocable<Compare, typename Iter::value_type, typename Iter::value_type> || sequoia::range<typename Iter::value_type>)
-                 && !(is_elementary_check<Compare>))
+      requires maybe_comparison_type<Compare, typename Iter::value_type>
     bool check(Compare compare,
                std::string_view description,
                Iter first,
