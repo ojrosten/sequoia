@@ -15,8 +15,8 @@ namespace sequoia::testing
 {
   namespace impl
   {
-    template<test_mode Mode, class PartitionedData>
-    void check_details(test_logger<Mode>& logger, const PartitionedData& data, const PartitionedData& prediction)
+    template<class CheckType, test_mode Mode, class PartitionedData>
+    void check_details(CheckType flavour, test_logger<Mode>& logger, const PartitionedData& data, const PartitionedData& prediction)
     {
       check(equality, "Emptiness incorrect", logger, data.empty(), prediction.empty());
 
@@ -27,29 +27,29 @@ namespace sequoia::testing
         for(std::size_t i{}; i<prediction.num_partitions(); ++i)
         {
           const auto message{std::string{"Partition "}.append(std::to_string(i))};
-          if(check(with_best_available, append_lines(message, "iterator (const)"), logger, data.begin_partition(i), data.end_partition(i), prediction.begin_partition(i), prediction.end_partition(i)))
+          if(check(flavour, append_lines(message, "iterator (const)"), logger, data.begin_partition(i), data.end_partition(i), prediction.begin_partition(i), prediction.end_partition(i)))
           {
             for(int64_t j{}; j<distance(prediction.begin_partition(i), prediction.end_partition(i)); ++j)
             {
-              check(equality, append_lines(message,"[] (const)"), logger, data[i][j], prediction[i][j]);
+              check(flavour, append_lines(message,"[] (const)"), logger, data[i][j], prediction[i][j]);
             }
           }
 
-          check(with_best_available, append_lines(message, "r_iterator (const)"), logger, data.rbegin_partition(i), data.rend_partition(i), prediction.rbegin_partition(i), prediction.rend_partition(i));
-          check(with_best_available, append_lines(message, "c_iterator"), logger, data.cbegin_partition(i), data.cend_partition(i), prediction.cbegin_partition(i), prediction.cend_partition(i));
-          check(with_best_available, append_lines(message, "cr_iterator"), logger, data.crbegin_partition(i), data.crend_partition(i), prediction.crbegin_partition(i), prediction.crend_partition(i));
+          check(flavour, append_lines(message, "r_iterator (const)"), logger, data.rbegin_partition(i), data.rend_partition(i), prediction.rbegin_partition(i), prediction.rend_partition(i));
+          check(flavour, append_lines(message, "c_iterator"), logger, data.cbegin_partition(i), data.cend_partition(i), prediction.cbegin_partition(i), prediction.cend_partition(i));
+          check(flavour, append_lines(message, "cr_iterator"), logger, data.crbegin_partition(i), data.crend_partition(i), prediction.crbegin_partition(i), prediction.crend_partition(i));
 
           auto& r{const_cast<PartitionedData&>(prediction)};
           auto& d{const_cast<PartitionedData&>(data)};
-          if(check(with_best_available, append_lines(message, "iterator"), logger, d.begin_partition(i), d.end_partition(i), r.begin_partition(i), r.end_partition(i)))
+          if(check(flavour, append_lines(message, "iterator"), logger, d.begin_partition(i), d.end_partition(i), r.begin_partition(i), r.end_partition(i)))
           {
             for(int64_t j{}; j<distance(r.begin_partition(i), r.end_partition(i)); ++j)
             {
-              check(equality, append_lines(message,"[]"), logger, d[i][j], r[i][j]);
+              check(flavour, append_lines(message,"[]"), logger, d[i][j], r[i][j]);
             }
           }
 
-          check(with_best_available, append_lines(message, "r_iterator"), logger, d.rbegin_partition(i), d.rend_partition(i), r.rbegin_partition(i), r.rend_partition(i));
+          check(flavour, append_lines(message, "r_iterator"), logger, d.rbegin_partition(i), d.rend_partition(i), r.rbegin_partition(i), r.rend_partition(i));
         }
       }
     }
@@ -80,10 +80,10 @@ namespace sequoia::testing
   {
     using type = data_structures::bucketed_storage<T, Handler, Traits>;
 
-    template<test_mode Mode>
-    static void test(equality_check_t, test_logger<Mode>& logger, const type& data, const type& prediction)
+    template<class CheckType, test_mode Mode>
+    static void test(CheckType flavour, test_logger<Mode>& logger, const type& data, const type& prediction)
     {
-      impl::check_details(logger, data, prediction);
+      impl::check_details(flavour, logger, data, prediction);
     }
 
     template<test_mode Mode>
@@ -99,10 +99,10 @@ namespace sequoia::testing
     using type = data_structures::partitioned_sequence<T, Handler, Traits>;
     using equivalent_type = std::initializer_list<std::initializer_list<T>>;
 
-    template<test_mode Mode>
-    static void test(equality_check_t, test_logger<Mode>& logger, const type& data, const type& prediction)
+    template<class CheckType, test_mode Mode>
+    static void test(CheckType flavour, test_logger<Mode>& logger, const type& data, const type& prediction)
     {
-      impl::check_details(logger, data, prediction);
+      impl::check_details(flavour, logger, data, prediction);
     }
 
     template<test_mode Mode>
@@ -117,10 +117,10 @@ namespace sequoia::testing
   {
     using type = data_structures::static_partitioned_sequence<T, Npartitions, Nelements, IndexType>;
 
-    template<test_mode Mode>
-    static void test(equality_check_t, test_logger<Mode>& logger, const type& data, const type& prediction)
+    template<class CheckType, test_mode Mode>
+    static void test(CheckType flavour, test_logger<Mode>& logger, const type& data, const type& prediction)
     {
-      impl::check_details(logger, data, prediction);
+      impl::check_details(flavour, logger, data, prediction);
     }
 
     template<test_mode Mode>

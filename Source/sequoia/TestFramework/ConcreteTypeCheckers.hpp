@@ -193,26 +193,26 @@ namespace sequoia::testing
   template<class S, class T>
   struct value_tester<std::pair<S, T>>
   {
-    template<class CheckFlavour, test_mode Mode, class U, class V, class Advisor>
+    template<class CheckType, test_mode Mode, class U, class V, class Advisor>
       requires (   std::is_same_v<std::remove_cvref_t<S>, std::remove_cvref_t<U>>
                 && std::is_same_v<std::remove_cvref_t<T>, std::remove_cvref_t<V>>)
-    static void test(CheckFlavour flavour, test_logger<Mode>& logger, const std::pair<S, T>& value, const std::pair<U, V>& prediction, const tutor<Advisor>& advisor)
+    static void test(CheckType flavour, test_logger<Mode>& logger, const std::pair<S, T>& value, const std::pair<U, V>& prediction, const tutor<Advisor>& advisor)
     {
       check_elements(flavour, logger, value, prediction, std::move(advisor));
     }
 
-  template<class CheckFlavour, test_mode Mode, class Advisor>
+  template<class CheckType, test_mode Mode, class Advisor>
   static void test(equality_check_t, test_logger<Mode>& logger, const std::pair<S, T>& value, const std::pair<S, T>& prediction, const tutor<Advisor>& advisor)
   {
     check_elements(equality, logger, value, prediction, std::move(advisor));
   }
 
   private:
-    template<class CheckFlavour, test_mode Mode, class U, class V, class Advisor>
-    static void check_elements(CheckFlavour, test_logger<Mode>& logger, const std::pair<S, T>& value, const std::pair<U, V>& prediction, const tutor<Advisor>& advisor)
+    template<class CheckType, test_mode Mode, class U, class V, class Advisor>
+    static void check_elements(CheckType, test_logger<Mode>& logger, const std::pair<S, T>& value, const std::pair<U, V>& prediction, const tutor<Advisor>& advisor)
     {
-      check(CheckFlavour{}, "First element of pair is incorrect", logger, value.first, prediction.first, advisor);
-      check(CheckFlavour{}, "Second element of pair is incorrect", logger, value.second, prediction.second, advisor);
+      check(CheckType{}, "First element of pair is incorrect", logger, value.first, prediction.first, advisor);
+      check(CheckType{}, "Second element of pair is incorrect", logger, value.second, prediction.second, advisor);
     }
   };
 
@@ -224,28 +224,28 @@ namespace sequoia::testing
   struct value_tester<std::tuple<T...>>
   {
   private:
-    template<std::size_t I = 0, class CheckFlavour, test_mode Mode, class... U, class Advisor>
+    template<std::size_t I = 0, class CheckType, test_mode Mode, class... U, class Advisor>
       requires (I < sizeof...(T))
-    static void check_tuple_elements(CheckFlavour flavour, test_logger<Mode>& logger, const std::tuple<T...>& value, const std::tuple<U...>& prediction, const tutor<Advisor>& advisor)
+    static void check_tuple_elements(CheckType flavour, test_logger<Mode>& logger, const std::tuple<T...>& value, const std::tuple<U...>& prediction, const tutor<Advisor>& advisor)
     {
       const std::string message{"Element " + std::to_string(I) + " of tuple incorrect"};
       check(equality, message, logger, std::get<I>(value), std::get<I>(prediction), advisor);
       check_tuple_elements<I+1>(flavour, logger, value, prediction, advisor);
     }
 
-    template<std::size_t I = 0, class CheckFlavour, test_mode Mode, class... U, class Advisor>
-    static void check_tuple_elements(CheckFlavour, test_logger<Mode>&, const std::tuple<T...>&, const std::tuple<U...>&, const tutor<Advisor>&)
+    template<std::size_t I = 0, class CheckType, test_mode Mode, class... U, class Advisor>
+    static void check_tuple_elements(CheckType, test_logger<Mode>&, const std::tuple<T...>&, const std::tuple<U...>&, const tutor<Advisor>&)
     {}
 
   public:
-    template<class CheckFlavour, test_mode Mode, class... U, class Advisor>
+    template<class CheckType, test_mode Mode, class... U, class Advisor>
       requires ((sizeof...(T) == sizeof...(U)) && (std::is_same_v<std::remove_cvref_t<T>, std::remove_cvref_t<U>> && ...))
-    static void test(CheckFlavour flavour, test_logger<Mode>& logger, const std::tuple<T...>& value, const std::tuple<U...>& prediction, const tutor<Advisor>& advisor)
+    static void test(CheckType flavour, test_logger<Mode>& logger, const std::tuple<T...>& value, const std::tuple<U...>& prediction, const tutor<Advisor>& advisor)
     {
       check_tuple_elements(flavour, logger, value, prediction, advisor);
     }
 
-    template<class CheckFlavour, test_mode Mode, class Advisor>
+    template<class CheckType, test_mode Mode, class Advisor>
     static void test(equality_check_t, test_logger<Mode>& logger, const std::tuple<T...>& value, const std::tuple<T...>& prediction, const tutor<Advisor>& advisor)
     {
       check_tuple_elements(equality, logger, value, prediction, advisor);
@@ -438,8 +438,8 @@ namespace sequoia::testing
   {
     using type = std::variant<Ts...>;
 
-    template<class CheckFlavour, test_mode Mode, class Advisor>
-    static void test(CheckFlavour flavour, test_logger<Mode>& logger, const type& obtained, const type& prediction, tutor<Advisor> advisor)
+    template<class CheckType, test_mode Mode, class Advisor>
+    static void test(CheckType flavour, test_logger<Mode>& logger, const type& obtained, const type& prediction, tutor<Advisor> advisor)
     {
       if(check(flavour, "Variant Index", logger, obtained.index(), prediction.index()))
       {
@@ -447,14 +447,14 @@ namespace sequoia::testing
       }
     }
   private:
-    template<class CheckFlavour, test_mode Mode, class Advisor, std::size_t... I>
-    static void check_value(CheckFlavour flavour, test_logger<Mode>& logger, const type& obtained, const type& prediction, const tutor<Advisor>& advisor, std::index_sequence<I...>)
+    template<class CheckType, test_mode Mode, class Advisor, std::size_t... I>
+    static void check_value(CheckType flavour, test_logger<Mode>& logger, const type& obtained, const type& prediction, const tutor<Advisor>& advisor, std::index_sequence<I...>)
     {
       (check_value<I>(flavour, logger, obtained, prediction, advisor), ...);
     }
 
-    template<std::size_t I, class CheckFlavour, test_mode Mode, class Advisor>
-    static void check_value(CheckFlavour flavour, test_logger<Mode>& logger, const type& obtained, const type& prediction, const tutor<Advisor>& advisor)
+    template<std::size_t I, class CheckType, test_mode Mode, class Advisor>
+    static void check_value(CheckType flavour, test_logger<Mode>& logger, const type& obtained, const type& prediction, const tutor<Advisor>& advisor)
     {
       if(auto pObtained{std::get_if<I>(&obtained)})
       {
@@ -475,8 +475,8 @@ namespace sequoia::testing
   {
     using type = std::optional<T>;
 
-    template<class CheckFlavour, test_mode Mode, class Advisor>
-    static void test(CheckFlavour flavour, test_logger<Mode>& logger, const type& obtained, const type& prediction, tutor<Advisor> advisor)
+    template<class CheckType, test_mode Mode, class Advisor>
+    static void test(CheckType flavour, test_logger<Mode>& logger, const type& obtained, const type& prediction, tutor<Advisor> advisor)
     {
       if(check(flavour, "Has value", logger, obtained.has_value(), prediction.has_value()))
       {

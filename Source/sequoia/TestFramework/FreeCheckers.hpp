@@ -149,7 +149,7 @@ namespace sequoia::testing
 
   template<class T>
   inline constexpr bool is_customized_check{
-    requires{
+    requires {
       typename T::customizer_type;
       typename T::template rebind_check_type<typename T::customizer_type>;
       requires std::is_same_v<typename T::template rebind_check_type<typename T::customizer_type>, T>;
@@ -169,14 +169,14 @@ namespace sequoia::testing
     requires { typename T::fallback; }
   };
 
-  template<class CheckFlavour, test_mode Mode, class T, class... Args>
+  template<class CheckType, test_mode Mode, class T, class... Args>
   concept tester_for = requires(test_logger<Mode>& logger, Args&&... args) {
-    value_tester<T>::test(CheckFlavour{}, logger, std::forward<Args>(args)...);
+    value_tester<T>::test(CheckType{}, logger, std::forward<Args>(args)...);
   };
 
-  template<class CheckFlavour, test_mode Mode, class T, class Advisor>
+  template<class CheckType, test_mode Mode, class T, class Advisor>
   concept binary_tester_for =
-    tester_for<CheckFlavour, Mode, T, T, T, tutor<Advisor>> || tester_for<CheckFlavour, Mode, T, T, T>;
+    tester_for<CheckType, Mode, T, T, T, tutor<Advisor>> || tester_for<CheckType, Mode, T, T, T>;
 
   template<class... Ts>
   struct equivalent_type_processor
@@ -232,9 +232,9 @@ namespace sequoia::testing
   template<class T>
   struct equivalence_checker_delegator
   {
-    template<class CheckFlavour, test_mode Mode, class... Args>
-      requires tester_for<CheckFlavour, Mode, T, Args...>
-    void operator()(CheckFlavour flavour, test_logger<Mode>& logger, Args&&... args) const
+    template<class CheckType, test_mode Mode, class... Args>
+      requires tester_for<CheckType, Mode, T, Args...>
+    void operator()(CheckType flavour, test_logger<Mode>& logger, Args&&... args) const
     {
       value_tester<T>::test(flavour, logger, std::forward<Args>(args)...);
     }
@@ -249,12 +249,12 @@ namespace sequoia::testing
     };
   }
 
-  template<test_mode Mode, class CheckFlavour, class T, class S, class... U>
+  template<test_mode Mode, class CheckType, class T, class S, class... U>
   inline constexpr bool implements_general_equivalence_check{
-            tester_for<CheckFlavour, Mode, T, T, S, U...>
+            tester_for<CheckType, Mode, T, T, S, U...>
     || (    equivalent_type_processor<S, U...>::ends_with_tutor
-         && impl::invocable_without_last_arg<equivalence_checker_delegator<T>, CheckFlavour, test_logger<Mode>&, T, S, U...>)
-    ||      tester_for<CheckFlavour, Mode, T, T, S, U..., tutor<null_advisor>>
+         && impl::invocable_without_last_arg<equivalence_checker_delegator<T>, CheckType, test_logger<Mode>&, T, S, U...>)
+    ||      tester_for<CheckType, Mode, T, T, S, U..., tutor<null_advisor>>
   };
 
   /*! \brief generic function that generates a check from any class providing a static check method.
@@ -262,9 +262,9 @@ namespace sequoia::testing
       This employs a \ref test_logger_primary "sentinel" and so can be used naively.
    */
 
-  template<class CheckFlavour, test_mode Mode, class T, class S, class... U>
-    requires implements_general_equivalence_check<Mode, CheckFlavour, T, S, U...>
-  bool general_equivalence_check(CheckFlavour flavour, std::string_view description, test_logger<Mode>& logger, const T& obtained, const S& s, const U&... u)
+  template<class CheckType, test_mode Mode, class T, class S, class... U>
+    requires implements_general_equivalence_check<Mode, CheckType, T, S, U...>
+  bool general_equivalence_check(CheckType flavour, std::string_view description, test_logger<Mode>& logger, const T& obtained, const S& s, const U&... u)
   {
     using processor = equivalent_type_processor<S, U...>;
 
@@ -277,7 +277,7 @@ namespace sequoia::testing
 
     sentinel<Mode> sentry{logger, msg};
 
-    if constexpr(tester_for<CheckFlavour, Mode, T, T, S, U...>)
+    if constexpr(tester_for<CheckType, Mode, T, T, S, U...>)
     {
       value_tester<T>::test(flavour, logger,  obtained, s, u...);
     }
@@ -285,7 +285,7 @@ namespace sequoia::testing
     {
       using delegator = equivalence_checker_delegator<T>;
 
-      if constexpr(impl::invocable_without_last_arg<delegator, CheckFlavour, test_logger<Mode>&, T, S, U...>)
+      if constexpr(impl::invocable_without_last_arg<delegator, CheckType, test_logger<Mode>&, T, S, U...>)
       {
         invoke_with_specified_args(delegator{}, std::make_index_sequence<sizeof...(U) + 3>(), flavour, logger, obtained, s, u...);
       }
@@ -294,7 +294,7 @@ namespace sequoia::testing
         static_assert(dependent_false<value_tester<T>>::value, "Should never be triggered; indicates mismatch between requirement and logic");
       }
     }
-    else if constexpr(tester_for<CheckFlavour, Mode, T, T, S, U..., tutor<null_advisor>>)
+    else if constexpr(tester_for<CheckType, Mode, T, T, S, U..., tutor<null_advisor>>)
     {
       value_tester<T>::test(flavour, logger, obtained, s, u..., tutor<null_advisor>{});
     }
@@ -320,31 +320,31 @@ namespace sequoia::testing
     }
   }
 
-  template<class CheckFlavour, test_mode Mode, class T, class S, class... U>
+  template<class CheckType, test_mode Mode, class T, class S, class... U>
   inline constexpr bool has_generalized_equivalence_check{
-      !(   std::is_same_v<CheckFlavour, equality_check_t>
-        || std::is_same_v<CheckFlavour, with_best_available_check_t>)
-    && (   implements_general_equivalence_check<Mode, CheckFlavour, T, S, U...>
+      !(   std::is_same_v<CheckType, equality_check_t>
+        || std::is_same_v<CheckType, with_best_available_check_t>)
+    && (   implements_general_equivalence_check<Mode, CheckType, T, S, U...>
         || sequoia::range<T>
-        || has_fallback<CheckFlavour>)
+        || has_fallback<CheckType>)
   };
 
 
-  template<class CheckFlavour, test_mode Mode, class T, class Advisor>
-    requires binary_tester_for<CheckFlavour, Mode, T, tutor<Advisor>>
-  void select_test(CheckFlavour flavour, test_logger<Mode>& logger, const T& obtained, const T& prediction, [[maybe_unused]] tutor<Advisor> advisor)
+  template<class CheckType, test_mode Mode, class T, class Advisor>
+    requires binary_tester_for<CheckType, Mode, T, tutor<Advisor>>
+  void select_test(CheckType flavour, test_logger<Mode>& logger, const T& obtained, const T& prediction, [[maybe_unused]] tutor<Advisor> advisor)
   {
-    if constexpr(tester_for<CheckFlavour, Mode, T, T, T, tutor<Advisor>>)
+    if constexpr(tester_for<CheckType, Mode, T, T, T, tutor<Advisor>>)
     {
       value_tester<T>::test(flavour, logger, obtained, prediction, advisor);
     }
-    else if constexpr(tester_for<CheckFlavour, Mode, T, T, T>)
+    else if constexpr(tester_for<CheckType, Mode, T, T, T>)
     {
       value_tester<T>::test(flavour, logger, obtained, prediction);
     }
     else
     {
-      static_assert(dependent_false<CheckFlavour>::value, "Should never be triggered; indicates mismatch between requirement and logic");
+      static_assert(dependent_false<CheckType>::value, "Should never be triggered; indicates mismatch between requirement and logic");
     }
   }
 
@@ -414,7 +414,7 @@ namespace sequoia::testing
 
   template
   <
-    class CheckFlavour,
+    class CheckType,
     test_mode Mode,
     std::input_or_output_iterator Iter,
     std::sentinel_for<Iter> Sentinel,
@@ -422,7 +422,7 @@ namespace sequoia::testing
     std::sentinel_for<PredictionIter> PredictionSentinel,
     class Advisor = null_advisor
   >
-  bool check(CheckFlavour flavour,
+  bool check(CheckType flavour,
       std::string_view description,
       test_logger<Mode>& logger,
       Iter first,
@@ -556,11 +556,11 @@ namespace sequoia::testing
 
    */
 
-  template<class CheckFlavour, test_mode Mode, class T, class S, class... U>
-    requires has_generalized_equivalence_check<CheckFlavour, Mode, T, S, U...>
-  bool check(CheckFlavour flavour, std::string_view description, test_logger<Mode>& logger, const T& obtained, S&& s, U&&... u)
+  template<class CheckType, test_mode Mode, class T, class S, class... U>
+    requires has_generalized_equivalence_check<CheckType, Mode, T, S, U...>
+  bool check(CheckType flavour, std::string_view description, test_logger<Mode>& logger, const T& obtained, S&& s, U&&... u)
   {
-    if constexpr(implements_general_equivalence_check<Mode, CheckFlavour, T, S, U...>)
+    if constexpr(implements_general_equivalence_check<Mode, CheckType, T, S, U...>)
     {
       return general_equivalence_check(flavour, description, logger, obtained, std::forward<S>(s), std::forward<U>(u)...);
     }
@@ -568,14 +568,14 @@ namespace sequoia::testing
     {
       return check(flavour, add_type_info<T>(description), logger, std::begin(obtained), std::end(obtained), std::begin(std::forward<S>(s)), std::end(std::forward<S>(s)), std::forward<U>(u)...);
     }
-    else if constexpr(has_fallback<CheckFlavour>)
+    else if constexpr(has_fallback<CheckType>)
     {
-      using fallback = typename CheckFlavour::fallback;
+      using fallback = typename CheckType::fallback;
       return check(fallback{}, description, logger, obtained, std::forward<S>(s), std::forward<U>(u)...);
     }
     else
     {
-      static_assert(dependent_false<CheckFlavour>::value, "Should never be triggered; indicates mismatch between requirement and logic");
+      static_assert(dependent_false<CheckType>::value, "Should never be triggered; indicates mismatch between requirement and logic");
     }
   }
 

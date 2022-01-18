@@ -18,10 +18,10 @@ namespace sequoia::testing
   {
     using type = sequoia::data_structures::static_linearly_partitioned_sequence<T, Npartitions, NelementsPerPartition, IndexType>;
 
-    template<test_mode Mode>
-    static void test(equality_check_t, test_logger<Mode>& logger, const type& actual, const type& prediction)
+    template<class CheckType, test_mode Mode>
+    static void test(CheckType flavour, test_logger<Mode>& logger, const type& actual, const type& prediction)
     {
-      impl::check_details(logger, actual, prediction);
+      impl::check_details(flavour, logger, actual, prediction);
     }
 
     template<test_mode Mode>
