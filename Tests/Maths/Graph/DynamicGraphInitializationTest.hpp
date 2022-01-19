@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "GraphInitTestingUtilities.hpp"
+#include "GraphInitializationTestingUtilities.hpp"
 #include "DynamicGraphTestingUtilities.hpp"
 #include "GraphInitializationGenericTests.hpp"
 
