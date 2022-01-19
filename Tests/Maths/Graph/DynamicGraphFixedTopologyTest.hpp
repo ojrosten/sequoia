@@ -8,7 +8,7 @@
 #pragma once
 
 #include "DynamicGraphTestingUtilities.hpp"
-#include "FixedTopologyTestingUtilities.hpp"
+#include "FixedTopologyGenericTests.hpp"
 
 namespace sequoia
 {

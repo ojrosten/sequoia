@@ -6,7 +6,7 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "StaticGraphInitializationTest.hpp"
-#include "GraphInitializationTestingUtilities.hpp"
+#include "GraphInitializationGenericTests.hpp"
 
 #include "sequoia/Maths/Graph/StaticGraph.hpp"
 
