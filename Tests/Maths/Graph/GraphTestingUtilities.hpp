@@ -104,7 +104,7 @@ namespace sequoia::testing
     }
 
     template<test_mode Mode, class NodeWeight>
-      requires dynamic_tree<type>
+      requires maths::dynamic_tree<type>
     static void test(equivalence_check_t, test_logger<Mode>& logger, const type& actual, const maths::tree_initializer<NodeWeight>& prediction)
     {
       check_node(logger, 0, type::npos, actual, prediction);
@@ -114,7 +114,7 @@ namespace sequoia::testing
     using size_type     = typename type::size_type;
 
     template<test_mode Mode, class NodeWeight>
-      requires dynamic_tree<type>
+      requires maths::dynamic_tree<type>
     static size_type check_node(test_logger<Mode>& logger, size_type node, size_type parent, const type& actual, const maths::tree_initializer<NodeWeight>& prediction)
     {
       constexpr auto TreeLinkDir{type::link_dir};
@@ -175,7 +175,7 @@ namespace sequoia::testing
     }
 
     template<test_mode Mode, class NodeWeight>
-      requires dynamic_tree<type>
+      requires maths::dynamic_tree<type>
     static std::optional<edge_iterator> check_num_edges(test_logger<Mode>& logger, size_type node, [[maybe_unused]] size_type parent, const type& actual, const maths::tree_initializer<NodeWeight>& prediction)
     {
       using std::distance;
@@ -224,7 +224,7 @@ namespace sequoia::testing
     }
 
     template<test_mode Mode, std::input_or_output_iterator EdgeIter>
-      requires dynamic_tree<type>
+      requires maths::dynamic_tree<type>
     static bool check_edge(test_logger<Mode>& logger, EdgeIter iter, size_type nodeCounter, const type& actual)
     {
       using std::distance;

@@ -7,7 +7,7 @@
 
 #include "ExperimentalTest.hpp"
 #include "../Parsing/CommandLineArgumentsTestingUtilities.hpp"
-#include "../Maths/Graph/TreeTestingUtilities.hpp"
+#include "../Maths/Graph/GraphTestingUtilities.hpp"
 
 #include "sequoia/Parsing/CommandLineArguments.hpp"
 #include "sequoia/Maths/Graph/DynamicTree.hpp"
