@@ -20,102 +20,6 @@
 
 namespace sequoia::testing
 {
-  namespace impl
-  {
-    template<maths::network Graph>
-    struct graph_value_tester
-    {
-      using type = Graph;
-
-      template<test_mode Mode>
-      static void test(equality_check_t, test_logger<Mode>& logger, const Graph& graph, const Graph& prediction)
-      {
-        using connectivity_t = typename type::connectivity_type;
-        using nodes_t = typename type::nodes_type;
-
-        check(equality, "", logger, static_cast<const connectivity_t&>(graph), static_cast<const connectivity_t&>(prediction));
-        check(equality, "", logger, static_cast<const nodes_t&>(graph), static_cast<const nodes_t&>(prediction));
-      }
-    };
-
-    template<maths::network Graph, class CheckFn>
-    struct graph_general_equivalence_checker
-    {
-      using type = Graph;
-
-      using connectivity_equivalent_type = std::initializer_list<std::initializer_list<typename type::edge_init_type>>;
-      using node_weight_type = typename type::node_weight_type;
-      using nodes_equivalent_type = std::initializer_list<node_weight_type>;
-
-      template<test_mode Mode>
-        requires (!std::is_empty_v<node_weight_type>)
-      static void test_general_equivalence(test_logger<Mode>& logger, const type& graph, connectivity_equivalent_type connPrediction, nodes_equivalent_type nodesPrediction)
-      {
-        using connectivity_t = typename type::connectivity_type;
-        using nodes_t = typename type::nodes_type;
-
-        CheckFn{}("", logger, static_cast<const connectivity_t&>(graph), connPrediction);
-        CheckFn{}("", logger, static_cast<const nodes_t&>(graph), nodesPrediction);
-      }
-
-      template<test_mode Mode>
-        requires std::is_empty_v<node_weight_type>
-      static void test_general_equivalence(test_logger<Mode>& logger, const type& graph, connectivity_equivalent_type connPrediction)
-      {
-        using connectivity_t = typename type::connectivity_type;
-
-        CheckFn{}("", logger, static_cast<const connectivity_t&>(graph), connPrediction);
-      }
-
-      template<test_mode Mode>
-      static void check(test_logger<Mode>& logger, const Graph& graph, const Graph& prediction)
-      {
-        using connectivity_t = typename type::connectivity_type;
-        using nodes_t = typename type::nodes_type;
-
-        CheckFn{}("", logger, static_cast<const connectivity_t&>(graph), static_cast<const connectivity_t&>(prediction));
-        CheckFn{}("", logger, static_cast<const nodes_t&>(graph), static_cast<const nodes_t&>(prediction));
-      }
-    };
-
-    template<maths::network Graph>
-    using graph_equivalence_checker
-      = graph_general_equivalence_checker<Graph, decltype([](auto&&... args){ check(equivalence, std::forward<decltype(args)>(args)...); })>;
-
-    template<maths::network Graph>
-    using graph_weak_equivalence_checker
-      = graph_general_equivalence_checker<Graph, decltype([](auto&&... args){ check(weak_equivalence, std::forward<decltype(args)>(args)...); })>;
-
-    template
-    <
-      maths::directed_flavour Directedness,
-      class EdgeTraits,
-      class WeightMaker,
-      class CheckFn
-    >
-    struct connectivity_general_equivalence_checker
-    {
-      using type            = maths::connectivity<Directedness, EdgeTraits, WeightMaker>;
-      using edge_init_type  = typename type::edge_init_type;
-      using edge_index_type = typename type::edge_index_type;
-      using edge_type       = typename type::edge_type;
-      using equivalent_type = std::initializer_list<std::initializer_list<edge_init_type>>;
-
-      template<test_mode Mode>
-      static void check_connectivity(test_logger<Mode>& logger, const type& connectivity, equivalent_type prediction)
-      {
-        if(check(equality, "Connectivity order incorrect", logger, connectivity.order(), prediction.size()))
-        {
-          for(edge_index_type i{}; i < connectivity.order(); ++i)
-          {
-            const auto message{"Partition " + std::to_string(i)};
-            CheckFn{}(append_lines(message, "cedge_iterator"), logger, connectivity.cbegin_edges(i), connectivity.cend_edges(i), (prediction.begin() + i)->begin(), (prediction.begin() + i)->end());
-          }
-        }
-      }
-    };
-  }
-
   template
   <
     maths::directed_flavour Directedness,
@@ -124,12 +28,14 @@ namespace sequoia::testing
   >
   struct value_tester<maths::connectivity<Directedness, EdgeTraits, WeightMaker>>
   {
-    using type = maths::connectivity<Directedness, EdgeTraits, WeightMaker>;
-    using edge_index_type = typename type::edge_index_type;
-    using connectivity_equivalent_type = std::initializer_list<std::initializer_list<typename type::edge_init_type>>;
+    using type                         = maths::connectivity<Directedness, EdgeTraits, WeightMaker>;
+    using edge_index_type              = typename type::edge_index_type;
 
-    template<test_mode Mode>
-    static void test(equality_check_t, test_logger<Mode>& logger, const type& connectivity, const type& prediction)
+    template<class E>
+    using connectivity_equivalent_type = std::initializer_list<std::initializer_list<E>>;
+
+    template<class CheckType, test_mode Mode>
+    static void test(CheckType flavour, test_logger<Mode>& logger, const type& connectivity, const type& prediction)
     {
       check(equality, "Connectivity size incorrect", logger, connectivity.size(), prediction.size());
 
@@ -138,39 +44,218 @@ namespace sequoia::testing
         for(edge_index_type i{}; i<connectivity.order(); ++i)
         {
           const auto message{std::string{"Partition "}.append(std::to_string(i))};
-          check(with_best_available, append_lines(message, "cedge_iterator"), logger, connectivity.cbegin_edges(i), connectivity.cend_edges(i), prediction.cbegin_edges(i), prediction.cend_edges(i));
-          check(with_best_available, append_lines(message, "credge_iterator"), logger, connectivity.crbegin_edges(i), connectivity.crend_edges(i), prediction.crbegin_edges(i), prediction.crend_edges(i));
+          check(flavour, append_lines(message, "cedge_iterator"), logger, connectivity.cbegin_edges(i), connectivity.cend_edges(i), prediction.cbegin_edges(i), prediction.cend_edges(i));
+          check(flavour, append_lines(message, "credge_iterator"), logger, connectivity.crbegin_edges(i), connectivity.crend_edges(i), prediction.crbegin_edges(i), prediction.crend_edges(i));
         }
       }
     }
 
-    template<test_mode Mode>
-    static void test(equivalence_check_t, test_logger<Mode>& logger, const type& connectivity, connectivity_equivalent_type prediction)
+    template<class CheckType, test_mode Mode, class E>
+    static void test(CheckType flavour, test_logger<Mode>& logger, const type& connectivity, connectivity_equivalent_type<E> prediction)
     {
-      graph_equivalence_tester::check_connectivity(logger, connectivity, prediction);
-    }
-
-    template<test_mode Mode>
-    static void test(weak_equivalence_check_t, test_logger<Mode>& logger, const type& connectivity, connectivity_equivalent_type prediction)
-    {
-      graph_weak_equivalence_tester::check_connectivity(logger, connectivity, prediction);
+      check_connectivity(flavour, logger, connectivity, prediction);
     }
   private:
-    using graph_equivalence_tester =
-      impl::connectivity_general_equivalence_checker<
-        Directedness,
-        EdgeTraits,
-        WeightMaker,
-        decltype([](auto&&... args) { check(equivalence, std::forward<decltype(args)>(args)...); })
-      >;
+    template<class CheckType, test_mode Mode, class E>
+    static void check_connectivity(CheckType flavour, test_logger<Mode>& logger, const type& connectivity, connectivity_equivalent_type<E> prediction)
+    {
+      if(check(equality, "Connectivity order incorrect", logger, connectivity.order(), prediction.size()))
+      {
+        for(edge_index_type i{}; i < connectivity.order(); ++i)
+        {
+          const auto message{"Partition " + std::to_string(i)};
+          check(flavour, append_lines(message, "cedge_iterator"), logger, connectivity.cbegin_edges(i), connectivity.cend_edges(i), (prediction.begin() + i)->begin(), (prediction.begin() + i)->end());
+        }
+      }
+    }
+  };
 
-    using graph_weak_equivalence_tester =
-      impl::connectivity_general_equivalence_checker<
-        Directedness,
-        EdgeTraits,
-        WeightMaker,
-        decltype([](auto&&... args) { check(weak_equivalence, std::forward<decltype(args)>(args)...); })
-      >;
+  template<maths::network Graph>
+  struct value_tester<Graph>
+  {
+    using type = Graph;
+
+    template<class E>
+    using connectivity_equivalent_type = std::initializer_list<std::initializer_list<E>>;
+
+    using connectivity_type = typename type::connectivity_type;
+    using nodes_type = typename type::nodes_type;
+
+    template<class CheckType, test_mode Mode>
+    static void test(CheckType flavour, test_logger<Mode>& logger, const Graph& graph, const Graph& prediction)
+    {
+      check(flavour, "", logger, static_cast<const connectivity_type&>(graph), static_cast<const connectivity_type&>(prediction));
+      check(flavour, "", logger, static_cast<const nodes_type &>(graph), static_cast<const nodes_type&>(prediction));
+    }
+
+    template<class CheckType, test_mode Mode, class E, class NodesEquivalentType>
+      //requires (!std::is_empty_v<nodes_type>)
+    static void test(CheckType flavour, test_logger<Mode>& logger, const type& graph, connectivity_equivalent_type<E> connPrediction, NodesEquivalentType&& nodesPrediction)
+    {
+      check(flavour, "", logger, static_cast<const connectivity_type&>(graph), connPrediction);
+      check(flavour, "", logger, static_cast<const nodes_type&>(graph), std::forward<NodesEquivalentType>(nodesPrediction));
+    }
+
+    template<class CheckType, test_mode Mode, class E>
+     // requires std::is_empty_v<nodes_type>
+    static void test(CheckType flavour, test_logger<Mode>& logger, const type& graph, connectivity_equivalent_type<E> connPrediction)
+    {
+      check(flavour, "", logger, static_cast<const connectivity_type&>(graph), connPrediction);
+    }
+
+    template<test_mode Mode, class NodeWeight>
+      requires dynamic_tree<type>
+    static void test(equivalence_check_t, test_logger<Mode>& logger, const type& actual, const maths::tree_initializer<NodeWeight>& prediction)
+    {
+      check_node(logger, 0, type::npos, actual, prediction);
+    }
+  private:
+    using edge_iterator = typename type::const_edge_iterator;
+    using size_type     = typename type::size_type;
+
+    template<test_mode Mode, class NodeWeight>
+      requires dynamic_tree<type>
+    static size_type check_node(test_logger<Mode>& logger, size_type node, size_type parent, const type& actual, const maths::tree_initializer<NodeWeight>& prediction)
+    {
+      constexpr auto TreeLinkDir{type::link_dir};
+
+      if(node == type::npos) return node;
+
+      if(testing::check("Insufficient nodes detected while checking node " + std::to_string(node), logger, node < actual.order()))
+      {
+        if constexpr(TreeLinkDir != maths::tree_link_direction::backward)
+        {
+          check(equality, "Node weight for node " + std::to_string(node), logger, actual.cbegin_node_weights()[node], prediction.node);
+
+          if(auto optIter{check_num_edges(logger, node, parent, actual, prediction)})
+          {
+            for(const auto& child : prediction.children)
+            {
+              if(!check_edge(logger, (*optIter)++, ++node, actual))
+                return type::npos;
+
+              node = check_node(logger, node, optIter->partition_index(), actual, child);
+
+              if(node == type::npos) return type::npos;
+            }
+
+            return node;
+          }
+        }
+        else
+        {
+          if(auto optIter{check_num_edges(logger, node, parent, actual, prediction)})
+          {
+            check(equality, "Node weight for node " + std::to_string(node), logger, actual.cbegin_node_weights()[node], prediction.node);
+
+            for(const auto& child : prediction.children)
+            {
+              node = check_node(logger, ++node, optIter->partition_index(), actual, child);
+
+              if(node == type::npos) return type::npos;
+            }
+
+            if(const auto next{node + 1}; next < actual.order())
+            {
+              if(auto begin{actual.cbegin_edges(next)}; begin != actual.cend_edges(next))
+              {
+                if(!testing::check("Extraneous nodes joined to node " + std::to_string(node), logger, begin->target_node() != optIter->partition_index()))
+                {
+                  return type::npos;
+                }
+              }
+            }
+
+            return node;
+          }
+        }
+      }
+
+      return type::npos;
+    }
+
+    template<test_mode Mode, class NodeWeight>
+      requires dynamic_tree<type>
+    static std::optional<edge_iterator> check_num_edges(test_logger<Mode>& logger, size_type node, [[maybe_unused]] size_type parent, const type& actual, const maths::tree_initializer<NodeWeight>& prediction)
+    {
+      using std::distance;
+
+      constexpr auto TreeLinkDir{type::link_dir};
+
+      if constexpr(TreeLinkDir == maths::tree_link_direction::forward)
+      {
+        if(check(equality, "Number of children for node " + std::to_string(node), logger, static_cast<std::size_t>(distance(actual.cbegin_edges(node), actual.cend_edges(node))), prediction.children.size()))
+          return actual.cbegin_edges(node);
+      }
+      else
+      {
+        const auto begin{actual.cbegin_edges(node)};
+        const auto dist{static_cast<std::size_t>(distance(begin, actual.cend_edges(node)))};
+        using dist_t = decltype(dist);
+
+        const auto num{
+          [&logger,parent,dist,begin]() -> std::optional<dist_t> {
+            if(parent == type::npos) return dist;
+
+            if(testing::check("Return edge detected", logger, dist > 0)
+               && check(equality, "Return edge target", logger, begin->target_node(), parent))
+              return dist - 1;
+
+            return std::nullopt;
+          }()
+        };
+
+        if(num.has_value())
+        {
+          if constexpr(TreeLinkDir == maths::tree_link_direction::symmetric)
+          {
+            if(check(equality, "Number of children for node " + std::to_string(node), logger, num.value(), prediction.children.size()))
+              return num < dist ? std::next(begin) : begin;
+          }
+          else
+          {
+            if(check(equality, "No reachable children for node " + std::to_string(node), logger, num.value(), size_type{}))
+              return num < dist ? std::next(begin) : begin;
+          }
+        }
+      }
+
+      return std::nullopt;
+    }
+
+    template<test_mode Mode, std::input_or_output_iterator EdgeIter>
+      requires dynamic_tree<type>
+    static bool check_edge(test_logger<Mode>& logger, EdgeIter iter, size_type nodeCounter, const type& actual)
+    {
+      using std::distance;
+
+      constexpr auto TreeLinkDir{type::link_dir};
+
+      if constexpr(TreeLinkDir == maths::tree_link_direction::forward)
+      {
+        const auto parent{iter.partition_index()};
+        const auto dist{distance(actual.cbegin_edges(parent), iter)};
+        const auto mess{std::string{"Index for child "}.append(std::to_string(dist)).append(" of node ").append(std::to_string(parent))};
+
+        return check(equality, mess, logger, iter->target_node(), nodeCounter);
+      }
+      else if constexpr(TreeLinkDir == maths::tree_link_direction::backward)
+      {
+        static_assert(dependent_false<type>::value, "Not yet implemented");
+      }
+      else if constexpr(TreeLinkDir == maths::tree_link_direction::symmetric)
+      {
+        const auto parent{iter.partition_index()};
+        const auto dist{distance(actual.cbegin_edges(parent), iter)};
+        const auto mess{std::string{"Index for child "}.append(std::to_string(dist)).append(" of node ").append(std::to_string(parent))};
+
+        return check(equality, mess, logger, iter->target_node(), nodeCounter);
+      }
+      else
+      {
+        static_assert(dependent_false<type>::value);
+      }
+    }
   };
 
   constexpr bool mutual_info(const maths::graph_flavour flavour) noexcept
@@ -192,7 +277,7 @@ namespace sequoia::testing
     template<class G, class... NodeWeights, class E=typename G::edge_init_type>
     void check_graph(std::string_view description, const G& graph, std::initializer_list<std::initializer_list<E>> edges, const std::tuple<NodeWeights...>& nodeWeights)
     {
-      checker_t::check(equivalence, description, graph, std::move(edges), nodeWeights);
+      checker_t::check(weak_equivalence, description, graph, std::move(edges), nodeWeights);
     }
 
     template

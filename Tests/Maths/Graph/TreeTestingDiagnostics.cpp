@@ -7,6 +7,8 @@
 
 #include "TreeTestingDiagnostics.hpp"
 
+#include "sequoia/Maths/Graph/DynamicTree.hpp"
+
 namespace sequoia::testing
 {
   using namespace maths;
