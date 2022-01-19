@@ -11,10 +11,10 @@
 
 namespace sequoia::testing
 {
-  class unweighted_graph_test final : public graph_unit_test
+  class unweighted_graph_test final : public regular_test
   {
   public:
-    using graph_unit_test::graph_unit_test;
+    using regular_test::regular_test;
 
     [[nodiscard]]
     std::string_view source_file() const noexcept final;

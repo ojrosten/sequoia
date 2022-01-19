@@ -11,10 +11,10 @@
 
 namespace sequoia::testing
 {
-  class test_static_graph_traversals final : public graph_unit_test
+  class test_static_graph_traversals final : public regular_test
   {
   public:
-    using graph_unit_test::graph_unit_test;
+    using regular_test::regular_test;
 
     [[nodiscard]]
     std::string_view source_file() const noexcept final;
