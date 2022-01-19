@@ -34,16 +34,16 @@ namespace sequoia::testing
 
     using graph_value_tester_base<tree_type>::test;
 
-    template<test_mode Mode>
-    static void test(equivalence_check_t, test_logger<Mode>& logger, const tree_type& actual, const maths::tree_initializer<NodeWeight>& prediction)
+    template<class CheckType, test_mode Mode>
+    static void test(CheckType flavour, test_logger<Mode>& logger, const tree_type& actual, const maths::tree_initializer<NodeWeight>& prediction)
     {
-      check_node(logger, 0, tree_type::npos, actual, prediction);
+      check_node(flavour, logger, 0, tree_type::npos, actual, prediction);
     }
   private:
     using edge_iterator = typename tree_type::const_edge_iterator;
 
-    template<test_mode Mode>
-    static size_type check_node(test_logger<Mode>& logger, size_type node, size_type parent, const tree_type& actual, const maths::tree_initializer<NodeWeight>& prediction)
+    template<class CheckType, test_mode Mode>
+    static size_type check_node(CheckType flavour, test_logger<Mode>& logger, size_type node, size_type parent, const tree_type& actual, const maths::tree_initializer<NodeWeight>& prediction)
     {
       if (node == tree_type::npos) return node;
 
@@ -51,7 +51,7 @@ namespace sequoia::testing
       {
         if constexpr (TreeLinkDir != maths::tree_link_direction::backward)
         {
-          check(equality, "Node weight for node " + std::to_string(node), logger, actual.cbegin_node_weights()[node], prediction.node);
+          check(flavour, "Node weight for node " + std::to_string(node), logger, actual.cbegin_node_weights()[node], prediction.node);
 
           if (auto optIter{ check_num_edges(logger, node, parent, actual, prediction) })
           {
@@ -60,7 +60,7 @@ namespace sequoia::testing
               if (!check_edge(logger, (*optIter)++, ++node, actual))
                 return tree_type::npos;
 
-              node = check_node(logger, node, optIter->partition_index(), actual, child);
+              node = check_node(flavour, logger, node, optIter->partition_index(), actual, child);
 
               if (node == tree_type::npos) return tree_type::npos;
             }
@@ -72,11 +72,11 @@ namespace sequoia::testing
         {
           if (auto optIter{ check_num_edges(logger, node, parent, actual, prediction) })
           {
-            check(equality, "Node weight for node " + std::to_string(node), logger, actual.cbegin_node_weights()[node], prediction.node);
+            check(flavour, "Node weight for node " + std::to_string(node), logger, actual.cbegin_node_weights()[node], prediction.node);
 
             for (const auto& child : prediction.children)
             {
-              node = check_node(logger, ++node, optIter->partition_index(), actual, child);
+              node = check_node(flavour, logger, ++node, optIter->partition_index(), actual, child);
 
               if (node == tree_type::npos) return tree_type::npos;
             }
