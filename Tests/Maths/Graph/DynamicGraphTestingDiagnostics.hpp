@@ -11,10 +11,10 @@
 
 namespace sequoia::testing
 {
-  class test_graph_false_positives final : public graph_false_positive_test
+  class test_graph_false_positives final : public regular_false_positive_test
   {
   public:
-    using graph_false_positive_test::graph_false_positive_test;
+    using regular_false_positive_test::regular_false_positive_test;
 
     [[nodiscard]]
     std::string_view source_file() const noexcept final;
