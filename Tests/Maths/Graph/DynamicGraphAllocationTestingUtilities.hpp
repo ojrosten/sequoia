@@ -84,12 +84,4 @@ namespace sequoia::testing
     }
   };
 
-  // Treat this as a special case, at least for now. A fully-fledged allocation
-  // test treats all 8 permutations of the propagation traits and, for graph test,
-  // this makes compilation extremely expensive...
-  template<test_mode mode>
-  using regular_graph_allocation_test = graph_basic_test<mode, regular_allocation_extender<mode>>;
-
-  using graph_allocation_test = regular_graph_allocation_test<test_mode::standard>;
-
 }

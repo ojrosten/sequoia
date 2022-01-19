@@ -9,6 +9,8 @@
 
 #include "GraphTraversalTestingUtilities.hpp"
 
+#include "sequoia/TestFramework/PerformanceTestCore.hpp"
+
 namespace sequoia::testing
 {
   class test_graph_traversals final : public performance_test

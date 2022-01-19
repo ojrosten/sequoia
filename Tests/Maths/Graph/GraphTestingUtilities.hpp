@@ -16,8 +16,6 @@
 #include "sequoia/Maths/Graph/GraphImpl.hpp"
 #include "sequoia/Maths/Graph/GraphTraits.hpp"
 
-#include "sequoia/TestFramework/PerformanceTestCore.hpp"
-
 namespace sequoia::testing
 {
   template
@@ -112,66 +110,6 @@ namespace sequoia::testing
   {
     return flavour != maths::graph_flavour::directed;
   }
-
-  template<test_mode Mode, class... Extenders>
-  class graph_checker : public checker<Mode, Extenders...>
-  {
-  public:
-    using checker_t = checker<Mode, Extenders...>;
-
-    using checker<Mode, Extenders...>::checker;
-
-    graph_checker(const graph_checker&) = delete;
-    graph_checker& operator=(const graph_checker&) = delete;
-
-    template<class G, class... NodeWeights, class E=typename G::edge_init_type>
-    void check_graph(std::string_view description, const G& graph, std::initializer_list<std::initializer_list<E>> edges, const std::tuple<NodeWeights...>& nodeWeights)
-    {
-      checker_t::check(weak_equivalence, description, graph, std::move(edges), nodeWeights);
-    }
-
-    template
-    <
-      class G,
-      class E=typename G::edge_init_type
-    >
-      requires (!std::is_empty_v<typename G::node_weight_type>)
-    void check_graph(std::string_view description, const G& graph, std::initializer_list<std::initializer_list<E>> edges, std::initializer_list<typename G::node_weight_type> nodeWeights)
-    {
-      checker_t::check(weak_equivalence, description, graph, edges, nodeWeights);
-    }
-
-    template
-    <
-      class G,
-      class E=typename G::edge_init_type
-    >
-      requires std::is_empty_v<typename G::node_weight_type>
-    void check_graph(std::string_view description, const G& graph, std::initializer_list<std::initializer_list<E>> edges)
-    {
-      checker_t::check(weak_equivalence, description, graph, edges);
-    }
-  protected:
-    graph_checker(graph_checker&&)            noexcept = default;
-    graph_checker& operator=(graph_checker&&) noexcept = default;
-
-    ~graph_checker() = default;
-  };
-
-  template<test_mode Mode, class... Extenders>
-  class graph_basic_test : public basic_test<graph_checker<Mode, Extenders...>>
-  {
-  public:
-    using base_t = basic_test<graph_checker<Mode, Extenders...>>;
-
-    using base_t::base_t;
-  };
-
-  template<test_mode mode>
-  using regular_graph_test = graph_basic_test<mode, regular_extender<mode>>;
-
-  using graph_unit_test = regular_graph_test<test_mode::standard>;
-  using graph_false_positive_test = regular_graph_test<test_mode::false_positive>;
 
   struct unsortable
   {

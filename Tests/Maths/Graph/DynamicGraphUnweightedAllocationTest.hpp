@@ -11,10 +11,10 @@
 
 namespace sequoia::testing
 {
-  class unweighted_graph_allocation_test final : public graph_allocation_test
+  class unweighted_graph_allocation_test final : public regular_allocation_test
   {
   public:
-    using graph_allocation_test::graph_allocation_test;
+    using regular_allocation_test::regular_allocation_test;
 
     [[nodiscard]]
     std::string_view source_file() const noexcept final;

@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "GraphTestingUtilities.hpp"
+#include "GraphInitTestingUtilities.hpp"
 
 namespace sequoia
 {

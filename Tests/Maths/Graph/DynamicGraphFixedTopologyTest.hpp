@@ -14,10 +14,10 @@ namespace sequoia
 {
   namespace testing
   {
-    class test_fixed_topology final : public graph_unit_test
+    class test_fixed_topology final : public graph_init_test
     {
     public:
-      using graph_unit_test::graph_unit_test;
+      using graph_init_test::graph_init_test;
 
       [[nodiscard]]
       std::string_view source_file() const noexcept final;
