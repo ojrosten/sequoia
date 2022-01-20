@@ -87,7 +87,7 @@ namespace sequoia::testing
     }
 
     template<class CheckType, test_mode Mode, class E, class NodesEquivalentType>
-      //requires (!std::is_empty_v<nodes_type>)
+      requires (!std::is_empty_v<nodes_type>)
     static void test(CheckType flavour, test_logger<Mode>& logger, const type& graph, connectivity_equivalent_type<E> connPrediction, NodesEquivalentType&& nodesPrediction)
     {
       check(flavour, "", logger, static_cast<const connectivity_type&>(graph), connPrediction);
@@ -95,7 +95,7 @@ namespace sequoia::testing
     }
 
     template<class CheckType, test_mode Mode, class E>
-     // requires std::is_empty_v<nodes_type>
+      requires std::is_empty_v<nodes_type>
     static void test(CheckType flavour, test_logger<Mode>& logger, const type& graph, connectivity_equivalent_type<E> connPrediction)
     {
       check(flavour, "", logger, static_cast<const connectivity_type&>(graph), connPrediction);
