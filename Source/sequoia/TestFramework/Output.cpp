@@ -168,32 +168,17 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string default_prediction_message(std::string_view obtained, std::string_view predicted)
+  std::string default_prediction_message(std::string_view obtained, std::string_view prediction)
   {
-    return append_lines(std::string{"Obtained : "}.append(obtained), std::string{"Predicted: "}.append(predicted));
+    return append_lines(std::string{"Obtained : "}.append(obtained), std::string{"Predicted: "}.append(prediction));
   }
 
   [[nodiscard]]
-  std::string display_character(char c)
+  std::string prediction_message(const std::string& obtained, const std::string& prediction)
   {
-    if(c == '\a') return "'\\a'";
-    if(c == '\b') return "'\\b'";
-    if(c == '\f') return "'\\f'";
-    if(c == '\n') return "'\\n'";
-    if(c == '\r') return "'\\r'";
-    if(c == '\t') return "'\\t'";
-    if(c == '\v') return "'\\v'";
-    if(c == '\0') return "'\\0'";
-    if(c == ' ')  return "' '";
-
-    return std::string(1, c);
+    return default_prediction_message(obtained, prediction);
   }
 
-  [[nodiscard]]
-  std::string prediction_message(char obtained, char predicted)
-  {
-    return prediction_message(display_character(obtained), display_character(predicted));
-  }
 
   [[nodiscard]]
   std::string failure_message(is_final_message_t, bool, bool)

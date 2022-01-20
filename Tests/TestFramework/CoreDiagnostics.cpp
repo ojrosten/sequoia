@@ -136,8 +136,12 @@ namespace sequoia::testing
     test_variant();
     test_optional();
     test_container_checks();
-    test_strings();
+    test_strings<std::string>();
+    test_strings<std::string_view>();
+    test_wstrings<std::wstring>();
+    test_wstrings<std::wstring_view>();
     test_mixed();
+    test_paths();
     test_regular_semantics();
     test_equivalence_checks();
     test_weak_equivalence_checks();
@@ -215,48 +219,54 @@ namespace sequoia::testing
     check(equality, LINE("Iterators demarcate differing elements"), refs.cbegin(), refs.cend(), ans.cbegin(), ans.cbegin() + 4);
   }
 
+  template<class String>
   void false_positive_diagnostics::test_strings()
   {
-    using namespace std::string_literals;
-    using namespace std::literals::string_view_literals;
-    check(equality, LINE("Empty and non-empty strings"), ""s, "Hello, World!"s);
-    check(equality, LINE("Empty and non-empty strings"), "Hello, World!"s, ""s);
-    check(equality, LINE("Strings of differing length"), "what?!"s, "Hello, World!"s);
-    check(equality, LINE("Differing strings of same length"), "Hello, world?"s, "Hello, World!"s);
-    check(equality, LINE("Differing string views of same length"), "Hello, world?"sv, "Hello, World!"sv);
-    check(equality, LINE("Advice"), "Foo"s, "Bar"s, tutor{[](const std::string&, const std::string&) { return "Foo, my old nemesis"; }});
+    check(equality, LINE("Empty and non-empty strings"), String{""}, String{"Hello, World!"});
+    check(equality, LINE("Empty and non-empty strings"), String{"Hello, World!"}, String{""});
+    check(equality, LINE("Strings of differing length"), String{"what?!"}, String{"Hello, World!"});
+    check(equality, LINE("Differing strings of same length"), String{"Hello, world?"}, String{"Hello, World!"});
+    check(equality, LINE("Advice"), String{"Foo"}, String{"Bar"}, tutor{[](const String&, const String&) { return "Foo, my old nemesis"; }});
 
-    const std::string longMessage{"This is a message which is sufficiently long for only a segment to be included when a string diff is performed"};
+    const String longMessage{"This is a message which is sufficiently long for only a segment to be included when a string diff is performed"};
+    const String longMessageWithDiffNearMiddle{"This is a message which is sufficiently long for only a segment to be incluxed when a string diff is performed"};
+    const String longMessageWithDiffNearEnd{"This is a message which is sufficiently long for only a segment to be included when a string diff isxperformed"};
 
-    check(equality, LINE("Empty string compared with long string"), ""s, longMessage);
-    check(equality, LINE("Long string with empty string"), longMessage, ""s);
+    check(equality, LINE("Empty string compared with long string"), String{""}, longMessage);
+    check(equality, LINE("Long string with empty string"), longMessage, String{""});
 
-    check(equality, LINE("Short string compared with long string"), "This is a mess"s, longMessage);
-    check(equality, LINE("Long string with short string"), longMessage, "This is a mess"s);
+    check(equality, LINE("Short string compared with long string"), String{"This is a mess"}, longMessage);
+    check(equality, LINE("Long string with short string"), longMessage, String{"This is a mess"});
 
-    check(equality, LINE("Strings differing by a newline"), "Hello\nWorld"s, "Hello, World"s);
-    check(equality, LINE("Strings differing by a newline"), "Hello, World"s, "Hello\nWorld"s);
-    check(equality, LINE("Strings differing by a newline at the start"), "\nHello, World"s, "Hello, World"s);
-    check(equality, LINE("Strings differing by a newline at the start"), "Hello, World"s, "\nHello, World"s);
-    check(equality, LINE("Empty string compared with newline"), ""s, "\n"s);
-    check(equality, LINE("Empty string compared with newline"), "\n"s, ""s);
-    check(equality, LINE("Strings differing from newline onwards"), "Hello, World"s, "Hello\n"s);
-    check(equality, LINE("Strings differing from newline onwards"), "Hello\n"s, "Hello, World"s);
-    check(equality, LINE("Strings differing from newline onwards"), "Hello, World"s, "Hello\nPeople"s);
-    check(equality, LINE("Strings differing from newline onwards"), "Hello\nPeople"s, "Hello, World"s);
-    check(equality, LINE("Output suppressed by a new line"), "Hello  World\nAnd so forth"s, "Hello, World\nAnd so forth"s);
+    check(equality, LINE("Strings differing by a newline"), String{"Hello\nWorld"}, String{"Hello, World"});
+    check(equality, LINE("Strings differing by a newline"), String{"Hello, World"}, String{"Hello\nWorld"});
+    check(equality, LINE("Strings differing by a newline at the start"), String{"\nHello, World"}, String{"Hello, World"});
+    check(equality, LINE("Strings differing by a newline at the start"), String{"Hello, World"}, String{"\nHello, World"});
+    check(equality, LINE("Empty string compared with newline"), String{""}, String{"\n"});
+    check(equality, LINE("Empty string compared with newline"), String{"\n"}, String{""});
+    check(equality, LINE("Strings differing from newline onwards"), String{"Hello, World"}, String{"Hello\n"});
+    check(equality, LINE("Strings differing from newline onwards"), String{"Hello\n"}, String{"Hello, World"});
+    check(equality, LINE("Strings differing from newline onwards"), String{"Hello, World"}, String{"Hello\nPeople"});
+    check(equality, LINE("Strings differing from newline onwards"), String{"Hello\nPeople"}, String{"Hello, World"});
+    check(equality, LINE("Output suppressed by a new line"), String{"Hello  World\nAnd so forth"}, String{"Hello, World\nAnd so forth"});
 
-    std::string corruptedMessage{longMessage};
-    corruptedMessage[75] = 'x';
+    check(equality, LINE("Long strings compared with difference near middle"), longMessageWithDiffNearMiddle, longMessage);
+    check(equality, LINE("Long strings compared with difference near middle"), longMessage, longMessageWithDiffNearMiddle);
 
-    check(equality, LINE("Long strings compared with difference near middle"), corruptedMessage, longMessage);
-    check(equality, LINE("Long strings compared with difference near middle"), longMessage, corruptedMessage);
+    check(equality, LINE("Long strings compared with difference near end"), longMessageWithDiffNearEnd, longMessage);
+    check(equality, LINE("Long strings compared with difference near end"), longMessage, longMessageWithDiffNearEnd);
 
-    corruptedMessage[75] = 'd';
-    corruptedMessage[100] = 'x';
+    check(equivalence, LINE(""), String{"foo"}, "fo");
+    check(equivalence, LINE(""), String{"foo"}, "fob", tutor{[](char, char) {
+        return "Sort your chars out!";
+      }});
+  }
 
-    check(equality, LINE("Long strings compared with difference near end"), corruptedMessage, longMessage);
-    check(equality, LINE("Long strings compared with difference near end"), longMessage, corruptedMessage);
+  template<class String>
+  void false_positive_diagnostics::test_wstrings()
+  {
+    check(equality, LINE("Differing strings of same length"), String{L"Hello, world?"}, String{L"Hello, World!"});
+    check(equality, LINE("Advice"), String{L"Foo"}, String{L"Bar"}, tutor{[](const String&, const String&) { return "Foo, my old nemesis"; }});
   }
 
   void false_positive_diagnostics::test_mixed()
@@ -279,6 +289,12 @@ namespace sequoia::testing
                                        return "Note reordering of elements upon set construction";
                                      }});
     }
+
+    check(equivalence, LINE(""), std::vector<std::string>{ {"a"}, {"b"}}, std::initializer_list<std::string_view>{"a", "c"});
+
+    check(equivalence, LINE(""), std::vector<std::string>{ {"a"}, {"b"}}, std::initializer_list<std::string_view>{"a", "c"}, tutor{[](char, char) {
+        return "Ah, chars. So easy to get wrong.";
+    }});
   }
 
   void false_positive_diagnostics::test_regular_semantics()
@@ -300,63 +316,69 @@ namespace sequoia::testing
     check_semantics(LINE("Broken deserialization"), broken_deserialization{1}, broken_deserialization{2});
   }
 
+  void false_positive_diagnostics::test_paths()
+  {
+    check(equivalence,
+          LINE("Inequivalence of two different paths, neither of which exists"),
+          fs::path{working_materials()}.append("Stuff/Blah"),
+          fs::path{working_materials()}.append("Stuff/Blurg"));
+
+    check(equivalence,
+          LINE("Inequivalence of two different paths, one of which exists"),
+          fs::path{working_materials()}.append("Stuff/Blah"),
+          fs::path{working_materials()}.append("Stuff/A"));
+
+    check(equivalence,
+          LINE("Inequivalence of directory/file"),
+          fs::path{working_materials()}.append("Stuff/A"),
+          fs::path{working_materials()}.append("Stuff/A/foo.txt"));
+
+    check(equivalence,
+          LINE("Inequivalence of differently named files"),
+          fs::path{working_materials()}.append("Stuff/B/foo.txt"),
+          fs::path{working_materials()}.append("Stuff/B/bar.txt"));
+
+    check(equivalence,
+          LINE("Inequivalence of file contents"),
+          fs::path{working_materials()}.append("Stuff/A/foo.txt"),
+          fs::path{working_materials()}.append("Stuff/B/foo.txt"));
+
+    check(equivalence,
+          LINE("Inequivalence of differently named directories with the same contents"),
+          fs::path{working_materials()}.append("Stuff/A"),
+          fs::path{working_materials()}.append("Stuff/C"));
+
+    check(equivalence,
+          LINE("Inequivalence of directories with the same files but different contents"),
+          fs::path{working_materials()}.append("Stuff/A"),
+          fs::path{working_materials()}.append("MoreStuff/A"));
+
+    check(equivalence,
+          LINE("Inequivalence of directories with some common files"),
+          fs::path{working_materials()}.append("Stuff/B"),
+          fs::path{working_materials()}.append("MoreStuff/B"));
+
+    check(equivalence,
+          LINE("Inequivalence of directories with some common files"),
+          fs::path{working_materials()}.append("MoreStuff/B"),
+          fs::path{working_materials()}.append("Stuff/B"));
+
+    check(equivalence,
+          LINE("File inequivalence when default file checking is used"),
+          fs::path{working_materials()}.append("CustomComparison/A/DifferingContent.ignore"),
+          fs::path{working_materials()}.append("CustomComparison/B/DifferingContent.ignore"));
+
+    check(equivalence,
+          LINE("Range inequivalence when default file checking us used"),
+          std::vector<fs::path>{fs::path{working_materials()}.append("CustomComparison/A/DifferingContent.ignore")},
+          std::vector<fs::path>{fs::path{working_materials()}.append("CustomComparison/B/DifferingContent.ignore")});
+  }
+
   void false_positive_diagnostics::test_equivalence_checks()
   {
-    check(equivalence, LINE(""), std::string{"foo"}, "fo");
-    check(equivalence, LINE(""), std::string{"foo"}, "fob", tutor{[](char, char){
-        return "Sort your chars out!";
-      }});
-
-    check(equivalence, LINE(""), std::vector<std::string>{{"a"}, {"b"}}, std::initializer_list<std::string_view>{"a", "c"});
-
-    check(equivalence, LINE(""), std::vector<std::string>{{"a"}, {"b"}}, std::initializer_list<std::string_view>{"a", "c"}, tutor{[](char, char){
-        return "Ah, chars. So easy to get wrong.";
-    }});
-
-    check(equivalence, LINE("Inequivalence of two different paths, neither of which exists"),
-                      fs::path{working_materials()}.append("Stuff/Blah"),
-                      fs::path{working_materials()}.append("Stuff/Blurg"));
-
-    check(equivalence, LINE("Inequivalence of two different paths, one of which exists"),
-                      fs::path{working_materials()}.append("Stuff/Blah"),
-                      fs::path{working_materials()}.append("Stuff/A"));
-
-    check(equivalence, LINE("Inequivalence of directory/file"),
-                      fs::path{working_materials()}.append("Stuff/A"),
-                      fs::path{working_materials()}.append("Stuff/A/foo.txt"));
-
-    check(equivalence, LINE("Inequivalence of differently named files"),
-                      fs::path{working_materials()}.append("Stuff/B/foo.txt"),
-                      fs::path{working_materials()}.append("Stuff/B/bar.txt"));
-
-    check(equivalence, LINE("Inequivalence of file contents"),
-                      fs::path{working_materials()}.append("Stuff/A/foo.txt"),
-                      fs::path{working_materials()}.append("Stuff/B/foo.txt"));
-
-    check(equivalence, LINE("Inequivalence of differently named directories with the same contents"),
-                      fs::path{working_materials()}.append("Stuff/A"),
-                      fs::path{working_materials()}.append("Stuff/C"));
-
-    check(equivalence, LINE("Inequivalence of directories with the same files but different contents"),
-                      fs::path{working_materials()}.append("Stuff/A"),
-                      fs::path{working_materials()}.append("MoreStuff/A"));
-
-    check(equivalence, LINE("Inequivalence of directories with some common files"),
-                      fs::path{working_materials()}.append("Stuff/B"),
-                      fs::path{working_materials()}.append("MoreStuff/B"));
-
-    check(equivalence, LINE("Inequivalence of directories with some common files"),
-                      fs::path{working_materials()}.append("MoreStuff/B"),
-                      fs::path{working_materials()}.append("Stuff/B"));
-
-    check(equivalence, LINE("File inequivalence when default file checking is used"),
-                      fs::path{working_materials()}.append("CustomComparison/A/DifferingContent.ignore"),
-                      fs::path{working_materials()}.append("CustomComparison/B/DifferingContent.ignore"));
-
-    check(equivalence, 
-      LINE("Range inequivalence when default file checking us used"),
-      std::vector<fs::path>{fs::path{working_materials()}.append("CustomComparison/A/DifferingContent.ignore")},
-      std::vector<fs::path>{fs::path{working_materials()}.append("CustomComparison/B/DifferingContent.ignore")});
+    using namespace std::string_literals;
+    using namespace std::string_view_literals;
+    check(equivalence, LINE("string and string_view"), "foo"s, "fob"sv);
 
     check(equivalence, LINE("Advice for equivalence checking"), foo{42}, 41, tutor{bland{}});
 
@@ -424,6 +446,7 @@ namespace sequoia::testing
     test_strings();
     test_mixed();
     test_regular_semantics();
+    test_paths();
     test_equivalence_checks();
     test_weak_equivalence_checks();
   }
@@ -483,6 +506,7 @@ namespace sequoia::testing
   void false_negative_diagnostics::test_strings()
   {
     check(equality, LINE("Differing strings"), std::string{"Hello, World!"}, std::string{"Hello, World!"});
+    check(equivalence, LINE(""), std::string{"foo"}, "foo");
   }
 
   void false_negative_diagnostics::test_mixed()
@@ -496,6 +520,8 @@ namespace sequoia::testing
     type b{t_0{{1, 2.1f}, {2, 2.8f}}, {3.3, -9.6, 3.2}, {1.1, 0.2}};
 
     check(equality, LINE(""), a, b);
+
+    check(equivalence, LINE(""), std::vector<std::string>{ {"a"}, {"b"}}, std::initializer_list<std::string_view>{"a", "b"});
   }
 
   void false_negative_diagnostics::test_regular_semantics()
@@ -504,27 +530,27 @@ namespace sequoia::testing
     check_semantics(LINE(""), perfectly_stringy_beast{}, perfectly_stringy_beast{"Hello, world"});
   }
 
-  void false_negative_diagnostics::test_equivalence_checks()
+  void false_negative_diagnostics::test_paths()
   {
-    check(equivalence, LINE(""), std::string{"foo"}, "foo");
+    check(equivalence,
+          LINE("Equivalence of a file to itself"),
+          fs::path{working_materials()}.append("Stuff/A/foo.txt"),
+          fs::path{working_materials()}.append("Stuff/A/foo.txt"));
 
-    check(equivalence, LINE(""), std::vector<std::string>{{"a"}, {"b"}}, std::initializer_list<std::string_view>{"a", "b"});
+    check(equivalence,
+          LINE("Equivalence of a directory to itself"),
+          fs::path{working_materials()}.append("Stuff/A"),
+          fs::path{working_materials()}.append("Stuff/A"));
 
-    check(equivalence, LINE("Equivalence of a file to itself"),
-                      fs::path{working_materials()}.append("Stuff/A/foo.txt"),
-                      fs::path{working_materials()}.append("Stuff/A/foo.txt"));
+    check(equivalence,
+          LINE("Equivalence of a directory, with sub-directories to itself"),
+          fs::path{working_materials()}.append("Stuff"),
+          fs::path{working_materials()}.append("Stuff"));
 
-    check(equivalence, LINE("Equivalence of a directory to itself"),
-                      fs::path{working_materials()}.append("Stuff/A"),
-                      fs::path{working_materials()}.append("Stuff/A"));
-
-    check(equivalence, LINE("Equivalence of a directory, with sub-directories to itself"),
-                      fs::path{working_materials()}.append("Stuff"),
-                      fs::path{working_materials()}.append("Stuff"));
-
-    check(equivalence, LINE("Equivalence of identical directories in different locations"),
-                      fs::path{working_materials()}.append("Stuff/C"),
-                      fs::path{working_materials()}.append("SameStuff/C"));
+    check(equivalence,
+          LINE("Equivalence of identical directories in different locations"),
+          fs::path{working_materials()}.append("Stuff/C"),
+          fs::path{working_materials()}.append("SameStuff/C"));
 
     check(general_equivalence<bespoke_file_checker>,
           LINE("File equivalence when .ignore is ignored"),
@@ -535,7 +561,10 @@ namespace sequoia::testing
           LINE("Range equivalence when .ignore is ignored"),
           std::vector<fs::path>{fs::path{working_materials()}.append("CustomComparison/A/DifferingContent.ignore")},
           std::vector<fs::path>{fs::path{working_materials()}.append("CustomComparison/B/DifferingContent.ignore")});
+  }
 
+  void false_negative_diagnostics::test_equivalence_checks()
+  {
     check(equivalence, LINE("Advice for equivalence checking"), foo{42}, 42, tutor{bland{}});
 
     check(equivalence, LINE("Advice for range equivalence, where the containerized for is explicitly specialized"), 
@@ -543,6 +572,10 @@ namespace sequoia::testing
 
     check(equivalence, LINE("Advice for range equivalence, where the containerized for is not explicitly specialized"),
       std::set<foo>{{42}}, std::set<int>{42}, tutor{bland{}});
+
+    using namespace std::string_literals;
+    using namespace std::string_view_literals;
+    check(equivalence, LINE("string and string_view"), "foo"s, "foo"sv);
   }
 
   void false_negative_diagnostics::test_weak_equivalence_checks()

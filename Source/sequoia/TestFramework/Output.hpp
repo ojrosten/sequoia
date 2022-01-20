@@ -47,8 +47,32 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string emphasise(std::string_view s);
 
+  template<class Char>
+  constexpr inline bool is_character_v{
+       std::is_same_v<std::remove_cvref_t<Char>, char>
+    || std::is_same_v<std::remove_cvref_t<Char>, wchar_t>
+    || std::is_same_v<std::remove_cvref_t<Char>, char8_t>
+    || std::is_same_v<std::remove_cvref_t<Char>, char16_t>
+    || std::is_same_v<std::remove_cvref_t<Char>, char32_t>
+  };
+
+  template<class Char>
+    requires is_character_v<Char>
   [[nodiscard]]
-  std::string display_character(char c);
+  std::string display_character(Char c)
+  {
+    if(c == '\a') return "'\\a'";
+    if(c == '\b') return "'\\b'";
+    if(c == '\f') return "'\\f'";
+    if(c == '\n') return "'\\n'";
+    if(c == '\r') return "'\\r'";
+    if(c == '\t') return "'\\t'";
+    if(c == '\v') return "'\\v'";
+    if(c == '\0') return "'\\0'";
+    if(c == ' ')  return "' '";
+
+    return std::string(1, static_cast<char>(c));
+  }
 
   void end_block(std::string& s, line_breaks newlines, std::string_view footer="");
 
@@ -68,12 +92,21 @@ namespace sequoia::testing
   std::string equality_operator_failure_message();
 
   [[nodiscard]]
-  std::string default_prediction_message(std::string_view obtained, std::string_view predicted);
+  std::string default_prediction_message(std::string_view obtained, std::string_view prediction);
 
   [[nodiscard]]
-  std::string prediction_message(char obtained, char predicted);
+  std::string prediction_message(const std::string& obtained, const std::string& prediction);
+
+  template<class Char>
+    requires is_character_v<Char>
+  [[nodiscard]]
+  std::string prediction_message(Char obtained, Char prediction)
+  {
+    return prediction_message(display_character(obtained), display_character(prediction));
+  }
 
   template<serializable T>
+    requires (!is_character_v<T>)
   [[nodiscard]]
   std::string prediction_message(const T& obtained, const T& prediction)
   {
@@ -91,6 +124,8 @@ namespace sequoia::testing
 
   template<class T>
   inline constexpr bool has_prediction_message{requires(const T& obtained, const T& prediction) { prediction_message(obtained, prediction); }};
+
+  static_assert(has_prediction_message<char>);
 
   [[nodiscard]]
   std::string failure_message(is_final_message_t, bool, bool);

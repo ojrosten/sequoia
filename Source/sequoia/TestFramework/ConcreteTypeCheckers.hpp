@@ -43,13 +43,27 @@
 
 namespace sequoia::testing
 {
-  /*! \brief Checks equality of std::basic_string */
+  /*! \brief Checks equality of std::basic_string_view */
   template<class Char, class Traits>
   struct value_tester<std::basic_string_view<Char, Traits>>
   {
     using string_view_type = std::basic_string_view<Char, Traits>;
   private:
     using size_type = typename string_view_type::size_type;
+
+    static void appender(std::string& mess, string_view_type sv, size_type pos, size_type count)
+    {
+      if constexpr(std::is_same_v<char, Char>)
+      {
+        mess.append(sv.substr(pos, count));
+      }
+      else
+      {
+        if(pos > sv.size()) throw std::out_of_range{"pos out of range"};
+        const auto end{count > sv.size() - pos ? sv.size() : pos + count};
+        std::transform(sv.begin() + pos, sv.begin() + end, std::back_inserter(mess), [](Char c) { return static_cast<char>(c); });
+      }
+    }
 
     template<class Advisor>
     static auto make_advisor(std::string_view info, string_view_type obtained, string_view_type prediction, size_type pos, const tutor<Advisor>& advisor)
@@ -78,7 +92,7 @@ namespace sequoia::testing
           const auto rpos{sv.find('\n', pos+1)};
           const auto count{rpos == npos ? defaultCount : rpos - pos};
 
-          mess.append(sv.substr(pos, count));
+          appender(mess, sv, pos, count);
 
           const bool trunc{lpos + count < sv.size()};
           if(trunc) mess.append("...");
@@ -161,13 +175,14 @@ namespace sequoia::testing
   struct value_tester<std::basic_string<Char, Traits, Allocator>>
   {
     using string_type = std::basic_string<Char, Traits, Allocator>;
+    using string_view_type = std::basic_string_view<Char, Traits>;
 
     template<test_mode Mode, class Advisor>
     static void test(equality_check_t, test_logger<Mode>& logger, const string_type& obtained, const string_type& prediction, tutor<Advisor> advisor)
     {
       using tester = value_tester<std::basic_string_view<Char, Traits>>;
 
-      tester::test(equality_check_t{}, logger, std::string_view{obtained}, std::string_view{prediction}, std::move(advisor));
+      tester::test(equality_check_t{}, logger, string_view_type{obtained}, string_view_type{prediction}, std::move(advisor));
     }
 
     template<test_mode Mode, std::size_t N, class Advisor>
@@ -175,7 +190,7 @@ namespace sequoia::testing
     {
        using tester = value_tester<std::basic_string_view<Char, Traits>>;
 
-       tester::test(equality_check_t{}, logger, std::string_view{obtained}, std::string_view{prediction}, std::move(advisor));
+       tester::test(equality_check_t{}, logger, string_view_type{obtained}, string_view_type{prediction}, std::move(advisor));
     }
 
     template<test_mode Mode, class Advisor>
@@ -183,7 +198,7 @@ namespace sequoia::testing
     {
        using tester = value_tester<std::basic_string_view<Char, Traits>>;
 
-       tester::test(equality_check_t{}, logger, std::string_view{obtained}, std::string_view{prediction}, std::move(advisor));
+       tester::test(equality_check_t{}, logger, string_view_type{obtained}, string_view_type{prediction}, std::move(advisor));
     }
   };
 
