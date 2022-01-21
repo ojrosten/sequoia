@@ -854,8 +854,7 @@
 
 	  Surrounding substring(s):
 	  Obtained : ...\nAnd so forth
-	  Predicted: ...\n
-	  And so forth
+	  Predicted: ...\n\n...
 
 	=======================================
 
@@ -872,8 +871,7 @@
 	  Predicted: A
 
 	  Surrounding substring(s):
-	  Obtained : ...\n
-	  And so forth
+	  Obtained : ...\n\n...
 	  Predicted: ...\nAnd so forth
 
 	=======================================
@@ -1400,8 +1398,7 @@
 
 	  Surrounding substring(s):
 	  Obtained : ...\nAnd so forth
-	  Predicted: ...\n
-	  And so forth
+	  Predicted: ...\n\n...
 
 	=======================================
 
@@ -1418,8 +1415,7 @@
 	  Predicted: A
 
 	  Surrounding substring(s):
-	  Obtained : ...\n
-	  And so forth
+	  Obtained : ...\n\n...
 	  Predicted: ...\nAnd so forth
 
 	=======================================

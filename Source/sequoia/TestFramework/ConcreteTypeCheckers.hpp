@@ -87,13 +87,20 @@ namespace sequoia::testing
         [lpos](string_view_type sv) -> message {
           std::string mess{lpos > 0 ? "..." : ""};
 
-          const auto pos{lpos < sv.size() && sv[lpos] == '\n' ? lpos + 1 : lpos};
+          const auto pos{(lpos < sv.size()) && (sv[lpos] == '\n') ? lpos + 1 : lpos};
           if(pos == lpos + 1) mess.append("\\n");
 
-          const auto rpos{sv.find('\n', pos+1)};
-          const auto count{rpos == npos ? defaultCount : rpos - pos};
+          const auto rpos{sv.find('\n', lpos+1)};
+          const auto count{rpos == npos ? defaultCount : rpos - lpos};
 
-          appender(mess, sv, pos, count);
+          if((count == 1) && (sv[lpos] == '\n'))
+          {
+            mess.append("\\n");
+          }
+          else
+          {
+            appender(mess, sv, pos, count);
+          }
 
           const bool trunc{lpos + count < sv.size()};
           if(trunc) mess.append("...");
