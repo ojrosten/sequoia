@@ -84,22 +84,23 @@ namespace sequoia::testing
       struct message{ std::string mess; bool trunc{}; };
 
       auto make{
-        [lpos](string_view_type sv) -> message {
+        [](string_view_type sv, size_type lpos) -> message {
           std::string mess{lpos > 0 ? "..." : ""};
 
-          const auto pos{(lpos < sv.size()) && (sv[lpos] == '\n') ? lpos + 1 : lpos};
-          if(pos == lpos + 1) mess.append("\\n");
+          const bool newline{(lpos < sv.size()) && (sv[lpos] == '\n')};
+          if(newline) mess.append("\\n");
 
           const auto rpos{sv.find('\n', lpos+1)};
           const auto count{rpos == npos ? defaultCount : rpos - lpos};
 
-          if((count == 1) && (sv[lpos] == '\n'))
+          if(newline && (count == 1))
           {
             mess.append("\\n");
           }
           else
           {
-            appender(mess, sv, pos, count);
+            if(newline) ++lpos;
+            appender(mess, sv, lpos, count);
           }
 
           const bool trunc{lpos + count < sv.size()};
@@ -109,8 +110,8 @@ namespace sequoia::testing
         }
       };
 
-      const auto[obMess,obTrunc]{make(obtained)};
-      const auto[prMess,prTrunc]{make(prediction)};
+      const auto[obMess,obTrunc]{make(obtained, lpos)};
+      const auto[prMess,prTrunc]{make(prediction, lpos)};
 
       const bool trunc{lpos > 0 || obTrunc || prTrunc};
       const auto message{append_lines(info,  trunc ? "Surrounding substring(s):" : "Full strings:",
