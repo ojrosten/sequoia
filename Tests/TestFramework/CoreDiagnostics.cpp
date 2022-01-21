@@ -270,6 +270,8 @@ namespace sequoia::testing
   {
     check(equality, LINE("Differing strings of same length"), String{L"Hello, world?"}, String{L"Hello, World!"});
     check(equality, LINE("Advice"), String{L"Foo"}, String{L"Bar"}, tutor{[](const String&, const String&) { return "Foo, my old nemesis"; }});
+    check(equality, LINE("Missing line"), String{L"Hello, World\nAnd so forth"}, String{L"Hello, World\n\nAnd so forth"});
+    check(equality, LINE("Extra line"), String{L"Hello, World\n\nAnd so forth"}, String{L"Hello, World\nAnd so forth"});
   }
 
   void false_positive_diagnostics::test_mixed()

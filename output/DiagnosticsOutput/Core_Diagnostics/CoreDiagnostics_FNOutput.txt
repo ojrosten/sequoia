@@ -1,29 +1,21 @@
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 459
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 461
 
 	[bool]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 461
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 463
 
 	[int]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 462
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 464
 
 	[double]
-
-	=======================================
-
-	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 467
-
-	Expected Exception Type:
-	[std::runtime_error]
 
 	=======================================
 
@@ -31,35 +23,29 @@
 	Tests/TestFramework/CoreDiagnostics.cpp, Line 469
 
 	Expected Exception Type:
-	[int]
+	[std::runtime_error]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 474
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 471
 
-	[std::pair<int, double>]
+	Expected Exception Type:
+	[int]
 
 	=======================================
 
 	False Positive Failure:
 	Tests/TestFramework/CoreDiagnostics.cpp, Line 476
 
+	[std::pair<int, double>]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 478
+
 	[std::tuple<int, double, float>]
-
-	=======================================
-
-	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 483
-
-	[std::variant<int, double>]
-
-	=======================================
-
-	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 484
-
-	[std::variant<int, double>]
 
 	=======================================
 
@@ -78,16 +64,16 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 492
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 487
 
-	[std::optional<int>]
+	[std::variant<int, double>]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 493
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 488
 
-	[std::optional<int>]
+	[std::variant<int, double>]
 
 	=======================================
 
@@ -99,7 +85,21 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 499
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 495
+
+	[std::optional<int>]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 496
+
+	[std::optional<int>]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 501
 	Empty vector check which should pass
 
 	[std::vector<double, std::allocator<double> >]
@@ -107,7 +107,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 500
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 502
 	One element vector check which should pass
 
 	[std::vector<double, std::allocator<double> >]
@@ -115,7 +115,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 501
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 503
 	Multi-element vector comparison which should pass
 
 	[std::vector<double, std::allocator<double> >]
@@ -123,13 +123,13 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 505
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 507
 	Iterators demarcate identical elements
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 511
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 513
 	Differing strings
 
 	[std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
@@ -137,7 +137,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 512
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 514
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<std::basic_string<char, std::char_traits<char>, std::allocator<char> > >]
@@ -147,21 +147,21 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 525
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 527
 
 	[std::tuple<std::vector<std::pair<int, float>, std::allocator<std::pair<int, float> > >, std::set<double, std::less<double>, std::allocator<double> >, std::complex<double> >]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 527
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 529
 
 	[std::vector<std::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::basic_string<char, std::char_traits<char>, std::allocator<char> > > >]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 532
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 534
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<int, std::allocator<int> >]
@@ -169,7 +169,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 533
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 535
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_stringy_beast<char, std::allocator<char> >]
@@ -177,7 +177,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 539
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 541
 	Equivalence of a file to itself
 
 	Comparison performed using:
@@ -188,7 +188,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 544
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 546
 	Equivalence of a directory to itself
 
 	Comparison performed using:
@@ -199,7 +199,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 549
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 551
 	Equivalence of a directory, with sub-directories to itself
 
 	Comparison performed using:
@@ -210,7 +210,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 554
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 556
 	Equivalence of identical directories in different locations
 
 	Comparison performed using:
@@ -221,7 +221,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 559
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 561
 	File equivalence when .ignore is ignored
 
 	Comparison performed using:
@@ -232,7 +232,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 564
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 566
 	Range equivalence when .ignore is ignored
 
 	[std::vector<std::filesystem::path, std::allocator<std::filesystem::path> >]
@@ -240,7 +240,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 571
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 573
 	Advice for equivalence checking
 
 	Comparison performed using:
@@ -251,7 +251,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 573
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 575
 	Advice for range equivalence, where the containerized for is explicitly specialized
 
 	Comparison performed using:
@@ -262,7 +262,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 576
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 578
 	Advice for range equivalence, where the containerized for is not explicitly specialized
 
 	[std::set<sequoia::testing::(anonymous namespace)::foo, std::less<sequoia::testing::(anonymous namespace)::foo>, std::allocator<sequoia::testing::(anonymous namespace)::foo> >]
@@ -270,7 +270,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 581
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 583
 	string and string_view
 
 	Comparison performed using:
@@ -281,7 +281,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 587
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 589
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > >]
@@ -291,14 +291,14 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 590
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 592
 
 	[std::vector<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> >, std::allocator<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > > >]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 592
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 594
 	Weak equivalence of directories in with the same contents but different names
 
 	Comparison performed using:
@@ -309,7 +309,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 597
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 599
 	Weak equivalence when .ignore is ignored
 
 	Comparison performed using:
@@ -320,7 +320,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 602
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 604
 	Weak equivalence of range when .ignore is ignored
 
 	[std::vector<std::filesystem::path, std::allocator<std::filesystem::path> >]
@@ -328,7 +328,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 606
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 608
 	Advice for weak equivalence checking
 
 	Comparison performed using:
@@ -339,7 +339,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 609
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 611
 	Advice for range weak equivalence, where the containerized form is explicitly specialized
 
 	[std::vector<sequoia::testing::(anonymous namespace)::bar, std::allocator<sequoia::testing::(anonymous namespace)::bar> >]
@@ -347,7 +347,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 613
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 615
 	Advice for range weak equivalence, where the containerized form is not explicitly specialized
 
 	[std::list<sequoia::testing::(anonymous namespace)::bar, std::allocator<sequoia::testing::(anonymous namespace)::bar> >]

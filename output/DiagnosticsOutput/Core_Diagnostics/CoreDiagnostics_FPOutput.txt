@@ -1553,6 +1553,42 @@
 
 	=======================================
 
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 273
+	Missing line
+
+	[std::basic_string<wchar_t, std::char_traits<wchar_t>, std::allocator<wchar_t> >]
+	operator== returned false
+
+	  First difference detected on line 2:
+	  [wchar_t]
+	  operator== returned false
+	  Obtained : A
+	  Predicted: '\n'
+
+	  Surrounding substring(s):
+	  Obtained : ...\nAnd so forth
+	  Predicted: ...\n\n...
+
+	=======================================
+
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 274
+	Extra line
+
+	[std::basic_string<wchar_t, std::char_traits<wchar_t>, std::allocator<wchar_t> >]
+	operator== returned false
+
+	  First difference detected on line 2:
+	  [wchar_t]
+	  operator== returned false
+	  Obtained : '\n'
+	  Predicted: A
+
+	  Surrounding substring(s):
+	  Obtained : ...\n\n...
+	  Predicted: ...\nAnd so forth
+
+	=======================================
+
 	Tests/TestFramework/CoreDiagnostics.cpp, Line 271
 	Differing strings of same length
 
@@ -1590,7 +1626,43 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 286
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 273
+	Missing line
+
+	[std::basic_string_view<wchar_t, std::char_traits<wchar_t> >]
+	operator== returned false
+
+	  First difference detected on line 2:
+	  [wchar_t]
+	  operator== returned false
+	  Obtained : A
+	  Predicted: '\n'
+
+	  Surrounding substring(s):
+	  Obtained : ...\nAnd so forth
+	  Predicted: ...\n\n...
+
+	=======================================
+
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 274
+	Extra line
+
+	[std::basic_string_view<wchar_t, std::char_traits<wchar_t> >]
+	operator== returned false
+
+	  First difference detected on line 2:
+	  [wchar_t]
+	  operator== returned false
+	  Obtained : '\n'
+	  Predicted: A
+
+	  Surrounding substring(s):
+	  Obtained : ...\n\n...
+	  Predicted: ...\nAnd so forth
+
+	=======================================
+
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 288
 
 	[std::tuple<std::vector<std::pair<int, float>, std::allocator<std::pair<int, float> > >, std::set<double, std::less<double>, std::allocator<double> >, std::complex<double> >]
 	operator== returned false
@@ -1612,7 +1684,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 291
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 293
 
 	[std::tuple<std::vector<std::pair<int, float>, std::allocator<std::pair<int, float> > >, std::set<double, std::less<double>, std::allocator<double> >, std::complex<double> >]
 	operator== returned false
@@ -1627,28 +1699,6 @@
 	    operator== returned false
 	    Obtained : 3.3
 	    Predicted: 3.4
-
-	=======================================
-
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 296
-
-	[std::vector<std::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::basic_string<char, std::char_traits<char>, std::allocator<char> > > >]
-
-	  Element 1 of range incorrect
-	  Comparison performed using:
-	  [sequoia::testing::value_tester<std::basic_string<char, std::char_traits<char>, std::allocator<char> > >]
-	  With equivalent types:
-	  [std::basic_string_view<char, std::char_traits<char> >]
-
-	    First difference detected at character 0:
-	    [char]
-	    operator== returned false
-	    Obtained : b
-	    Predicted: c
-
-	    Full strings:
-	    Obtained : b
-	    Predicted: c
 
 	=======================================
 
@@ -1671,11 +1721,33 @@
 	    Full strings:
 	    Obtained : b
 	    Predicted: c
+
+	=======================================
+
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 300
+
+	[std::vector<std::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::basic_string<char, std::char_traits<char>, std::allocator<char> > > >]
+
+	  Element 1 of range incorrect
+	  Comparison performed using:
+	  [sequoia::testing::value_tester<std::basic_string<char, std::char_traits<char>, std::allocator<char> > >]
+	  With equivalent types:
+	  [std::basic_string_view<char, std::char_traits<char> >]
+
+	    First difference detected at character 0:
+	    [char]
+	    operator== returned false
+	    Obtained : b
+	    Predicted: c
+
+	    Full strings:
+	    Obtained : b
+	    Predicted: c
 	    Advice: Ah, chars. So easy to get wrong.
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 325
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 327
 	Inequivalence of two different paths, neither of which exists
 
 	Comparison performed using:
@@ -1691,7 +1763,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 330
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 332
 	Inequivalence of two different paths, one of which exists
 
 	Comparison performed using:
@@ -1711,7 +1783,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 335
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 337
 	Inequivalence of directory/file
 
 	Comparison performed using:
@@ -1731,7 +1803,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 340
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 342
 	Inequivalence of differently named files
 
 	Comparison performed using:
@@ -1751,7 +1823,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 345
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 347
 	Inequivalence of file contents
 
 	Comparison performed using:
@@ -1779,7 +1851,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 350
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 352
 	Inequivalence of differently named directories with the same contents
 
 	Comparison performed using:
@@ -1795,7 +1867,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 355
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 357
 	Inequivalence of directories with the same files but different contents
 
 	Comparison performed using:
@@ -1823,7 +1895,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 360
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 362
 	Inequivalence of directories with some common files
 
 	Comparison performed using:
@@ -1845,7 +1917,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 365
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 367
 	Inequivalence of directories with some common files
 
 	Comparison performed using:
@@ -1867,7 +1939,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 370
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 372
 	File inequivalence when default file checking is used
 
 	Comparison performed using:
@@ -1895,7 +1967,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 375
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 377
 	Range inequivalence when default file checking us used
 
 	[std::vector<std::filesystem::path, std::allocator<std::filesystem::path> >]
@@ -1926,7 +1998,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 305
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 307
 	Broken check invariant
 
 	--Regular Semantics--
@@ -1938,7 +2010,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 306
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 308
 	Broken equality
 
 	--Regular Semantics--
@@ -1954,7 +2026,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 307
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 309
 	Broken inequality
 
 	--Regular Semantics--
@@ -1970,7 +2042,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 308
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 310
 	Broken copy
 
 	--Regular Semantics--
@@ -1984,7 +2056,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 309
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 311
 	Broken move
 
 	--Regular Semantics--
@@ -1998,7 +2070,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 310
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 312
 	Broken copy assignment
 
 	--Regular Semantics--
@@ -2012,7 +2084,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 311
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 313
 	Broken move assignment
 
 	--Regular Semantics--
@@ -2026,7 +2098,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 312
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 314
 	Broken self copy assignment
 
 	--Regular Semantics--
@@ -2040,7 +2112,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 313
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 315
 	Broken swap
 
 	--Regular Semantics--
@@ -2060,7 +2132,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 314
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 316
 	Broken self swap
 
 	--Regular Semantics--
@@ -2074,7 +2146,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 315
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 317
 	Broken copy value semantics
 
 	--Regular Semantics--
@@ -2086,7 +2158,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 316
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 318
 	Broken copy assignment value semantics
 
 	--Regular Semantics--
@@ -2098,7 +2170,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 318
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 320
 	Broken serialization
 
 	--Regular Semantics--
@@ -2112,7 +2184,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 319
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 321
 	Broken deserialization
 
 	--Regular Semantics--
@@ -2126,7 +2198,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 384
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 386
 	string and string_view
 
 	Comparison performed using:
@@ -2146,7 +2218,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 386
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 388
 	Advice for equivalence checking
 
 	Comparison performed using:
@@ -2163,7 +2235,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 388
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 390
 	Advice for range equivalence, where the containerized form is explicitly specialized
 
 	Comparison performed using:
@@ -2188,7 +2260,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 391
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 393
 	Advice for range equivalence, where the containerized form is not explicitly specialized
 
 	[std::set<sequoia::testing::(anonymous namespace)::foo, std::less<sequoia::testing::(anonymous namespace)::foo>, std::allocator<sequoia::testing::(anonymous namespace)::foo> >]
@@ -2208,7 +2280,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 398
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 400
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > >]
@@ -2223,7 +2295,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 399
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 401
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > >]
@@ -2239,7 +2311,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 404
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 406
 
 	[std::vector<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> >, std::allocator<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > > >]
 
@@ -2257,7 +2329,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 405
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 407
 
 	[std::vector<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> >, std::allocator<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > > >]
 
@@ -2276,7 +2348,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 410
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 412
 	Weak inequivalence of directories with some common files
 
 	Comparison performed using:
@@ -2298,7 +2370,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 414
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 416
 	Directory weak inequivalence when default file checking is used
 
 	Comparison performed using:
@@ -2326,7 +2398,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 419
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 421
 	Weak inequivalence of range when default file checking is used
 
 	[std::vector<std::filesystem::path, std::allocator<std::filesystem::path> >]
@@ -2357,7 +2429,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 423
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 425
 	Advice for weak equivalence checking
 
 	Comparison performed using:
@@ -2381,7 +2453,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 427
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 429
 	Advice for range weak equivalence, where the containerized form is explicitly specialized
 
 	[std::vector<sequoia::testing::(anonymous namespace)::bar, std::allocator<sequoia::testing::(anonymous namespace)::bar> >]
@@ -2408,7 +2480,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 431
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 433
 	Advice for range weak equivalence, where the containerized form is not explicitly specialized
 
 	[std::list<sequoia::testing::(anonymous namespace)::bar, std::allocator<sequoia::testing::(anonymous namespace)::bar> >]
