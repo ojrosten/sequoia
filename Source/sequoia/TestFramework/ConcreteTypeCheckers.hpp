@@ -49,11 +49,12 @@ namespace sequoia::testing
   {
     using string_view_type = std::basic_string_view<Char, Traits>;
   private:
+    using iter_type = typename string_view_type::const_iterator;
     using size_type = typename string_view_type::size_type;
 
     static void appender(std::string& mess, string_view_type sv, size_type pos, size_type count)
     {
-      if constexpr(std::is_same_v<char, Char>)
+      if constexpr(sizeof(char) >= sizeof(Char))
       {
         mess.append(sv.substr(pos, count));
       }
@@ -127,6 +128,7 @@ namespace sequoia::testing
         };
       }
     }
+
   public:
     template<test_mode Mode, class Advisor>
     static void test(equality_check_t, test_logger<Mode>& logger, string_view_type obtained, string_view_type prediction, const tutor<Advisor>& advisor)
@@ -138,9 +140,16 @@ namespace sequoia::testing
         const auto dist{std::distance(obtained.begin(), iters.first)};
         auto adv{make_advisor("", obtained, prediction, dist, advisor)};
 
+        const auto numLines{std::count(prediction.begin(), iters.second, '\n')};
+
         const auto mess{
-          std::string{"First difference detected at character "}
-            .append(std::to_string(dist)).append(":")
+          [dist,numLines]() {
+            std::string m{"First difference detected "};
+            numLines > 0 ? m.append("on line ").append(std::to_string(numLines+1))
+                         : m.append("at character ").append(std::to_string(dist));
+
+            return m.append(":");
+          }()
         };
 
         check(equality, mess, logger, *(iters.first), *(iters.second), adv);

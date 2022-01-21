@@ -249,6 +249,9 @@ namespace sequoia::testing
     check(equality, LINE("Strings differing from newline onwards"), String{"Hello, World"}, String{"Hello\nPeople"});
     check(equality, LINE("Strings differing from newline onwards"), String{"Hello\nPeople"}, String{"Hello, World"});
     check(equality, LINE("Output suppressed by a new line"), String{"Hello  World\nAnd so forth"}, String{"Hello, World\nAnd so forth"});
+    check(equality, LINE("Difference on the second line"), String{"Hello, World\nAnd so furth"}, String{"Hello, World\nAnd so forth"});
+    check(equality, LINE("Missing line"), String{"Hello, World\nAnd so forth"}, String{"Hello, World\n\nAnd so forth"});
+    check(equality, LINE("Extra line"), String{"Hello, World\n\nAnd so forth"}, String{"Hello, World\nAnd so forth"});
 
     check(equality, LINE("Long strings compared with difference near middle"), longMessageWithDiffNearMiddle, longMessage);
     check(equality, LINE("Long strings compared with difference near middle"), longMessage, longMessageWithDiffNearMiddle);
