@@ -9,13 +9,76 @@
 
 #include "sequoia/Core/Meta/TypeTraits.hpp"
 
-
+#include <array>
 #include <complex>
 #include <set>
 #include <vector>
 
 namespace sequoia::testing
 {
+  struct foo {};
+
+  template<class T>
+  inline constexpr bool has_value_type{requires { typename T::value_type; }};
+
+  template<class T, std::size_t... I>
+  inline constexpr bool heterogeneous_deep_equality_v{
+    requires(T & t, std::index_sequence<I...>) {
+      requires (std::equality_comparable<std::remove_cvref_t<decltype(std::get<I>(t))>> && ...);
+    }
+  };
+
+  template<class T, std::size_t...I>
+  constexpr bool has_heterogeneous_deep_equality(std::index_sequence<I...>)
+  {
+    return heterogeneous_deep_equality_v<T, I...>;
+  }
+
+  template<class T>
+  struct heterogeneous_deep_equality;
+
+  template<template<class...> class T, class... Ts>
+  struct heterogeneous_deep_equality<T<Ts...>>
+    : std::bool_constant<has_heterogeneous_deep_equality<T<Ts...>>(std::make_index_sequence<sizeof...(Ts)>{}) >
+  {};
+
+  template<class T>
+  struct deep_equality_comparable : std::bool_constant<std::equality_comparable<T>>
+  {};
+
+  template<class T>
+    requires has_value_type<T>
+  struct deep_equality_comparable<T> : std::bool_constant<std::equality_comparable<T> && deep_equality_comparable<typename T::value_type>::value>
+  {};
+
+  template<template<class...> class T, class... Ts>
+    requires (!has_value_type<T<Ts...>>)
+  struct deep_equality_comparable<T<Ts...>> : std::bool_constant<std::equality_comparable<T<Ts...>> && heterogeneous_deep_equality<T<Ts...>>::value>
+  {};
+
+  template<class T>
+  inline constexpr bool deep_equality_comparable_v{deep_equality_comparable<T>::value};
+
+
+  static_assert(heterogeneous_deep_equality<std::variant<int, double>>::value);
+  static_assert(heterogeneous_deep_equality<std::tuple<int, double>>::value);
+  static_assert(heterogeneous_deep_equality<std::pair<int, double>>::value);
+  static_assert(!heterogeneous_deep_equality<std::variant<int, foo>>::value);
+
+  static_assert(deep_equality_comparable_v<int>);
+  static_assert(deep_equality_comparable_v<std::vector<int>>);
+  static_assert(deep_equality_comparable_v<std::array<int, 3>>);
+  static_assert(deep_equality_comparable_v<std::tuple<int>>);
+  static_assert(deep_equality_comparable_v<std::tuple<int, double>>);
+  static_assert(deep_equality_comparable_v<std::variant<int, float>>);
+
+  static_assert(!deep_equality_comparable_v<foo>);
+  static_assert(!deep_equality_comparable_v<std::vector<foo>>);
+  static_assert(!deep_equality_comparable_v<std::array<foo, 3>>);
+  static_assert(!deep_equality_comparable_v<std::tuple<foo>>);
+  static_assert(!deep_equality_comparable_v<std::tuple<foo, double>>);
+  static_assert(!deep_equality_comparable_v<std::variant<int, foo>>);
+
   [[nodiscard]]
   std::string_view type_traits_test::source_file() const noexcept
   {
