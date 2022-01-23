@@ -81,6 +81,7 @@
 #include "TestFramework/PerformanceTestDiagnostics.hpp"
 #include "TestFramework/RegularAllocationTestDiagnostics.hpp"
 #include "TestFramework/RegularStateTransitionDiagnostics.hpp"
+#include "TestFramework/RegularTestDiagnostics.hpp"
 #include "TestFramework/RelationalTestDiagnostics.hpp"
 #include "TestFramework/ScopedAllocationTestDiagnostics.hpp"
 #include "TestFramework/TestRunnerDiagnostics.hpp"

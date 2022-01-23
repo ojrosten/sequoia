@@ -39,7 +39,6 @@ namespace sequoia:: testing
     template<class String> void test_strings();
     template<class String> void test_wstrings();
     void test_mixed();
-    void test_regular_semantics();
     void test_paths();
     void test_equivalence_checks();
     void test_weak_equivalence_checks();
@@ -71,7 +70,6 @@ namespace sequoia:: testing
     void test_strings();
     void test_mixed();
     void test_paths();
-    void test_regular_semantics();
     void test_equivalence_checks();
     void test_weak_equivalence_checks();
   };

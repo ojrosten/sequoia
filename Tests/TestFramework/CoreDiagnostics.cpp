@@ -142,7 +142,6 @@ namespace sequoia::testing
     test_wstrings<std::wstring_view>();
     test_mixed();
     test_paths();
-    test_regular_semantics();
     test_equivalence_checks();
     test_weak_equivalence_checks();
   }
@@ -302,25 +301,6 @@ namespace sequoia::testing
     }});
   }
 
-  void false_positive_diagnostics::test_regular_semantics()
-  {
-    check_semantics(LINE("Broken check invariant"), perfectly_normal_beast{1}, perfectly_normal_beast{1});
-    check_semantics(LINE("Broken equality"), broken_equality{1}, broken_equality{2});
-    check_semantics(LINE("Broken inequality"), broken_inequality{1}, broken_inequality{2});
-    check_semantics(LINE("Broken copy"), broken_copy{1}, broken_copy{2});
-    check_semantics(LINE("Broken move"), broken_move{1}, broken_move{2});
-    check_semantics(LINE("Broken copy assignment"), broken_copy_assignment{1}, broken_copy_assignment{2});
-    check_semantics(LINE("Broken move assignment"), broken_move_assignment{1}, broken_move_assignment{2});
-    check_semantics(LINE("Broken self copy assignment"), broken_self_copy_assignment{1}, broken_self_copy_assignment{2});
-    check_semantics(LINE("Broken swap"), broken_swap{1}, broken_swap{2});
-    check_semantics(LINE("Broken self swap"), broken_self_swap{1}, broken_self_swap{2});
-    check_semantics(LINE("Broken copy value semantics"), broken_copy_value_semantics{1}, broken_copy_value_semantics{2}, [](auto& b){ *b.x.front() = 3; });
-    check_semantics(LINE("Broken copy assignment value semantics"),
-                            broken_copy_assignment_value_semantics{1}, broken_copy_assignment_value_semantics{2}, [](auto& b){ *b.x.front() = 3; });
-    check_semantics(LINE("Broken serialization"), broken_serialization{1}, broken_serialization{2});
-    check_semantics(LINE("Broken deserialization"), broken_deserialization{1}, broken_deserialization{2});
-  }
-
   void false_positive_diagnostics::test_paths()
   {
     check(equivalence,
@@ -450,7 +430,6 @@ namespace sequoia::testing
     test_container_checks();
     test_strings();
     test_mixed();
-    test_regular_semantics();
     test_paths();
     test_equivalence_checks();
     test_weak_equivalence_checks();
@@ -527,12 +506,6 @@ namespace sequoia::testing
     check(equality, LINE(""), a, b);
 
     check(equivalence, LINE(""), std::vector<std::string>{ {"a"}, {"b"}}, std::initializer_list<std::string_view>{"a", "b"});
-  }
-
-  void false_negative_diagnostics::test_regular_semantics()
-  {
-    check_semantics(LINE(""), perfectly_normal_beast{1}, perfectly_normal_beast{2});
-    check_semantics(LINE(""), perfectly_stringy_beast{}, perfectly_stringy_beast{"Hello, world"});
   }
 
   void false_negative_diagnostics::test_paths()
