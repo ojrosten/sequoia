@@ -52,7 +52,7 @@ int main(int argc, char** argv)
     );
     
     runner.add_test_family(
-      "Extended Diagnostics",
+      "Semantics Testing Diagnostics",
       regular_false_positive_diagnostics{"Regular False Positive Diagnostics"},
       move_only_false_positive_diagnostics{"Move-Only False Positive Diagnostics"},
       orderable_move_only_false_positive_diagnostics{"Orderable Move-Only False Positive Diagnostics"},
