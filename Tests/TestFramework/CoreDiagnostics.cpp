@@ -463,9 +463,9 @@ namespace sequoia::testing
     {
       using type = std::pair<int, only_equivalence_checkable>;
 
-      check(with_best_available, LINE(""), type{1, 1.5}, type{0, 1.5});
-      check(with_best_available, LINE(""), type{1, 1.5}, type{1, 1.4});
-      check(with_best_available, LINE(""), type{1, 1.4}, type{0, 1.4}, tutor{bland{}});
+      check(with_best_available, LINE(""), type{1, {1.5}}, type{0, {1.5}});
+      check(with_best_available, LINE(""), type{1, {1.5}}, type{1, {1.4}});
+      check(with_best_available, LINE(""), type{1, {1.4}}, type{0, {1.4}}, tutor{bland{}});
     }
   }
 
@@ -662,8 +662,8 @@ namespace sequoia::testing
     {
       using type = std::pair<int, only_equivalence_checkable>;
 
-      check(with_best_available, LINE(""), type{1, 1.4}, type{1, 1.4});
-      check(with_best_available, LINE(""), type{1, 1.4}, type{1, 1.4}, tutor{bland{}});
+      check(with_best_available, LINE(""), type{1, {1.4}}, type{1, {1.4}});
+      check(with_best_available, LINE(""), type{1, {1.4}}, type{1, {1.4}}, tutor{bland{}});
     }
   }
 }
