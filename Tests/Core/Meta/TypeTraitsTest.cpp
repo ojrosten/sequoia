@@ -11,6 +11,7 @@
 
 #include <array>
 #include <complex>
+#include <map>
 #include <set>
 #include <vector>
 
@@ -21,10 +22,13 @@ namespace sequoia::testing
   template<class T>
   inline constexpr bool has_value_type{requires { typename T::value_type; }};
 
+  template<class T>
+  struct deep_equality_comparable;
+
   template<class T, std::size_t... I>
   inline constexpr bool heterogeneous_deep_equality_v{
     requires(T & t, std::index_sequence<I...>) {
-      requires (std::equality_comparable<std::remove_cvref_t<decltype(std::get<I>(t))>> && ...);
+      requires (deep_equality_comparable<std::remove_cvref_t<decltype(std::get<I>(t))>>::value && ...);
     }
   };
 
@@ -71,6 +75,8 @@ namespace sequoia::testing
   static_assert(deep_equality_comparable_v<std::tuple<int>>);
   static_assert(deep_equality_comparable_v<std::tuple<int, double>>);
   static_assert(deep_equality_comparable_v<std::variant<int, float>>);
+  static_assert(deep_equality_comparable_v<std::map<int, double>>);
+  static_assert(deep_equality_comparable_v<std::tuple<std::vector<int>, std::array<std::pair<int, float>, 2>>>);
 
   static_assert(!deep_equality_comparable_v<foo>);
   static_assert(!deep_equality_comparable_v<std::vector<foo>>);
@@ -78,6 +84,11 @@ namespace sequoia::testing
   static_assert(!deep_equality_comparable_v<std::tuple<foo>>);
   static_assert(!deep_equality_comparable_v<std::tuple<foo, double>>);
   static_assert(!deep_equality_comparable_v<std::variant<int, foo>>);
+  static_assert(!deep_equality_comparable_v<std::map<int, foo>>);
+  static_assert(!deep_equality_comparable_v<std::tuple<std::vector<foo>, std::array<std::pair<int, float>, 2>>>);
+  static_assert(!deep_equality_comparable_v<std::tuple<std::vector<int>, std::array<std::pair<foo, float>, 2>>>);
+  static_assert(!deep_equality_comparable_v<std::tuple<std::vector<int>, std::array<std::pair<int, foo>, 2>>>);
+
 
   [[nodiscard]]
   std::string_view type_traits_test::source_file() const noexcept
