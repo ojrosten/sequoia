@@ -3,7 +3,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::data_structures::bucketed_storage<int, sequoia::ownership::independent<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::ownership::independent<int> > > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[std::initializer_list<std::initializer_list<int> >]
 
 	  Number of elements incorrect
@@ -25,7 +25,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::data_structures::bucketed_storage<int, sequoia::ownership::independent<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::ownership::independent<int> > > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[std::initializer_list<std::initializer_list<int> >]
 
 	  Number of elements incorrect
@@ -57,7 +57,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::data_structures::bucketed_storage<int, sequoia::ownership::independent<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::ownership::independent<int> > > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[std::initializer_list<std::initializer_list<int> >]
 
 	  Partition 0: iterator
@@ -83,7 +83,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::data_structures::bucketed_storage<int, sequoia::ownership::independent<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::ownership::independent<int> > > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[std::initializer_list<std::initializer_list<int> >]
 
 	  Number of partitions incorrect
@@ -99,7 +99,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::data_structures::bucketed_storage<int, sequoia::ownership::independent<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::ownership::independent<int> > > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[std::initializer_list<std::initializer_list<int> >]
 
 	  Number of partitions incorrect
@@ -556,7 +556,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::data_structures::bucketed_storage<int, sequoia::ownership::shared<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::ownership::shared<int> > > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[std::initializer_list<std::initializer_list<int> >]
 
 	  Number of elements incorrect
@@ -578,7 +578,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::data_structures::bucketed_storage<int, sequoia::ownership::shared<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::ownership::shared<int> > > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[std::initializer_list<std::initializer_list<int> >]
 
 	  Number of elements incorrect
@@ -610,7 +610,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::data_structures::bucketed_storage<int, sequoia::ownership::shared<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::ownership::shared<int> > > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[std::initializer_list<std::initializer_list<int> >]
 
 	  Partition 0: iterator
@@ -636,7 +636,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::data_structures::bucketed_storage<int, sequoia::ownership::shared<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::ownership::shared<int> > > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[std::initializer_list<std::initializer_list<int> >]
 
 	  Number of partitions incorrect
@@ -652,7 +652,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::data_structures::bucketed_storage<int, sequoia::ownership::shared<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::ownership::shared<int> > > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[std::initializer_list<std::initializer_list<int> >]
 
 	  Number of partitions incorrect
@@ -1109,7 +1109,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::data_structures::partitioned_sequence<int, sequoia::ownership::independent<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::ownership::independent<int> > > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[std::initializer_list<std::initializer_list<int> >]
 
 	  Number of elements incorrect
@@ -1131,7 +1131,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::data_structures::partitioned_sequence<int, sequoia::ownership::independent<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::ownership::independent<int> > > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[std::initializer_list<std::initializer_list<int> >]
 
 	  Number of elements incorrect
@@ -1163,7 +1163,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::data_structures::partitioned_sequence<int, sequoia::ownership::independent<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::ownership::independent<int> > > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[std::initializer_list<std::initializer_list<int> >]
 
 	  Partition 0: iterator
@@ -1189,7 +1189,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::data_structures::partitioned_sequence<int, sequoia::ownership::independent<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::ownership::independent<int> > > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[std::initializer_list<std::initializer_list<int> >]
 
 	  Number of partitions incorrect
@@ -1205,7 +1205,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::data_structures::partitioned_sequence<int, sequoia::ownership::independent<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::ownership::independent<int> > > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[std::initializer_list<std::initializer_list<int> >]
 
 	  Number of partitions incorrect
@@ -1662,7 +1662,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::data_structures::partitioned_sequence<int, sequoia::ownership::shared<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::ownership::shared<int> > > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[std::initializer_list<std::initializer_list<int> >]
 
 	  Number of elements incorrect
@@ -1684,7 +1684,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::data_structures::partitioned_sequence<int, sequoia::ownership::shared<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::ownership::shared<int> > > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[std::initializer_list<std::initializer_list<int> >]
 
 	  Number of elements incorrect
@@ -1716,7 +1716,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::data_structures::partitioned_sequence<int, sequoia::ownership::shared<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::ownership::shared<int> > > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[std::initializer_list<std::initializer_list<int> >]
 
 	  Partition 0: iterator
@@ -1742,7 +1742,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::data_structures::partitioned_sequence<int, sequoia::ownership::shared<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::ownership::shared<int> > > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[std::initializer_list<std::initializer_list<int> >]
 
 	  Number of partitions incorrect
@@ -1758,7 +1758,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::data_structures::partitioned_sequence<int, sequoia::ownership::shared<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::ownership::shared<int> > > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[std::initializer_list<std::initializer_list<int> >]
 
 	  Number of partitions incorrect
@@ -2215,7 +2215,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::data_structures::bucketed_storage<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > > > > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
 	  Number of elements incorrect
@@ -2237,7 +2237,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::data_structures::bucketed_storage<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > > > > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
 	  Number of elements incorrect
@@ -2269,7 +2269,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::data_structures::bucketed_storage<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > > > > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
 	  Partition 0: iterator
@@ -2303,7 +2303,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::data_structures::bucketed_storage<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > > > > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
 	  Number of partitions incorrect
@@ -2319,7 +2319,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::data_structures::bucketed_storage<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > > > > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
 	  Number of partitions incorrect
@@ -2928,7 +2928,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::data_structures::bucketed_storage<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > > > > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
 	  Number of elements incorrect
@@ -2950,7 +2950,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::data_structures::bucketed_storage<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > > > > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
 	  Number of elements incorrect
@@ -2982,7 +2982,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::data_structures::bucketed_storage<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > > > > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
 	  Partition 0: iterator
@@ -3016,7 +3016,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::data_structures::bucketed_storage<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > > > > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
 	  Number of partitions incorrect
@@ -3032,7 +3032,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::data_structures::bucketed_storage<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > > > > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
 	  Number of partitions incorrect
@@ -3641,7 +3641,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::data_structures::partitioned_sequence<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > > > > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
 	  Number of elements incorrect
@@ -3663,7 +3663,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::data_structures::partitioned_sequence<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > > > > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
 	  Number of elements incorrect
@@ -3695,7 +3695,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::data_structures::partitioned_sequence<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > > > > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
 	  Partition 0: iterator
@@ -3729,7 +3729,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::data_structures::partitioned_sequence<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > > > > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
 	  Number of partitions incorrect
@@ -3745,7 +3745,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::data_structures::partitioned_sequence<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > > > > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
 	  Number of partitions incorrect
@@ -4354,7 +4354,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::data_structures::partitioned_sequence<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > > > > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
 	  Number of elements incorrect
@@ -4376,7 +4376,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::data_structures::partitioned_sequence<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > > > > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
 	  Number of elements incorrect
@@ -4408,7 +4408,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::data_structures::partitioned_sequence<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > > > > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
 	  Partition 0: iterator
@@ -4442,7 +4442,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::data_structures::partitioned_sequence<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > > > > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
 	  Number of partitions incorrect
@@ -4458,7 +4458,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::data_structures::partitioned_sequence<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > > > > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
 	  Number of partitions incorrect

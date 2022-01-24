@@ -17,7 +17,7 @@ Tests/Maths/ProbabilityTestingDiagnostics.cpp, Line 21
 
 Comparison performed using:
 [sequoia::testing::value_tester<maths::probability>]
-With equivalent types:
+Checking for equivalence with:
 [double]
 
 Description
@@ -34,7 +34,7 @@ Tests/Maths/ProbabilityTest.cpp, Line 21
 
 Comparison performed using:
 [sequoia::testing::value_tester<maths::probability>]
-With equivalent types:
+Checking for equivalence with:
 [double]
 
 Description
@@ -45,7 +45,7 @@ Tests/Maths/ProbabilityTest.cpp, Line 22
 
 Comparison performed using:
 [sequoia::testing::value_tester<maths::probability>]
-With equivalent types:
+Checking for equivalence with:
 [double]
 
 Description
@@ -139,7 +139,7 @@ Tests/Stuff/FooTest.cpp, Line 41
 
 Comparison performed using:
 [sequoia::testing::value_tester<std::filesystem::path>]
-With equivalent types:
+Checking for equivalence with:
 [std::filesystem::path]
 
 Path type
@@ -289,7 +289,7 @@ Useful Description
 
 Comparison performed using:
 [sequoia::testing::value_tester<stuff::unique_thing>]
-With equivalent types:
+Checking for equivalence with:
 [double]
 
 Description
@@ -308,7 +308,7 @@ Tests/Utilities/Thing/UniqueThingTest.cpp, Line 23
 
 Comparison performed using:
 [sequoia::testing::value_tester<stuff::unique_thing>]
-With equivalent types:
+Checking for equivalence with:
 [double]
 
 Description
@@ -319,7 +319,7 @@ Tests/Utilities/Thing/UniqueThingTest.cpp, Line 24
 
 Comparison performed using:
 [sequoia::testing::value_tester<stuff::unique_thing>]
-With equivalent types:
+Checking for equivalence with:
 [double]
 
 Description

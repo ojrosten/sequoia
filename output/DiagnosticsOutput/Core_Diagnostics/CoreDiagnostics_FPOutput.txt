@@ -133,7 +133,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<std::pair<int const&, double> >]
-	With equivalent types:
+	Checking for equivalence with:
 	[std::pair<int, double const&>]
 
 	  First element of pair is incorrect
@@ -154,7 +154,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<std::pair<int const&, double> >]
-	With equivalent types:
+	Checking for weak equivalence with:
 	[std::pair<int, double const&>]
 
 	  First element of pair is incorrect
@@ -215,7 +215,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<std::tuple<int const&, double> >]
-	With equivalent types:
+	Checking for equivalence with:
 	[std::tuple<int, double const&>]
 
 	  Element 0 of tuple incorrect
@@ -952,7 +952,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<std::basic_string<char, std::char_traits<char>, std::allocator<char> > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[char [3]]
 
 	  Lengths differ
@@ -973,7 +973,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<std::basic_string<char, std::char_traits<char>, std::allocator<char> > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[char [4]]
 
 	  First difference detected at character 2:
@@ -1709,7 +1709,7 @@
 	  Element 1 of range incorrect
 	  Comparison performed using:
 	  [sequoia::testing::value_tester<std::basic_string<char, std::char_traits<char>, std::allocator<char> > >]
-	  With equivalent types:
+	  Checking for equivalence with:
 	  [std::basic_string_view<char, std::char_traits<char> >]
 
 	    First difference detected at character 0:
@@ -1731,7 +1731,7 @@
 	  Element 1 of range incorrect
 	  Comparison performed using:
 	  [sequoia::testing::value_tester<std::basic_string<char, std::char_traits<char>, std::allocator<char> > >]
-	  With equivalent types:
+	  Checking for equivalence with:
 	  [std::basic_string_view<char, std::char_traits<char> >]
 
 	    First difference detected at character 0:
@@ -1752,7 +1752,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<std::filesystem::path>]
-	With equivalent types:
+	Checking for equivalence with:
 	[std::filesystem::path]
 
 	  Final path token
@@ -1768,7 +1768,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<std::filesystem::path>]
-	With equivalent types:
+	Checking for equivalence with:
 	[std::filesystem::path]
 
 	  Path type
@@ -1788,7 +1788,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<std::filesystem::path>]
-	With equivalent types:
+	Checking for equivalence with:
 	[std::filesystem::path]
 
 	  Path type
@@ -1808,7 +1808,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<std::filesystem::path>]
-	With equivalent types:
+	Checking for equivalence with:
 	[std::filesystem::path]
 
 	  Path type
@@ -1828,7 +1828,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<std::filesystem::path>]
-	With equivalent types:
+	Checking for equivalence with:
 	[std::filesystem::path]
 
 	  Contents of
@@ -1856,7 +1856,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<std::filesystem::path>]
-	With equivalent types:
+	Checking for equivalence with:
 	[std::filesystem::path]
 
 	  Final path token
@@ -1872,7 +1872,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<std::filesystem::path>]
-	With equivalent types:
+	Checking for equivalence with:
 	[std::filesystem::path]
 
 	  Contents of
@@ -1900,7 +1900,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<std::filesystem::path>]
-	With equivalent types:
+	Checking for equivalence with:
 	[std::filesystem::path]
 
 	  Number of directory entries for output/TestsTemporaryData/TestFramework/CoreDiagnostics/Stuff/B
@@ -1922,7 +1922,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<std::filesystem::path>]
-	With equivalent types:
+	Checking for equivalence with:
 	[std::filesystem::path]
 
 	  Number of directory entries for output/TestsTemporaryData/TestFramework/CoreDiagnostics/MoreStuff/B
@@ -1944,7 +1944,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<std::filesystem::path>]
-	With equivalent types:
+	Checking for equivalence with:
 	[std::filesystem::path]
 
 	  Contents of
@@ -1975,7 +1975,7 @@
 	  Element 0 of range incorrect
 	  Comparison performed using:
 	  [sequoia::testing::value_tester<std::filesystem::path>]
-	  With equivalent types:
+	  Checking for equivalence with:
 	  [std::filesystem::path]
 
 	    Contents of
@@ -2003,7 +2003,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<std::basic_string<char, std::char_traits<char>, std::allocator<char> > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[std::basic_string_view<char, std::char_traits<char> >]
 
 	  First difference detected at character 2:
@@ -2023,7 +2023,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::testing::(anonymous namespace)::foo>]
-	With equivalent types:
+	Checking for equivalence with:
 	[int]
 
 	  Wrapped value
@@ -2040,7 +2040,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<std::vector<sequoia::testing::(anonymous namespace)::foo, std::allocator<sequoia::testing::(anonymous namespace)::foo> > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[std::vector<int, std::allocator<int> >]
 
 	  Vector equivalence
@@ -2048,7 +2048,7 @@
 	    Element 0 of range incorrect
 	    Comparison performed using:
 	    [sequoia::testing::value_tester<sequoia::testing::(anonymous namespace)::foo>]
-	    With equivalent types:
+	    Checking for equivalence with:
 	    [int]
 
 	      Wrapped value
@@ -2068,7 +2068,7 @@
 	  Element 0 of range incorrect
 	  Comparison performed using:
 	  [sequoia::testing::value_tester<sequoia::testing::(anonymous namespace)::foo>]
-	  With equivalent types:
+	  Checking for equivalence with:
 	  [int]
 
 	    Wrapped value
@@ -2084,7 +2084,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > >]
-	With equivalent types:
+	Checking for weak equivalence with:
 	[std::initializer_list<int>]
 
 	  Element 1 of range incorrect
@@ -2099,7 +2099,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > >]
-	With equivalent types:
+	Checking for weak equivalence with:
 	[std::initializer_list<int>]
 
 	  Element 1 of range incorrect
@@ -2118,7 +2118,7 @@
 	  Element 1 of range incorrect
 	  Comparison performed using:
 	  [sequoia::testing::value_tester<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > >]
-	  With equivalent types:
+	  Checking for weak equivalence with:
 	  [std::initializer_list<int>]
 
 	    Element 1 of range incorrect
@@ -2136,7 +2136,7 @@
 	  Element 1 of range incorrect
 	  Comparison performed using:
 	  [sequoia::testing::value_tester<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > >]
-	  With equivalent types:
+	  Checking for weak equivalence with:
 	  [std::initializer_list<int>]
 
 	    Element 1 of range incorrect
@@ -2153,7 +2153,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<std::filesystem::path>]
-	With equivalent types:
+	Checking for weak equivalence with:
 	[std::filesystem::path]
 
 	  Number of directory entries for output/TestsTemporaryData/TestFramework/CoreDiagnostics/MoreStuff/B
@@ -2175,7 +2175,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<std::filesystem::path>]
-	With equivalent types:
+	Checking for weak equivalence with:
 	[std::filesystem::path]
 
 	  Contents of
@@ -2206,7 +2206,7 @@
 	  Element 0 of range incorrect
 	  Comparison performed using:
 	  [sequoia::testing::value_tester<std::filesystem::path>]
-	  With equivalent types:
+	  Checking for weak equivalence with:
 	  [std::filesystem::path]
 
 	    Contents of
@@ -2234,7 +2234,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::testing::(anonymous namespace)::only_weakly_checkable>]
-	With equivalent types:
+	Checking for weak equivalence with:
 	[std::pair<int, double>]
 
 	  Wrapped int
@@ -2261,7 +2261,7 @@
 	  Element 0 of range incorrect
 	  Comparison performed using:
 	  [sequoia::testing::value_tester<sequoia::testing::(anonymous namespace)::only_weakly_checkable>]
-	  With equivalent types:
+	  Checking for weak equivalence with:
 	  [std::pair<int, double>]
 
 	    Wrapped int
@@ -2288,7 +2288,7 @@
 	  Element 0 of range incorrect
 	  Comparison performed using:
 	  [sequoia::testing::value_tester<sequoia::testing::(anonymous namespace)::only_weakly_checkable>]
-	  With equivalent types:
+	  Checking for weak equivalence with:
 	  [std::pair<int, double>]
 
 	    Wrapped int

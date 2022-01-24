@@ -2,7 +2,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::data_structures::static_linearly_partitioned_sequence<int, 1, 1, unsigned long long> >]
-	With equivalent types:
+	Checking for equivalence with:
 	[std::array<std::array<int, 1>, 1>]
 
 	  Partition 0: iterator
@@ -27,7 +27,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::data_structures::static_linearly_partitioned_sequence<int, 1, 1, unsigned long long> >]
-	With equivalent types:
+	Checking for equivalence with:
 	[std::array<std::array<int, 1>, 1>]
 
 	  Partition 0: iterator

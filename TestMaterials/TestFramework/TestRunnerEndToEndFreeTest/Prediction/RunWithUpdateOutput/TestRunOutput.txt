@@ -6,14 +6,14 @@ Analyzing dependencies...
 Running tests...
 
 Foo:
-[21 (10)ms]
+[24 (10)ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 42]
 
 	Tests/Stuff/FooTest.cpp, Line 41
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<std::filesystem::path>]
-	With equivalent types:
+	Checking for equivalence with:
 	[std::filesystem::path]
 
 	  Contents of
@@ -110,7 +110,7 @@ Foo:
 
 
 -----------Grand Totals-----------
-[21 (10)ms]
+[24 (10)ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 42]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

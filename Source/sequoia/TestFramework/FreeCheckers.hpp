@@ -126,6 +126,20 @@ namespace sequoia::testing
 
   struct with_best_available_check_t {};
 
+  template<class ValueBasedCustomizer>
+  [[nodiscard]]
+  std::string to_string(general_equivalence_check_t<ValueBasedCustomizer>)
+  {
+    return "equivalence";
+  }
+
+  template<class ValueBasedCustomizer>
+  [[nodiscard]]
+  std::string to_string(general_weak_equivalence_check_t<ValueBasedCustomizer>)
+  {
+    return "weak equivalence";
+  }
+
   //=========================== Values defined for convenience ===========================//
 
   inline constexpr equality_check_t equality{};
@@ -269,9 +283,13 @@ namespace sequoia::testing
     using processor = equivalent_type_processor<S, U...>;
 
     const auto msg{
-      [description, types{processor::info()}] (){
-        return append_lines(description, "Comparison performed using:", make_type_info<value_tester<T>>(), "With equivalent types:", types)
-          .append("\n");
+      [flavour, description, types{processor::info()}] (){
+        return append_lines(description,
+                            "Comparison performed using:",
+                            make_type_info<value_tester<T>>(),
+                            std::string{"Checking for "}.append(to_string(flavour)).append(" with:"),
+                            types)
+               .append("\n");
       }()
     };
 

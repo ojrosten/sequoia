@@ -3,7 +3,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::maths::tree<1, 1, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[sequoia::maths::tree_initializer<int>]
 
 	  Insufficient nodes detected while checking node 0
@@ -17,7 +17,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::maths::tree<1, 1, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[sequoia::maths::tree_initializer<int>]
 
 	  Node weight for node 0
@@ -33,7 +33,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::maths::tree<1, 1, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[sequoia::maths::tree_initializer<int>]
 
 	  Number of children for node 0
@@ -49,7 +49,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::maths::tree<1, 1, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[sequoia::maths::tree_initializer<int>]
 
 	  Node weight for node 1
@@ -65,7 +65,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::maths::tree<1, 1, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[sequoia::maths::tree_initializer<int>]
 
 	  Number of children for node 0
@@ -81,7 +81,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::maths::tree<1, 1, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[sequoia::maths::tree_initializer<int>]
 
 	  Number of children for node 1
@@ -97,7 +97,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::maths::tree<1, 1, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[sequoia::maths::tree_initializer<int>]
 
 	  Node weight for node 2
@@ -119,7 +119,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::maths::tree<1, 1, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[sequoia::maths::tree_initializer<int>]
 
 	  Number of children for node 1
@@ -225,7 +225,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::maths::tree<1, 2, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[sequoia::maths::tree_initializer<int>]
 
 	  Insufficient nodes detected while checking node 0
@@ -239,7 +239,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::maths::tree<1, 2, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[sequoia::maths::tree_initializer<int>]
 
 	  Node weight for node 0
@@ -255,7 +255,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::maths::tree<1, 2, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[sequoia::maths::tree_initializer<int>]
 
 	  Extraneous nodes joined to node 0
@@ -269,7 +269,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::maths::tree<1, 2, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[sequoia::maths::tree_initializer<int>]
 
 	  Node weight for node 1
@@ -285,7 +285,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::maths::tree<1, 2, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[sequoia::maths::tree_initializer<int>]
 
 	  Insufficient nodes detected while checking node 2
@@ -299,7 +299,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::maths::tree<1, 2, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[sequoia::maths::tree_initializer<int>]
 
 	  Extraneous nodes joined to node 2
@@ -313,7 +313,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::maths::tree<1, 2, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[sequoia::maths::tree_initializer<int>]
 
 	  Node weight for node 2
@@ -335,7 +335,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::maths::tree<1, 2, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[sequoia::maths::tree_initializer<int>]
 
 	  Return edge target
@@ -441,7 +441,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[sequoia::maths::tree_initializer<int>]
 
 	  Insufficient nodes detected while checking node 0
@@ -455,7 +455,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[sequoia::maths::tree_initializer<int>]
 
 	  Node weight for node 0
@@ -471,7 +471,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[sequoia::maths::tree_initializer<int>]
 
 	  Number of children for node 0
@@ -487,7 +487,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[sequoia::maths::tree_initializer<int>]
 
 	  Node weight for node 1
@@ -503,7 +503,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[sequoia::maths::tree_initializer<int>]
 
 	  Number of children for node 0
@@ -519,7 +519,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[sequoia::maths::tree_initializer<int>]
 
 	  Number of children for node 1
@@ -535,7 +535,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[sequoia::maths::tree_initializer<int>]
 
 	  Node weight for node 2
@@ -557,7 +557,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[sequoia::maths::tree_initializer<int>]
 
 	  Number of children for node 1
@@ -663,7 +663,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[sequoia::maths::tree_initializer<int>]
 
 	  Insufficient nodes detected while checking node 0
@@ -677,7 +677,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[sequoia::maths::tree_initializer<int>]
 
 	  Node weight for node 0
@@ -693,7 +693,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[sequoia::maths::tree_initializer<int>]
 
 	  Number of children for node 0
@@ -709,7 +709,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[sequoia::maths::tree_initializer<int>]
 
 	  Node weight for node 1
@@ -725,7 +725,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[sequoia::maths::tree_initializer<int>]
 
 	  Number of children for node 0
@@ -741,7 +741,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[sequoia::maths::tree_initializer<int>]
 
 	  Number of children for node 1
@@ -757,7 +757,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[sequoia::maths::tree_initializer<int>]
 
 	  Node weight for node 2
@@ -779,7 +779,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[sequoia::maths::tree_initializer<int>]
 
 	  Number of children for node 1

@@ -3,7 +3,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::maths::monotonic_sequence<int, std::less<int>, std::vector<int, std::allocator<int> > > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[std::initializer_list<int>]
 
 	  Container size wrong
@@ -19,7 +19,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::maths::monotonic_sequence<int, std::less<int>, std::vector<int, std::allocator<int> > > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[std::initializer_list<int>]
 
 	  Container size wrong
@@ -35,7 +35,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::maths::monotonic_sequence<int, std::less<int>, std::vector<int, std::allocator<int> > > >]
-	With equivalent types:
+	Checking for equivalence with:
 	[std::initializer_list<int>]
 
 	  Element 0 of range incorrect

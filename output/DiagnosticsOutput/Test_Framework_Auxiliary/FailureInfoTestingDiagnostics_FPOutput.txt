@@ -2,7 +2,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::testing::failure_info>]
-	With equivalent types:
+	Checking for equivalence with:
 	[int,
 	char [1]]
 
@@ -18,7 +18,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::testing::failure_info>]
-	With equivalent types:
+	Checking for equivalence with:
 	[int,
 	char [4]]
 

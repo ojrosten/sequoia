@@ -2,7 +2,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::maths::linear_sequence<int, unsigned long long> >]
-	With equivalent types:
+	Checking for equivalence with:
 	[int,
 	int]
 

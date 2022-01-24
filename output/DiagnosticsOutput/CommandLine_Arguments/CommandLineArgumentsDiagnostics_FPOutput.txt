@@ -47,7 +47,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::parsing::commandline::outcome>]
-	With equivalent types:
+	Checking for weak equivalence with:
 	[sequoia::parsing::commandline::outcome]
 
 	  Zeroth Argument
@@ -73,7 +73,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::parsing::commandline::outcome>]
-	With equivalent types:
+	Checking for weak equivalence with:
 	[sequoia::parsing::commandline::outcome]
 
 	  Operations
@@ -82,7 +82,7 @@
 	    Element 0 of range incorrect
 	    Comparison performed using:
 	    [sequoia::testing::value_tester<sequoia::parsing::commandline::operation>]
-	    With equivalent types:
+	    Checking for weak equivalence with:
 	    [sequoia::parsing::commandline::operation]
 
 	      Existence ofearly function objects differs
@@ -96,7 +96,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::parsing::commandline::outcome>]
-	With equivalent types:
+	Checking for weak equivalence with:
 	[sequoia::parsing::commandline::outcome]
 
 	  Operations
@@ -105,7 +105,7 @@
 	    Element 0 of range incorrect
 	    Comparison performed using:
 	    [sequoia::testing::value_tester<sequoia::parsing::commandline::operation>]
-	    With equivalent types:
+	    Checking for weak equivalence with:
 	    [sequoia::parsing::commandline::operation]
 
 	      Existence oflate function objects differs
@@ -119,7 +119,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::parsing::commandline::outcome>]
-	With equivalent types:
+	Checking for weak equivalence with:
 	[sequoia::parsing::commandline::outcome]
 
 	  Operations
@@ -128,7 +128,7 @@
 	    Element 0 of range incorrect
 	    Comparison performed using:
 	    [sequoia::testing::value_tester<sequoia::parsing::commandline::operation>]
-	    With equivalent types:
+	    Checking for weak equivalence with:
 	    [sequoia::parsing::commandline::operation]
 
 	      Function object tag
@@ -154,7 +154,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::parsing::commandline::outcome>]
-	With equivalent types:
+	Checking for weak equivalence with:
 	[sequoia::parsing::commandline::outcome]
 
 	  Operations
@@ -163,7 +163,7 @@
 	    Element 0 of range incorrect
 	    Comparison performed using:
 	    [sequoia::testing::value_tester<sequoia::parsing::commandline::operation>]
-	    With equivalent types:
+	    Checking for weak equivalence with:
 	    [sequoia::parsing::commandline::operation]
 
 	      Function object tag
@@ -189,7 +189,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::parsing::commandline::outcome>]
-	With equivalent types:
+	Checking for weak equivalence with:
 	[sequoia::parsing::commandline::outcome]
 
 	  Operations
@@ -198,7 +198,7 @@
 	    Element 0 of range incorrect
 	    Comparison performed using:
 	    [sequoia::testing::value_tester<sequoia::parsing::commandline::operation>]
-	    With equivalent types:
+	    Checking for weak equivalence with:
 	    [sequoia::parsing::commandline::operation]
 
 	      Function object tag
@@ -236,7 +236,7 @@
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::parsing::commandline::outcome>]
-	With equivalent types:
+	Checking for weak equivalence with:
 	[sequoia::parsing::commandline::outcome]
 
 	  Help
