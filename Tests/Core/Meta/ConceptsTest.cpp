@@ -13,33 +13,39 @@
 
 #include <complex>
 #include <set>
+#include <map>
 #include <vector>
 
 
 namespace sequoia::testing
 {
+  namespace
+  {
+    struct bar{};
+
+    struct serializable_thing
+    {
+      template<class Stream>
+      friend Stream& operator<<(Stream& s, const serializable_thing&)
+      {
+        return s;
+      }
+    };
+
+    struct non_serializable
+    {};
+
+    template<class> struct foo;
+
+    template<>
+    struct foo<int> {};
+  }
+
   [[nodiscard]]
   std::string_view concepts_test::source_file() const noexcept
   {
     return __FILE__;
   }
-
-  struct serializable_thing
-  {
-    template<class Stream>
-    friend Stream& operator<<(Stream& s, const serializable_thing&)
-    {
-      return s;
-    }
-  };
-
-  struct non_serializable
-  {};
-
-  template<class> struct foo;
-
-  template<>
-  struct foo<int> {};
 
   void concepts_test::run_tests()
   {
@@ -48,6 +54,7 @@ namespace sequoia::testing
     test_is_serializable();
     test_is_class_template_instantiable();
     test_has_allocator_type();
+    test_deep_equality_comparable();
   }
 
   void concepts_test::test_is_range()
@@ -97,6 +104,34 @@ namespace sequoia::testing
     check(LINE(""), []() {
         static_assert(class_template_is_default_instantiable<foo, int>);
         static_assert(!class_template_is_default_instantiable<foo, double>);
+        return true;
+      }()
+    );
+  }
+
+  void concepts_test::test_deep_equality_comparable()
+  {
+    check(LINE(""), []() {
+        static_assert(deep_equality_comparable<int>);
+        static_assert(deep_equality_comparable<std::vector<int>>);
+        static_assert(deep_equality_comparable<std::array<int, 3>>);
+        static_assert(deep_equality_comparable<std::tuple<int>>);
+        static_assert(deep_equality_comparable<std::tuple<int, double>>);
+        static_assert(deep_equality_comparable<std::variant<int, float>>);
+        static_assert(deep_equality_comparable<std::map<int, double>>);
+        static_assert(deep_equality_comparable<std::tuple<std::vector<int>, std::array<std::pair<int, float>, 2>>>);
+
+        static_assert(!deep_equality_comparable<bar>);
+        static_assert(!deep_equality_comparable<std::vector<bar>>);
+        static_assert(!deep_equality_comparable<std::array<bar, 3>>);
+        static_assert(!deep_equality_comparable<std::tuple<bar>>);
+        static_assert(!deep_equality_comparable<std::tuple<bar, double>>);
+        static_assert(!deep_equality_comparable<std::variant<int, bar>>);
+        static_assert(!deep_equality_comparable<std::map<int, bar>>);
+        static_assert(!deep_equality_comparable<std::tuple<std::vector<bar>, std::array<std::pair<int, float>, 2>>>);
+        static_assert(!deep_equality_comparable<std::tuple<std::vector<int>, std::array<std::pair<bar, float>, 2>>>);
+        static_assert(!deep_equality_comparable<std::tuple<std::vector<int>, std::array<std::pair<int, bar>, 2>>>);
+
         return true;
       }()
     );

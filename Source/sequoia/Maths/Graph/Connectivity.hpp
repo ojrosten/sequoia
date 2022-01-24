@@ -197,7 +197,7 @@ namespace sequoia
 
       [[nodiscard]]
       friend constexpr bool operator==(const connectivity& lhs, const connectivity& rhs) noexcept
-        requires std::equality_comparable<edge_type>
+        requires deep_equality_comparable<edge_type>
       {
         return lhs.m_Edges == rhs.m_Edges;
       }

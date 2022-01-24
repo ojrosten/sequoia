@@ -7,9 +7,13 @@
 
 #pragma once
 
-#include <type_traits>
+#include <array>
+#include <concepts>
 #include <iterator>
+#include <type_traits>
 #include <tuple>
+#include <utility>
+#include <variant>
 
 /*! \file TypeTraits.hpp
     \brief Traits added as required by other components of the library.
@@ -133,4 +137,57 @@ namespace sequoia
 
   template<class T>
   struct dependent_false : std::false_type {};
+
+  // Machinery for deep equality checking, which will hopefully one day
+  // be obviated if the stl properly constrains operator==
+
+  template<class T>
+  inline constexpr bool has_value_type{ requires { typename T::value_type; }};
+
+  template<class T>
+  inline constexpr bool has_gettable_elements{requires (T & t) { std::get<0>(t); }};
+
+  template<class T>
+  struct is_deep_equality_comparable;
+
+  template<class T, std::size_t... I>
+  inline constexpr bool heterogeneous_deep_equality_v{
+    requires(T & t, std::index_sequence<I...>) {
+      requires (is_deep_equality_comparable<std::remove_cvref_t<decltype(std::get<I>(t))>>::value && ...);
+    }
+  };
+
+  template<class T, std::size_t...I>
+  constexpr bool has_heterogeneous_deep_equality(std::index_sequence<I...>)
+  {
+    return heterogeneous_deep_equality_v<T, I...>;
+  }
+
+  template<class T>
+  struct heterogeneous_deep_equality;
+
+  template<template<class...> class T, class... Ts>
+  struct heterogeneous_deep_equality<T<Ts...>>
+    : std::bool_constant<has_heterogeneous_deep_equality<T<Ts...>>(std::make_index_sequence<sizeof...(Ts)>{})>
+  {};
+
+  template<class T>
+  struct is_deep_equality_comparable : std::bool_constant<std::equality_comparable<T>>
+  {};
+
+  template<class T>
+    requires has_value_type<T>
+  struct is_deep_equality_comparable<T> : std::bool_constant<std::equality_comparable<T>&& is_deep_equality_comparable<typename T::value_type>::value>
+  {};
+
+  template<template<class...> class T, class... Ts>
+    requires (!has_value_type<T<Ts...>> && has_gettable_elements<T<Ts...>>)
+  struct is_deep_equality_comparable<T<Ts...>> : std::bool_constant<std::equality_comparable<T<Ts...>> && heterogeneous_deep_equality<T<Ts...>>::value>
+  {};
+
+  template<class T>
+  inline constexpr bool is_deep_equality_comparable_v{is_deep_equality_comparable<T>::value};
+
+  template<class T>
+  using is_deep_equality_comparable_t = typename is_deep_equality_comparable<T>::type;
 }

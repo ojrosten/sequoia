@@ -17,6 +17,7 @@ namespace sequoia::testing
   template<class T=int, class Allocator=std::allocator<int>>
   struct perfectly_normal_beast
   {
+    using value_type = T;
     using allocator_type = Allocator;
 
     perfectly_normal_beast(std::initializer_list<T> list) : x{list} {}

@@ -150,7 +150,7 @@ namespace sequoia::maths::graph_impl
 
     [[nodiscard]]
     friend constexpr bool operator==(const node_storage& lhs, const node_storage& rhs) noexcept
-      requires std::equality_comparable<weight_type>
+      requires deep_equality_comparable<weight_type>
     {
       return lhs.m_NodeWeights == rhs.m_NodeWeights;
     }

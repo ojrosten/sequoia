@@ -30,5 +30,7 @@ namespace sequoia::testing
     void test_is_class_template_instantiable();
 
     void test_has_allocator_type();
+
+    void test_deep_equality_comparable();
   };
 }

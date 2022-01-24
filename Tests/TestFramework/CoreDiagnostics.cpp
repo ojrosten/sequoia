@@ -64,7 +64,7 @@ namespace sequoia::testing
       friend constexpr auto operator<=>(const foo&, const foo&) = default;
     };
 
-    struct bar
+    struct only_weakly_checkable
     {
       int i{};
       double x{};
@@ -101,13 +101,20 @@ namespace sequoia::testing
   };
 
   template<>
-  struct value_tester<bar>
+  struct value_tester<only_weakly_checkable>
   {
     template<test_mode Mode>
-    static void test(weak_equivalence_check_t, test_logger<Mode>& logger, const bar& b, const std::pair<int, double>& prediction, tutor<bland> advisor)
+    static void test(weak_equivalence_check_t, test_logger<Mode>& logger, const only_weakly_checkable& obtained, const std::pair<int, double>& prediction, tutor<bland> advisor)
     {
-      check(equality, "Wrapped int", logger, b.i, prediction.first, advisor);
-      check(equality, "Wrapped double", logger, b.x, prediction.second, advisor);
+      check(equality, "Wrapped int", logger, obtained.i, prediction.first, advisor);
+      check(equality, "Wrapped double", logger, obtained.x, prediction.second, advisor);
+    }
+
+    template<test_mode Mode, class Advisor=null_advisor>
+    static void test(weak_equivalence_check_t, test_logger<Mode>& logger, const only_weakly_checkable& obtained, const only_weakly_checkable& prediction, const tutor<Advisor>& advisor = {})
+    {
+      check(equality, "Wrapped int", logger, obtained.i, prediction.i, advisor);
+      check(equality, "Wrapped double", logger, obtained.x, prediction.x, advisor);
     }
   };
 
@@ -144,6 +151,7 @@ namespace sequoia::testing
     test_paths();
     test_equivalence_checks();
     test_weak_equivalence_checks();
+    test_with_best_available_checks();
   }
 
   void false_positive_diagnostics::basic_tests()
@@ -403,15 +411,32 @@ namespace sequoia::testing
       std::vector<fs::path>{{fs::path{working_materials()}.append("CustomComparison/B")}});
 
     check(weak_equivalence, LINE("Advice for weak equivalence checking"),
-                           bar{42, 3.14}, std::pair<int, double>{41, 3.13}, tutor{bland{}});
+                           only_weakly_checkable{42, 3.14}, std::pair<int, double>{41, 3.13}, tutor{bland{}});
 
     check(weak_equivalence, 
       LINE("Advice for range weak equivalence, where the containerized form is explicitly specialized"),
-      std::vector<bar>{{42, 3.14}}, std::vector<std::pair<int, double>>{{41, 3.13}}, tutor{bland{}});
+      std::vector<only_weakly_checkable>{{42, 3.14}}, std::vector<std::pair<int, double>>{{41, 3.13}}, tutor{bland{}});
 
     check(weak_equivalence, 
       LINE("Advice for range weak equivalence, where the containerized form is not explicitly specialized"),
-      std::list<bar>{{42, 3.14}}, std::list<std::pair<int, double>>{{41, 3.13}}, tutor{bland{}});
+      std::list<only_weakly_checkable>{{42, 3.14}}, std::list<std::pair<int, double>>{{41, 3.13}}, tutor{bland{}});
+  }
+
+
+  void false_positive_diagnostics::test_with_best_available_checks()
+  {
+    {
+      using type = std::pair<int, double>;
+
+      check(with_best_available, LINE(""), type{}, type{1, 0.0});
+    }
+
+    {
+      using type = std::pair<int, only_weakly_checkable>;
+
+      check(with_best_available, LINE(""), type{1, {0, 2.0}}, type{0, {0, 2.0}});
+    }
+
   }
 
   [[nodiscard]]
@@ -433,6 +458,7 @@ namespace sequoia::testing
     test_paths();
     test_equivalence_checks();
     test_weak_equivalence_checks();
+    test_with_best_available_checks();
   }
 
   void false_negative_diagnostics::basic_tests()
@@ -578,14 +604,19 @@ namespace sequoia::testing
           std::vector<fs::path>{{fs::path{working_materials()}.append("CustomComparison/A")}},
           std::vector<fs::path>{{fs::path{working_materials()}.append("CustomComparison/B")}});
 
-    check(weak_equivalence, LINE("Advice for weak equivalence checking"), bar{42, 3.14}, std::pair<int, double>{42, 3.14}, tutor{bland{}});
+    check(weak_equivalence, LINE("Advice for weak equivalence checking"), only_weakly_checkable{42, 3.14}, std::pair<int, double>{42, 3.14}, tutor{bland{}});
 
     check(weak_equivalence, 
       LINE("Advice for range weak equivalence, where the containerized form is explicitly specialized"),
-      std::vector<bar>{{42, 3.14}}, std::vector<std::pair<int, double>>{{42, 3.14}}, tutor{bland{}});
+      std::vector<only_weakly_checkable>{{42, 3.14}}, std::vector<std::pair<int, double>>{{42, 3.14}}, tutor{bland{}});
 
     check(weak_equivalence, 
       LINE("Advice for range weak equivalence, where the containerized form is not explicitly specialized"),
-      std::list<bar>{{42, 3.14}}, std::list<std::pair<int, double>>{{42, 3.14}}, tutor{bland{}});
+      std::list<only_weakly_checkable>{{42, 3.14}}, std::list<std::pair<int, double>>{{42, 3.14}}, tutor{bland{}});
+  }
+
+  void false_negative_diagnostics::test_with_best_available_checks()
+  {
+
   }
 }

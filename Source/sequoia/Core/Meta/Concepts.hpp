@@ -11,7 +11,8 @@
     \brief Concepts mostly, but not exclusively, replicating things which will appear in std at some point.
  */
 
-#include <type_traits>
+#include "sequoia/Core/Meta/TypeTraits.hpp"
+
 #include <utility>
 #include <functional>
 #include <concepts>
@@ -79,4 +80,7 @@ namespace sequoia
   concept class_template_is_default_instantiable
    = requires() { T<Args...>{}; };
 
+
+  template<class T>
+  concept deep_equality_comparable = is_deep_equality_comparable_v<T>;
 }

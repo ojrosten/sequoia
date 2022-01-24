@@ -350,10 +350,10 @@ namespace sequoia::testing
 
   template<test_mode Mode, class T, class Advisor>
   inline constexpr bool has_detailed_agnostic_check{
-       binary_tester_for<equality_check_t, Mode, T, tutor<Advisor>>
-    || binary_tester_for<equivalence_check_t, Mode, T, tutor<Advisor>>
-    || binary_tester_for<weak_equivalence_check_t, Mode, T, tutor<Advisor>>
-    || binary_tester_for<with_best_available_check_t, Mode, T, tutor<Advisor>>
+       binary_tester_for<equality_check_t, Mode, T, Advisor>
+    || binary_tester_for<equivalence_check_t, Mode, T, Advisor>
+    || binary_tester_for<weak_equivalence_check_t, Mode, T, Advisor>
+    || binary_tester_for<with_best_available_check_t, Mode, T, Advisor>
   };
 
   struct default_exception_message_postprocessor
@@ -514,7 +514,7 @@ namespace sequoia::testing
    */
 
   template<test_mode Mode, class T, class Advisor=null_advisor>
-    requires (    std::equality_comparable<T>
+    requires (    deep_equality_comparable<T>
                || binary_tester_for<equality_check_t, Mode, T, tutor<Advisor>>
                || sequoia::range<T>)
   bool check(equality_check_t,
@@ -526,7 +526,7 @@ namespace sequoia::testing
   {
     sentinel<Mode> sentry{logger, add_type_info<T>(description)};
 
-    if constexpr(std::equality_comparable<T>)
+    if constexpr(deep_equality_comparable<T>)
     {
       using finality = final_message_constant<!(binary_tester_for<equality_check_t, Mode, T, tutor<Advisor>> || sequoia::range<T>)>;
       binary_comparison(finality{}, sentry, std::equal_to<T>{}, obtained, prediction, advisor);
@@ -584,7 +584,7 @@ namespace sequoia::testing
    */
 
   template<test_mode Mode, class T, class Advisor=null_advisor>
-    requires (std::equality_comparable<T> || has_detailed_agnostic_check<Mode, T, Advisor> || sequoia::range<T>)
+    requires (deep_equality_comparable<T> || has_detailed_agnostic_check<Mode, T, Advisor> || sequoia::range<T>)
   bool check(with_best_available_check_t,
              std::string_view description,
              test_logger<Mode>& logger,
@@ -594,7 +594,7 @@ namespace sequoia::testing
   {
     sentinel<Mode> sentry{logger, add_type_info<T>(description)};
 
-    if constexpr(std::equality_comparable<T>)
+    if constexpr(deep_equality_comparable<T>)
     {
       using finality = final_message_constant<!(has_detailed_agnostic_check<Mode, T, Advisor> || sequoia::range<T>)>;
       binary_comparison(finality{}, sentry, std::equal_to<T>{}, obtained, prediction, advisor);

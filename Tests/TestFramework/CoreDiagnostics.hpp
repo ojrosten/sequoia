@@ -42,6 +42,7 @@ namespace sequoia:: testing
     void test_paths();
     void test_equivalence_checks();
     void test_weak_equivalence_checks();
+    void test_with_best_available_checks();
   };
 
   class false_negative_diagnostics final : public regular_false_negative_test
@@ -72,5 +73,6 @@ namespace sequoia:: testing
     void test_paths();
     void test_equivalence_checks();
     void test_weak_equivalence_checks();
+    void test_with_best_available_checks();
   };
 }
