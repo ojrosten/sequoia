@@ -435,8 +435,8 @@ namespace sequoia::testing
       using type = std::pair<int, only_weakly_checkable>;
 
       check(with_best_available, LINE(""), type{1, {0, 2.0}}, type{0, {0, 2.0}});
+      check(with_best_available, LINE(""), type{1, {0, 2.0}}, type{1, {0, 2.1}});
     }
-
   }
 
   [[nodiscard]]
@@ -617,6 +617,16 @@ namespace sequoia::testing
 
   void false_negative_diagnostics::test_with_best_available_checks()
   {
+    {
+      using type = std::pair<int, double>;
 
+      check(with_best_available, LINE(""), type{1, 0.0}, type{1, 0.0});
+    }
+
+    {
+      using type = std::pair<int, only_weakly_checkable>;
+
+      check(with_best_available, LINE(""), type{1, {0, 2.0}}, type{1, {0, 2.0}});
+    }
   }
 }

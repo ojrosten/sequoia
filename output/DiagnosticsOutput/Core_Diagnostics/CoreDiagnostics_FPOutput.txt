@@ -2331,3 +2331,16 @@
 
 	=======================================
 
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 438
+
+	[std::pair<int, sequoia::testing::(anonymous namespace)::only_weakly_checkable>]
+	  Second element of pair is incorrect
+	  [sequoia::testing::(anonymous namespace)::only_weakly_checkable]
+	    Wrapped double
+	    [double]
+	    operator== returned false
+	    Obtained : 2
+	    Predicted: 2.1
+
+	=======================================
+

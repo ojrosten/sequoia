@@ -338,3 +338,17 @@
 
 	=======================================
 
+	False Positive Failure:
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 623
+
+	[std::pair<int, double>]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 629
+
+	[std::pair<int, sequoia::testing::(anonymous namespace)::only_weakly_checkable>]
+
+	=======================================
+
