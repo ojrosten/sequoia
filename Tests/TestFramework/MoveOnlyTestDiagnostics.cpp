@@ -23,14 +23,16 @@ namespace sequoia::testing
 
   void move_only_false_positive_diagnostics::test_regular_semantics()
   {
-    check_semantics(LINE("Broken equality"),  move_only_broken_equality{1},  move_only_broken_equality{2},  move_only_broken_equality{1},  move_only_broken_equality{2});
-    check_semantics(LINE("Broken inequality"),  move_only_broken_inequality{1},  move_only_broken_inequality{2},  move_only_broken_inequality{1},  move_only_broken_inequality{2});
+    check_semantics(LINE("Broken equality"),   move_only_broken_equality{1},    move_only_broken_equality{2},    move_only_broken_equality{1},    move_only_broken_equality{2});
+    check_semantics(LINE("Broken inequality"), move_only_broken_inequality{1},  move_only_broken_inequality{2},  move_only_broken_inequality{1},  move_only_broken_inequality{2});
     check_semantics(LINE("Broken move"),  move_only_broken_move{1},  move_only_broken_move{2},  move_only_broken_move{1},  move_only_broken_move{2});
     check_semantics(LINE("Broken swap"),  move_only_broken_swap{1},  move_only_broken_swap{2},  move_only_broken_swap{1},  move_only_broken_swap{2});
     check_semantics(LINE("Broken move assignment"), move_only_broken_move_assignment{1}, move_only_broken_move_assignment{2}, move_only_broken_move_assignment{1}, move_only_broken_move_assignment{2});
     check_semantics(LINE("Broken check invariant"), move_only_beast{1}, move_only_beast{1}, move_only_beast{1}, move_only_beast{1});
     check_semantics(LINE("Broken check invariant"), move_only_beast{1}, move_only_beast{3}, move_only_beast{2}, move_only_beast{3});
     check_semantics(LINE("Broken check invariant"), move_only_beast{2}, move_only_beast{1}, move_only_beast{2}, move_only_beast{3});
+
+    check_semantics(LINE("Incorrect moved-from state"), []() { return resource_binder{1}; }, []() {return resource_binder{2}; }, std::optional<resource_binder>{1});
   }
 
 
@@ -50,5 +52,7 @@ namespace sequoia::testing
     using beast = move_only_beast<int>;
     check_semantics(LINE(""), beast{1}, beast{2}, beast{1}, beast{2});
     check_semantics(LINE("Function object syntax"), [](){ return beast{1}; }, [](){ return beast{2}; });
+
+    check_semantics(LINE("Incorrect moved-from state"), []() { return resource_binder{1}; }, []() {return resource_binder{2}; }, std::optional<resource_binder>{});
   }
 }

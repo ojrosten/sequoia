@@ -122,3 +122,23 @@
 
 	=======================================
 
+	Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 35
+	Incorrect moved-from state
+
+	--Move-only Semantics--
+	[sequoia::testing::resource_binder]
+
+	  Incorrect moved-from value after move construction
+	  [sequoia::testing::resource_binder]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	  Incorrect moved-from value after move assignment
+	  [sequoia::testing::resource_binder]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	=======================================
+

@@ -66,6 +66,12 @@ namespace sequoia::testing
 
       check_semantics(LINE(""), beast{1}, beast{2}, beast{1}, beast{2}, std::weak_ordering::less);
     }
+
+    {
+      using binder = orderable_resource_binder;
+
+      check_semantics(LINE("Incorrect moved-from state"), []() { return binder{1}; }, []() {return binder{2}; }, std::optional<binder>{1}, std::strong_ordering::less);
+    }
   }
 
   [[nodiscard]]
@@ -81,10 +87,18 @@ namespace sequoia::testing
 
   void orderable_move_only_false_negative_diagnostics::test_regular_semantics()
   {
-    using beast = orderable_move_only_beast<int>;
+    {
+      using beast = orderable_move_only_beast<int>;
 
-    check_semantics(LINE(""), beast{1}, beast{2}, beast{1}, beast{2}, std::weak_ordering::less);
-    check_semantics(LINE("Function object syntax"), [](){ return beast{1}; }, [](){ return beast{2}; }, std::weak_ordering::less);
-    check_semantics(LINE(""), beast{2}, beast{1}, beast{2}, beast{1}, std::weak_ordering::greater);
+      check_semantics(LINE(""), beast{1}, beast{2}, beast{1}, beast{2}, std::weak_ordering::less);
+      check_semantics(LINE("Function object syntax"), []() { return beast{1}; }, []() { return beast{2}; }, std::weak_ordering::less);
+      check_semantics(LINE(""), beast{2}, beast{1}, beast{2}, beast{1}, std::weak_ordering::greater);
+    }
+
+    {
+      using binder = orderable_resource_binder;
+
+      check_semantics(LINE("Incorrect moved-from state"), []() { return binder{1}; }, []() {return binder{2}; }, std::optional<binder>{}, std::strong_ordering::less);
+    }
   }
 }

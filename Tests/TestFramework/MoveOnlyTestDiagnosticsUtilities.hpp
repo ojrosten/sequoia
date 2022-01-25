@@ -61,6 +61,54 @@ namespace sequoia::testing
     }
   };
 
+  class resource_binder
+  {
+  public:
+    resource_binder() = default;
+
+    explicit resource_binder(int i)
+      : m_Index{i}
+    {}
+
+    resource_binder(resource_binder&& other)
+      : m_Index{std::exchange(other.m_Index, 0)}
+    {}
+
+    resource_binder& operator=(resource_binder&& other)
+    {
+      m_Index = std::exchange(other.m_Index, 0);
+      return *this;
+    }
+
+    [[nodiscard]]
+    int index() const noexcept
+    {
+      return m_Index;
+    }
+
+    [[nodiscard]]
+    friend bool operator==(const resource_binder&, const resource_binder&) = default;
+
+    [[nodiscard]]
+    friend bool operator!=(const resource_binder&, const resource_binder&) = default;
+
+    template<class Stream>
+    friend Stream& operator<<(Stream& s, const resource_binder& b)
+    {
+      s << b.index();
+      return s;
+    }
+
+    template<class Stream>
+    friend Stream& operator>>(Stream& s, resource_binder& b)
+    {
+      s >> b.m_Index;
+      return s;
+    }
+  private:
+    int m_Index{-1};
+  };
+
   template<class T=int, class Allocator=std::allocator<int>>
   struct move_only_broken_equality
   {

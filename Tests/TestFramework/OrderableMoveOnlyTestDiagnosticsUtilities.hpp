@@ -95,6 +95,53 @@ namespace sequoia::testing
     }
   };
 
+
+
+  class orderable_resource_binder
+  {
+  public:
+    orderable_resource_binder() = default;
+
+    explicit orderable_resource_binder(int i)
+      : m_Index{i}
+    {}
+
+    orderable_resource_binder(orderable_resource_binder&& other)
+      : m_Index{std::exchange(other.m_Index, 0)}
+    {}
+
+    orderable_resource_binder& operator=(orderable_resource_binder&& other)
+    {
+      m_Index = std::exchange(other.m_Index, 0);
+      return *this;
+    }
+
+    [[nodiscard]]
+    int index() const noexcept
+    {
+      return m_Index;
+    }
+
+    [[nodiscard]]
+    friend auto operator<=>(const orderable_resource_binder&, const orderable_resource_binder&) = default;
+
+    template<class Stream>
+    friend Stream& operator<<(Stream& s, const orderable_resource_binder& b)
+    {
+      s << b.index();
+      return s;
+    }
+
+    template<class Stream>
+    friend Stream& operator>>(Stream& s, orderable_resource_binder& b)
+    {
+      s >> b.m_Index;
+      return s;
+    }
+  private:
+    int m_Index{-1};
+  };
+
   template<class T=int, class Allocator=std::allocator<int>>
   struct move_only_broken_less
   {
