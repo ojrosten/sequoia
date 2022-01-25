@@ -43,9 +43,9 @@ namespace sequoia::testing
 
     /// Preconditions: x!=y; x==xClone, y==yClone
     template<moveonly T>
-    void check_semantics(std::string_view description, T&& x, T&& y, const T& xClone, const T& yClone)
+    void check_semantics(std::string_view description, T&& x, T&& y, const T& xClone, const T& yClone, const std::optional<T>& movedFrom = {})
     {
-      testing::check_semantics(append_lines(description, emphasise("Move-only Semantics")), logger(), std::move(x), std::move(y), xClone, yClone, std::optional<T>{});
+      testing::check_semantics(append_lines(description, emphasise("Move-only Semantics")), logger(), std::move(x), std::move(y), xClone, yClone, movedFrom);
     }
 
     template
@@ -54,17 +54,36 @@ namespace sequoia::testing
       moveonly T=std::invoke_result_t<xMaker>,
       invocable_r<T> yMaker
     >
-    void check_semantics(std::string_view description, xMaker xFn, yMaker yFn)
+    void check_semantics(std::string_view description, xMaker xFn, yMaker yFn, const std::optional<T>& movedFrom = {})
     {
-      check_semantics(description, xFn(), yFn(), xFn(), yFn());
+      check_semantics(description, xFn(), yFn(), xFn(), yFn(), movedFrom);
     }
 
      /// Preconditions: x!=y, with values consistent with order; x==xClone, y==yClone
     template<moveonly T>
       requires std::totally_ordered<T>
+    void check_semantics(std::string_view description, T&& x, T&& y, const T& xClone, const T& yClone, const std::optional<T>& movedFrom, std::weak_ordering order)
+    {
+      testing::check_semantics(append_lines(description, emphasise("Move-only Semantics")), logger(), std::move(x), std::move(y), xClone, yClone, movedFrom, order);
+    }
+
+    template<moveonly T>
+      requires std::totally_ordered<T>
     void check_semantics(std::string_view description, T&& x, T&& y, const T& xClone, const T& yClone, std::weak_ordering order)
     {
-      testing::check_semantics(append_lines(description, emphasise("Move-only Semantics")), logger(), std::move(x), std::move(y), xClone, yClone, std::optional<T>{}, order);
+      check_semantics(description, std::move(x), std::move(y), xClone, yClone, std::optional<T>{}, order);
+    }
+
+    template
+    <
+      std::invocable<> xMaker,
+      moveonly T = std::invoke_result_t<xMaker>,
+      invocable_r<T> yMaker
+    >
+      requires std::totally_ordered<T>
+    void check_semantics(std::string_view description, xMaker xFn, yMaker yFn, const std::optional<T>& movedFrom, std::weak_ordering order)
+    {
+      check_semantics(description, xFn(), yFn(), xFn(), yFn(), movedFrom, order);
     }
 
     template
@@ -78,6 +97,7 @@ namespace sequoia::testing
     {
       check_semantics(description, xFn(), yFn(), xFn(), yFn(), order);
     }
+
   protected:
     ~move_only_extender() = default;
   private:
