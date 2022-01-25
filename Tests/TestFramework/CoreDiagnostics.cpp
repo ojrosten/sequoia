@@ -457,6 +457,7 @@ namespace sequoia::testing
 
       check(with_best_available, LINE(""), type{1, {0, 2.0}}, type{0, {0, 2.0}});
       check(with_best_available, LINE(""), type{1, {0, 2.0}}, type{1, {0, 2.1}});
+      check(with_best_available, LINE(""), type{1, {0, 2.0}}, type{0, {0, 2.1}});
       check(with_best_available, LINE(""), type{1, {0, 2.0}}, type{1, {0, 2.1}}, tutor{bland{}});
     }
 
@@ -465,6 +466,7 @@ namespace sequoia::testing
 
       check(with_best_available, LINE(""), type{1, {1.5}}, type{0, {1.5}});
       check(with_best_available, LINE(""), type{1, {1.5}}, type{1, {1.4}});
+      check(with_best_available, LINE(""), type{0, {1.5}}, type{1, {1.4}});
       check(with_best_available, LINE(""), type{1, {1.4}}, type{0, {1.4}}, tutor{bland{}});
     }
   }

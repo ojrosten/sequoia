@@ -2347,6 +2347,25 @@
 	Tests/TestFramework/CoreDiagnostics.cpp, Line 460
 
 	[std::pair<int, sequoia::testing::(anonymous namespace)::only_weakly_checkable>]
+	  First element of pair is incorrect
+	  [int]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
+
+	  Second element of pair is incorrect
+	  [sequoia::testing::(anonymous namespace)::only_weakly_checkable]
+	    Wrapped double
+	    [double]
+	    operator== returned false
+	    Obtained : 2
+	    Predicted: 2.1
+
+	=======================================
+
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 461
+
+	[std::pair<int, sequoia::testing::(anonymous namespace)::only_weakly_checkable>]
 	  Second element of pair is incorrect
 	  [sequoia::testing::(anonymous namespace)::only_weakly_checkable]
 	    Wrapped double
@@ -2358,7 +2377,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 466
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 467
 
 	[std::pair<int, sequoia::testing::(anonymous namespace)::only_equivalence_checkable>]
 	  First element of pair is incorrect
@@ -2369,7 +2388,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 467
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 468
 
 	[std::pair<int, sequoia::testing::(anonymous namespace)::only_equivalence_checkable>]
 	  Second element of pair is incorrect
@@ -2382,7 +2401,26 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 468
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 469
+
+	[std::pair<int, sequoia::testing::(anonymous namespace)::only_equivalence_checkable>]
+	  First element of pair is incorrect
+	  [int]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	  Second element of pair is incorrect
+	  [sequoia::testing::(anonymous namespace)::only_equivalence_checkable]
+	    Wrapped float
+	    [double]
+	    operator== returned false
+	    Obtained : 1.5
+	    Predicted: 1.4
+
+	=======================================
+
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 470
 
 	[std::pair<int, sequoia::testing::(anonymous namespace)::only_equivalence_checkable>]
 	  First element of pair is incorrect
