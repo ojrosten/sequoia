@@ -75,28 +75,46 @@ namespace sequoia::testing::impl
   }
 
   template<test_mode Mode, class Actions, moveonly T, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
-  void check_semantics(std::string_view description, test_logger<Mode>& logger, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, Mutator m, const allocation_info<T, Getters>&... info)
+    requires (sizeof...(Getters) > 0)
+  void check_semantics(std::string_view description,
+                       test_logger<Mode>& logger,
+                       const Actions& actions,
+                       T&& x,
+                       T&& y,
+                       const T& xClone,
+                       const T& yClone,
+                       const std::optional<T>& movedFrom,
+                       Mutator m,
+                       const allocation_info<T, Getters>&... info)
   {
     const auto message{!description.empty() ? add_type_info<T>(description).append("\n") : ""};
     sentinel<Mode> sentry{logger, message};
 
     if(auto[optx,opty]{check_para_constructor_allocations(logger, std::forward<T>(x), std::forward<T>(y), xClone, yClone, info...)}; (optx != std::nullopt) && (opty != std::nullopt))
     {
-      check_semantics(logger, actions, std::move(*optx), std::move(*opty), xClone, yClone, std::move(m), std::tuple_cat(make_dual_allocation_checkers(info, x, y)...));
+      check_semantics(logger, actions, std::move(*optx), std::move(*opty), xClone, yClone, movedFrom, std::move(m), std::tuple_cat(make_dual_allocation_checkers(info, x, y)...));
     }
   }
 
   template
   <
     test_mode Mode,
-    class Actions,    
+    class Actions,
     moveonly T,
     invocable_r<T> xMaker,
     invocable_r<T> yMaker,
     std::invocable<T&> Mutator,
     alloc_getter<T>... Getters
   >
-  std::pair<T,T> check_semantics(std::string_view description, test_logger<Mode>& logger, const Actions& actions, xMaker xFn, yMaker yFn, Mutator m, const allocation_info<T, Getters>&... info)
+    requires (sizeof...(Getters) > 0)
+  std::pair<T,T> check_semantics(std::string_view description,
+                                 test_logger<Mode>& logger,
+                                 const Actions& actions,
+                                 xMaker xFn,
+                                 yMaker yFn,
+                                 const std::optional<T>& movedFrom,
+                                 Mutator m,
+                                 const allocation_info<T, Getters>&... info)
   {
     sentinel<Mode> sentry{logger, add_type_info<T>(description).append("\n")};
 
@@ -104,18 +122,27 @@ namespace sequoia::testing::impl
     auto y{yFn()};
 
     impl::check_initialization_allocations(logger, x, y, info...);
-    check_semantics("", logger, actions, xFn(), yFn(), x, y, std::move(m), info...);
+    check_semantics("", logger, actions, xFn(), yFn(), x, y, movedFrom, std::move(m), info...);
 
     return {std::move(x), std::move(y)};
   }
 
   /// Unpacks the tuple and feeds to the overload of check_semantics defined in MoveOnlyCheckersDetails.hpp
   template<test_mode Mode, class Actions, moveonly T, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
-  void check_semantics(test_logger<Mode>& logger, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, Mutator m, std::tuple<dual_allocation_checker<T, Getters>...> checkers)
+    requires (sizeof...(Getters) > 0)
+  void check_semantics(test_logger<Mode>& logger,
+                       const Actions& actions,
+                       T&& x,
+                       T&& y,
+                       const T& xClone,
+                       const T& yClone,
+                       const std::optional<T>& movedFrom,
+                       Mutator m,
+                       std::tuple<dual_allocation_checker<T, Getters>...> checkers)
   {
     auto fn{
-      [&logger, &actions, &x, &y, &xClone, &yClone, m{std::move(m)}](auto&&... checkers){
-        return check_semantics(logger, actions, std::forward<T>(x), std::forward<T>(y), xClone, yClone, std::move(m), std::forward<decltype(checkers)>(checkers)...);
+      [&,m{std::move(m)}](auto&&... checkers){
+        return check_semantics(logger, actions, std::forward<T>(x), std::forward<T>(y), xClone, yClone, movedFrom, std::move(m), std::forward<decltype(checkers)>(checkers)...);
       }
     };
 

@@ -47,11 +47,11 @@ namespace sequoia::testing
       x != y
    */
   template<test_mode Mode, moveonly T>
-  void check_semantics(std::string_view description, test_logger<Mode>& logger, T&& x, T&& y, const T& xClone, const T& yClone)
+  void check_semantics(std::string_view description, test_logger<Mode>& logger, T&& x, T&& y, const T& xClone, const T& yClone, const std::optional<T>& movedFrom)
   {
     sentinel<Mode> sentry{logger, add_type_info<T>(description).append("\n")};
 
-    impl::check_semantics(logger, impl::auxiliary_data<T>{}, std::forward<T>(x), std::forward<T>(y), xClone, yClone, impl::null_mutator{});
+    impl::check_semantics(logger, impl::auxiliary_data<T>{}, std::forward<T>(x), std::forward<T>(y), xClone, yClone, movedFrom, impl::null_mutator{});
   }
 
   /*! Preconditions:
@@ -62,10 +62,10 @@ namespace sequoia::testing
    */
   template<test_mode Mode, moveonly T>
     requires std::totally_ordered<T>
-  void check_semantics(std::string_view description, test_logger<Mode>& logger, T&& x, T&& y, const T& xClone, const T& yClone, std::weak_ordering order)
+  void check_semantics(std::string_view description, test_logger<Mode>& logger, T&& x, T&& y, const T& xClone, const T& yClone, const std::optional<T>& movedFrom, std::weak_ordering order)
   {
     sentinel<Mode> sentry{logger, add_type_info<T>(description).append("\n")};
 
-    impl::check_semantics(logger, impl::auxiliary_data<T>{order}, std::forward<T>(x), std::forward<T>(y), xClone, yClone, impl::null_mutator{});
+    impl::check_semantics(logger, impl::auxiliary_data<T>{order}, std::forward<T>(x), std::forward<T>(y), xClone, yClone, movedFrom, impl::null_mutator{});
   }
 }

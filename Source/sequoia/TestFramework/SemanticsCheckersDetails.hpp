@@ -330,11 +330,21 @@ namespace sequoia::testing::impl
   //================================  move construction ================================ //
 
   template<test_mode Mode, class Actions, movable_comparable T, class... Args>
-  std::optional<T> do_check_move_construction(test_logger<Mode>& logger, [[maybe_unused]] const Actions& actions, T&& z, const T& y, const Args&... args)
+  std::optional<T> do_check_move_construction(test_logger<Mode>& logger,
+                                              [[maybe_unused]] const Actions& actions,
+                                              T&& z,
+                                              const T& y,
+                                              const std::optional<T>& movedFrom,
+                                              const Args&... args)
   {
     T w{std::move(z)};
     if(!check(equality, "Inconsistent move construction", logger, w, y))
       return {};
+
+    if(movedFrom.has_value())
+    {
+      check(equality, "Incorrect moved-from value after move construction", logger, z, movedFrom.value());
+    }
 
     if constexpr(has_post_move_action<Actions>)
     {
@@ -344,20 +354,26 @@ namespace sequoia::testing::impl
     return w;
   }
 
-  template<test_mode Mode, class Actions, movable_comparable T>
-  std::optional<T> check_move_construction(test_logger<Mode>& logger, const Actions& actions, T&& z, const T& y)
+  template<test_mode Mode, class Actions, movable_comparable T, movable_comparable S>
+    requires std::is_same_v<S,T>
+  std::optional<T> check_move_construction(test_logger<Mode>& logger, const Actions& actions, T&& z, const T& y, const std::optional<S>& movedFrom)
   {
-    return do_check_move_construction(logger, actions, std::forward<T>(z), y);
+    return do_check_move_construction(logger, actions, std::forward<T>(z), y, movedFrom);
   }
 
   //================================ move assign ================================//
 
   template<test_mode Mode, class Actions, movable_comparable T, std::invocable<T&> Mutator, class... Args>
-  void do_check_move_assign(test_logger<Mode>& logger, [[maybe_unused]] const Actions& actions, T& z, T&& y, const T& yClone, [[maybe_unused]] Mutator&& yMutator, const Args&... args)
+  void do_check_move_assign(test_logger<Mode>& logger, [[maybe_unused]] const Actions& actions, T& z, T&& y, const T& yClone, const std::optional<T>& movedFrom, [[maybe_unused]] Mutator&& yMutator, const Args&... args)
   {
     z = std::move(y);
     if(!check(equality, "Inconsistent move assignment (from y)", logger, z, yClone))
        return;
+
+    if(movedFrom.has_value())
+    {
+      check(equality, "Incorrect moved-from value after move assignment", logger, y, movedFrom.value());
+    }
 
     if constexpr(has_post_move_assign_action<Actions>)
     {
@@ -366,9 +382,9 @@ namespace sequoia::testing::impl
   }
 
   template<test_mode Mode, class Actions, movable_comparable T, std::invocable<T&> Mutator>
-  void check_move_assign(test_logger<Mode>& logger, const Actions& actions, T& z, T&& y, const T& yClone, Mutator m)
+  void check_move_assign(test_logger<Mode>& logger, const Actions& actions, T& z, T&& y, const T& yClone, const std::optional<T>& movedFrom, Mutator m)
   {
-    do_check_move_assign(logger, actions, z, std::forward<T>(y), yClone, std::move(m));
+    do_check_move_assign(logger, actions, z, std::forward<T>(y), yClone, movedFrom, std::move(m));
   }
 
   //================================ swap ================================//

@@ -45,12 +45,12 @@ namespace sequoia::testing
     template<moveonly T>
     void check_semantics(std::string_view description, T&& x, T&& y, const T& xClone, const T& yClone)
     {
-      testing::check_semantics(append_lines(description, emphasise("Move-only Semantics")), logger(), std::move(x), std::move(y), xClone, yClone);
+      testing::check_semantics(append_lines(description, emphasise("Move-only Semantics")), logger(), std::move(x), std::move(y), xClone, yClone, std::optional<T>{});
     }
 
     template
     <
-      std::invocable<> xMaker,
+      std::invocable xMaker,
       moveonly T=std::invoke_result_t<xMaker>,
       invocable_r<T> yMaker
     >
@@ -64,7 +64,7 @@ namespace sequoia::testing
       requires std::totally_ordered<T>
     void check_semantics(std::string_view description, T&& x, T&& y, const T& xClone, const T& yClone, std::weak_ordering order)
     {
-      testing::check_semantics(append_lines(description, emphasise("Move-only Semantics")), logger(), std::move(x), std::move(y), xClone, yClone, order);
+      testing::check_semantics(append_lines(description, emphasise("Move-only Semantics")), logger(), std::move(x), std::move(y), xClone, yClone, std::optional<T>{}, order);
     }
 
     template

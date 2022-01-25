@@ -73,14 +73,14 @@ namespace sequoia::testing::impl
 
     if(consistentCopyAssign)
     {
-      check_move_construction(logger, actions, std::move(z), y, args...);
+      check_move_construction(logger, actions, std::move(z), y, std::optional<T>{}, args...);
     }
 
     if(!consistentCopy)
       return false;
 
     T w{x};
-    check_move_assign(logger, actions, w, T{y}, y, yMutator, args...);
+    check_move_assign(logger, actions, w, T{y}, y, std::optional<T>{}, yMutator, args...);
 
     if constexpr (do_swap<Args...>::value)
     {
