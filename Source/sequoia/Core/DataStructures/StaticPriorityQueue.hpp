@@ -25,12 +25,12 @@ namespace sequoia::data_structures
    */
 
   template<class T, std::size_t MaxDepth, class Compare=std::less<T>>
-  class static_priority_queue : private Compare
+  class static_priority_queue
   {
   public:
     constexpr static_priority_queue() = default;
 
-    constexpr explicit static_priority_queue(const Compare& compare) : Compare{compare} {}
+    constexpr explicit static_priority_queue(const Compare& compare) : m_Compare{compare} {}
 
     constexpr static_priority_queue(std::initializer_list<T> l)
       : m_Q{make_Q(l, Compare{})}
@@ -38,9 +38,9 @@ namespace sequoia::data_structures
     {}
 
     constexpr static_priority_queue(std::initializer_list<T> l, const Compare& compare)
-      : Compare{compare}
-      , m_Q{make_Q(l, compare)}
+      : m_Q{make_Q(l, compare)}
       , m_End{l.size()}
+      , m_Compare{compare}
     {}
 
     constexpr static_priority_queue(const static_priority_queue&)     = default;
@@ -58,7 +58,7 @@ namespace sequoia::data_structures
 
       m_Q[m_End++] = val;
 
-      bubble_up(m_Q.begin(), m_Q.begin() + m_End - 1, static_cast<Compare&>(*this));
+      bubble_up(m_Q.begin(), m_Q.begin() + m_End - 1, m_Compare);
     }
 
     [[nodiscard]]
@@ -71,7 +71,7 @@ namespace sequoia::data_structures
     {
       std::iter_swap(m_Q.begin(), m_Q.begin() + m_End -1);
       --m_End;
-      sequoia::make_heap(m_Q.begin(), m_Q.begin() + m_End, static_cast<Compare&>(*this));
+      sequoia::make_heap(m_Q.begin(), m_Q.begin() + m_End, m_Compare);
     }
 
     [[nodiscard]]
@@ -101,6 +101,8 @@ namespace sequoia::data_structures
     std::array<T, MaxDepth> m_Q{};
 
     std::size_t m_End{};
+
+    NO_UNIQUE_ADDRESS Compare m_Compare;
 
     static constexpr std::array<T, MaxDepth> make_Q(std::initializer_list<T> l, const Compare& compare)
     {
