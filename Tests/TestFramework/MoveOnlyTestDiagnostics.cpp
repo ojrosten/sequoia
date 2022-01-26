@@ -32,7 +32,8 @@ namespace sequoia::testing
     check_semantics(LINE("Broken check invariant"), move_only_beast{1}, move_only_beast{3}, move_only_beast{2}, move_only_beast{3});
     check_semantics(LINE("Broken check invariant"), move_only_beast{2}, move_only_beast{1}, move_only_beast{2}, move_only_beast{3});
 
-    check_semantics(LINE("Incorrect moved-from state"), []() { return resource_binder{1}; }, []() {return resource_binder{2}; }, std::optional<resource_binder>{1});
+    check_semantics(LINE("Incorrect moved-from state"), resource_binder{1}, resource_binder{2}, resource_binder{1}, resource_binder{2}, resource_binder{3});
+    check_semantics(LINE("Incorrect moved-from state"), []() { return resource_binder{1}; }, []() {return resource_binder{2}; }, resource_binder{3});
   }
 
 
@@ -53,6 +54,7 @@ namespace sequoia::testing
     check_semantics(LINE(""), beast{1}, beast{2}, beast{1}, beast{2});
     check_semantics(LINE("Function object syntax"), [](){ return beast{1}; }, [](){ return beast{2}; });
 
-    check_semantics(LINE("Incorrect moved-from state"), []() { return resource_binder{1}; }, []() {return resource_binder{2}; }, std::optional<resource_binder>{});
+    check_semantics(LINE("Check moved-from state"), resource_binder{1}, resource_binder{2}, resource_binder{1}, resource_binder{2}, resource_binder{0});
+    check_semantics(LINE("Check moved-from state"), []() { return resource_binder{1}; }, []() {return resource_binder{2}; }, resource_binder{0});
   }
 }

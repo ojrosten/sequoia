@@ -118,13 +118,33 @@
 	  [sequoia::testing::orderable_resource_binder]
 	  operator== returned false
 	  Obtained : 0
-	  Predicted: 1
+	  Predicted: 3
 
 	  Incorrect moved-from value after move assignment
 	  [sequoia::testing::orderable_resource_binder]
 	  operator== returned false
 	  Obtained : 0
-	  Predicted: 1
+	  Predicted: 3
+
+	=======================================
+
+	Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 74
+	Incorrect moved-from state
+
+	--Move-only Semantics--
+	[sequoia::testing::orderable_resource_binder]
+
+	  Incorrect moved-from value after move construction
+	  [sequoia::testing::orderable_resource_binder]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 3
+
+	  Incorrect moved-from value after move assignment
+	  [sequoia::testing::orderable_resource_binder]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 3
 
 	=======================================
 

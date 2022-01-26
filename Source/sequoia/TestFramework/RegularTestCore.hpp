@@ -16,6 +16,9 @@
 
 namespace sequoia::testing
 {
+  [[nodiscard]]
+  std::string regular_message(std::string_view description);
+
   /*! \brief Extender for testing classes exhibiting regular/std::totally_ordered semantics.
 
        This class is designed to be plugged into the
@@ -43,7 +46,7 @@ namespace sequoia::testing
       requires (!std::totally_ordered<T>)
     void check_semantics(std::string_view description, const T& x, const T& y)
     {
-      testing::check_semantics(append_lines(description, emphasise("Regular Semantics")), logger(), x, y);
+      testing::check_semantics(regular_message(description), logger(), x, y);
     }
 
     /// Precondition: x!=y, with values consistent with order
@@ -51,14 +54,14 @@ namespace sequoia::testing
       requires std::totally_ordered<T>
     void check_semantics(std::string_view description, const T& x, const T& y, std::weak_ordering order)
     {
-      testing::check_semantics(append_lines(description, emphasise("Regular Semantics")), logger(), x, y, order);
+      testing::check_semantics(regular_message(description), logger(), x, y, order);
     }
 
     /// Precondition: x!=y
     template<pseudoregular T, std::invocable<T&> Mutator>
     void check_semantics(std::string_view description, const T& x, const T& y, Mutator m)
     {
-      testing::check_semantics(append_lines(description, emphasise("Regular Semantics")), logger(), x, y, std::move(m));
+      testing::check_semantics(regular_message(description), logger(), x, y, std::move(m));
     }
 
     /// Precondition: x!=y, with values consistent with order
@@ -66,7 +69,7 @@ namespace sequoia::testing
       requires std::totally_ordered<T>
     void check_semantics(std::string_view description, const T& x, const T& y, std::weak_ordering order, Mutator m)
     {
-      testing::check_semantics(append_lines(description, emphasise("Regular Semantics")), logger(), x, y, order, std::move(m));
+      testing::check_semantics(regular_message(description), logger(), x, y, order, std::move(m));
     }
   protected:
     ~regular_extender() = default;

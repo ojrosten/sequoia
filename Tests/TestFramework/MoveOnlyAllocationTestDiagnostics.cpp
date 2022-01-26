@@ -150,6 +150,22 @@ namespace sequoia::testing
       check_semantics(LINE("Invariant violated: x == y"), beast{1}, beast{1}, beast{1}, beast{1}, mutator,
                       allocation_info{allocGetter, {1_pm, {1_pm, 1_mu}, {0_manp}}});
     }
+
+    {
+      using beast = specified_moved_from_beast<int, shared_counting_allocator<int, true, PropagateMove, PropagateSwap>>;
+
+      auto allocGetter{
+        [](const beast& beast) {
+          return beast.x.get_allocator();
+        }
+      };
+
+      check_semantics(LINE("Incorrect moved-from state"), beast{1}, beast{2}, beast{1}, beast{2}, beast{3}, mutator,
+        allocation_info{allocGetter, {1_pm, {1_pm, 1_mu}, {0_manp}}});
+
+      check_semantics(LINE("Incorrect moved-from state"), []() { return beast{1}; }, []() { return beast{2}; }, beast{3}, mutator,
+        allocation_info{allocGetter, {1_pm, {1_pm, 1_mu}, {0_manp}}});
+    }
   }
 
   [[nodiscard]]
@@ -201,6 +217,21 @@ namespace sequoia::testing
 
       check(equality, LINE("check_semantics return value (x)"), x, beast{});
       check(equality, LINE("check_semantics return value (y)"), y, beast{2});
+    }
+
+    {
+      using beast = specified_moved_from_beast<int, shared_counting_allocator<int, true, PropagateMove, PropagateSwap>>;
+      auto allocGetter{
+        [](const beast& beast) {
+          return beast.x.get_allocator();
+        }
+      };
+
+      check_semantics(LINE("Check moved-from state"), beast{1}, beast{2}, beast{1}, beast{2}, beast{}, mutator,
+        allocation_info{allocGetter, {1_pm, {1_pm, 1_mu}, {0_manp}}});
+
+      check_semantics(LINE("Check moved-from state"), []() { return beast{1}; }, []() { return beast{2}; }, beast{}, mutator,
+        allocation_info{allocGetter, {1_pm, {1_pm, 1_mu}, {0_manp}}});
     }
   }
 }

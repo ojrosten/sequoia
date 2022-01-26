@@ -47,7 +47,7 @@ namespace sequoia::testing
       x != y
    */
   template<test_mode Mode, moveonly T>
-  void check_semantics(std::string_view description, test_logger<Mode>& logger, T&& x, T&& y, const T& xClone, const T& yClone, const std::optional<T>& movedFrom)
+  void check_semantics(std::string_view description, test_logger<Mode>& logger, T&& x, T&& y, const T& xClone, const T& yClone, opt_moved_from_ref<T> movedFrom)
   {
     sentinel<Mode> sentry{logger, add_type_info<T>(description).append("\n")};
 
@@ -62,7 +62,7 @@ namespace sequoia::testing
    */
   template<test_mode Mode, moveonly T>
     requires std::totally_ordered<T>
-  void check_semantics(std::string_view description, test_logger<Mode>& logger, T&& x, T&& y, const T& xClone, const T& yClone, const std::optional<T>& movedFrom, std::weak_ordering order)
+  void check_semantics(std::string_view description, test_logger<Mode>& logger, T&& x, T&& y, const T& xClone, const T& yClone, opt_moved_from_ref<T> movedFrom, std::weak_ordering order)
   {
     sentinel<Mode> sentry{logger, add_type_info<T>(description).append("\n")};
 

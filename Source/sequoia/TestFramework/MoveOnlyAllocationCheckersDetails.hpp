@@ -83,7 +83,7 @@ namespace sequoia::testing::impl
                        T&& y,
                        const T& xClone,
                        const T& yClone,
-                       const std::optional<T>& movedFrom,
+                       opt_moved_from_ref<T> movedFrom,
                        Mutator m,
                        const allocation_info<T, Getters>&... info)
   {
@@ -112,7 +112,7 @@ namespace sequoia::testing::impl
                                  const Actions& actions,
                                  xMaker xFn,
                                  yMaker yFn,
-                                 const std::optional<T>& movedFrom,
+                                 opt_moved_from_ref<T> movedFrom,
                                  Mutator m,
                                  const allocation_info<T, Getters>&... info)
   {
@@ -136,7 +136,7 @@ namespace sequoia::testing::impl
                        T&& y,
                        const T& xClone,
                        const T& yClone,
-                       const std::optional<T>& movedFrom,
+                       opt_moved_from_ref<T> movedFrom,
                        Mutator m,
                        std::tuple<dual_allocation_checker<T, Getters>...> checkers)
   {

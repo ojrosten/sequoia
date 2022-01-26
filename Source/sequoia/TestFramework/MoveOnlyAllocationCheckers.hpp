@@ -178,7 +178,7 @@ namespace sequoia::testing
                        T&& y,
                        const T& xClone,
                        const T& yClone,
-                       const std::optional<T>& movedFrom,
+                       opt_moved_from_ref<T> movedFrom,
                        Mutator m,
                        const allocation_info<T, Getters>&... info)
   {
@@ -193,7 +193,7 @@ namespace sequoia::testing
                        T&& y,
                        const T& xClone,
                        const T& yClone,
-                       const std::optional<T>& movedFrom,
+                       opt_moved_from_ref<T> movedFrom,
                        std::weak_ordering order,
                        Mutator m,
                        const allocation_info<T, Getters>&... info)
@@ -215,7 +215,7 @@ namespace sequoia::testing
                                  test_logger<Mode>& logger,
                                  xMaker xFn,
                                  yMaker yFn,
-                                 const std::optional<T>& movedFrom,
+                                 opt_moved_from_ref<T> movedFrom,
                                  Mutator m,
                                  const allocation_info<T, Getters>&... info)
   {
@@ -236,7 +236,7 @@ namespace sequoia::testing
                                  test_logger<Mode>& logger,
                                  xMaker xFn,
                                  yMaker yFn,
-                                 const std::optional<T>& movedFrom,
+                                 opt_moved_from_ref<T> movedFrom,
                                  std::weak_ordering order,
                                  Mutator m,
                                  const allocation_info<T, Getters>&... info)

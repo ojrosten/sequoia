@@ -70,7 +70,8 @@ namespace sequoia::testing
     {
       using binder = orderable_resource_binder;
 
-      check_semantics(LINE("Incorrect moved-from state"), []() { return binder{1}; }, []() {return binder{2}; }, std::optional<binder>{1}, std::strong_ordering::less);
+      check_semantics(LINE("Incorrect moved-from state"), binder{1}, binder{2}, binder{1}, binder{2}, binder{3}, std::strong_ordering::less);
+      check_semantics(LINE("Incorrect moved-from state"), []() { return binder{1}; }, []() {return binder{2}; }, binder{3}, std::strong_ordering::less);
     }
   }
 
@@ -98,7 +99,8 @@ namespace sequoia::testing
     {
       using binder = orderable_resource_binder;
 
-      check_semantics(LINE("Incorrect moved-from state"), []() { return binder{1}; }, []() {return binder{2}; }, std::optional<binder>{}, std::strong_ordering::less);
+      check_semantics(LINE("Incorrect moved-from state"), binder{1}, binder{2}, binder{1}, binder{2}, binder{0}, std::strong_ordering::less);
+      check_semantics(LINE("Incorrect moved-from state"), []() { return binder{1}; }, []() {return binder{2}; }, binder{0}, std::strong_ordering::less);
     }
   }
 }

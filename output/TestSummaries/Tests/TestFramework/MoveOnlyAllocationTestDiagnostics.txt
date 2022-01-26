@@ -1,4 +1,4 @@
 Move-Only Alloction False Positive Diagnostics
-False Positive Checks:                    52;  Failures:  0
+False Positive Checks:                    60;  Failures:  0
 Move-Only Allocation False Negative Diagnostics
-False Negative Checks:                    20;  Failures:  0
+False Negative Checks:                    28;  Failures:  0

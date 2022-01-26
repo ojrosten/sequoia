@@ -1,5 +1,5 @@
 	False Positive Failure:
-	Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 53
+	Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 54
 
 	--Move-only Semantics--
 	[sequoia::testing::move_only_beast<int, std::allocator<int> >]
@@ -7,7 +7,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 54
+	Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 55
 	Function object syntax
 
 	--Move-only Semantics--
@@ -16,8 +16,17 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 56
-	Incorrect moved-from state
+	Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 57
+	Check moved-from state
+
+	--Move-only Semantics--
+	[sequoia::testing::resource_binder]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 58
+	Check moved-from state
 
 	--Move-only Semantics--
 	[sequoia::testing::resource_binder]

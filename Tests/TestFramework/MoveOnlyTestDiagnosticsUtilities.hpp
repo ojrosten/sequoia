@@ -109,6 +109,64 @@ namespace sequoia::testing
     int m_Index{-1};
   };
 
+  template<class T = int, class Allocator = std::allocator<int>>
+  struct specified_moved_from_beast
+  {
+    using allocator_type = Allocator;
+
+    specified_moved_from_beast(std::initializer_list<T> list) : x{list} {}
+
+    specified_moved_from_beast(std::initializer_list<T> list, const allocator_type& a) : x(list, a) {}
+
+    specified_moved_from_beast(const allocator_type& a) : x(a) {}
+
+    specified_moved_from_beast(const specified_moved_from_beast&) = delete;
+
+    specified_moved_from_beast(specified_moved_from_beast&& other) noexcept
+      : x{std::move(other.x)}
+    {
+      other.x.clear();
+    }
+
+    specified_moved_from_beast(specified_moved_from_beast&& other, const allocator_type& a) : x(std::move(other.x), a) {}
+
+    specified_moved_from_beast& operator=(const specified_moved_from_beast&) = delete;
+
+    specified_moved_from_beast& operator=(specified_moved_from_beast&& other)
+    {
+      x = std::move(other.x);
+      other.x.clear();
+
+      return *this;
+    }
+
+    void swap(specified_moved_from_beast& other) noexcept(noexcept(std::swap(this->x, other.x)))
+    {
+      std::swap(x, other.x);
+    }
+
+    friend void swap(specified_moved_from_beast& lhs, specified_moved_from_beast& rhs)
+      noexcept(noexcept(lhs.swap(rhs)))
+    {
+      lhs.swap(rhs);
+    }
+
+    std::vector<T, Allocator> x{};
+
+    [[nodiscard]]
+    friend bool operator==(const specified_moved_from_beast&, const specified_moved_from_beast&) noexcept = default;
+
+    [[nodiscard]]
+    friend bool operator!=(const specified_moved_from_beast&, const specified_moved_from_beast&) noexcept = default;
+
+    template<class Stream>
+    friend Stream& operator<<(Stream& s, const specified_moved_from_beast& b)
+    {
+      for(const auto& i : b.x) s << i << '\n';
+      return s;
+    }
+  };
+
   template<class T=int, class Allocator=std::allocator<int>>
   struct move_only_broken_equality
   {
