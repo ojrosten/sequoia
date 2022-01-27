@@ -123,15 +123,18 @@ namespace sequoia::testing
   inline constexpr is_not_final_message_t is_not_final_message{};
 
   template<class T>
-  inline constexpr bool has_prediction_message{requires(const T& obtained, const T& prediction) { prediction_message(obtained, prediction); }};
+  concept reportable = serializable<T> || is_character_v<T>;
 
-  static_assert(has_prediction_message<char>);
-
+  /// To prevent implicit conversions to bool
+  template<reportable T>
+    requires std::is_same_v<T, bool>
   [[nodiscard]]
-  std::string failure_message(is_final_message_t, bool, bool);
+  std::string failure_message(is_final_message_t, T, T)
+  {
+    return "check failed";
+  }
 
-  template<class T>
-    requires has_prediction_message<T> // satisfied if the type is serializable
+  template<reportable T>
   [[nodiscard]]
   std::string failure_message(is_final_message_t, const T& obtained, const T& prediction)
   {

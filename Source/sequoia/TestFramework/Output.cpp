@@ -179,13 +179,6 @@ namespace sequoia::testing
     return default_prediction_message(obtained, prediction);
   }
 
-
-  [[nodiscard]]
-  std::string failure_message(is_final_message_t, bool, bool)
-  {
-    return "check failed";
-  }
-
   [[nodiscard]]
   std::string report_line(const std::filesystem::path& file, const int line, std::string_view message, const std::filesystem::path& repository)
   {

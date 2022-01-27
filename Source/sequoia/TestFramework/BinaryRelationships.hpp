@@ -36,7 +36,6 @@ namespace sequoia::testing
     static std::string report(final_message_constant<IsFinalMessage>, const Compare&, const T&, const T&) = delete;
   };
 
-  
   /*! \brief Function object for performing comparisons within an absolute tolerance
 
       \anchor within_tolerance_primary
@@ -68,12 +67,11 @@ namespace sequoia::testing
   struct failure_reporter<within_tolerance<T>>
   {
     template<bool IsFinalMessage>
+      requires reportable<T>
     [[nodiscard]]
     static std::string report(final_message_constant<IsFinalMessage>, const within_tolerance<T>& c, const T& obtained, const T& prediction)
     {
-      return prediction_message(to_string(obtained), to_string(prediction))
-        .append(" +/- ")
-        .append(to_string(c.tol()));
+      return prediction_message(obtained, prediction).append(" +/- ").append(to_string(c.tol()));
     }
   };
 
@@ -81,6 +79,7 @@ namespace sequoia::testing
   struct failure_reporter<std::equal_to<T>>
   {
     template<bool IsFinalMessage>
+      requires (reportable<T> || !IsFinalMessage)
     [[nodiscard]]
     static std::string report(final_message_constant<IsFinalMessage>, const std::equal_to<T>&, const T& obtained, const T& prediction)
     {
@@ -99,6 +98,7 @@ namespace sequoia::testing
   struct failure_reporter<std::less<T>>
   {
     template<bool IsFinalMessage>
+      requires reportable<T>
     [[nodiscard]]
     static std::string report(final_message_constant<IsFinalMessage>, const std::less<T>&, const T& obtained, const T& prediction)
     {
@@ -110,6 +110,7 @@ namespace sequoia::testing
   struct failure_reporter<std::less_equal<T>>
   {
     template<bool IsFinalMessage>
+      requires reportable<T>
     [[nodiscard]]
     static std::string report(final_message_constant<IsFinalMessage>, const std::less_equal<T>&, const T& obtained, const T& prediction)
     {
@@ -121,6 +122,7 @@ namespace sequoia::testing
   struct failure_reporter<std::greater<T>>
   {
     template<bool IsFinalMessage>
+      requires reportable<T>
     [[nodiscard]]
     static std::string report(final_message_constant<IsFinalMessage>, const std::greater<T>&, const T& obtained, const T& prediction)
     {
@@ -132,6 +134,7 @@ namespace sequoia::testing
   struct failure_reporter<std::greater_equal<T>>
   {
     template<bool IsFinalMessage>
+      requires reportable<T>
     [[nodiscard]]
     static std::string report(final_message_constant<IsFinalMessage>, const std::greater_equal<T>&, const T& obtained, const T& prediction)
     {
