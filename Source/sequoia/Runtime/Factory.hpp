@@ -7,6 +7,10 @@
 
 #pragma once
 
+/*! \file
+    \brief Generic factory with statically defined products.
+ */
+
 #include "sequoia/Core/Meta/Concepts.hpp"
 #include "sequoia/Core/Utilities/Iterator.hpp"
 

@@ -7,6 +7,10 @@
 
 #pragma once
 
+/*! \file
+    \brief Utilities for reading/writing to files.
+ */
+
 #include "sequoia/Core/Meta/Concepts.hpp"
 
 #include <filesystem>

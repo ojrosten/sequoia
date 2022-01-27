@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.2"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Sequoia: C:/Users/olive/OneDrive/sequoia/Source/sequoia/Streaming/Streaming.cpp File Reference</title>
+<title>Sequoia: C:/Users/olive/OneDrive/sequoia/Source/sequoia/Streaming/Streaming.hpp File Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -68,16 +68,18 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#func-members">Functions</a>  </div>
-  <div class="headertitle"><div class="title">Streaming.cpp File Reference</div></div>
+  <div class="headertitle"><div class="title">Streaming.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>Definitions for <a class="el" href="../../de/db5/Streaming_8hpp.html" title="Utilities for reading/writing to files.">Streaming.hpp</a>.  
+<p>Utilities for reading/writing to files.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;<a class="el" href="../../de/db5/Streaming_8hpp_source.html">sequoia/Streaming/Streaming.hpp</a>&quot;</code><br />
-<code>#include &lt;fstream&gt;</code><br />
-<code>#include &lt;sstream&gt;</code><br />
-</div><table class="memberdecls">
+<div class="textblock"><code>#include &quot;<a class="el" href="../../d3/d84/Concepts_8hpp_source.html">sequoia/Core/Meta/Concepts.hpp</a>&quot;</code><br />
+<code>#include &lt;filesystem&gt;</code><br />
+<code>#include &lt;optional&gt;</code><br />
+</div>
+<p><a href="../../de/db5/Streaming_8hpp_source.html">Go to the source code of this file.</a></p>
+<table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:aa12fc850c308269138fd991fc58f1067"><td class="memItemLeft" align="right" valign="top"><a id="aa12fc850c308269138fd991fc58f1067" name="aa12fc850c308269138fd991fc58f1067"></a>
@@ -92,9 +94,13 @@ std::optional&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bo
 <tr class="memitem:aa4be22d8c6c026dcd9e0e023e88473ea"><td class="memItemLeft" align="right" valign="top"><a id="aa4be22d8c6c026dcd9e0e023e88473ea" name="aa4be22d8c6c026dcd9e0e023e88473ea"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::write_to_file</b> (const std::filesystem::path &amp;file, std::string_view text)</td></tr>
 <tr class="separator:aa4be22d8c6c026dcd9e0e023e88473ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2d8e2e831a4d976ce6d37364ff4439cd"><td class="memTemplParams" colspan="2"><a id="a2d8e2e831a4d976ce6d37364ff4439cd" name="a2d8e2e831a4d976ce6d37364ff4439cd"></a>
+template&lt;std::invocable&lt; std::string &amp; &gt; Fn&gt; </td></tr>
+<tr class="memitem:a2d8e2e831a4d976ce6d37364ff4439cd"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::read_modify_write</b> (const std::filesystem::path &amp;file, Fn fn)</td></tr>
+<tr class="separator:a2d8e2e831a4d976ce6d37364ff4439cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p >Definitions for <a class="el" href="../../de/db5/Streaming_8hpp.html" title="Utilities for reading/writing to files.">Streaming.hpp</a>. </p>
+<div class="textblock"><p >Utilities for reading/writing to files. </p>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

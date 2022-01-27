@@ -7,6 +7,10 @@
 
 #pragma once
 
+/*! \file
+    \brief Tools for generating compiler-specific behaviour.
+ */
+
 #include <vector>
 #include <type_traits>
 

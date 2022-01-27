@@ -7,7 +7,9 @@
 
 #pragma once
 
-/*! \file Platform-dependent utilities */
+/*! \file
+    \brief Platform-dependent utilities
+ */
 
 #include <chrono>
 

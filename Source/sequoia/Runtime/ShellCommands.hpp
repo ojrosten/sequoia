@@ -7,6 +7,10 @@
 
 #pragma once
 
+/*! \file
+    \brief Utilties for creating, composing and invoking commandline input.
+ */
+
 #include <filesystem>
 
 namespace sequoia::runtime
