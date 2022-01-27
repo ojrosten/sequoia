@@ -28,8 +28,8 @@
     - Instability detection: `locate-instabilities` is called with an integer, specifying the number
       of times tests should be run. Instabilities are pinned down to the line of test code where
       they first manifest. By default, everything is run within the same program, allowing detection
-      of changes to static data. However, it's conceivable that these changes are desired. To allow false
-      positives, use the `--sandbox` flag to ensure that each run is done in an independent process.
+      of changes to static data. However, it's conceivable that these changes are desired. If appropriate,
+	  use the `--sandbox` flag to ensure that each run is done in an independent process.
 
     \section sec_automated Automation
 
@@ -74,11 +74,11 @@
     check looks as follows:
 
     <pre>
-    check_equality("Description of test", x, 5);
+    check(equality, "Description of test", x, 5);
     </pre>
 
     If `x==5` the check passes, whereas if `x!=5` a failure is reported. However, suppose that
-    check_equality has a bug. For example, it might never report failure.
+    `check` has a bug. For example, it might never report failure.
     To counter this, tests can be created to be run in false-positive mode. In this case,
     the above example will pass when `x!=5` and fail when `x==5`. The purpose of this is to pick
     up bugs in the testing framework itself.
@@ -101,7 +101,7 @@
     framework generates output.
 
     Clients may extend the testing framework to conveniently test their types, for example
-    by specializing the \ref value_checker_primary "value_checker"
+    by specializing the \ref value_tester_primary "value_tester"
     (see \ref sec_extensible). This is a perfect
     opportunity to write some false-positive tests to give confidence that the newly-added code
     is not spuriously reporting success.
@@ -110,7 +110,7 @@
     however, they are treated separately since statements like
 
     <pre>
-    check_equality("Description of test", 5, 5);
+    check(equality, "Description of test", 5, 5);
     </pre>
 
     are morally tests of the testing framework itself, rather than tests of client code. As
@@ -118,22 +118,40 @@
     of detecting (via version control) changes to the way the testing framework generates
     output.
 
+	Just as the outputs of false-negative and, especially, false-positive tests is written to files,
+	so to is the output from exception checks. For example, consider the call
+	
+	<pre>
+	check_exception_thrown<std::runtime_error>("Description", f);
+	</pre>
+	
+	where `f` is invocable without any arguments. This check will pass if `f` throws an exception
+	of the expected type - here, `std::runtime_error`. To obtain higher fidelity, the message
+	associated with the exception is witten to a file, again best placed under version control.
+	First and foremost, this allows clients to check that the exception thrown is the one expected.
+	After all, it may be that `f` can fail in a number of says, each with the same exception type.
+	Only by checking the associated message can one be sure that the failure is the one intended
+	to be tested. Secondly, by placing the file under version control, changes to either the text
+	of the exception, or changes to which exception was actually thrown can be detected. 
+	
+	Should the need arise, the class template \ref exception_message_extractor_primary
+	"exception_message_extractor" is provided to allow customized extraction of error messages
+	from exceptions of arbitary types.
 
     \section sec_extensible Extensibility
 
     There are several ways in which the testing framework may be extended. Suppose that a
     client has created a new type, `my_type`. One way or another, it is almost inevitable that
-    calls will be made to `check_equality`. If the type is sufficiently simple, and defines
+    calls will be made to `check`. If the type is sufficiently simple, and defines
     `operator==`, it suffices for clients to specialize the class template
     \ref serializer_primary "serializer". This
     defines how to serialize instances of the class and so we may again end up with a failure
     report along the lines of the above. However, if the class is more complex, there is
     a superior alternative.
 
-    `sequoia` defines a class template,
-    \ref value_checker_primary "value_checker".
-    The purpose of this is to
-    use the `const` accessors of two instances of a class to probe their purported equality.
+    `sequoia` defines a class template, \ref value_tester_primary "value_tester".
+	One purpose of this is to provide a customization point where
+    the `const` accessors of two instances of a class can be used to probe purported equality.
     Suppose that a client has created a new container and consider comparing two instances.
     `operator==` may return `false` or `true`. In the first case, we want to get to the bottom
     of this, in a more appropriate manner than simply serializing the class (which may produce
@@ -141,10 +159,14 @@
     to use iterators to compare
     the elements and find any that differ. However, it is worth doing this even if `operator==`
     returns `true`; after all, the aim is to test with high fidelity and it may be that `operator==`
-    has a bug; or perhaps it is fine but there's a bug in the const accessors. Either way,
-    a well designed specialization of the
-    \ref value_checker_primary "value_checker" will catch these
-    potential inconsistencies.
+    has a bug; or perhaps it is fine but there's a bug in the `const` accessors. Either way,
+    a well designed definition of the static method
+	
+	<pre>
+	void value_tester<my_type>::check(equality_check_t, std::string_view description, const my_type& obtained, const my_type& prediction);
+	</pre>
+	
+	will catch these potential inconsistencies.
 
     However, there is a gap here. Consider the the first time a type is instantiated in
     a test, say
@@ -157,41 +179,45 @@
     like
 
     <pre>
-    check_equality("x correctly initialized", x, my_type{5});
+    check(equality, "x correctly initialized", x, my_type{5});
     </pre>
-
-    Therefore, in addition to the
-    \ref value_checker_primary "value_checker", the framework defines two class
-    templates,
-    \ref equivalence_checker_primary "equivalence_checker" and
-    \ref weak_equivalence_checker_primary "weak_equivalence_checker".
-    Suppose that, in this example,
-    `my_type` simply wraps an `int`. Here it may make sense to define the specialization
-    `equivalence_checker<my_type>`; internally, this will define a static function, `check`, which
-    defines a comparison between `my_type` and `int`. The line of code above may then be replaced by
-
-    <pre>
-    check_equivalence("x correctly initialized", x, 5);
+	
+	
+    Therefore, in addition to supplying a static `check(equality_check_t, ...)` method, we can supply an overload,
+	`check(equivalence_check_t, ...)`.Suppose that, in this example, `my_type` simply wraps an `int`.
+	In this case we would define the static method
+	
+	<pre>
+	void value_tester<my_type>::check(equivalence_check_t, std::string_view description, const my_type& obtained, int prediction);
+	</pre>
+	
+	which will automatically be called when the following line of code is invoked:
+	
+	<pre>
+    check(equivalence, "x correctly initialized", x, 5);
     </pre>
+	
+	There are cicumstances in which it appropriate to consider equivalence of a type not with
+	another type, but with itself. For example, consider `std::filesystem::path`. Equality of two
+	instances would amount to the paths being identical. One reasonable definition of two
+	equivalent paths is that they point to a filesystem object with the same name and the same contents.
 
-    Once consistency of initialization has been checked, thereafter it makes sense to revert
-    to `check_equality`.
-
-    What of the \ref weak_equivalence_checker_primary "weak_equivalence_checker"?
-    This is for cases where there is a signifcant mismatch
-    between the information content of the type to be checked and the type it is being compared
-    with.
-
+	In some cicumstances, it may feel more logically comfortable
+	check weak equivalence instead of equivalence (done in the obvious way, adhering to the pattern above).
+	For example,
+	suppose the goal is to compare two values of `std::fuction<R (Args...)>`. Statically, it is known
+	that the signatures are the same. However, at runtime, all that can be readily checked is whether
+	a given `std::function` is null or not. Therefore, it may be reasonable to say that two instances
+	of `std::fuction<R (Args...)>` are weakly equivalent if they are either both null or both not null.
+	
     There is also an entirely different way in which the testing framework may be extended.
-    The \ref checker_primary "checker" class template provides basic functionality such as `check_equality` and
+    The \ref checker_primary "checker" class template provides basic functionality such as `check(equality_check_t, ...)` and
     `check_exception_thrown`. However, the class template accepts a variadic number of extenders,
     which enhance its functionality. Examples provided with `sequoia` are various semantics extenders
-    (see below), a
-    \ref performance_extender_primary "performance_extender", and a
-    \ref fuzzy_extender_primary "fuzzy_extender" for doing fuzzy comparisons. These may be readily
+    (see below), and a
+    \ref performance_extender_primary "performance_extender". Extenders may be readily
     mixed and matched with appropriate using declarations, some of which are supplied with the
-    library. If a client of the code wishes to provide a new extension, simply follow the existing
-    pattern using e.g. FuzzyTestCore.hpp as an example.
+    library.
 
 
     \section sec_semantics Semantics-Awareness
@@ -212,6 +238,9 @@
     of the burden of devising ways to carefully check consistency of these operations by
     reliably bundling everything into a call to check_semantics.
 
+	As a bonus, if both serialization and deserialization are defined, `check_semantics` will check
+	their consistency. Not a single line of extra code need to written to activate the extra check:
+	static reflection determines whether or not it should be performed.
 
     \section sec_allocators Allocator-Awareness
 
@@ -245,8 +274,7 @@
     The design accomodates scoped allocators and multiple
     allocators (be each of them normal or scoped). 
     \ref regular_allocation_test_alias "Regular allocation tests"
-    come with a facility for
-    automatically
+    come with a facility for automatically
     generating all 8 combinations of allocation propagation from a single call to `check_semantics`.
     \ref move_only_allocation_test_alias "Move-only allocation tests" do likewise for the
     4 combinations relevant to move-only types.
@@ -286,7 +314,7 @@
     of `std::pair<int,double>`:
 
     <pre>
-    ../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 51
+    Tests/TestFramework/UnitTestDiagnostics.cpp, Line 51
 	[std::pair<int, double>]
 	operator== returned false
 
@@ -300,13 +328,32 @@
     For each sub-check performed as part of the top-level check, type information is reported. This is
     generated by the class template \ref type_demangler_primary "type_demangler". Clients are welcome
     to specialize this to provide more readable demangling.
+	
+	There is another side to generics-friendliness. Consider the example of testing a class template.
+	Following the examples above, it makes sense to start by testing (weak) equivalence following
+	initialization and then subsequently performing equality checks of two instances following various
+	operations. However, given
+	this type is templated, it may be that the type with which it is instantiated does not naturally
+	support equality checks. For example, consider `std::pair<int, std::function<void ()>`. Here, the first
+	member supports equality checking but the second only weak equivalence checking. However,
+	the implementation of `value_tester` for `std::pair` supplied by `sequoia` is such that it supports
+	the following call:
+	
+	<pre>
+	check(with_best_available, "", x, y);
+	</pre>
+	
+	where `x` and `y` are both instances of `std::pair<int, std::function<void ()>`. Static reflection
+	is used to invoke the strongest check for each of the wrapped type.
 
     \section sec_expressive Expressiveness
 
-    The focus of the testing framework's API is on providing useful primitives, such as `check_equality` and
-    `check_semantics`, rather than providing classes with names like 'Then' and 'That'. However, in
-    addition to encouraging clients to think seriously about providing each check with a descriptive
-    string (which, being the first argument of each check method, is firmly encouraged), there is the facility
+    The focus of the testing framework's API is on providing useful primitives, such as
+    `check_semantics`, `check_exception_thrown` and `check`. As discussed above, the latter naturally
+	forms overload sets which allows generic testing of class templates, even where the class is 
+	heterogenous and the types with which it is instantiated may support checks of differing strengths.
+	Clients are encouraged to supply each check with a description, which constitutes the second
+	argument. In addition, there is the facility
     to provide customized advice in the event of particular failures. For example, within the allocation
     testing framework, it is possible for a negative number of allocations to be reported. This is rather
     counter-intuitive and, when encountered for the first time, may raise doubts as to the correctness
@@ -324,7 +371,7 @@
     If `operator()` is overloaded in such a way that it takes two instances of a type and
     returns a string, then reflection is utilized to apply this function object whenever the
     appropriate overload may be invoked. For example, consider the case where a function object is supplied to
-    provide advice for ints, under certain conditions. Suppose this
+    provide advice for `int`s, under certain conditions. Suppose this
     function object is fed to a check performed on a `std::vector<int>`. In this case, the function object
     will be propagated internally until it reaches the point where it can be invoked
     on the `int`s at the end of the chain.

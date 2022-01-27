@@ -224,6 +224,10 @@ namespace sequoia::testing
     }
   };
 
+
+  /*! \brief class template, specializations of which extract messages from various exception types.
+     \anchor exception_message_extractor_primary
+  */
   template<class>
   struct exception_message_extractor;
 
@@ -382,6 +386,7 @@ namespace sequoia::testing
       return mess;
     }
   };
+
   template
   <
     class E,

@@ -1,11 +1,14 @@
 var searchData=
 [
-  ['line_5fbreaks_1293',['line_breaks',['../d3/d49/classsequoia_1_1testing_1_1line__breaks.html',1,'sequoia::testing']]],
-  ['linear_5fsequence_1294',['linear_sequence',['../d8/d4a/classsequoia_1_1maths_1_1linear__sequence.html',1,'sequoia::maths']]],
-  ['linear_5fsequence_5ffalse_5fpositive_5ftest_1295',['linear_sequence_false_positive_test',['../d5/df8/classsequoia_1_1testing_1_1linear__sequence__false__positive__test.html',1,'sequoia::testing']]],
-  ['linear_5fsequence_5ftest_1296',['linear_sequence_test',['../d4/d2e/classsequoia_1_1testing_1_1linear__sequence__test.html',1,'sequoia::testing']]],
-  ['log_5fsummary_1297',['log_summary',['../d2/daa/classsequoia_1_1testing_1_1log__summary.html',1,'sequoia::testing']]],
-  ['loop_5fprocessor_1298',['loop_processor',['../dc/d07/classsequoia_1_1maths_1_1graph__impl_1_1loop__processor.html',1,'sequoia::maths::graph_impl']]],
-  ['loop_5fprocessor_3c_20g_2c_20graph_5fflavour_3a_3aundirected_20_3e_1299',['loop_processor&lt; G, graph_flavour::undirected &gt;',['../dc/d1a/classsequoia_1_1maths_1_1graph__impl_1_1loop__processor_3_01G_00_01graph__flavour_1_1undirected_01_4.html',1,'sequoia::maths::graph_impl']]],
-  ['loop_5fprocessor_3c_20g_2c_20graphflavour_20_3e_1300',['loop_processor&lt; G, GraphFlavour &gt;',['../d9/d97/classsequoia_1_1maths_1_1graph__impl_1_1loop__processor_3_01G_00_01GraphFlavour_01_4.html',1,'sequoia::maths::graph_impl']]]
+  ['mapper_0',['mapper',['../d7/df1/structsequoia_1_1impl_1_1type__to__type_1_1mapper.html',1,'sequoia::impl::type_to_type']]],
+  ['materials_5finfo_1',['materials_info',['../d0/d4e/structsequoia_1_1testing_1_1materials__info.html',1,'sequoia::testing']]],
+  ['materials_5fsetter_2',['materials_setter',['../d5/df0/classsequoia_1_1testing_1_1family__info_1_1materials__setter.html',1,'sequoia::testing::family_info']]],
+  ['monotonic_5fsequence_3',['monotonic_sequence',['../d7/ddc/classsequoia_1_1maths_1_1monotonic__sequence.html',1,'sequoia::maths']]],
+  ['monotonic_5fsequence_5fbase_4',['monotonic_sequence_base',['../d5/dcd/classsequoia_1_1maths_1_1monotonic__sequence__base.html',1,'sequoia::maths']]],
+  ['monotonic_5fsequence_5fbase_3c_20t_2c_20std_3a_3aarray_3c_20t_2c_20n_20_3e_2c_20std_3a_3aless_3c_20t_20_3e_20_3e_5',['monotonic_sequence_base&lt; T, std::array&lt; T, N &gt;, std::less&lt; T &gt; &gt;',['../d5/dcd/classsequoia_1_1maths_1_1monotonic__sequence__base.html',1,'sequoia::maths']]],
+  ['monotonic_5fsequence_5fbase_3c_20t_2c_20std_3a_3avector_3c_20t_20_3e_2c_20std_3a_3aless_3c_20t_20_3e_20_3e_6',['monotonic_sequence_base&lt; T, std::vector&lt; T &gt;, std::less&lt; T &gt; &gt;',['../d5/dcd/classsequoia_1_1maths_1_1monotonic__sequence__base.html',1,'sequoia::maths']]],
+  ['move_5fonly_5fallocation_5factions_7',['move_only_allocation_actions',['../d5/d80/structsequoia_1_1testing_1_1impl_1_1move__only__allocation__actions.html',1,'sequoia::testing::impl']]],
+  ['move_5fonly_5fallocation_5fextender_8',['move_only_allocation_extender',['../d7/d8c/classsequoia_1_1testing_1_1move__only__allocation__extender.html',1,'sequoia::testing']]],
+  ['move_5fonly_5fextender_9',['move_only_extender',['../da/d45/classsequoia_1_1testing_1_1move__only__extender.html',1,'sequoia::testing']]],
+  ['mutable_5freference_10',['mutable_reference',['../da/d63/structsequoia_1_1data__structures_1_1partition__impl_1_1mutable__reference.html',1,'sequoia::data_structures::partition_impl']]]
 ];
