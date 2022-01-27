@@ -7,6 +7,11 @@
 
 #pragma once
 
+/*! \file
+    \brief Facility to detect changes on disk and only run the relevant tests.
+
+ */
+
 #include <filesystem>
 #include <optional>
 #include <string>

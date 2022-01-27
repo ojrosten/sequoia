@@ -5,6 +5,10 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
+/*! \file
+    \brief Definitions for TestRunnerUtilities.hpp
+ */
+
 #include "sequoia/TestFramework/TestRunnerUtilities.hpp"
 
 #include <chrono>

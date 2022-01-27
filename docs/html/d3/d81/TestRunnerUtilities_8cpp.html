@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.2"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Sequoia: C:/Users/olive/OneDrive/sequoia/Source/sequoia/TestFramework/TestRunnerUtilities.hpp Source File</title>
+<title>Sequoia: C:/Users/olive/OneDrive/sequoia/Source/sequoia/TestFramework/TestRunnerUtilities.cpp File Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -66,27 +66,29 @@ $(function() {
 </div>
 </div><!-- top -->
 <div class="header">
-  <div class="headertitle"><div class="title">TestRunnerUtilities.hpp</div></div>
+  <div class="summary">
+<a href="#func-members">Functions</a>  </div>
+  <div class="headertitle"><div class="title">TestRunnerUtilities.cpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<a href="../../d9/d8f/TestRunnerUtilities_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span> </div>
-<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment">//                Copyright Oliver J. Rosten 2021.                //</span></div>
-<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment">// Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //</span></div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment">//    (See accompanying file LICENSE.md or copy at                //</span></div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="comment">//          https://www.gnu.org/licenses/gpl-3.0.en.html)         //</span></div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="comment"></span> </div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#pragma once</span></div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &lt;ostream&gt;</span></div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &lt;string&gt;</span></div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="keyword">namespace </span>sequoia::testing</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>{</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>  <span class="keywordtype">void</span> report(std::ostream&amp; stream, std::string_view prefix, std::string_view message);</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>  <span class="keywordtype">void</span> set_top_copyright(std::string&amp; text, std::string_view copyright);</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>}</div>
-</div><!-- fragment --></div><!-- contents -->
+
+<p>Definitions for <a class="el" href="../../d9/d8f/TestRunnerUtilities_8hpp.html" title="Common utilities for creating both Projects and Tests.">TestRunnerUtilities.hpp</a>.  
+<a href="#details">More...</a></p>
+<div class="textblock"><code>#include &quot;<a class="el" href="../../d9/d8f/TestRunnerUtilities_8hpp_source.html">sequoia/TestFramework/TestRunnerUtilities.hpp</a>&quot;</code><br />
+<code>#include &lt;chrono&gt;</code><br />
+</div><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:ad3c57542a05481a4cd91166727429169"><td class="memItemLeft" align="right" valign="top"><a id="ad3c57542a05481a4cd91166727429169" name="ad3c57542a05481a4cd91166727429169"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::report</b> (std::ostream &amp;stream, std::string_view prefix, std::string_view message)</td></tr>
+<tr class="separator:ad3c57542a05481a4cd91166727429169"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a05abc09355de461c535a09c2f6b55876"><td class="memItemLeft" align="right" valign="top"><a id="a05abc09355de461c535a09c2f6b55876" name="a05abc09355de461c535a09c2f6b55876"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::set_top_copyright</b> (std::string &amp;text, std::string_view copyright)</td></tr>
+<tr class="separator:a05abc09355de461c535a09c2f6b55876"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p >Definitions for <a class="el" href="../../d9/d8f/TestRunnerUtilities_8hpp.html" title="Common utilities for creating both Projects and Tests.">TestRunnerUtilities.hpp</a>. </p>
+</div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2

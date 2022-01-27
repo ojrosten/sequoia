@@ -7,6 +7,10 @@
 
 #pragma once
 
+/*! \file
+    \brief Common utilities for creating both Projects and Tests.
+ */
+
 #include <ostream>
 #include <string>
 
