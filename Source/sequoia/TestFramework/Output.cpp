@@ -6,7 +6,7 @@
 ////////////////////////////////////////////////////////////////////
 
 /*! \file
-    \brief Definitions for Output.hpp.
+    \brief Definitions for Output.hpp
  */
 
 #include "sequoia/TestFramework/Output.hpp"

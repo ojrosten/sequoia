@@ -8,7 +8,7 @@
 #pragma once
 
 /*! \file
-    \brief Contains utilities for the advice framework.
+    \brief Utilities for the advice framework.
  */
 
 #include "sequoia/Core/Meta/Concepts.hpp"

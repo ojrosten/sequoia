@@ -6,7 +6,7 @@
 ////////////////////////////////////////////////////////////////////
 
 /*! \file
-    \brief Definitions for TestCreator.hpp"
+    \brief Definitions for TestCreator.hpp
  */
 
 #include "sequoia/TestFramework/TestCreator.hpp"

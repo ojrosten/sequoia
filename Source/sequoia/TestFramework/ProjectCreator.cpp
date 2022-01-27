@@ -6,7 +6,7 @@
 ////////////////////////////////////////////////////////////////////
 
 /*! \file
-    \brief Definitions for ProjectCreator.hpp"
+    \brief Definitions for ProjectCreator.hpp
  */
 
 #include "sequoia/TestFramework/ProjectCreator.hpp"

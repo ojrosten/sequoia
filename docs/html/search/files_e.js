@@ -5,5 +5,6 @@ var searchData=
   ['regularallocationtestcore_2ehpp_2',['RegularAllocationTestCore.hpp',['../d8/da2/RegularAllocationTestCore_8hpp.html',1,'']]],
   ['regularcheckers_2ehpp_3',['RegularCheckers.hpp',['../d1/db7/RegularCheckers_8hpp.html',1,'']]],
   ['regularcheckersdetails_2ehpp_4',['RegularCheckersDetails.hpp',['../d6/d98/RegularCheckersDetails_8hpp.html',1,'']]],
-  ['regulartestcore_2ehpp_5',['RegularTestCore.hpp',['../d9/daf/RegularTestCore_8hpp.html',1,'']]]
+  ['regulartestcore_2ecpp_5',['RegularTestCore.cpp',['../d7/db3/RegularTestCore_8cpp.html',1,'']]],
+  ['regulartestcore_2ehpp_6',['RegularTestCore.hpp',['../d9/daf/RegularTestCore_8hpp.html',1,'']]]
 ];

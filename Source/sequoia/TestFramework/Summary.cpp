@@ -6,7 +6,7 @@
 ////////////////////////////////////////////////////////////////////
 
 /*! \file
-    \brief Definitions for Summary.hpp.
+    \brief Definitions for Summary.hpp
 */
 
 #include "sequoia/TestFramework/Summary.hpp"

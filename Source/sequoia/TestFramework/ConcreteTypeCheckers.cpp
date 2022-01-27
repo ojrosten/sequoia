@@ -5,7 +5,9 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/*! \file Definitions for ConcreteTypeCheckers.hpp */
+/*! \file 
+    \brief Definitions for ConcreteTypeCheckers.hpp
+ */
 
 #include "sequoia/TestFramework/ConcreteTypeCheckers.hpp"
 

@@ -6,7 +6,7 @@
 ////////////////////////////////////////////////////////////////////
 
 /*! \file
-    \brief Definitions for TestRunner.hpp.
+    \brief Definitions for TestRunner.hpp
 */
 
 #include "sequoia/TestFramework/TestRunner.hpp"

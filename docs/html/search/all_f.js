@@ -13,7 +13,8 @@ var searchData=
   ['regularallocationtestcore_2ehpp_10',['RegularAllocationTestCore.hpp',['../d8/da2/RegularAllocationTestCore_8hpp.html',1,'']]],
   ['regularcheckers_2ehpp_11',['RegularCheckers.hpp',['../d1/db7/RegularCheckers_8hpp.html',1,'']]],
   ['regularcheckersdetails_2ehpp_12',['RegularCheckersDetails.hpp',['../d6/d98/RegularCheckersDetails_8hpp.html',1,'']]],
-  ['regulartestcore_2ehpp_13',['RegularTestCore.hpp',['../d9/daf/RegularTestCore_8hpp.html',1,'']]],
-  ['replacement_14',['replacement',['../da/dd8/structsequoia_1_1replacement.html',1,'sequoia']]],
-  ['resolve_5fto_5fcopy_15',['resolve_to_copy',['../dc/d48/structsequoia_1_1resolve__to__copy.html',1,'sequoia']]]
+  ['regulartestcore_2ecpp_13',['RegularTestCore.cpp',['../d7/db3/RegularTestCore_8cpp.html',1,'']]],
+  ['regulartestcore_2ehpp_14',['RegularTestCore.hpp',['../d9/daf/RegularTestCore_8hpp.html',1,'']]],
+  ['replacement_15',['replacement',['../da/dd8/structsequoia_1_1replacement.html',1,'sequoia']]],
+  ['resolve_5fto_5fcopy_16',['resolve_to_copy',['../dc/d48/structsequoia_1_1resolve__to__copy.html',1,'sequoia']]]
 ];

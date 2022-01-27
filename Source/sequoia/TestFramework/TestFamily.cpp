@@ -6,7 +6,7 @@
 ////////////////////////////////////////////////////////////////////
 
 /*! \file
-    \brief Definitions for TestFamily.hpp.
+    \brief Definitions for TestFamily.hpp
  */
 
 #include "sequoia/TestFramework/TestFamily.hpp"

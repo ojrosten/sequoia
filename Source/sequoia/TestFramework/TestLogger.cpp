@@ -5,7 +5,9 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/*! \file Definitions for TestLogger.hpp */
+/*! \file
+    \brief Definitions for TestLogger.hpp
+ */
 
 #include "sequoia/TestFramework/TestLogger.hpp"
 

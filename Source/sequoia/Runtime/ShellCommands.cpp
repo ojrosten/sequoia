@@ -5,6 +5,10 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
+/*! \file
+    \brief Definitions for ShellCommands.hpp
+*/
+
 #include "sequoia/Runtime/ShellCommands.hpp"
 
 #include "sequoia/Parsing/CommandLineArguments.hpp"

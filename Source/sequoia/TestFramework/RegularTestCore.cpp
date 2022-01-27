@@ -5,6 +5,10 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
+/*! \file
+    \brief Definitions for RegularTestCore.hpp
+*/
+
 #include "sequoia/TestFramework/RegularTestCore.hpp"
 
 namespace sequoia::testing

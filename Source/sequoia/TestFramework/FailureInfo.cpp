@@ -5,6 +5,10 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
+/*! \file
+    \brief Definitions for FailureInfo.hpp
+*/
+
 #include "sequoia/TestFramework/FailureInfo.hpp"
 #include "sequoia/TestFramework/FileSystem.hpp"
 #include "sequoia/TestFramework/Output.hpp"

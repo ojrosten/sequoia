@@ -6,7 +6,7 @@
 ////////////////////////////////////////////////////////////////////
 
 /*! \file
-    \brief Definitions for Output.hpp.
+    \brief Definitions for Indent.hpp
  */
 
 #include "sequoia/TextProcessing/Indent.hpp"

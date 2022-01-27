@@ -5,6 +5,10 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
+/*! \file
+    \brief Definitions for Helpers.hpp
+*/
+
 #include "sequoia/PlatformSpecific/Helpers.hpp"
 #include "sequoia/PlatformSpecific/Preprocessor.hpp"
 #ifdef _MSC_VER

@@ -6,7 +6,7 @@
 ////////////////////////////////////////////////////////////////////
 
 /*! \file
-    \brief Definitions for TestFamilySelector.hpp"
+    \brief Definitions for TestFamilySelector.hpp
  */
 
 #include "sequoia/TestFramework/TestFamilySelector.hpp"
