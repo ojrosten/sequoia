@@ -12,7 +12,7 @@
     and
     \ref sec_expressive "expressive".
 
-    \section sec_scale Scalabilty
+    \section sec_scale Scalability
 
     To operate effectively at scale, `sequoia` incorporates the following features:
     - No waste: if a principled structure is adhered to, then running with the `prune` option
