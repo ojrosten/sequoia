@@ -98,12 +98,12 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:afa8de0996f21db60c7582df68f5a4762"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adde575c5e33aa3e59ed7fe23b126cb04"><td class="memTemplParams" colspan="2"><a id="adde575c5e33aa3e59ed7fe23b126cb04" name="adde575c5e33aa3e59ed7fe23b126cb04"></a>
 template&lt;moveonly T&gt; </td></tr>
-<tr class="memitem:adde575c5e33aa3e59ed7fe23b126cb04"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_semantics</b> (std::string_view description, T &amp;&amp;x, T &amp;&amp;y, const T &amp;xClone, const T &amp;yClone, const T &amp;movedFrom)</td></tr>
+<tr class="memitem:adde575c5e33aa3e59ed7fe23b126cb04"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_semantics</b> (std::string_view description, T &amp;&amp;<a class="el" href="../../d6/d61/structsequoia_1_1testing_1_1x.html">x</a>, T &amp;&amp;<a class="el" href="../../d9/dfe/structsequoia_1_1testing_1_1y.html">y</a>, const T &amp;xClone, const T &amp;yClone, const T &amp;movedFrom)</td></tr>
 <tr class="memdesc:adde575c5e33aa3e59ed7fe23b126cb04"><td class="mdescLeft">&#160;</td><td class="mdescRight">Preconditions: x!=y; x==xClone, y==yClone. <br /></td></tr>
 <tr class="separator:adde575c5e33aa3e59ed7fe23b126cb04"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a531b2a2cb896a881c7141aacc7bfc20a"><td class="memTemplParams" colspan="2"><a id="a531b2a2cb896a881c7141aacc7bfc20a" name="a531b2a2cb896a881c7141aacc7bfc20a"></a>
 template&lt;moveonly T&gt; </td></tr>
-<tr class="memitem:a531b2a2cb896a881c7141aacc7bfc20a"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_semantics</b> (std::string_view description, T &amp;&amp;x, T &amp;&amp;y, const T &amp;xClone, const T &amp;yClone)</td></tr>
+<tr class="memitem:a531b2a2cb896a881c7141aacc7bfc20a"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_semantics</b> (std::string_view description, T &amp;&amp;<a class="el" href="../../d6/d61/structsequoia_1_1testing_1_1x.html">x</a>, T &amp;&amp;<a class="el" href="../../d9/dfe/structsequoia_1_1testing_1_1y.html">y</a>, const T &amp;xClone, const T &amp;yClone)</td></tr>
 <tr class="separator:a531b2a2cb896a881c7141aacc7bfc20a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a346e7a453cc524d847bd49662bf3321f"><td class="memTemplParams" colspan="2"><a id="a346e7a453cc524d847bd49662bf3321f" name="a346e7a453cc524d847bd49662bf3321f"></a>
 template&lt;std::invocable xMaker, moveonly T = std::invoke_result_t&lt;xMaker&gt;, invocable_r&lt; T &gt; yMaker&gt; </td></tr>
@@ -116,13 +116,13 @@ template&lt;std::invocable xMaker, moveonly T = std::invoke_result_t&lt;xMaker&g
 <tr class="memitem:ae79f15dc7f72f983e7a49f6ae692d83b"><td class="memTemplParams" colspan="2"><a id="ae79f15dc7f72f983e7a49f6ae692d83b" name="ae79f15dc7f72f983e7a49f6ae692d83b"></a>
 template&lt;moveonly T&gt; <br />
 requires std::totally_ordered&lt;T&gt;</td></tr>
-<tr class="memitem:ae79f15dc7f72f983e7a49f6ae692d83b"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_semantics</b> (std::string_view description, T &amp;&amp;x, T &amp;&amp;y, const T &amp;xClone, const T &amp;yClone, const T &amp;movedFrom, std::weak_ordering order)</td></tr>
+<tr class="memitem:ae79f15dc7f72f983e7a49f6ae692d83b"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_semantics</b> (std::string_view description, T &amp;&amp;<a class="el" href="../../d6/d61/structsequoia_1_1testing_1_1x.html">x</a>, T &amp;&amp;<a class="el" href="../../d9/dfe/structsequoia_1_1testing_1_1y.html">y</a>, const T &amp;xClone, const T &amp;yClone, const T &amp;movedFrom, std::weak_ordering order)</td></tr>
 <tr class="memdesc:ae79f15dc7f72f983e7a49f6ae692d83b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Preconditions: x!=y, with values consistent with order; x==xClone, y==yClone. <br /></td></tr>
 <tr class="separator:ae79f15dc7f72f983e7a49f6ae692d83b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab19e91bfaca3552d96ca1d53dc3c1a78"><td class="memTemplParams" colspan="2"><a id="ab19e91bfaca3552d96ca1d53dc3c1a78" name="ab19e91bfaca3552d96ca1d53dc3c1a78"></a>
 template&lt;moveonly T&gt; <br />
 requires std::totally_ordered&lt;T&gt;</td></tr>
-<tr class="memitem:ab19e91bfaca3552d96ca1d53dc3c1a78"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_semantics</b> (std::string_view description, T &amp;&amp;x, T &amp;&amp;y, const T &amp;xClone, const T &amp;yClone, std::weak_ordering order)</td></tr>
+<tr class="memitem:ab19e91bfaca3552d96ca1d53dc3c1a78"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_semantics</b> (std::string_view description, T &amp;&amp;<a class="el" href="../../d6/d61/structsequoia_1_1testing_1_1x.html">x</a>, T &amp;&amp;<a class="el" href="../../d9/dfe/structsequoia_1_1testing_1_1y.html">y</a>, const T &amp;xClone, const T &amp;yClone, std::weak_ordering order)</td></tr>
 <tr class="separator:ab19e91bfaca3552d96ca1d53dc3c1a78"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0fd1cc4d42ea482c5a8c318f50803141"><td class="memTemplParams" colspan="2"><a id="a0fd1cc4d42ea482c5a8c318f50803141" name="a0fd1cc4d42ea482c5a8c318f50803141"></a>
 template&lt;std::invocable&lt;&gt; xMaker, moveonly T = std::invoke_result_t&lt;xMaker&gt;, invocable_r&lt; T &gt; yMaker&gt; <br />

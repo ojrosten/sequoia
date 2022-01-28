@@ -33,7 +33,7 @@
 
     \section sec_automated Automation
 
-    The processes of initializating a new project, and creating new tests are highly automated.
+    The processes of initializing a new project, and creating new tests are highly automated.
     Both are integrated with CMake. For example, running with the command line arguments
 
     <pre>
@@ -127,7 +127,7 @@
 	
 	where `f` is invocable without any arguments. This check will pass if `f` throws an exception
 	of the expected type - here, `std::runtime_error`. To obtain higher fidelity, the message
-	associated with the exception is witten to a file, again best placed under version control.
+	associated with the exception is written to a file, again best placed under version control.
 	First and foremost, this allows clients to check that the exception thrown is the one expected.
 	After all, it may be that `f` can fail in a number of says, each with the same exception type.
 	Only by checking the associated message can one be sure that the failure is the one intended
@@ -136,7 +136,7 @@
 	
 	Should the need arise, the class template \ref exception_message_extractor_primary
 	"exception_message_extractor" is provided to allow customized extraction of error messages
-	from exceptions of arbitary types.
+	from exceptions of arbitrary types.
 
     \section sec_extensible Extensibility
 
@@ -197,12 +197,12 @@
     check(equivalence, "x correctly initialized", x, 5);
     </pre>
 	
-	There are cicumstances in which it appropriate to consider equivalence of a type not with
+	There are circumstances in which it appropriate to consider equivalence of a type not with
 	another type, but with itself. For example, consider `std::filesystem::path`. Equality of two
 	instances would amount to the paths being identical. One reasonable definition of two
 	equivalent paths is that they point to a filesystem object with the same name and the same contents.
 
-	In some cicumstances, it may feel more logically comfortable
+	In some circumstances, it may feel more logically comfortable
 	check weak equivalence instead of equivalence (done in the obvious way, adhering to the pattern above).
 	For example,
 	suppose the goal is to compare two values of `std::fuction<R (Args...)>`. Statically, it is known
@@ -222,10 +222,10 @@
 
     \section sec_semantics Semantics-Awareness
 
-    By utilizing `sequoia`'s testing framework, clients are strongly encourged to think carefully
+    By utilizing `sequoia`'s testing framework, clients are strongly encouraged to think carefully
     about the semantics of their classes upfront, rather than as an after-thought. For the
     purposes of this library, a type exhibiting regular semantics is understood to exhibit copy/move
-    constructors, copy/move assigment, `operator==`, `operator!=` and swap. Note that
+    constructors, copy/move assignment, `operator==`, `operator!=` and swap. Note that
     there is no strict requirement for a default constructor. If a class provides this
     functionality, then the \ref regular_test_alias "regular_test" alias template may be utilized,
     which makes use of the
@@ -271,7 +271,7 @@
     propagation) and mutation, together with para-copy/move. Here and throught the documentation
     para copy/move refer to the copy-like and move-like constructors which additionally accept
     an allocator.
-    The design accomodates scoped allocators and multiple
+    The design accommodates scoped allocators and multiple
     allocators (be each of them normal or scoped). 
     \ref regular_allocation_test_alias "Regular allocation tests"
     come with a facility for automatically
@@ -351,19 +351,19 @@
     The focus of the testing framework's API is on providing useful primitives, such as
     `check_semantics`, `check_exception_thrown` and `check`. As discussed above, the latter naturally
 	forms overload sets which allows generic testing of class templates, even where the class is 
-	heterogenous and the types with which it is instantiated may support checks of differing strengths.
+	heterogeneous and the types with which it is instantiated may support checks of differing strengths.
 	Clients are encouraged to supply each check with a description, which constitutes the second
 	argument. In addition, there is the facility
     to provide customized advice in the event of particular failures. For example, within the allocation
     testing framework, it is possible for a negative number of allocations to be reported. This is rather
     counter-intuitive and, when encountered for the first time, may raise doubts as to the correctness
-    of the framework. This is hopefully ameliorated by levaraging the advice functionality internally, giving
+    of the framework. This is hopefully ameliorated by leveraging the advice functionality internally, giving
     typical output:
 
     <pre>
     Obtained : -1
 	Predicted: 1
-	Advice   : A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
+	Advice   : A negative allocation count generally indicates an allocator propagating when it shouldn't or not propagating when it should.
     </pre>
 
     Clients may provided customized advice by calling many of the check methods with an extra function
@@ -376,5 +376,15 @@
     will be propagated internally until it reaches the point where it can be invoked
     on the `int`s at the end of the chain.
 
-
+	One frequent challenge with writing unit tests is their linear structure. Again, consider 
+	writing a container. Perhaps one of the first things to test is `push_back`. Next, it ma
+	be reasonable to check that `erase` returns us to where we started. Following this 
+	maybe invoke `push_back` twice. Should we test `erase` again? And if so back to one element or
+	zero elements, or should we do both> Part of the issue is that the more is done, the more
+	unwieldy the unit test becomes. To alleviate this, `sequoia` provides a graph-based testing
+	solution defined in \ref StateTransitionUtilities.hpp. The idea is that nodes corresponds to
+	states of the type under test. Directed edges define transitions between nodes. When invoked,
+	a breadth-first search is performed, invoking specified checks at each node and determining
+	whether the transition from the previous state matches the expected state specified by the
+	latest node. An example may be found in \ref RegularStateTransitionDiagnostics.cpp.
  */
