@@ -71,7 +71,7 @@ Scalabilty</h1>
 <p >To operate effectively at scale, <code>sequoia</code> incorporates the following features:</p><ul>
 <li>No waste: if a principled structure is adhered to, then running with the <code>prune</code> option will ensure that only those tests dependent on changes since the last run will be executed. Changes may be either to source files or materials exploited by the test. In particular:<ol type="1">
 <li>cpp files should supply definitions only for the header of the same name;</li>
-<li>Given a test file <code>Tests/Foo/Bar.cpp</code>, any testing materials should be stored in <code>TestMaterials\Foo\Bar</code>.</li>
+<li>Given a test file <code>Tests/Foo/Bar.cpp</code>, any testing materials should be stored in <code>TestMaterials/Foo/Bar</code>.</li>
 </ol>
 </li>
 <li>Concurrency: by default, tests run concurrently. Tests are grouped into families and, by default, concurrency will be at the family level if there are more than three families; otherwise, concurrency is at the level of individual tests. However, this may be overridden using <code>--async-depth</code>.</li>

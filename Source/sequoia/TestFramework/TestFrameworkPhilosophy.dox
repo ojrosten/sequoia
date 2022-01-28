@@ -20,7 +20,7 @@
     Changes may be either to source files or materials exploited by the test.
     In particular:
        -# cpp files should supply definitions only for the header of the same name;
-       -# Given a test file `Tests/Foo/Bar.cpp`, any testing materials should be stored in `TestMaterials\Foo\Bar`.
+       -# Given a test file `Tests/Foo/Bar.cpp`, any testing materials should be stored in `TestMaterials/Foo/Bar`.
     - Concurrency: by default, tests run concurrently. Tests are grouped into families and,
       by default, concurrency will be at the family level if there are more than three families; otherwise,
       concurrency is at the level of individual tests. However, this may be overridden using 
