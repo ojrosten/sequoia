@@ -6,6 +6,7 @@
     \ref sec_automated  "highly automated",
     \ref sec_robustness "robust",
     \ref sec_extensible "extensible",
+	\ref sec_malleable  "malleable",
     \ref sec_semantics  "semantics-aware",
     \ref sec_allocators "allocator-aware",
     \ref sec_generics   "generics-friendly"
@@ -224,7 +225,7 @@
 	understood by the following example. Recall that equivalence of instances of `std::filesystem::path`
 	is taken
 	to mean that two filesystem objects, potentially in different locations, have the same name and
-	the same contents. By default, the contents of a file are determined via deserialization to a
+	the same contents. By default, the contents of a file are determined via de-serialization to a
 	string. However, this may not be appropriate for all file types. Moreover, the particular file
 	types involved in comparisons will only be known at runtime and so are dynamic, as opposed to static.
 	With this in mind, the testing framework supports generalized (weak) equivalence checks. Statically,
@@ -250,9 +251,39 @@
     of the burden of devising ways to carefully check consistency of these operations by
     reliably bundling everything into a call to check_semantics.
 
-	As a bonus, if both serialization and deserialization are defined, `check_semantics` will check
+	As a bonus, if both serialization and de-serialization are defined, `check_semantics` will check
 	their consistency. Not a single line of extra code need to written to activate the extra check:
 	static reflection determines whether or not it should be performed.
+	
+	\section sec_malleable Malleability
+	
+	For some tests it is desirable to utilize auxiliary materials, as alluded to in \ref sec_scale.
+	Given a test file `Tests/Foo/Bar.cpp`, any testing materials should be stored in `TestMaterials/Foo/Bar`,
+	using the following conventions. There are three sub-folders with special names: `Auxiliary`, `WorkingCopy`
+	and `Prediction`. Of these, only the last is necessary. When a test is run that possesses materials,
+	the `Auxiliary` and `WorkingCopy` folders, should they exist, are copied to a temporary location which is cleared
+	out at the beginning of each test run. If `WorkingCopy` does not exist, it is created on the fly.
+	At some point during the test, the contents of `WorkingCopy` should be compared with `Prediction`;
+	the test framework comes with methods exposing the relevant paths.  The `Auxiliary` folder
+	is useful for holding materials never intended for comparison.
+	Roughly speaking, differences
+	between the `WorkingCopy` and `Prediction` folders and any files they may hold 
+	will be reported as a test failure.
+	
+	However, there are some exceptions to this. First, the following files are ignored: `.keep` and
+	`.DS_Store`. More interestingly, clients may specify that particular substrings within a file
+	are ignored when comparing file contents. To motivate this, consider end-to-end testing of the
+	testing framework itself. The output includes timings, of the form `[2ms]`. The problem is that timings
+	can be expected to change, meaning that a given test may regularly fail in way which is not useful.
+	To counter this, each file in `Prediction` and it subfolders can be supplemented by a file of the
+	same name but with the extension `seqpat`. The latter is expected to contain a list of regular expressions,
+	specifying sub-strings to be ignored from the file comparison process.
+	
+	Suppose now that we are left we a genuine failure after preprocessing the files in `WorkingCopy`
+	and `Prediction`. It may be that the code under test is actually correct, but the predictions need
+	updating. This can be achieved by running the test with the additional argument `update`. Updating
+	is discerning: only files exhibiting a failure after preprocessing are updated. This prevents the
+	version-controlled diffs being polluted with noise.
 
     \section sec_allocators Allocator-Awareness
 
