@@ -481,9 +481,20 @@ namespace sequoia::testing
     {
       commandline_arguments a{"foo", "--async"};
 
-      check(weak_equivalence, LINE("Early"), experimental::parse(a.size(), a.get(), {{{"--async", {}, {}, fo{}}}}), experimental::outcome{"foo", {{{fo{}, nullptr, {}}}}});
-     // check(weak_equivalence, LINE("Late"), experimental::parse(a.size(), a.get(), {{"--async", {}, {}, nullptr, {}, fo{}}}), experimental::outcome{"foo", {{nullptr, fo{}, {}}}});
-     // check(weak_equivalence, LINE("Both"), experimental::parse(a.size(), a.get(), {{"--async", {}, {}, fo{"x"}, {}, fo{"y"}}}), experimental::outcome{"foo", {{fo{"x"}, fo{"y"}, {}}}});
+      check(weak_equivalence,
+           LINE("Early"),
+           experimental::parse(a.size(), a.get(), {{{"--async", {}, {}, fo{}}}}),
+           experimental::outcome{"foo", {{{fo{}, nullptr, {}}}}});
+
+      check(weak_equivalence,
+            LINE("Late"),
+            experimental::parse(a.size(), a.get(), {{{"--async", {}, {}, nullptr, fo{}}}}),
+            experimental::outcome{"foo", {{{nullptr, fo{}, {}}}}});
+      
+      check(weak_equivalence,
+            LINE("Both"),
+            experimental::parse(a.size(), a.get(), {{{"--async", {}, {}, fo{"x"}, fo{"y"}}}}),
+            experimental::outcome{"foo", {{{fo{"x"}, fo{"y"}, {}}}}});
     }
 /*
     {
