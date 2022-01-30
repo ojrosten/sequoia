@@ -300,27 +300,27 @@ namespace sequoia::testing
     [[nodiscard]]
     bool argument_parser::process_concatenated_aliases(Iter beginOptions, Sentinel endOptions, std::string_view arg, current_operation currentOperation, top_level topLevel)
     {
-      if((arg.size() > 2) && (arg[0] == '-') && (arg[1] != ' '))
+      if(!(arg.size() > 2) && (arg[0] == '-') && (arg[1] != ' '))
+        return false;
+
+      for(auto j{arg.cbegin() + 1}; j != arg.cend(); ++j)
       {
-        for(auto j{arg.cbegin() + 1}; j != arg.cend(); ++j)
+        const auto c{*j};
+        if(c != '-')
         {
-          const auto c{*j};
-          if(c != '-')
+          const auto alias{std::string{'-'} + c};
+
+          auto optionsIter{std::find_if(beginOptions, endOptions,
+            [arg](const auto& tree) { return root_weight(tree).name == arg; })};
+
+          // TO DO need to deal with the case where rollback is allowed
+          if(optionsIter == endOptions)
           {
-            const auto alias{std::string{'-'} + c};
-
-            auto optionsIter{std::find_if(beginOptions, endOptions,
-              [arg](const auto& tree) { return root_weight(tree).name == arg; })};
-
-            // TO DO need to deal with the case where rollback is allowed
-            if(optionsIter == endOptions)
-            {
-              throw std::runtime_error{"Unrecognized concatenated alias: " + std::string{arg}};
-            }
-
-            const current_option_tree currentOptionTree{*optionsIter};
-            process_option(currentOptionTree, currentOperation, topLevel);
+            throw std::runtime_error{"Unrecognized concatenated alias: " + std::string{arg}};
           }
+
+          const current_option_tree currentOptionTree{*optionsIter};
+          process_option(currentOptionTree, currentOperation, topLevel);
         }
       }
 
@@ -496,30 +496,39 @@ namespace sequoia::testing
             experimental::parse(a.size(), a.get(), {{{"--async", {}, {}, fo{"x"}, fo{"y"}}}}),
             experimental::outcome{"foo", {{{fo{"x"}, fo{"y"}, {}}}}});
     }
-/*
+
     {
       commandline_arguments a{"bar", "-a"};
 
-      check(weak_equivalence, LINE(""), experimental::parse(a.size(), a.get(), {{"--async", {"-a"}, {}, fo{}}}), experimental::outcome{"bar", {{fo{}, nullptr, {}}}});
+      check(weak_equivalence,
+        LINE("Argument shorthand"),
+        experimental::parse(a.size(), a.get(), {{{"--async", {"-a"}, {}, fo{}}}}),
+        experimental::outcome{"bar", {{{fo{}, nullptr, {}}}}});
     }
 
     {
       commandline_arguments a{"bar", "", "-a"};
 
-      check(weak_equivalence, LINE("Ignored empty option"), experimental::parse(a.size(), a.get(), {{"--async", {"-a"}, {}, fo{}}}), experimental::outcome{"bar", {{fo{}, nullptr, {}}}});
+      check(weak_equivalence,
+            LINE("Ignored empty option"),
+            experimental::parse(a.size(), a.get(), {{{"--async", {"-a"}, {}, fo{}}}}),
+            experimental::outcome{"bar", {{{fo{}, nullptr, {}}}}});
     }
 
     {
       commandline_arguments a{"foo", "-a"};
 
-      check(weak_equivalence, LINE(""), experimental::parse(a.size(), a.get(), {{"--async", {"-as", "-a"}, {}, fo{}}}), experimental::outcome{"foo", {{fo{}, nullptr, {}}}});
+      check(weak_equivalence,
+            LINE("Shorthand for a selection"),
+            experimental::parse(a.size(), a.get(), {{{"--async", {"-as", "-a"}, {}, fo{}}}}),
+            experimental::outcome{"foo", {{{fo{}, nullptr, {}}}}});
     }
 
     {
       commandline_arguments a{"foo", "--asyng"};
 
       check_exception_thrown<std::runtime_error>(LINE("Unexpected argument"), [&a](){
-        return experimental::parse(a.size(), a.get(), {{"--async", {}, {}, fo{}}});
+        return experimental::parse(a.size(), a.get(), {{{"--async", {}, {}, fo{}}}});
         });
     }
 
@@ -527,10 +536,10 @@ namespace sequoia::testing
       commandline_arguments a{"foo", "-a"};
 
       check_exception_thrown<std::runtime_error>(LINE("Unexpected argument"), [&a](){
-        return experimental::parse(a.size(), a.get(), {{"--async", {"-as"}, {}, fo{}}});
+        return experimental::parse(a.size(), a.get(), {{{"--async", {"-as"}, {}, fo{}}}});
         });
     }
-
+/*
     {
       commandline_arguments a{"foo", "-av"};
 

@@ -25,3 +25,22 @@ Empty string detected
 
 	=======================================
 
+Tests/Experimental/ExperimentalTest.cpp, Line 530
+Unexpected argument
+
+Expected Exception Type:
+[std::runtime_error]
+Unrecognized concatenated alias: --asyng
+
+	=======================================
+
+Tests/Experimental/ExperimentalTest.cpp, Line 538
+Unexpected argument
+
+Expected Exception Type:
+[std::runtime_error]
+
+  Error: unrecognized option '-a'
+
+	=======================================
+
