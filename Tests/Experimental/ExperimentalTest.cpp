@@ -164,7 +164,7 @@ namespace sequoia::testing
     template<std::input_or_output_iterator Iter, std::sentinel_for<Iter> Sentinel>
     void argument_parser::parse(Iter beginOptions, Sentinel endOptions, current_operation currentOperation, top_level topLevel)
     {
-      if(!m_Help.empty()) return;
+      if(!m_Help.empty() || (beginOptions == endOptions)) return;
 
       current_option_tree currentOptionTree{};
       while(m_Index < m_ArgCount)
@@ -222,9 +222,9 @@ namespace sequoia::testing
           using forest_iter = forest_from_tree_iterator<iter_t, const_tree_adaptor<options_tree>>;
 
           parse(forest_iter{currentOptionTree.tree().cbegin_edges(node), currentOptionTree.tree()},
-            forest_iter{currentOptionTree.tree().cend_edges(node), currentOptionTree.tree()},
-            currentOperation,
-            top_level::no);
+                forest_iter{currentOptionTree.tree().cend_edges(node), currentOptionTree.tree()},
+                currentOperation,
+                top_level::no);
 
           currentOptionTree = {};
         }
@@ -624,7 +624,7 @@ namespace sequoia::testing
             experimental::parse(a.size(), a.get(), {{{"create", {}, {"class_name", "directory"}, fo{}}}}),
             experimental::outcome{"foo", {{{fo{}, nullptr, {"class", "dir"}}}}});
     }
-/*
+
     {
       commandline_arguments a{"foo", "--async", "create", "class", "dir"};
 
@@ -634,7 +634,7 @@ namespace sequoia::testing
                                                     {{"--async", {}, {}, fo{}}}}),
             experimental::outcome{"foo", { {{fo{}, nullptr, {}}}, {{fo{}, nullptr, {"class", "dir"}}} }});
     }
-
+/*
     {
       commandline_arguments a{"foo", "--async", "create", "class", "dir"};
 
