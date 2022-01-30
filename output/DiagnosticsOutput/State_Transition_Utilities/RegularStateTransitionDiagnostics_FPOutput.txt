@@ -1,4 +1,4 @@
-	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 132
+	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 136
 	Mistake in transition functions
 
 	Transition from node 0 to 1
@@ -10,7 +10,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 132
+	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 136
 	Mistake in transition functions
 
 	Transition from node 1 to 0

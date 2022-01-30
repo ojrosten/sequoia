@@ -399,24 +399,26 @@ namespace sequoia::testing
     template<test_mode Mode>
     static void test(weak_equivalence_check_t, test_logger<Mode>& logger, const type& operation, const type& prediction)
     {
-      check(logger, operation.early, prediction.early, "early");
-      check(logger, operation.late, prediction.late, "late");
+      check_executor(logger, operation.early, prediction.early, "early");
+      check_executor(logger, operation.late, prediction.late, "late");
       check(equality, "Operation Parameters differ", logger, operation.arguments, prediction.arguments);
     }
   private:
     using executor = experimental::executor;
 
     template<test_mode Mode>
-    static void check(test_logger<Mode>& logger, const executor& operation, const executor& prediction, std::string_view tag)
+    static void check_executor(test_logger<Mode>& logger, const executor& operation, const executor& prediction, std::string_view tag)
     {
       const bool consistent{(operation && prediction) || (!operation && !prediction)};
       testing::check(std::string{"Existence of"}.append(tag).append(" function objects differs"), logger, consistent);
 
       if(operation && prediction)
       {
-        check(equality, "Function object tag", logger,
-          operation.target<function_object>()->tag,
-          prediction.target<function_object>()->tag);
+        check(equality,
+              "Function object tag",
+              logger,
+              operation.target<function_object>()->tag,
+              prediction.target<function_object>()->tag);
       }
     }
   };
@@ -431,7 +433,7 @@ namespace sequoia::testing
     static void test(weak_equivalence_check_t, test_logger<Mode>& logger, const type& obtained, const type& prediction)
     {
       check(equality, "Zeroth Argument", logger, obtained.zeroth_arg, prediction.zeroth_arg);
-      //check(weak_equivalence, "Operations", logger, obtained.operations, prediction.operations);
+      check(weak_equivalence, "Operations", logger, obtained.operations, prediction.operations);
       check(equality, "Help", logger, obtained.help, prediction.help);
     }
   };
