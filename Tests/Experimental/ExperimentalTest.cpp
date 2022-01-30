@@ -169,8 +169,6 @@ namespace sequoia::testing
       current_option_tree currentOptionTree{};
       while(m_Index < m_ArgCount)
       {
-        currentOptionTree = {};
-
         if(std::string_view arg{m_Argv[m_Index++]}; !arg.empty())
         {
           if(!currentOperation.tree || currentOperation.current_op_complete)
@@ -225,11 +223,13 @@ namespace sequoia::testing
                   forest_iter{currentOptionTree.tree().cend_edges(node), currentOptionTree.tree()},
                   currentOperation,
                   top_level::no);
+
+            currentOptionTree = {};
           }
         }
       }
 
-      if(    !m_Operations.empty()
+      if(   !m_Operations.empty()
          && currentOptionTree
          && (root_weight(currentOperation.tree).arguments.size() != root_weight(currentOptionTree).parameters.size()))
       {
@@ -578,13 +578,16 @@ namespace sequoia::testing
         return experimental::parse(a.size(), a.get(), {{{"--async", {"-a"}, {}, fo{}}}});
         });
     }
-/*
+
     {
       commandline_arguments a{"foo", "test", "thing"};
 
-      check(weak_equivalence, LINE(""), experimental::parse(a.size(), a.get(), {{"test", {}, {"case"}, fo{}}}), experimental::outcome{"foo", {{fo{}, nullptr, {"thing"}}}});
+      check(weak_equivalence,
+            LINE("Argument with paramater"),
+            experimental::parse(a.size(), a.get(), {{{"test", {}, {"case"}, fo{}}}}),
+            experimental::outcome{"foo", {{{fo{}, nullptr, {"thing"}}}}});
     }
-
+/*
     {
       commandline_arguments a{"foo", "t", "thing"};
 
