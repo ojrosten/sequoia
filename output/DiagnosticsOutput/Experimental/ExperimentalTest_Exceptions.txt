@@ -44,3 +44,12 @@ Expected Exception Type:
 
 	=======================================
 
+Tests/Experimental/ExperimentalTest.cpp, Line 577
+Concatenated alias with only partial match
+
+Expected Exception Type:
+[std::runtime_error]
+Unrecognized concatenated alias: -ac
+
+	=======================================
+

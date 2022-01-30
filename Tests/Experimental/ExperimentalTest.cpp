@@ -547,36 +547,38 @@ namespace sequoia::testing
             LINE("Concatenated alias"),
             experimental::parse(a.size(), a.get(), {{{"--async",   {"-a"}, {}, fo{}}},
                                                     {{"--verbose", {"-v"}, {}, fo{}}}}),
-            experimental::outcome{"foo", { {{fo{}, nullptr, {}}}, {{fo{}, nullptr, {}}}}});
+            experimental::outcome{"foo", { {{fo{}, nullptr, {}}}, {{fo{}, nullptr, {}}} }});
     }
-/*
+
     {
       commandline_arguments a{"foo", "-a-v"};
 
-      check(weak_equivalence, LINE(""),
-        experimental::parse(a.size(), a.get(), {{"--async", {"-a"}, {}, fo{}},
-                                 {"--verbose", {"-v"}, {}, fo{}}}),
-        experimental::outcome{"foo", {{fo{}, nullptr, {}}, {fo{}, nullptr, {}}}});
+      check(weak_equivalence,
+            LINE("Concatenated alias with dash"),
+            experimental::parse(a.size(), a.get(), {{{"--async", {"-a"}, {}, fo{}}},
+                                                    {{"--verbose", {"-v"}, {}, fo{}}}}),
+            experimental::outcome{"foo", { {{fo{}, nullptr, {}}}, {{fo{}, nullptr, {}}} }});
     }
 
     {
       commandline_arguments a{"foo", "-av", "-p"};
 
-      check(weak_equivalence, LINE(""),
-        experimental::parse(a.size(), a.get(), {{"--async",   {"-a"}, {}, fo{}},
-                                 {"--verbose", {"-v"}, {}, fo{}},
-                                 {"--pause",   {"-p"}, {}, fo{}}}),
-        experimental::outcome{"foo", {{fo{}, nullptr, {}}, {fo{}, nullptr, {}}, {fo{}, nullptr, {}}}});
+      check(weak_equivalence,
+            LINE("Concatenated alias and sinlge alias"),
+            experimental::parse(a.size(), a.get(), {{{"--async",   {"-a"}, {}, fo{}}},
+                                                    {{"--verbose", {"-v"}, {}, fo{}}},
+                                                    {{"--pause",   {"-p"}, {}, fo{}}}}),
+            experimental::outcome{"foo", { {{fo{}, nullptr, {}}}, {{fo{}, nullptr, {}}}, {{fo{}, nullptr, {}}} }});
     }
 
     {
       commandline_arguments a{"foo", "-ac"};
 
-      check_exception_thrown<std::runtime_error>(LINE("Unexpected argument"), [&a](){
-        return experimental::parse(a.size(), a.get(), {{"--async", {"-a"}, {}, fo{}}});
+      check_exception_thrown<std::runtime_error>(LINE("Concatenated alias with only partial match"), [&a](){
+        return experimental::parse(a.size(), a.get(), {{{"--async", {"-a"}, {}, fo{}}}});
         });
     }
-
+/*
     {
       commandline_arguments a{"foo", "test", "thing"};
 
