@@ -311,7 +311,7 @@ namespace sequoia::testing
           const auto alias{std::string{'-'} + c};
 
           auto optionsIter{std::find_if(beginOptions, endOptions,
-            [arg](const auto& tree) { return root_weight(tree).name == arg; })};
+            [&alias](const auto& tree) { return is_alias(root_weight(tree), alias); })};
 
           // TO DO need to deal with the case where rollback is allowed
           if(optionsIter == endOptions)
@@ -539,16 +539,17 @@ namespace sequoia::testing
         return experimental::parse(a.size(), a.get(), {{{"--async", {"-as"}, {}, fo{}}}});
         });
     }
-/*
+
     {
       commandline_arguments a{"foo", "-av"};
 
-      check(weak_equivalence, LINE(""),
-        experimental::parse(a.size(), a.get(), {{"--async", {"-a"}, {}, fo{}},
-                                 {"--verbose", {"-v"}, {}, fo{}}}),
-        experimental::outcome{"foo", {{fo{}, nullptr, {}}, {fo{}, nullptr, {}}}});
+      check(weak_equivalence,
+            LINE("Concatenated alias"),
+            experimental::parse(a.size(), a.get(), {{{"--async",   {"-a"}, {}, fo{}}},
+                                                    {{"--verbose", {"-v"}, {}, fo{}}}}),
+            experimental::outcome{"foo", { {{fo{}, nullptr, {}}}, {{fo{}, nullptr, {}}}}});
     }
-
+/*
     {
       commandline_arguments a{"foo", "-a-v"};
 
