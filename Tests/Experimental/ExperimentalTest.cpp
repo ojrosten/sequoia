@@ -629,20 +629,20 @@ namespace sequoia::testing
       commandline_arguments a{"foo", "--async", "create", "class", "dir"};
 
       check(weak_equivalence,
-            LINE(""),
+            LINE("Single level, mixed"),
             experimental::parse(a.size(), a.get(), {{{"create",  {}, {"class_name", "directory"}, fo{}}},
                                                     {{"--async", {}, {}, fo{}}}}),
             experimental::outcome{"foo", { {{fo{}, nullptr, {}}}, {{fo{}, nullptr, {"class", "dir"}}} }});
     }
-/*
+
     {
       commandline_arguments a{"foo", "--async", "create", "class", "dir"};
 
-      check(weak_equivalence, LINE(""),
-        experimental::argument_parser{a.size(), a.get(), { {"create",  {}, {"class_name", "directory"}, fo{}},
-                                   {"--async", {}, {}, fo{}} }},
-        experimental::outcome{"foo", {{fo{}, nullptr, {}}, {fo{}, nullptr, {"class", "dir"}}}});
+      check(weak_equivalence,
+            LINE("Single level, mixed, with argument_parser"),
+            experimental::argument_parser{a.size(), a.get(), { {{"create",  {}, {"class_name", "directory"}, fo{}}},
+                                                               {{"--async", {}, {}, fo{}}} }},
+            experimental::outcome{"foo", { {{fo{}, nullptr, {}}}, {{fo{}, nullptr, {"class", "dir"}}}}});
     }
-    */
   }
 }
