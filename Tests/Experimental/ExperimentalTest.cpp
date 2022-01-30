@@ -169,9 +169,10 @@ namespace sequoia::testing
       current_option_tree currentOptionTree{};
       while(m_Index < m_ArgCount)
       {
-        if(std::string_view arg{m_Argv[m_Index++]}; !arg.empty())
+        std::string_view arg{m_Argv[m_Index++]};
+        if(!currentOperation.tree || currentOperation.current_op_complete)
         {
-          if(!currentOperation.tree || currentOperation.current_op_complete)
+          if(!arg.empty())
           {
             const auto optionsIter{std::find_if(beginOptions, endOptions,
               [arg](const auto& tree) {
@@ -201,31 +202,31 @@ namespace sequoia::testing
             currentOptionTree = *optionsIter;
             currentOperation = process_option(currentOptionTree, currentOperation, topLevel);
           }
-          else
+        }
+        else
+        {
+          if(!currentOptionTree) throw std::logic_error{"Current option not found"};
+
+          if(root_weight(currentOperation.tree).arguments.size() < root_weight(currentOptionTree).parameters.size())
           {
-            if(!currentOptionTree) throw std::logic_error{"Current option not found"};
-
-            if(root_weight(currentOperation.tree).arguments.size() < root_weight(currentOptionTree).parameters.size())
-            {
-              mutate_root_weight(currentOperation.tree, [arg](auto& w){ w.arguments.emplace_back(arg); });
-            }
+            mutate_root_weight(currentOperation.tree, [arg](auto& w) { w.arguments.emplace_back(arg); });
           }
+        }
 
-          if(root_weight(currentOperation.tree).arguments.size() == root_weight(currentOptionTree).parameters.size())
-          {
-            currentOperation.current_op_complete = true;
-            const auto node{currentOptionTree.node()};
+        if(currentOperation.tree && (root_weight(currentOperation.tree).arguments.size() == root_weight(currentOptionTree).parameters.size()))
+        {
+          currentOperation.current_op_complete = true;
+          const auto node{currentOptionTree.node()};
 
-            using iter_t = decltype(currentOptionTree.tree().cbegin_edges(node));
-            using forest_iter = forest_from_tree_iterator<iter_t, const_tree_adaptor<options_tree>>;
+          using iter_t = decltype(currentOptionTree.tree().cbegin_edges(node));
+          using forest_iter = forest_from_tree_iterator<iter_t, const_tree_adaptor<options_tree>>;
 
-            parse(forest_iter{currentOptionTree.tree().cbegin_edges(node), currentOptionTree.tree()},
-                  forest_iter{currentOptionTree.tree().cend_edges(node), currentOptionTree.tree()},
-                  currentOperation,
-                  top_level::no);
+          parse(forest_iter{currentOptionTree.tree().cbegin_edges(node), currentOptionTree.tree()},
+            forest_iter{currentOptionTree.tree().cend_edges(node), currentOptionTree.tree()},
+            currentOperation,
+            top_level::no);
 
-            currentOptionTree = {};
-          }
+          currentOptionTree = {};
         }
       }
 
@@ -596,13 +597,16 @@ namespace sequoia::testing
             experimental::parse(a.size(), a.get(), {{{"test", {"t"}, {"case"}, fo{}}}}),
             experimental::outcome{"foo", {{{fo{}, nullptr, {"thing"}}}}});
     }
-/*
+
     {
       commandline_arguments a{"foo", "test", ""};
 
-      check(weak_equivalence, LINE("Empty parameter"), experimental::parse(a.size(), a.get(), {{"test", {}, {"case"}, fo{}}}), experimental::outcome{"foo", {{fo{}, nullptr, {""}}}});
+      check(weak_equivalence,
+            LINE("Empty parameter"),
+            experimental::parse(a.size(), a.get(), {{{"test", {}, {"case"}, fo{}}}}),
+            experimental::outcome{"foo", {{{fo{}, nullptr, {""}}}}});
     }
-
+/*
     {
       commandline_arguments a{"foo", "test"};
 
