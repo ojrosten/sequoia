@@ -615,22 +615,24 @@ namespace sequoia::testing
           return experimental::parse(a.size(), a.get(), {{{"test", {}, {"case"}, fo{}}}});
         });
     }
-/*
+
     {
       commandline_arguments a{"foo", "create", "class", "dir"};
 
-      check(weak_equivalence, LINE(""),
-        experimental::parse(a.size(), a.get(), {{"create", {}, {"class_name", "directory"}, fo{}}}),
-        experimental::outcome{"foo", {{fo{}, nullptr, {"class", "dir"}}}});
+      check(weak_equivalence,
+            LINE("Two parameter option"),
+            experimental::parse(a.size(), a.get(), {{{"create", {}, {"class_name", "directory"}, fo{}}}}),
+            experimental::outcome{"foo", {{{fo{}, nullptr, {"class", "dir"}}}}});
     }
-
+/*
     {
       commandline_arguments a{"foo", "--async", "create", "class", "dir"};
 
-      check(weak_equivalence, LINE(""),
-        experimental::parse(a.size(), a.get(), {{"create",  {}, {"class_name", "directory"}, fo{}},
-                                   {"--async", {}, {}, fo{}}}),
-        experimental::outcome{"foo", {{fo{}, nullptr, {}}, {fo{}, nullptr, {"class", "dir"}}}});
+      check(weak_equivalence,
+            LINE(""),
+            experimental::parse(a.size(), a.get(), {{{"create",  {}, {"class_name", "directory"}, fo{}}},
+                                                    {{"--async", {}, {}, fo{}}}}),
+            experimental::outcome{"foo", { {{fo{}, nullptr, {}}}, {{fo{}, nullptr, {"class", "dir"}}} }});
     }
 
     {
