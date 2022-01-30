@@ -587,13 +587,16 @@ namespace sequoia::testing
             experimental::parse(a.size(), a.get(), {{{"test", {}, {"case"}, fo{}}}}),
             experimental::outcome{"foo", {{{fo{}, nullptr, {"thing"}}}}});
     }
-/*
+
     {
       commandline_arguments a{"foo", "t", "thing"};
 
-      check(weak_equivalence, LINE(""), experimental::parse(a.size(), a.get(), {{"test", {"t"}, {"case"}, fo{}}}), experimental::outcome{"foo", {{fo{}, nullptr, {"thing"}}}});
+      check(weak_equivalence,
+            LINE("Aliased argument with parameter"),
+            experimental::parse(a.size(), a.get(), {{{"test", {"t"}, {"case"}, fo{}}}}),
+            experimental::outcome{"foo", {{{fo{}, nullptr, {"thing"}}}}});
     }
-
+/*
     {
       commandline_arguments a{"foo", "test", ""};
 
