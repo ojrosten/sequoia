@@ -606,16 +606,16 @@ namespace sequoia::testing
             experimental::parse(a.size(), a.get(), {{{"test", {}, {"case"}, fo{}}}}),
             experimental::outcome{"foo", {{{fo{}, nullptr, {""}}}}});
     }
-/*
+
     {
       commandline_arguments a{"foo", "test"};
 
       check_exception_thrown<std::runtime_error>(LINE("Final argument missing"),
         [&a](){
-          return experimental::parse(a.size(), a.get(), {{"test", {}, {"case"}, fo{}}});
+          return experimental::parse(a.size(), a.get(), {{{"test", {}, {"case"}, fo{}}}});
         });
     }
-
+/*
     {
       commandline_arguments a{"foo", "create", "class", "dir"};
 

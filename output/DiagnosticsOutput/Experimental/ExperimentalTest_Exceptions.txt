@@ -53,3 +53,13 @@ Unrecognized concatenated alias: -ac
 
 	=======================================
 
+Tests/Experimental/ExperimentalTest.cpp, Line 613
+Final argument missing
+
+Expected Exception Type:
+[std::runtime_error]
+
+  Error: while parsing option "test": expected 1 argument, [case], but found 0 arguments
+
+	=======================================
+
