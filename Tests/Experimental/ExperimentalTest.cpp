@@ -108,7 +108,6 @@ namespace sequoia::testing
     struct current_operation
     {
       tree_adaptor<operations_tree> tree{};
-      bool current_op_complete{};
     };
 
     using options_tree        = maths::tree<maths::directed_flavour::directed, maths::tree_link_direction::forward, maths::null_weight, option>;
@@ -170,7 +169,7 @@ namespace sequoia::testing
       while(m_Index < m_ArgCount)
       {
         std::string_view arg{m_Argv[m_Index++]};
-        if(!currentOperation.tree || currentOperation.current_op_complete)
+        if(!currentOperation.tree)
         {
           if(!arg.empty())
           {
@@ -215,7 +214,6 @@ namespace sequoia::testing
 
         if(currentOperation.tree && (root_weight(currentOperation.tree).arguments.size() == root_weight(currentOptionTree).parameters.size()))
         {
-          currentOperation.current_op_complete = true;
           const auto node{currentOptionTree.node()};
 
           using iter_t = decltype(currentOptionTree.tree().cbegin_edges(node));
@@ -227,6 +225,7 @@ namespace sequoia::testing
                 top_level::no);
 
           currentOptionTree = {};
+          currentOperation = {};
         }
       }
 
