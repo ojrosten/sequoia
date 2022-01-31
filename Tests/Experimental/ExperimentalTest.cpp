@@ -458,6 +458,7 @@ namespace sequoia::testing
   {
     test_flat_parsing();
     test_flat_parsing_help();
+    test_nested_parsing();
   }
 
   void experimental_test::test_flat_parsing()
@@ -704,24 +705,24 @@ namespace sequoia::testing
       commandline_arguments a{"", "create", "class", "dir"};
 
       check(weak_equivalence,
-        LINE("A nested argument, not called"),
-        experimental::parse(a.size(),
-          a.get(),
-          {{ {"create", {}, {"class_name", "directory"}, fo{}, {},
-               { {{"--equivalent-type", {}, {"type"}}} } } }}),
-        experimental::outcome{"", {{{fo{}, nullptr, {"class", "dir"}}}}});
+            LINE("A nested argument, not called"),
+            experimental::parse(a.size(),
+              a.get(),
+              {{ {"create", {}, {"class_name", "directory"}, fo{}, {},
+                   { {{"--equivalent-type", {}, {"type"}}} } } }}),
+            experimental::outcome{"", {{{fo{}, nullptr, {"class", "dir"}}}}});
     }
 
     /*{
       commandline_arguments a{"bar", "create", "class", "dir", "--equivalent-type", "foo"};
 
       check(weak_equivalence,
-        LINE("A nested type, which is used"),
-        experimental::parse(a.size(),
-          a.get(),
-          {{ {"create", {}, {"class_name", "directory"}, fo{}, {},
-               { {{"--equivalent-type", {}, {"type"}}} } } }}),
-        experimental::outcome{"bar", {{{fo{}, nullptr, {"class", "dir", "foo"}}}}});
+            LINE("A nested type, which is used"),
+            experimental::parse(a.size(),
+              a.get(),
+              {{ {"create", {}, {"class_name", "directory"}, fo{}, {},
+                   { {{"--equivalent-type", {}, {"type"}}} } } }}),
+            experimental::outcome{"bar", {{{fo{}, nullptr, {"class", "dir", "foo"}}}}});
     }*/
 
     //{
