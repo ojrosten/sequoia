@@ -165,7 +165,7 @@ namespace sequoia::testing
       while(m_Index < m_ArgCount)
       {
         std::string_view arg{m_Argv[m_Index++]};
-        if(!currentOperationTree)
+        if(!currentOperationTree || !currentOptionTree)
         {
           if(arg.empty()) continue;
 
@@ -269,8 +269,11 @@ namespace sequoia::testing
 
         auto& operationTree{m_Operations.back()};
 
-        const auto node{operationTree.add_node(currentOptionTree.node(), root_weight(currentOptionTree).early, root_weight(currentOptionTree).late)};
-        currentOperationTree = {m_Operations.back(), node};
+        if(root_weight(currentOptionTree).early || root_weight(currentOptionTree).late)
+        {
+          const auto node{operationTree.add_node(currentOptionTree.node(), root_weight(currentOptionTree).early, root_weight(currentOptionTree).late)};
+          currentOperationTree = {m_Operations.back(), node};
+        }
 
         // TO DO: incorporate this
         /*while(i != nestedOperations.end())
