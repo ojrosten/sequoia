@@ -111,12 +111,16 @@ namespace sequoia::maths
     Tree& tree()
       requires (!std::is_const_v<Tree>)
     {
+      if(!m_pTree) throw std::logic_error{"Tree not found"};
+
       return *m_pTree;
     }
 
     [[nodiscard]]
     const Tree& tree() const
     {
+      if(!m_pTree) throw std::logic_error{"Tree not found"};
+
       return *m_pTree;
     }
 

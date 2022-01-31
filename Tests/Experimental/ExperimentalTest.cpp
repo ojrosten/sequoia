@@ -167,36 +167,35 @@ namespace sequoia::testing
         std::string_view arg{m_Argv[m_Index++]};
         if(!currentOperationTree)
         {
-          if(!arg.empty())
+          if(arg.empty()) continue;
+
+          const auto optionsIter{std::find_if(beginOptions, endOptions,
+            [arg](const auto& tree) {
+              return (root_weight(tree).name == arg) || is_alias(root_weight(tree), arg);
+            })
+          };
+
+          if(optionsIter == endOptions)
           {
-            const auto optionsIter{std::find_if(beginOptions, endOptions,
-              [arg](const auto& tree) {
-                return (root_weight(tree).name == arg) || is_alias(root_weight(tree), arg);
-              })
-            };
-
-            if(optionsIter == endOptions)
+            if(arg == "--help")
             {
-              if(arg == "--help")
-              {
-                m_Help = generate_help(beginOptions, endOptions);
-                return;
-              }
-
-              if(process_concatenated_aliases(beginOptions, endOptions, arg, currentOperationTree, topLevel))
-                continue;
-
-              if(topLevel == top_level::yes)
-                throw std::runtime_error{error(std::string{"unrecognized option '"}.append(arg).append("'"))};
-
-              // Roll back and see if the current argument makes sense at the previous level
-              --m_Index;
+              m_Help = generate_help(beginOptions, endOptions);
               return;
             }
 
-            currentOptionTree = *optionsIter;
-            currentOperationTree = process_option(currentOptionTree, currentOperationTree, topLevel);
+            if(process_concatenated_aliases(beginOptions, endOptions, arg, currentOperationTree, topLevel))
+              continue;
+
+            if(topLevel == top_level::yes)
+              throw std::runtime_error{error(std::string{"unrecognized option '"}.append(arg).append("'"))};
+
+            // Roll back and see if the current argument makes sense at the previous level
+            --m_Index;
+            return;
           }
+
+          currentOptionTree = *optionsIter;
+          currentOperationTree = process_option(currentOptionTree, currentOperationTree, topLevel);
         }
         else
         {
@@ -208,7 +207,9 @@ namespace sequoia::testing
           }
         }
 
-        if(currentOperationTree && (root_weight(currentOperationTree).arguments.size() == root_weight(currentOptionTree).parameters.size()))
+        if(!currentOperationTree) throw std::logic_error{"Current option not found"};
+
+        if((root_weight(currentOperationTree).arguments.size() == root_weight(currentOptionTree).parameters.size()))
         {
           const auto node{currentOptionTree.node()};
 
