@@ -22,5 +22,6 @@ namespace sequoia::testing
     void run_tests() final;
 
     void test_flat_parsing();
+    void test_flat_parsing_help();
   };
 }

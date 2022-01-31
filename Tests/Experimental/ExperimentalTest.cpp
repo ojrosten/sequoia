@@ -457,7 +457,7 @@ namespace sequoia::testing
   void experimental_test::run_tests()
   {
     test_flat_parsing();
-
+    test_flat_parsing_help();
   }
 
   void experimental_test::test_flat_parsing()
@@ -640,5 +640,58 @@ namespace sequoia::testing
                                                                {{"--async", {}, {}, fo{}}} }},
             experimental::outcome{"foo", { {{fo{}, nullptr, {}}}, {{fo{}, nullptr, {"class", "dir"}}}}});
     }
+  }
+
+  void experimental_test::test_flat_parsing_help()
+  {
+    using namespace sequoia::parsing::commandline;
+    using fo = function_object;
+
+    {
+      commandline_arguments a{"foo", "--help"};
+
+      check(weak_equivalence,
+            LINE("Single option help"),
+            experimental::parse(a.size(), a.get(), {{{"--async", {}, {}, fo{}}}}),
+            experimental::outcome{"foo", {}, "--async\n"});
+    }
+
+    {
+      commandline_arguments a{"foo", "--help"};
+
+      check(weak_equivalence,
+            LINE("Single option alias help"),
+            experimental::parse(a.size(), a.get(), {{{"--async", {"-a"}, {}, fo{}}}}),
+            experimental::outcome{"foo", {}, "--async | -a |\n"});
+    }
+
+    {
+      commandline_arguments a{"foo", "--help"};
+
+      check(weak_equivalence,
+            LINE("Single option multi-alias help"),
+            experimental::parse(a.size(), a.get(), {{{"--async", {"-a","-as"}, {}, fo{}}}}),
+            experimental::outcome{"foo", {}, "--async | -a -as |\n"});
+    }
+
+    /*{
+      commandline_arguments a{"foo", "--help"};
+
+      check(weak_equivalence,
+        LINE("Multi-option help"),
+        experimental::parse(a.size(), a.get(), {{{"create",  {"-c"}, {"class_name", "directory"}, fo{}}},
+                                                {{"--async", {}, {}, fo{}}}}),
+        experimental::outcome{"foo", {}, "create | -c | class_name, directory\n--async\n"});
+    }
+
+    {
+      commandline_arguments a{"foo", "--help"};
+
+      check(weak_equivalence,
+            LINE("Multi-option help, with argument_parser"),
+            experimental::argument_parser{a.size(), a.get(), { {{"create",  {"-c"}, {"class_name", "directory"}, fo{}}},
+                                                               {{"--async", {}, {}, fo{}}} }},
+            experimental::outcome{"foo", {}, "create | -c | class_name, directory\n--async\n"});
+    }*/
   }
 }
