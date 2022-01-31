@@ -365,7 +365,7 @@ namespace sequoia::testing
               help.pop_back();
 
             help += "\n";
-            ind.append(' ', 2);
+            ind.append(2, ' ');
           }
         };
 
@@ -674,7 +674,7 @@ namespace sequoia::testing
             experimental::outcome{"foo", {}, "--async | -a -as |\n"});
     }
 
-    /*{
+    {
       commandline_arguments a{"foo", "--help"};
 
       check(weak_equivalence,
@@ -692,6 +692,167 @@ namespace sequoia::testing
             experimental::argument_parser{a.size(), a.get(), { {{"create",  {"-c"}, {"class_name", "directory"}, fo{}}},
                                                                {{"--async", {}, {}, fo{}}} }},
             experimental::outcome{"foo", {}, "create | -c | class_name, directory\n--async\n"});
+    }
+  }
+
+  void experimental_test::test_nested_parsing()
+  {
+    using namespace sequoia::parsing::commandline;
+    using fo = function_object;
+
+    {
+      commandline_arguments a{"", "create", "class", "dir"};
+
+      check(weak_equivalence,
+        LINE("A nested argument, not called"),
+        experimental::parse(a.size(),
+          a.get(),
+          {{ {"create", {}, {"class_name", "directory"}, fo{}, {},
+               { {{"--equivalent-type", {}, {"type"}}} } } }}),
+        experimental::outcome{"", {{{fo{}, nullptr, {"class", "dir"}}}}});
+    }
+
+    /*{
+      commandline_arguments a{"bar", "create", "class", "dir", "--equivalent-type", "foo"};
+
+      check(weak_equivalence,
+        LINE("A nested type, which is used"),
+        experimental::parse(a.size(),
+          a.get(),
+          {{ {"create", {}, {"class_name", "directory"}, fo{}, {},
+               { {{"--equivalent-type", {}, {"type"}}} } } }}),
+        experimental::outcome{"bar", {{{fo{}, nullptr, {"class", "dir", "foo"}}}}});
     }*/
+
+    //{
+    //  commandline_arguments a{"", "create", "class", "dir", "--equivalent-type", "foo"};
+
+    //  check(weak_equivalence, LINE(""),
+    //    parse(a.size(), a.get(), {{"create", {}, {"class_name", "directory"}, fo{},
+    //                                { {"--equivalent-type", {}, {"type"}, fo{}} }
+    //                        }}),
+    //    outcome{"", {{ fo{}, nullptr, {"class", "dir"}, { { fo{}, nullptr, {"foo"}} } }}});
+    //}
+
+    //{
+    //  commandline_arguments a{"", "create", "class", "dir", "--equivalent-type", "foo", "--generate", "bar"};
+
+    //  check(weak_equivalence, LINE(""),
+    //    parse(a.size(), a.get(),
+    //      {{"create", {}, {"class_name", "directory"}, fo{},
+    //           { {"--equivalent-type", {}, {"type"}},
+    //             {"--generate",        {}, {"file"}, fo{}} }
+    //         }
+    //      }),
+    //    outcome{"", {{ fo{}, nullptr, {"class", "dir", "foo"}, { { fo{}, nullptr, {"bar"}} } }}});
+    //}
+
+    //{
+    //  commandline_arguments a{"", "create", "class", "dir", "--equivalent-type", "foo", "-v"};
+
+    //  check(weak_equivalence, LINE(""),
+    //    parse(a.size(), a.get(),
+    //      {{"create", {}, {"class_name", "directory"}, fo{},
+    //           { {"--equivalent-type", {}, {"type"}} }
+    //         },
+    //        {"--verbose", {"-v"}, {}, fo{}}
+    //      }),
+    //    outcome{"", {{fo{}, nullptr, {"class", "dir", "foo"}}, {fo{}, nullptr, {}}}});
+    //}
+
+    //{
+    //  commandline_arguments a{"", "create", "class", "dir", "--equivalent-type", "foo", "-v", "-a"};
+
+    //  check(weak_equivalence, LINE(""),
+    //    parse(a.size(), a.get(),
+    //      {{"create", {}, {"class_name", "directory"}, fo{},
+    //           { {"--equivalent-type", {}, {"type"}} }
+    //         },
+    //        {"--verbose", {"-v"}, {}, fo{}},
+    //        {"--async", {"-a"}, {}, fo{}}
+    //      }),
+    //    outcome{"", {{fo{}, nullptr, {"class", "dir", "foo"}}, {fo{}, nullptr, {}}, {fo{}, nullptr, {}}}});
+    //}
+
+    //{
+    //  commandline_arguments a{"", "create", "class", "dir", "--equivalent-type", "foo", "-va"};
+
+    //  check(weak_equivalence, LINE(""),
+    //    parse(a.size(), a.get(),
+    //      {{"create", {}, {"class_name", "directory"}, fo{},
+    //           { {"--equivalent-type", {}, {"type"}} }
+    //         },
+    //        {"--verbose", {"-v"}, {}, fo{}},
+    //        {"--async", {"-a"}, {}, fo{}}
+    //      }),
+    //    outcome{"", {{fo{}, nullptr, {"class", "dir", "foo"}}, {fo{}, nullptr, {}}, {fo{}, nullptr, {}}}});
+    //}
+
+    //{
+    //  commandline_arguments a{"", "create", "regular_test", "maybe<class T>", "std::optional<T>"};
+
+    //  check(weak_equivalence, LINE("Nested modes"),
+    //    parse(a.size(), a.get(),
+    //      {{"create", {"c"}, {}, fo{},
+    //           { { "regular_test",
+    //               {"regular"},
+    //               {"qualified::class_name<class T>", "equivalent type"},
+    //               fo{}
+    //             }
+    //           }
+    //         }
+    //      }),
+    //    outcome{"", {{fo{}, nullptr, {}, {{fo{}, nullptr, {"maybe<class T>", "std::optional<T>"}}} }}});
+    //}
+
+    //{
+    //  commandline_arguments a{"", "create", "regular_test", "maybe<class T>", "std::optional<T>"};
+
+    //  check(weak_equivalence, LINE("Nested modes"),
+    //    argument_parser{a.size(), a.get(),
+    //          { {"create", {"c"}, {}, fo{},
+    //               { { "regular_test",
+    //                   {"regular"},
+    //                   {"qualified::class_name<class T>", "equivalent type"},
+    //                   fo{}
+    //                 }
+    //               }
+    //             }
+    //          }},
+    //    outcome{"", {{fo{}, nullptr, {}, {{fo{}, nullptr, {"maybe<class T>", "std::optional<T>"}}} }}});
+    //}
+
+    //{
+    //  commandline_arguments a{"", "create", "create", "regular_test", "maybe<class T>", "std::optional<T>"};
+
+    //  // This is subtle! After the first 'create' is parsed, the second one is not
+    //  // recognized as a nested option and so it re-parsed as a top-level option.
+    //  check(weak_equivalence, LINE("Nested modes with duplicated command"),
+    //    parse(a.size(), a.get(),
+    //      {{"create", {"c"}, {}, fo{},
+    //           { { "regular_test",
+    //               {"regular"},
+    //               {"qualified::class_name<class T>", "equivalent type"},
+    //               fo{}
+    //             }
+    //           }
+    //         }
+    //      }),
+    //    outcome{"", {{fo{}, nullptr, {}}, {fo{}, nullptr, {}, {{fo{}, nullptr, {"maybe<class T>", "std::optional<T>"}}} }}});
+    //}
+
+    //{
+    //  commandline_arguments a{"", "create", "class", "dir", "--equivalent-type", "foo", "blah"};
+
+    //  check_exception_thrown<std::runtime_error>(LINE(""),
+    //    [&a]() {
+    //      return parse(a.size(), a.get(),
+    //        {{"create", {}, {"class_name", "directory"}, fo{},
+    //           { {"--equivalent-type", {}, {"type"}} }
+    //           },
+    //          {"--verbose", {"-v"}, {}, fo{}}
+    //        });
+    //    });
+    //}
   }
 }
