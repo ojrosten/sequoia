@@ -333,7 +333,10 @@ namespace sequoia::testing
 
       while(beginOptions != endOptions)
       {
-        const auto& optTree{(*(beginOptions++)).tree()};
+        const auto& optTree{(*beginOptions).tree()};
+        const auto subTreeRootNode{(*beginOptions).node()};
+
+        ++beginOptions;
 
         auto nodeEarly{
           [&](const auto n){
@@ -366,7 +369,7 @@ namespace sequoia::testing
           [&ind](auto){ ind.trim(2); }
         };
 
-        depth_first_search(optTree, ignore_disconnected_t{}, nodeEarly, nodeLate);
+        depth_first_search(optTree, ignore_disconnected_t{subTreeRootNode}, nodeEarly, nodeLate);
       }
 
       return help;
@@ -896,7 +899,7 @@ namespace sequoia::testing
                                   "qualified::class_name<class T>, equivalent_type\n"});
     }
 
-    /*{
+    {
       commandline_arguments a{"", "create", "--help"};
 
       check(weak_equivalence,
@@ -914,6 +917,6 @@ namespace sequoia::testing
                                   {{{fo{}, nullptr, {}}}},
                                   "regular_test | regular | "
                                   "qualified::class_name<class T>, equivalent_type\n"});
-    }*/
+    }
   }
 }
