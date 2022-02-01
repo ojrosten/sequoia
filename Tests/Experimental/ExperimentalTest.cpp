@@ -277,7 +277,7 @@ namespace sequoia::testing
         if(root_weight(currentOptionTree).early || root_weight(currentOptionTree).late)
         {
           auto& operationTree{m_Operations.back()};
-          const auto node{operationTree.add_node(currentOptionTree.node(), root_weight(currentOptionTree).early, root_weight(currentOptionTree).late)};
+          const auto node{operationTree.add_node(currentOperationData.oper_tree.node(), root_weight(currentOptionTree).early, root_weight(currentOptionTree).late)};
           currentOperationData = {{m_Operations.back(), node}};
         }
         else
@@ -701,7 +701,7 @@ namespace sequoia::testing
       commandline_arguments a{"", "create", "class", "dir"};
 
       check(weak_equivalence,
-            LINE("A nested argument, not called"),
+            LINE("A nested argument, not bound to a function object, not called"),
             experimental::parse(a.size(),
               a.get(),
               {{ {"create", {}, {"class_name", "directory"}, fo{}, {},
@@ -713,7 +713,7 @@ namespace sequoia::testing
       commandline_arguments a{"bar", "create", "class", "dir", "--equivalent-type", "foo"};
 
       check(weak_equivalence,
-            LINE("A nested type, which is used"),
+            LINE("A nested argument, not bound to a function object, utilized"),
             experimental::parse(a.size(),
               a.get(),
               {{ {"create", {}, {"class_name", "directory"}, fo{}, {},
@@ -721,15 +721,15 @@ namespace sequoia::testing
             experimental::outcome{"bar", {{{fo{}, nullptr, {"class", "dir", "foo"}}}}});
     }
 
-    //{
-    //  commandline_arguments a{"", "create", "class", "dir", "--equivalent-type", "foo"};
+    {
+      commandline_arguments a{"", "create", "class", "dir", "--equivalent-type", "foo"};
 
-    //  check(weak_equivalence, LINE(""),
-    //    parse(a.size(), a.get(), {{"create", {}, {"class_name", "directory"}, fo{},
-    //                                { {"--equivalent-type", {}, {"type"}, fo{}} }
-    //                        }}),
-    //    outcome{"", {{ fo{}, nullptr, {"class", "dir"}, { { fo{}, nullptr, {"foo"}} } }}});
-    //}
+      check(weak_equivalence,
+            LINE("A nested argument, bound to a function object, utilized"),
+            experimental::parse(a.size(), a.get(), {{ {"create", {}, {"class_name", "directory"}, fo{}, {},
+                                        { {{"--equivalent-type", {}, {"type"}, fo{}}} } } }}),
+            experimental::outcome{"", {{{ fo{}, nullptr, {"class", "dir"}, { { fo{}, nullptr, {"foo"}} } }}}});
+    }
 
     //{
     //  commandline_arguments a{"", "create", "class", "dir", "--equivalent-type", "foo", "--generate", "bar"};
