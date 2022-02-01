@@ -773,85 +773,100 @@ namespace sequoia::testing
     }
 
     {
+      commandline_arguments a{"", "create", "class", "dir", "--equivalent-type", "foo", "-a", "-v"};
+
+      check(weak_equivalence,
+            LINE("Three options, one with nesting, the other two aliased; invoked with concatenated alias"),
+            experimental::parse(a.size(),
+                                a.get(),
+                                { {{"create", {}, {"class_name", "directory"}, fo{}, {},
+                                      { {"--equivalent-type", {}, {"type"}} }
+                                   }},
+                                   {{"--verbose", {"-v"}, {}, fo{}}},
+                                   {{"--async", {"-a"}, {}, fo{}}}}),
+            experimental::outcome{"", {{{fo{}, nullptr, {"class", "dir", "foo"}}}, {{fo{}, nullptr, {}}}, {{fo{}, nullptr, {}}}}});
+    }
+
+    {
       commandline_arguments a{"", "create", "class", "dir", "--equivalent-type", "foo", "-va"};
 
       check(weak_equivalence,
             LINE("Three options, one with nesting, the other two aliased; invoked with concatenated alias"),
             experimental::parse(a.size(),
-              a.get(),
-              {{{"create", {}, {"class_name", "directory"}, fo{}, {},
-                   { {"--equivalent-type", {}, {"type"}} }
-                }},
-                {{"--verbose", {"-v"}, {}, fo{}}},
-                {{"--async", {"-a"}, {}, fo{}}}}),
+                                a.get(),
+                                {{{"create", {}, {"class_name", "directory"}, fo{}, {},
+                                     { {"--equivalent-type", {}, {"type"}} }
+                                  }},
+                                  {{"--verbose", {"-v"}, {}, fo{}}},
+                                  {{"--async", {"-a"}, {}, fo{}}}}),
             experimental::outcome{"", {{{fo{}, nullptr, {"class", "dir", "foo"}}}, {{fo{}, nullptr, {}}}, {{fo{}, nullptr, {}}}}});
     }
 
-    //{
-    //  commandline_arguments a{"", "create", "regular_test", "maybe<class T>", "std::optional<T>"};
+    {
+      commandline_arguments a{"", "create", "regular_test", "maybe<class T>", "std::optional<T>"};
 
-    //  check(weak_equivalence, LINE("Nested modes"),
-    //    parse(a.size(), a.get(),
-    //      {{"create", {"c"}, {}, fo{},
-    //           { { "regular_test",
-    //               {"regular"},
-    //               {"qualified::class_name<class T>", "equivalent type"},
-    //               fo{}
-    //             }
-    //           }
-    //         }
-    //      }),
-    //    outcome{"", {{fo{}, nullptr, {}, {{fo{}, nullptr, {"maybe<class T>", "std::optional<T>"}}} }}});
-    //}
+      check(weak_equivalence,
+            LINE("Nested mode"),
+            experimental::parse(a.size(),
+                                a.get(),
+                                {{{"create", {"c"}, {}, fo{}, {},
+                                     {{ "regular_test",
+                                         {"regular"},
+                                         {"qualified::class_name<class T>", "equivalent type"},
+                                         fo{}
+                                     }}
+                                }}}),
+            experimental::outcome{"", {{{fo{}, nullptr, {}, {{fo{}, nullptr, {"maybe<class T>", "std::optional<T>"}}} }}}});
+    }
 
-    //{
-    //  commandline_arguments a{"", "create", "regular_test", "maybe<class T>", "std::optional<T>"};
+    {
+      commandline_arguments a{"", "c", "regular", "maybe<class T>", "std::optional<T>"};
 
-    //  check(weak_equivalence, LINE("Nested modes"),
-    //    argument_parser{a.size(), a.get(),
-    //          { {"create", {"c"}, {}, fo{},
-    //               { { "regular_test",
-    //                   {"regular"},
-    //                   {"qualified::class_name<class T>", "equivalent type"},
-    //                   fo{}
-    //                 }
-    //               }
-    //             }
-    //          }},
-    //    outcome{"", {{fo{}, nullptr, {}, {{fo{}, nullptr, {"maybe<class T>", "std::optional<T>"}}} }}});
-    //}
+      check(weak_equivalence,
+            LINE("Nested mode, invoked with short-hand"),
+            experimental::parse(a.size(),
+                                a.get(),
+                                {{{"create", {"c"}, {}, fo{}, {},
+                                     {{ "regular_test",
+                                         {"regular"},
+                                         {"qualified::class_name<class T>", "equivalent type"},
+                                         fo{}
+                                     }}
+                                }}}),
+            experimental::outcome{"", {{{fo{}, nullptr, {}, {{fo{}, nullptr, {"maybe<class T>", "std::optional<T>"}}} }}}});
+    }
 
-    //{
-    //  commandline_arguments a{"", "create", "create", "regular_test", "maybe<class T>", "std::optional<T>"};
+    {
+      commandline_arguments a{"", "create", "create", "regular", "maybe<class T>", "std::optional<T>"};
 
-    //  // This is subtle! After the first 'create' is parsed, the second one is not
-    //  // recognized as a nested option and so it re-parsed as a top-level option.
-    //  check(weak_equivalence, LINE("Nested modes with duplicated command"),
-    //    parse(a.size(), a.get(),
-    //      {{"create", {"c"}, {}, fo{},
-    //           { { "regular_test",
-    //               {"regular"},
-    //               {"qualified::class_name<class T>", "equivalent type"},
-    //               fo{}
-    //             }
-    //           }
-    //         }
-    //      }),
-    //    outcome{"", {{fo{}, nullptr, {}}, {fo{}, nullptr, {}, {{fo{}, nullptr, {"maybe<class T>", "std::optional<T>"}}} }}});
-    //}
+      // This is subtle! After the first 'create' is parsed, the second one is not
+      // recognized as a nested option and so it re-parsed as a top-level option.
+      check(weak_equivalence,
+            LINE("Nested mode with duplicated command"),
+            experimental::parse(a.size(),
+                                a.get(),
+                                {{{"create", {"c"}, {}, fo{}, {},
+                                     {{ "regular_test",
+                                         {"regular"},
+                                         {"qualified::class_name<class T>", "equivalent type"},
+                                         fo{}
+                                     }}
+                                }}}),
+             experimental::outcome{"", { {{fo{}, nullptr, {}}}, {{fo{}, nullptr, {}, {{fo{}, nullptr, {"maybe<class T>", "std::optional<T>"}}} }} }});
+    }
 
-    //{
-    //  commandline_arguments a{"", "create", "class", "dir", "--equivalent-type", "foo", "blah"};
+    {
+      commandline_arguments a{"", "create", "class", "dir", "--equivalent-type", "foo", "blah"};
 
-    //  check_exception_thrown<std::runtime_error>(LINE(""),
-    //    [&a]() {
-    //      return parse(a.size(), a.get(),
-    //        {{"create", {}, {"class_name", "directory"}, fo{},
-    //           { {"--equivalent-type", {}, {"type"}} }
-    //           },
-    //          {"--verbose", {"-v"}, {}, fo{}}
-    //        });
-    //    });
-    //}
+      check_exception_thrown<std::runtime_error>(LINE("Two options, one with nesting, illegal argument"),
+        [&a]() {
+          return experimental::parse(a.size(),
+                                     a.get(),
+                                     {{{"create", {}, {"class_name", "directory"}, fo{}, {},
+                                          { {"--equivalent-type", {}, {"type"}} }
+                                       }},
+                                       {{"--verbose", {"-v"}, {}, fo{}}}});
+        });
+    }
   }
 }

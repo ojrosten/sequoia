@@ -65,3 +65,13 @@ Expected Exception Type:
 
 	=======================================
 
+Tests/Experimental/ExperimentalTest.cpp, Line 861
+Two options, one with nesting, illegal argument
+
+Expected Exception Type:
+[std::runtime_error]
+
+  Error: unrecognized option 'blah'
+
+	=======================================
+
