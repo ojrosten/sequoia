@@ -702,7 +702,7 @@ namespace sequoia::testing
       commandline_arguments a{"", "create", "class", "dir"};
 
       check(weak_equivalence,
-            LINE("A nested argument, not bound to a function object, not called"),
+            LINE("A nested option, not bound to a function object, not called"),
             experimental::parse(a.size(),
                                 a.get(),
                                 {{ {"create", {}, {"class_name", "directory"}, fo{}, {},
@@ -714,7 +714,7 @@ namespace sequoia::testing
       commandline_arguments a{"bar", "create", "class", "dir", "--equivalent-type", "foo"};
 
       check(weak_equivalence,
-            LINE("A nested argument, not bound to a function object, utilized"),
+            LINE("A nested option, not bound to a function object, utilized"),
             experimental::parse(a.size(),
                                 a.get(),
                                 {{ {"create", {}, {"class_name", "directory"}, fo{}, {},
@@ -726,7 +726,7 @@ namespace sequoia::testing
       commandline_arguments a{"", "create", "class", "dir", "--equivalent-type", "foo"};
 
       check(weak_equivalence,
-            LINE("A nested argument, bound to a function object, utilized"),
+            LINE("A nested option, bound to a function object, utilized"),
             experimental::parse(a.size(),
                                 a.get(),
                                 {{ {"create", {}, {"class_name", "directory"}, fo{}, {},
@@ -738,7 +738,7 @@ namespace sequoia::testing
       commandline_arguments a{"", "create", "class", "dir", "--equivalent-type", "foo", "--generate", "bar"};
 
       check(weak_equivalence,
-            LINE("Two nested arguments"),
+            LINE("Two nested options"),
             experimental::parse(a.size(),
                                 a.get(),
                                 {{ {"create", {}, {"class_name", "directory"}, fo{}, {},
@@ -747,32 +747,34 @@ namespace sequoia::testing
             experimental::outcome{"", {{{ fo{}, nullptr, {"class", "dir", "foo"}, { { fo{}, nullptr, {"bar"}} } }}}});
     }
 
-    //{
-    //  commandline_arguments a{"", "create", "class", "dir", "--equivalent-type", "foo", "-v"};
+    {
+      commandline_arguments a{"", "create", "class", "dir", "--equivalent-type", "foo", "-v"};
 
-    //  check(weak_equivalence, LINE(""),
-    //    parse(a.size(), a.get(),
-    //      {{"create", {}, {"class_name", "directory"}, fo{},
-    //           { {"--equivalent-type", {}, {"type"}} }
-    //         },
-    //        {"--verbose", {"-v"}, {}, fo{}}
-    //      }),
-    //    outcome{"", {{fo{}, nullptr, {"class", "dir", "foo"}}, {fo{}, nullptr, {}}}});
-    //}
+      check(weak_equivalence,
+        LINE("Two options, one with nesting, the other aliased"),
+        experimental::parse(a.size(),
+                            a.get(),
+                            { {{"create", {}, {"class_name", "directory"}, fo{}, {},
+                                 { {"--equivalent-type", {}, {"type"}} } 
+                              }},
+                              {{"--verbose", {"-v"}, {}, fo{}}}}),
+        experimental::outcome{"", {{{fo{}, nullptr, {"class", "dir", "foo"}}}, {{fo{}, nullptr, {}}}}});
+    }
 
-    //{
-    //  commandline_arguments a{"", "create", "class", "dir", "--equivalent-type", "foo", "-v", "-a"};
+    {
+      commandline_arguments a{"", "create", "class", "dir", "--equivalent-type", "foo", "-v", "-a"};
 
-    //  check(weak_equivalence, LINE(""),
-    //    parse(a.size(), a.get(),
-    //      {{"create", {}, {"class_name", "directory"}, fo{},
-    //           { {"--equivalent-type", {}, {"type"}} }
-    //         },
-    //        {"--verbose", {"-v"}, {}, fo{}},
-    //        {"--async", {"-a"}, {}, fo{}}
-    //      }),
-    //    outcome{"", {{fo{}, nullptr, {"class", "dir", "foo"}}, {fo{}, nullptr, {}}, {fo{}, nullptr, {}}}});
-    //}
+      check(weak_equivalence,
+            LINE("Three options, one with nesting, the other two aliased"),
+            experimental::parse(a.size(),
+                                a.get(),
+                                { {{"create", {}, {"class_name", "directory"}, fo{}, {},
+                                     { {"--equivalent-type", {}, {"type"}} }
+                                  }},
+                                  {{"--verbose", {"-v"}, {}, fo{}}},
+                                  {{"--async", {"-a"}, {}, fo{}}}}),
+            experimental::outcome{"", {{{fo{}, nullptr, {"class", "dir", "foo"}}}, {{fo{}, nullptr, {}}}, {{fo{}, nullptr, {}}}}});
+    }
 
     //{
     //  commandline_arguments a{"", "create", "class", "dir", "--equivalent-type", "foo", "-va"};
