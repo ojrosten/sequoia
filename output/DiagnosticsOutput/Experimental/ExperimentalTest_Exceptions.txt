@@ -1,4 +1,4 @@
-Tests/Experimental/ExperimentalTest.cpp, Line 467
+Tests/Experimental/ExperimentalTest.cpp, Line 463
 Empty name
 
 Expected Exception Type:
@@ -7,7 +7,7 @@ Empty string detected
 
 	=======================================
 
-Tests/Experimental/ExperimentalTest.cpp, Line 468
+Tests/Experimental/ExperimentalTest.cpp, Line 464
 Empty alias
 
 Expected Exception Type:
@@ -16,7 +16,7 @@ Empty string detected
 
 	=======================================
 
-Tests/Experimental/ExperimentalTest.cpp, Line 469
+Tests/Experimental/ExperimentalTest.cpp, Line 465
 Empty parameter
 
 Expected Exception Type:
@@ -25,16 +25,17 @@ Empty string detected
 
 	=======================================
 
-Tests/Experimental/ExperimentalTest.cpp, Line 525
+Tests/Experimental/ExperimentalTest.cpp, Line 521
 Unexpected argument
 
 Expected Exception Type:
 [std::runtime_error]
-Unrecognized concatenated alias: --asyng
+
+  Error: unrecognized option '--asyng'
 
 	=======================================
 
-Tests/Experimental/ExperimentalTest.cpp, Line 533
+Tests/Experimental/ExperimentalTest.cpp, Line 529
 Unexpected argument
 
 Expected Exception Type:
@@ -44,16 +45,17 @@ Expected Exception Type:
 
 	=======================================
 
-Tests/Experimental/ExperimentalTest.cpp, Line 572
+Tests/Experimental/ExperimentalTest.cpp, Line 568
 Concatenated alias with only partial match
 
 Expected Exception Type:
 [std::runtime_error]
-Unrecognized concatenated alias: -ac
+
+  Error: unrecognized option '-ac'
 
 	=======================================
 
-Tests/Experimental/ExperimentalTest.cpp, Line 607
+Tests/Experimental/ExperimentalTest.cpp, Line 603
 Final argument missing
 
 Expected Exception Type:

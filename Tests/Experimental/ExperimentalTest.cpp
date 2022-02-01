@@ -307,11 +307,7 @@ namespace sequoia::testing
           auto optionsIter{std::find_if(beginOptions, endOptions,
             [&alias](const auto& tree) { return is_alias(root_weight(tree), alias); })};
 
-          // TO DO need to deal with the case where rollback is allowed
-          if(optionsIter == endOptions)
-          {
-            throw std::runtime_error{"Unrecognized concatenated alias: " + std::string{arg}};
-          }
+          if(optionsIter == endOptions)  return false;
 
           const option_tree currentOptionTree{*optionsIter};
           process_option(currentOptionTree, currentOperationData, topLevel);
@@ -776,19 +772,20 @@ namespace sequoia::testing
             experimental::outcome{"", {{{fo{}, nullptr, {"class", "dir", "foo"}}}, {{fo{}, nullptr, {}}}, {{fo{}, nullptr, {}}}}});
     }
 
-    //{
-    //  commandline_arguments a{"", "create", "class", "dir", "--equivalent-type", "foo", "-va"};
+    {
+      commandline_arguments a{"", "create", "class", "dir", "--equivalent-type", "foo", "-va"};
 
-    //  check(weak_equivalence, LINE(""),
-    //    parse(a.size(), a.get(),
-    //      {{"create", {}, {"class_name", "directory"}, fo{},
-    //           { {"--equivalent-type", {}, {"type"}} }
-    //         },
-    //        {"--verbose", {"-v"}, {}, fo{}},
-    //        {"--async", {"-a"}, {}, fo{}}
-    //      }),
-    //    outcome{"", {{fo{}, nullptr, {"class", "dir", "foo"}}, {fo{}, nullptr, {}}, {fo{}, nullptr, {}}}});
-    //}
+      check(weak_equivalence,
+            LINE("Three options, one with nesting, the other two aliased; invoked with concatenated alias"),
+            experimental::parse(a.size(),
+              a.get(),
+              {{{"create", {}, {"class_name", "directory"}, fo{}, {},
+                   { {"--equivalent-type", {}, {"type"}} }
+                }},
+                {{"--verbose", {"-v"}, {}, fo{}}},
+                {{"--async", {"-a"}, {}, fo{}}}}),
+            experimental::outcome{"", {{{fo{}, nullptr, {"class", "dir", "foo"}}}, {{fo{}, nullptr, {}}}, {{fo{}, nullptr, {}}}}});
+    }
 
     //{
     //  commandline_arguments a{"", "create", "regular_test", "maybe<class T>", "std::optional<T>"};
