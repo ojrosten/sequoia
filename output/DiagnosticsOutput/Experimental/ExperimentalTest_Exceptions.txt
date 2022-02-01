@@ -1,4 +1,4 @@
-Tests/Experimental/ExperimentalTest.cpp, Line 466
+Tests/Experimental/ExperimentalTest.cpp, Line 467
 Empty name
 
 Expected Exception Type:
@@ -7,7 +7,7 @@ Empty string detected
 
 	=======================================
 
-Tests/Experimental/ExperimentalTest.cpp, Line 467
+Tests/Experimental/ExperimentalTest.cpp, Line 468
 Empty alias
 
 Expected Exception Type:
@@ -16,7 +16,7 @@ Empty string detected
 
 	=======================================
 
-Tests/Experimental/ExperimentalTest.cpp, Line 468
+Tests/Experimental/ExperimentalTest.cpp, Line 469
 Empty parameter
 
 Expected Exception Type:
@@ -25,7 +25,7 @@ Empty string detected
 
 	=======================================
 
-Tests/Experimental/ExperimentalTest.cpp, Line 524
+Tests/Experimental/ExperimentalTest.cpp, Line 525
 Unexpected argument
 
 Expected Exception Type:
@@ -34,7 +34,7 @@ Unrecognized concatenated alias: --asyng
 
 	=======================================
 
-Tests/Experimental/ExperimentalTest.cpp, Line 532
+Tests/Experimental/ExperimentalTest.cpp, Line 533
 Unexpected argument
 
 Expected Exception Type:
@@ -44,7 +44,7 @@ Expected Exception Type:
 
 	=======================================
 
-Tests/Experimental/ExperimentalTest.cpp, Line 571
+Tests/Experimental/ExperimentalTest.cpp, Line 572
 Concatenated alias with only partial match
 
 Expected Exception Type:
@@ -53,7 +53,7 @@ Unrecognized concatenated alias: -ac
 
 	=======================================
 
-Tests/Experimental/ExperimentalTest.cpp, Line 606
+Tests/Experimental/ExperimentalTest.cpp, Line 607
 Final argument missing
 
 Expected Exception Type:

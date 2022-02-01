@@ -124,7 +124,7 @@ namespace sequoia::testing
     private:
       enum class top_level {yes, no};
 
-      struct current_operation_data
+      struct operation_data
       {
         operation_tree oper_tree{};
         std::size_t    saturated_args{};
@@ -136,13 +136,13 @@ namespace sequoia::testing
       std::string m_ZerothArg{}, m_Help{};
 
       template<std::input_or_output_iterator Iter, std::sentinel_for<Iter> Sentinel>
-      void parse(Iter beginOptions, Sentinel endOptions, current_operation_data currentOperationData, top_level topLevel);
+      void parse(Iter beginOptions, Sentinel endOptions, const operation_data& previousOperationData, top_level topLevel);
 
       template<std::input_or_output_iterator Iter, std::sentinel_for<Iter> Sentinel>
       [[nodiscard]]
-      bool process_concatenated_aliases(Iter beginOptions, Sentinel endOptions, std::string_view arg, current_operation_data currentOperationData, top_level topLevel);
+      bool process_concatenated_aliases(Iter beginOptions, Sentinel endOptions, std::string_view arg, operation_data currentOperationData, top_level topLevel);
 
-      auto process_option(option_tree currentOptionTree, current_operation_data currentOperationData, top_level topLevel) -> current_operation_data;
+      auto process_option(option_tree currentOptionTree, operation_data currentOperationData, top_level topLevel) -> operation_data;
 
       template<std::input_or_output_iterator Iter, std::sentinel_for<Iter> Sentinel>
       [[nodiscard]]
@@ -163,11 +163,12 @@ namespace sequoia::testing
     }
 
     template<std::input_or_output_iterator Iter, std::sentinel_for<Iter> Sentinel>
-    void argument_parser::parse(Iter beginOptions, Sentinel endOptions, current_operation_data currentOperationData, top_level topLevel)
+    void argument_parser::parse(Iter beginOptions, Sentinel endOptions, const operation_data& previousOperationData, top_level topLevel)
     {
       if(!m_Help.empty() || (beginOptions == endOptions)) return;
 
       option_tree currentOptionTree{};
+      auto currentOperationData{previousOperationData};
       while(m_Index < m_ArgCount)
       {
         std::string_view arg{m_Argv[m_Index++]};
@@ -229,7 +230,7 @@ namespace sequoia::testing
                 top_level::no);
 
           currentOptionTree = {};
-          currentOperationData = {};
+          currentOperationData = previousOperationData;
         }
       }
 
@@ -259,7 +260,7 @@ namespace sequoia::testing
       }
     }
 
-    auto argument_parser::process_option(option_tree currentOptionTree, current_operation_data currentOperationData, top_level topLevel) -> current_operation_data
+    auto argument_parser::process_option(option_tree currentOptionTree, operation_data currentOperationData, top_level topLevel) -> operation_data
     {
       if(topLevel == top_level::yes)
       {
@@ -291,7 +292,7 @@ namespace sequoia::testing
 
     template<std::input_or_output_iterator Iter, std::sentinel_for<Iter> Sentinel>
     [[nodiscard]]
-    bool argument_parser::process_concatenated_aliases(Iter beginOptions, Sentinel endOptions, std::string_view arg, current_operation_data currentOperationData, top_level topLevel)
+    bool argument_parser::process_concatenated_aliases(Iter beginOptions, Sentinel endOptions, std::string_view arg, operation_data currentOperationData, top_level topLevel)
     {
       if(!(arg.size() > 2) && (arg[0] == '-') && (arg[1] != ' '))
         return false;
@@ -703,9 +704,9 @@ namespace sequoia::testing
       check(weak_equivalence,
             LINE("A nested argument, not bound to a function object, not called"),
             experimental::parse(a.size(),
-              a.get(),
-              {{ {"create", {}, {"class_name", "directory"}, fo{}, {},
-                   { {{"--equivalent-type", {}, {"type"}}} } } }}),
+                                a.get(),
+                                {{ {"create", {}, {"class_name", "directory"}, fo{}, {},
+                                     { {{"--equivalent-type", {}, {"type"}}} } } }}),
             experimental::outcome{"", {{{fo{}, nullptr, {"class", "dir"}}}}});
     }
 
@@ -715,9 +716,9 @@ namespace sequoia::testing
       check(weak_equivalence,
             LINE("A nested argument, not bound to a function object, utilized"),
             experimental::parse(a.size(),
-              a.get(),
-              {{ {"create", {}, {"class_name", "directory"}, fo{}, {},
-                   { {{"--equivalent-type", {}, {"type"}}} } } }}),
+                                a.get(),
+                                {{ {"create", {}, {"class_name", "directory"}, fo{}, {},
+                                     { {{"--equivalent-type", {}, {"type"}}} } } }}),
             experimental::outcome{"bar", {{{fo{}, nullptr, {"class", "dir", "foo"}}}}});
     }
 
@@ -726,23 +727,25 @@ namespace sequoia::testing
 
       check(weak_equivalence,
             LINE("A nested argument, bound to a function object, utilized"),
-            experimental::parse(a.size(), a.get(), {{ {"create", {}, {"class_name", "directory"}, fo{}, {},
-                                        { {{"--equivalent-type", {}, {"type"}, fo{}}} } } }}),
+            experimental::parse(a.size(),
+                                a.get(),
+                                {{ {"create", {}, {"class_name", "directory"}, fo{}, {},
+                                     { {{"--equivalent-type", {}, {"type"}, fo{}}} } } }}),
             experimental::outcome{"", {{{ fo{}, nullptr, {"class", "dir"}, { { fo{}, nullptr, {"foo"}} } }}}});
     }
 
-    //{
-    //  commandline_arguments a{"", "create", "class", "dir", "--equivalent-type", "foo", "--generate", "bar"};
+    {
+      commandline_arguments a{"", "create", "class", "dir", "--equivalent-type", "foo", "--generate", "bar"};
 
-    //  check(weak_equivalence, LINE(""),
-    //    parse(a.size(), a.get(),
-    //      {{"create", {}, {"class_name", "directory"}, fo{},
-    //           { {"--equivalent-type", {}, {"type"}},
-    //             {"--generate",        {}, {"file"}, fo{}} }
-    //         }
-    //      }),
-    //    outcome{"", {{ fo{}, nullptr, {"class", "dir", "foo"}, { { fo{}, nullptr, {"bar"}} } }}});
-    //}
+      check(weak_equivalence,
+            LINE("Two nested arguments"),
+            experimental::parse(a.size(),
+                                a.get(),
+                                {{ {"create", {}, {"class_name", "directory"}, fo{}, {},
+                                     { {{"--equivalent-type", {}, {"type"}}},
+                                       {{"--generate",        {}, {"file"}, fo{}} }}}}}),
+            experimental::outcome{"", {{{ fo{}, nullptr, {"class", "dir", "foo"}, { { fo{}, nullptr, {"bar"}} } }}}});
+    }
 
     //{
     //  commandline_arguments a{"", "create", "class", "dir", "--equivalent-type", "foo", "-v"};
