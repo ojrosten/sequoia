@@ -124,19 +124,25 @@ namespace sequoia::testing
     private:
       enum class top_level {yes, no};
 
+      struct current_operation_data
+      {
+        operation_tree oper_tree{};
+        std::size_t    saturated_args{};
+      };
+
       operations_forest m_Operations{};
       int m_Index{1}, m_ArgCount{};
       char** m_Argv{};
       std::string m_ZerothArg{}, m_Help{};
 
       template<std::input_or_output_iterator Iter, std::sentinel_for<Iter> Sentinel>
-      void parse(Iter beginOptions, Sentinel endOptions, operation_tree currentOperationTree, top_level topLevel);
+      void parse(Iter beginOptions, Sentinel endOptions, current_operation_data currentOperationData, top_level topLevel);
 
       template<std::input_or_output_iterator Iter, std::sentinel_for<Iter> Sentinel>
       [[nodiscard]]
-      bool process_concatenated_aliases(Iter beginOptions, Sentinel endOptions, std::string_view arg, operation_tree currentOperationTree, top_level topLevel);
+      bool process_concatenated_aliases(Iter beginOptions, Sentinel endOptions, std::string_view arg, current_operation_data currentOperationData, top_level topLevel);
 
-      operation_tree process_option(option_tree currentOptionTree, operation_tree currentOperationTree, top_level topLevel);
+      auto process_option(option_tree currentOptionTree, current_operation_data currentOperationData, top_level topLevel) -> current_operation_data;
 
       template<std::input_or_output_iterator Iter, std::sentinel_for<Iter> Sentinel>
       [[nodiscard]]
@@ -157,7 +163,7 @@ namespace sequoia::testing
     }
 
     template<std::input_or_output_iterator Iter, std::sentinel_for<Iter> Sentinel>
-    void argument_parser::parse(Iter beginOptions, Sentinel endOptions, operation_tree currentOperationTree, top_level topLevel)
+    void argument_parser::parse(Iter beginOptions, Sentinel endOptions, current_operation_data currentOperationData, top_level topLevel)
     {
       if(!m_Help.empty() || (beginOptions == endOptions)) return;
 
@@ -165,7 +171,7 @@ namespace sequoia::testing
       while(m_Index < m_ArgCount)
       {
         std::string_view arg{m_Argv[m_Index++]};
-        if(!currentOperationTree || !currentOptionTree)
+        if(!currentOperationData.oper_tree || !currentOptionTree)
         {
           if(arg.empty()) continue;
 
@@ -183,7 +189,7 @@ namespace sequoia::testing
               return;
             }
 
-            if(process_concatenated_aliases(beginOptions, endOptions, arg, currentOperationTree, topLevel))
+            if(process_concatenated_aliases(beginOptions, endOptions, arg, currentOperationData, topLevel))
               continue;
 
             if(topLevel == top_level::yes)
@@ -195,21 +201,22 @@ namespace sequoia::testing
           }
 
           currentOptionTree = *optionsIter;
-          currentOperationTree = process_option(currentOptionTree, currentOperationTree, topLevel);
+          currentOperationData = process_option(currentOptionTree, currentOperationData, topLevel);
         }
         else
         {
           if(!currentOptionTree) throw std::logic_error{"Current option not found"};
 
-          if(root_weight(currentOperationTree).arguments.size() < root_weight(currentOptionTree).parameters.size())
+          if(   root_weight(currentOperationData.oper_tree).arguments.size() 
+              < root_weight(currentOptionTree).parameters.size() + currentOperationData.saturated_args)
           {
-            mutate_root_weight(currentOperationTree, [arg](auto& w) { w.arguments.emplace_back(arg); });
+            mutate_root_weight(currentOperationData.oper_tree, [arg](auto& w) { w.arguments.emplace_back(arg); });
           }
         }
 
-        if(!currentOperationTree) throw std::logic_error{"Current option not found"};
+        if(!currentOperationData.oper_tree) throw std::logic_error{"Current option not found"};
 
-        if((root_weight(currentOperationTree).arguments.size() == root_weight(currentOptionTree).parameters.size()))
+        if((root_weight(currentOperationData.oper_tree).arguments.size() == root_weight(currentOptionTree).parameters.size() + currentOperationData.saturated_args))
         {
           const auto node{currentOptionTree.node()};
 
@@ -218,17 +225,17 @@ namespace sequoia::testing
 
           parse(forest_iter{currentOptionTree.tree().cbegin_edges(node), currentOptionTree.tree()},
                 forest_iter{currentOptionTree.tree().cend_edges(node), currentOptionTree.tree()},
-                currentOperationTree,
+                currentOperationData,
                 top_level::no);
 
           currentOptionTree = {};
-          currentOperationTree = {};
+          currentOperationData = {};
         }
       }
 
       if(   !m_Operations.empty()
          && currentOptionTree
-         && (root_weight(currentOperationTree).arguments.size() != root_weight(currentOptionTree).parameters.size()))
+         && (root_weight(currentOperationData.oper_tree).arguments.size() != root_weight(currentOptionTree).parameters.size()))
       {
         const auto& params{root_weight(currentOptionTree).parameters};
         const auto expected{params.size()};
@@ -245,14 +252,14 @@ namespace sequoia::testing
           if(std::distance(i, params.end()) > 1) mess.append(", ");
         }
 
-        const auto actual{root_weight(currentOperationTree).arguments.size()};
+        const auto actual{root_weight(currentOperationData.oper_tree).arguments.size()};
         mess.append("], but found ").append(std::to_string(actual)).append(pluralize(actual, "argument"));
 
         throw std::runtime_error{error(mess)};
       }
     }
 
-    operation_tree argument_parser::process_option(option_tree currentOptionTree, operation_tree currentOperationTree, top_level topLevel)
+    auto argument_parser::process_option(option_tree currentOptionTree, current_operation_data currentOperationData, top_level topLevel) -> current_operation_data
     {
       if(topLevel == top_level::yes)
       {
@@ -260,45 +267,31 @@ namespace sequoia::testing
           throw std::logic_error{error("Commandline option not bound to a function object")};
 
         m_Operations.push_back({{root_weight(currentOptionTree).early, root_weight(currentOptionTree).late, {}}});
-        currentOperationTree = {m_Operations.back(), 0};
+        currentOperationData = {{m_Operations.back(), 0}};
       }
       else
       {
-        if(m_Operations.empty() || !currentOperationTree)
+        if(m_Operations.empty() || !currentOperationData.oper_tree)
           throw std::logic_error{"Unable to find commandline operation"};
-
-        auto& operationTree{m_Operations.back()};
 
         if(root_weight(currentOptionTree).early || root_weight(currentOptionTree).late)
         {
+          auto& operationTree{m_Operations.back()};
           const auto node{operationTree.add_node(currentOptionTree.node(), root_weight(currentOptionTree).early, root_weight(currentOptionTree).late)};
-          currentOperationTree = {m_Operations.back(), node};
+          currentOperationData = {{m_Operations.back(), node}};
         }
-
-        // TO DO: incorporate this
-        /*while(i != nestedOperations.end())
+        else
         {
-          if(!i->early && !i->late)
-          {
-            auto& args{currentOp.arguments};
-            const auto& nestedArgs{i->arguments};
-            std::copy(nestedArgs.begin(), nestedArgs.end(), std::back_inserter(args));
-
-            i = nestedOperations.erase(i);
-          }
-          else
-          {
-            ++i;
-          }
-        }*/
+          currentOperationData = {currentOperationData.oper_tree, root_weight(currentOperationData.oper_tree).arguments.size()};
+        }
       }
 
-      return currentOperationTree;
+      return currentOperationData;
     }
 
     template<std::input_or_output_iterator Iter, std::sentinel_for<Iter> Sentinel>
     [[nodiscard]]
-    bool argument_parser::process_concatenated_aliases(Iter beginOptions, Sentinel endOptions, std::string_view arg, operation_tree currentOperationTree, top_level topLevel)
+    bool argument_parser::process_concatenated_aliases(Iter beginOptions, Sentinel endOptions, std::string_view arg, current_operation_data currentOperationData, top_level topLevel)
     {
       if(!(arg.size() > 2) && (arg[0] == '-') && (arg[1] != ' '))
         return false;
@@ -320,7 +313,7 @@ namespace sequoia::testing
           }
 
           const option_tree currentOptionTree{*optionsIter};
-          process_option(currentOptionTree, currentOperationTree, topLevel);
+          process_option(currentOptionTree, currentOperationData, topLevel);
         }
       }
 
@@ -716,7 +709,7 @@ namespace sequoia::testing
             experimental::outcome{"", {{{fo{}, nullptr, {"class", "dir"}}}}});
     }
 
-    /*{
+    {
       commandline_arguments a{"bar", "create", "class", "dir", "--equivalent-type", "foo"};
 
       check(weak_equivalence,
@@ -726,7 +719,7 @@ namespace sequoia::testing
               {{ {"create", {}, {"class_name", "directory"}, fo{}, {},
                    { {{"--equivalent-type", {}, {"type"}}} } } }}),
             experimental::outcome{"bar", {{{fo{}, nullptr, {"class", "dir", "foo"}}}}});
-    }*/
+    }
 
     //{
     //  commandline_arguments a{"", "create", "class", "dir", "--equivalent-type", "foo"};
