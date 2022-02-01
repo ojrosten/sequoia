@@ -460,8 +460,8 @@ namespace sequoia::testing
     using fo = function_object;
 
     {
-      check_exception_thrown<std::logic_error>(LINE("Empty name"), []() { return option{"", {}, {}, fo{}}; });
-      check_exception_thrown<std::logic_error>(LINE("Empty alias"), []() { return option{"test", {""}, {}, fo{}}; });
+      check_exception_thrown<std::logic_error>(LINE("Empty name"),      []() { return option{"", {}, {}, fo{}}; });
+      check_exception_thrown<std::logic_error>(LINE("Empty alias"),     []() { return option{"test", {""}, {}, fo{}}; });
       check_exception_thrown<std::logic_error>(LINE("Empty parameter"), []() { return option{"test", {}, {""}, fo{}}; });
     }
 
@@ -473,9 +473,9 @@ namespace sequoia::testing
       commandline_arguments a{"foo", "--async"};
 
       check(weak_equivalence,
-           LINE("Early"),
-           experimental::parse(a.size(), a.get(), {{{"--async", {}, {}, fo{}}}}),
-           experimental::outcome{"foo", {{{fo{}, nullptr, {}}}}});
+            LINE("Early"),
+            experimental::parse(a.size(), a.get(), {{{"--async", {}, {}, fo{}}}}),
+            experimental::outcome{"foo", {{{fo{}, nullptr, {}}}}});
 
       check(weak_equivalence,
             LINE("Late"),
@@ -492,9 +492,9 @@ namespace sequoia::testing
       commandline_arguments a{"bar", "-a"};
 
       check(weak_equivalence,
-        LINE("Argument shorthand"),
-        experimental::parse(a.size(), a.get(), {{{"--async", {"-a"}, {}, fo{}}}}),
-        experimental::outcome{"bar", {{{fo{}, nullptr, {}}}}});
+            LINE("Argument shorthand"),
+            experimental::parse(a.size(), a.get(), {{{"--async", {"-a"}, {}, fo{}}}}),
+            experimental::outcome{"bar", {{{fo{}, nullptr, {}}}}});
     }
 
     {
@@ -510,7 +510,7 @@ namespace sequoia::testing
       commandline_arguments a{"foo", "-a"};
 
       check(weak_equivalence,
-            LINE("Shorthand for a selection"),
+            LINE("Multiple shorthands for a single option"),
             experimental::parse(a.size(), a.get(), {{{"--async", {"-as", "-a"}, {}, fo{}}}}),
             experimental::outcome{"foo", {{{fo{}, nullptr, {}}}}});
     }
@@ -520,7 +520,7 @@ namespace sequoia::testing
 
       check_exception_thrown<std::runtime_error>(LINE("Unexpected argument"), [&a](){
         return experimental::parse(a.size(), a.get(), {{{"--async", {}, {}, fo{}}}});
-        });
+      });
     }
 
     {
@@ -555,7 +555,7 @@ namespace sequoia::testing
       commandline_arguments a{"foo", "-av", "-p"};
 
       check(weak_equivalence,
-            LINE("Concatenated alias and sinlge alias"),
+            LINE("Concatenated alias and single alias"),
             experimental::parse(a.size(), a.get(), {{{"--async",   {"-a"}, {}, fo{}}},
                                                     {{"--verbose", {"-v"}, {}, fo{}}},
                                                     {{"--pause",   {"-p"}, {}, fo{}}}}),
@@ -567,14 +567,14 @@ namespace sequoia::testing
 
       check_exception_thrown<std::runtime_error>(LINE("Concatenated alias with only partial match"), [&a](){
         return experimental::parse(a.size(), a.get(), {{{"--async", {"-a"}, {}, fo{}}}});
-        });
+      });
     }
 
     {
       commandline_arguments a{"foo", "test", "thing"};
 
       check(weak_equivalence,
-            LINE("Argument with paramater"),
+            LINE("Option with paramater"),
             experimental::parse(a.size(), a.get(), {{{"test", {}, {"case"}, fo{}}}}),
             experimental::outcome{"foo", {{{fo{}, nullptr, {"thing"}}}}});
     }
@@ -583,7 +583,7 @@ namespace sequoia::testing
       commandline_arguments a{"foo", "t", "thing"};
 
       check(weak_equivalence,
-            LINE("Aliased argument with parameter"),
+            LINE("Aliased option with parameter"),
             experimental::parse(a.size(), a.get(), {{{"test", {"t"}, {"case"}, fo{}}}}),
             experimental::outcome{"foo", {{{fo{}, nullptr, {"thing"}}}}});
     }
@@ -619,7 +619,7 @@ namespace sequoia::testing
       commandline_arguments a{"foo", "--async", "create", "class", "dir"};
 
       check(weak_equivalence,
-            LINE("Single level, mixed"),
+            LINE("Two options"),
             experimental::parse(a.size(), a.get(), {{{"create",  {}, {"class_name", "directory"}, fo{}}},
                                                     {{"--async", {}, {}, fo{}}}}),
             experimental::outcome{"foo", { {{fo{}, nullptr, {}}}, {{fo{}, nullptr, {"class", "dir"}}} }});
@@ -629,7 +629,7 @@ namespace sequoia::testing
       commandline_arguments a{"foo", "--async", "create", "class", "dir"};
 
       check(weak_equivalence,
-            LINE("Single level, mixed, with argument_parser"),
+            LINE("Two options, invoked with argument_parser"),
             experimental::argument_parser{a.size(), a.get(), { {{"create",  {}, {"class_name", "directory"}, fo{}}},
                                                                {{"--async", {}, {}, fo{}}} }},
             experimental::outcome{"foo", { {{fo{}, nullptr, {}}}, {{fo{}, nullptr, {"class", "dir"}}}}});
@@ -747,14 +747,14 @@ namespace sequoia::testing
       commandline_arguments a{"", "create", "class", "dir", "--equivalent-type", "foo", "-v"};
 
       check(weak_equivalence,
-        LINE("Two options, one with nesting, the other aliased"),
-        experimental::parse(a.size(),
-                            a.get(),
-                            { {{"create", {}, {"class_name", "directory"}, fo{}, {},
-                                 { {"--equivalent-type", {}, {"type"}} } 
-                              }},
-                              {{"--verbose", {"-v"}, {}, fo{}}}}),
-        experimental::outcome{"", {{{fo{}, nullptr, {"class", "dir", "foo"}}}, {{fo{}, nullptr, {}}}}});
+            LINE("Two options, one with nesting, the other aliased"),
+            experimental::parse(a.size(),
+                                a.get(),
+                                { {{"create", {}, {"class_name", "directory"}, fo{}, {},
+                                     { {"--equivalent-type", {}, {"type"}} } 
+                                  }},
+                                  {{"--verbose", {"-v"}, {}, fo{}}}}),
+            experimental::outcome{"", {{{fo{}, nullptr, {"class", "dir", "foo"}}}, {{fo{}, nullptr, {}}}}});
     }
 
     {
