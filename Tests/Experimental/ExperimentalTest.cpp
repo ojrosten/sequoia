@@ -452,6 +452,7 @@ namespace sequoia::testing
     test_flat_parsing();
     test_flat_parsing_help();
     test_nested_parsing();
+    test_nested_parsing_help();
   }
 
   void experimental_test::test_flat_parsing()
@@ -868,5 +869,51 @@ namespace sequoia::testing
                                        {{"--verbose", {"-v"}, {}, fo{}}}});
         });
     }
+  }
+
+  void experimental_test::test_nested_parsing_help()
+  {
+    using namespace sequoia::parsing::commandline;
+    using fo = function_object;
+
+    {
+      commandline_arguments a{"", "--help"};
+
+      check(weak_equivalence,
+            LINE("Nested help"),
+            experimental::parse(a.size(),
+                                a.get(),
+                                { {{"create", {"c"}, {}, fo{}, {},
+                                     {{"regular_test",
+                                        {"regular"},
+                                        {"qualified::class_name<class T>", "equivalent_type"},
+                                        fo{}
+                                     }}
+                                   }} }),
+            experimental::outcome{"",
+                                  {},
+                                  "create | c |\n  regular_test | regular | "
+                                  "qualified::class_name<class T>, equivalent_type\n"});
+    }
+
+    /*{
+      commandline_arguments a{"", "create", "--help"};
+
+      check(weak_equivalence,
+            LINE("Help requested for nested option"),
+            experimental::parse(a.size(),
+                                a.get(),
+                                { {{"create", {"c"}, {}, fo{}, {},
+                                     {{"regular_test",
+                                        {"regular"},
+                                        {"qualified::class_name<class T>", "equivalent_type"},
+                                        fo{}
+                                     }}
+                                }} }),
+            experimental::outcome{"",
+                                  {{{fo{}, nullptr, {}}}},
+                                  "regular_test | regular | "
+                                  "qualified::class_name<class T>, equivalent_type\n"});
+    }*/
   }
 }

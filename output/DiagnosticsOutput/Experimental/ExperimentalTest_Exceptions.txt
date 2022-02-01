@@ -1,4 +1,4 @@
-Tests/Experimental/ExperimentalTest.cpp, Line 463
+Tests/Experimental/ExperimentalTest.cpp, Line 464
 Empty name
 
 Expected Exception Type:
@@ -7,7 +7,7 @@ Empty string detected
 
 	=======================================
 
-Tests/Experimental/ExperimentalTest.cpp, Line 464
+Tests/Experimental/ExperimentalTest.cpp, Line 465
 Empty alias
 
 Expected Exception Type:
@@ -16,7 +16,7 @@ Empty string detected
 
 	=======================================
 
-Tests/Experimental/ExperimentalTest.cpp, Line 465
+Tests/Experimental/ExperimentalTest.cpp, Line 466
 Empty parameter
 
 Expected Exception Type:
@@ -25,7 +25,7 @@ Empty string detected
 
 	=======================================
 
-Tests/Experimental/ExperimentalTest.cpp, Line 521
+Tests/Experimental/ExperimentalTest.cpp, Line 522
 Unexpected argument
 
 Expected Exception Type:
@@ -35,7 +35,7 @@ Expected Exception Type:
 
 	=======================================
 
-Tests/Experimental/ExperimentalTest.cpp, Line 529
+Tests/Experimental/ExperimentalTest.cpp, Line 530
 Unexpected argument
 
 Expected Exception Type:
@@ -45,7 +45,7 @@ Expected Exception Type:
 
 	=======================================
 
-Tests/Experimental/ExperimentalTest.cpp, Line 568
+Tests/Experimental/ExperimentalTest.cpp, Line 569
 Concatenated alias with only partial match
 
 Expected Exception Type:
@@ -55,7 +55,7 @@ Expected Exception Type:
 
 	=======================================
 
-Tests/Experimental/ExperimentalTest.cpp, Line 603
+Tests/Experimental/ExperimentalTest.cpp, Line 604
 Final argument missing
 
 Expected Exception Type:
@@ -65,7 +65,7 @@ Expected Exception Type:
 
 	=======================================
 
-Tests/Experimental/ExperimentalTest.cpp, Line 861
+Tests/Experimental/ExperimentalTest.cpp, Line 862
 Two options, one with nesting, illegal argument
 
 Expected Exception Type:
