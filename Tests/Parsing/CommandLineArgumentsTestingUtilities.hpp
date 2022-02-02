@@ -100,7 +100,10 @@ namespace sequoia::testing
     commandline_arguments(std::vector<std::string> args);
 
     [[nodiscard]]
-    char** get() noexcept { return &m_Ptrs[0]; }
+    char** get() noexcept
+    {
+      return !m_Ptrs.empty() ? &m_Ptrs[0] : nullptr;
+    }
   private:
     std::vector<std::string> m_Args;
     std::vector<char*> m_Ptrs;
