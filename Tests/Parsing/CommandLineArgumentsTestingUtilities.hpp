@@ -10,6 +10,10 @@
 #include "sequoia/Parsing/CommandLineArguments.hpp"
 #include "sequoia/TestFramework/RegularTestCore.hpp"
 
+#include "../Maths/Graph/GraphTestingUtilities.hpp"
+
+
+
 namespace sequoia::testing
 {
   struct function_object
@@ -26,7 +30,7 @@ namespace sequoia::testing
   template<>
   struct value_tester<parsing::commandline::operation>
   {
-    using type = sequoia::parsing::commandline::operation;
+    using type = parsing::commandline::operation;
 
     template<test_mode Mode>
     static void test(weak_equivalence_check_t, test_logger<Mode>& logger, const type& operation, const type& prediction)
@@ -36,27 +40,30 @@ namespace sequoia::testing
       check(equality, "Operation Parameters differ", logger, operation.arguments, prediction.arguments);
     }
   private:
-    using executor = sequoia::parsing::commandline::executor;
+    using executor = parsing::commandline::executor;
 
     template<test_mode Mode>
     static void check_executor(test_logger<Mode>& logger, const executor& operation, const executor& prediction, std::string_view tag)
     {
       const bool consistent{(operation && prediction) || (!operation && !prediction)};
-      testing::check(std::string{"Existence of" }.append(tag).append(" function objects differs"), logger, consistent);
+      testing::check(std::string{"Existence of"}.append(tag).append(" function objects differs"), logger, consistent);
 
       if(operation && prediction)
       {
-        check(equality, "Function object tag", logger,
-                       operation.target<function_object>()->tag,
-                       prediction.target<function_object>()->tag);
+        check(equality,
+              "Function object tag",
+              logger,
+              operation.target<function_object>()->tag,
+              prediction.target<function_object>()->tag);
       }
     }
   };
 
+
   template<>
   struct value_tester<parsing::commandline::outcome>
   {
-    using type = sequoia::parsing::commandline::outcome;
+    using type = parsing::commandline::outcome;
 
     template<test_mode Mode>
     static void test(weak_equivalence_check_t, test_logger<Mode>& logger, const type& obtained, const type& prediction)
@@ -71,7 +78,7 @@ namespace sequoia::testing
   struct value_tester<parsing::commandline::argument_parser>
   {
     using type = parsing::commandline::argument_parser;
-    using prediction_type = sequoia::parsing::commandline::outcome;
+    using prediction_type = parsing::commandline::outcome;
 
     template<test_mode Mode>
     static void test(weak_equivalence_check_t, test_logger<Mode>& logger, const type& obtained, const prediction_type& prediction)

@@ -158,6 +158,26 @@ namespace sequoia::maths
   template<class Tree>
   using const_tree_adaptor = basic_tree_adaptor<const Tree>;
 
+  template<dynamic_tree T>
+  [[nodiscard]]
+  auto root_weight_iter(const basic_tree_adaptor<T>& adaptor)
+  {
+    return adaptor.tree().cbegin_node_weights() + adaptor.node();
+  }
+
+  template<dynamic_tree T>
+  [[nodiscard]]
+  const auto& root_weight(const basic_tree_adaptor<T>& adaptor)
+  {
+    return adaptor.tree().cbegin_node_weights()[adaptor.node()];
+  }
+
+  template<dynamic_tree T, std::invocable<typename T::node_weight_type&> Fn>
+  void mutate_root_weight(basic_tree_adaptor<T>& adaptor, Fn fn)
+  {
+    adaptor.tree().mutate_node_weight(root_weight_iter(adaptor), fn);
+  }
+
   template<std::input_or_output_iterator Iterator, class TreeAdaptor>
   class forest_from_tree_dereference_policy
   {
@@ -203,4 +223,43 @@ namespace sequoia::maths
 
   template<std::input_or_output_iterator Iterator, class Adaptor>
   using forest_from_tree_iterator = utilities::iterator<Iterator, forest_from_tree_dereference_policy<Iterator, Adaptor>>;
+
+
+  template<std::input_or_output_iterator Iterator, class TreeAdaptor>
+  class forest_dereference_policy
+  {
+  public:
+    using value_type = typename std::iterator_traits<Iterator>::value_type;
+    using proxy = TreeAdaptor;
+    using pointer = typename std::iterator_traits<Iterator>::pointer;
+    using reference = typename std::iterator_traits<Iterator>::reference;
+
+    constexpr forest_dereference_policy() = default;
+    constexpr forest_dereference_policy(const forest_dereference_policy&) = default;
+
+    [[nodiscard]]
+    friend constexpr bool operator==(const forest_dereference_policy&, const forest_dereference_policy&) noexcept = default;
+
+    [[nodiscard]]
+    friend constexpr bool operator!=(const forest_dereference_policy&, const forest_dereference_policy&) noexcept = default;
+  protected:
+    constexpr forest_dereference_policy(forest_dereference_policy&&) = default;
+
+    ~forest_dereference_policy() = default;
+
+    constexpr forest_dereference_policy& operator=(const forest_dereference_policy&) = default;
+    constexpr forest_dereference_policy& operator=(forest_dereference_policy&&) = default;
+
+    [[nodiscard]]
+    constexpr proxy get(reference ref) const noexcept
+    {
+      return {ref, 0};
+    }
+
+    [[nodiscard]]
+    static constexpr pointer get_ptr(reference ref) noexcept { return &ref; }
+  };
+
+  template<std::input_or_output_iterator Iterator, class Adaptor>
+  using forest_iterator = utilities::iterator<Iterator, forest_dereference_policy<Iterator, Adaptor>>;
 }

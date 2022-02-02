@@ -25,7 +25,7 @@ Empty string detected
 
 	=======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 70
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 90
 Unexpected argument
 
 Expected Exception Type:
@@ -35,7 +35,7 @@ Expected Exception Type:
 
 	=======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 78
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 98
 Unexpected argument
 
 Expected Exception Type:
@@ -45,8 +45,8 @@ Expected Exception Type:
 
 	=======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 114
-Unexpected argument
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 137
+Concatenated alias with only partial match
 
 Expected Exception Type:
 [std::runtime_error]
@@ -55,7 +55,7 @@ Expected Exception Type:
 
 	=======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 140
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 172
 Final argument missing
 
 Expected Exception Type:
@@ -65,7 +65,8 @@ Expected Exception Type:
 
 	=======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 367
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 430
+Two options, one with nesting, illegal argument
 
 Expected Exception Type:
 [std::runtime_error]

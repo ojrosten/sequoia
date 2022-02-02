@@ -189,70 +189,74 @@ namespace sequoia::testing
       }
     };
 
-    const std::vector<option> semanticsOptions{equivOption, familyOption, headerOption, genSemanticsSourceOption};
-    const std::vector<option> allocationOptions{familyOption, headerOption};
+    const std::initializer_list<maths::tree_initializer<option>> semanticsOptions{{equivOption}, {familyOption}, {headerOption}, {genSemanticsSourceOption}};
+    const std::initializer_list<maths::tree_initializer<option>> allocationOptions{{familyOption}, {headerOption}};
+    const std::initializer_list<maths::tree_initializer<option>> performanceOptions{{familyOption}};
+    const std::initializer_list<maths::tree_initializer<option>> freeOptions{{familyOption}, {nameOption}, {genFreeSourceOption}};
 
     const auto help{
       parse_invoke_depth_first(argc, argv,
-                { {"test", {"t"}, {"test family name"},
+                { {{"test", {"t"}, {"test family name"},
                     [this](const arg_list& args) {
                       m_RunnerMode |= runner_mode::test;
                       m_Selector.select_family(args.front());
                     }
-                  },
-                  {"select", {"s"}, {"source file name"},
+                  }},
+                  {{"select", {"s"}, {"source file name"},
                     [this](const arg_list& args) {
                       m_RunnerMode |= runner_mode::test;
                       m_Selector.select_source_file(fs::path{args.front()});
                     }
-                  },
-                  {"prune", {"p"}, {},
+                  }},
+                  {{"prune", {"p"}, {},
                     [this](const arg_list&) {
                       m_RunnerMode |= runner_mode::test;
                       m_Selector.enable_prune();
                     },
-                    {{"--cutoff", {"-c"}, {"Cutoff for #include search e.g. 'namespace'"},
+                    {},
+                    {{{"--cutoff", {"-c"}, {"Cutoff for #include search e.g. 'namespace'"},
                       [this](const arg_list& args) {
                         m_Selector.set_prune_cutoff(args[0]);
-                      }}
+                      }}}
                     }
-                  },
-                  {"create", {"c"}, {}, [](const arg_list&) {},
-                   { {"regular_test", {"regular"}, {"qualified::class_name<class T>", "equivalent type"},
-                      nascent_test_data{"semantic", "regular", *this, nascentTests}, semanticsOptions
-                     },
-                     {"move_only_test", {"move_only"}, {"qualified::class_name<class T>", "equivalent type"},
-                      nascent_test_data{"semantic", "move_only", *this, nascentTests}, semanticsOptions
-                     },
-                     {"regular_allocation_test", {"regular_allocation", "allocation_test"}, {"raw class name"},
-                      nascent_test_data{"allocation", "regular_allocation", *this, nascentTests}, allocationOptions
-                     },
-                     {"move_only_allocation_test", {"move_only_allocation"}, {"raw class name"},
-                      nascent_test_data{"allocation", "move_only_allocation", *this, nascentTests}, allocationOptions
-                     },
-                     {"free_test", {"free"}, {"header"},
-                      nascent_test_data{"behavioural", "free", *this, nascentTests}, {familyOption, nameOption, genFreeSourceOption}
-                     },
-                     {"performance_test", {"performance"}, {"header"},
-                       nascent_test_data{"behavioural", "performance", *this, nascentTests}, {familyOption}
-                     }
-                   },
-                   [this,&nascentTests](const arg_list&) {
-                      if(!nascentTests.empty())
-                      {
-                        m_RunnerMode |= runner_mode::create;
-                        variant_visitor visitor{ [](auto& nascent) { nascent.finalize(); } };
-                        std::visit(visitor, nascentTests.back());
+                  }},
+                  {{"create", {"c"}, {},
+                        [](const arg_list&) {},
+                        [this,&nascentTests](const arg_list&) {
+                          if(!nascentTests.empty())
+                          {
+                            m_RunnerMode |= runner_mode::create;
+                            variant_visitor visitor{ [](auto& nascent) { nascent.finalize(); } };
+                            std::visit(visitor, nascentTests.back());
+                          }
+                        },
+                    { {"regular_test", {"regular"}, {"qualified::class_name<class T>", "equivalent type"},
+                        nascent_test_data{"semantic", "regular", *this, nascentTests}, {}, semanticsOptions
+                      },
+                      {"move_only_test", {"move_only"}, {"qualified::class_name<class T>", "equivalent type"},
+                        nascent_test_data{"semantic", "move_only", *this, nascentTests}, {}, semanticsOptions
+                      },
+                      {"regular_allocation_test", {"regular_allocation", "allocation_test"}, {"raw class name"},
+                        nascent_test_data{"allocation", "regular_allocation", *this, nascentTests}, {}, allocationOptions
+                      },
+                      {"move_only_allocation_test", {"move_only_allocation"}, {"raw class name"},
+                        nascent_test_data{"allocation", "move_only_allocation", *this, nascentTests}, {}, allocationOptions
+                      },
+                      {"free_test", {"free"}, {"header"},
+                        nascent_test_data{"behavioural", "free", *this, nascentTests}, {}, freeOptions
+                      },
+                      {"performance_test", {"performance"}, {"header"},
+                         nascent_test_data{"behavioural", "performance", *this, nascentTests}, {}, performanceOptions
                       }
                     }
-                  },
-                  {"init", {"i"}, {"copyright owner", "path ending with project name", "code indent"},
+                  }},
+                  {{"init", {"i"}, {"copyright owner", "path ending with project name", "code indent"},
                     [this,&nascentProjects](const arg_list& args) {
                       m_RunnerMode |= runner_mode::init;
 
                       const auto ind{
                         [](std::string arg) {
-                          
+
                           replace_all(arg, "\\t", "\t");
                           return indentation{arg};
                         }
@@ -260,6 +264,7 @@ namespace sequoia::testing
 
                       nascentProjects.push_back(project_data{args[0], args[1], ind(args[2])});
                     },
+                    {},
                     { {"--no-build", {}, {},
                         [&nascentProjects](const arg_list&) { nascentProjects.back().do_build = build_invocation::no; }},
                       {"--to-files",  {}, {"filename (A file of this name will appear in multiple directories)"},
@@ -271,18 +276,18 @@ namespace sequoia::testing
                         }
                       }
                     }
-                  },
-                  {"update-materials", {"u"}, {},
+                  }},
+                  {{"update-materials", {"u"}, {},
                     [this](const arg_list&) {
                       m_RunnerMode |= runner_mode::test;
                       m_UpdateMode = update_mode::soft;
                     }
-                  },
-                  {"locate-instabilities", {"locate"}, {"number of repetitions >= 2"},
+                  }},
+                  {{"locate-instabilities", {"locate"}, {"number of repetitions >= 2"},
                     [this](const arg_list& args) {
                       using parsing::commandline::error;
                       const int i{
-                        [arg{args.front()}](){
+                        [arg{args.front()}] (){
                           try
                           {
                             return std::stoi(arg);
@@ -300,6 +305,7 @@ namespace sequoia::testing
                       m_InstabilityMode = instability_mode::single_instance;
                       m_NumReps = i;
                     },
+                    {},
                     { {"--sandbox", {"-s"}, {},
                         [this](const arg_list&) {
                           m_InstabilityMode = instability_mode::coordinator;
@@ -310,16 +316,16 @@ namespace sequoia::testing
                           m_InstabilityMode = instability_mode::sandbox;
                         }}
                     }
-                  },
-                  {"dump", {}, {},
+                  }},
+                  {{"dump", {}, {},
                     [this, recoveryDir{recovery_path(proj_paths().output())}](const arg_list&) {
                       std::filesystem::create_directory(recoveryDir);
                       m_Selector.dump_file(recoveryDir / "Dump.txt");
                       std::filesystem::remove(m_Selector.dump_file());
                       m_ConcurrencyMode = concurrency_mode::serial;
                     }
-                  },
-                  {"--async-depth", {"-a"}, {"depth [null,family,unit]"},
+                  }},
+                  {{"--async-depth", {"-a"}, {"depth [null,family,unit]"},
                     [this](const arg_list& args) {
                       const auto& depth{args.front()};
                       if(depth == "null")
@@ -341,16 +347,16 @@ namespace sequoia::testing
                         stream() << warning(std::string{"Unrecognized async depth option "}.append(depth).append(" should be one of [null,family,unit]\n"));
                       }
                     }
-                  },
-                  {"--verbose",  {"-v"}, {}, [this](const arg_list&) { m_OutputMode = output_mode::verbose; }},
-                  {"--recovery", {"-r"}, {},
+                  }},
+                  {{"--verbose",  {"-v"}, {}, [this](const arg_list&) { m_OutputMode = output_mode::verbose; }}},
+                  {{"--recovery", {"-r"}, {},
                     [this,recoveryDir{recovery_path(proj_paths().output())}] (const arg_list&) {
                       std::filesystem::create_directory(recoveryDir);
                       m_Selector.recovery_file(recoveryDir / "Recovery.txt");
                       std::filesystem::remove(m_Selector.recovery_file());
                       m_ConcurrencyMode = concurrency_mode::serial;
                     }
-                  }
+                  }}
                 },
                 [this](std::string_view exe){
                     const fs::path executable{exe};

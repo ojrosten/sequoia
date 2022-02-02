@@ -36,90 +36,97 @@ namespace sequoia::parsing::commandline
     return (n==1) ? s : s.append("s");
   }
 
-  [[nodiscard]]
-  outcome parse(int argc, char** argv, const std::vector<option>& options)
-  {
-    argument_parser p{argc, argv, options};
-
-    return p.get();
-  }
-
-  void invoke_depth_first(const std::vector<operation>& operations)
-  {
-    for(auto& op : operations)
-    {
-      if(op.early) op.early(op.arguments);
-
-      invoke_depth_first(op.nested_operations);
-
-      if(op.late) op.late(op.arguments);
-    }
-  }
-
-  argument_parser::argument_parser(int argc, char** argv, const std::vector<option>& options)
+  argument_parser::argument_parser(int argc, char** argv, const options_forest& options)
     : m_ArgCount{argc}
     , m_Argv{argv}
     , m_ZerothArg{m_ArgCount ? m_Argv[0] : ""}
   {
-    parse(options, m_Operations);
+    using iter_t = decltype(options.begin());
+    using forest_iter = maths::forest_iterator<iter_t, maths::const_tree_adaptor<options_tree>>;
+
+    parse(forest_iter{options.begin()}, forest_iter{options.end()}, {}, top_level::yes);
   }
 
-  bool argument_parser::parse(const std::vector<option>& options, std::vector<operation>& operations)
+  template<std::input_or_output_iterator Iter, std::sentinel_for<Iter> Sentinel>
+  void argument_parser::parse(Iter beginOptions, Sentinel endOptions, const operation_data& previousOperationData, top_level topLevel)
   {
-    auto optionsIter{options.end()};
-    for(; m_Index < m_ArgCount; ++m_Index)
+    if(!m_Help.empty() || (beginOptions == endOptions)) return;
+
+    option_tree currentOptionTree{};
+    auto currentOperationData{previousOperationData};
+    while(m_Index < m_ArgCount)
     {
-      const std::string arg{m_Argv[m_Index]};
-      if(optionsIter == options.end())
+      std::string_view arg{m_Argv[m_Index++]};
+      if(!currentOperationData.oper_tree || !currentOptionTree)
       {
-        if(!arg.empty())
+        if(arg.empty()) continue;
+
+        const auto optionsIter{std::find_if(beginOptions, endOptions,
+          [arg](const auto& tree) {
+            return (root_weight(tree).name == arg) || is_alias(root_weight(tree), arg);
+          })
+        };
+
+        if(optionsIter == endOptions)
         {
-          optionsIter = std::find_if(options.begin(), options.end(),
-                                     [&arg](const auto& opt) { return (opt.name == arg) || is_alias(opt, arg); });
-
-          if(optionsIter == options.end())
+          if(arg == "--help")
           {
-            if(arg == "--help")
-            {
-              m_Help = generate_help(options);
-              return true;
-            }
-
-            if(process_concatenated_aliases(optionsIter, options.begin(), options.end(), arg, operations))
-              continue;
+            m_Help = generate_help(beginOptions, endOptions);
+            return;
           }
 
-          if(auto maybeIter{process_option(optionsIter, options.end(), arg, operations)})
-          {
-            optionsIter = *maybeIter;
-          }
-          else
-          {
-            return false;
-          }
+          if(process_concatenated_aliases(beginOptions, endOptions, arg, currentOperationData, topLevel))
+            continue;
+
+          if(topLevel == top_level::yes)
+            throw std::runtime_error{error(std::string{"unrecognized option '"}.append(arg).append("'"))};
+
+          // Roll back and see if the current argument makes sense at the previous level
+          --m_Index;
+          return;
         }
+
+        currentOptionTree = *optionsIter;
+        currentOperationData = process_option(currentOptionTree, currentOperationData, topLevel);
       }
       else
       {
-        auto& currentOperation{operations.back()};
-        auto& arguments{currentOperation.arguments};
-        arguments.push_back(arg);
+        if(!currentOptionTree) throw std::logic_error{"Current option not found"};
 
-        if(arguments.size() == optionsIter->parameters.size())
+        if(root_weight(currentOperationData.oper_tree).arguments.size()
+          < root_weight(currentOptionTree).parameters.size() + currentOperationData.saturated_args)
         {
-          optionsIter = process_nested_options(optionsIter, options.end(), currentOperation);
+          mutate_root_weight(currentOperationData.oper_tree, [arg](auto& w) { w.arguments.emplace_back(arg); });
         }
+      }
+
+      if(!currentOperationData.oper_tree) throw std::logic_error{"Current option not found"};
+
+      if((root_weight(currentOperationData.oper_tree).arguments.size() == root_weight(currentOptionTree).parameters.size() + currentOperationData.saturated_args))
+      {
+        const auto node{currentOptionTree.node()};
+
+        using iter_t = decltype(currentOptionTree.tree().cbegin_edges(node));
+        using forest_iter = maths::forest_from_tree_iterator<iter_t, maths::const_tree_adaptor<options_tree>>;
+
+        parse(forest_iter{currentOptionTree.tree().cbegin_edges(node), currentOptionTree.tree()},
+              forest_iter{currentOptionTree.tree().cend_edges(node), currentOptionTree.tree()},
+              currentOperationData,
+              top_level::no);
+
+        currentOptionTree = {};
+        currentOperationData = previousOperationData;
       }
     }
 
-    if(   !operations.empty()
-       && (optionsIter != options.end())
-       && (operations.back().arguments.size() != optionsIter->parameters.size()))
+    if(!m_Operations.empty()
+      && currentOptionTree
+      && (root_weight(currentOperationData.oper_tree).arguments.size() != root_weight(currentOptionTree).parameters.size()))
     {
-      const auto& params{optionsIter->parameters};
+      const auto& params{root_weight(currentOptionTree).parameters};
       const auto expected{params.size()};
       auto mess{std::string{"while parsing option \""}
-                  .append(optionsIter->name)
+                  .append(root_weight(currentOptionTree).name)
                   .append("\": expected ")
                   .append(std::to_string(expected))
                   .append(pluralize(expected, "argument"))
@@ -131,142 +138,133 @@ namespace sequoia::parsing::commandline
         if(std::distance(i, params.end()) > 1) mess.append(", ");
       }
 
-      const auto actual{operations.back().arguments.size()};
+      const auto actual{root_weight(currentOperationData.oper_tree).arguments.size()};
       mess.append("], but found ").append(std::to_string(actual)).append(pluralize(actual, "argument"));
 
       throw std::runtime_error{error(mess)};
+    }
+  }
+
+  auto argument_parser::process_option(option_tree currentOptionTree, operation_data currentOperationData, top_level topLevel) -> operation_data
+  {
+    if(topLevel == top_level::yes)
+    {
+      if(!root_weight(currentOptionTree).early && !root_weight(currentOptionTree).late)
+        throw std::logic_error{error("Commandline option not bound to a function object")};
+
+      m_Operations.push_back({{root_weight(currentOptionTree).early, root_weight(currentOptionTree).late, {}}});
+      currentOperationData = {{m_Operations.back(), 0}};
+    }
+    else
+    {
+      if(m_Operations.empty() || !currentOperationData.oper_tree)
+        throw std::logic_error{"Unable to find commandline operation"};
+
+      if(root_weight(currentOptionTree).early || root_weight(currentOptionTree).late)
+      {
+        auto& operationTree{m_Operations.back()};
+        const auto node{operationTree.add_node(currentOperationData.oper_tree.node(), root_weight(currentOptionTree).early, root_weight(currentOptionTree).late)};
+        currentOperationData = {{m_Operations.back(), node}};
+      }
+      else
+      {
+        currentOperationData = {currentOperationData.oper_tree, maths::root_weight(currentOperationData.oper_tree).arguments.size()};
+      }
+    }
+
+    return currentOperationData;
+  }
+
+  template<std::input_or_output_iterator Iter, std::sentinel_for<Iter> Sentinel>
+  [[nodiscard]]
+  bool argument_parser::process_concatenated_aliases(Iter beginOptions, Sentinel endOptions, std::string_view arg, operation_data currentOperationData, top_level topLevel)
+  {
+    if((arg.size() < 2) || ((arg[0] == '-') && (arg[1] == ' ')))
+      return false;
+
+    for(auto j{arg.cbegin() + 1}; j != arg.cend(); ++j)
+    {
+      const auto c{*j};
+      if(c != '-')
+      {
+        const auto alias{std::string{'-'} + c};
+
+        auto optionsIter{std::find_if(beginOptions, endOptions,
+          [&alias](const auto& tree) { return is_alias(root_weight(tree), alias); })};
+
+        if(optionsIter == endOptions)  return false;
+
+        const option_tree currentOptionTree{*optionsIter};
+        process_option(currentOptionTree, currentOperationData, topLevel);
+      }
     }
 
     return true;
   }
 
+
   [[nodiscard]]
-  std::string argument_parser::generate_help(const std::vector<option>& options)
+  bool argument_parser::is_alias(const option& opt, std::string_view s)
   {
+    return std::find(opt.aliases.begin(), opt.aliases.end(), s) != opt.aliases.end();
+  }
+
+  template<std::input_or_output_iterator Iter, std::sentinel_for<Iter> Sentinel>
+  [[nodiscard]]
+  std::string argument_parser::generate_help(Iter beginOptions, Sentinel endOptions)
+  {
+    indentation ind{};
     std::string help;
-    for(const auto& opt : options)
+
+    while(beginOptions != endOptions)
     {
-      help += opt.name;
-      if(!opt.aliases.empty())
-      {
-        help += " | ";
-        for(const auto& a : opt.aliases)
-        {
-          help.append(a).append(" ");
+      const auto& optTree{(*beginOptions).tree()};
+      const auto subTreeRootNode{(*beginOptions).node()};
+
+      ++beginOptions;
+
+      auto nodeEarly{
+        [&](const auto n) {
+          const auto& wt{optTree.cbegin_node_weights()[n]};
+          help += indent(std::string{wt.name}, ind);
+          if(!wt.aliases.empty())
+          {
+            help += " | ";
+            for(const auto& a : wt.aliases)
+            {
+              help.append(a).append(" ");
+            }
+            help += "|";
+          }
+
+          for(const auto& p : wt.parameters)
+          {
+            help.append(" ").append(p).append(",");
+          }
+
+          if(!help.empty() && (help.back() == ','))
+            help.pop_back();
+
+          help += "\n";
+          ind.append(2, ' ');
         }
-        help += "|";
-      }
+      };
 
-      for(const auto& p : opt.parameters)
-      {
-        help.append(" ").append(p).append(",");
-      }
+      auto nodeLate{
+        [&ind](auto) { ind.trim(2); }
+      };
 
-      if(!help.empty() && (help.back() == ','))
-        help.pop_back();
-
-      help += "\n";
-      help += indent(generate_help(opt.nested_options), indentation{"  "});
+      depth_first_search(optTree, maths::ignore_disconnected_t{subTreeRootNode}, nodeEarly, nodeLate);
     }
 
     return help;
   }
 
-  template<std::input_or_output_iterator Iter, std::sentinel_for<Iter> Sentinel>
-  std::optional<Iter> argument_parser::process_option(Iter optionsIter, Sentinel optionsEnd, std::string_view arg, std::vector<operation>& operations)
-  {
-    if(optionsIter == optionsEnd)
-    {
-      if(top_level(operations))
-        throw std::runtime_error{error(std::string{"unrecognized option '"}.append(arg).append("'"))};
-
-      return {};
-    }
-
-    if(top_level(operations) && !optionsIter->early &&  !optionsIter->late)
-      throw std::logic_error{error("Commandline option not bound to a function object")};
-
-    operations.push_back(operation{optionsIter->early, optionsIter->late, {}});
-    if(optionsIter->parameters.empty())
-    {
-      optionsIter = process_nested_options(optionsIter, optionsEnd, operations.back());
-    }
-
-    return optionsIter;
-  }
-
-
-  template<std::input_iterator Iter, std::sentinel_for<Iter> Sentinel>
-  bool argument_parser::process_concatenated_aliases(Iter optionsIter, Iter optionsBegin, Sentinel optionsEnd, std::string_view arg, std::vector<operation>& operations)
-  {
-    if(optionsIter != optionsEnd) return false;
-
-    if((arg.size() > 2) && (arg[0] == '-') && (arg[1] != ' '))
-    {
-      for(auto j{arg.cbegin() + 1}; j != arg.cend(); ++j)
-      {
-        const auto c{*j};
-        if(c != '-')
-        {
-          const auto alias{std::string{'-'} + c};
-
-          optionsIter = std::find_if(optionsBegin, optionsEnd,
-                                    [&alias](const auto& opt) { return is_alias(opt, alias); });
-
-          process_option(optionsIter, optionsEnd, arg, operations);
-        }
-      }
-    }
-
-    return optionsIter != optionsEnd;
-  }
-
-  template<std::input_or_output_iterator Iter, std::sentinel_for<Iter> Sentinel>
-  Iter argument_parser::process_nested_options(Iter optionsIter, Sentinel optionsEnd, operation& currentOp)
-  {
-    if(!optionsIter->nested_options.empty())
-    {
-      if(m_Index + 1 < m_ArgCount)
-      {
-        ++m_Index;
-        const bool isNestedOption{parse(optionsIter->nested_options, currentOp.nested_operations)};
-
-        auto& nestedOperations{currentOp.nested_operations};
-        auto i{nestedOperations.begin()};
-        while(i != nestedOperations.end())
-        {
-          if(!i->early && !i->late)
-          {
-            auto& args{currentOp.arguments};
-            const auto& nestedArgs{i->arguments};
-            std::copy(nestedArgs.begin(), nestedArgs.end(), std::back_inserter(args));
-
-            i = nestedOperations.erase(i);
-          }
-          else
-          {
-            ++i;
-          }
-        }
-
-        if(!isNestedOption)
-          --m_Index;
-      }
-    }
-
-    return optionsEnd;
-  }
-
   [[nodiscard]]
-  bool argument_parser::top_level(const std::vector<operation>& operations) const noexcept
+  outcome parse(int argc, char** argv, const options_forest& options)
   {
-    return &m_Operations == &operations;
-  }
+    argument_parser p{argc, argv, options};
 
-  [[nodiscard]]
-  bool argument_parser::is_alias(const option& opt, const std::string& s)
-  {
-    return std::find(opt.aliases.begin(), opt.aliases.end(), s) != opt.aliases.end();
+    return p.get();
   }
-
 }

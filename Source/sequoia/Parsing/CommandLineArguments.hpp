@@ -13,12 +13,12 @@
 
 #include "sequoia/Core/Meta/Concepts.hpp"
 
+#include "sequoia/Maths/Graph/DynamicTree.hpp"
+#include "sequoia/Maths/Graph/GraphTraversalFunctions.hpp"
+
 #include <vector>
-#include <map>
 #include <string>
 #include <functional>
-#include <optional>
-#include <filesystem>
 #include <stdexcept>
 
 namespace sequoia::parsing::commandline
@@ -64,27 +64,30 @@ namespace sequoia::parsing::commandline
   struct option
   {
     proper_string name;
-    param_list aliases;
-    param_list parameters;
-    executor early{};
-
-    std::vector<option> nested_options{};
-
-    executor late{};
+    param_list aliases,
+               parameters;
+    executor early{},
+             late{};
   };
 
   struct operation
   {
     executor early, late;
     arg_list arguments;
-
-    std::vector<operation> nested_operations{};
   };
+
+  using options_tree   = maths::tree<maths::directed_flavour::directed, maths::tree_link_direction::forward, maths::null_weight, option>;
+  using options_forest = std::vector<options_tree>;
+  using option_tree    = maths::const_tree_adaptor<options_tree>;
+  
+  using operations_tree     = maths::tree<maths::directed_flavour::directed, maths::tree_link_direction::forward, maths::null_weight, operation>;
+  using operations_sub_tree = maths::tree_adaptor<operations_tree>;
+  using operations_forest   = std::vector<operations_tree>;
 
   struct outcome
   {
     std::string zeroth_arg;
-    std::vector<operation> operations;
+    operations_forest operations;
     std::string help{};
   };
 
@@ -98,29 +101,44 @@ namespace sequoia::parsing::commandline
   std::string pluralize(std::size_t n, std::string_view noun, std::string_view prefix=" ");
 
   [[nodiscard]]
-  outcome parse(int argc, char** argv, const std::vector<option>& options);
+  outcome parse(int argc, char** argv, const options_forest& options);
 
-  void invoke_depth_first(const std::vector<operation>& operations);
 
   template<std::invocable<std::string> Fn>
   [[nodiscard]]
-  std::string parse_invoke_depth_first(int argc, char** argv, const std::vector<option>& options, Fn zerothArgProcessor)
+  std::string parse_invoke_depth_first(int argc, char** argv, const options_forest options, Fn zerothArgProcessor)
   {
-    auto[zerothArg, ops, help]{parse(argc, argv, options)};
+    auto[zerothArg, operations, help]{parse(argc, argv, options)};
 
     if(help.empty())
     {
       zerothArgProcessor(zerothArg);
-      invoke_depth_first(ops);
+
+      using namespace maths;
+      for(const auto& operTree : operations)
+      {
+        depth_first_search(operTree,
+                           ignore_disconnected_t{},
+                           [&operTree](const auto node) {
+                              const operation& oper{operTree.cbegin_node_weights()[node]};
+                              if(oper.early) oper.early(oper.arguments);
+                           },
+                           [&operTree](const auto node) {
+                              const operation& oper{operTree.cbegin_node_weights()[node]};
+                              if(oper.late) oper.late(oper.arguments);
+                           });
+      }
     }
 
     return help;
   }
 
+
   class argument_parser
   {
   public:
-    argument_parser(int argc, char** argv, const std::vector<option>& options);
+
+    argument_parser(int argc, char** argv, const options_forest& options);
 
     [[nodiscard]]
     outcome get() const
@@ -128,28 +146,32 @@ namespace sequoia::parsing::commandline
       return {m_ZerothArg, m_Operations, m_Help};
     }
   private:
-    std::vector<operation> m_Operations{};
+    enum class top_level { yes, no };
+
+    struct operation_data
+    {
+      operations_sub_tree oper_tree{};
+      std::size_t    saturated_args{};
+    };
+
+    operations_forest m_Operations{};
     int m_Index{1}, m_ArgCount{};
     char** m_Argv{};
     std::string m_ZerothArg{}, m_Help{};
 
-    bool parse(const std::vector<option>& options, std::vector<operation>& operations);
+    template<std::input_or_output_iterator Iter, std::sentinel_for<Iter> Sentinel>
+    void parse(Iter beginOptions, Sentinel endOptions, const operation_data& previousOperationData, top_level topLevel);
 
     template<std::input_or_output_iterator Iter, std::sentinel_for<Iter> Sentinel>
-    std::optional<Iter> process_option(Iter optionsIter, Sentinel optionsEnd, std::string_view arg, std::vector<operation>& operations);
+    [[nodiscard]]
+    bool process_concatenated_aliases(Iter beginOptions, Sentinel endOptions, std::string_view arg, operation_data currentOperationData, top_level topLevel);
 
-    template<std::input_iterator Iter, std::sentinel_for<Iter> Sentinel>
-    bool process_concatenated_aliases(Iter optionsIter, Iter optionsBegin, Sentinel optionsEnd, std::string_view arg, std::vector<operation>& operations);
+    auto process_option(option_tree currentOptionTree, operation_data currentOperationData, top_level topLevel)->operation_data;
 
     template<std::input_or_output_iterator Iter, std::sentinel_for<Iter> Sentinel>
-    Iter process_nested_options(Iter optionsIter, Sentinel optionsEnd, operation& currentOp);
-
     [[nodiscard]]
-    bool top_level(const std::vector<operation>& operations) const noexcept;
+    static std::string generate_help(Iter beginOptions, Sentinel endOptions);
 
-    [[nodiscard]]
-    static std::string generate_help(const std::vector<option>& options);
-
-    static bool is_alias(const option& opt, const std::string& s);
+    static bool is_alias(const option& opt, std::string_view s);
   };
 }

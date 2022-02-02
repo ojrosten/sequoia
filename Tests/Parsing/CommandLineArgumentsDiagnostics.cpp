@@ -29,7 +29,7 @@ namespace sequoia::testing
       commandline_arguments a{"foo", "test"};
 
       check_exception_thrown<int>(LINE("Final argument missing"), [&a](){
-          return parse(a.size(), a.get(), { {"test", {}, {"case"}, fo{}} });
+          return parse(a.size(), a.get(), {{ {"test", {}, {"case"}, fo{}} }});
         });
     }
 
@@ -38,7 +38,7 @@ namespace sequoia::testing
       commandline_arguments a{"foo", "--asyng"};
 
       check_exception_thrown<int>(LINE("Unexpected argument"), [&a](){
-          return parse(a.size(), a.get(), { {"--async", {}, {}, fo{}} });
+          return parse(a.size(), a.get(), {{ {"--async", {}, {}, fo{}} }});
         });
     }
 
@@ -46,7 +46,7 @@ namespace sequoia::testing
       commandline_arguments a{"foo", "--async"};
 
       check_exception_thrown<int>(LINE("No bound function object"), [&a](){
-          return parse(a.size(), a.get(), { {"--async", {}, {}, nullptr} });
+          return parse(a.size(), a.get(), {{ {"--async", {}, {}, nullptr} }});
         });
     }
 
@@ -54,7 +54,7 @@ namespace sequoia::testing
       commandline_arguments a{"foo", "-ac"};
 
       check_exception_thrown<int>(LINE("Unexpected argument"), [&a](){
-          return parse(a.size(), a.get(), { {"--async", {"-a"}, {}, fo{}} });
+          return parse(a.size(), a.get(), {{ {"--async", {"-a"}, {}, fo{}} }});
         });
     }
 
@@ -65,21 +65,21 @@ namespace sequoia::testing
     {
       commandline_arguments a{"foo", "--async"};
 
-      check(weak_equivalence, LINE("Early function object not generated"), parse(a.size(), a.get(), { {"--async", {}, {}, fo{}} }), outcome{"foo", {{nullptr, nullptr, {}}}});
+      check(weak_equivalence, LINE("Early function object not generated"), parse(a.size(), a.get(), {{ {"--async", {}, {}, fo{}} }}), outcome{"foo", {{{nullptr, nullptr, {}}}}});
 
-      check(weak_equivalence, LINE("Late function object not generated"), parse(a.size(), a.get(), { {"--async", {}, {}, nullptr, {}, fo{}} }), outcome{"foo", {{nullptr, nullptr, {}}}});
+      check(weak_equivalence, LINE("Late function object not generated"), parse(a.size(), a.get(), {{ {"--async", {}, {}, nullptr, fo{}} }}), outcome{"foo", {{{nullptr, nullptr, {}}}}});
 
-      check(weak_equivalence, LINE("Unexpected early function object"), parse(a.size(), a.get(), { {"--async", {}, {}, fo{}} }), outcome{"foo", {{fo{"x"}, nullptr, {}}}});
+      check(weak_equivalence, LINE("Unexpected early function object"), parse(a.size(), a.get(), {{ {"--async", {}, {}, fo{}} }}), outcome{"foo", {{{fo{"x"}, nullptr, {}}}}});
 
-      check(weak_equivalence, LINE("Unexpected late function object"), parse(a.size(), a.get(), { {"--async", {}, {}, nullptr, {}, fo{}} }), outcome{"foo", {{nullptr, fo{"y"}, {}}}});
+      check(weak_equivalence, LINE("Unexpected late function object"), parse(a.size(), a.get(), {{ {"--async", {}, {}, nullptr, fo{}} }}), outcome{"foo", {{{nullptr, fo{"y"}, {}}}}});
 
-      check(weak_equivalence, LINE("Mixed-up function objects"), parse(a.size(), a.get(), { {"--async", {}, {}, fo{"x"}, {}, fo{"y"}} }), outcome{"foo", {{fo{"y"}, fo{"x"}, {}}}});
+      check(weak_equivalence, LINE("Mixed-up function objects"), parse(a.size(), a.get(), {{ {"--async", {}, {}, fo{"x"}, fo{"y"}} }}), outcome{"foo", {{{fo{"y"}, fo{"x"}, {}}}}});
     }
 
     {
       commandline_arguments a{"foo", "--help"};
 
-      check(weak_equivalence, LINE("Help not generated"), parse(a.size(), a.get(), { {"--async", {}, {}, fo{}} }), outcome{"foo", {}, ""});
+      check(weak_equivalence, LINE("Help not generated"), parse(a.size(), a.get(), {{ {"--async", {}, {}, fo{}} }}), outcome{"foo", {}, ""});
     }
   }
 }
