@@ -85,7 +85,7 @@ Expected Exception Type:
 
 	=======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 455
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 469
 Two options, one with nesting, illegal argument
 
 Expected Exception Type:

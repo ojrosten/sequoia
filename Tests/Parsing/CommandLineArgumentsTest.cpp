@@ -352,6 +352,20 @@ namespace sequoia::testing
     }
 
     {
+      commandline_arguments a{"", "create", "class", "dir", "--equivalent-type", "foo", "u"};
+
+      check(weak_equivalence,
+            LINE("Two options, one with nesting, the other aliased without a leading dash"),
+            parse(a.size(),
+              a.get(),
+              {{{"create", {}, {"class_name", "directory"}, fo{}, {},
+                   { {"--equivalent-type", {}, {"type"}} }
+                }},
+                {{"update", {"u"}, {}, fo{}}}}),
+            outcome{"", {{{fo{}, nullptr, {"class", "dir", "foo"}}}, {{fo{}, nullptr, {}}}}});
+    }
+
+    {
       commandline_arguments a{"", "create", "class", "dir", "--equivalent-type", "foo", "-v", "-a"};
 
       check(weak_equivalence,
