@@ -138,7 +138,7 @@ namespace sequoia
     struct tree_initializer
     {
       NodeWeight node;
-      std::initializer_list<tree_initializer> children{};
+      std::initializer_list<tree_initializer> children;
     };
 
     enum class tree_link_direction {symmetric, forward, backward};

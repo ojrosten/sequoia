@@ -152,7 +152,7 @@ namespace sequoia::parsing::commandline
       if(!root_weight(currentOptionTree).early && !root_weight(currentOptionTree).late)
         throw std::logic_error{error("Commandline option not bound to a function object")};
 
-      m_Operations.push_back({{{root_weight(currentOptionTree).early, root_weight(currentOptionTree).late, {}}}});
+      m_Operations.push_back({{root_weight(currentOptionTree).early, root_weight(currentOptionTree).late, {}}});
       currentOperationData = {{m_Operations.back(), 0}};
     }
     else
