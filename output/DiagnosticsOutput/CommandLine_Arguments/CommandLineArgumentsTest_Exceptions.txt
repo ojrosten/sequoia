@@ -26,7 +26,7 @@ Empty string detected
 	=======================================
 
 Tests/Parsing/CommandLineArgumentsTest.cpp, Line 90
-Unexpected argument
+Typo in argument
 
 Expected Exception Type:
 [std::runtime_error]
@@ -36,7 +36,7 @@ Expected Exception Type:
 	=======================================
 
 Tests/Parsing/CommandLineArgumentsTest.cpp, Line 98
-Unexpected argument
+Alias mismatch
 
 Expected Exception Type:
 [std::runtime_error]
@@ -45,7 +45,27 @@ Expected Exception Type:
 
 	=======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 137
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 106
+Missing alias
+
+Expected Exception Type:
+[std::runtime_error]
+
+  Error: unrecognized option '-'
+
+	=======================================
+
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 114
+Extra space in argument
+
+Expected Exception Type:
+[std::runtime_error]
+
+  Error: unrecognized option '- a'
+
+	=======================================
+
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 153
 Concatenated alias with only partial match
 
 Expected Exception Type:
@@ -55,7 +75,7 @@ Expected Exception Type:
 
 	=======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 172
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 197
 Final argument missing
 
 Expected Exception Type:
@@ -65,7 +85,7 @@ Expected Exception Type:
 
 	=======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 430
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 455
 Two options, one with nesting, illegal argument
 
 Expected Exception Type:

@@ -61,7 +61,7 @@ namespace sequoia::testing
       commandline_arguments a{"bar", "-a"};
 
       check(weak_equivalence,
-            LINE("Argument shorthand"),
+            LINE("Alias"),
             parse(a.size(), a.get(), {{{"--async", {"-a"}, {}, fo{}}}}),
             outcome{"bar", {{{fo{}, nullptr, {}}}}});
     }
@@ -87,7 +87,7 @@ namespace sequoia::testing
     {
       commandline_arguments a{"foo", "--asyng"};
 
-      check_exception_thrown<std::runtime_error>(LINE("Unexpected argument"), [&a](){
+      check_exception_thrown<std::runtime_error>(LINE("Typo in argument"), [&a](){
         return parse(a.size(), a.get(), {{{"--async", {}, {}, fo{}}}});
       });
     }
@@ -95,8 +95,24 @@ namespace sequoia::testing
     {
       commandline_arguments a{"foo", "-a"};
 
-      check_exception_thrown<std::runtime_error>(LINE("Unexpected argument"), [&a](){
+      check_exception_thrown<std::runtime_error>(LINE("Alias mismatch"), [&a](){
         return parse(a.size(), a.get(), {{{"--async", {"-as"}, {}, fo{}}}});
+        });
+    }
+
+    {
+      commandline_arguments a{"foo", "-"};
+
+      check_exception_thrown<std::runtime_error>(LINE("Missing alias"), [&a]() {
+        return parse(a.size(), a.get(), {{{"--async", {"-a"}, {}, fo{}}}});
+        });
+    }
+
+    {
+      commandline_arguments a{"foo", "- a"};
+
+      check_exception_thrown<std::runtime_error>(LINE("Extra space in argument"), [&a]() {
+        return parse(a.size(), a.get(), {{{"--async", {"-a"}, {}, fo{}}}});
         });
     }
 
@@ -137,6 +153,15 @@ namespace sequoia::testing
       check_exception_thrown<std::runtime_error>(LINE("Concatenated alias with only partial match"), [&a](){
         return parse(a.size(), a.get(), {{{"--async", {"-a"}, {}, fo{}}}});
       });
+    }
+
+    {
+      commandline_arguments a{"bar", "c"};
+
+      check(weak_equivalence,
+            LINE("Alias without leading dash"),
+            parse(a.size(), a.get(), {{{"create", {"c"}, {}, fo{}}}}),
+            outcome{"bar", {{{fo{}, nullptr, {}}}}});
     }
 
     {
