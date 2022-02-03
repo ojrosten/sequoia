@@ -7,6 +7,8 @@
 
 #pragma once
 
+/*! \file */
+
 #include "GraphTestingUtilities.hpp"
 #include "sequoia/Maths/Graph/DynamicGraphTraversals.hpp"
 

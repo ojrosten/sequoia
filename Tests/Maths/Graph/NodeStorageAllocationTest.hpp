@@ -7,6 +7,8 @@
 
 #pragma once
 
+/*! \file */
+
 #include "NodeStorageTestingUtilities.hpp"
 
 #include "sequoia/TestFramework/RegularAllocationTestCore.hpp"

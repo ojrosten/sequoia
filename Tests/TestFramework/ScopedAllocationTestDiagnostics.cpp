@@ -5,6 +5,8 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
+/*! \file */
+
 #include "ScopedAllocationTestDiagnostics.hpp"
 #include "ScopedAllocationTestDiagnosticsUtilities.hpp"
 #include "AllocationTestDiagnosticsUtilities.hpp"

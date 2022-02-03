@@ -7,6 +7,8 @@
 
 #pragma once
 
+/*! \file */
+
 #include "sequoia/Core/Utilities/AssignmentUtilities.hpp"
 #include "sequoia/TestFramework/AllocationCheckers.hpp"
 

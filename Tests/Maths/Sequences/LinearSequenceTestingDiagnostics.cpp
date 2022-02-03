@@ -5,6 +5,8 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
+/*! \file */
+
 #include "LinearSequenceTestingDiagnostics.hpp"
 
 namespace sequoia::testing

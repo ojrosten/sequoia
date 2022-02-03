@@ -37,8 +37,9 @@
 #include "sequoia/Streaming/Streaming.hpp"
 
 #include <array>
-#include <tuple>
+#include <functional>
 #include <optional>
+#include <tuple>
 #include <variant>
 
 namespace sequoia::testing
@@ -517,6 +518,29 @@ namespace sequoia::testing
           check(flavour, "Contents of optional", logger, *obtained, *prediction, advisor);
         }
       }
+    }
+  };
+
+  template<class R, class... Args>
+  struct value_tester<std::function<R (Args...)>>
+  {
+    using type = std::function<R (Args...)>;
+
+    template<test_mode Mode>
+    static void test(weak_equivalence_check_t, test_logger<Mode>& logger, const type& obtained, const type& prediction)
+    {
+      const bool obtainedIsBound{obtained}, predictionIsBound{prediction};
+
+      auto messageFn{[](std::string_view name, const bool bound) -> std::string {
+           auto mess{std::string{name} + " has a function "};
+           if(!bound) mess.append("not ");
+           return mess.append("bound");
+        }
+      };
+
+      check(messageFn("obtained", obtainedIsBound).append(" but ").append(messageFn("prediction", predictionIsBound)),
+            logger,
+            (obtainedIsBound && predictionIsBound) || (!obtainedIsBound && !predictionIsBound));
     }
   };
 }

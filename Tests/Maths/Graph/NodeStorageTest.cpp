@@ -5,6 +5,8 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
+/*! \file */
+
 #include "NodeStorageTest.hpp"
 #include "sequoia/Core/Utilities/UniformWrapper.hpp"
 #include "sequoia/Core/Ownership/DataPool.hpp"

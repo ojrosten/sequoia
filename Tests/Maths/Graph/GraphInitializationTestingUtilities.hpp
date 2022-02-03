@@ -7,6 +7,8 @@
 
 #pragma once
 
+/*! \file */
+
 #include "GraphTestingUtilities.hpp"
 
 namespace sequoia::testing

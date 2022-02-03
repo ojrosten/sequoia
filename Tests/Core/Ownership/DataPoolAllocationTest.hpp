@@ -7,6 +7,8 @@
 
 #pragma once
 
+/*! \file */
+
 #include "sequoia/TestFramework/MoveOnlyAllocationTestCore.hpp"
 
 #include "sequoia/Core/Ownership/DataPool.hpp"

@@ -7,6 +7,8 @@
 
 #pragma once
 
+/*! \file */
+
 #include "sequoia/Core/Utilities/Iterator.hpp"
 
 namespace sequoia::testing

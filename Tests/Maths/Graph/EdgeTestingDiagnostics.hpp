@@ -1,5 +1,7 @@
 #pragma once
 
+/*! \file */
+
 #include "EdgeTestingUtilities.hpp"
 
 namespace sequoia::testing

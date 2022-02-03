@@ -7,6 +7,8 @@
 
 #pragma once
 
+/*! \file */
+
 #include "sequoia/Core/Ownership/DataPool.hpp"
 
 namespace sequoia::testing

@@ -7,6 +7,8 @@
 
 #pragma once
 
+/*! \file */
+
 #include "sequoia/TestFramework/RegularTestCore.hpp"
 
 namespace sequoia:: testing
@@ -40,6 +42,7 @@ namespace sequoia:: testing
     template<class String> void test_wstrings();
     void test_mixed();
     void test_paths();
+    void test_function();
     void test_equivalence_checks();
     void test_weak_equivalence_checks();
     void test_with_best_available_checks();
@@ -71,6 +74,7 @@ namespace sequoia:: testing
     void test_strings();
     void test_mixed();
     void test_paths();
+    void test_function();
     void test_equivalence_checks();
     void test_weak_equivalence_checks();
     void test_with_best_available_checks();

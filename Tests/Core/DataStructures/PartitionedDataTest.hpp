@@ -7,6 +7,8 @@
 
 #pragma once
 
+/*! \file */
+
 #include "PartitionedDataTestingUtilities.hpp"
 
 namespace sequoia::testing

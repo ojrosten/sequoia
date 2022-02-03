@@ -5,9 +5,7 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/*! \file
-    \brief Defintions for RegularStateTransitionDiagnostics.hpp
- */
+/*! \file */
 
 #include "RegularStateTransitionDiagnostics.hpp"
 

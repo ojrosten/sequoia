@@ -7,6 +7,8 @@
 
 #pragma once
 
+/*! \file */
+
 #include "GraphInitializationTestingUtilities.hpp"
 #include "DynamicGraphTestingUtilities.hpp"
 #include "GraphInitializationGenericTests.hpp"

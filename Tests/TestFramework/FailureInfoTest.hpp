@@ -7,6 +7,8 @@
 
 #pragma once
 
+/*! \file */
+
 #include "FailureInfoTestingUtilities.hpp"
 
 namespace sequoia::testing

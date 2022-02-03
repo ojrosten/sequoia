@@ -7,6 +7,8 @@
 
 #pragma once
 
+/*! \file */
+
 #include "sequoia/TestFramework/TestCreator.hpp"
 #include "sequoia/TestFramework/TestRunner.hpp"
 #include "sequoia/TestFramework/CoreInfrastructure.hpp"

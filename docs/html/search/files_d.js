@@ -1,12 +1,24 @@
 var searchData=
 [
   ['partitioneddata_2ehpp_0',['PartitionedData.hpp',['../d3/d6e/PartitionedData_8hpp.html',1,'']]],
-  ['partitioneddatadetails_2ehpp_1',['PartitionedDataDetails.hpp',['../d4/d71/PartitionedDataDetails_8hpp.html',1,'']]],
-  ['patterns_2ecpp_2',['Patterns.cpp',['../dd/da8/Patterns_8cpp.html',1,'']]],
-  ['patterns_2ehpp_3',['Patterns.hpp',['../d5/de0/Patterns_8hpp.html',1,'']]],
-  ['performancetestcore_2ecpp_4',['PerformanceTestCore.cpp',['../d1/da0/PerformanceTestCore_8cpp.html',1,'']]],
-  ['performancetestcore_2ehpp_5',['PerformanceTestCore.hpp',['../d9/d44/PerformanceTestCore_8hpp.html',1,'']]],
-  ['preprocessor_2ehpp_6',['Preprocessor.hpp',['../de/d56/Preprocessor_8hpp.html',1,'']]],
-  ['projectcreator_2ecpp_7',['ProjectCreator.cpp',['../d0/d91/ProjectCreator_8cpp.html',1,'']]],
-  ['projectcreator_2ehpp_8',['ProjectCreator.hpp',['../d8/df2/ProjectCreator_8hpp.html',1,'']]]
+  ['partitioneddataallocationtest_2ecpp_1',['PartitionedDataAllocationTest.cpp',['../d8/dd7/PartitionedDataAllocationTest_8cpp.html',1,'']]],
+  ['partitioneddataallocationtest_2ehpp_2',['PartitionedDataAllocationTest.hpp',['../d9/d90/PartitionedDataAllocationTest_8hpp.html',1,'']]],
+  ['partitioneddataallocationtestingutilities_2ehpp_3',['PartitionedDataAllocationTestingUtilities.hpp',['../d7/dd6/PartitionedDataAllocationTestingUtilities_8hpp.html',1,'']]],
+  ['partitioneddatadetails_2ehpp_4',['PartitionedDataDetails.hpp',['../d4/d71/PartitionedDataDetails_8hpp.html',1,'']]],
+  ['partitioneddatatest_2ecpp_5',['PartitionedDataTest.cpp',['../d8/dfc/PartitionedDataTest_8cpp.html',1,'']]],
+  ['partitioneddatatest_2ehpp_6',['PartitionedDataTest.hpp',['../dd/d1e/PartitionedDataTest_8hpp.html',1,'']]],
+  ['partitioneddatatestingdiagnostics_2ecpp_7',['PartitionedDataTestingDiagnostics.cpp',['../db/da4/PartitionedDataTestingDiagnostics_8cpp.html',1,'']]],
+  ['partitioneddatatestingdiagnostics_2ehpp_8',['PartitionedDataTestingDiagnostics.hpp',['../d2/d91/PartitionedDataTestingDiagnostics_8hpp.html',1,'']]],
+  ['partitioneddatatestingutilities_2ehpp_9',['PartitionedDataTestingUtilities.hpp',['../da/d10/PartitionedDataTestingUtilities_8hpp.html',1,'']]],
+  ['patterns_2ecpp_10',['Patterns.cpp',['../dd/da8/Patterns_8cpp.html',1,'']]],
+  ['patterns_2ehpp_11',['Patterns.hpp',['../d5/de0/Patterns_8hpp.html',1,'']]],
+  ['patternsfreetest_2ecpp_12',['PatternsFreeTest.cpp',['../dc/d10/PatternsFreeTest_8cpp.html',1,'']]],
+  ['patternsfreetest_2ehpp_13',['PatternsFreeTest.hpp',['../d7/d06/PatternsFreeTest_8hpp.html',1,'']]],
+  ['performancetestcore_2ecpp_14',['PerformanceTestCore.cpp',['../d1/da0/PerformanceTestCore_8cpp.html',1,'']]],
+  ['performancetestcore_2ehpp_15',['PerformanceTestCore.hpp',['../d9/d44/PerformanceTestCore_8hpp.html',1,'']]],
+  ['performancetestdiagnostics_2ecpp_16',['PerformanceTestDiagnostics.cpp',['../d2/d69/PerformanceTestDiagnostics_8cpp.html',1,'']]],
+  ['performancetestdiagnostics_2ehpp_17',['PerformanceTestDiagnostics.hpp',['../de/d77/PerformanceTestDiagnostics_8hpp.html',1,'']]],
+  ['preprocessor_2ehpp_18',['Preprocessor.hpp',['../de/d56/Preprocessor_8hpp.html',1,'']]],
+  ['projectcreator_2ecpp_19',['ProjectCreator.cpp',['../d0/d91/ProjectCreator_8cpp.html',1,'']]],
+  ['projectcreator_2ehpp_20',['ProjectCreator.hpp',['../d8/df2/ProjectCreator_8hpp.html',1,'']]]
 ];

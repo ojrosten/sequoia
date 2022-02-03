@@ -68,7 +68,8 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#typedef-members">Typedefs</a>  </div>
+<a href="#typedef-members">Typedefs</a> &#124;
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">DynamicTree.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
@@ -87,6 +88,8 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d0b/classsequoia_1_1maths_1_1forest__from__tree__dereference__policy.html">sequoia::maths::forest_from_tree_dereference_policy&lt; Iterator, TreeAdaptor &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d77/classsequoia_1_1maths_1_1forest__dereference__policy.html">sequoia::maths::forest_dereference_policy&lt; Iterator, TreeAdaptor &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
@@ -102,6 +105,25 @@ template&lt;class Tree &gt; </td></tr>
 template&lt;std::input_or_output_iterator Iterator, class Adaptor &gt; </td></tr>
 <tr class="memitem:a49090950908a11da5a6c08013b914827"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::forest_from_tree_iterator</b> = utilities::iterator&lt; Iterator, forest_from_tree_dereference_policy&lt; Iterator, Adaptor &gt; &gt;</td></tr>
 <tr class="separator:a49090950908a11da5a6c08013b914827"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a25bc5fd9a993ad66c08daae7e564719f"><td class="memTemplParams" colspan="2"><a id="a25bc5fd9a993ad66c08daae7e564719f" name="a25bc5fd9a993ad66c08daae7e564719f"></a>
+template&lt;std::input_or_output_iterator Iterator, class Adaptor &gt; </td></tr>
+<tr class="memitem:a25bc5fd9a993ad66c08daae7e564719f"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::forest_iterator</b> = utilities::iterator&lt; Iterator, forest_dereference_policy&lt; Iterator, Adaptor &gt; &gt;</td></tr>
+<tr class="separator:a25bc5fd9a993ad66c08daae7e564719f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:aeec824b0732af5a60d1cbcf76da1a14c"><td class="memTemplParams" colspan="2"><a id="aeec824b0732af5a60d1cbcf76da1a14c" name="aeec824b0732af5a60d1cbcf76da1a14c"></a>
+template&lt;dynamic_tree T&gt; </td></tr>
+<tr class="memitem:aeec824b0732af5a60d1cbcf76da1a14c"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::root_weight_iter</b> (const basic_tree_adaptor&lt; T &gt; &amp;adaptor)</td></tr>
+<tr class="separator:aeec824b0732af5a60d1cbcf76da1a14c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae78cb77874ae92e1decf9ca9f1e22c67"><td class="memTemplParams" colspan="2"><a id="ae78cb77874ae92e1decf9ca9f1e22c67" name="ae78cb77874ae92e1decf9ca9f1e22c67"></a>
+template&lt;dynamic_tree T&gt; </td></tr>
+<tr class="memitem:ae78cb77874ae92e1decf9ca9f1e22c67"><td class="memTemplItemLeft" align="right" valign="top">const auto &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::root_weight</b> (const basic_tree_adaptor&lt; T &gt; &amp;adaptor)</td></tr>
+<tr class="separator:ae78cb77874ae92e1decf9ca9f1e22c67"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae20205b293953f343a473ba7e2e4d73c"><td class="memTemplParams" colspan="2"><a id="ae20205b293953f343a473ba7e2e4d73c" name="ae20205b293953f343a473ba7e2e4d73c"></a>
+template&lt;dynamic_tree T, std::invocable&lt; typename T::node_weight_type &amp; &gt; Fn&gt; </td></tr>
+<tr class="memitem:ae20205b293953f343a473ba7e2e4d73c"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::mutate_root_weight</b> (basic_tree_adaptor&lt; T &gt; &amp;adaptor, Fn fn)</td></tr>
+<tr class="separator:ae20205b293953f343a473ba7e2e4d73c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >Restriction of Dynamic Graphs to Trees. </p>

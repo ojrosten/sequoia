@@ -7,6 +7,8 @@
 
 #pragma once
 
+/*! \file */
+
 #include "FactoryTestingUtilities.hpp"
 
 namespace sequoia::testing

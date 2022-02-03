@@ -7,6 +7,8 @@
 
 #pragma once
 
+/*! \file */
+
 #include "CommandLineArgumentsTestingUtilities.hpp"
 
 namespace sequoia::testing

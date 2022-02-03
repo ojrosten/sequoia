@@ -5,6 +5,8 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
+/*! \file */
+
 #include "CoreDiagnostics.hpp"
 #include "CoreDiagnosticsUtilities.hpp"
 #include "sequoia/TextProcessing/Substitutions.hpp"
@@ -170,6 +172,7 @@ namespace sequoia::testing
     test_wstrings<std::wstring_view>();
     test_mixed();
     test_paths();
+    test_function();
     test_equivalence_checks();
     test_weak_equivalence_checks();
     test_with_best_available_checks();
@@ -388,6 +391,20 @@ namespace sequoia::testing
           std::vector<fs::path>{fs::path{working_materials()}.append("CustomComparison/B/DifferingContent.ignore")});
   }
 
+  void false_positive_diagnostics::test_function()
+  {
+    using function = std::function<void()>;
+    check(weak_equivalence,
+          LINE("Obtained bound but prediction not"),
+          function{[]() {}},
+          function{});
+
+    check(weak_equivalence,
+      LINE("Prediction bound but obtained not"),
+      function{},
+      function{[]() {}});
+  }
+
   void false_positive_diagnostics::test_equivalence_checks()
   {
     using namespace std::string_literals;
@@ -488,6 +505,7 @@ namespace sequoia::testing
     test_strings();
     test_mixed();
     test_paths();
+    test_function();
     test_equivalence_checks();
     test_weak_equivalence_checks();
     test_with_best_available_checks();
@@ -597,6 +615,13 @@ namespace sequoia::testing
           LINE("Range equivalence when .ignore is ignored"),
           std::vector<fs::path>{fs::path{working_materials()}.append("CustomComparison/A/DifferingContent.ignore")},
           std::vector<fs::path>{fs::path{working_materials()}.append("CustomComparison/B/DifferingContent.ignore")});
+  }
+
+  void false_negative_diagnostics::test_function()
+  {
+    using function = std::function<void()>;
+    check(weak_equivalence, LINE("Both bound"), function{[]() {}}, function{[]() {}});
+    check(weak_equivalence, LINE("Neither bound"), function{}, function{});
   }
 
   void false_negative_diagnostics::test_equivalence_checks()

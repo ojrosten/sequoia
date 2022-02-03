@@ -5,6 +5,8 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
+/*! \file */
+
 #include "TypeTraitsTest.hpp"
 
 #include "sequoia/Core/Meta/TypeTraits.hpp"

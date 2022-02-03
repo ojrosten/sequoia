@@ -7,6 +7,8 @@
 
 #pragma once
 
+/*! \file */
+
 #include "sequoia/TestFramework/MoveOnlyAllocationTestCore.hpp"
 
 namespace sequoia::testing

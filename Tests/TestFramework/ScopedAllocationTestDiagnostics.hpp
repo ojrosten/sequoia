@@ -7,6 +7,8 @@
 
 #pragma once
 
+/*! \file */
+
 #include "sequoia/TestFramework/RegularAllocationTestCore.hpp"
 
 namespace sequoia::testing

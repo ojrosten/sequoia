@@ -7,6 +7,8 @@
 
 #pragma once
 
+/*! \file */
+
 #include "GraphTraversalTestingUtilities.hpp"
 
 #include "sequoia/TestFramework/PerformanceTestCore.hpp"

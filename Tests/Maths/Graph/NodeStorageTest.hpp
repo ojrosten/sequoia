@@ -7,6 +7,8 @@
 
 #pragma once
 
+/*! \file */
+
 #include "NodeStorageTestingUtilities.hpp"
 
 namespace sequoia::testing

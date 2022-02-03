@@ -7,6 +7,8 @@
 
 #pragma once
 
+/*! \file */
+
 #include "DynamicGraphTestingUtilities.hpp"
 
 namespace sequoia::testing

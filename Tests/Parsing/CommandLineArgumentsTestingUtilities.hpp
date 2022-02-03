@@ -7,6 +7,8 @@
 
 #pragma once
 
+/*! \file */
+
 #include "sequoia/Parsing/CommandLineArguments.hpp"
 #include "sequoia/TestFramework/RegularTestCore.hpp"
 

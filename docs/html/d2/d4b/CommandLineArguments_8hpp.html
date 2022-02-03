@@ -77,12 +77,11 @@ $(function() {
 <p>Parsing of commandline arguments.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="../../d3/d84/Concepts_8hpp_source.html">sequoia/Core/Meta/Concepts.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../db/dec/DynamicTree_8hpp_source.html">sequoia/Maths/Graph/DynamicTree.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d4/d59/GraphTraversalFunctions_8hpp_source.html">sequoia/Maths/Graph/GraphTraversalFunctions.hpp</a>&quot;</code><br />
 <code>#include &lt;vector&gt;</code><br />
-<code>#include &lt;map&gt;</code><br />
 <code>#include &lt;string&gt;</code><br />
 <code>#include &lt;functional&gt;</code><br />
-<code>#include &lt;optional&gt;</code><br />
-<code>#include &lt;filesystem&gt;</code><br />
 <code>#include &lt;stdexcept&gt;</code><br />
 </div>
 <p><a href="../../d2/d4b/CommandLineArguments_8hpp_source.html">Go to the source code of this file.</a></p>
@@ -111,6 +110,24 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::parsing::co
 <tr class="memitem:aa35876f41b88ccc24f76e56c399e66f1"><td class="memItemLeft" align="right" valign="top"><a id="aa35876f41b88ccc24f76e56c399e66f1" name="aa35876f41b88ccc24f76e56c399e66f1"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::parsing::commandline::executor</b> = std::function&lt; void(const arg_list &amp;)&gt;</td></tr>
 <tr class="separator:aa35876f41b88ccc24f76e56c399e66f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5958d4b8d0dbc3181ae27061b69c4b2a"><td class="memItemLeft" align="right" valign="top"><a id="a5958d4b8d0dbc3181ae27061b69c4b2a" name="a5958d4b8d0dbc3181ae27061b69c4b2a"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::parsing::commandline::options_tree</b> = maths::tree&lt; maths::directed_flavour::directed, maths::tree_link_direction::forward, maths::null_weight, option &gt;</td></tr>
+<tr class="separator:a5958d4b8d0dbc3181ae27061b69c4b2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a95994811e11260d8fa5a4a5dffc400e5"><td class="memItemLeft" align="right" valign="top"><a id="a95994811e11260d8fa5a4a5dffc400e5" name="a95994811e11260d8fa5a4a5dffc400e5"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::parsing::commandline::options_forest</b> = std::vector&lt; options_tree &gt;</td></tr>
+<tr class="separator:a95994811e11260d8fa5a4a5dffc400e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4e86ba13131d7bdadcc28a1ba9b6d579"><td class="memItemLeft" align="right" valign="top"><a id="a4e86ba13131d7bdadcc28a1ba9b6d579" name="a4e86ba13131d7bdadcc28a1ba9b6d579"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::parsing::commandline::option_tree</b> = maths::const_tree_adaptor&lt; options_tree &gt;</td></tr>
+<tr class="separator:a4e86ba13131d7bdadcc28a1ba9b6d579"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a995d2e2337c30e7eddad5f6a215bf41a"><td class="memItemLeft" align="right" valign="top"><a id="a995d2e2337c30e7eddad5f6a215bf41a" name="a995d2e2337c30e7eddad5f6a215bf41a"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::parsing::commandline::operations_tree</b> = maths::tree&lt; maths::directed_flavour::directed, maths::tree_link_direction::forward, maths::null_weight, operation &gt;</td></tr>
+<tr class="separator:a995d2e2337c30e7eddad5f6a215bf41a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a858af74ccf660da245f56bbe1de6f5ee"><td class="memItemLeft" align="right" valign="top"><a id="a858af74ccf660da245f56bbe1de6f5ee" name="a858af74ccf660da245f56bbe1de6f5ee"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::parsing::commandline::operations_sub_tree</b> = maths::tree_adaptor&lt; operations_tree &gt;</td></tr>
+<tr class="separator:a858af74ccf660da245f56bbe1de6f5ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad0676bf75922bdfa8834e96286204de2"><td class="memItemLeft" align="right" valign="top"><a id="ad0676bf75922bdfa8834e96286204de2" name="ad0676bf75922bdfa8834e96286204de2"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::parsing::commandline::operations_forest</b> = std::vector&lt; operations_tree &gt;</td></tr>
+<tr class="separator:ad0676bf75922bdfa8834e96286204de2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
@@ -123,16 +140,13 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::parsi
 <tr class="memitem:acf822e20d0d1fe2622488f9a1aa648c9"><td class="memItemLeft" align="right" valign="top"><a id="acf822e20d0d1fe2622488f9a1aa648c9" name="acf822e20d0d1fe2622488f9a1aa648c9"></a>
 std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::parsing::commandline::pluralize</b> (const std::size_t n, std::string_view noun, std::string_view prefix)</td></tr>
 <tr class="separator:acf822e20d0d1fe2622488f9a1aa648c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afb4efba14d8428bb2cfcdba39b759001"><td class="memItemLeft" align="right" valign="top"><a id="afb4efba14d8428bb2cfcdba39b759001" name="afb4efba14d8428bb2cfcdba39b759001"></a>
-outcome&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::parsing::commandline::parse</b> (int argc, char **argv, const std::vector&lt; option &gt; &amp;options)</td></tr>
-<tr class="separator:afb4efba14d8428bb2cfcdba39b759001"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac12192e2bb56bdb8e6c462ecb069d618"><td class="memItemLeft" align="right" valign="top"><a id="ac12192e2bb56bdb8e6c462ecb069d618" name="ac12192e2bb56bdb8e6c462ecb069d618"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::parsing::commandline::invoke_depth_first</b> (const std::vector&lt; operation &gt; &amp;operations)</td></tr>
-<tr class="separator:ac12192e2bb56bdb8e6c462ecb069d618"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aef09f6da2b2c3d70603022fdc562aa91"><td class="memTemplParams" colspan="2"><a id="aef09f6da2b2c3d70603022fdc562aa91" name="aef09f6da2b2c3d70603022fdc562aa91"></a>
+<tr class="memitem:ae8f7cff233d65111ac22fd2b7d5dcba8"><td class="memItemLeft" align="right" valign="top"><a id="ae8f7cff233d65111ac22fd2b7d5dcba8" name="ae8f7cff233d65111ac22fd2b7d5dcba8"></a>
+outcome&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::parsing::commandline::parse</b> (int argc, char **argv, const options_forest &amp;options)</td></tr>
+<tr class="separator:ae8f7cff233d65111ac22fd2b7d5dcba8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad44528b9492c3eee6643ef86ec2976c1"><td class="memTemplParams" colspan="2"><a id="ad44528b9492c3eee6643ef86ec2976c1" name="ad44528b9492c3eee6643ef86ec2976c1"></a>
 template&lt;std::invocable&lt; std::string &gt; Fn&gt; </td></tr>
-<tr class="memitem:aef09f6da2b2c3d70603022fdc562aa91"><td class="memTemplItemLeft" align="right" valign="top">std::string&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::parsing::commandline::parse_invoke_depth_first</b> (int argc, char **argv, const std::vector&lt; option &gt; &amp;options, Fn zerothArgProcessor)</td></tr>
-<tr class="separator:aef09f6da2b2c3d70603022fdc562aa91"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad44528b9492c3eee6643ef86ec2976c1"><td class="memTemplItemLeft" align="right" valign="top">std::string&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::parsing::commandline::parse_invoke_depth_first</b> (int argc, char **argv, const options_forest options, Fn zerothArgProcessor)</td></tr>
+<tr class="separator:ad44528b9492c3eee6643ef86ec2976c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >Parsing of commandline arguments. </p>

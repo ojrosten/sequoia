@@ -7,6 +7,8 @@
 
 #pragma once
 
+/*! \file */
+
 #include "sequoia/TestFramework/RegularTestCore.hpp"
 
 #include "sequoia/Maths/Graph/HeterogeneousNodeStorage.hpp"

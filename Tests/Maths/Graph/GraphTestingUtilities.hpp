@@ -7,6 +7,8 @@
 
 #pragma once
 
+/*! \file */
+
 #include "EdgeTestingUtilities.hpp"
 #include "NodeStorageTestingUtilities.hpp"
 
