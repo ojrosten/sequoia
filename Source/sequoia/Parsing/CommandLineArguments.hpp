@@ -64,16 +64,16 @@ namespace sequoia::parsing::commandline
   struct option
   {
     proper_string name;
-    param_list aliases,
-               parameters;
+    param_list aliases{},
+               parameters{};
     executor early{},
              late{};
   };
 
   struct operation
   {
-    executor early, late;
-    arg_list arguments;
+    executor early{}, late{};
+    arg_list arguments{};
   };
 
   using options_tree   = maths::tree<maths::directed_flavour::directed, maths::tree_link_direction::forward, maths::null_weight, option>;
