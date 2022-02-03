@@ -230,23 +230,23 @@ namespace sequoia::testing
                             std::visit(visitor, nascentTests.back());
                           }
                         }},
-                    { {"regular_test", {"regular"}, {"qualified::class_name<class T>", "equivalent type"},
-                        nascent_test_data{"semantic", "regular", *this, nascentTests}, {}, semanticsOptions
+                    { {{"regular_test", {"regular"}, {"qualified::class_name<class T>", "equivalent type"},
+                        nascent_test_data{"semantic", "regular", *this, nascentTests}, {}}, semanticsOptions
                       },
-                      {"move_only_test", {"move_only"}, {"qualified::class_name<class T>", "equivalent type"},
-                        nascent_test_data{"semantic", "move_only", *this, nascentTests}, {}, semanticsOptions
+                      {{"move_only_test", {"move_only"}, {"qualified::class_name<class T>", "equivalent type"},
+                        nascent_test_data{"semantic", "move_only", *this, nascentTests}, {}}, semanticsOptions
                       },
-                      {"regular_allocation_test", {"regular_allocation", "allocation_test"}, {"raw class name"},
-                        nascent_test_data{"allocation", "regular_allocation", *this, nascentTests}, {}, allocationOptions
+                      {{"regular_allocation_test", {"regular_allocation", "allocation_test"}, {"raw class name"},
+                        nascent_test_data{"allocation", "regular_allocation", *this, nascentTests}, {}}, allocationOptions
                       },
-                      {"move_only_allocation_test", {"move_only_allocation"}, {"raw class name"},
-                        nascent_test_data{"allocation", "move_only_allocation", *this, nascentTests}, {}, allocationOptions
+                      {{"move_only_allocation_test", {"move_only_allocation"}, {"raw class name"},
+                        nascent_test_data{"allocation", "move_only_allocation", *this, nascentTests}, {}}, allocationOptions
                       },
-                      {"free_test", {"free"}, {"header"},
-                        nascent_test_data{"behavioural", "free", *this, nascentTests}, {}, freeOptions
+                      {{"free_test", {"free"}, {"header"},
+                        nascent_test_data{"behavioural", "free", *this, nascentTests}, {}}, freeOptions
                       },
-                      {"performance_test", {"performance"}, {"header"},
-                         nascent_test_data{"behavioural", "performance", *this, nascentTests}, {}, performanceOptions
+                      {{"performance_test", {"performance"}, {"header"},
+                         nascent_test_data{"behavioural", "performance", *this, nascentTests}, {}}, performanceOptions
                       }
                     }
                   }},
@@ -265,16 +265,16 @@ namespace sequoia::testing
                       nascentProjects.push_back(project_data{args[0], args[1], ind(args[2])});
                     },
                     {}},
-                    { {"--no-build", {}, {},
-                        [&nascentProjects](const arg_list&) { nascentProjects.back().do_build = build_invocation::no; }},
-                      {"--to-files",  {}, {"filename (A file of this name will appear in multiple directories)"},
-                        [&nascentProjects](const arg_list& args) { nascentProjects.back().output = args[0]; }},
-                      {"--no-ide", {}, {},
+                    { {{"--no-build", {}, {},
+                        [&nascentProjects](const arg_list&) { nascentProjects.back().do_build = build_invocation::no; }}},
+                      {{"--to-files",  {}, {"filename (A file of this name will appear in multiple directories)"},
+                        [&nascentProjects](const arg_list& args) { nascentProjects.back().output = args[0]; }}},
+                      {{"--no-ide", {}, {},
                         [&nascentProjects](const arg_list&) {
                           auto& build{nascentProjects.back().do_build};
                           if(build == build_invocation::launch_ide) build = build_invocation::yes;
                         }
-                      }
+                      }}
                     }
                   }},
                   {{{"update-materials", {"u"}, {},
@@ -306,26 +306,26 @@ namespace sequoia::testing
                       m_NumReps = i;
                     },
                     {}},
-                    { {"--sandbox", {"-s"}, {},
+                    { {{"--sandbox", {"-s"}, {},
                         [this](const arg_list&) {
                           m_InstabilityMode = instability_mode::coordinator;
-                        }},
-                      {"--runner-id", {}, {"private option, best avoided"},
+                        }}},
+                      {{"--runner-id", {}, {"private option, best avoided"},
                         [this](const arg_list& args) {
                           m_RunnerID = std::stoi(args.front());
                           m_InstabilityMode = instability_mode::sandbox;
-                        }}
+                        }}}
                     }
                   }},
-                  {{"dump", {}, {},
+                  {{{"dump", {}, {},
                     [this, recoveryDir{recovery_path(proj_paths().output())}](const arg_list&) {
                       std::filesystem::create_directory(recoveryDir);
                       m_Selector.dump_file(recoveryDir / "Dump.txt");
                       std::filesystem::remove(m_Selector.dump_file());
                       m_ConcurrencyMode = concurrency_mode::serial;
                     }
-                  }},
-                  {{"--async-depth", {"-a"}, {"depth [null,family,unit]"},
+                  }}},
+                  {{{"--async-depth", {"-a"}, {"depth [null,family,unit]"},
                     [this](const arg_list& args) {
                       const auto& depth{args.front()};
                       if(depth == "null")
@@ -347,7 +347,7 @@ namespace sequoia::testing
                         stream() << warning(std::string{"Unrecognized async depth option "}.append(depth).append(" should be one of [null,family,unit]\n"));
                       }
                     }
-                  }},
+                  }}},
                   {{{"--verbose",  {"-v"}, {}, [this](const arg_list&) { m_OutputMode = output_mode::verbose; }}}},
                   {{{"--recovery", {"-r"}, {},
                     [this,recoveryDir{recovery_path(proj_paths().output())}] (const arg_list&) {
