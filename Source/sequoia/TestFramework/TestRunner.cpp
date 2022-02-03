@@ -196,31 +196,31 @@ namespace sequoia::testing
 
     const auto help{
       parse_invoke_depth_first(argc, argv,
-                { {{"test", {"t"}, {"test family name"},
+                { {{{"test", {"t"}, {"test family name"},
                     [this](const arg_list& args) {
                       m_RunnerMode |= runner_mode::test;
                       m_Selector.select_family(args.front());
-                    }
+                    }}
                   }},
-                  {{"select", {"s"}, {"source file name"},
+                  {{{"select", {"s"}, {"source file name"},
                     [this](const arg_list& args) {
                       m_RunnerMode |= runner_mode::test;
                       m_Selector.select_source_file(fs::path{args.front()});
-                    }
+                    }}
                   }},
-                  {{"prune", {"p"}, {},
+                  {{{"prune", {"p"}, {},
                     [this](const arg_list&) {
                       m_RunnerMode |= runner_mode::test;
                       m_Selector.enable_prune();
                     },
-                    {},
+                    {}},
                     {{{"--cutoff", {"-c"}, {"Cutoff for #include search e.g. 'namespace'"},
                       [this](const arg_list& args) {
                         m_Selector.set_prune_cutoff(args[0]);
                       }}}
                     }
                   }},
-                  {{"create", {"c"}, {},
+                  {{{"create", {"c"}, {},
                         [](const arg_list&) {},
                         [this,&nascentTests](const arg_list&) {
                           if(!nascentTests.empty())
@@ -229,7 +229,7 @@ namespace sequoia::testing
                             variant_visitor visitor{ [](auto& nascent) { nascent.finalize(); } };
                             std::visit(visitor, nascentTests.back());
                           }
-                        },
+                        }},
                     { {"regular_test", {"regular"}, {"qualified::class_name<class T>", "equivalent type"},
                         nascent_test_data{"semantic", "regular", *this, nascentTests}, {}, semanticsOptions
                       },
@@ -250,7 +250,7 @@ namespace sequoia::testing
                       }
                     }
                   }},
-                  {{"init", {"i"}, {"copyright owner", "path ending with project name", "code indent"},
+                  {{{"init", {"i"}, {"copyright owner", "path ending with project name", "code indent"},
                     [this,&nascentProjects](const arg_list& args) {
                       m_RunnerMode |= runner_mode::init;
 
@@ -264,7 +264,7 @@ namespace sequoia::testing
 
                       nascentProjects.push_back(project_data{args[0], args[1], ind(args[2])});
                     },
-                    {},
+                    {}},
                     { {"--no-build", {}, {},
                         [&nascentProjects](const arg_list&) { nascentProjects.back().do_build = build_invocation::no; }},
                       {"--to-files",  {}, {"filename (A file of this name will appear in multiple directories)"},
@@ -277,13 +277,13 @@ namespace sequoia::testing
                       }
                     }
                   }},
-                  {{"update-materials", {"u"}, {},
+                  {{{"update-materials", {"u"}, {},
                     [this](const arg_list&) {
                       m_RunnerMode |= runner_mode::test;
                       m_UpdateMode = update_mode::soft;
                     }
-                  }},
-                  {{"locate-instabilities", {"locate"}, {"number of repetitions >= 2"},
+                  }}},
+                  {{{"locate-instabilities", {"locate"}, {"number of repetitions >= 2"},
                     [this](const arg_list& args) {
                       using parsing::commandline::error;
                       const int i{
@@ -305,7 +305,7 @@ namespace sequoia::testing
                       m_InstabilityMode = instability_mode::single_instance;
                       m_NumReps = i;
                     },
-                    {},
+                    {}},
                     { {"--sandbox", {"-s"}, {},
                         [this](const arg_list&) {
                           m_InstabilityMode = instability_mode::coordinator;
@@ -348,15 +348,15 @@ namespace sequoia::testing
                       }
                     }
                   }},
-                  {{"--verbose",  {"-v"}, {}, [this](const arg_list&) { m_OutputMode = output_mode::verbose; }}},
-                  {{"--recovery", {"-r"}, {},
+                  {{{"--verbose",  {"-v"}, {}, [this](const arg_list&) { m_OutputMode = output_mode::verbose; }}}},
+                  {{{"--recovery", {"-r"}, {},
                     [this,recoveryDir{recovery_path(proj_paths().output())}] (const arg_list&) {
                       std::filesystem::create_directory(recoveryDir);
                       m_Selector.recovery_file(recoveryDir / "Recovery.txt");
                       std::filesystem::remove(m_Selector.recovery_file());
                       m_ConcurrencyMode = concurrency_mode::serial;
                     }
-                  }}
+                  }}}
                 },
                 [this](std::string_view exe){
                     const fs::path executable{exe};
