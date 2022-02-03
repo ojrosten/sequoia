@@ -1,4 +1,4 @@
-	Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 29
+	Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 31
 	Broken check invariant
 
 	--Regular Semantics--
@@ -10,7 +10,7 @@
 
 	=======================================
 
-	Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 30
+	Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 32
 	Broken check invariant
 
 	--Regular Semantics--
@@ -22,7 +22,7 @@
 
 	=======================================
 
-	Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 36
+	Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 38
 
 	--Regular Semantics--
 	[sequoia::testing::regular_broken_less<int, std::allocator<int> >]
@@ -41,7 +41,7 @@
 
 	=======================================
 
-	Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 42
+	Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 44
 
 	--Regular Semantics--
 	[sequoia::testing::regular_broken_lesseq<int, std::allocator<int> >]
@@ -52,7 +52,7 @@
 
 	=======================================
 
-	Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 48
+	Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 50
 
 	--Regular Semantics--
 	[sequoia::testing::regular_broken_greater<int, std::allocator<int> >]
@@ -63,7 +63,7 @@
 
 	=======================================
 
-	Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 54
+	Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 56
 
 	--Regular Semantics--
 	[sequoia::testing::regular_broken_greatereq<int, std::allocator<int> >]
@@ -74,7 +74,7 @@
 
 	=======================================
 
-	Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 60
+	Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 62
 
 	--Regular Semantics--
 	[sequoia::testing::regular_inverted_comparisons<int, std::allocator<int> >]
@@ -85,7 +85,7 @@
 
 	=======================================
 
-	Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 66
+	Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 68
 
 	--Regular Semantics--
 	[sequoia::testing::regular_broken_spaceship<int, std::allocator<int> >]

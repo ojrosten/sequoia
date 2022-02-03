@@ -1,4 +1,4 @@
-	Tests/Core/DataStructures/StaticStackTestingDiagnostics.cpp, Line 30
+	Tests/Core/DataStructures/StaticStackTestingDiagnostics.cpp, Line 32
 	Empty stack
 
 	[bool]
@@ -6,7 +6,7 @@
 
 	=======================================
 
-	Tests/Core/DataStructures/StaticStackTestingDiagnostics.cpp, Line 31
+	Tests/Core/DataStructures/StaticStackTestingDiagnostics.cpp, Line 33
 
 	[unsigned long long]
 	operator== returned false
@@ -15,7 +15,7 @@
 
 	=======================================
 
-	Tests/Core/DataStructures/StaticStackTestingDiagnostics.cpp, Line 45
+	Tests/Core/DataStructures/StaticStackTestingDiagnostics.cpp, Line 47
 	Empty stack
 
 	[bool]
@@ -23,7 +23,7 @@
 
 	=======================================
 
-	Tests/Core/DataStructures/StaticStackTestingDiagnostics.cpp, Line 46
+	Tests/Core/DataStructures/StaticStackTestingDiagnostics.cpp, Line 48
 	Non-empty stack
 
 	[bool]
@@ -31,7 +31,7 @@
 
 	=======================================
 
-	Tests/Core/DataStructures/StaticStackTestingDiagnostics.cpp, Line 48
+	Tests/Core/DataStructures/StaticStackTestingDiagnostics.cpp, Line 50
 	Empty stack versus populated stack
 
 	[sequoia::data_structures::static_stack<int, 1>]
@@ -53,7 +53,7 @@
 
 	=======================================
 
-	Tests/Core/DataStructures/StaticStackTestingDiagnostics.cpp, Line 51
+	Tests/Core/DataStructures/StaticStackTestingDiagnostics.cpp, Line 53
 	Differing elements
 
 	[sequoia::data_structures::static_stack<int, 1>]
@@ -71,7 +71,7 @@
 
 	=======================================
 
-	Tests/Core/DataStructures/StaticStackTestingDiagnostics.cpp, Line 54
+	Tests/Core/DataStructures/StaticStackTestingDiagnostics.cpp, Line 56
 	Empty stack versus populated stack
 
 	[sequoia::data_structures::static_stack<int, 1>]

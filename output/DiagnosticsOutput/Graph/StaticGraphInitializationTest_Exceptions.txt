@@ -1,4 +1,4 @@
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 214
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 216
 Too few elements in initializer list
 
 Expected Exception Type:
@@ -7,7 +7,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 215
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 217
 First partial index of loop out of range
 
 Expected Exception Type:
@@ -16,7 +16,7 @@ Odd number of loop edges
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 216
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 218
 Second partial index of loop out of range
 
 Expected Exception Type:
@@ -25,7 +25,7 @@ Odd number of loop edges
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 217
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 219
 Initializer list too long
 
 Expected Exception Type:
@@ -34,7 +34,7 @@ initializer_list too big for array
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 297
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 299
 Too few elements in initializer list
 
 Expected Exception Type:
@@ -43,7 +43,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 298
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 300
 Partial index out of range
 
 Expected Exception Type:
@@ -52,7 +52,7 @@ Odd number of loop edges
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 299
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 301
 Too Many elements in initializer list
 
 Expected Exception Type:
@@ -61,7 +61,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 352
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 354
 Too few elements in both sub-initializer list
 
 Expected Exception Type:
@@ -70,7 +70,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 353
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 355
 Too few elements in first sub-initializer list
 
 Expected Exception Type:
@@ -79,7 +79,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 354
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 356
 Too few elements in second sub-initializer list
 
 Expected Exception Type:
@@ -88,7 +88,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 356
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 358
 Too many elements in first sub-initializer list
 
 Expected Exception Type:
@@ -97,7 +97,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 357
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 359
 Too many elements in second sub-initializer list
 
 Expected Exception Type:
@@ -106,7 +106,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 359
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 361
 Mismatched indices
 
 Expected Exception Type:
@@ -115,7 +115,7 @@ Odd number of loop edges
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 403
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 405
 Too few elements in sub-initializer list
 
 Expected Exception Type:
@@ -124,7 +124,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 404
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 406
 Mismatched partial indices
 
 Expected Exception Type:
@@ -133,7 +133,7 @@ Reciprocated target indices do not match
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 214
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 216
 Too few elements in initializer list
 
 Expected Exception Type:
@@ -142,7 +142,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 215
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 217
 First partial index of loop out of range
 
 Expected Exception Type:
@@ -151,7 +151,7 @@ Odd number of loop edges
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 216
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 218
 Second partial index of loop out of range
 
 Expected Exception Type:
@@ -160,7 +160,7 @@ Odd number of loop edges
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 217
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 219
 Initializer list too long
 
 Expected Exception Type:
@@ -169,7 +169,7 @@ initializer_list too big for array
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 222
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 224
 Mismatch between weights
 
 Expected Exception Type:
@@ -178,7 +178,7 @@ Odd number of loop edges
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 297
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 299
 Too few elements in initializer list
 
 Expected Exception Type:
@@ -187,7 +187,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 298
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 300
 Partial index out of range
 
 Expected Exception Type:
@@ -196,7 +196,7 @@ Odd number of loop edges
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 299
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 301
 Too Many elements in initializer list
 
 Expected Exception Type:
@@ -205,7 +205,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 304
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 306
 Weight mismatch
 
 Expected Exception Type:
@@ -214,7 +214,7 @@ Odd number of loop edges
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 352
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 354
 Too few elements in both sub-initializer list
 
 Expected Exception Type:
@@ -223,7 +223,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 353
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 355
 Too few elements in first sub-initializer list
 
 Expected Exception Type:
@@ -232,7 +232,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 354
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 356
 Too few elements in second sub-initializer list
 
 Expected Exception Type:
@@ -241,7 +241,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 356
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 358
 Too many elements in first sub-initializer list
 
 Expected Exception Type:
@@ -250,7 +250,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 357
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 359
 Too many elements in second sub-initializer list
 
 Expected Exception Type:
@@ -259,7 +259,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 359
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 361
 Mismatched indices
 
 Expected Exception Type:
@@ -268,7 +268,7 @@ Odd number of loop edges
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 364
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 366
 Mismatched weights
 
 Expected Exception Type:
@@ -277,7 +277,7 @@ Reciprocated partial edge does not exist
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 403
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 405
 Too few elements in sub-initializer list
 
 Expected Exception Type:
@@ -286,7 +286,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 404
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 406
 Mismatched partial indices
 
 Expected Exception Type:
@@ -295,7 +295,7 @@ Reciprocated target indices do not match
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 409
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 411
 Mismatched weights
 
 Expected Exception Type:
@@ -304,17 +304,8 @@ Reciprocated partial edge does not exist
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 410
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 412
 Mismatched weight
-
-Expected Exception Type:
-[std::logic_error]
-Reciprocated partial edge does not exist
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 461
-Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
@@ -331,7 +322,16 @@ Reciprocated partial edge does not exist
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 552
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 465
+Mismatched weights
+
+Expected Exception Type:
+[std::logic_error]
+Reciprocated partial edge does not exist
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 554
 Mismatched weights
 
 Expected Exception Type:
@@ -340,7 +340,7 @@ Reciprocated target indices do not match
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 214
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 216
 Too few elements in initializer list
 
 Expected Exception Type:
@@ -349,7 +349,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 215
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 217
 First partial index of loop out of range
 
 Expected Exception Type:
@@ -358,7 +358,7 @@ Odd number of loop edges
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 216
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 218
 Second partial index of loop out of range
 
 Expected Exception Type:
@@ -367,7 +367,7 @@ Odd number of loop edges
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 217
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 219
 Initializer list too long
 
 Expected Exception Type:
@@ -376,7 +376,7 @@ initializer_list too big for array
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 222
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 224
 Mismatch between weights
 
 Expected Exception Type:
@@ -385,7 +385,7 @@ Odd number of loop edges
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 297
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 299
 Too few elements in initializer list
 
 Expected Exception Type:
@@ -394,7 +394,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 298
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 300
 Partial index out of range
 
 Expected Exception Type:
@@ -403,7 +403,7 @@ Odd number of loop edges
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 299
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 301
 Too Many elements in initializer list
 
 Expected Exception Type:
@@ -412,7 +412,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 304
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 306
 Weight mismatch
 
 Expected Exception Type:
@@ -421,7 +421,7 @@ Odd number of loop edges
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 352
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 354
 Too few elements in both sub-initializer list
 
 Expected Exception Type:
@@ -430,7 +430,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 353
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 355
 Too few elements in first sub-initializer list
 
 Expected Exception Type:
@@ -439,7 +439,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 354
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 356
 Too few elements in second sub-initializer list
 
 Expected Exception Type:
@@ -448,7 +448,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 356
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 358
 Too many elements in first sub-initializer list
 
 Expected Exception Type:
@@ -457,7 +457,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 357
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 359
 Too many elements in second sub-initializer list
 
 Expected Exception Type:
@@ -466,7 +466,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 359
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 361
 Mismatched indices
 
 Expected Exception Type:
@@ -475,7 +475,7 @@ Odd number of loop edges
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 364
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 366
 Mismatched weights
 
 Expected Exception Type:
@@ -484,7 +484,7 @@ Reciprocated target indices do not match
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 403
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 405
 Too few elements in sub-initializer list
 
 Expected Exception Type:
@@ -493,7 +493,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 404
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 406
 Mismatched partial indices
 
 Expected Exception Type:
@@ -502,7 +502,7 @@ Reciprocated target indices do not match
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 409
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 411
 Mismatched weights
 
 Expected Exception Type:
@@ -511,17 +511,8 @@ Reciprocated target indices do not match
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 410
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 412
 Mismatched weight
-
-Expected Exception Type:
-[std::logic_error]
-Reciprocated target indices do not match
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 461
-Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
@@ -538,7 +529,7 @@ Reciprocated target indices do not match
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 552
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 465
 Mismatched weights
 
 Expected Exception Type:
@@ -547,7 +538,16 @@ Reciprocated target indices do not match
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 214
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 554
+Mismatched weights
+
+Expected Exception Type:
+[std::logic_error]
+Reciprocated target indices do not match
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 216
 Too few elements in initializer list
 
 Expected Exception Type:
@@ -556,7 +556,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 215
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 217
 First partial index of loop out of range
 
 Expected Exception Type:
@@ -565,7 +565,7 @@ Odd number of loop edges
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 216
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 218
 Second partial index of loop out of range
 
 Expected Exception Type:
@@ -574,7 +574,7 @@ Odd number of loop edges
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 217
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 219
 Initializer list too long
 
 Expected Exception Type:
@@ -583,7 +583,7 @@ initializer_list too big for array
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 222
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 224
 Mismatch between weights
 
 Expected Exception Type:
@@ -592,7 +592,7 @@ Odd number of loop edges
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 297
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 299
 Too few elements in initializer list
 
 Expected Exception Type:
@@ -601,7 +601,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 298
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 300
 Partial index out of range
 
 Expected Exception Type:
@@ -610,7 +610,7 @@ Odd number of loop edges
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 299
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 301
 Too Many elements in initializer list
 
 Expected Exception Type:
@@ -619,7 +619,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 304
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 306
 Weight mismatch
 
 Expected Exception Type:
@@ -628,7 +628,7 @@ Odd number of loop edges
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 352
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 354
 Too few elements in both sub-initializer list
 
 Expected Exception Type:
@@ -637,7 +637,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 353
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 355
 Too few elements in first sub-initializer list
 
 Expected Exception Type:
@@ -646,7 +646,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 354
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 356
 Too few elements in second sub-initializer list
 
 Expected Exception Type:
@@ -655,7 +655,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 356
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 358
 Too many elements in first sub-initializer list
 
 Expected Exception Type:
@@ -664,7 +664,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 357
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 359
 Too many elements in second sub-initializer list
 
 Expected Exception Type:
@@ -673,7 +673,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 359
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 361
 Mismatched indices
 
 Expected Exception Type:
@@ -682,7 +682,7 @@ Odd number of loop edges
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 364
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 366
 Mismatched weights
 
 Expected Exception Type:
@@ -691,7 +691,7 @@ Reciprocated target indices do not match
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 403
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 405
 Too few elements in sub-initializer list
 
 Expected Exception Type:
@@ -700,7 +700,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 404
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 406
 Mismatched partial indices
 
 Expected Exception Type:
@@ -709,7 +709,7 @@ Reciprocated target indices do not match
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 409
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 411
 Mismatched weights
 
 Expected Exception Type:
@@ -718,17 +718,8 @@ Reciprocated target indices do not match
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 410
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 412
 Mismatched weight
-
-Expected Exception Type:
-[std::logic_error]
-Reciprocated target indices do not match
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 461
-Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
@@ -745,7 +736,7 @@ Reciprocated target indices do not match
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 552
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 465
 Mismatched weights
 
 Expected Exception Type:
@@ -754,7 +745,16 @@ Reciprocated target indices do not match
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 214
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 554
+Mismatched weights
+
+Expected Exception Type:
+[std::logic_error]
+Reciprocated target indices do not match
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 216
 Too few elements in initializer list
 
 Expected Exception Type:
@@ -763,7 +763,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 215
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 217
 First partial index of loop out of range
 
 Expected Exception Type:
@@ -772,7 +772,7 @@ Odd number of loop edges
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 216
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 218
 Second partial index of loop out of range
 
 Expected Exception Type:
@@ -781,17 +781,8 @@ Odd number of loop edges
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 217
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 219
 Initializer list too long
-
-Expected Exception Type:
-[std::logic_error]
-initializer_list too big for array
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 259
-Mismatch between node and edge init
 
 Expected Exception Type:
 [std::logic_error]
@@ -804,11 +795,20 @@ Mismatch between node and edge init
 
 Expected Exception Type:
 [std::logic_error]
+initializer_list too big for array
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 263
+Mismatch between node and edge init
+
+Expected Exception Type:
+[std::logic_error]
 Initializer list of wrong size
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 297
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 299
 Too few elements in initializer list
 
 Expected Exception Type:
@@ -817,7 +817,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 298
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 300
 Partial index out of range
 
 Expected Exception Type:
@@ -826,7 +826,7 @@ Odd number of loop edges
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 299
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 301
 Too Many elements in initializer list
 
 Expected Exception Type:
@@ -835,7 +835,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 352
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 354
 Too few elements in both sub-initializer list
 
 Expected Exception Type:
@@ -844,7 +844,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 353
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 355
 Too few elements in first sub-initializer list
 
 Expected Exception Type:
@@ -853,7 +853,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 354
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 356
 Too few elements in second sub-initializer list
 
 Expected Exception Type:
@@ -862,7 +862,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 356
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 358
 Too many elements in first sub-initializer list
 
 Expected Exception Type:
@@ -871,7 +871,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 357
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 359
 Too many elements in second sub-initializer list
 
 Expected Exception Type:
@@ -880,7 +880,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 359
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 361
 Mismatched indices
 
 Expected Exception Type:
@@ -889,7 +889,7 @@ Odd number of loop edges
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 403
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 405
 Too few elements in sub-initializer list
 
 Expected Exception Type:
@@ -898,7 +898,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 404
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 406
 Mismatched partial indices
 
 Expected Exception Type:
@@ -907,7 +907,7 @@ Reciprocated target indices do not match
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 214
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 216
 Too few elements in initializer list
 
 Expected Exception Type:
@@ -916,7 +916,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 215
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 217
 First partial index of loop out of range
 
 Expected Exception Type:
@@ -925,7 +925,7 @@ Odd number of loop edges
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 216
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 218
 Second partial index of loop out of range
 
 Expected Exception Type:
@@ -934,7 +934,7 @@ Odd number of loop edges
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 217
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 219
 Initializer list too long
 
 Expected Exception Type:
@@ -943,7 +943,7 @@ initializer_list too big for array
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 222
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 224
 Mismatch between weights
 
 Expected Exception Type:
@@ -952,7 +952,7 @@ Odd number of loop edges
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 259
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 261
 Mismatch between node and edge init
 
 Expected Exception Type:
@@ -961,7 +961,7 @@ initializer_list too big for array
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 261
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 263
 Mismatch between node and edge init
 
 Expected Exception Type:
@@ -970,7 +970,7 @@ Initializer list of wrong size
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 297
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 299
 Too few elements in initializer list
 
 Expected Exception Type:
@@ -979,7 +979,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 298
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 300
 Partial index out of range
 
 Expected Exception Type:
@@ -988,7 +988,7 @@ Odd number of loop edges
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 299
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 301
 Too Many elements in initializer list
 
 Expected Exception Type:
@@ -997,7 +997,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 304
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 306
 Weight mismatch
 
 Expected Exception Type:
@@ -1006,7 +1006,7 @@ Odd number of loop edges
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 352
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 354
 Too few elements in both sub-initializer list
 
 Expected Exception Type:
@@ -1015,7 +1015,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 353
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 355
 Too few elements in first sub-initializer list
 
 Expected Exception Type:
@@ -1024,7 +1024,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 354
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 356
 Too few elements in second sub-initializer list
 
 Expected Exception Type:
@@ -1033,7 +1033,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 356
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 358
 Too many elements in first sub-initializer list
 
 Expected Exception Type:
@@ -1042,7 +1042,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 357
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 359
 Too many elements in second sub-initializer list
 
 Expected Exception Type:
@@ -1051,7 +1051,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 359
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 361
 Mismatched indices
 
 Expected Exception Type:
@@ -1060,7 +1060,7 @@ Odd number of loop edges
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 364
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 366
 Mismatched weights
 
 Expected Exception Type:
@@ -1069,7 +1069,7 @@ Reciprocated partial edge does not exist
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 403
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 405
 Too few elements in sub-initializer list
 
 Expected Exception Type:
@@ -1078,7 +1078,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 404
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 406
 Mismatched partial indices
 
 Expected Exception Type:
@@ -1087,7 +1087,7 @@ Reciprocated target indices do not match
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 409
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 411
 Mismatched weights
 
 Expected Exception Type:
@@ -1096,17 +1096,8 @@ Reciprocated partial edge does not exist
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 410
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 412
 Mismatched weight
-
-Expected Exception Type:
-[std::logic_error]
-Reciprocated partial edge does not exist
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 461
-Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
@@ -1123,7 +1114,16 @@ Reciprocated partial edge does not exist
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 552
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 465
+Mismatched weights
+
+Expected Exception Type:
+[std::logic_error]
+Reciprocated partial edge does not exist
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 554
 Mismatched weights
 
 Expected Exception Type:
@@ -1132,7 +1132,7 @@ Reciprocated target indices do not match
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 214
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 216
 Too few elements in initializer list
 
 Expected Exception Type:
@@ -1141,7 +1141,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 215
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 217
 First partial index of loop out of range
 
 Expected Exception Type:
@@ -1150,7 +1150,7 @@ Odd number of loop edges
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 216
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 218
 Second partial index of loop out of range
 
 Expected Exception Type:
@@ -1159,7 +1159,7 @@ Odd number of loop edges
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 217
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 219
 Initializer list too long
 
 Expected Exception Type:
@@ -1168,7 +1168,7 @@ initializer_list too big for array
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 222
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 224
 Mismatch between weights
 
 Expected Exception Type:
@@ -1177,7 +1177,7 @@ Odd number of loop edges
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 259
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 261
 Mismatch between node and edge init
 
 Expected Exception Type:
@@ -1186,7 +1186,7 @@ initializer_list too big for array
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 261
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 263
 Mismatch between node and edge init
 
 Expected Exception Type:
@@ -1195,7 +1195,7 @@ Initializer list of wrong size
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 297
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 299
 Too few elements in initializer list
 
 Expected Exception Type:
@@ -1204,7 +1204,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 298
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 300
 Partial index out of range
 
 Expected Exception Type:
@@ -1213,7 +1213,7 @@ Odd number of loop edges
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 299
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 301
 Too Many elements in initializer list
 
 Expected Exception Type:
@@ -1222,7 +1222,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 304
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 306
 Weight mismatch
 
 Expected Exception Type:
@@ -1231,7 +1231,7 @@ Odd number of loop edges
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 352
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 354
 Too few elements in both sub-initializer list
 
 Expected Exception Type:
@@ -1240,7 +1240,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 353
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 355
 Too few elements in first sub-initializer list
 
 Expected Exception Type:
@@ -1249,7 +1249,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 354
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 356
 Too few elements in second sub-initializer list
 
 Expected Exception Type:
@@ -1258,7 +1258,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 356
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 358
 Too many elements in first sub-initializer list
 
 Expected Exception Type:
@@ -1267,7 +1267,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 357
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 359
 Too many elements in second sub-initializer list
 
 Expected Exception Type:
@@ -1276,7 +1276,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 359
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 361
 Mismatched indices
 
 Expected Exception Type:
@@ -1285,7 +1285,7 @@ Odd number of loop edges
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 364
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 366
 Mismatched weights
 
 Expected Exception Type:
@@ -1294,7 +1294,7 @@ Reciprocated target indices do not match
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 403
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 405
 Too few elements in sub-initializer list
 
 Expected Exception Type:
@@ -1303,7 +1303,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 404
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 406
 Mismatched partial indices
 
 Expected Exception Type:
@@ -1312,7 +1312,7 @@ Reciprocated target indices do not match
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 409
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 411
 Mismatched weights
 
 Expected Exception Type:
@@ -1321,17 +1321,8 @@ Reciprocated target indices do not match
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 410
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 412
 Mismatched weight
-
-Expected Exception Type:
-[std::logic_error]
-Reciprocated target indices do not match
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 461
-Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
@@ -1348,7 +1339,7 @@ Reciprocated target indices do not match
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 552
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 465
 Mismatched weights
 
 Expected Exception Type:
@@ -1357,7 +1348,16 @@ Reciprocated target indices do not match
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 214
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 554
+Mismatched weights
+
+Expected Exception Type:
+[std::logic_error]
+Reciprocated target indices do not match
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 216
 Too few elements in initializer list
 
 Expected Exception Type:
@@ -1366,7 +1366,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 215
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 217
 First partial index of loop out of range
 
 Expected Exception Type:
@@ -1375,7 +1375,7 @@ Odd number of loop edges
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 216
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 218
 Second partial index of loop out of range
 
 Expected Exception Type:
@@ -1384,7 +1384,7 @@ Odd number of loop edges
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 217
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 219
 Initializer list too long
 
 Expected Exception Type:
@@ -1393,7 +1393,7 @@ initializer_list too big for array
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 222
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 224
 Mismatch between weights
 
 Expected Exception Type:
@@ -1402,7 +1402,7 @@ Odd number of loop edges
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 259
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 261
 Mismatch between node and edge init
 
 Expected Exception Type:
@@ -1411,7 +1411,7 @@ initializer_list too big for array
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 261
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 263
 Mismatch between node and edge init
 
 Expected Exception Type:
@@ -1420,7 +1420,7 @@ Initializer list of wrong size
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 297
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 299
 Too few elements in initializer list
 
 Expected Exception Type:
@@ -1429,7 +1429,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 298
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 300
 Partial index out of range
 
 Expected Exception Type:
@@ -1438,7 +1438,7 @@ Odd number of loop edges
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 299
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 301
 Too Many elements in initializer list
 
 Expected Exception Type:
@@ -1447,7 +1447,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 304
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 306
 Weight mismatch
 
 Expected Exception Type:
@@ -1456,7 +1456,7 @@ Odd number of loop edges
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 352
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 354
 Too few elements in both sub-initializer list
 
 Expected Exception Type:
@@ -1465,7 +1465,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 353
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 355
 Too few elements in first sub-initializer list
 
 Expected Exception Type:
@@ -1474,7 +1474,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 354
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 356
 Too few elements in second sub-initializer list
 
 Expected Exception Type:
@@ -1483,7 +1483,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 356
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 358
 Too many elements in first sub-initializer list
 
 Expected Exception Type:
@@ -1492,7 +1492,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 357
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 359
 Too many elements in second sub-initializer list
 
 Expected Exception Type:
@@ -1501,7 +1501,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 359
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 361
 Mismatched indices
 
 Expected Exception Type:
@@ -1510,7 +1510,7 @@ Odd number of loop edges
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 364
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 366
 Mismatched weights
 
 Expected Exception Type:
@@ -1519,7 +1519,7 @@ Reciprocated target indices do not match
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 403
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 405
 Too few elements in sub-initializer list
 
 Expected Exception Type:
@@ -1528,7 +1528,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 404
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 406
 Mismatched partial indices
 
 Expected Exception Type:
@@ -1537,7 +1537,7 @@ Reciprocated target indices do not match
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 409
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 411
 Mismatched weights
 
 Expected Exception Type:
@@ -1546,17 +1546,8 @@ Reciprocated target indices do not match
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 410
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 412
 Mismatched weight
-
-Expected Exception Type:
-[std::logic_error]
-Reciprocated target indices do not match
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 461
-Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
@@ -1573,7 +1564,7 @@ Reciprocated target indices do not match
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 552
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 465
 Mismatched weights
 
 Expected Exception Type:
@@ -1582,7 +1573,16 @@ Reciprocated target indices do not match
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 807
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 554
+Mismatched weights
+
+Expected Exception Type:
+[std::logic_error]
+Reciprocated target indices do not match
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 809
 Too few elements in initializer list
 
 Expected Exception Type:
@@ -1591,7 +1591,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 808
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 810
 First partial index of loop out of range
 
 Expected Exception Type:
@@ -1600,7 +1600,7 @@ Target index out of range
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 809
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 811
 Second partial index of loop out of range
 
 Expected Exception Type:
@@ -1609,7 +1609,7 @@ Reciprocated target index does not match for undirected graph
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 810
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 812
 Initializer list too long
 
 Expected Exception Type:
@@ -1618,7 +1618,7 @@ initializer_list too big for array
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 811
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 813
 First complementary index is self-referential
 
 Expected Exception Type:
@@ -1627,7 +1627,7 @@ Complementary index is self-referential
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 812
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 814
 Second complementary index is self-referential
 
 Expected Exception Type:
@@ -1636,7 +1636,7 @@ Complementary index is self-referential
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 813
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 815
 First complementary index is out of range
 
 Expected Exception Type:
@@ -1645,7 +1645,7 @@ Complementary index out of range
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 814
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 816
 First complementary index is out of range
 
 Expected Exception Type:
@@ -1654,7 +1654,7 @@ Complementary index is self-referential
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 896
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 898
 Too few elements in initializer lists
 
 Expected Exception Type:
@@ -1663,7 +1663,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 897
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 899
 Partial index out of range
 
 Expected Exception Type:
@@ -1672,7 +1672,7 @@ Reciprocated target index does not match for undirected graph
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 898
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 900
 Too Many elements in initializer list
 
 Expected Exception Type:
@@ -1681,7 +1681,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 899
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 901
 Self-referential complementary indices
 
 Expected Exception Type:
@@ -1690,7 +1690,7 @@ Complementary index is self-referential
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 900
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 902
 Complementary index out of range
 
 Expected Exception Type:
@@ -1699,7 +1699,7 @@ Complementary index out of range
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 931
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 933
 Too few elements in both sub-initializer lists
 
 Expected Exception Type:
@@ -1708,7 +1708,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 932
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 934
 Too few elements in first sub-initializer list
 
 Expected Exception Type:
@@ -1717,7 +1717,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 933
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 935
 Too few elements in second sub-initializer list
 
 Expected Exception Type:
@@ -1726,7 +1726,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 935
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 937
 Too many elements in first sub-initializer list
 
 Expected Exception Type:
@@ -1735,7 +1735,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 936
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 938
 Too many elements in second sub-initializer list
 
 Expected Exception Type:
@@ -1744,7 +1744,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 938
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 940
 Complementary index out of range
 
 Expected Exception Type:
@@ -1753,7 +1753,7 @@ Complementary index out of range
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 939
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 941
 Complementary indices out of range
 
 Expected Exception Type:
@@ -1762,7 +1762,7 @@ Complementary index out of range
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 993
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 995
 Too few elements in sub-initializer list
 
 Expected Exception Type:
@@ -1771,7 +1771,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 994
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 996
 Mismatched partial indices
 
 Expected Exception Type:
@@ -1780,7 +1780,7 @@ Reciprocated complementary index does not match
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 995
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 997
 Mismatched complementary indices
 
 Expected Exception Type:
@@ -1789,7 +1789,7 @@ Reciprocated target index does not match for undirected graph
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1028
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1030
 Mismatched complementary index
 
 Expected Exception Type:
@@ -1798,7 +1798,7 @@ Reciprocated complementary index does not match
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1058
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1060
 Mismatched complementary indices
 
 Expected Exception Type:
@@ -1807,7 +1807,7 @@ Reciprocated target index does not match for undirected graph
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 807
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 809
 Too few elements in initializer list
 
 Expected Exception Type:
@@ -1816,7 +1816,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 808
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 810
 First partial index of loop out of range
 
 Expected Exception Type:
@@ -1825,7 +1825,7 @@ Target index out of range
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 809
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 811
 Second partial index of loop out of range
 
 Expected Exception Type:
@@ -1834,7 +1834,7 @@ Reciprocated target index does not match for undirected graph
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 810
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 812
 Initializer list too long
 
 Expected Exception Type:
@@ -1843,7 +1843,7 @@ initializer_list too big for array
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 811
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 813
 First complementary index is self-referential
 
 Expected Exception Type:
@@ -1852,7 +1852,7 @@ Complementary index is self-referential
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 812
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 814
 Second complementary index is self-referential
 
 Expected Exception Type:
@@ -1861,7 +1861,7 @@ Complementary index is self-referential
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 813
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 815
 First complementary index is out of range
 
 Expected Exception Type:
@@ -1870,7 +1870,7 @@ Complementary index out of range
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 814
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 816
 First complementary index is out of range
 
 Expected Exception Type:
@@ -1879,7 +1879,7 @@ Complementary index is self-referential
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 819
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 821
 Weight mismatch
 
 Expected Exception Type:
@@ -1888,7 +1888,7 @@ Mismath between weights
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 896
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 898
 Too few elements in initializer lists
 
 Expected Exception Type:
@@ -1897,7 +1897,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 897
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 899
 Partial index out of range
 
 Expected Exception Type:
@@ -1906,7 +1906,7 @@ Reciprocated target index does not match for undirected graph
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 898
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 900
 Too Many elements in initializer list
 
 Expected Exception Type:
@@ -1915,7 +1915,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 899
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 901
 Self-referential complementary indices
 
 Expected Exception Type:
@@ -1924,7 +1924,7 @@ Complementary index is self-referential
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 900
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 902
 Complementary index out of range
 
 Expected Exception Type:
@@ -1933,7 +1933,7 @@ Complementary index out of range
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 905
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 907
 Weight mismatch
 
 Expected Exception Type:
@@ -1942,7 +1942,7 @@ Mismath between weights
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 931
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 933
 Too few elements in both sub-initializer lists
 
 Expected Exception Type:
@@ -1951,7 +1951,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 932
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 934
 Too few elements in first sub-initializer list
 
 Expected Exception Type:
@@ -1960,7 +1960,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 933
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 935
 Too few elements in second sub-initializer list
 
 Expected Exception Type:
@@ -1969,7 +1969,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 935
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 937
 Too many elements in first sub-initializer list
 
 Expected Exception Type:
@@ -1978,7 +1978,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 936
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 938
 Too many elements in second sub-initializer list
 
 Expected Exception Type:
@@ -1987,7 +1987,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 938
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 940
 Complementary index out of range
 
 Expected Exception Type:
@@ -1996,7 +1996,7 @@ Complementary index out of range
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 939
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 941
 Complementary indices out of range
 
 Expected Exception Type:
@@ -2005,7 +2005,7 @@ Complementary index out of range
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 944
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 946
 Weight mismatch
 
 Expected Exception Type:
@@ -2014,7 +2014,7 @@ Overall initializer list of wrong size
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 993
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 995
 Too few elements in sub-initializer list
 
 Expected Exception Type:
@@ -2023,7 +2023,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 994
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 996
 Mismatched partial indices
 
 Expected Exception Type:
@@ -2032,7 +2032,7 @@ Reciprocated complementary index does not match
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 995
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 997
 Mismatched complementary indices
 
 Expected Exception Type:
@@ -2041,7 +2041,7 @@ Reciprocated target index does not match for undirected graph
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1000
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1002
 Weight mismatch
 
 Expected Exception Type:
@@ -2050,7 +2050,7 @@ Mismath between weights
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1028
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1030
 Mismatched complementary index
 
 Expected Exception Type:
@@ -2059,7 +2059,7 @@ Reciprocated complementary index does not match
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1033
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1035
 Weight mismatch
 
 Expected Exception Type:
@@ -2068,7 +2068,7 @@ Mismath between weights
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1058
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1060
 Mismatched complementary indices
 
 Expected Exception Type:
@@ -2077,7 +2077,7 @@ Reciprocated target index does not match for undirected graph
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 807
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 809
 Too few elements in initializer list
 
 Expected Exception Type:
@@ -2086,7 +2086,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 808
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 810
 First partial index of loop out of range
 
 Expected Exception Type:
@@ -2095,7 +2095,7 @@ Target index out of range
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 809
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 811
 Second partial index of loop out of range
 
 Expected Exception Type:
@@ -2104,7 +2104,7 @@ Reciprocated target index does not match for undirected graph
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 810
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 812
 Initializer list too long
 
 Expected Exception Type:
@@ -2113,7 +2113,7 @@ initializer_list too big for array
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 811
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 813
 First complementary index is self-referential
 
 Expected Exception Type:
@@ -2122,7 +2122,7 @@ Complementary index is self-referential
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 812
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 814
 Second complementary index is self-referential
 
 Expected Exception Type:
@@ -2131,7 +2131,7 @@ Complementary index is self-referential
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 813
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 815
 First complementary index is out of range
 
 Expected Exception Type:
@@ -2140,7 +2140,7 @@ Complementary index out of range
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 814
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 816
 First complementary index is out of range
 
 Expected Exception Type:
@@ -2149,7 +2149,7 @@ Complementary index is self-referential
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 819
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 821
 Weight mismatch
 
 Expected Exception Type:
@@ -2158,7 +2158,7 @@ Mismath between weights
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 896
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 898
 Too few elements in initializer lists
 
 Expected Exception Type:
@@ -2167,7 +2167,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 897
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 899
 Partial index out of range
 
 Expected Exception Type:
@@ -2176,7 +2176,7 @@ Reciprocated target index does not match for undirected graph
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 898
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 900
 Too Many elements in initializer list
 
 Expected Exception Type:
@@ -2185,7 +2185,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 899
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 901
 Self-referential complementary indices
 
 Expected Exception Type:
@@ -2194,7 +2194,7 @@ Complementary index is self-referential
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 900
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 902
 Complementary index out of range
 
 Expected Exception Type:
@@ -2203,7 +2203,7 @@ Complementary index out of range
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 905
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 907
 Weight mismatch
 
 Expected Exception Type:
@@ -2212,7 +2212,7 @@ Mismath between weights
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 931
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 933
 Too few elements in both sub-initializer lists
 
 Expected Exception Type:
@@ -2221,7 +2221,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 932
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 934
 Too few elements in first sub-initializer list
 
 Expected Exception Type:
@@ -2230,7 +2230,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 933
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 935
 Too few elements in second sub-initializer list
 
 Expected Exception Type:
@@ -2239,7 +2239,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 935
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 937
 Too many elements in first sub-initializer list
 
 Expected Exception Type:
@@ -2248,7 +2248,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 936
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 938
 Too many elements in second sub-initializer list
 
 Expected Exception Type:
@@ -2257,7 +2257,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 938
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 940
 Complementary index out of range
 
 Expected Exception Type:
@@ -2266,7 +2266,7 @@ Complementary index out of range
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 939
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 941
 Complementary indices out of range
 
 Expected Exception Type:
@@ -2275,7 +2275,7 @@ Complementary index out of range
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 944
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 946
 Weight mismatch
 
 Expected Exception Type:
@@ -2284,7 +2284,7 @@ Overall initializer list of wrong size
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 993
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 995
 Too few elements in sub-initializer list
 
 Expected Exception Type:
@@ -2293,7 +2293,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 994
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 996
 Mismatched partial indices
 
 Expected Exception Type:
@@ -2302,7 +2302,7 @@ Reciprocated complementary index does not match
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 995
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 997
 Mismatched complementary indices
 
 Expected Exception Type:
@@ -2311,7 +2311,7 @@ Reciprocated target index does not match for undirected graph
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1000
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1002
 Weight mismatch
 
 Expected Exception Type:
@@ -2320,7 +2320,7 @@ Mismath between weights
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1028
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1030
 Mismatched complementary index
 
 Expected Exception Type:
@@ -2329,7 +2329,7 @@ Reciprocated complementary index does not match
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1033
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1035
 Weight mismatch
 
 Expected Exception Type:
@@ -2338,7 +2338,7 @@ Mismath between weights
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1058
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1060
 Mismatched complementary indices
 
 Expected Exception Type:
@@ -2347,7 +2347,7 @@ Reciprocated target index does not match for undirected graph
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 807
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 809
 Too few elements in initializer list
 
 Expected Exception Type:
@@ -2356,7 +2356,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 808
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 810
 First partial index of loop out of range
 
 Expected Exception Type:
@@ -2365,7 +2365,7 @@ Target index out of range
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 809
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 811
 Second partial index of loop out of range
 
 Expected Exception Type:
@@ -2374,7 +2374,7 @@ Reciprocated target index does not match for undirected graph
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 810
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 812
 Initializer list too long
 
 Expected Exception Type:
@@ -2383,7 +2383,7 @@ initializer_list too big for array
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 811
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 813
 First complementary index is self-referential
 
 Expected Exception Type:
@@ -2392,7 +2392,7 @@ Complementary index is self-referential
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 812
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 814
 Second complementary index is self-referential
 
 Expected Exception Type:
@@ -2401,7 +2401,7 @@ Complementary index is self-referential
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 813
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 815
 First complementary index is out of range
 
 Expected Exception Type:
@@ -2410,7 +2410,7 @@ Complementary index out of range
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 814
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 816
 First complementary index is out of range
 
 Expected Exception Type:
@@ -2419,7 +2419,7 @@ Complementary index is self-referential
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 819
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 821
 Weight mismatch
 
 Expected Exception Type:
@@ -2428,7 +2428,7 @@ Mismath between weights
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 896
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 898
 Too few elements in initializer lists
 
 Expected Exception Type:
@@ -2437,7 +2437,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 897
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 899
 Partial index out of range
 
 Expected Exception Type:
@@ -2446,7 +2446,7 @@ Reciprocated target index does not match for undirected graph
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 898
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 900
 Too Many elements in initializer list
 
 Expected Exception Type:
@@ -2455,7 +2455,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 899
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 901
 Self-referential complementary indices
 
 Expected Exception Type:
@@ -2464,7 +2464,7 @@ Complementary index is self-referential
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 900
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 902
 Complementary index out of range
 
 Expected Exception Type:
@@ -2473,7 +2473,7 @@ Complementary index out of range
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 905
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 907
 Weight mismatch
 
 Expected Exception Type:
@@ -2482,7 +2482,7 @@ Mismath between weights
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 931
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 933
 Too few elements in both sub-initializer lists
 
 Expected Exception Type:
@@ -2491,7 +2491,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 932
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 934
 Too few elements in first sub-initializer list
 
 Expected Exception Type:
@@ -2500,7 +2500,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 933
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 935
 Too few elements in second sub-initializer list
 
 Expected Exception Type:
@@ -2509,7 +2509,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 935
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 937
 Too many elements in first sub-initializer list
 
 Expected Exception Type:
@@ -2518,7 +2518,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 936
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 938
 Too many elements in second sub-initializer list
 
 Expected Exception Type:
@@ -2527,7 +2527,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 938
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 940
 Complementary index out of range
 
 Expected Exception Type:
@@ -2536,7 +2536,7 @@ Complementary index out of range
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 939
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 941
 Complementary indices out of range
 
 Expected Exception Type:
@@ -2545,7 +2545,7 @@ Complementary index out of range
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 944
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 946
 Weight mismatch
 
 Expected Exception Type:
@@ -2554,7 +2554,7 @@ Overall initializer list of wrong size
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 993
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 995
 Too few elements in sub-initializer list
 
 Expected Exception Type:
@@ -2563,7 +2563,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 994
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 996
 Mismatched partial indices
 
 Expected Exception Type:
@@ -2572,7 +2572,7 @@ Reciprocated complementary index does not match
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 995
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 997
 Mismatched complementary indices
 
 Expected Exception Type:
@@ -2581,7 +2581,7 @@ Reciprocated target index does not match for undirected graph
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1000
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1002
 Weight mismatch
 
 Expected Exception Type:
@@ -2590,7 +2590,7 @@ Mismath between weights
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1028
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1030
 Mismatched complementary index
 
 Expected Exception Type:
@@ -2599,7 +2599,7 @@ Reciprocated complementary index does not match
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1033
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1035
 Weight mismatch
 
 Expected Exception Type:
@@ -2608,7 +2608,7 @@ Mismath between weights
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1058
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1060
 Mismatched complementary indices
 
 Expected Exception Type:
@@ -2617,7 +2617,7 @@ Reciprocated target index does not match for undirected graph
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 807
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 809
 Too few elements in initializer list
 
 Expected Exception Type:
@@ -2626,7 +2626,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 808
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 810
 First partial index of loop out of range
 
 Expected Exception Type:
@@ -2635,7 +2635,7 @@ Target index out of range
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 809
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 811
 Second partial index of loop out of range
 
 Expected Exception Type:
@@ -2644,7 +2644,7 @@ Reciprocated target index does not match for undirected graph
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 810
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 812
 Initializer list too long
 
 Expected Exception Type:
@@ -2653,7 +2653,7 @@ initializer_list too big for array
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 811
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 813
 First complementary index is self-referential
 
 Expected Exception Type:
@@ -2662,7 +2662,7 @@ Complementary index is self-referential
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 812
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 814
 Second complementary index is self-referential
 
 Expected Exception Type:
@@ -2671,7 +2671,7 @@ Complementary index is self-referential
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 813
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 815
 First complementary index is out of range
 
 Expected Exception Type:
@@ -2680,21 +2680,12 @@ Complementary index out of range
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 814
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 816
 First complementary index is out of range
 
 Expected Exception Type:
 [std::logic_error]
 Complementary index is self-referential
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 858
-Mismatch between node and edge init
-
-Expected Exception Type:
-[std::logic_error]
-initializer_list too big for array
 
 	=======================================
 
@@ -2703,11 +2694,20 @@ Mismatch between node and edge init
 
 Expected Exception Type:
 [std::logic_error]
+initializer_list too big for array
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 862
+Mismatch between node and edge init
+
+Expected Exception Type:
+[std::logic_error]
 Initializer list of wrong size
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 896
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 898
 Too few elements in initializer lists
 
 Expected Exception Type:
@@ -2716,7 +2716,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 897
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 899
 Partial index out of range
 
 Expected Exception Type:
@@ -2725,7 +2725,7 @@ Reciprocated target index does not match for undirected graph
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 898
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 900
 Too Many elements in initializer list
 
 Expected Exception Type:
@@ -2734,7 +2734,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 899
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 901
 Self-referential complementary indices
 
 Expected Exception Type:
@@ -2743,7 +2743,7 @@ Complementary index is self-referential
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 900
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 902
 Complementary index out of range
 
 Expected Exception Type:
@@ -2752,7 +2752,7 @@ Complementary index out of range
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 931
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 933
 Too few elements in both sub-initializer lists
 
 Expected Exception Type:
@@ -2761,7 +2761,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 932
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 934
 Too few elements in first sub-initializer list
 
 Expected Exception Type:
@@ -2770,7 +2770,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 933
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 935
 Too few elements in second sub-initializer list
 
 Expected Exception Type:
@@ -2779,7 +2779,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 935
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 937
 Too many elements in first sub-initializer list
 
 Expected Exception Type:
@@ -2788,7 +2788,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 936
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 938
 Too many elements in second sub-initializer list
 
 Expected Exception Type:
@@ -2797,7 +2797,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 938
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 940
 Complementary index out of range
 
 Expected Exception Type:
@@ -2806,7 +2806,7 @@ Complementary index out of range
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 939
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 941
 Complementary indices out of range
 
 Expected Exception Type:
@@ -2815,7 +2815,7 @@ Complementary index out of range
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 993
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 995
 Too few elements in sub-initializer list
 
 Expected Exception Type:
@@ -2824,7 +2824,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 994
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 996
 Mismatched partial indices
 
 Expected Exception Type:
@@ -2833,7 +2833,7 @@ Reciprocated complementary index does not match
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 995
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 997
 Mismatched complementary indices
 
 Expected Exception Type:
@@ -2842,7 +2842,7 @@ Reciprocated target index does not match for undirected graph
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1028
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1030
 Mismatched complementary index
 
 Expected Exception Type:
@@ -2851,7 +2851,7 @@ Reciprocated complementary index does not match
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1058
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1060
 Mismatched complementary indices
 
 Expected Exception Type:
@@ -2860,7 +2860,7 @@ Reciprocated target index does not match for undirected graph
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 807
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 809
 Too few elements in initializer list
 
 Expected Exception Type:
@@ -2869,7 +2869,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 808
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 810
 First partial index of loop out of range
 
 Expected Exception Type:
@@ -2878,7 +2878,7 @@ Target index out of range
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 809
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 811
 Second partial index of loop out of range
 
 Expected Exception Type:
@@ -2887,7 +2887,7 @@ Reciprocated target index does not match for undirected graph
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 810
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 812
 Initializer list too long
 
 Expected Exception Type:
@@ -2896,7 +2896,7 @@ initializer_list too big for array
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 811
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 813
 First complementary index is self-referential
 
 Expected Exception Type:
@@ -2905,7 +2905,7 @@ Complementary index is self-referential
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 812
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 814
 Second complementary index is self-referential
 
 Expected Exception Type:
@@ -2914,7 +2914,7 @@ Complementary index is self-referential
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 813
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 815
 First complementary index is out of range
 
 Expected Exception Type:
@@ -2923,7 +2923,7 @@ Complementary index out of range
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 814
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 816
 First complementary index is out of range
 
 Expected Exception Type:
@@ -2932,21 +2932,12 @@ Complementary index is self-referential
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 819
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 821
 Weight mismatch
 
 Expected Exception Type:
 [std::logic_error]
 Mismath between weights
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 858
-Mismatch between node and edge init
-
-Expected Exception Type:
-[std::logic_error]
-initializer_list too big for array
 
 	=======================================
 
@@ -2955,11 +2946,20 @@ Mismatch between node and edge init
 
 Expected Exception Type:
 [std::logic_error]
+initializer_list too big for array
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 862
+Mismatch between node and edge init
+
+Expected Exception Type:
+[std::logic_error]
 Initializer list of wrong size
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 896
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 898
 Too few elements in initializer lists
 
 Expected Exception Type:
@@ -2968,7 +2968,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 897
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 899
 Partial index out of range
 
 Expected Exception Type:
@@ -2977,7 +2977,7 @@ Reciprocated target index does not match for undirected graph
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 898
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 900
 Too Many elements in initializer list
 
 Expected Exception Type:
@@ -2986,7 +2986,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 899
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 901
 Self-referential complementary indices
 
 Expected Exception Type:
@@ -2995,7 +2995,7 @@ Complementary index is self-referential
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 900
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 902
 Complementary index out of range
 
 Expected Exception Type:
@@ -3004,7 +3004,7 @@ Complementary index out of range
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 905
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 907
 Weight mismatch
 
 Expected Exception Type:
@@ -3013,7 +3013,7 @@ Mismath between weights
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 931
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 933
 Too few elements in both sub-initializer lists
 
 Expected Exception Type:
@@ -3022,7 +3022,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 932
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 934
 Too few elements in first sub-initializer list
 
 Expected Exception Type:
@@ -3031,7 +3031,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 933
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 935
 Too few elements in second sub-initializer list
 
 Expected Exception Type:
@@ -3040,7 +3040,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 935
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 937
 Too many elements in first sub-initializer list
 
 Expected Exception Type:
@@ -3049,7 +3049,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 936
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 938
 Too many elements in second sub-initializer list
 
 Expected Exception Type:
@@ -3058,7 +3058,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 938
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 940
 Complementary index out of range
 
 Expected Exception Type:
@@ -3067,7 +3067,7 @@ Complementary index out of range
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 939
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 941
 Complementary indices out of range
 
 Expected Exception Type:
@@ -3076,7 +3076,7 @@ Complementary index out of range
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 944
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 946
 Weight mismatch
 
 Expected Exception Type:
@@ -3085,7 +3085,7 @@ Overall initializer list of wrong size
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 993
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 995
 Too few elements in sub-initializer list
 
 Expected Exception Type:
@@ -3094,7 +3094,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 994
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 996
 Mismatched partial indices
 
 Expected Exception Type:
@@ -3103,7 +3103,7 @@ Reciprocated complementary index does not match
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 995
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 997
 Mismatched complementary indices
 
 Expected Exception Type:
@@ -3112,7 +3112,7 @@ Reciprocated target index does not match for undirected graph
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1000
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1002
 Weight mismatch
 
 Expected Exception Type:
@@ -3121,7 +3121,7 @@ Mismath between weights
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1028
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1030
 Mismatched complementary index
 
 Expected Exception Type:
@@ -3130,7 +3130,7 @@ Reciprocated complementary index does not match
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1033
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1035
 Weight mismatch
 
 Expected Exception Type:
@@ -3139,7 +3139,7 @@ Mismath between weights
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1058
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1060
 Mismatched complementary indices
 
 Expected Exception Type:
@@ -3148,7 +3148,7 @@ Reciprocated target index does not match for undirected graph
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 807
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 809
 Too few elements in initializer list
 
 Expected Exception Type:
@@ -3157,7 +3157,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 808
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 810
 First partial index of loop out of range
 
 Expected Exception Type:
@@ -3166,7 +3166,7 @@ Target index out of range
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 809
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 811
 Second partial index of loop out of range
 
 Expected Exception Type:
@@ -3175,7 +3175,7 @@ Reciprocated target index does not match for undirected graph
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 810
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 812
 Initializer list too long
 
 Expected Exception Type:
@@ -3184,7 +3184,7 @@ initializer_list too big for array
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 811
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 813
 First complementary index is self-referential
 
 Expected Exception Type:
@@ -3193,7 +3193,7 @@ Complementary index is self-referential
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 812
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 814
 Second complementary index is self-referential
 
 Expected Exception Type:
@@ -3202,7 +3202,7 @@ Complementary index is self-referential
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 813
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 815
 First complementary index is out of range
 
 Expected Exception Type:
@@ -3211,7 +3211,7 @@ Complementary index out of range
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 814
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 816
 First complementary index is out of range
 
 Expected Exception Type:
@@ -3220,21 +3220,12 @@ Complementary index is self-referential
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 819
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 821
 Weight mismatch
 
 Expected Exception Type:
 [std::logic_error]
 Mismath between weights
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 858
-Mismatch between node and edge init
-
-Expected Exception Type:
-[std::logic_error]
-initializer_list too big for array
 
 	=======================================
 
@@ -3243,11 +3234,20 @@ Mismatch between node and edge init
 
 Expected Exception Type:
 [std::logic_error]
+initializer_list too big for array
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 862
+Mismatch between node and edge init
+
+Expected Exception Type:
+[std::logic_error]
 Initializer list of wrong size
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 896
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 898
 Too few elements in initializer lists
 
 Expected Exception Type:
@@ -3256,7 +3256,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 897
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 899
 Partial index out of range
 
 Expected Exception Type:
@@ -3265,7 +3265,7 @@ Reciprocated target index does not match for undirected graph
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 898
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 900
 Too Many elements in initializer list
 
 Expected Exception Type:
@@ -3274,7 +3274,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 899
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 901
 Self-referential complementary indices
 
 Expected Exception Type:
@@ -3283,7 +3283,7 @@ Complementary index is self-referential
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 900
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 902
 Complementary index out of range
 
 Expected Exception Type:
@@ -3292,7 +3292,7 @@ Complementary index out of range
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 905
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 907
 Weight mismatch
 
 Expected Exception Type:
@@ -3301,7 +3301,7 @@ Mismath between weights
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 931
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 933
 Too few elements in both sub-initializer lists
 
 Expected Exception Type:
@@ -3310,7 +3310,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 932
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 934
 Too few elements in first sub-initializer list
 
 Expected Exception Type:
@@ -3319,7 +3319,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 933
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 935
 Too few elements in second sub-initializer list
 
 Expected Exception Type:
@@ -3328,7 +3328,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 935
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 937
 Too many elements in first sub-initializer list
 
 Expected Exception Type:
@@ -3337,7 +3337,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 936
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 938
 Too many elements in second sub-initializer list
 
 Expected Exception Type:
@@ -3346,7 +3346,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 938
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 940
 Complementary index out of range
 
 Expected Exception Type:
@@ -3355,7 +3355,7 @@ Complementary index out of range
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 939
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 941
 Complementary indices out of range
 
 Expected Exception Type:
@@ -3364,7 +3364,7 @@ Complementary index out of range
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 944
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 946
 Weight mismatch
 
 Expected Exception Type:
@@ -3373,7 +3373,7 @@ Overall initializer list of wrong size
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 993
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 995
 Too few elements in sub-initializer list
 
 Expected Exception Type:
@@ -3382,7 +3382,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 994
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 996
 Mismatched partial indices
 
 Expected Exception Type:
@@ -3391,7 +3391,7 @@ Reciprocated complementary index does not match
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 995
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 997
 Mismatched complementary indices
 
 Expected Exception Type:
@@ -3400,7 +3400,7 @@ Reciprocated target index does not match for undirected graph
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1000
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1002
 Weight mismatch
 
 Expected Exception Type:
@@ -3409,7 +3409,7 @@ Mismath between weights
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1028
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1030
 Mismatched complementary index
 
 Expected Exception Type:
@@ -3418,7 +3418,7 @@ Reciprocated complementary index does not match
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1033
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1035
 Weight mismatch
 
 Expected Exception Type:
@@ -3427,7 +3427,7 @@ Mismath between weights
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1058
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1060
 Mismatched complementary indices
 
 Expected Exception Type:
@@ -3436,7 +3436,7 @@ Reciprocated target index does not match for undirected graph
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 807
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 809
 Too few elements in initializer list
 
 Expected Exception Type:
@@ -3445,7 +3445,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 808
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 810
 First partial index of loop out of range
 
 Expected Exception Type:
@@ -3454,7 +3454,7 @@ Target index out of range
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 809
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 811
 Second partial index of loop out of range
 
 Expected Exception Type:
@@ -3463,7 +3463,7 @@ Reciprocated target index does not match for undirected graph
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 810
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 812
 Initializer list too long
 
 Expected Exception Type:
@@ -3472,7 +3472,7 @@ initializer_list too big for array
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 811
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 813
 First complementary index is self-referential
 
 Expected Exception Type:
@@ -3481,7 +3481,7 @@ Complementary index is self-referential
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 812
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 814
 Second complementary index is self-referential
 
 Expected Exception Type:
@@ -3490,7 +3490,7 @@ Complementary index is self-referential
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 813
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 815
 First complementary index is out of range
 
 Expected Exception Type:
@@ -3499,7 +3499,7 @@ Complementary index out of range
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 814
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 816
 First complementary index is out of range
 
 Expected Exception Type:
@@ -3508,21 +3508,12 @@ Complementary index is self-referential
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 819
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 821
 Weight mismatch
 
 Expected Exception Type:
 [std::logic_error]
 Mismath between weights
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 858
-Mismatch between node and edge init
-
-Expected Exception Type:
-[std::logic_error]
-initializer_list too big for array
 
 	=======================================
 
@@ -3531,30 +3522,21 @@ Mismatch between node and edge init
 
 Expected Exception Type:
 [std::logic_error]
+initializer_list too big for array
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 862
+Mismatch between node and edge init
+
+Expected Exception Type:
+[std::logic_error]
 Initializer list of wrong size
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 896
-Too few elements in initializer lists
-
-Expected Exception Type:
-[std::logic_error]
-Inconsistent number of elements supplied by initializer lists
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 897
-Partial index out of range
-
-Expected Exception Type:
-[std::logic_error]
-Reciprocated target index does not match for undirected graph
-
-	=======================================
-
 Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 898
-Too Many elements in initializer list
+Too few elements in initializer lists
 
 Expected Exception Type:
 [std::logic_error]
@@ -3563,6 +3545,24 @@ Inconsistent number of elements supplied by initializer lists
 	=======================================
 
 Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 899
+Partial index out of range
+
+Expected Exception Type:
+[std::logic_error]
+Reciprocated target index does not match for undirected graph
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 900
+Too Many elements in initializer list
+
+Expected Exception Type:
+[std::logic_error]
+Inconsistent number of elements supplied by initializer lists
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 901
 Self-referential complementary indices
 
 Expected Exception Type:
@@ -3571,7 +3571,7 @@ Complementary index is self-referential
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 900
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 902
 Complementary index out of range
 
 Expected Exception Type:
@@ -3580,7 +3580,7 @@ Complementary index out of range
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 905
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 907
 Weight mismatch
 
 Expected Exception Type:
@@ -3589,7 +3589,7 @@ Mismath between weights
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 931
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 933
 Too few elements in both sub-initializer lists
 
 Expected Exception Type:
@@ -3598,7 +3598,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 932
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 934
 Too few elements in first sub-initializer list
 
 Expected Exception Type:
@@ -3607,7 +3607,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 933
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 935
 Too few elements in second sub-initializer list
 
 Expected Exception Type:
@@ -3616,7 +3616,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 935
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 937
 Too many elements in first sub-initializer list
 
 Expected Exception Type:
@@ -3625,7 +3625,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 936
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 938
 Too many elements in second sub-initializer list
 
 Expected Exception Type:
@@ -3634,7 +3634,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 938
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 940
 Complementary index out of range
 
 Expected Exception Type:
@@ -3643,7 +3643,7 @@ Complementary index out of range
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 939
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 941
 Complementary indices out of range
 
 Expected Exception Type:
@@ -3652,7 +3652,7 @@ Complementary index out of range
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 944
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 946
 Weight mismatch
 
 Expected Exception Type:
@@ -3661,7 +3661,7 @@ Overall initializer list of wrong size
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 993
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 995
 Too few elements in sub-initializer list
 
 Expected Exception Type:
@@ -3670,7 +3670,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 994
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 996
 Mismatched partial indices
 
 Expected Exception Type:
@@ -3679,7 +3679,7 @@ Reciprocated complementary index does not match
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 995
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 997
 Mismatched complementary indices
 
 Expected Exception Type:
@@ -3688,7 +3688,7 @@ Reciprocated target index does not match for undirected graph
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1000
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1002
 Weight mismatch
 
 Expected Exception Type:
@@ -3697,7 +3697,7 @@ Mismath between weights
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1028
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1030
 Mismatched complementary index
 
 Expected Exception Type:
@@ -3706,7 +3706,7 @@ Reciprocated complementary index does not match
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1033
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1035
 Weight mismatch
 
 Expected Exception Type:
@@ -3715,7 +3715,7 @@ Mismath between weights
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1058
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1060
 Mismatched complementary indices
 
 Expected Exception Type:
@@ -3724,7 +3724,7 @@ Reciprocated target index does not match for undirected graph
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1234
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1236
 Partial index out of range
 
 Expected Exception Type:
@@ -3733,17 +3733,8 @@ Target index out of range
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1311
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1313
 Too few elements in initializer lists
-
-Expected Exception Type:
-[std::logic_error]
-Inconsistent number of elements supplied by initializer lists
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1312
-Too many elements in initializer lists
 
 Expected Exception Type:
 [std::logic_error]
@@ -3752,24 +3743,6 @@ Inconsistent number of elements supplied by initializer lists
 	=======================================
 
 Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1314
-Partial index out of range
-
-Expected Exception Type:
-[std::logic_error]
-Target index out of range
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1341
-Too few elements in initializer lists
-
-Expected Exception Type:
-[std::logic_error]
-Overall initializer list of wrong size
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1342
 Too many elements in initializer lists
 
 Expected Exception Type:
@@ -3778,7 +3751,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1345
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1316
 Partial index out of range
 
 Expected Exception Type:
@@ -3787,7 +3760,34 @@ Target index out of range
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1367
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1343
+Too few elements in initializer lists
+
+Expected Exception Type:
+[std::logic_error]
+Overall initializer list of wrong size
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1344
+Too many elements in initializer lists
+
+Expected Exception Type:
+[std::logic_error]
+Inconsistent number of elements supplied by initializer lists
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1347
+Partial index out of range
+
+Expected Exception Type:
+[std::logic_error]
+Target index out of range
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1369
 Only one element in initializer lists
 
 Expected Exception Type:
@@ -3796,7 +3796,7 @@ Overall initializer list of wrong size
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1368
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1370
 Only two elements in initializer lists
 
 Expected Exception Type:
@@ -3805,7 +3805,7 @@ Overall initializer list of wrong size
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1369
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1371
 Too many elements in initializer lists
 
 Expected Exception Type:
@@ -3814,7 +3814,7 @@ initializer_list too big for array
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1234
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1236
 Partial index out of range
 
 Expected Exception Type:
@@ -3823,17 +3823,8 @@ Target index out of range
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1311
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1313
 Too few elements in initializer lists
-
-Expected Exception Type:
-[std::logic_error]
-Inconsistent number of elements supplied by initializer lists
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1312
-Too many elements in initializer lists
 
 Expected Exception Type:
 [std::logic_error]
@@ -3842,24 +3833,6 @@ Inconsistent number of elements supplied by initializer lists
 	=======================================
 
 Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1314
-Partial index out of range
-
-Expected Exception Type:
-[std::logic_error]
-Target index out of range
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1341
-Too few elements in initializer lists
-
-Expected Exception Type:
-[std::logic_error]
-Overall initializer list of wrong size
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1342
 Too many elements in initializer lists
 
 Expected Exception Type:
@@ -3868,7 +3841,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1345
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1316
 Partial index out of range
 
 Expected Exception Type:
@@ -3877,7 +3850,34 @@ Target index out of range
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1367
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1343
+Too few elements in initializer lists
+
+Expected Exception Type:
+[std::logic_error]
+Overall initializer list of wrong size
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1344
+Too many elements in initializer lists
+
+Expected Exception Type:
+[std::logic_error]
+Inconsistent number of elements supplied by initializer lists
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1347
+Partial index out of range
+
+Expected Exception Type:
+[std::logic_error]
+Target index out of range
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1369
 Only one element in initializer lists
 
 Expected Exception Type:
@@ -3886,7 +3886,7 @@ Overall initializer list of wrong size
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1368
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1370
 Only two elements in initializer lists
 
 Expected Exception Type:
@@ -3895,7 +3895,7 @@ Overall initializer list of wrong size
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1369
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1371
 Too many elements in initializer lists
 
 Expected Exception Type:
@@ -3904,7 +3904,7 @@ initializer_list too big for array
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1234
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1236
 Partial index out of range
 
 Expected Exception Type:
@@ -3913,17 +3913,8 @@ Target index out of range
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1311
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1313
 Too few elements in initializer lists
-
-Expected Exception Type:
-[std::logic_error]
-Inconsistent number of elements supplied by initializer lists
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1312
-Too many elements in initializer lists
 
 Expected Exception Type:
 [std::logic_error]
@@ -3932,24 +3923,6 @@ Inconsistent number of elements supplied by initializer lists
 	=======================================
 
 Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1314
-Partial index out of range
-
-Expected Exception Type:
-[std::logic_error]
-Target index out of range
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1341
-Too few elements in initializer lists
-
-Expected Exception Type:
-[std::logic_error]
-Overall initializer list of wrong size
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1342
 Too many elements in initializer lists
 
 Expected Exception Type:
@@ -3958,7 +3931,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1345
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1316
 Partial index out of range
 
 Expected Exception Type:
@@ -3967,7 +3940,34 @@ Target index out of range
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1367
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1343
+Too few elements in initializer lists
+
+Expected Exception Type:
+[std::logic_error]
+Overall initializer list of wrong size
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1344
+Too many elements in initializer lists
+
+Expected Exception Type:
+[std::logic_error]
+Inconsistent number of elements supplied by initializer lists
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1347
+Partial index out of range
+
+Expected Exception Type:
+[std::logic_error]
+Target index out of range
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1369
 Only one element in initializer lists
 
 Expected Exception Type:
@@ -3976,7 +3976,7 @@ Overall initializer list of wrong size
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1368
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1370
 Only two elements in initializer lists
 
 Expected Exception Type:
@@ -3985,7 +3985,7 @@ Overall initializer list of wrong size
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1369
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1371
 Too many elements in initializer lists
 
 Expected Exception Type:
@@ -3994,7 +3994,7 @@ initializer_list too big for array
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1234
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1236
 Partial index out of range
 
 Expected Exception Type:
@@ -4003,17 +4003,8 @@ Target index out of range
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1311
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1313
 Too few elements in initializer lists
-
-Expected Exception Type:
-[std::logic_error]
-Inconsistent number of elements supplied by initializer lists
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1312
-Too many elements in initializer lists
 
 Expected Exception Type:
 [std::logic_error]
@@ -4022,24 +4013,6 @@ Inconsistent number of elements supplied by initializer lists
 	=======================================
 
 Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1314
-Partial index out of range
-
-Expected Exception Type:
-[std::logic_error]
-Target index out of range
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1341
-Too few elements in initializer lists
-
-Expected Exception Type:
-[std::logic_error]
-Overall initializer list of wrong size
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1342
 Too many elements in initializer lists
 
 Expected Exception Type:
@@ -4048,7 +4021,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1345
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1316
 Partial index out of range
 
 Expected Exception Type:
@@ -4057,7 +4030,34 @@ Target index out of range
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1367
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1343
+Too few elements in initializer lists
+
+Expected Exception Type:
+[std::logic_error]
+Overall initializer list of wrong size
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1344
+Too many elements in initializer lists
+
+Expected Exception Type:
+[std::logic_error]
+Inconsistent number of elements supplied by initializer lists
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1347
+Partial index out of range
+
+Expected Exception Type:
+[std::logic_error]
+Target index out of range
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1369
 Only one element in initializer lists
 
 Expected Exception Type:
@@ -4066,7 +4066,7 @@ Overall initializer list of wrong size
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1368
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1370
 Only two elements in initializer lists
 
 Expected Exception Type:
@@ -4075,7 +4075,7 @@ Overall initializer list of wrong size
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1369
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1371
 Too many elements in initializer lists
 
 Expected Exception Type:
@@ -4084,21 +4084,12 @@ initializer_list too big for array
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1234
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1236
 Partial index out of range
 
 Expected Exception Type:
 [std::logic_error]
 Target index out of range
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1271
-Mismatch between node and edge init
-
-Expected Exception Type:
-[std::logic_error]
-initializer_list too big for array
 
 	=======================================
 
@@ -4107,21 +4098,21 @@ Mismatch between node and edge init
 
 Expected Exception Type:
 [std::logic_error]
+initializer_list too big for array
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1275
+Mismatch between node and edge init
+
+Expected Exception Type:
+[std::logic_error]
 Initializer list of wrong size
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1311
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1313
 Too few elements in initializer lists
-
-Expected Exception Type:
-[std::logic_error]
-Inconsistent number of elements supplied by initializer lists
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1312
-Too many elements in initializer lists
 
 Expected Exception Type:
 [std::logic_error]
@@ -4130,24 +4121,6 @@ Inconsistent number of elements supplied by initializer lists
 	=======================================
 
 Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1314
-Partial index out of range
-
-Expected Exception Type:
-[std::logic_error]
-Target index out of range
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1341
-Too few elements in initializer lists
-
-Expected Exception Type:
-[std::logic_error]
-Overall initializer list of wrong size
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1342
 Too many elements in initializer lists
 
 Expected Exception Type:
@@ -4156,7 +4129,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1345
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1316
 Partial index out of range
 
 Expected Exception Type:
@@ -4165,7 +4138,34 @@ Target index out of range
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1367
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1343
+Too few elements in initializer lists
+
+Expected Exception Type:
+[std::logic_error]
+Overall initializer list of wrong size
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1344
+Too many elements in initializer lists
+
+Expected Exception Type:
+[std::logic_error]
+Inconsistent number of elements supplied by initializer lists
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1347
+Partial index out of range
+
+Expected Exception Type:
+[std::logic_error]
+Target index out of range
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1369
 Only one element in initializer lists
 
 Expected Exception Type:
@@ -4174,7 +4174,7 @@ Overall initializer list of wrong size
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1368
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1370
 Only two elements in initializer lists
 
 Expected Exception Type:
@@ -4183,7 +4183,7 @@ Overall initializer list of wrong size
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1369
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1371
 Too many elements in initializer lists
 
 Expected Exception Type:
@@ -4192,21 +4192,12 @@ initializer_list too big for array
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1234
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1236
 Partial index out of range
 
 Expected Exception Type:
 [std::logic_error]
 Target index out of range
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1271
-Mismatch between node and edge init
-
-Expected Exception Type:
-[std::logic_error]
-initializer_list too big for array
 
 	=======================================
 
@@ -4215,21 +4206,21 @@ Mismatch between node and edge init
 
 Expected Exception Type:
 [std::logic_error]
+initializer_list too big for array
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1275
+Mismatch between node and edge init
+
+Expected Exception Type:
+[std::logic_error]
 Initializer list of wrong size
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1311
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1313
 Too few elements in initializer lists
-
-Expected Exception Type:
-[std::logic_error]
-Inconsistent number of elements supplied by initializer lists
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1312
-Too many elements in initializer lists
 
 Expected Exception Type:
 [std::logic_error]
@@ -4238,24 +4229,6 @@ Inconsistent number of elements supplied by initializer lists
 	=======================================
 
 Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1314
-Partial index out of range
-
-Expected Exception Type:
-[std::logic_error]
-Target index out of range
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1341
-Too few elements in initializer lists
-
-Expected Exception Type:
-[std::logic_error]
-Overall initializer list of wrong size
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1342
 Too many elements in initializer lists
 
 Expected Exception Type:
@@ -4264,7 +4237,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1345
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1316
 Partial index out of range
 
 Expected Exception Type:
@@ -4273,7 +4246,34 @@ Target index out of range
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1367
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1343
+Too few elements in initializer lists
+
+Expected Exception Type:
+[std::logic_error]
+Overall initializer list of wrong size
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1344
+Too many elements in initializer lists
+
+Expected Exception Type:
+[std::logic_error]
+Inconsistent number of elements supplied by initializer lists
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1347
+Partial index out of range
+
+Expected Exception Type:
+[std::logic_error]
+Target index out of range
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1369
 Only one element in initializer lists
 
 Expected Exception Type:
@@ -4282,7 +4282,7 @@ Overall initializer list of wrong size
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1368
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1370
 Only two elements in initializer lists
 
 Expected Exception Type:
@@ -4291,7 +4291,7 @@ Overall initializer list of wrong size
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1369
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1371
 Too many elements in initializer lists
 
 Expected Exception Type:
@@ -4300,21 +4300,12 @@ initializer_list too big for array
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1234
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1236
 Partial index out of range
 
 Expected Exception Type:
 [std::logic_error]
 Target index out of range
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1271
-Mismatch between node and edge init
-
-Expected Exception Type:
-[std::logic_error]
-initializer_list too big for array
 
 	=======================================
 
@@ -4323,21 +4314,21 @@ Mismatch between node and edge init
 
 Expected Exception Type:
 [std::logic_error]
+initializer_list too big for array
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1275
+Mismatch between node and edge init
+
+Expected Exception Type:
+[std::logic_error]
 Initializer list of wrong size
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1311
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1313
 Too few elements in initializer lists
-
-Expected Exception Type:
-[std::logic_error]
-Inconsistent number of elements supplied by initializer lists
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1312
-Too many elements in initializer lists
 
 Expected Exception Type:
 [std::logic_error]
@@ -4346,24 +4337,6 @@ Inconsistent number of elements supplied by initializer lists
 	=======================================
 
 Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1314
-Partial index out of range
-
-Expected Exception Type:
-[std::logic_error]
-Target index out of range
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1341
-Too few elements in initializer lists
-
-Expected Exception Type:
-[std::logic_error]
-Overall initializer list of wrong size
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1342
 Too many elements in initializer lists
 
 Expected Exception Type:
@@ -4372,7 +4345,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1345
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1316
 Partial index out of range
 
 Expected Exception Type:
@@ -4381,7 +4354,34 @@ Target index out of range
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1367
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1343
+Too few elements in initializer lists
+
+Expected Exception Type:
+[std::logic_error]
+Overall initializer list of wrong size
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1344
+Too many elements in initializer lists
+
+Expected Exception Type:
+[std::logic_error]
+Inconsistent number of elements supplied by initializer lists
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1347
+Partial index out of range
+
+Expected Exception Type:
+[std::logic_error]
+Target index out of range
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1369
 Only one element in initializer lists
 
 Expected Exception Type:
@@ -4390,7 +4390,7 @@ Overall initializer list of wrong size
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1368
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1370
 Only two elements in initializer lists
 
 Expected Exception Type:
@@ -4399,7 +4399,7 @@ Overall initializer list of wrong size
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1369
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1371
 Too many elements in initializer lists
 
 Expected Exception Type:
@@ -4408,21 +4408,12 @@ initializer_list too big for array
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1234
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1236
 Partial index out of range
 
 Expected Exception Type:
 [std::logic_error]
 Target index out of range
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1271
-Mismatch between node and edge init
-
-Expected Exception Type:
-[std::logic_error]
-initializer_list too big for array
 
 	=======================================
 
@@ -4431,21 +4422,21 @@ Mismatch between node and edge init
 
 Expected Exception Type:
 [std::logic_error]
+initializer_list too big for array
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1275
+Mismatch between node and edge init
+
+Expected Exception Type:
+[std::logic_error]
 Initializer list of wrong size
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1311
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1313
 Too few elements in initializer lists
-
-Expected Exception Type:
-[std::logic_error]
-Inconsistent number of elements supplied by initializer lists
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1312
-Too many elements in initializer lists
 
 Expected Exception Type:
 [std::logic_error]
@@ -4454,24 +4445,6 @@ Inconsistent number of elements supplied by initializer lists
 	=======================================
 
 Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1314
-Partial index out of range
-
-Expected Exception Type:
-[std::logic_error]
-Target index out of range
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1341
-Too few elements in initializer lists
-
-Expected Exception Type:
-[std::logic_error]
-Overall initializer list of wrong size
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1342
 Too many elements in initializer lists
 
 Expected Exception Type:
@@ -4480,7 +4453,7 @@ Inconsistent number of elements supplied by initializer lists
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1345
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1316
 Partial index out of range
 
 Expected Exception Type:
@@ -4489,7 +4462,34 @@ Target index out of range
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1367
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1343
+Too few elements in initializer lists
+
+Expected Exception Type:
+[std::logic_error]
+Overall initializer list of wrong size
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1344
+Too many elements in initializer lists
+
+Expected Exception Type:
+[std::logic_error]
+Inconsistent number of elements supplied by initializer lists
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1347
+Partial index out of range
+
+Expected Exception Type:
+[std::logic_error]
+Target index out of range
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1369
 Only one element in initializer lists
 
 Expected Exception Type:
@@ -4498,7 +4498,7 @@ Overall initializer list of wrong size
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1368
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1370
 Only two elements in initializer lists
 
 Expected Exception Type:
@@ -4507,7 +4507,7 @@ Overall initializer list of wrong size
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1369
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1371
 Too many elements in initializer lists
 
 Expected Exception Type:
@@ -4516,7 +4516,7 @@ initializer_list too big for array
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1542
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1544
 Partial index out of range
 
 Expected Exception Type:
@@ -4525,7 +4525,7 @@ Host index out of range
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1543
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1545
 Mismatched complementary indices
 
 Expected Exception Type:
@@ -4534,7 +4534,7 @@ Reciprocated complementary index does not match
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1634
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1636
 Mismatched full edges
 
 Expected Exception Type:
@@ -4543,7 +4543,7 @@ Overall initializer list of wrong size
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1661
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1663
 Mismatched complementary indices
 
 Expected Exception Type:
@@ -4552,7 +4552,7 @@ Reciprocated complementary index does not match
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1542
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1544
 Partial index out of range
 
 Expected Exception Type:
@@ -4561,7 +4561,7 @@ Host index out of range
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1543
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1545
 Mismatched complementary indices
 
 Expected Exception Type:
@@ -4570,7 +4570,7 @@ Reciprocated complementary index does not match
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1634
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1636
 Mismatched full edges
 
 Expected Exception Type:
@@ -4579,7 +4579,7 @@ Overall initializer list of wrong size
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1661
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1663
 Mismatched complementary indices
 
 Expected Exception Type:
@@ -4588,7 +4588,7 @@ Reciprocated complementary index does not match
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1542
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1544
 Partial index out of range
 
 Expected Exception Type:
@@ -4597,7 +4597,7 @@ Host index out of range
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1543
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1545
 Mismatched complementary indices
 
 Expected Exception Type:
@@ -4606,7 +4606,7 @@ Reciprocated complementary index does not match
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1634
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1636
 Mismatched full edges
 
 Expected Exception Type:
@@ -4615,7 +4615,7 @@ Overall initializer list of wrong size
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1661
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1663
 Mismatched complementary indices
 
 Expected Exception Type:
@@ -4624,7 +4624,7 @@ Reciprocated complementary index does not match
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1542
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1544
 Partial index out of range
 
 Expected Exception Type:
@@ -4633,7 +4633,7 @@ Host index out of range
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1543
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1545
 Mismatched complementary indices
 
 Expected Exception Type:
@@ -4642,7 +4642,7 @@ Reciprocated complementary index does not match
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1634
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1636
 Mismatched full edges
 
 Expected Exception Type:
@@ -4651,7 +4651,7 @@ Overall initializer list of wrong size
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1661
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1663
 Mismatched complementary indices
 
 Expected Exception Type:
@@ -4660,7 +4660,7 @@ Reciprocated complementary index does not match
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1542
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1544
 Partial index out of range
 
 Expected Exception Type:
@@ -4669,21 +4669,12 @@ Host index out of range
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1543
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1545
 Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
 Reciprocated complementary index does not match
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1588
-Mismatch between node and edge init
-
-Expected Exception Type:
-[std::logic_error]
-initializer_list too big for array
 
 	=======================================
 
@@ -4692,11 +4683,20 @@ Mismatch between node and edge init
 
 Expected Exception Type:
 [std::logic_error]
+initializer_list too big for array
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1592
+Mismatch between node and edge init
+
+Expected Exception Type:
+[std::logic_error]
 Initializer list of wrong size
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1634
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1636
 Mismatched full edges
 
 Expected Exception Type:
@@ -4705,7 +4705,7 @@ Overall initializer list of wrong size
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1661
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1663
 Mismatched complementary indices
 
 Expected Exception Type:
@@ -4714,7 +4714,7 @@ Reciprocated complementary index does not match
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1542
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1544
 Partial index out of range
 
 Expected Exception Type:
@@ -4723,21 +4723,12 @@ Host index out of range
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1543
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1545
 Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
 Reciprocated complementary index does not match
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1588
-Mismatch between node and edge init
-
-Expected Exception Type:
-[std::logic_error]
-initializer_list too big for array
 
 	=======================================
 
@@ -4746,11 +4737,20 @@ Mismatch between node and edge init
 
 Expected Exception Type:
 [std::logic_error]
+initializer_list too big for array
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1592
+Mismatch between node and edge init
+
+Expected Exception Type:
+[std::logic_error]
 Initializer list of wrong size
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1634
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1636
 Mismatched full edges
 
 Expected Exception Type:
@@ -4759,7 +4759,7 @@ Overall initializer list of wrong size
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1661
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1663
 Mismatched complementary indices
 
 Expected Exception Type:
@@ -4768,7 +4768,7 @@ Reciprocated complementary index does not match
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1542
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1544
 Partial index out of range
 
 Expected Exception Type:
@@ -4777,21 +4777,12 @@ Host index out of range
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1543
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1545
 Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
 Reciprocated complementary index does not match
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1588
-Mismatch between node and edge init
-
-Expected Exception Type:
-[std::logic_error]
-initializer_list too big for array
 
 	=======================================
 
@@ -4800,11 +4791,20 @@ Mismatch between node and edge init
 
 Expected Exception Type:
 [std::logic_error]
+initializer_list too big for array
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1592
+Mismatch between node and edge init
+
+Expected Exception Type:
+[std::logic_error]
 Initializer list of wrong size
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1634
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1636
 Mismatched full edges
 
 Expected Exception Type:
@@ -4813,7 +4813,7 @@ Overall initializer list of wrong size
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1661
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1663
 Mismatched complementary indices
 
 Expected Exception Type:
@@ -4822,7 +4822,7 @@ Reciprocated complementary index does not match
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1542
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1544
 Partial index out of range
 
 Expected Exception Type:
@@ -4831,7 +4831,7 @@ Host index out of range
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1543
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1545
 Mismatched complementary indices
 
 Expected Exception Type:
@@ -4840,7 +4840,7 @@ Reciprocated complementary index does not match
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1588
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1590
 Mismatch between node and edge init
 
 Expected Exception Type:
@@ -4849,7 +4849,7 @@ initializer_list too big for array
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1590
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1592
 Mismatch between node and edge init
 
 Expected Exception Type:
@@ -4858,7 +4858,7 @@ Initializer list of wrong size
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1634
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1636
 Mismatched full edges
 
 Expected Exception Type:
@@ -4867,7 +4867,7 @@ Overall initializer list of wrong size
 
 	=======================================
 
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1661
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1663
 Mismatched complementary indices
 
 Expected Exception Type:

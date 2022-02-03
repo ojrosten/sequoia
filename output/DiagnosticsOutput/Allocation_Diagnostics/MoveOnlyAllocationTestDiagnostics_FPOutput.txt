@@ -1,4 +1,4 @@
-	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 51
+	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 53
 	Incorrect para-move allocs
 
 	--Move-only Semantics--
@@ -18,7 +18,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 54
+	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 56
 	Incorrect mutation allocs
 
 	--Move-only Semantics--
@@ -38,7 +38,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 59
+	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 61
 	Incorrect assignment allocs
 
 	--Move-only Semantics--
@@ -58,7 +58,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 63
+	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 65
 	Move-only beast
 
 	--Move-only Semantics--
@@ -90,7 +90,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 69
+	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 71
 	check_semantics return value (x)
 
 	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
@@ -100,7 +100,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 70
+	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 72
 	check_semantics return value (y)
 
 	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
@@ -111,7 +111,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 81
+	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 83
 	Broken move
 
 	--Move-only Semantics--
@@ -131,7 +131,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 93
+	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 95
 	Broken move assignment
 
 	--Move-only Semantics--
@@ -145,7 +145,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 119
+	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 121
 	Inefficient move
 
 	--Move-only Semantics--
@@ -165,7 +165,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 131
+	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 133
 	Inefficient move assignment
 
 	--Move-only Semantics--
@@ -185,7 +185,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 144
+	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 146
 	Invariant violated: x != xClone
 
 	--Move-only Semantics--
@@ -197,7 +197,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 147
+	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 149
 	Invariant violated: y != YClone
 
 	--Move-only Semantics--
@@ -209,7 +209,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 150
+	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 152
 	Invariant violated: x == y
 
 	--Move-only Semantics--
@@ -221,7 +221,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 163
+	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 165
 	Incorrect moved-from state
 
 	--Move-only Semantics--
@@ -241,7 +241,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 166
+	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 168
 	Incorrect moved-from state
 
 	--Move-only Semantics--
@@ -261,7 +261,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 51
+	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 53
 	Incorrect para-move allocs
 
 	--Move-only Semantics--
@@ -281,7 +281,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 54
+	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 56
 	Incorrect mutation allocs
 
 	--Move-only Semantics--
@@ -301,7 +301,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 59
+	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 61
 	Incorrect assignment allocs
 
 	--Move-only Semantics--
@@ -321,7 +321,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 63
+	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 65
 	Move-only beast
 
 	--Move-only Semantics--
@@ -353,7 +353,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 69
+	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 71
 	check_semantics return value (x)
 
 	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
@@ -363,7 +363,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 70
+	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 72
 	check_semantics return value (y)
 
 	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
@@ -374,7 +374,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 81
+	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 83
 	Broken move
 
 	--Move-only Semantics--
@@ -394,7 +394,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 93
+	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 95
 	Broken move assignment
 
 	--Move-only Semantics--
@@ -408,7 +408,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 107
+	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 109
 	Broken swap
 
 	--Move-only Semantics--
@@ -428,7 +428,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 119
+	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 121
 	Inefficient move
 
 	--Move-only Semantics--
@@ -448,7 +448,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 131
+	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 133
 	Inefficient move assignment
 
 	--Move-only Semantics--
@@ -468,7 +468,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 144
+	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 146
 	Invariant violated: x != xClone
 
 	--Move-only Semantics--
@@ -480,7 +480,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 147
+	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 149
 	Invariant violated: y != YClone
 
 	--Move-only Semantics--
@@ -492,7 +492,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 150
+	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 152
 	Invariant violated: x == y
 
 	--Move-only Semantics--
@@ -504,7 +504,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 163
+	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 165
 	Incorrect moved-from state
 
 	--Move-only Semantics--
@@ -524,7 +524,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 166
+	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 168
 	Incorrect moved-from state
 
 	--Move-only Semantics--
@@ -544,7 +544,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 51
+	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 53
 	Incorrect para-move allocs
 
 	--Move-only Semantics--
@@ -564,7 +564,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 54
+	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 56
 	Incorrect mutation allocs
 
 	--Move-only Semantics--
@@ -584,7 +584,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 63
+	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 65
 	Move-only beast
 
 	--Move-only Semantics--
@@ -616,7 +616,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 69
+	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 71
 	check_semantics return value (x)
 
 	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
@@ -626,7 +626,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 70
+	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 72
 	check_semantics return value (y)
 
 	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
@@ -637,7 +637,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 81
+	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 83
 	Broken move
 
 	--Move-only Semantics--
@@ -657,7 +657,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 93
+	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 95
 	Broken move assignment
 
 	--Move-only Semantics--
@@ -671,7 +671,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 119
+	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 121
 	Inefficient move
 
 	--Move-only Semantics--
@@ -691,7 +691,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 131
+	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 133
 	Inefficient move assignment
 
 	--Move-only Semantics--
@@ -711,7 +711,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 144
+	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 146
 	Invariant violated: x != xClone
 
 	--Move-only Semantics--
@@ -723,7 +723,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 147
+	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 149
 	Invariant violated: y != YClone
 
 	--Move-only Semantics--
@@ -735,7 +735,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 150
+	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 152
 	Invariant violated: x == y
 
 	--Move-only Semantics--
@@ -747,7 +747,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 163
+	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 165
 	Incorrect moved-from state
 
 	--Move-only Semantics--
@@ -767,7 +767,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 166
+	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 168
 	Incorrect moved-from state
 
 	--Move-only Semantics--
@@ -787,7 +787,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 51
+	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 53
 	Incorrect para-move allocs
 
 	--Move-only Semantics--
@@ -807,7 +807,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 54
+	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 56
 	Incorrect mutation allocs
 
 	--Move-only Semantics--
@@ -827,7 +827,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 63
+	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 65
 	Move-only beast
 
 	--Move-only Semantics--
@@ -859,7 +859,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 69
+	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 71
 	check_semantics return value (x)
 
 	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
@@ -869,7 +869,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 70
+	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 72
 	check_semantics return value (y)
 
 	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
@@ -880,7 +880,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 81
+	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 83
 	Broken move
 
 	--Move-only Semantics--
@@ -900,7 +900,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 93
+	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 95
 	Broken move assignment
 
 	--Move-only Semantics--
@@ -914,7 +914,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 107
+	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 109
 	Broken swap
 
 	--Move-only Semantics--
@@ -934,7 +934,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 119
+	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 121
 	Inefficient move
 
 	--Move-only Semantics--
@@ -954,7 +954,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 131
+	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 133
 	Inefficient move assignment
 
 	--Move-only Semantics--
@@ -974,7 +974,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 144
+	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 146
 	Invariant violated: x != xClone
 
 	--Move-only Semantics--
@@ -986,7 +986,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 147
+	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 149
 	Invariant violated: y != YClone
 
 	--Move-only Semantics--
@@ -998,7 +998,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 150
+	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 152
 	Invariant violated: x == y
 
 	--Move-only Semantics--
@@ -1010,7 +1010,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 163
+	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 165
 	Incorrect moved-from state
 
 	--Move-only Semantics--
@@ -1030,7 +1030,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 166
+	Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 168
 	Incorrect moved-from state
 
 	--Move-only Semantics--

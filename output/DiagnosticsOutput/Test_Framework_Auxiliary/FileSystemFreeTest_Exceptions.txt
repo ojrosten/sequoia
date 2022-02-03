@@ -1,4 +1,4 @@
-Tests/TestFramework/FileSystemFreeTest.cpp, Line 43
+Tests/TestFramework/FileSystemFreeTest.cpp, Line 45
 
 Expected Exception Type:
 [std::runtime_error]
@@ -6,7 +6,7 @@ output/TestsTemporaryData/TestFramework/FileSystemFreeTest/Foo/Bar/baz.txt is no
 
 	=======================================
 
-Tests/TestFramework/FileSystemFreeTest.cpp, Line 46
+Tests/TestFramework/FileSystemFreeTest.cpp, Line 48
 
 Expected Exception Type:
 [std::runtime_error]
@@ -14,7 +14,7 @@ output/TestsTemporaryData/TestFramework/FileSystemFreeTest/Foo/Stuff is not a di
 
 	=======================================
 
-Tests/TestFramework/FileSystemFreeTest.cpp, Line 63
+Tests/TestFramework/FileSystemFreeTest.cpp, Line 65
 Attempt to rebase from file
 
 Expected Exception Type:

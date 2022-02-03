@@ -1,21 +1,4 @@
 	False Positive Failure:
-	Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 94
-
-	--Move-only Semantics--
-	[sequoia::testing::orderable_move_only_beast<int, std::allocator<int> >]
-
-	=======================================
-
-	False Positive Failure:
-	Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 95
-	Function object syntax
-
-	--Move-only Semantics--
-	[sequoia::testing::orderable_move_only_beast<int, std::allocator<int> >]
-
-	=======================================
-
-	False Positive Failure:
 	Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 96
 
 	--Move-only Semantics--
@@ -24,7 +7,24 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 102
+	Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 97
+	Function object syntax
+
+	--Move-only Semantics--
+	[sequoia::testing::orderable_move_only_beast<int, std::allocator<int> >]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 98
+
+	--Move-only Semantics--
+	[sequoia::testing::orderable_move_only_beast<int, std::allocator<int> >]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 104
 	Incorrect moved-from state
 
 	--Move-only Semantics--
@@ -33,7 +33,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 103
+	Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 105
 	Incorrect moved-from state
 
 	--Move-only Semantics--

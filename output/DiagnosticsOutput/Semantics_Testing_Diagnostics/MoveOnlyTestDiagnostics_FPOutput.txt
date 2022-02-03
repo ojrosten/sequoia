@@ -1,4 +1,4 @@
-	Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 26
+	Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 28
 	Broken equality
 
 	--Move-only Semantics--
@@ -14,7 +14,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 27
+	Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 29
 	Broken inequality
 
 	--Move-only Semantics--
@@ -38,7 +38,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 28
+	Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 30
 	Broken move
 
 	--Move-only Semantics--
@@ -52,7 +52,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 29
+	Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 31
 	Broken swap
 
 	--Move-only Semantics--
@@ -72,7 +72,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 30
+	Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 32
 	Broken move assignment
 
 	--Move-only Semantics--
@@ -86,7 +86,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 31
+	Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 33
 	Broken check invariant
 
 	--Move-only Semantics--
@@ -98,7 +98,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 32
+	Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 34
 	Broken check invariant
 
 	--Move-only Semantics--
@@ -110,7 +110,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 33
+	Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 35
 	Broken check invariant
 
 	--Move-only Semantics--
@@ -122,7 +122,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 35
+	Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 37
 	Incorrect moved-from state
 
 	--Move-only Semantics--
@@ -142,7 +142,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 36
+	Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 38
 	Incorrect moved-from state
 
 	--Move-only Semantics--

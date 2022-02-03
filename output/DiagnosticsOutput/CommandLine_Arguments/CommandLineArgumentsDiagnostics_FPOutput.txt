@@ -1,4 +1,4 @@
-	Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 31
+	Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 33
 	Final argument missing
 
 	Expected Exception Type:
@@ -9,7 +9,7 @@
 
 	=======================================
 
-	Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 40
+	Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 42
 	Unexpected argument
 
 	Expected Exception Type:
@@ -20,7 +20,7 @@
 
 	=======================================
 
-	Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 48
+	Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 50
 	No bound function object
 
 	Expected Exception Type:
@@ -31,7 +31,7 @@
 
 	=======================================
 
-	Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 56
+	Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 58
 	Unexpected argument
 
 	Expected Exception Type:
@@ -42,7 +42,7 @@
 
 	=======================================
 
-	Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 62
+	Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 64
 	Mismatched zeroth argument
 
 	Comparison performed using:
@@ -68,7 +68,7 @@
 
 	=======================================
 
-	Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 68
+	Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 70
 	Early function object not generated
 
 	Comparison performed using:
@@ -104,7 +104,7 @@
 
 	=======================================
 
-	Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 70
+	Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 72
 	Late function object not generated
 
 	Comparison performed using:
@@ -140,7 +140,7 @@
 
 	=======================================
 
-	Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 72
+	Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 74
 	Unexpected early function object
 
 	Comparison performed using:
@@ -200,7 +200,7 @@
 
 	=======================================
 
-	Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 74
+	Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 76
 	Unexpected late function object
 
 	Comparison performed using:
@@ -260,7 +260,7 @@
 
 	=======================================
 
-	Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 76
+	Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 78
 	Mixed-up function objects
 
 	Comparison performed using:
@@ -344,7 +344,7 @@
 
 	=======================================
 
-	Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 82
+	Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 84
 	Help not generated
 
 	Comparison performed using:

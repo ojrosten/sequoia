@@ -1,5 +1,5 @@
 	False Positive Failure:
-	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 93
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 95
 
 	Transition from node 0 to 1
 	Adding 1.1
@@ -8,7 +8,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 93
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 95
 
 	Transition from node 0 to 1
 	Adding 1.1
@@ -17,7 +17,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 93
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 95
 
 	Transition from node 0 to 1
 	Adding 1.1
@@ -27,7 +27,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 93
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 95
 
 	Transition from node 1 to 0
 	Subtracting 1.1
@@ -36,7 +36,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 93
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 95
 
 	Transition from node 1 to 0
 	Subtracting 1.1
@@ -45,7 +45,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 93
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 95
 
 	Transition from node 1 to 0
 	Subtracting 1.1
@@ -55,7 +55,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 93
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 95
 
 	Transition from node 1 to 2
 	Multiplying by 2
@@ -64,7 +64,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 93
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 95
 
 	Transition from node 1 to 2
 	Multiplying by 2
@@ -73,7 +73,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 93
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 95
 
 	Transition from node 1 to 2
 	Multiplying by 2
@@ -83,7 +83,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 93
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 95
 
 	Transition from node 2 to 1
 	Dividing by 2
@@ -92,7 +92,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 93
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 95
 
 	Transition from node 2 to 1
 	Dividing by 2
@@ -101,7 +101,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 93
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 95
 
 	Transition from node 2 to 1
 	Dividing by 2
@@ -111,7 +111,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 104
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 106
 
 	Transition from node 0 to 1
 	Adding 1.1
@@ -120,7 +120,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 104
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 106
 
 	Transition from node 0 to 1
 	Adding 1.1
@@ -129,7 +129,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 104
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 106
 
 	Transition from node 1 to 0
 	Subtracting 1.1
@@ -138,7 +138,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 104
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 106
 
 	Transition from node 1 to 0
 	Subtracting 1.1
@@ -147,7 +147,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 104
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 106
 
 	Transition from node 1 to 2
 	Multiplying by 2
@@ -156,7 +156,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 104
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 106
 
 	Transition from node 1 to 2
 	Multiplying by 2
@@ -165,7 +165,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 104
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 106
 
 	Transition from node 2 to 1
 	Dividing by 2
@@ -174,7 +174,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 104
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 106
 
 	Transition from node 2 to 1
 	Dividing by 2

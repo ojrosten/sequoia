@@ -1,4 +1,4 @@
-	Tests/Core/Utilities/UniformWrapperTestingDiagnostics.cpp, Line 32
+	Tests/Core/Utilities/UniformWrapperTestingDiagnostics.cpp, Line 34
 
 	[sequoia::utilities::uniform_wrapper<int>]
 	operator== returned false
@@ -10,7 +10,7 @@
 
 	=======================================
 
-	Tests/Core/Utilities/UniformWrapperTestingDiagnostics.cpp, Line 40
+	Tests/Core/Utilities/UniformWrapperTestingDiagnostics.cpp, Line 42
 
 	[sequoia::utilities::uniform_wrapper<std::vector<int, std::allocator<int> > >]
 	operator== returned false
@@ -26,7 +26,7 @@
 
 	=======================================
 
-	Tests/Core/Utilities/UniformWrapperTestingDiagnostics.cpp, Line 43
+	Tests/Core/Utilities/UniformWrapperTestingDiagnostics.cpp, Line 45
 
 	[sequoia::utilities::uniform_wrapper<std::vector<int, std::allocator<int> > >]
 	operator== returned false
@@ -42,7 +42,7 @@
 
 	=======================================
 
-	Tests/Core/Utilities/UniformWrapperTestingDiagnostics.cpp, Line 46
+	Tests/Core/Utilities/UniformWrapperTestingDiagnostics.cpp, Line 48
 
 	[sequoia::utilities::uniform_wrapper<std::vector<int, std::allocator<int> > >]
 	operator== returned false
@@ -58,7 +58,7 @@
 
 	=======================================
 
-	Tests/Core/Utilities/UniformWrapperTestingDiagnostics.cpp, Line 54
+	Tests/Core/Utilities/UniformWrapperTestingDiagnostics.cpp, Line 56
 
 	[sequoia::utilities::uniform_wrapper<sequoia::testing::data>]
 	operator== returned false

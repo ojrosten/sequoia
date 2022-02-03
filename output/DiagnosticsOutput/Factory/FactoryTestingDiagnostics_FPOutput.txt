@@ -1,4 +1,4 @@
-	Tests/Runtime/FactoryTestingDiagnostics.cpp, Line 25
+	Tests/Runtime/FactoryTestingDiagnostics.cpp, Line 27
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::runtime::factory<int> >]
@@ -17,7 +17,7 @@
 
 	=======================================
 
-	Tests/Runtime/FactoryTestingDiagnostics.cpp, Line 28
+	Tests/Runtime/FactoryTestingDiagnostics.cpp, Line 30
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::runtime::factory<int> >]
@@ -36,7 +36,7 @@
 
 	=======================================
 
-	Tests/Runtime/FactoryTestingDiagnostics.cpp, Line 34
+	Tests/Runtime/FactoryTestingDiagnostics.cpp, Line 36
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::runtime::factory<int, double> >]

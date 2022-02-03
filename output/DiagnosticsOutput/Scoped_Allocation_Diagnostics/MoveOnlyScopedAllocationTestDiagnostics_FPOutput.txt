@@ -1,4 +1,4 @@
-	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 120
+	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 122
 	Incorrect assigment outer allocs
 
 	--Move-only Semantics--
@@ -18,7 +18,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 133
+	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 135
 	Incorrect mutation outer allocs
 
 	--Move-only Semantics--
@@ -38,7 +38,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 145
+	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 147
 	Incorrect para move outer allocs
 
 	--Move-only Semantics--
@@ -58,7 +58,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 159
+	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 161
 	Incorrect assigment inner allocs
 
 	--Move-only Semantics--
@@ -78,7 +78,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 172
+	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 174
 	Incorrect mutation inner allocs
 
 	--Move-only Semantics--
@@ -98,7 +98,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 183
+	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 185
 	Incorrect para move inner allocs
 
 	--Move-only Semantics--
@@ -118,7 +118,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 120
+	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 122
 	Incorrect assigment outer allocs
 
 	--Move-only Semantics--
@@ -138,7 +138,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 133
+	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 135
 	Incorrect mutation outer allocs
 
 	--Move-only Semantics--
@@ -158,7 +158,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 145
+	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 147
 	Incorrect para move outer allocs
 
 	--Move-only Semantics--
@@ -178,7 +178,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 159
+	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 161
 	Incorrect assigment inner allocs
 
 	--Move-only Semantics--
@@ -198,7 +198,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 172
+	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 174
 	Incorrect mutation inner allocs
 
 	--Move-only Semantics--
@@ -218,7 +218,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 183
+	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 185
 	Incorrect para move inner allocs
 
 	--Move-only Semantics--
@@ -238,7 +238,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 133
+	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 135
 	Incorrect mutation outer allocs
 
 	--Move-only Semantics--
@@ -258,7 +258,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 145
+	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 147
 	Incorrect para move outer allocs
 
 	--Move-only Semantics--
@@ -278,7 +278,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 172
+	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 174
 	Incorrect mutation inner allocs
 
 	--Move-only Semantics--
@@ -298,7 +298,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 183
+	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 185
 	Incorrect para move inner allocs
 
 	--Move-only Semantics--
@@ -318,7 +318,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 133
+	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 135
 	Incorrect mutation outer allocs
 
 	--Move-only Semantics--
@@ -338,7 +338,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 145
+	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 147
 	Incorrect para move outer allocs
 
 	--Move-only Semantics--
@@ -358,7 +358,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 172
+	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 174
 	Incorrect mutation inner allocs
 
 	--Move-only Semantics--
@@ -378,7 +378,7 @@
 
 	=======================================
 
-	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 183
+	Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 185
 	Incorrect para move inner allocs
 
 	--Move-only Semantics--

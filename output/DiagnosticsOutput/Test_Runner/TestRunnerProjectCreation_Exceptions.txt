@@ -1,4 +1,4 @@
-Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 32
+Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 34
 Project name with space
 
 Expected Exception Type:
@@ -7,7 +7,7 @@ Please ensure the project name 'Generated Project' consists of just alpha-numeri
 
 	=======================================
 
-Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 43
+Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 45
 Project name with $
 
 Expected Exception Type:
@@ -16,7 +16,7 @@ Please ensure the project name 'Generated$Project' consists of just alpha-numeri
 
 	=======================================
 
-Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 54
+Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 56
 Project path that is not absolute
 
 Expected Exception Type:
@@ -25,7 +25,7 @@ Project path 'Generated_Project' should be absolute
 
 	=======================================
 
-Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 65
+Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 67
 Empty project path
 
 Expected Exception Type:
@@ -34,7 +34,7 @@ Project path should not be empty
 
 	=======================================
 
-Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 76
+Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 78
 Project name clash
 
 Expected Exception Type:
@@ -43,7 +43,7 @@ output/TestsTemporaryData/TestFramework/TestRunnerProjectCreation/WorkingCopy' i
 
 	=======================================
 
-Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 94
+Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 96
 Illegal indent
 
 Expected Exception Type:
@@ -52,7 +52,7 @@ Code indent must comprise only spaces or tabs
 
 	=======================================
 
-Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 105
+Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 107
 Illegal init indent
 
 Expected Exception Type:

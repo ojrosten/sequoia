@@ -1,12 +1,5 @@
 	False Positive Failure:
-	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 82
-
-	[double]
-
-	=======================================
-
-	False Positive Failure:
-	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 83
+	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 84
 
 	[double]
 
@@ -20,7 +13,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 86
+	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 87
 
 	[double]
 
@@ -28,23 +21,14 @@
 
 	False Positive Failure:
 	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 88
-	<
 
-	[int]
-
-	=======================================
-
-	False Positive Failure:
-	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 89
-	<=
-
-	[int]
+	[double]
 
 	=======================================
 
 	False Positive Failure:
 	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 90
-	>
+	<
 
 	[int]
 
@@ -52,6 +36,22 @@
 
 	False Positive Failure:
 	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 91
+	<=
+
+	[int]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 92
+	>
+
+	[int]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 93
 	>=
 
 	[int]
@@ -59,25 +59,25 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 98
+	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 100
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 103
+	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 105
 	<
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 109
+	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 111
 
 	[std::vector<double, std::allocator<double> >]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 112
+	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 114
 
 	[std::vector<std::vector<double, std::allocator<double> >, std::allocator<std::vector<double, std::allocator<double> > > >]
 

@@ -1,4 +1,4 @@
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -7,7 +7,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -16,7 +16,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -25,7 +25,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -34,7 +34,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -43,7 +43,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -52,7 +52,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -61,7 +61,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -70,7 +70,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -79,7 +79,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -88,7 +88,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -97,7 +97,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -106,7 +106,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -115,7 +115,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -124,7 +124,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -133,7 +133,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -142,7 +142,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -151,7 +151,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -160,7 +160,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -169,7 +169,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -178,7 +178,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -187,7 +187,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -196,7 +196,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -205,7 +205,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -214,7 +214,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -223,7 +223,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -232,7 +232,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -241,7 +241,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -250,7 +250,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -259,7 +259,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -268,7 +268,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -277,7 +277,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -286,7 +286,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -295,7 +295,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -304,7 +304,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -313,7 +313,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -322,7 +322,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -331,7 +331,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -340,7 +340,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -349,7 +349,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -358,7 +358,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -367,7 +367,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -376,7 +376,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -385,7 +385,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -394,7 +394,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -403,7 +403,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -412,7 +412,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -421,7 +421,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -430,7 +430,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -439,7 +439,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -448,7 +448,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -457,7 +457,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -466,7 +466,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -475,7 +475,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -484,7 +484,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -493,7 +493,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -502,7 +502,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -511,7 +511,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -520,7 +520,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -529,7 +529,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -538,7 +538,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -547,7 +547,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -556,7 +556,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -565,7 +565,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -574,7 +574,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -583,7 +583,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -592,7 +592,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -601,7 +601,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -610,7 +610,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -619,7 +619,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -628,7 +628,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -637,7 +637,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -646,7 +646,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -655,7 +655,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -664,7 +664,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -673,7 +673,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -682,7 +682,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -691,7 +691,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -700,7 +700,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -709,7 +709,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -718,7 +718,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -727,7 +727,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -736,7 +736,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -745,7 +745,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -754,7 +754,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -763,7 +763,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -772,7 +772,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -781,7 +781,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -790,7 +790,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -799,7 +799,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -808,7 +808,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -817,7 +817,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -826,7 +826,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -835,7 +835,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -844,7 +844,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -853,7 +853,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -862,7 +862,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -871,7 +871,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -880,7 +880,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -889,7 +889,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -898,7 +898,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -907,7 +907,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -916,7 +916,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -925,7 +925,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -934,7 +934,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -943,7 +943,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -952,7 +952,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -961,7 +961,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -970,7 +970,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -979,7 +979,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -988,7 +988,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -997,7 +997,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -1006,7 +1006,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -1015,7 +1015,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -1024,7 +1024,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -1033,7 +1033,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -1042,7 +1042,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -1051,7 +1051,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -1060,7 +1060,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -1069,7 +1069,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -1078,7 +1078,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -1087,7 +1087,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -1096,7 +1096,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -1105,7 +1105,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -1114,7 +1114,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -1123,7 +1123,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -1132,7 +1132,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -1141,7 +1141,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -1150,7 +1150,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -1159,7 +1159,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -1168,7 +1168,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -1177,7 +1177,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -1186,7 +1186,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -1195,7 +1195,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -1204,7 +1204,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -1213,7 +1213,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -1222,7 +1222,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -1231,7 +1231,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -1240,7 +1240,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -1249,7 +1249,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -1258,7 +1258,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -1267,7 +1267,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -1276,7 +1276,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -1285,7 +1285,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -1294,7 +1294,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -1303,7 +1303,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -1312,7 +1312,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -1321,7 +1321,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -1330,7 +1330,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -1339,7 +1339,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -1348,7 +1348,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -1357,7 +1357,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -1366,7 +1366,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -1375,7 +1375,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -1384,7 +1384,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -1393,7 +1393,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -1402,7 +1402,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -1411,7 +1411,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -1420,7 +1420,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -1429,7 +1429,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -1438,7 +1438,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -1447,7 +1447,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -1456,7 +1456,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -1465,7 +1465,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -1474,7 +1474,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -1483,7 +1483,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -1492,7 +1492,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -1501,7 +1501,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -1510,7 +1510,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -1519,7 +1519,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -1528,7 +1528,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -1537,7 +1537,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -1546,7 +1546,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -1555,7 +1555,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -1564,7 +1564,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -1573,7 +1573,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -1582,7 +1582,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -1591,7 +1591,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -1600,7 +1600,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -1609,7 +1609,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -1618,7 +1618,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -1627,7 +1627,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -1636,7 +1636,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -1645,7 +1645,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -1654,7 +1654,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -1663,7 +1663,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -1672,7 +1672,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -1681,7 +1681,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -1690,7 +1690,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -1699,7 +1699,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -1708,7 +1708,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -1717,7 +1717,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -1726,7 +1726,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -1735,7 +1735,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -1744,7 +1744,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -1753,7 +1753,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -1762,7 +1762,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -1771,7 +1771,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -1780,7 +1780,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -1789,7 +1789,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -1798,7 +1798,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -1807,7 +1807,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -1816,7 +1816,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -1825,7 +1825,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -1834,7 +1834,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -1843,7 +1843,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -1852,7 +1852,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -1861,7 +1861,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -1870,7 +1870,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -1879,7 +1879,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -1888,7 +1888,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -1897,7 +1897,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -1906,7 +1906,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -1915,7 +1915,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -1924,7 +1924,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -1933,7 +1933,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -1942,7 +1942,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -1951,7 +1951,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -1960,7 +1960,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -1969,7 +1969,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -1978,7 +1978,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -1987,7 +1987,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -1996,7 +1996,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -2005,7 +2005,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -2014,7 +2014,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -2023,7 +2023,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -2032,7 +2032,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -2041,7 +2041,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -2050,7 +2050,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -2059,7 +2059,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -2068,7 +2068,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -2077,7 +2077,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -2086,7 +2086,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -2095,7 +2095,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -2104,7 +2104,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -2113,7 +2113,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -2122,7 +2122,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -2131,7 +2131,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -2140,7 +2140,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -2149,7 +2149,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -2158,7 +2158,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -2167,7 +2167,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -2176,7 +2176,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -2185,7 +2185,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -2194,7 +2194,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -2203,7 +2203,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -2212,7 +2212,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -2221,7 +2221,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -2230,7 +2230,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -2239,7 +2239,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -2248,7 +2248,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -2257,7 +2257,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -2266,7 +2266,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -2275,7 +2275,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -2284,7 +2284,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -2293,7 +2293,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -2302,7 +2302,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -2311,7 +2311,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -2320,7 +2320,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -2329,7 +2329,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -2338,7 +2338,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -2347,7 +2347,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -2356,7 +2356,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -2365,7 +2365,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -2374,7 +2374,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -2383,7 +2383,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -2392,7 +2392,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -2401,7 +2401,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -2410,7 +2410,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -2419,7 +2419,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -2428,7 +2428,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -2437,7 +2437,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -2446,7 +2446,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -2455,7 +2455,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -2464,7 +2464,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -2473,7 +2473,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -2482,7 +2482,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -2491,7 +2491,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -2500,7 +2500,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -2509,7 +2509,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -2518,7 +2518,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -2527,7 +2527,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -2536,7 +2536,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -2545,7 +2545,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -2554,7 +2554,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -2563,7 +2563,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -2572,7 +2572,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -2581,7 +2581,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -2590,7 +2590,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -2599,7 +2599,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -2608,7 +2608,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -2617,7 +2617,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -2626,7 +2626,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -2635,7 +2635,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -2644,7 +2644,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -2653,7 +2653,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -2662,7 +2662,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -2671,7 +2671,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -2680,7 +2680,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -2689,7 +2689,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -2698,7 +2698,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -2707,7 +2707,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -2716,7 +2716,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -2725,7 +2725,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -2734,7 +2734,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -2743,7 +2743,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -2752,7 +2752,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -2761,7 +2761,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -2770,7 +2770,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -2779,7 +2779,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -2788,7 +2788,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -2797,7 +2797,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -2806,7 +2806,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -2815,7 +2815,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -2824,7 +2824,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -2833,7 +2833,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -2842,7 +2842,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -2851,7 +2851,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -2860,7 +2860,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -2869,7 +2869,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -2878,7 +2878,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -2887,7 +2887,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -2896,7 +2896,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -2905,7 +2905,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -2914,7 +2914,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -2923,7 +2923,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -2932,7 +2932,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -2941,7 +2941,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -2950,7 +2950,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -2959,7 +2959,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -2968,7 +2968,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -2977,7 +2977,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -2986,7 +2986,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -2995,7 +2995,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -3004,7 +3004,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -3013,7 +3013,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -3022,7 +3022,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -3031,7 +3031,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -3040,7 +3040,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -3049,7 +3049,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -3058,7 +3058,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -3067,7 +3067,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -3076,7 +3076,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -3085,7 +3085,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -3094,7 +3094,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -3103,7 +3103,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -3112,7 +3112,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -3121,7 +3121,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -3130,7 +3130,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -3139,7 +3139,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -3148,7 +3148,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -3157,7 +3157,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -3166,7 +3166,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -3175,7 +3175,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -3184,7 +3184,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -3193,7 +3193,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -3202,7 +3202,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -3211,7 +3211,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -3220,7 +3220,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -3229,7 +3229,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -3238,7 +3238,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -3247,7 +3247,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -3256,7 +3256,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -3265,7 +3265,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -3274,7 +3274,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -3283,7 +3283,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -3292,7 +3292,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -3301,7 +3301,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -3310,7 +3310,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -3319,7 +3319,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -3328,7 +3328,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -3337,7 +3337,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -3346,7 +3346,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -3355,7 +3355,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -3364,7 +3364,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -3373,7 +3373,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -3382,7 +3382,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -3391,7 +3391,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -3400,7 +3400,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -3409,7 +3409,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -3418,7 +3418,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -3427,7 +3427,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -3436,7 +3436,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -3445,7 +3445,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -3454,7 +3454,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -3463,7 +3463,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -3472,7 +3472,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -3481,7 +3481,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -3490,7 +3490,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -3499,7 +3499,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -3508,7 +3508,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -3517,7 +3517,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -3526,7 +3526,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -3535,7 +3535,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -3544,7 +3544,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -3553,7 +3553,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -3562,7 +3562,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -3571,7 +3571,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -3580,7 +3580,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -3589,7 +3589,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -3598,7 +3598,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -3607,7 +3607,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -3616,7 +3616,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -3625,7 +3625,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -3634,7 +3634,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -3643,7 +3643,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -3652,7 +3652,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -3661,7 +3661,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -3670,7 +3670,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -3679,7 +3679,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -3688,7 +3688,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -3697,7 +3697,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -3706,7 +3706,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -3715,7 +3715,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -3724,7 +3724,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -3733,7 +3733,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -3742,7 +3742,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -3751,7 +3751,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -3760,7 +3760,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -3769,7 +3769,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -3778,7 +3778,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -3787,7 +3787,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -3796,7 +3796,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -3805,7 +3805,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -3814,7 +3814,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -3823,7 +3823,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -3832,7 +3832,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -3841,7 +3841,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -3850,7 +3850,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -3859,7 +3859,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -3868,7 +3868,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -3877,7 +3877,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -3886,7 +3886,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -3895,7 +3895,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -3904,7 +3904,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -3913,7 +3913,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -3922,7 +3922,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -3931,7 +3931,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -3940,7 +3940,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -3949,7 +3949,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -3958,7 +3958,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -3967,7 +3967,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -3976,7 +3976,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -3985,7 +3985,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -3994,7 +3994,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -4003,7 +4003,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -4012,7 +4012,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -4021,7 +4021,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -4030,7 +4030,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -4039,7 +4039,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -4048,7 +4048,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -4057,7 +4057,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -4066,7 +4066,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -4075,7 +4075,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -4084,7 +4084,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -4093,7 +4093,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -4102,7 +4102,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -4111,7 +4111,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -4120,7 +4120,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -4129,7 +4129,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -4138,7 +4138,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -4147,7 +4147,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -4156,7 +4156,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -4165,7 +4165,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -4174,7 +4174,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -4183,7 +4183,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -4192,7 +4192,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -4201,7 +4201,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -4210,7 +4210,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -4219,7 +4219,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -4228,7 +4228,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -4237,7 +4237,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -4246,7 +4246,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -4255,7 +4255,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -4264,7 +4264,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -4273,7 +4273,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -4282,7 +4282,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -4291,7 +4291,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -4300,7 +4300,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -4309,7 +4309,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -4318,7 +4318,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -4327,7 +4327,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -4336,7 +4336,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -4345,7 +4345,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -4354,7 +4354,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -4363,7 +4363,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -4372,7 +4372,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -4381,7 +4381,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -4390,7 +4390,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -4399,7 +4399,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -4408,7 +4408,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -4417,7 +4417,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -4426,7 +4426,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -4435,7 +4435,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -4444,7 +4444,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -4453,7 +4453,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -4462,7 +4462,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -4471,7 +4471,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -4480,7 +4480,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -4489,7 +4489,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -4498,7 +4498,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -4507,7 +4507,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -4516,7 +4516,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -4525,7 +4525,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -4534,7 +4534,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -4543,7 +4543,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -4552,7 +4552,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -4561,7 +4561,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -4570,7 +4570,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -4579,7 +4579,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -4588,7 +4588,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -4597,7 +4597,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -4606,7 +4606,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -4615,7 +4615,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -4624,7 +4624,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -4633,7 +4633,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -4642,7 +4642,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -4651,7 +4651,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -4660,7 +4660,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -4669,7 +4669,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -4678,7 +4678,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -4687,7 +4687,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -4696,7 +4696,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -4705,7 +4705,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -4714,7 +4714,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -4723,7 +4723,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -4732,7 +4732,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -4741,7 +4741,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -4750,7 +4750,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -4759,7 +4759,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -4768,7 +4768,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -4777,7 +4777,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -4786,7 +4786,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -4795,7 +4795,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -4804,7 +4804,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -4813,7 +4813,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -4822,7 +4822,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -4831,7 +4831,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -4840,7 +4840,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -4849,7 +4849,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -4858,7 +4858,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -4867,7 +4867,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -4876,7 +4876,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -4885,7 +4885,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -4894,7 +4894,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -4903,7 +4903,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -4912,7 +4912,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -4921,7 +4921,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -4930,7 +4930,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -4939,7 +4939,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -4948,7 +4948,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -4957,7 +4957,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -4966,7 +4966,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -4975,7 +4975,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -4984,7 +4984,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -4993,7 +4993,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -5002,7 +5002,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -5011,7 +5011,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -5020,7 +5020,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -5029,7 +5029,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -5038,7 +5038,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -5047,7 +5047,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -5056,7 +5056,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -5065,7 +5065,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -5074,7 +5074,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -5083,7 +5083,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -5092,7 +5092,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -5101,7 +5101,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -5110,7 +5110,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -5119,7 +5119,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -5128,7 +5128,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -5137,7 +5137,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -5146,7 +5146,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -5155,7 +5155,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -5164,7 +5164,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -5173,7 +5173,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -5182,7 +5182,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -5191,7 +5191,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -5200,7 +5200,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -5209,7 +5209,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -5218,7 +5218,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -5227,7 +5227,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -5236,7 +5236,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -5245,7 +5245,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -5254,7 +5254,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -5263,7 +5263,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -5272,7 +5272,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -5281,7 +5281,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -5290,7 +5290,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -5299,7 +5299,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -5308,7 +5308,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -5317,7 +5317,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -5326,7 +5326,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -5335,7 +5335,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -5344,7 +5344,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:
@@ -5353,7 +5353,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 73
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
 No nodes to erase
 
 Expected Exception Type:
@@ -5362,7 +5362,7 @@ Cannot erase node: index out of range
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 74
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
 No edges to erase
 
 Expected Exception Type:
@@ -5371,7 +5371,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 75
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 77
 No nodes to set weight
 
 Expected Exception Type:
@@ -5380,7 +5380,7 @@ node_storage::node_weight - index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 76
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 78
 No edges to set weight
 
 Expected Exception Type:
@@ -5389,7 +5389,7 @@ Node index out of range!
 
 	=======================================
 
-Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 87
+Tests/Maths/Graph/DynamicGraphWeightedTest.cpp, Line 89
 Throw if node out of range
 
 Expected Exception Type:

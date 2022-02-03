@@ -1,4 +1,4 @@
-Tests/Core/DataStructures/StaticQueueTest.cpp, Line 37
+Tests/Core/DataStructures/StaticQueueTest.cpp, Line 39
 Can't push to null queue
 
 Expected Exception Type:
@@ -7,7 +7,7 @@ Attempting to exceed maximum queue depth
 
 	=======================================
 
-Tests/Core/DataStructures/StaticQueueTest.cpp, Line 38
+Tests/Core/DataStructures/StaticQueueTest.cpp, Line 40
 Can't construct non-null null queue
 
 Expected Exception Type:
@@ -16,7 +16,7 @@ initializer_list too big for array
 
 	=======================================
 
-Tests/Core/DataStructures/StaticQueueTest.cpp, Line 51
+Tests/Core/DataStructures/StaticQueueTest.cpp, Line 53
 Trying to push two elements to queue of depth 1
 
 Expected Exception Type:
@@ -25,7 +25,7 @@ Attempting to exceed maximum queue depth
 
 	=======================================
 
-Tests/Core/DataStructures/StaticQueueTest.cpp, Line 52
+Tests/Core/DataStructures/StaticQueueTest.cpp, Line 54
 Can't construct queue of depth 1 with 2 elements
 
 Expected Exception Type:
@@ -34,7 +34,7 @@ initializer_list too big for array
 
 	=======================================
 
-Tests/Core/DataStructures/StaticQueueTest.cpp, Line 84
+Tests/Core/DataStructures/StaticQueueTest.cpp, Line 86
 Can't construct queue of depth 2 with 3 elements
 
 Expected Exception Type:
@@ -43,7 +43,7 @@ initializer_list too big for array
 
 	=======================================
 
-Tests/Core/DataStructures/StaticQueueTest.cpp, Line 93
+Tests/Core/DataStructures/StaticQueueTest.cpp, Line 95
 Trying to push 3 elements to a queue of depth 2
 
 Expected Exception Type:
@@ -52,7 +52,7 @@ Attempting to exceed maximum queue depth
 
 	=======================================
 
-Tests/Core/DataStructures/StaticQueueTest.cpp, Line 101
+Tests/Core/DataStructures/StaticQueueTest.cpp, Line 103
 Trying to push 3 elements to a queue of depth 2
 
 Expected Exception Type:

@@ -1,4 +1,4 @@
-Tests/TestFramework/MaterialsUpdaterFreeTest.cpp, Line 23
+Tests/TestFramework/MaterialsUpdaterFreeTest.cpp, Line 25
 Empty 'to' path
 
 Expected Exception Type:
@@ -7,7 +7,7 @@ File path is empty
 
 	=======================================
 
-Tests/TestFramework/MaterialsUpdaterFreeTest.cpp, Line 24
+Tests/TestFramework/MaterialsUpdaterFreeTest.cpp, Line 26
 Empty 'from' path
 
 Expected Exception Type:

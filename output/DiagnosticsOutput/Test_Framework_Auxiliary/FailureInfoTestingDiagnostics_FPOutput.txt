@@ -1,4 +1,4 @@
-	Tests/TestFramework/FailureInfoTestingDiagnostics.cpp, Line 21
+	Tests/TestFramework/FailureInfoTestingDiagnostics.cpp, Line 23
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::testing::failure_info>]
@@ -14,7 +14,7 @@
 
 	=======================================
 
-	Tests/TestFramework/FailureInfoTestingDiagnostics.cpp, Line 22
+	Tests/TestFramework/FailureInfoTestingDiagnostics.cpp, Line 24
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::testing::failure_info>]
@@ -40,7 +40,7 @@
 
 	=======================================
 
-	Tests/TestFramework/FailureInfoTestingDiagnostics.cpp, Line 23
+	Tests/TestFramework/FailureInfoTestingDiagnostics.cpp, Line 25
 	check_index differs
 
 	[sequoia::testing::failure_info]
@@ -54,7 +54,7 @@
 
 	=======================================
 
-	Tests/TestFramework/FailureInfoTestingDiagnostics.cpp, Line 24
+	Tests/TestFramework/FailureInfoTestingDiagnostics.cpp, Line 26
 	message differs
 
 	[sequoia::testing::failure_info]

@@ -1,4 +1,4 @@
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 51
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 53
 	Broken equality
 
 	--Regular Semantics--
@@ -14,7 +14,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 62
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 64
 	Broken inequality
 
 	--Regular Semantics--
@@ -30,7 +30,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 73
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 75
 	Inefficient equality
 
 	--Regular Semantics--
@@ -62,7 +62,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 84
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 86
 	Inefficient inequality
 
 	--Regular Semantics--
@@ -94,7 +94,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 95
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 97
 	Broken copy
 
 	--Regular Semantics--
@@ -108,7 +108,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 106
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 108
 	Broken para-copy
 
 	--Regular Semantics--
@@ -122,7 +122,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 117
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 119
 	Broken move
 
 	--Regular Semantics--
@@ -136,7 +136,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 128
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 130
 	Broken para-move
 
 	--Regular Semantics--
@@ -150,7 +150,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 139
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 141
 	Broken copy assignment
 
 	--Regular Semantics--
@@ -164,7 +164,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 150
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 152
 	Broken move assignment
 
 	--Regular Semantics--
@@ -178,7 +178,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 165
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 167
 	Broken copy value semantics
 
 	--Regular Semantics--
@@ -194,7 +194,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 183
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 185
 	Broken copy assignment value semantics
 
 	--Regular Semantics--
@@ -206,7 +206,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 201
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 203
 	Inefficient copy
 
 	--Regular Semantics--
@@ -226,7 +226,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 202
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 204
 	Inefficient copy
 
 	--Regular Semantics--
@@ -246,7 +246,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 213
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 215
 	Inefficient move
 
 	--Regular Semantics--
@@ -266,7 +266,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 231
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 233
 	Inefficient para-copy
 
 	--Regular Semantics--
@@ -286,7 +286,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 249
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 251
 	Inefficient para-move
 
 	--Regular Semantics--
@@ -306,7 +306,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 260
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 262
 	Broken check invariant
 
 	--Regular Semantics--
@@ -318,7 +318,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 262
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 264
 	Incorrect init allocs
 
 	--Regular Semantics--
@@ -386,7 +386,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 277
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 279
 	Incorrect copy x allocs
 
 	--Regular Semantics--
@@ -406,7 +406,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 279
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 281
 	Incorrect copy y allocs
 
 	--Regular Semantics--
@@ -426,7 +426,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 281
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 283
 	Incorrect mutation allocs
 
 	--Regular Semantics--
@@ -446,7 +446,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 296
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 298
 	Incorrect copy assign y to x allocs
 
 	--Regular Semantics--
@@ -478,7 +478,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 311
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 313
 	Incorrect copy x allocs
 
 	--Regular Semantics--
@@ -498,7 +498,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 313
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 315
 	Incorrect copy y allocs
 
 	--Regular Semantics--
@@ -518,7 +518,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 315
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 317
 	Incorrect mutation allocs
 
 	--Regular Semantics--
@@ -538,7 +538,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 330
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 332
 	Incorrect copy assign y to x allocs
 
 	--Regular Semantics--
@@ -570,7 +570,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 340
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 342
 	Inefficient serialization
 
 	--Regular Semantics--
@@ -590,7 +590,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 51
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 53
 	Broken equality
 
 	--Regular Semantics--
@@ -606,7 +606,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 62
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 64
 	Broken inequality
 
 	--Regular Semantics--
@@ -622,7 +622,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 73
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 75
 	Inefficient equality
 
 	--Regular Semantics--
@@ -654,7 +654,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 84
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 86
 	Inefficient inequality
 
 	--Regular Semantics--
@@ -686,7 +686,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 95
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 97
 	Broken copy
 
 	--Regular Semantics--
@@ -700,7 +700,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 106
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 108
 	Broken para-copy
 
 	--Regular Semantics--
@@ -714,7 +714,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 117
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 119
 	Broken move
 
 	--Regular Semantics--
@@ -728,7 +728,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 128
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 130
 	Broken para-move
 
 	--Regular Semantics--
@@ -742,7 +742,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 139
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 141
 	Broken copy assignment
 
 	--Regular Semantics--
@@ -756,7 +756,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 150
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 152
 	Broken move assignment
 
 	--Regular Semantics--
@@ -770,7 +770,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 165
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 167
 	Broken copy value semantics
 
 	--Regular Semantics--
@@ -790,7 +790,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 183
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 185
 	Broken copy assignment value semantics
 
 	--Regular Semantics--
@@ -802,7 +802,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 201
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 203
 	Inefficient copy
 
 	--Regular Semantics--
@@ -822,7 +822,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 202
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 204
 	Inefficient copy
 
 	--Regular Semantics--
@@ -842,7 +842,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 213
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 215
 	Inefficient move
 
 	--Regular Semantics--
@@ -862,7 +862,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 231
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 233
 	Inefficient para-copy
 
 	--Regular Semantics--
@@ -882,7 +882,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 249
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 251
 	Inefficient para-move
 
 	--Regular Semantics--
@@ -902,7 +902,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 260
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 262
 	Broken check invariant
 
 	--Regular Semantics--
@@ -914,7 +914,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 262
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 264
 	Incorrect init allocs
 
 	--Regular Semantics--
@@ -982,7 +982,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 277
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 279
 	Incorrect copy x allocs
 
 	--Regular Semantics--
@@ -995,26 +995,6 @@
 	  		Propagate on swap = true
 	   >]
 	  Unexpected allocation detected for copy construction (x)
-	  [int]
-	  operator== returned false
-	  Obtained : 1
-	  Predicted: 0
-
-	=======================================
-
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 279
-	Incorrect copy y allocs
-
-	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
-
-	  [shared_counting_allocator<
-	  		int,
-	  		Propagate on copy assignment = false,
-	  		Propagate on move assignment = false,
-	  		Propagate on swap = true
-	   >]
-	  Unexpected allocation detected for copy construction (y)
 	  [int]
 	  operator== returned false
 	  Obtained : 1
@@ -1023,6 +1003,26 @@
 	=======================================
 
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 281
+	Incorrect copy y allocs
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
+
+	  [shared_counting_allocator<
+	  		int,
+	  		Propagate on copy assignment = false,
+	  		Propagate on move assignment = false,
+	  		Propagate on swap = true
+	   >]
+	  Unexpected allocation detected for copy construction (y)
+	  [int]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
+
+	=======================================
+
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 283
 	Incorrect mutation allocs
 
 	--Regular Semantics--
@@ -1054,7 +1054,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 296
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 298
 	Incorrect copy assign y to x allocs
 
 	--Regular Semantics--
@@ -1086,7 +1086,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 311
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 313
 	Incorrect copy x allocs
 
 	--Regular Semantics--
@@ -1106,7 +1106,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 313
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 315
 	Incorrect copy y allocs
 
 	--Regular Semantics--
@@ -1126,7 +1126,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 315
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 317
 	Incorrect mutation allocs
 
 	--Regular Semantics--
@@ -1158,7 +1158,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 330
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 332
 	Incorrect copy assign y to x allocs
 
 	--Regular Semantics--
@@ -1190,7 +1190,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 340
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 342
 	Inefficient serialization
 
 	--Regular Semantics--
@@ -1210,7 +1210,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 51
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 53
 	Broken equality
 
 	--Regular Semantics--
@@ -1226,7 +1226,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 62
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 64
 	Broken inequality
 
 	--Regular Semantics--
@@ -1242,7 +1242,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 73
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 75
 	Inefficient equality
 
 	--Regular Semantics--
@@ -1274,7 +1274,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 84
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 86
 	Inefficient inequality
 
 	--Regular Semantics--
@@ -1306,7 +1306,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 95
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 97
 	Broken copy
 
 	--Regular Semantics--
@@ -1320,7 +1320,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 106
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 108
 	Broken para-copy
 
 	--Regular Semantics--
@@ -1334,7 +1334,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 117
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 119
 	Broken move
 
 	--Regular Semantics--
@@ -1348,7 +1348,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 128
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 130
 	Broken para-move
 
 	--Regular Semantics--
@@ -1362,7 +1362,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 139
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 141
 	Broken copy assignment
 
 	--Regular Semantics--
@@ -1376,7 +1376,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 150
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 152
 	Broken move assignment
 
 	--Regular Semantics--
@@ -1390,7 +1390,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 165
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 167
 	Broken copy value semantics
 
 	--Regular Semantics--
@@ -1406,7 +1406,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 183
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 185
 	Broken copy assignment value semantics
 
 	--Regular Semantics--
@@ -1418,7 +1418,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 201
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 203
 	Inefficient copy
 
 	--Regular Semantics--
@@ -1438,7 +1438,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 202
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 204
 	Inefficient copy
 
 	--Regular Semantics--
@@ -1458,7 +1458,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 213
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 215
 	Inefficient move
 
 	--Regular Semantics--
@@ -1478,7 +1478,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 231
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 233
 	Inefficient para-copy
 
 	--Regular Semantics--
@@ -1498,7 +1498,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 249
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 251
 	Inefficient para-move
 
 	--Regular Semantics--
@@ -1518,7 +1518,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 260
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 262
 	Broken check invariant
 
 	--Regular Semantics--
@@ -1530,7 +1530,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 262
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 264
 	Incorrect init allocs
 
 	--Regular Semantics--
@@ -1586,7 +1586,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 277
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 279
 	Incorrect copy x allocs
 
 	--Regular Semantics--
@@ -1606,7 +1606,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 279
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 281
 	Incorrect copy y allocs
 
 	--Regular Semantics--
@@ -1626,7 +1626,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 281
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 283
 	Incorrect mutation allocs
 
 	--Regular Semantics--
@@ -1646,7 +1646,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 296
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 298
 	Incorrect copy assign y to x allocs
 
 	--Regular Semantics--
@@ -1666,7 +1666,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 311
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 313
 	Incorrect copy x allocs
 
 	--Regular Semantics--
@@ -1686,7 +1686,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 313
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 315
 	Incorrect copy y allocs
 
 	--Regular Semantics--
@@ -1706,7 +1706,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 315
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 317
 	Incorrect mutation allocs
 
 	--Regular Semantics--
@@ -1726,7 +1726,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 330
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 332
 	Incorrect copy assign y to x allocs
 
 	--Regular Semantics--
@@ -1746,7 +1746,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 340
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 342
 	Inefficient serialization
 
 	--Regular Semantics--
@@ -1766,7 +1766,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 351
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 353
 	Broken copy assignment propagation
 
 	--Regular Semantics--
@@ -1798,7 +1798,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 352
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 354
 	Broken copy assignment propagation; 'negative' allocation counts
 
 	--Regular Semantics--
@@ -1820,7 +1820,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 51
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 53
 	Broken equality
 
 	--Regular Semantics--
@@ -1836,7 +1836,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 62
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 64
 	Broken inequality
 
 	--Regular Semantics--
@@ -1852,7 +1852,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 73
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 75
 	Inefficient equality
 
 	--Regular Semantics--
@@ -1884,7 +1884,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 84
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 86
 	Inefficient inequality
 
 	--Regular Semantics--
@@ -1916,7 +1916,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 95
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 97
 	Broken copy
 
 	--Regular Semantics--
@@ -1930,7 +1930,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 106
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 108
 	Broken para-copy
 
 	--Regular Semantics--
@@ -1944,7 +1944,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 117
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 119
 	Broken move
 
 	--Regular Semantics--
@@ -1958,7 +1958,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 128
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 130
 	Broken para-move
 
 	--Regular Semantics--
@@ -1972,7 +1972,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 139
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 141
 	Broken copy assignment
 
 	--Regular Semantics--
@@ -1986,7 +1986,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 150
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 152
 	Broken move assignment
 
 	--Regular Semantics--
@@ -2000,7 +2000,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 165
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 167
 	Broken copy value semantics
 
 	--Regular Semantics--
@@ -2020,7 +2020,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 183
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 185
 	Broken copy assignment value semantics
 
 	--Regular Semantics--
@@ -2032,7 +2032,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 201
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 203
 	Inefficient copy
 
 	--Regular Semantics--
@@ -2052,7 +2052,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 202
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 204
 	Inefficient copy
 
 	--Regular Semantics--
@@ -2072,7 +2072,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 213
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 215
 	Inefficient move
 
 	--Regular Semantics--
@@ -2092,7 +2092,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 231
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 233
 	Inefficient para-copy
 
 	--Regular Semantics--
@@ -2112,7 +2112,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 249
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 251
 	Inefficient para-move
 
 	--Regular Semantics--
@@ -2132,7 +2132,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 260
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 262
 	Broken check invariant
 
 	--Regular Semantics--
@@ -2144,7 +2144,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 262
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 264
 	Incorrect init allocs
 
 	--Regular Semantics--
@@ -2200,7 +2200,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 277
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 279
 	Incorrect copy x allocs
 
 	--Regular Semantics--
@@ -2213,26 +2213,6 @@
 	  		Propagate on swap = true
 	   >]
 	  Unexpected allocation detected for copy construction (x)
-	  [int]
-	  operator== returned false
-	  Obtained : 1
-	  Predicted: 0
-
-	=======================================
-
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 279
-	Incorrect copy y allocs
-
-	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
-
-	  [shared_counting_allocator<
-	  		int,
-	  		Propagate on copy assignment = false,
-	  		Propagate on move assignment = true,
-	  		Propagate on swap = true
-	   >]
-	  Unexpected allocation detected for copy construction (y)
 	  [int]
 	  operator== returned false
 	  Obtained : 1
@@ -2241,6 +2221,26 @@
 	=======================================
 
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 281
+	Incorrect copy y allocs
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
+
+	  [shared_counting_allocator<
+	  		int,
+	  		Propagate on copy assignment = false,
+	  		Propagate on move assignment = true,
+	  		Propagate on swap = true
+	   >]
+	  Unexpected allocation detected for copy construction (y)
+	  [int]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
+
+	=======================================
+
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 283
 	Incorrect mutation allocs
 
 	--Regular Semantics--
@@ -2272,7 +2272,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 296
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 298
 	Incorrect copy assign y to x allocs
 
 	--Regular Semantics--
@@ -2292,7 +2292,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 311
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 313
 	Incorrect copy x allocs
 
 	--Regular Semantics--
@@ -2312,7 +2312,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 313
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 315
 	Incorrect copy y allocs
 
 	--Regular Semantics--
@@ -2332,7 +2332,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 315
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 317
 	Incorrect mutation allocs
 
 	--Regular Semantics--
@@ -2364,7 +2364,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 330
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 332
 	Incorrect copy assign y to x allocs
 
 	--Regular Semantics--
@@ -2384,7 +2384,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 340
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 342
 	Inefficient serialization
 
 	--Regular Semantics--
@@ -2404,7 +2404,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 351
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 353
 	Broken copy assignment propagation
 
 	--Regular Semantics--
@@ -2436,7 +2436,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 352
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 354
 	Broken copy assignment propagation; 'negative' allocation counts
 
 	--Regular Semantics--
@@ -2458,7 +2458,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 51
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 53
 	Broken equality
 
 	--Regular Semantics--
@@ -2474,7 +2474,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 62
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 64
 	Broken inequality
 
 	--Regular Semantics--
@@ -2490,7 +2490,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 73
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 75
 	Inefficient equality
 
 	--Regular Semantics--
@@ -2522,7 +2522,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 84
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 86
 	Inefficient inequality
 
 	--Regular Semantics--
@@ -2554,7 +2554,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 95
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 97
 	Broken copy
 
 	--Regular Semantics--
@@ -2568,7 +2568,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 106
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 108
 	Broken para-copy
 
 	--Regular Semantics--
@@ -2582,7 +2582,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 117
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 119
 	Broken move
 
 	--Regular Semantics--
@@ -2596,7 +2596,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 128
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 130
 	Broken para-move
 
 	--Regular Semantics--
@@ -2610,7 +2610,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 139
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 141
 	Broken copy assignment
 
 	--Regular Semantics--
@@ -2624,7 +2624,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 150
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 152
 	Broken move assignment
 
 	--Regular Semantics--
@@ -2638,7 +2638,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 165
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 167
 	Broken copy value semantics
 
 	--Regular Semantics--
@@ -2654,7 +2654,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 183
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 185
 	Broken copy assignment value semantics
 
 	--Regular Semantics--
@@ -2666,7 +2666,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 201
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 203
 	Inefficient copy
 
 	--Regular Semantics--
@@ -2686,7 +2686,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 202
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 204
 	Inefficient copy
 
 	--Regular Semantics--
@@ -2706,7 +2706,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 213
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 215
 	Inefficient move
 
 	--Regular Semantics--
@@ -2726,7 +2726,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 231
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 233
 	Inefficient para-copy
 
 	--Regular Semantics--
@@ -2746,7 +2746,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 249
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 251
 	Inefficient para-move
 
 	--Regular Semantics--
@@ -2766,7 +2766,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 260
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 262
 	Broken check invariant
 
 	--Regular Semantics--
@@ -2778,7 +2778,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 262
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 264
 	Incorrect init allocs
 
 	--Regular Semantics--
@@ -2846,7 +2846,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 277
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 279
 	Incorrect copy x allocs
 
 	--Regular Semantics--
@@ -2866,7 +2866,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 279
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 281
 	Incorrect copy y allocs
 
 	--Regular Semantics--
@@ -2886,7 +2886,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 281
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 283
 	Incorrect mutation allocs
 
 	--Regular Semantics--
@@ -2906,7 +2906,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 296
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 298
 	Incorrect copy assign y to x allocs
 
 	--Regular Semantics--
@@ -2938,7 +2938,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 311
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 313
 	Incorrect copy x allocs
 
 	--Regular Semantics--
@@ -2958,7 +2958,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 313
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 315
 	Incorrect copy y allocs
 
 	--Regular Semantics--
@@ -2978,7 +2978,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 315
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 317
 	Incorrect mutation allocs
 
 	--Regular Semantics--
@@ -2998,7 +2998,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 330
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 332
 	Incorrect copy assign y to x allocs
 
 	--Regular Semantics--
@@ -3030,7 +3030,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 340
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 342
 	Inefficient serialization
 
 	--Regular Semantics--
@@ -3050,7 +3050,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 351
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 353
 	Broken copy assignment propagation
 
 	--Regular Semantics--
@@ -3070,7 +3070,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 352
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 354
 	Broken copy assignment propagation; 'negative' allocation counts
 
 	--Regular Semantics--
@@ -3102,7 +3102,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 51
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 53
 	Broken equality
 
 	--Regular Semantics--
@@ -3118,7 +3118,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 62
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 64
 	Broken inequality
 
 	--Regular Semantics--
@@ -3134,7 +3134,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 73
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 75
 	Inefficient equality
 
 	--Regular Semantics--
@@ -3166,7 +3166,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 84
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 86
 	Inefficient inequality
 
 	--Regular Semantics--
@@ -3198,7 +3198,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 95
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 97
 	Broken copy
 
 	--Regular Semantics--
@@ -3212,7 +3212,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 106
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 108
 	Broken para-copy
 
 	--Regular Semantics--
@@ -3226,7 +3226,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 117
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 119
 	Broken move
 
 	--Regular Semantics--
@@ -3240,7 +3240,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 128
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 130
 	Broken para-move
 
 	--Regular Semantics--
@@ -3254,7 +3254,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 139
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 141
 	Broken copy assignment
 
 	--Regular Semantics--
@@ -3268,7 +3268,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 150
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 152
 	Broken move assignment
 
 	--Regular Semantics--
@@ -3282,7 +3282,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 165
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 167
 	Broken copy value semantics
 
 	--Regular Semantics--
@@ -3302,7 +3302,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 183
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 185
 	Broken copy assignment value semantics
 
 	--Regular Semantics--
@@ -3314,7 +3314,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 201
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 203
 	Inefficient copy
 
 	--Regular Semantics--
@@ -3334,7 +3334,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 202
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 204
 	Inefficient copy
 
 	--Regular Semantics--
@@ -3354,7 +3354,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 213
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 215
 	Inefficient move
 
 	--Regular Semantics--
@@ -3374,7 +3374,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 231
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 233
 	Inefficient para-copy
 
 	--Regular Semantics--
@@ -3394,7 +3394,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 249
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 251
 	Inefficient para-move
 
 	--Regular Semantics--
@@ -3414,7 +3414,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 260
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 262
 	Broken check invariant
 
 	--Regular Semantics--
@@ -3426,7 +3426,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 262
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 264
 	Incorrect init allocs
 
 	--Regular Semantics--
@@ -3494,7 +3494,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 277
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 279
 	Incorrect copy x allocs
 
 	--Regular Semantics--
@@ -3507,26 +3507,6 @@
 	  		Propagate on swap = true
 	   >]
 	  Unexpected allocation detected for copy construction (x)
-	  [int]
-	  operator== returned false
-	  Obtained : 1
-	  Predicted: 0
-
-	=======================================
-
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 279
-	Incorrect copy y allocs
-
-	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
-
-	  [shared_counting_allocator<
-	  		int,
-	  		Propagate on copy assignment = true,
-	  		Propagate on move assignment = false,
-	  		Propagate on swap = true
-	   >]
-	  Unexpected allocation detected for copy construction (y)
 	  [int]
 	  operator== returned false
 	  Obtained : 1
@@ -3535,6 +3515,26 @@
 	=======================================
 
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 281
+	Incorrect copy y allocs
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
+
+	  [shared_counting_allocator<
+	  		int,
+	  		Propagate on copy assignment = true,
+	  		Propagate on move assignment = false,
+	  		Propagate on swap = true
+	   >]
+	  Unexpected allocation detected for copy construction (y)
+	  [int]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
+
+	=======================================
+
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 283
 	Incorrect mutation allocs
 
 	--Regular Semantics--
@@ -3566,7 +3566,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 296
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 298
 	Incorrect copy assign y to x allocs
 
 	--Regular Semantics--
@@ -3598,7 +3598,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 311
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 313
 	Incorrect copy x allocs
 
 	--Regular Semantics--
@@ -3618,7 +3618,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 313
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 315
 	Incorrect copy y allocs
 
 	--Regular Semantics--
@@ -3638,7 +3638,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 315
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 317
 	Incorrect mutation allocs
 
 	--Regular Semantics--
@@ -3670,7 +3670,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 330
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 332
 	Incorrect copy assign y to x allocs
 
 	--Regular Semantics--
@@ -3702,7 +3702,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 340
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 342
 	Inefficient serialization
 
 	--Regular Semantics--
@@ -3722,7 +3722,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 351
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 353
 	Broken copy assignment propagation
 
 	--Regular Semantics--
@@ -3742,7 +3742,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 352
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 354
 	Broken copy assignment propagation; 'negative' allocation counts
 
 	--Regular Semantics--
@@ -3774,7 +3774,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 51
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 53
 	Broken equality
 
 	--Regular Semantics--
@@ -3790,7 +3790,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 62
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 64
 	Broken inequality
 
 	--Regular Semantics--
@@ -3806,7 +3806,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 73
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 75
 	Inefficient equality
 
 	--Regular Semantics--
@@ -3838,7 +3838,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 84
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 86
 	Inefficient inequality
 
 	--Regular Semantics--
@@ -3870,7 +3870,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 95
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 97
 	Broken copy
 
 	--Regular Semantics--
@@ -3884,7 +3884,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 106
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 108
 	Broken para-copy
 
 	--Regular Semantics--
@@ -3898,7 +3898,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 117
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 119
 	Broken move
 
 	--Regular Semantics--
@@ -3912,7 +3912,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 128
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 130
 	Broken para-move
 
 	--Regular Semantics--
@@ -3926,7 +3926,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 139
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 141
 	Broken copy assignment
 
 	--Regular Semantics--
@@ -3940,7 +3940,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 150
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 152
 	Broken move assignment
 
 	--Regular Semantics--
@@ -3954,7 +3954,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 165
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 167
 	Broken copy value semantics
 
 	--Regular Semantics--
@@ -3970,7 +3970,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 183
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 185
 	Broken copy assignment value semantics
 
 	--Regular Semantics--
@@ -3982,7 +3982,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 201
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 203
 	Inefficient copy
 
 	--Regular Semantics--
@@ -4002,7 +4002,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 202
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 204
 	Inefficient copy
 
 	--Regular Semantics--
@@ -4022,7 +4022,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 213
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 215
 	Inefficient move
 
 	--Regular Semantics--
@@ -4042,7 +4042,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 231
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 233
 	Inefficient para-copy
 
 	--Regular Semantics--
@@ -4062,7 +4062,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 249
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 251
 	Inefficient para-move
 
 	--Regular Semantics--
@@ -4082,7 +4082,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 260
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 262
 	Broken check invariant
 
 	--Regular Semantics--
@@ -4094,7 +4094,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 262
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 264
 	Incorrect init allocs
 
 	--Regular Semantics--
@@ -4150,7 +4150,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 277
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 279
 	Incorrect copy x allocs
 
 	--Regular Semantics--
@@ -4170,7 +4170,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 279
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 281
 	Incorrect copy y allocs
 
 	--Regular Semantics--
@@ -4190,7 +4190,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 281
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 283
 	Incorrect mutation allocs
 
 	--Regular Semantics--
@@ -4210,7 +4210,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 296
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 298
 	Incorrect copy assign y to x allocs
 
 	--Regular Semantics--
@@ -4242,7 +4242,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 311
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 313
 	Incorrect copy x allocs
 
 	--Regular Semantics--
@@ -4262,7 +4262,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 313
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 315
 	Incorrect copy y allocs
 
 	--Regular Semantics--
@@ -4282,7 +4282,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 315
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 317
 	Incorrect mutation allocs
 
 	--Regular Semantics--
@@ -4302,7 +4302,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 330
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 332
 	Incorrect copy assign y to x allocs
 
 	--Regular Semantics--
@@ -4334,7 +4334,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 340
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 342
 	Inefficient serialization
 
 	--Regular Semantics--
@@ -4354,7 +4354,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 51
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 53
 	Broken equality
 
 	--Regular Semantics--
@@ -4370,7 +4370,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 62
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 64
 	Broken inequality
 
 	--Regular Semantics--
@@ -4386,7 +4386,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 73
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 75
 	Inefficient equality
 
 	--Regular Semantics--
@@ -4418,7 +4418,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 84
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 86
 	Inefficient inequality
 
 	--Regular Semantics--
@@ -4450,7 +4450,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 95
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 97
 	Broken copy
 
 	--Regular Semantics--
@@ -4464,7 +4464,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 106
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 108
 	Broken para-copy
 
 	--Regular Semantics--
@@ -4478,7 +4478,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 117
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 119
 	Broken move
 
 	--Regular Semantics--
@@ -4492,7 +4492,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 128
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 130
 	Broken para-move
 
 	--Regular Semantics--
@@ -4506,7 +4506,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 139
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 141
 	Broken copy assignment
 
 	--Regular Semantics--
@@ -4520,7 +4520,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 150
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 152
 	Broken move assignment
 
 	--Regular Semantics--
@@ -4534,7 +4534,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 165
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 167
 	Broken copy value semantics
 
 	--Regular Semantics--
@@ -4554,7 +4554,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 183
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 185
 	Broken copy assignment value semantics
 
 	--Regular Semantics--
@@ -4566,7 +4566,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 201
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 203
 	Inefficient copy
 
 	--Regular Semantics--
@@ -4586,7 +4586,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 202
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 204
 	Inefficient copy
 
 	--Regular Semantics--
@@ -4606,7 +4606,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 213
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 215
 	Inefficient move
 
 	--Regular Semantics--
@@ -4626,7 +4626,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 231
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 233
 	Inefficient para-copy
 
 	--Regular Semantics--
@@ -4646,7 +4646,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 249
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 251
 	Inefficient para-move
 
 	--Regular Semantics--
@@ -4666,7 +4666,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 260
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 262
 	Broken check invariant
 
 	--Regular Semantics--
@@ -4678,7 +4678,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 262
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 264
 	Incorrect init allocs
 
 	--Regular Semantics--
@@ -4734,7 +4734,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 277
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 279
 	Incorrect copy x allocs
 
 	--Regular Semantics--
@@ -4747,26 +4747,6 @@
 	  		Propagate on swap = true
 	   >]
 	  Unexpected allocation detected for copy construction (x)
-	  [int]
-	  operator== returned false
-	  Obtained : 1
-	  Predicted: 0
-
-	=======================================
-
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 279
-	Incorrect copy y allocs
-
-	--Regular Semantics--
-	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
-
-	  [shared_counting_allocator<
-	  		int,
-	  		Propagate on copy assignment = true,
-	  		Propagate on move assignment = true,
-	  		Propagate on swap = true
-	   >]
-	  Unexpected allocation detected for copy construction (y)
 	  [int]
 	  operator== returned false
 	  Obtained : 1
@@ -4775,6 +4755,26 @@
 	=======================================
 
 	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 281
+	Incorrect copy y allocs
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
+
+	  [shared_counting_allocator<
+	  		int,
+	  		Propagate on copy assignment = true,
+	  		Propagate on move assignment = true,
+	  		Propagate on swap = true
+	   >]
+	  Unexpected allocation detected for copy construction (y)
+	  [int]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
+
+	=======================================
+
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 283
 	Incorrect mutation allocs
 
 	--Regular Semantics--
@@ -4806,7 +4806,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 296
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 298
 	Incorrect copy assign y to x allocs
 
 	--Regular Semantics--
@@ -4838,7 +4838,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 311
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 313
 	Incorrect copy x allocs
 
 	--Regular Semantics--
@@ -4858,7 +4858,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 313
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 315
 	Incorrect copy y allocs
 
 	--Regular Semantics--
@@ -4878,7 +4878,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 315
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 317
 	Incorrect mutation allocs
 
 	--Regular Semantics--
@@ -4910,7 +4910,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 330
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 332
 	Incorrect copy assign y to x allocs
 
 	--Regular Semantics--
@@ -4942,7 +4942,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 340
+	Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 342
 	Inefficient serialization
 
 	--Regular Semantics--

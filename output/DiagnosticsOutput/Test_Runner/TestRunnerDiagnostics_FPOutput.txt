@@ -1,4 +1,4 @@
-	Tests/TestFramework/TestRunnerDiagnostics.cpp, Line 26
+	Tests/TestFramework/TestRunnerDiagnostics.cpp, Line 28
 	Wrong species
 
 	[std::vector<sequoia::testing::template_spec, std::allocator<sequoia::testing::template_spec> >]
@@ -24,7 +24,7 @@
 
 	=======================================
 
-	Tests/TestFramework/TestRunnerDiagnostics.cpp, Line 29
+	Tests/TestFramework/TestRunnerDiagnostics.cpp, Line 31
 	Wrong symbol
 
 	[std::vector<sequoia::testing::template_spec, std::allocator<sequoia::testing::template_spec> >]

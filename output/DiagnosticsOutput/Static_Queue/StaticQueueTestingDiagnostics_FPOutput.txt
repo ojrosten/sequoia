@@ -1,4 +1,4 @@
-	Tests/Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 31
+	Tests/Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 33
 	Empty queue must be empty
 
 	[bool]
@@ -6,7 +6,7 @@
 
 	=======================================
 
-	Tests/Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 32
+	Tests/Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 34
 	Empty queue must have size zero
 
 	[unsigned long long]
@@ -16,7 +16,7 @@
 
 	=======================================
 
-	Tests/Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 42
+	Tests/Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 44
 	Empty queue versus populated queue
 
 	[sequoia::data_structures::static_queue<int, 1>]
@@ -42,7 +42,7 @@
 
 	=======================================
 
-	Tests/Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 45
+	Tests/Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 47
 	Differing elements
 
 	[sequoia::data_structures::static_queue<int, 1>]
@@ -70,7 +70,7 @@
 
 	=======================================
 
-	Tests/Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 48
+	Tests/Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 50
 	Empty queue versus populated queue
 
 	[sequoia::data_structures::static_queue<int, 1>]

@@ -1,4 +1,4 @@
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 36
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 38
 Empty string
 
 Expected Exception Type:
@@ -7,7 +7,7 @@ Equivalent type is unspecified
 
 	=======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 37
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 39
 Just spaces
 
 Expected Exception Type:
@@ -16,7 +16,7 @@ Equivalent type is unspecified
 
 	=======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 59
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 61
 Unmatched <
 
 Expected Exception Type:
@@ -25,7 +25,7 @@ Expected Exception Type:
 
 	=======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 61
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 63
 Backwards delimiters
 
 Expected Exception Type:
@@ -34,7 +34,7 @@ Expected Exception Type:
 
 	=======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 63
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 65
 Missing symbol
 
 Expected Exception Type:
@@ -43,7 +43,7 @@ Expected Exception Type:
 
 	=======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 65
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 67
 Missing symbol
 
 Expected Exception Type:
@@ -52,7 +52,7 @@ Expected Exception Type:
 
 	=======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 168
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 170
 Test Main has empty path
 
 Expected Exception Type:
@@ -63,7 +63,7 @@ Try ensuring that the application is run from the appropriate directory
 
 	=======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 177
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 179
 Test Main does not exist
 
 Expected Exception Type:
@@ -74,7 +74,7 @@ Try ensuring that the application is run from the appropriate directory
 
 	=======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 186
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 188
 Include Target has empty path
 
 Expected Exception Type:
@@ -85,7 +85,7 @@ Include target not found
 
 	=======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 195
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 197
 Include Target does not exist
 
 Expected Exception Type:
@@ -96,7 +96,7 @@ Include target not found
 
 	=======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 204
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 206
 Project root is empty
 
 Expected Exception Type:
@@ -105,7 +105,7 @@ Project root should not be empty
 
 	=======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 214
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 216
 Project root does not exist
 
 Expected Exception Type:
@@ -116,7 +116,7 @@ Test repository not found
 
 	=======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 224
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 226
 Project root not a directory
 
 Expected Exception Type:
@@ -127,7 +127,7 @@ Test repository not found
 
 	=======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 234
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 236
 Plurgh.h does not exist
 
 Expected Exception Type:
@@ -137,7 +137,7 @@ Unable to locate file Plurgh.h or Plurgh.hpp or Plurgh.hxx in the source reposit
 
 	=======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 245
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 247
 Typo in specified class header
 
 Expected Exception Type:
