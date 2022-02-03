@@ -7,6 +7,8 @@
 
 #pragma once
 
+/*! \file */
+
 #include "AngleTestingUtilities.hpp"
 
 namespace sequoia::testing

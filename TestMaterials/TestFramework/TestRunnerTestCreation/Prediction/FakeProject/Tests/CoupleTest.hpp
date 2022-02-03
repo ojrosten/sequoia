@@ -7,6 +7,8 @@
 
 #pragma once
 
+/*! \file */
+
 #include "CoupleTestingUtilities.hpp"
 
 namespace sequoia::testing

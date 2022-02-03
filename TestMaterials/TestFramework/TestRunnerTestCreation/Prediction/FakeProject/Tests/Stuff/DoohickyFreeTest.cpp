@@ -5,6 +5,8 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
+/*! \file */
+
 #include "DoohickyFreeTest.hpp"
 #include "fakeProject/Stuff/Doohicky.hpp"
 

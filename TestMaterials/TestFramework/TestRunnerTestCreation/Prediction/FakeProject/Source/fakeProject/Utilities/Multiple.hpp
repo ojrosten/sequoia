@@ -7,6 +7,8 @@
 
 #pragma once
 
+/*! \file */
+
 #include <compare>
 
 template<class... T>

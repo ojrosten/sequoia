@@ -5,6 +5,8 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
+/*! \file */
+
 #include "UtilitiesFreeTest.hpp"
 #include "fakeProject/Utilities/Utilities.h"
 

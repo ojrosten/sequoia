@@ -7,6 +7,8 @@
 
 #pragma once
 
+/*! \file */
+
 #include "ThingummyTestingUtilities.hpp"
 
 namespace sequoia::testing

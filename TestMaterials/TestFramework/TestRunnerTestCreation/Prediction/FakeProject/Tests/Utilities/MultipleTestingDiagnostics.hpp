@@ -5,6 +5,10 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
+#pragma once
+
+/*! \file */
+
 #include "MultipleTestingUtilities.hpp"
 
 namespace sequoia::testing

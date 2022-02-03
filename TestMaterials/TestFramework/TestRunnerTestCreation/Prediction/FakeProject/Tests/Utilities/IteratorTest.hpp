@@ -7,6 +7,8 @@
 
 #pragma once
 
+/*! \file */
+
 #include "IteratorTestingUtilities.hpp"
 
 namespace sequoia::testing

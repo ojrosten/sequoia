@@ -7,6 +7,8 @@
 
 #pragma once
 
+/*! \file */
+
 #include "ProbabilityTestingUtilities.hpp"
 
 namespace sequoia::testing

@@ -7,6 +7,8 @@
 
 #pragma once
 
+/*! \file */
+
 namespace bar::things
 {
 }

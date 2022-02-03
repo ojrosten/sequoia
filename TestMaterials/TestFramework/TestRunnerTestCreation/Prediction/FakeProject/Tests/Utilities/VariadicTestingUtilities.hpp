@@ -7,6 +7,8 @@
 
 #pragma once
 
+/*! \file */
+
 #include "sequoia/TestFramework/MoveOnlyTestCore.hpp"
 #include "fakeProject/Utilities/Variadic.hpp"
 

@@ -7,6 +7,8 @@
 
 #pragma once
 
+/*! \file */
+
 #include "ThingsTestingUtilities.hpp"
 
 namespace sequoia::testing

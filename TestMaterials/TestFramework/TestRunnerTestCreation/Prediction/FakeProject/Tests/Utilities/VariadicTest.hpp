@@ -7,6 +7,8 @@
 
 #pragma once
 
+/*! \file */
+
 #include "VariadicTestingUtilities.hpp"
 
 namespace sequoia::testing
