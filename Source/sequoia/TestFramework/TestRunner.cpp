@@ -465,7 +465,7 @@ namespace sequoia::testing
         throw std::runtime_error{"Unable to run in sandbox mode, as executable cannot be found"};
 
       const auto specified{
-        [&selector{m_Selector}] () -> std::string {
+        [&selector=m_Selector] () -> std::string {
           std::string srcs{};
           // TO DO: use ranges when supported by libc++
           for(auto i{selector.begin_selected_sources()}; i != selector.end_selected_sources(); ++i)

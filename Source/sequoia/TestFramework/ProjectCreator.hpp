@@ -14,6 +14,8 @@
 #include "sequoia/Runtime/ShellCommands.hpp"
 #include "sequoia/TextProcessing/Indent.hpp"
 
+#include <vector>
+
 namespace sequoia::testing
 {
   enum class build_invocation { no = 0, yes, launch_ide };

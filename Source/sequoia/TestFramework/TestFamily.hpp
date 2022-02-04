@@ -177,7 +177,7 @@ namespace sequoia::testing
     {
       family_info::materials_setter setter{m_Info};
       std::apply(
-        [=,&setter](auto&... t) { ( set_materials(setter, t), ... ); },
+        [this,&setter](auto&... t) { ( set_materials(setter, t), ... ); },
         m_Tests
       );
     }
@@ -300,7 +300,7 @@ namespace sequoia::testing
       family_info::materials_setter setter{m_Info};
       
       auto reset{
-        [=,&setter](auto& optTest){
+        [this,&setter](auto& optTest){
           if(optTest)
           {
             using type = typename std::remove_cvref_t<decltype(optTest)>::value_type;
