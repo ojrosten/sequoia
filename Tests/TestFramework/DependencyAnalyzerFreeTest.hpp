@@ -28,8 +28,6 @@ namespace sequoia::testing
 
     information m_Info{};
 
-    using test_list = std::optional<std::vector<std::filesystem::path>>;
-
     [[nodiscard]]
     std::string_view source_file() const noexcept final;
 

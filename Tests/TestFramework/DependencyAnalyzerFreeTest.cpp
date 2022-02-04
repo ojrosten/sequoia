@@ -16,6 +16,9 @@ namespace sequoia::testing
 {
   namespace fs = std::filesystem;
 
+  using test_list     = std::vector<fs::path>;
+  using opt_test_list = std::optional<test_list>;
+
   [[nodiscard]]
   std::string_view dependency_analyzer_free_test::source_file() const noexcept
   {
@@ -30,11 +33,11 @@ namespace sequoia::testing
       fs::last_write_time(f, std::chrono::file_clock::now());
     }
 
-    test_list actual{tests_to_run(info.source_repo, info.tests_repo, info.materials, info.prune_file, info.reset_time, info.exe_time_stamp, cutoff)};
+    opt_test_list actual{tests_to_run(info.source_repo, info.tests_repo, info.materials, info.prune_file, info.reset_time, info.exe_time_stamp, cutoff)};
     if(actual.has_value())
       std::sort(actual->begin(), actual->end());
 
-    test_list prediction{toRun};
+    opt_test_list prediction{toRun};
     std::sort(prediction->begin(), prediction->end());
 
     check(equality, description, actual, prediction);
@@ -44,7 +47,7 @@ namespace sequoia::testing
       fs::last_write_time(f, info.reset_time);
     }
 
-    check(equality, append_lines(description, "Nothing Stale"), tests_to_run(info.source_repo, info.tests_repo, info.materials, "", info.reset_time, info.exe_time_stamp, cutoff), test_list{{}});
+    check(equality, append_lines(description, "Nothing Stale"), tests_to_run(info.source_repo, info.tests_repo, info.materials, "", info.reset_time, info.exe_time_stamp, cutoff), opt_test_list{test_list{}});
   }
 
   void dependency_analyzer_free_test::run_tests()
@@ -73,8 +76,8 @@ namespace sequoia::testing
 #
   void dependency_analyzer_free_test::test_dependencies()
   {
-    check(equality, LINE("No timestamp"), tests_to_run(m_Info.source_repo, m_Info.tests_repo, m_Info.materials, "", std::nullopt, std::nullopt, ""), test_list{});
-    check(equality, LINE("Nothing stale"), tests_to_run(m_Info.source_repo, m_Info.tests_repo, m_Info.materials, "", std::chrono::file_clock::now(), std::nullopt, ""), test_list{{}});
+    check(equality, LINE("No timestamp"), tests_to_run(m_Info.source_repo, m_Info.tests_repo, m_Info.materials, "", std::nullopt, std::nullopt, ""), opt_test_list{});
+    check(equality, LINE("Nothing stale"), tests_to_run(m_Info.source_repo, m_Info.tests_repo, m_Info.materials, "", std::chrono::file_clock::now(), std::nullopt, ""), opt_test_list{test_list{}});
 
     check_tests_to_run(LINE("Test cpp stale (no cutoff)"),
                        m_Info,
