@@ -228,9 +228,9 @@
 	Both bound
 
 	Comparison performed using:
-	[sequoia::testing::value_tester<std::function<void __cdecl(void)> >]
+	[sequoia::testing::value_tester<std::function<void ()> >]
 	Checking for weak equivalence with:
-	[std::function<void __cdecl(void)>]
+	[std::function<void ()>]
 
 	=======================================
 
@@ -239,9 +239,9 @@
 	Neither bound
 
 	Comparison performed using:
-	[sequoia::testing::value_tester<std::function<void __cdecl(void)> >]
+	[sequoia::testing::value_tester<std::function<void ()> >]
 	Checking for weak equivalence with:
-	[std::function<void __cdecl(void)>]
+	[std::function<void ()>]
 
 	=======================================
 

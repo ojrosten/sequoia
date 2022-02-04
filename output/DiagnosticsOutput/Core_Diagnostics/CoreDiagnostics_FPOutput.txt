@@ -2002,9 +2002,9 @@
 	Obtained bound but prediction not
 
 	Comparison performed using:
-	[sequoia::testing::value_tester<std::function<void __cdecl(void)> >]
+	[sequoia::testing::value_tester<std::function<void ()> >]
 	Checking for weak equivalence with:
-	[std::function<void __cdecl(void)>]
+	[std::function<void ()>]
 
 	  obtained has a function bound but prediction has a function not bound
 	  [bool]
@@ -2016,9 +2016,9 @@
 	Prediction bound but obtained not
 
 	Comparison performed using:
-	[sequoia::testing::value_tester<std::function<void __cdecl(void)> >]
+	[sequoia::testing::value_tester<std::function<void ()> >]
 	Checking for weak equivalence with:
-	[std::function<void __cdecl(void)>]
+	[std::function<void ()>]
 
 	  obtained has a function not bound but prediction has a function bound
 	  [bool]
