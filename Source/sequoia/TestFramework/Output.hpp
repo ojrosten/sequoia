@@ -135,6 +135,7 @@ namespace sequoia::testing
   }
 
   template<reportable T>
+    requires (!std::is_same_v<T, bool>)
   [[nodiscard]]
   std::string failure_message(is_final_message_t, const T& obtained, const T& prediction)
   {
