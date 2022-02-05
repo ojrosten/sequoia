@@ -53,7 +53,7 @@ namespace sequoia::testing
   template<class Advisor, class T>
   struct advisor_analyser
   {
-    constexpr static bool utilize{};
+    constexpr static bool utilize{false};
   };
 
   template<class Advisor, class T>
