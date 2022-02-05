@@ -54,7 +54,7 @@ namespace sequoia::testing::impl
       std::optional<T> w{std::move(v)};
       if(check(equality, "Inconsistent move construction", logger, *w, zClone))
       {
-        return std::move(w);
+        return w;
       }
     }
 

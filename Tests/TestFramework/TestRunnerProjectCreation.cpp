@@ -137,7 +137,7 @@ namespace sequoia::testing
 
     {
       auto generated{
-        [&mat{working_materials()}] () { return mat / "GeneratedProject"; }
+        [&mat=working_materials()] () { return mat / "GeneratedProject"; }
       };
 
       commandline_arguments args{"", "init", "Oliver Jacob Rosten", generated().string(), "  ", "--no-build"};
