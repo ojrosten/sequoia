@@ -282,6 +282,9 @@ namespace sequoia::testing
     }
 #endif
 
+    replace_all(name, "__cdecl(void)", "()");
+    replace_all(name, "__cdecl", "");
+
     return name;
   }
 

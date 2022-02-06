@@ -1998,7 +1998,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 398
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 399
 	Obtained bound but prediction not
 
 	Comparison performed using:
@@ -2012,7 +2012,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 403
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 404
 	Prediction bound but obtained not
 
 	Comparison performed using:
@@ -2027,6 +2027,62 @@
 	=======================================
 
 	Tests/TestFramework/CoreDiagnostics.cpp, Line 412
+	Obtained bound but prediction not
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<std::function<int ()> >]
+	Checking for weak equivalence with:
+	[std::function<int ()>]
+
+	  obtained has a function bound but prediction has a function not bound
+	  [bool]
+	  check failed
+
+	=======================================
+
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 417
+	Prediction bound but obtained not
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<std::function<int ()> >]
+	Checking for weak equivalence with:
+	[std::function<int ()>]
+
+	  obtained has a function not bound but prediction has a function bound
+	  [bool]
+	  check failed
+
+	=======================================
+
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 425
+	Obtained bound but prediction not
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<std::function<void (int)> >]
+	Checking for weak equivalence with:
+	[std::function<void (int)>]
+
+	  obtained has a function bound but prediction has a function not bound
+	  [bool]
+	  check failed
+
+	=======================================
+
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 430
+	Prediction bound but obtained not
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<std::function<void (int)> >]
+	Checking for weak equivalence with:
+	[std::function<void (int)>]
+
+	  obtained has a function not bound but prediction has a function bound
+	  [bool]
+	  check failed
+
+	=======================================
+
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 440
 	string and string_view
 
 	Comparison performed using:
@@ -2046,7 +2102,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 414
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 442
 	Advice for equivalence checking
 
 	Comparison performed using:
@@ -2063,7 +2119,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 416
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 444
 	Advice for range equivalence, where the containerized form is explicitly specialized
 
 	Comparison performed using:
@@ -2088,7 +2144,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 419
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 447
 	Advice for range equivalence, where the containerized form is not explicitly specialized
 
 	[std::set<sequoia::testing::(anonymous namespace)::foo, std::less<sequoia::testing::(anonymous namespace)::foo>, std::allocator<sequoia::testing::(anonymous namespace)::foo> >]
@@ -2108,7 +2164,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 426
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 454
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > >]
@@ -2123,7 +2179,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 427
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 455
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > >]
@@ -2139,7 +2195,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 432
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 460
 
 	[std::vector<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> >, std::allocator<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > > >]
 
@@ -2157,7 +2213,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 433
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 461
 
 	[std::vector<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> >, std::allocator<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > > >]
 
@@ -2176,7 +2232,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 438
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 466
 	Weak inequivalence of directories with some common files
 
 	Comparison performed using:
@@ -2198,7 +2254,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 442
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 470
 	Directory weak inequivalence when default file checking is used
 
 	Comparison performed using:
@@ -2226,7 +2282,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 447
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 475
 	Weak inequivalence of range when default file checking is used
 
 	[std::vector<std::filesystem::path, std::allocator<std::filesystem::path> >]
@@ -2257,7 +2313,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 451
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 479
 	Advice for weak equivalence checking
 
 	Comparison performed using:
@@ -2281,7 +2337,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 455
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 483
 	Advice for range weak equivalence, where the containerized form is explicitly specialized
 
 	[std::vector<sequoia::testing::(anonymous namespace)::only_weakly_checkable, std::allocator<sequoia::testing::(anonymous namespace)::only_weakly_checkable> >]
@@ -2308,7 +2364,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 459
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 487
 	Advice for range weak equivalence, where the containerized form is not explicitly specialized
 
 	[std::list<sequoia::testing::(anonymous namespace)::only_weakly_checkable, std::allocator<sequoia::testing::(anonymous namespace)::only_weakly_checkable> >]
@@ -2335,7 +2391,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 469
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 497
 
 	[std::pair<int, double>]
 	operator== returned false
@@ -2348,7 +2404,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 475
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 503
 
 	[std::pair<int, sequoia::testing::(anonymous namespace)::only_weakly_checkable>]
 	  First element of pair is incorrect
@@ -2359,7 +2415,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 476
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 504
 
 	[std::pair<int, sequoia::testing::(anonymous namespace)::only_weakly_checkable>]
 	  Second element of pair is incorrect
@@ -2372,7 +2428,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 477
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 505
 
 	[std::pair<int, sequoia::testing::(anonymous namespace)::only_weakly_checkable>]
 	  First element of pair is incorrect
@@ -2391,7 +2447,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 478
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 506
 
 	[std::pair<int, sequoia::testing::(anonymous namespace)::only_weakly_checkable>]
 	  Second element of pair is incorrect
@@ -2405,7 +2461,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 484
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 512
 
 	[std::pair<int, sequoia::testing::(anonymous namespace)::only_equivalence_checkable>]
 	  First element of pair is incorrect
@@ -2416,7 +2472,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 485
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 513
 
 	[std::pair<int, sequoia::testing::(anonymous namespace)::only_equivalence_checkable>]
 	  Second element of pair is incorrect
@@ -2429,7 +2485,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 486
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 514
 
 	[std::pair<int, sequoia::testing::(anonymous namespace)::only_equivalence_checkable>]
 	  First element of pair is incorrect
@@ -2448,7 +2504,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 487
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 515
 
 	[std::pair<int, sequoia::testing::(anonymous namespace)::only_equivalence_checkable>]
 	  First element of pair is incorrect
