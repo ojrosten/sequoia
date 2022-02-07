@@ -60,7 +60,8 @@ namespace sequoia::testing
                                            m_Paths.test_materials(),
                                            m_Paths.output(),
                                            m_Recovery,
-                                           std::move(test), std::move(tests)...});
+                                           std::move(test),
+                                           std::move(tests)...});
         }
       }
     }
