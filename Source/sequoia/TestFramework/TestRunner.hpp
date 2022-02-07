@@ -49,9 +49,9 @@ namespace sequoia::testing
     test_runner& operator=(test_runner&&) noexcept = default;
 
     template<class Test, class... Tests>
-    void add_test_family(std::string_view name, Test&& test, Tests&&... tests)
+    void add_test_family(std::string_view name, Test test, Tests... tests)
     {
-      m_Selector.add_test_family(name, std::forward<Test>(test), std::forward<Tests>(tests)...);
+      m_Selector.add_test_family(name, std::move(test), std::move(tests)...);
     }
 
     void execute([[maybe_unused]] timer_resolution r={});

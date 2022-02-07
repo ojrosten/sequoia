@@ -26,19 +26,19 @@ namespace sequoia::testing
     explicit family_selector(project_paths paths);
 
     template<class Test, class... Tests>
-    void add_test_family(std::string_view name, Test&& test, Tests&&... tests)
+    void add_test_family(std::string_view name, Test test, Tests... tests)
     {
       check_for_duplicates(name, test, tests...);
-      
+
       const bool done{
-        [this, name](Test&& test, Tests&&... tests) {
+        [this, name](Test& test, Tests&... tests) {
           if(!m_SelectedSources.empty())
           {
             using family_t = test_family<std::remove_cvref_t<Test>, std::remove_cvref_t<Tests>...>;
             family_t f{std::string{name}, m_Paths.tests(), m_Paths.test_materials(), m_Paths.output(), m_Recovery};
             auto setter{f.make_materials_setter()};
-            
-            add_tests(f, setter, std::forward<Test>(test), std::forward<Tests>(tests)...);
+
+            add_tests(f, setter, std::move(test), std::move(tests)...);
             if(!f.empty())
             {
               m_Families.push_back(std::move(f));
@@ -48,15 +48,19 @@ namespace sequoia::testing
           }
 
           return false;
-        }(std::forward<Test>(test), std::forward<Tests>(tests)...)
+        }(test, tests...)
       };
 
       if(!done && ((m_SelectedSources.empty() && !pruned()) || !m_SelectedFamilies.empty()))
       {
         if(mark_family(name))
         {
-          m_Families.push_back(test_family{std::string{name}, m_Paths.tests(), m_Paths.test_materials(), m_Paths.output(), m_Recovery,
-            std::forward<Test>(test), std::forward<Tests>(tests)...});
+          m_Families.push_back(test_family{std::string{name},
+                                           m_Paths.tests(),
+                                           m_Paths.test_materials(),
+                                           m_Paths.output(),
+                                           m_Recovery,
+                                           std::move(test), std::move(tests)...});
         }
       }
     }

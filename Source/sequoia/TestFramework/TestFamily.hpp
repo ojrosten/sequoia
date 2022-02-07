@@ -167,13 +167,13 @@ namespace sequoia::testing
                 std::filesystem::path testMaterialsRepo,
                 std::filesystem::path outputDir,
                 recovery_paths recovery,
-                Tests&&... tests)
+                Tests... tests)
       : m_Info{std::move(name),
                std::move(testRepo),
                std::move(testMaterialsRepo),
                std::move(outputDir),
                std::move(recovery)}
-      , m_Tests{std::forward<Tests>(tests)...}
+      , m_Tests{std::move(tests)...}
     {
       family_info::materials_setter setter{m_Info};
       std::apply(
@@ -207,12 +207,12 @@ namespace sequoia::testing
     }
 
     template<concrete_test T>
-    void add_test(family_info::materials_setter& setter, T&& test)
+    void add_test(family_info::materials_setter& setter, T test)
     {
       using test_type = std::optional<std::remove_cvref_t<T>>;
 
       auto& t{std::get<test_type>(m_Tests)};
-      t = std::forward<T>(test);
+      t = std::move(test);
       set_materials(setter, t);
     }
 
