@@ -36,24 +36,28 @@ namespace sequoia::testing
     {
       std::weak_ordering ordering;
     };
-
-    template<class T>
-    struct object_info
-    {
-      template<class... Args>
-        requires (!resolve_to_copy_v<object_info, Args...>)
-      object_info(Args&&... args)
-        : fn{[...args{std::move(args)}] () { return T{args...}; }}
-      {}
-
-      std::function<T()> fn;
-    };
   }
+
+  template<class T>
+  struct object_generator
+  {
+    object_generator() = default;
+
+    template<std::invocable Fn>
+    object_generator(Fn f) : fn{std::move(f)}
+    {}
+
+    object_generator(T t)
+      : fn{[t{std::move(t)}]() { return t; }}
+    {}
+
+    std::function<T()> fn;
+  };
 
   template<class T, invocable_r<T, const T&> TransitionFn = std::function<T(const T&)>>
   struct transition_checker
   {
-    using transition_graph = maths::graph<maths::directed_flavour::directed, impl::transition_info<T, TransitionFn>, impl::object_info<T>>;
+    using transition_graph = maths::graph<maths::directed_flavour::directed, impl::transition_info<T, TransitionFn>, object_generator<T>>;
     using edge = typename transition_graph::edge_type;
 
     template<std::invocable<std::string, T, T> CheckFn>

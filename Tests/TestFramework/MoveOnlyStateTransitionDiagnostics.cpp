@@ -80,7 +80,7 @@ namespace sequoia::testing
 
         { edge_t{1, "Dividing by 2", [](const bar& f) -> bar { return bar{f.x / 2}; }, std::weak_ordering::less} }
       },
-      {{}, {1.1}, {2.2}}
+      {[](){ return bar{}; }, [](){ return bar{1.1}; }, [](){ return bar{2.2}; }}
     };
 
     {
@@ -117,16 +117,15 @@ namespace sequoia::testing
   {
     using bar_graph = transition_checker<bar>::transition_graph;
     using edge_t = transition_checker<bar>::edge;
-    using node_weight_t = transition_checker<bar>::transition_graph::node_weight_type;
-    // Note: the use of node_weight_t below only seems to be necessary
-    // with MSVC
 
     bar_graph g{
       { { edge_t{1, "Adding 1.1", [](const bar& f) -> bar { return bar{f.x + 1.0}; }, std::weak_ordering::greater }},
         { edge_t{0, "Subtracting 1.1", [](const bar& f) -> bar { return bar{f.x - 1.0}; }, std::weak_ordering::less} },
       },
-      {node_weight_t{}, node_weight_t{1.1}}
+      {[](){ return bar{}; }, [](){ return bar{1.1}; }}
     };
+
+    g.node_weight(g.cbegin_node_weights()+1, [](){ return bar{1.1}; });
 
     auto checker{
         [this](std::string_view description, const bar& obtained, const bar& prediction) {

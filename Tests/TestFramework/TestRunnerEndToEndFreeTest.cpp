@@ -154,7 +154,7 @@ namespace sequoia::testing
 
   void  test_runner_end_to_end_test::create_run_and_check(std::string_view description, const cmd_builder& b)
   {
-    auto fake{[&mat{auxiliary_materials()}] () { return mat / "FakeProject"; }};
+    auto fake{[&mat=auxiliary_materials()] () { return mat / "FakeProject"; }};
 
     fs::copy(fake() / "Source" / "fakeProject", generated_project() / "Source" / "generatedProject", fs::copy_options::recursive | fs::copy_options::skip_existing);
     fs::create_directory(working_materials() / "CreationOutput");

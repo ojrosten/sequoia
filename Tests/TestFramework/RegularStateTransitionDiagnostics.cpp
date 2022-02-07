@@ -68,7 +68,7 @@ namespace sequoia::testing
 
         { edge_t{1, "Dividing by 2", [](const foo& f) -> foo { return {f.x / 2}; }, std::weak_ordering::less} }
       },
-      {{}, {1.1}, {2.2}}
+      {foo{}, foo{1.1}, foo{2.2}}
     };
     
     {

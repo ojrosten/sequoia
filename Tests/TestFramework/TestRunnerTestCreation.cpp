@@ -92,7 +92,7 @@ namespace sequoia::testing
   void test_runner_test_creation::test_creation()
   {
     auto working{
-      [&mat{working_materials()}]() { return mat / "FakeProject"; }
+      [&mat=working_materials()]() { return mat / "FakeProject"; }
     };
 
     namespace fs = std::filesystem;
@@ -154,7 +154,7 @@ namespace sequoia::testing
   void test_runner_test_creation::test_creation_failure()
   {
     auto working{
-      [&mat{working_materials()}]() { return mat / "FakeProject"; }
+      [&mat=working_materials()]() { return mat / "FakeProject"; }
     };
 
     auto pathTrimmer{

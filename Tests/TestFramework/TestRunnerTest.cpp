@@ -122,7 +122,7 @@ namespace sequoia::testing
     template<std::size_t N>
     struct periodic
     {
-      periodic() { x = (++x) % N;}
+      periodic() { x = (x+1) % N;}
       
       inline static int x{};
     };
@@ -266,7 +266,7 @@ namespace sequoia::testing
   {
     check_exception_thrown<std::runtime_error>(
       LINE("Neither name nor source unique"),
-      [=](){
+      [this](){
         commandline_arguments args{""};
         const auto testMain{aux_project().append("TestSandbox").append("TestSandbox.cpp")};
         const auto includeTarget{aux_project().append("TestShared").append("SharedIncludes.hpp")};
