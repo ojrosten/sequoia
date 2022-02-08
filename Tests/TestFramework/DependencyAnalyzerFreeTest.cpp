@@ -28,9 +28,11 @@ namespace sequoia::testing
   void dependency_analyzer_free_test::check_tests_to_run(std::string_view description, const information& info, std::string_view cutoff, const std::vector<std::filesystem::path>& makeStale, const std::vector<std::filesystem::path>& toRun)
   {
     namespace fs = std::filesystem;
+
+    const auto staleTime{std::chrono::file_clock::now()};
     for(const auto& f : makeStale)
     {
-      fs::last_write_time(f, std::chrono::file_clock::now());
+      fs::last_write_time(f, staleTime);
     }
 
     opt_test_list actual{tests_to_run(info.source_repo, info.tests_repo, info.materials, info.prune_file, info.reset_time, info.exe_time_stamp, cutoff)};
@@ -54,7 +56,11 @@ namespace sequoia::testing
   {
     const auto fake{working_materials() / "FakeProject"};
 
-    m_Info = {fake / "Source", fake / "Tests", fake / "TestMaterials", fake / "output/TestAll.prune", std::chrono::file_clock::now()};
+    m_Info = {fake / "Source",
+              fake / "Tests",
+              fake / "TestMaterials",
+              fake / "output/TestAll.prune",
+              std::chrono::file_clock::now() - std::chrono::seconds(1)};
 
     for(auto& entry : fs::recursive_directory_iterator(fake))
     {
@@ -70,7 +76,8 @@ namespace sequoia::testing
     check_exception_thrown<std::runtime_error>(LINE("Executable out of date"), 
       [this]() {
         const auto now{std::chrono::file_clock::now()};
-        return tests_to_run(m_Info.source_repo, m_Info.tests_repo, m_Info.materials, "", now, m_Info.reset_time, "");
+        const auto exeTime{m_Info.reset_time - std::chrono::seconds(2)};
+        return tests_to_run(m_Info.source_repo, m_Info.tests_repo, m_Info.materials, "", now, exeTime, "");
       });
   }
 #
