@@ -1,6 +1,6 @@
 #BUILD_ROOT   := ../build/native
-#BUILD_ROOT   := ../build/gcc
-BUILD_ROOT     := ../build/clang
+BUILD_ROOT   := ../build/gcc
+#BUILD_ROOT     := ../build/clang
 
 TEST_BUILD_ROOT := $(BUILD_ROOT)/TestFrameworkDiagnostics
 SEQ_BUILD_ROOT  := $(BUILD_ROOT)/SequoiaLib
@@ -36,7 +36,7 @@ CFLAGS += -I/usr/local/Cellar/gcc/11.2.0_3/include -I/usr/local/Cellar/gcc/11.2.
 
 
 #CFLAGS +=  -ferror-limit=1 -Wno-missing-braces -fsanitize=address
-CFLAGS += -v -fmax-errors=1 -Wno-comment
+CFLAGS += -fmax-errors=1 -Wno-comment -fsanitize=address
 
 EXE      := $(TEST_BUILD_ROOT)/TestFrameworkDiagnostics
 SEQ_LIB  := $(SEQ_BUILD_ROOT)/Sequoia.a
@@ -58,7 +58,7 @@ SEQ_OBJS := $(addprefix $(SEQ_BUILD_DIR)/, $(SEQ_SRCS:%.cpp=%.o))
 SEQ_DEPS := $(addprefix $(SEQ_BUILD_DIR)/, $(SEQ_SRCS:%.cpp=%.d))
 
 LDFLAGS :=
-LDFLAGS += -L/usr/local/opt/llvm/lib -Wl,-rpath,/usr/local/opt/llvm/lib
+LDFLAGS += -L/usr/local/opt/llvm/lib -Wl,-rpath,/usr/local/opt/llvm/lib  -fsanitize=address
 
 $(EXE) : $(APP_OBJ) $(TEST_OBJS) $(SEQ_LIB)
 	$(CC) $(CFLAGS) $^ -o $@ $(LDFLAGS)

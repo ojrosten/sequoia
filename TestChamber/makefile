@@ -19,9 +19,9 @@ SEQ_BUILD_SUB_DIRS  := $(addprefix $(SEQ_BUILD_DIR)/, $(SEQ_SUB_DIRS))
 
 .PHONY: clean subdirs
 
-CC := /usr/local/Cellar/gcc/11.2.0_3/bin/g++-11
+#CC := /usr/local/Cellar/gcc/11.2.0_3/bin/g++-11
 #CC := clang++
-#CC := /usr/local/opt/llvm/bin/clang++
+CC := /usr/local/opt/llvm/bin/clang++
 
 PREPROP :=
 #PREPROP += -D MINIMAL_GRAPH_TESTS
@@ -31,11 +31,11 @@ CFLAGS := -Wall -Wextra -Wpedantic -std=c++2a -O0 \
 	$(PREPROP)						       \
 
 CFLAGS += -I../TestCommon -I../Source -I../Tests
-#CFLAGS += -I/usr/local/opt/llvm/include -I/usr/local/opt/llvm/include/c++/v1/
-CFLAGS += -I/usr/local/Cellar/gcc/11.2.0_3/include -I/usr/local/Cellar/gcc/11.2.0_3/include/c++/11/
+CFLAGS += -I/usr/local/opt/llvm/include -I/usr/local/opt/llvm/include/c++/v1/
+#CFLAGS += -I/usr/local/Cellar/gcc/11.2.0_3/include -I/usr/local/Cellar/gcc/11.2.0_3/include/c++/11/
 
-#CFLAGS +=  -ferror-limit=1 -Wno-missing-braces
-CFLAGS += -fmax-errors=1 -Wno-comment
+CFLAGS +=  -ferror-limit=1 -Wno-missing-braces -fsanitize=address
+#CFLAGS += -fmax-errors=1 -Wno-comment -fsanitize=address
 
 EXE      := $(TEST_BUILD_ROOT)/TestChamber
 SEQ_LIB  := $(SEQ_BUILD_ROOT)/Sequoia.a
@@ -53,7 +53,7 @@ SEQ_OBJS := $(addprefix $(SEQ_BUILD_DIR)/, $(SEQ_SRCS:%.cpp=%.o))
 SEQ_DEPS := $(addprefix $(SEQ_BUILD_DIR)/, $(SEQ_SRCS:%.cpp=%.d))
 
 LDFLAGS :=
-LDFLAGS += -L/usr/local/opt/llvm/lib -Wl,-rpath,/usr/local/opt/llvm/lib
+LDFLAGS += -L/usr/local/opt/llvm/lib -Wl,-rpath,/usr/local/opt/llvm/lib -fsanitize=address
 
 $(EXE) : $(APP_OBJ) $(TEST_OBJS) $(SEQ_LIB)
 	$(CC) $(CFLAGS) $^ -o $@ $(LDFLAGS)
