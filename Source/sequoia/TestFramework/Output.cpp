@@ -239,6 +239,7 @@ namespace sequoia::testing
   std::string tidy_name(std::string name, gcc_type)
   {
     replace_all(name, ">>", ">> ");
+    replace_all(name, "__cxx11::", "");
     return tidy_name(name);
   }
 
