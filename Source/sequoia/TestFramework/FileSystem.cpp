@@ -354,7 +354,7 @@ namespace sequoia::testing
         if(*dirIter == *i) break;
       }
 
-      while((*dirIter == *i) && (dirIter != dir.end()) && (i != p.end()))
+      while((dirIter != dir.end()) && (i != p.end()) && (*dirIter == *i))
       {
         ++dirIter;
         ++i;
