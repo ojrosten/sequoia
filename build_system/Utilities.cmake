@@ -1,7 +1,9 @@
 set(CURRENT_DIR ${CMAKE_CURRENT_LIST_DIR})
 
 FUNCTION(LINK_LIBRARIES target)
-    target_link_libraries(${target} PUBLIC TestFramework)
+    target_link_libraries(${target}
+                          PUBLIC TestFramework
+                          PRIVATE Threads::Threads)
 
     if(MSVC)
         target_link_libraries(${target} PRIVATE winmm)

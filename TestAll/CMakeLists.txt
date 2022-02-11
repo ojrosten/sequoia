@@ -1,7 +1,9 @@
 cmake_minimum_required(VERSION 3.20)
 
-project(SequioaTestAll DESCRIPTION "The Sequoia Library plus all tests"
+project(SequoiaTestAll DESCRIPTION "The Sequoia Library plus all tests"
                        LANGUAGES CXX)
+
+find_package(Threads REQUIRED)
 
 add_executable(TestAll TestMain.cpp)
 

@@ -1,7 +1,9 @@
 cmake_minimum_required(VERSION 3.20)
 
-project(SequioaTestChamber DESCRIPTION "The Sequoia Library plus a test chamber"
+project(SequoiaTestChamber DESCRIPTION "The Sequoia Library plus a test chamber"
                            LANGUAGES CXX)
+
+find_package(Threads REQUIRED)
 
 add_executable(TestChamber TestChamberMain.cpp)
 

@@ -1,7 +1,9 @@
 cmake_minimum_required(VERSION 3.20)
 
-project(SequioaTestFrameworkDiagnostics DESCRIPTION "The Sequoia Library plus diagnostics for the testing framework"
+project(SequoiaTestFrameworkDiagnostics DESCRIPTION "The Sequoia Library plus diagnostics for the testing framework"
                                         LANGUAGES CXX)
+
+find_package(Threads REQUIRED)
 
 add_executable(TestFrameworkDiagnostics TestFrameworkDiagnosticsMain.cpp)
 
