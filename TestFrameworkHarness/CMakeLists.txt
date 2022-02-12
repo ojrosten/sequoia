@@ -9,6 +9,9 @@ sequoia_init()
 
 add_executable(TestFrameworkHarness TestFrameworkHarnessMain.cpp)
 
-target_sources(TestFrameworkHarness PRIVATE ../Tests/TestFramework/TestRunnerEndToEndFreeTest.cpp)
+set(TestDir ../Tests)
+
+target_sources(TestFrameworkHarness PRIVATE ${TestDir}/TestFramework/TestRunnerEndToEndFreeTest.cpp
+                                            ${TestDir}/Parsing/CommandLineArgumentsTestingUtilities.cpp) 
 
 sequoia_finalize_self(TestFrameworkHarness ../Tests/TestFramework)
