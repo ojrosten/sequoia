@@ -1,7 +1,7 @@
 set(CurrentDir ${CMAKE_CURRENT_LIST_DIR})
 
 FUNCTION(sequoia_init)
-	if(!MSVC)
+	if(NOT MSVC)
 		find_package(Threads REQUIRED)
 	endif()
 ENDFUNCTION()
