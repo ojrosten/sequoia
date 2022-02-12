@@ -11,7 +11,7 @@ add_executable(TestAll TestMain.cpp)
 
 set(TestDir ../Tests)
 
-target_sources(TestAll PRIVATE ${TestDir}/Experimental/ExperimentalTest.cpp
+target_sources(TestAll PRIVATE
                ${TestDir}/Algorithms/AlgorithmsTest.cpp
                ${TestDir}/Core/Concurrency/ConcurrencyModelsPerformanceTest.cpp
                ${TestDir}/Core/Concurrency/ConcurrencyModelsTest.cpp
@@ -35,6 +35,7 @@ target_sources(TestAll PRIVATE ${TestDir}/Experimental/ExperimentalTest.cpp
                ${TestDir}/Core/Utilities/IteratorTest.cpp
                ${TestDir}/Core/Utilities/UniformWrapperTest.cpp
                ${TestDir}/Core/Utilities/UniformWrapperTestingDiagnostics.cpp
+			   ${TestDir}/Experimental/ExperimentalTest.cpp
                ${TestDir}/Maths/Graph/DynamicGraphEmbeddedTest.cpp
                ${TestDir}/Maths/Graph/DynamicGraphFixedTopologyTest.cpp
                ${TestDir}/Maths/Graph/DynamicGraphInitializationTest.cpp
