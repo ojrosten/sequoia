@@ -1,5 +1,3 @@
-set(CurrentDir ${CMAKE_CURRENT_LIST_DIR})
-
 FUNCTION(sequoia_init)
 	if(NOT MSVC)
 		find_package(Threads REQUIRED)
@@ -27,10 +25,15 @@ FUNCTION(sequoia_compile_options)
     endif()
 ENDFUNCTION()
 
+FUNCTION(set_headers_for_ide target directory)
+	file(GLOB_RECURSE HeaderFiles ${directory}/*.h*)
+	target_sources(${target} PRIVATE ${HeaderFiles})
+ENDFUNCTION()
+
 FUNCTION(sequoia_finalize target headerDirForIDE)
     sequoia_compile_options()
 
-    add_subdirectory(${CurrentDir}/../Source TestFramework)
+    add_subdirectory(${CMAKE_CURRENT_FUNCTION_LIST_DIR}/../Source TestFramework)
 
     sequoia_link_libraries(${target})
     target_compile_features(${target} PUBLIC cxx_std_23)
@@ -39,15 +42,12 @@ FUNCTION(sequoia_finalize target headerDirForIDE)
 		set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${target})
 	endif()
 	
-	if(headerDirForIDE)
-		file(GLOB_RECURSE HeaderFiles ${headerDirForIDE}/*.hpp)
-		target_sources(${target} PRIVATE ${HeaderFiles})
-	endif()
+	set_headers_for_ide(${target} ${headerDirForIDE})
 ENDFUNCTION()
 
 FUNCTION(sequoia_finalize_self target headersForIDE)
-    target_include_directories(${target} PRIVATE ${CurrentDir}/../TestCommon)
-    target_include_directories(${target} PRIVATE ${CurrentDir}/../Tests)
+    target_include_directories(${target} PRIVATE ${CMAKE_CURRENT_FUNCTION_LIST_DIR}/../TestCommon)
+    target_include_directories(${target} PRIVATE ${CMAKE_CURRENT_FUNCTION_LIST_DIR}/../Tests)
 
     sequoia_finalize(${target} ${headersForIDE})
 ENDFUNCTION()
