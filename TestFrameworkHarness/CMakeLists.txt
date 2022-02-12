@@ -3,12 +3,12 @@ cmake_minimum_required(VERSION 3.20)
 project(SequioaTestFrameworkHarness DESCRIPTION "End-to-end testing of the Sequoia testing framework"
                                     LANGUAGES CXX)
 
+include(../build_system/Utilities.cmake)
+
+sequoia_init()
+
 add_executable(TestFrameworkHarness TestFrameworkHarnessMain.cpp)
 
 target_sources(TestFrameworkHarness PRIVATE ../Tests/TestFramework/TestRunnerEndToEndFreeTest.cpp)
 
-SET(BUILD_SYS ${CMAKE_CURRENT_SOURCE_DIR}/../build_system)
-
-include(${BUILD_SYS}/Utilities.cmake)
-
-FINALIZE_SEQUOIA(TestFrameworkHarness)
+sequoia_finalize_self(TestFrameworkHarness ../Tests/TestFramework)

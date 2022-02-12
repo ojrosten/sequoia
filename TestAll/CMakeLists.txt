@@ -3,11 +3,13 @@ cmake_minimum_required(VERSION 3.20)
 project(SequoiaTestAll DESCRIPTION "The Sequoia Library plus all tests"
                        LANGUAGES CXX)
 
-find_package(Threads REQUIRED)
+include(../build_system/Utilities.cmake)
+
+sequoia_init()
 
 add_executable(TestAll TestMain.cpp)
 
-set(TestDir "../Tests")
+set(TestDir ../Tests)
 
 target_sources(TestAll PRIVATE ${TestDir}/Experimental/ExperimentalTest.cpp
                ${TestDir}/Algorithms/AlgorithmsTest.cpp
@@ -100,12 +102,5 @@ target_sources(TestAll PRIVATE ${TestDir}/Experimental/ExperimentalTest.cpp
                ${TestDir}/TextProcessing/PatternsFreeTest.cpp
                ${TestDir}/TextProcessing/SubstitutionsFreeTest.cpp)
 
-set(BUILD_SYS ${CMAKE_CURRENT_SOURCE_DIR}/../build_system)
-
-file(GLOB_RECURSE HeaderFiles ${TestDir}/*.hpp)
-target_sources(TestAll PRIVATE ${HeaderFiles})
-
-include(${BUILD_SYS}/Utilities.cmake)
-
-FINALIZE_SEQUOIA(TestAll)
+sequoia_finalize_self(TestAll ${TestDir})
 

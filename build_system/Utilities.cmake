@@ -1,17 +1,23 @@
-set(CURRENT_DIR ${CMAKE_CURRENT_LIST_DIR})
+set(CurrentDir ${CMAKE_CURRENT_LIST_DIR})
 
-FUNCTION(LINK_LIBRARIES target)
-    target_link_libraries(${target}
-                          PUBLIC TestFramework
-                          PRIVATE Threads::Threads)
+FUNCTION(sequoia_init)
+	if(!MSVC)
+		find_package(Threads REQUIRED)
+	endif()
+ENDFUNCTION()
+
+FUNCTION(sequoia_link_libraries target)
+    target_link_libraries(${target} PUBLIC TestFramework)
 
     if(MSVC)
         target_link_libraries(${target} PRIVATE winmm)
         set_target_properties(${target} PROPERTIES LINK_FLAGS "/INCREMENTAL:NO")
+	else()
+		target_link_libraries(${target} PRIVATE Threads::Threads)
     endif()
 ENDFUNCTION()
 
-FUNCTION(COMPILE_OPTIONS)
+FUNCTION(sequoia_compile_options)
     if (MSVC)
         add_definitions(/W4)
         add_definitions(/bigobj)
@@ -21,18 +27,27 @@ FUNCTION(COMPILE_OPTIONS)
     endif()
 ENDFUNCTION()
 
-FUNCTION(FINALIZE target)
-    COMPILE_OPTIONS()
+FUNCTION(sequoia_finalize target headerDirForIDE)
+    sequoia_compile_options()
 
-    add_subdirectory(${CURRENT_DIR}/../Source TestFramework)
+    add_subdirectory(${CurrentDir}/../Source TestFramework)
 
-    LINK_LIBRARIES(${target})
+    sequoia_link_libraries(${target})
     target_compile_features(${target} PUBLIC cxx_std_23)
+	
+	if (MSVC)
+		set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${target})
+	endif()
+	
+	if(headerDirForIDE)
+		file(GLOB_RECURSE HeaderFiles ${headerDirForIDE}/*.hpp)
+		target_sources(${target} PRIVATE ${HeaderFiles})
+	endif()
 ENDFUNCTION()
 
-FUNCTION(FINALIZE_SEQUOIA target)
-    target_include_directories(${target} PRIVATE ${CURRENT_DIR}/../TestCommon)
-    target_include_directories(${target} PRIVATE ${CURRENT_DIR}/../Tests)
+FUNCTION(sequoia_finalize_self target headersForIDE)
+    target_include_directories(${target} PRIVATE ${CurrentDir}/../TestCommon)
+    target_include_directories(${target} PRIVATE ${CurrentDir}/../Tests)
 
-    FINALIZE(${target})
+    sequoia_finalize(${target} ${headersForIDE})
 ENDFUNCTION()

@@ -1,13 +1,16 @@
-cmake_minimum_required(VERSION 3.19)
+cmake_minimum_required(VERSION 3.20)
 
 project(MyProjectTests LANGUAGES CXX)
 
-add_executable(TestAll TestSandbox.cpp)
-
-set(CURRENT_DIR ${CMAKE_CURRENT_LIST_DIR})
 set(BuildSystem ../build_system)
-set(SourceDir ${CURRENT_DIR}/../Source)
-set(TestDir ${CURRENT_DIR}/../Tests)
+set(TestDir ../Tests)
+set(SourceDir ../Source)
+
+include(${BuildSystem}/Utilities.cmake)
+
+sequoia_init()
+
+add_executable(TestAll TestSandbox.cpp)
 
 add_subdirectory(${SourceDir} MyProject)
 target_link_libraries(TestAll PUBLIC MyProject)
@@ -47,17 +50,8 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Utilities/VariadicTest.cpp
                ${TestDir}/Utilities/VariadicTestingDiagnostics.cpp)
 
-file(GLOB_RECURSE HeaderFiles ${TestDir}/*.hpp)
-target_sources(TestAll PRIVATE ${HeaderFiles})
-
-include(${BuildSystem}/Utilities.cmake)
-
 target_include_directories(TestAll PRIVATE ${SourceDir})
 target_include_directories(TestAll PRIVATE ${TestDir})
 
-if (MSVC)
-	set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT TestAll)
-endif()
-
-FINALIZE(TestAll)
+sequoia_finalize(TestAll ${TestDir})
 
