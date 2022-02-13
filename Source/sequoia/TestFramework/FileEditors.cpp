@@ -178,10 +178,19 @@ namespace sequoia::testing
               entries.push_back(text.substr(entryStart, next - entryStart));
             }
 
+            const auto numSpaces{
+              [patternOpen]() {
+                if(const auto pos{patternOpen.find('(')}; pos < std::string_view::npos)
+                  return pos + 1;
+
+                return patternOpen.size();
+              }()
+            };
+
             std::sort(entries.begin(), entries.end());
             std::string sorted{};
-            std::for_each(entries.begin(), entries.end(), [&sorted, patternOpen](const std::string& e) {
-              sorted.append("\n").append(patternOpen.size(), ' ').append(e); });
+            std::for_each(entries.begin(), entries.end(), [&sorted, numSpaces](const std::string& e) {
+              sorted.append("\n").append(numSpaces, ' ').append(e); });
 
             const auto startSection{std::min(text.find("\n", startPos + patternOpen.size()), endPos)};
             text.replace(startSection, endPos - startSection, sorted);

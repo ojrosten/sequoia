@@ -346,7 +346,7 @@ namespace sequoia::testing
 
     read_modify_write(srcPath, setCppText);
 
-    add_to_cmake(sourceRoot, sourceRoot, srcPath, "set(", ")\n", "");
+    add_to_cmake(sourceRoot, sourceRoot, srcPath, "set(SourceList", ")\n", "");
 
     read_modify_write(paths().main_cpp_dir() / "CMakeLists.txt", [&root=paths().project_root()](std::string& text) {
         replace_all(text, "#!", "");
