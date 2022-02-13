@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.20)
 
+include(../build_system/Utilities.cmake)
+
 set(SourceList sequoia/TestFramework/Advice.cpp
     sequoia/Parsing/CommandLineArguments.cpp
     sequoia/PlatformSpecific/Helpers.cpp
@@ -34,7 +36,4 @@ add_library(TestFramework STATIC ${SourceList})
 
 target_include_directories(TestFramework PUBLIC .)
 
-file(GLOB_RECURSE HeaderFiles *.hpp)
-target_sources(TestFramework PRIVATE ${HeaderFiles})
-
-target_compile_features(TestFramework PUBLIC cxx_std_23)
+sequoia_finalize_library(TestFramework)

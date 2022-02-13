@@ -30,13 +30,17 @@ FUNCTION(set_headers_for_ide target directory)
 	target_sources(${target} PRIVATE ${HeaderFiles})
 ENDFUNCTION()
 
+FUNCTION(sequoia_compile_features target)
+	target_compile_features(${target} PUBLIC cxx_std_23)
+ENDFUNCTION()
+
 FUNCTION(sequoia_finalize target headerDirForIDE)
     sequoia_compile_options()
 
     add_subdirectory(${CMAKE_CURRENT_FUNCTION_LIST_DIR}/../Source TestFramework)
 
     sequoia_link_libraries(${target})
-    target_compile_features(${target} PUBLIC cxx_std_23)
+	sequoia_compile_features(${target})
 	
 	if (MSVC)
 		set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${target})
@@ -50,4 +54,9 @@ FUNCTION(sequoia_finalize_self target headersForIDE)
     target_include_directories(${target} PRIVATE ${CMAKE_CURRENT_FUNCTION_LIST_DIR}/../Tests)
 
     sequoia_finalize(${target} ${headersForIDE})
+ENDFUNCTION()
+
+FUNCTION(sequoia_finalize_library target)
+	set_headers_for_ide(${target} ${CMAKE_CURRENT_LIST_DIR})
+	sequoia_compile_features(${target})
 ENDFUNCTION()
