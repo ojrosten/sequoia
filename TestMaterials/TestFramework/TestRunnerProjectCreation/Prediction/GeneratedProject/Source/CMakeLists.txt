@@ -6,7 +6,7 @@ add_library(GeneratedProject STATIC ${SourceList})
 
 target_include_directories(GeneratedProject PUBLIC .)
 
-file(GLOB_RECURSE HeaderFiles *.h*)
-target_sources(GeneratedProject PRIVATE ${HeaderFiles})
+set(BuildSystem ../../FakeProject/build_system)
+include(${BuildSystem}/Utilities.cmake)
 
-target_compile_features(GeneratedProject PUBLIC cxx_std_23)
+sequoia_finalize_library(GeneratedProject)

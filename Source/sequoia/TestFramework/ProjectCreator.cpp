@@ -119,7 +119,8 @@ namespace sequoia::testing
       }
     );
 
-    read_modify_write(newProjRoot / "Source" / "CMakeLists.txt", [&newProjRoot](std::string& text) {
+    read_modify_write(newProjRoot / "Source" / "CMakeLists.txt", [setBuildSysPath, &newProjRoot](std::string& text) {
+        setBuildSysPath(text);
         set_proj_name(text, newProjRoot);
       }
     );

@@ -12,7 +12,7 @@ add_library(MyProject STATIC ${SourceList})
 
 target_include_directories(MyProject PUBLIC .)
 
-file(GLOB_RECURSE HeaderFiles *.h*)
-target_sources(MyProject PRIVATE ${HeaderFiles})
+set(BuildSystem ../build_system)
+include(${BuildSystem}/Utilities.cmake)
 
-target_compile_features(MyProject PUBLIC cxx_std_23)
+sequoia_finalize_library(MyProject)
