@@ -9,7 +9,7 @@ FUNCTION(sequoia_compile_options)
             add_compile_options(-Wno-missing-braces -Wno-unused-lambda-capture)
         elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
             add_compile_options(-Wno-comment)
-        endif()         
+        endif()
     endif()
 ENDFUNCTION()
 
