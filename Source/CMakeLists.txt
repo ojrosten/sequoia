@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.20)
 
 include(../build_system/Utilities.cmake)
 
+sequoia_init()
+
 set(SourceList sequoia/TestFramework/Advice.cpp
     sequoia/Parsing/CommandLineArguments.cpp
     sequoia/PlatformSpecific/Helpers.cpp
