@@ -16,11 +16,17 @@
 
 namespace sequoia::testing::impl
 {
-  template<class Actions>
-  inline constexpr bool has_post_copy_action = requires { &Actions::post_copy_action; };
+  template<class Actions, class... Args>
+  inline constexpr bool has_post_copy_action
+    = requires (std::remove_cvref_t<Actions> actions, std::remove_cvref_t<Args>&... args) {
+        actions.post_copy_action(args...);
+      };
 
-  template<class Actions>
-  inline constexpr bool has_post_copy_assign_action = requires { &Actions::post_copy_assign_action; };
+  template<class Actions, class... Args>
+  inline constexpr bool has_post_copy_assign_action
+    = requires (std::remove_cvref_t<Actions> actions, std::remove_cvref_t<Args>&... args) {
+        actions.post_copy_assign_action(args...);
+      };
 
   template<test_mode Mode, class Actions, pseudoregular T, class... Args>
   bool do_check_copy_assign(test_logger<Mode>& logger, [[maybe_unused]] const Actions& actions, T& z, const T& y, const Args&... args)
@@ -28,7 +34,7 @@ namespace sequoia::testing::impl
     z = y;
     if(check(equality, "Inconsistent copy assignment (from y)", logger, z, y))
     {
-      if constexpr(has_post_copy_assign_action<Actions>)
+      if constexpr(has_post_copy_assign_action<Actions, test_logger<Mode>, T, T, Args...>)
       {
         actions.post_copy_assign_action(logger, z, y, args...);
       }
@@ -60,7 +66,7 @@ namespace sequoia::testing::impl
       check(equality, "Inconsistent copy constructor (x)", logger, z, x)
     };
 
-    if constexpr(has_post_copy_action<Actions>)
+    if constexpr(has_post_copy_action<Actions, test_logger<Mode>, T, T, Args...>)
     {
       if(consistentCopy)
       {

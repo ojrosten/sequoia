@@ -139,20 +139,35 @@ namespace sequoia::testing::impl
     using auxiliary_data_policy<T>::auxiliary_data_policy;
   };
   
-  template<class Actions>
-  inline constexpr bool has_post_comparison_action = requires { &Actions::post_comparison_action; };
+  template<class Actions, class... Args>
+  inline constexpr bool has_post_comparison_action
+    = requires (std::remove_cvref_t<Actions> actions, std::remove_cvref_t<Args>&... args) {
+        actions.post_comparison_action(args...);
+      };
 
-  template<class Actions>
-  inline constexpr bool has_post_move_action = requires { &Actions::post_move_action; };
+  template<class Actions, class... Args>
+  inline constexpr bool has_post_move_action
+   = requires (std::remove_cvref_t<Actions> actions, std::remove_cvref_t<Args>&... args) {
+        actions.post_move_action(args...);
+      };
 
-  template<class Actions>
-  inline constexpr bool has_post_move_assign_action = requires { &Actions::post_move_assign_action; };
+  template<class Actions, class... Args>
+  inline constexpr bool has_post_move_assign_action
+    = requires (std::remove_cvref_t<Actions> actions, std::remove_cvref_t<Args>&... args) {
+        actions.post_move_assign_action(args...);
+      };
 
-  template<class Actions>
-  inline constexpr bool has_post_swap_action = requires { &Actions::post_swap_action; };
+  template<class Actions, class... Args>
+  inline constexpr bool has_post_swap_action
+    = requires (std::remove_cvref_t<Actions> actions, std::remove_cvref_t<Args>&... args) {
+        actions.post_swap_action(args...);
+      };
 
-  template<class Actions>
-  inline constexpr bool has_post_serialization_action = requires { &Actions::post_serialization_action; };
+  template<class Actions, class... Args>
+  inline constexpr bool has_post_serialization_action
+    = requires (std::remove_cvref_t<Actions> actions, std::remove_cvref_t<Args>&... args) {
+        actions.post_serialization_action(args...);
+      };
 
   //================================ comparisons ================================//
 
@@ -194,7 +209,7 @@ namespace sequoia::testing::impl
     if(!check(std::string{"operator"}.append(to_string(comparison.value)).append(" is inconsistent ").append(tag), logger, fn(x)))
       return false;
 
-    if constexpr (has_post_comparison_action<Actions>)
+    if constexpr (has_post_comparison_action<Actions, test_logger<Mode>, comparison_constant<C>, T, std::string_view, Args...>)
     {
       if(!actions.post_comparison_action(logger, comparison, x, tag, args...))
         return false;
@@ -349,7 +364,7 @@ namespace sequoia::testing::impl
       check(equality, "Incorrect moved-from value after move construction", logger, z, movedFrom.value().get());
     }
 
-    if constexpr(has_post_move_action<Actions>)
+    if constexpr(has_post_move_action<Actions, test_logger<Mode>, T, Args...>)
     {
       actions.post_move_action(logger, w, args...);
     }
@@ -377,7 +392,7 @@ namespace sequoia::testing::impl
       check(equality, "Incorrect moved-from value after move assignment", logger, y, movedFrom.value().get());
     }
 
-    if constexpr(has_post_move_assign_action<Actions>)
+    if constexpr(has_post_move_assign_action<Actions, test_logger<Mode>, T, T, Mutator, Args...>)
     {
       actions.post_move_assign_action(logger, z, yClone, std::move(yMutator), args...);
     }
@@ -407,7 +422,7 @@ namespace sequoia::testing::impl
 
     if(swapx && swapy)
     {
-      if constexpr(has_post_swap_action<Actions>)
+      if constexpr(has_post_swap_action<Actions, test_logger<Mode>, T, T, T, Args...>)
       {
         actions.post_swap_action(logger, x, y, yClone, args...);
       }
@@ -444,7 +459,7 @@ namespace sequoia::testing::impl
     std::stringstream s{};
     s << y;
 
-    if constexpr(has_post_serialization_action<Actions>)
+    if constexpr(has_post_serialization_action<Actions, test_logger<Mode>, T, Args...>)
     {
       actions.post_serialization_action(logger, y, args...);
     }
