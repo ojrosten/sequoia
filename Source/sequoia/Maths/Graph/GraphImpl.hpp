@@ -503,7 +503,7 @@ namespace sequoia
       }
 
       void swap(graph_primitive& rhs)
-        noexcept(noexcept(Connectivity::swap(rhs)) && noexcept(Nodes::swap(rhs)))
+        noexcept(noexcept(this->Connectivity::swap(rhs)) && noexcept(this->Nodes::swap(rhs)))
       {
         Connectivity::swap(rhs);
         Nodes::swap(rhs);
