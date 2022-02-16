@@ -195,7 +195,7 @@ namespace sequoia::testing
   template<class... Ts>
   struct equivalent_type_processor
   {
-    static constexpr bool ends_with_tutor{};
+    constexpr static bool ends_with_tutor{false};
 
     [[nodiscard]]
     static std::string info()
@@ -208,7 +208,7 @@ namespace sequoia::testing
     requires ends_with_tutor_v<Ts...>
   struct equivalent_type_processor<Ts...>
   {
-    static constexpr bool ends_with_tutor{true};
+    constexpr static bool ends_with_tutor{true};
 
     [[nodiscard]]
     static std::string info()

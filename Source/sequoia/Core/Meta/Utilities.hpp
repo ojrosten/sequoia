@@ -119,12 +119,12 @@ namespace sequoia
   template<alloc A>
   struct alloc_count
   {
-    static constexpr std::size_t size{1};
+    constexpr static std::size_t size{1};
   };
 
   template<alloc OuterAlloc, alloc... InnerAlloc>
   struct alloc_count<std::scoped_allocator_adaptor<OuterAlloc, InnerAlloc...>>
   {
-    static constexpr std::size_t size{1 + sizeof...(InnerAlloc)};
+    constexpr static std::size_t size{1 + sizeof...(InnerAlloc)};
   };
 }

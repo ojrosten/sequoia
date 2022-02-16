@@ -854,7 +854,7 @@ namespace sequoia
       using indirect_edge_init_type = edge_init_constant<false>;
 
       [[nodiscard]]
-      static constexpr auto direct_edge_init() noexcept
+      constexpr static auto direct_edge_init() noexcept
       {
         if constexpr(std::is_same_v<edge_type, edge_init_type>)
         {
@@ -866,7 +866,7 @@ namespace sequoia
         }
       }
 
-      static constexpr bool direct_edge_init_v{std::is_same_v<decltype(direct_edge_init()), direct_edge_init_type>};
+      constexpr static bool direct_edge_init_v{std::is_same_v<decltype(direct_edge_init()), direct_edge_init_type>};
 
       template<bool Direct>
       struct edge_copy_constant : std::bool_constant<Direct>
@@ -876,7 +876,7 @@ namespace sequoia
       using indirect_edge_copy_type = edge_copy_constant<false>;
 
       [[nodiscard]]
-      static constexpr auto direct_edge_copy() noexcept
+      constexpr static auto direct_edge_copy() noexcept
       {
         return edge_copy_constant<direct_edge_init_v || (EdgeTraits::shared_edge_v && protectiveEdgeWeightProxy)>{};
       }
@@ -887,11 +887,11 @@ namespace sequoia
       using has_partitions_alloc_type = has_partitions_alloc_constant<true>;
       using no_partitions_alloc_type = has_partitions_alloc_constant<false>;
 
-      static constexpr bool protectiveEdgeWeightProxy{
+      constexpr static bool protectiveEdgeWeightProxy{
         std::is_same_v<typename edge_type::weight_proxy_type, utilities::uniform_wrapper<edge_weight_type>>
       };
 
-      static constexpr bool embeddedEdge{
+      constexpr static bool embeddedEdge{
         (edge_type::flavour == edge_flavour::partial_embedded) || (edge_type::flavour == edge_flavour::full_embedded)
       };
 
@@ -1008,7 +1008,7 @@ namespace sequoia
       }
 
       [[nodiscard]]
-      static constexpr auto partner_index(const_edge_iterator citer)
+      constexpr static auto partner_index(const_edge_iterator citer)
       {
         const auto& edge{*citer};
         const auto target{edge.target_node()};

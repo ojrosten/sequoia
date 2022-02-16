@@ -40,7 +40,7 @@ namespace sequoia::maths
   struct node_weight_storage_traits
   {
     constexpr static bool throw_on_range_error{true};
-    constexpr static bool static_storage_v{};
+    constexpr static bool static_storage_v{false};
     constexpr static bool has_allocator{true};
     template<class S> using container_type = std::vector<S, std::allocator<S>>;
   };
@@ -49,7 +49,7 @@ namespace sequoia::maths
     requires std::is_empty_v<NodeWeight>
   struct node_weight_storage_traits<NodeWeight>
   {
-    constexpr static bool has_allocator{};
+    constexpr static bool has_allocator{false};
   };
 
   template<class Traits>
@@ -434,52 +434,52 @@ namespace sequoia::maths
       EdgeStorageTraits,
       NodeWeightStorageTraits
     >
+  {
+  public:
+    using node_weight_type = NodeWeight;
+
+    using
+      graph_base
+      <
+        graph_impl::to_embedded_graph_flavour<Directedness>(),
+        EdgeWeight,
+        NodeWeight,
+        EdgeWeightCreator,
+        NodeWeightCreator,
+        EdgeStorageTraits,
+        NodeWeightStorageTraits
+      >::graph_base;
+
+    using base_type =
+      graph_base
+      <
+        graph_impl::to_embedded_graph_flavour<Directedness>(),
+        EdgeWeight,
+        NodeWeight,
+        EdgeWeightCreator,
+        NodeWeightCreator,
+        EdgeStorageTraits,
+        NodeWeightStorageTraits
+      >;
+
+    using base_type::swap_nodes;
+    using base_type::add_node;
+    using base_type::insert_node;
+    using base_type::erase_node;
+
+    using base_type::join;
+    using base_type::erase_edge;
+
+    using base_type::primitive_type::insert_join;
+
+    void swap(embedded_graph& rhs) noexcept(noexcept(base_type::swap(rhs)))
     {
-    public:
-      using node_weight_type = NodeWeight;
+      base_type::swap(rhs);
+    }
 
-      using
-        graph_base
-        <
-          graph_impl::to_embedded_graph_flavour<Directedness>(),
-          EdgeWeight,
-          NodeWeight,
-          EdgeWeightCreator,
-          NodeWeightCreator,
-          EdgeStorageTraits,
-          NodeWeightStorageTraits
-        >::graph_base;
-
-      using base_type =
-        graph_base
-        <
-          graph_impl::to_embedded_graph_flavour<Directedness>(),
-          EdgeWeight,
-          NodeWeight,
-          EdgeWeightCreator,
-          NodeWeightCreator,
-          EdgeStorageTraits,
-          NodeWeightStorageTraits
-        >;
-
-      using base_type::swap_nodes;
-      using base_type::add_node;
-      using base_type::insert_node;
-      using base_type::erase_node;
-
-      using base_type::join;
-      using base_type::erase_edge;
-
-      using base_type::primitive_type::insert_join;
-
-      void swap(embedded_graph& rhs) noexcept(noexcept(base_type::swap(rhs)))
-      {
-        base_type::swap(rhs);
-      }
-
-      friend void swap(embedded_graph& lhs, embedded_graph& rhs) noexcept(noexcept(lhs.swap(rhs)))
-      {
-        lhs.swap(rhs);
-      }
-    };
+    friend void swap(embedded_graph& lhs, embedded_graph& rhs) noexcept(noexcept(lhs.swap(rhs)))
+    {
+      lhs.swap(rhs);
+    }
+  };
 }

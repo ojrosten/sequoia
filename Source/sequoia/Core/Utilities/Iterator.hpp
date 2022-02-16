@@ -57,10 +57,10 @@ namespace sequoia::utilities
     constexpr identity_dereference_policy(const identity_dereference_policy&) = default;
 
     [[nodiscard]]
-    static constexpr reference get(reference ref) noexcept { return ref; }
+    constexpr static reference get(reference ref) noexcept { return ref; }
 
     [[nodiscard]]
-    static constexpr pointer get_ptr(reference ref) noexcept { return &ref; }
+    constexpr static pointer get_ptr(reference ref) noexcept { return &ref; }
 
     [[nodiscard]]
     friend constexpr bool operator==(const identity_dereference_policy&, const identity_dereference_policy&) noexcept = default;

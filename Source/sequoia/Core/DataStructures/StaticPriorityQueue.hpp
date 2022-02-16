@@ -104,7 +104,7 @@ namespace sequoia::data_structures
 
     NO_UNIQUE_ADDRESS Compare m_Compare;
 
-    static constexpr std::array<T, MaxDepth> make_Q(std::initializer_list<T> l, const Compare& compare)
+    constexpr static std::array<T, MaxDepth> make_Q(std::initializer_list<T> l, const Compare& compare)
     {
       auto q{utilities::to_array<T, MaxDepth>(l)};
       sequoia::make_heap(q.begin(), q.end(), compare);

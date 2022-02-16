@@ -48,7 +48,7 @@ namespace sequoia::testing
   std::string emphasise(std::string_view s);
 
   template<class Char>
-  constexpr inline bool is_character_v{
+  inline constexpr bool is_character_v{
        std::is_same_v<std::remove_cvref_t<Char>, char>
     || std::is_same_v<std::remove_cvref_t<Char>, wchar_t>
     || std::is_same_v<std::remove_cvref_t<Char>, char8_t>

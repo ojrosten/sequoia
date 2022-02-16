@@ -31,7 +31,7 @@ namespace sequoia::ownership
 
     template<class... Args>
     [[nodiscard]]
-    static constexpr proxy make(Args&&... args)
+    constexpr static proxy make(Args&&... args)
     {
       return proxy{std::forward<Args>(args)...};
     }

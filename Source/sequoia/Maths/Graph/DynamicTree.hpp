@@ -212,7 +212,7 @@ namespace sequoia::maths
     }
 
     [[nodiscard]]
-    static constexpr pointer get_ptr(reference ref) noexcept { return &ref; }
+    constexpr static pointer get_ptr(reference ref) noexcept { return &ref; }
   private:
     TreeAdaptor m_Proxy;
 
@@ -257,7 +257,7 @@ namespace sequoia::maths
     }
 
     [[nodiscard]]
-    static constexpr pointer get_ptr(reference ref) noexcept { return &ref; }
+    constexpr static pointer get_ptr(reference ref) noexcept { return &ref; }
   };
 
   template<std::input_or_output_iterator Iterator, class Adaptor>

@@ -69,33 +69,33 @@ namespace sequoia::testing
 
     wrapper w{}, v{1};
 
-    // TO DO: prefer MSVC version once the spaceship fully lands elsewhere
-#ifdef _MSC_VER
-      check_semantics(LINE(""), w, v, std::weak_ordering::less);
+    // TO DO: prefer MSVC/gcc version once the spaceship fully lands elsewhere
+#ifdef __clang__
+    check_semantics(LINE(""), w, v);
 #else
-      check_semantics(LINE(""), w, v);
+    check_semantics(LINE(""), w, v, std::weak_ordering::less);
 #endif
 
     w.set(2);
 
     check(equality, LINE(""), w, wrapper{std::vector<int>{2}});
 
-    // TO DO: prefer MSVC version once the spaceship fully lands elsewhere
-#ifdef _MSC_VER
-      check_semantics(LINE(""), w, v, std::weak_ordering::greater);
+    // TO DO: prefer MSVC/gcc version once the spaceship fully lands elsewhere
+#ifdef __clang__
+    check_semantics(LINE(""), w, v);
 #else
-      check_semantics(LINE(""), w, v);
+    check_semantics(LINE(""), w, v, std::weak_ordering::greater);
 #endif
 
     v.mutate([](auto& u) { u.push_back(3); });
 
     check(equality, LINE(""), v, wrapper{std::vector<int>{1, 3}});
 
-    // TO DO: prefer MSVC version once the spaceship fully lands elsewhere
-#ifdef _MSC_VER
-      check_semantics(LINE(""), w, v, std::weak_ordering::greater);
+    // TO DO: prefer MSVC/gg version once the spaceship fully lands elsewhere
+#ifdef __clang__
+    check_semantics(LINE(""), w, v);
 #else
-      check_semantics(LINE(""), w, v);
+    check_semantics(LINE(""), w, v, std::weak_ordering::greater);
 #endif
   }
   

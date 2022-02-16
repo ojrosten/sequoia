@@ -387,7 +387,7 @@ namespace sequoia
       [[nodiscard]]
       constexpr bool inverted() const noexcept { return this->auxiliary_index() == npos; }
     private:
-      static constexpr auto npos = std::numeric_limits<IndexType>::max();
+      constexpr static auto npos = std::numeric_limits<IndexType>::max();
     };
 
     //===================================Full Embedded Edge===================================//
@@ -466,7 +466,7 @@ namespace sequoia
         return !(lhs == rhs);
       }
     private:
-      static constexpr auto npos = std::numeric_limits<IndexType>::max();
+      constexpr static auto npos = std::numeric_limits<IndexType>::max();
 
       IndexType m_HostIndex;
     };

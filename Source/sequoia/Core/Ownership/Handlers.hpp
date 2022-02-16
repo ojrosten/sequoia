@@ -89,16 +89,16 @@ namespace sequoia::ownership
     }
 
     [[nodiscard]]
-    static constexpr T& get(T& in) noexcept { return in; }
+    constexpr static T& get(T& in) noexcept { return in; }
 
     [[nodiscard]]
-    static constexpr const T& get(const T& in) noexcept { return in; }
+    constexpr static const T& get(const T& in) noexcept { return in; }
 
     [[nodiscard]]
-    static constexpr T* get_ptr(T& in) noexcept { return &in; }
+    constexpr static T* get_ptr(T& in) noexcept { return &in; }
 
     [[nodiscard]]
-    static constexpr const T* get_ptr(const T& in) noexcept { return &in; }
+    constexpr static const T* get_ptr(const T& in) noexcept { return &in; }
 
   protected:
     independent() noexcept = default;

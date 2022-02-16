@@ -46,10 +46,10 @@ namespace sequoia::maths::graph_impl
     constexpr proxy_dereference_policy() = default;
     constexpr proxy_dereference_policy(const proxy_dereference_policy&) = default;
 
-    static constexpr reference get(proxy_reference ref) noexcept { return ref.get(); }
+    constexpr static reference get(proxy_reference ref) noexcept { return ref.get(); }
 
     [[nodiscard]]
-    static constexpr pointer get_ptr(proxy_reference ref) noexcept { return &ref.get(); }
+    constexpr static pointer get_ptr(proxy_reference ref) noexcept { return &ref.get(); }
   protected:
     constexpr proxy_dereference_policy(proxy_dereference_policy&&) noexcept = default;
 
@@ -60,7 +60,7 @@ namespace sequoia::maths::graph_impl
   };
 
   template<class T>
-  constexpr bool empty_proxy = ownership::creator<T> && std::is_empty_v<typename T::proxy::value_type>;
+  inline constexpr bool empty_proxy = ownership::creator<T> && std::is_empty_v<typename T::proxy::value_type>;
 
   // TO DO: remove this indirection if/when clang no longer needs it!
   template<class N>
@@ -316,7 +316,7 @@ namespace sequoia::maths::graph_impl
     using indirect_copy_type = copy_constant<false>;
 
     [[nodiscard]]
-    static constexpr auto direct_copy() noexcept
+    constexpr static auto direct_copy() noexcept
     {
       constexpr bool protective{
         std::is_same_v<weight_proxy_type, utilities::uniform_wrapper<weight_type>>
