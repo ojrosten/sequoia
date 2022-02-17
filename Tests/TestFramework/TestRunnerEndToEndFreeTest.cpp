@@ -134,7 +134,7 @@ namespace sequoia::testing
     const auto absoluteFrom{auxiliary_materials() / relativeFrom};
     const auto absoluteTo{generated_project() / relativeTo};
     fs::copy(absoluteFrom, absoluteTo, fs::copy_options::recursive | fs::copy_options::overwrite_existing);
-    const auto now{fs::file_time_type::clock::now()};
+    const auto now{fs::file_time_type::clock::now() + std::chrono::seconds(1)};
 
     if(fs::is_regular_file(absoluteFrom))
     {
