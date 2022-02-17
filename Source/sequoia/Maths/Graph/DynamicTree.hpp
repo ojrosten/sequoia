@@ -70,7 +70,7 @@ namespace sequoia::maths
       : base_type{tree, tree_link_direction_constant<TreeLinkDir>{}}
     {}
 
-    void swap(tree& rhs) noexcept(noexcept(base_type::swap(rhs)))
+    void swap(tree& rhs) noexcept(noexcept(this->base_type::swap(rhs)))
     {
       base_type::swap(rhs);
     }
