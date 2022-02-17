@@ -34,7 +34,7 @@ namespace sequoia::testing
   struct node_traits
   {
     constexpr static bool throw_on_range_error{true};
-    constexpr static bool static_storage_v{};
+    constexpr static bool static_storage_v{false};
     constexpr static bool has_allocator{true};
     template<class S> using container_type = std::vector<S, shared_counting_allocator<S, true, true, true>>;
   };
@@ -43,7 +43,7 @@ namespace sequoia::testing
     requires std::is_empty_v<NodeWeight>
   struct node_traits<NodeWeight>
   {
-    constexpr static bool has_allocator{};
+    constexpr static bool has_allocator{false};
   };
 
   template<class Graph>
