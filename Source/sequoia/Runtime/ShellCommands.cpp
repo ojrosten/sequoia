@@ -85,7 +85,7 @@ namespace sequoia::runtime
     }
     else if constexpr(with_gcc_v)
     {
-      cmd.append("-D CMAKE_CXX_COMPILER=/usr/bin/g++");
+      cmd.append("-D CMAKE_CXX_COMPILER=/usr/local/Cellar/gcc/11.2.0_3/bin/g++-11");
     }
 
     return {"Running CMake...", cmd, output};
