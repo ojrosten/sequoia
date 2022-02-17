@@ -53,7 +53,7 @@ namespace sequoia::maths
   };
 
   template<class Traits>
-  concept allocatable_partitions = requires(){
+  concept allocatable_partitions = requires{
     typename Traits::edge_storage_type;
     typename Traits::edge_storage_type::partitions_allocator_type;
   };
