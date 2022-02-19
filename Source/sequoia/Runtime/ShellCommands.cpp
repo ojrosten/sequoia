@@ -40,11 +40,14 @@ namespace sequoia::runtime
       {
         constexpr auto npos{std::string::npos};
         const auto& text{optText.value()};
-        const auto positions{find_sandwiched_text(text, pattern, "\n")};
+        const auto pos{text.find(pattern)};
+        const auto offset{pos < npos ? pos + pattern.size() : pos};
+        
+        const auto positions{find_sandwiched_text(text, "=", "\n", offset)};
         if((positions.first == npos) || (positions.second == npos))
-          throw std::runtime_error{"Unable to determine Visual Studio version from " + cmakeCache.generic_string()};
+          throw std::runtime_error{"Unable to deduce cmake command from " + cmakeCache.generic_string()};
 
-        return std::string{cmakeArg}.append(" \"").append(text.substr(positions.first, positions.second - positions.first)).append("\"");
+        return std::string{cmakeArg}.append("\"").append(text.substr(positions.first, positions.second - positions.first)).append("\"");
       }
       else
       {
@@ -114,15 +117,11 @@ namespace sequoia::runtime
 
     if constexpr(with_msvc_v)
     {
-      cmd.append(cmake_extractor(parentBuildDir, buildDir, "CMAKE_GENERATOR:INTERNAL=", "-G"));
+      cmd.append(cmake_extractor(parentBuildDir, buildDir, "CMAKE_GENERATOR:", "-G "));
     }
-    else if constexpr(with_clang_v)
+    else
     {
-      cmd.append("-D CMAKE_CXX_COMPILER=/usr/local/opt/llvm/bin/clang++");
-    }
-    else if constexpr(with_gcc_v)
-    {
-      cmd.append("-D CMAKE_CXX_COMPILER=/usr/local/Cellar/gcc/11.2.0_3/bin/g++-11");
+      cmd.append(cmake_extractor(parentBuildDir, buildDir, "CMAKE_CXX_COMPILER:", "-D CMAKE_CXX_COMPILER="));
     }
 
     return {"Running CMake...", cmd, output};
