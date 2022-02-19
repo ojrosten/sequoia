@@ -15,7 +15,7 @@ namespace sequoia
 {
   [[nodiscard]]
   std::pair<std::string::size_type, std::string::size_type>
-  find_matched_delimiters(std::string_view text, std::string::size_type pos, const char open, const char close)
+  find_matched_delimiters(std::string_view text, const char open, const char close, std::string::size_type pos)
   {
     constexpr auto npos{std::string::npos};
 

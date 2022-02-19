@@ -28,7 +28,7 @@ namespace sequoia::testing
 
       while(pos != std::string::npos)
       {
-        const auto[open, close]{find_matched_delimiters(name, pos)};
+        const auto[open, close]{find_matched_delimiters(name, '(', ')', pos)};
         if((open != close) && (close < name.size()) && std::isdigit(name[close]))
         {
           name.erase(open, close - open);
