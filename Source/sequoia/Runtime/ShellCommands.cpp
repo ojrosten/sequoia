@@ -22,6 +22,37 @@ namespace sequoia::runtime
 {
   namespace fs = std::filesystem;
 
+  namespace
+  {
+    [[nodiscard]]
+    std::string cmake_extractor(const std::optional<std::filesystem::path>& parentBuildDir,
+                                const std::filesystem::path& buildDir,
+                                std::string_view pattern)
+    {
+      const auto cacheDir{parentBuildDir.has_value() ? parentBuildDir.value() : buildDir};
+
+      const fs::path cmakeCache{cacheDir / "CMakeCache.txt"};
+      if(!fs::exists(cmakeCache))
+        throw std::runtime_error{"Unable to find CMakeCache.txt in " + cmakeCache.generic_string()};
+
+      if(const auto optText{read_to_string(cmakeCache)})
+      {
+        constexpr auto npos{std::string::npos};
+        const auto& text{optText.value()};
+        const auto positions{find_sandwiched_text(text, pattern, "\n")};
+        if((positions.first == npos) || (positions.second == npos))
+          throw std::runtime_error{"Unable to determine Visual Studio version from " + cmakeCache.generic_string()};
+
+        const auto generator{text.substr(positions.first, positions.second - positions.first)};
+        return std::string{"-G \""}.append(generator).append("\"");
+      }
+      else
+      {
+        throw std::runtime_error{"Unable to read from " + cmakeCache.generic_string()};
+      }
+    }
+  }
+
   shell_command::shell_command(std::string cmd, const std::filesystem::path& output, append_mode app)
     : m_Command{std::move(cmd)}
   {
@@ -83,27 +114,7 @@ namespace sequoia::runtime
 
     if constexpr(with_msvc_v)
     {
-      const auto cacheDir{parentBuildDir.has_value() ? parentBuildDir.value() : buildDir};
-
-      const fs::path cmakeCache{cacheDir/"CMakeCache.txt"};
-      if(!fs::exists(cmakeCache))
-        throw std::runtime_error{"Unable to find CMakeCache.txt in " + cmakeCache.generic_string()};
-
-      if(const auto optText{read_to_string(cmakeCache)})
-      {
-        constexpr auto npos{std::string::npos};
-        const auto& text{optText.value()};
-        const auto positions{find_sandwiched_text(text, "CMAKE_GENERATOR:INTERNAL=", "\n")};
-        if((positions.first == npos) || (positions.second == npos))
-          throw std::runtime_error{"Unable to determine Visual Studio version from " + cmakeCache.generic_string()};
-
-        const auto generator{text.substr(positions.first, positions.second - positions.first)};
-        cmd.append("-G \"").append(generator).append("\"");
-      }
-      else
-      {
-        throw std::runtime_error{"Unable to read from " + cmakeCache.generic_string()};
-      }
+      cmd.append(cmake_extractor(parentBuildDir, buildDir, "CMAKE_GENERATOR:INTERNAL="));
     }
     else if constexpr(with_clang_v)
     {
