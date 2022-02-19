@@ -27,7 +27,8 @@ namespace sequoia::runtime
     [[nodiscard]]
     std::string cmake_extractor(const std::optional<std::filesystem::path>& parentBuildDir,
                                 const std::filesystem::path& buildDir,
-                                std::string_view pattern)
+                                std::string_view pattern,
+                                std::string_view cmakeArg)
     {
       const auto cacheDir{parentBuildDir.has_value() ? parentBuildDir.value() : buildDir};
 
@@ -43,8 +44,7 @@ namespace sequoia::runtime
         if((positions.first == npos) || (positions.second == npos))
           throw std::runtime_error{"Unable to determine Visual Studio version from " + cmakeCache.generic_string()};
 
-        const auto generator{text.substr(positions.first, positions.second - positions.first)};
-        return std::string{"-G \""}.append(generator).append("\"");
+        return std::string{cmakeArg}.append(" \"").append(text.substr(positions.first, positions.second - positions.first)).append("\"");
       }
       else
       {
@@ -114,7 +114,7 @@ namespace sequoia::runtime
 
     if constexpr(with_msvc_v)
     {
-      cmd.append(cmake_extractor(parentBuildDir, buildDir, "CMAKE_GENERATOR:INTERNAL="));
+      cmd.append(cmake_extractor(parentBuildDir, buildDir, "CMAKE_GENERATOR:INTERNAL=", "-G"));
     }
     else if constexpr(with_clang_v)
     {
