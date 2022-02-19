@@ -102,7 +102,7 @@ namespace sequoia::testing
 
   void cmd_builder::rebuild_run(const std::filesystem::path& outputDir, std::string_view cmakeOutput, std::string_view buildOutput, std::string_view options) const
   {
-    invoke(cd_cmd(mainDir) && cmake_cmd(buildDir, cmakeOutput) && build_cmd(buildDir, buildOutput) && run(outputDir, options));
+    invoke(cd_cmd(mainDir) && cmake_cmd(std::nullopt, buildDir, cmakeOutput) && build_cmd(buildDir, buildOutput) && run(outputDir, options));
   }
 
   void cmd_builder::run_executable(const std::filesystem::path& outputDir, std::string_view options) const

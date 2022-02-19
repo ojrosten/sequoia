@@ -20,4 +20,8 @@ namespace sequoia
   [[nodiscard]]
   std::pair<std::string::size_type, std::string::size_type>
   find_matched_delimiters(std::string_view s, std::string::size_type pos={}, char open='(', char close=')');
+
+  [[nodiscard]]
+  std::pair<std::string::size_type, std::string::size_type>
+  find_sandwiched_text(std::string_view s, std::string_view leftPattern, std::string_view rightPattern, std::string::size_type pos={});
 }

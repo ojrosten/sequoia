@@ -13,11 +13,15 @@
 
 #include "sequoia/Parsing/CommandLineArguments.hpp"
 #include "sequoia/PlatformSpecific/Preprocessor.hpp"
+#include "sequoia/Streaming/Streaming.hpp"
+#include "sequoia/TextProcessing/Patterns.hpp"
 
 #include <iostream>
 
 namespace sequoia::runtime
 {
+  namespace fs = std::filesystem;
+
   shell_command::shell_command(std::string cmd, const std::filesystem::path& output, append_mode app)
     : m_Command{std::move(cmd)}
   {
@@ -71,13 +75,35 @@ namespace sequoia::runtime
   }
 
   [[nodiscard]]
-  shell_command cmake_cmd(const std::filesystem::path& buildDir, const std::filesystem::path& output)
+  shell_command cmake_cmd(const std::optional<std::filesystem::path>& parentBuildDir,
+                          const std::filesystem::path& buildDir,
+                          const std::filesystem::path& output)
   {
     auto cmd{std::string{"cmake -S ."}.append(" -B \"").append(buildDir.string()).append("\" ")};
 
     if constexpr(with_msvc_v)
     {
-      cmd.append("-G \"Visual Studio 17 2022\"");
+      const auto cacheDir{parentBuildDir.has_value() ? parentBuildDir.value() : buildDir};
+
+      const fs::path cmakeCache{cacheDir/"CMakeCache.txt"};
+      if(!fs::exists(cmakeCache))
+        throw std::runtime_error{"Unable to find CMakeCache.txt in " + cmakeCache.generic_string()};
+
+      if(const auto optText{read_to_string(cmakeCache)})
+      {
+        constexpr auto npos{std::string::npos};
+        const auto& text{optText.value()};
+        const auto positions{find_sandwiched_text(text, "CMAKE_GENERATOR:INTERNAL=", "\n")};
+        if((positions.first == npos) || (positions.second == npos))
+          throw std::runtime_error{"Unable to determine Visual Studio version from " + cmakeCache.generic_string()};
+
+        const auto generator{text.substr(positions.first, positions.second - positions.first)};
+        cmd.append("-G \"").append(generator).append("\"");
+      }
+      else
+      {
+        throw std::runtime_error{"Unable to read from " + cmakeCache.generic_string()};
+      }
     }
     else if constexpr(with_clang_v)
     {

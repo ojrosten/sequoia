@@ -176,7 +176,7 @@ namespace sequoia::testing
 
         using namespace runtime;
         invoke(cd_cmd(mainDir)
-            && cmake_cmd(buildDir, data.output)
+            && cmake_cmd(working_path_v, buildDir, data.output)
             && build_cmd(buildDir, data.output)
             && git_first_cmd(data.project_root, data.output)
             && (data.do_build == build_invocation::launch_ide ? launch_cmd(data.project_root, buildDir) : shell_command{})

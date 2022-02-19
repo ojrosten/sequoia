@@ -181,7 +181,7 @@ namespace sequoia::testing
     if(fs::exists(mainCppDir) && fs::exists(buildDir))
     {
       stream << "\n";
-      invoke(cd_cmd(mainCppDir) && cmake_cmd(buildDir, {}));
+      invoke(cd_cmd(mainCppDir) && cmake_cmd(std::nullopt, buildDir, {}));
     }
   }
 

@@ -38,4 +38,16 @@ namespace sequoia
 
     return {npos, npos};
   }
+
+  [[nodiscard]]
+  std::pair<std::string::size_type, std::string::size_type>
+  find_sandwiched_text(std::string_view s, std::string_view leftPattern, std::string_view rightPattern, std::string::size_type pos)
+  {
+    constexpr auto npos{std::string::npos};
+    const auto start{s.find(leftPattern,pos)};
+    if(start == npos) return {npos, npos};
+
+    const auto offset{start + leftPattern.size()};
+    return {offset, s.find(rightPattern, offset)};
+  }
 }
