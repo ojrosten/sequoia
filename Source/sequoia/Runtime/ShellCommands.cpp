@@ -26,9 +26,7 @@ namespace sequoia::runtime
   {
     [[nodiscard]]
     std::string cmake_extractor(const std::optional<std::filesystem::path>& parentBuildDir,
-                                const std::filesystem::path& buildDir,
-                                std::string_view pattern,
-                                std::string_view cmakeArg)
+                                const std::filesystem::path& buildDir)
     {
       const auto cacheDir{parentBuildDir.has_value() ? parentBuildDir.value() : buildDir};
 
@@ -40,14 +38,31 @@ namespace sequoia::runtime
       {
         constexpr auto npos{std::string::npos};
         const auto& text{optText.value()};
-        const auto pos{text.find(pattern)};
-        const auto offset{pos < npos ? pos + pattern.size() : pos};
-        
-        const auto positions{find_sandwiched_text(text, "=", "\n", offset)};
-        if((positions.first == npos) || (positions.second == npos))
-          throw std::runtime_error{"Unable to deduce cmake command from " + cmakeCache.generic_string()};
 
-        return std::string{cmakeArg}.append("\"").append(text.substr(positions.first, positions.second - positions.first)).append("\"");
+        const auto finder{
+          [&text](std::string_view pattern) {
+            const auto pos{text.find(pattern)};
+            const auto offset{pos < npos ? pos + pattern.size() : pos};
+
+            return find_sandwiched_text(text, "=", "\n", offset);
+          }
+        };
+
+        auto positions{finder("CMAKE_GENERATOR:")};
+        if((positions.first != npos) && (positions.second != npos))
+        {
+          auto generator{text.substr(positions.first, positions.second - positions.first)};
+          if(generator != "Unix Makefiles")
+            return std::string{"-G \""}.append(generator).append("\"");
+        }
+
+        positions = finder("CMAKE_CXX_COMPILER:");
+        if((positions.first != npos) && (positions.second != npos))
+        {
+          return std::string{"-D CMAKE_CXX_COMPILER="}.append(text.substr(positions.first, positions.second - positions.first));
+        }
+
+        throw std::runtime_error{"Unable to deduce cmake command from " + cmakeCache.generic_string()};
       }
       else
       {
@@ -114,15 +129,7 @@ namespace sequoia::runtime
                           const std::filesystem::path& output)
   {
     auto cmd{std::string{"cmake -S ."}.append(" -B \"").append(buildDir.string()).append("\" ")};
-
-    if constexpr(with_msvc_v)
-    {
-      cmd.append(cmake_extractor(parentBuildDir, buildDir, "CMAKE_GENERATOR:", "-G "));
-    }
-    else
-    {
-      cmd.append(cmake_extractor(parentBuildDir, buildDir, "CMAKE_CXX_COMPILER:", "-D CMAKE_CXX_COMPILER="));
-    }
+    cmd.append(cmake_extractor(parentBuildDir, buildDir));
 
     return {"Running CMake...", cmd, output};
   }
