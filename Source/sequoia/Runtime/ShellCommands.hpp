@@ -39,13 +39,19 @@ namespace sequoia::runtime
 
     [[nodiscard]]
     friend bool operator!=(const shell_command&, const shell_command&) noexcept = default;
-    
-    friend shell_command operator&&(const shell_command& lhs, const shell_command& rhs);
+
+    [[nodiscard]]
+    friend shell_command operator&&(const shell_command& lhs, const shell_command& rhs)
+    {
+      return rhs.empty() ? lhs :
+             lhs.empty() ? rhs :
+                           std::string{lhs.m_Command}.append("&&").append(rhs.m_Command);
+    }
 
     [[nodiscard]]
     friend shell_command operator&&(const shell_command& lhs, std::string rhs)
     {
-      return lhs && shell_command{rhs};
+      return lhs && shell_command{std::move(rhs)};
     }
 
     friend void invoke(const shell_command& cmd);

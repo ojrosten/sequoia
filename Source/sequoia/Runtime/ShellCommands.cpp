@@ -103,14 +103,6 @@ namespace sequoia::runtime
     *this = pre && shell_command{std::move(cmd), output, !pre.empty() ? append_mode::yes : app};
   }
 
-  [[nodiscard]]
-  shell_command operator&&(const shell_command& lhs, const shell_command& rhs)
-  {
-    return rhs.empty() ? lhs :
-           lhs.empty() ? rhs :
-                         std::string{lhs.m_Command}.append("&&").append(rhs.m_Command);
-  }
-
   void invoke(const shell_command& cmd)
   {
     std::cout << std::flush;
