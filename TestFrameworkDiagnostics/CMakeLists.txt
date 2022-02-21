@@ -17,6 +17,7 @@ target_sources(TestFrameworkDiagnostics PRIVATE
                ${TestDir}/Parsing/CommandLineArgumentsTestingUtilities.cpp
                ${TestDir}/Runtime/FactoryTest.cpp
                ${TestDir}/Runtime/FactoryTestingDiagnostics.cpp
+               ${TestDir}/Runtime/ShellCommandsFreeTest.cpp
                ${TestDir}/TestFramework/CoreDiagnostics.cpp
                ${TestDir}/TestFramework/DependencyAnalyzerFreeTest.cpp
                ${TestDir}/TestFramework/FailureInfoTest.cpp

@@ -114,7 +114,8 @@ int main(int argc, char** argv)
     );
 
     runner.add_test_family(
-      "Factory",
+      "Runtime",
+      shell_commands_free_test("Free Test"),
       factory_false_positive_test("False Positive Test"),
       factory_test("Unit Test")
     );

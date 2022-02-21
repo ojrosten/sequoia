@@ -35,7 +35,7 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Core/Utilities/IteratorTest.cpp
                ${TestDir}/Core/Utilities/UniformWrapperTest.cpp
                ${TestDir}/Core/Utilities/UniformWrapperTestingDiagnostics.cpp
-			   ${TestDir}/Experimental/ExperimentalTest.cpp
+               ${TestDir}/Experimental/ExperimentalTest.cpp
                ${TestDir}/Maths/Graph/DynamicGraphEmbeddedTest.cpp
                ${TestDir}/Maths/Graph/DynamicGraphFixedTopologyTest.cpp
                ${TestDir}/Maths/Graph/DynamicGraphInitializationTest.cpp
@@ -71,9 +71,10 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Parsing/CommandLineArgumentsTestingUtilities.cpp
                ${TestDir}/Runtime/FactoryTest.cpp
                ${TestDir}/Runtime/FactoryTestingDiagnostics.cpp
+               ${TestDir}/Runtime/ShellCommandsFreeTest.cpp
                ${TestDir}/Streaming/StreamingFreeTest.cpp
                ${TestDir}/TestFramework/CoreDiagnostics.cpp
-               ${TestDir}/TestFramework/DependencyAnalyzerFreeTest.cpp               
+               ${TestDir}/TestFramework/DependencyAnalyzerFreeTest.cpp
                ${TestDir}/TestFramework/FailureInfoTest.cpp
                ${TestDir}/TestFramework/FailureInfoTestingDiagnostics.cpp
                ${TestDir}/TestFramework/FileSystemFreeTest.cpp
