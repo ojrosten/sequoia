@@ -165,10 +165,11 @@ requires std::is_same_v&lt;T, bool&gt;</td></tr>
 <tr class="memitem:a2522541db7e1d610bf0a4e016b3397d3"><td class="memTemplItemLeft" align="right" valign="top">std::string&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::failure_message</b> (is_final_message_t, T, T)</td></tr>
 <tr class="memdesc:a2522541db7e1d610bf0a4e016b3397d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">To prevent implicit conversions to bool. <br /></td></tr>
 <tr class="separator:a2522541db7e1d610bf0a4e016b3397d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae15a75ca359d91bc895ab45e6a12fbf2"><td class="memTemplParams" colspan="2"><a id="ae15a75ca359d91bc895ab45e6a12fbf2" name="ae15a75ca359d91bc895ab45e6a12fbf2"></a>
-template&lt;reportable T&gt; </td></tr>
-<tr class="memitem:ae15a75ca359d91bc895ab45e6a12fbf2"><td class="memTemplItemLeft" align="right" valign="top">std::string&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::failure_message</b> (is_final_message_t, const T &amp;obtained, const T &amp;prediction)</td></tr>
-<tr class="separator:ae15a75ca359d91bc895ab45e6a12fbf2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af72de960adc37512a1f2af9d0e15a8b2"><td class="memTemplParams" colspan="2"><a id="af72de960adc37512a1f2af9d0e15a8b2" name="af72de960adc37512a1f2af9d0e15a8b2"></a>
+template&lt;reportable T&gt; <br />
+requires (!std::is_same_v&lt;T, bool&gt;)</td></tr>
+<tr class="memitem:af72de960adc37512a1f2af9d0e15a8b2"><td class="memTemplItemLeft" align="right" valign="top">std::string&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::failure_message</b> (is_final_message_t, const T &amp;obtained, const T &amp;prediction)</td></tr>
+<tr class="separator:af72de960adc37512a1f2af9d0e15a8b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acd3dd34c826ead082f6e36f206a5b54a"><td class="memTemplParams" colspan="2"><a id="acd3dd34c826ead082f6e36f206a5b54a" name="acd3dd34c826ead082f6e36f206a5b54a"></a>
 template&lt;class T &gt; </td></tr>
 <tr class="memitem:acd3dd34c826ead082f6e36f206a5b54a"><td class="memTemplItemLeft" align="right" valign="top">std::string&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::failure_message</b> (is_not_final_message_t, const T &amp;, const T &amp;)</td></tr>

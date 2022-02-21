@@ -223,26 +223,21 @@ requires (serializable_to&lt;T, std::stringstream&gt; &amp;&amp; deserializable_
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:ab52d420c854acfb4f806caf486ce1db3"><td class="memTemplParams" colspan="2"><a id="ab52d420c854acfb4f806caf486ce1db3" name="ab52d420c854acfb4f806caf486ce1db3"></a>
-template&lt;class Actions &gt; </td></tr>
-<tr class="memitem:ab52d420c854acfb4f806caf486ce1db3"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::has_post_comparison_action</b> = requires { &amp;Actions::post_comparison_action; }</td></tr>
-<tr class="separator:ab52d420c854acfb4f806caf486ce1db3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aca5bb197510343c10a38a907feb44d9e"><td class="memTemplParams" colspan="2"><a id="aca5bb197510343c10a38a907feb44d9e" name="aca5bb197510343c10a38a907feb44d9e"></a>
-template&lt;class Actions &gt; </td></tr>
-<tr class="memitem:aca5bb197510343c10a38a907feb44d9e"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::has_post_move_action</b> = requires { &amp;Actions::post_move_action; }</td></tr>
-<tr class="separator:aca5bb197510343c10a38a907feb44d9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6a9c6667405cd1a08507cf3fc3f200c7"><td class="memTemplParams" colspan="2"><a id="a6a9c6667405cd1a08507cf3fc3f200c7" name="a6a9c6667405cd1a08507cf3fc3f200c7"></a>
-template&lt;class Actions &gt; </td></tr>
-<tr class="memitem:a6a9c6667405cd1a08507cf3fc3f200c7"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::has_post_move_assign_action</b> = requires { &amp;Actions::post_move_assign_action; }</td></tr>
-<tr class="separator:a6a9c6667405cd1a08507cf3fc3f200c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2510e4af8f646b1af43f8b7f7fe3fe5b"><td class="memTemplParams" colspan="2"><a id="a2510e4af8f646b1af43f8b7f7fe3fe5b" name="a2510e4af8f646b1af43f8b7f7fe3fe5b"></a>
-template&lt;class Actions &gt; </td></tr>
-<tr class="memitem:a2510e4af8f646b1af43f8b7f7fe3fe5b"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::has_post_swap_action</b> = requires { &amp;Actions::post_swap_action; }</td></tr>
-<tr class="separator:a2510e4af8f646b1af43f8b7f7fe3fe5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab612f7cf88f8af6baaefd3929a4dfb9d"><td class="memTemplParams" colspan="2"><a id="ab612f7cf88f8af6baaefd3929a4dfb9d" name="ab612f7cf88f8af6baaefd3929a4dfb9d"></a>
-template&lt;class Actions &gt; </td></tr>
-<tr class="memitem:ab612f7cf88f8af6baaefd3929a4dfb9d"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::has_post_serialization_action</b> = requires { &amp;Actions::post_serialization_action; }</td></tr>
-<tr class="separator:ab612f7cf88f8af6baaefd3929a4dfb9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6d0c505735eda9cbd410cab6720f540a"><td class="memTemplParams" colspan="2">template&lt;class Actions , class... Args&gt; </td></tr>
+<tr class="memitem:a6d0c505735eda9cbd410cab6720f540a"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../df/dd3/SemanticsCheckersDetails_8hpp.html#a6d0c505735eda9cbd410cab6720f540a">sequoia::testing::impl::has_post_comparison_action</a></td></tr>
+<tr class="separator:a6d0c505735eda9cbd410cab6720f540a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:addb57233898e59a219e94290644e8c34"><td class="memTemplParams" colspan="2">template&lt;class Actions , class... Args&gt; </td></tr>
+<tr class="memitem:addb57233898e59a219e94290644e8c34"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../df/dd3/SemanticsCheckersDetails_8hpp.html#addb57233898e59a219e94290644e8c34">sequoia::testing::impl::has_post_move_action</a></td></tr>
+<tr class="separator:addb57233898e59a219e94290644e8c34"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a65433f7c393364691e312419c36b729c"><td class="memTemplParams" colspan="2">template&lt;class Actions , class... Args&gt; </td></tr>
+<tr class="memitem:a65433f7c393364691e312419c36b729c"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../df/dd3/SemanticsCheckersDetails_8hpp.html#a65433f7c393364691e312419c36b729c">sequoia::testing::impl::has_post_move_assign_action</a></td></tr>
+<tr class="separator:a65433f7c393364691e312419c36b729c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9006964a5a00e6237ab49a4799e20fcc"><td class="memTemplParams" colspan="2">template&lt;class Actions , class... Args&gt; </td></tr>
+<tr class="memitem:a9006964a5a00e6237ab49a4799e20fcc"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../df/dd3/SemanticsCheckersDetails_8hpp.html#a9006964a5a00e6237ab49a4799e20fcc">sequoia::testing::impl::has_post_swap_action</a></td></tr>
+<tr class="separator:a9006964a5a00e6237ab49a4799e20fcc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a727c9149ca579a5d8376675a9578592e"><td class="memTemplParams" colspan="2">template&lt;class Actions , class... Args&gt; </td></tr>
+<tr class="memitem:a727c9149ca579a5d8376675a9578592e"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../df/dd3/SemanticsCheckersDetails_8hpp.html#a727c9149ca579a5d8376675a9578592e">sequoia::testing::impl::has_post_serialization_action</a></td></tr>
+<tr class="separator:a727c9149ca579a5d8376675a9578592e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >Implementation details for semantics checks that cleanly supports types which do/do not have allocators. </p>
@@ -269,7 +264,143 @@ if constexpr (Actions::some_flag)
 <p >Therefore when checking the semantics of an allocating type, the skeleton of the function is the same as for non-allocating types. However, in the former case extra checks are folded in. This pattern ensures consistency: if the scheme is tweaked for non-allocating types, allocating types will automatically benefit. But there is enough flexbility to allow for all the extra allocation checks that allocating types require.</p>
 <p >As such, the various check_foo functions in this header have overloads in <a class="el" href="../../d5/d00/AllocationCheckersDetails_8hpp.html" title="Implementation details for allocation checks.">AllocationCheckersDetails.hpp</a> which supply the extra argument(s) for the additional actions that comprise allocation checking.</p>
 <p >Note that check_foo / do_check_foo pairs in this file are common to both regular and move-only types. However, regular types additionally have copy semantics; the extra pieces necessary for this may be found in <a class="el" href="../../d6/d98/RegularCheckersDetails_8hpp.html" title="Implementation details for checking regular semantics.">RegularCheckersDetails.hpp</a> and RegularAllocationCheckerDetails.hpp </p>
-</div></div><!-- contents -->
+</div><h2 class="groupheader">Variable Documentation</h2>
+<a id="a6d0c505735eda9cbd410cab6720f540a" name="a6d0c505735eda9cbd410cab6720f540a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6d0c505735eda9cbd410cab6720f540a">&#9670;&nbsp;</a></span>has_post_comparison_action</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Actions , class... Args&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr bool sequoia::testing::impl::has_post_comparison_action</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">= <span class="keyword">requires</span> (std::remove_cvref_t&lt;Actions&gt; actions, std::remove_cvref_t&lt;Args&gt;&amp;... args) {</div>
+<div class="line">        actions.post_comparison_action(args...);</div>
+<div class="line">      }</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="addb57233898e59a219e94290644e8c34" name="addb57233898e59a219e94290644e8c34"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#addb57233898e59a219e94290644e8c34">&#9670;&nbsp;</a></span>has_post_move_action</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Actions , class... Args&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr bool sequoia::testing::impl::has_post_move_action</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">= <span class="keyword">requires</span> (std::remove_cvref_t&lt;Actions&gt; actions, std::remove_cvref_t&lt;Args&gt;&amp;... args) {</div>
+<div class="line">        actions.post_move_action(args...);</div>
+<div class="line">      }</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="a65433f7c393364691e312419c36b729c" name="a65433f7c393364691e312419c36b729c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a65433f7c393364691e312419c36b729c">&#9670;&nbsp;</a></span>has_post_move_assign_action</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Actions , class... Args&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr bool sequoia::testing::impl::has_post_move_assign_action</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">= <span class="keyword">requires</span> (std::remove_cvref_t&lt;Actions&gt; actions, std::remove_cvref_t&lt;Args&gt;&amp;... args) {</div>
+<div class="line">        actions.post_move_assign_action(args...);</div>
+<div class="line">      }</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="a727c9149ca579a5d8376675a9578592e" name="a727c9149ca579a5d8376675a9578592e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a727c9149ca579a5d8376675a9578592e">&#9670;&nbsp;</a></span>has_post_serialization_action</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Actions , class... Args&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr bool sequoia::testing::impl::has_post_serialization_action</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">= <span class="keyword">requires</span> (std::remove_cvref_t&lt;Actions&gt; actions, std::remove_cvref_t&lt;Args&gt;&amp;... args) {</div>
+<div class="line">        actions.post_serialization_action(args...);</div>
+<div class="line">      }</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="a9006964a5a00e6237ab49a4799e20fcc" name="a9006964a5a00e6237ab49a4799e20fcc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9006964a5a00e6237ab49a4799e20fcc">&#9670;&nbsp;</a></span>has_post_swap_action</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Actions , class... Args&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr bool sequoia::testing::impl::has_post_swap_action</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">= <span class="keyword">requires</span> (std::remove_cvref_t&lt;Actions&gt; actions, std::remove_cvref_t&lt;Args&gt;&amp;... args) {</div>
+<div class="line">        actions.post_swap_action(args...);</div>
+<div class="line">      }</div>
+</div><!-- fragment -->
+</div>
+</div>
+</div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2

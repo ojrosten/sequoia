@@ -185,13 +185,13 @@ $(function() {
 <div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>  <span class="keyword">template</span>&lt;alloc A&gt;</div>
 <div class="line"><a id="l00120" name="l00120"></a><span class="lineno"><a class="line" href="../../d0/d25/structsequoia_1_1alloc__count.html">  120</a></span>  <span class="keyword">struct </span><a class="code hl_struct" href="../../d0/d25/structsequoia_1_1alloc__count.html">alloc_count</a></div>
 <div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>  {</div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> std::size_t size{1};</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>    <span class="keyword">constexpr</span> <span class="keyword">static</span> std::size_t size{1};</div>
 <div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>  };</div>
 <div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span> </div>
 <div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>  <span class="keyword">template</span>&lt;alloc OuterAlloc, alloc... InnerAlloc&gt;</div>
 <div class="line"><a id="l00126" name="l00126"></a><span class="lineno"><a class="line" href="../../d5/d19/structsequoia_1_1alloc__count_3_01std_1_1scoped__allocator__adaptor_3_01OuterAlloc_00_01InnerAlloc_8_8_8_01_4_01_4.html">  126</a></span>  <span class="keyword">struct </span><a class="code hl_struct" href="../../d0/d25/structsequoia_1_1alloc__count.html">alloc_count</a>&lt;std::scoped_allocator_adaptor&lt;OuterAlloc, InnerAlloc...&gt;&gt;</div>
 <div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>  {</div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> std::size_t size{1 + <span class="keyword">sizeof</span>...(InnerAlloc)};</div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>    <span class="keyword">constexpr</span> <span class="keyword">static</span> std::size_t size{1 + <span class="keyword">sizeof</span>...(InnerAlloc)};</div>
 <div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>  };</div>
 <div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>}</div>
 <div class="ttc" id="aConcepts_8hpp_html"><div class="ttname"><a href="../../d3/d84/Concepts_8hpp.html">Concepts.hpp</a></div><div class="ttdoc">Concepts mostly, but not exclusively, replicating things which will appear in std at some point.</div></div>

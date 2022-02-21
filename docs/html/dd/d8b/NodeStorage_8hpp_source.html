@@ -106,10 +106,10 @@ $(function() {
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <span class="keyword">constexpr</span> <a class="code hl_struct" href="../../db/d8a/structsequoia_1_1maths_1_1graph__impl_1_1proxy__dereference__policy.html">proxy_dereference_policy</a>() = <span class="keywordflow">default</span>;</div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <span class="keyword">constexpr</span> <a class="code hl_struct" href="../../db/d8a/structsequoia_1_1maths_1_1graph__impl_1_1proxy__dereference__policy.html">proxy_dereference_policy</a>(<span class="keyword">const</span> <a class="code hl_struct" href="../../db/d8a/structsequoia_1_1maths_1_1graph__impl_1_1proxy__dereference__policy.html">proxy_dereference_policy</a>&amp;) = <span class="keywordflow">default</span>;</div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> reference get(proxy_reference ref) <span class="keyword">noexcept</span> { <span class="keywordflow">return</span> ref.get(); }</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    <span class="keyword">constexpr</span> <span class="keyword">static</span> reference get(proxy_reference ref) <span class="keyword">noexcept</span> { <span class="keywordflow">return</span> ref.get(); }</div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    [[nodiscard]]</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> pointer get_ptr(proxy_reference ref) <span class="keyword">noexcept</span> { <span class="keywordflow">return</span> &amp;ref.get(); }</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="keyword">constexpr</span> <span class="keyword">static</span> pointer get_ptr(proxy_reference ref) <span class="keyword">noexcept</span> { <span class="keywordflow">return</span> &amp;ref.get(); }</div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>  <span class="keyword">protected</span>:</div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <span class="keyword">constexpr</span> <a class="code hl_struct" href="../../db/d8a/structsequoia_1_1maths_1_1graph__impl_1_1proxy__dereference__policy.html">proxy_dereference_policy</a>(<a class="code hl_struct" href="../../db/d8a/structsequoia_1_1maths_1_1graph__impl_1_1proxy__dereference__policy.html">proxy_dereference_policy</a>&amp;&amp;) <span class="keyword">noexcept</span> = <span class="keywordflow">default</span>;</div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
@@ -120,7 +120,7 @@ $(function() {
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>  };</div>
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span> </div>
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>  <span class="keyword">template</span>&lt;<span class="keyword">class</span> T&gt;</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>  <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> empty_proxy = ownership::creator&lt;T&gt; &amp;&amp; std::is_empty_v&lt;typename T::proxy::value_type&gt;;</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>  <span class="keyword">inline</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> empty_proxy = ownership::creator&lt;T&gt; &amp;&amp; std::is_empty_v&lt;typename T::proxy::value_type&gt;;</div>
 <div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span> </div>
 <div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>  <span class="comment">// TO DO: remove this indirection if/when clang no longer needs it!</span></div>
 <div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>  <span class="keyword">template</span>&lt;<span class="keyword">class</span> N&gt;</div>
@@ -376,7 +376,7 @@ $(function() {
 <div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span>    <span class="keyword">using</span> indirect_copy_type = copy_constant&lt;false&gt;;</div>
 <div class="line"><a id="l00317" name="l00317"></a><span class="lineno">  317</span> </div>
 <div class="line"><a id="l00318" name="l00318"></a><span class="lineno">  318</span>    [[nodiscard]]</div>
-<div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> direct_copy() <span class="keyword">noexcept</span></div>
+<div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span>    <span class="keyword">constexpr</span> <span class="keyword">static</span> <span class="keyword">auto</span> direct_copy() <span class="keyword">noexcept</span></div>
 <div class="line"><a id="l00320" name="l00320"></a><span class="lineno">  320</span>    {</div>
 <div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span>      <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> protective{</div>
 <div class="line"><a id="l00322" name="l00322"></a><span class="lineno">  322</span>        std::is_same_v&lt;weight_proxy_type, utilities::uniform_wrapper&lt;weight_type&gt;&gt;</div>
@@ -458,7 +458,7 @@ $(function() {
 <div class="line"><a id="l00398" name="l00398"></a><span class="lineno">  398</span>    {</div>
 <div class="line"><a id="l00399" name="l00399"></a><span class="lineno">  399</span>      m_NodeWeights.reserve(from.size());</div>
 <div class="line"><a id="l00400" name="l00400"></a><span class="lineno">  400</span>      std::transform(from.cbegin(), from.cend(), std::back_inserter(m_NodeWeights),</div>
-<div class="line"><a id="l00401" name="l00401"></a><span class="lineno">  401</span>        [=](<span class="keyword">const</span> <span class="keyword">auto</span>&amp; weight) { return make_node_weight(weight.get()); });</div>
+<div class="line"><a id="l00401" name="l00401"></a><span class="lineno">  401</span>        [<span class="keyword">this</span>](<span class="keyword">const</span> <span class="keyword">auto</span>&amp; weight) { return make_node_weight(weight.get()); });</div>
 <div class="line"><a id="l00402" name="l00402"></a><span class="lineno">  402</span>    }</div>
 <div class="line"><a id="l00403" name="l00403"></a><span class="lineno">  403</span> </div>
 <div class="line"><a id="l00404" name="l00404"></a><span class="lineno">  404</span>    [[nodiscard]]</div>

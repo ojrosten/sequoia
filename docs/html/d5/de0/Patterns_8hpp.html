@@ -80,14 +80,17 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a2ab6cca5e3974201f4190e1bcefac697"><td class="memItemLeft" align="right" valign="top">std::pair&lt; std::string::size_type, std::string::size_type &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/da8/Patterns_8cpp.html#a2ab6cca5e3974201f4190e1bcefac697">sequoia::find_matched_delimiters</a> (std::string_view text, std::string::size_type pos, const char open, const char close)</td></tr>
-<tr class="separator:a2ab6cca5e3974201f4190e1bcefac697"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:add0acb53c382d46a8d66917ffa3aeed6"><td class="memItemLeft" align="right" valign="top">std::pair&lt; std::string::size_type, std::string::size_type &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/da8/Patterns_8cpp.html#add0acb53c382d46a8d66917ffa3aeed6">sequoia::find_matched_delimiters</a> (std::string_view text, const char open, const char close, std::string::size_type pos)</td></tr>
+<tr class="separator:add0acb53c382d46a8d66917ffa3aeed6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a86429149c3b7b0e3113767385ded7c86"><td class="memItemLeft" align="right" valign="top"><a id="a86429149c3b7b0e3113767385ded7c86" name="a86429149c3b7b0e3113767385ded7c86"></a>
+std::pair&lt; std::string::size_type, std::string::size_type &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::find_sandwiched_text</b> (std::string_view s, std::string_view leftPattern, std::string_view rightPattern, std::string::size_type pos)</td></tr>
+<tr class="separator:a86429149c3b7b0e3113767385ded7c86"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >A collection of functions for finding patterns within text. </p>
 </div><h2 class="groupheader">Function Documentation</h2>
-<a id="a2ab6cca5e3974201f4190e1bcefac697" name="a2ab6cca5e3974201f4190e1bcefac697"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2ab6cca5e3974201f4190e1bcefac697">&#9670;&nbsp;</a></span>find_matched_delimiters()</h2>
+<a id="add0acb53c382d46a8d66917ffa3aeed6" name="add0acb53c382d46a8d66917ffa3aeed6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#add0acb53c382d46a8d66917ffa3aeed6">&#9670;&nbsp;</a></span>find_matched_delimiters()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -101,20 +104,20 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">char&#160;</td>
+          <td class="paramname"><em>open</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char&#160;</td>
+          <td class="paramname"><em>close</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype">std::string::size_type&#160;</td>
-          <td class="paramname"><em>pos</em> = <code>{}</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">char&#160;</td>
-          <td class="paramname"><em>open</em> = <code>'('</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">char&#160;</td>
-          <td class="paramname"><em>close</em> = <code>')'</code>&#160;</td>
+          <td class="paramname"><em>pos</em> = <code>{}</code>&#160;</td>
         </tr>
         <tr>
           <td></td>

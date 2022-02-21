@@ -96,7 +96,7 @@ $(function() {
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    <span class="keyword">template</span>&lt;<span class="keyword">class</span>... Args&gt;</div>
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    [[nodiscard]]</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <a class="code hl_class" href="../../d7/d3e/classsequoia_1_1utilities_1_1uniform__wrapper.html">proxy</a> make(Args&amp;&amp;... args)</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    <span class="keyword">constexpr</span> <span class="keyword">static</span> <a class="code hl_class" href="../../d7/d3e/classsequoia_1_1utilities_1_1uniform__wrapper.html">proxy</a> make(Args&amp;&amp;... args)</div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    {</div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>      <span class="keywordflow">return</span> <a class="code hl_class" href="../../d7/d3e/classsequoia_1_1utilities_1_1uniform__wrapper.html">proxy</a>{std::forward&lt;Args&gt;(args)...};</div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    }</div>

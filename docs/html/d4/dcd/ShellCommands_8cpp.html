@@ -77,6 +77,8 @@ $(function() {
 <div class="textblock"><code>#include &quot;<a class="el" href="../../d1/db1/ShellCommands_8hpp_source.html">sequoia/Runtime/ShellCommands.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../d2/d4b/CommandLineArguments_8hpp_source.html">sequoia/Parsing/CommandLineArguments.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../de/d56/Preprocessor_8hpp_source.html">sequoia/PlatformSpecific/Preprocessor.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../de/db5/Streaming_8hpp_source.html">sequoia/Streaming/Streaming.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d5/de0/Patterns_8hpp_source.html">sequoia/TextProcessing/Patterns.hpp</a>&quot;</code><br />
 <code>#include &lt;iostream&gt;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
@@ -90,9 +92,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::runtime::inv
 <tr class="memitem:addea76f0aeeaf86906111a4de7033396"><td class="memItemLeft" align="right" valign="top"><a id="addea76f0aeeaf86906111a4de7033396" name="addea76f0aeeaf86906111a4de7033396"></a>
 shell_command&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::runtime::cd_cmd</b> (const std::filesystem::path &amp;dir)</td></tr>
 <tr class="separator:addea76f0aeeaf86906111a4de7033396"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a73cc000c0960cfdd6e42e943f76bc513"><td class="memItemLeft" align="right" valign="top"><a id="a73cc000c0960cfdd6e42e943f76bc513" name="a73cc000c0960cfdd6e42e943f76bc513"></a>
-shell_command&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::runtime::cmake_cmd</b> (const std::filesystem::path &amp;buildDir, const std::filesystem::path &amp;output)</td></tr>
-<tr class="separator:a73cc000c0960cfdd6e42e943f76bc513"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4dcc0bcd3dc2b61b352003d8c813a4b2"><td class="memItemLeft" align="right" valign="top"><a id="a4dcc0bcd3dc2b61b352003d8c813a4b2" name="a4dcc0bcd3dc2b61b352003d8c813a4b2"></a>
+shell_command&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::runtime::cmake_cmd</b> (const std::optional&lt; std::filesystem::path &gt; &amp;parentBuildDir, const std::filesystem::path &amp;buildDir, const std::filesystem::path &amp;output)</td></tr>
+<tr class="separator:a4dcc0bcd3dc2b61b352003d8c813a4b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a960a066904656d0f5e45d14e23cf2c06"><td class="memItemLeft" align="right" valign="top"><a id="a960a066904656d0f5e45d14e23cf2c06" name="a960a066904656d0f5e45d14e23cf2c06"></a>
 shell_command&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::runtime::build_cmd</b> (const std::filesystem::path &amp;buildDir, const std::filesystem::path &amp;output)</td></tr>
 <tr class="separator:a960a066904656d0f5e45d14e23cf2c06"><td class="memSeparator" colspan="2">&#160;</td></tr>

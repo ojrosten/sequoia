@@ -120,7 +120,7 @@ $(function() {
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>      std::optional&lt;T&gt; w{std::move(v)};</div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>      <span class="keywordflow">if</span>(<a class="code hl_function" href="../../d2/d0d/FreeCheckers_8hpp.html#a75993733a577e6b76bb93628fe2b722b">check</a>(equality, <span class="stringliteral">&quot;Inconsistent move construction&quot;</span>, logger, *w, zClone))</div>
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>      {</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>        <span class="keywordflow">return</span> std::move(w);</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>        <span class="keywordflow">return</span> w;</div>
 <div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>      }</div>
 <div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    }</div>
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
