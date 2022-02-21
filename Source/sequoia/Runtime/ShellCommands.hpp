@@ -40,6 +40,7 @@ namespace sequoia::runtime
     [[nodiscard]]
     friend bool operator!=(const shell_command&, const shell_command&) noexcept = default;
 
+    [[nodiscard]]
     friend shell_command operator&&(const shell_command& lhs, const shell_command& rhs);
 
     [[nodiscard]]
