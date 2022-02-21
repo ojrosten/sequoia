@@ -32,7 +32,7 @@ namespace sequoia::runtime
 
       const fs::path cmakeCache{cacheDir / "CMakeCache.txt"};
       if(!fs::exists(cmakeCache))
-        throw std::runtime_error{"Unable to find CMakeCache.txt in " + cmakeCache.generic_string()};
+        throw std::runtime_error{"Unable to find CMakeCache.txt in " + cacheDir.generic_string()};
 
       if(const auto optText{read_to_string(cmakeCache)})
       {
