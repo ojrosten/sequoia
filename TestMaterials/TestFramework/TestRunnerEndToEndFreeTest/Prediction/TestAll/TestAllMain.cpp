@@ -40,63 +40,63 @@ int main(int argc, char** argv)
 
 		runner.add_test_family(
 			"Utilities",
-			utilities_free_test("Free Test")
+			utilities_free_test{"Free Test"}
 		);
 
 		runner.add_test_family(
 			"Useful Things",
-			useful_things_free_test("Free Test")
+			useful_things_free_test{"Free Test"}
 		);
 
 		runner.add_test_family(
 			"Bar",
-			bar_free_test("Free Test")
+			bar_free_test{"Free Test"}
 		);
 
 		runner.add_test_family(
 			"Unstable",
-			flipper_free_test("Free Test")
+			flipper_free_test{"Free Test"}
 		);
 
 		runner.add_test_family(
 			"Maybe",
-			maybe_false_positive_test("False Positive Test"),
-			maybe_test("Unit Test")
+			maybe_false_positive_test{"False Positive Test"},
+			maybe_test{"Unit Test"}
 		);
 
 		runner.add_test_family(
 			"Oldschool",
-			oldschool_false_positive_test("False Positive Test"),
-			oldschool_test("Unit Test")
+			oldschool_false_positive_test{"False Positive Test"},
+			oldschool_test{"Unit Test"}
 		);
 
 		runner.add_test_family(
 			"Probability",
-			probability_false_positive_test("False Positive Test"),
-			probability_test("Unit Test")
+			probability_false_positive_test{"False Positive Test"},
+			probability_test{"Unit Test"}
 		);
 
 		runner.add_test_family(
 			"Foo",
-			foo_false_positive_test("False Positive Test"),
-			foo_test("Unit Test")
+			foo_false_positive_test{"False Positive Test"},
+			foo_test{"Unit Test"}
 		);
 
 		runner.add_test_family(
 			"Unique Thing",
-			unique_thing_false_positive_test("False Positive Test"),
-			unique_thing_test("Unit Test")
+			unique_thing_false_positive_test{"False Positive Test"},
+			unique_thing_test{"Unit Test"}
 		);
 
 		runner.add_test_family(
 			"Container",
-			container_performance_test("Performance Test"),
-			container_allocation_test("Allocation Test")
+			container_performance_test{"Performance Test"},
+			container_allocation_test{"Allocation Test"}
 		);
 
 		runner.add_test_family(
 			"House",
-			house_allocation_test("Allocation Test")
+			house_allocation_test{"Allocation Test"}
 		);
 
 		runner.execute(timer_resolution{1ms});

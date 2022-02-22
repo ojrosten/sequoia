@@ -444,8 +444,8 @@ namespace sequoia::testing
   [[nodiscard]]
   std::vector<std::string> nascent_semantics_test::constructors() const
   {
-    return { {std::string{forename()}.append("_false_positive_test(\"False Positive Test\")")},
-             {std::string{forename()}.append("_test(\"Unit Test\")")} };
+    return { {std::string{forename()}.append("_false_positive_test{\"False Positive Test\"}")},
+             {std::string{forename()}.append("_test{\"Unit Test\"}")} };
   }
 
   void nascent_semantics_test::transform_file(std::string& text) const
@@ -593,7 +593,7 @@ namespace sequoia::testing
   [[nodiscard]]
   std::vector<std::string> nascent_behavioural_test::constructors() const
   {
-    return { {std::string{forename()}.append("_test(\"").append(to_camel_case(test_type())).append(" Test\")")} };
+    return { {std::string{forename()}.append("_test{\"").append(to_camel_case(test_type())).append(" Test\"}")} };
   }
 
   void nascent_behavioural_test::transform_file(std::string& text) const
@@ -625,7 +625,7 @@ namespace sequoia::testing
   [[nodiscard]]
   std::vector<std::string> nascent_allocation_test::constructors() const
   {
-    return { {std::string{forename()}.append("_allocation_test(\"Allocation Test\")")} };
+    return { {std::string{forename()}.append("_allocation_test{\"Allocation Test\"}")} };
   }
 
   void nascent_allocation_test::transform_file(std::string& text) const

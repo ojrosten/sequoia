@@ -24,99 +24,99 @@ int main(int argc, char** argv)
 
         runner.add_test_family(
             "Maybe",
-            maybe_false_positive_test("False Positive Test"),
-            maybe_test("Unit Test")
+            maybe_false_positive_test{"False Positive Test"},
+            maybe_test{"Unit Test"}
         );
 
         runner.add_test_family(
             "Iterator",
-            foo_allocation_test("Allocation Test"),
-            foo_test("Unit Test"),
-            foo_false_positive_test("False Positive Test"),
-            iterator_false_positive_test("False Positive Test"),
-            iterator_test("Unit Test")
+            foo_allocation_test{"Allocation Test"},
+            foo_test{"Unit Test"},
+            foo_false_positive_test{"False Positive Test"},
+            iterator_false_positive_test{"False Positive Test"},
+            iterator_test{"Unit Test"}
         );
 
         runner.add_test_family(
             "Widget",
-            widget_false_positive_test("False Positive Test"),
-            widget_test("Unit Test")
+            widget_false_positive_test{"False Positive Test"},
+            widget_test{"Unit Test"}
         );
 
         runner.add_test_family(
             "Probability",
-            probability_false_positive_test("False Positive Test"),
-            probability_test("Unit Test")
+            probability_false_positive_test{"False Positive Test"},
+            probability_test{"Unit Test"}
         );
 
         runner.add_test_family(
             "Angle",
-            angle_false_positive_test("False Positive Test"),
-            angle_test("Unit Test")
+            angle_false_positive_test{"False Positive Test"},
+            angle_test{"Unit Test"}
         );
 
         runner.add_test_family(
             "Thingummy",
-            thingummy_false_positive_test("False Positive Test"),
-            thingummy_test("Unit Test")
+            thingummy_false_positive_test{"False Positive Test"},
+            thingummy_test{"Unit Test"}
         );
 
         runner.add_test_family(
             "Container",
-            container_performance_test("Performance Test"),
-            container_allocation_test("Allocation Test"),
-            container_false_positive_test("False Positive Test"),
-            container_test("Unit Test")
+            container_performance_test{"Performance Test"},
+            container_allocation_test{"Allocation Test"},
+            container_false_positive_test{"False Positive Test"},
+            container_test{"Unit Test"}
         );
 
         runner.add_test_family(
             "partners",
-            couple_false_positive_test("False Positive Test"),
-            couple_test("Unit Test")
+            couple_false_positive_test{"False Positive Test"},
+            couple_test{"Unit Test"}
         );
 
         runner.add_test_family(
             "Things",
-            things_false_positive_test("False Positive Test"),
-            things_test("Unit Test")
+            things_false_positive_test{"False Positive Test"},
+            things_test{"Unit Test"}
         );
 
         runner.add_test_family(
             "Variadic",
-            variadic_false_positive_test("False Positive Test"),
-            variadic_test("Unit Test")
+            variadic_false_positive_test{"False Positive Test"},
+            variadic_test{"Unit Test"}
         );
 
         runner.add_test_family(
             "Multiple",
-            multiple_false_positive_test("False Positive Test"),
-            multiple_test("Unit Test")
+            multiple_false_positive_test{"False Positive Test"},
+            multiple_test{"Unit Test"}
         );
 
         runner.add_test_family(
             "Utilities",
-            utilities_free_test("Free Test")
+            utilities_free_test{"Free Test"}
         );
 
         runner.add_test_family(
             "Bazzer",
-            bazagain_test("Free Test"),
-            bazzer_test("Free Test")
+            bazagain_test{"Free Test"},
+            bazzer_test{"Free Test"}
         );
 
         runner.add_test_family(
             "Doohicky",
-            doohicky_free_test("Free Test")
+            doohicky_free_test{"Free Test"}
         );
 
         runner.add_test_family(
             "Global",
-            global_free_test("Free Test")
+            global_free_test{"Free Test"}
         );
 
         runner.add_test_family(
             "Defs",
-            defs_free_test("Free Test")
+            defs_free_test{"Free Test"}
         );
 
 		runner.execute(timer_resolution{1ms});
