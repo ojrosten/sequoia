@@ -37,8 +37,8 @@ int main(int argc, char** argv)
 
     runner.add_test_family(
       "Test Framework Auxiliary",
-      failure_info_test("failure_info Unit Test"),
-      failure_info_false_positive_test("failure_info False Positive Test"),
+      failure_info_test{"failure_info Unit Test"},
+      failure_info_false_positive_test{"failure_info False Positive Test"},
       file_system_free_test{"File System Free Test"},
       output_free_test{"Output Free Test"},
       dependency_analyzer_free_test{"Dependency Analyzer Free Test"},
@@ -101,17 +101,17 @@ int main(int argc, char** argv)
 
     runner.add_test_family(
       "State Transition Utilities",
-      regular_state_transition_false_positive_diagnostics("Regular False Positive Diagnostics"),
-      regular_state_transition_false_negative_diagnostics("Regular False Negative Diagnostics"),
-      move_only_state_transition_false_negative_diagnostics("Move-Only False Positive Diagnostics"),
-      move_only_state_transition_false_positive_diagnostics("Move-Only False Negative Diagnostics")
+      regular_state_transition_false_positive_diagnostics{"Regular False Positive Diagnostics"},
+      regular_state_transition_false_negative_diagnostics{"Regular False Negative Diagnostics"},
+      move_only_state_transition_false_negative_diagnostics{"Move-Only False Positive Diagnostics"},
+      move_only_state_transition_false_positive_diagnostics{"Move-Only False Negative Diagnostics"}
     );
 
     runner.add_test_family(
       "Text Processing",
-      indent_free_test("Indent Free Test"),
-      patterns_free_test("Patterns Free Test"),
-      substitutions_free_test("Substitutions Free Test")
+      indent_free_test{"Indent Free Test"},
+      patterns_free_test{"Patterns Free Test"},
+      substitutions_free_test{"Substitutions Free Test"}
     );
 
     runner.add_test_family(
@@ -200,8 +200,8 @@ int main(int argc, char** argv)
 
     runner.add_test_family(
       "StaticLinearlyPartitionedSequence",
-      static_linearly_partitioned_sequence_false_positive_test("False Positive Test"),
-      static_linearly_partitioned_sequence_test("Unit Test")
+      static_linearly_partitioned_sequence_false_positive_test{"False Positive Test"},
+      static_linearly_partitioned_sequence_test{"Unit Test"}
     );
 
     runner.add_test_family(
@@ -238,8 +238,8 @@ int main(int argc, char** argv)
     runner.add_test_family(
       "Graph",
       test_graph_false_positives{"Graph false positive diagnostics"},
-      test_graph_meta("Meta Tests"),
-      test_graph_init("Dynamic Graph Init"),
+      test_graph_meta{"Meta Tests"},
+      test_graph_init{"Dynamic Graph Init"},
       test_static_graph{"Static Graph Init"},
       test_heterogeneous_static_graph{"Heterogeneous Static Graphs"},
       unweighted_graph_test{"Unweighted Graph Tests"},
@@ -266,13 +266,13 @@ int main(int argc, char** argv)
 
     runner.add_test_family(
       "Streaming",
-      streaming_free_test("Free Test")
+      streaming_free_test{"Free Test"}
     );
 
     runner.add_test_family(
       "Tree",
-      tree_false_positive_test("False Positive Test"),
-      tree_test("Unit Test")
+      tree_false_positive_test{"False Positive Test"},
+      tree_test{"Unit Test"}
     );
 
     runner.execute(timer_resolution{1ms});
@@ -283,7 +283,7 @@ int main(int argc, char** argv)
   }
   catch(...)
   {
-    std::cout << "Unrecognized error\n"; 
+    std::cout << "Unrecognized error\n";
   }
 
   return 0;
