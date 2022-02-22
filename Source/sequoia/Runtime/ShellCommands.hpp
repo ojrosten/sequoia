@@ -35,6 +35,12 @@ namespace sequoia::runtime
     }
 
     [[nodiscard]]
+    const std::string& string() const noexcept
+    {
+      return m_Command;
+    }
+
+    [[nodiscard]]
     friend bool operator==(const shell_command&, const shell_command&) noexcept = default;
 
     [[nodiscard]]

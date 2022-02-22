@@ -114,10 +114,16 @@ int main(int argc, char** argv)
     );
 
     runner.add_test_family(
-      "Runtime",
-      shell_commands_free_test("Free Test"),
-      factory_false_positive_test("False Positive Test"),
-      factory_test("Unit Test")
+      "Factory",
+      factory_false_positive_test{"False Positive Test"},
+      factory_test{"Unit Test"}
+    );
+
+    runner.add_test_family(
+      "Shell Commands",
+      shell_commands_false_positive_test{"False Positive Test"},
+      shell_commands_test{"Unit Test"},
+      shell_commands_free_test{"Free Test"}
     );
 
     runner.add_test_family(

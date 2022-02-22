@@ -63,6 +63,8 @@
 #include "Runtime/FactoryTest.hpp"
 #include "Runtime/FactoryTestingDiagnostics.hpp"
 #include "Runtime/ShellCommandsFreeTest.hpp"
+#include "Runtime/ShellCommandsTest.hpp"
+#include "Runtime/ShellCommandsTestingDiagnostics.hpp"
 #include "Streaming/StreamingFreeTest.hpp"
 #include "TestFramework/CoreDiagnostics.hpp"
 #include "TestFramework/DependencyAnalyzerFreeTest.hpp"

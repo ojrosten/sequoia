@@ -72,6 +72,8 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Runtime/FactoryTest.cpp
                ${TestDir}/Runtime/FactoryTestingDiagnostics.cpp
                ${TestDir}/Runtime/ShellCommandsFreeTest.cpp
+               ${TestDir}/Runtime/ShellCommandsTest.cpp
+               ${TestDir}/Runtime/ShellCommandsTestingDiagnostics.cpp
                ${TestDir}/Streaming/StreamingFreeTest.cpp
                ${TestDir}/TestFramework/CoreDiagnostics.cpp
                ${TestDir}/TestFramework/DependencyAnalyzerFreeTest.cpp
