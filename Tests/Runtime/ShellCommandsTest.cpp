@@ -12,7 +12,6 @@
 namespace sequoia::testing
 {
   using namespace runtime;
-  using namespace std::string_literals;
 
   [[nodiscard]]
   std::string_view shell_commands_test::source_file() const noexcept
@@ -22,10 +21,23 @@ namespace sequoia::testing
 
   void shell_commands_test::run_tests()
   {
-    shell_command x{}, y{"cmd"};
-    check(equivalence, LINE(""), x, ""s);
-    check(equivalence,LINE(""), y, "cmd"s);
+    using append_mode = shell_command::append_mode;
 
-    check_semantics(LINE(""), x, y);
+    shell_command nullCmd{},
+                  simpleCmd{"cmd"},
+                  cmdNoAppend{"", "foo", "dir", append_mode::no},
+                  cmdAppend{"", "foo", "dir", append_mode::yes};
+
+    check(equivalence, LINE(""), nullCmd, "");
+    check(equivalence, LINE(""), simpleCmd, "cmd");
+    check(equivalence, LINE(""), cmdNoAppend, "foo> dir 2>&1");
+    check(equivalence, LINE(""), cmdAppend, "foo>> dir 2>&1");
+
+    check_semantics(LINE(""), nullCmd, simpleCmd);
+    check_semantics(LINE(""), simpleCmd, cmdNoAppend);
+    check_semantics(LINE(""), cmdAppend, cmdNoAppend);
+
+    check(equivalence, LINE("Space after digit, before >"),  shell_command{"", "foo1", "dir", append_mode::no}, "foo1 > dir 2>&1");
+    check(equivalence, LINE("Space after digit, before >>"), shell_command{"", "foo1", "dir", append_mode::yes}, "foo1 >> dir 2>&1");
   }
 }
