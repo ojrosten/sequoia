@@ -133,8 +133,10 @@ namespace sequoia::testing
         }()
       };
 
-
-      check(equality, LINE(""), a, array_t{1, 4, 42});
+      check(equality,
+            LINE("Sorting a three element array, where stability is irrelevant"),
+            a,
+            array_t{1, 4, 42});
     }
 
     {
@@ -152,8 +154,10 @@ namespace sequoia::testing
         }()
       };
 
-
-      check(equality, LINE(""), a, array_t{pair_t{1, 100}, pair_t{42,42}, pair_t{42, 1}, pair_t{42, 4}});
+      check(equality,
+            LINE("Sorting a four element array, where stability makes a different"),
+            a,
+            array_t{pair_t{1, 100}, pair_t{42,42}, pair_t{42, 1}, pair_t{42, 4}});
     }
   }
 }
