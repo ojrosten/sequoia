@@ -124,7 +124,7 @@ namespace sequoia::testing
     
       constexpr auto a{
         [](){
-          array_t a{42, 1, 4};
+          array_t a{42, 1, 42};
           experimental::stable_sort(a.begin(), a.end(), [](int lhs, int rhs){
               return lhs < rhs;
             });
@@ -134,9 +134,9 @@ namespace sequoia::testing
       };
 
       check(equality,
-            LINE("Sorting a three element array, where stability is irrelevant"),
+            LINE("Sorting a three element array, where identical elements are indistinguishable, and so stability is irrelevant"),
             a,
-            array_t{1, 4, 42});
+            array_t{1, 42, 42});
     }
 
     {
@@ -155,7 +155,7 @@ namespace sequoia::testing
       };
 
       check(equality,
-            LINE("Sorting a four element array, where stability makes a different"),
+            LINE("Sorting a four element array, where stability makes a difference"),
             a,
             array_t{pair_t{1, 100}, pair_t{42,42}, pair_t{42, 1}, pair_t{42, 4}});
     }
