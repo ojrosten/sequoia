@@ -126,8 +126,8 @@ namespace sequoia::testing
         [](){
           array_t a{42, 1, 4};
           experimental::stable_sort(a.begin(), a.end(), [](int lhs, int rhs){
-            return lhs < rhs;
-          });
+              return lhs < rhs;
+            });
 
           return a;
         }()
@@ -147,7 +147,7 @@ namespace sequoia::testing
         [](){
           array_t a{pair_t{42,42}, pair_t{42, 1}, pair_t{42, 4}, pair_t{1, 100}};
           experimental::stable_sort(a.begin(), a.end(), [](const pair_t& lhs, const pair_t& rhs){
-            return lhs.first < rhs.first;
+              return lhs.first < rhs.first;
             });
 
           return a;
