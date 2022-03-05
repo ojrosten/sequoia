@@ -9,6 +9,8 @@
 
 #include "ExperimentalTest.hpp"
 
+#include <array>
+
 namespace sequoia::testing
 {
   [[nodiscard]]
@@ -19,5 +21,20 @@ namespace sequoia::testing
 
   void experimental_test::run_tests()
   {
+    using array_t = std::array<int, 3>;
+    
+    constexpr auto a{
+      [](){
+        array_t a{42, 1, 4};
+        experimental::stable_sort(a.begin(), a.end(), [](int lhs, int rhs){
+          return lhs < rhs;
+        });
+
+        return a;
+      }()
+    };
+
+
+    check(equality, LINE(""), a, array_t{1, 4, 42});
   }
 }
