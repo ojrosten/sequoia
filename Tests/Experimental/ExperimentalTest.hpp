@@ -61,9 +61,9 @@ namespace sequoia::experimental
 
       _BidirectionalIterator __new_middle
 	= std::rotate(__first_cut, __middle, __second_cut);
-      __merge_without_buffer(__first, __first_cut, __new_middle,
+      experimental::__merge_without_buffer(__first, __first_cut, __new_middle,
 				  __len11, __len22, __comp);
-      __merge_without_buffer(__new_middle, __second_cut, __last,
+      experimental::__merge_without_buffer(__new_middle, __second_cut, __last,
 				  __len1 - __len11, __len2 - __len22, __comp);
     }
 
@@ -80,12 +80,12 @@ namespace sequoia::experimental
 	  return;
     }
       _RandomAccessIterator __middle = __first + (__last - __first) / 2;
-      __inplace_stable_sort(__first, __middle, __comp);
-      __inplace_stable_sort(__middle, __last, __comp);
-      __merge_without_buffer(__first, __middle, __last,
-				  __middle - __first,
-				  __last - __middle,
-				  __comp);
+      experimental::__inplace_stable_sort(__first, __middle, __comp);
+      experimental::__inplace_stable_sort(__middle, __last, __comp);
+      experimental::__merge_without_buffer(__first, __middle, __last,
+                                           __middle - __first,
+                                           __last - __middle,
+                                           __comp);
     }
 
   template<typename _RandomAccessIterator, typename _Compare>
@@ -99,7 +99,7 @@ namespace sequoia::experimental
         if (__first == __last)
           return;
 
-        __inplace_stable_sort(__first, __last, __gnu_cxx::__ops::__iter_comp_iter(__comp));
+        experimental::__inplace_stable_sort(__first, __last, __gnu_cxx::__ops::__iter_comp_iter(__comp));
       }
       else
       {
