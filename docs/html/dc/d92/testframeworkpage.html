@@ -82,7 +82,7 @@ Platform Independence</h1>
 <p >Having cloned the <code>sequoia</code> repository, the testing framework may be built with CMake. A good way to get started is to navigate to the <code>TestFrameworkDiagnostics</code> folder and invoke CMake with the appropriate generator. This has been tested with MSVC, clang and gcc. Appropriate commands may look something like </p><pre>
 cmake -G "Visual Studio 17 2022" -B ..\build\CMade\win\TestFrameworkDiagnostics
 </pre><p> or </p><pre>
-cmake -D CMAKE_CXX_COMPILER=/usr/local/opt/llvm/bin/clang++ -B ..\build\CMade\clang\TestFrameworkDiagnostics
+cmake -D CMAKE_CXX_COMPILER=/usr/local/opt/llvm/bin/clang++ -B ../build/CMade/clang/TestFrameworkDiagnostics
 </pre><p> depending on the system and precise set-up. Invoking the resulting executable runs a minimal set of diagnostics. A richer set may be found in <code>TestAll</code>.</p>
 <p >As described in more detail below, certain output arising from running tests is written to files which should be placed under version control. This presents additional difficulties in guaranteeing platform independence. For example, the files may contain absolute paths or demangled type names, which could differ from machine to machine and/or platform to platform. For files placed under version control this is particularly problematic. Therefore, various mechanisms have been put in place to mitigate these problems: see <a class="el" href="../../dc/d92/testframeworkpage.html#sec_robustness">Robustness</a>, <a class="el" href="../../dc/d92/testframeworkpage.html#sec_malleable">Malleability</a> and <a class="el" href="../../dc/d92/testframeworkpage.html#sec_generics">Generics-Friendliness</a>.</p>
 <h1><a class="anchor" id="sec_automated"></a>

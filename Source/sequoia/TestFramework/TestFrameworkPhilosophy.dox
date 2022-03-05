@@ -44,7 +44,7 @@
 	</pre>
 	or
 	<pre>
-	cmake -D CMAKE_CXX_COMPILER=/usr/local/opt/llvm/bin/clang++ -B ..\build\CMade\clang\TestFrameworkDiagnostics
+	cmake -D CMAKE_CXX_COMPILER=/usr/local/opt/llvm/bin/clang++ -B ../build/CMade/clang/TestFrameworkDiagnostics
 	</pre>
 	depending on the system and precise set-up. Invoking the resulting executable runs a minimal set of diagnostics.
 	A richer set may be found in `TestAll`.
