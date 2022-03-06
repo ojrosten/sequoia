@@ -2,19 +2,20 @@
 
     \section intro_sec Introduction
 
-    `sequoia` is a modern C++ library, under active development, comprising a sophisticated
-    \ref testframeworkpage together with various mathematical abstractions.
+    `sequoia` is a modern C++ library, under active development, presently comprising a sophisticated
+    \ref testframeworkpage "testing framework" together with various mathematical abstractions,
+	the most mature of which is a graph implementation.
 
-    \subsection intro_name Why the Name?
+    \subsection intro_name Why `sequoia`?
 
-    The giant sequoia, Sequoiadendron giganteum, has a remarkable ecology. Of particular relevance is that,
+    The giant sequoia, <em>Sequoiadendron giganteum</em>, has a remarkable ecology. Of particular relevance is that,
     despite their tremendous size as adults, young trees do not appear to grow particularly fast:
     significant resources are invested in
-    growing thick, fire proof bark to protect their future. This has always served as an inspiration
-    for the testing framework that underpins this library, and a point of reference when tempted
+    growing thick, fireproof bark to protect their future. This has always served as an inspiration
+    for the testing framework that underpins this library; also a personal reminder when tempted
     with shortcuts! As they develop,
     giant sequoias pack their wood with tannins and, under the right conditions, can survive for thousands
     of years. As humanity ploughs headlong into a climate catastrophe driven, at least in part, by
-    a collective inability to see beyond the short term, perhaps we would do well to learn from these
+    a collective inability to see beyond the short term, we would do well to learn from these
     magnificent organisms.
  */
