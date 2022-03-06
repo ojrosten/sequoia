@@ -2,7 +2,29 @@
 
     \section intro_sec Introduction
 
-    `sequoia` is a modern C++ library which aims to supply various mathematical
-    abstractions, together with a sophisticated testing framework.
-    More information about the latter can be found here \ref testframeworkpage.
+    `sequoia` is a modern C++ library, under active development, presently comprising a sophisticated
+    \ref testframeworkpage "testing framework" together with various mathematical abstractions,
+	the most mature of which is a graph implementation.
+
+    \subsection intro_name Why sequoia?
+
+    The giant sequoia, <em>Sequoiadendron giganteum</em>, has a remarkable ecology. Of particular relevance is that,
+    despite their tremendous size as adults, young trees do not appear to grow particularly fast:
+    significant resources are invested in
+    growing thick, fireproof bark to protect their future. This has always served as an inspiration
+    for the testing framework that underpins this library; also as a personal reminder when tempted
+    with hacks! As they develop,
+    giant sequoias pack their wood with tannins and, under the right conditions, can survive for thousands
+    of years. As humanity ploughs headlong into a climate catastrophe driven, at least in part, by
+    a collective inability to see beyond the short term, we would do well to learn from these
+    magnificent organisms.
+	
+	\subsection intro_gpl Why the GNU Public License?
+	
+	I believe in free, open-source software. Software has an ever-increasing influence over our daily lives.
+	My personal view is that software should, at an intrinsic level, be for everyone: without catches and
+	with total transparency. 
+	My greatest source of trepidation in making `sequoia` open-source is that of embarrassment: some of the code
+	I've written is doubtless wrong, awful or both! However, if the price of transparency is my ego, then it is
+	a small price to pay.
  */
