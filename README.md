@@ -1,6 +1,7 @@
 # sequoia
 
-sequoia is a modern C++ library, under active development, comprising a sophisticated
+[https://ojrosten.github.io/sequoia/html/index.html](sequoia) is a modern C++ library,
+under active development, comprising a sophisticated
 [testing framework](https://ojrosten.github.io/sequoia/html/dc/d92/testframeworkpage.html)
 together with various mathematical abstractions.
 
