@@ -18,4 +18,13 @@
     of years. As humanity ploughs headlong into a climate catastrophe driven, at least in part, by
     a collective inability to see beyond the short term, we would do well to learn from these
     magnificent organisms.
+	
+	\subsection intro_gpl Why the GNU Public License?
+	
+	I believe in free, open-source software. Software has an ever-increasing influence over our daily lives.
+	My personal view is that software should, at an intrinsic level, be for everyone: without catches and
+	with total transparency. 
+	My greatest source of trepidation in making `sequoia` open-source is that of embarrassment: some of the code
+	I've written is doubtless wrong, awful or both! However, if the price of transparency is my ego, then it is
+	a small price to pay.
  */
