@@ -3,7 +3,7 @@
 [sequoia](https://ojrosten.github.io/sequoia/html/index.html) is a modern C++ library,
 under active development, comprising a sophisticated
 [testing framework](https://ojrosten.github.io/sequoia/html/dc/d92/testframeworkpage.html)
-together with various mathematical abstractions.
+together with various mathematical abstractions, the most mature of which is a graph implementation.
 
 ## Licensing:
 
