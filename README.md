@@ -16,7 +16,7 @@ of these charities.
 
 [UNHCR: The UN Refugee Agency](https://www.unhcr.org)
 
-[WWT: A Conversvation charity dedicated to wetlands](https://www.wwt.org.uk/)
+[WWT: A Conservation charity dedicated to wetlands](https://www.wwt.org.uk/)
 
 ## Requirements (as of 2022-03-06):
 
