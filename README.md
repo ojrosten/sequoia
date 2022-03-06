@@ -4,6 +4,19 @@ sequoia is a modern C++ library, under active development, comprising a sophisti
 [testing framework](https://ojrosten.github.io/sequoia/html/dc/d92/testframeworkpage.html)
 together with various mathematical abstractions.
 
+Licensing:
+
+GPL 3.0
+
+This software is, and always will be, free!
+
+If you would like to give something back, other than code, please consider donating to one
+of these charities.
+
+[UNHCR: The UN Refugee Agency](https://www.unhcr.org)
+
+[WWT: A Conversvation charity dedicated to wetlands](https://www.wwt.org.uk/)
+
 Requirements (as of 2022-03-06):
 
 git 2.33.0  
@@ -16,15 +29,7 @@ Testing Framework API:
 
 Nearly stable, but awaiting std::source_location in libc++.
 
-Licensing:
+Documentation:
 
-GPL 3.0
+High-level documentation is up-to-date, but per-file documentation may be inaccurate.
 
-This software is, and always will be, free!
-
-If you would like to give something back, other than code, please consider donating to one
-of these charities.
-
-[UNHCR: The UN Refugee Agency](https://www.unhcr.org)
-
-[WWT: A Conversvation charity dedicated to weltands](https://www.wwt.org.uk/)
