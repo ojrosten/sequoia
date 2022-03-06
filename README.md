@@ -6,11 +6,11 @@ together with various mathematical abstractions.
 
 Requirements (as of 2022-03-06):
 
-git 2.33.0
-CMake 3.20
-clang 13.0.1
-g++ 11.2
-Visual Studio 2022
+git 2.33.0  
+CMake 3.20  
+clang 13.0.1  
+g++ 11.2  
+Visual Studio 2022  
 
 Testing Framework API:
 
