@@ -25,6 +25,6 @@ This software is, and always will be, free!
 If you would like to give something back, other than code, please consider donating to one
 of these charities.
 
-[UNHCR The UN Refugee Agency](https://www.unhcr.org)
+[UNHCR: The UN Refugee Agency](https://www.unhcr.org)
 
-[WWT A Conversvation charity dedicated to weltands](https://www.wwt.org.uk/)
+[WWT: A Conversvation charity dedicated to weltands](https://www.wwt.org.uk/)
