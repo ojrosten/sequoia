@@ -5,7 +5,7 @@ under active development, comprising a sophisticated
 [testing framework](https://ojrosten.github.io/sequoia/html/dc/d92/testframeworkpage.html)
 together with various mathematical abstractions.
 
-### Licensing:
+## Licensing:
 
 GPL 3.0
 
@@ -18,7 +18,7 @@ of these charities.
 
 [WWT: A Conversvation charity dedicated to wetlands](https://www.wwt.org.uk/)
 
-### Requirements (as of 2022-03-06):
+## Requirements (as of 2022-03-06):
 
 git 2.33.0  
 CMake 3.20  
@@ -26,11 +26,11 @@ clang 13.0.1
 g++ 11.2  
 Visual Studio 2022  
 
-### Testing Framework API:
+## Testing Framework API:
 
 Nearly stable, but awaiting std::source_location in libc++.
 
-### Documentation:
+## Documentation:
 
 High-level documentation is up-to-date, but per-file documentation may be inaccurate.
 
