@@ -4,6 +4,7 @@
 under active development, comprising a sophisticated
 [testing framework](https://ojrosten.github.io/sequoia/html/dc/d92/testframeworkpage.html)
 together with various mathematical abstractions, the most mature of which is a graph implementation.
+The latter is useable in constant expressions, supporting traversals which may return compile-time constants.
 
 ## Licensing:
 
