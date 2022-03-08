@@ -304,5 +304,26 @@ namespace sequoia::testing
             a,
             array_t{1, 2, 4, 5});
     }
+
+    {
+      using pair_t = std::pair<int, int>;
+      using array_t = std::array<pair_t, 9>;
+
+      constexpr auto a{
+        [](){
+          array_t a{pair_t{0,1}, pair_t{0,2}, pair_t{3,0}, pair_t{-1,0}, pair_t{2,0}, pair_t{4,0}, pair_t{5,0}, pair_t{0,3}, pair_t{7,0}};
+          experimental::stable_partition(a.begin(), a.end(), [](const pair_t& element){
+              return element.first > 0;
+            });
+
+          return a;
+        }()
+      };
+
+      check(equality,
+            LINE("cppreference example with extra data to distinguish indentical 'first' values"),
+            a,
+            array_t{pair_t{3,0}, pair_t{2,0}, pair_t{4,0}, pair_t{5,0}, pair_t{7,0}, pair_t{0,1}, pair_t{0,2}, pair_t{-1,0}, pair_t{0,3}});
+    }
   }
 }
