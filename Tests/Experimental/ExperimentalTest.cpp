@@ -182,7 +182,8 @@ namespace sequoia::experimental
       __glibcxx_requires_valid_range(__first, __last);
 
       if(std::is_constant_evaluated())
-      {
+      {        
+        __first = std::__find_if_not(__first, __last, __gnu_cxx::__ops::__pred_iter(__pred));
         return experimental::__inplace_stable_partition(__first, __last,
                                                         __gnu_cxx::__ops::__pred_iter(__pred),
                                                         std::distance(__first, __last));
@@ -278,7 +279,7 @@ namespace sequoia::testing
 
   void experimental_test::test_stable_partition()
   {
-    /*{
+    {
       using array_t = std::array<int, 4>;
 
       constexpr auto a{
@@ -294,6 +295,6 @@ namespace sequoia::testing
             LINE("stable partition of a four element array"),
             a,
             array_t{1, 2, 4, 5});
-            }*/
+    }
   }
 }
