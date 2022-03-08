@@ -167,6 +167,24 @@ namespace sequoia::experimental
       return std::rotate(__left_split, __middle, __right_split);
     }
 
+  /// a constexpr version of stable_partition, based on the gcc implementation
+  template<typename _ForwardIterator, typename _Predicate>
+    constexpr _ForwardIterator
+    __stable_partition(_ForwardIterator __first, _ForwardIterator __last,
+		     _Predicate __pred)
+    {
+      if(std::is_constant_evaluated())
+      {
+         __first = std::__find_if_not(__first, __last, __pred);
+        return experimental::__inplace_stable_partition(__first, __last,
+                                                        __pred,
+                                                        std::distance(__first, __last));
+      }
+      else
+      {
+        return std::__stable_partition(__first, __last, __pred);
+      }
+    }
 
   /// a constexpr version of stable_partition, based on the gcc implementation
   template<typename _ForwardIterator, typename _Predicate>
@@ -181,18 +199,8 @@ namespace sequoia::experimental
 	    typename iterator_traits<_ForwardIterator>::value_type>)
       __glibcxx_requires_valid_range(__first, __last);
 
-      if(std::is_constant_evaluated())
-      {        
-        __first = std::__find_if_not(__first, __last, __gnu_cxx::__ops::__pred_iter(__pred));
-        return experimental::__inplace_stable_partition(__first, __last,
-                                                        __gnu_cxx::__ops::__pred_iter(__pred),
-                                                        std::distance(__first, __last));
-      }
-      else
-      {
-        return std::__stable_partition(__first, __last,
-				              __gnu_cxx::__ops::__pred_iter(__pred));
-      }
+      return experimental::__stable_partition(__first, __last,
+	  		                  __gnu_cxx::__ops::__pred_iter(__pred));
     }
 }
 
