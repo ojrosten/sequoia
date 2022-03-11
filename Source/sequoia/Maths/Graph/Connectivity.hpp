@@ -49,7 +49,7 @@ namespace sequoia
     >
     class connectivity
     {
-      friend struct sequoia::impl::assignment_helper;
+      friend struct sequoia::assignment_helper;
     protected:
       using edge_storage_type = typename EdgeTraits::edge_storage_type;
     public:
@@ -256,7 +256,7 @@ namespace sequoia
             }
           };
 
-          sequoia::impl::assignment_helper::assign(*this, in, allocGetter, partitionsAllocGetter);
+          sequoia::assignment_helper::assign(*this, in, allocGetter, partitionsAllocGetter);
         }
 
         return *this;

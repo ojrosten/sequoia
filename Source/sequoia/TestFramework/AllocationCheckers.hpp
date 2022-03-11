@@ -8,40 +8,13 @@
 #pragma once
 
 /*! \file
-    \brief Utilities for performing allocation checks.
+    \brief Client-facing utilities for performing allocation checks.
 
-    The allocation testing framework is built upon the idea of supplying and testing
-    predictions for particular allocation events, in particular:
-
-    - copying
-    - mutating
-    - para copy (use of the copy-like constructor taking an allocator as an extra argument)
-    - para move (use of the move-like constructor taking an allocator as an extra argument)
-    - assignment with/without propagation of the allocator
-    - swap with/without propagation of the allocator
-
-    To help with readability of actual tests, various user defined literals are introduced
-    so that, for example, 1_c may be used to mean a prediction of 1 allocation for a copy
-    event. This is more expressive than just '1' and less verbose than copy_prediction{1},
-    particularly bearing in mind that often several predictions are supplied together.
-
-    In addition to predictions, clients must also supply a function object, per allocator
-    which consumes a container and returns a copy of the allocator. With these ingredients,
-    together with a container which uses the shared_counting_allocator, the following
-    scenario may be realized:
-
-    A extract a copy of the allocator
-    B acquire the number of allocations
-    C perform an operation with an expected number of allocations
-    D acquire the number of allocations
-    E compare the prediction to the difference between D and B.
-
-    Note that the framework is designed to work smoothly with std::scoped_allocator_adaptor
-    and/or with containers containing multiple allocators, scoped or otherwise.
+    For more information see \ref AllocationCheckersCore.hpp
 */
 
+#include "sequoia/TestFramework/AllocationCheckersCore.hpp"
 #include "sequoia/TestFramework/FreeCheckers.hpp"
-#include "sequoia/TestFramework/AllocationCheckersDetails.hpp"
 
 #include "sequoia/Core/Utilities/ArrayUtilities.hpp"
 #include "sequoia/Core/Meta/Utilities.hpp"
@@ -200,6 +173,14 @@ namespace sequoia::testing
 
   namespace allocation_equivalence_classes
   {
+    /*! This namespace contains types which act as tags for containers with different semantics.
+        The purpose for this is to provide a mechanism to specialize how allocation predictions
+        are shifted, e.g. for the MSVC debug build. 
+        Two common cases are supplied with `sequoia`: containers of values and containers of
+        pointers. In the latter case, it is assumed that the implementation makes use of 
+        \ref sequoia::assignment_helper.
+     */
+
     template<class Allocator>
     struct container_of_values {};
 
@@ -480,11 +461,13 @@ namespace sequoia::testing
     {
       using allocClass = alloc_equivalence_class_generator_t<T, Getter>;
 
+      [[nodiscard]]
       constexpr predictions_type operator()(const predictions_type& predictions) const
       {
         return shift<allocClass>(predictions);
       }
 
+      [[nodiscard]]
       constexpr predictions_type operator()(const inner_predictions_type& predictions) const
       {
         return to_top_level(shift<allocClass>(predictions));
@@ -507,6 +490,7 @@ namespace sequoia::testing
 
     outer_alloc_getter(Getter g) : getter{std::move(g)} {}
 
+    [[nodiscard]]
     auto operator()(const T& c) const
     {
       return getter(c).outer_allocator();

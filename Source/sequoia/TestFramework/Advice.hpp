@@ -95,7 +95,8 @@ namespace sequoia::testing
   /*! \brief class template used to wrap function objects which proffer advice.
 
       An appropriate instantiation of this class template may be supplied as the
-      final argument of many of the check methods. For example, consider an int, x:
+      final argument of many of the check methods. For example, consider 
+      checking equality of an `int`:
 
       <pre>
       check(equality, LINE(""), x, 41, tutor{[](double value, double prediction) {
@@ -103,8 +104,8 @@ namespace sequoia::testing
       }});
       </pre>
 
-      In the case the x != 41, not only will failure be reported in the usual manner
-      but, if x == 42, some spectacularly useful advice will be proffered.
+      In the case the `x != 41`, not only will failure be reported in the usual manner
+      but, if `x == 42`, some spectacularly useful advice will be proffered.
 
       \anchor tutor_primary
    */

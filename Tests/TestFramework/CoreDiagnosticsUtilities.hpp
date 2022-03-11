@@ -227,7 +227,7 @@ namespace sequoia::testing
 
     perfectly_sharing_beast& operator=(const perfectly_sharing_beast& other)
     {
-      sequoia::impl::assignment_helper::assign(*this, other, alloc_acquirer{});
+      sequoia::assignment_helper::assign(*this, other, alloc_acquirer{});
 
       return *this;
     }
@@ -943,7 +943,7 @@ namespace sequoia::testing
         }
       };
 
-      sequoia::impl::assignment_helper::assign(*this, other, allocGetter);
+      sequoia::assignment_helper::assign(*this, other, allocGetter);
 
       return *this;
     }

@@ -32,13 +32,16 @@ namespace sequoia::impl
       using type = std::invoke_result_t<AllocGetter, T>;
     };
   };
+}
 
+namespace sequoia
+{
   struct assignment_helper
   {
     template<class T, std::invocable<T>... AllocGetters>
     constexpr static void assign(T& to, const T& from, [[maybe_unused]] AllocGetters... allocGetters)
     {
-      invoke_filtered<void, type_to_type<T>::template mapper>([&to, &from](auto... filteredAllocGetters){ assign_filtered(to, from, filteredAllocGetters...); }, allocGetters...);
+      impl::invoke_filtered<void, impl::type_to_type<T>::template mapper>([&to, &from](auto... filteredAllocGetters){ assign_filtered(to, from, filteredAllocGetters...); }, allocGetters...);
     }
 
   private:
