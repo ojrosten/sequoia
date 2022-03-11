@@ -7,7 +7,8 @@
 
 #pragma once
 
-/*! \brief Core components for the Allocation Testing framework
+/*! \file
+    \brief Core components for the Allocation Testing framework
 
     The allocation testing framework is built upon the idea of supplying and testing
     predictions for particular allocation events, in particular:
@@ -20,8 +21,8 @@
     - swap with/without propagation of the allocator
 
     To help with readability of actual tests, various user defined literals are introduced
-    so that, for example, 1_c may be used to mean a prediction of 1 allocation for a copy
-    event. This is more expressive than just '1' and less verbose than copy_prediction{1},
+    so that, for example, 1_c may be used to mean a prediction of `1` allocation for a copy
+    event. This is more expressive than just `1` and less verbose than `copy_prediction{1}`,
     particularly bearing in mind that often several predictions are supplied together.
 
     In addition to predictions, clients must also supply a function object, per allocator,

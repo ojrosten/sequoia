@@ -295,7 +295,7 @@ $(function() {
 <div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span> </div>
 <div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>    perfectly_sharing_beast&amp; operator=(<span class="keyword">const</span> perfectly_sharing_beast&amp; other)</div>
 <div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>    {</div>
-<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>      sequoia::impl::assignment_helper::assign(*<span class="keyword">this</span>, other, alloc_acquirer{});</div>
+<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>      sequoia::assignment_helper::assign(*<span class="keyword">this</span>, other, alloc_acquirer{});</div>
 <div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span> </div>
 <div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>      <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
 <div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>    }</div>
@@ -1011,7 +1011,7 @@ $(function() {
 <div class="line"><a id="l00943" name="l00943"></a><span class="lineno">  943</span>        }</div>
 <div class="line"><a id="l00944" name="l00944"></a><span class="lineno">  944</span>      };</div>
 <div class="line"><a id="l00945" name="l00945"></a><span class="lineno">  945</span> </div>
-<div class="line"><a id="l00946" name="l00946"></a><span class="lineno">  946</span>      sequoia::impl::assignment_helper::assign(*<span class="keyword">this</span>, other, allocGetter);</div>
+<div class="line"><a id="l00946" name="l00946"></a><span class="lineno">  946</span>      sequoia::assignment_helper::assign(*<span class="keyword">this</span>, other, allocGetter);</div>
 <div class="line"><a id="l00947" name="l00947"></a><span class="lineno">  947</span> </div>
 <div class="line"><a id="l00948" name="l00948"></a><span class="lineno">  948</span>      <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
 <div class="line"><a id="l00949" name="l00949"></a><span class="lineno">  949</span>    }</div>
@@ -1245,12 +1245,12 @@ $(function() {
 <div class="line"><a id="l01177" name="l01177"></a><span class="lineno"> 1177</span>  };</div>
 <div class="line"><a id="l01178" name="l01178"></a><span class="lineno"> 1178</span> </div>
 <div class="line"><a id="l01179" name="l01179"></a><span class="lineno"> 1179</span>}</div>
-<div class="ttc" id="aAllocationCheckers_8hpp_html"><div class="ttname"><a href="../../d3/dfb/AllocationCheckers_8hpp.html">AllocationCheckers.hpp</a></div><div class="ttdoc">Utilities for performing allocation checks.</div></div>
+<div class="ttc" id="aAllocationCheckers_8hpp_html"><div class="ttname"><a href="../../d3/dfb/AllocationCheckers_8hpp.html">AllocationCheckers.hpp</a></div><div class="ttdoc">Client-facing utilities for performing allocation checks.</div></div>
 <div class="ttc" id="aAssignmentUtilities_8hpp_html"><div class="ttname"><a href="../../d0/dbb/AssignmentUtilities_8hpp.html">AssignmentUtilities.hpp</a></div><div class="ttdoc">Helper for dealing with allocator propagation during copy assignment.</div></div>
 <div class="ttc" id="aFreeCheckers_8hpp_html_a75993733a577e6b76bb93628fe2b722b"><div class="ttname"><a href="../../d2/d0d/FreeCheckers_8hpp.html#a75993733a577e6b76bb93628fe2b722b">sequoia::testing::check</a></div><div class="ttdeci">bool check(CheckType flavour, std::string_view description, test_logger&lt; Mode &gt; &amp;logger, Iter first, Sentinel last, PredictionIter predictionFirst, PredictionSentinel predictionLast, tutor&lt; Advisor &gt; advisor={})</div><div class="ttdoc">The workhorse for comparing the contents of ranges.</div><div class="ttdef"><b>Definition:</b> FreeCheckers.hpp:448</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1test__logger_html"><div class="ttname"><a href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">sequoia::testing::test_logger</a></div><div class="ttdef"><b>Definition:</b> TestLogger.hpp:135</div></div>
-<div class="ttc" id="aclasssequoia_1_1testing_1_1tutor_html"><div class="ttname"><a href="../../d6/d71/classsequoia_1_1testing_1_1tutor.html">sequoia::testing::tutor</a></div><div class="ttdoc">class template used to wrap function objects which proffer advice.</div><div class="ttdef"><b>Definition:</b> Advice.hpp:113</div></div>
-<div class="ttc" id="astructsequoia_1_1testing_1_1allocation__equivalence__classes_1_1container__of__pointers_html"><div class="ttname"><a href="../../dc/dc9/structsequoia_1_1testing_1_1allocation__equivalence__classes_1_1container__of__pointers.html">sequoia::testing::allocation_equivalence_classes::container_of_pointers</a></div><div class="ttdef"><b>Definition:</b> AllocationCheckers.hpp:207</div></div>
+<div class="ttc" id="aclasssequoia_1_1testing_1_1tutor_html"><div class="ttname"><a href="../../d6/d71/classsequoia_1_1testing_1_1tutor.html">sequoia::testing::tutor</a></div><div class="ttdoc">class template used to wrap function objects which proffer advice.</div><div class="ttdef"><b>Definition:</b> Advice.hpp:114</div></div>
+<div class="ttc" id="astructsequoia_1_1testing_1_1allocation__equivalence__classes_1_1container__of__pointers_html"><div class="ttname"><a href="../../dc/dc9/structsequoia_1_1testing_1_1allocation__equivalence__classes_1_1container__of__pointers.html">sequoia::testing::allocation_equivalence_classes::container_of_pointers</a></div><div class="ttdef"><b>Definition:</b> AllocationCheckers.hpp:189</div></div>
 <div class="ttc" id="astructsequoia_1_1testing_1_1broken__copy__assignment__value__semantics_html"><div class="ttname"><a href="../../d6/dda/structsequoia_1_1testing_1_1broken__copy__assignment__value__semantics.html">sequoia::testing::broken_copy_assignment_value_semantics</a></div><div class="ttdef"><b>Definition:</b> CoreDiagnosticsUtilities.hpp:996</div></div>
 <div class="ttc" id="astructsequoia_1_1testing_1_1broken__copy__assignment_html"><div class="ttname"><a href="../../de/de5/structsequoia_1_1testing_1_1broken__copy__assignment.html">sequoia::testing::broken_copy_assignment</a></div><div class="ttdef"><b>Definition:</b> CoreDiagnosticsUtilities.hpp:645</div></div>
 <div class="ttc" id="astructsequoia_1_1testing_1_1broken__copy__value__semantics_1_1alloc__acquirer_html"><div class="ttname"><a href="../../d9/d1c/structsequoia_1_1testing_1_1broken__copy__value__semantics_1_1alloc__acquirer.html">sequoia::testing::broken_copy_value_semantics::alloc_acquirer</a></div><div class="ttdef"><b>Definition:</b> CoreDiagnosticsUtilities.hpp:903</div></div>

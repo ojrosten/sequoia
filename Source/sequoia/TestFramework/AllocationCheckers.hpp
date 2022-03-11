@@ -173,9 +173,10 @@ namespace sequoia::testing
 
   namespace allocation_equivalence_classes
   {
-    /*! This namespace contains types which act as tags for containers with different semantics.
-        The purpose for this is to provide a mechanism to specialize how allocation predictions
-        are shifted, e.g. for the MSVC debug build. 
+    ///@{
+    /*! Types in the namespace `allocation_equivalence_classes` act as tags for containers
+        with different semantics. The purpose for this is to provide a mechanism to specialize
+        how allocation predictions are shifted, e.g. for the MSVC debug build.
         Two common cases are supplied with `sequoia`: containers of values and containers of
         pointers. In the latter case, it is assumed that the implementation makes use of 
         \ref sequoia::assignment_helper.
@@ -186,6 +187,8 @@ namespace sequoia::testing
 
     template<class Allocator>
     struct container_of_pointers {};
+
+    ///@}
   }
 
   template<auto AllocEvent>

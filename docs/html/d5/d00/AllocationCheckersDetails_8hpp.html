@@ -68,7 +68,6 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">AllocationCheckersDetails.hpp File Reference</div></div>
 </div><!--header-->
@@ -76,19 +75,14 @@ $(function() {
 
 <p>Implementation details for allocation checks.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;<a class="el" href="../../df/dd3/SemanticsCheckersDetails_8hpp_source.html">sequoia/TestFramework/SemanticsCheckersDetails.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../db/d7b/AllocationCheckersTraits_8hpp_source.html">sequoia/TestFramework/AllocationCheckersTraits.hpp</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="../../df/d4e/AllocationCheckersCore_8hpp_source.html">sequoia/TestFramework/AllocationCheckersCore.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../df/dd3/SemanticsCheckersDetails_8hpp_source.html">sequoia/TestFramework/SemanticsCheckersDetails.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../d2/d0d/FreeCheckers_8hpp_source.html">sequoia/TestFramework/FreeCheckers.hpp</a>&quot;</code><br />
-<code>#include &lt;scoped_allocator&gt;</code><br />
 </div>
 <p><a href="../../d5/d00/AllocationCheckersDetails_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d58/structsequoia_1_1testing_1_1container__tag__constant.html">sequoia::testing::container_tag_constant&lt; tag &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d6b/classsequoia_1_1testing_1_1alloc__prediction.html">sequoia::testing::alloc_prediction&lt; Event &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/ddf/structsequoia_1_1testing_1_1impl_1_1allocation__advice.html">sequoia::testing::impl::allocation_advice</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/df2/classsequoia_1_1testing_1_1impl_1_1dual__allocation__checker.html">sequoia::testing::impl::dual_allocation_checker&lt; T, Getter &gt;</a></td></tr>
@@ -105,24 +99,8 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">actions common to both move-only and regular types.  <a href="../../d9/d71/structsequoia_1_1testing_1_1impl_1_1allocation__actions.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
-Enumerations</h2></td></tr>
-<tr class="memitem:a8b186d4da6c4d6923ab3ac4cbb8da722"><td class="memItemLeft" align="right" valign="top"><a id="a8b186d4da6c4d6923ab3ac4cbb8da722" name="a8b186d4da6c4d6923ab3ac4cbb8da722"></a>enum class &#160;</td><td class="memItemRight" valign="bottom"><b>container_tag</b> { <b>x</b>
-, <b>y</b>
- }</td></tr>
-<tr class="separator:a8b186d4da6c4d6923ab3ac4cbb8da722"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a62a4f566f8991b117146355633496fa6"><td class="memItemLeft" align="right" valign="top"><a id="a62a4f566f8991b117146355633496fa6" name="a62a4f566f8991b117146355633496fa6"></a>enum class &#160;</td><td class="memItemRight" valign="bottom"><b>null_allocation_event</b> { <b>comparison</b>
-, <b>spectator</b>
-, <b>serialization</b>
-, <b>swap</b>
- }</td></tr>
-<tr class="separator:a62a4f566f8991b117146355633496fa6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a9a6a8a276c0e3d4a302f95fd72c0127d"><td class="memItemLeft" align="right" valign="top"><a id="a9a6a8a276c0e3d4a302f95fd72c0127d" name="a9a6a8a276c0e3d4a302f95fd72c0127d"></a>
-std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::to_string</b> (container_tag tag)</td></tr>
-<tr class="separator:a9a6a8a276c0e3d4a302f95fd72c0127d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a958e64fd52763b9310c0ca9e139ede11"><td class="memTemplParams" colspan="2"><a id="a958e64fd52763b9310c0ca9e139ede11" name="a958e64fd52763b9310c0ca9e139ede11"></a>
 template&lt;test_mode Mode, movable_comparable T, alloc_getter&lt; T &gt; Getter, auto Event&gt; </td></tr>
 <tr class="memitem:a958e64fd52763b9310c0ca9e139ede11"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_allocation</b> (std::string_view detail, test_logger&lt; Mode &gt; &amp;logger, const T &amp;container, const allocation_info&lt; T, Getter &gt; &amp;info, const int previous, const alloc_prediction&lt; Event &gt; prediction)</td></tr>
@@ -272,6 +250,7 @@ template&lt;test_mode Mode, class Actions , movable_comparable T, alloc_getter&l
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >Implementation details for allocation checks. </p>
+<p >For more information see <a class="el" href="../../df/d4e/AllocationCheckersCore_8hpp.html">AllocationCheckersCore.hpp</a> </p>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
