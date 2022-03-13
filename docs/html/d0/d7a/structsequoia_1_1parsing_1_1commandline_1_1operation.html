@@ -72,6 +72,11 @@ $(function() {
   <div class="headertitle"><div class="title">sequoia::parsing::commandline::operation Struct Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Used to build a forest of operations which will be invoked at the end of the parsing process.  
+ <a href="../../d0/d7a/structsequoia_1_1parsing_1_1commandline_1_1operation.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="../../d2/d4b/CommandLineArguments_8hpp_source.html">CommandLineArguments.hpp</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -85,7 +90,13 @@ executor&#160;</td><td class="memItemRight" valign="bottom"><b>late</b> {}</td><
 arg_list&#160;</td><td class="memItemRight" valign="bottom"><b>arguments</b> {}</td></tr>
 <tr class="separator:ad11dda8c1dd38c875f3923944b229e56"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<hr/>The documentation for this struct was generated from the following file:<ul>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p >Used to build a forest of operations which will be invoked at the end of the parsing process. </p>
+<p >As the command line arguments are parsed, a forest of <code>operation</code>s is constructed. Each operation comprises:</p><ol type="1">
+<li>Two invocables. After the <code>operation</code> forest is constructed, a depth-first search in invoked. During this, the <code>early</code> invocable, if present, will be invoked as soon as an operation node is encountered. The <code>late</code> invocable, if present, will be invoked after the depth-first search has exhausted an operation node's children.</li>
+<li><code>arguments</code>, which have been read in from the command line, and are supplied to <code>early</code> and <code>late</code> (if not null) upon invocation. </li>
+</ol>
+</div><hr/>The documentation for this struct was generated from the following file:<ul>
 <li>C:/Users/olive/OneDrive/sequoia/Source/sequoia/Parsing/<a class="el" href="../../d2/d4b/CommandLineArguments_8hpp_source.html">CommandLineArguments.hpp</a></li>
 </ul>
 </div><!-- contents -->
