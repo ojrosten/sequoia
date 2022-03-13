@@ -75,6 +75,11 @@ $(function() {
   <div class="headertitle"><div class="title">sequoia::data_structures::bucketed_storage&lt; T, Handler, Traits &gt; Class Template Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Storage for partitioned data such that data within each partition is contiguous.  
+ <a href="../../da/d7b/classsequoia_1_1data__structures_1_1bucketed__storage.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="../../d3/d6e/PartitionedData_8hpp_source.html">PartitionedData.hpp</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
@@ -255,9 +260,9 @@ constexpr static bool&#160;</td><td class="memItemRight" valign="bottom"><b>thro
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="friends" name="friends"></a>
 Friends</h2></td></tr>
-<tr class="memitem:ac87b689ffe652a582abdfca7418f6630"><td class="memItemLeft" align="right" valign="top"><a id="ac87b689ffe652a582abdfca7418f6630" name="ac87b689ffe652a582abdfca7418f6630"></a>
-struct&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::assignment_helper</b></td></tr>
-<tr class="separator:ac87b689ffe652a582abdfca7418f6630"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5e8e78aa483ab4dde9ce8e6958b77b7b"><td class="memItemLeft" align="right" valign="top"><a id="a5e8e78aa483ab4dde9ce8e6958b77b7b" name="a5e8e78aa483ab4dde9ce8e6958b77b7b"></a>
+struct&#160;</td><td class="memItemRight" valign="bottom"><b>assignment_helper</b></td></tr>
+<tr class="separator:a5e8e78aa483ab4dde9ce8e6958b77b7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5fc15e4a2cfee4b3b1884dea2eca1572"><td class="memItemLeft" align="right" valign="top"><a id="a5fc15e4a2cfee4b3b1884dea2eca1572" name="a5fc15e4a2cfee4b3b1884dea2eca1572"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>swap</b> (<a class="el" href="../../da/d7b/classsequoia_1_1data__structures_1_1bucketed__storage.html">bucketed_storage</a> &amp;lhs, <a class="el" href="../../da/d7b/classsequoia_1_1data__structures_1_1bucketed__storage.html">bucketed_storage</a> &amp;rhs) noexcept(noexcept(lhs.swap(rhs)))</td></tr>
 <tr class="separator:a5fc15e4a2cfee4b3b1884dea2eca1572"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -268,7 +273,11 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator==</b> (const
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator!=</b> (const <a class="el" href="../../da/d7b/classsequoia_1_1data__structures_1_1bucketed__storage.html">bucketed_storage</a> &amp;lhs, const <a class="el" href="../../da/d7b/classsequoia_1_1data__structures_1_1bucketed__storage.html">bucketed_storage</a> &amp;rhs) noexcept</td></tr>
 <tr class="separator:ad3d01e83dd281043df95bb72fb5f5d88"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<hr/>The documentation for this class was generated from the following file:<ul>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><div class="compoundTemplParams">template&lt;class T, class Handler = ownership::independent&lt;T&gt;, class Traits = bucketed_storage_traits&lt;T, Handler&gt;&gt;<br />
+requires ownership::handler&lt;Handler&gt;<br />
+class sequoia::data_structures::bucketed_storage&lt; T, Handler, Traits &gt;</div><p >Storage for partitioned data such that data within each partition is contiguous. </p>
+</div><hr/>The documentation for this class was generated from the following file:<ul>
 <li>C:/Users/olive/OneDrive/sequoia/Source/sequoia/Core/DataStructures/<a class="el" href="../../d3/d6e/PartitionedData_8hpp_source.html">PartitionedData.hpp</a></li>
 </ul>
 </div><!-- contents -->

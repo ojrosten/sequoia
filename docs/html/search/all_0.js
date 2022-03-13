@@ -69,12 +69,13 @@ var searchData=
   ['as_5fbitmask_66',['as_bitmask',['../d4/d5f/structsequoia_1_1testing_1_1as__bitmask.html',1,'sequoia::testing']]],
   ['as_5fbitmask_3c_20runner_5fmode_20_3e_67',['as_bitmask&lt; runner_mode &gt;',['../d7/d43/structsequoia_1_1testing_1_1as__bitmask_3_01runner__mode_01_4.html',1,'sequoia::testing']]],
   ['as_5fbitmask_3c_20summary_5fdetail_20_3e_68',['as_bitmask&lt; summary_detail &gt;',['../db/db3/structsequoia_1_1testing_1_1as__bitmask_3_01summary__detail_01_4.html',1,'sequoia::testing']]],
-  ['assignment_5fallocation_5fpredictions_69',['assignment_allocation_predictions',['../dd/db4/structsequoia_1_1testing_1_1assignment__allocation__predictions.html',1,'sequoia::testing']]],
-  ['assignment_5fhelper_70',['assignment_helper',['../d9/d8d/structsequoia_1_1assignment__helper.html',1,'sequoia']]],
-  ['assignment_5fmove_5fonly_5fallocation_5fpredictions_71',['assignment_move_only_allocation_predictions',['../dc/d54/structsequoia_1_1testing_1_1assignment__move__only__allocation__predictions.html',1,'sequoia::testing']]],
-  ['assignmentutilities_2ehpp_72',['AssignmentUtilities.hpp',['../d0/dbb/AssignmentUtilities_8hpp.html',1,'']]],
-  ['asynchronous_73',['asynchronous',['../d0/d11/classsequoia_1_1concurrency_1_1asynchronous.html',1,'sequoia::concurrency']]],
-  ['auxiliary_5fdata_74',['auxiliary_data',['../d9/d65/structsequoia_1_1testing_1_1impl_1_1auxiliary__data.html',1,'sequoia::testing::impl']]],
-  ['auxiliary_5fdata_5fpolicy_75',['auxiliary_data_policy',['../dc/dff/structsequoia_1_1testing_1_1impl_1_1auxiliary__data__policy.html',1,'sequoia::testing::impl']]],
-  ['auxiliary_5fdata_5fpolicy_3c_20t_20_3e_76',['auxiliary_data_policy&lt; T &gt;',['../dc/d6d/structsequoia_1_1testing_1_1impl_1_1auxiliary__data__policy_3_01T_01_4.html',1,'sequoia::testing::impl']]]
+  ['assign_69',['assign',['../d9/d8d/structsequoia_1_1assignment__helper.html#a2a9a21be462ca5dca837d2aa9f37c562',1,'sequoia::assignment_helper']]],
+  ['assignment_5fallocation_5fpredictions_70',['assignment_allocation_predictions',['../dd/db4/structsequoia_1_1testing_1_1assignment__allocation__predictions.html',1,'sequoia::testing']]],
+  ['assignment_5fhelper_71',['assignment_helper',['../d9/d8d/structsequoia_1_1assignment__helper.html',1,'sequoia']]],
+  ['assignment_5fmove_5fonly_5fallocation_5fpredictions_72',['assignment_move_only_allocation_predictions',['../dc/d54/structsequoia_1_1testing_1_1assignment__move__only__allocation__predictions.html',1,'sequoia::testing']]],
+  ['assignmentutilities_2ehpp_73',['AssignmentUtilities.hpp',['../d0/dbb/AssignmentUtilities_8hpp.html',1,'']]],
+  ['asynchronous_74',['asynchronous',['../d0/d11/classsequoia_1_1concurrency_1_1asynchronous.html',1,'sequoia::concurrency']]],
+  ['auxiliary_5fdata_75',['auxiliary_data',['../d9/d65/structsequoia_1_1testing_1_1impl_1_1auxiliary__data.html',1,'sequoia::testing::impl']]],
+  ['auxiliary_5fdata_5fpolicy_76',['auxiliary_data_policy',['../dc/dff/structsequoia_1_1testing_1_1impl_1_1auxiliary__data__policy.html',1,'sequoia::testing::impl']]],
+  ['auxiliary_5fdata_5fpolicy_3c_20t_20_3e_77',['auxiliary_data_policy&lt; T &gt;',['../dc/d6d/structsequoia_1_1testing_1_1impl_1_1auxiliary__data__policy_3_01T_01_4.html',1,'sequoia::testing::impl']]]
 ];

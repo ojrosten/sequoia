@@ -154,7 +154,7 @@ namespace sequoia
     class MSVC_EMPTY_BASE_HACK graph_primitive : public Connectivity, public Nodes
     {
     private:
-      friend struct sequoia::assignment_helper;
+      friend struct assignment_helper;
 
       using node_weight_type = typename Nodes::weight_type;
     public:
@@ -496,7 +496,7 @@ namespace sequoia
             }
           };
 
-          sequoia::assignment_helper::assign(*this, in, edgeAllocGetter, edgePartitionsAllocGetter, nodeAllocGetter);
+          assignment_helper::assign(*this, in, edgeAllocGetter, edgePartitionsAllocGetter, nodeAllocGetter);
         }
 
         return *this;

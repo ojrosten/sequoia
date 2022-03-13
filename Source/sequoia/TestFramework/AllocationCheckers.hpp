@@ -179,7 +179,7 @@ namespace sequoia::testing
         how allocation predictions are shifted, e.g. for the MSVC debug build.
         Two common cases are supplied with `sequoia`: containers of values and containers of
         pointers. In the latter case, it is assumed that the implementation makes use of 
-        \ref sequoia::assignment_helper.
+        \ref assignment_helper.
      */
 
     template<class Allocator>
