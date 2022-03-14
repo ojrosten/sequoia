@@ -85,7 +85,7 @@ namespace sequoia
     class bucketed_storage
     {
     private:
-      friend struct assignment_helper;
+      friend struct sequoia::assignment_helper;
 
       using held_type    = typename Handler::handle_type;
       using storage_type = typename Traits::template buckets_type<held_type>;
@@ -499,7 +499,7 @@ namespace sequoia
       requires ownership::handler<Handler>
     class partitioned_sequence_base
     {
-      friend struct assignment_helper;
+      friend struct sequoia::assignment_helper;
 
     public:
       using value_type          = T;

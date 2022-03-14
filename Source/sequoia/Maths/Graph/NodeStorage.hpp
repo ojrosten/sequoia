@@ -76,7 +76,7 @@ namespace sequoia::maths::graph_impl
   template<class WeightMaker, class Traits>
   class node_storage
   {
-    friend struct assignment_helper;
+    friend struct sequoia::assignment_helper;
 
   private:
     template<class S> using Container = typename Traits::template container_type<S>;
