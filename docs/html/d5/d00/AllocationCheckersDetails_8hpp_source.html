@@ -296,7 +296,7 @@ $(function() {
 <div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>  <span class="keyword">template</span></div>
 <div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>  &lt;</div>
 <div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>    <span class="keyword">template</span>&lt;<span class="keyword">class</span>, <span class="keyword">class</span>&gt; <span class="keyword">class </span>Checker,</div>
-<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>    movable_comparable T,</div>
+<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>    <a class="code hl_concept" href="../../df/d6a/conceptsequoia_1_1movable__comparable.html">movable_comparable</a> T,</div>
 <div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>    alloc_getter&lt;T&gt; Getter,</div>
 <div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>    <span class="keyword">class</span>... Args,</div>
 <div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>    std::size_t... I</div>
@@ -310,7 +310,7 @@ $(function() {
 <div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>  <span class="keyword">template</span></div>
 <div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>  &lt;</div>
 <div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span>    <span class="keyword">template</span>&lt;<span class="keyword">class</span>, <span class="keyword">class</span>&gt; <span class="keyword">class </span>Checker,</div>
-<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span>    movable_comparable T,</div>
+<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span>    <a class="code hl_concept" href="../../df/d6a/conceptsequoia_1_1movable__comparable.html">movable_comparable</a> T,</div>
 <div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span>    alloc_getter&lt;T&gt; Getter,</div>
 <div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>    <span class="keyword">class</span>... Args</div>
 <div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>  &gt;</div>
@@ -701,8 +701,8 @@ $(function() {
 <div class="line"><a id="l00667" name="l00667"></a><span class="lineno">  667</span>    <a class="code hl_enumeration" href="../../d5/d05/TestLogger_8hpp.html#ae4e97c9d45a89647799f0d308ba6d244">test_mode</a> Mode,</div>
 <div class="line"><a id="l00668" name="l00668"></a><span class="lineno">  668</span>    comparison_flavour C,</div>
 <div class="line"><a id="l00669" name="l00669"></a><span class="lineno">  669</span>    <span class="keyword">class </span>Actions,</div>
-<div class="line"><a id="l00670" name="l00670"></a><span class="lineno">  670</span>    movable_comparable T,</div>
-<div class="line"><a id="l00671" name="l00671"></a><span class="lineno">  671</span>    invocable_r&lt;bool, T&gt; Fn,</div>
+<div class="line"><a id="l00670" name="l00670"></a><span class="lineno">  670</span>    <a class="code hl_concept" href="../../df/d6a/conceptsequoia_1_1movable__comparable.html">movable_comparable</a> T,</div>
+<div class="line"><a id="l00671" name="l00671"></a><span class="lineno">  671</span>    <a class="code hl_concept" href="../../d2/d46/conceptsequoia_1_1invocable__r.html">invocable_r&lt;bool, T&gt;</a> Fn,</div>
 <div class="line"><a id="l00672" name="l00672"></a><span class="lineno">  672</span>    <span class="keyword">class</span>... Getters</div>
 <div class="line"><a id="l00673" name="l00673"></a><span class="lineno">  673</span>  &gt;</div>
 <div class="line"><a id="l00674" name="l00674"></a><span class="lineno">  674</span>  <span class="keywordtype">bool</span> check_comparison_consistency(<a class="code hl_class" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger&lt;Mode&gt;</a>&amp; logger,</div>
@@ -777,6 +777,8 @@ $(function() {
 <div class="ttc" id="aclasssequoia_1_1testing_1_1impl_1_1dual__allocation__checker_html"><div class="ttname"><a href="../../dd/df2/classsequoia_1_1testing_1_1impl_1_1dual__allocation__checker.html">sequoia::testing::impl::dual_allocation_checker</a></div><div class="ttdoc">Wraps allocation_info, together with two prior allocation counts.</div><div class="ttdef"><b>Definition:</b> AllocationCheckersDetails.hpp:60</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1sentinel_html"><div class="ttname"><a href="../../d1/d8f/classsequoia_1_1testing_1_1sentinel.html">sequoia::testing::sentinel</a></div><div class="ttdef"><b>Definition:</b> TestLogger.hpp:82</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1test__logger_html"><div class="ttname"><a href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">sequoia::testing::test_logger</a></div><div class="ttdef"><b>Definition:</b> TestLogger.hpp:135</div></div>
+<div class="ttc" id="aconceptsequoia_1_1invocable__r_html"><div class="ttname"><a href="../../d2/d46/conceptsequoia_1_1invocable__r.html">sequoia::invocable_r</a></div><div class="ttdoc">Supplements std::invocable.</div><div class="ttdef"><b>Definition:</b> Concepts.hpp:32</div></div>
+<div class="ttc" id="aconceptsequoia_1_1movable__comparable_html"><div class="ttname"><a href="../../df/d6a/conceptsequoia_1_1movable__comparable.html">sequoia::movable_comparable</a></div><div class="ttdoc">Building block for concepts related to std::regular but without the requirement of default constructi...</div><div class="ttdef"><b>Definition:</b> Concepts.hpp:39</div></div>
 <div class="ttc" id="astructsequoia_1_1testing_1_1allocation__count__shifter_html"><div class="ttname"><a href="../../d4/daa/structsequoia_1_1testing_1_1allocation__count__shifter.html">sequoia::testing::allocation_count_shifter</a></div><div class="ttdef"><b>Definition:</b> AllocationCheckers.hpp:211</div></div>
 <div class="ttc" id="astructsequoia_1_1testing_1_1impl_1_1allocation__actions_html"><div class="ttname"><a href="../../d9/d71/structsequoia_1_1testing_1_1impl_1_1allocation__actions.html">sequoia::testing::impl::allocation_actions</a></div><div class="ttdoc">actions common to both move-only and regular types.</div><div class="ttdef"><b>Definition:</b> AllocationCheckersDetails.hpp:602</div></div>
 <div class="ttc" id="astructsequoia_1_1testing_1_1impl_1_1allocation__advice_html"><div class="ttname"><a href="../../d0/ddf/structsequoia_1_1testing_1_1impl_1_1allocation__advice.html">sequoia::testing::impl::allocation_advice</a></div><div class="ttdef"><b>Definition:</b> AllocationCheckersDetails.hpp:23</div></div>

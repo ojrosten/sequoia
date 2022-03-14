@@ -8,7 +8,7 @@
 #pragma once
 
 /*! \file
-    \brief Concepts mostly, but not exclusively, replicating things which will appear in std at some point.
+    \brief Concepts which are sufficiently general to appear in the `sequoia` namespace.
  */
 
 #include "sequoia/Core/Meta/TypeTraits.hpp"
@@ -19,7 +19,7 @@
 
 namespace sequoia
 {
-  // Temporary, crude implementation while waiting for clang
+  /// TO DO: Temporary, crude implementation while waiting for clang.
   template<class T>
   concept three_way_comparable = requires(const std::remove_reference_t<T>&t,
                                           const std::remove_reference_t<T>&u)
@@ -27,60 +27,74 @@ namespace sequoia
     t <=> u;
   };
 
+  /// \brief Supplements `std::invocable`.
   template <class F, class R, class... Args>
   concept invocable_r =
     requires(F&& f, Args&&... args) {
       { std::invoke(std::forward<F>(f), std::forward<Args>(args)...) } -> std::same_as<R>;
-  };
+  }; 
 
-  template <class T>
-  concept pseudoregular = std::copyable<T> && std::equality_comparable<T>;
-
-  template <class T>
-  concept moveonly = std::movable<T> && !std::copyable<T> && std::equality_comparable<T>;
-
+  /// \brief Building block for concepts related to `std::regular` but without the requirement of default constructibility.
   template <class T>
   concept movable_comparable = std::movable<T> && std::equality_comparable<T>;
 
+  /// \brief Similar to std::regular but relaxes the requirement of default initializability.
+  template <class T>
+  concept pseudoregular = movable_comparable<T> && std::copyable<T>;
+
+  /// \brief The move-only version of sequoia::pseudoregular.
+  template <class T>
+  concept moveonly = movable_comparable<T> && !std::copyable<T>;
+
+
+  /// \brief A concept for allocators
   template <class A>
   concept alloc = requires(A& a) {
     a.allocate(0);
   };
 
+  /// \brief A concept for scoped allocators
   template <class A>
   concept scoped_alloc = alloc<A> && requires() {
     typename A::outer_allocator_type;
     typename A::inner_allocator_type;
   };
 
-  template<class T>
-  concept has_allocator_type = requires() {
-    typename T::allocator_type;
-  };
-
+  /// \brief A concept which is realized by a `T const&` which be serialized to a `Stream&`.
   template<class T, class Stream>
   concept serializable_to = requires(std::remove_reference_t<Stream>& stream, const std::remove_reference_t<T>& t) {
    stream << t;
   };
 
+  /// \brief A concept which is realized by a `Stream&` which may be deserialized to a `T&`.
   template<class T, class Stream>
   concept deserializable_from = requires(std::remove_reference_t<Stream>& stream, std::remove_reference_t<T>& t) {
     stream >> t;
   };
 
+  /*! \brief Similar to std::range but excludes the case where dereferencing yields the same type as the range.
+  
+      This avoids treating std::filesystem::path as a range in circumstances where, to do so, would be inappropriate.
+      The implementation of `faithful_range` is not complete; it deals with the simplest circular case but
+      doesn't take into account more complicated possibilites. A full treatment could almost certainly be
+      readily implemented if/when reflection is properly supported in C++.
+   */
   template<class T>
-  concept range = requires(T& t) {
+  concept faithful_range = requires(T& t) {
     std::begin(t);
     std::end(t);
 
     requires (!std::same_as<std::remove_cvref_t<decltype(*std::begin(t))>, std::remove_cvref_t<T>>);
   };
 
-  template<template<class...> class T, class... Args>
-  concept class_template_is_default_instantiable
-   = requires() { T<Args...>{}; };
+  /*! \addtogroup deep_equality
+  
+      @{
+   */
 
-
+  /*! \brief Concept to work around the fact that currently the stl typically underconstrains `operator== `. */
   template<class T>
   concept deep_equality_comparable = is_deep_equality_comparable_v<T>;
+
+  /*! @} */
 }

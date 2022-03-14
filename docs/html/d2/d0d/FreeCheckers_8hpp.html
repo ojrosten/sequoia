@@ -167,22 +167,22 @@ requires maybe_comparison_type&lt;Compare, T&gt;</td></tr>
 <tr class="memitem:af74c18b631138b107fc0011ac2f5c291"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d2/d0d/FreeCheckers_8hpp.html#af74c18b631138b107fc0011ac2f5c291">sequoia::testing::check</a> (Compare compare, std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const T &amp;obtained, const T &amp;prediction, tutor&lt; Advisor &gt; advisor={})</td></tr>
 <tr class="memdesc:af74c18b631138b107fc0011ac2f5c291"><td class="mdescLeft">&#160;</td><td class="mdescRight">The workhorse for performing a check with respect to a user-specified binary operator.  <a href="../../d2/d0d/FreeCheckers_8hpp.html#af74c18b631138b107fc0011ac2f5c291">More...</a><br /></td></tr>
 <tr class="separator:af74c18b631138b107fc0011ac2f5c291"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3f67b17d15ee8dae58cea69239d45eaa"><td class="memTemplParams" colspan="2">template&lt;test_mode Mode, class T , class Advisor  = null_advisor&gt; <br />
-requires ( deep_equality_comparable&lt;T&gt; || binary_tester_for&lt;equality_check_t, Mode, T, tutor&lt;Advisor&gt;&gt; || sequoia::range&lt;T&gt;)</td></tr>
-<tr class="memitem:a3f67b17d15ee8dae58cea69239d45eaa"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d2/d0d/FreeCheckers_8hpp.html#a3f67b17d15ee8dae58cea69239d45eaa">sequoia::testing::check</a> (equality_check_t, std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const T &amp;obtained, const T &amp;prediction, tutor&lt; Advisor &gt; advisor={})</td></tr>
-<tr class="memdesc:a3f67b17d15ee8dae58cea69239d45eaa"><td class="mdescLeft">&#160;</td><td class="mdescRight">The workhorse of equality checking, which takes responsibility for reflecting upon types and then dispatching, appropriately.  <a href="../../d2/d0d/FreeCheckers_8hpp.html#a3f67b17d15ee8dae58cea69239d45eaa">More...</a><br /></td></tr>
-<tr class="separator:a3f67b17d15ee8dae58cea69239d45eaa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab55728109d9839f8e1b0921be4bb506e"><td class="memTemplParams" colspan="2">template&lt;test_mode Mode, class T , class Advisor  = null_advisor&gt; <br />
+requires ( deep_equality_comparable&lt;T&gt; || binary_tester_for&lt;equality_check_t, Mode, T, tutor&lt;Advisor&gt;&gt; || faithful_range&lt;T&gt;)</td></tr>
+<tr class="memitem:ab55728109d9839f8e1b0921be4bb506e"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d2/d0d/FreeCheckers_8hpp.html#ab55728109d9839f8e1b0921be4bb506e">sequoia::testing::check</a> (equality_check_t, std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const T &amp;obtained, const T &amp;prediction, tutor&lt; Advisor &gt; advisor={})</td></tr>
+<tr class="memdesc:ab55728109d9839f8e1b0921be4bb506e"><td class="mdescLeft">&#160;</td><td class="mdescRight">The workhorse of equality checking, which takes responsibility for reflecting upon types and then dispatching, appropriately.  <a href="../../d2/d0d/FreeCheckers_8hpp.html#ab55728109d9839f8e1b0921be4bb506e">More...</a><br /></td></tr>
+<tr class="separator:ab55728109d9839f8e1b0921be4bb506e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a35e77cd405b72de79852dc81fd25705e"><td class="memTemplParams" colspan="2">template&lt;class CheckType , test_mode Mode, class T , class S , class... U&gt; <br />
 requires has_generalized_equivalence_check&lt;CheckType, Mode, T, S, U...&gt;</td></tr>
 <tr class="memitem:a35e77cd405b72de79852dc81fd25705e"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d2/d0d/FreeCheckers_8hpp.html#a35e77cd405b72de79852dc81fd25705e">sequoia::testing::check</a> (CheckType flavour, std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const T &amp;obtained, S &amp;&amp;s, U &amp;&amp;... u)</td></tr>
 <tr class="memdesc:a35e77cd405b72de79852dc81fd25705e"><td class="mdescLeft">&#160;</td><td class="mdescRight">The workhorse for (weak) equivalence checking.  <a href="../../d2/d0d/FreeCheckers_8hpp.html#a35e77cd405b72de79852dc81fd25705e">More...</a><br /></td></tr>
 <tr class="separator:a35e77cd405b72de79852dc81fd25705e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae9564bbc0bbee2ed9316fb350b33ae71"><td class="memTemplParams" colspan="2"><a id="ae9564bbc0bbee2ed9316fb350b33ae71" name="ae9564bbc0bbee2ed9316fb350b33ae71"></a>
+<tr class="memitem:a892d1135816b1269d569c47988bf0d2d"><td class="memTemplParams" colspan="2"><a id="a892d1135816b1269d569c47988bf0d2d" name="a892d1135816b1269d569c47988bf0d2d"></a>
 template&lt;test_mode Mode, class T , class Advisor  = null_advisor&gt; <br />
-requires (deep_equality_comparable&lt;T&gt; || has_detailed_agnostic_check&lt;Mode, T, Advisor&gt; || sequoia::range&lt;T&gt;)</td></tr>
-<tr class="memitem:ae9564bbc0bbee2ed9316fb350b33ae71"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check</b> (with_best_available_check_t, std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const T &amp;obtained, const T &amp;prediction, tutor&lt; Advisor &gt; advisor={})</td></tr>
-<tr class="memdesc:ae9564bbc0bbee2ed9316fb350b33ae71"><td class="mdescLeft">&#160;</td><td class="mdescRight">The workhorse for dispatching to the strongest available type of check. <br /></td></tr>
-<tr class="separator:ae9564bbc0bbee2ed9316fb350b33ae71"><td class="memSeparator" colspan="2">&#160;</td></tr>
+requires (deep_equality_comparable&lt;T&gt; || has_detailed_agnostic_check&lt;Mode, T, Advisor&gt; || faithful_range&lt;T&gt;)</td></tr>
+<tr class="memitem:a892d1135816b1269d569c47988bf0d2d"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check</b> (with_best_available_check_t, std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const T &amp;obtained, const T &amp;prediction, tutor&lt; Advisor &gt; advisor={})</td></tr>
+<tr class="memdesc:a892d1135816b1269d569c47988bf0d2d"><td class="mdescLeft">&#160;</td><td class="mdescRight">The workhorse for dispatching to the strongest available type of check. <br /></td></tr>
+<tr class="separator:a892d1135816b1269d569c47988bf0d2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af4e61caa1617d08060dfb112f61aeaff"><td class="memTemplParams" colspan="2"><a id="af4e61caa1617d08060dfb112f61aeaff" name="af4e61caa1617d08060dfb112f61aeaff"></a>
 template&lt;test_mode Mode, class Advisor  = null_advisor&gt; </td></tr>
 <tr class="memitem:af4e61caa1617d08060dfb112f61aeaff"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const bool obtained, tutor&lt; Advisor &gt; advisor={})</td></tr>
@@ -361,14 +361,14 @@ requires maybe_comparison_type&lt;Compare, T&gt;</div>
 
 </div>
 </div>
-<a id="a3f67b17d15ee8dae58cea69239d45eaa" name="a3f67b17d15ee8dae58cea69239d45eaa"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3f67b17d15ee8dae58cea69239d45eaa">&#9670;&nbsp;</a></span>check() <span class="overload">[3/3]</span></h2>
+<a id="ab55728109d9839f8e1b0921be4bb506e" name="ab55728109d9839f8e1b0921be4bb506e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab55728109d9839f8e1b0921be4bb506e">&#9670;&nbsp;</a></span>check() <span class="overload">[3/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;test_mode Mode, class T , class Advisor  = null_advisor&gt; <br />
-requires ( deep_equality_comparable&lt;T&gt; || binary_tester_for&lt;equality_check_t, Mode, T, tutor&lt;Advisor&gt;&gt; || sequoia::range&lt;T&gt;)</div>
+requires ( deep_equality_comparable&lt;T&gt; || binary_tester_for&lt;equality_check_t, Mode, T, tutor&lt;Advisor&gt;&gt; || faithful_range&lt;T&gt;)</div>
       <table class="memname">
         <tr>
           <td class="memname">bool sequoia::testing::check </td>
@@ -569,7 +569,7 @@ template&lt;class CheckType , test_mode Mode, class T , class S , class... U&gt;
 <div class="line">      !(   std::is_same_v&lt;CheckType, equality_check_t&gt;</div>
 <div class="line">        || std::is_same_v&lt;CheckType, with_best_available_check_t&gt;)</div>
 <div class="line">    &amp;&amp; (   implements_general_equivalence_check&lt;Mode, CheckType, T, S, U...&gt;</div>
-<div class="line">        || sequoia::range&lt;T&gt;</div>
+<div class="line">        || faithful_range&lt;T&gt;</div>
 <div class="line">        || has_fallback&lt;CheckType&gt;)</div>
 <div class="line">  }</div>
 </div><!-- fragment -->
@@ -688,7 +688,7 @@ template&lt;class Compare , class T &gt; </div>
 </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">{</div>
-<div class="line">    (std::invocable&lt;Compare, T, T&gt; || sequoia::range&lt;T&gt;) &amp;&amp; !(is_elementary_check&lt;Compare&gt; || is_customized_check&lt;Compare&gt;)</div>
+<div class="line">    (std::invocable&lt;Compare, T, T&gt; || faithful_range&lt;T&gt;) &amp;&amp; !(is_elementary_check&lt;Compare&gt; || is_customized_check&lt;Compare&gt;)</div>
 <div class="line">  }</div>
 </div><!-- fragment -->
 </div>

@@ -240,7 +240,7 @@ namespace sequoia
         {
           auto allocGetter{
             [](const connectivity& in){
-              if constexpr(has_allocator_type<edge_storage_type>)
+              if constexpr(has_allocator_type_v<edge_storage_type>)
               {
                 return in.m_Edges.get_allocator();
               }

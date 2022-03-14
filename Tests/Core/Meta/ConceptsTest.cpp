@@ -54,16 +54,14 @@ namespace sequoia::testing
     test_is_range();
     test_is_allocator();
     test_is_serializable();
-    test_is_class_template_instantiable();
-    test_has_allocator_type();
     test_deep_equality_comparable();
   }
 
   void concepts_test::test_is_range()
   {
     check(LINE(""), []() {
-        static_assert(range<std::vector<double>>);
-        static_assert(!range<double>);
+        static_assert(faithful_range<std::vector<double>>);
+        static_assert(!faithful_range<double>);
         return true;
       }()
     );
@@ -79,16 +77,6 @@ namespace sequoia::testing
     );
   }
 
-  void concepts_test::test_has_allocator_type()
-  {
-    check(LINE(""), []() {
-        static_assert(has_allocator_type<std::vector<double>>);
-        static_assert(!has_allocator_type<double>);
-        return true;
-      }()
-    );
-  }
-
   void concepts_test::test_is_serializable()
   {
 
@@ -96,16 +84,6 @@ namespace sequoia::testing
         static_assert(serializable_to<int, std::stringstream>);
         static_assert(serializable_to<serializable_thing, std::stringstream>);
         static_assert(!serializable_to<non_serializable, std::stringstream>);
-        return true;
-      }()
-    );
-  }
-
-  void concepts_test::test_is_class_template_instantiable()
-  {
-    check(LINE(""), []() {
-        static_assert(class_template_is_default_instantiable<foo, int>);
-        static_assert(!class_template_is_default_instantiable<foo, double>);
         return true;
       }()
     );

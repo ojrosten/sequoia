@@ -93,7 +93,7 @@ $(function() {
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    {</div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>      <span class="keyword">template</span>&lt;<span class="keyword">class</span> N&gt;</div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>      <span class="keyword">inline</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> has_allocating_nodes = <span class="keyword">requires</span> {</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>        has_allocator_type&lt;typename N::node_weight_container_type&gt;;</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>        has_allocator_type_v&lt;typename N::node_weight_container_type&gt;;</div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>      };</div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>      <span class="keyword">template</span>&lt;network Connectivity, <span class="keyword">class</span> Nodes&gt;</div>
@@ -315,8 +315,8 @@ $(function() {
 <div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span> </div>
 <div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>      <span class="keyword">template</span></div>
 <div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>      &lt;</div>
-<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>        alloc EdgeAllocator,</div>
-<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>        alloc NodeAllocator</div>
+<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>        <a class="code hl_concept" href="../../df/d4b/conceptsequoia_1_1alloc.html">alloc</a> EdgeAllocator,</div>
+<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>        <a class="code hl_concept" href="../../df/d4b/conceptsequoia_1_1alloc.html">alloc</a> NodeAllocator</div>
 <div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>      &gt;</div>
 <div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>        <span class="keyword">requires</span> enableNodeAllocation&lt;node_weight_type&gt;</div>
 <div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>      <span class="keyword">constexpr</span> <a class="code hl_class" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a>(<span class="keyword">const</span> EdgeAllocator&amp; edgeAlloc, <span class="keyword">const</span> NodeAllocator&amp; nodeAlloc)</div>
@@ -327,9 +327,9 @@ $(function() {
 <div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span> </div>
 <div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>      <span class="keyword">template</span></div>
 <div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>      &lt;</div>
-<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>        alloc EdgeAllocator,</div>
-<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>        alloc EdgePartitionsAllocator,</div>
-<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>        alloc NodeAllocator</div>
+<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>        <a class="code hl_concept" href="../../df/d4b/conceptsequoia_1_1alloc.html">alloc</a> EdgeAllocator,</div>
+<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>        <a class="code hl_concept" href="../../df/d4b/conceptsequoia_1_1alloc.html">alloc</a> EdgePartitionsAllocator,</div>
+<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>        <a class="code hl_concept" href="../../df/d4b/conceptsequoia_1_1alloc.html">alloc</a> NodeAllocator</div>
 <div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span>      &gt;</div>
 <div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>        <span class="keyword">requires</span> (enableNodeAllocation&lt;node_weight_type&gt;)</div>
 <div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>      <span class="keyword">constexpr</span> <a class="code hl_class" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a>(<span class="keyword">const</span> EdgeAllocator&amp; edgeAlloc, <span class="keyword">const</span> EdgePartitionsAllocator&amp; edgeParitionsAlloc, <span class="keyword">const</span> NodeAllocator&amp; nodeAlloc)</div>
@@ -345,8 +345,8 @@ $(function() {
 <div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span> </div>
 <div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>      <span class="keyword">template</span></div>
 <div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span>      &lt;</div>
-<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span>        alloc EdgeAllocator,</div>
-<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>        alloc EdgePartitionsAllocator</div>
+<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span>        <a class="code hl_concept" href="../../df/d4b/conceptsequoia_1_1alloc.html">alloc</a> EdgeAllocator,</div>
+<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>        <a class="code hl_concept" href="../../df/d4b/conceptsequoia_1_1alloc.html">alloc</a> EdgePartitionsAllocator</div>
 <div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>      &gt;</div>
 <div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span>        <span class="keyword">requires</span>(!enableNodeAllocation&lt;node_weight_type&gt;)</div>
 <div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span>      <span class="keyword">constexpr</span> <a class="code hl_class" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a>(<span class="keyword">const</span> EdgeAllocator&amp; edgeAlloc, <span class="keyword">const</span> EdgePartitionsAllocator&amp; edgeParitionsAlloc)</div>
@@ -355,8 +355,8 @@ $(function() {
 <div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span> </div>
 <div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span>      <span class="keyword">template</span></div>
 <div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span>      &lt;</div>
-<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span>        alloc EdgeAllocator,</div>
-<div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span>        alloc NodeAllocator</div>
+<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span>        <a class="code hl_concept" href="../../df/d4b/conceptsequoia_1_1alloc.html">alloc</a> EdgeAllocator,</div>
+<div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span>        <a class="code hl_concept" href="../../df/d4b/conceptsequoia_1_1alloc.html">alloc</a> NodeAllocator</div>
 <div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span>      &gt;</div>
 <div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span>        <span class="keyword">requires</span> enableNodeAllocation&lt;node_weight_type&gt;</div>
 <div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span>      <span class="keyword">constexpr</span> <a class="code hl_class" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a>(edges_initializer edges, <span class="keyword">const</span> EdgeAllocator&amp; edgeAlloc, std::initializer_list&lt;node_weight_type&gt; nodeWeights, <span class="keyword">const</span> NodeAllocator&amp; nodeAlloc)</div>
@@ -366,9 +366,9 @@ $(function() {
 <div class="line"><a id="l00300" name="l00300"></a><span class="lineno">  300</span> </div>
 <div class="line"><a id="l00301" name="l00301"></a><span class="lineno">  301</span>      <span class="keyword">template</span></div>
 <div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span>      &lt;</div>
-<div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span>        alloc EdgeAllocator,</div>
-<div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span>        alloc EdgePartitionsAllocator,</div>
-<div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span>        alloc NodeAllocator</div>
+<div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span>        <a class="code hl_concept" href="../../df/d4b/conceptsequoia_1_1alloc.html">alloc</a> EdgeAllocator,</div>
+<div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span>        <a class="code hl_concept" href="../../df/d4b/conceptsequoia_1_1alloc.html">alloc</a> EdgePartitionsAllocator,</div>
+<div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span>        <a class="code hl_concept" href="../../df/d4b/conceptsequoia_1_1alloc.html">alloc</a> NodeAllocator</div>
 <div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span>      &gt;</div>
 <div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span>        <span class="keyword">requires</span> enableNodeAllocation&lt;node_weight_type&gt;</div>
 <div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span>      <span class="keyword">constexpr</span> <a class="code hl_class" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a>(edges_initializer edges, <span class="keyword">const</span> EdgeAllocator&amp; edgeAlloc, <span class="keyword">const</span> EdgePartitionsAllocator&amp; edgeParitionsAlloc, std::initializer_list&lt;node_weight_type&gt; nodeWeights, <span class="keyword">const</span> NodeAllocator&amp; nodeAlloc)</div>
@@ -378,8 +378,8 @@ $(function() {
 <div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span> </div>
 <div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span>      <span class="keyword">template</span></div>
 <div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span>      &lt;</div>
-<div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span>        alloc EdgeAllocator,</div>
-<div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span>        alloc EdgePartitionsAllocator,</div>
+<div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span>        <a class="code hl_concept" href="../../df/d4b/conceptsequoia_1_1alloc.html">alloc</a> EdgeAllocator,</div>
+<div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span>        <a class="code hl_concept" href="../../df/d4b/conceptsequoia_1_1alloc.html">alloc</a> EdgePartitionsAllocator,</div>
 <div class="line"><a id="l00317" name="l00317"></a><span class="lineno">  317</span>        <span class="keyword">class</span>... NodeWeights</div>
 <div class="line"><a id="l00318" name="l00318"></a><span class="lineno">  318</span>      &gt;</div>
 <div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span>        <span class="keyword">requires</span> std::same_as&lt;node_weight_type, graph_impl::heterogeneous_tag&gt;</div>
@@ -390,8 +390,8 @@ $(function() {
 <div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span> </div>
 <div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span>      <span class="keyword">template</span></div>
 <div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span>      &lt;</div>
-<div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span>        alloc EdgeAllocator,</div>
-<div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span>        alloc NodeAllocator</div>
+<div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span>        <a class="code hl_concept" href="../../df/d4b/conceptsequoia_1_1alloc.html">alloc</a> EdgeAllocator,</div>
+<div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span>        <a class="code hl_concept" href="../../df/d4b/conceptsequoia_1_1alloc.html">alloc</a> NodeAllocator</div>
 <div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>      &gt;</div>
 <div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span>        <span class="keyword">requires</span> enableNodeAllocation&lt;node_weight_type&gt;</div>
 <div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span>      <span class="keyword">constexpr</span> <a class="code hl_class" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a>(edges_initializer edges, <span class="keyword">const</span> EdgeAllocator&amp; edgeAlloc, <span class="keyword">const</span> NodeAllocator&amp; nodeAlloc)</div>
@@ -401,9 +401,9 @@ $(function() {
 <div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span> </div>
 <div class="line"><a id="l00336" name="l00336"></a><span class="lineno">  336</span>      <span class="keyword">template</span></div>
 <div class="line"><a id="l00337" name="l00337"></a><span class="lineno">  337</span>      &lt;</div>
-<div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span>        alloc EdgeAllocator,</div>
-<div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span>        alloc EdgePartitionsAllocator,</div>
-<div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span>        alloc NodeAllocator</div>
+<div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span>        <a class="code hl_concept" href="../../df/d4b/conceptsequoia_1_1alloc.html">alloc</a> EdgeAllocator,</div>
+<div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span>        <a class="code hl_concept" href="../../df/d4b/conceptsequoia_1_1alloc.html">alloc</a> EdgePartitionsAllocator,</div>
+<div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span>        <a class="code hl_concept" href="../../df/d4b/conceptsequoia_1_1alloc.html">alloc</a> NodeAllocator</div>
 <div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span>      &gt;</div>
 <div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span>        <span class="keyword">requires</span> enableNodeAllocation&lt;node_weight_type&gt;</div>
 <div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span>      <span class="keyword">constexpr</span> <a class="code hl_class" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a>(edges_initializer edges, <span class="keyword">const</span> EdgeAllocator&amp; edgeAlloc, <span class="keyword">const</span> EdgePartitionsAllocator&amp; edgeParitionsAlloc, <span class="keyword">const</span> NodeAllocator&amp; nodeAlloc)</div>
@@ -413,8 +413,8 @@ $(function() {
 <div class="line"><a id="l00347" name="l00347"></a><span class="lineno">  347</span> </div>
 <div class="line"><a id="l00348" name="l00348"></a><span class="lineno">  348</span>      <span class="keyword">template</span></div>
 <div class="line"><a id="l00349" name="l00349"></a><span class="lineno">  349</span>      &lt;</div>
-<div class="line"><a id="l00350" name="l00350"></a><span class="lineno">  350</span>        alloc EdgeAllocator,</div>
-<div class="line"><a id="l00351" name="l00351"></a><span class="lineno">  351</span>        alloc EdgePartitionsAllocator</div>
+<div class="line"><a id="l00350" name="l00350"></a><span class="lineno">  350</span>        <a class="code hl_concept" href="../../df/d4b/conceptsequoia_1_1alloc.html">alloc</a> EdgeAllocator,</div>
+<div class="line"><a id="l00351" name="l00351"></a><span class="lineno">  351</span>        <a class="code hl_concept" href="../../df/d4b/conceptsequoia_1_1alloc.html">alloc</a> EdgePartitionsAllocator</div>
 <div class="line"><a id="l00352" name="l00352"></a><span class="lineno">  352</span>      &gt;</div>
 <div class="line"><a id="l00353" name="l00353"></a><span class="lineno">  353</span>        <span class="keyword">requires</span> (!enableNodeAllocation&lt;node_weight_type&gt;)</div>
 <div class="line"><a id="l00354" name="l00354"></a><span class="lineno">  354</span>      <span class="keyword">constexpr</span> <a class="code hl_class" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a>(edges_initializer edges, <span class="keyword">const</span> EdgeAllocator&amp; edgeAlloc, <span class="keyword">const</span> EdgePartitionsAllocator&amp; edgeParitionsAlloc)</div>
@@ -433,9 +433,9 @@ $(function() {
 <div class="line"><a id="l00367" name="l00367"></a><span class="lineno">  367</span> </div>
 <div class="line"><a id="l00368" name="l00368"></a><span class="lineno">  368</span>      <span class="keyword">template</span></div>
 <div class="line"><a id="l00369" name="l00369"></a><span class="lineno">  369</span>      &lt;</div>
-<div class="line"><a id="l00370" name="l00370"></a><span class="lineno">  370</span>        alloc EdgeAllocator,</div>
-<div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span>        alloc EdgePartitionsAllocator,</div>
-<div class="line"><a id="l00372" name="l00372"></a><span class="lineno">  372</span>        alloc NodeAllocator</div>
+<div class="line"><a id="l00370" name="l00370"></a><span class="lineno">  370</span>        <a class="code hl_concept" href="../../df/d4b/conceptsequoia_1_1alloc.html">alloc</a> EdgeAllocator,</div>
+<div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span>        <a class="code hl_concept" href="../../df/d4b/conceptsequoia_1_1alloc.html">alloc</a> EdgePartitionsAllocator,</div>
+<div class="line"><a id="l00372" name="l00372"></a><span class="lineno">  372</span>        <a class="code hl_concept" href="../../df/d4b/conceptsequoia_1_1alloc.html">alloc</a> NodeAllocator</div>
 <div class="line"><a id="l00373" name="l00373"></a><span class="lineno">  373</span>      &gt;</div>
 <div class="line"><a id="l00374" name="l00374"></a><span class="lineno">  374</span>        <span class="keyword">requires</span> enableNodeAllocation&lt;node_weight_type&gt;</div>
 <div class="line"><a id="l00375" name="l00375"></a><span class="lineno">  375</span>      <span class="keyword">constexpr</span> <a class="code hl_class" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a>(<span class="keyword">const</span> <a class="code hl_class" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a>&amp; in, <span class="keyword">const</span> EdgeAllocator&amp; edgeAlloc, <span class="keyword">const</span> EdgePartitionsAllocator&amp; edgeParitionsAlloc, <span class="keyword">const</span> NodeAllocator&amp; nodeAlloc)</div>
@@ -445,8 +445,8 @@ $(function() {
 <div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span> </div>
 <div class="line"><a id="l00380" name="l00380"></a><span class="lineno">  380</span>      <span class="keyword">template</span></div>
 <div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span>      &lt;</div>
-<div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span>        alloc EdgeAllocator,</div>
-<div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span>        alloc NodeAllocator</div>
+<div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span>        <a class="code hl_concept" href="../../df/d4b/conceptsequoia_1_1alloc.html">alloc</a> EdgeAllocator,</div>
+<div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span>        <a class="code hl_concept" href="../../df/d4b/conceptsequoia_1_1alloc.html">alloc</a> NodeAllocator</div>
 <div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span>      &gt;</div>
 <div class="line"><a id="l00385" name="l00385"></a><span class="lineno">  385</span>        <span class="keyword">requires</span> enableNodeAllocation&lt;node_weight_type&gt;</div>
 <div class="line"><a id="l00386" name="l00386"></a><span class="lineno">  386</span>      <span class="keyword">constexpr</span> <a class="code hl_class" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a>(<span class="keyword">const</span> <a class="code hl_class" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a>&amp; in, <span class="keyword">const</span> EdgeAllocator&amp; edgeAlloc, <span class="keyword">const</span> NodeAllocator&amp; nodeAlloc)</div>
@@ -456,8 +456,8 @@ $(function() {
 <div class="line"><a id="l00390" name="l00390"></a><span class="lineno">  390</span> </div>
 <div class="line"><a id="l00391" name="l00391"></a><span class="lineno">  391</span>      <span class="keyword">template</span></div>
 <div class="line"><a id="l00392" name="l00392"></a><span class="lineno">  392</span>      &lt;</div>
-<div class="line"><a id="l00393" name="l00393"></a><span class="lineno">  393</span>        alloc EdgeAllocator,</div>
-<div class="line"><a id="l00394" name="l00394"></a><span class="lineno">  394</span>        alloc EdgePartitionsAllocator</div>
+<div class="line"><a id="l00393" name="l00393"></a><span class="lineno">  393</span>        <a class="code hl_concept" href="../../df/d4b/conceptsequoia_1_1alloc.html">alloc</a> EdgeAllocator,</div>
+<div class="line"><a id="l00394" name="l00394"></a><span class="lineno">  394</span>        <a class="code hl_concept" href="../../df/d4b/conceptsequoia_1_1alloc.html">alloc</a> EdgePartitionsAllocator</div>
 <div class="line"><a id="l00395" name="l00395"></a><span class="lineno">  395</span>      &gt;</div>
 <div class="line"><a id="l00396" name="l00396"></a><span class="lineno">  396</span>        <span class="keyword">requires</span> (!enableNodeAllocation&lt;node_weight_type&gt;)</div>
 <div class="line"><a id="l00397" name="l00397"></a><span class="lineno">  397</span>      <span class="keyword">constexpr</span> <a class="code hl_class" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a>(<span class="keyword">const</span> <a class="code hl_class" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a>&amp; in, <span class="keyword">const</span> EdgeAllocator&amp; edgeAlloc, <span class="keyword">const</span> EdgePartitionsAllocator&amp; edgeParitionsAlloc)</div>
@@ -478,9 +478,9 @@ $(function() {
 <div class="line"><a id="l00412" name="l00412"></a><span class="lineno">  412</span> </div>
 <div class="line"><a id="l00413" name="l00413"></a><span class="lineno">  413</span>      <span class="keyword">template</span></div>
 <div class="line"><a id="l00414" name="l00414"></a><span class="lineno">  414</span>      &lt;</div>
-<div class="line"><a id="l00415" name="l00415"></a><span class="lineno">  415</span>        alloc EdgeAllocator,</div>
-<div class="line"><a id="l00416" name="l00416"></a><span class="lineno">  416</span>        alloc EdgePartitionsAllocator,</div>
-<div class="line"><a id="l00417" name="l00417"></a><span class="lineno">  417</span>        alloc NodeAllocator</div>
+<div class="line"><a id="l00415" name="l00415"></a><span class="lineno">  415</span>        <a class="code hl_concept" href="../../df/d4b/conceptsequoia_1_1alloc.html">alloc</a> EdgeAllocator,</div>
+<div class="line"><a id="l00416" name="l00416"></a><span class="lineno">  416</span>        <a class="code hl_concept" href="../../df/d4b/conceptsequoia_1_1alloc.html">alloc</a> EdgePartitionsAllocator,</div>
+<div class="line"><a id="l00417" name="l00417"></a><span class="lineno">  417</span>        <a class="code hl_concept" href="../../df/d4b/conceptsequoia_1_1alloc.html">alloc</a> NodeAllocator</div>
 <div class="line"><a id="l00418" name="l00418"></a><span class="lineno">  418</span>      &gt;</div>
 <div class="line"><a id="l00419" name="l00419"></a><span class="lineno">  419</span>        <span class="keyword">requires</span> enableNodeAllocation&lt;node_weight_type&gt;</div>
 <div class="line"><a id="l00420" name="l00420"></a><span class="lineno">  420</span>      <span class="keyword">constexpr</span> <a class="code hl_class" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a>(<a class="code hl_class" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a>&amp;&amp; in, <span class="keyword">const</span> EdgeAllocator&amp; edgeAlloc, <span class="keyword">const</span> EdgePartitionsAllocator&amp; edgeParitionsAlloc, <span class="keyword">const</span> NodeAllocator&amp; nodeAlloc)</div>
@@ -490,8 +490,8 @@ $(function() {
 <div class="line"><a id="l00424" name="l00424"></a><span class="lineno">  424</span> </div>
 <div class="line"><a id="l00425" name="l00425"></a><span class="lineno">  425</span>      <span class="keyword">template</span></div>
 <div class="line"><a id="l00426" name="l00426"></a><span class="lineno">  426</span>      &lt;</div>
-<div class="line"><a id="l00427" name="l00427"></a><span class="lineno">  427</span>        alloc EdgeAllocator,</div>
-<div class="line"><a id="l00428" name="l00428"></a><span class="lineno">  428</span>        alloc NodeAllocator</div>
+<div class="line"><a id="l00427" name="l00427"></a><span class="lineno">  427</span>        <a class="code hl_concept" href="../../df/d4b/conceptsequoia_1_1alloc.html">alloc</a> EdgeAllocator,</div>
+<div class="line"><a id="l00428" name="l00428"></a><span class="lineno">  428</span>        <a class="code hl_concept" href="../../df/d4b/conceptsequoia_1_1alloc.html">alloc</a> NodeAllocator</div>
 <div class="line"><a id="l00429" name="l00429"></a><span class="lineno">  429</span>      &gt;</div>
 <div class="line"><a id="l00430" name="l00430"></a><span class="lineno">  430</span>        <span class="keyword">requires</span> enableNodeAllocation&lt;node_weight_type&gt;</div>
 <div class="line"><a id="l00431" name="l00431"></a><span class="lineno">  431</span>      <span class="keyword">constexpr</span> <a class="code hl_class" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a>(<a class="code hl_class" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a>&amp;&amp; in, <span class="keyword">const</span> EdgeAllocator&amp; edgeAlloc, <span class="keyword">const</span> NodeAllocator&amp; nodeAlloc)</div>
@@ -501,9 +501,9 @@ $(function() {
 <div class="line"><a id="l00435" name="l00435"></a><span class="lineno">  435</span> </div>
 <div class="line"><a id="l00436" name="l00436"></a><span class="lineno">  436</span>      <span class="keyword">template</span></div>
 <div class="line"><a id="l00437" name="l00437"></a><span class="lineno">  437</span>      &lt;</div>
-<div class="line"><a id="l00438" name="l00438"></a><span class="lineno">  438</span>        alloc EdgeAllocator,</div>
-<div class="line"><a id="l00439" name="l00439"></a><span class="lineno">  439</span>        alloc EdgePartitionsAllocator,</div>
-<div class="line"><a id="l00440" name="l00440"></a><span class="lineno">  440</span>        alloc NodeAllocator</div>
+<div class="line"><a id="l00438" name="l00438"></a><span class="lineno">  438</span>        <a class="code hl_concept" href="../../df/d4b/conceptsequoia_1_1alloc.html">alloc</a> EdgeAllocator,</div>
+<div class="line"><a id="l00439" name="l00439"></a><span class="lineno">  439</span>        <a class="code hl_concept" href="../../df/d4b/conceptsequoia_1_1alloc.html">alloc</a> EdgePartitionsAllocator,</div>
+<div class="line"><a id="l00440" name="l00440"></a><span class="lineno">  440</span>        <a class="code hl_concept" href="../../df/d4b/conceptsequoia_1_1alloc.html">alloc</a> NodeAllocator</div>
 <div class="line"><a id="l00441" name="l00441"></a><span class="lineno">  441</span>      &gt;</div>
 <div class="line"><a id="l00442" name="l00442"></a><span class="lineno">  442</span>        <span class="keyword">requires</span> (!enableNodeAllocation&lt;node_weight_type&gt;)</div>
 <div class="line"><a id="l00443" name="l00443"></a><span class="lineno">  443</span>      <span class="keyword">constexpr</span> <a class="code hl_class" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a>(<a class="code hl_class" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a>&amp;&amp; in, <span class="keyword">const</span> EdgeAllocator&amp; edgeAlloc, <span class="keyword">const</span> EdgePartitionsAllocator&amp; edgeParitionsAlloc)</div>
@@ -513,8 +513,8 @@ $(function() {
 <div class="line"><a id="l00447" name="l00447"></a><span class="lineno">  447</span> </div>
 <div class="line"><a id="l00448" name="l00448"></a><span class="lineno">  448</span>      <span class="keyword">template</span></div>
 <div class="line"><a id="l00449" name="l00449"></a><span class="lineno">  449</span>      &lt;</div>
-<div class="line"><a id="l00450" name="l00450"></a><span class="lineno">  450</span>        alloc EdgeAllocator,</div>
-<div class="line"><a id="l00451" name="l00451"></a><span class="lineno">  451</span>        alloc NodeAllocator</div>
+<div class="line"><a id="l00450" name="l00450"></a><span class="lineno">  450</span>        <a class="code hl_concept" href="../../df/d4b/conceptsequoia_1_1alloc.html">alloc</a> EdgeAllocator,</div>
+<div class="line"><a id="l00451" name="l00451"></a><span class="lineno">  451</span>        <a class="code hl_concept" href="../../df/d4b/conceptsequoia_1_1alloc.html">alloc</a> NodeAllocator</div>
 <div class="line"><a id="l00452" name="l00452"></a><span class="lineno">  452</span>      &gt;</div>
 <div class="line"><a id="l00453" name="l00453"></a><span class="lineno">  453</span>        <span class="keyword">requires</span> (!enableNodeAllocation&lt;node_weight_type&gt;)</div>
 <div class="line"><a id="l00454" name="l00454"></a><span class="lineno">  454</span>      <span class="keyword">constexpr</span> <a class="code hl_class" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a>(<a class="code hl_class" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a>&amp;&amp; in, <span class="keyword">const</span> EdgeAllocator&amp; edgeAlloc)</div>
@@ -534,7 +534,7 @@ $(function() {
 <div class="line"><a id="l00468" name="l00468"></a><span class="lineno">  468</span> </div>
 <div class="line"><a id="l00469" name="l00469"></a><span class="lineno">  469</span>          <span class="keyword">auto</span> edgeAllocGetter{</div>
 <div class="line"><a id="l00470" name="l00470"></a><span class="lineno">  470</span>            []([[maybe_unused]] <span class="keyword">const</span> <a class="code hl_class" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a>&amp; in){</div>
-<div class="line"><a id="l00471" name="l00471"></a><span class="lineno">  471</span>              <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(has_allocator_type&lt;edge_storage&gt;)</div>
+<div class="line"><a id="l00471" name="l00471"></a><span class="lineno">  471</span>              <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(has_allocator_type_v&lt;edge_storage&gt;)</div>
 <div class="line"><a id="l00472" name="l00472"></a><span class="lineno">  472</span>              {</div>
 <div class="line"><a id="l00473" name="l00473"></a><span class="lineno">  473</span>                <span class="keywordflow">return</span> in.get_edge_allocator();</div>
 <div class="line"><a id="l00474" name="l00474"></a><span class="lineno">  474</span>              }</div>
@@ -765,6 +765,7 @@ $(function() {
 <div class="ttc" id="aclasssequoia_1_1maths_1_1graph__primitive_html"><div class="ttname"><a href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">sequoia::maths::graph_primitive</a></div><div class="ttdef"><b>Definition:</b> GraphImpl.hpp:155</div></div>
 <div class="ttc" id="aclasssequoia_1_1maths_1_1graph_html"><div class="ttname"><a href="../../d8/d87/classsequoia_1_1maths_1_1graph.html">sequoia::maths::graph</a></div><div class="ttdef"><b>Definition:</b> DynamicGraph.hpp:365</div></div>
 <div class="ttc" id="aclasssequoia_1_1maths_1_1tree_html"><div class="ttname"><a href="../../d6/dce/classsequoia_1_1maths_1_1tree.html">sequoia::maths::tree</a></div><div class="ttdef"><b>Definition:</b> DynamicTree.hpp:42</div></div>
+<div class="ttc" id="aconceptsequoia_1_1alloc_html"><div class="ttname"><a href="../../df/d4b/conceptsequoia_1_1alloc.html">sequoia::alloc</a></div><div class="ttdoc">A concept for allocators.</div><div class="ttdef"><b>Definition:</b> Concepts.hpp:52</div></div>
 <div class="ttc" id="astructsequoia_1_1assignment__helper_html"><div class="ttname"><a href="../../d9/d8d/structsequoia_1_1assignment__helper.html">sequoia::assignment_helper</a></div><div class="ttdoc">Helper class to assist with copy assignment for allocator-aware types.</div><div class="ttdef"><b>Definition:</b> AssignmentUtilities.hpp:67</div></div>
 <div class="ttc" id="astructsequoia_1_1assignment__helper_html_a2a9a21be462ca5dca837d2aa9f37c562"><div class="ttname"><a href="../../d9/d8d/structsequoia_1_1assignment__helper.html#a2a9a21be462ca5dca837d2aa9f37c562">sequoia::assignment_helper::assign</a></div><div class="ttdeci">constexpr static void assign(T &amp;to, const T &amp;from, AllocGetters... allocGetters)</div><div class="ttdef"><b>Definition:</b> AssignmentUtilities.hpp:70</div></div>
 <div class="ttc" id="astructsequoia_1_1maths_1_1partitions__allocator__tag_html"><div class="ttname"><a href="../../d4/dd4/structsequoia_1_1maths_1_1partitions__allocator__tag.html">sequoia::maths::partitions_allocator_tag</a></div><div class="ttdef"><b>Definition:</b> Connectivity.hpp:42</div></div>

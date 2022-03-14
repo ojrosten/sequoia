@@ -31,7 +31,7 @@ namespace sequoia::maths::impl
   {};
 
   template<class C>
-    requires has_allocator_type<C>
+    requires has_allocator_type_v<C>
   struct noexcept_spec<C> : std::true_type
   {};
 

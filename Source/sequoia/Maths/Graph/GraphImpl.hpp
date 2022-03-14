@@ -27,7 +27,7 @@ namespace sequoia
     {
       template<class N>
       inline constexpr bool has_allocating_nodes = requires {
-        has_allocator_type<typename N::node_weight_container_type>;
+        has_allocator_type_v<typename N::node_weight_container_type>;
       };
 
       template<network Connectivity, class Nodes>
@@ -468,7 +468,7 @@ namespace sequoia
 
           auto edgeAllocGetter{
             []([[maybe_unused]] const graph_primitive& in){
-              if constexpr(has_allocator_type<edge_storage>)
+              if constexpr(has_allocator_type_v<edge_storage>)
               {
                 return in.get_edge_allocator();
               }
