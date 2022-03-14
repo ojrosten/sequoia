@@ -181,7 +181,7 @@ namespace sequoia::testing
 
     graph.mutate_edge_weight(graph.cbegin_edges(0),
         [](auto& val) {
-        if constexpr(std::ranges::range<edge_weight_t>)
+        if constexpr(faithful_range<edge_weight_t>)
         {
           val[0] *= 2;
         }
@@ -660,7 +660,7 @@ namespace sequoia::testing
 
     graph.mutate_edge_weight(graph.cbegin_edges(0) + (mutual_info(GraphFlavour) ?  3 : 2),
       [](auto& val){
-        if constexpr(std::ranges::range<edge_weight_t>)
+        if constexpr(faithful_range<edge_weight_t>)
         {
           val[0] = 6;
         }
@@ -768,7 +768,7 @@ namespace sequoia::testing
 
     graph.mutate_edge_weight(graph.cbegin_edges(0) + (mutual_info(GraphFlavour) ?  4 : 1),
       [](auto& val){
-        if constexpr(std::ranges::range<edge_weight_t>)
+        if constexpr(faithful_range<edge_weight_t>)
         {
           val[0] = 10;
         }
@@ -834,7 +834,7 @@ namespace sequoia::testing
 
     graph.mutate_edge_weight(graph.cbegin_edges(0) + (mutual_info(GraphFlavour) ?  4 : 2),
       [](auto& val){
-        if constexpr(std::ranges::range<edge_weight_t>)
+        if constexpr(faithful_range<edge_weight_t>)
         {
           val[0] = 7;
         }
@@ -957,7 +957,7 @@ namespace sequoia::testing
     }
 
     graph.mutate_node_weight(graph.cbegin_node_weights(), [](auto& val){
-        if constexpr(std::ranges::range<node_weight_t>)
+        if constexpr(faithful_range<node_weight_t>)
         {
           val[0] *= 2;
           val[1] *= 2;
