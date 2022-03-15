@@ -40,23 +40,19 @@ namespace sequoia::testing
       }
     };
 
-    struct dummy_file_checker
+    struct dummy_file_comparer
     {
       template<test_mode Mode>
       void operator()(test_logger<Mode>&, const std::filesystem::path&, const std::filesystem::path&) const
       {}
     };
 
-    struct bespoke_file_checker
-    {
-      template<test_mode Mode>
-      static void check_file(test_logger<Mode>& logger, const std::filesystem::path& file, const std::filesystem::path& prediction)
-      {
-        const auto factory{runtime::factory<default_file_checker, dummy_file_checker>{{"default", ".ignore"}}};
-        const auto checker{factory.create_or<default_file_checker>(file.extension().string())};
-        std::visit([&logger, &file, &prediction](auto&& fn){ fn(logger, file, prediction); }, checker);
-      }
-    };
+    using bespoke_file_checker_t = general_file_checker<string_based_file_comparer, dummy_file_comparer>;
+
+    inline const bespoke_file_checker_t bespoke_file_checker{{".*", ".ignore"}};
+
+    inline const general_equivalence_check_t<bespoke_file_checker_t>      bespoke_path_equivalence{bespoke_file_checker};
+    inline const general_weak_equivalence_check_t<bespoke_file_checker_t> bespoke_path_weak_equivalence{bespoke_file_checker};
 
     struct foo
     {
@@ -458,34 +454,45 @@ namespace sequoia::testing
 
     using prediction = std::initializer_list<std::initializer_list<int>>;
     check(weak_equivalence, LINE(""), std::vector<beast>{{1, 2}, {3, 4}}, prediction{{1, 2}, {3, 5}});
-    check(weak_equivalence, LINE(""), std::vector<beast>{{1, 2}, {3, 4}}, prediction{{1, 2}, {3, 5}},
-                           tutor{[](int, int){
-                             return "Or at least don't mess with a vector of beasts.";
-                           }});
 
-    check(weak_equivalence, LINE("Weak inequivalence of directories with some common files"),
-                           fs::path{working_materials()}.append("MoreStuff/B"),
-                           fs::path{working_materials()}.append("Stuff/B"));
+    check(weak_equivalence,
+          LINE(""),
+          std::vector<beast>{{1, 2}, {3, 4}},
+          prediction{{1, 2}, {3, 5}},
+          tutor{[](int, int){
+            return "Or at least don't mess with a vector of beasts.";
+          }});
 
-    check(weak_equivalence, LINE("Directory weak inequivalence when default file checking is used"),
-                           fs::path{working_materials()}.append("CustomComparison/A"),
-                           fs::path{working_materials()}.append("CustomComparison/B"));
+    check(weak_equivalence,
+          LINE("Weak inequivalence of directories with some common files"),
+          fs::path{working_materials()}.append("MoreStuff/B"),
+          fs::path{working_materials()}.append("Stuff/B"));
+
+    check(weak_equivalence,
+          LINE("Directory weak inequivalence when default file checking is used"),
+          fs::path{working_materials()}.append("CustomComparison/A"),
+          fs::path{working_materials()}.append("CustomComparison/B"));
+
+    check(weak_equivalence,
+          LINE("Weak inequivalence of range when default file checking is used"),
+          std::vector<fs::path>{{fs::path{working_materials()}.append("CustomComparison/A")}},
+          std::vector<fs::path>{{fs::path{working_materials()}.append("CustomComparison/B")}});
+
+    check(weak_equivalence,
+          LINE("Advice for weak equivalence checking"),
+          only_weakly_checkable{42, 3.14},
+          std::pair<int, double>{41, 3.13},
+          tutor{bland{}});
+
+    check(weak_equivalence,
+          LINE("Advice for range weak equivalence, where the containerized form is explicitly specialized"),
+          std::vector<only_weakly_checkable>{{42, 3.14}},
+          std::vector<std::pair<int, double>>{{41, 3.13}}, tutor{bland{}});
 
     check(weak_equivalence, 
-      LINE("Weak inequivalence of range when default file checking is used"),
-      std::vector<fs::path>{{fs::path{working_materials()}.append("CustomComparison/A")}},
-      std::vector<fs::path>{{fs::path{working_materials()}.append("CustomComparison/B")}});
-
-    check(weak_equivalence, LINE("Advice for weak equivalence checking"),
-                           only_weakly_checkable{42, 3.14}, std::pair<int, double>{41, 3.13}, tutor{bland{}});
-
-    check(weak_equivalence, 
-      LINE("Advice for range weak equivalence, where the containerized form is explicitly specialized"),
-      std::vector<only_weakly_checkable>{{42, 3.14}}, std::vector<std::pair<int, double>>{{41, 3.13}}, tutor{bland{}});
-
-    check(weak_equivalence, 
-      LINE("Advice for range weak equivalence, where the containerized form is not explicitly specialized"),
-      std::list<only_weakly_checkable>{{42, 3.14}}, std::list<std::pair<int, double>>{{41, 3.13}}, tutor{bland{}});
+          LINE("Advice for range weak equivalence, where the containerized form is not explicitly specialized"),
+          std::list<only_weakly_checkable>{{42, 3.14}},
+          std::list<std::pair<int, double>>{{41, 3.13}}, tutor{bland{}});
   }
 
 
@@ -634,12 +641,12 @@ namespace sequoia::testing
           fs::path{working_materials()}.append("Stuff/C"),
           fs::path{working_materials()}.append("SameStuff/C"));
 
-    check(general_equivalence<bespoke_file_checker>,
+    check(bespoke_path_equivalence,
           LINE("File equivalence when .ignore is ignored"),
           fs::path{working_materials()}.append("CustomComparison/A/DifferingContent.ignore"),
           fs::path{working_materials()}.append("CustomComparison/B/DifferingContent.ignore"));
 
-    check(general_equivalence<bespoke_file_checker>,
+    check(bespoke_path_equivalence,
           LINE("Range equivalence when .ignore is ignored"),
           std::vector<fs::path>{fs::path{working_materials()}.append("CustomComparison/A/DifferingContent.ignore")},
           std::vector<fs::path>{fs::path{working_materials()}.append("CustomComparison/B/DifferingContent.ignore")});
@@ -689,29 +696,30 @@ namespace sequoia::testing
     using prediction = std::initializer_list<std::initializer_list<int>>;
     check(weak_equivalence, LINE(""), std::vector<beast>{{1, 2}, {3, 4}}, prediction{{1, 2}, {3, 4}});
 
-    check(weak_equivalence, LINE("Weak equivalence of directories in with the same contents but different names"),
-                           fs::path{working_materials()}.append("Stuff"),
-                           fs::path{working_materials()}.append("SameStuff"));
+    check(weak_equivalence,
+         LINE("Weak equivalence of directories in with the same contents but different names"),
+         fs::path{working_materials()}.append("Stuff"),
+         fs::path{working_materials()}.append("SameStuff"));
 
-    check(general_weak_equivalence<bespoke_file_checker>,
+    check(bespoke_path_weak_equivalence,
           LINE("Weak equivalence when .ignore is ignored"),
           fs::path{working_materials()}.append("CustomComparison/A"),
           fs::path{working_materials()}.append("CustomComparison/B"));
 
-    check(general_weak_equivalence<bespoke_file_checker>,
+    check(bespoke_path_weak_equivalence,
           LINE("Weak equivalence of range when .ignore is ignored"),
           std::vector<fs::path>{{fs::path{working_materials()}.append("CustomComparison/A")}},
           std::vector<fs::path>{{fs::path{working_materials()}.append("CustomComparison/B")}});
 
     check(weak_equivalence, LINE("Advice for weak equivalence checking"), only_weakly_checkable{42, 3.14}, std::pair<int, double>{42, 3.14}, tutor{bland{}});
 
-    check(weak_equivalence, 
-      LINE("Advice for range weak equivalence, where the containerized form is explicitly specialized"),
-      std::vector<only_weakly_checkable>{{42, 3.14}}, std::vector<std::pair<int, double>>{{42, 3.14}}, tutor{bland{}});
+    check(weak_equivalence,
+          LINE("Advice for range weak equivalence, where the containerized form is explicitly specialized"),
+          std::vector<only_weakly_checkable>{{42, 3.14}}, std::vector<std::pair<int, double>>{{42, 3.14}}, tutor{bland{}});
 
-    check(weak_equivalence, 
-      LINE("Advice for range weak equivalence, where the containerized form is not explicitly specialized"),
-      std::list<only_weakly_checkable>{{42, 3.14}}, std::list<std::pair<int, double>>{{42, 3.14}}, tutor{bland{}});
+    check(weak_equivalence,
+          LINE("Advice for range weak equivalence, where the containerized form is not explicitly specialized"),
+          std::list<only_weakly_checkable>{{42, 3.14}}, std::list<std::pair<int, double>>{{42, 3.14}}, tutor{bland{}});
   }
 
   void false_negative_diagnostics::test_with_best_available_checks()
