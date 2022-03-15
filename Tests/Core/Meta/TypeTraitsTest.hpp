@@ -34,5 +34,7 @@ namespace sequoia::testing
     void test_is_const_reference();
 
     void test_is_tuple();
+
+    void test_has_allocator_type();
   };
 }

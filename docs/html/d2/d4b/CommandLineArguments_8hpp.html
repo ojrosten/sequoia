@@ -89,14 +89,19 @@ $(function() {
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/dbe/classsequoia_1_1parsing_1_1commandline_1_1proper__string.html">sequoia::parsing::commandline::proper_string</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class which wraps a <code>std::string</code> and enforces the invariant that the <code>std::string</code> be non-empty.  <a href="../../d6/dbe/classsequoia_1_1parsing_1_1commandline_1_1proper__string.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/da8/structsequoia_1_1parsing_1_1commandline_1_1option.html">sequoia::parsing::commandline::option</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Used to specify a forest of options, against which the runtime commandline arguments are parsed.  <a href="../../db/da8/structsequoia_1_1parsing_1_1commandline_1_1option.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d7a/structsequoia_1_1parsing_1_1commandline_1_1operation.html">sequoia::parsing::commandline::operation</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Used to build a forest of operations which will be invoked at the end of the parsing process.  <a href="../../d0/d7a/structsequoia_1_1parsing_1_1commandline_1_1operation.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/dd1/structsequoia_1_1parsing_1_1commandline_1_1outcome.html">sequoia::parsing::commandline::outcome</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The result of parsing command line arguments to build an <a class="el" href="../../d0/d7a/structsequoia_1_1parsing_1_1commandline_1_1operation.html">operation</a> forest.  <a href="../../df/dd1/structsequoia_1_1parsing_1_1commandline_1_1outcome.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/dd0/classsequoia_1_1parsing_1_1commandline_1_1argument__parser.html">sequoia::parsing::commandline::argument_parser</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses command line arguments, building <a class="el" href="../../df/dd1/structsequoia_1_1parsing_1_1commandline_1_1outcome.html">outcome</a> from an <a class="el" href="../../db/da8/structsequoia_1_1parsing_1_1commandline_1_1option.html">option</a> forest.  <a href="../../df/dd0/classsequoia_1_1parsing_1_1commandline_1_1argument__parser.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
@@ -150,6 +155,7 @@ template&lt;std::invocable&lt; std::string &gt; Fn&gt; </td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >Parsing of commandline arguments. </p>
+<p >The philosophy is to specify a forest whose nodes are instance of <a class="el" href="../../db/da8/structsequoia_1_1parsing_1_1commandline_1_1option.html" title="Used to specify a forest of options, against which the runtime commandline arguments are parsed.">sequoia::parsing::commandline::option</a>. This is used at runtime, as the command line arguments are parsed to generate a forest whose nodes are instances of <a class="el" href="../../d0/d7a/structsequoia_1_1parsing_1_1commandline_1_1operation.html" title="Used to build a forest of operations which will be invoked at the end of the parsing process.">sequoia::parsing::commandline::operation</a>. This tree is then traversed, and the function objects held by the <code>operation</code>s invoked. </p>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

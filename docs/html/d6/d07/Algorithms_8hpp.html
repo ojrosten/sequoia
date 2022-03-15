@@ -95,19 +95,110 @@ template&lt;class Iter , class Comparer  = std::less&lt;std::decay_t&lt;decltype
 template&lt;class Iter , class Comparer  = std::less&lt;std::decay_t&lt;decltype(*Iter())&gt;&gt;&gt; </td></tr>
 <tr class="memitem:ab73c98ad481fcb3e45305f0bf0129b54"><td class="memTemplItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::make_heap</b> (Iter begin, Iter end, Comparer comp=Comparer{})</td></tr>
 <tr class="separator:ab73c98ad481fcb3e45305f0bf0129b54"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acea3d5784387d9a7cf99326563ed0a5c"><td class="memTemplParams" colspan="2"><a id="acea3d5784387d9a7cf99326563ed0a5c" name="acea3d5784387d9a7cf99326563ed0a5c"></a>
-template&lt;class Iter , class Comparer  = std::less&lt;std::decay_t&lt;decltype(*Iter())&gt;&gt;&gt; </td></tr>
-<tr class="memitem:acea3d5784387d9a7cf99326563ed0a5c"><td class="memTemplItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::sort</b> (Iter begin, Iter end, Comparer comp=Comparer{})</td></tr>
+<tr class="memitem:acea3d5784387d9a7cf99326563ed0a5c"><td class="memTemplParams" colspan="2">template&lt;class Iter , class Comparer  = std::less&lt;std::decay_t&lt;decltype(*Iter())&gt;&gt;&gt; </td></tr>
+<tr class="memitem:acea3d5784387d9a7cf99326563ed0a5c"><td class="memTemplItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d6/d07/Algorithms_8hpp.html#acea3d5784387d9a7cf99326563ed0a5c">sequoia::sort</a> (Iter begin, Iter end, Comparer comp=Comparer{})</td></tr>
 <tr class="separator:acea3d5784387d9a7cf99326563ed0a5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8c86fc959d9b9d2f4393c0c118a31f55"><td class="memTemplParams" colspan="2"><a id="a8c86fc959d9b9d2f4393c0c118a31f55" name="a8c86fc959d9b9d2f4393c0c118a31f55"></a>
-template&lt;std::forward_iterator Iter, class Comparer  = std::equal_to&lt;std::decay_t&lt;decltype(*Iter())&gt;&gt;&gt; </td></tr>
-<tr class="memitem:a8c86fc959d9b9d2f4393c0c118a31f55"><td class="memTemplItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::cluster</b> (Iter begin, Iter end, Comparer comp=Comparer{})</td></tr>
+<tr class="memitem:a8c86fc959d9b9d2f4393c0c118a31f55"><td class="memTemplParams" colspan="2">template&lt;std::forward_iterator Iter, class Comparer  = std::equal_to&lt;std::decay_t&lt;decltype(*Iter())&gt;&gt;&gt; </td></tr>
+<tr class="memitem:a8c86fc959d9b9d2f4393c0c118a31f55"><td class="memTemplItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d6/d07/Algorithms_8hpp.html#a8c86fc959d9b9d2f4393c0c118a31f55">sequoia::cluster</a> (Iter begin, Iter end, Comparer comp=Comparer{})</td></tr>
+<tr class="memdesc:a8c86fc959d9b9d2f4393c0c118a31f55"><td class="mdescLeft">&#160;</td><td class="mdescRight">An algorithm which clusters together elements which compare equal.  <a href="../../d6/d07/Algorithms_8hpp.html#a8c86fc959d9b9d2f4393c0c118a31f55">More...</a><br /></td></tr>
 <tr class="separator:a8c86fc959d9b9d2f4393c0c118a31f55"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >A collection of constexpr algorithms. </p>
-<p >These algorithms have been written as they have been required by other parts of the library; many will be retired once C++20 arrives. </p>
-</div></div><!-- contents -->
+</div><h2 class="groupheader">Function Documentation</h2>
+<a id="a8c86fc959d9b9d2f4393c0c118a31f55" name="a8c86fc959d9b9d2f4393c0c118a31f55"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8c86fc959d9b9d2f4393c0c118a31f55">&#9670;&nbsp;</a></span>cluster()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;std::forward_iterator Iter, class Comparer  = std::equal_to&lt;std::decay_t&lt;decltype(*Iter())&gt;&gt;&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr void sequoia::cluster </td>
+          <td>(</td>
+          <td class="paramtype">Iter&#160;</td>
+          <td class="paramname"><em>begin</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Iter&#160;</td>
+          <td class="paramname"><em>end</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Comparer&#160;</td>
+          <td class="paramname"><em>comp</em> = <code>Comparer{}</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>An algorithm which clusters together elements which compare equal. </p>
+<p >This is best used in situations where operator&lt; is not defined. </p>
+
+</div>
+</div>
+<a id="acea3d5784387d9a7cf99326563ed0a5c" name="acea3d5784387d9a7cf99326563ed0a5c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acea3d5784387d9a7cf99326563ed0a5c">&#9670;&nbsp;</a></span>sort()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Iter , class Comparer  = std::less&lt;std::decay_t&lt;decltype(*Iter())&gt;&gt;&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr void sequoia::sort </td>
+          <td>(</td>
+          <td class="paramtype">Iter&#160;</td>
+          <td class="paramname"><em>begin</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Iter&#160;</td>
+          <td class="paramname"><em>end</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Comparer&#160;</td>
+          <td class="paramname"><em>comp</em> = <code>Comparer{}</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p >This version of swap is retained, at least for now, since it is guaranteed to use iter_swap internally. This means that the behaviour can be customized by specializing the latter. Currently, this is exploited to sort graph nodes. </p>
+
+</div>
+</div>
+</div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2

@@ -102,12 +102,12 @@ const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>pr
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;class Advisor&gt;<br />
 class sequoia::testing::tutor&lt; Advisor &gt;</div><p >class template used to wrap function objects which proffer advice. </p>
-<p >An appropriate instantiation of this class template may be supplied as the final argument of many of the check methods. For example, consider an int, x:</p>
+<p >An appropriate instantiation of this class template may be supplied as the final argument of many of the check methods. For example, consider checking equality of an <code>int</code>:</p>
 <pre>
 check(equality, LINE(""), x, 41, tutor{[](double value, double prediction) {
     return value == 42 ? "Are you sure the universe isn't trying to tell you something?" : "";
 }});
-</pre><p >In the case the x != 41, not only will failure be reported in the usual manner but, if x == 42, some spectacularly useful advice will be proffered.</p>
+</pre><p >In the case the <code>x != 41</code>, not only will failure be reported in the usual manner but, if <code>x == 42</code>, some spectacularly useful advice will be proffered.</p>
 <p ><a class="anchor" id="tutor_primary"></a></p>
 </div><hr/>The documentation for this class was generated from the following file:<ul>
 <li>C:/Users/olive/OneDrive/sequoia/Source/sequoia/TestFramework/<a class="el" href="../../da/d27/Advice_8hpp_source.html">Advice.hpp</a></li>

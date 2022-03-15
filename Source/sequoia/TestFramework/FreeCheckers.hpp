@@ -175,7 +175,7 @@ namespace sequoia::testing
 
   template<class Compare, class T>
   inline constexpr bool maybe_comparison_type{
-    (std::invocable<Compare, T, T> || sequoia::range<T>) && !(is_elementary_check<Compare> || is_customized_check<Compare>)
+    (std::invocable<Compare, T, T> || faithful_range<T>) && !(is_elementary_check<Compare> || is_customized_check<Compare>)
   };
 
   template<class T>
@@ -347,7 +347,7 @@ namespace sequoia::testing
       !(   std::is_same_v<CheckType, equality_check_t>
         || std::is_same_v<CheckType, with_best_available_check_t>)
     && (   implements_general_equivalence_check<Mode, CheckType, T, S, U...>
-        || sequoia::range<T>
+        || faithful_range<T>
         || has_fallback<CheckType>)
   };
 
@@ -506,7 +506,7 @@ namespace sequoia::testing
 
     if constexpr(std::invocable<Compare, T, T>)
     {
-      using finality = final_message_constant<!sequoia::range<T>>;
+      using finality = final_message_constant<!faithful_range<T>>;
       binary_comparison(finality{}, sentry, std::move(compare), obtained, prediction, advisor);
     }
     else
@@ -538,7 +538,7 @@ namespace sequoia::testing
   template<test_mode Mode, class T, class Advisor=null_advisor>
     requires (    deep_equality_comparable<T>
                || binary_tester_for<equality_check_t, Mode, T, tutor<Advisor>>
-               || sequoia::range<T>)
+               || faithful_range<T>)
   bool check(equality_check_t,
              std::string_view description,
              test_logger<Mode>& logger,
@@ -550,7 +550,7 @@ namespace sequoia::testing
 
     if constexpr(deep_equality_comparable<T>)
     {
-      using finality = final_message_constant<!(binary_tester_for<equality_check_t, Mode, T, tutor<Advisor>> || sequoia::range<T>)>;
+      using finality = final_message_constant<!(binary_tester_for<equality_check_t, Mode, T, tutor<Advisor>> || faithful_range<T>)>;
       binary_comparison(finality{}, sentry, std::equal_to<T>{}, obtained, prediction, advisor);
     }
 
@@ -558,7 +558,7 @@ namespace sequoia::testing
     {
       select_test(equality_check_t{}, logger, obtained, prediction, advisor);
     }
-    else if constexpr(sequoia::range<T>)
+    else if constexpr(faithful_range<T>)
     {
       check(equality, "", logger, std::begin(obtained), std::end(obtained), std::begin(prediction), std::end(prediction), advisor);
     }
@@ -586,7 +586,7 @@ namespace sequoia::testing
     {
       return general_equivalence_check(flavour, description, logger, obtained, std::forward<S>(s), std::forward<U>(u)...);
     }
-    else if constexpr(sequoia::range<T>)
+    else if constexpr(faithful_range<T>)
     {
       return check(flavour, add_type_info<T>(description), logger, std::begin(obtained), std::end(obtained), std::begin(std::forward<S>(s)), std::end(std::forward<S>(s)), std::forward<U>(u)...);
     }
@@ -606,7 +606,7 @@ namespace sequoia::testing
    */
 
   template<test_mode Mode, class T, class Advisor=null_advisor>
-    requires (deep_equality_comparable<T> || has_detailed_agnostic_check<Mode, T, Advisor> || sequoia::range<T>)
+    requires (deep_equality_comparable<T> || has_detailed_agnostic_check<Mode, T, Advisor> || faithful_range<T>)
   bool check(with_best_available_check_t,
              std::string_view description,
              test_logger<Mode>& logger,
@@ -618,7 +618,7 @@ namespace sequoia::testing
 
     if constexpr(deep_equality_comparable<T>)
     {
-      using finality = final_message_constant<!(has_detailed_agnostic_check<Mode, T, Advisor> || sequoia::range<T>)>;
+      using finality = final_message_constant<!(has_detailed_agnostic_check<Mode, T, Advisor> || faithful_range<T>)>;
       binary_comparison(finality{}, sentry, std::equal_to<T>{}, obtained, prediction, advisor);
     }
 
@@ -638,7 +638,7 @@ namespace sequoia::testing
     {
       select_test(weak_equivalence_check_t{}, logger, obtained, prediction, advisor);
     }
-    else if constexpr(sequoia::range<T>)
+    else if constexpr(faithful_range<T>)
     {
       check(with_best_available_check_t{}, "", logger, std::begin(obtained), std::end(obtained), std::begin(prediction), std::end(prediction), advisor);
     }

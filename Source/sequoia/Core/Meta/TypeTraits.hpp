@@ -15,13 +15,18 @@
 #include <utility>
 #include <variant>
 
-/*! \file TypeTraits.hpp
-    \brief Traits added as required by other components of the library.
+/*! \file
+    \brief Traits which are sufficiently general to appear in the `sequoia` namespace.
 
  */
 
 namespace sequoia
 {
+  /*! @defgroup variadic_traits The variadic_traits Group
+      This group provides mechanisms for extracting the head and tail from a parameter pack.
+      @{
+   */
+
   namespace impl
   {
     template<class H, class... T>
@@ -39,6 +44,7 @@ namespace sequoia
     };
   }
 
+  /*! \brief Primary template for extracting the head/tail from a parameter pack. */
   template<class... T>
   struct variadic_traits
   {
@@ -53,11 +59,13 @@ namespace sequoia
     using tail = void;
   };
 
+  /*! Helper to conveniently extract the head-type from a parameter pack */
   template<class... T>
   using head_of_t = typename variadic_traits<T...>::head;
 
-  // is_base_of_head
+  /*! @} */ // end of variadic_traits Group
 
+  /*! \brief class template for determining if a type is the base class of the head of a parameter pack */
   template<class T, class... Args>
   struct is_base_of_head
     : std::is_base_of<std::remove_cvref_t<T>, std::remove_cvref_t<head_of_t<Args...>>>
@@ -69,8 +77,8 @@ namespace sequoia
   template<class T, class... Args>
   using is_base_of_head_t = typename is_base_of_head<T, Args...>::type;
 
-  // resolve_to_copy
 
+  /*! \brief class template for determining whether a constructor template should resolve to the copy constructor */
   template<class T, class... Args>
   struct resolve_to_copy
     : std::bool_constant<
@@ -86,8 +94,8 @@ namespace sequoia
   template<class T, class... Args>
   using resolve_to_copy_t = typename resolve_to_copy<T, Args...>::type;
 
-  // is_const_pointer
 
+  /*! \brief Primary template for determining if a type is a pointer */
   template<class T>
   struct is_const_pointer : std::false_type {};
 
@@ -116,9 +124,6 @@ namespace sequoia
   template<class T>
   using is_const_reference_t = typename is_const_reference<T>::type;
 
-  template<class T>
-  std::add_lvalue_reference_t<T> makelval() noexcept;
-
   // is_tuple
 
   template<class T>
@@ -138,8 +143,32 @@ namespace sequoia
   template<class T>
   struct dependent_false : std::false_type {};
 
+  // has_allocator_type_v
+
+  template<class T>
+  struct has_allocator_type : std::bool_constant< requires { typename T::allocator_type; } >
+  {};
+
+  template<class T>
+  using has_allocator_type_t = typename has_allocator_type<T>::type;
+
+  template<class T>
+  inline constexpr bool has_allocator_type_v{has_allocator_type<T>::value};
+
   // Machinery for deep equality checking, which will hopefully one day
   // be obviated if the stl properly constrains operator==
+
+  /*! @defgroup deep_equality The deep_equality Group
+      The stl currently underconstrains `operator==`. For example, consider
+      a type, `T`, which is not equality comparable. Nevertheless, In C++20, `std::vector<T>`
+      counter-intuitively satisfies the `std::equality_comparable` concept.
+      To work around this defect, machinery is provided for checking deep equality.
+      This exploits the uniformity of the stl:
+        - If a type defines a nested type `value_type` it is treated as a homogeneous container.
+        - If a type does not defines a nested type `value_type` but elements may be accessed with
+          `std::get` it is treated as a heterogeneous container.
+      @{
+   */
 
   template<class T>
   inline constexpr bool has_value_type{ requires { typename T::value_type; }};
@@ -190,4 +219,6 @@ namespace sequoia
 
   template<class T>
   using is_deep_equality_comparable_t = typename is_deep_equality_comparable<T>::type;
+
+  /*! @} */
 }

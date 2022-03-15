@@ -9,75 +9,29 @@
 
 /*! \file
     \brief Implementation details for allocation checks.
+
+    For more information see \ref AllocationCheckersCore.hpp
 */
 
+#include "sequoia/TestFramework/AllocationCheckersCore.hpp"
 #include "sequoia/TestFramework/SemanticsCheckersDetails.hpp"
-#include "sequoia/TestFramework/AllocationCheckersTraits.hpp"
 #include "sequoia/TestFramework/FreeCheckers.hpp"
-
-#include <scoped_allocator>
-
-namespace sequoia::testing
-{
-  enum class container_tag { x, y };
-
-  template<container_tag tag>
-  struct container_tag_constant : std::integral_constant<container_tag, tag>
-  {};
-
-  [[nodiscard]]
-  std::string to_string(container_tag tag);
-
-  template<movable_comparable T, alloc_getter<T> Getter>
-  class allocation_info;
-
-  enum class null_allocation_event { comparison, spectator, serialization, swap };
-
-  /*! Type-safe wrapper for allocation predictions, to avoid mixing different allocation events */
-  template<auto Event>
-  class alloc_prediction
-  {
-  public:
-    constexpr alloc_prediction() = default;
-
-    constexpr alloc_prediction(int unshifted, int delta={}) noexcept
-      : m_Unshifted{unshifted}
-      , m_Prediction{m_Unshifted + delta}
-    {}
-
-    [[nodiscard]]
-    constexpr int value() const noexcept
-    {
-      return m_Prediction;
-    }
-
-    [[nodiscard]]
-    constexpr int unshifted() const noexcept
-    {
-      return m_Unshifted;
-    }
-  private:
-    int m_Unshifted{}, m_Prediction{};
-  };
-
-  template<class T>
-  struct allocation_count_shifter;
-}
 
 namespace sequoia::testing::impl
 {
   struct allocation_advice
   {
+    [[nodiscard]]
     std::string operator()(int count, int) const;
   };
 
   template<test_mode Mode, movable_comparable T, alloc_getter<T> Getter, auto Event>
   bool check_allocation(std::string_view detail,
-    test_logger<Mode>& logger,
-    const T& container,
-    const allocation_info<T, Getter>& info,
-    const int previous,
-    const alloc_prediction<Event> prediction)
+                        test_logger<Mode>& logger,
+                        const T& container,
+                        const allocation_info<T, Getter>& info,
+                        const int previous,
+                        const alloc_prediction<Event> prediction)
   {
     const auto current{info.count(container)};
     const auto unshifted{prediction.unshifted()};

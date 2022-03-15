@@ -33,6 +33,7 @@ namespace sequoia::testing
     test_is_const_pointer();
     test_is_const_reference();
     test_is_tuple();
+    test_has_allocator_type();
   }
 
   void type_traits_test::test_variadic_traits()
@@ -453,6 +454,23 @@ namespace sequoia::testing
         static_assert(is_tuple_v<std::tuple<int>>);
         static_assert(std::is_same_v<std::true_type, is_tuple_t<std::tuple<int>>>);
         return true;
+      }()
+    );
+  }
+
+  void type_traits_test::test_has_allocator_type()
+  {
+    check(LINE(""), []() {
+      static_assert(has_allocator_type_v<std::vector<double>>);
+      static_assert(std::is_same_v<std::true_type, has_allocator_type_t<std::vector<double>>>);
+      return true;
+      }()
+    );
+
+    check(LINE(""), []() {
+      static_assert(!has_allocator_type_v<double>);
+      static_assert(std::is_same_v<std::false_type, has_allocator_type_t<double>>);
+      return true;
       }()
     );
   }

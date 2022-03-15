@@ -9,6 +9,11 @@
 
 /*! \file
     \brief Helper for dealing with allocator propagation during copy assignment.
+
+    Consider a type which wraps one or containers. If the enclosing type is
+    allocator-aware, getting copy assigment right in situations were it cannot
+    be defaulted is non-trivial. This file defines the class sequoia::assignment_helper
+    to help with this.
  */
 
 #include "sequoia/Core/Meta/Utilities.hpp"
@@ -32,13 +37,39 @@ namespace sequoia::impl
       using type = std::invoke_result_t<AllocGetter, T>;
     };
   };
+}
+
+namespace sequoia
+{
+  /*! \brief Helper class to assist with copy assignment for allocator-aware types.
+  
+      Consider a type, `T`, which is allocator-aware and for which copy assignment cannot
+      be defaulted. Suppose that `T` wraps containers `Cs...`. To utilize the this helper,
+      do the following:
+        -# Ensure assignment_helper is befriended by `T`.
+        -# Furnish `T` with a `reset` method, the arguments of which are the allocators associated with `Cs...`.
+           Internally, `reset` should construct instances `Cs...` using the allocators and copy assign these
+           to the wrapped containers. It is important that copy assignment is used since allocator propagation
+           may differ between copying and moving.
+        -# Utilize assignment_helper to define copy assignment. A single allocator example is provided
+           by sequoia::data_structures::bucketed_storage and a two allocator example is provided by 
+           sequoia::data_structures::partitioned_sequence_base.
+           The basic idea is that assignment_helper::assign takes references to two instances of `T`,
+           together with a sequence of function objects which return the requisite allocators.
+
+      This pattern has an extra layer of generality, an example of which may be seen in sequoia::maths::connectivity.
+      Depending on how its template arguments are chosen, sequoia::maths::connectivity may wrap either one or two
+      allocator-aware types. To deal with these situations homogeneously, assignment_helper::assign ignores
+      any of the supplied function objects if they return void.
+  */
 
   struct assignment_helper
   {
+    /*! Can be used to implement non-defaultable copy assignment for allocator-aware classes */
     template<class T, std::invocable<T>... AllocGetters>
     constexpr static void assign(T& to, const T& from, [[maybe_unused]] AllocGetters... allocGetters)
     {
-      invoke_filtered<void, type_to_type<T>::template mapper>([&to, &from](auto... filteredAllocGetters){ assign_filtered(to, from, filteredAllocGetters...); }, allocGetters...);
+      impl::invoke_filtered<void, impl::type_to_type<T>::template mapper>([&to, &from](auto... filteredAllocGetters){ assign_filtered(to, from, filteredAllocGetters...); }, allocGetters...);
     }
 
   private:

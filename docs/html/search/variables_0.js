@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['extender_1841',['extender',['../dd/da8/namespacesequoia_1_1testing.html#ac460355a425fb4db86211989c86e9af1',1,'sequoia::testing']]]
+  ['is_5fbase_5fof_5fhead_5fv_0',['is_base_of_head_v',['../d0/d81/TypeTraits_8hpp.html#a51063e2718ac15a1370456e1fee5200a',1,'sequoia']]]
 ];

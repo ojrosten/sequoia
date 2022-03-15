@@ -136,7 +136,7 @@ $(function() {
 <div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>  <span class="keyword">template</span>&lt;<span class="keyword">class</span> WeightMaker, <span class="keyword">class</span> Traits&gt;</div>
 <div class="line"><a id="l00077" name="l00077"></a><span class="lineno"><a class="line" href="../../d0/de4/classsequoia_1_1maths_1_1graph__impl_1_1node__storage.html">   77</a></span>  <span class="keyword">class </span><a class="code hl_class" href="../../d0/de4/classsequoia_1_1maths_1_1graph__impl_1_1node__storage.html">node_storage</a></div>
 <div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>  {</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    <span class="keyword">friend</span> <span class="keyword">struct </span><a class="code hl_struct" href="../../d6/d69/structsequoia_1_1impl_1_1assignment__helper.html">sequoia::impl::assignment_helper</a>;</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    <span class="keyword">friend</span> <span class="keyword">struct </span><a class="code hl_struct" href="../../d9/d8d/structsequoia_1_1assignment__helper.html">assignment_helper</a>;</div>
 <div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span> </div>
 <div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>  <span class="keyword">private</span>:</div>
 <div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    <span class="keyword">template</span>&lt;<span class="keyword">class</span> S&gt; <span class="keyword">using</span> Container = <span class="keyword">typename</span> Traits::template container_type&lt;S&gt;;</div>
@@ -210,7 +210,7 @@ $(function() {
 <div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span> </div>
 <div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>    [[nodiscard]]</div>
 <div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>    <span class="keyword">friend</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> operator==(<span class="keyword">const</span> <a class="code hl_class" href="../../d0/de4/classsequoia_1_1maths_1_1graph__impl_1_1node__storage.html">node_storage</a>&amp; lhs, <span class="keyword">const</span> <a class="code hl_class" href="../../d0/de4/classsequoia_1_1maths_1_1graph__impl_1_1node__storage.html">node_storage</a>&amp; rhs) <span class="keyword">noexcept</span></div>
-<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>      <span class="keyword">requires</span> deep_equality_comparable&lt;weight_type&gt;</div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>      <span class="keyword">requires</span> <a class="code hl_concept" href="../../da/d5f/conceptsequoia_1_1deep__equality__comparable.html">deep_equality_comparable&lt;weight_type&gt;</a></div>
 <div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>    {</div>
 <div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>      <span class="keywordflow">return</span> lhs.m_NodeWeights == rhs.m_NodeWeights;</div>
 <div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>    }</div>
@@ -257,13 +257,13 @@ $(function() {
 <div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>      {</div>
 <div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>        <span class="keyword">auto</span> allocGetter{</div>
 <div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>          []([[maybe_unused]] <span class="keyword">const</span> <a class="code hl_class" href="../../d0/de4/classsequoia_1_1maths_1_1graph__impl_1_1node__storage.html">node_storage</a>&amp; in){</div>
-<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>            <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(has_allocator_type&lt;node_weight_container_type&gt;)</div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>            <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(has_allocator_type_v&lt;node_weight_container_type&gt;)</div>
 <div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>            {</div>
 <div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>              <span class="keywordflow">return</span> in.m_NodeWeights.get_allocator();</div>
 <div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>            }</div>
 <div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>          }</div>
 <div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>        };</div>
-<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>        sequoia::impl::assignment_helper::assign(*<span class="keyword">this</span>, in, allocGetter);</div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>        <a class="code hl_function" href="../../d9/d8d/structsequoia_1_1assignment__helper.html#a2a9a21be462ca5dca837d2aa9f37c562">assignment_helper::assign</a>(*<span class="keyword">this</span>, in, allocGetter);</div>
 <div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>      }</div>
 <div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span> </div>
 <div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>      <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
@@ -522,7 +522,7 @@ $(function() {
 <div class="line"><a id="l00462" name="l00462"></a><span class="lineno">  462</span>  };</div>
 <div class="line"><a id="l00463" name="l00463"></a><span class="lineno">  463</span>}</div>
 <div class="ttc" id="aAlgorithms_8hpp_html"><div class="ttname"><a href="../../d6/d07/Algorithms_8hpp.html">Algorithms.hpp</a></div><div class="ttdoc">A collection of constexpr algorithms.</div></div>
-<div class="ttc" id="aArrayUtilities_8hpp_html"><div class="ttname"><a href="../../d8/def/ArrayUtilities_8hpp.html">ArrayUtilities.hpp</a></div><div class="ttdoc">Utility to convert an initializer_list into an array, potentially transforming the inlitializer_list ...</div></div>
+<div class="ttc" id="aArrayUtilities_8hpp_html"><div class="ttname"><a href="../../d8/def/ArrayUtilities_8hpp.html">ArrayUtilities.hpp</a></div><div class="ttdoc">Utility to convert an initializer_list into an array, potentially transforming the initializer_list i...</div></div>
 <div class="ttc" id="aAssignmentUtilities_8hpp_html"><div class="ttname"><a href="../../d0/dbb/AssignmentUtilities_8hpp.html">AssignmentUtilities.hpp</a></div><div class="ttdoc">Helper for dealing with allocator propagation during copy assignment.</div></div>
 <div class="ttc" id="aDataPoolTraits_8hpp_html"><div class="ttname"><a href="../../d5/d5f/DataPoolTraits_8hpp.html">DataPoolTraits.hpp</a></div><div class="ttdoc">Traits and Concepts for Pooled/Spawned data.</div></div>
 <div class="ttc" id="aEdgesAndNodesUtilities_8hpp_html"><div class="ttname"><a href="../../db/d4a/EdgesAndNodesUtilities_8hpp.html">EdgesAndNodesUtilities.hpp</a></div><div class="ttdoc">Utilities for both edges and nodes.</div></div>
@@ -531,7 +531,9 @@ $(function() {
 <div class="ttc" id="aUniformWrapper_8hpp_html"><div class="ttname"><a href="../../d9/d8f/UniformWrapper_8hpp.html">UniformWrapper.hpp</a></div><div class="ttdoc">A class which allows homogenous semantics for families of classes, particularly where at least one us...</div></div>
 <div class="ttc" id="aclasssequoia_1_1maths_1_1graph__impl_1_1node__storage_html"><div class="ttname"><a href="../../d0/de4/classsequoia_1_1maths_1_1graph__impl_1_1node__storage.html">sequoia::maths::graph_impl::node_storage</a></div><div class="ttdef"><b>Definition:</b> NodeStorage.hpp:78</div></div>
 <div class="ttc" id="aclasssequoia_1_1utilities_1_1iterator_html"><div class="ttname"><a href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">sequoia::utilities::iterator</a></div><div class="ttdoc">An iterator with policies controlling dereferencing and auxiliary data.</div><div class="ttdef"><b>Definition:</b> Iterator.hpp:90</div></div>
-<div class="ttc" id="astructsequoia_1_1impl_1_1assignment__helper_html"><div class="ttname"><a href="../../d6/d69/structsequoia_1_1impl_1_1assignment__helper.html">sequoia::impl::assignment_helper</a></div><div class="ttdef"><b>Definition:</b> AssignmentUtilities.hpp:37</div></div>
+<div class="ttc" id="aconceptsequoia_1_1deep__equality__comparable_html"><div class="ttname"><a href="../../da/d5f/conceptsequoia_1_1deep__equality__comparable.html">sequoia::deep_equality_comparable</a></div><div class="ttdoc">Concept to work around the fact that currently the stl typically underconstrains operator==.</div><div class="ttdef"><b>Definition:</b> Concepts.hpp:97</div></div>
+<div class="ttc" id="astructsequoia_1_1assignment__helper_html"><div class="ttname"><a href="../../d9/d8d/structsequoia_1_1assignment__helper.html">sequoia::assignment_helper</a></div><div class="ttdoc">Helper class to assist with copy assignment for allocator-aware types.</div><div class="ttdef"><b>Definition:</b> AssignmentUtilities.hpp:67</div></div>
+<div class="ttc" id="astructsequoia_1_1assignment__helper_html_a2a9a21be462ca5dca837d2aa9f37c562"><div class="ttname"><a href="../../d9/d8d/structsequoia_1_1assignment__helper.html#a2a9a21be462ca5dca837d2aa9f37c562">sequoia::assignment_helper::assign</a></div><div class="ttdeci">constexpr static void assign(T &amp;to, const T &amp;from, AllocGetters... allocGetters)</div><div class="ttdef"><b>Definition:</b> AssignmentUtilities.hpp:70</div></div>
 <div class="ttc" id="astructsequoia_1_1maths_1_1graph__impl_1_1proxy__dereference__policy_html"><div class="ttname"><a href="../../db/d8a/structsequoia_1_1maths_1_1graph__impl_1_1proxy__dereference__policy.html">sequoia::maths::graph_impl::proxy_dereference_policy</a></div><div class="ttdef"><b>Definition:</b> NodeStorage.hpp:38</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->

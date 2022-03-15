@@ -9,7 +9,7 @@
 
 /*! \file
     \brief Utility to convert an initializer_list into an array, potentially transforming
-    the inlitializer_list in the process
+    the initializer_list in the process
  */
 
 #include <array>

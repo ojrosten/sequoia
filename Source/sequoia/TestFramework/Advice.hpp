@@ -8,17 +8,23 @@
 #pragma once
 
 /*! \file
-    \brief Utilities for the advice framework.
+    \brief Utilities for the advice framework, which provides hints for certain failures.
+
+    When a check fails, there may be some instances where the nature of the failure
+    deserves comment. Indeed, such comments may provide a useful clue as to the origin
+    of the failure, particularly when it is subtle. The advice framework facilitates this,
+    allowing value-dependent comments to be generated in the instance of failure. This is
+    achieved by passing an instance of \ref tutor_primary "tutor" to the appropriate
+    `check` call.
  */
 
 #include "sequoia/Core/Meta/Concepts.hpp"
 #include "sequoia/Core/Meta/TypeTraits.hpp"
 #include "sequoia/TestFramework/Output.hpp"
 
-#include <string>
-
 namespace sequoia::testing
 {
+  /// \brief meta utility for garnering invocation and return types from an Advisor
   template<class Advisor>
   struct advisor_invoke_type;
 
@@ -50,6 +56,7 @@ namespace sequoia::testing
     using type = T;
   };
 
+  /// \brief meta utility for determining whether a particular Advisor should be used for a given type
   template<class Advisor, class T>
   struct advisor_analyser
   {
@@ -63,8 +70,9 @@ namespace sequoia::testing
     constexpr static bool utilize{true};
   };
 
-  // For a Advisor with a single operator(), attempt to disallow bindings which involve
-  // a narrowing conversion
+  // Attempt to disallow bindings which involve a narrowing conversion. I can only think
+  // how to do this in the case of a single operator(), hence this specialization.
+  // The logic to prohibit narrowing occurs in the definition of `utilize`.
   template<class Advisor, class T>
     requires std::invocable<Advisor, T, T> && requires {
       std::declval<decltype(&Advisor::operator())>();
@@ -87,7 +95,8 @@ namespace sequoia::testing
   /*! \brief class template used to wrap function objects which proffer advice.
 
       An appropriate instantiation of this class template may be supplied as the
-      final argument of many of the check methods. For example, consider an int, x:
+      final argument of many of the check methods. For example, consider 
+      checking equality of an `int`:
 
       <pre>
       check(equality, LINE(""), x, 41, tutor{[](double value, double prediction) {
@@ -95,8 +104,8 @@ namespace sequoia::testing
       }});
       </pre>
 
-      In the case the x != 41, not only will failure be reported in the usual manner
-      but, if x == 42, some spectacularly useful advice will be proffered.
+      In the case the `x != 41`, not only will failure be reported in the usual manner
+      but, if `x == 42`, some spectacularly useful advice will be proffered.
 
       \anchor tutor_primary
    */
@@ -136,9 +145,9 @@ namespace sequoia::testing
     using sequoia_advisor_type = null_advisor;
   };
 
-  template<class A>
-  concept teacher = requires() {
-    typename std::remove_cvref_t<A>::sequoia_advisor_type;
+  template<class Tutor>
+  inline constexpr bool is_teacher_v{
+    requires { typename std::remove_cvref_t<Tutor>::sequoia_advisor_type; }
   };
 
   template<class... U>
@@ -147,7 +156,7 @@ namespace sequoia::testing
 
   template<class... U>
     requires    (sizeof...(U) > 0u)
-             && teacher<decltype(std::get<sizeof...(U) - 1>(std::declval<std::tuple<std::remove_cvref_t<U>&...>>()))>
+             && is_teacher_v<decltype(std::get<sizeof...(U) - 1>(std::declval<std::tuple<std::remove_cvref_t<U>&...>>()))>
   struct ends_with_tutor<U...> : std::true_type
   {};
 
@@ -155,17 +164,20 @@ namespace sequoia::testing
   template<class... U>
   inline constexpr bool ends_with_tutor_v{ends_with_tutor<U...>::value};
 
+  /// \brief Helper for generating advice strings
   class advice_data
   {
   public:
     template<class Advisor, class T>
+    advice_data(const tutor<Advisor>&, const T&, const T&)
+    {}
+
+    template<class Advisor, class T>
+      requires std::is_invocable_r_v<std::string, tutor<Advisor>, T, T>
     advice_data(const tutor<Advisor>& advisor, const T& value, const T& prediction)
     {
-      if constexpr(std::is_invocable_r_v<std::string, tutor<Advisor>, T, T>)
-      {
         m_Advice = advisor(value, prediction);
         m_Prefix = advisor.prefix();
-      }
     }
 
     std::string& append_to(std::string& message) const;

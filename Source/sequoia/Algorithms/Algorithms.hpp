@@ -9,9 +9,6 @@
 
 /*! \file
     \brief A collection of constexpr algorithms.
-
-    These algorithms have been written as they have been required by other
-    parts of the library; many will be retired once C++20 arrives.
 */
 
 #include "sequoia/Core/Meta/Concepts.hpp"
@@ -78,9 +75,10 @@ namespace sequoia
     }
   }
 
-  // One reason to retain this is that it uses iter_swap internally.
-  // This means that the behaviour can be customized by specializing
-  // the latter. Currently, this is exploited to sort graph nodes.
+  /// This version of swap is retained, at least for now, since it
+  /// is guaranteed to use iter_swap internally.
+  /// This means that the behaviour can be customized by specializing
+  /// the latter. Currently, this is exploited to sort graph nodes.
   template<class Iter, class Comparer=std::less<std::decay_t<decltype(*Iter())>>>
   constexpr void sort(Iter begin, Iter end, Comparer comp = Comparer{})
   {
@@ -97,35 +95,9 @@ namespace sequoia
     }
   }
 
-  /*template<class ForwardIt>
-  constexpr ForwardIt rotate(ForwardIt first, ForwardIt n_first, ForwardIt last)
-  {
-    if(first == n_first) return last;
-    if(last == n_first) return first;
-
-    using namespace std;
-
-    const auto distToEnd{distance(n_first, last)};
-    const auto distFromBegin{distance(first, n_first)};
-    const auto retIter{next(first, distToEnd)};
-
-    const auto dist{min(distToEnd, distFromBegin)};
-
-    const auto unswapped{next(first, dist)};
-
-    while(first != unswapped)
-    {
-      iter_swap(first++, n_first++);
-    }
-
-    if(distToEnd > distFromBegin)
-      sequoia::rotate(unswapped, next(unswapped, dist), last);
-    else if(distToEnd < distFromBegin)
-      sequoia::rotate(unswapped, last - dist, last);
-
-    return retIter;
-  }*/
-
+  /// \brief An algorithm which clusters together elements which compare equal.
+  ///
+  /// This is best used in situations where operator< is not defined.
   template<std::forward_iterator Iter, class Comparer=std::equal_to<std::decay_t<decltype(*Iter())>>>
   constexpr void cluster(Iter begin, Iter end, Comparer comp = Comparer{})
   {
@@ -150,56 +122,4 @@ namespace sequoia
 
     cluster(endOfCluster, end, comp);
   }
-
-  /*template<class Iter, class T, class Comparer = std::less<std::decay_t<decltype(*Iter())>>>
-  constexpr Iter lower_bound(Iter begin, Iter end, const T& val, Comparer comp = Comparer{})
-  {
-    while(begin != end)
-    {
-      using namespace std;
-      auto partition{begin + distance(begin, end)/2};
-      if(comp(*partition, val))
-      {
-        begin = ++partition;
-      }
-      else
-      {
-        end = partition;
-      }
-    }
-
-    return end;
-  }
-
-  template<class Iter, class T, class Comparer=std::less<std::decay_t<decltype(*Iter())>>>
-  constexpr Iter upper_bound(Iter begin, Iter end, const T& val, Comparer comp = Comparer{})
-  {
-    auto notComp{
-      [comp](const auto& lhs, const auto& rhs){
-        return !comp(rhs, lhs);
-      }
-    };
-
-    return sequoia::lower_bound(begin, end, val, notComp);
-  }
-
-  template<class Iter, class T, class Comparer=std::less<std::decay_t<decltype(*Iter())>>>
-  constexpr std::pair<Iter, Iter> equal_range(Iter begin, Iter end, const T& val, Comparer comp = Comparer{})
-  {
-    return {sequoia::lower_bound(begin, end, val, comp), sequoia::upper_bound(begin, end, val, comp)};
-  }
-
-  template<class InputIt1, class InputIt2>
-  constexpr bool equal(InputIt1 first1, InputIt2 last1, InputIt2 first2, InputIt2 last2)
-  {
-    using namespace std;
-    if(distance(first1, last1) != distance(first2, last2)) return false;
-
-    for(; first1 != last1; ++first1, ++first2)
-    {
-      if(*first1 != *first2) return false;
-    }
-
-    return true;
-  }*/
 }

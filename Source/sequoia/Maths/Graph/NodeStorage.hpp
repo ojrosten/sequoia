@@ -76,7 +76,7 @@ namespace sequoia::maths::graph_impl
   template<class WeightMaker, class Traits>
   class node_storage
   {
-    friend struct sequoia::impl::assignment_helper;
+    friend struct sequoia::assignment_helper;
 
   private:
     template<class S> using Container = typename Traits::template container_type<S>;
@@ -197,13 +197,13 @@ namespace sequoia::maths::graph_impl
       {
         auto allocGetter{
           []([[maybe_unused]] const node_storage& in){
-            if constexpr(has_allocator_type<node_weight_container_type>)
+            if constexpr(has_allocator_type_v<node_weight_container_type>)
             {
               return in.m_NodeWeights.get_allocator();
             }
           }
         };
-        sequoia::impl::assignment_helper::assign(*this, in, allocGetter);
+        assignment_helper::assign(*this, in, allocGetter);
       }
 
       return *this;

@@ -195,7 +195,7 @@ namespace sequoia::testing
 
     using app_mode = shell_command::append_mode;
     return cd_cmd(root)
-        && shell_command {"Placing under version control...", "git init -b trunk", output}
+        && shell_command{"Placing under version control...", "git init -b trunk", output}
         && shell_command{"", "git add . ", output, app_mode::yes}
         && shell_command{"", "git commit -m \"First commit\"", output, app_mode::yes};
   }

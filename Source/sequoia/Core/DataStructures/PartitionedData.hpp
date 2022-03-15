@@ -77,12 +77,15 @@ namespace sequoia
       using buckets_type = std::vector<std::vector<S>>;
     };
 
+    /*! \brief Storage for partitioned data such that data within each partition is contiguous.
+     */
+
     template<class T, class Handler=ownership::independent<T>, class Traits=bucketed_storage_traits<T, Handler>>
       requires ownership::handler<Handler>
     class bucketed_storage
     {
     private:
-      friend struct sequoia::impl::assignment_helper;
+      friend struct sequoia::assignment_helper;
 
       using held_type    = typename Handler::handle_type;
       using storage_type = typename Traits::template buckets_type<held_type>;
@@ -163,7 +166,7 @@ namespace sequoia
               return s.get_allocator();
             }
           };
-          sequoia::impl::assignment_helper::assign(*this, in, allocGetter);
+          assignment_helper::assign(*this, in, allocGetter);
         }
 
         return *this;
@@ -489,11 +492,14 @@ namespace sequoia
 
     //===================================Contiguous storage===================================//
 
+    /*! \brief Base class for partitioned sequences where data is contiguous across all partitions.
+     */
+
     template<class T, class Handler, class Traits>
       requires ownership::handler<Handler>
     class partitioned_sequence_base
     {
-      friend struct sequoia::impl::assignment_helper;
+      friend struct sequoia::assignment_helper;
 
     public:
       using value_type          = T;
@@ -677,7 +683,7 @@ namespace sequoia
         {
           auto allocGetter{
             []([[maybe_unused]] const partitioned_sequence_base& in) {
-              if constexpr(has_allocator_type<container_type>)
+              if constexpr(has_allocator_type_v<container_type>)
               {
                 return in.m_Storage.get_allocator();
               }
@@ -686,14 +692,14 @@ namespace sequoia
 
           auto partitionsAllocGetter{
             []([[maybe_unused]] const partitioned_sequence_base& in){
-              if constexpr(has_allocator_type<PartitionsType>)
+              if constexpr(has_allocator_type_v<PartitionsType>)
               {
                 return in.m_Partitions.get_allocator();
               }
             }
           };
 
-          sequoia::impl::assignment_helper::assign(*this, in, allocGetter, partitionsAllocGetter);
+          assignment_helper::assign(*this, in, allocGetter, partitionsAllocGetter);
         }
 
         return *this;

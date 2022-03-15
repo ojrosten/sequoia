@@ -33,7 +33,7 @@ namespace sequoia::testing
 
       In addition to taking the usual T as a template parameter, the class template accepts
       three bools which control whether or not the allocator is propapaged when the
-      associated container is copied, mobed or swapped.
+      associated container is copied, moved or swapped.
    */
 
   template<class T, bool PropagateCopy=true, bool PropagateMove=true, bool PropagateSwap=false>

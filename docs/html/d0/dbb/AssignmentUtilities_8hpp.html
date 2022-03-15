@@ -86,7 +86,8 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/df1/structsequoia_1_1impl_1_1type__to__type_1_1mapper.html">sequoia::impl::type_to_type&lt; T &gt;::mapper&lt; AllocGetter &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d69/structsequoia_1_1impl_1_1assignment__helper.html">sequoia::impl::assignment_helper</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d8d/structsequoia_1_1assignment__helper.html">sequoia::assignment_helper</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper class to assist with copy assignment for allocator-aware types.  <a href="../../d9/d8d/structsequoia_1_1assignment__helper.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
@@ -98,6 +99,7 @@ template&lt;class Excluded , template&lt; class &gt; class TypeToType, class Fn 
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >Helper for dealing with allocator propagation during copy assignment. </p>
+<p >Consider a type which wraps one or containers. If the enclosing type is allocator-aware, getting copy assigment right in situations were it cannot be defaulted is non-trivial. This file defines the class <a class="el" href="../../d9/d8d/structsequoia_1_1assignment__helper.html" title="Helper class to assist with copy assignment for allocator-aware types.">sequoia::assignment_helper</a> to help with this. </p>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

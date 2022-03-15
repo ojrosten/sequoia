@@ -72,7 +72,7 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>Concepts mostly, but not exclusively, replicating things which will appear in std at some point.  
+<p>Concepts which are sufficiently general to appear in the <code>sequoia</code> namespace.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="../../d0/d81/TypeTraits_8hpp_source.html">sequoia/Core/Meta/TypeTraits.hpp</a>&quot;</code><br />
 <code>#include &lt;utility&gt;</code><br />
@@ -80,8 +80,45 @@ $(function() {
 <code>#include &lt;concepts&gt;</code><br />
 </div>
 <p><a href="../../d3/d84/Concepts_8hpp_source.html">Go to the source code of this file.</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="concepts" name="concepts"></a>
+Concepts</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">concept &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dd8/conceptsequoia_1_1three__way__comparable.html">sequoia::three_way_comparable</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">TO DO: Temporary, crude implementation while waiting for clang. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">concept &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d46/conceptsequoia_1_1invocable__r.html">sequoia::invocable_r</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Supplements <code>std::invocable</code>. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">concept &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d6a/conceptsequoia_1_1movable__comparable.html">sequoia::movable_comparable</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Building block for concepts related to <code>std::regular</code> but without the requirement of default constructibility. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">concept &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/df2/conceptsequoia_1_1pseudoregular.html">sequoia::pseudoregular</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Similar to std::regular but relaxes the requirement of default initializability. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">concept &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/ddd/conceptsequoia_1_1moveonly.html">sequoia::moveonly</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The move-only version of <a class="el" href="../../df/df2/conceptsequoia_1_1pseudoregular.html" title="Similar to std::regular but relaxes the requirement of default initializability.">sequoia::pseudoregular</a>. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">concept &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d4b/conceptsequoia_1_1alloc.html">sequoia::alloc</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A concept for allocators. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">concept &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d27/conceptsequoia_1_1scoped__alloc.html">sequoia::scoped_alloc</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A concept for scoped allocators. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">concept &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/dcc/conceptsequoia_1_1serializable__to.html">sequoia::serializable_to</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A concept which is realized by a <code>T const&amp;</code> which be serialized to a <code>Stream&amp;</code>. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">concept &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/df6/conceptsequoia_1_1deserializable__from.html">sequoia::deserializable_from</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A concept which is realized by a <code>Stream&amp;</code> which may be deserialized to a <code>T&amp;</code>. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">concept &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d51/conceptsequoia_1_1faithful__range.html">sequoia::faithful_range</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Similar to std::range but excludes the case where dereferencing yields the same type as the range. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">concept &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/d5f/conceptsequoia_1_1deep__equality__comparable.html">sequoia::deep_equality_comparable</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Concept to work around the fact that currently the stl typically underconstrains <code>operator==</code>. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p >Concepts mostly, but not exclusively, replicating things which will appear in std at some point. </p>
+<div class="textblock"><p >Concepts which are sufficiently general to appear in the <code>sequoia</code> namespace. </p>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

@@ -115,7 +115,7 @@ $(function() {
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    &gt;</div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno"><a class="line" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">   50</a></span>    <span class="keyword">class </span><a class="code hl_class" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">connectivity</a></div>
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    {</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>      <span class="keyword">friend</span> <span class="keyword">struct </span><a class="code hl_struct" href="../../d6/d69/structsequoia_1_1impl_1_1assignment__helper.html">sequoia::impl::assignment_helper</a>;</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>      <span class="keyword">friend</span> <span class="keyword">struct </span><a class="code hl_struct" href="../../d9/d8d/structsequoia_1_1assignment__helper.html">assignment_helper</a>;</div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    <span class="keyword">protected</span>:</div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>      <span class="keyword">using</span> edge_storage_type = <span class="keyword">typename</span> EdgeTraits::edge_storage_type;</div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="keyword">public</span>:</div>
@@ -263,7 +263,7 @@ $(function() {
 <div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span> </div>
 <div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>      [[nodiscard]]</div>
 <div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>      <span class="keyword">friend</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> operator==(<span class="keyword">const</span> <a class="code hl_class" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">connectivity</a>&amp; lhs, <span class="keyword">const</span> <a class="code hl_class" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">connectivity</a>&amp; rhs) <span class="keyword">noexcept</span></div>
-<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>        <span class="keyword">requires</span> deep_equality_comparable&lt;edge_type&gt;</div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>        <span class="keyword">requires</span> <a class="code hl_concept" href="../../da/d5f/conceptsequoia_1_1deep__equality__comparable.html">deep_equality_comparable&lt;edge_type&gt;</a></div>
 <div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>      {</div>
 <div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>        <span class="keywordflow">return</span> lhs.m_Edges == rhs.m_Edges;</div>
 <div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>      }</div>
@@ -274,24 +274,24 @@ $(function() {
 <div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>      <span class="keyword">using</span> edge_iterator = <span class="keyword">typename</span> edge_storage_type::partition_iterator;</div>
 <div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>      <span class="keyword">using</span> init_t = std::initializer_list&lt;std::initializer_list&lt;edge_init_type&gt;&gt;;</div>
 <div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span> </div>
-<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>      <span class="keyword">template</span>&lt;alloc... Allocators&gt;</div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>      <span class="keyword">template</span>&lt;<a class="code hl_concept" href="../../df/d4b/conceptsequoia_1_1alloc.html">alloc</a>... Allocators&gt;</div>
 <div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>      <span class="keyword">constexpr</span> <a class="code hl_class" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">connectivity</a>(<span class="keyword">const</span> Allocators&amp;... as)</div>
 <div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>        : m_Edges(as...)</div>
 <div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>      {}</div>
 <div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span> </div>
-<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>      <span class="keyword">template</span>&lt;alloc... Allocators&gt;</div>
+<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>      <span class="keyword">template</span>&lt;<a class="code hl_concept" href="../../df/d4b/conceptsequoia_1_1alloc.html">alloc</a>... Allocators&gt;</div>
 <div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>      <span class="keyword">constexpr</span> <a class="code hl_class" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">connectivity</a>(init_t edges, <span class="keyword">const</span> Allocators&amp;... as)</div>
 <div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>        : <a class="code hl_class" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">connectivity</a>(direct_edge_init(), edges, as...)</div>
 <div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>      {}</div>
 <div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span> </div>
-<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>      <span class="keyword">template</span>&lt;alloc... Allocators&gt;</div>
+<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>      <span class="keyword">template</span>&lt;<a class="code hl_concept" href="../../df/d4b/conceptsequoia_1_1alloc.html">alloc</a>... Allocators&gt;</div>
 <div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>      <span class="keyword">constexpr</span> <a class="code hl_class" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">connectivity</a>(<span class="keyword">const</span> <a class="code hl_class" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">connectivity</a>&amp; c, <span class="keyword">const</span> Allocators&amp;... as)</div>
 <div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>        : <a class="code hl_class" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">connectivity</a>(direct_edge_copy(), c, as...)</div>
 <div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>      {}</div>
 <div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span> </div>
 <div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>      <span class="keyword">constexpr</span> <a class="code hl_class" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">connectivity</a>(<a class="code hl_class" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">connectivity</a>&amp;&amp;) <span class="keyword">noexcept</span> = <span class="keywordflow">default</span>;</div>
 <div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span> </div>
-<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>      <span class="keyword">template</span>&lt;alloc... Allocators&gt;</div>
+<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>      <span class="keyword">template</span>&lt;<a class="code hl_concept" href="../../df/d4b/conceptsequoia_1_1alloc.html">alloc</a>... Allocators&gt;</div>
 <div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>      <span class="keyword">constexpr</span> <a class="code hl_class" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">connectivity</a>(<a class="code hl_class" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">connectivity</a>&amp;&amp; c, <span class="keyword">const</span> Allocators&amp;... as)</div>
 <div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>        : m_Edges{std::move(c.m_Edges), as...}</div>
 <div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>      {}</div>
@@ -306,7 +306,7 @@ $(function() {
 <div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>        {</div>
 <div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>          <span class="keyword">auto</span> allocGetter{</div>
 <div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>            [](<span class="keyword">const</span> <a class="code hl_class" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">connectivity</a>&amp; in){</div>
-<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>              <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(has_allocator_type&lt;edge_storage_type&gt;)</div>
+<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>              <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(has_allocator_type_v&lt;edge_storage_type&gt;)</div>
 <div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>              {</div>
 <div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>                <span class="keywordflow">return</span> in.m_Edges.get_allocator();</div>
 <div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>              }</div>
@@ -322,7 +322,7 @@ $(function() {
 <div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>            }</div>
 <div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>          };</div>
 <div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span> </div>
-<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>          sequoia::impl::assignment_helper::assign(*<span class="keyword">this</span>, in, allocGetter, partitionsAllocGetter);</div>
+<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>          <a class="code hl_function" href="../../d9/d8d/structsequoia_1_1assignment__helper.html#a2a9a21be462ca5dca837d2aa9f37c562">assignment_helper::assign</a>(*<span class="keyword">this</span>, in, allocGetter, partitionsAllocGetter);</div>
 <div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>        }</div>
 <div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span> </div>
 <div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>        <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
@@ -897,17 +897,17 @@ $(function() {
 <div class="line"><a id="l00831" name="l00831"></a><span class="lineno">  831</span>        edge_index_type bsource{begin.partition_index()}, esource{end.partition_index()};</div>
 <div class="line"><a id="l00832" name="l00832"></a><span class="lineno">  832</span>        <span class="keywordflow">if</span>(bsource == esource)</div>
 <div class="line"><a id="l00833" name="l00833"></a><span class="lineno">  833</span>        {</div>
-<div class="line"><a id="l00834" name="l00834"></a><span class="lineno">  834</span>          sequoia::sort(begin_edges(bsource) + distance(cbegin_edges(bsource), begin), begin_edges(esource) + distance(cbegin_edges(esource), end), comp);</div>
+<div class="line"><a id="l00834" name="l00834"></a><span class="lineno">  834</span>          <a class="code hl_function" href="../../d6/d07/Algorithms_8hpp.html#acea3d5784387d9a7cf99326563ed0a5c">sequoia::sort</a>(begin_edges(bsource) + distance(cbegin_edges(bsource), begin), begin_edges(esource) + distance(cbegin_edges(esource), end), comp);</div>
 <div class="line"><a id="l00835" name="l00835"></a><span class="lineno">  835</span>        }</div>
 <div class="line"><a id="l00836" name="l00836"></a><span class="lineno">  836</span>        <span class="keywordflow">else</span></div>
 <div class="line"><a id="l00837" name="l00837"></a><span class="lineno">  837</span>        {</div>
 <div class="line"><a id="l00838" name="l00838"></a><span class="lineno">  838</span>          <span class="keywordflow">if</span>(bsource &gt; esource) std::swap(bsource, esource);</div>
-<div class="line"><a id="l00839" name="l00839"></a><span class="lineno">  839</span>          sequoia::sort(begin_edges(bsource) + distance(cbegin_edges(bsource), begin), end_edges(bsource), comp);</div>
+<div class="line"><a id="l00839" name="l00839"></a><span class="lineno">  839</span>          <a class="code hl_function" href="../../d6/d07/Algorithms_8hpp.html#acea3d5784387d9a7cf99326563ed0a5c">sequoia::sort</a>(begin_edges(bsource) + distance(cbegin_edges(bsource), begin), end_edges(bsource), comp);</div>
 <div class="line"><a id="l00840" name="l00840"></a><span class="lineno">  840</span>          <span class="keywordflow">for</span>(edge_index_type i = bsource + 1; i &lt; esource; ++i)</div>
 <div class="line"><a id="l00841" name="l00841"></a><span class="lineno">  841</span>          {</div>
-<div class="line"><a id="l00842" name="l00842"></a><span class="lineno">  842</span>            sequoia::sort(begin_edges(i), end_edges(i), comp);</div>
+<div class="line"><a id="l00842" name="l00842"></a><span class="lineno">  842</span>            <a class="code hl_function" href="../../d6/d07/Algorithms_8hpp.html#acea3d5784387d9a7cf99326563ed0a5c">sequoia::sort</a>(begin_edges(i), end_edges(i), comp);</div>
 <div class="line"><a id="l00843" name="l00843"></a><span class="lineno">  843</span>          }</div>
-<div class="line"><a id="l00844" name="l00844"></a><span class="lineno">  844</span>          sequoia::sort(begin_edges(esource), begin_edges(esource) + distance(cbegin_edges(esource), end), comp);</div>
+<div class="line"><a id="l00844" name="l00844"></a><span class="lineno">  844</span>          <a class="code hl_function" href="../../d6/d07/Algorithms_8hpp.html#acea3d5784387d9a7cf99326563ed0a5c">sequoia::sort</a>(begin_edges(esource), begin_edges(esource) + distance(cbegin_edges(esource), end), comp);</div>
 <div class="line"><a id="l00845" name="l00845"></a><span class="lineno">  845</span>        }</div>
 <div class="line"><a id="l00846" name="l00846"></a><span class="lineno">  846</span>      }</div>
 <div class="line"><a id="l00847" name="l00847"></a><span class="lineno">  847</span> </div>
@@ -998,7 +998,7 @@ $(function() {
 <div class="line"><a id="l00932" name="l00932"></a><span class="lineno">  932</span>      edge_storage_type m_Edges;</div>
 <div class="line"><a id="l00933" name="l00933"></a><span class="lineno">  933</span> </div>
 <div class="line"><a id="l00934" name="l00934"></a><span class="lineno">  934</span>      <span class="comment">// constructor implementations</span></div>
-<div class="line"><a id="l00935" name="l00935"></a><span class="lineno">  935</span>      <span class="keyword">template</span>&lt;alloc... Allocators&gt;</div>
+<div class="line"><a id="l00935" name="l00935"></a><span class="lineno">  935</span>      <span class="keyword">template</span>&lt;<a class="code hl_concept" href="../../df/d4b/conceptsequoia_1_1alloc.html">alloc</a>... Allocators&gt;</div>
 <div class="line"><a id="l00936" name="l00936"></a><span class="lineno">  936</span>      <span class="keyword">constexpr</span> <a class="code hl_class" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">connectivity</a>(direct_edge_init_type, init_t edges, <span class="keyword">const</span> Allocators&amp;... as)</div>
 <div class="line"><a id="l00937" name="l00937"></a><span class="lineno">  937</span>        : m_Edges{edges, as...}</div>
 <div class="line"><a id="l00938" name="l00938"></a><span class="lineno">  938</span>      {</div>
@@ -1026,7 +1026,7 @@ $(function() {
 <div class="line"><a id="l00960" name="l00960"></a><span class="lineno">  960</span>         process_edges(edges);</div>
 <div class="line"><a id="l00961" name="l00961"></a><span class="lineno">  961</span>      }</div>
 <div class="line"><a id="l00962" name="l00962"></a><span class="lineno">  962</span> </div>
-<div class="line"><a id="l00963" name="l00963"></a><span class="lineno">  963</span>      <span class="keyword">template</span>&lt;alloc... Allocators&gt;</div>
+<div class="line"><a id="l00963" name="l00963"></a><span class="lineno">  963</span>      <span class="keyword">template</span>&lt;<a class="code hl_concept" href="../../df/d4b/conceptsequoia_1_1alloc.html">alloc</a>... Allocators&gt;</div>
 <div class="line"><a id="l00964" name="l00964"></a><span class="lineno">  964</span>      <span class="keyword">constexpr</span> <a class="code hl_class" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">connectivity</a>(direct_edge_copy_type, <span class="keyword">const</span> <a class="code hl_class" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">connectivity</a>&amp; in, <span class="keyword">const</span> Allocators&amp;... as)</div>
 <div class="line"><a id="l00965" name="l00965"></a><span class="lineno">  965</span>        : m_Edges{in.m_Edges, as...}</div>
 <div class="line"><a id="l00966" name="l00966"></a><span class="lineno">  966</span>      {}</div>
@@ -1249,7 +1249,7 @@ $(function() {
 <div class="line"><a id="l01183" name="l01183"></a><span class="lineno"> 1183</span>        <span class="keywordflow">return</span> end;</div>
 <div class="line"><a id="l01184" name="l01184"></a><span class="lineno"> 1184</span>      }</div>
 <div class="line"><a id="l01185" name="l01185"></a><span class="lineno"> 1185</span> </div>
-<div class="line"><a id="l01186" name="l01186"></a><span class="lineno"> 1186</span>      <span class="keyword">template</span>&lt;<span class="keyword">class </span>Edges, alloc... Allocators&gt;</div>
+<div class="line"><a id="l01186" name="l01186"></a><span class="lineno"> 1186</span>      <span class="keyword">template</span>&lt;<span class="keyword">class </span>Edges, <a class="code hl_concept" href="../../df/d4b/conceptsequoia_1_1alloc.html">alloc</a>... Allocators&gt;</div>
 <div class="line"><a id="l01187" name="l01187"></a><span class="lineno"> 1187</span>      <span class="keyword">constexpr</span> <span class="keywordtype">void</span> process_edges(Edges&amp; orderedEdges, <span class="keyword">const</span> Allocators&amp;... allocs)</div>
 <div class="line"><a id="l01188" name="l01188"></a><span class="lineno"> 1188</span>      {</div>
 <div class="line"><a id="l01189" name="l01189"></a><span class="lineno"> 1189</span>        <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> sortWeights{!std::is_empty_v&lt;edge_weight_type&gt; &amp;&amp; std::totally_ordered&lt;edge_weight_type&gt;};</div>
@@ -1270,7 +1270,7 @@ $(function() {
 <div class="line"><a id="l01204" name="l01204"></a><span class="lineno"> 1204</span> </div>
 <div class="line"><a id="l01205" name="l01205"></a><span class="lineno"> 1205</span>        <span class="keywordflow">for</span>(edge_index_type i{}; i&lt; orderedEdges.num_partitions(); ++i)</div>
 <div class="line"><a id="l01206" name="l01206"></a><span class="lineno"> 1206</span>        {</div>
-<div class="line"><a id="l01207" name="l01207"></a><span class="lineno"> 1207</span>          sequoia::sort(orderedEdges.begin_partition(i), orderedEdges.end_partition(i), edgeComparer);</div>
+<div class="line"><a id="l01207" name="l01207"></a><span class="lineno"> 1207</span>          <a class="code hl_function" href="../../d6/d07/Algorithms_8hpp.html#acea3d5784387d9a7cf99326563ed0a5c">sequoia::sort</a>(orderedEdges.begin_partition(i), orderedEdges.end_partition(i), edgeComparer);</div>
 <div class="line"><a id="l01208" name="l01208"></a><span class="lineno"> 1208</span> </div>
 <div class="line"><a id="l01209" name="l01209"></a><span class="lineno"> 1209</span>          <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(clusterEdges)</div>
 <div class="line"><a id="l01210" name="l01210"></a><span class="lineno"> 1210</span>          {</div>
@@ -1280,7 +1280,7 @@ $(function() {
 <div class="line"><a id="l01214" name="l01214"></a><span class="lineno"> 1214</span>              <span class="keywordflow">while</span>((upperIter != orderedEdges.end_partition(i)) &amp;&amp; (lowerIter-&gt;target_node() == upperIter-&gt;target_node()))</div>
 <div class="line"><a id="l01215" name="l01215"></a><span class="lineno"> 1215</span>                ++upperIter;</div>
 <div class="line"><a id="l01216" name="l01216"></a><span class="lineno"> 1216</span> </div>
-<div class="line"><a id="l01217" name="l01217"></a><span class="lineno"> 1217</span>              sequoia::cluster(lowerIter, upperIter, [](<span class="keyword">const</span> <span class="keyword">auto</span>&amp; e1, <span class="keyword">const</span> <span class="keyword">auto</span>&amp; e2){</div>
+<div class="line"><a id="l01217" name="l01217"></a><span class="lineno"> 1217</span>              <a class="code hl_function" href="../../d6/d07/Algorithms_8hpp.html#a8c86fc959d9b9d2f4393c0c118a31f55">sequoia::cluster</a>(lowerIter, upperIter, [](<span class="keyword">const</span> <span class="keyword">auto</span>&amp; e1, <span class="keyword">const</span> <span class="keyword">auto</span>&amp; e2){</div>
 <div class="line"><a id="l01218" name="l01218"></a><span class="lineno"> 1218</span>                <span class="keywordflow">return</span> e1.weight() == e2.weight();</div>
 <div class="line"><a id="l01219" name="l01219"></a><span class="lineno"> 1219</span>              });</div>
 <div class="line"><a id="l01220" name="l01220"></a><span class="lineno"> 1220</span> </div>
@@ -1830,17 +1830,22 @@ $(function() {
 <div class="line"><a id="l01764" name="l01764"></a><span class="lineno"> 1764</span>  }</div>
 <div class="line"><a id="l01765" name="l01765"></a><span class="lineno"> 1765</span>}</div>
 <div class="ttc" id="aAlgorithms_8hpp_html"><div class="ttname"><a href="../../d6/d07/Algorithms_8hpp.html">Algorithms.hpp</a></div><div class="ttdoc">A collection of constexpr algorithms.</div></div>
+<div class="ttc" id="aAlgorithms_8hpp_html_a8c86fc959d9b9d2f4393c0c118a31f55"><div class="ttname"><a href="../../d6/d07/Algorithms_8hpp.html#a8c86fc959d9b9d2f4393c0c118a31f55">sequoia::cluster</a></div><div class="ttdeci">constexpr void cluster(Iter begin, Iter end, Comparer comp=Comparer{})</div><div class="ttdoc">An algorithm which clusters together elements which compare equal.</div><div class="ttdef"><b>Definition:</b> Algorithms.hpp:102</div></div>
+<div class="ttc" id="aAlgorithms_8hpp_html_acea3d5784387d9a7cf99326563ed0a5c"><div class="ttname"><a href="../../d6/d07/Algorithms_8hpp.html#acea3d5784387d9a7cf99326563ed0a5c">sequoia::sort</a></div><div class="ttdeci">constexpr void sort(Iter begin, Iter end, Comparer comp=Comparer{})</div><div class="ttdef"><b>Definition:</b> Algorithms.hpp:83</div></div>
 <div class="ttc" id="aAssignmentUtilities_8hpp_html"><div class="ttname"><a href="../../d0/dbb/AssignmentUtilities_8hpp.html">AssignmentUtilities.hpp</a></div><div class="ttdoc">Helper for dealing with allocator propagation during copy assignment.</div></div>
 <div class="ttc" id="aDataStructuresTypeTraits_8hpp_html"><div class="ttname"><a href="../../de/d27/DataStructuresTypeTraits_8hpp.html">DataStructuresTypeTraits.hpp</a></div><div class="ttdoc">Traits and concepts for data structures.</div></div>
 <div class="ttc" id="aGraphDetails_8hpp_html"><div class="ttname"><a href="../../d3/d76/GraphDetails_8hpp.html">GraphDetails.hpp</a></div><div class="ttdoc">Meta-programming elements for graph implementation.</div></div>
 <div class="ttc" id="aGraphTraits_8hpp_html"><div class="ttname"><a href="../../d9/d96/GraphTraits_8hpp.html">GraphTraits.hpp</a></div><div class="ttdoc">Traits and Concepts for graphs.</div></div>
 <div class="ttc" id="aHandlerTraits_8hpp_html"><div class="ttname"><a href="../../d5/d43/HandlerTraits_8hpp.html">HandlerTraits.hpp</a></div><div class="ttdoc">Traits and Concepts for Sharing Policies.</div></div>
 <div class="ttc" id="aPreprocessor_8hpp_html"><div class="ttname"><a href="../../de/d56/Preprocessor_8hpp.html">Preprocessor.hpp</a></div><div class="ttdoc">Tools for generating compiler-specific behaviour.</div></div>
-<div class="ttc" id="aTypeTraits_8hpp_html"><div class="ttname"><a href="../../d0/d81/TypeTraits_8hpp.html">TypeTraits.hpp</a></div><div class="ttdoc">Traits added as required by other components of the library.</div></div>
+<div class="ttc" id="aTypeTraits_8hpp_html"><div class="ttname"><a href="../../d0/d81/TypeTraits_8hpp.html">TypeTraits.hpp</a></div><div class="ttdoc">Traits which are sufficiently general to appear in the sequoia namespace.</div></div>
 <div class="ttc" id="aclasssequoia_1_1maths_1_1connectivity_html"><div class="ttname"><a href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">sequoia::maths::connectivity</a></div><div class="ttdef"><b>Definition:</b> Connectivity.hpp:51</div></div>
 <div class="ttc" id="aclasssequoia_1_1maths_1_1edge_html"><div class="ttname"><a href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">sequoia::maths::edge</a></div><div class="ttdoc">Stores the source node as well as the target node and an optional weight.</div><div class="ttdef"><b>Definition:</b> Edge.hpp:343</div></div>
-<div class="ttc" id="astructsequoia_1_1dependent__false_html"><div class="ttname"><a href="../../dd/ded/structsequoia_1_1dependent__false.html">sequoia::dependent_false</a></div><div class="ttdef"><b>Definition:</b> TypeTraits.hpp:139</div></div>
-<div class="ttc" id="astructsequoia_1_1impl_1_1assignment__helper_html"><div class="ttname"><a href="../../d6/d69/structsequoia_1_1impl_1_1assignment__helper.html">sequoia::impl::assignment_helper</a></div><div class="ttdef"><b>Definition:</b> AssignmentUtilities.hpp:37</div></div>
+<div class="ttc" id="aconceptsequoia_1_1alloc_html"><div class="ttname"><a href="../../df/d4b/conceptsequoia_1_1alloc.html">sequoia::alloc</a></div><div class="ttdoc">A concept for allocators.</div><div class="ttdef"><b>Definition:</b> Concepts.hpp:52</div></div>
+<div class="ttc" id="aconceptsequoia_1_1deep__equality__comparable_html"><div class="ttname"><a href="../../da/d5f/conceptsequoia_1_1deep__equality__comparable.html">sequoia::deep_equality_comparable</a></div><div class="ttdoc">Concept to work around the fact that currently the stl typically underconstrains operator==.</div><div class="ttdef"><b>Definition:</b> Concepts.hpp:97</div></div>
+<div class="ttc" id="astructsequoia_1_1assignment__helper_html"><div class="ttname"><a href="../../d9/d8d/structsequoia_1_1assignment__helper.html">sequoia::assignment_helper</a></div><div class="ttdoc">Helper class to assist with copy assignment for allocator-aware types.</div><div class="ttdef"><b>Definition:</b> AssignmentUtilities.hpp:67</div></div>
+<div class="ttc" id="astructsequoia_1_1assignment__helper_html_a2a9a21be462ca5dca837d2aa9f37c562"><div class="ttname"><a href="../../d9/d8d/structsequoia_1_1assignment__helper.html#a2a9a21be462ca5dca837d2aa9f37c562">sequoia::assignment_helper::assign</a></div><div class="ttdeci">constexpr static void assign(T &amp;to, const T &amp;from, AllocGetters... allocGetters)</div><div class="ttdef"><b>Definition:</b> AssignmentUtilities.hpp:70</div></div>
+<div class="ttc" id="astructsequoia_1_1dependent__false_html"><div class="ttname"><a href="../../dd/ded/structsequoia_1_1dependent__false.html">sequoia::dependent_false</a></div><div class="ttdef"><b>Definition:</b> TypeTraits.hpp:144</div></div>
 <div class="ttc" id="astructsequoia_1_1maths_1_1inversion__constant_html"><div class="ttname"><a href="../../d8/dc0/structsequoia_1_1maths_1_1inversion__constant.html">sequoia::maths::inversion_constant</a></div><div class="ttdef"><b>Definition:</b> Edge.hpp:331</div></div>
 <div class="ttc" id="astructsequoia_1_1maths_1_1partitions__allocator__tag_html"><div class="ttname"><a href="../../d4/dd4/structsequoia_1_1maths_1_1partitions__allocator__tag.html">sequoia::maths::partitions_allocator_tag</a></div><div class="ttdef"><b>Definition:</b> Connectivity.hpp:42</div></div>
 </div><!-- fragment --></div><!-- contents -->

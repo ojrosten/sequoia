@@ -75,10 +75,10 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>Utilities for performing allocation checks.  
+<p>Client-facing utilities for performing allocation checks.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;<a class="el" href="../../d2/d0d/FreeCheckers_8hpp_source.html">sequoia/TestFramework/FreeCheckers.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d5/d00/AllocationCheckersDetails_8hpp_source.html">sequoia/TestFramework/AllocationCheckersDetails.hpp</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="../../df/d4e/AllocationCheckersCore_8hpp_source.html">sequoia/TestFramework/AllocationCheckersCore.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d2/d0d/FreeCheckers_8hpp_source.html">sequoia/TestFramework/FreeCheckers.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../d8/def/ArrayUtilities_8hpp_source.html">sequoia/Core/Utilities/ArrayUtilities.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../db/d8f/Utilities_8hpp_source.html">sequoia/Core/Meta/Utilities.hpp</a>&quot;</code><br />
 </div>
@@ -254,20 +254,8 @@ template&lt;class Fn , class T  = std::remove_cvref_t&lt;typename function_signa
 <tr class="separator:ad843a4ebbec6d2108dbb92ad0d6d6330"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p >Utilities for performing allocation checks. </p>
-<p >The allocation testing framework is built upon the idea of supplying and testing predictions for particular allocation events, in particular:</p>
-<ul>
-<li>copying</li>
-<li>mutating</li>
-<li>para copy (use of the copy-like constructor taking an allocator as an extra argument)</li>
-<li>para move (use of the move-like constructor taking an allocator as an extra argument)</li>
-<li>assignment with/without propagation of the allocator</li>
-<li>swap with/without propagation of the allocator</li>
-</ul>
-<p >To help with readability of actual tests, various user defined literals are introduced so that, for example, 1_c may be used to mean a prediction of 1 allocation for a copy event. This is more expressive than just '1' and less verbose than copy_prediction{1}, particularly bearing in mind that often several predictions are supplied together.</p>
-<p >In addition to predictions, clients must also supply a function object, per allocator which consumes a container and returns a copy of the allocator. With these ingredients, together with a container which uses the shared_counting_allocator, the following scenario may be realized:</p>
-<p >A extract a copy of the allocator B acquire the number of allocations C perform an operation with an expected number of allocations D acquire the number of allocations E compare the prediction to the difference between D and B.</p>
-<p >Note that the framework is designed to work smoothly with std::scoped_allocator_adaptor and/or with containers containing multiple allocators, scoped or otherwise. </p>
+<div class="textblock"><p >Client-facing utilities for performing allocation checks. </p>
+<p >For more information see <a class="el" href="../../df/d4e/AllocationCheckersCore_8hpp.html">AllocationCheckersCore.hpp</a> </p>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
