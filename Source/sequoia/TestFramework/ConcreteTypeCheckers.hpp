@@ -329,10 +329,16 @@ namespace sequoia::testing
     }
   };
 
+  template<class T>
+  inline constexpr bool is_file_comparer_v{
+    std::invocable<T, test_logger<test_mode::standard>&, std::filesystem::path, std::filesystem::path>
+  };
+
   /*! \brief A file checker, which accepts a variadic set of file comparison function objects
    */
 
   template<class DefaultComparer, class... Comparers>
+    requires (is_file_comparer_v<DefaultComparer> && (is_file_comparer_v<Comparers> && ...))
   class general_file_checker
   {
   public:
@@ -358,15 +364,17 @@ namespace sequoia::testing
     factory m_Factory;
   };
 
-  using basic_file_checker_t = general_file_checker<string_based_file_comparer>;
+  template<class DefaultComparer, class... Comparers>
+  using equivalence_with_bespoke_file_checker_t = general_equivalence_check_t<general_file_checker<DefaultComparer, Comparers...>>;
 
-  inline const basic_file_checker_t basic_file_checker{{".*"}};
-
-  inline const general_equivalence_check_t<basic_file_checker_t>      basic_path_equivalence{basic_file_checker};
-  inline const general_weak_equivalence_check_t<basic_file_checker_t> basic_path_weak_equivalence{basic_file_checker};
-
+  template<class DefaultComparer, class... Comparers>
+  using weak_equivalence_with_bespoke_file_checker_t = general_weak_equivalence_check_t<general_file_checker<DefaultComparer, Comparers...>>;
 
   /*! \brief Checks equivalence of filesystem paths.
+
+      For the overloads of `test` accepting either `equivalence` or `weak_equivalence` as the
+      first argument, all file comparisons are performed using string_based_file_comparer.
+      Other overloads allow clients to customize the way in which files are compared.
 
       Files are considered equivalent if they have the same name and the same contents;
       similarly directories.
@@ -378,8 +386,11 @@ namespace sequoia::testing
   template<>
   struct value_tester<std::filesystem::path>
   {
-    template<class ValueBasedCustomization, test_mode Mode>
-    static void test(general_equivalence_check_t<ValueBasedCustomization> checker, test_logger<Mode>& logger, const std::filesystem::path& path, const std::filesystem::path& prediction)
+    template<class DefaultComparer, class... Comparers, test_mode Mode>
+    static void test(equivalence_with_bespoke_file_checker_t<DefaultComparer, Comparers...> checker,
+                     test_logger<Mode>& logger,
+                     const std::filesystem::path& path,
+                     const std::filesystem::path& prediction)
     {
       namespace fs = std::filesystem;
 
@@ -399,8 +410,11 @@ namespace sequoia::testing
       test(basic_path_equivalence, logger, path, prediction);
     }
 
-    template<class ValueBasedCustomization, test_mode Mode>
-    static void test(general_weak_equivalence_check_t<ValueBasedCustomization> checker, test_logger<Mode>& logger, const std::filesystem::path& path, const std::filesystem::path& prediction)
+    template<class DefaultComparer, class... Comparers, test_mode Mode>
+    static void test(weak_equivalence_with_bespoke_file_checker_t<DefaultComparer, Comparers...> checker,
+                     test_logger<Mode>& logger,
+                     const std::filesystem::path& path,
+                     const std::filesystem::path& prediction)
     {
       namespace fs = std::filesystem;
       check_path(logger, checker.customizer, path, prediction, [](const fs::path&, const fs::path&) { return true; });
@@ -417,6 +431,13 @@ namespace sequoia::testing
 
     constexpr static std::array<std::string_view, 1>
       excluded_extensions{seqpat};
+
+    using basic_file_checker_t = general_file_checker<string_based_file_comparer>;
+
+    inline static const basic_file_checker_t basic_file_checker{{".*"}};
+
+    inline static const general_equivalence_check_t<basic_file_checker_t>      basic_path_equivalence{basic_file_checker};
+    inline static const general_weak_equivalence_check_t<basic_file_checker_t> basic_path_weak_equivalence{basic_file_checker};
 
     template<test_mode Mode, class Customization, invocable_r<bool, std::filesystem::path, std::filesystem::path> FinalTokenComparison>
     static void check_path(test_logger<Mode>& logger, const Customization& custom, const std::filesystem::path& path, const std::filesystem::path& prediction, FinalTokenComparison compare)

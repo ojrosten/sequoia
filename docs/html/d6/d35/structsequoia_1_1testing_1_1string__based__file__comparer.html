@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.2"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Sequoia: sequoia::testing::value_tester&lt; std::optional&lt; T &gt; &gt; Struct Template Reference</title>
+<title>Sequoia: sequoia::testing::string_based_file_comparer Struct Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -62,39 +62,31 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><b>sequoia</b></li><li class="navelem"><b>testing</b></li><li class="navelem"><a class="el" href="../../dc/def/structsequoia_1_1testing_1_1value__tester_3_01std_1_1optional_3_01T_01_4_01_4.html">value_tester&lt; std::optional&lt; T &gt; &gt;</a></li>  </ul>
+<li class="navelem"><b>sequoia</b></li><li class="navelem"><b>testing</b></li><li class="navelem"><a class="el" href="../../d6/d35/structsequoia_1_1testing_1_1string__based__file__comparer.html">string_based_file_comparer</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#pub-types">Public Types</a> &#124;
-<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
-<a href="../../db/d44/structsequoia_1_1testing_1_1value__tester_3_01std_1_1optional_3_01T_01_4_01_4-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">sequoia::testing::value_tester&lt; std::optional&lt; T &gt; &gt; Struct Template Reference</div></div>
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="../../d5/d84/structsequoia_1_1testing_1_1string__based__file__comparer-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">sequoia::testing::string_based_file_comparer Struct Reference</div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>Compares instances of <code>std::optional</code>  
- <a href="../../dc/def/structsequoia_1_1testing_1_1value__tester_3_01std_1_1optional_3_01T_01_4_01_4.html#details">More...</a></p>
+<p>Function object for comparing files via reading their contents into strings.  
+ <a href="../../d6/d35/structsequoia_1_1testing_1_1string__based__file__comparer.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="../../dc/d9c/ConcreteTypeCheckers_8hpp_source.html">ConcreteTypeCheckers.hpp</a>&gt;</code></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
-Public Types</h2></td></tr>
-<tr class="memitem:a4a4a3d4214610a9b46a34ff56f9ea6d9"><td class="memItemLeft" align="right" valign="top"><a id="a4a4a3d4214610a9b46a34ff56f9ea6d9" name="a4a4a3d4214610a9b46a34ff56f9ea6d9"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>type</b> = std::optional&lt; T &gt;</td></tr>
-<tr class="separator:a4a4a3d4214610a9b46a34ff56f9ea6d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
-Static Public Member Functions</h2></td></tr>
-<tr class="memitem:ae5fa42802a1ac2d874f9f40f454fcdb1"><td class="memTemplParams" colspan="2"><a id="ae5fa42802a1ac2d874f9f40f454fcdb1" name="ae5fa42802a1ac2d874f9f40f454fcdb1"></a>
-template&lt;class CheckType , <a class="el" href="../../d5/d05/TestLogger_8hpp.html#ae4e97c9d45a89647799f0d308ba6d244">test_mode</a> Mode, class Advisor &gt; </td></tr>
-<tr class="memitem:ae5fa42802a1ac2d874f9f40f454fcdb1"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>test</b> (CheckType flavour, <a class="el" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger</a>&lt; Mode &gt; &amp;logger, const type &amp;obtained, const type &amp;prediction, <a class="el" href="../../d6/d71/classsequoia_1_1testing_1_1tutor.html">tutor</a>&lt; Advisor &gt; advisor)</td></tr>
-<tr class="separator:ae5fa42802a1ac2d874f9f40f454fcdb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:ac65fd355b8db6fd59e5654227d4fc902"><td class="memTemplParams" colspan="2"><a id="ac65fd355b8db6fd59e5654227d4fc902" name="ac65fd355b8db6fd59e5654227d4fc902"></a>
+template&lt;<a class="el" href="../../d5/d05/TestLogger_8hpp.html#ae4e97c9d45a89647799f0d308ba6d244">test_mode</a> Mode&gt; </td></tr>
+<tr class="memitem:ac65fd355b8db6fd59e5654227d4fc902"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (<a class="el" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger</a>&lt; Mode &gt; &amp;logger, const std::filesystem::path &amp;file, const std::filesystem::path &amp;prediction) const</td></tr>
+<tr class="separator:ac65fd355b8db6fd59e5654227d4fc902"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><div class="compoundTemplParams">template&lt;class T&gt;<br />
-struct sequoia::testing::value_tester&lt; std::optional&lt; T &gt; &gt;</div><p >Compares instances of <code>std::optional</code> </p>
+<div class="textblock"><p >Function object for comparing files via reading their contents into strings. </p>
 </div><hr/>The documentation for this struct was generated from the following file:<ul>
 <li>C:/Users/olive/OneDrive/sequoia/Source/sequoia/TestFramework/<a class="el" href="../../dc/d9c/ConcreteTypeCheckers_8hpp_source.html">ConcreteTypeCheckers.hpp</a></li>
 </ul>
