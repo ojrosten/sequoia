@@ -8,7 +8,7 @@
 #pragma once
 
 /*! \file
-    \brief Traits and concepts for data structures.
+    \brief Traits for data structures.
  */
 
 #include <type_traits>
@@ -16,7 +16,7 @@
 namespace sequoia
 {
   template<class T>
-  concept has_partitions_allocator = requires() {
-    typename T::partitions_allocator_type;
+  inline constexpr bool has_partitions_allocator{
+    requires { typename T::partitions_allocator_type; }
   };
 }

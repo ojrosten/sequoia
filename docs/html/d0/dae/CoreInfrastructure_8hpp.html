@@ -76,7 +76,7 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>Core declarations / definitions.  
+<p>Core declarations / definitions used in the testing framework.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="../../d3/d84/Concepts_8hpp_source.html">sequoia/Core/Meta/Concepts.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../de/d56/Preprocessor_8hpp_source.html">sequoia/PlatformSpecific/Preprocessor.hpp</a>&quot;</code><br />
@@ -91,6 +91,7 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d99/structsequoia_1_1testing_1_1serializer_3_01T_01_4.html">sequoia::testing::serializer&lt; T &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/def/structsequoia_1_1testing_1_1type__normalizer.html">sequoia::testing::type_normalizer&lt; T &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Primary class template for converting unsigned types of implementation-defined size into fixed-width types.  <a href="../../db/def/structsequoia_1_1testing_1_1type__normalizer.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d63/structsequoia_1_1testing_1_1type__normalizer_3_01T_01_4.html">sequoia::testing::type_normalizer&lt; T &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -116,10 +117,10 @@ Functions</h2></td></tr>
 template&lt;serializable T&gt; </td></tr>
 <tr class="memitem:aa3547c09713fcd102f39383340686484"><td class="memTemplItemLeft" align="right" valign="top">std::string&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::to_string</b> (const T &amp;value)</td></tr>
 <tr class="separator:aa3547c09713fcd102f39383340686484"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad76946700c05ea40932abb7a35b94aed"><td class="memTemplParams" colspan="2"><a id="ad76946700c05ea40932abb7a35b94aed" name="ad76946700c05ea40932abb7a35b94aed"></a>
+<tr class="memitem:a9dfbe8d5aa200784a9ff144a21bd4247"><td class="memTemplParams" colspan="2"><a id="a9dfbe8d5aa200784a9ff144a21bd4247" name="a9dfbe8d5aa200784a9ff144a21bd4247"></a>
 template&lt;std::integral T&gt; </td></tr>
-<tr class="memitem:ad76946700c05ea40932abb7a35b94aed"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::fixed_width_unsigned_cast</b> (T x)</td></tr>
-<tr class="separator:ad76946700c05ea40932abb7a35b94aed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9dfbe8d5aa200784a9ff144a21bd4247"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::fixed_width_unsigned_cast</b> (T x) noexcept</td></tr>
+<tr class="separator:a9dfbe8d5aa200784a9ff144a21bd4247"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa07a6ad292fdb49197a4fbdf2dbd2e68"><td class="memTemplParams" colspan="2"><a id="aa07a6ad292fdb49197a4fbdf2dbd2e68" name="aa07a6ad292fdb49197a4fbdf2dbd2e68"></a>
 template&lt;class T &gt; <br />
 requires as_bitmask_v&lt;T&gt;</td></tr>
@@ -162,7 +163,7 @@ template&lt;class T &gt; </td></tr>
 <tr class="separator:aa07c47d6a018dca2350c27b0da5fc1a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p >Core declarations / definitions. </p>
+<div class="textblock"><p >Core declarations / definitions used in the testing framework. </p>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

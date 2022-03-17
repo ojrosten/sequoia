@@ -74,7 +74,7 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>Tasks may be pushed, upon which they are fed to std::async; results may be acquired through get.  
+<p>Tasks may be <code>push</code>ed, upon which they are fed to std::async; results may be acquired through <code>get</code>.  
  <a href="../../d0/d11/classsequoia_1_1concurrency_1_1asynchronous.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="../../d9/d70/ConcurrencyModels_8hpp_source.html">ConcurrencyModels.hpp</a>&gt;</code></p>
@@ -109,8 +109,8 @@ decltype(auto)&#160;</td><td class="memItemRight" valign="bottom"><b>get</b> ()<
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;class R&gt;<br />
-class sequoia::concurrency::asynchronous&lt; R &gt;</div><p >Tasks may be pushed, upon which they are fed to std::async; results may be acquired through get. </p>
-<p >Internally, the class holds a future for each pushed task. The get method extracts the associated return values of the tasks and, if they are no-void, returns them as a vector. </p>
+class sequoia::concurrency::asynchronous&lt; R &gt;</div><p >Tasks may be <code>push</code>ed, upon which they are fed to std::async; results may be acquired through <code>get</code>. </p>
+<p >Internally, the class holds a future for each pushed task. The get method extracts the associated return values of the tasks and, if they are non-<code>void</code>, returns them in a <code>std::vector</code>. </p>
 </div><hr/>The documentation for this class was generated from the following file:<ul>
 <li>C:/Users/olive/OneDrive/sequoia/Source/sequoia/Core/Concurrency/<a class="el" href="../../d9/d70/ConcurrencyModels_8hpp_source.html">ConcurrencyModels.hpp</a></li>
 </ul>
