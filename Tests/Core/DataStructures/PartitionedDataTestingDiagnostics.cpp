@@ -28,8 +28,8 @@ namespace sequoia::testing
     using namespace data_structures;
     using namespace ownership;
 
-    test<bucketed_storage<T, ownership::independent<T>>>();
-    test<bucketed_storage<T, ownership::shared<T>>>();
+    test<bucketed_sequence<T, ownership::independent<T>>>();
+    test<bucketed_sequence<T, ownership::shared<T>>>();
 
     test<partitioned_sequence<T, ownership::independent<T>>>();
     test<partitioned_sequence<T, ownership::shared<T>>>();

@@ -89,14 +89,22 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/de4/structsequoia_1_1impl_1_1variadic__traits__helper.html">sequoia::impl::variadic_traits_helper&lt; H, T &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/ded/structsequoia_1_1dependent__false.html">sequoia::dependent_false&lt; T &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Standard meta-programming utility.  <a href="../../dd/ded/structsequoia_1_1dependent__false.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d51/structsequoia_1_1impl_1_1variadic__traits__helper_3_01H_01_4.html">sequoia::impl::variadic_traits_helper&lt; H &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d67/structsequoia_1_1type__list_3_01T_00_01Ts_8_8_8_01_4.html">sequoia::type_list&lt; T, Ts... &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d22/structsequoia_1_1variadic__traits.html">sequoia::variadic_traits&lt; T &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Primary template for extracting the head/tail from a parameter pack.  <a href="../../df/d22/structsequoia_1_1variadic__traits.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d86/structsequoia_1_1type__list_3_4.html">sequoia::type_list&lt;&gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/dbb/structsequoia_1_1variadic__traits_3_4.html">sequoia::variadic_traits&lt;&gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/dc6/structsequoia_1_1head__of.html">sequoia::head_of&lt; Ts &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Primary template for finding the head of either a variadic list of a <a class="el" href="../../d3/de8/structsequoia_1_1type__list.html" title="Primary template for mapping a parameter pack to a type.">type_list</a>.  <a href="../../d4/dc6/structsequoia_1_1head__of.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d80/structsequoia_1_1head__of_3_01type__list_3_01Ts_8_8_8_01_4_01_4.html">sequoia::head_of&lt; type_list&lt; Ts... &gt; &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d51/structsequoia_1_1tail__of.html">sequoia::tail_of&lt; Ts &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Primary template for finding the tail of either a variadic list of a <a class="el" href="../../d3/de8/structsequoia_1_1type__list.html" title="Primary template for mapping a parameter pack to a type.">type_list</a>.  <a href="../../d2/d51/structsequoia_1_1tail__of.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/db9/structsequoia_1_1tail__of_3_01type__list_3_01Ts_8_8_8_01_4_01_4.html">sequoia::tail_of&lt; type_list&lt; Ts... &gt; &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/d2e/structsequoia_1_1is__base__of__head.html">sequoia::is_base_of_head&lt; T, Args &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">class template for determining if a type is the base class of the head of a parameter pack  <a href="../../d4/d2e/structsequoia_1_1is__base__of__head.html#details">More...</a><br /></td></tr>
@@ -105,21 +113,22 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">class template for determining whether a constructor template should resolve to the copy constructor  <a href="../../dc/d48/structsequoia_1_1resolve__to__copy.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d5a/structsequoia_1_1is__const__pointer.html">sequoia::is_const_pointer&lt; T &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Primary template for determining if a type is a pointer.  <a href="../../dd/d5a/structsequoia_1_1is__const__pointer.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Primary class template for determining if a type is a <code>const</code> pointer.  <a href="../../dd/d5a/structsequoia_1_1is__const__pointer.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/dc2/structsequoia_1_1is__const__pointer_3_01const_01T_01_5_01_4.html">sequoia::is_const_pointer&lt; const T * &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d46/structsequoia_1_1is__const__pointer_3_01const_01T_01_5const_01_4.html">sequoia::is_const_pointer&lt; const T *const &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d93/structsequoia_1_1is__const__reference.html">sequoia::is_const_reference&lt; T &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">class template for determining if a type is a <code>const</code> reference  <a href="../../d6/d93/structsequoia_1_1is__const__reference.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d9a/structsequoia_1_1is__tuple.html">sequoia::is_tuple&lt; T &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Primary class template for determining if a type is a <code>std::tuple</code>  <a href="../../d6/d9a/structsequoia_1_1is__tuple.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d05/structsequoia_1_1is__tuple_3_01std_1_1tuple_3_01Ts_8_8_8_01_4_01_4.html">sequoia::is_tuple&lt; std::tuple&lt; Ts... &gt; &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/ded/structsequoia_1_1dependent__false.html">sequoia::dependent_false&lt; T &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/dea/structsequoia_1_1has__allocator__type.html">sequoia::has_allocator_type&lt; T &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class template for determining if a type defines a nested type <code>allocator_type</code>  <a href="../../d6/dea/structsequoia_1_1has__allocator__type.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d71/structsequoia_1_1heterogeneous__deep__equality_3_01T_3_01Ts_8_8_8_01_4_01_4.html">sequoia::heterogeneous_deep_equality&lt; T&lt; Ts... &gt; &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -132,9 +141,14 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:ga2f43800dd90fea5cc96fda5b2b4f1525"><td class="memTemplParams" colspan="2">template&lt;class... T&gt; </td></tr>
-<tr class="memitem:ga2f43800dd90fea5cc96fda5b2b4f1525"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dc/d78/group__variadic__traits.html#ga2f43800dd90fea5cc96fda5b2b4f1525">sequoia::head_of_t</a> = typename variadic_traits&lt; T... &gt;::head</td></tr>
-<tr class="separator:ga2f43800dd90fea5cc96fda5b2b4f1525"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6f51112d9bb696dd37389569fc82c487"><td class="memTemplParams" colspan="2">
+template&lt;class... Ts&gt; </td></tr>
+<tr class="memitem:ga6f51112d9bb696dd37389569fc82c487"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::head_of_t</b> = typename head_of&lt; Ts... &gt;::type</td></tr>
+<tr class="separator:ga6f51112d9bb696dd37389569fc82c487"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac02b12a4419b7c7e10daa21f8251af85"><td class="memTemplParams" colspan="2">
+template&lt;class... Ts&gt; </td></tr>
+<tr class="memitem:gac02b12a4419b7c7e10daa21f8251af85"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::tail_of_t</b> = typename tail_of&lt; Ts... &gt;::type</td></tr>
+<tr class="separator:gac02b12a4419b7c7e10daa21f8251af85"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a37a651440a60f865d5552ec56efa5cc6"><td class="memTemplParams" colspan="2"><a id="a37a651440a60f865d5552ec56efa5cc6" name="a37a651440a60f865d5552ec56efa5cc6"></a>
 template&lt;class T , class... Args&gt; </td></tr>
 <tr class="memitem:a37a651440a60f865d5552ec56efa5cc6"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::is_base_of_head_t</b> = typename is_base_of_head&lt; T, Args... &gt;::type</td></tr>

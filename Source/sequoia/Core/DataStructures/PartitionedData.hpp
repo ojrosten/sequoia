@@ -82,7 +82,7 @@ namespace sequoia
 
     template<class T, class Handler=ownership::independent<T>, class Traits=bucketed_storage_traits<T, Handler>>
       requires ownership::handler<Handler>
-    class bucketed_storage
+    class bucketed_sequence
     {
     private:
       friend struct sequoia::assignment_helper;
@@ -103,13 +103,13 @@ namespace sequoia
 
       constexpr static bool throw_on_range_error{Traits::throw_on_range_error};
 
-      bucketed_storage() noexcept(noexcept(allocator_type{})) = default;
+      bucketed_sequence() noexcept(noexcept(allocator_type{})) = default;
 
-      explicit bucketed_storage(const allocator_type& allocator) noexcept
+      explicit bucketed_sequence(const allocator_type& allocator) noexcept
         : m_Buckets(allocator)
       {}
 
-      bucketed_storage(std::initializer_list<std::initializer_list<T>> list,
+      bucketed_sequence(std::initializer_list<std::initializer_list<T>> list,
                        const allocator_type& allocator = allocator_type{})
         : m_Buckets(allocator)
       {
@@ -126,11 +126,11 @@ namespace sequoia
         }
       }
 
-      bucketed_storage(const bucketed_storage& in)
-        : bucketed_storage(partition_impl::copy_constant<directCopy>{}, in)
+      bucketed_sequence(const bucketed_sequence& in)
+        : bucketed_sequence(partition_impl::copy_constant<directCopy>{}, in)
       {}
 
-     bucketed_storage(const bucketed_storage& in, const allocator_type& allocator)
+     bucketed_sequence(const bucketed_sequence& in, const allocator_type& allocator)
        : m_Buckets(std::allocator_traits<allocator_type>::select_on_container_copy_construction(allocator))
       {
         m_Buckets.reserve(in.m_Buckets.size());
@@ -149,20 +149,20 @@ namespace sequoia
         }
       }
 
-      bucketed_storage(bucketed_storage&& in) noexcept = default;
+      bucketed_sequence(bucketed_sequence&& in) noexcept = default;
 
-      bucketed_storage(bucketed_storage&& in, const allocator_type& allocator)
+      bucketed_sequence(bucketed_sequence&& in, const allocator_type& allocator)
         : m_Buckets(std::move(in).m_Buckets, allocator)
       {}
 
-      bucketed_storage& operator=(bucketed_storage&& in) = default;
+      bucketed_sequence& operator=(bucketed_sequence&& in) = default;
 
-      bucketed_storage& operator=(const bucketed_storage& in)
+      bucketed_sequence& operator=(const bucketed_sequence& in)
       {
         if(&in != this)
         {
           auto allocGetter{
-            [](const  bucketed_storage& s){
+            [](const  bucketed_sequence& s){
               return s.get_allocator();
             }
           };
@@ -172,13 +172,13 @@ namespace sequoia
         return *this;
       }
 
-      void swap(bucketed_storage& other)
+      void swap(bucketed_sequence& other)
         noexcept(noexcept(std::swap(this->m_Buckets, other.m_Buckets)))
       {
         std::swap(m_Buckets, other.m_Buckets);
       }
 
-      friend void swap(bucketed_storage& lhs, bucketed_storage& rhs)
+      friend void swap(bucketed_sequence& lhs, bucketed_sequence& rhs)
         noexcept(noexcept(lhs.swap(rhs)))
       {
         lhs.swap(rhs);
@@ -211,7 +211,7 @@ namespace sequoia
         }
         else if constexpr(throw_on_range_error)
         {
-          throw std::out_of_range("bucketed_storage::swap_partitions - index out of range");
+          throw std::out_of_range("bucketed_sequence::swap_partitions - index out of range");
         }
       }
 
@@ -316,7 +316,7 @@ namespace sequoia
       {
         if constexpr(throw_on_range_error)
         {
-          if(!m_Buckets.size()) throw std::out_of_range("bucketed_storage: no partitions into which to insert");
+          if(!m_Buckets.size()) throw std::out_of_range("bucketed_sequence: no partitions into which to insert");
         }
 
         const auto soure{pos.partition_index()};
@@ -330,7 +330,7 @@ namespace sequoia
       {
         if constexpr(throw_on_range_error)
         {
-          if(!m_Buckets.size()) throw std::out_of_range("bucketed_storage: no partitions into which to insert");
+          if(!m_Buckets.size()) throw std::out_of_range("bucketed_sequence: no partitions into which to insert");
         }
 
         const auto soure{pos.partition_index()};
@@ -360,50 +360,50 @@ namespace sequoia
 
       partition_iterator begin_partition(const size_type i)
       {
-        if constexpr(throw_on_range_error) if(m_Buckets.empty()) throw std::out_of_range("bucketed_storage::begin_partition: no buckets!\n");
+        if constexpr(throw_on_range_error) if(m_Buckets.empty()) throw std::out_of_range("bucketed_sequence::begin_partition: no buckets!\n");
         return (i < m_Buckets.size()) ? partition_iterator(m_Buckets[i].begin(), i) : partition_iterator(m_Buckets.back().end(), npos);
       }
 
       partition_iterator end_partition(const size_type i)
       {
-        if constexpr(throw_on_range_error) if(m_Buckets.empty()) throw std::out_of_range("bucketed_storage::end_partition: no buckets!\n");
+        if constexpr(throw_on_range_error) if(m_Buckets.empty()) throw std::out_of_range("bucketed_sequence::end_partition: no buckets!\n");
         return (i < m_Buckets.size()) ? partition_iterator(m_Buckets[i].end(), i) : partition_iterator(m_Buckets.back().end(), npos);
       }
 
       const_partition_iterator begin_partition(const size_type i) const
       {
-        if constexpr(throw_on_range_error) if(m_Buckets.empty()) throw std::out_of_range("bucketed_storage::begin_partition: no buckets!\n");
+        if constexpr(throw_on_range_error) if(m_Buckets.empty()) throw std::out_of_range("bucketed_sequence::begin_partition: no buckets!\n");
         return (i < m_Buckets.size()) ? const_partition_iterator(m_Buckets[i].cbegin(), i) : const_partition_iterator(m_Buckets.back().cend(), npos);
       }
 
       const_partition_iterator end_partition(const size_type i) const
       {
-        if constexpr(throw_on_range_error) if(m_Buckets.empty()) throw std::out_of_range("bucketed_storage::end_partition: no buckets!\n");
+        if constexpr(throw_on_range_error) if(m_Buckets.empty()) throw std::out_of_range("bucketed_sequence::end_partition: no buckets!\n");
         return (i < m_Buckets.size()) ? const_partition_iterator(m_Buckets[i].cend(), i) : const_partition_iterator(m_Buckets.back().cend(), npos);
       }
 
       reverse_partition_iterator rbegin_partition(const size_type i)
       {
-        if(m_Buckets.empty()) throw std::out_of_range("bucketed_storage::begin_partition: no buckets!\n");
+        if(m_Buckets.empty()) throw std::out_of_range("bucketed_sequence::begin_partition: no buckets!\n");
         return (i < m_Buckets.size()) ? reverse_partition_iterator(m_Buckets[i].rbegin(), i) : reverse_partition_iterator(m_Buckets.front().rend(), npos);
       }
 
       reverse_partition_iterator rend_partition(const size_type i)
       {
-        if constexpr(throw_on_range_error) if(m_Buckets.empty()) throw std::out_of_range("bucketed_storage::end_partition: no buckets!\n");
+        if constexpr(throw_on_range_error) if(m_Buckets.empty()) throw std::out_of_range("bucketed_sequence::end_partition: no buckets!\n");
         return (i < m_Buckets.size()) ? reverse_partition_iterator(m_Buckets[i].rend(), i) : reverse_partition_iterator(m_Buckets.front().rend(), npos);
       }
 
       const_reverse_partition_iterator rbegin_partition(const size_type i) const
       {
-        if constexpr(throw_on_range_error) if(m_Buckets.empty()) throw std::out_of_range("bucketed_storage::begin_partition: no buckets!\n");
+        if constexpr(throw_on_range_error) if(m_Buckets.empty()) throw std::out_of_range("bucketed_sequence::begin_partition: no buckets!\n");
         return (i < m_Buckets.size()) ? const_reverse_partition_iterator(m_Buckets[i].crbegin(), i) : const_reverse_partition_iterator(m_Buckets.front().crend(), npos);
 
       }
 
       const_reverse_partition_iterator rend_partition(const size_type i) const
       {
-        if constexpr(throw_on_range_error) if(m_Buckets.empty()) throw std::out_of_range("bucketed_storage::end_partition: no buckets!\n");
+        if constexpr(throw_on_range_error) if(m_Buckets.empty()) throw std::out_of_range("bucketed_sequence::end_partition: no buckets!\n");
         return (i < m_Buckets.size()) ? const_reverse_partition_iterator(m_Buckets[i].crend(), i) : const_reverse_partition_iterator(m_Buckets.front().crend(), npos);
       }
 
@@ -434,7 +434,7 @@ namespace sequoia
       partition_iterator operator[](const size_type i) { return begin_partition(i); }
 
       [[nodiscard]]
-      friend bool operator==(const bucketed_storage& lhs, const bucketed_storage& rhs) noexcept
+      friend bool operator==(const bucketed_sequence& lhs, const bucketed_sequence& rhs) noexcept
       {
         if constexpr(std::is_same_v<Handler, ownership::independent<T>>)
         {
@@ -447,7 +447,7 @@ namespace sequoia
       }
 
       [[nodiscard]]
-      friend bool operator!=(const bucketed_storage& lhs, const bucketed_storage& rhs) noexcept
+      friend bool operator!=(const bucketed_sequence& lhs, const bucketed_sequence& rhs) noexcept
       {
         return !(lhs == rhs);
       }
@@ -457,12 +457,12 @@ namespace sequoia
 
       storage_type m_Buckets;
 
-      bucketed_storage(partition_impl::direct_copy_type, const bucketed_storage& in)
+      bucketed_sequence(partition_impl::direct_copy_type, const bucketed_sequence& in)
         : m_Buckets{in.m_Buckets}
       {}
 
-      bucketed_storage(partition_impl::indirect_copy_type, const bucketed_storage& in)
-        : bucketed_storage(in, in.m_Buckets.get_allocator())
+      bucketed_sequence(partition_impl::indirect_copy_type, const bucketed_sequence& in)
+        : bucketed_sequence(in, in.m_Buckets.get_allocator())
       {}
 
       void reset(const allocator_type& allocator) noexcept
@@ -475,7 +475,7 @@ namespace sequoia
       {
         if(index >= m_Buckets.size())
         {
-          throw std::out_of_range("bucketed_storage::index " + std::to_string(index) + " out of range!");
+          throw std::out_of_range("bucketed_sequence::index " + std::to_string(index) + " out of range!");
         }
       }
 
@@ -485,7 +485,7 @@ namespace sequoia
         const auto bucketSize{m_Buckets[index].size()};
         if(pos > bucketSize)
         {
-          throw std::out_of_range("bucketed_storage::partition " + std::to_string(index) + " pos " + std::to_string(pos) + " out of range");
+          throw std::out_of_range("bucketed_sequence::partition " + std::to_string(index) + " pos " + std::to_string(pos) + " out of range");
         }
       }
     };

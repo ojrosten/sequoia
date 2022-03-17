@@ -33,6 +33,6 @@ var searchData=
   ['broken_5fswap_30',['broken_swap',['../dd/de2/structsequoia_1_1testing_1_1broken__swap.html',1,'sequoia::testing']]],
   ['bucket_5falloc_5fgetter_31',['bucket_alloc_getter',['../db/d0a/structsequoia_1_1testing_1_1bucket__alloc__getter.html',1,'sequoia::testing']]],
   ['bucketed_5fedge_5fstorage_5ftraits_32',['bucketed_edge_storage_traits',['../dc/d63/structsequoia_1_1maths_1_1bucketed__edge__storage__traits.html',1,'sequoia::maths']]],
-  ['bucketed_5fstorage_33',['bucketed_storage',['../da/d7b/classsequoia_1_1data__structures_1_1bucketed__storage.html',1,'sequoia::data_structures']]],
+  ['bucketed_5fsequence_33',['bucketed_sequence',['../d4/db3/classsequoia_1_1data__structures_1_1bucketed__sequence.html',1,'sequoia::data_structures']]],
   ['bucketed_5fstorage_5ftraits_34',['bucketed_storage_traits',['../dc/dec/structsequoia_1_1data__structures_1_1bucketed__storage__traits.html',1,'sequoia::data_structures']]]
 ];

@@ -2,7 +2,7 @@ Tests/Maths/Graph/DynamicGraphUnweightedAllocationTest.cpp, Line 142
 
 Expected Exception Type:
 [std::out_of_range]
-bucketed_storage::index 0 out of range!
+bucketed_sequence::index 0 out of range!
 
 	=======================================
 
@@ -10,7 +10,7 @@ Tests/Maths/Graph/DynamicGraphUnweightedAllocationTest.cpp, Line 143
 
 Expected Exception Type:
 [std::out_of_range]
-bucketed_storage::index 0 out of range!
+bucketed_sequence::index 0 out of range!
 
 	=======================================
 
@@ -18,7 +18,7 @@ Tests/Maths/Graph/DynamicGraphUnweightedAllocationTest.cpp, Line 142
 
 Expected Exception Type:
 [std::out_of_range]
-bucketed_storage::index 0 out of range!
+bucketed_sequence::index 0 out of range!
 
 	=======================================
 
@@ -26,7 +26,7 @@ Tests/Maths/Graph/DynamicGraphUnweightedAllocationTest.cpp, Line 143
 
 Expected Exception Type:
 [std::out_of_range]
-bucketed_storage::index 0 out of range!
+bucketed_sequence::index 0 out of range!
 
 	=======================================
 
@@ -34,7 +34,7 @@ Tests/Maths/Graph/DynamicGraphUnweightedAllocationTest.cpp, Line 142
 
 Expected Exception Type:
 [std::out_of_range]
-bucketed_storage::index 0 out of range!
+bucketed_sequence::index 0 out of range!
 
 	=======================================
 
@@ -42,7 +42,7 @@ Tests/Maths/Graph/DynamicGraphUnweightedAllocationTest.cpp, Line 143
 
 Expected Exception Type:
 [std::out_of_range]
-bucketed_storage::index 0 out of range!
+bucketed_sequence::index 0 out of range!
 
 	=======================================
 
@@ -50,7 +50,7 @@ Tests/Maths/Graph/DynamicGraphUnweightedAllocationTest.cpp, Line 142
 
 Expected Exception Type:
 [std::out_of_range]
-bucketed_storage::index 0 out of range!
+bucketed_sequence::index 0 out of range!
 
 	=======================================
 
@@ -58,7 +58,7 @@ Tests/Maths/Graph/DynamicGraphUnweightedAllocationTest.cpp, Line 143
 
 Expected Exception Type:
 [std::out_of_range]
-bucketed_storage::index 0 out of range!
+bucketed_sequence::index 0 out of range!
 
 	=======================================
 

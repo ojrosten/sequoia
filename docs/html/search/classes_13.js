@@ -1,7 +1,7 @@
 var searchData=
 [
   ['value_5ftester_0',['value_tester',['../df/d6f/structsequoia_1_1testing_1_1value__tester.html',1,'sequoia::testing']]],
-  ['value_5ftester_3c_20data_5fstructures_3a_3abucketed_5fstorage_3c_20t_2c_20handler_2c_20traits_20_3e_20_3e_1',['value_tester&lt; data_structures::bucketed_storage&lt; T, Handler, Traits &gt; &gt;',['../d8/deb/structsequoia_1_1testing_1_1value__tester_3_01data__structures_1_1bucketed__storage_3_01T_00_01Handler_00_01Traits_01_4_01_4.html',1,'sequoia::testing']]],
+  ['value_5ftester_3c_20data_5fstructures_3a_3abucketed_5fsequence_3c_20t_2c_20handler_2c_20traits_20_3e_20_3e_1',['value_tester&lt; data_structures::bucketed_sequence&lt; T, Handler, Traits &gt; &gt;',['../d2/dfe/structsequoia_1_1testing_1_1value__tester_3_01data__structures_1_1bucketed__sequence_3_01T_00_01Handler_00_01Traits_01_4_01_4.html',1,'sequoia::testing']]],
   ['value_5ftester_3c_20data_5fstructures_3a_3apartitioned_5fsequence_3c_20t_2c_20handler_2c_20traits_20_3e_20_3e_2',['value_tester&lt; data_structures::partitioned_sequence&lt; T, Handler, Traits &gt; &gt;',['../d3/dbb/structsequoia_1_1testing_1_1value__tester_3_01data__structures_1_1partitioned__sequence_3_01T_002a42fc9fde5dedc56d2e33df15477279.html',1,'sequoia::testing']]],
   ['value_5ftester_3c_20data_5fstructures_3a_3astatic_5fpartitioned_5fsequence_3c_20t_2c_20npartitions_2c_20nelements_2c_20indextype_20_3e_20_3e_3',['value_tester&lt; data_structures::static_partitioned_sequence&lt; T, Npartitions, Nelements, IndexType &gt; &gt;',['../dd/d1f/structsequoia_1_1testing_1_1value__tester_3_01data__structures_1_1static__partitioned__sequence_b7afc21b030a123dec1875bfbf80d62f.html',1,'sequoia::testing']]],
   ['value_5ftester_3c_20data_5fstructures_3a_3astatic_5fpriority_5fqueue_3c_20t_2c_20maxdepth_2c_20compare_20_3e_20_3e_4',['value_tester&lt; data_structures::static_priority_queue&lt; T, MaxDepth, Compare &gt; &gt;',['../da/dde/structsequoia_1_1testing_1_1value__tester_3_01data__structures_1_1static__priority__queue_3_01T_f0945bd6e11a3cefdb793f4f444872d8.html',1,'sequoia::testing']]],
@@ -48,9 +48,5 @@ var searchData=
   ['value_5ftester_3c_20std_3a_3avector_3c_20foo_20_3e_20_3e_45',['value_tester&lt; std::vector&lt; foo &gt; &gt;',['../df/d20/structsequoia_1_1testing_1_1value__tester_3_01std_1_1vector_3_01foo_01_4_01_4.html',1,'sequoia::testing']]],
   ['value_5ftester_3c_20template_5fspec_20_3e_46',['value_tester&lt; template_spec &gt;',['../d4/d90/structsequoia_1_1testing_1_1value__tester_3_01template__spec_01_4.html',1,'sequoia::testing']]],
   ['value_5ftester_3c_20utilities_3a_3auniform_5fwrapper_3c_20t_20_3e_20_3e_47',['value_tester&lt; utilities::uniform_wrapper&lt; T &gt; &gt;',['../d6/d4e/structsequoia_1_1testing_1_1value__tester_3_01utilities_1_1uniform__wrapper_3_01T_01_4_01_4.html',1,'sequoia::testing']]],
-  ['variadic_5ftraits_48',['variadic_traits',['../df/d22/structsequoia_1_1variadic__traits.html',1,'sequoia']]],
-  ['variadic_5ftraits_3c_3e_49',['variadic_traits&lt;&gt;',['../d5/dbb/structsequoia_1_1variadic__traits_3_4.html',1,'sequoia']]],
-  ['variadic_5ftraits_5fhelper_50',['variadic_traits_helper',['../d6/de4/structsequoia_1_1impl_1_1variadic__traits__helper.html',1,'sequoia::impl']]],
-  ['variadic_5ftraits_5fhelper_3c_20h_20_3e_51',['variadic_traits_helper&lt; H &gt;',['../db/d51/structsequoia_1_1impl_1_1variadic__traits__helper_3_01H_01_4.html',1,'sequoia::impl']]],
-  ['variant_5fvisitor_52',['variant_visitor',['../dc/daf/structsequoia_1_1variant__visitor.html',1,'sequoia']]]
+  ['variant_5fvisitor_48',['variant_visitor',['../dc/daf/structsequoia_1_1variant__visitor.html',1,'sequoia']]]
 ];

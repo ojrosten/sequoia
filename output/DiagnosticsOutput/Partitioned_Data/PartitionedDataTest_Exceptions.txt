@@ -3,7 +3,7 @@ No partition available to push back to
 
 Expected Exception Type:
 [std::out_of_range]
-bucketed_storage::index 0 out of range!
+bucketed_sequence::index 0 out of range!
 
 	=======================================
 
@@ -12,7 +12,7 @@ No partition available to insert into
 
 Expected Exception Type:
 [std::out_of_range]
-bucketed_storage::begin_partition: no buckets!
+bucketed_sequence::begin_partition: no buckets!
 
 	=======================================
 
@@ -21,7 +21,7 @@ No partitions to swap
 
 Expected Exception Type:
 [std::out_of_range]
-bucketed_storage::swap_partitions - index out of range
+bucketed_sequence::swap_partitions - index out of range
 
 	=======================================
 
@@ -30,7 +30,7 @@ Only one partition available so cannot push back to the second
 
 Expected Exception Type:
 [std::out_of_range]
-bucketed_storage::index 1 out of range!
+bucketed_sequence::index 1 out of range!
 
 	=======================================
 
@@ -39,7 +39,7 @@ No partitions to swap
 
 Expected Exception Type:
 [std::out_of_range]
-bucketed_storage::swap_partitions - index out of range
+bucketed_sequence::swap_partitions - index out of range
 
 	=======================================
 
@@ -93,7 +93,7 @@ No partition available to push back to
 
 Expected Exception Type:
 [std::out_of_range]
-bucketed_storage::index 0 out of range!
+bucketed_sequence::index 0 out of range!
 
 	=======================================
 
@@ -102,7 +102,7 @@ No partition available to insert into
 
 Expected Exception Type:
 [std::out_of_range]
-bucketed_storage::begin_partition: no buckets!
+bucketed_sequence::begin_partition: no buckets!
 
 	=======================================
 
@@ -111,7 +111,7 @@ No partitions to swap
 
 Expected Exception Type:
 [std::out_of_range]
-bucketed_storage::swap_partitions - index out of range
+bucketed_sequence::swap_partitions - index out of range
 
 	=======================================
 
@@ -120,7 +120,7 @@ Only one partition available so cannot push back to the second
 
 Expected Exception Type:
 [std::out_of_range]
-bucketed_storage::index 1 out of range!
+bucketed_sequence::index 1 out of range!
 
 	=======================================
 
@@ -129,7 +129,7 @@ No partitions to swap
 
 Expected Exception Type:
 [std::out_of_range]
-bucketed_storage::swap_partitions - index out of range
+bucketed_sequence::swap_partitions - index out of range
 
 	=======================================
 
@@ -182,7 +182,7 @@ Tests/Core/DataStructures/PartitionedDataTest.cpp, Line 700
 
 Expected Exception Type:
 [std::out_of_range]
-bucketed_storage::index 0 out of range!
+bucketed_sequence::index 0 out of range!
 
 	=======================================
 
@@ -190,7 +190,7 @@ Tests/Core/DataStructures/PartitionedDataTest.cpp, Line 704
 
 Expected Exception Type:
 [std::out_of_range]
-bucketed_storage::index 0 out of range!
+bucketed_sequence::index 0 out of range!
 
 	=======================================
 
@@ -198,7 +198,7 @@ Tests/Core/DataStructures/PartitionedDataTest.cpp, Line 708
 
 Expected Exception Type:
 [std::out_of_range]
-bucketed_storage::index 0 out of range!
+bucketed_sequence::index 0 out of range!
 
 	=======================================
 
@@ -206,7 +206,7 @@ Tests/Core/DataStructures/PartitionedDataTest.cpp, Line 712
 
 Expected Exception Type:
 [std::out_of_range]
-bucketed_storage::index 1 out of range!
+bucketed_sequence::index 1 out of range!
 
 	=======================================
 
@@ -214,7 +214,7 @@ Tests/Core/DataStructures/PartitionedDataTest.cpp, Line 719
 
 Expected Exception Type:
 [std::out_of_range]
-bucketed_storage::index 1 out of range!
+bucketed_sequence::index 1 out of range!
 
 	=======================================
 
@@ -222,7 +222,7 @@ Tests/Core/DataStructures/PartitionedDataTest.cpp, Line 700
 
 Expected Exception Type:
 [std::out_of_range]
-bucketed_storage::index 0 out of range!
+bucketed_sequence::index 0 out of range!
 
 	=======================================
 
@@ -230,7 +230,7 @@ Tests/Core/DataStructures/PartitionedDataTest.cpp, Line 704
 
 Expected Exception Type:
 [std::out_of_range]
-bucketed_storage::index 0 out of range!
+bucketed_sequence::index 0 out of range!
 
 	=======================================
 
@@ -238,7 +238,7 @@ Tests/Core/DataStructures/PartitionedDataTest.cpp, Line 708
 
 Expected Exception Type:
 [std::out_of_range]
-bucketed_storage::index 0 out of range!
+bucketed_sequence::index 0 out of range!
 
 	=======================================
 
@@ -246,7 +246,7 @@ Tests/Core/DataStructures/PartitionedDataTest.cpp, Line 712
 
 Expected Exception Type:
 [std::out_of_range]
-bucketed_storage::index 1 out of range!
+bucketed_sequence::index 1 out of range!
 
 	=======================================
 
@@ -254,7 +254,7 @@ Tests/Core/DataStructures/PartitionedDataTest.cpp, Line 719
 
 Expected Exception Type:
 [std::out_of_range]
-bucketed_storage::index 1 out of range!
+bucketed_sequence::index 1 out of range!
 
 	=======================================
 

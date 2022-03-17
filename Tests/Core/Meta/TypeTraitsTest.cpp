@@ -27,7 +27,7 @@ namespace sequoia::testing
 
   void type_traits_test::run_tests()
   {
-    test_variadic_traits();
+    test_type_list();
     test_base_of_head();
     test_resolve_to_copy();
     test_is_const_pointer();
@@ -36,85 +36,75 @@ namespace sequoia::testing
     test_has_allocator_type();
   }
 
-  void type_traits_test::test_variadic_traits()
+  void type_traits_test::test_type_list()
   {
     {
-      using traits = variadic_traits<>;
+      using typeList = type_list<>;
 
       check(LINE(""), []() {
-          static_assert(std::is_same_v<traits::head, void>);
+          static_assert(std::is_same_v<head_of_t<>, void>);
+          static_assert(std::is_same_v<head_of_t<typeList>, void>);
           return true;
         }()
       );
 
       check(LINE(""), []() {
-          static_assert(std::is_same_v<traits::tail, void>);
-          return true;
-        }()
-      );
-    }
-
-    {
-      using traits = variadic_traits<int>;
-
-      check(LINE(""), []() {
-          static_assert(std::is_same_v<traits::head, int>);
-          return true;
-        }()
-      );
-
-      check(LINE(""), []() {
-          static_assert(std::is_same_v<traits::tail, void>);
+          static_assert(std::is_same_v<tail_of_t<>,         type_list<>>);
+          static_assert(std::is_same_v<tail_of_t<typeList>, type_list<>>);
           return true;
         }()
       );
     }
 
     {
-      using traits = variadic_traits<int, double>;
+      using typeList = type_list<int>;
 
       check(LINE(""), []() {
-          static_assert(std::is_same_v<traits::head, int>);
+          static_assert(std::is_same_v<head_of_t<int>, int>);
+          static_assert(std::is_same_v<head_of_t<typeList>, int>);
           return true;
         }()
       );
 
       check(LINE(""), []() {
-          static_assert(std::is_same_v<traits::tail::head, double>);
-          return true;
-        }()
-      );
-
-      check(LINE(""), []() {
-          static_assert(std::is_same_v<traits::tail::tail, void>);
+        static_assert(std::is_same_v<tail_of_t<int>, type_list<>>);
+          static_assert(std::is_same_v<tail_of_t<typeList>, type_list<>>);
           return true;
         }()
       );
     }
 
     {
-      using traits = variadic_traits<int, double, char>;
+      using typeList = type_list<int, double>;
 
       check(LINE(""), []() {
-          static_assert(std::is_same_v<traits::head, int>);
+          static_assert(std::is_same_v<head_of_t<int, double>, int>);
+          static_assert(std::is_same_v<head_of_t<typeList>, int>);
           return true;
         }()
       );
 
       check(LINE(""), []() {
-          static_assert(std::is_same_v<traits::tail::head, double>);
+          static_assert(std::is_same_v<tail_of_t<int, double>, type_list<double>>);
+          static_assert(std::is_same_v<tail_of_t<typeList>, type_list<double>>);
+          return true;
+        }()
+      );
+    }
+
+    {
+      using typeList = type_list<int, double, char>;
+
+      check(LINE(""), []() {
+          static_assert(std::is_same_v<head_of_t<int, double, char>, int>);
+          static_assert(std::is_same_v<head_of_t<typeList>, int>);
           return true;
         }()
       );
 
       check(LINE(""), []() {
-          static_assert(std::is_same_v<traits::tail::tail::head, char>);
-          return true;
-        }()
-      );
-
-      check(LINE(""), []() {
-          static_assert(std::is_same_v<traits::tail::tail::tail, void>);
+          static_assert(std::is_same_v<tail_of_t<int, double, char>, type_list<double, char>>);
+          static_assert(std::is_same_v<tail_of_t<typeList>, type_list<double, char>>);
           return true;
         }()
       );

@@ -40,7 +40,7 @@ namespace sequoia::testing
   {
     using namespace data_structures;
 
-    using storage = bucketed_storage<T, Handler, custom_bucketed_storage_traits<T, Handler, PropagateCopy, PropagateMove, PropagateSwap>>;
+    using storage = bucketed_sequence<T, Handler, custom_bucketed_storage_traits<T, Handler, PropagateCopy, PropagateMove, PropagateSwap>>;
     using allocator = typename storage::allocator_type;
     using prediction = std::initializer_list<std::initializer_list<int>>;
 
