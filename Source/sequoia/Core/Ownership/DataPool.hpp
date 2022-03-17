@@ -8,8 +8,10 @@
 #pragma once
 
 /*! \file
-    \brief Classes to allow homogenous treatment of pooled/spawned data.
+    \brief Classes to allow homogenous treatment of pooled/independently spawned data.
 
+    The idea is, in each case, to supply a `make` method which returns a proxy; the
+    latter provides a uniform interface.
  */
 
 #include "sequoia/Core/Ownership/Handlers.hpp"
@@ -23,6 +25,11 @@
 
 namespace sequoia::ownership
 {
+  /*! \brief Class template providing a `make` method, which constructs an instance of `T`, wrapped in a proxy.
+
+      The proxy used is \ref sequoia::utilities::uniform_wrapper "sequoia::utilities::uniform_wrapper<T>".
+      The latter is understood to define the interface for other analogous proxies appearing in this file.
+   */
   template<class T> class spawner
   {
   public:
@@ -73,6 +80,29 @@ namespace sequoia::ownership
     using pool_iterator = utilities::iterator<Iterator, pool_deref_policy<Wrapper>>;
   }
 
+  /*! \brief A data pool, allowing what would otherwise be identical instances of a type to reference a single instance.
+
+      The pool is illustrated by the following diagram. The bottom layer is the internal storage:
+      a container holding instances of std::shared_ptr, each pointing to an intermediate wrapper,
+      `W`, which holds an instance of the pool's value type, `T`.
+      `W` is also pointed to by the client-level proxies, P, of which there may be an arbitrary
+      number. If a mutating call is made to the proxy then its pointer back to `W` is redirected.
+      If a different `W` exists that happens to already hold an instance of `T` equal to the mutated
+      value, then this is where `P` now points. Otherwise, a new `W` is created.
+
+      <pre>
+       |P| |P|
+        |  /
+        | /
+        |/
+       |W|
+        |
+        |
+       | |....
+      </pre>
+
+      To remove intermediate wrappers, `W`, with no associated proxies, invoke sequoia::ownership::data_pool::tidy.
+   */
   template<class T, class Allocator=std::allocator<T>>
     requires (!std::is_empty_v<T>)
   class data_pool
@@ -237,10 +267,7 @@ namespace sequoia::ownership
     }
 
     [[nodiscard]]
-    friend bool operator!=(const data_pool& lhs, const data_pool& rhs)
-    {
-      return !(lhs == rhs);
-    }
+    friend bool operator!=(const data_pool& lhs, const data_pool& rhs) = default;
 
     [[nodiscard]]
     bool empty() const noexcept { return m_Data.empty(); }
@@ -295,6 +322,7 @@ namespace sequoia::ownership
       }
     }
 
+    /*! \brief Removes elements to which no proxies point. */
     void tidy()
     {
       m_Data.erase(std::remove_if(m_Data.begin(), m_Data.end(), [](const auto& ptr) { ptr.use_count() == 1;}), m_Data.end());

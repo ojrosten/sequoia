@@ -75,6 +75,11 @@ $(function() {
   <div class="headertitle"><div class="title">sequoia::ownership::data_pool&lt; T, Allocator &gt; Class Template Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>A data pool, allowing what would otherwise be identical instances of a type to reference a single instance.  
+ <a href="../../d3/d2a/classsequoia_1_1ownership_1_1data__pool.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="../../df/d01/DataPool_8hpp_source.html">DataPool.hpp</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
@@ -160,6 +165,7 @@ template&lt;class... Args&gt; </td></tr>
 <tr class="separator:aba999ed8a9098673dc20012ea13a000a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac20dc8ea07b331547bdde852ac4c7a72"><td class="memItemLeft" align="right" valign="top"><a id="ac20dc8ea07b331547bdde852ac4c7a72" name="ac20dc8ea07b331547bdde852ac4c7a72"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>tidy</b> ()</td></tr>
+<tr class="memdesc:ac20dc8ea07b331547bdde852ac4c7a72"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes elements to which no proxies point. <br /></td></tr>
 <tr class="separator:ac20dc8ea07b331547bdde852ac4c7a72"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="friends" name="friends"></a>
@@ -173,11 +179,26 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>swap</b> (<a class="e
 <tr class="memitem:a14ec14e6796726f9e51a6b2d278c4cab"><td class="memItemLeft" align="right" valign="top"><a id="a14ec14e6796726f9e51a6b2d278c4cab" name="a14ec14e6796726f9e51a6b2d278c4cab"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator==</b> (const <a class="el" href="../../d3/d2a/classsequoia_1_1ownership_1_1data__pool.html">data_pool</a> &amp;lhs, const <a class="el" href="../../d3/d2a/classsequoia_1_1ownership_1_1data__pool.html">data_pool</a> &amp;rhs) noexcept</td></tr>
 <tr class="separator:a14ec14e6796726f9e51a6b2d278c4cab"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4fa81b741f791057bc27f66e1ffd51e5"><td class="memItemLeft" align="right" valign="top"><a id="a4fa81b741f791057bc27f66e1ffd51e5" name="a4fa81b741f791057bc27f66e1ffd51e5"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator!=</b> (const <a class="el" href="../../d3/d2a/classsequoia_1_1ownership_1_1data__pool.html">data_pool</a> &amp;lhs, const <a class="el" href="../../d3/d2a/classsequoia_1_1ownership_1_1data__pool.html">data_pool</a> &amp;rhs)</td></tr>
-<tr class="separator:a4fa81b741f791057bc27f66e1ffd51e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1e016dad90b2659eb6439fec69158140"><td class="memItemLeft" align="right" valign="top"><a id="a1e016dad90b2659eb6439fec69158140" name="a1e016dad90b2659eb6439fec69158140"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator!=</b> (const <a class="el" href="../../d3/d2a/classsequoia_1_1ownership_1_1data__pool.html">data_pool</a> &amp;lhs, const <a class="el" href="../../d3/d2a/classsequoia_1_1ownership_1_1data__pool.html">data_pool</a> &amp;rhs)=default</td></tr>
+<tr class="separator:a1e016dad90b2659eb6439fec69158140"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<hr/>The documentation for this class was generated from the following file:<ul>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><div class="compoundTemplParams">template&lt;class T, class Allocator = std::allocator&lt;T&gt;&gt;<br />
+requires (!std::is_empty_v&lt;T&gt;)<br />
+class sequoia::ownership::data_pool&lt; T, Allocator &gt;</div><p >A data pool, allowing what would otherwise be identical instances of a type to reference a single instance. </p>
+<p >The pool is illustrated by the following diagram. The bottom layer is the internal storage: a container holding instances of std::shared_ptr, each pointing to an intermediate wrapper, <code>W</code>, which holds an instance of the pool's value type, <code>T</code>. <code>W</code> is also pointed to by the client-level proxies, P, of which there may be an arbitrary number. If a mutating call is made to the proxy then its pointer back to <code>W</code> is redirected. If a different <code>W</code> exists that happens to already hold an instance of <code>T</code> equal to the mutated value, then this is where <code>P</code> now points. Otherwise, a new <code>W</code> is created.</p>
+<pre>
+ |P| |P|
+  |  /
+  | /
+  |/
+ |W|
+  |
+  |
+ | |....
+</pre><p >To remove intermediate wrappers, <code>W</code>, with no associated proxies, invoke <a class="el" href="../../d3/d2a/classsequoia_1_1ownership_1_1data__pool.html#ac20dc8ea07b331547bdde852ac4c7a72" title="Removes elements to which no proxies point.">sequoia::ownership::data_pool::tidy</a>. </p>
+</div><hr/>The documentation for this class was generated from the following file:<ul>
 <li>C:/Users/olive/OneDrive/sequoia/Source/sequoia/Core/Ownership/<a class="el" href="../../df/d01/DataPool_8hpp_source.html">DataPool.hpp</a></li>
 </ul>
 </div><!-- contents -->
