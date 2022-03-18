@@ -72,7 +72,7 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>Implementation for the storage of graph edges.  
+<p>Implementation for a partitioned sequence of edges, which represents a graph's connectivity.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="../../de/d27/DataStructuresTypeTraits_8hpp_source.html">sequoia/Core/DataStructures/DataStructuresTypeTraits.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../d3/d76/GraphDetails_8hpp_source.html">sequoia/Maths/Graph/GraphDetails.hpp</a>&quot;</code><br />
@@ -94,10 +94,12 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/dd4/structsequoia_1_1maths_1_1partitions__allocator__tag.html">sequoia::maths::partitions_allocator_tag</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">sequoia::maths::connectivity&lt; Directedness, EdgeTraits, WeightMaker &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Graph connectivity, used as a building block for concrete graphs.  <a href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p >Implementation for the storage of graph edges. </p>
+<div class="textblock"><p >Implementation for a partitioned sequence of edges, which represents a graph's connectivity. </p>
+<p >Graphs consist of edges and nodes. If the nodes do not possess a weight, they may be treated entirely implicitly. A partitioned sequence of edges, where each partition corresponds to a node and each edges records the other node to which it attaches, suffices to competely specify the graph. This data structure will be referred to as the <code>connectivity</code>. For graphs with weighted nodes, the same <code>connectivity</code> data structure may be used, but now in conjunction with a separate structure to record the node weights. </p>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

@@ -30,7 +30,7 @@ namespace sequoia::maths
 
   struct bucketed_edge_storage_traits
   {
-    template <class T, class Sharing, class Traits> using storage_type = data_structures::bucketed_storage<T, Sharing, Traits>;
+    template <class T, class Sharing, class Traits> using storage_type = data_structures::bucketed_sequence<T, Sharing, Traits>;
     template <class T, class Sharing> using traits_type = data_structures::bucketed_storage_traits<T, Sharing>;
 
     constexpr static edge_sharing_preference edge_sharing{edge_sharing_preference::agnostic};

@@ -8,7 +8,7 @@
 #pragma once
 
 /*! \file
-    \brief Core declarations / definitions
+    \brief Core declarations / definitions used in the testing framework
 
  */
 
@@ -41,8 +41,7 @@ namespace sequoia::testing
   };
 
   template<class T>
-  concept serializable = requires(serializer<T>& s, T& t)
-  {
+  concept serializable = requires(serializer<T>& s, T& t) {
     s.make(t);
   };
 
@@ -53,6 +52,7 @@ namespace sequoia::testing
     return serializer<T>::make(value);
   }
 
+  /*! \brief Primary class template for converting unsigned types of implementation-defined size into fixed-width types. */
   template<class T>
   struct type_normalizer
   {
@@ -78,13 +78,18 @@ namespace sequoia::testing
 
   template<std::integral T>
   [[nodiscard]]
-  auto fixed_width_unsigned_cast(T x)
+  auto fixed_width_unsigned_cast(T x) noexcept
   {
     using U = std::make_unsigned_t<T>;
 
     return static_cast<type_normalizer_t<U>>(x);
   }
 
+  /*! Specialize this class template, and inherit from `std::true_type`, to cause `enum`s in the `testing`
+      `namespace` to be automatically useable as bit masks.
+
+      Clients must ensure themselves that any enums for which this is done actually have a bitmask structure.
+   */
   template<class T>
     requires std::is_enum_v<T>
   struct as_bitmask : std::false_type
@@ -103,7 +108,8 @@ namespace sequoia::testing
   [[nodiscard]]
   constexpr T operator|(T lhs, T rhs) noexcept
   {
-    return static_cast<T>(static_cast<int>(lhs) | static_cast<int>(rhs));
+    using underlying = std::underlying_type_t<T>;
+    return static_cast<T>(static_cast<underlying>(lhs) | static_cast<underlying>(rhs));
   }
 
   template<class T>
@@ -119,7 +125,8 @@ namespace sequoia::testing
   [[nodiscard]]
   constexpr T operator&(T lhs, T rhs) noexcept
   {
-    return static_cast<T>(static_cast<int>(lhs) & static_cast<int>(rhs));
+    using underlying = std::underlying_type_t<T>;
+    return static_cast<T>(static_cast<underlying>(lhs) & static_cast<underlying>(rhs));
   }
 
   template<class T>
@@ -135,7 +142,8 @@ namespace sequoia::testing
   [[nodiscard]]
   constexpr T operator~(T om)
   {
-    return static_cast<T>(~static_cast<int>(om));
+    using underlying = std::underlying_type_t<T>;
+    return static_cast<T>(~static_cast<underlying>(om));
   }
 
   template<class T>
@@ -143,7 +151,8 @@ namespace sequoia::testing
   [[nodiscard]]
   constexpr T operator^(T lhs, T rhs) noexcept
   {
-    return static_cast<T>(static_cast<int>(lhs) ^ static_cast<int>(rhs));
+    using underlying = std::underlying_type_t<T>;
+    return static_cast<T>(static_cast<underlying>(lhs) ^ static_cast<underlying>(rhs));
   }
 
   struct uncaught_exception_info

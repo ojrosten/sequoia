@@ -115,7 +115,7 @@ namespace sequoia
       using namespace ownership;
 
       {
-        auto storage1 = test_generic_storage<bucketed_storage<int, shared<int>>>();
+        auto storage1 = test_generic_storage<bucketed_sequence<int, shared<int>>>();
         auto storage2 = test_generic_storage<partitioned_sequence<int,shared<int>>>();
 
         check(LINE(""), isomorphic(storage1, storage2));
@@ -123,7 +123,7 @@ namespace sequoia
       }
 
       {
-        auto storage1 = test_generic_storage<bucketed_storage<int, independent<int>>>();
+        auto storage1 = test_generic_storage<bucketed_sequence<int, independent<int>>>();
         auto storage2 = test_generic_storage<partitioned_sequence<int, independent<int>>>();
 
         check(LINE(""), isomorphic(storage1, storage2));
@@ -694,7 +694,7 @@ namespace sequoia
     {
       using namespace data_structures;
 
-      bucketed_storage<T, Handler> s{};
+      bucketed_sequence<T, Handler> s{};
 
       check(equality, LINE(""), s.num_partitions_capacity(), 0_sz);
       if constexpr(ThrowOnRangeError) check_exception_thrown<std::out_of_range>(LINE(""), [&s](){ return s.partition_capacity(0); });

@@ -8,7 +8,18 @@
 #pragma once
 
 /*! \file
-    \brief Implementation for the storage of graph edges.
+    \brief Implementation for a partitioned sequence of edges, which represents
+    a graph's connectivity.
+
+    Graphs consist of edges and nodes. If the nodes do not possess a weight,
+    they may be treated entirely implicitly. A partitioned sequence of edges,
+    where each partition corresponds to a node and each edges records
+    the other node to which it attaches, suffices to competely specify the
+    graph. This data structure will be referred to as the `connectivity`.
+    For graphs with weighted nodes, the same `connectivity` data structure
+    may be used, but now in conjunction with a separate structure to record
+    the node weights.
+
  */
 
 #include "sequoia/Core/DataStructures/DataStructuresTypeTraits.hpp"
@@ -29,7 +40,7 @@ namespace sequoia
 {
   namespace data_structures
   {
-    template <class, class H, class> requires ownership::handler<H> class bucketed_storage;
+    template <class, class H, class> requires ownership::handler<H> class bucketed_sequence;
     template <class, class H>        requires ownership::handler<H> struct bucketed_storage_traits;
     template <class, class H, class> requires ownership::handler<H> class partitioned_sequence;
     template <class, class H>        requires ownership::handler<H> struct partitioned_sequence_traits;
@@ -41,6 +52,14 @@ namespace sequoia
   {
     struct partitions_allocator_tag{};
 
+    /*! \brief Graph connectivity, used as a building block for concrete graphs.
+    
+        This class is flexible, allowing for representations of many different flavours
+        of connectivity. It is designed for inheritance by concrete graphs; therefore
+        various methods, including the destructor, are protected. Both static and
+        dynamic graphs are supported; for the purposes of the latter, the relevant
+        protected methods of `connectivity` are allocator-aware.
+     */
     template
     <
       directed_flavour Directedness,
@@ -54,6 +73,7 @@ namespace sequoia
       using edge_storage_type = typename EdgeTraits::edge_storage_type;
     public:
 
+      using edge_traits_type            = EdgeTraits;
       using edge_type                   = typename EdgeTraits::edge_type;
       using edge_weight_type            = typename edge_type::weight_type;
       using edge_index_type             = typename edge_type::index_type;

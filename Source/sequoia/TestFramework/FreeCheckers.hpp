@@ -147,12 +147,6 @@ namespace sequoia::testing
   inline constexpr weak_equivalence_check_t weak_equivalence{};
   inline constexpr with_best_available_check_t with_best_available{};
 
-  template<class ValueBasedCustomizer>
-  inline constexpr general_equivalence_check_t<ValueBasedCustomizer> general_equivalence{};
-
-  template<class ValueBasedCustomizer>
-  inline constexpr general_weak_equivalence_check_t<ValueBasedCustomizer> general_weak_equivalence{};
-
   template<class T>
   inline constexpr bool is_elementary_check{
        std::is_same_v<std::remove_cvref_t<T>, equality_check_t>
@@ -185,7 +179,7 @@ namespace sequoia::testing
 
   template<class CheckType, test_mode Mode, class T, class... Args>
   concept tester_for = requires(test_logger<Mode>& logger, Args&&... args) {
-    value_tester<T>::test(CheckType{}, logger, std::forward<Args>(args)...);
+    value_tester<T>::test(std::declval<CheckType>(), logger, std::forward<Args>(args)...);
   };
 
   template<class CheckType, test_mode Mode, class T, class Advisor>
@@ -446,13 +440,13 @@ namespace sequoia::testing
     class Advisor = null_advisor
   >
   bool check(CheckType flavour,
-      std::string_view description,
-      test_logger<Mode>& logger,
-      Iter first,
-      Sentinel last,
-      PredictionIter predictionFirst,
-      PredictionSentinel predictionLast,
-      tutor<Advisor> advisor = {})
+             std::string_view description,
+             test_logger<Mode>& logger,
+             Iter first,
+             Sentinel last,
+             PredictionIter predictionFirst,
+             PredictionSentinel predictionLast,
+             tutor<Advisor> advisor = {})
   {
     auto info{
       [description]() {

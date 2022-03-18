@@ -11,11 +11,11 @@
     \brief Classes with a queue-like behaviour to which tasks can be pushed and results recovered, possibly
            following concurrent execution
 
-           The three concurrency models serial, asynchronous and thread_pool have a common interface
-           for pushing tasks and recovering results, via the push and get methods. The semantics of
-           get is that it may change the state of the class; for serial execution, any results are
-           moved out of the class, whereas for asynchronous or thread pool models,
-           extraction of data from a future occurs.
+           The three concurrency models sequoia::concurrency::serial, sequoia::concurrency::asynchronous
+           and sequoia::concurrencythread_pool have a common interface for pushing tasks and recovering
+           results, via the `push` and `get` methods. The semantics of `get` is that it may change the
+           state of the class; for `serial` execution, any results are moved out of the class, whereas
+           for `asynchronous` or `thread_pool` models, extraction of data from a `std::future` occurs.
 
  */
 
@@ -30,8 +30,7 @@
 namespace sequoia::concurrency
 {
 
-  /*! \class task_queue
-      \brief a task queue designed for use by mutliple threads.
+  /*! \brief a task queue designed for use by multiple threads.
 
       This class supports both aggressive pushing and popping and also speculative versions which
       do not necessarily acquire the underlying mutex and may therefore fail.
@@ -157,11 +156,8 @@ namespace sequoia::concurrency
 
   //===================================Serial Execution Model===================================//
 
-  /*! \class serial
-      \brief Tasks may be pushed, upon which they are immediately invoked; results may be
-      acquired through get.
-
-      Results are acquired via a handle to the underlying container.
+  /*! \brief Tasks may be `push`ed, upon which they are immediately invoked; results may be
+      acquired through `get`.
    */
 
   template<class R=void>  class serial
@@ -169,15 +165,15 @@ namespace sequoia::concurrency
   public:
     using return_type = R;
 
-    template<class Fn, class... Args> void push(Fn&& fn, Args&&... args)
+    template<class Fn, class... Args>
+      requires std::is_convertible_v<R, std::invoke_result_t<std::decay_t<Fn>, std::decay_t<Args>...>>
+    void push(Fn&& fn, Args&&... args)
     {
-      static_assert(std::is_convertible_v<R, std::invoke_result_t<std::decay_t<Fn>, std::decay_t<Args>...>>,
-                    "Function return type inconsistent!");
       m_Results.push_back(fn(std::forward<Args>(args)...));
     }
 
     [[nodiscard]]
-    auto get() noexcept { return std::move(m_Results); }
+    const std::vector<R>& get() const noexcept { return m_Results; }
   private:
     std::vector<R> m_Results;
   };
@@ -185,7 +181,7 @@ namespace sequoia::concurrency
   /*! \class serial<void>
       \brief Tasks may be pushed, upon which they are immediately invoked.
 
-      The dummy get method does nothing but serves to provide a uniform interface.
+      The dummy `get` method does nothing but serve to provide a uniform interface.
    */
 
   template<> class serial<void>
@@ -203,12 +199,12 @@ namespace sequoia::concurrency
 
   //==================================Asynchronous Execution==================================//
 
-  /*! \class asynchronous
-      \brief Tasks may be pushed, upon which they are fed to std::async; results may be
-      acquired through get.
+  /*! \brief Tasks may be `push`ed, upon which they are fed to std::async; results may be
+      acquired through `get`.
 
       Internally, the class holds a future for each pushed task. The get method extracts the
-      associated return values of the tasks and, if they are no-void, returns them as a vector.
+      associated return values of the tasks and, if they are non-`void`, returns them in a
+      `std::vector`.
    */
 
   template<class R>
@@ -242,8 +238,7 @@ namespace sequoia::concurrency
 
   //=======================================Thread Pool========================================//
 
-  /*! \class thread_pool
-      \brief Supports either a single pipeline or a pipeline for each thread, together with task
+  /*! \brief Supports either a single pipeline or a pipeline for each thread, together with task
       stealing.
    */
 
@@ -253,12 +248,14 @@ namespace sequoia::concurrency
   public:
     using return_type = R;
 
-    explicit thread_pool(const std::size_t numThreads) requires( !MultiPipeline)
+    explicit thread_pool(const std::size_t numThreads)
+      requires(!MultiPipeline)
     {
       make_pool(numThreads);
     }
 
-    thread_pool(const std::size_t numThreads, const std::size_t pushCycles = 46) requires MultiPipeline
+    thread_pool(const std::size_t numThreads, const std::size_t pushCycles = 46)
+      requires MultiPipeline
       : impl::queue_details<R, MultiPipeline>{pushCycles}
       , m_Queues(numThreads)
     {

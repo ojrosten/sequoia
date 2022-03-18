@@ -52,7 +52,7 @@ namespace sequoia
            to the wrapped containers. It is important that copy assignment is used since allocator propagation
            may differ between copying and moving.
         -# Utilize assignment_helper to define copy assignment. A single allocator example is provided
-           by sequoia::data_structures::bucketed_storage and a two allocator example is provided by 
+           by sequoia::data_structures::bucketed_sequence and a two allocator example is provided by 
            sequoia::data_structures::partitioned_sequence_base.
            The basic idea is that assignment_helper::assign takes references to two instances of `T`,
            together with a sequence of function objects which return the requisite allocators.

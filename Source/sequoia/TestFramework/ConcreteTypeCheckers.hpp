@@ -10,24 +10,40 @@
 /*! \file
     \brief Useful specializations for the class template value_tester.
 
-    The specializations in this header are for various types defined in std. Internally,
-    check(equality,...) / (check,equivalence,...) is used meaning that there will be automatic,
-    recursive dispatch to
-    other specializations of value_tester, if appropriate. For example,
-    consider two instances of std::pair<my_type1, mytype2>, x and y. The utilities in this
+    The specializations in this header are for various types defined in `std`. Internally,
+    `check(equality,...)` / `check(equivalence,...)` are used meaning that there will be automatic,
+    recursive dispatch to other specializations of `value_tester`, if appropriate. For example,
+    consider two instances of `std::pair<T, U>`, `x` and `y`. The utilities in this
     header means the call
 
+    <pre>
     check(equality, "descripion", logger, x, y);
+    </pre>
 
     will automatically call
 
+    <pre>
     check(equality, "automatically enhanced desciption", logger, x.first, y,first)
+    </pre>
 
-    and similarly for the second element. In turn, this nested check_equality will use
-    a specialization of the value_tester of my_type1, should it exist. As
-    usual, if the specialization for T does not exist, but T may be interpreted as
-    a container holding a type U, then everything will simply work, provided either that
-    there exists a specialization of the value_tester for U or U is serializable.
+    and similarly for the second element. In turn, this nested `check(equality, ...)` will use
+    a specialization of the `value_tester` for `T`, should it exist. As
+    usual, if the specialization for `T` does not exist, but `T` may be interpreted as
+    a range holding a type `V`, then everything will simply work, provided either that
+    there exists a specialization of the `value_tester` for `V` or `V` is serializable.
+
+    However, all of this begs the question as to what happens in the above example if
+    one or both of `U` and `T` do not support `equality` checking, but rather only
+    offer `equivalence` or `weak_equivalence`. If both types have the same characteristics,
+    then the top level call can be made using the appropriate tag. However, if they are
+    different then instead clients should use
+
+    <pre>
+    check(with_best_available, "descripion", logger, x, y);
+    </pre>
+
+    This uses static reflection to choose the strongest check available for each of the
+    nested types.
  */
 
 #include "sequoia/TestFramework/FreeCheckers.hpp"
@@ -44,7 +60,11 @@
 
 namespace sequoia::testing
 {
-  /*! \brief Checks equality of std::basic_string_view */
+  /*! \brief Checks equality of `std::basic_string_view`
+  
+      Some support is offered for wide string views etc., though test failures are ultimately reported
+      using normal strings, which has its limitations when the character type is bigger than a `char`. 
+   */
   template<class Char, class Traits>
   struct value_tester<std::basic_string_view<Char, Traits>>
   {
@@ -189,6 +209,11 @@ namespace sequoia::testing
     }
   };
 
+  /*! \brief Checks equality of `std::basic_string_view`
+
+      Some support is offered for wide string views etc., though test failures are ultimately reported
+      using normal strings, which has its limitations when the character type is bigger than a `char`.
+   */
   template<class Char, class Traits, alloc Allocator>
   struct value_tester<std::basic_string<Char, Traits, Allocator>>
   {
@@ -220,9 +245,8 @@ namespace sequoia::testing
     }
   };
 
-  /*! \brief Checks equivalence of std::pair<S,T> and std::pair<U,V> where,
-      after removing references and cv-qualifiers, S,U and T,V are each the same
-   */
+  /*! \brief Compares instances of `std::pair` */
+
   template<class S, class T>
   struct value_tester<std::pair<S, T>>
   {
@@ -234,11 +258,11 @@ namespace sequoia::testing
       check_elements(flavour, logger, value, prediction, std::move(advisor));
     }
 
-  template<class CheckType, test_mode Mode, class Advisor>
-  static void test(equality_check_t, test_logger<Mode>& logger, const std::pair<S, T>& value, const std::pair<S, T>& prediction, const tutor<Advisor>& advisor)
-  {
-    check_elements(equality, logger, value, prediction, std::move(advisor));
-  }
+    template<class CheckType, test_mode Mode, class Advisor>
+    static void test(equality_check_t, test_logger<Mode>& logger, const std::pair<S, T>& value, const std::pair<S, T>& prediction, const tutor<Advisor>& advisor)
+    {
+      check_elements(equality, logger, value, prediction, std::move(advisor));
+    }
 
   private:
     template<class CheckType, test_mode Mode, class U, class V, class Advisor>
@@ -249,10 +273,8 @@ namespace sequoia::testing
     }
   };
 
-  /*! \brief Checks equivalence of std::tuple<T...> and std::tuple<U...> where T... and U...
-      are the same size and, after removing references and cv-qualifiers, the respective elements
-      are of the same type
-   */
+  /*! \brief Compares instances of `std::tuple` */
+
   template<class... T>
   struct value_tester<std::tuple<T...>>
   {
@@ -288,16 +310,16 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string path_check_preamble(std::string_view prefix, const std::filesystem::path& path, const std::filesystem::path& prediction);
 
-  /*! \brief Function object for default checking of files */
+  /*! \brief Function object for comparing files via reading their contents into strings. */
 
-  struct default_file_checker
+  struct string_based_file_comparer
   {
     template<test_mode Mode>
     void operator()(test_logger<Mode>& logger, const std::filesystem::path& file, const std::filesystem::path& prediction) const
     {
       const auto [reducedWorking, reducedPrediction] {get_reduced_file_content(file, prediction)};
 
-      testing::check(report_failed_read(file), logger, static_cast<bool>(reducedWorking));
+      testing::check(report_failed_read(file),       logger, static_cast<bool>(reducedWorking));
       testing::check(report_failed_read(prediction), logger, static_cast<bool>(reducedPrediction));
 
       if(reducedWorking && reducedPrediction)
@@ -307,32 +329,68 @@ namespace sequoia::testing
     }
   };
 
-  struct basic_file_checker
+  template<class T>
+  inline constexpr bool is_file_comparer_v{
+    std::invocable<T, test_logger<test_mode::standard>&, std::filesystem::path, std::filesystem::path>
+  };
+
+  /*! \brief A file checker, which accepts a variadic set of file comparison function objects
+   */
+
+  template<class DefaultComparer, class... Comparers>
+    requires (is_file_comparer_v<DefaultComparer> && (is_file_comparer_v<Comparers> && ...))
+  class general_file_checker
   {
-    template<test_mode Mode>
-    static void check_file(test_logger<Mode>& logger, const std::filesystem::path& file, const std::filesystem::path& prediction)
+  public:
+    [[nodiscard]]
+    constexpr static std::size_t size() noexcept
     {
-      const auto factory{runtime::factory<default_file_checker>{{"default"}}};
-      const auto checker{factory.create_or<default_file_checker>(file.extension().string())};
+      return 1 + sizeof...(Comparers);
+    }
+
+    general_file_checker(const std::array<std::string_view, size()>& extensions)
+      : m_Factory{extensions}
+    {}
+
+    template<test_mode Mode>
+    void check_file(test_logger<Mode>& logger, const std::filesystem::path& file, const std::filesystem::path& prediction) const
+    {
+      const auto checker{m_Factory.template create_or<DefaultComparer>(file.extension().string())};
       std::visit([&logger, &file, &prediction](auto&& fn){ fn(logger, file, prediction); }, checker);
     }
+  private:
+    using factory = runtime::factory<DefaultComparer, Comparers...>;
+
+    factory m_Factory;
   };
+
+  template<class DefaultComparer, class... Comparers>
+  using equivalence_with_bespoke_file_checker_t = general_equivalence_check_t<general_file_checker<DefaultComparer, Comparers...>>;
+
+  template<class DefaultComparer, class... Comparers>
+  using weak_equivalence_with_bespoke_file_checker_t = general_weak_equivalence_check_t<general_file_checker<DefaultComparer, Comparers...>>;
 
   /*! \brief Checks equivalence of filesystem paths.
 
-    Files are considered equivalent if they have the same name and the same contents;
-    similarly directories.
+      For the overloads of `test` accepting either `equivalence` or `weak_equivalence` as the
+      first argument, all file comparisons are performed using string_based_file_comparer.
+      Other overloads allow clients to customize the way in which files are compared.
 
-    Files are considered weakly equivalent if they have the same contents;
-    similarly directories. The names of both are ignored.
+      Files are considered equivalent if they have the same name and the same contents;
+      similarly directories.
 
+      Files are considered weakly equivalent if they have the same contents;
+      similarly directories. The names of both are ignored.
    */
 
   template<>
   struct value_tester<std::filesystem::path>
   {
-    template<class ValueBasedCustomization, test_mode Mode>
-    static void test(general_equivalence_check_t<ValueBasedCustomization> checker, test_logger<Mode>& logger, const std::filesystem::path& path, const std::filesystem::path& prediction)
+    template<class DefaultComparer, class... Comparers, test_mode Mode>
+    static void test(equivalence_with_bespoke_file_checker_t<DefaultComparer, Comparers...> checker,
+                     test_logger<Mode>& logger,
+                     const std::filesystem::path& path,
+                     const std::filesystem::path& prediction)
     {
       namespace fs = std::filesystem;
 
@@ -349,11 +407,14 @@ namespace sequoia::testing
     template<test_mode Mode>
     static void test(equivalence_check_t, test_logger<Mode>& logger, const std::filesystem::path& path, const std::filesystem::path& prediction)
     {
-      test(general_equivalence_check_t<basic_file_checker>{}, logger, path, prediction);
+      test(basic_path_equivalence, logger, path, prediction);
     }
 
-    template<class ValueBasedCustomization, test_mode Mode>
-    static void test(general_weak_equivalence_check_t<ValueBasedCustomization> checker, test_logger<Mode>& logger, const std::filesystem::path& path, const std::filesystem::path& prediction)
+    template<class DefaultComparer, class... Comparers, test_mode Mode>
+    static void test(weak_equivalence_with_bespoke_file_checker_t<DefaultComparer, Comparers...> checker,
+                     test_logger<Mode>& logger,
+                     const std::filesystem::path& path,
+                     const std::filesystem::path& prediction)
     {
       namespace fs = std::filesystem;
       check_path(logger, checker.customizer, path, prediction, [](const fs::path&, const fs::path&) { return true; });
@@ -362,7 +423,7 @@ namespace sequoia::testing
     template<test_mode Mode>
     static void test(weak_equivalence_check_t, test_logger<Mode>& logger, const std::filesystem::path& path, const std::filesystem::path& prediction)
     {
-      test(general_weak_equivalence_check_t<basic_file_checker>{}, logger, path, prediction);
+      test(basic_path_weak_equivalence, logger, path, prediction);
     }
   private:
     constexpr static std::array<std::string_view, 2>
@@ -370,6 +431,13 @@ namespace sequoia::testing
 
     constexpr static std::array<std::string_view, 1>
       excluded_extensions{seqpat};
+
+    using basic_file_checker_t = general_file_checker<string_based_file_comparer>;
+
+    inline static const basic_file_checker_t basic_file_checker{{".*"}};
+
+    inline static const general_equivalence_check_t<basic_file_checker_t>      basic_path_equivalence{basic_file_checker};
+    inline static const general_weak_equivalence_check_t<basic_file_checker_t> basic_path_weak_equivalence{basic_file_checker};
 
     template<test_mode Mode, class Customization, invocable_r<bool, std::filesystem::path, std::filesystem::path> FinalTokenComparison>
     static void check_path(test_logger<Mode>& logger, const Customization& custom, const std::filesystem::path& path, const std::filesystem::path& prediction, FinalTokenComparison compare)
@@ -466,6 +534,8 @@ namespace sequoia::testing
     }
   };
 
+  /*! \brief Compares instances of `std::variant` */
+
   template<class... Ts>
   struct value_tester<std::variant<Ts...>>
   {
@@ -503,6 +573,8 @@ namespace sequoia::testing
     }
   };
 
+  /*! \brief Compares instances of `std::optional` */
+
   template<class T>
   struct value_tester<std::optional<T>>
   {
@@ -521,6 +593,11 @@ namespace sequoia::testing
     }
   };
 
+  /*! \brief Provides a `weak_equivalence` test for `std::function`
+
+      Two instances of `std::function<R (Args...)>` are taken to be weakly equivalent
+      if they are either both null or both not null.
+   */
   template<class R, class... Args>
   struct value_tester<std::function<R (Args...)>>
   {

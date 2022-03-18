@@ -39,7 +39,7 @@ namespace sequoia::testing
 
     using namespace data_structures;
 
-    static_assert(has_reservable_partitions<bucketed_storage<int>>);
+    static_assert(has_reservable_partitions<bucketed_sequence<int>>);
     static_assert(!has_reservable_partitions<partitioned_sequence<int>>);
   }
 

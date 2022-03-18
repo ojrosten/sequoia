@@ -23,7 +23,7 @@ namespace sequoia::testing
   private:
     void run_tests() final;
 
-    void test_variadic_traits();
+    void test_type_list();
 
     void test_base_of_head();
 

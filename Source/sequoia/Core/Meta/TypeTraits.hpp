@@ -22,48 +22,66 @@
 
 namespace sequoia
 {
-  /*! @defgroup variadic_traits The variadic_traits Group
+  /*! \brief Standard meta-programming utility */
+  template<class T>
+  struct dependent_false : std::false_type {};
+
+  /*! @defgroup type_list The type_list Group
       This group provides mechanisms for extracting the head and tail from a parameter pack.
       @{
    */
 
-  namespace impl
-  {
-    template<class H, class... T>
-    struct variadic_traits_helper
-    {
-      using head = H;
-      using tail = variadic_traits_helper<T...>;
-    };
+  /*! \brief Primary template for mapping a parameter pack to a type */
+  template<class... Ts>
+  struct type_list;
 
-    template<class H>
-    struct variadic_traits_helper<H>
-    {
-      using head = H;
-      using tail = void;
-    };
-  }
-
-  /*! \brief Primary template for extracting the head/tail from a parameter pack. */
-  template<class... T>
-  struct variadic_traits
+  template<class T, class... Ts>
+  struct type_list<T, Ts...>
   {
-    using head = typename impl::variadic_traits_helper<T...>::head;
-    using tail = typename impl::variadic_traits_helper<T...>::tail;
+    using head = T;
+    using tail = type_list<Ts...>;
   };
 
   template<>
-  struct variadic_traits<>
+  struct type_list<>
   {
     using head = void;
-    using tail = void;
+    using tail = type_list<>;
   };
 
-  /*! Helper to conveniently extract the head-type from a parameter pack */
-  template<class... T>
-  using head_of_t = typename variadic_traits<T...>::head;
+  /*! \brief Primary template for finding the head of either a variadic list of a type_list */
+  template<class... Ts>
+  struct head_of
+  {
+    using type = typename type_list<Ts...>::head;
+  };
 
-  /*! @} */ // end of variadic_traits Group
+  template<class... Ts>
+  struct head_of<type_list<Ts...>>
+  {
+    using type = typename type_list<Ts...>::head;
+  };
+
+  template<class... Ts>
+  using head_of_t = typename head_of<Ts...>::type;
+
+  /*! \brief Primary template for finding the tail of either a variadic list of a type_list */
+  template<class... Ts>
+  struct tail_of
+  {
+    using type = typename type_list<Ts...>::tail;
+  };
+
+  template<class... Ts>
+  struct tail_of<type_list<Ts...>>
+  {
+    using type = typename type_list<Ts...>::tail;
+  };
+
+  template<class... Ts>
+  using tail_of_t = typename tail_of<Ts...>::type;
+
+  /*! @} */ // end of type_list Group
 
   /*! \brief class template for determining if a type is the base class of the head of a parameter pack */
   template<class T, class... Args>
@@ -83,7 +101,7 @@ namespace sequoia
   struct resolve_to_copy
     : std::bool_constant<
            (sizeof...(Args) == 1)
-        && (   std::is_same_v<std::remove_cvref_t<typename variadic_traits<Args...>::head>, std::remove_cvref_t<T>>
+        && (   std::is_same_v<std::remove_cvref_t<head_of_t<Args...>>, std::remove_cvref_t<T>>
             || is_base_of_head_v<T, Args...>)
       >
   {};
@@ -95,7 +113,7 @@ namespace sequoia
   using resolve_to_copy_t = typename resolve_to_copy<T, Args...>::type;
 
 
-  /*! \brief Primary template for determining if a type is a pointer */
+  /*! \brief Primary class template for determining if a type is a `const` pointer */
   template<class T>
   struct is_const_pointer : std::false_type {};
 
@@ -111,8 +129,7 @@ namespace sequoia
   template<class T>
   using is_const_pointer_t = typename is_const_pointer<T>::type;
 
-  // is_const_reference
-
+  /*! \brief class template for determining if a type is a `const` reference */
   template<class T>
   struct is_const_reference
     : std::bool_constant<std::is_reference_v<T> && std::is_const_v<std::remove_reference_t<T>>>
@@ -124,8 +141,7 @@ namespace sequoia
   template<class T>
   using is_const_reference_t = typename is_const_reference<T>::type;
 
-  // is_tuple
-
+  /*! \brief Primary class template for determining if a type is a `std::tuple` */
   template<class T>
   struct is_tuple : std::false_type{};
 
@@ -138,13 +154,7 @@ namespace sequoia
   template<class... Ts>
   inline constexpr bool is_tuple_v{is_tuple<Ts...>::value};
 
-  // dependent_false
-
-  template<class T>
-  struct dependent_false : std::false_type {};
-
-  // has_allocator_type_v
-
+  /*! \brief Class template for determining if a type defines a nested type `allocator_type` */
   template<class T>
   struct has_allocator_type : std::bool_constant< requires { typename T::allocator_type; } >
   {};
@@ -220,5 +230,5 @@ namespace sequoia
   template<class T>
   using is_deep_equality_comparable_t = typename is_deep_equality_comparable<T>::type;
 
-  /*! @} */
+  /*! @} */ // end of deep_equality group
 }

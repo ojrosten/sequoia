@@ -78,9 +78,17 @@ $(function() {
   <div class="headertitle"><div class="title">sequoia::maths::connectivity&lt; Directedness, EdgeTraits, WeightMaker &gt; Class Template Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Graph connectivity, used as a building block for concrete graphs.  
+ <a href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="../../d5/d2d/Connectivity_8hpp_source.html">Connectivity.hpp</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
+<tr class="memitem:a2e5622d80b5b9183e74f19a2e0438ef0"><td class="memItemLeft" align="right" valign="top"><a id="a2e5622d80b5b9183e74f19a2e0438ef0" name="a2e5622d80b5b9183e74f19a2e0438ef0"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>edge_traits_type</b> = EdgeTraits</td></tr>
+<tr class="separator:a2e5622d80b5b9183e74f19a2e0438ef0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a949efa2aeb61e352de4078ff6624736f"><td class="memItemLeft" align="right" valign="top"><a id="a949efa2aeb61e352de4078ff6624736f" name="a949efa2aeb61e352de4078ff6624736f"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>edge_type</b> = typename EdgeTraits::edge_type</td></tr>
 <tr class="separator:a949efa2aeb61e352de4078ff6624736f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -279,9 +287,9 @@ template&lt;class Comparer &gt; </td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="friends" name="friends"></a>
 Friends</h2></td></tr>
-<tr class="memitem:a5e8e78aa483ab4dde9ce8e6958b77b7b"><td class="memItemLeft" align="right" valign="top"><a id="a5e8e78aa483ab4dde9ce8e6958b77b7b" name="a5e8e78aa483ab4dde9ce8e6958b77b7b"></a>
-struct&#160;</td><td class="memItemRight" valign="bottom"><b>assignment_helper</b></td></tr>
-<tr class="separator:a5e8e78aa483ab4dde9ce8e6958b77b7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac87b689ffe652a582abdfca7418f6630"><td class="memItemLeft" align="right" valign="top"><a id="ac87b689ffe652a582abdfca7418f6630" name="ac87b689ffe652a582abdfca7418f6630"></a>
+struct&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::assignment_helper</b></td></tr>
+<tr class="separator:ac87b689ffe652a582abdfca7418f6630"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abd640acdee3b6d56bfef264515d25e4f"><td class="memItemLeft" align="right" valign="top"><a id="abd640acdee3b6d56bfef264515d25e4f" name="abd640acdee3b6d56bfef264515d25e4f"></a>
 constexpr friend bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator==</b> (const <a class="el" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">connectivity</a> &amp;lhs, const <a class="el" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">connectivity</a> &amp;rhs) noexcept</td></tr>
 <tr class="separator:abd640acdee3b6d56bfef264515d25e4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -289,7 +297,11 @@ constexpr friend bool&#160;</td><td class="memItemRight" valign="bottom"><b>oper
 constexpr friend bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator!=</b> (const <a class="el" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">connectivity</a> &amp;lhs, const <a class="el" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">connectivity</a> &amp;rhs) noexcept=default</td></tr>
 <tr class="separator:ae724b8b9c2a1b9028d606326e55a4052"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<hr/>The documentation for this class was generated from the following file:<ul>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><div class="compoundTemplParams">template&lt;directed_flavour Directedness, class EdgeTraits, class WeightMaker&gt;<br />
+class sequoia::maths::connectivity&lt; Directedness, EdgeTraits, WeightMaker &gt;</div><p >Graph connectivity, used as a building block for concrete graphs. </p>
+<p >This class is flexible, allowing for representations of many different flavours of connectivity. It is designed for inheritance by concrete graphs; therefore various methods, including the destructor, are protected. Both static and dynamic graphs are supported; for the purposes of the latter, the relevant protected methods of <code>connectivity</code> are allocator-aware. </p>
+</div><hr/>The documentation for this class was generated from the following file:<ul>
 <li>C:/Users/olive/OneDrive/sequoia/Source/sequoia/Maths/Graph/<a class="el" href="../../d5/d2d/Connectivity_8hpp_source.html">Connectivity.hpp</a></li>
 </ul>
 </div><!-- contents -->
