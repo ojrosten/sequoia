@@ -25,9 +25,7 @@ namespace sequoia::testing
       using prediction_type = std::array<std::pair<std::string, std::variant<int>>, 1>;
       factory<int> f{{"int"}};
       check(equivalence, LINE(""), f, prediction_type{{{"int", 5}}});
-
-      //factory<int> g{{"int"}, 1};
-      //check(equivalence, LINE(""), g, prediction_type{{{"int", 5}}});
+      check(equivalence, LINE(""), f, prediction_type{{{"int", 5}}}, 4);
     }
 
     {
