@@ -61,12 +61,14 @@ namespace sequoia::runtime
 
   /*! \brief Generic factory with statically defined products.
 
-      This class template requires the static specification of a variadic set of products. When
-      a factory is created, a mapping from keys to products is created.
-
+      The constructor requires a list of unique key which are internally mapped to the
+      products. To generate a product, clients should call one of `create` / `create_or`.
+      The former throws if the supplied string does not match a key; the latter 
+      requires specification of a default product in this situation.
    */
+
   template<class... Products>
-    requires (sizeof...(Products) > 0)
+    requires (sizeof...(Products) > 0) && (std::movable<Products> && ...)
   class factory
   {
   public:
@@ -83,6 +85,7 @@ namespace sequoia::runtime
     struct product_creator
     {
       template<class... Args>
+        requires std::constructible_from<Product, Args...>
       [[nodiscard]]
       Product operator()(Args&&... args) const
       {

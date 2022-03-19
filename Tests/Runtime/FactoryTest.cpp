@@ -40,6 +40,12 @@ namespace sequoia::testing
   {
     y(int j) : i{j} {}
 
+    y(const y&)     = delete;
+    y(y&&) noexcept = default;
+
+    y& operator=(const y&)     = delete;
+    y& operator=(y&&) noexcept = default;
+
     [[nodiscard]]
     friend auto operator<=>(const y&, const y&) = default;
 
