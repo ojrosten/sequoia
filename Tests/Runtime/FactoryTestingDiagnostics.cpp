@@ -26,8 +26,8 @@ namespace sequoia::testing
       factory<int> f{{"int"}};
       check(equivalence, LINE(""), f, prediction_type{{{"int", 5}}});
 
-      factory<int> g{{"int"}, 1};
-      check(equivalence, LINE(""), g, prediction_type{{{"int", 5}}});
+      //factory<int> g{{"int"}, 1};
+      //check(equivalence, LINE(""), g, prediction_type{{{"int", 5}}});
     }
 
     {

@@ -31,5 +31,11 @@ namespace sequoia::testing
         check(equality, message, logger, actual.create(name), product);
       }
     }
+
+    template<test_mode Mode>
+    static void test(equality_check_t, test_logger<Mode>& logger, const type& actual, const type& prediction)
+    {
+      check(equality, "Names", logger, actual.begin_names(), actual.end_names(), prediction.begin_names(), prediction.end_names());
+    }
   };
 }
