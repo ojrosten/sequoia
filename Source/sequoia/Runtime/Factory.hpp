@@ -50,13 +50,13 @@ namespace sequoia::runtime
     constexpr factory_dereference_policy& operator=(factory_dereference_policy&&) noexcept = default;
 
     [[nodiscard]]
-    constexpr proxy get(reference ref) const noexcept
+    proxy get(reference ref) const noexcept
     {
       return ref.first;
     }
 
     [[nodiscard]]
-    static constexpr pointer get_ptr(reference ref) noexcept { return &ref; }
+    static pointer get_ptr(reference ref) noexcept { return &ref; }
   };
 
   /*! \brief Generic factory with statically defined products.
