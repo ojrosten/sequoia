@@ -97,14 +97,17 @@ namespace sequoia::testing
     }
 
     {
-     /* using prediction_type = std::array<std::pair<std::string, std::variant<x, y>>, 2>;
+     using prediction_type = std::array<std::pair<std::string, std::variant<x, y>>, 2>;
 
-      factory<x, y> f{{"x", "y"}}, g{{"x", "y"}};
+      factory<x, y> f{{"x", "y"}}, g{{"make_x", "make_y"}};
 
-      check(equivalence, LINE(""), f, prediction_type{{{"x", x{1}}, {"y", y{1}}}});
-      check(equivalence, LINE(""), g, prediction_type{{{"x", x{2}}, {"y", y{2}}}});
+      static_assert(tester_for<equivalence_check_t, test_mode::standard, factory<x, y>, factory<x, y>, prediction_type, int>);
+      static_assert(implements_general_equivalence_check<test_mode::standard, equivalence_check_t, factory<x, y>, prediction_type, int>);
 
-      check_semantics(LINE(""), f, g);*/
+      check(equivalence, LINE(""), f, prediction_type{{{"x", x{1}}, {"y", y{1}}}}, 1);
+      check(equivalence, LINE(""), g, prediction_type{{{"make_x", x{2}}, {"make_y", y{2}}}}, 2);
+
+      check_semantics(LINE(""), f, g);
     }
   }
 }

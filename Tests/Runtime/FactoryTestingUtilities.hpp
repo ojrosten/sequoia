@@ -23,7 +23,8 @@ namespace sequoia::testing
     using element = std::pair<std::string, std::variant<Products...>>;
 
     template<test_mode Mode, class... Args>
-    static void test(equivalence_check_t, test_logger<Mode>& logger, const type& actual, const std::array<element, sizeof...(Products)>& prediction, Args&&... args)
+      requires (std::constructible_from<Products, Args...> && ...)
+    static void test(equivalence_check_t, test_logger<Mode>& logger, const type& actual, const std::array<element, sizeof...(Products)>& prediction, const Args&... args)
     {
       for(const auto&[name, product] : prediction)
       {
