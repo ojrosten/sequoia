@@ -14,10 +14,12 @@
 
 namespace sequoia::testing
 {
+  using namespace object;
+
   // a+1, b*2
-  constexpr utilities::uniform_wrapper<data> make(int a, double b)
+  constexpr object::uniform_wrapper<data> make(int a, double b)
   {
-    utilities::uniform_wrapper<data> d{a, b};
+    object::uniform_wrapper<data> d{a, b};
     d.set(a, b);
     d.mutate([](auto& e) { e.a+=1; e.b*=2; });
 
@@ -39,8 +41,6 @@ namespace sequoia::testing
 
   void uniform_wrapper_test::test_basic_type()
   {
-    using namespace utilities;
-
     using wrapper = uniform_wrapper<int>;
 
     static_assert(sizeof(wrapper) == sizeof(int));
@@ -58,11 +58,9 @@ namespace sequoia::testing
 
     check(equality, LINE(""), w, wrapper{4});
   }
-  
+
   void uniform_wrapper_test::test_container_type()
   {
-    using namespace utilities;
-
     using wrapper = uniform_wrapper<std::vector<int>>;
 
     static_assert(sizeof(wrapper) == sizeof(std::vector<int>));
@@ -98,11 +96,9 @@ namespace sequoia::testing
     check_semantics(LINE(""), w, v, std::weak_ordering::greater);
 #endif
   }
-  
+
   void uniform_wrapper_test::test_aggregate_type()
   {
-    using namespace utilities;
-
     using wrapper = uniform_wrapper<data>;
 
     static_assert(sizeof(wrapper) == sizeof(data));

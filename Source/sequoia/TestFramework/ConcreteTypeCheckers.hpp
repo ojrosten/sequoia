@@ -359,7 +359,7 @@ namespace sequoia::testing
       std::visit([&logger, &file, &prediction](auto&& fn){ fn(logger, file, prediction); }, checker);
     }
   private:
-    using factory = runtime::factory<DefaultComparer, Comparers...>;
+    using factory = object::factory<DefaultComparer, Comparers...>;
 
     factory m_Factory;
   };

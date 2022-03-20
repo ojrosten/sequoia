@@ -68,7 +68,7 @@ namespace sequoia::maths
     class EdgeStorageTraits,
     class NodeWeightStorageTraits
   >
-    requires (ownership::creator<EdgeWeightCreator> && ownership::creator<NodeWeightCreator>)
+    requires (object::creator<EdgeWeightCreator> && object::creator<NodeWeightCreator>)
   class graph_base : public
     graph_primitive
     <
@@ -196,8 +196,8 @@ namespace sequoia::maths
     class EdgeStorageTraits,
     class NodeWeightStorageTraits
   >
-  requires (   ownership::creator<EdgeWeightCreator>
-            && ownership::creator<NodeWeightCreator>
+  requires (   object::creator<EdgeWeightCreator>
+            && object::creator<NodeWeightCreator>
             && NodeWeightStorageTraits::has_allocator)
   class graph_base<
       GraphFlavour,
@@ -345,12 +345,12 @@ namespace sequoia::maths
     directed_flavour Directedness,
     class EdgeWeight,
     class NodeWeight,
-    class EdgeWeightCreator=ownership::spawner<EdgeWeight>,
-    class NodeWeightCreator=ownership::spawner<NodeWeight>,
+    class EdgeWeightCreator=object::spawner<EdgeWeight>,
+    class NodeWeightCreator=object::spawner<NodeWeight>,
     class EdgeStorageTraits = bucketed_edge_storage_traits,
     class NodeWeightStorageTraits = node_weight_storage_traits<NodeWeight>
   >
-    requires (ownership::creator<EdgeWeightCreator> && ownership::creator<NodeWeightCreator>)
+    requires (object::creator<EdgeWeightCreator> && object::creator<NodeWeightCreator>)
   class graph final : public
     graph_base
     <
@@ -417,12 +417,12 @@ namespace sequoia::maths
     directed_flavour Directedness,
     class EdgeWeight,
     class NodeWeight,
-    class EdgeWeightCreator=ownership::spawner<EdgeWeight>,
-    class NodeWeightCreator=ownership::spawner<NodeWeight>,
+    class EdgeWeightCreator=object::spawner<EdgeWeight>,
+    class NodeWeightCreator=object::spawner<NodeWeight>,
     class EdgeStorageTraits=bucketed_edge_storage_traits,
     class NodeWeightStorageTraits=node_weight_storage_traits<NodeWeight>
   >
-    requires (ownership::creator<EdgeWeightCreator> && ownership::creator<NodeWeightCreator>)
+    requires (object::creator<EdgeWeightCreator> && object::creator<NodeWeightCreator>)
   class embedded_graph final : public
     graph_base
     <

@@ -60,7 +60,7 @@ namespace sequoia::maths::graph_impl
   };
 
   template<class T>
-  inline constexpr bool empty_proxy = ownership::creator<T> && std::is_empty_v<typename T::proxy::value_type>;
+  inline constexpr bool empty_proxy = object::creator<T> && std::is_empty_v<typename T::proxy::value_type>;
 
   // TO DO: remove this indirection if/when clang no longer needs it!
   template<class N>
@@ -319,7 +319,7 @@ namespace sequoia::maths::graph_impl
     constexpr static auto direct_copy() noexcept
     {
       constexpr bool protective{
-        std::is_same_v<weight_proxy_type, utilities::uniform_wrapper<weight_type>>
+        std::is_same_v<weight_proxy_type, object::uniform_wrapper<weight_type>>
       };
       return copy_constant<protective>{};
     }

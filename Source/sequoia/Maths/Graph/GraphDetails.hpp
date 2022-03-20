@@ -18,7 +18,7 @@
 
 namespace sequoia
 {
-  namespace ownership
+  namespace object
   {
     template <class> struct shared;
     template <class> struct independent;
@@ -66,14 +66,14 @@ namespace sequoia
       }
 
       template<bool Shared, class Proxy>
-      using shared_to_handler_t = std::conditional_t<Shared, ownership::shared<Proxy>, ownership::independent<Proxy>>;
+      using shared_to_handler_t = std::conditional_t<Shared, object::shared<Proxy>, object::independent<Proxy>>;
 
       template<class EdgeWeightCreator>
-        requires ownership::creator<EdgeWeightCreator>
+        requires object::creator<EdgeWeightCreator>
       using edge_weight_proxy_t = typename EdgeWeightCreator::proxy;
 
       template<class EdgeWeightCreator>
-        requires ownership::creator<EdgeWeightCreator>
+        requires object::creator<EdgeWeightCreator>
       [[nodiscard]]
       constexpr bool big_proxy() noexcept
       {
@@ -83,7 +83,7 @@ namespace sequoia
       }
 
       template<class EdgeWeightCreator>
-        requires ownership::creator<EdgeWeightCreator>
+        requires object::creator<EdgeWeightCreator>
       [[nodiscard]]
       constexpr bool copy_constructible_proxy() noexcept
       {
@@ -97,7 +97,7 @@ namespace sequoia
         edge_sharing_preference SharingPreference,
         class EdgeWeightCreator
       >
-        requires ownership::creator<EdgeWeightCreator>
+        requires object::creator<EdgeWeightCreator>
       struct sharing_traits
       {
       private:
@@ -125,28 +125,28 @@ namespace sequoia
 
       // Flavour to Edge
       template<graph_flavour GraphFlavour, class Handler, std::integral IndexType, bool SharedEdge>
-        requires ownership::handler<Handler>
+        requires object::handler<Handler>
       struct flavour_to_edge
       {
         using edge_type  = partial_edge<Handler, IndexType>;
       };
 
       template<class Handler, std::integral IndexType, bool SharedEdge>
-        requires ownership::handler<Handler>
+        requires object::handler<Handler>
       struct flavour_to_edge<graph_flavour::undirected_embedded, Handler, IndexType, SharedEdge>
       {
         using edge_type = embedded_partial_edge<Handler, IndexType>;
       };
 
       template<class Handler, std::integral IndexType, bool SharedEdge>
-        requires ownership::handler<Handler>
+        requires object::handler<Handler>
       struct flavour_to_edge<graph_flavour::directed_embedded, Handler, IndexType, SharedEdge>
       {
         using edge_type = std::conditional_t<SharedEdge, edge<Handler, IndexType>, embedded_edge<Handler, IndexType>>;
       };
 
       template<graph_flavour GraphFlavour, class Handler, std::integral IndexType, bool SharedEdge>
-        requires ownership::handler<Handler>
+        requires object::handler<Handler>
       using flavour_to_edge_t = typename flavour_to_edge<GraphFlavour, Handler, IndexType, SharedEdge>::edge_type;
 
       // Edge Init Type
@@ -154,8 +154,8 @@ namespace sequoia
       struct edge_to_init_type
       {
         using weight_type    = typename Edge::weight_type;
-        using proxy_type     = utilities::uniform_wrapper<weight_type>;
-        using handler_type   = ownership::independent<proxy_type>;
+        using proxy_type     = object::uniform_wrapper<weight_type>;
+        using handler_type   = object::independent<proxy_type>;
         using index_type     = typename Edge::index_type;
         using edge_init_type = std::conditional_t<Embedded,
                                                   std::conditional_t<Edge::flavour == edge_flavour::partial_embedded,
@@ -175,7 +175,7 @@ namespace sequoia
         std::integral IndexType,
         edge_sharing_preference SharingPreference
       >
-        requires ownership::creator<EdgeWeightCreator>
+        requires object::creator<EdgeWeightCreator>
       struct edge_type_generator
       {
         using sharing = sharing_traits<GraphFlavour, SharingPreference, EdgeWeightCreator>;

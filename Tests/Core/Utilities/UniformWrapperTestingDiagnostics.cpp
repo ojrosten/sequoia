@@ -13,6 +13,8 @@
 
 namespace sequoia::testing
 {
+  using namespace object;
+
   [[nodiscard]]
   std::string_view uniform_wrapper_false_positive_test::source_file() const noexcept
   {
@@ -28,16 +30,12 @@ namespace sequoia::testing
 
   void uniform_wrapper_false_positive_test::test_basic_type()
   {
-    using namespace utilities;
-
     uniform_wrapper<int> w{1}, v{};
     check(equality, LINE(""), w, v);
   }
 
   void uniform_wrapper_false_positive_test::test_container_type()
   {
-    using namespace utilities;
-
     uniform_wrapper<std::vector<int>> w{}, v{1};
     check(equality, LINE(""), w, v);
 
@@ -50,8 +48,6 @@ namespace sequoia::testing
 
   void uniform_wrapper_false_positive_test::test_aggregate_type()
   {
-    using namespace utilities;
-
     uniform_wrapper<data> w{}, v{1, 2.0};
     check(equality, LINE(""), w, v);
   }

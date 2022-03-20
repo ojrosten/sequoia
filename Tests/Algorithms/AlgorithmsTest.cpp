@@ -100,7 +100,7 @@ namespace sequoia::testing
 
   void algorithms_test::sort_uniform_wrapper()
   {
-    using wrapper = utilities::uniform_wrapper<int>;
+    using wrapper = object::uniform_wrapper<int>;
     constexpr std::array<wrapper, 4> a{wrapper{3}, wrapper{2}, wrapper{4}, wrapper{1}};
     constexpr auto b = sort(a);
     for(int i{}; i < 4; ++i)
@@ -110,7 +110,7 @@ namespace sequoia::testing
   void algorithms_test::sort_partial_edge()
   {
     struct null_type{};
-    using edge = maths::partial_edge<ownership::independent<utilities::uniform_wrapper<null_type>>>;
+    using edge = maths::partial_edge<object::independent<object::uniform_wrapper<null_type>>>;
     constexpr std::array<edge, 3> a{edge{1}, edge{2}, edge{0}};
     constexpr auto b = sort(a, [](const edge& lhs, const edge& rhs) { return lhs.target_node() < rhs.target_node(); });
 

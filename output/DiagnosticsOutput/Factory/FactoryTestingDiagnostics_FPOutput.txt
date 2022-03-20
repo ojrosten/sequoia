@@ -1,7 +1,7 @@
 	Tests/Runtime/FactoryTestingDiagnostics.cpp, Line 27
 
 	Comparison performed using:
-	[sequoia::testing::value_tester<sequoia::runtime::factory<int> >]
+	[sequoia::testing::value_tester<sequoia::object::factory<int> >]
 	Checking for equivalence with:
 	[std::array<std::pair<std::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::variant<int> >, 1>]
 
@@ -20,7 +20,7 @@
 	Tests/Runtime/FactoryTestingDiagnostics.cpp, Line 28
 
 	Comparison performed using:
-	[sequoia::testing::value_tester<sequoia::runtime::factory<int> >]
+	[sequoia::testing::value_tester<sequoia::object::factory<int> >]
 	Checking for equivalence with:
 	[std::array<std::pair<std::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::variant<int> >, 1>,
 	int]
@@ -40,7 +40,7 @@
 	Tests/Runtime/FactoryTestingDiagnostics.cpp, Line 34
 
 	Comparison performed using:
-	[sequoia::testing::value_tester<sequoia::runtime::factory<int, double> >]
+	[sequoia::testing::value_tester<sequoia::object::factory<int, double> >]
 	Checking for equivalence with:
 	[std::array<std::pair<std::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::variant<int, double> >, 2>]
 

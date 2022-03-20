@@ -23,17 +23,17 @@
 #include <memory>
 #include <algorithm>
 
-namespace sequoia::ownership
+namespace sequoia::object
 {
   /*! \brief Class template providing a `make` method, which constructs an instance of `T`, wrapped in a proxy.
 
-      The proxy used is \ref sequoia::utilities::uniform_wrapper "sequoia::utilities::uniform_wrapper<T>".
+      The proxy used is \ref sequoia::object::uniform_wrapper "sequoia::object::uniform_wrapper<T>".
       The latter is understood to define the interface for other analogous proxies appearing in this file.
    */
   template<class T> class spawner
   {
   public:
-    using proxy = utilities::uniform_wrapper<T>;
+    using proxy = object::uniform_wrapper<T>;
     using value_type = T;
 
     template<class... Args>
@@ -101,7 +101,7 @@ namespace sequoia::ownership
        | |....
       </pre>
 
-      To remove intermediate wrappers, `W`, with no associated proxies, invoke sequoia::ownership::data_pool::tidy.
+      To remove intermediate wrappers, `W`, with no associated proxies, invoke sequoia::object::data_pool::tidy.
    */
   template<class T, class Allocator=std::allocator<T>>
     requires (!std::is_empty_v<T>)

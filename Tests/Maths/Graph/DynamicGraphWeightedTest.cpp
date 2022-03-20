@@ -62,7 +62,7 @@ namespace sequoia::testing
     using edge_weight_t    = typename graph_t::edge_weight_type;
     using node_weight_t    = typename graph_t::node_weight_type;
 
-    constexpr bool edgeDataPool{std::is_same_v<EdgeWeightCreator, ownership::data_pool<EdgeWeight>>};
+    constexpr bool edgeDataPool{std::is_same_v<EdgeWeightCreator, object::data_pool<EdgeWeight>>};
 
     graph_t graph;
 

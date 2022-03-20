@@ -11,6 +11,8 @@
 
 namespace sequoia::testing
 {
+  using namespace object;
+
   [[nodiscard]]
   std::string_view factory_false_positive_test::source_file() const noexcept
   {
@@ -19,8 +21,6 @@ namespace sequoia::testing
 
   void factory_false_positive_test::run_tests()
   {
-    using namespace runtime;
-
     {
       using prediction_type = std::array<std::pair<std::string, std::variant<int>>, 1>;
       factory<int> f{{"int"}};

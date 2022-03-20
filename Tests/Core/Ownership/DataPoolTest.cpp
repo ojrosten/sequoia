@@ -25,9 +25,9 @@ namespace sequoia::testing
     test_spawner();
   }
 
-  ownership::data_pool<int> data_pool_test::make_int_pool(const int val)
+  object::data_pool<int> data_pool_test::make_int_pool(const int val)
   {
-    using namespace ownership;
+    using namespace object;
     using pool_t = data_pool<int>;
 
     using prediction_t = typename value_tester<pool_t>::prediction_type;
@@ -47,7 +47,7 @@ namespace sequoia::testing
 
   void data_pool_test::test_multi_pools()
   {
-    using namespace ownership;
+    using namespace object;
     using pool_t = data_pool<int>;
 
     using prediction_t = typename value_tester<pool_t>::prediction_type;
@@ -121,7 +121,7 @@ namespace sequoia::testing
 
   void data_pool_test::test_pooled()
   {
-    using namespace ownership;
+    using namespace object;
     using pool_t = data_pool<int>;
 
     using prediction_t = typename value_tester<pool_t>::prediction_type;
@@ -199,7 +199,7 @@ namespace sequoia::testing
 
   void data_pool_test::test_spawner()
   {
-    using namespace ownership;
+    using namespace object;
     constexpr auto x = spawner<double>::make(3.0);
     check(equality, LINE(""), x.get(), 3.0);
   }

@@ -12,7 +12,7 @@
 
  */
 
-namespace sequoia::ownership
+namespace sequoia::object
 {
   template<class T>
   concept creator = requires(T & a) {

@@ -14,7 +14,7 @@
 
 #include "sequoia/Core/Meta/Concepts.hpp"
 
-namespace sequoia::ownership
+namespace sequoia::object
 {
   template<class H>
   concept handler = requires(H& h, typename H::handle_type& x, const typename H::handle_type& cx){

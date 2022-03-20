@@ -47,7 +47,7 @@ namespace sequoia::maths::graph_impl
     class EdgeStorageTraits,
     std::integral IndexType
   >
-    requires ownership::creator<EdgeWeightCreator>
+    requires object::creator<EdgeWeightCreator>
   struct dynamic_edge_traits : public
     edge_type_generator
     <
@@ -70,8 +70,8 @@ namespace sequoia::maths::graph_impl
     constexpr static bool shared_edge_v{edge_type_gen::shared_edge_v};
 
     using edge_storage_handler = std::conditional_t<shared_edge_v,
-                                                    ownership::shared<edge_type>,
-                                                    ownership::independent<edge_type>>;
+                                                    object::shared<edge_type>,
+                                                    object::independent<edge_type>>;
 
     using edge_storage_traits
       = typename EdgeStorageTraits::template traits_type<edge_type, edge_storage_handler>;

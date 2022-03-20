@@ -42,7 +42,7 @@ namespace sequoia::testing
   }
 
   template<class WeightHandler, std::integral IndexType>
-    requires ownership::handler<WeightHandler>
+    requires object::handler<WeightHandler>
   struct value_tester<maths::partial_edge<WeightHandler, IndexType>>
   {
     using type = maths::partial_edge<WeightHandler, IndexType>;
@@ -54,7 +54,7 @@ namespace sequoia::testing
     }
 
     template<test_mode Mode, class OtherHandler>
-      requires ownership::handler<OtherHandler>
+      requires object::handler<OtherHandler>
     static void test(equivalence_check_t, test_logger<Mode>& logger, const type& edge, const maths::partial_edge<OtherHandler, IndexType>& prediction)
     {
       impl::check_partial(with_best_available, logger, edge, prediction);
@@ -62,7 +62,7 @@ namespace sequoia::testing
   };
 
   template<class WeightHandler, std::integral IndexType>
-    requires ownership::handler<WeightHandler>
+    requires object::handler<WeightHandler>
   struct value_tester<maths::embedded_partial_edge<WeightHandler, IndexType>>
   {
     using type = maths::embedded_partial_edge<WeightHandler, IndexType>;
@@ -75,7 +75,7 @@ namespace sequoia::testing
     }
 
     template<test_mode Mode, class OtherHandler>
-      requires ownership::handler<OtherHandler>
+      requires object::handler<OtherHandler>
     static void test(equivalence_check_t, test_logger<Mode>& logger, const type& edge, const maths::embedded_partial_edge<OtherHandler, IndexType>& prediction)
     {
       impl::check_partial(with_best_available, logger, edge, prediction);
@@ -84,7 +84,7 @@ namespace sequoia::testing
   };
 
   template<class WeightHandler, std::integral IndexType>
-    requires ownership::handler<WeightHandler>
+    requires object::handler<WeightHandler>
   struct value_tester<maths::edge<WeightHandler, IndexType>>
   {
     using type = maths::edge<WeightHandler, IndexType>;
@@ -97,7 +97,7 @@ namespace sequoia::testing
     }
 
     template<test_mode Mode, class OtherHandler>
-      requires ownership::handler<OtherHandler>
+      requires object::handler<OtherHandler>
     static void test(equivalence_check_t, test_logger<Mode>& logger, const type& edge, const maths::edge<OtherHandler, IndexType>& prediction)
     {
       impl::check_partial(with_best_available, logger, edge, prediction);
@@ -113,7 +113,7 @@ namespace sequoia::testing
   };
 
   template<class WeightHandler, std::integral IndexType>
-    requires ownership::handler<WeightHandler>
+    requires object::handler<WeightHandler>
   struct value_tester<maths::embedded_edge<WeightHandler, IndexType>>
   {
     using type = maths::embedded_edge<WeightHandler, IndexType>;
@@ -127,7 +127,7 @@ namespace sequoia::testing
     }
 
     template<test_mode Mode, class OtherHandler>
-      requires ownership::handler<OtherHandler>
+      requires object::handler<OtherHandler>
     static void test(equivalence_check_t, test_logger<Mode>& logger, const type& edge, const maths::embedded_edge<OtherHandler, IndexType>& prediction)
     {
       impl::check_partial(with_best_available, logger, edge, prediction);

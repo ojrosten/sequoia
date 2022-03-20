@@ -18,7 +18,7 @@
 
 #include <memory>
 
-namespace sequoia::ownership
+namespace sequoia::object
 {
   template<class T, class... Args>
   [[nodiscard]]

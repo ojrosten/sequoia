@@ -22,7 +22,7 @@
 #include <algorithm>
 #include <string>
 
-namespace sequoia::runtime
+namespace sequoia::object
 {
   template<std::input_or_output_iterator Iterator>
   class factory_dereference_policy

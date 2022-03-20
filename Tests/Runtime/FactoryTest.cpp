@@ -13,6 +13,8 @@
 
 namespace sequoia::testing
 {
+  using namespace object;
+
   [[nodiscard]]
   std::string_view factory_test::source_file() const noexcept
   {
@@ -61,8 +63,6 @@ namespace sequoia::testing
 
   void factory_test::run_tests()
   {
-    using namespace runtime;
-
     {
       using prediction_type = std::array<std::pair<std::string, std::variant<int, double>>, 2>;
 

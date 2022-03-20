@@ -17,9 +17,9 @@
 namespace sequoia::testing
 {
   template<class... Products>
-  struct value_tester<sequoia::runtime::factory<Products...>>
+  struct value_tester<sequoia::object::factory<Products...>>
   {
-    using type = sequoia::runtime::factory<Products...>;
+    using type = sequoia::object::factory<Products...>;
     using element = std::pair<std::string, std::variant<Products...>>;
 
     template<test_mode Mode, class... Args>
