@@ -13,7 +13,7 @@
 
  */
 
-#include "sequoia/Core/Ownership/HandlerTraits.hpp"
+#include "sequoia/Core/ObjectHandling/HandlerTraits.hpp"
 #include "sequoia/Core/Meta/Concepts.hpp"
 
 #include <memory>
@@ -35,7 +35,8 @@ namespace sequoia::ownership
     using elementary_type = T;
 
     template<class... Args>
-    [[nodiscard]] static handle_type make(Args&&... args)
+    [[nodiscard]]
+    static handle_type make(Args&&... args)
     {
       return make_shared_braced<T>(std::forward<Args>(args)...);
     }
@@ -83,7 +84,8 @@ namespace sequoia::ownership
     using elementary_type = T;
 
     template<class... Args>
-    [[nodiscard]] constexpr static T make(Args&&... args)
+    [[nodiscard]]
+    constexpr static T make(Args&&... args)
     {
       return T{std::forward<Args>(args)...};
     }

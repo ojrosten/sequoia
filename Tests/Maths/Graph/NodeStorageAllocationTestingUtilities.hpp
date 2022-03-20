@@ -12,7 +12,7 @@
 #include "NodeStorageTestingUtilities.hpp"
 
 #include "sequoia/TestFramework/AllocationCheckers.hpp"
-#include "sequoia/Core/Ownership/DataPool.hpp"
+#include "sequoia/Core/ObjectHandling/DataPool.hpp"
 #include "sequoia/Core/Meta/Concepts.hpp"
 
 namespace sequoia::testing

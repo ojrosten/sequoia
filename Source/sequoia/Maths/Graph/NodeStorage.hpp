@@ -21,8 +21,8 @@
 #include "sequoia/Core/Utilities/ArrayUtilities.hpp"
 #include "sequoia/Core/Utilities/AssignmentUtilities.hpp"
 #include "sequoia/Core/Utilities/Iterator.hpp"
-#include "sequoia/Core/Utilities/UniformWrapper.hpp"
-#include "sequoia/Core/Ownership/DataPoolTraits.hpp"
+#include "sequoia/Core/ObjectHandling/UniformWrapper.hpp"
+#include "sequoia/Core/ObjectHandling/DataPoolTraits.hpp"
 #include "sequoia/Maths/Graph/EdgesAndNodesUtilities.hpp"
 #include "sequoia/PlatformSpecific/Preprocessor.hpp"
 

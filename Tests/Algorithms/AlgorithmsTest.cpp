@@ -11,9 +11,9 @@
 #include "AlgorithmsTest.hpp"
 
 #include "sequoia/Algorithms/Algorithms.hpp"
-#include "sequoia/Core/Utilities/UniformWrapper.hpp"
+#include "sequoia/Core/ObjectHandling/UniformWrapper.hpp"
 #include "sequoia/Maths/Graph/Edge.hpp"
-#include "sequoia/Core/Ownership/Handlers.hpp"
+#include "sequoia/Core/ObjectHandling/Handlers.hpp"
 
 #include <array>
 

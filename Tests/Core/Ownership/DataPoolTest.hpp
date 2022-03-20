@@ -11,7 +11,7 @@
 
 #include "sequoia/TestFramework/MoveOnlyTestCore.hpp"
 
-#include "sequoia/Core/Ownership/DataPool.hpp"
+#include "sequoia/Core/ObjectHandling/DataPool.hpp"
 
 namespace sequoia::testing
 {

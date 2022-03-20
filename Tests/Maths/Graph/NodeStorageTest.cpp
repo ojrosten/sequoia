@@ -8,8 +8,8 @@
 /*! \file */
 
 #include "NodeStorageTest.hpp"
-#include "sequoia/Core/Utilities/UniformWrapper.hpp"
-#include "sequoia/Core/Ownership/DataPool.hpp"
+#include "sequoia/Core/ObjectHandling/UniformWrapper.hpp"
+#include "sequoia/Core/ObjectHandling/DataPool.hpp"
 #include "sequoia/Maths/Graph/GraphDetails.hpp"
 
 #include <complex>
