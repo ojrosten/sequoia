@@ -13,7 +13,7 @@
 
  */
 
-#include "sequoia/Core/ObjectHandling/HandlerTraits.hpp"
+#include "sequoia/Core/Object/HandlerTraits.hpp"
 #include "sequoia/Core/Meta/Concepts.hpp"
 
 #include <memory>

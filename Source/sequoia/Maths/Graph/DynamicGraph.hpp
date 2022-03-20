@@ -13,7 +13,7 @@
 */
 
 #include "sequoia/Core/DataStructures/PartitionedData.hpp"
-#include "sequoia/Core/ObjectHandling/DataPool.hpp"
+#include "sequoia/Core/Object/DataPool.hpp"
 #include "sequoia/Maths/Graph/GraphImpl.hpp"
 #include "sequoia/Maths/Graph/DynamicGraphImpl.hpp"
 #include "sequoia/Maths/Graph/NodeStorage.hpp"

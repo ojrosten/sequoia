@@ -28,7 +28,7 @@
 
 #include "sequoia/Core/Meta/Concepts.hpp"
 #include "sequoia/Core/Meta/TypeTraits.hpp"
-#include "sequoia/Core/ObjectHandling/HandlerTraits.hpp"
+#include "sequoia/Core/Object/HandlerTraits.hpp"
 #include "sequoia/Maths/Graph/EdgesAndNodesUtilities.hpp"
 
 #include <stdexcept>

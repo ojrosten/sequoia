@@ -13,8 +13,8 @@
  */
 
 #include "sequoia/Maths/Graph/Edge.hpp"
-#include "sequoia/Core/ObjectHandling/DataPoolTraits.hpp"
-#include "sequoia/Core/ObjectHandling/UniformWrapper.hpp"
+#include "sequoia/Core/Object/Creator.hpp"
+#include "sequoia/Core/Object/UniformWrapper.hpp"
 
 namespace sequoia
 {

@@ -49,7 +49,7 @@
 #include "sequoia/TestFramework/FreeCheckers.hpp"
 #include "sequoia/TestFramework/FileEditors.hpp"
 #include "sequoia/TestFramework/FileSystem.hpp"
-#include "sequoia/Core/ObjectHandling/Factory.hpp"
+#include "sequoia/Core/Object/Factory.hpp"
 #include "sequoia/Streaming/Streaming.hpp"
 
 #include <array>

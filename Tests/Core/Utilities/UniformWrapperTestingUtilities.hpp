@@ -11,7 +11,7 @@
 
 #include "sequoia/TestFramework/RegularTestCore.hpp"
 
-#include "sequoia/Core/ObjectHandling/UniformWrapper.hpp"
+#include "sequoia/Core/Object/UniformWrapper.hpp"
 
 namespace sequoia::testing
 {

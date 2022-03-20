@@ -9,8 +9,8 @@
 
 #include "EdgeTestingDiagnostics.hpp"
 
-#include "sequoia/Core/ObjectHandling/Handlers.hpp"
-#include "sequoia/Core/ObjectHandling/UniformWrapper.hpp"
+#include "sequoia/Core/Object/Handlers.hpp"
+#include "sequoia/Core/Object/UniformWrapper.hpp"
 
 namespace sequoia::testing
 {

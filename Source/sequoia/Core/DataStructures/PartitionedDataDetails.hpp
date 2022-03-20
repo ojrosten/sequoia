@@ -11,7 +11,7 @@
     \brief Metaprogramming components for partitioned data.
  */
 
-#include "sequoia/Core/ObjectHandling/Handlers.hpp"
+#include "sequoia/Core/Object/Handlers.hpp"
 #include "sequoia/Core/Meta/TypeTraits.hpp"
 
 #include <map>

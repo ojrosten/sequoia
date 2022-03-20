@@ -10,7 +10,7 @@
 /*! \file */
 
 #include "sequoia/TestFramework/RegularTestCore.hpp"
-#include "sequoia/Core/ObjectHandling/Factory.hpp"
+#include "sequoia/Core/Object/Factory.hpp"
 
 #include <map>
 

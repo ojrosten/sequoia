@@ -14,9 +14,9 @@
     latter provides a uniform interface.
  */
 
-#include "sequoia/Core/ObjectHandling/Handlers.hpp"
+#include "sequoia/Core/Object/Handlers.hpp"
 
-#include "sequoia/Core/ObjectHandling/UniformWrapper.hpp"
+#include "sequoia/Core/Object/UniformWrapper.hpp"
 #include "sequoia/Core/Utilities/Iterator.hpp"
 
 #include <vector>
