@@ -16,10 +16,35 @@
 namespace sequoia::object
 {
   template<class T>
-  concept creator = requires(T & a) {
-    typename T::proxy;
+  concept creator = requires(T& a) {
+    typename T::product_type;
     typename T::value_type;
 
-    { a.make() } -> std::same_as<typename T::proxy>;
+    { a.make() } -> std::same_as<typename T::product_type>;
+  };
+
+  template<class Product, class T>
+  concept producer_for = requires { std::same_as<T, typename Product::value_type>; };
+
+  template<class T, producer_for<T> Product>
+  class producer
+  {
+  public:
+    using product_type = Product;
+    using value_type   = T;
+
+    template<class... Args>
+      requires std::constructible_from<product_type, Args...>
+    [[nodiscard]]
+    constexpr static product_type make(Args&&... args)
+    {
+      return product_type{std::forward<Args>(args)...};
+    }
+
+    [[nodiscard]]
+    friend constexpr bool operator==(const producer&, const producer&) noexcept = default;
+
+    [[nodiscard]]
+    friend constexpr bool operator!=(const producer&, const producer&) noexcept = default;
   };
 }

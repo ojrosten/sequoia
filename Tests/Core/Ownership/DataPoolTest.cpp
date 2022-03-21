@@ -200,7 +200,7 @@ namespace sequoia::testing
   void data_pool_test::test_spawner()
   {
     using namespace object;
-    constexpr auto x = spawner<double>::make(3.0);
+    constexpr auto x = uniform_producer<double>::make(3.0);
     check(equality, LINE(""), x.get(), 3.0);
   }
 }

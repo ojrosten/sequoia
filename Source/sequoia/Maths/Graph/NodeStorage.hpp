@@ -60,7 +60,7 @@ namespace sequoia::maths::graph_impl
   };
 
   template<class T>
-  inline constexpr bool empty_proxy = object::creator<T> && std::is_empty_v<typename T::proxy::value_type>;
+  inline constexpr bool empty_proxy = object::creator<T> && std::is_empty_v<typename T::product_type::value_type>;
 
   // TO DO: remove this indirection if/when clang no longer needs it!
   template<class N>
@@ -83,7 +83,7 @@ namespace sequoia::maths::graph_impl
   public:
     using weight_maker_type          = WeightMaker;
     using traits_type                = Traits;
-    using weight_proxy_type          = typename WeightMaker::proxy;
+    using weight_proxy_type          = typename WeightMaker::product_type;
     using node_weight_container_type = Container<weight_proxy_type>;
     using weight_type                = typename weight_proxy_type::value_type;
     using size_type                  = typename node_weight_container_type::size_type;
@@ -438,7 +438,7 @@ namespace sequoia::maths::graph_impl
   class node_storage<WeightMaker, Traits>
   {
   public:
-    using weight_proxy_type = typename WeightMaker::proxy;
+    using weight_proxy_type = typename WeightMaker::product_type;
     using weight_type       = typename weight_proxy_type::value_type;
     using size_type         = std::size_t;
 

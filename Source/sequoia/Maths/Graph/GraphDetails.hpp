@@ -70,7 +70,7 @@ namespace sequoia
 
       template<class EdgeWeightCreator>
         requires object::creator<EdgeWeightCreator>
-      using edge_weight_proxy_t = typename EdgeWeightCreator::proxy;
+      using edge_weight_proxy_t = typename EdgeWeightCreator::product_type;
 
       template<class EdgeWeightCreator>
         requires object::creator<EdgeWeightCreator>

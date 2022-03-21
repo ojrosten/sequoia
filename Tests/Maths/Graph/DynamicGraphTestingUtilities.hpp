@@ -173,18 +173,18 @@ namespace sequoia::testing
       using ESTraits = EdgeStorageTraits;
       using NSTraits = NodeWeightStorageTraits;
 
-      run_tests<GraphFlavour, spawner<EW>, spawner<NW>, ESTraits, NSTraits>();
+      run_tests<GraphFlavour, uniform_producer<EW>, uniform_producer<NW>, ESTraits, NSTraits>();
 
       if constexpr(!minimal_graph_tests())
       {
         if constexpr(!std::is_empty_v<NodeWeight>)
         {
-          run_tests<GraphFlavour, spawner<EW>, data_pool<NW>, ESTraits, NSTraits>();
+          run_tests<GraphFlavour, uniform_producer<EW>, data_pool<NW>, ESTraits, NSTraits>();
         }
 
         if constexpr(!std::is_empty_v<EdgeWeight>)
         {
-          run_tests<GraphFlavour, data_pool<EW>, spawner<NW>, ESTraits, NSTraits>();
+          run_tests<GraphFlavour, data_pool<EW>, uniform_producer<NW>, ESTraits, NSTraits>();
         }
 
         if constexpr(!std::is_empty_v<EdgeWeight> && !std::is_empty_v<NodeWeight>)

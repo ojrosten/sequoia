@@ -74,9 +74,9 @@ namespace sequoia::maths::graph_impl
     std::integral IndexType
   >
   struct static_edge_traits
-    : public edge_type_generator<GraphFlavour, object::spawner<EdgeWeight>, IndexType, edge_sharing_preference::independent>
+    : public edge_type_generator<GraphFlavour, object::uniform_producer<EdgeWeight>, IndexType, edge_sharing_preference::independent>
   {
-    using edge_type = typename edge_type_generator<GraphFlavour, object::spawner<EdgeWeight>, IndexType, edge_sharing_preference::independent>::edge_type;
+    using edge_type = typename edge_type_generator<GraphFlavour, object::uniform_producer<EdgeWeight>, IndexType, edge_sharing_preference::independent>::edge_type;
     using edge_storage_type = data_structures::static_partitioned_sequence<edge_type, Order, num_static_edges(GraphFlavour, Size), IndexType>;
 
     constexpr static bool shared_edge_v{};
