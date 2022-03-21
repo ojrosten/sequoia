@@ -114,7 +114,7 @@ namespace sequoia::object
         throw std::runtime_error{std::string{"Factory unable to make product of name '"}.append(name).append("'")};
 
       return std::visit(variant_visitor{[&](const auto& v) { return vessel{v.make(std::forward<Args>(args)...)}; }}, found->second);
-    };
+    }
 
     template<class Product, class... Args>
       requires (    (std::is_same_v<Product, Products> || ...)
