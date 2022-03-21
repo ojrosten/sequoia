@@ -2,7 +2,7 @@
 	Empty data inequivalent to non-empty data 
 
 	Comparison performed using:
-	[sequoia::testing::value_tester<sequoia::data_structures::bucketed_sequence<int, sequoia::object::independent<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::object::independent<int> > > >]
+	[sequoia::testing::value_tester<sequoia::data_structures::bucketed_sequence<int, sequoia::object::independent<int>, sequoia::data_structures::bucketed_sequence_traits<int, sequoia::object::independent<int> > > >]
 	Checking for equivalence with:
 	[std::initializer_list<std::initializer_list<int> >]
 
@@ -24,7 +24,7 @@
 	Non-empty data inequivalent to empty data 
 
 	Comparison performed using:
-	[sequoia::testing::value_tester<sequoia::data_structures::bucketed_sequence<int, sequoia::object::independent<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::object::independent<int> > > >]
+	[sequoia::testing::value_tester<sequoia::data_structures::bucketed_sequence<int, sequoia::object::independent<int>, sequoia::data_structures::bucketed_sequence_traits<int, sequoia::object::independent<int> > > >]
 	Checking for equivalence with:
 	[std::initializer_list<std::initializer_list<int> >]
 
@@ -56,7 +56,7 @@
 	Single partitions holding different elements compare not equal
 
 	Comparison performed using:
-	[sequoia::testing::value_tester<sequoia::data_structures::bucketed_sequence<int, sequoia::object::independent<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::object::independent<int> > > >]
+	[sequoia::testing::value_tester<sequoia::data_structures::bucketed_sequence<int, sequoia::object::independent<int>, sequoia::data_structures::bucketed_sequence_traits<int, sequoia::object::independent<int> > > >]
 	Checking for equivalence with:
 	[std::initializer_list<std::initializer_list<int> >]
 
@@ -82,7 +82,7 @@
 	Identical elements divided between different partitions compare notequal
 
 	Comparison performed using:
-	[sequoia::testing::value_tester<sequoia::data_structures::bucketed_sequence<int, sequoia::object::independent<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::object::independent<int> > > >]
+	[sequoia::testing::value_tester<sequoia::data_structures::bucketed_sequence<int, sequoia::object::independent<int>, sequoia::data_structures::bucketed_sequence_traits<int, sequoia::object::independent<int> > > >]
 	Checking for equivalence with:
 	[std::initializer_list<std::initializer_list<int> >]
 
@@ -98,7 +98,7 @@
 	Identical elements divided between different partitions compare notequal
 
 	Comparison performed using:
-	[sequoia::testing::value_tester<sequoia::data_structures::bucketed_sequence<int, sequoia::object::independent<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::object::independent<int> > > >]
+	[sequoia::testing::value_tester<sequoia::data_structures::bucketed_sequence<int, sequoia::object::independent<int>, sequoia::data_structures::bucketed_sequence_traits<int, sequoia::object::independent<int> > > >]
 	Checking for equivalence with:
 	[std::initializer_list<std::initializer_list<int> >]
 
@@ -112,7 +112,7 @@
 
 	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 62
 
-	[sequoia::data_structures::bucketed_sequence<int, sequoia::object::independent<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::object::independent<int> > >]
+	[sequoia::data_structures::bucketed_sequence<int, sequoia::object::independent<int>, sequoia::data_structures::bucketed_sequence_traits<int, sequoia::object::independent<int> > >]
 	operator== returned false
 
 	  Emptiness incorrect
@@ -135,7 +135,7 @@
 
 	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 63
 
-	[sequoia::data_structures::bucketed_sequence<int, sequoia::object::independent<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::object::independent<int> > >]
+	[sequoia::data_structures::bucketed_sequence<int, sequoia::object::independent<int>, sequoia::data_structures::bucketed_sequence_traits<int, sequoia::object::independent<int> > >]
 	operator== returned false
 
 	  Partition 0
@@ -196,7 +196,7 @@
 
 	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 64
 
-	[sequoia::data_structures::bucketed_sequence<int, sequoia::object::independent<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::object::independent<int> > >]
+	[sequoia::data_structures::bucketed_sequence<int, sequoia::object::independent<int>, sequoia::data_structures::bucketed_sequence_traits<int, sequoia::object::independent<int> > >]
 	operator== returned false
 
 	  Number of partitions incorrect
@@ -555,7 +555,7 @@
 	Empty data inequivalent to non-empty data 
 
 	Comparison performed using:
-	[sequoia::testing::value_tester<sequoia::data_structures::bucketed_sequence<int, sequoia::object::shared<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::object::shared<int> > > >]
+	[sequoia::testing::value_tester<sequoia::data_structures::bucketed_sequence<int, sequoia::object::shared<int>, sequoia::data_structures::bucketed_sequence_traits<int, sequoia::object::shared<int> > > >]
 	Checking for equivalence with:
 	[std::initializer_list<std::initializer_list<int> >]
 
@@ -577,7 +577,7 @@
 	Non-empty data inequivalent to empty data 
 
 	Comparison performed using:
-	[sequoia::testing::value_tester<sequoia::data_structures::bucketed_sequence<int, sequoia::object::shared<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::object::shared<int> > > >]
+	[sequoia::testing::value_tester<sequoia::data_structures::bucketed_sequence<int, sequoia::object::shared<int>, sequoia::data_structures::bucketed_sequence_traits<int, sequoia::object::shared<int> > > >]
 	Checking for equivalence with:
 	[std::initializer_list<std::initializer_list<int> >]
 
@@ -609,7 +609,7 @@
 	Single partitions holding different elements compare not equal
 
 	Comparison performed using:
-	[sequoia::testing::value_tester<sequoia::data_structures::bucketed_sequence<int, sequoia::object::shared<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::object::shared<int> > > >]
+	[sequoia::testing::value_tester<sequoia::data_structures::bucketed_sequence<int, sequoia::object::shared<int>, sequoia::data_structures::bucketed_sequence_traits<int, sequoia::object::shared<int> > > >]
 	Checking for equivalence with:
 	[std::initializer_list<std::initializer_list<int> >]
 
@@ -635,7 +635,7 @@
 	Identical elements divided between different partitions compare notequal
 
 	Comparison performed using:
-	[sequoia::testing::value_tester<sequoia::data_structures::bucketed_sequence<int, sequoia::object::shared<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::object::shared<int> > > >]
+	[sequoia::testing::value_tester<sequoia::data_structures::bucketed_sequence<int, sequoia::object::shared<int>, sequoia::data_structures::bucketed_sequence_traits<int, sequoia::object::shared<int> > > >]
 	Checking for equivalence with:
 	[std::initializer_list<std::initializer_list<int> >]
 
@@ -651,7 +651,7 @@
 	Identical elements divided between different partitions compare notequal
 
 	Comparison performed using:
-	[sequoia::testing::value_tester<sequoia::data_structures::bucketed_sequence<int, sequoia::object::shared<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::object::shared<int> > > >]
+	[sequoia::testing::value_tester<sequoia::data_structures::bucketed_sequence<int, sequoia::object::shared<int>, sequoia::data_structures::bucketed_sequence_traits<int, sequoia::object::shared<int> > > >]
 	Checking for equivalence with:
 	[std::initializer_list<std::initializer_list<int> >]
 
@@ -665,7 +665,7 @@
 
 	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 62
 
-	[sequoia::data_structures::bucketed_sequence<int, sequoia::object::shared<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::object::shared<int> > >]
+	[sequoia::data_structures::bucketed_sequence<int, sequoia::object::shared<int>, sequoia::data_structures::bucketed_sequence_traits<int, sequoia::object::shared<int> > >]
 	operator== returned false
 
 	  Emptiness incorrect
@@ -688,7 +688,7 @@
 
 	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 63
 
-	[sequoia::data_structures::bucketed_sequence<int, sequoia::object::shared<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::object::shared<int> > >]
+	[sequoia::data_structures::bucketed_sequence<int, sequoia::object::shared<int>, sequoia::data_structures::bucketed_sequence_traits<int, sequoia::object::shared<int> > >]
 	operator== returned false
 
 	  Partition 0
@@ -749,7 +749,7 @@
 
 	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 64
 
-	[sequoia::data_structures::bucketed_sequence<int, sequoia::object::shared<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::object::shared<int> > >]
+	[sequoia::data_structures::bucketed_sequence<int, sequoia::object::shared<int>, sequoia::data_structures::bucketed_sequence_traits<int, sequoia::object::shared<int> > >]
 	operator== returned false
 
 	  Number of partitions incorrect
@@ -2214,7 +2214,7 @@
 	Empty data inequivalent to non-empty data 
 
 	Comparison performed using:
-	[sequoia::testing::value_tester<sequoia::data_structures::bucketed_sequence<std::vector<double, std::allocator<double> >, sequoia::object::independent<std::vector<double, std::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::vector<double, std::allocator<double> >, sequoia::object::independent<std::vector<double, std::allocator<double> > > > > >]
+	[sequoia::testing::value_tester<sequoia::data_structures::bucketed_sequence<std::vector<double, std::allocator<double> >, sequoia::object::independent<std::vector<double, std::allocator<double> > >, sequoia::data_structures::bucketed_sequence_traits<std::vector<double, std::allocator<double> >, sequoia::object::independent<std::vector<double, std::allocator<double> > > > > >]
 	Checking for equivalence with:
 	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
@@ -2236,7 +2236,7 @@
 	Non-empty data inequivalent to empty data 
 
 	Comparison performed using:
-	[sequoia::testing::value_tester<sequoia::data_structures::bucketed_sequence<std::vector<double, std::allocator<double> >, sequoia::object::independent<std::vector<double, std::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::vector<double, std::allocator<double> >, sequoia::object::independent<std::vector<double, std::allocator<double> > > > > >]
+	[sequoia::testing::value_tester<sequoia::data_structures::bucketed_sequence<std::vector<double, std::allocator<double> >, sequoia::object::independent<std::vector<double, std::allocator<double> > >, sequoia::data_structures::bucketed_sequence_traits<std::vector<double, std::allocator<double> >, sequoia::object::independent<std::vector<double, std::allocator<double> > > > > >]
 	Checking for equivalence with:
 	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
@@ -2268,7 +2268,7 @@
 	Single partitions holding different elements compare not equal
 
 	Comparison performed using:
-	[sequoia::testing::value_tester<sequoia::data_structures::bucketed_sequence<std::vector<double, std::allocator<double> >, sequoia::object::independent<std::vector<double, std::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::vector<double, std::allocator<double> >, sequoia::object::independent<std::vector<double, std::allocator<double> > > > > >]
+	[sequoia::testing::value_tester<sequoia::data_structures::bucketed_sequence<std::vector<double, std::allocator<double> >, sequoia::object::independent<std::vector<double, std::allocator<double> > >, sequoia::data_structures::bucketed_sequence_traits<std::vector<double, std::allocator<double> >, sequoia::object::independent<std::vector<double, std::allocator<double> > > > > >]
 	Checking for equivalence with:
 	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
@@ -2302,7 +2302,7 @@
 	Identical elements divided between different partitions compare notequal
 
 	Comparison performed using:
-	[sequoia::testing::value_tester<sequoia::data_structures::bucketed_sequence<std::vector<double, std::allocator<double> >, sequoia::object::independent<std::vector<double, std::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::vector<double, std::allocator<double> >, sequoia::object::independent<std::vector<double, std::allocator<double> > > > > >]
+	[sequoia::testing::value_tester<sequoia::data_structures::bucketed_sequence<std::vector<double, std::allocator<double> >, sequoia::object::independent<std::vector<double, std::allocator<double> > >, sequoia::data_structures::bucketed_sequence_traits<std::vector<double, std::allocator<double> >, sequoia::object::independent<std::vector<double, std::allocator<double> > > > > >]
 	Checking for equivalence with:
 	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
@@ -2318,7 +2318,7 @@
 	Identical elements divided between different partitions compare notequal
 
 	Comparison performed using:
-	[sequoia::testing::value_tester<sequoia::data_structures::bucketed_sequence<std::vector<double, std::allocator<double> >, sequoia::object::independent<std::vector<double, std::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::vector<double, std::allocator<double> >, sequoia::object::independent<std::vector<double, std::allocator<double> > > > > >]
+	[sequoia::testing::value_tester<sequoia::data_structures::bucketed_sequence<std::vector<double, std::allocator<double> >, sequoia::object::independent<std::vector<double, std::allocator<double> > >, sequoia::data_structures::bucketed_sequence_traits<std::vector<double, std::allocator<double> >, sequoia::object::independent<std::vector<double, std::allocator<double> > > > > >]
 	Checking for equivalence with:
 	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
@@ -2332,7 +2332,7 @@
 
 	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 62
 
-	[sequoia::data_structures::bucketed_sequence<std::vector<double, std::allocator<double> >, sequoia::object::independent<std::vector<double, std::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::vector<double, std::allocator<double> >, sequoia::object::independent<std::vector<double, std::allocator<double> > > > >]
+	[sequoia::data_structures::bucketed_sequence<std::vector<double, std::allocator<double> >, sequoia::object::independent<std::vector<double, std::allocator<double> > >, sequoia::data_structures::bucketed_sequence_traits<std::vector<double, std::allocator<double> >, sequoia::object::independent<std::vector<double, std::allocator<double> > > > >]
 	operator== returned false
 
 	  Emptiness incorrect
@@ -2355,7 +2355,7 @@
 
 	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 63
 
-	[sequoia::data_structures::bucketed_sequence<std::vector<double, std::allocator<double> >, sequoia::object::independent<std::vector<double, std::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::vector<double, std::allocator<double> >, sequoia::object::independent<std::vector<double, std::allocator<double> > > > >]
+	[sequoia::data_structures::bucketed_sequence<std::vector<double, std::allocator<double> >, sequoia::object::independent<std::vector<double, std::allocator<double> > >, sequoia::data_structures::bucketed_sequence_traits<std::vector<double, std::allocator<double> >, sequoia::object::independent<std::vector<double, std::allocator<double> > > > >]
 	operator== returned false
 
 	  Partition 0
@@ -2440,7 +2440,7 @@
 
 	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 64
 
-	[sequoia::data_structures::bucketed_sequence<std::vector<double, std::allocator<double> >, sequoia::object::independent<std::vector<double, std::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::vector<double, std::allocator<double> >, sequoia::object::independent<std::vector<double, std::allocator<double> > > > >]
+	[sequoia::data_structures::bucketed_sequence<std::vector<double, std::allocator<double> >, sequoia::object::independent<std::vector<double, std::allocator<double> > >, sequoia::data_structures::bucketed_sequence_traits<std::vector<double, std::allocator<double> >, sequoia::object::independent<std::vector<double, std::allocator<double> > > > >]
 	operator== returned false
 
 	  Number of partitions incorrect
@@ -2927,7 +2927,7 @@
 	Empty data inequivalent to non-empty data 
 
 	Comparison performed using:
-	[sequoia::testing::value_tester<sequoia::data_structures::bucketed_sequence<std::vector<double, std::allocator<double> >, sequoia::object::shared<std::vector<double, std::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::vector<double, std::allocator<double> >, sequoia::object::shared<std::vector<double, std::allocator<double> > > > > >]
+	[sequoia::testing::value_tester<sequoia::data_structures::bucketed_sequence<std::vector<double, std::allocator<double> >, sequoia::object::shared<std::vector<double, std::allocator<double> > >, sequoia::data_structures::bucketed_sequence_traits<std::vector<double, std::allocator<double> >, sequoia::object::shared<std::vector<double, std::allocator<double> > > > > >]
 	Checking for equivalence with:
 	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
@@ -2949,7 +2949,7 @@
 	Non-empty data inequivalent to empty data 
 
 	Comparison performed using:
-	[sequoia::testing::value_tester<sequoia::data_structures::bucketed_sequence<std::vector<double, std::allocator<double> >, sequoia::object::shared<std::vector<double, std::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::vector<double, std::allocator<double> >, sequoia::object::shared<std::vector<double, std::allocator<double> > > > > >]
+	[sequoia::testing::value_tester<sequoia::data_structures::bucketed_sequence<std::vector<double, std::allocator<double> >, sequoia::object::shared<std::vector<double, std::allocator<double> > >, sequoia::data_structures::bucketed_sequence_traits<std::vector<double, std::allocator<double> >, sequoia::object::shared<std::vector<double, std::allocator<double> > > > > >]
 	Checking for equivalence with:
 	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
@@ -2981,7 +2981,7 @@
 	Single partitions holding different elements compare not equal
 
 	Comparison performed using:
-	[sequoia::testing::value_tester<sequoia::data_structures::bucketed_sequence<std::vector<double, std::allocator<double> >, sequoia::object::shared<std::vector<double, std::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::vector<double, std::allocator<double> >, sequoia::object::shared<std::vector<double, std::allocator<double> > > > > >]
+	[sequoia::testing::value_tester<sequoia::data_structures::bucketed_sequence<std::vector<double, std::allocator<double> >, sequoia::object::shared<std::vector<double, std::allocator<double> > >, sequoia::data_structures::bucketed_sequence_traits<std::vector<double, std::allocator<double> >, sequoia::object::shared<std::vector<double, std::allocator<double> > > > > >]
 	Checking for equivalence with:
 	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
@@ -3015,7 +3015,7 @@
 	Identical elements divided between different partitions compare notequal
 
 	Comparison performed using:
-	[sequoia::testing::value_tester<sequoia::data_structures::bucketed_sequence<std::vector<double, std::allocator<double> >, sequoia::object::shared<std::vector<double, std::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::vector<double, std::allocator<double> >, sequoia::object::shared<std::vector<double, std::allocator<double> > > > > >]
+	[sequoia::testing::value_tester<sequoia::data_structures::bucketed_sequence<std::vector<double, std::allocator<double> >, sequoia::object::shared<std::vector<double, std::allocator<double> > >, sequoia::data_structures::bucketed_sequence_traits<std::vector<double, std::allocator<double> >, sequoia::object::shared<std::vector<double, std::allocator<double> > > > > >]
 	Checking for equivalence with:
 	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
@@ -3031,7 +3031,7 @@
 	Identical elements divided between different partitions compare notequal
 
 	Comparison performed using:
-	[sequoia::testing::value_tester<sequoia::data_structures::bucketed_sequence<std::vector<double, std::allocator<double> >, sequoia::object::shared<std::vector<double, std::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::vector<double, std::allocator<double> >, sequoia::object::shared<std::vector<double, std::allocator<double> > > > > >]
+	[sequoia::testing::value_tester<sequoia::data_structures::bucketed_sequence<std::vector<double, std::allocator<double> >, sequoia::object::shared<std::vector<double, std::allocator<double> > >, sequoia::data_structures::bucketed_sequence_traits<std::vector<double, std::allocator<double> >, sequoia::object::shared<std::vector<double, std::allocator<double> > > > > >]
 	Checking for equivalence with:
 	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
@@ -3045,7 +3045,7 @@
 
 	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 62
 
-	[sequoia::data_structures::bucketed_sequence<std::vector<double, std::allocator<double> >, sequoia::object::shared<std::vector<double, std::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::vector<double, std::allocator<double> >, sequoia::object::shared<std::vector<double, std::allocator<double> > > > >]
+	[sequoia::data_structures::bucketed_sequence<std::vector<double, std::allocator<double> >, sequoia::object::shared<std::vector<double, std::allocator<double> > >, sequoia::data_structures::bucketed_sequence_traits<std::vector<double, std::allocator<double> >, sequoia::object::shared<std::vector<double, std::allocator<double> > > > >]
 	operator== returned false
 
 	  Emptiness incorrect
@@ -3068,7 +3068,7 @@
 
 	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 63
 
-	[sequoia::data_structures::bucketed_sequence<std::vector<double, std::allocator<double> >, sequoia::object::shared<std::vector<double, std::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::vector<double, std::allocator<double> >, sequoia::object::shared<std::vector<double, std::allocator<double> > > > >]
+	[sequoia::data_structures::bucketed_sequence<std::vector<double, std::allocator<double> >, sequoia::object::shared<std::vector<double, std::allocator<double> > >, sequoia::data_structures::bucketed_sequence_traits<std::vector<double, std::allocator<double> >, sequoia::object::shared<std::vector<double, std::allocator<double> > > > >]
 	operator== returned false
 
 	  Partition 0
@@ -3153,7 +3153,7 @@
 
 	Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 64
 
-	[sequoia::data_structures::bucketed_sequence<std::vector<double, std::allocator<double> >, sequoia::object::shared<std::vector<double, std::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::vector<double, std::allocator<double> >, sequoia::object::shared<std::vector<double, std::allocator<double> > > > >]
+	[sequoia::data_structures::bucketed_sequence<std::vector<double, std::allocator<double> >, sequoia::object::shared<std::vector<double, std::allocator<double> > >, sequoia::data_structures::bucketed_sequence_traits<std::vector<double, std::allocator<double> >, sequoia::object::shared<std::vector<double, std::allocator<double> > > > >]
 	operator== returned false
 
 	  Number of partitions incorrect

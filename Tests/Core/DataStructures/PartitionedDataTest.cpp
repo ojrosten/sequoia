@@ -595,7 +595,7 @@ namespace sequoia
     {
       using namespace data_structures;
 
-      using container_t = std::vector<typename Handler<int>::handle_type>;
+      using container_t = std::vector<typename Handler<int>::product_type>;
 
       container_t vec{Handler<int>::make(1), Handler<int>::make(2), Handler<int>::make(3)};
 

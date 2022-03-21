@@ -29,7 +29,7 @@ Tests/Runtime/FactoryTest.cpp, Line 80
 
 Expected Exception Type:
 [std::runtime_error]
-Factory unable to create product of name 'plurgh'
+Factory unable to make product of name 'plurgh'
 
 	=======================================
 

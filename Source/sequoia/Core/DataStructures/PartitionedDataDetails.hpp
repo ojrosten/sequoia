@@ -36,7 +36,7 @@ namespace sequoia::data_structures::partition_impl
     requires object::handler<Handler>
   struct storage_type_generator
   {
-    using held_type      = typename Handler::handle_type;
+    using held_type      = typename Handler::product_type;
     using container_type = typename Traits::template container_type<held_type>;
   };
 
@@ -111,10 +111,10 @@ namespace sequoia::data_structures::partition_impl
     requires object::handler<Handler>
   struct dereference_policy : public Handler, public AuxiliaryDataPolicy
   {
-    using elementary_type = typename Handler::elementary_type;
-    using value_type      = elementary_type;
-    using reference       = typename ReferencePolicy<elementary_type>::reference;
-    using pointer         = typename ReferencePolicy<elementary_type>::pointer;
+    using value_type = typename Handler::value_type;
+    using value_type      = value_type;
+    using reference       = typename ReferencePolicy<value_type>::reference;
+    using pointer         = typename ReferencePolicy<value_type>::pointer;
 
     template<class... Args>
       requires (!resolve_to_copy_v<dereference_policy, Args...>)
@@ -178,12 +178,12 @@ namespace sequoia::data_structures::partition_impl
   template<class T> class data_duplicator<object::shared<T>>
   {
   public:
-    using handle_type = typename object::shared<T>::handle_type;
+    using product_type = typename object::shared<T>::product_type;
 
     [[nodiscard]]
-    handle_type duplicate(const handle_type in)
+    product_type duplicate(const product_type in)
     {
-      handle_type ptr{};
+      product_type ptr{};
       auto found{m_ProcessedPointers.find(in)};
       if(found == m_ProcessedPointers.end())
       {
@@ -197,7 +197,7 @@ namespace sequoia::data_structures::partition_impl
       return ptr;
     }
   private:
-    std::map<handle_type, handle_type> m_ProcessedPointers;
+    std::map<product_type, product_type> m_ProcessedPointers;
   };
 
   template<class>

@@ -66,7 +66,7 @@ namespace sequoia
 
     template<class T, class Handler>
       requires object::handler<Handler>
-    struct bucketed_storage_traits
+    struct bucketed_sequence_traits
     {
       constexpr static bool throw_on_range_error{true};
 
@@ -80,14 +80,14 @@ namespace sequoia
     /*! \brief Storage for partitioned data such that data within each partition is contiguous.
      */
 
-    template<class T, class Handler=object::independent<T>, class Traits=bucketed_storage_traits<T, Handler>>
+    template<class T, class Handler=object::independent<T>, class Traits=bucketed_sequence_traits<T, Handler>>
       requires object::handler<Handler>
     class bucketed_sequence
     {
     private:
       friend struct sequoia::assignment_helper;
 
-      using held_type    = typename Handler::handle_type;
+      using held_type    = typename Handler::product_type;
       using storage_type = typename Traits::template buckets_type<held_type>;
     public:
       using value_type     = T;

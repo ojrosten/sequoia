@@ -38,7 +38,7 @@ namespace sequoia::object
       using proxy      = std::pair<reference, long>;
 
     protected:
-      using handle_type = std::shared_ptr<Wrapper>;
+      using product_type = std::shared_ptr<Wrapper>;
 
       pool_deref_policy() = default;
       pool_deref_policy(const pool_deref_policy&)     = default;
@@ -47,7 +47,7 @@ namespace sequoia::object
       pool_deref_policy& operator=(pool_deref_policy&&) noexcept = default;
 
       [[nodiscard]]
-      static proxy get(const handle_type& ptr)
+      static proxy get(const product_type& ptr)
       {
         return {ptr->get(), ptr.use_count() - 1};
       }

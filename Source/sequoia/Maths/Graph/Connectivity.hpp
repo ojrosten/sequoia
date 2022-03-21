@@ -41,7 +41,7 @@ namespace sequoia
   namespace data_structures
   {
     template <class, class H, class> requires object::handler<H> class bucketed_sequence;
-    template <class, class H>        requires object::handler<H> struct bucketed_storage_traits;
+    template <class, class H>        requires object::handler<H> struct bucketed_sequence_traits;
     template <class, class H, class> requires object::handler<H> class partitioned_sequence;
     template <class, class H>        requires object::handler<H> struct partitioned_sequence_traits;
     template <class, std::size_t, std::size_t, std::integral> class static_partitioned_sequence;

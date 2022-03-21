@@ -355,7 +355,7 @@ namespace sequoia::testing
     template<test_mode Mode>
     void check_file(test_logger<Mode>& logger, const std::filesystem::path& file, const std::filesystem::path& prediction) const
     {
-      const auto checker{m_Factory.template create_or<DefaultComparer>(file.extension().string())};
+      const auto checker{m_Factory.template make_or<DefaultComparer>(file.extension().string())};
       std::visit([&logger, &file, &prediction](auto&& fn){ fn(logger, file, prediction); }, checker);
     }
   private:

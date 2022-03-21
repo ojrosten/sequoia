@@ -8,7 +8,7 @@
 #pragma once
 
 /*! \file
-    
+    \brief Traits, Concepts and basic utilities for the creation of objects.
  */
 
 #include <concepts>
@@ -24,9 +24,23 @@ namespace sequoia::object
   };
 
   template<class Product, class T>
-  concept producer_for = requires { std::same_as<T, typename Product::value_type>; };
+  inline constexpr bool product_for_v{
+    requires{
+      typename Product::value_type;
 
-  template<class T, producer_for<T> Product>
+      requires std::same_as<T, typename Product::value_type>;
+      requires std::constructible_from<Product, T>;
+    }
+  };
+
+  template<class Product, class T>
+  concept makeable_from = std::convertible_to<T, Product> || product_for_v<Product, T>;
+
+  /*! \brief Creates a `product` for `T`.
+  
+   */
+
+  template<class T, makeable_from<T> Product, class Projection=std::identity>
   class producer
   {
   public:
@@ -34,11 +48,11 @@ namespace sequoia::object
     using value_type   = T;
 
     template<class... Args>
-      requires std::constructible_from<product_type, Args...>
+      requires std::constructible_from<product_type, std::invoke_result_t<Projection, Args>...>
     [[nodiscard]]
     constexpr static product_type make(Args&&... args)
     {
-      return product_type{std::forward<Args>(args)...};
+      return product_type{Projection{}(std::forward<Args>(args))...};
     }
 
     [[nodiscard]]

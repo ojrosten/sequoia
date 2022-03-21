@@ -12,6 +12,7 @@
  */
 
 #include "sequoia/Core/Meta/Concepts.hpp"
+#include "sequoia/Core/Object/Creator.hpp"
 #include "sequoia/Core/Utilities/Iterator.hpp"
 #include "sequoia/Core/Meta/Utilities.hpp"
 
@@ -62,9 +63,9 @@ namespace sequoia::object
   /*! \brief Generic factory with statically defined products.
 
       The constructor requires a list of unique key which are internally mapped to the
-      products. To generate a product, clients should call one of `create` / `create_or`.
+      products. To generate a product, clients should call one of `make` / `make_or`.
       The former throws if the supplied string does not match a key; the latter 
-      requires specification of a default product in this situation.
+      requires specification of a default product which is created in this situation.
    */
 
   template<class... Products>
@@ -81,23 +82,9 @@ namespace sequoia::object
       return sizeof...(Products);
     }
   private:
+
     template<class Product>
-    struct product_creator
-    {
-      template<class... Args>
-        requires std::constructible_from<Product, Args...>
-      [[nodiscard]]
-      Product operator()(Args&&... args) const
-      {
-        return Product{std::forward<Args>(args)...};
-      }
-
-      [[nodiscard]]
-      friend bool operator==(const product_creator&, const product_creator&) noexcept = default;
-
-      [[nodiscard]]
-      friend bool operator!=(const product_creator&, const product_creator&) noexcept = default;
-    };
+    using product_creator = producer<Product, Product>;
 
     using creator_variant = std::variant<product_creator<Products>...>;
     using element = std::pair<key, creator_variant>;
@@ -119,21 +106,21 @@ namespace sequoia::object
     template<class... Args>
       requires (std::constructible_from<Products, Args...> && ...)
     [[nodiscard]]
-    vessel create(std::string_view name, Args&&... args) const
+    vessel make(std::string_view name, Args&&... args) const
     {
       const auto found{find(name)};
 
       if(found == m_Creators.end())
-        throw std::runtime_error{std::string{"Factory unable to create product of name '"}.append(name).append("'")};
+        throw std::runtime_error{std::string{"Factory unable to make product of name '"}.append(name).append("'")};
 
-      return std::visit(variant_visitor{[&](const auto& v) { return vessel{v(std::forward<Args>(args)...)}; }}, found->second);
+      return std::visit(variant_visitor{[&](const auto& v) { return vessel{v.make(std::forward<Args>(args)...)}; }}, found->second);
     };
 
     template<class Product, class... Args>
       requires (    (std::is_same_v<Product, Products> || ...)
                  && (std::constructible_from<Products, Args...> && ...))
     [[nodiscard]]
-    vessel create_or(std::string_view name, Args&&... args) const
+    vessel make_or(std::string_view name, Args&&... args) const
     {
       auto found{find(name)};
       if(found == m_Creators.end())
@@ -142,7 +129,7 @@ namespace sequoia::object
                              [](const element& e){ return std::holds_alternative<product_creator<Product>>(e.second); });
       }
 
-      return std::visit(variant_visitor{[&](const auto& v) { return vessel{v(std::forward<Args>(args)...)}; }}, found->second);
+      return std::visit(variant_visitor{[&](const auto& v) { return vessel{v.make(std::forward<Args>(args)...)}; }}, found->second);
     }
 
     [[nodiscard]]

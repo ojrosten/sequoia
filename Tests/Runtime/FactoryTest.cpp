@@ -77,9 +77,9 @@ namespace sequoia::testing
 
       check_semantics(LINE(""), f, g);
 
-      check_exception_thrown<std::runtime_error>(LINE(""), [&f](){ return f.create("plurgh"); });
+      check_exception_thrown<std::runtime_error>(LINE(""), [&f](){ return f.make("plurgh"); });
 
-      const auto created{f.create_or<int>("plurgh")};
+      const auto created{f.make_or<int>("plurgh")};
       check(equality, LINE(""), created, std::variant<int, double>{0});
     }
 

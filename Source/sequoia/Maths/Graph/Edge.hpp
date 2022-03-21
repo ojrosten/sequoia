@@ -103,7 +103,7 @@ namespace sequoia
     class weighting
     {
     public:
-      using weight_proxy_type = typename WeightHandler::elementary_type;
+      using weight_proxy_type = typename WeightHandler::value_type;
       using weight_type       = typename weight_proxy_type::value_type;
 
       template<class Arg, class... Args>
@@ -161,7 +161,7 @@ namespace sequoia
 
       constexpr weighting& operator=(weighting&&) noexcept = default;
     private:
-      typename WeightHandler::handle_type m_Weight;
+      typename WeightHandler::product_type m_Weight;
     };
 
     /*! \class weighting<WeightHandler, IndexType, true>
@@ -170,11 +170,11 @@ namespace sequoia
      */
 
     template<class WeightHandler, std::integral IndexType>
-      requires (object::handler<WeightHandler> && std::is_empty_v<typename WeightHandler::elementary_type::value_type>)
+      requires (object::handler<WeightHandler> && std::is_empty_v<typename WeightHandler::value_type::value_type>)
     class weighting<WeightHandler, IndexType>
     {
     public:
-      using weight_proxy_type = typename WeightHandler::elementary_type;
+      using weight_proxy_type = typename WeightHandler::value_type;
       using weight_type       = typename weight_proxy_type::value_type;
 
       [[nodiscard]]

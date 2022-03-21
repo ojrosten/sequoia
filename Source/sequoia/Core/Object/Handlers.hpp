@@ -31,36 +31,36 @@ namespace sequoia::object
   struct shared
   {
   public:
-    using handle_type = std::shared_ptr<T>;
-    using elementary_type = T;
+    using product_type = std::shared_ptr<T>;
+    using value_type   = T;
 
     template<class... Args>
     [[nodiscard]]
-    static handle_type make(Args&&... args)
+    static product_type make(Args&&... args)
     {
       return make_shared_braced<T>(std::forward<Args>(args)...);
     }
 
     [[nodiscard]]
-    static T& get(handle_type& ptr)
+    static T& get(product_type& ptr)
     {
       return *ptr;
     }
 
     [[nodiscard]]
-    static const T& get(const handle_type& ptr)
+    static const T& get(const product_type& ptr)
     {
       return *ptr;
     }
 
     [[nodiscard]]
-    static T* get_ptr(handle_type& ptr)
+    static T* get_ptr(product_type& ptr)
     {
       return &*ptr;
     }
 
     [[nodiscard]]
-    static const T* get_ptr(const handle_type& ptr)
+    static const T* get_ptr(const product_type& ptr)
     {
       return &*ptr;
     }
@@ -80,8 +80,8 @@ namespace sequoia::object
   struct independent
   {
   public:
-    using handle_type = T;
-    using elementary_type = T;
+    using product_type = T;
+    using value_type   = T;
 
     template<class... Args>
     [[nodiscard]]

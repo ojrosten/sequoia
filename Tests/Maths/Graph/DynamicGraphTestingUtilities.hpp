@@ -34,7 +34,7 @@ namespace sequoia::testing
   struct independent_bucketed_edge_storage_traits
   {
     template <class T, class Sharing, class Traits> using storage_type = data_structures::bucketed_sequence<T, Sharing, Traits>;
-    template <class T, class Sharing> using traits_type = data_structures::bucketed_storage_traits<T, Sharing>;
+    template <class T, class Sharing> using traits_type = data_structures::bucketed_sequence_traits<T, Sharing>;
 
     constexpr static maths::edge_sharing_preference edge_sharing{maths::edge_sharing_preference::independent};
   };
@@ -50,7 +50,7 @@ namespace sequoia::testing
   struct shared_weight_bucketed_edge_storage_traits
   {
     template <class T, class Sharing, class Traits> using storage_type = data_structures::bucketed_sequence<T, Sharing, Traits>;
-    template <class T, class Sharing> using traits_type = data_structures::bucketed_storage_traits<T, Sharing>;
+    template <class T, class Sharing> using traits_type = data_structures::bucketed_sequence_traits<T, Sharing>;
 
     constexpr static maths::edge_sharing_preference edge_sharing{maths::edge_sharing_preference::shared_weight};
   };
