@@ -112,9 +112,8 @@ namespace sequoia::data_structures::partition_impl
   struct dereference_policy : public Handler, public AuxiliaryDataPolicy
   {
     using value_type = typename Handler::value_type;
-    using value_type      = value_type;
-    using reference       = typename ReferencePolicy<value_type>::reference;
-    using pointer         = typename ReferencePolicy<value_type>::pointer;
+    using reference  = typename ReferencePolicy<value_type>::reference;
+    using pointer    = typename ReferencePolicy<value_type>::pointer;
 
     template<class... Args>
       requires (!resolve_to_copy_v<dereference_policy, Args...>)
