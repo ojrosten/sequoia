@@ -13,6 +13,7 @@
 
  */
 
+#include "sequoia/Core/Object/Creator.hpp"
 #include "sequoia/Core/Object/HandlerTraits.hpp"
 #include "sequoia/Core/Meta/Concepts.hpp"
 
@@ -20,26 +21,27 @@
 
 namespace sequoia::object
 {
-  template<class T, class... Args>
-  [[nodiscard]]
-  std::shared_ptr<T> make_shared_braced(Args&&... args)
+  template<class T>
+  struct make_shared_braced
   {
-    return std::shared_ptr<T>(new T{std::forward<Args>(args)...});
-  }
+    template<class... Args>
+      requires std::constructible_from<T, Args...>
+    [[nodiscard]]
+    std::shared_ptr<T> operator()(Args&&... args) const
+    {
+      return std::shared_ptr<T>(new T{std::forward<Args>(args)...});
+    }
+  };
 
   template<class T>
-  struct shared
+  struct shared : private producer<T, std::shared_ptr<T>, make_shared_braced<T>>
   {
   public:
-    using product_type = std::shared_ptr<T>;
-    using value_type   = T;
+    using product_type  = std::shared_ptr<T>;
+    using value_type    = T;
+    using producer_type = producer<T, std::shared_ptr<T>, make_shared_braced<T>>;
 
-    template<class... Args>
-    [[nodiscard]]
-    static product_type make(Args&&... args)
-    {
-      return make_shared_braced<T>(std::forward<Args>(args)...);
-    }
+    using producer_type::make;
 
     [[nodiscard]]
     static T& get(product_type& ptr)
@@ -77,18 +79,14 @@ namespace sequoia::object
   };
 
   template<class T>
-  struct independent
+  struct independent : private producer<T, T>
   {
   public:
-    using product_type = T;
-    using value_type   = T;
+    using product_type  = T;
+    using value_type    = T;
+    using producer_type = producer<T, T>;
 
-    template<class... Args>
-    [[nodiscard]]
-    constexpr static T make(Args&&... args)
-    {
-      return T{std::forward<Args>(args)...};
-    }
+    using producer_type::make;
 
     [[nodiscard]]
     constexpr static T& get(T& in) noexcept { return in; }

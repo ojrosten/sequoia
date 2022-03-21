@@ -1,10 +1,10 @@
 	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 47
 	Check false positive: empty graph versus single node
 
-	[sequoia::maths::graph<0, sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity>, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity>, sequoia::maths::contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::maths::null_weight> >]
+	[sequoia::maths::graph<0, sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::maths::contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::maths::null_weight> >]
 	operator== returned false
 
-	  [sequoia::maths::connectivity<0, sequoia::maths::graph_impl::dynamic_edge_traits<0, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity>, sequoia::maths::contiguous_edge_storage_traits, unsigned long long>, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity> >]
+	  [sequoia::maths::connectivity<0, sequoia::maths::graph_impl::dynamic_edge_traits<0, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::maths::contiguous_edge_storage_traits, unsigned long long>, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > > >]
 	  operator== returned false
 
 	    Connectivity order incorrect
@@ -18,10 +18,10 @@
 	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 56
 	Check false positive: empty graph versus single node with loop
 
-	[sequoia::maths::graph<0, sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity>, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity>, sequoia::maths::contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::maths::null_weight> >]
+	[sequoia::maths::graph<0, sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::maths::contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::maths::null_weight> >]
 	operator== returned false
 
-	  [sequoia::maths::connectivity<0, sequoia::maths::graph_impl::dynamic_edge_traits<0, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity>, sequoia::maths::contiguous_edge_storage_traits, unsigned long long>, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity> >]
+	  [sequoia::maths::connectivity<0, sequoia::maths::graph_impl::dynamic_edge_traits<0, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::maths::contiguous_edge_storage_traits, unsigned long long>, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > > >]
 	  operator== returned false
 
 	    Connectivity size incorrect
@@ -41,10 +41,10 @@
 	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 47
 	Check false positive: empty graph versus single node
 
-	[sequoia::maths::graph<0, sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity>, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::maths::null_weight> >]
+	[sequoia::maths::graph<0, sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::maths::null_weight> >]
 	operator== returned false
 
-	  [sequoia::maths::connectivity<0, sequoia::maths::graph_impl::dynamic_edge_traits<0, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity>, sequoia::maths::bucketed_edge_storage_traits, unsigned long long>, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity> >]
+	  [sequoia::maths::connectivity<0, sequoia::maths::graph_impl::dynamic_edge_traits<0, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::maths::bucketed_edge_storage_traits, unsigned long long>, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > > >]
 	  operator== returned false
 
 	    Connectivity order incorrect
@@ -58,10 +58,10 @@
 	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 56
 	Check false positive: empty graph versus single node with loop
 
-	[sequoia::maths::graph<0, sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity>, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::maths::null_weight> >]
+	[sequoia::maths::graph<0, sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::maths::null_weight> >]
 	operator== returned false
 
-	  [sequoia::maths::connectivity<0, sequoia::maths::graph_impl::dynamic_edge_traits<0, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity>, sequoia::maths::bucketed_edge_storage_traits, unsigned long long>, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity> >]
+	  [sequoia::maths::connectivity<0, sequoia::maths::graph_impl::dynamic_edge_traits<0, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::maths::bucketed_edge_storage_traits, unsigned long long>, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > > >]
 	  operator== returned false
 
 	    Connectivity size incorrect
@@ -81,10 +81,10 @@
 	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 47
 	Check false positive: empty graph versus single node
 
-	[sequoia::maths::embedded_graph<0, sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity>, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity>, sequoia::maths::contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::maths::null_weight> >]
+	[sequoia::maths::embedded_graph<0, sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::maths::contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::maths::null_weight> >]
 	operator== returned false
 
-	  [sequoia::maths::connectivity<0, sequoia::maths::graph_impl::dynamic_edge_traits<1, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity>, sequoia::maths::contiguous_edge_storage_traits, unsigned long long>, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity> >]
+	  [sequoia::maths::connectivity<0, sequoia::maths::graph_impl::dynamic_edge_traits<1, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::maths::contiguous_edge_storage_traits, unsigned long long>, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > > >]
 	  operator== returned false
 
 	    Connectivity order incorrect
@@ -98,10 +98,10 @@
 	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 64
 	Check false positive: empty graph versus single node with loop
 
-	[sequoia::maths::embedded_graph<0, sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity>, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity>, sequoia::maths::contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::maths::null_weight> >]
+	[sequoia::maths::embedded_graph<0, sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::maths::contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::maths::null_weight> >]
 	operator== returned false
 
-	  [sequoia::maths::connectivity<0, sequoia::maths::graph_impl::dynamic_edge_traits<1, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity>, sequoia::maths::contiguous_edge_storage_traits, unsigned long long>, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity> >]
+	  [sequoia::maths::connectivity<0, sequoia::maths::graph_impl::dynamic_edge_traits<1, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::maths::contiguous_edge_storage_traits, unsigned long long>, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > > >]
 	  operator== returned false
 
 	    Connectivity size incorrect
@@ -121,10 +121,10 @@
 	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 47
 	Check false positive: empty graph versus single node
 
-	[sequoia::maths::embedded_graph<0, sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity>, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::maths::null_weight> >]
+	[sequoia::maths::embedded_graph<0, sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::maths::null_weight> >]
 	operator== returned false
 
-	  [sequoia::maths::connectivity<0, sequoia::maths::graph_impl::dynamic_edge_traits<1, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity>, sequoia::maths::bucketed_edge_storage_traits, unsigned long long>, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity> >]
+	  [sequoia::maths::connectivity<0, sequoia::maths::graph_impl::dynamic_edge_traits<1, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::maths::bucketed_edge_storage_traits, unsigned long long>, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > > >]
 	  operator== returned false
 
 	    Connectivity order incorrect
@@ -138,10 +138,10 @@
 	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 64
 	Check false positive: empty graph versus single node with loop
 
-	[sequoia::maths::embedded_graph<0, sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity>, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::maths::null_weight> >]
+	[sequoia::maths::embedded_graph<0, sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::maths::null_weight> >]
 	operator== returned false
 
-	  [sequoia::maths::connectivity<0, sequoia::maths::graph_impl::dynamic_edge_traits<1, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity>, sequoia::maths::bucketed_edge_storage_traits, unsigned long long>, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity> >]
+	  [sequoia::maths::connectivity<0, sequoia::maths::graph_impl::dynamic_edge_traits<1, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::maths::bucketed_edge_storage_traits, unsigned long long>, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > > >]
 	  operator== returned false
 
 	    Connectivity size incorrect
@@ -161,10 +161,10 @@
 	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 47
 	Check false positive: empty graph versus single node
 
-	[sequoia::maths::graph<1, sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity>, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity>, sequoia::maths::contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::maths::null_weight> >]
+	[sequoia::maths::graph<1, sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::maths::contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::maths::null_weight> >]
 	operator== returned false
 
-	  [sequoia::maths::connectivity<1, sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity>, sequoia::maths::contiguous_edge_storage_traits, unsigned long long>, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity> >]
+	  [sequoia::maths::connectivity<1, sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::maths::contiguous_edge_storage_traits, unsigned long long>, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > > >]
 	  operator== returned false
 
 	    Connectivity order incorrect
@@ -178,10 +178,10 @@
 	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 52
 	Check false positive: empty graph versus single node with loop
 
-	[sequoia::maths::graph<1, sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity>, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity>, sequoia::maths::contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::maths::null_weight> >]
+	[sequoia::maths::graph<1, sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::maths::contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::maths::null_weight> >]
 	operator== returned false
 
-	  [sequoia::maths::connectivity<1, sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity>, sequoia::maths::contiguous_edge_storage_traits, unsigned long long>, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity> >]
+	  [sequoia::maths::connectivity<1, sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::maths::contiguous_edge_storage_traits, unsigned long long>, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > > >]
 	  operator== returned false
 
 	    Connectivity size incorrect
@@ -201,10 +201,10 @@
 	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 47
 	Check false positive: empty graph versus single node
 
-	[sequoia::maths::graph<1, sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity>, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::maths::null_weight> >]
+	[sequoia::maths::graph<1, sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::maths::null_weight> >]
 	operator== returned false
 
-	  [sequoia::maths::connectivity<1, sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity>, sequoia::maths::bucketed_edge_storage_traits, unsigned long long>, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity> >]
+	  [sequoia::maths::connectivity<1, sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::maths::bucketed_edge_storage_traits, unsigned long long>, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > > >]
 	  operator== returned false
 
 	    Connectivity order incorrect
@@ -218,10 +218,10 @@
 	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 52
 	Check false positive: empty graph versus single node with loop
 
-	[sequoia::maths::graph<1, sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity>, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::maths::null_weight> >]
+	[sequoia::maths::graph<1, sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::maths::null_weight> >]
 	operator== returned false
 
-	  [sequoia::maths::connectivity<1, sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity>, sequoia::maths::bucketed_edge_storage_traits, unsigned long long>, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity> >]
+	  [sequoia::maths::connectivity<1, sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::maths::bucketed_edge_storage_traits, unsigned long long>, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > > >]
 	  operator== returned false
 
 	    Connectivity size incorrect
@@ -241,10 +241,10 @@
 	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 47
 	Check false positive: empty graph versus single node
 
-	[sequoia::maths::embedded_graph<1, sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity>, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity>, sequoia::maths::contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::maths::null_weight> >]
+	[sequoia::maths::embedded_graph<1, sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::maths::contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::maths::null_weight> >]
 	operator== returned false
 
-	  [sequoia::maths::connectivity<1, sequoia::maths::graph_impl::dynamic_edge_traits<3, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity>, sequoia::maths::contiguous_edge_storage_traits, unsigned long long>, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity> >]
+	  [sequoia::maths::connectivity<1, sequoia::maths::graph_impl::dynamic_edge_traits<3, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::maths::contiguous_edge_storage_traits, unsigned long long>, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > > >]
 	  operator== returned false
 
 	    Connectivity order incorrect
@@ -258,10 +258,10 @@
 	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 60
 	Check false positive: empty graph versus single node with loop
 
-	[sequoia::maths::embedded_graph<1, sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity>, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity>, sequoia::maths::contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::maths::null_weight> >]
+	[sequoia::maths::embedded_graph<1, sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::maths::contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::maths::null_weight> >]
 	operator== returned false
 
-	  [sequoia::maths::connectivity<1, sequoia::maths::graph_impl::dynamic_edge_traits<3, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity>, sequoia::maths::contiguous_edge_storage_traits, unsigned long long>, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity> >]
+	  [sequoia::maths::connectivity<1, sequoia::maths::graph_impl::dynamic_edge_traits<3, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::maths::contiguous_edge_storage_traits, unsigned long long>, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > > >]
 	  operator== returned false
 
 	    Connectivity size incorrect
@@ -281,10 +281,10 @@
 	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 47
 	Check false positive: empty graph versus single node
 
-	[sequoia::maths::embedded_graph<1, sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity>, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::maths::null_weight> >]
+	[sequoia::maths::embedded_graph<1, sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::maths::null_weight> >]
 	operator== returned false
 
-	  [sequoia::maths::connectivity<1, sequoia::maths::graph_impl::dynamic_edge_traits<3, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity>, sequoia::maths::bucketed_edge_storage_traits, unsigned long long>, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity> >]
+	  [sequoia::maths::connectivity<1, sequoia::maths::graph_impl::dynamic_edge_traits<3, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::maths::bucketed_edge_storage_traits, unsigned long long>, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > > >]
 	  operator== returned false
 
 	    Connectivity order incorrect
@@ -298,10 +298,10 @@
 	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 60
 	Check false positive: empty graph versus single node with loop
 
-	[sequoia::maths::embedded_graph<1, sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity>, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::maths::null_weight> >]
+	[sequoia::maths::embedded_graph<1, sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::maths::null_weight> >]
 	operator== returned false
 
-	  [sequoia::maths::connectivity<1, sequoia::maths::graph_impl::dynamic_edge_traits<3, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity>, sequoia::maths::bucketed_edge_storage_traits, unsigned long long>, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity> >]
+	  [sequoia::maths::connectivity<1, sequoia::maths::graph_impl::dynamic_edge_traits<3, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::maths::bucketed_edge_storage_traits, unsigned long long>, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > > >]
 	  operator== returned false
 
 	    Connectivity size incorrect
@@ -321,10 +321,10 @@
 	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 47
 	Check false positive: empty graph versus single node
 
-	[sequoia::maths::embedded_graph<1, sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity>, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity>, sequoia::testing::independent_contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::maths::null_weight> >]
+	[sequoia::maths::embedded_graph<1, sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::testing::independent_contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::maths::null_weight> >]
 	operator== returned false
 
-	  [sequoia::maths::connectivity<1, sequoia::maths::graph_impl::dynamic_edge_traits<3, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity>, sequoia::testing::independent_contiguous_edge_storage_traits, unsigned long long>, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity> >]
+	  [sequoia::maths::connectivity<1, sequoia::maths::graph_impl::dynamic_edge_traits<3, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::testing::independent_contiguous_edge_storage_traits, unsigned long long>, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > > >]
 	  operator== returned false
 
 	    Connectivity order incorrect
@@ -338,10 +338,10 @@
 	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 60
 	Check false positive: empty graph versus single node with loop
 
-	[sequoia::maths::embedded_graph<1, sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity>, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity>, sequoia::testing::independent_contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::maths::null_weight> >]
+	[sequoia::maths::embedded_graph<1, sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::testing::independent_contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::maths::null_weight> >]
 	operator== returned false
 
-	  [sequoia::maths::connectivity<1, sequoia::maths::graph_impl::dynamic_edge_traits<3, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity>, sequoia::testing::independent_contiguous_edge_storage_traits, unsigned long long>, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity> >]
+	  [sequoia::maths::connectivity<1, sequoia::maths::graph_impl::dynamic_edge_traits<3, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::testing::independent_contiguous_edge_storage_traits, unsigned long long>, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > > >]
 	  operator== returned false
 
 	    Connectivity size incorrect
@@ -361,10 +361,10 @@
 	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 47
 	Check false positive: empty graph versus single node
 
-	[sequoia::maths::embedded_graph<1, sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity>, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity>, sequoia::testing::independent_bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::maths::null_weight> >]
+	[sequoia::maths::embedded_graph<1, sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::testing::independent_bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::maths::null_weight> >]
 	operator== returned false
 
-	  [sequoia::maths::connectivity<1, sequoia::maths::graph_impl::dynamic_edge_traits<3, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity>, sequoia::testing::independent_bucketed_edge_storage_traits, unsigned long long>, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity> >]
+	  [sequoia::maths::connectivity<1, sequoia::maths::graph_impl::dynamic_edge_traits<3, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::testing::independent_bucketed_edge_storage_traits, unsigned long long>, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > > >]
 	  operator== returned false
 
 	    Connectivity order incorrect
@@ -378,10 +378,10 @@
 	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 60
 	Check false positive: empty graph versus single node with loop
 
-	[sequoia::maths::embedded_graph<1, sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity>, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity>, sequoia::testing::independent_bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::maths::null_weight> >]
+	[sequoia::maths::embedded_graph<1, sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::testing::independent_bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::maths::null_weight> >]
 	operator== returned false
 
-	  [sequoia::maths::connectivity<1, sequoia::maths::graph_impl::dynamic_edge_traits<3, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity>, sequoia::testing::independent_bucketed_edge_storage_traits, unsigned long long>, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, std::identity> >]
+	  [sequoia::maths::connectivity<1, sequoia::maths::graph_impl::dynamic_edge_traits<3, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::testing::independent_bucketed_edge_storage_traits, unsigned long long>, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > > >]
 	  operator== returned false
 
 	    Connectivity size incorrect

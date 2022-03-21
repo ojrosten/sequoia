@@ -165,6 +165,14 @@ namespace sequoia
   template<class T>
   inline constexpr bool has_allocator_type_v{has_allocator_type<T>::value};
 
+  /*! \brief Checks for dependent type `value_type` */
+  template<class T>
+  inline constexpr bool has_value_type{requires { typename T::value_type; }};
+
+  /*! \brief Checks for dependent type `element_type` */
+  template<class T>
+  inline constexpr bool has_element_type{requires { typename T::element_type; }};
+
   // Machinery for deep equality checking, which will hopefully one day
   // be obviated if the stl properly constrains operator==
 
@@ -179,9 +187,6 @@ namespace sequoia
           `std::get` it is treated as a heterogeneous container.
       @{
    */
-
-  template<class T>
-  inline constexpr bool has_value_type{ requires { typename T::value_type; }};
 
   template<class T>
   inline constexpr bool has_gettable_elements{requires (T & t) { std::get<0>(t); }};
