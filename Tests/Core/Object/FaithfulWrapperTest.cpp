@@ -36,7 +36,7 @@ namespace sequoia::testing
   {
     test_basic_type();
     test_container_type();
-    test_aggregate_type();   
+    test_aggregate_type();
   }
 
   void faithful_wrapper_test::test_basic_type()
@@ -44,6 +44,7 @@ namespace sequoia::testing
     using wrapper = faithful_wrapper<int>;
 
     static_assert(sizeof(wrapper) == sizeof(int));
+    static_assert(uniform_wrapper<wrapper>);
 
     wrapper w{};
     constexpr wrapper v{1};
@@ -64,6 +65,7 @@ namespace sequoia::testing
     using wrapper = faithful_wrapper<std::vector<int>>;
 
     static_assert(sizeof(wrapper) == sizeof(std::vector<int>));
+    static_assert(uniform_wrapper<wrapper>);
 
     wrapper w{}, v{1};
 
@@ -102,6 +104,7 @@ namespace sequoia::testing
     using wrapper = faithful_wrapper<data>;
 
     static_assert(sizeof(wrapper) == sizeof(data));
+    static_assert(uniform_wrapper<wrapper>);
 
     wrapper w{};
     constexpr wrapper v{make(1, 2.0)};

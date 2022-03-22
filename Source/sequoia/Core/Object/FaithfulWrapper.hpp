@@ -18,6 +18,17 @@
 
 namespace sequoia::object
 {
+  template<class W>
+  concept uniform_wrapper = requires(W & w) {
+    typename W::value_type;
+
+    { w.get() } -> std::same_as<const typename W::value_type&>;
+
+    w.mutate([](typename W::value_type&) {});
+
+    &W::set;
+  };
+
   /*! \brief A wrapper which allows for getting, setting and mutation of its stored value.
 
       This wrapper is designed for use alongside classes which expose proxies to the
@@ -38,6 +49,7 @@ namespace sequoia::object
     constexpr explicit faithful_wrapper(Args&&... args) : m_Type{std::forward<Args>(args)...} {}
 
     template<class... Args>
+      requires std::constructible_from<T, Args...>
     constexpr void set(Args&&... args)
     {
       m_Type = T{std::forward<Args>(args)...};

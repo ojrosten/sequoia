@@ -27,7 +27,7 @@ namespace sequoia::testing
 
     void test_pooled();
     void test_multi_pools();
-    void test_spawner();
+    void test_faithful_producer();
 
     object::data_pool<int> make_int_pool(const int val);
   };
