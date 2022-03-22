@@ -34,7 +34,7 @@ namespace sequoia::testing
   struct independent_bucketed_edge_storage_traits
   {
     template <class T, class Sharing, class Traits> using storage_type = data_structures::bucketed_sequence<T, Sharing, Traits>;
-    template <class T, class Sharing> using traits_type = data_structures::bucketed_storage_traits<T, Sharing>;
+    template <class T, class Sharing> using traits_type = data_structures::bucketed_sequence_traits<T, Sharing>;
 
     constexpr static maths::edge_sharing_preference edge_sharing{maths::edge_sharing_preference::independent};
   };
@@ -50,7 +50,7 @@ namespace sequoia::testing
   struct shared_weight_bucketed_edge_storage_traits
   {
     template <class T, class Sharing, class Traits> using storage_type = data_structures::bucketed_sequence<T, Sharing, Traits>;
-    template <class T, class Sharing> using traits_type = data_structures::bucketed_storage_traits<T, Sharing>;
+    template <class T, class Sharing> using traits_type = data_structures::bucketed_sequence_traits<T, Sharing>;
 
     constexpr static maths::edge_sharing_preference edge_sharing{maths::edge_sharing_preference::shared_weight};
   };
@@ -75,7 +75,7 @@ namespace sequoia::testing
     class NodeWeightStorageTraits,
     bool=embedded(GraphFlavour)
   >
-    requires ownership::creator<EdgeWeightCreator>
+    requires object::creator<EdgeWeightCreator>
   struct graph_type_generator
   {
     using graph_type = maths::graph<maths::to_directedness(GraphFlavour), EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightStorage, EdgeStorageTraits, NodeWeightStorageTraits>;
@@ -91,7 +91,7 @@ namespace sequoia::testing
     class EdgeStorageTraits,
     class NodeWeightStorageTraits
   >
-    requires (ownership::creator<EdgeWeightCreator> && ownership::creator<NodeWeightCreator>)
+    requires (object::creator<EdgeWeightCreator> && object::creator<NodeWeightCreator>)
   struct graph_type_generator<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits, true>
   {
     using graph_type = maths::embedded_graph<maths::to_directedness(GraphFlavour), EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>;
@@ -107,7 +107,7 @@ namespace sequoia::testing
     class EdgeStorageTraits,
     class NodeWeightStorageTraits
   >
-    requires (ownership::creator<EdgeWeightCreator> && ownership::creator<NodeWeightCreator>)
+    requires (object::creator<EdgeWeightCreator> && object::creator<NodeWeightCreator>)
   using graph_type_generator_t = typename graph_type_generator<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>::graph_type;
 
   template <class EdgeWeight, class NodeWeight, class Test>
@@ -167,24 +167,24 @@ namespace sequoia::testing
     >
     void creation_permutations()
     {
-      using namespace ownership;
+      using namespace object;
       using EW = EdgeWeight;
       using NW = NodeWeight;
       using ESTraits = EdgeStorageTraits;
       using NSTraits = NodeWeightStorageTraits;
 
-      run_tests<GraphFlavour, spawner<EW>, spawner<NW>, ESTraits, NSTraits>();
+      run_tests<GraphFlavour, uniform_producer<EW>, uniform_producer<NW>, ESTraits, NSTraits>();
 
       if constexpr(!minimal_graph_tests())
       {
         if constexpr(!std::is_empty_v<NodeWeight>)
         {
-          run_tests<GraphFlavour, spawner<EW>, data_pool<NW>, ESTraits, NSTraits>();
+          run_tests<GraphFlavour, uniform_producer<EW>, data_pool<NW>, ESTraits, NSTraits>();
         }
 
         if constexpr(!std::is_empty_v<EdgeWeight>)
         {
-          run_tests<GraphFlavour, data_pool<EW>, spawner<NW>, ESTraits, NSTraits>();
+          run_tests<GraphFlavour, data_pool<EW>, uniform_producer<NW>, ESTraits, NSTraits>();
         }
 
         if constexpr(!std::is_empty_v<EdgeWeight> && !std::is_empty_v<NodeWeight>)

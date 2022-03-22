@@ -49,7 +49,7 @@
 #include "sequoia/TestFramework/FreeCheckers.hpp"
 #include "sequoia/TestFramework/FileEditors.hpp"
 #include "sequoia/TestFramework/FileSystem.hpp"
-#include "sequoia/Runtime/Factory.hpp"
+#include "sequoia/Core/Object/Factory.hpp"
 #include "sequoia/Streaming/Streaming.hpp"
 
 #include <array>
@@ -355,11 +355,11 @@ namespace sequoia::testing
     template<test_mode Mode>
     void check_file(test_logger<Mode>& logger, const std::filesystem::path& file, const std::filesystem::path& prediction) const
     {
-      const auto checker{m_Factory.template create_or<DefaultComparer>(file.extension().string())};
+      const auto checker{m_Factory.template make_or<DefaultComparer>(file.extension().string())};
       std::visit([&logger, &file, &prediction](auto&& fn){ fn(logger, file, prediction); }, checker);
     }
   private:
-    using factory = runtime::factory<DefaultComparer, Comparers...>;
+    using factory = object::factory<DefaultComparer, Comparers...>;
 
     factory m_Factory;
   };

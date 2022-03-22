@@ -13,7 +13,7 @@
 */
 
 #include "sequoia/Core/DataStructures/PartitionedData.hpp"
-#include "sequoia/Core/Ownership/DataPool.hpp"
+#include "sequoia/Core/Object/DataPool.hpp"
 #include "sequoia/Maths/Graph/GraphImpl.hpp"
 #include "sequoia/Maths/Graph/DynamicGraphImpl.hpp"
 #include "sequoia/Maths/Graph/NodeStorage.hpp"
@@ -31,7 +31,7 @@ namespace sequoia::maths
   struct bucketed_edge_storage_traits
   {
     template <class T, class Sharing, class Traits> using storage_type = data_structures::bucketed_sequence<T, Sharing, Traits>;
-    template <class T, class Sharing> using traits_type = data_structures::bucketed_storage_traits<T, Sharing>;
+    template <class T, class Sharing> using traits_type = data_structures::bucketed_sequence_traits<T, Sharing>;
 
     constexpr static edge_sharing_preference edge_sharing{edge_sharing_preference::agnostic};
   };
@@ -68,7 +68,7 @@ namespace sequoia::maths
     class EdgeStorageTraits,
     class NodeWeightStorageTraits
   >
-    requires (ownership::creator<EdgeWeightCreator> && ownership::creator<NodeWeightCreator>)
+    requires (object::creator<EdgeWeightCreator> && object::creator<NodeWeightCreator>)
   class graph_base : public
     graph_primitive
     <
@@ -196,8 +196,8 @@ namespace sequoia::maths
     class EdgeStorageTraits,
     class NodeWeightStorageTraits
   >
-  requires (   ownership::creator<EdgeWeightCreator>
-            && ownership::creator<NodeWeightCreator>
+  requires (   object::creator<EdgeWeightCreator>
+            && object::creator<NodeWeightCreator>
             && NodeWeightStorageTraits::has_allocator)
   class graph_base<
       GraphFlavour,
@@ -345,12 +345,12 @@ namespace sequoia::maths
     directed_flavour Directedness,
     class EdgeWeight,
     class NodeWeight,
-    class EdgeWeightCreator=ownership::spawner<EdgeWeight>,
-    class NodeWeightCreator=ownership::spawner<NodeWeight>,
+    class EdgeWeightCreator=object::uniform_producer<EdgeWeight>,
+    class NodeWeightCreator=object::uniform_producer<NodeWeight>,
     class EdgeStorageTraits = bucketed_edge_storage_traits,
     class NodeWeightStorageTraits = node_weight_storage_traits<NodeWeight>
   >
-    requires (ownership::creator<EdgeWeightCreator> && ownership::creator<NodeWeightCreator>)
+    requires (object::creator<EdgeWeightCreator> && object::creator<NodeWeightCreator>)
   class graph final : public
     graph_base
     <
@@ -417,12 +417,12 @@ namespace sequoia::maths
     directed_flavour Directedness,
     class EdgeWeight,
     class NodeWeight,
-    class EdgeWeightCreator=ownership::spawner<EdgeWeight>,
-    class NodeWeightCreator=ownership::spawner<NodeWeight>,
+    class EdgeWeightCreator=object::uniform_producer<EdgeWeight>,
+    class NodeWeightCreator=object::uniform_producer<NodeWeight>,
     class EdgeStorageTraits=bucketed_edge_storage_traits,
     class NodeWeightStorageTraits=node_weight_storage_traits<NodeWeight>
   >
-    requires (ownership::creator<EdgeWeightCreator> && ownership::creator<NodeWeightCreator>)
+    requires (object::creator<EdgeWeightCreator> && object::creator<NodeWeightCreator>)
   class embedded_graph final : public
     graph_base
     <

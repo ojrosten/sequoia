@@ -28,14 +28,14 @@
 
 #include "sequoia/Core/Meta/Concepts.hpp"
 #include "sequoia/Core/Meta/TypeTraits.hpp"
-#include "sequoia/Core/Ownership/HandlerTraits.hpp"
+#include "sequoia/Core/Object/HandlerTraits.hpp"
 #include "sequoia/Maths/Graph/EdgesAndNodesUtilities.hpp"
 
 #include <stdexcept>
 
 namespace sequoia
 {
-  namespace ownership
+  namespace object
   {
     template<class> struct independent;
   }
@@ -99,11 +99,11 @@ namespace sequoia
     */
 
     template<class WeightHandler, std::integral IndexType>
-      requires ownership::handler<WeightHandler>
+      requires object::handler<WeightHandler>
     class weighting
     {
     public:
-      using weight_proxy_type = typename WeightHandler::elementary_type;
+      using weight_proxy_type = typename WeightHandler::value_type;
       using weight_type       = typename weight_proxy_type::value_type;
 
       template<class Arg, class... Args>
@@ -161,7 +161,7 @@ namespace sequoia
 
       constexpr weighting& operator=(weighting&&) noexcept = default;
     private:
-      typename WeightHandler::handle_type m_Weight;
+      typename WeightHandler::product_type m_Weight;
     };
 
     /*! \class weighting<WeightHandler, IndexType, true>
@@ -170,11 +170,11 @@ namespace sequoia
      */
 
     template<class WeightHandler, std::integral IndexType>
-      requires (ownership::handler<WeightHandler> && std::is_empty_v<typename WeightHandler::elementary_type::value_type>)
+      requires (object::handler<WeightHandler> && std::is_empty_v<typename WeightHandler::value_type::value_type>)
     class weighting<WeightHandler, IndexType>
     {
     public:
-      using weight_proxy_type = typename WeightHandler::elementary_type;
+      using weight_proxy_type = typename WeightHandler::value_type;
       using weight_type       = typename weight_proxy_type::value_type;
 
       [[nodiscard]]
@@ -201,7 +201,7 @@ namespace sequoia
      */
 
     template<class WeightHandler, std::integral IndexType>
-      requires ownership::handler<WeightHandler>
+      requires object::handler<WeightHandler>
     class partial_edge_base : public edge_base<IndexType>, public weighting<WeightHandler, IndexType>
     {
     public:
@@ -246,7 +246,7 @@ namespace sequoia
      */
 
     template<class WeightHandler, std::integral IndexType=std::size_t>
-      requires ownership::handler<WeightHandler>
+      requires object::handler<WeightHandler>
     class partial_edge : public partial_edge_base<WeightHandler, IndexType>
     {
     public:
@@ -262,7 +262,7 @@ namespace sequoia
      */
 
     template<class WeightHandler, std::integral IndexType=std::size_t>
-      requires ownership::handler<WeightHandler>
+      requires object::handler<WeightHandler>
     class decorated_edge_base : public partial_edge_base<WeightHandler, IndexType>
     {
     public:
@@ -311,7 +311,7 @@ namespace sequoia
      */
 
     template<class WeightHandler, std::integral IndexType=std::size_t>
-      requires ownership::handler<WeightHandler>
+      requires object::handler<WeightHandler>
     class embedded_partial_edge : public decorated_edge_base<WeightHandler, IndexType>
     {
     public:
@@ -338,7 +338,7 @@ namespace sequoia
      */
 
     template<class WeightHandler, std::integral IndexType=std::size_t>
-      requires ownership::handler<WeightHandler>
+      requires object::handler<WeightHandler>
     class edge : public decorated_edge_base<WeightHandler, IndexType>
     {
     public:
@@ -399,7 +399,7 @@ namespace sequoia
      */
 
     template<class WeightHandler, std::integral IndexType=std::size_t>
-      requires ownership::handler<WeightHandler>
+      requires object::handler<WeightHandler>
     class embedded_edge : public decorated_edge_base<WeightHandler, IndexType>
     {
     public:

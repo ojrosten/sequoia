@@ -26,7 +26,7 @@ namespace sequoia::testing
   template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
   void partitioned_data_allocation_test::test_allocation()
   {
-    using namespace ownership;
+    using namespace object;
 
     test_bucketed_allocation<int, independent<int>, PropagateCopy, PropagateMove, PropagateSwap>();
     test_bucketed_allocation<int, shared<int>, PropagateCopy, PropagateMove, PropagateSwap>();

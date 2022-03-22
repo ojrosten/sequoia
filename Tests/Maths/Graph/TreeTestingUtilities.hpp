@@ -27,7 +27,7 @@ namespace sequoia::testing
     class EdgeStorageTraits,
     class NodeWeightStorageTraits
   >
-    requires (ownership::creator<EdgeWeightCreator> && ownership::creator<NodeWeightCreator>)
+    requires (object::creator<EdgeWeightCreator> && object::creator<NodeWeightCreator>)
   struct value_tester<maths::tree<Directedness, TreeLinkDir, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>>
     : graph_value_tester_base<maths::tree<Directedness, TreeLinkDir, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>>
   {

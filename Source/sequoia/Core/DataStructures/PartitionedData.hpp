@@ -31,7 +31,7 @@ namespace sequoia
     //===================================A Custom Iterator===================================//
 
     template<class Traits, class Handler, std::integral IndexType>
-      requires ownership::handler<Handler>
+      requires object::handler<Handler>
     using partition_iterator
       = utilities::iterator<
           typename partition_impl::partition_iterator_generator<Traits, Handler, partition_impl::mutable_reference, false>::iterator,
@@ -39,7 +39,7 @@ namespace sequoia
         >;
 
     template<class Traits, class Handler, std::integral IndexType>
-      requires ownership::handler<Handler>
+      requires object::handler<Handler>
     using const_partition_iterator
       = utilities::iterator<
           typename partition_impl::partition_iterator_generator<Traits, Handler, partition_impl::const_reference, false>::iterator,
@@ -47,7 +47,7 @@ namespace sequoia
       >;
 
     template<class Traits, class Handler, std::integral IndexType>
-      requires ownership::handler<Handler>
+      requires object::handler<Handler>
     using reverse_partition_iterator
       = utilities::iterator<
           typename partition_impl::partition_iterator_generator<Traits, Handler, partition_impl::mutable_reference, true>::iterator,
@@ -55,7 +55,7 @@ namespace sequoia
       >;
 
     template<class Traits, class Handler, std::integral IndexType>
-      requires ownership::handler<Handler>
+      requires object::handler<Handler>
     using const_reverse_partition_iterator
       = utilities::iterator<
           typename partition_impl::partition_iterator_generator<Traits, Handler, partition_impl::const_reference, true>::iterator,
@@ -65,8 +65,8 @@ namespace sequoia
     //===================================Storage using buckets===================================//
 
     template<class T, class Handler>
-      requires ownership::handler<Handler>
-    struct bucketed_storage_traits
+      requires object::handler<Handler>
+    struct bucketed_sequence_traits
     {
       constexpr static bool throw_on_range_error{true};
 
@@ -80,14 +80,14 @@ namespace sequoia
     /*! \brief Storage for partitioned data such that data within each partition is contiguous.
      */
 
-    template<class T, class Handler=ownership::independent<T>, class Traits=bucketed_storage_traits<T, Handler>>
-      requires ownership::handler<Handler>
+    template<class T, class Handler=object::independent<T>, class Traits=bucketed_sequence_traits<T, Handler>>
+      requires object::handler<Handler>
     class bucketed_sequence
     {
     private:
       friend struct sequoia::assignment_helper;
 
-      using held_type    = typename Handler::handle_type;
+      using held_type    = typename Handler::product_type;
       using storage_type = typename Traits::template buckets_type<held_type>;
     public:
       using value_type     = T;
@@ -436,7 +436,7 @@ namespace sequoia
       [[nodiscard]]
       friend bool operator==(const bucketed_sequence& lhs, const bucketed_sequence& rhs) noexcept
       {
-        if constexpr(std::is_same_v<Handler, ownership::independent<T>>)
+        if constexpr(std::is_same_v<Handler, object::independent<T>>)
         {
           return lhs.m_Buckets == rhs.m_Buckets;
         }
@@ -496,7 +496,7 @@ namespace sequoia
      */
 
     template<class T, class Handler, class Traits>
-      requires ownership::handler<Handler>
+      requires object::handler<Handler>
     class partitioned_sequence_base
     {
       friend struct sequoia::assignment_helper;
@@ -657,7 +657,7 @@ namespace sequoia
       [[nodiscard]]
       friend constexpr bool operator==(const partitioned_sequence_base& lhs, const partitioned_sequence_base& rhs) noexcept
       {
-        if constexpr(std::is_same_v<Handler, ownership::independent<T>>)
+        if constexpr(std::is_same_v<Handler, object::independent<T>>)
         {
           return (lhs.m_Storage == rhs.m_Storage) && (lhs.m_Partitions == rhs.m_Partitions);
         }
@@ -1127,7 +1127,7 @@ namespace sequoia
     };
 
     template<class T, class Handler>
-      requires ownership::handler<Handler>
+      requires object::handler<Handler>
     struct partitioned_sequence_traits
     {
       constexpr static bool static_storage_v{false};
@@ -1141,8 +1141,8 @@ namespace sequoia
       template<class S> using container_type = std::vector<S, std::allocator<S>>;
     };
 
-    template<class T, class Handler=ownership::independent<T>, class Traits=partitioned_sequence_traits<T, Handler>>
-      requires ownership::handler<Handler>
+    template<class T, class Handler=object::independent<T>, class Traits=partitioned_sequence_traits<T, Handler>>
+      requires object::handler<Handler>
     class partitioned_sequence : public partitioned_sequence_base<T, Handler, Traits>
     {
     private:
@@ -1256,12 +1256,12 @@ namespace sequoia
 
     template<class T, std::size_t Npartitions, std::size_t Nelements, std::integral IndexType=std::size_t>
     class static_partitioned_sequence :
-      public partitioned_sequence_base<T, ownership::independent<T>, static_partitioned_sequence_traits<T, Npartitions, Nelements,IndexType>>
+      public partitioned_sequence_base<T, object::independent<T>, static_partitioned_sequence_traits<T, Npartitions, Nelements,IndexType>>
     {
     public:
       using partitioned_sequence_base<
         T,
-        ownership::independent<T>,
+        object::independent<T>,
         static_partitioned_sequence_traits<T, Npartitions, Nelements,IndexType>
       >::partitioned_sequence_base;
     };

@@ -11,7 +11,7 @@
     \brief Metaprogramming components for partitioned data.
  */
 
-#include "sequoia/Core/Ownership/Handlers.hpp"
+#include "sequoia/Core/Object/Handlers.hpp"
 #include "sequoia/Core/Meta/TypeTraits.hpp"
 
 #include <map>
@@ -33,36 +33,36 @@ namespace sequoia::data_structures::partition_impl
   };
 
   template<class Traits, class Handler>
-    requires ownership::handler<Handler>
+    requires object::handler<Handler>
   struct storage_type_generator
   {
-    using held_type      = typename Handler::handle_type;
+    using held_type      = typename Handler::product_type;
     using container_type = typename Traits::template container_type<held_type>;
   };
 
   template<class Traits, class Handler, template<class> class ReferencePolicy, bool Reversed>
-    requires ownership::handler<Handler>
+    requires object::handler<Handler>
   struct partition_iterator_generator
   {
     using iterator = typename storage_type_generator<Traits, Handler>::container_type::iterator;
   };
 
   template<class Traits, class Handler>
-    requires ownership::handler<Handler>
+    requires object::handler<Handler>
   struct partition_iterator_generator<Traits, Handler, mutable_reference, true>
   {
     using iterator = typename storage_type_generator<Traits,Handler>::container_type::reverse_iterator;
   };
 
   template<class Traits, class Handler>
-    requires ownership::handler<Handler>
+    requires object::handler<Handler>
   struct partition_iterator_generator<Traits, Handler, const_reference, false>
   {
     using iterator = typename storage_type_generator<Traits, Handler>::container_type::const_iterator;
   };
 
   template<class Traits, class Handler>
-    requires ownership::handler<Handler>
+    requires object::handler<Handler>
   struct partition_iterator_generator<Traits, Handler, const_reference, true>
   {
     using iterator = typename storage_type_generator<Traits, Handler>::container_type::const_reverse_iterator;
@@ -108,13 +108,12 @@ namespace sequoia::data_structures::partition_impl
     template<class> class ReferencePolicy,
     class AuxiliaryDataPolicy
   >
-    requires ownership::handler<Handler>
+    requires object::handler<Handler>
   struct dereference_policy : public Handler, public AuxiliaryDataPolicy
   {
-    using elementary_type = typename Handler::elementary_type;
-    using value_type      = elementary_type;
-    using reference       = typename ReferencePolicy<elementary_type>::reference;
-    using pointer         = typename ReferencePolicy<elementary_type>::pointer;
+    using value_type = typename Handler::value_type;
+    using reference  = typename ReferencePolicy<value_type>::reference;
+    using pointer    = typename ReferencePolicy<value_type>::pointer;
 
     template<class... Args>
       requires (!resolve_to_copy_v<dereference_policy, Args...>)
@@ -162,12 +161,12 @@ namespace sequoia::data_structures::partition_impl
   };
 
   template<class Handler, class T>
-    requires ownership::handler<Handler>
-  inline constexpr bool direct_copy_v{std::is_same_v<Handler, ownership::independent<T>>};
+    requires object::handler<Handler>
+  inline constexpr bool direct_copy_v{std::is_same_v<Handler, object::independent<T>>};
 
   template<class T> class data_duplicator;
 
-  template<class T> class data_duplicator<ownership::independent<T>>
+  template<class T> class data_duplicator<object::independent<T>>
   {
   public:
     [[nodiscard]]
@@ -175,19 +174,19 @@ namespace sequoia::data_structures::partition_impl
   private:
   };
 
-  template<class T> class data_duplicator<ownership::shared<T>>
+  template<class T> class data_duplicator<object::shared<T>>
   {
   public:
-    using handle_type = typename ownership::shared<T>::handle_type;
+    using product_type = typename object::shared<T>::product_type;
 
     [[nodiscard]]
-    handle_type duplicate(const handle_type in)
+    product_type duplicate(const product_type in)
     {
-      handle_type ptr{};
+      product_type ptr{};
       auto found{m_ProcessedPointers.find(in)};
       if(found == m_ProcessedPointers.end())
       {
-        ptr = ownership::shared<T>::make(*in);
+        ptr = object::shared<T>::make(*in);
         m_ProcessedPointers.insert(make_pair(in, ptr));
       }
       else
@@ -197,7 +196,7 @@ namespace sequoia::data_structures::partition_impl
       return ptr;
     }
   private:
-    std::map<handle_type, handle_type> m_ProcessedPointers;
+    std::map<product_type, product_type> m_ProcessedPointers;
   };
 
   template<class>

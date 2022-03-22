@@ -13,21 +13,23 @@
 
 namespace sequoia::testing
 {
+  using namespace object;
+
   [[nodiscard]]
   std::string_view factory_test::source_file() const noexcept
   {
     return __FILE__;
   }
 
-  struct x
+  struct regular_type
   {
-    x(int j) : i{j} {}
+    regular_type(int j) : i{j} {}
 
     [[nodiscard]]
-    friend auto operator<=>(const x&, const x&) = default;
+    friend auto operator<=>(const regular_type&, const regular_type&) = default;
 
     template<class Stream>
-    friend Stream& operator<<(Stream& s, const x& val)
+    friend Stream& operator<<(Stream& s, const regular_type& val)
     {
       s << val.i;
       return s;
@@ -36,15 +38,21 @@ namespace sequoia::testing
     int i{};
   };
 
-  struct y
+  struct move_only_type
   {
-    y(int j) : i{j} {}
+    move_only_type(int j) : i{j} {}
+
+    move_only_type(const move_only_type&)     = delete;
+    move_only_type(move_only_type&&) noexcept = default;
+
+    move_only_type& operator=(const move_only_type&)     = delete;
+    move_only_type& operator=(move_only_type&&) noexcept = default;
 
     [[nodiscard]]
-    friend auto operator<=>(const y&, const y&) = default;
+    friend auto operator<=>(const move_only_type&, const move_only_type&) = default;
 
     template<class Stream>
-    friend Stream& operator<<(Stream& s, const y& val)
+    friend Stream& operator<<(Stream& s, const move_only_type& val)
     {
       s << val.i;
       return s;
@@ -55,8 +63,6 @@ namespace sequoia::testing
 
   void factory_test::run_tests()
   {
-    using namespace runtime;
-
     {
       using prediction_type = std::array<std::pair<std::string, std::variant<int, double>>, 2>;
 
@@ -71,9 +77,9 @@ namespace sequoia::testing
 
       check_semantics(LINE(""), f, g);
 
-      check_exception_thrown<std::runtime_error>(LINE(""), [&f](){ return f.create("plurgh"); });
+      check_exception_thrown<std::runtime_error>(LINE(""), [&f](){ return f.make("plurgh"); });
 
-      const auto created{f.create_or<int>("plurgh")};
+      const auto created{f.make_or<int>("plurgh")};
       check(equality, LINE(""), created, std::variant<int, double>{0});
     }
 
@@ -97,12 +103,12 @@ namespace sequoia::testing
     }
 
     {
-      using prediction_type = std::array<std::pair<std::string, std::variant<x, y>>, 2>;
+      using prediction_type = std::array<std::pair<std::string, std::variant<regular_type, move_only_type>>, 2>;
 
-      factory<x, y> f{{"x", "y"}, 1}, g{{"x", "y"}, 2};
+      factory<regular_type, move_only_type> f{{"x", "y"}}, g{{"make_x", "make_y"}};
 
-      check(equivalence, LINE(""), f, prediction_type{{{"x", x{1}}, {"y", y{1}}}});
-      check(equivalence, LINE(""), g, prediction_type{{{"x", x{2}}, {"y", y{2}}}});
+      check(equivalence, LINE(""), f, prediction_type{{{"x", regular_type{1}}, {"y", move_only_type{1}}}}, 1);
+      check(equivalence, LINE(""), g, prediction_type{{{"make_x", regular_type{2}}, {"make_y", move_only_type{2}}}}, 2);
 
       check_semantics(LINE(""), f, g);
     }

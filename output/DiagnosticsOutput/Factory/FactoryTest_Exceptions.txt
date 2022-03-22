@@ -1,4 +1,4 @@
-Tests/Runtime/FactoryTest.cpp, Line 63
+Tests/Runtime/FactoryTest.cpp, Line 69
 Empty string
 
 Expected Exception Type:
@@ -7,7 +7,7 @@ Factory product names must not be empty!
 
 	=======================================
 
-Tests/Runtime/FactoryTest.cpp, Line 64
+Tests/Runtime/FactoryTest.cpp, Line 70
 Empty string
 
 Expected Exception Type:
@@ -16,7 +16,7 @@ Factory product names must not be empty!
 
 	=======================================
 
-Tests/Runtime/FactoryTest.cpp, Line 65
+Tests/Runtime/FactoryTest.cpp, Line 71
 Duplicated names
 
 Expected Exception Type:
@@ -25,15 +25,15 @@ Factory product names must be unique!
 
 	=======================================
 
-Tests/Runtime/FactoryTest.cpp, Line 74
+Tests/Runtime/FactoryTest.cpp, Line 80
 
 Expected Exception Type:
 [std::runtime_error]
-Factory unable to create product of name 'plurgh'
+Factory unable to make product of name 'plurgh'
 
 	=======================================
 
-Tests/Runtime/FactoryTest.cpp, Line 85
+Tests/Runtime/FactoryTest.cpp, Line 91
 Duplicated names
 
 Expected Exception Type:

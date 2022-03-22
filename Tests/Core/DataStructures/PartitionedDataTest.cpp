@@ -25,7 +25,7 @@ namespace sequoia
 
     void partitioned_data_test::run_tests()
     {
-      using namespace ownership;
+      using namespace object;
       using namespace data_structures;
       test_iterators<independent>();
       test_iterators<shared>();
@@ -112,7 +112,7 @@ namespace sequoia
     void partitioned_data_test::test_storage()
     {
       using namespace data_structures;
-      using namespace ownership;
+      using namespace object;
 
       {
         auto storage1 = test_generic_storage<bucketed_sequence<int, shared<int>>>();
@@ -134,7 +134,7 @@ namespace sequoia
     Storage partitioned_data_test::test_generic_storage()
     {
       using namespace data_structures;
-      using namespace ownership;
+      using namespace object;
       using value_type = typename Storage::value_type;
       using equivalent_type = std::initializer_list<std::initializer_list<value_type>>;
 
@@ -595,7 +595,7 @@ namespace sequoia
     {
       using namespace data_structures;
 
-      using container_t = std::vector<typename Handler<int>::handle_type>;
+      using container_t = std::vector<typename Handler<int>::product_type>;
 
       container_t vec{Handler<int>::make(1), Handler<int>::make(2), Handler<int>::make(3)};
 

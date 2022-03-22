@@ -13,7 +13,7 @@
  */
 
 #include "sequoia/Core/DataStructures/PartitionedData.hpp"
-#include "sequoia/Core/Ownership/DataPool.hpp"
+#include "sequoia/Core/Object/DataPool.hpp"
 #include "sequoia/Maths/Graph/GraphImpl.hpp"
 #include "sequoia/Maths/Graph/StaticGraphImpl.hpp"
 #include "sequoia/Maths/Graph/StaticNodeStorage.hpp"
@@ -42,9 +42,9 @@ namespace sequoia::maths
       <
         Directedness,
         graph_impl::static_edge_traits<(Directedness == directed_flavour::directed) ? graph_flavour::directed : graph_flavour::undirected, Order, Size, EdgeWeight, typename Traits::edge_index_type>,
-        ownership::spawner<EdgeWeight>
+        object::uniform_producer<EdgeWeight>
       >,
-      graph_impl::static_node_storage<ownership::spawner<NodeWeight>, Order>
+      graph_impl::static_node_storage<object::uniform_producer<NodeWeight>, Order>
     >
   {
   private:
@@ -55,9 +55,9 @@ namespace sequoia::maths
         <
           Directedness,
           graph_impl::static_edge_traits<(Directedness == directed_flavour::directed) ? graph_flavour::directed : graph_flavour::undirected, Order, Size, EdgeWeight, typename Traits::edge_index_type>,
-          ownership::spawner<EdgeWeight>
+          object::uniform_producer<EdgeWeight>
         >,
-        graph_impl::static_node_storage<ownership::spawner<NodeWeight>, Order>
+        graph_impl::static_node_storage<object::uniform_producer<NodeWeight>, Order>
       >;
 
   public:
@@ -79,9 +79,9 @@ namespace sequoia::maths
         <
           Directedness,
           graph_impl::static_edge_traits<(Directedness == directed_flavour::directed) ? graph_flavour::directed : graph_flavour::undirected, Order, Size, EdgeWeight, typename Traits::edge_index_type>,
-          ownership::spawner<EdgeWeight>
+          object::uniform_producer<EdgeWeight>
         >,
-        graph_impl::static_node_storage<ownership::spawner<NodeWeight>, Order>
+        graph_impl::static_node_storage<object::uniform_producer<NodeWeight>, Order>
       >::graph_primitive;
 
     using primitive_type::swap_nodes;
@@ -111,9 +111,9 @@ namespace sequoia::maths
       <
         Directedness,
         graph_impl::static_edge_traits<(Directedness == directed_flavour::directed) ? graph_flavour::directed_embedded : graph_flavour::undirected_embedded, Order, Size, EdgeWeight, typename Traits::edge_index_type>,
-        ownership::spawner<EdgeWeight>
+        object::uniform_producer<EdgeWeight>
       >,
-      graph_impl::static_node_storage<ownership::spawner<NodeWeight>, Order>
+      graph_impl::static_node_storage<object::uniform_producer<NodeWeight>, Order>
     >
   {
   private:
@@ -124,9 +124,9 @@ namespace sequoia::maths
         <
           Directedness,
           graph_impl::static_edge_traits<(Directedness == directed_flavour::directed) ? graph_flavour::directed_embedded : graph_flavour::undirected_embedded, Order, Size, EdgeWeight, typename Traits::edge_index_type>,
-          ownership::spawner<EdgeWeight>
+          object::uniform_producer<EdgeWeight>
         >,
-        graph_impl::static_node_storage<ownership::spawner<NodeWeight>, Order>
+        graph_impl::static_node_storage<object::uniform_producer<NodeWeight>, Order>
       >;
 
   public:
@@ -148,9 +148,9 @@ namespace sequoia::maths
         <
           Directedness,
           graph_impl::static_edge_traits<(Directedness == directed_flavour::directed) ? graph_flavour::directed_embedded : graph_flavour::undirected_embedded, Order, Size, EdgeWeight, typename Traits::edge_index_type>,
-          ownership::spawner<EdgeWeight>
+          object::uniform_producer<EdgeWeight>
         >,
-        graph_impl::static_node_storage<ownership::spawner<NodeWeight>, Order>
+        graph_impl::static_node_storage<object::uniform_producer<NodeWeight>, Order>
       >::graph_primitive;
 
     using primitive::swap_nodes;

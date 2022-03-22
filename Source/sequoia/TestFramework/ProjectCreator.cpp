@@ -174,7 +174,6 @@ namespace sequoia::testing
         const auto mainDir{data.project_root / "TestAll"};
         const auto buildDir{project_paths::cmade_build_dir(data.project_root, mainDir)};
 
-        using namespace runtime;
         invoke(cd_cmd(mainDir)
             && cmake_cmd(working_path_v, buildDir, data.output)
             && build_cmd(buildDir, data.output)

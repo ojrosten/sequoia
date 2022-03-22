@@ -14,41 +14,18 @@
     latter provides a uniform interface.
  */
 
-#include "sequoia/Core/Ownership/Handlers.hpp"
-
-#include "sequoia/Core/Utilities/UniformWrapper.hpp"
+#include "sequoia/Core/Object/Creator.hpp"
+#include "sequoia/Core/Object/UniformWrapper.hpp"
 #include "sequoia/Core/Utilities/Iterator.hpp"
 
 #include <vector>
 #include <memory>
 #include <algorithm>
 
-namespace sequoia::ownership
+namespace sequoia::object
 {
-  /*! \brief Class template providing a `make` method, which constructs an instance of `T`, wrapped in a proxy.
-
-      The proxy used is \ref sequoia::utilities::uniform_wrapper "sequoia::utilities::uniform_wrapper<T>".
-      The latter is understood to define the interface for other analogous proxies appearing in this file.
-   */
-  template<class T> class spawner
-  {
-  public:
-    using proxy = utilities::uniform_wrapper<T>;
-    using value_type = T;
-
-    template<class... Args>
-    [[nodiscard]]
-    constexpr static proxy make(Args&&... args)
-    {
-      return proxy{std::forward<Args>(args)...};
-    }
-
-    [[nodiscard]]
-    friend constexpr bool operator==(const spawner&, const spawner&) noexcept = default;
-
-    [[nodiscard]]
-    friend constexpr bool operator!=(const spawner&, const spawner&) noexcept = default;
-  };
+  template<class T>
+  using uniform_producer = producer<T, uniform_wrapper<T>>;
 
   namespace impl
   {
@@ -61,7 +38,7 @@ namespace sequoia::ownership
       using proxy      = std::pair<reference, long>;
 
     protected:
-      using handle_type = std::shared_ptr<Wrapper>;
+      using product_type = std::shared_ptr<Wrapper>;
 
       pool_deref_policy() = default;
       pool_deref_policy(const pool_deref_policy&)     = default;
@@ -70,7 +47,7 @@ namespace sequoia::ownership
       pool_deref_policy& operator=(pool_deref_policy&&) noexcept = default;
 
       [[nodiscard]]
-      static proxy get(const handle_type& ptr)
+      static proxy get(const product_type& ptr)
       {
         return {ptr->get(), ptr.use_count() - 1};
       }
@@ -101,7 +78,7 @@ namespace sequoia::ownership
        | |....
       </pre>
 
-      To remove intermediate wrappers, `W`, with no associated proxies, invoke sequoia::ownership::data_pool::tidy.
+      To remove intermediate wrappers, `W`, with no associated proxies, invoke sequoia::object::data_pool::tidy.
    */
   template<class T, class Allocator=std::allocator<T>>
     requires (!std::is_empty_v<T>)
@@ -195,6 +172,7 @@ namespace sequoia::ownership
     using container = std::vector<wrapper_handle, allocator_type>;
   public:
     using value_type             = T;
+    using product_type           = proxy;
     using const_iterator         = impl::pool_iterator<typename container::const_iterator, data_wrapper>;
     using const_reverse_iterator = impl::pool_iterator<typename container::const_reverse_iterator, data_wrapper>;
 

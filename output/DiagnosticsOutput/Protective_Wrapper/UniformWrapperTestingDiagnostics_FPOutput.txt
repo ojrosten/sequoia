@@ -1,6 +1,6 @@
 	Tests/Core/Utilities/UniformWrapperTestingDiagnostics.cpp, Line 34
 
-	[sequoia::utilities::uniform_wrapper<int>]
+	[sequoia::object::uniform_wrapper<int>]
 	operator== returned false
 
 	  [int]
@@ -10,9 +10,9 @@
 
 	=======================================
 
-	Tests/Core/Utilities/UniformWrapperTestingDiagnostics.cpp, Line 42
+	Tests/Core/Utilities/UniformWrapperTestingDiagnostics.cpp, Line 40
 
-	[sequoia::utilities::uniform_wrapper<std::vector<int, std::allocator<int> > >]
+	[sequoia::object::uniform_wrapper<std::vector<int, std::allocator<int> > >]
 	operator== returned false
 
 	  [std::vector<int, std::allocator<int> >]
@@ -26,9 +26,9 @@
 
 	=======================================
 
-	Tests/Core/Utilities/UniformWrapperTestingDiagnostics.cpp, Line 45
+	Tests/Core/Utilities/UniformWrapperTestingDiagnostics.cpp, Line 43
 
-	[sequoia::utilities::uniform_wrapper<std::vector<int, std::allocator<int> > >]
+	[sequoia::object::uniform_wrapper<std::vector<int, std::allocator<int> > >]
 	operator== returned false
 
 	  [std::vector<int, std::allocator<int> >]
@@ -42,9 +42,9 @@
 
 	=======================================
 
-	Tests/Core/Utilities/UniformWrapperTestingDiagnostics.cpp, Line 48
+	Tests/Core/Utilities/UniformWrapperTestingDiagnostics.cpp, Line 46
 
-	[sequoia::utilities::uniform_wrapper<std::vector<int, std::allocator<int> > >]
+	[sequoia::object::uniform_wrapper<std::vector<int, std::allocator<int> > >]
 	operator== returned false
 
 	  [std::vector<int, std::allocator<int> >]
@@ -58,9 +58,9 @@
 
 	=======================================
 
-	Tests/Core/Utilities/UniformWrapperTestingDiagnostics.cpp, Line 56
+	Tests/Core/Utilities/UniformWrapperTestingDiagnostics.cpp, Line 52
 
-	[sequoia::utilities::uniform_wrapper<sequoia::testing::data>]
+	[sequoia::object::uniform_wrapper<sequoia::testing::data>]
 	operator== returned false
 
 	  [sequoia::testing::data]

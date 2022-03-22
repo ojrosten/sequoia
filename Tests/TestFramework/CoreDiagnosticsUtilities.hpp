@@ -180,9 +180,9 @@ namespace sequoia::testing
   template<class T=int, class Handle=std::shared_ptr<T>, class Allocator=std::allocator<Handle>>
   struct perfectly_sharing_beast
   {
-    using handle_type    = Handle;
+    using product_type    = Handle;
     using allocator_type = Allocator;
-    using container_type = std::vector<handle_type, allocator_type>;
+    using container_type = std::vector<product_type, allocator_type>;
 
     struct alloc_acquirer
     {
@@ -270,7 +270,7 @@ namespace sequoia::testing
 
     void reset(const allocator_type& a)
     {
-      const std::vector<handle_type, allocator_type> v(a);
+      const std::vector<product_type, allocator_type> v(a);
       x = v;
     }
   };
@@ -896,7 +896,7 @@ namespace sequoia::testing
   template<class T=int, class Handle=std::shared_ptr<T>, class Allocator=std::allocator<Handle>>
   struct broken_copy_value_semantics
   {
-    using handle_type = Handle;
+    using product_type = Handle;
     using allocator_type = Allocator;
 
     struct alloc_acquirer
@@ -963,11 +963,11 @@ namespace sequoia::testing
 
     void reset(const allocator_type& a)
     {
-      const std::vector<handle_type, allocator_type> v(a);
+      const std::vector<product_type, allocator_type> v(a);
       x = v;
     }
 
-    std::vector<handle_type, allocator_type> x{};
+    std::vector<product_type, allocator_type> x{};
 
     [[nodiscard]]
     friend bool operator==(const broken_copy_value_semantics& lhs, const broken_copy_value_semantics& rhs) noexcept
@@ -994,7 +994,7 @@ namespace sequoia::testing
   template<class T=int, class Handle=std::shared_ptr<T>, class Allocator=std::allocator<Handle>>
   struct broken_copy_assignment_value_semantics
   {
-    using handle_type = Handle;
+    using product_type = Handle;
     using allocator_type = Allocator;
 
     broken_copy_assignment_value_semantics(std::initializer_list<T> list, const allocator_type& a = allocator_type{})
@@ -1033,7 +1033,7 @@ namespace sequoia::testing
       std::swap(lhs.x, rhs.x);
     }
 
-    std::vector<handle_type, allocator_type> x{};
+    std::vector<product_type, allocator_type> x{};
 
     [[nodiscard]]
     friend bool operator==(const broken_copy_assignment_value_semantics& lhs, const broken_copy_assignment_value_semantics& rhs) noexcept

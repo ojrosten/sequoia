@@ -26,7 +26,7 @@ namespace sequoia::testing
   template<bool PropagateMove, bool PropagateSwap>
   void data_pool_allocation_test::test_allocation()
   {
-    using namespace ownership;
+    using namespace object;
     using pool_t = data_pool<int, shared_counting_allocator<int, true, PropagateMove, PropagateSwap>>;
     using prediction_t = typename value_tester<pool_t>::prediction_type;
 

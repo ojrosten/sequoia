@@ -2,7 +2,7 @@
 	Directedness: directed / Tree Link Dir: forward - Empty vs non-empty
 
 	Comparison performed using:
-	[sequoia::testing::value_tester<sequoia::maths::tree<1, 1, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+	[sequoia::testing::value_tester<sequoia::maths::tree<1, 1, sequoia::maths::null_weight, int, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::object::producer<int, sequoia::object::uniform_wrapper<int>, sequoia::object::direct_forwarder<int, sequoia::object::uniform_wrapper<int> > >, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
 	Checking for equivalence with:
 	[sequoia::maths::tree_initializer<int>]
 
@@ -16,7 +16,7 @@
 	Directedness: directed / Tree Link Dir: forward - Incorrect weight
 
 	Comparison performed using:
-	[sequoia::testing::value_tester<sequoia::maths::tree<1, 1, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+	[sequoia::testing::value_tester<sequoia::maths::tree<1, 1, sequoia::maths::null_weight, int, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::object::producer<int, sequoia::object::uniform_wrapper<int>, sequoia::object::direct_forwarder<int, sequoia::object::uniform_wrapper<int> > >, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
 	Checking for equivalence with:
 	[sequoia::maths::tree_initializer<int>]
 
@@ -32,7 +32,7 @@
 	Directedness: directed / Tree Link Dir: forward - Too many children
 
 	Comparison performed using:
-	[sequoia::testing::value_tester<sequoia::maths::tree<1, 1, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+	[sequoia::testing::value_tester<sequoia::maths::tree<1, 1, sequoia::maths::null_weight, int, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::object::producer<int, sequoia::object::uniform_wrapper<int>, sequoia::object::direct_forwarder<int, sequoia::object::uniform_wrapper<int> > >, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
 	Checking for equivalence with:
 	[sequoia::maths::tree_initializer<int>]
 
@@ -48,7 +48,7 @@
 	Directedness: directed / Tree Link Dir: forward - Incorrect child weight
 
 	Comparison performed using:
-	[sequoia::testing::value_tester<sequoia::maths::tree<1, 1, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+	[sequoia::testing::value_tester<sequoia::maths::tree<1, 1, sequoia::maths::null_weight, int, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::object::producer<int, sequoia::object::uniform_wrapper<int>, sequoia::object::direct_forwarder<int, sequoia::object::uniform_wrapper<int> > >, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
 	Checking for equivalence with:
 	[sequoia::maths::tree_initializer<int>]
 
@@ -64,7 +64,7 @@
 	Directedness: directed / Tree Link Dir: forward - Too few children
 
 	Comparison performed using:
-	[sequoia::testing::value_tester<sequoia::maths::tree<1, 1, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+	[sequoia::testing::value_tester<sequoia::maths::tree<1, 1, sequoia::maths::null_weight, int, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::object::producer<int, sequoia::object::uniform_wrapper<int>, sequoia::object::direct_forwarder<int, sequoia::object::uniform_wrapper<int> > >, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
 	Checking for equivalence with:
 	[sequoia::maths::tree_initializer<int>]
 
@@ -80,7 +80,7 @@
 	Directedness: directed / Tree Link Dir: forward - Too many grand children
 
 	Comparison performed using:
-	[sequoia::testing::value_tester<sequoia::maths::tree<1, 1, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+	[sequoia::testing::value_tester<sequoia::maths::tree<1, 1, sequoia::maths::null_weight, int, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::object::producer<int, sequoia::object::uniform_wrapper<int>, sequoia::object::direct_forwarder<int, sequoia::object::uniform_wrapper<int> > >, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
 	Checking for equivalence with:
 	[sequoia::maths::tree_initializer<int>]
 
@@ -96,7 +96,7 @@
 	Directedness: directed / Tree Link Dir: forward - Incorrect grand child weight
 
 	Comparison performed using:
-	[sequoia::testing::value_tester<sequoia::maths::tree<1, 1, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+	[sequoia::testing::value_tester<sequoia::maths::tree<1, 1, sequoia::maths::null_weight, int, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::object::producer<int, sequoia::object::uniform_wrapper<int>, sequoia::object::direct_forwarder<int, sequoia::object::uniform_wrapper<int> > >, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
 	Checking for equivalence with:
 	[sequoia::maths::tree_initializer<int>]
 
@@ -118,7 +118,7 @@
 	Directedness: directed / Tree Link Dir: forward - Too few grand children
 
 	Comparison performed using:
-	[sequoia::testing::value_tester<sequoia::maths::tree<1, 1, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+	[sequoia::testing::value_tester<sequoia::maths::tree<1, 1, sequoia::maths::null_weight, int, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::object::producer<int, sequoia::object::uniform_wrapper<int>, sequoia::object::direct_forwarder<int, sequoia::object::uniform_wrapper<int> > >, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
 	Checking for equivalence with:
 	[sequoia::maths::tree_initializer<int>]
 
@@ -133,10 +133,10 @@
 	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 99
 	Directedness: directed / Tree Link Dir: forward
 
-	[sequoia::maths::tree<1, 1, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> >]
+	[sequoia::maths::tree<1, 1, sequoia::maths::null_weight, int, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::object::producer<int, sequoia::object::uniform_wrapper<int>, sequoia::object::direct_forwarder<int, sequoia::object::uniform_wrapper<int> > >, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> >]
 	operator== returned false
 
-	  [sequoia::maths::connectivity<1, sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::maths::bucketed_edge_storage_traits, unsigned long long>, sequoia::ownership::spawner<sequoia::maths::null_weight> >]
+	  [sequoia::maths::connectivity<1, sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::maths::bucketed_edge_storage_traits, unsigned long long>, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > > >]
 	  operator== returned false
 
 	    Connectivity order incorrect
@@ -145,7 +145,7 @@
 	    Obtained : 0
 	    Predicted: 1
 
-	  [sequoia::maths::graph_impl::node_storage<sequoia::ownership::spawner<int>, sequoia::maths::node_weight_storage_traits<int> >]
+	  [sequoia::maths::graph_impl::node_storage<sequoia::object::producer<int, sequoia::object::uniform_wrapper<int>, sequoia::object::direct_forwarder<int, sequoia::object::uniform_wrapper<int> > >, sequoia::maths::node_weight_storage_traits<int> >]
 	  operator== returned false
 
 	    Sizes different
@@ -175,10 +175,10 @@
 	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 100
 	Directedness: directed / Tree Link Dir: forward
 
-	[sequoia::maths::tree<1, 1, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> >]
+	[sequoia::maths::tree<1, 1, sequoia::maths::null_weight, int, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::object::producer<int, sequoia::object::uniform_wrapper<int>, sequoia::object::direct_forwarder<int, sequoia::object::uniform_wrapper<int> > >, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> >]
 	operator== returned false
 
-	  [sequoia::maths::connectivity<1, sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::maths::bucketed_edge_storage_traits, unsigned long long>, sequoia::ownership::spawner<sequoia::maths::null_weight> >]
+	  [sequoia::maths::connectivity<1, sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::maths::bucketed_edge_storage_traits, unsigned long long>, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > > >]
 	  operator== returned false
 
 	    Connectivity size incorrect
@@ -193,7 +193,7 @@
 	    Obtained : 1
 	    Predicted: 2
 
-	  [sequoia::maths::graph_impl::node_storage<sequoia::ownership::spawner<int>, sequoia::maths::node_weight_storage_traits<int> >]
+	  [sequoia::maths::graph_impl::node_storage<sequoia::object::producer<int, sequoia::object::uniform_wrapper<int>, sequoia::object::direct_forwarder<int, sequoia::object::uniform_wrapper<int> > >, sequoia::maths::node_weight_storage_traits<int> >]
 	  operator== returned false
 
 	    Sizes different
@@ -224,7 +224,7 @@
 	Directedness: directed / Tree Link Dir: backward - Empty vs non-empty
 
 	Comparison performed using:
-	[sequoia::testing::value_tester<sequoia::maths::tree<1, 2, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+	[sequoia::testing::value_tester<sequoia::maths::tree<1, 2, sequoia::maths::null_weight, int, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::object::producer<int, sequoia::object::uniform_wrapper<int>, sequoia::object::direct_forwarder<int, sequoia::object::uniform_wrapper<int> > >, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
 	Checking for equivalence with:
 	[sequoia::maths::tree_initializer<int>]
 
@@ -238,7 +238,7 @@
 	Directedness: directed / Tree Link Dir: backward - Incorrect weight
 
 	Comparison performed using:
-	[sequoia::testing::value_tester<sequoia::maths::tree<1, 2, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+	[sequoia::testing::value_tester<sequoia::maths::tree<1, 2, sequoia::maths::null_weight, int, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::object::producer<int, sequoia::object::uniform_wrapper<int>, sequoia::object::direct_forwarder<int, sequoia::object::uniform_wrapper<int> > >, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
 	Checking for equivalence with:
 	[sequoia::maths::tree_initializer<int>]
 
@@ -254,7 +254,7 @@
 	Directedness: directed / Tree Link Dir: backward - Too many children
 
 	Comparison performed using:
-	[sequoia::testing::value_tester<sequoia::maths::tree<1, 2, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+	[sequoia::testing::value_tester<sequoia::maths::tree<1, 2, sequoia::maths::null_weight, int, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::object::producer<int, sequoia::object::uniform_wrapper<int>, sequoia::object::direct_forwarder<int, sequoia::object::uniform_wrapper<int> > >, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
 	Checking for equivalence with:
 	[sequoia::maths::tree_initializer<int>]
 
@@ -268,7 +268,7 @@
 	Directedness: directed / Tree Link Dir: backward - Incorrect child weight
 
 	Comparison performed using:
-	[sequoia::testing::value_tester<sequoia::maths::tree<1, 2, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+	[sequoia::testing::value_tester<sequoia::maths::tree<1, 2, sequoia::maths::null_weight, int, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::object::producer<int, sequoia::object::uniform_wrapper<int>, sequoia::object::direct_forwarder<int, sequoia::object::uniform_wrapper<int> > >, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
 	Checking for equivalence with:
 	[sequoia::maths::tree_initializer<int>]
 
@@ -284,7 +284,7 @@
 	Directedness: directed / Tree Link Dir: backward - Too few children
 
 	Comparison performed using:
-	[sequoia::testing::value_tester<sequoia::maths::tree<1, 2, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+	[sequoia::testing::value_tester<sequoia::maths::tree<1, 2, sequoia::maths::null_weight, int, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::object::producer<int, sequoia::object::uniform_wrapper<int>, sequoia::object::direct_forwarder<int, sequoia::object::uniform_wrapper<int> > >, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
 	Checking for equivalence with:
 	[sequoia::maths::tree_initializer<int>]
 
@@ -298,7 +298,7 @@
 	Directedness: directed / Tree Link Dir: backward - Too many grand children
 
 	Comparison performed using:
-	[sequoia::testing::value_tester<sequoia::maths::tree<1, 2, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+	[sequoia::testing::value_tester<sequoia::maths::tree<1, 2, sequoia::maths::null_weight, int, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::object::producer<int, sequoia::object::uniform_wrapper<int>, sequoia::object::direct_forwarder<int, sequoia::object::uniform_wrapper<int> > >, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
 	Checking for equivalence with:
 	[sequoia::maths::tree_initializer<int>]
 
@@ -312,7 +312,7 @@
 	Directedness: directed / Tree Link Dir: backward - Incorrect grand child weight
 
 	Comparison performed using:
-	[sequoia::testing::value_tester<sequoia::maths::tree<1, 2, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+	[sequoia::testing::value_tester<sequoia::maths::tree<1, 2, sequoia::maths::null_weight, int, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::object::producer<int, sequoia::object::uniform_wrapper<int>, sequoia::object::direct_forwarder<int, sequoia::object::uniform_wrapper<int> > >, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
 	Checking for equivalence with:
 	[sequoia::maths::tree_initializer<int>]
 
@@ -334,7 +334,7 @@
 	Directedness: directed / Tree Link Dir: backward - Too few grand children
 
 	Comparison performed using:
-	[sequoia::testing::value_tester<sequoia::maths::tree<1, 2, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+	[sequoia::testing::value_tester<sequoia::maths::tree<1, 2, sequoia::maths::null_weight, int, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::object::producer<int, sequoia::object::uniform_wrapper<int>, sequoia::object::direct_forwarder<int, sequoia::object::uniform_wrapper<int> > >, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
 	Checking for equivalence with:
 	[sequoia::maths::tree_initializer<int>]
 
@@ -349,10 +349,10 @@
 	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 99
 	Directedness: directed / Tree Link Dir: backward
 
-	[sequoia::maths::tree<1, 2, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> >]
+	[sequoia::maths::tree<1, 2, sequoia::maths::null_weight, int, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::object::producer<int, sequoia::object::uniform_wrapper<int>, sequoia::object::direct_forwarder<int, sequoia::object::uniform_wrapper<int> > >, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> >]
 	operator== returned false
 
-	  [sequoia::maths::connectivity<1, sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::maths::bucketed_edge_storage_traits, unsigned long long>, sequoia::ownership::spawner<sequoia::maths::null_weight> >]
+	  [sequoia::maths::connectivity<1, sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::maths::bucketed_edge_storage_traits, unsigned long long>, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > > >]
 	  operator== returned false
 
 	    Connectivity order incorrect
@@ -361,7 +361,7 @@
 	    Obtained : 0
 	    Predicted: 1
 
-	  [sequoia::maths::graph_impl::node_storage<sequoia::ownership::spawner<int>, sequoia::maths::node_weight_storage_traits<int> >]
+	  [sequoia::maths::graph_impl::node_storage<sequoia::object::producer<int, sequoia::object::uniform_wrapper<int>, sequoia::object::direct_forwarder<int, sequoia::object::uniform_wrapper<int> > >, sequoia::maths::node_weight_storage_traits<int> >]
 	  operator== returned false
 
 	    Sizes different
@@ -391,10 +391,10 @@
 	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 100
 	Directedness: directed / Tree Link Dir: backward
 
-	[sequoia::maths::tree<1, 2, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> >]
+	[sequoia::maths::tree<1, 2, sequoia::maths::null_weight, int, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::object::producer<int, sequoia::object::uniform_wrapper<int>, sequoia::object::direct_forwarder<int, sequoia::object::uniform_wrapper<int> > >, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> >]
 	operator== returned false
 
-	  [sequoia::maths::connectivity<1, sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::maths::bucketed_edge_storage_traits, unsigned long long>, sequoia::ownership::spawner<sequoia::maths::null_weight> >]
+	  [sequoia::maths::connectivity<1, sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::maths::bucketed_edge_storage_traits, unsigned long long>, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > > >]
 	  operator== returned false
 
 	    Connectivity size incorrect
@@ -409,7 +409,7 @@
 	    Obtained : 1
 	    Predicted: 2
 
-	  [sequoia::maths::graph_impl::node_storage<sequoia::ownership::spawner<int>, sequoia::maths::node_weight_storage_traits<int> >]
+	  [sequoia::maths::graph_impl::node_storage<sequoia::object::producer<int, sequoia::object::uniform_wrapper<int>, sequoia::object::direct_forwarder<int, sequoia::object::uniform_wrapper<int> > >, sequoia::maths::node_weight_storage_traits<int> >]
 	  operator== returned false
 
 	    Sizes different
@@ -440,7 +440,7 @@
 	Directedness: directed / Tree Link Dir: symmetric - Empty vs non-empty
 
 	Comparison performed using:
-	[sequoia::testing::value_tester<sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+	[sequoia::testing::value_tester<sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::object::producer<int, sequoia::object::uniform_wrapper<int>, sequoia::object::direct_forwarder<int, sequoia::object::uniform_wrapper<int> > >, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
 	Checking for equivalence with:
 	[sequoia::maths::tree_initializer<int>]
 
@@ -454,7 +454,7 @@
 	Directedness: directed / Tree Link Dir: symmetric - Incorrect weight
 
 	Comparison performed using:
-	[sequoia::testing::value_tester<sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+	[sequoia::testing::value_tester<sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::object::producer<int, sequoia::object::uniform_wrapper<int>, sequoia::object::direct_forwarder<int, sequoia::object::uniform_wrapper<int> > >, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
 	Checking for equivalence with:
 	[sequoia::maths::tree_initializer<int>]
 
@@ -470,7 +470,7 @@
 	Directedness: directed / Tree Link Dir: symmetric - Too many children
 
 	Comparison performed using:
-	[sequoia::testing::value_tester<sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+	[sequoia::testing::value_tester<sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::object::producer<int, sequoia::object::uniform_wrapper<int>, sequoia::object::direct_forwarder<int, sequoia::object::uniform_wrapper<int> > >, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
 	Checking for equivalence with:
 	[sequoia::maths::tree_initializer<int>]
 
@@ -486,7 +486,7 @@
 	Directedness: directed / Tree Link Dir: symmetric - Incorrect child weight
 
 	Comparison performed using:
-	[sequoia::testing::value_tester<sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+	[sequoia::testing::value_tester<sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::object::producer<int, sequoia::object::uniform_wrapper<int>, sequoia::object::direct_forwarder<int, sequoia::object::uniform_wrapper<int> > >, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
 	Checking for equivalence with:
 	[sequoia::maths::tree_initializer<int>]
 
@@ -502,7 +502,7 @@
 	Directedness: directed / Tree Link Dir: symmetric - Too few children
 
 	Comparison performed using:
-	[sequoia::testing::value_tester<sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+	[sequoia::testing::value_tester<sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::object::producer<int, sequoia::object::uniform_wrapper<int>, sequoia::object::direct_forwarder<int, sequoia::object::uniform_wrapper<int> > >, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
 	Checking for equivalence with:
 	[sequoia::maths::tree_initializer<int>]
 
@@ -518,7 +518,7 @@
 	Directedness: directed / Tree Link Dir: symmetric - Too many grand children
 
 	Comparison performed using:
-	[sequoia::testing::value_tester<sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+	[sequoia::testing::value_tester<sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::object::producer<int, sequoia::object::uniform_wrapper<int>, sequoia::object::direct_forwarder<int, sequoia::object::uniform_wrapper<int> > >, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
 	Checking for equivalence with:
 	[sequoia::maths::tree_initializer<int>]
 
@@ -534,7 +534,7 @@
 	Directedness: directed / Tree Link Dir: symmetric - Incorrect grand child weight
 
 	Comparison performed using:
-	[sequoia::testing::value_tester<sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+	[sequoia::testing::value_tester<sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::object::producer<int, sequoia::object::uniform_wrapper<int>, sequoia::object::direct_forwarder<int, sequoia::object::uniform_wrapper<int> > >, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
 	Checking for equivalence with:
 	[sequoia::maths::tree_initializer<int>]
 
@@ -556,7 +556,7 @@
 	Directedness: directed / Tree Link Dir: symmetric - Too few grand children
 
 	Comparison performed using:
-	[sequoia::testing::value_tester<sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+	[sequoia::testing::value_tester<sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::object::producer<int, sequoia::object::uniform_wrapper<int>, sequoia::object::direct_forwarder<int, sequoia::object::uniform_wrapper<int> > >, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
 	Checking for equivalence with:
 	[sequoia::maths::tree_initializer<int>]
 
@@ -571,10 +571,10 @@
 	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 99
 	Directedness: directed / Tree Link Dir: symmetric
 
-	[sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> >]
+	[sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::object::producer<int, sequoia::object::uniform_wrapper<int>, sequoia::object::direct_forwarder<int, sequoia::object::uniform_wrapper<int> > >, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> >]
 	operator== returned false
 
-	  [sequoia::maths::connectivity<1, sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::maths::bucketed_edge_storage_traits, unsigned long long>, sequoia::ownership::spawner<sequoia::maths::null_weight> >]
+	  [sequoia::maths::connectivity<1, sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::maths::bucketed_edge_storage_traits, unsigned long long>, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > > >]
 	  operator== returned false
 
 	    Connectivity order incorrect
@@ -583,7 +583,7 @@
 	    Obtained : 0
 	    Predicted: 1
 
-	  [sequoia::maths::graph_impl::node_storage<sequoia::ownership::spawner<int>, sequoia::maths::node_weight_storage_traits<int> >]
+	  [sequoia::maths::graph_impl::node_storage<sequoia::object::producer<int, sequoia::object::uniform_wrapper<int>, sequoia::object::direct_forwarder<int, sequoia::object::uniform_wrapper<int> > >, sequoia::maths::node_weight_storage_traits<int> >]
 	  operator== returned false
 
 	    Sizes different
@@ -613,10 +613,10 @@
 	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 100
 	Directedness: directed / Tree Link Dir: symmetric
 
-	[sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> >]
+	[sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::object::producer<int, sequoia::object::uniform_wrapper<int>, sequoia::object::direct_forwarder<int, sequoia::object::uniform_wrapper<int> > >, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> >]
 	operator== returned false
 
-	  [sequoia::maths::connectivity<1, sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::maths::bucketed_edge_storage_traits, unsigned long long>, sequoia::ownership::spawner<sequoia::maths::null_weight> >]
+	  [sequoia::maths::connectivity<1, sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::maths::bucketed_edge_storage_traits, unsigned long long>, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > > >]
 	  operator== returned false
 
 	    Connectivity size incorrect
@@ -631,7 +631,7 @@
 	    Obtained : 1
 	    Predicted: 2
 
-	  [sequoia::maths::graph_impl::node_storage<sequoia::ownership::spawner<int>, sequoia::maths::node_weight_storage_traits<int> >]
+	  [sequoia::maths::graph_impl::node_storage<sequoia::object::producer<int, sequoia::object::uniform_wrapper<int>, sequoia::object::direct_forwarder<int, sequoia::object::uniform_wrapper<int> > >, sequoia::maths::node_weight_storage_traits<int> >]
 	  operator== returned false
 
 	    Sizes different
@@ -662,7 +662,7 @@
 	Directedness: undirected / Tree Link Dir: symmetric - Empty vs non-empty
 
 	Comparison performed using:
-	[sequoia::testing::value_tester<sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+	[sequoia::testing::value_tester<sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::object::producer<int, sequoia::object::uniform_wrapper<int>, sequoia::object::direct_forwarder<int, sequoia::object::uniform_wrapper<int> > >, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
 	Checking for equivalence with:
 	[sequoia::maths::tree_initializer<int>]
 
@@ -676,7 +676,7 @@
 	Directedness: undirected / Tree Link Dir: symmetric - Incorrect weight
 
 	Comparison performed using:
-	[sequoia::testing::value_tester<sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+	[sequoia::testing::value_tester<sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::object::producer<int, sequoia::object::uniform_wrapper<int>, sequoia::object::direct_forwarder<int, sequoia::object::uniform_wrapper<int> > >, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
 	Checking for equivalence with:
 	[sequoia::maths::tree_initializer<int>]
 
@@ -692,7 +692,7 @@
 	Directedness: undirected / Tree Link Dir: symmetric - Too many children
 
 	Comparison performed using:
-	[sequoia::testing::value_tester<sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+	[sequoia::testing::value_tester<sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::object::producer<int, sequoia::object::uniform_wrapper<int>, sequoia::object::direct_forwarder<int, sequoia::object::uniform_wrapper<int> > >, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
 	Checking for equivalence with:
 	[sequoia::maths::tree_initializer<int>]
 
@@ -708,7 +708,7 @@
 	Directedness: undirected / Tree Link Dir: symmetric - Incorrect child weight
 
 	Comparison performed using:
-	[sequoia::testing::value_tester<sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+	[sequoia::testing::value_tester<sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::object::producer<int, sequoia::object::uniform_wrapper<int>, sequoia::object::direct_forwarder<int, sequoia::object::uniform_wrapper<int> > >, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
 	Checking for equivalence with:
 	[sequoia::maths::tree_initializer<int>]
 
@@ -724,7 +724,7 @@
 	Directedness: undirected / Tree Link Dir: symmetric - Too few children
 
 	Comparison performed using:
-	[sequoia::testing::value_tester<sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+	[sequoia::testing::value_tester<sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::object::producer<int, sequoia::object::uniform_wrapper<int>, sequoia::object::direct_forwarder<int, sequoia::object::uniform_wrapper<int> > >, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
 	Checking for equivalence with:
 	[sequoia::maths::tree_initializer<int>]
 
@@ -740,7 +740,7 @@
 	Directedness: undirected / Tree Link Dir: symmetric - Too many grand children
 
 	Comparison performed using:
-	[sequoia::testing::value_tester<sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+	[sequoia::testing::value_tester<sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::object::producer<int, sequoia::object::uniform_wrapper<int>, sequoia::object::direct_forwarder<int, sequoia::object::uniform_wrapper<int> > >, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
 	Checking for equivalence with:
 	[sequoia::maths::tree_initializer<int>]
 
@@ -756,7 +756,7 @@
 	Directedness: undirected / Tree Link Dir: symmetric - Incorrect grand child weight
 
 	Comparison performed using:
-	[sequoia::testing::value_tester<sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+	[sequoia::testing::value_tester<sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::object::producer<int, sequoia::object::uniform_wrapper<int>, sequoia::object::direct_forwarder<int, sequoia::object::uniform_wrapper<int> > >, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
 	Checking for equivalence with:
 	[sequoia::maths::tree_initializer<int>]
 
@@ -778,7 +778,7 @@
 	Directedness: undirected / Tree Link Dir: symmetric - Too few grand children
 
 	Comparison performed using:
-	[sequoia::testing::value_tester<sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+	[sequoia::testing::value_tester<sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::object::producer<int, sequoia::object::uniform_wrapper<int>, sequoia::object::direct_forwarder<int, sequoia::object::uniform_wrapper<int> > >, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
 	Checking for equivalence with:
 	[sequoia::maths::tree_initializer<int>]
 
@@ -793,10 +793,10 @@
 	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 99
 	Directedness: undirected / Tree Link Dir: symmetric
 
-	[sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> >]
+	[sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::object::producer<int, sequoia::object::uniform_wrapper<int>, sequoia::object::direct_forwarder<int, sequoia::object::uniform_wrapper<int> > >, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> >]
 	operator== returned false
 
-	  [sequoia::maths::connectivity<1, sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::maths::bucketed_edge_storage_traits, unsigned long long>, sequoia::ownership::spawner<sequoia::maths::null_weight> >]
+	  [sequoia::maths::connectivity<1, sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::maths::bucketed_edge_storage_traits, unsigned long long>, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > > >]
 	  operator== returned false
 
 	    Connectivity order incorrect
@@ -805,7 +805,7 @@
 	    Obtained : 0
 	    Predicted: 1
 
-	  [sequoia::maths::graph_impl::node_storage<sequoia::ownership::spawner<int>, sequoia::maths::node_weight_storage_traits<int> >]
+	  [sequoia::maths::graph_impl::node_storage<sequoia::object::producer<int, sequoia::object::uniform_wrapper<int>, sequoia::object::direct_forwarder<int, sequoia::object::uniform_wrapper<int> > >, sequoia::maths::node_weight_storage_traits<int> >]
 	  operator== returned false
 
 	    Sizes different
@@ -835,10 +835,10 @@
 	Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 100
 	Directedness: undirected / Tree Link Dir: symmetric
 
-	[sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::ownership::spawner<int>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> >]
+	[sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::object::producer<int, sequoia::object::uniform_wrapper<int>, sequoia::object::direct_forwarder<int, sequoia::object::uniform_wrapper<int> > >, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> >]
 	operator== returned false
 
-	  [sequoia::maths::connectivity<1, sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::ownership::spawner<sequoia::maths::null_weight>, sequoia::maths::bucketed_edge_storage_traits, unsigned long long>, sequoia::ownership::spawner<sequoia::maths::null_weight> >]
+	  [sequoia::maths::connectivity<1, sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > >, sequoia::maths::bucketed_edge_storage_traits, unsigned long long>, sequoia::object::producer<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight>, sequoia::object::direct_forwarder<sequoia::maths::null_weight, sequoia::object::uniform_wrapper<sequoia::maths::null_weight> > > >]
 	  operator== returned false
 
 	    Connectivity size incorrect
@@ -853,7 +853,7 @@
 	    Obtained : 1
 	    Predicted: 2
 
-	  [sequoia::maths::graph_impl::node_storage<sequoia::ownership::spawner<int>, sequoia::maths::node_weight_storage_traits<int> >]
+	  [sequoia::maths::graph_impl::node_storage<sequoia::object::producer<int, sequoia::object::uniform_wrapper<int>, sequoia::object::direct_forwarder<int, sequoia::object::uniform_wrapper<int> > >, sequoia::maths::node_weight_storage_traits<int> >]
 	  operator== returned false
 
 	    Sizes different

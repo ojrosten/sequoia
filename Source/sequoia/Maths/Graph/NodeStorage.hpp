@@ -21,8 +21,8 @@
 #include "sequoia/Core/Utilities/ArrayUtilities.hpp"
 #include "sequoia/Core/Utilities/AssignmentUtilities.hpp"
 #include "sequoia/Core/Utilities/Iterator.hpp"
-#include "sequoia/Core/Utilities/UniformWrapper.hpp"
-#include "sequoia/Core/Ownership/DataPoolTraits.hpp"
+#include "sequoia/Core/Object/UniformWrapper.hpp"
+#include "sequoia/Core/Object/Creator.hpp"
 #include "sequoia/Maths/Graph/EdgesAndNodesUtilities.hpp"
 #include "sequoia/PlatformSpecific/Preprocessor.hpp"
 
@@ -60,7 +60,7 @@ namespace sequoia::maths::graph_impl
   };
 
   template<class T>
-  inline constexpr bool empty_proxy = ownership::creator<T> && std::is_empty_v<typename T::proxy::value_type>;
+  inline constexpr bool empty_proxy = object::creator<T> && std::is_empty_v<typename T::product_type::value_type>;
 
   // TO DO: remove this indirection if/when clang no longer needs it!
   template<class N>
@@ -83,7 +83,7 @@ namespace sequoia::maths::graph_impl
   public:
     using weight_maker_type          = WeightMaker;
     using traits_type                = Traits;
-    using weight_proxy_type          = typename WeightMaker::proxy;
+    using weight_proxy_type          = typename WeightMaker::product_type;
     using node_weight_container_type = Container<weight_proxy_type>;
     using weight_type                = typename weight_proxy_type::value_type;
     using size_type                  = typename node_weight_container_type::size_type;
@@ -319,7 +319,7 @@ namespace sequoia::maths::graph_impl
     constexpr static auto direct_copy() noexcept
     {
       constexpr bool protective{
-        std::is_same_v<weight_proxy_type, utilities::uniform_wrapper<weight_type>>
+        std::is_same_v<weight_proxy_type, object::uniform_wrapper<weight_type>>
       };
       return copy_constant<protective>{};
     }
@@ -438,7 +438,7 @@ namespace sequoia::maths::graph_impl
   class node_storage<WeightMaker, Traits>
   {
   public:
-    using weight_proxy_type = typename WeightMaker::proxy;
+    using weight_proxy_type = typename WeightMaker::product_type;
     using weight_type       = typename weight_proxy_type::value_type;
     using size_type         = std::size_t;
 

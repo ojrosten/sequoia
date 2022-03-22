@@ -13,53 +13,56 @@
 
  */
 
-#include "sequoia/Core/Ownership/HandlerTraits.hpp"
+#include "sequoia/Core/Object/Creator.hpp"
+#include "sequoia/Core/Object/HandlerTraits.hpp"
 #include "sequoia/Core/Meta/Concepts.hpp"
 
 #include <memory>
 
-namespace sequoia::ownership
+namespace sequoia::object
 {
-  template<class T, class... Args>
-  [[nodiscard]]
-  std::shared_ptr<T> make_shared_braced(Args&&... args)
+  template<class T>
+  struct make_shared_braced
   {
-    return std::shared_ptr<T>(new T{std::forward<Args>(args)...});
-  }
+    template<class... Args>
+      requires std::constructible_from<T, Args...>
+    [[nodiscard]]
+    std::shared_ptr<T> operator()(Args&&... args) const
+    {
+      return std::shared_ptr<T>(new T{std::forward<Args>(args)...});
+    }
+  };
 
   template<class T>
-  struct shared
+  struct shared : private producer<T, std::shared_ptr<T>, make_shared_braced<T>>
   {
   public:
-    using handle_type = std::shared_ptr<T>;
-    using elementary_type = T;
+    using product_type  = std::shared_ptr<T>;
+    using value_type    = T;
+    using producer_type = producer<T, std::shared_ptr<T>, make_shared_braced<T>>;
 
-    template<class... Args>
-    [[nodiscard]] static handle_type make(Args&&... args)
-    {
-      return make_shared_braced<T>(std::forward<Args>(args)...);
-    }
+    using producer_type::make;
 
     [[nodiscard]]
-    static T& get(handle_type& ptr)
+    static T& get(product_type& ptr)
     {
       return *ptr;
     }
 
     [[nodiscard]]
-    static const T& get(const handle_type& ptr)
+    static const T& get(const product_type& ptr)
     {
       return *ptr;
     }
 
     [[nodiscard]]
-    static T* get_ptr(handle_type& ptr)
+    static T* get_ptr(product_type& ptr)
     {
       return &*ptr;
     }
 
     [[nodiscard]]
-    static const T* get_ptr(const handle_type& ptr)
+    static const T* get_ptr(const product_type& ptr)
     {
       return &*ptr;
     }
@@ -76,17 +79,14 @@ namespace sequoia::ownership
   };
 
   template<class T>
-  struct independent
+  struct independent : private producer<T, T>
   {
   public:
-    using handle_type = T;
-    using elementary_type = T;
+    using product_type  = T;
+    using value_type    = T;
+    using producer_type = producer<T, T>;
 
-    template<class... Args>
-    [[nodiscard]] constexpr static T make(Args&&... args)
-    {
-      return T{std::forward<Args>(args)...};
-    }
+    using producer_type::make;
 
     [[nodiscard]]
     constexpr static T& get(T& in) noexcept { return in; }

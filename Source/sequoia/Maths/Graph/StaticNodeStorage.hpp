@@ -50,7 +50,7 @@ namespace sequoia::maths::graph_impl
   class static_node_storage<WeightMaker, N>
   {
   public:
-    using weight_proxy_type = typename WeightMaker::proxy;
+    using weight_proxy_type = typename WeightMaker::product_type;
     using weight_type       = typename weight_proxy_type::value_type;
     using size_type         = std::size_t;
 

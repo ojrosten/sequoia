@@ -28,7 +28,7 @@
 #include "sequoia/Algorithms/Algorithms.hpp"
 #include "sequoia/Core/Meta/TypeTraits.hpp"
 #include "sequoia/Core/Utilities/AssignmentUtilities.hpp"
-#include "sequoia/Core/Ownership/HandlerTraits.hpp"
+#include "sequoia/Core/Object/HandlerTraits.hpp"
 #include "sequoia/PlatformSpecific/Preprocessor.hpp"
 
 #include <limits>
@@ -40,10 +40,10 @@ namespace sequoia
 {
   namespace data_structures
   {
-    template <class, class H, class> requires ownership::handler<H> class bucketed_sequence;
-    template <class, class H>        requires ownership::handler<H> struct bucketed_storage_traits;
-    template <class, class H, class> requires ownership::handler<H> class partitioned_sequence;
-    template <class, class H>        requires ownership::handler<H> struct partitioned_sequence_traits;
+    template <class, class H, class> requires object::handler<H> class bucketed_sequence;
+    template <class, class H>        requires object::handler<H> struct bucketed_sequence_traits;
+    template <class, class H, class> requires object::handler<H> class partitioned_sequence;
+    template <class, class H>        requires object::handler<H> struct partitioned_sequence_traits;
     template <class, std::size_t, std::size_t, std::integral> class static_partitioned_sequence;
     class static_data_base;
   }
@@ -908,7 +908,7 @@ namespace sequoia
       using no_partitions_alloc_type = has_partitions_alloc_constant<false>;
 
       constexpr static bool protectiveEdgeWeightProxy{
-        std::is_same_v<typename edge_type::weight_proxy_type, utilities::uniform_wrapper<edge_weight_type>>
+        std::is_same_v<typename edge_type::weight_proxy_type, object::uniform_wrapper<edge_weight_type>>
       };
 
       constexpr static bool embeddedEdge{
@@ -1180,8 +1180,8 @@ namespace sequoia
       constexpr void process_edges(indirect_edge_init_type, init_t edges)
       {
         using namespace data_structures;
-        using traits_t = partitioned_sequence_traits<edge_init_type, ownership::independent<edge_init_type>>;
-        partitioned_sequence<edge_init_type, ownership::independent<edge_init_type>, traits_t> edgesForChecking{edges};
+        using traits_t = partitioned_sequence_traits<edge_init_type, object::independent<edge_init_type>>;
+        partitioned_sequence<edge_init_type, object::independent<edge_init_type>, traits_t> edgesForChecking{edges};
         process_edges(edgesForChecking);
       }
 

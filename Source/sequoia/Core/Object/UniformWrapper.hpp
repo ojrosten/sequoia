@@ -16,7 +16,7 @@
 
 #include <compare>
 
-namespace sequoia::utilities
+namespace sequoia::object
 {
   /*! \class uniform_wrapper
       \brief A wrapper which allows for getting, setting and mutation of its stored value.

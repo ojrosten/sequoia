@@ -11,7 +11,7 @@
 
 #include "sequoia/TestFramework/MoveOnlyTestCore.hpp"
 
-#include "sequoia/Core/Ownership/DataPool.hpp"
+#include "sequoia/Core/Object/DataPool.hpp"
 
 namespace sequoia::testing
 {
@@ -29,6 +29,6 @@ namespace sequoia::testing
     void test_multi_pools();
     void test_spawner();
 
-    ownership::data_pool<int> make_int_pool(const int val);
+    object::data_pool<int> make_int_pool(const int val);
   };
 }
