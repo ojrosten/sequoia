@@ -117,24 +117,24 @@ namespace sequoia::testing
   >
   void test_graph_meta::test_undirected()
   {
-    test_undirected_unshared<GraphFlavour, int, object::uniform_producer<int>, EdgeType>();
+    test_undirected_unshared<GraphFlavour, int, object::faithful_producer<int>, EdgeType>();
     test_undirected_unshared<GraphFlavour, int, object::data_pool<int>, EdgeType>();
-    test_undirected_unshared<GraphFlavour, wrapper<int>, object::uniform_producer<wrapper<int>>, EdgeType>();
+    test_undirected_unshared<GraphFlavour, wrapper<int>, object::faithful_producer<wrapper<int>>, EdgeType>();
     test_undirected_unshared<GraphFlavour, wrapper<int>, object::data_pool<wrapper<int>>, EdgeType>();
 
-    test_undirected_unshared<GraphFlavour, double, object::uniform_producer<double>, EdgeType>();
+    test_undirected_unshared<GraphFlavour, double, object::faithful_producer<double>, EdgeType>();
     test_undirected_unshared<GraphFlavour, double, object::data_pool<double>, EdgeType>();
-    test_undirected_unshared<GraphFlavour, wrapper<double>, object::uniform_producer<wrapper<double>>, EdgeType>();
+    test_undirected_unshared<GraphFlavour, wrapper<double>, object::faithful_producer<wrapper<double>>, EdgeType>();
     test_undirected_unshared<GraphFlavour, wrapper<double>, object::data_pool<wrapper<double>>, EdgeType>();
 
-    test_undirected_unshared<GraphFlavour, std::tuple<double, double>, object::uniform_producer<std::tuple<double, double>>, EdgeType>();
+    test_undirected_unshared<GraphFlavour, std::tuple<double, double>, object::faithful_producer<std::tuple<double, double>>, EdgeType>();
     test_undirected_unshared<GraphFlavour, std::tuple<double, double>, object::data_pool<std::tuple<double, double>>, EdgeType>();
 
-    test_undirected_shared<GraphFlavour, std::tuple<double, double, double>, object::uniform_producer<std::tuple<double, double, double>>, EdgeType>();
+    test_undirected_shared<GraphFlavour, std::tuple<double, double, double>, object::faithful_producer<std::tuple<double, double, double>>, EdgeType>();
     // For the data pool, the sizeof the proxy is just the size of a shared_ptr
     test_undirected_unshared<GraphFlavour, std::tuple<double, double, double>, object::data_pool<std::tuple<double, double, double>>, EdgeType>();
 
-    test_undirected_shared<GraphFlavour, std::vector<int>, object::uniform_producer<std::vector<int>>, EdgeType>();
+    test_undirected_shared<GraphFlavour, std::vector<int>, object::faithful_producer<std::vector<int>>, EdgeType>();
     test_undirected_unshared<GraphFlavour, std::vector<int>, object::data_pool<std::vector<int>>, EdgeType>();
   }
 
@@ -180,10 +180,10 @@ namespace sequoia::testing
   {
     using namespace maths;
 
-    test_directed_impl<int, object::uniform_producer<int>>();
+    test_directed_impl<int, object::faithful_producer<int>>();
     test_directed_impl<int, object::data_pool<int>>();
 
-    test_directed_impl<std::tuple<double,double,double>, object::uniform_producer<std::tuple<double,double,double>>>();
+    test_directed_impl<std::tuple<double,double,double>, object::faithful_producer<std::tuple<double,double,double>>>();
     test_directed_impl<std::tuple<double,double,double>, object::data_pool<std::tuple<double,double,double>>>();
   }
 
@@ -192,10 +192,10 @@ namespace sequoia::testing
   {
     using namespace maths;
 
-    test_directed_embedded_impl<int, object::uniform_producer<int>>();
+    test_directed_embedded_impl<int, object::faithful_producer<int>>();
     test_directed_embedded_impl<int, object::data_pool<int>>();
 
-    test_directed_embedded_impl<std::tuple<double,double,double>, object::uniform_producer<std::tuple<double,double,double>>>();
+    test_directed_embedded_impl<std::tuple<double,double,double>, object::faithful_producer<std::tuple<double,double,double>>>();
     test_directed_embedded_impl<std::tuple<double,double,double>, object::data_pool<std::tuple<double,double,double>>>();
   }
 }

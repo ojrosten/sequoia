@@ -15,7 +15,7 @@
  */
 
 #include "sequoia/Core/Object/Creator.hpp"
-#include "sequoia/Core/Object/UniformWrapper.hpp"
+#include "sequoia/Core/Object/FaithfulWrapper.hpp"
 #include "sequoia/Core/Utilities/Iterator.hpp"
 
 #include <vector>
@@ -25,7 +25,7 @@
 namespace sequoia::object
 {
   template<class T>
-  using uniform_producer = producer<T, uniform_wrapper<T>>;
+  using faithful_producer = producer<T, faithful_wrapper<T>>;
 
   namespace impl
   {

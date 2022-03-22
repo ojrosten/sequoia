@@ -10,7 +10,7 @@
 #include "EdgeTestingDiagnostics.hpp"
 
 #include "sequoia/Core/Object/Handlers.hpp"
-#include "sequoia/Core/Object/UniformWrapper.hpp"
+#include "sequoia/Core/Object/FaithfulWrapper.hpp"
 
 namespace sequoia::testing
 {
@@ -43,11 +43,11 @@ namespace sequoia::testing
   {
     using namespace maths;
     using namespace object;
-    using edge_t = partial_edge<independent<object::uniform_wrapper<null_weight>>>;
+    using edge_t = partial_edge<independent<object::faithful_wrapper<null_weight>>>;
 
     check(equality, LINE("Differing target indices"), edge_t{0}, edge_t{1});
 
-    using compact_edge_t = partial_edge<independent<object::uniform_wrapper<null_weight>>, unsigned char>;
+    using compact_edge_t = partial_edge<independent<object::faithful_wrapper<null_weight>>, unsigned char>;
 
     check(equality, LINE("Differing target indices"), compact_edge_t{10}, compact_edge_t{255});
   }
@@ -57,7 +57,7 @@ namespace sequoia::testing
     using namespace maths;
     using namespace object;
 
-    using edge_t = partial_edge<independent<object::uniform_wrapper<int>>>;
+    using edge_t = partial_edge<independent<object::faithful_wrapper<int>>>;
 
     check(equality, LINE("Differing targets, identical weights"), edge_t{0,0}, edge_t{1,0});
     check(equality, LINE("Differing targets, identical weights"), edge_t{0,5}, edge_t{1,5});
@@ -72,7 +72,7 @@ namespace sequoia::testing
     using namespace maths;
     using namespace object;
 
-    using edge_t = partial_edge<shared<object::uniform_wrapper<int>>>;
+    using edge_t = partial_edge<shared<object::faithful_wrapper<int>>>;
 
     check(equality, LINE("Differing targets, identical weights"), edge_t{0,0}, edge_t{1,0});
     check(equality, LINE("Differing targets, identical weights"), edge_t{0,5}, edge_t{1,5});
@@ -87,7 +87,7 @@ namespace sequoia::testing
     using namespace maths;
     using namespace object;
 
-    using edge_t = partial_edge<shared<object::uniform_wrapper<int>>>;
+    using edge_t = partial_edge<shared<object::faithful_wrapper<int>>>;
 
     check(equality, LINE("Differing targets, identical complementary indices"), edge_t{0,0}, edge_t{1,0});
     check(equality, LINE("Differing targets, identical complementary indices"), edge_t{0,5}, edge_t{1,5});
@@ -102,7 +102,7 @@ namespace sequoia::testing
     using namespace maths;
     using namespace object;
 
-    using edge_t = embedded_partial_edge<independent<object::uniform_wrapper<double>>>;
+    using edge_t = embedded_partial_edge<independent<object::faithful_wrapper<double>>>;
 
     check(equality, LINE("Differing targets, identical complementary indices and weights"), edge_t{0,0,0.0}, edge_t{1,0,0.0});
     check(equality, LINE("Differing targets, identical complementary indices and weights"), edge_t{1,10,0.0}, edge_t{0,10,0.0});
@@ -128,7 +128,7 @@ namespace sequoia::testing
     using namespace maths;
     using namespace object;
 
-     using edge_t = embedded_partial_edge<independent<object::uniform_wrapper<double>>>;
+     using edge_t = embedded_partial_edge<independent<object::faithful_wrapper<double>>>;
 
     check(equality, LINE("Differing targets, identical complementary indices and weights"), edge_t{0,0,0.0}, edge_t{1,0,0.0});
     check(equality, LINE("Differing targets, identical complementary indices and weights"), edge_t{0,10,0.0}, edge_t{1,10,0.0});
@@ -154,7 +154,7 @@ namespace sequoia::testing
     using namespace maths;
     using namespace object;
 
-    using edge_t = edge<independent<object::uniform_wrapper<null_weight>>>;
+    using edge_t = edge<independent<object::faithful_wrapper<null_weight>>>;
 
     check(equality, LINE("Differing targets, identical soures"), edge_t{0,0}, edge_t{0,1});
     check(equality, LINE("Differing targets, identical soures"), edge_t{4,1}, edge_t{4,0});
@@ -172,7 +172,7 @@ namespace sequoia::testing
     using namespace maths;
     using namespace object;
 
-    using edge_t = edge<independent<object::uniform_wrapper<double>>>;
+    using edge_t = edge<independent<object::faithful_wrapper<double>>>;
 
     check(equality, LINE("Differing targets, identical soures and weight"), edge_t{0,0,0.0}, edge_t{0,1,0.0});
     check(equality, LINE("Differing targets, identical soure and weights"), edge_t{0,10,0.0}, edge_t{1,10,0.0});
@@ -199,7 +199,7 @@ namespace sequoia::testing
     using namespace maths;
     using namespace object;
 
-    using edge_t = embedded_edge<independent<object::uniform_wrapper<null_weight>>>;
+    using edge_t = embedded_edge<independent<object::faithful_wrapper<null_weight>>>;
 
     check(equality, LINE("Differing targets, identical soures and complementary indices"), edge_t{0,0,0}, edge_t{0,1,0});
     check(equality, LINE("Differing targets, identical soure and complementary indices"), edge_t{0,10,0}, edge_t{1,10,0});
@@ -226,7 +226,7 @@ namespace sequoia::testing
     using namespace maths;
     using namespace object;
 
-    using edge_t = embedded_edge<independent<object::uniform_wrapper<double>>>;
+    using edge_t = embedded_edge<independent<object::faithful_wrapper<double>>>;
 
     check(equality, LINE("Differing targets, identical soures, complementary indices and weights"), edge_t{0,0,0,0.0}, edge_t{0,1,0,0.0});
     check(equality, LINE("Differing soures, identical targets, complementary indices and weights"), edge_t{1,0,0,0.0}, edge_t{0,0,0,0.0});
@@ -241,7 +241,7 @@ namespace sequoia::testing
     using namespace maths;
     using namespace object;
 
-    using edge_t = embedded_edge<shared<object::uniform_wrapper<double>>>;
+    using edge_t = embedded_edge<shared<object::faithful_wrapper<double>>>;
 
     check(equality, LINE("Differing targets, identical soures, complementary indices and weights"), edge_t{0,0,0,0.0}, edge_t{0,1,0,0.0});
     check(equality, LINE("Differing soures, identical targets, complementary indices and weights"), edge_t{1,0,0,0.0}, edge_t{0,0,0,0.0});

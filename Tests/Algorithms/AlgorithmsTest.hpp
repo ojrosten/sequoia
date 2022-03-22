@@ -24,7 +24,7 @@ namespace sequoia::testing
     void run_tests() final;
 
     void sort_basic_type();
-    void sort_uniform_wrapper();
+    void sort_faithful_wrapper();
     void sort_partial_edge();
 
     void cluster_basic_type();

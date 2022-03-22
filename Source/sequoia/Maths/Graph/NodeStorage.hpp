@@ -21,7 +21,7 @@
 #include "sequoia/Core/Utilities/ArrayUtilities.hpp"
 #include "sequoia/Core/Utilities/AssignmentUtilities.hpp"
 #include "sequoia/Core/Utilities/Iterator.hpp"
-#include "sequoia/Core/Object/UniformWrapper.hpp"
+#include "sequoia/Core/Object/FaithfulWrapper.hpp"
 #include "sequoia/Core/Object/Creator.hpp"
 #include "sequoia/Maths/Graph/EdgesAndNodesUtilities.hpp"
 #include "sequoia/PlatformSpecific/Preprocessor.hpp"
@@ -319,7 +319,7 @@ namespace sequoia::maths::graph_impl
     constexpr static auto direct_copy() noexcept
     {
       constexpr bool protective{
-        std::is_same_v<weight_proxy_type, object::uniform_wrapper<weight_type>>
+        std::is_same_v<weight_proxy_type, object::faithful_wrapper<weight_type>>
       };
       return copy_constant<protective>{};
     }

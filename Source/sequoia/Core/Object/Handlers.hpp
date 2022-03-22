@@ -54,15 +54,15 @@ namespace sequoia::object
     }
 
     [[nodiscard]]
-    static T* get_ptr(product_type& ptr)
+    static T* get_ptr(product_type& ptr) noexcept
     {
-      return &*ptr;
+      return ptr.get();
     }
 
     [[nodiscard]]
-    static const T* get_ptr(const product_type& ptr)
+    static const T* get_ptr(const product_type& ptr) noexcept
     {
-      return &*ptr;
+      return ptr.get();
     }
 
   protected:

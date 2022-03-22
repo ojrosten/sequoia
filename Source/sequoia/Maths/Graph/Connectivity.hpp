@@ -908,7 +908,7 @@ namespace sequoia
       using no_partitions_alloc_type = has_partitions_alloc_constant<false>;
 
       constexpr static bool protectiveEdgeWeightProxy{
-        std::is_same_v<typename edge_type::weight_proxy_type, object::uniform_wrapper<edge_weight_type>>
+        std::is_same_v<typename edge_type::weight_proxy_type, object::faithful_wrapper<edge_weight_type>>
       };
 
       constexpr static bool embeddedEdge{

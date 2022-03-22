@@ -11,14 +11,14 @@
 
 #include "sequoia/TestFramework/RegularTestCore.hpp"
 
-#include "sequoia/Core/Object/UniformWrapper.hpp"
+#include "sequoia/Core/Object/FaithfulWrapper.hpp"
 
 namespace sequoia::testing
 {
   template<class T>
-  struct value_tester<object::uniform_wrapper<T>>
+  struct value_tester<object::faithful_wrapper<T>>
   {
-    using type = object::uniform_wrapper<T>;
+    using type = object::faithful_wrapper<T>;
 
     template<class CheckerType, test_mode Mode>
     static void test(CheckerType flavour, test_logger<Mode>& logger, const type& wrapper, const type& prediction)

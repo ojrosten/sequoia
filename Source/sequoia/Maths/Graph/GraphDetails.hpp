@@ -14,7 +14,7 @@
 
 #include "sequoia/Maths/Graph/Edge.hpp"
 #include "sequoia/Core/Object/Creator.hpp"
-#include "sequoia/Core/Object/UniformWrapper.hpp"
+#include "sequoia/Core/Object/FaithfulWrapper.hpp"
 
 namespace sequoia
 {
@@ -154,7 +154,7 @@ namespace sequoia
       struct edge_to_init_type
       {
         using weight_type    = typename Edge::weight_type;
-        using proxy_type     = object::uniform_wrapper<weight_type>;
+        using proxy_type     = object::faithful_wrapper<weight_type>;
         using handler_type   = object::independent<proxy_type>;
         using index_type     = typename Edge::index_type;
         using edge_init_type = std::conditional_t<Embedded,
