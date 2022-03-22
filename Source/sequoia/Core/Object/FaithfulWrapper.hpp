@@ -49,7 +49,6 @@ namespace sequoia::object
     constexpr explicit faithful_wrapper(Args&&... args) : m_Type{std::forward<Args>(args)...} {}
 
     template<class... Args>
-      requires std::constructible_from<T, Args...>
     constexpr void set(Args&&... args)
     {
       m_Type = T{std::forward<Args>(args)...};
