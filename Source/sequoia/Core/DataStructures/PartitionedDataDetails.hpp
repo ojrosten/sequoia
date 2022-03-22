@@ -186,7 +186,7 @@ namespace sequoia::data_structures::partition_impl
       auto found{m_ProcessedPointers.find(in)};
       if(found == m_ProcessedPointers.end())
       {
-        ptr = object::shared<T>::make(*in);
+        ptr = object::shared<T>::producer_type::make(*in);
         m_ProcessedPointers.insert(make_pair(in, ptr));
       }
       else

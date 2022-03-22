@@ -34,14 +34,12 @@ namespace sequoia::object
   };
 
   template<class T>
-  struct shared : private producer<T, std::shared_ptr<T>, make_shared_braced<T>>
+  struct shared
   {
   public:
     using product_type  = std::shared_ptr<T>;
     using value_type    = T;
     using producer_type = producer<T, std::shared_ptr<T>, make_shared_braced<T>>;
-
-    using producer_type::make;
 
     [[nodiscard]]
     static T& get(product_type& ptr)
@@ -79,14 +77,12 @@ namespace sequoia::object
   };
 
   template<class T>
-  struct independent : private producer<T, T>
+  struct independent
   {
   public:
     using product_type  = T;
     using value_type    = T;
     using producer_type = producer<T, T>;
-
-    using producer_type::make;
 
     [[nodiscard]]
     constexpr static T& get(T& in) noexcept { return in; }

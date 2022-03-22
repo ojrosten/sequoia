@@ -140,10 +140,10 @@ namespace sequoia
 
       template<class... Args>
         requires (!resolve_to_copy_v<weighting, Args...> && !is_base_of_head_v<weighting, Args...>)
-      constexpr explicit weighting(Args&&... args) : m_Weight{WeightHandler::make(std::forward<Args>(args)...)}
+      constexpr explicit weighting(Args&&... args) : m_Weight{WeightHandler::producer_type::make(std::forward<Args>(args)...)}
       {}
 
-      constexpr weighting(const weighting& in) : m_Weight{WeightHandler::make(WeightHandler::get(in.m_Weight))}
+      constexpr weighting(const weighting& in) : m_Weight{WeightHandler::producer_type::make(WeightHandler::get(in.m_Weight))}
       {
       }
 
@@ -155,7 +155,7 @@ namespace sequoia
 
       constexpr weighting& operator=(const weighting& in)
       {
-        if(&in != this) m_Weight = WeightHandler::make(WeightHandler::get(in.m_Weight));
+        if(&in != this) m_Weight = WeightHandler::producer_type::make(WeightHandler::get(in.m_Weight));
         return *this;
       }
 

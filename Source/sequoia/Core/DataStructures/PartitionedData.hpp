@@ -301,7 +301,7 @@ namespace sequoia
       {
         if constexpr(throw_on_range_error) check_range(index);
 
-        m_Buckets[index].push_back(Handler::make(std::forward<Args>(args)...));
+        m_Buckets[index].push_back(Handler::producer_type::make(std::forward<Args>(args)...));
       }
 
       void push_back_to_partition(const size_type index, const_partition_iterator iter)
@@ -320,7 +320,7 @@ namespace sequoia
         }
 
         const auto soure{pos.partition_index()};
-        auto iter{m_Buckets[soure].insert(pos.base_iterator(), Handler::make(std::forward<Args>(args)...))};
+        auto iter{m_Buckets[soure].insert(pos.base_iterator(), Handler::producer_type::make(std::forward<Args>(args)...))};
 
         return partition_iterator{iter, soure};
       }
@@ -838,7 +838,7 @@ namespace sequoia
         if constexpr(throw_on_range_error) check_range(index);
         auto maker{
           [](auto&&... a) {
-            return Handler::make(std::forward<decltype(a)>(a)...);
+            return Handler::producer_type::make(std::forward<decltype(a)>(a)...);
           }
         };
 
@@ -863,7 +863,7 @@ namespace sequoia
       {
         auto maker{
           [](auto&&... a) {
-            return Handler::make(std::forward<decltype(a)>(a)...);
+            return Handler::producer_type::make(std::forward<decltype(a)>(a)...);
           }
         };
 
@@ -1001,7 +1001,7 @@ namespace sequoia
 
         auto index{partition ? i - m_Partitions[partition-1] : i};
 
-        return Handler::make(*((list.begin() + partition)->begin() + index));
+        return Handler::producer_type::make(*((list.begin() + partition)->begin() + index));
       }
 
       template<size_type... Inds>
