@@ -42,13 +42,13 @@ namespace sequoia::object
     using producer_type = producer<T, std::shared_ptr<T>, make_shared_braced<T>>;
 
     [[nodiscard]]
-    static T& get(product_type& ptr)
+    static T& get(product_type& ptr) noexcept
     {
       return *ptr;
     }
 
     [[nodiscard]]
-    static const T& get(const product_type& ptr)
+    static const T& get(const product_type& ptr) noexcept
     {
       return *ptr;
     }
@@ -64,16 +64,6 @@ namespace sequoia::object
     {
       return ptr.get();
     }
-
-  protected:
-    shared() noexcept = default;
-    shared(const shared&) noexcept = default;
-    shared(shared&&)      noexcept = default;
-
-    ~shared() noexcept = default;
-
-    shared& operator=(const shared&) noexcept = default;
-    shared& operator=(shared&&)      noexcept = default;
   };
 
   template<class T>
@@ -95,15 +85,5 @@ namespace sequoia::object
 
     [[nodiscard]]
     constexpr static const T* get_ptr(const T& in) noexcept { return &in; }
-
-  protected:
-    independent() noexcept = default;
-    independent(const independent&) noexcept = default;
-    independent(independent&&)      noexcept = default;
-
-    ~independent() noexcept = default;
-
-    independent& operator=(const independent&) noexcept = default;
-    independent& operator=(independent&&)      noexcept = default;
   };
 }
