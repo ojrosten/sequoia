@@ -104,7 +104,7 @@ namespace sequoia::object
     }
 
     template<class... Args>
-      requires (std::constructible_from<Products, Args...> && ...)
+      requires (initializable_from<Products, Args...> && ...)
     [[nodiscard]]
     vessel make(std::string_view name, Args&&... args) const
     {
@@ -118,7 +118,7 @@ namespace sequoia::object
 
     template<class Product, class... Args>
       requires (    (std::is_same_v<Product, Products> || ...)
-                 && (std::constructible_from<Products, Args...> && ...))
+                 && (initializable_from<Products, Args...> && ...))
     [[nodiscard]]
     vessel make_or(std::string_view name, Args&&... args) const
     {

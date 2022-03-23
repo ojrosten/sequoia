@@ -25,7 +25,7 @@ namespace sequoia::object
   struct make_shared_braced
   {
     template<class... Args>
-      requires std::constructible_from<T, Args...>
+      requires initializable_from<T, Args...>
     [[nodiscard]]
     std::shared_ptr<T> operator()(Args&&... args) const
     {

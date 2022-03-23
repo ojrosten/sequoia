@@ -30,5 +30,7 @@ namespace sequoia::testing
     void test_is_serializable();
 
     void test_deep_equality_comparable();
+
+    void test_initializable_from();
   };
 }

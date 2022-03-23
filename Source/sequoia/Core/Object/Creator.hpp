@@ -11,7 +11,7 @@
     \brief Traits, Concepts and basic utilities for the creation of objects.
  */
 
-#include <concepts>
+#include "sequoia/Core/Meta/Concepts.hpp"
 
 namespace sequoia::object
 {
@@ -19,7 +19,7 @@ namespace sequoia::object
   concept creator = requires(T& a) {
     requires has_value_type<T> || has_element_type<T>;
     typename T::product_type;
-    
+
     { a.make() } -> std::same_as<typename T::product_type>;
   };
 
@@ -46,18 +46,18 @@ namespace sequoia::object
 
   template<class Product, class T>
   inline constexpr bool product_for_v{
-       (impl::dependent_value_type_same_as_v<Product, T>   && std::constructible_from<Product, T>)
-    || (impl::dependent_element_type_same_as_v<Product, T> && std::constructible_from<Product, T*>)
+       (impl::dependent_value_type_same_as_v<Product, T>   && initializable_from<Product, T>)
+    || (impl::dependent_element_type_same_as_v<Product, T> && initializable_from<Product, T*>)
   };
 
   template<class Product, class T>
-  concept makeable_from = std::constructible_from<Product, T> || product_for_v<Product, T>;
+  concept makeable_from = initializable_from<Product, T> || product_for_v<Product, T>;
 
   template<class T, makeable_from<T> Product>
   struct direct_forwarder
   {
     template<class... Args>
-      requires std::constructible_from<Product, Args...>
+      requires initializable_from<Product, Args...>
     [[nodiscard]]
     constexpr Product operator()(Args&&... args) const
     {
@@ -78,7 +78,7 @@ namespace sequoia::object
     using transfomer_type = Transformer;
 
     template<class... Args>
-      requires std::constructible_from<product_type, std::invoke_result_t<Transformer, Args...>>
+      requires initializable_from<product_type, std::invoke_result_t<Transformer, Args...>>
     [[nodiscard]]
     constexpr static product_type make(Args&&... args)
     {
