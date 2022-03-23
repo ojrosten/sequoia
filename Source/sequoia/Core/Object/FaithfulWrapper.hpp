@@ -26,7 +26,7 @@ namespace sequoia::object
 
     w.mutate([](typename W::value_type&) {});
 
-    &W::set;
+    w.set();
   };
 
   /*! \brief A wrapper which allows for getting, setting and mutation of its stored value.

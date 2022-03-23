@@ -51,7 +51,7 @@ namespace sequoia::object
   };
 
   template<class Product, class T>
-  concept makeable_from = std::convertible_to<T, Product> || product_for_v<Product, T>;
+  concept makeable_from = std::constructible_from<Product, T> || product_for_v<Product, T>;
 
   template<class T, makeable_from<T> Product>
   struct direct_forwarder
@@ -82,7 +82,7 @@ namespace sequoia::object
     [[nodiscard]]
     constexpr static product_type make(Args&&... args)
     {
-      return Transformer{}(std::forward<Args>(args)...);
+      return product_type{Transformer{}(std::forward<Args>(args)...)};
     }
 
     [[nodiscard]]
