@@ -26,7 +26,7 @@ namespace sequoia::object
 
     w.mutate([](typename W::value_type&) {});
 
-    w.set();
+    w.set(std::declval<typename W::value_type>());
   };
 
   /*! \brief A wrapper which allows for getting, setting and mutation of its stored value.
@@ -49,6 +49,7 @@ namespace sequoia::object
     constexpr explicit faithful_wrapper(Args&&... args) : m_Type{std::forward<Args>(args)...} {}
 
     template<class... Args>
+      requires initializable_from<T, Args...>
     constexpr void set(Args&&... args)
     {
       m_Type = T{std::forward<Args>(args)...};

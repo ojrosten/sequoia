@@ -20,7 +20,7 @@ namespace sequoia::object
     requires has_value_type<T> || has_element_type<T>;
     typename T::product_type;
 
-    { a.make() } -> std::same_as<typename T::product_type>;
+    { a.make(std::declval<typename T::product_type>()) } -> std::same_as<typename T::product_type>;
   };
 
   namespace impl
@@ -53,7 +53,7 @@ namespace sequoia::object
   template<class Product, class T>
   concept makeable_from = initializable_from<Product, T> || product_for_v<Product, T>;
 
-  template<class T, makeable_from<T> Product>
+  template<std::movable T, makeable_from<T> Product>
   struct direct_forwarder
   {
     template<class... Args>
@@ -69,7 +69,7 @@ namespace sequoia::object
   
    */
 
-  template<class T, makeable_from<T> Product, class Transformer=direct_forwarder<T, Product>>
+  template<std::movable T, makeable_from<T> Product, class Transformer=direct_forwarder<T, Product>>
   class producer
   {
   public:
