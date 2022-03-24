@@ -41,6 +41,20 @@ namespace sequoia::testing
 
     template<>
     struct foo<int> {};
+
+    struct aggregate
+    {
+      int i;
+      double x;
+    };
+
+    struct move_only_init
+    {
+      move_only_init(std::vector<int>&& j) : i{std::move(j)}
+      {}
+
+      std::vector<int> i;
+    };
   }
 
   [[nodiscard]]
@@ -55,6 +69,7 @@ namespace sequoia::testing
     test_is_allocator();
     test_is_serializable();
     test_deep_equality_comparable();
+    test_initializable_from();
   }
 
   void concepts_test::test_is_range()
@@ -111,6 +126,21 @@ namespace sequoia::testing
         static_assert(!deep_equality_comparable<std::tuple<std::vector<bar>, std::array<std::pair<int, float>, 2>>>);
         static_assert(!deep_equality_comparable<std::tuple<std::vector<int>, std::array<std::pair<bar, float>, 2>>>);
         static_assert(!deep_equality_comparable<std::tuple<std::vector<int>, std::array<std::pair<int, bar>, 2>>>);
+
+        return true;
+      }()
+    );
+  }
+
+  void concepts_test::test_initializable_from()
+  {
+    check(LINE(""), []() {
+        static_assert(initializable_from<int, int>);
+        static_assert(initializable_from<bar>);
+        static_assert(!initializable_from<bar, int>);
+        static_assert(initializable_from<aggregate, int, double>);
+        static_assert(!initializable_from<aggregate, int, double, char>);
+        static_assert(initializable_from<move_only_init, std::vector<int>>);
 
         return true;
       }()

@@ -25,7 +25,7 @@ namespace sequoia::object
   struct make_shared_braced
   {
     template<class... Args>
-      requires std::constructible_from<T, Args...>
+      requires initializable_from<T, Args...>
     [[nodiscard]]
     std::shared_ptr<T> operator()(Args&&... args) const
     {
@@ -34,59 +34,45 @@ namespace sequoia::object
   };
 
   template<class T>
-  struct shared : private producer<T, std::shared_ptr<T>, make_shared_braced<T>>
+  struct shared
   {
   public:
     using product_type  = std::shared_ptr<T>;
     using value_type    = T;
     using producer_type = producer<T, std::shared_ptr<T>, make_shared_braced<T>>;
 
-    using producer_type::make;
-
     [[nodiscard]]
-    static T& get(product_type& ptr)
+    static T& get(product_type& ptr) noexcept
     {
       return *ptr;
     }
 
     [[nodiscard]]
-    static const T& get(const product_type& ptr)
+    static const T& get(const product_type& ptr) noexcept
     {
       return *ptr;
     }
 
     [[nodiscard]]
-    static T* get_ptr(product_type& ptr)
+    static T* get_ptr(product_type& ptr) noexcept
     {
-      return &*ptr;
+      return ptr.get();
     }
 
     [[nodiscard]]
-    static const T* get_ptr(const product_type& ptr)
+    static const T* get_ptr(const product_type& ptr) noexcept
     {
-      return &*ptr;
+      return ptr.get();
     }
-
-  protected:
-    shared() noexcept = default;
-    shared(const shared&) noexcept = default;
-    shared(shared&&)      noexcept = default;
-
-    ~shared() noexcept = default;
-
-    shared& operator=(const shared&) noexcept = default;
-    shared& operator=(shared&&)      noexcept = default;
   };
 
   template<class T>
-  struct independent : private producer<T, T>
+  struct independent
   {
   public:
     using product_type  = T;
     using value_type    = T;
     using producer_type = producer<T, T>;
-
-    using producer_type::make;
 
     [[nodiscard]]
     constexpr static T& get(T& in) noexcept { return in; }
@@ -99,15 +85,5 @@ namespace sequoia::object
 
     [[nodiscard]]
     constexpr static const T* get_ptr(const T& in) noexcept { return &in; }
-
-  protected:
-    independent() noexcept = default;
-    independent(const independent&) noexcept = default;
-    independent(independent&&)      noexcept = default;
-
-    ~independent() noexcept = default;
-
-    independent& operator=(const independent&) noexcept = default;
-    independent& operator=(independent&&)      noexcept = default;
   };
 }

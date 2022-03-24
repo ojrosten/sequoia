@@ -9,11 +9,11 @@
 
 /*! \file */
 
-#include "UniformWrapperTestingUtilities.hpp"
+#include "FaithfulWrapperTestingUtilities.hpp"
 
 namespace sequoia::testing
 {
-  class uniform_wrapper_false_positive_test final : public regular_false_positive_test
+  class faithful_wrapper_false_positive_test final : public regular_false_positive_test
   {
   public:
     using regular_false_positive_test::regular_false_positive_test;

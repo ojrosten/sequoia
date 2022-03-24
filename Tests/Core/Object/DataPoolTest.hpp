@@ -9,24 +9,26 @@
 
 /*! \file */
 
-#include "sequoia/TestFramework/RegularTestCore.hpp"
+#include "sequoia/TestFramework/MoveOnlyTestCore.hpp"
+
+#include "sequoia/Core/Object/DataPool.hpp"
 
 namespace sequoia::testing
 {
-  class uniform_wrapper_test final : public regular_test
+  class data_pool_test final : public move_only_test
   {
   public:
-    using regular_test::regular_test;
+    using move_only_test::move_only_test;
 
     [[nodiscard]]
     std::string_view source_file() const noexcept final;
   private:
     void run_tests() final;
 
-    void test_basic_type();
+    void test_pooled();
+    void test_multi_pools();
+    void test_faithful_producer();
 
-    void test_container_type();
-
-    void test_aggregate_type();
+    object::data_pool<int> make_int_pool(const int val);
   };
 }

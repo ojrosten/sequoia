@@ -908,7 +908,7 @@ namespace sequoia
       using no_partitions_alloc_type = has_partitions_alloc_constant<false>;
 
       constexpr static bool protectiveEdgeWeightProxy{
-        std::is_same_v<typename edge_type::weight_proxy_type, object::uniform_wrapper<edge_weight_type>>
+        std::is_same_v<typename edge_type::weight_proxy_type, object::faithful_wrapper<edge_weight_type>>
       };
 
       constexpr static bool embeddedEdge{
@@ -966,7 +966,7 @@ namespace sequoia
       }
 
       template<alloc EdgeAllocator, alloc PartitionAllocator>
-        requires std::constructible_from<edge_storage_type, EdgeAllocator, PartitionAllocator>
+        requires initializable_from<edge_storage_type, EdgeAllocator, PartitionAllocator>
       constexpr connectivity(indirect_edge_init_type, init_t edges, const EdgeAllocator& edgeAllocator, const PartitionAllocator& partitionAllocator)
         : m_Edges(edgeAllocator, partitionAllocator)
       {
@@ -1003,7 +1003,7 @@ namespace sequoia
       }
 
       template<alloc EdgeAllocator, alloc PartitionAllocator>
-        requires std::constructible_from<edge_storage_type, EdgeAllocator, PartitionAllocator>
+        requires initializable_from<edge_storage_type, EdgeAllocator, PartitionAllocator>
       constexpr connectivity(indirect_edge_copy_type, const connectivity& in, const EdgeAllocator& edgeAllocator, const PartitionAllocator& partitionAllocator)
         : m_Edges(std::allocator_traits<EdgeAllocator>::select_on_container_copy_construction(edgeAllocator),
                   std::allocator_traits<PartitionAllocator>::select_on_container_copy_construction(partitionAllocator))
@@ -1012,7 +1012,7 @@ namespace sequoia
       }
 
       template<alloc EdgeAllocator>
-        requires std::constructible_from<edge_storage_type, EdgeAllocator>
+        requires initializable_from<edge_storage_type, EdgeAllocator>
       constexpr connectivity(indirect_edge_copy_type, const connectivity& in, const EdgeAllocator& edgeAllocator)
         : m_Edges(std::allocator_traits<EdgeAllocator>::select_on_container_copy_construction(edgeAllocator))
       {

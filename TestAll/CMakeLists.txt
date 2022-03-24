@@ -29,12 +29,12 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Core/Meta/ConceptsTest.cpp
                ${TestDir}/Core/Meta/TypeTraitsTest.cpp
                ${TestDir}/Core/Meta/UtilitiesTest.cpp
-               ${TestDir}/Core/Ownership/DataPoolAllocationTest.cpp
-               ${TestDir}/Core/Ownership/DataPoolTest.cpp
+               ${TestDir}/Core/Object/DataPoolAllocationTest.cpp
+               ${TestDir}/Core/Object/DataPoolTest.cpp   
+               ${TestDir}/Core/Object/FaithfulWrapperTest.cpp
+               ${TestDir}/Core/Object/FaithfulWrapperTestingDiagnostics.cpp
                ${TestDir}/Core/Utilities/ArrayUtilitiesTest.cpp
                ${TestDir}/Core/Utilities/IteratorTest.cpp
-               ${TestDir}/Core/Utilities/UniformWrapperTest.cpp
-               ${TestDir}/Core/Utilities/UniformWrapperTestingDiagnostics.cpp
                ${TestDir}/Experimental/ExperimentalTest.cpp
                ${TestDir}/Maths/Graph/DynamicGraphEmbeddedTest.cpp
                ${TestDir}/Maths/Graph/DynamicGraphFixedTopologyTest.cpp

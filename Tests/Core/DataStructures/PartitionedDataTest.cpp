@@ -597,7 +597,7 @@ namespace sequoia
 
       using container_t = std::vector<typename Handler<int>::product_type>;
 
-      container_t vec{Handler<int>::make(1), Handler<int>::make(2), Handler<int>::make(3)};
+      container_t vec{Handler<int>::producer_type::make(1), Handler<int>::producer_type::make(2), Handler<int>::producer_type::make(3)};
 
       using p_i_t
         = utilities::iterator<

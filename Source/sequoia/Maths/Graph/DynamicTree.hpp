@@ -21,8 +21,8 @@ namespace sequoia::maths
     tree_link_direction TreeLinkDir,
     class EdgeWeight,
     class NodeWeight,
-    class EdgeWeightCreator = object::uniform_producer<EdgeWeight>,
-    class NodeWeightCreator = object::uniform_producer<NodeWeight>,
+    class EdgeWeightCreator = object::faithful_producer<EdgeWeight>,
+    class NodeWeightCreator = object::faithful_producer<NodeWeight>,
     class EdgeStorageTraits = bucketed_edge_storage_traits,
     class NodeWeightStorageTraits = node_weight_storage_traits<NodeWeight>
   >

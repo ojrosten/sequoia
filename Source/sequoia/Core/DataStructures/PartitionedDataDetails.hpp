@@ -109,7 +109,7 @@ namespace sequoia::data_structures::partition_impl
     class AuxiliaryDataPolicy
   >
     requires object::handler<Handler>
-  struct dereference_policy : public Handler, public AuxiliaryDataPolicy
+  struct dereference_policy : protected Handler, public AuxiliaryDataPolicy
   {
     using value_type = typename Handler::value_type;
     using reference  = typename ReferencePolicy<value_type>::reference;
@@ -186,7 +186,7 @@ namespace sequoia::data_structures::partition_impl
       auto found{m_ProcessedPointers.find(in)};
       if(found == m_ProcessedPointers.end())
       {
-        ptr = object::shared<T>::make(*in);
+        ptr = object::shared<T>::producer_type::make(*in);
         m_ProcessedPointers.insert(make_pair(in, ptr));
       }
       else

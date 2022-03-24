@@ -72,6 +72,12 @@ namespace sequoia
     stream >> t;
   };
 
+  /// \brief A concept similar to std::constructible_from, but which considers braced-init
+  template<class T, class... Args>
+  concept initializable_from = requires{
+    T{std::declval<Args>()...};
+  };
+
   /*! \brief Similar to std::range but excludes the case where dereferencing yields the same type as the range.
   
       This avoids treating std::filesystem::path as a range in circumstances where, to do so, would be inappropriate.

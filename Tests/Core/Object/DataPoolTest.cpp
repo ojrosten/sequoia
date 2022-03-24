@@ -22,13 +22,14 @@ namespace sequoia::testing
   {
     test_pooled();
     test_multi_pools();
-    test_spawner();
+    test_faithful_producer();
   }
 
   object::data_pool<int> data_pool_test::make_int_pool(const int val)
   {
     using namespace object;
     using pool_t = data_pool<int>;
+    static_assert(uniform_wrapper<pool_t::proxy>);
 
     using prediction_t = typename value_tester<pool_t>::prediction_type;
 
@@ -197,10 +198,10 @@ namespace sequoia::testing
     check(equality, LINE(""), elt3.get(), 7);
   }
 
-  void data_pool_test::test_spawner()
+  void data_pool_test::test_faithful_producer()
   {
     using namespace object;
-    constexpr auto x = uniform_producer<double>::make(3.0);
+    constexpr auto x = faithful_producer<double>::make(3.0);
     check(equality, LINE(""), x.get(), 3.0);
   }
 }

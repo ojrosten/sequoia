@@ -12,7 +12,7 @@
 #include "EdgeTestingUtilities.hpp"
 #include "NodeStorageTestingUtilities.hpp"
 
-#include "sequoia/Core/Object/UniformWrapper.hpp"
+#include "sequoia/Core/Object/FaithfulWrapper.hpp"
 #include "sequoia/Core/DataStructures/PartitionedData.hpp"
 #include "sequoia/Core/Object/DataPool.hpp"
 #include "sequoia/Maths/Graph/GraphImpl.hpp"

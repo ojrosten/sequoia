@@ -12,7 +12,7 @@
 #include "EdgeTestingUtilities.hpp"
 
 #include "sequoia/Core/Object/Handlers.hpp"
-#include "sequoia/Core/Object/UniformWrapper.hpp"
+#include "sequoia/Core/Object/FaithfulWrapper.hpp"
 
 #include <complex>
 #include <list>
@@ -52,10 +52,10 @@ namespace sequoia
       using namespace maths;
       using namespace object;
 
-      using edge_t = partial_edge<independent<object::uniform_wrapper<null_weight>>>;
+      using edge_t = partial_edge<independent<object::faithful_wrapper<null_weight>>>;
       static_assert(sizeof(std::size_t) == sizeof(edge_t));
 
-      using compact_edge_t = partial_edge<independent<object::uniform_wrapper<null_weight>>, unsigned char>;
+      using compact_edge_t = partial_edge<independent<object::faithful_wrapper<null_weight>>, unsigned char>;
       static_assert(sizeof(unsigned char) == sizeof(compact_edge_t));
 
       edge_t e1{0};
@@ -75,7 +75,7 @@ namespace sequoia
       using namespace maths;
       using namespace object;
 
-      using edge_t = partial_edge<shared<object::uniform_wrapper<int>>>;
+      using edge_t = partial_edge<shared<object::faithful_wrapper<int>>>;
 
       edge_t edge{1, 4};
       check(equality, LINE("Construction"), edge, edge_t{1, 4});
@@ -143,7 +143,7 @@ namespace sequoia
       using namespace maths;
       using namespace object;
 
-      using edge_t = partial_edge<independent<object::uniform_wrapper<int>>>;
+      using edge_t = partial_edge<independent<object::faithful_wrapper<int>>>;
       static_assert(2 * sizeof(std::size_t) == sizeof(edge_t));
 
       edge_t edge{2, 7};
@@ -171,11 +171,11 @@ namespace sequoia
       using namespace maths;
       using namespace object;
 
-      using edge_t = embedded_partial_edge<independent<object::uniform_wrapper<null_weight>>>;
+      using edge_t = embedded_partial_edge<independent<object::faithful_wrapper<null_weight>>>;
       static_assert(2*sizeof(std::size_t) == sizeof(edge_t));
 
       using compact_edge_t
-        = embedded_partial_edge<independent<object::uniform_wrapper<null_weight>>, unsigned char>;
+        = embedded_partial_edge<independent<object::faithful_wrapper<null_weight>>, unsigned char>;
       static_assert(2*sizeof(unsigned char) == sizeof(compact_edge_t));
 
       edge_t e1{0, 4};
@@ -198,7 +198,7 @@ namespace sequoia
       using namespace maths;
       using namespace object;
 
-      using edge_t = embedded_partial_edge<independent<object::uniform_wrapper<double>>>;
+      using edge_t = embedded_partial_edge<independent<object::faithful_wrapper<double>>>;
       static_assert(2*sizeof(std::size_t) + sizeof(double) == sizeof(edge_t));
 
       constexpr edge_t edge1{1, 2, 5.0};
@@ -224,7 +224,7 @@ namespace sequoia
       using namespace maths;
       using namespace object;
 
-      using edge_t = embedded_partial_edge<shared<object::uniform_wrapper<double>>>;
+      using edge_t = embedded_partial_edge<shared<object::faithful_wrapper<double>>>;
 
       edge_t edge1{1, 2, 5.0};
       check(equality, LINE("Construction"), edge1, edge_t{1, 2, 5.0});
@@ -251,10 +251,10 @@ namespace sequoia
       using namespace maths;
       using namespace object;
 
-      using edge_t = edge<independent<object::uniform_wrapper<null_weight>>>;
+      using edge_t = edge<independent<object::faithful_wrapper<null_weight>>>;
       static_assert(2*sizeof(std::size_t) == sizeof(edge_t));
 
-      using compact_edge_t = edge<independent<object::uniform_wrapper<null_weight>>, unsigned char>;
+      using compact_edge_t = edge<independent<object::faithful_wrapper<null_weight>>, unsigned char>;
       static_assert(2 * sizeof(unsigned char) == sizeof(compact_edge_t));
 
       edge_t
@@ -292,7 +292,7 @@ namespace sequoia
       using namespace object;
 
       {
-        using edge_t = edge<independent<object::uniform_wrapper<double>>>;
+        using edge_t = edge<independent<object::faithful_wrapper<double>>>;
         static_assert(sizeof(edge_t) == sizeof(double) + 2*sizeof(std::size_t));
 
         edge_t
@@ -316,7 +316,7 @@ namespace sequoia
 
       {
         using std::complex;
-        using edge_t = edge<independent<object::uniform_wrapper<complex<float>>>>;
+        using edge_t = edge<independent<object::faithful_wrapper<complex<float>>>>;
         static_assert(sizeof(edge_t) == sizeof(std::complex<float>) + 2*sizeof(std::size_t));
 
         edge_t
@@ -331,7 +331,7 @@ namespace sequoia
 
       {
         using std::vector;
-        using edge_t = edge<independent<object::uniform_wrapper<vector<int>>>>;
+        using edge_t = edge<independent<object::faithful_wrapper<vector<int>>>>;
 
         edge_t
           e1(0, 0, 5, 1),
@@ -355,10 +355,10 @@ namespace sequoia
       using namespace maths;
       using namespace object;
 
-      using edge_t = embedded_edge<independent<object::uniform_wrapper<null_weight>>>;
+      using edge_t = embedded_edge<independent<object::faithful_wrapper<null_weight>>>;
       check(equality, LINE(""), sizeof(edge_t), 3*sizeof(std::size_t));
 
-      using compact_edge_t = embedded_edge<independent<object::uniform_wrapper<null_weight>>, unsigned char>;
+      using compact_edge_t = embedded_edge<independent<object::faithful_wrapper<null_weight>>, unsigned char>;
       static_assert(3*sizeof(unsigned char) == sizeof(compact_edge_t));
 
       edge_t e{3, 4, 1};
@@ -391,7 +391,7 @@ namespace sequoia
       using namespace maths;
       using namespace object;
 
-      using edge_t = embedded_edge<independent<object::uniform_wrapper<double>>>;
+      using edge_t = embedded_edge<independent<object::faithful_wrapper<double>>>;
       check(equality, LINE(""), sizeof(edge_t), 3*sizeof(std::size_t) + sizeof(double));
 
       constexpr edge_t e{3, 4, 1, 4.2};
@@ -422,7 +422,7 @@ namespace sequoia
       using namespace maths;
       using namespace object;
 
-      using edge_t = embedded_edge<shared<object::uniform_wrapper<double>>>;
+      using edge_t = embedded_edge<shared<object::faithful_wrapper<double>>>;
 
         edge_t e{10, 11, 0, -1.2};
         check(equality, LINE("Construction"), e, edge_t{10, 11, 0, -1.2});

@@ -174,9 +174,9 @@ int main(int argc, char** argv)
     );
 
     runner.add_test_family(
-      "Protective Wrapper",
-      uniform_wrapper_false_positive_test{"False Positive Diagnostics"},
-      uniform_wrapper_test{"Unit Test"}
+      "Faithful Wrapper",
+      faithful_wrapper_false_positive_test{"False Positive Diagnostics"},
+      faithful_wrapper_test{"Unit Test"}
     );
 
     runner.add_test_family(
