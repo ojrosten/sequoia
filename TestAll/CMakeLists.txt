@@ -29,6 +29,7 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Core/Meta/ConceptsTest.cpp
                ${TestDir}/Core/Meta/TypeTraitsTest.cpp
                ${TestDir}/Core/Meta/UtilitiesTest.cpp
+               ${TestDir}/Core/Object/CreatorFreeTest.cpp
                ${TestDir}/Core/Object/DataPoolAllocationTest.cpp
                ${TestDir}/Core/Object/DataPoolTest.cpp   
                ${TestDir}/Core/Object/FaithfulWrapperTest.cpp
