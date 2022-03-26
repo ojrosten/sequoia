@@ -37,7 +37,7 @@ namespace sequoia
 {
   namespace object
   {
-    template<class> struct independent;
+    template<class> struct by_value;
   }
 
   namespace maths

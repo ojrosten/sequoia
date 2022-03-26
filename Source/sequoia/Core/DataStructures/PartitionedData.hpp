@@ -80,7 +80,7 @@ namespace sequoia
     /*! \brief Storage for partitioned data such that data within each partition is contiguous.
      */
 
-    template<class T, class Handler=object::independent<T>, class Traits=bucketed_sequence_traits<T, Handler>>
+    template<class T, class Handler=object::by_value<T>, class Traits=bucketed_sequence_traits<T, Handler>>
       requires object::handler<Handler>
     class bucketed_sequence
     {
@@ -436,7 +436,7 @@ namespace sequoia
       [[nodiscard]]
       friend bool operator==(const bucketed_sequence& lhs, const bucketed_sequence& rhs) noexcept
       {
-        if constexpr(std::is_same_v<Handler, object::independent<T>>)
+        if constexpr(std::is_same_v<Handler, object::by_value<T>>)
         {
           return lhs.m_Buckets == rhs.m_Buckets;
         }
@@ -657,7 +657,7 @@ namespace sequoia
       [[nodiscard]]
       friend constexpr bool operator==(const partitioned_sequence_base& lhs, const partitioned_sequence_base& rhs) noexcept
       {
-        if constexpr(std::is_same_v<Handler, object::independent<T>>)
+        if constexpr(std::is_same_v<Handler, object::by_value<T>>)
         {
           return (lhs.m_Storage == rhs.m_Storage) && (lhs.m_Partitions == rhs.m_Partitions);
         }
@@ -1141,7 +1141,7 @@ namespace sequoia
       template<class S> using container_type = std::vector<S, std::allocator<S>>;
     };
 
-    template<class T, class Handler=object::independent<T>, class Traits=partitioned_sequence_traits<T, Handler>>
+    template<class T, class Handler=object::by_value<T>, class Traits=partitioned_sequence_traits<T, Handler>>
       requires object::handler<Handler>
     class partitioned_sequence : public partitioned_sequence_base<T, Handler, Traits>
     {
@@ -1256,12 +1256,12 @@ namespace sequoia
 
     template<class T, std::size_t Npartitions, std::size_t Nelements, std::integral IndexType=std::size_t>
     class static_partitioned_sequence :
-      public partitioned_sequence_base<T, object::independent<T>, static_partitioned_sequence_traits<T, Npartitions, Nelements,IndexType>>
+      public partitioned_sequence_base<T, object::by_value<T>, static_partitioned_sequence_traits<T, Npartitions, Nelements,IndexType>>
     {
     public:
       using partitioned_sequence_base<
         T,
-        object::independent<T>,
+        object::by_value<T>,
         static_partitioned_sequence_traits<T, Npartitions, Nelements,IndexType>
       >::partitioned_sequence_base;
     };

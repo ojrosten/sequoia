@@ -71,7 +71,7 @@ namespace sequoia::maths::graph_impl
 
     using edge_storage_handler = std::conditional_t<shared_edge_v,
                                                     object::shared<edge_type>,
-                                                    object::independent<edge_type>>;
+                                                    object::by_value<edge_type>>;
 
     using edge_storage_traits
       = typename EdgeStorageTraits::template traits_type<edge_type, edge_storage_handler>;

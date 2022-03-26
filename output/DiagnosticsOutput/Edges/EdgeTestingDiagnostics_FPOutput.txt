@@ -1,7 +1,7 @@
-	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 48
+	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 49
 	Differing target indices
 
-	[sequoia::maths::partial_edge<sequoia::object::independent<sequoia::object::faithful_wrapper<sequoia::maths::null_weight> >, unsigned long long>]
+	[sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::object::faithful_wrapper<sequoia::maths::null_weight> >, unsigned long long>]
 	operator== returned false
 
 	  Target node incorrect
@@ -12,10 +12,10 @@
 
 	=======================================
 
-	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 52
+	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 53
 	Differing target indices
 
-	[sequoia::maths::partial_edge<sequoia::object::independent<sequoia::object::faithful_wrapper<sequoia::maths::null_weight> >, unsigned char>]
+	[sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::object::faithful_wrapper<sequoia::maths::null_weight> >, unsigned char>]
 	operator== returned false
 
 	  Target node incorrect
@@ -27,14 +27,42 @@
 
 	=======================================
 
-	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 62
+	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 60
 	Differing targets, identical weights
 
-	[sequoia::maths::partial_edge<sequoia::object::independent<sequoia::object::faithful_wrapper<int> >, unsigned long long>]
+	[sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::object::faithful_wrapper<int> >, unsigned long long>]
 	operator== returned false
 
 	  Target node incorrect
 	  [unsigned long long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 61
+	Differing targets, identical weights
+
+	[sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::object::faithful_wrapper<int> >, unsigned long long>]
+	operator== returned false
+
+	  Target node incorrect
+	  [unsigned long long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 62
+	Identical targets, differeing weights
+
+	[sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::object::faithful_wrapper<int> >, unsigned long long>]
+	operator== returned false
+
+	  Weight incorrect
+	  [int]
 	  operator== returned false
 	  Obtained : 0
 	  Predicted: 1
@@ -42,9 +70,23 @@
 	=======================================
 
 	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 63
-	Differing targets, identical weights
+	Identical targets, differeing weights
 
-	[sequoia::maths::partial_edge<sequoia::object::independent<sequoia::object::faithful_wrapper<int> >, unsigned long long>]
+	[sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::object::faithful_wrapper<int> >, unsigned long long>]
+	operator== returned false
+
+	  Weight incorrect
+	  [int]
+	  operator== returned false
+	  Obtained : 5
+	  Predicted: 6
+
+	=======================================
+
+	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 64
+	Differing targets and weights
+
+	[sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::object::faithful_wrapper<int> >, unsigned long long>]
 	operator== returned false
 
 	  Target node incorrect
@@ -52,14 +94,6 @@
 	  operator== returned false
 	  Obtained : 0
 	  Predicted: 1
-
-	=======================================
-
-	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 64
-	Identical targets, differeing weights
-
-	[sequoia::maths::partial_edge<sequoia::object::independent<sequoia::object::faithful_wrapper<int> >, unsigned long long>]
-	operator== returned false
 
 	  Weight incorrect
 	  [int]
@@ -70,43 +104,9 @@
 	=======================================
 
 	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 65
-	Identical targets, differeing weights
-
-	[sequoia::maths::partial_edge<sequoia::object::independent<sequoia::object::faithful_wrapper<int> >, unsigned long long>]
-	operator== returned false
-
-	  Weight incorrect
-	  [int]
-	  operator== returned false
-	  Obtained : 5
-	  Predicted: 6
-
-	=======================================
-
-	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 66
 	Differing targets and weights
 
-	[sequoia::maths::partial_edge<sequoia::object::independent<sequoia::object::faithful_wrapper<int> >, unsigned long long>]
-	operator== returned false
-
-	  Target node incorrect
-	  [unsigned long long]
-	  operator== returned false
-	  Obtained : 0
-	  Predicted: 1
-
-	  Weight incorrect
-	  [int]
-	  operator== returned false
-	  Obtained : 0
-	  Predicted: 1
-
-	=======================================
-
-	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 67
-	Differing targets and weights
-
-	[sequoia::maths::partial_edge<sequoia::object::independent<sequoia::object::faithful_wrapper<int> >, unsigned long long>]
+	[sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::object::faithful_wrapper<int> >, unsigned long long>]
 	operator== returned false
 
 	  Target node incorrect
@@ -120,86 +120,86 @@
 	  operator== returned false
 	  Obtained : 1
 	  Predicted: 3
+
+	=======================================
+
+	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 72
+	Differing targets, identical weights
+
+	[sequoia::maths::partial_edge<sequoia::object::shared<sequoia::object::faithful_wrapper<int> >, unsigned long long>]
+	operator== returned false
+
+	  Target node incorrect
+	  [unsigned long long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 73
+	Differing targets, identical weights
+
+	[sequoia::maths::partial_edge<sequoia::object::shared<sequoia::object::faithful_wrapper<int> >, unsigned long long>]
+	operator== returned false
+
+	  Target node incorrect
+	  [unsigned long long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 74
+	Identical targets, differeing weights
+
+	[sequoia::maths::partial_edge<sequoia::object::shared<sequoia::object::faithful_wrapper<int> >, unsigned long long>]
+	operator== returned false
+
+	  Weight incorrect
+	  [int]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 75
+	Identical targets, differeing weights
+
+	[sequoia::maths::partial_edge<sequoia::object::shared<sequoia::object::faithful_wrapper<int> >, unsigned long long>]
+	operator== returned false
+
+	  Weight incorrect
+	  [int]
+	  operator== returned false
+	  Obtained : 5
+	  Predicted: 6
+
+	=======================================
+
+	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 76
+	Differing targets and weights
+
+	[sequoia::maths::partial_edge<sequoia::object::shared<sequoia::object::faithful_wrapper<int> >, unsigned long long>]
+	operator== returned false
+
+	  Target node incorrect
+	  [unsigned long long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	  Weight incorrect
+	  [int]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
 	=======================================
 
 	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 77
-	Differing targets, identical weights
-
-	[sequoia::maths::partial_edge<sequoia::object::shared<sequoia::object::faithful_wrapper<int> >, unsigned long long>]
-	operator== returned false
-
-	  Target node incorrect
-	  [unsigned long long]
-	  operator== returned false
-	  Obtained : 0
-	  Predicted: 1
-
-	=======================================
-
-	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 78
-	Differing targets, identical weights
-
-	[sequoia::maths::partial_edge<sequoia::object::shared<sequoia::object::faithful_wrapper<int> >, unsigned long long>]
-	operator== returned false
-
-	  Target node incorrect
-	  [unsigned long long]
-	  operator== returned false
-	  Obtained : 0
-	  Predicted: 1
-
-	=======================================
-
-	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 79
-	Identical targets, differeing weights
-
-	[sequoia::maths::partial_edge<sequoia::object::shared<sequoia::object::faithful_wrapper<int> >, unsigned long long>]
-	operator== returned false
-
-	  Weight incorrect
-	  [int]
-	  operator== returned false
-	  Obtained : 0
-	  Predicted: 1
-
-	=======================================
-
-	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 80
-	Identical targets, differeing weights
-
-	[sequoia::maths::partial_edge<sequoia::object::shared<sequoia::object::faithful_wrapper<int> >, unsigned long long>]
-	operator== returned false
-
-	  Weight incorrect
-	  [int]
-	  operator== returned false
-	  Obtained : 5
-	  Predicted: 6
-
-	=======================================
-
-	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 81
-	Differing targets and weights
-
-	[sequoia::maths::partial_edge<sequoia::object::shared<sequoia::object::faithful_wrapper<int> >, unsigned long long>]
-	operator== returned false
-
-	  Target node incorrect
-	  [unsigned long long]
-	  operator== returned false
-	  Obtained : 0
-	  Predicted: 1
-
-	  Weight incorrect
-	  [int]
-	  operator== returned false
-	  Obtained : 0
-	  Predicted: 1
-
-	=======================================
-
-	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 82
 	Differing targets and weights
 
 	[sequoia::maths::partial_edge<sequoia::object::shared<sequoia::object::faithful_wrapper<int> >, unsigned long long>]
@@ -219,7 +219,7 @@
 
 	=======================================
 
-	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 92
+	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 84
 	Differing targets, identical complementary indices
 
 	[sequoia::maths::partial_edge<sequoia::object::shared<sequoia::object::faithful_wrapper<int> >, unsigned long long>]
@@ -233,7 +233,7 @@
 
 	=======================================
 
-	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 93
+	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 85
 	Differing targets, identical complementary indices
 
 	[sequoia::maths::partial_edge<sequoia::object::shared<sequoia::object::faithful_wrapper<int> >, unsigned long long>]
@@ -247,7 +247,7 @@
 
 	=======================================
 
-	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 94
+	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 86
 	Identical targets, differeing complementary indices
 
 	[sequoia::maths::partial_edge<sequoia::object::shared<sequoia::object::faithful_wrapper<int> >, unsigned long long>]
@@ -261,7 +261,7 @@
 
 	=======================================
 
-	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 95
+	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 87
 	Identical targets, differeing complementary indices
 
 	[sequoia::maths::partial_edge<sequoia::object::shared<sequoia::object::faithful_wrapper<int> >, unsigned long long>]
@@ -275,7 +275,7 @@
 
 	=======================================
 
-	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 96
+	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 88
 	Differing targets and complementary indices
 
 	[sequoia::maths::partial_edge<sequoia::object::shared<sequoia::object::faithful_wrapper<int> >, unsigned long long>]
@@ -295,7 +295,7 @@
 
 	=======================================
 
-	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 97
+	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 89
 	Differing targets and complementary indices
 
 	[sequoia::maths::partial_edge<sequoia::object::shared<sequoia::object::faithful_wrapper<int> >, unsigned long long>]
@@ -315,10 +315,10 @@
 
 	=======================================
 
-	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 107
+	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 96
 	Differing targets, identical complementary indices and weights
 
-	[sequoia::maths::embedded_partial_edge<sequoia::object::independent<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
+	[sequoia::maths::embedded_partial_edge<sequoia::object::by_value<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
 	operator== returned false
 
 	  Target node incorrect
@@ -329,13 +329,131 @@
 
 	=======================================
 
-	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 108
+	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 97
 	Differing targets, identical complementary indices and weights
 
-	[sequoia::maths::embedded_partial_edge<sequoia::object::independent<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
+	[sequoia::maths::embedded_partial_edge<sequoia::object::by_value<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
 	operator== returned false
 
 	  Target node incorrect
+	  [unsigned long long]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
+
+	=======================================
+
+	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 98
+	Differing targets, identical complementary indices and weights
+
+	[sequoia::maths::embedded_partial_edge<sequoia::object::by_value<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
+	operator== returned false
+
+	  Target node incorrect
+	  [unsigned long long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 100
+	Differing complementary indices, identical targets and weights
+
+	[sequoia::maths::embedded_partial_edge<sequoia::object::by_value<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
+	operator== returned false
+
+	  Complementary index incorrect
+	  [unsigned long long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 101
+	Differing complementary indices, identical targets and weights
+
+	[sequoia::maths::embedded_partial_edge<sequoia::object::by_value<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
+	operator== returned false
+
+	  Complementary index incorrect
+	  [unsigned long long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 102
+	Differing complementary indices, identical targets and weights
+
+	[sequoia::maths::embedded_partial_edge<sequoia::object::by_value<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
+	operator== returned false
+
+	  Complementary index incorrect
+	  [unsigned long long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 104
+	Differing weights, identical targets and complementary indices
+
+	[sequoia::maths::embedded_partial_edge<sequoia::object::by_value<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
+	operator== returned false
+
+	  Weight incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 105
+	Differing weights, identical targets and complementary indices
+
+	[sequoia::maths::embedded_partial_edge<sequoia::object::by_value<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
+	operator== returned false
+
+	  Weight incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 106
+	Differing weights, identical targets and complementary indices
+
+	[sequoia::maths::embedded_partial_edge<sequoia::object::by_value<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
+	operator== returned false
+
+	  Weight incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 108
+	Differing targets and complementary indices, identical weights
+
+	[sequoia::maths::embedded_partial_edge<sequoia::object::by_value<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
+	operator== returned false
+
+	  Target node incorrect
+	  [unsigned long long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	  Complementary index incorrect
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 1
@@ -344,127 +462,9 @@
 	=======================================
 
 	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 109
-	Differing targets, identical complementary indices and weights
-
-	[sequoia::maths::embedded_partial_edge<sequoia::object::independent<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
-	operator== returned false
-
-	  Target node incorrect
-	  [unsigned long long]
-	  operator== returned false
-	  Obtained : 0
-	  Predicted: 1
-
-	=======================================
-
-	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 111
-	Differing complementary indices, identical targets and weights
-
-	[sequoia::maths::embedded_partial_edge<sequoia::object::independent<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
-	operator== returned false
-
-	  Complementary index incorrect
-	  [unsigned long long]
-	  operator== returned false
-	  Obtained : 0
-	  Predicted: 1
-
-	=======================================
-
-	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 112
-	Differing complementary indices, identical targets and weights
-
-	[sequoia::maths::embedded_partial_edge<sequoia::object::independent<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
-	operator== returned false
-
-	  Complementary index incorrect
-	  [unsigned long long]
-	  operator== returned false
-	  Obtained : 0
-	  Predicted: 1
-
-	=======================================
-
-	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 113
-	Differing complementary indices, identical targets and weights
-
-	[sequoia::maths::embedded_partial_edge<sequoia::object::independent<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
-	operator== returned false
-
-	  Complementary index incorrect
-	  [unsigned long long]
-	  operator== returned false
-	  Obtained : 0
-	  Predicted: 1
-
-	=======================================
-
-	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 115
-	Differing weights, identical targets and complementary indices
-
-	[sequoia::maths::embedded_partial_edge<sequoia::object::independent<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
-	operator== returned false
-
-	  Weight incorrect
-	  [double]
-	  operator== returned false
-	  Obtained : 0
-	  Predicted: 1
-
-	=======================================
-
-	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 116
-	Differing weights, identical targets and complementary indices
-
-	[sequoia::maths::embedded_partial_edge<sequoia::object::independent<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
-	operator== returned false
-
-	  Weight incorrect
-	  [double]
-	  operator== returned false
-	  Obtained : 0
-	  Predicted: 1
-
-	=======================================
-
-	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 117
-	Differing weights, identical targets and complementary indices
-
-	[sequoia::maths::embedded_partial_edge<sequoia::object::independent<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
-	operator== returned false
-
-	  Weight incorrect
-	  [double]
-	  operator== returned false
-	  Obtained : 0
-	  Predicted: 1
-
-	=======================================
-
-	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 119
-	Differing targets and complementary indices, identical weights
-
-	[sequoia::maths::embedded_partial_edge<sequoia::object::independent<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
-	operator== returned false
-
-	  Target node incorrect
-	  [unsigned long long]
-	  operator== returned false
-	  Obtained : 0
-	  Predicted: 1
-
-	  Complementary index incorrect
-	  [unsigned long long]
-	  operator== returned false
-	  Obtained : 1
-	  Predicted: 0
-
-	=======================================
-
-	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 120
 	Differing targets and weights, identical complementary indices
 
-	[sequoia::maths::embedded_partial_edge<sequoia::object::independent<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
+	[sequoia::maths::embedded_partial_edge<sequoia::object::by_value<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
 	operator== returned false
 
 	  Target node incorrect
@@ -481,10 +481,10 @@
 
 	=======================================
 
-	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 121
+	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 110
 	Differing complementary indices and weights, identical targets
 
-	[sequoia::maths::embedded_partial_edge<sequoia::object::independent<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
+	[sequoia::maths::embedded_partial_edge<sequoia::object::by_value<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
 	operator== returned false
 
 	  Weight incorrect
@@ -501,10 +501,10 @@
 
 	=======================================
 
-	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 123
+	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 112
 	Differing targets, complementary indices and weights
 
-	[sequoia::maths::embedded_partial_edge<sequoia::object::independent<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
+	[sequoia::maths::embedded_partial_edge<sequoia::object::by_value<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
 	operator== returned false
 
 	  Target node incorrect
@@ -527,10 +527,10 @@
 
 	=======================================
 
-	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 133
+	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 119
 	Differing targets, identical complementary indices and weights
 
-	[sequoia::maths::embedded_partial_edge<sequoia::object::independent<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
+	[sequoia::maths::embedded_partial_edge<sequoia::object::by_value<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
 	operator== returned false
 
 	  Target node incorrect
@@ -541,10 +541,10 @@
 
 	=======================================
 
-	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 134
+	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 120
 	Differing targets, identical complementary indices and weights
 
-	[sequoia::maths::embedded_partial_edge<sequoia::object::independent<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
+	[sequoia::maths::embedded_partial_edge<sequoia::object::by_value<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
 	operator== returned false
 
 	  Target node incorrect
@@ -552,13 +552,171 @@
 	  operator== returned false
 	  Obtained : 0
 	  Predicted: 1
+
+	=======================================
+
+	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 121
+	Differing targets, identical complementary indices and weights
+
+	[sequoia::maths::embedded_partial_edge<sequoia::object::by_value<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
+	operator== returned false
+
+	  Target node incorrect
+	  [unsigned long long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 123
+	Differing complementary indices, identical targets and weights
+
+	[sequoia::maths::embedded_partial_edge<sequoia::object::by_value<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
+	operator== returned false
+
+	  Complementary index incorrect
+	  [unsigned long long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 124
+	Differing complementary indices, identical targets and weights
+
+	[sequoia::maths::embedded_partial_edge<sequoia::object::by_value<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
+	operator== returned false
+
+	  Complementary index incorrect
+	  [unsigned long long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 125
+	Differing complementary indices, identical targets and weights
+
+	[sequoia::maths::embedded_partial_edge<sequoia::object::by_value<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
+	operator== returned false
+
+	  Complementary index incorrect
+	  [unsigned long long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 127
+	Differing weights, identical targets and complementary indices
+
+	[sequoia::maths::embedded_partial_edge<sequoia::object::by_value<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
+	operator== returned false
+
+	  Weight incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 128
+	Differing weights, identical targets and complementary indices
+
+	[sequoia::maths::embedded_partial_edge<sequoia::object::by_value<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
+	operator== returned false
+
+	  Weight incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 129
+	Differing weights, identical targets and complementary indices
+
+	[sequoia::maths::embedded_partial_edge<sequoia::object::by_value<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
+	operator== returned false
+
+	  Weight incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 131
+	Differing targets and complementary indices, identical weights
+
+	[sequoia::maths::embedded_partial_edge<sequoia::object::by_value<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
+	operator== returned false
+
+	  Target node incorrect
+	  [unsigned long long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	  Complementary index incorrect
+	  [unsigned long long]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
+
+	=======================================
+
+	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 132
+	Differing targets and weights, identical complementary indices
+
+	[sequoia::maths::embedded_partial_edge<sequoia::object::by_value<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
+	operator== returned false
+
+	  Target node incorrect
+	  [unsigned long long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 2
+
+	  Weight incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 6
+	  Predicted: 5
+
+	=======================================
+
+	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 133
+	Differing complementary indices and weights, identical targets
+
+	[sequoia::maths::embedded_partial_edge<sequoia::object::by_value<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
+	operator== returned false
+
+	  Weight incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 4
+	  Predicted: 5
+
+	  Complementary index incorrect
+	  [unsigned long long]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 3
 
 	=======================================
 
 	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 135
-	Differing targets, identical complementary indices and weights
+	Differing targets, complementary indices and weights
 
-	[sequoia::maths::embedded_partial_edge<sequoia::object::independent<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
+	[sequoia::maths::embedded_partial_edge<sequoia::object::by_value<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
 	operator== returned false
 
 	  Target node incorrect
@@ -567,72 +725,28 @@
 	  Obtained : 0
 	  Predicted: 1
 
-	=======================================
-
-	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 137
-	Differing complementary indices, identical targets and weights
-
-	[sequoia::maths::embedded_partial_edge<sequoia::object::independent<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
-	operator== returned false
-
-	  Complementary index incorrect
-	  [unsigned long long]
-	  operator== returned false
-	  Obtained : 0
-	  Predicted: 1
-
-	=======================================
-
-	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 138
-	Differing complementary indices, identical targets and weights
-
-	[sequoia::maths::embedded_partial_edge<sequoia::object::independent<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
-	operator== returned false
-
-	  Complementary index incorrect
-	  [unsigned long long]
-	  operator== returned false
-	  Obtained : 0
-	  Predicted: 1
-
-	=======================================
-
-	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 139
-	Differing complementary indices, identical targets and weights
-
-	[sequoia::maths::embedded_partial_edge<sequoia::object::independent<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
-	operator== returned false
-
-	  Complementary index incorrect
-	  [unsigned long long]
-	  operator== returned false
-	  Obtained : 0
-	  Predicted: 1
-
-	=======================================
-
-	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 141
-	Differing weights, identical targets and complementary indices
-
-	[sequoia::maths::embedded_partial_edge<sequoia::object::independent<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
-	operator== returned false
-
 	  Weight incorrect
 	  [double]
 	  operator== returned false
-	  Obtained : 0
-	  Predicted: 1
+	  Obtained : 2
+	  Predicted: 5
+
+	  Complementary index incorrect
+	  [unsigned long long]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
 
 	=======================================
 
 	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 142
-	Differing weights, identical targets and complementary indices
+	Differing targets, identical soures
 
-	[sequoia::maths::embedded_partial_edge<sequoia::object::independent<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
+	[sequoia::maths::edge<sequoia::object::by_value<sequoia::object::faithful_wrapper<sequoia::maths::null_weight> >, unsigned long long>]
 	operator== returned false
 
-	  Weight incorrect
-	  [double]
+	  Target node incorrect
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
 	  Predicted: 1
@@ -640,83 +754,83 @@
 	=======================================
 
 	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 143
-	Differing weights, identical targets and complementary indices
+	Differing targets, identical soures
 
-	[sequoia::maths::embedded_partial_edge<sequoia::object::independent<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
+	[sequoia::maths::edge<sequoia::object::by_value<sequoia::object::faithful_wrapper<sequoia::maths::null_weight> >, unsigned long long>]
 	operator== returned false
 
-	  Weight incorrect
-	  [double]
+	  Target node incorrect
+	  [unsigned long long]
 	  operator== returned false
-	  Obtained : 0
-	  Predicted: 1
+	  Obtained : 1
+	  Predicted: 0
 
 	=======================================
 
 	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 145
-	Differing targets and complementary indices, identical weights
+	Differing soures, identical targets
 
-	[sequoia::maths::embedded_partial_edge<sequoia::object::independent<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
+	[sequoia::maths::edge<sequoia::object::by_value<sequoia::object::faithful_wrapper<sequoia::maths::null_weight> >, unsigned long long>]
 	operator== returned false
 
-	  Target node incorrect
+	  Host node incorrect
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
 	  Predicted: 1
-
-	  Complementary index incorrect
-	  [unsigned long long]
-	  operator== returned false
-	  Obtained : 1
-	  Predicted: 0
 
 	=======================================
 
 	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 146
-	Differing targets and weights, identical complementary indices
+	Differing soures, identical targets
 
-	[sequoia::maths::embedded_partial_edge<sequoia::object::independent<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
+	[sequoia::maths::edge<sequoia::object::by_value<sequoia::object::faithful_wrapper<sequoia::maths::null_weight> >, unsigned long long>]
+	operator== returned false
+
+	  Host node incorrect
+	  [unsigned long long]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
+
+	=======================================
+
+	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 148
+	Differing soures and targets
+
+	[sequoia::maths::edge<sequoia::object::by_value<sequoia::object::faithful_wrapper<sequoia::maths::null_weight> >, unsigned long long>]
 	operator== returned false
 
 	  Target node incorrect
 	  [unsigned long long]
 	  operator== returned false
-	  Obtained : 0
-	  Predicted: 2
+	  Obtained : 1
+	  Predicted: 0
 
-	  Weight incorrect
-	  [double]
-	  operator== returned false
-	  Obtained : 6
-	  Predicted: 5
-
-	=======================================
-
-	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 147
-	Differing complementary indices and weights, identical targets
-
-	[sequoia::maths::embedded_partial_edge<sequoia::object::independent<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
-	operator== returned false
-
-	  Weight incorrect
-	  [double]
-	  operator== returned false
-	  Obtained : 4
-	  Predicted: 5
-
-	  Complementary index incorrect
+	  Host node incorrect
 	  [unsigned long long]
 	  operator== returned false
-	  Obtained : 1
-	  Predicted: 3
+	  Obtained : 0
+	  Predicted: 1
 
 	=======================================
 
-	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 149
-	Differing targets, complementary indices and weights
+	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 150
+	Differing inversion flag
 
-	[sequoia::maths::embedded_partial_edge<sequoia::object::independent<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
+	[sequoia::maths::edge<sequoia::object::by_value<sequoia::object::faithful_wrapper<sequoia::maths::null_weight> >, unsigned long long>]
+	operator== returned false
+
+	  Inversion flag incorrect
+	  [bool]
+	  check failed
+
+	=======================================
+
+	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 157
+	Differing targets, identical soures and weight
+
+	[sequoia::maths::edge<sequoia::object::by_value<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
 	operator== returned false
 
 	  Target node incorrect
@@ -725,27 +839,29 @@
 	  Obtained : 0
 	  Predicted: 1
 
-	  Weight incorrect
-	  [double]
-	  operator== returned false
-	  Obtained : 2
-	  Predicted: 5
+	=======================================
 
-	  Complementary index incorrect
+	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 158
+	Differing targets, identical soure and weights
+
+	[sequoia::maths::edge<sequoia::object::by_value<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
+	operator== returned false
+
+	  Host node incorrect
 	  [unsigned long long]
 	  operator== returned false
-	  Obtained : 1
-	  Predicted: 0
+	  Obtained : 0
+	  Predicted: 1
 
 	=======================================
 
 	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 159
-	Differing targets, identical soures
+	Differing targets, identical soure and weights
 
-	[sequoia::maths::edge<sequoia::object::independent<sequoia::object::faithful_wrapper<sequoia::maths::null_weight> >, unsigned long long>]
+	[sequoia::maths::edge<sequoia::object::by_value<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
 	operator== returned false
 
-	  Target node incorrect
+	  Host node incorrect
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
@@ -754,26 +870,24 @@
 	=======================================
 
 	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 160
-	Differing targets, identical soures
+	Differing inversion flag
 
-	[sequoia::maths::edge<sequoia::object::independent<sequoia::object::faithful_wrapper<sequoia::maths::null_weight> >, unsigned long long>]
+	[sequoia::maths::edge<sequoia::object::by_value<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
 	operator== returned false
 
-	  Target node incorrect
-	  [unsigned long long]
-	  operator== returned false
-	  Obtained : 1
-	  Predicted: 0
+	  Inversion flag incorrect
+	  [bool]
+	  check failed
 
 	=======================================
 
 	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 162
-	Differing soures, identical targets
+	Differing soures, identical targets and weights
 
-	[sequoia::maths::edge<sequoia::object::independent<sequoia::object::faithful_wrapper<sequoia::maths::null_weight> >, unsigned long long>]
+	[sequoia::maths::edge<sequoia::object::by_value<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
 	operator== returned false
 
-	  Host node incorrect
+	  Target node incorrect
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
@@ -782,33 +896,41 @@
 	=======================================
 
 	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 163
-	Differing soures, identical targets
+	Differing soures, identical targets and weights
 
-	[sequoia::maths::edge<sequoia::object::independent<sequoia::object::faithful_wrapper<sequoia::maths::null_weight> >, unsigned long long>]
-	operator== returned false
-
-	  Host node incorrect
-	  [unsigned long long]
-	  operator== returned false
-	  Obtained : 1
-	  Predicted: 0
-
-	=======================================
-
-	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 165
-	Differing soures and targets
-
-	[sequoia::maths::edge<sequoia::object::independent<sequoia::object::faithful_wrapper<sequoia::maths::null_weight> >, unsigned long long>]
+	[sequoia::maths::edge<sequoia::object::by_value<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
 	operator== returned false
 
 	  Target node incorrect
 	  [unsigned long long]
 	  operator== returned false
-	  Obtained : 1
-	  Predicted: 0
+	  Obtained : 0
+	  Predicted: 1
 
-	  Host node incorrect
+	=======================================
+
+	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 164
+	Differing soures, identical targets and weights
+
+	[sequoia::maths::edge<sequoia::object::by_value<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
+	operator== returned false
+
+	  Target node incorrect
 	  [unsigned long long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 166
+	Differing weights, identical targets and soures
+
+	[sequoia::maths::edge<sequoia::object::by_value<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
+	operator== returned false
+
+	  Weight incorrect
+	  [double]
 	  operator== returned false
 	  Obtained : 0
 	  Predicted: 1
@@ -816,21 +938,123 @@
 	=======================================
 
 	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 167
-	Differing inversion flag
+	Differing weights, identical targets and soures
 
-	[sequoia::maths::edge<sequoia::object::independent<sequoia::object::faithful_wrapper<sequoia::maths::null_weight> >, unsigned long long>]
+	[sequoia::maths::edge<sequoia::object::by_value<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
 	operator== returned false
 
-	  Inversion flag incorrect
-	  [bool]
-	  check failed
+	  Weight incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
 	=======================================
 
-	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 177
-	Differing targets, identical soures and weight
+	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 168
+	Differing weights, identical targets and soures
 
-	[sequoia::maths::edge<sequoia::object::independent<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
+	[sequoia::maths::edge<sequoia::object::by_value<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
+	operator== returned false
+
+	  Weight incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 170
+	Differing targets and soures, identical weights
+
+	[sequoia::maths::edge<sequoia::object::by_value<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
+	operator== returned false
+
+	  Target node incorrect
+	  [unsigned long long]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
+
+	  Host node incorrect
+	  [unsigned long long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 171
+	Differing targets and weights, identical soures
+
+	[sequoia::maths::edge<sequoia::object::by_value<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
+	operator== returned false
+
+	  Weight incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 6
+	  Predicted: 5
+
+	  Host node incorrect
+	  [unsigned long long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 2
+
+	=======================================
+
+	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 172
+	Differing soures and weights, identical targets
+
+	[sequoia::maths::edge<sequoia::object::by_value<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
+	operator== returned false
+
+	  Target node incorrect
+	  [unsigned long long]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 3
+
+	  Weight incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 4
+	  Predicted: 5
+
+	=======================================
+
+	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 174
+	Differing targets, soures and weights
+
+	[sequoia::maths::edge<sequoia::object::by_value<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
+	operator== returned false
+
+	  Target node incorrect
+	  [unsigned long long]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
+
+	  Weight incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 5
+
+	  Host node incorrect
+	  [unsigned long long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 181
+	Differing targets, identical soures and complementary indices
+
+	[sequoia::maths::embedded_edge<sequoia::object::by_value<sequoia::object::faithful_wrapper<sequoia::maths::null_weight> >, unsigned long long>]
 	operator== returned false
 
 	  Target node incorrect
@@ -838,56 +1062,16 @@
 	  operator== returned false
 	  Obtained : 0
 	  Predicted: 1
-
-	=======================================
-
-	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 178
-	Differing targets, identical soure and weights
-
-	[sequoia::maths::edge<sequoia::object::independent<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
-	operator== returned false
-
-	  Host node incorrect
-	  [unsigned long long]
-	  operator== returned false
-	  Obtained : 0
-	  Predicted: 1
-
-	=======================================
-
-	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 179
-	Differing targets, identical soure and weights
-
-	[sequoia::maths::edge<sequoia::object::independent<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
-	operator== returned false
-
-	  Host node incorrect
-	  [unsigned long long]
-	  operator== returned false
-	  Obtained : 0
-	  Predicted: 1
-
-	=======================================
-
-	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 180
-	Differing inversion flag
-
-	[sequoia::maths::edge<sequoia::object::independent<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
-	operator== returned false
-
-	  Inversion flag incorrect
-	  [bool]
-	  check failed
 
 	=======================================
 
 	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 182
-	Differing soures, identical targets and weights
+	Differing targets, identical soure and complementary indices
 
-	[sequoia::maths::edge<sequoia::object::independent<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
+	[sequoia::maths::embedded_edge<sequoia::object::by_value<sequoia::object::faithful_wrapper<sequoia::maths::null_weight> >, unsigned long long>]
 	operator== returned false
 
-	  Target node incorrect
+	  Host node incorrect
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
@@ -896,12 +1080,12 @@
 	=======================================
 
 	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 183
-	Differing soures, identical targets and weights
+	Differing targets, identical soure and complementary indices
 
-	[sequoia::maths::edge<sequoia::object::independent<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
+	[sequoia::maths::embedded_edge<sequoia::object::by_value<sequoia::object::faithful_wrapper<sequoia::maths::null_weight> >, unsigned long long>]
 	operator== returned false
 
-	  Target node incorrect
+	  Host node incorrect
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
@@ -910,27 +1094,25 @@
 	=======================================
 
 	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 184
-	Differing soures, identical targets and weights
+	Differing inversion flag
 
-	[sequoia::maths::edge<sequoia::object::independent<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
+	[sequoia::maths::embedded_edge<sequoia::object::by_value<sequoia::object::faithful_wrapper<sequoia::maths::null_weight> >, unsigned long long>]
 	operator== returned false
 
-	  Target node incorrect
-	  [unsigned long long]
-	  operator== returned false
-	  Obtained : 0
-	  Predicted: 1
+	  Inversion flag incorrect
+	  [bool]
+	  check failed
 
 	=======================================
 
 	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 186
-	Differing weights, identical targets and soures
+	Differing soures, identical targets and complementary indices
 
-	[sequoia::maths::edge<sequoia::object::independent<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
+	[sequoia::maths::embedded_edge<sequoia::object::by_value<sequoia::object::faithful_wrapper<sequoia::maths::null_weight> >, unsigned long long>]
 	operator== returned false
 
-	  Weight incorrect
-	  [double]
+	  Target node incorrect
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
 	  Predicted: 1
@@ -938,13 +1120,13 @@
 	=======================================
 
 	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 187
-	Differing weights, identical targets and soures
+	Differing soures, identical targets and complementary indices
 
-	[sequoia::maths::edge<sequoia::object::independent<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
+	[sequoia::maths::embedded_edge<sequoia::object::by_value<sequoia::object::faithful_wrapper<sequoia::maths::null_weight> >, unsigned long long>]
 	operator== returned false
 
-	  Weight incorrect
-	  [double]
+	  Target node incorrect
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
 	  Predicted: 1
@@ -952,13 +1134,13 @@
 	=======================================
 
 	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 188
-	Differing weights, identical targets and soures
+	Differing soures, identical targets and complementary indices
 
-	[sequoia::maths::edge<sequoia::object::independent<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
+	[sequoia::maths::embedded_edge<sequoia::object::by_value<sequoia::object::faithful_wrapper<sequoia::maths::null_weight> >, unsigned long long>]
 	operator== returned false
 
-	  Weight incorrect
-	  [double]
+	  Target node incorrect
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
 	  Predicted: 1
@@ -966,18 +1148,12 @@
 	=======================================
 
 	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 190
-	Differing targets and soures, identical weights
+	Differing complementary indicess, identical targets and soures
 
-	[sequoia::maths::edge<sequoia::object::independent<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
+	[sequoia::maths::embedded_edge<sequoia::object::by_value<sequoia::object::faithful_wrapper<sequoia::maths::null_weight> >, unsigned long long>]
 	operator== returned false
 
-	  Target node incorrect
-	  [unsigned long long]
-	  operator== returned false
-	  Obtained : 1
-	  Predicted: 0
-
-	  Host node incorrect
+	  Complementary index incorrect
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
@@ -986,13 +1162,61 @@
 	=======================================
 
 	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 191
-	Differing targets and weights, identical soures
+	Differing complementary indicess, identical targets and soures
 
-	[sequoia::maths::edge<sequoia::object::independent<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
+	[sequoia::maths::embedded_edge<sequoia::object::by_value<sequoia::object::faithful_wrapper<sequoia::maths::null_weight> >, unsigned long long>]
 	operator== returned false
 
-	  Weight incorrect
-	  [double]
+	  Complementary index incorrect
+	  [unsigned long long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 192
+	Differing complementary indicess, identical targets and soures
+
+	[sequoia::maths::embedded_edge<sequoia::object::by_value<sequoia::object::faithful_wrapper<sequoia::maths::null_weight> >, unsigned long long>]
+	operator== returned false
+
+	  Complementary index incorrect
+	  [unsigned long long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 194
+	Differing targets and soures, identical complementary indices
+
+	[sequoia::maths::embedded_edge<sequoia::object::by_value<sequoia::object::faithful_wrapper<sequoia::maths::null_weight> >, unsigned long long>]
+	operator== returned false
+
+	  Target node incorrect
+	  [unsigned long long]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
+
+	  Host node incorrect
+	  [unsigned long long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 195
+	Differing targets and complementary indices, identical soures
+
+	[sequoia::maths::embedded_edge<sequoia::object::by_value<sequoia::object::faithful_wrapper<sequoia::maths::null_weight> >, unsigned long long>]
+	operator== returned false
+
+	  Complementary index incorrect
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 6
 	  Predicted: 5
@@ -1005,10 +1229,10 @@
 
 	=======================================
 
-	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 192
-	Differing soures and weights, identical targets
+	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 196
+	Differing soures and complementary indices, identical targets
 
-	[sequoia::maths::edge<sequoia::object::independent<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
+	[sequoia::maths::embedded_edge<sequoia::object::by_value<sequoia::object::faithful_wrapper<sequoia::maths::null_weight> >, unsigned long long>]
 	operator== returned false
 
 	  Target node incorrect
@@ -1017,18 +1241,18 @@
 	  Obtained : 1
 	  Predicted: 3
 
-	  Weight incorrect
-	  [double]
+	  Complementary index incorrect
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 4
 	  Predicted: 5
 
 	=======================================
 
-	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 194
-	Differing targets, soures and weights
+	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 198
+	Differing targets, soures and complementary indicess
 
-	[sequoia::maths::edge<sequoia::object::independent<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
+	[sequoia::maths::embedded_edge<sequoia::object::by_value<sequoia::object::faithful_wrapper<sequoia::maths::null_weight> >, unsigned long long>]
 	operator== returned false
 
 	  Target node incorrect
@@ -1037,41 +1261,27 @@
 	  Obtained : 1
 	  Predicted: 0
 
-	  Weight incorrect
-	  [double]
+	  Complementary index incorrect
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 2
-	  Predicted: 5
+	  Predicted: 1
 
 	  Host node incorrect
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
-	  Predicted: 1
-
-	=======================================
-
-	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 204
-	Differing targets, identical soures and complementary indices
-
-	[sequoia::maths::embedded_edge<sequoia::object::independent<sequoia::object::faithful_wrapper<sequoia::maths::null_weight> >, unsigned long long>]
-	operator== returned false
-
-	  Target node incorrect
-	  [unsigned long long]
-	  operator== returned false
-	  Obtained : 0
-	  Predicted: 1
+	  Predicted: 2
 
 	=======================================
 
 	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 205
-	Differing targets, identical soure and complementary indices
+	Differing targets, identical soures, complementary indices and weights
 
-	[sequoia::maths::embedded_edge<sequoia::object::independent<sequoia::object::faithful_wrapper<sequoia::maths::null_weight> >, unsigned long long>]
+	[sequoia::maths::embedded_edge<sequoia::object::by_value<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
 	operator== returned false
 
-	  Host node incorrect
+	  Target node incorrect
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
@@ -1080,12 +1290,26 @@
 	=======================================
 
 	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 206
-	Differing targets, identical soure and complementary indices
+	Differing soures, identical targets, complementary indices and weights
 
-	[sequoia::maths::embedded_edge<sequoia::object::independent<sequoia::object::faithful_wrapper<sequoia::maths::null_weight> >, unsigned long long>]
+	[sequoia::maths::embedded_edge<sequoia::object::by_value<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
 	operator== returned false
 
 	  Host node incorrect
+	  [unsigned long long]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
+
+	=======================================
+
+	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 207
+	Differing complementary indices, identical soures, targets and weights
+
+	[sequoia::maths::embedded_edge<sequoia::object::by_value<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
+	operator== returned false
+
+	  Complementary index incorrect
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
@@ -1093,10 +1317,24 @@
 
 	=======================================
 
-	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 207
+	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 208
+	Differing weights, identical soures, targets, complementary indices
+
+	[sequoia::maths::embedded_edge<sequoia::object::by_value<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
+	operator== returned false
+
+	  Weight incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 209
 	Differing inversion flag
 
-	[sequoia::maths::embedded_edge<sequoia::object::independent<sequoia::object::faithful_wrapper<sequoia::maths::null_weight> >, unsigned long long>]
+	[sequoia::maths::embedded_edge<sequoia::object::by_value<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
 	operator== returned false
 
 	  Inversion flag incorrect
@@ -1105,103 +1343,13 @@
 
 	=======================================
 
-	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 209
-	Differing soures, identical targets and complementary indices
-
-	[sequoia::maths::embedded_edge<sequoia::object::independent<sequoia::object::faithful_wrapper<sequoia::maths::null_weight> >, unsigned long long>]
-	operator== returned false
-
-	  Target node incorrect
-	  [unsigned long long]
-	  operator== returned false
-	  Obtained : 0
-	  Predicted: 1
-
-	=======================================
-
-	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 210
-	Differing soures, identical targets and complementary indices
-
-	[sequoia::maths::embedded_edge<sequoia::object::independent<sequoia::object::faithful_wrapper<sequoia::maths::null_weight> >, unsigned long long>]
-	operator== returned false
-
-	  Target node incorrect
-	  [unsigned long long]
-	  operator== returned false
-	  Obtained : 0
-	  Predicted: 1
-
-	=======================================
-
-	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 211
-	Differing soures, identical targets and complementary indices
-
-	[sequoia::maths::embedded_edge<sequoia::object::independent<sequoia::object::faithful_wrapper<sequoia::maths::null_weight> >, unsigned long long>]
-	operator== returned false
-
-	  Target node incorrect
-	  [unsigned long long]
-	  operator== returned false
-	  Obtained : 0
-	  Predicted: 1
-
-	=======================================
-
-	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 213
-	Differing complementary indicess, identical targets and soures
-
-	[sequoia::maths::embedded_edge<sequoia::object::independent<sequoia::object::faithful_wrapper<sequoia::maths::null_weight> >, unsigned long long>]
-	operator== returned false
-
-	  Complementary index incorrect
-	  [unsigned long long]
-	  operator== returned false
-	  Obtained : 0
-	  Predicted: 1
-
-	=======================================
-
-	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 214
-	Differing complementary indicess, identical targets and soures
-
-	[sequoia::maths::embedded_edge<sequoia::object::independent<sequoia::object::faithful_wrapper<sequoia::maths::null_weight> >, unsigned long long>]
-	operator== returned false
-
-	  Complementary index incorrect
-	  [unsigned long long]
-	  operator== returned false
-	  Obtained : 0
-	  Predicted: 1
-
-	=======================================
-
-	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 215
-	Differing complementary indicess, identical targets and soures
-
-	[sequoia::maths::embedded_edge<sequoia::object::independent<sequoia::object::faithful_wrapper<sequoia::maths::null_weight> >, unsigned long long>]
-	operator== returned false
-
-	  Complementary index incorrect
-	  [unsigned long long]
-	  operator== returned false
-	  Obtained : 0
-	  Predicted: 1
-
-	=======================================
-
 	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 217
-	Differing targets and soures, identical complementary indices
+	Differing targets, identical soures, complementary indices and weights
 
-	[sequoia::maths::embedded_edge<sequoia::object::independent<sequoia::object::faithful_wrapper<sequoia::maths::null_weight> >, unsigned long long>]
+	[sequoia::maths::embedded_edge<sequoia::object::shared<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
 	operator== returned false
 
 	  Target node incorrect
-	  [unsigned long long]
-	  operator== returned false
-	  Obtained : 1
-	  Predicted: 0
-
-	  Host node incorrect
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
@@ -1210,196 +1358,48 @@
 	=======================================
 
 	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 218
-	Differing targets and complementary indices, identical soures
+	Differing soures, identical targets, complementary indices and weights
 
-	[sequoia::maths::embedded_edge<sequoia::object::independent<sequoia::object::faithful_wrapper<sequoia::maths::null_weight> >, unsigned long long>]
+	[sequoia::maths::embedded_edge<sequoia::object::shared<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
 	operator== returned false
-
-	  Complementary index incorrect
-	  [unsigned long long]
-	  operator== returned false
-	  Obtained : 6
-	  Predicted: 5
 
 	  Host node incorrect
 	  [unsigned long long]
 	  operator== returned false
-	  Obtained : 0
-	  Predicted: 2
+	  Obtained : 1
+	  Predicted: 0
 
 	=======================================
 
 	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 219
-	Differing soures and complementary indices, identical targets
+	Differing complementary indices, identical soures, targets and weights
 
-	[sequoia::maths::embedded_edge<sequoia::object::independent<sequoia::object::faithful_wrapper<sequoia::maths::null_weight> >, unsigned long long>]
+	[sequoia::maths::embedded_edge<sequoia::object::shared<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
 	operator== returned false
-
-	  Target node incorrect
-	  [unsigned long long]
-	  operator== returned false
-	  Obtained : 1
-	  Predicted: 3
 
 	  Complementary index incorrect
 	  [unsigned long long]
 	  operator== returned false
-	  Obtained : 4
-	  Predicted: 5
+	  Obtained : 0
+	  Predicted: 1
+
+	=======================================
+
+	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 220
+	Differing weights, identical soures, targets, complementary indices
+
+	[sequoia::maths::embedded_edge<sequoia::object::shared<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
+	operator== returned false
+
+	  Weight incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
 	=======================================
 
 	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 221
-	Differing targets, soures and complementary indicess
-
-	[sequoia::maths::embedded_edge<sequoia::object::independent<sequoia::object::faithful_wrapper<sequoia::maths::null_weight> >, unsigned long long>]
-	operator== returned false
-
-	  Target node incorrect
-	  [unsigned long long]
-	  operator== returned false
-	  Obtained : 1
-	  Predicted: 0
-
-	  Complementary index incorrect
-	  [unsigned long long]
-	  operator== returned false
-	  Obtained : 2
-	  Predicted: 1
-
-	  Host node incorrect
-	  [unsigned long long]
-	  operator== returned false
-	  Obtained : 0
-	  Predicted: 2
-
-	=======================================
-
-	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 231
-	Differing targets, identical soures, complementary indices and weights
-
-	[sequoia::maths::embedded_edge<sequoia::object::independent<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
-	operator== returned false
-
-	  Target node incorrect
-	  [unsigned long long]
-	  operator== returned false
-	  Obtained : 0
-	  Predicted: 1
-
-	=======================================
-
-	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 232
-	Differing soures, identical targets, complementary indices and weights
-
-	[sequoia::maths::embedded_edge<sequoia::object::independent<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
-	operator== returned false
-
-	  Host node incorrect
-	  [unsigned long long]
-	  operator== returned false
-	  Obtained : 1
-	  Predicted: 0
-
-	=======================================
-
-	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 233
-	Differing complementary indices, identical soures, targets and weights
-
-	[sequoia::maths::embedded_edge<sequoia::object::independent<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
-	operator== returned false
-
-	  Complementary index incorrect
-	  [unsigned long long]
-	  operator== returned false
-	  Obtained : 0
-	  Predicted: 1
-
-	=======================================
-
-	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 234
-	Differing weights, identical soures, targets, complementary indices
-
-	[sequoia::maths::embedded_edge<sequoia::object::independent<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
-	operator== returned false
-
-	  Weight incorrect
-	  [double]
-	  operator== returned false
-	  Obtained : 0
-	  Predicted: 1
-
-	=======================================
-
-	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 235
-	Differing inversion flag
-
-	[sequoia::maths::embedded_edge<sequoia::object::independent<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
-	operator== returned false
-
-	  Inversion flag incorrect
-	  [bool]
-	  check failed
-
-	=======================================
-
-	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 246
-	Differing targets, identical soures, complementary indices and weights
-
-	[sequoia::maths::embedded_edge<sequoia::object::shared<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
-	operator== returned false
-
-	  Target node incorrect
-	  [unsigned long long]
-	  operator== returned false
-	  Obtained : 0
-	  Predicted: 1
-
-	=======================================
-
-	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 247
-	Differing soures, identical targets, complementary indices and weights
-
-	[sequoia::maths::embedded_edge<sequoia::object::shared<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
-	operator== returned false
-
-	  Host node incorrect
-	  [unsigned long long]
-	  operator== returned false
-	  Obtained : 1
-	  Predicted: 0
-
-	=======================================
-
-	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 248
-	Differing complementary indices, identical soures, targets and weights
-
-	[sequoia::maths::embedded_edge<sequoia::object::shared<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
-	operator== returned false
-
-	  Complementary index incorrect
-	  [unsigned long long]
-	  operator== returned false
-	  Obtained : 0
-	  Predicted: 1
-
-	=======================================
-
-	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 249
-	Differing weights, identical soures, targets, complementary indices
-
-	[sequoia::maths::embedded_edge<sequoia::object::shared<sequoia::object::faithful_wrapper<double> >, unsigned long long>]
-	operator== returned false
-
-	  Weight incorrect
-	  [double]
-	  operator== returned false
-	  Obtained : 0
-	  Predicted: 1
-
-	=======================================
-
-	Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 250
 	Differing inversion flag
 
 	[sequoia::maths::embedded_edge<sequoia::object::shared<sequoia::object::faithful_wrapper<double> >, unsigned long long>]

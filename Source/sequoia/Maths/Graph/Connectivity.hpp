@@ -1180,8 +1180,8 @@ namespace sequoia
       constexpr void process_edges(indirect_edge_init_type, init_t edges)
       {
         using namespace data_structures;
-        using traits_t = partitioned_sequence_traits<edge_init_type, object::independent<edge_init_type>>;
-        partitioned_sequence<edge_init_type, object::independent<edge_init_type>, traits_t> edgesForChecking{edges};
+        using traits_t = partitioned_sequence_traits<edge_init_type, object::by_value<edge_init_type>>;
+        partitioned_sequence<edge_init_type, object::by_value<edge_init_type>, traits_t> edgesForChecking{edges};
         process_edges(edgesForChecking);
       }
 

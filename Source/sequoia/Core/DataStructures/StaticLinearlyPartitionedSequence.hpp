@@ -38,12 +38,12 @@ namespace sequoia::data_structures
 
   template<class T, std::size_t Npartitions, std::size_t NelementsPerPartition, std::integral IndexType=std::size_t>
   class static_linearly_partitioned_sequence :
-    public partitioned_sequence_base<T, object::independent<T>, static_linearly_partitioned_sequence_traits<T, Npartitions, NelementsPerPartition, IndexType>>
+    public partitioned_sequence_base<T, object::by_value<T>, static_linearly_partitioned_sequence_traits<T, Npartitions, NelementsPerPartition, IndexType>>
   {
   public:
     using partitioned_sequence_base<
       T,
-      object::independent<T>,
+      object::by_value<T>,
       static_linearly_partitioned_sequence_traits<T, Npartitions, NelementsPerPartition, IndexType>
     >::partitioned_sequence_base;
   };
