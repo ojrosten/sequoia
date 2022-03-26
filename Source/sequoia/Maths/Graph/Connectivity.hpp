@@ -27,7 +27,7 @@
 #include "sequoia/Maths/Graph/GraphTraits.hpp"
 #include "sequoia/Algorithms/Algorithms.hpp"
 #include "sequoia/Core/Meta/TypeTraits.hpp"
-#include "sequoia/Core/Utilities/AssignmentUtilities.hpp"
+#include "sequoia/Core/ContainerUtilities/AssignmentUtilities.hpp"
 #include "sequoia/Core/Object/HandlerTraits.hpp"
 #include "sequoia/PlatformSpecific/Preprocessor.hpp"
 

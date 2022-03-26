@@ -15,6 +15,8 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Algorithms/AlgorithmsTest.cpp
                ${TestDir}/Core/Concurrency/ConcurrencyModelsPerformanceTest.cpp
                ${TestDir}/Core/Concurrency/ConcurrencyModelsTest.cpp
+               ${TestDir}/Core/ContainerUtilities/ArrayUtilitiesTest.cpp
+               ${TestDir}/Core/ContainerUtilities/IteratorTest.cpp
                ${TestDir}/Core/DataStructures/PartitionedDataAllocationTest.cpp
                ${TestDir}/Core/DataStructures/PartitionedDataTest.cpp
                ${TestDir}/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp
@@ -31,11 +33,9 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Core/Meta/UtilitiesTest.cpp
                ${TestDir}/Core/Object/CreatorFreeTest.cpp
                ${TestDir}/Core/Object/DataPoolAllocationTest.cpp
-               ${TestDir}/Core/Object/DataPoolTest.cpp   
+               ${TestDir}/Core/Object/DataPoolTest.cpp
                ${TestDir}/Core/Object/FaithfulWrapperTest.cpp
                ${TestDir}/Core/Object/FaithfulWrapperTestingDiagnostics.cpp
-               ${TestDir}/Core/Utilities/ArrayUtilitiesTest.cpp
-               ${TestDir}/Core/Utilities/IteratorTest.cpp
                ${TestDir}/Experimental/ExperimentalTest.cpp
                ${TestDir}/Maths/Graph/DynamicGraphEmbeddedTest.cpp
                ${TestDir}/Maths/Graph/DynamicGraphFixedTopologyTest.cpp

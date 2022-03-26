@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "sequoia/Core/Utilities/IteratorDetails.hpp"
+#include "sequoia/Core/ContainerUtilities/IteratorDetails.hpp"
 
 #include <iterator>
 

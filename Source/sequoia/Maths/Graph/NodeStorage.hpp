@@ -18,9 +18,9 @@
  */
 
 #include "sequoia/Algorithms/Algorithms.hpp"
-#include "sequoia/Core/Utilities/ArrayUtilities.hpp"
-#include "sequoia/Core/Utilities/AssignmentUtilities.hpp"
-#include "sequoia/Core/Utilities/Iterator.hpp"
+#include "sequoia/Core/ContainerUtilities/ArrayUtilities.hpp"
+#include "sequoia/Core/ContainerUtilities/AssignmentUtilities.hpp"
+#include "sequoia/Core/ContainerUtilities/Iterator.hpp"
 #include "sequoia/Core/Object/FaithfulWrapper.hpp"
 #include "sequoia/Core/Object/Creator.hpp"
 #include "sequoia/Maths/Graph/EdgesAndNodesUtilities.hpp"

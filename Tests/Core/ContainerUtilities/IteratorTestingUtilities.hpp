@@ -9,7 +9,7 @@
 
 /*! \file */
 
-#include "sequoia/Core/Utilities/Iterator.hpp"
+#include "sequoia/Core/ContainerUtilities/Iterator.hpp"
 
 namespace sequoia::testing
 {

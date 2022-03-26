@@ -1,4 +1,4 @@
-Tests/Core/Utilities/ArrayUtilitiesTest.cpp, Line 28
+Tests/Core/ContainerUtilities/ArrayUtilitiesTest.cpp, Line 28
 
 Expected Exception Type:
 [std::logic_error]
@@ -6,7 +6,7 @@ initializer_list too big for array
 
 	=======================================
 
-Tests/Core/Utilities/ArrayUtilitiesTest.cpp, Line 36
+Tests/Core/ContainerUtilities/ArrayUtilitiesTest.cpp, Line 36
 
 Expected Exception Type:
 [std::logic_error]
@@ -14,7 +14,7 @@ initializer_list too big for array
 
 	=======================================
 
-Tests/Core/Utilities/ArrayUtilitiesTest.cpp, Line 43
+Tests/Core/ContainerUtilities/ArrayUtilitiesTest.cpp, Line 43
 
 Expected Exception Type:
 [std::logic_error]
@@ -22,7 +22,7 @@ initializer_list too big for array
 
 	=======================================
 
-Tests/Core/Utilities/ArrayUtilitiesTest.cpp, Line 56
+Tests/Core/ContainerUtilities/ArrayUtilitiesTest.cpp, Line 56
 
 Expected Exception Type:
 [std::logic_error]

@@ -13,11 +13,11 @@
 
 #include "sequoia/Core/DataStructures/PartitionedDataDetails.hpp"
 #include "sequoia/Core/Meta/TypeTraits.hpp"
-#include "sequoia/Core/Utilities/ArrayUtilities.hpp"
-#include "sequoia/Core/Utilities/Iterator.hpp"
+#include "sequoia/Core/ContainerUtilities/ArrayUtilities.hpp"
+#include "sequoia/Core/ContainerUtilities/Iterator.hpp"
 #include "sequoia/Algorithms/Algorithms.hpp"
 #include "sequoia/Maths/Sequences/MonotonicSequence.hpp"
-#include "sequoia/Core/Utilities/AssignmentUtilities.hpp"
+#include "sequoia/Core/ContainerUtilities/AssignmentUtilities.hpp"
 #include "sequoia/PlatformSpecific/Preprocessor.hpp"
 
 #include <string>
