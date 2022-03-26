@@ -10,7 +10,7 @@
 #include "sequoia/TestFramework/TestUtilities.hpp"
 #include "ArrayUtilitiesTest.hpp"
 
-#include "sequoia/Core/Utilities/ArrayUtilities.hpp"
+#include "sequoia/Core/ContainerUtilities/ArrayUtilities.hpp"
 
 namespace sequoia::testing
 {

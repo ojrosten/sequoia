@@ -9,7 +9,7 @@
 
 /*! \file */
 
-#include "sequoia/Core/Utilities/AssignmentUtilities.hpp"
+#include "sequoia/Core/ContainerUtilities/AssignmentUtilities.hpp"
 #include "sequoia/TestFramework/AllocationCheckers.hpp"
 
 #include <vector>

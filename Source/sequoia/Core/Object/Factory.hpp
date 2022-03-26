@@ -13,7 +13,7 @@
 
 #include "sequoia/Core/Meta/Concepts.hpp"
 #include "sequoia/Core/Object/Creator.hpp"
-#include "sequoia/Core/Utilities/Iterator.hpp"
+#include "sequoia/Core/ContainerUtilities/Iterator.hpp"
 #include "sequoia/Core/Meta/Utilities.hpp"
 
 #include <variant>

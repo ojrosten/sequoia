@@ -110,7 +110,7 @@ namespace sequoia::testing
   void algorithms_test::sort_partial_edge()
   {
     struct null_type{};
-    using edge = maths::partial_edge<object::independent<object::faithful_wrapper<null_type>>>;
+    using edge = maths::partial_edge<object::by_value<object::faithful_wrapper<null_type>>>;
     constexpr std::array<edge, 3> a{edge{1}, edge{2}, edge{0}};
     constexpr auto b = sort(a, [](const edge& lhs, const edge& rhs) { return lhs.target_node() < rhs.target_node(); });
 

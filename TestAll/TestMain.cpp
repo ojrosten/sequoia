@@ -139,6 +139,11 @@ int main(int argc, char** argv)
       concepts_test{"Concepts"},
       utilities_test{"Utilities"}
     );
+
+    runner.add_test_family(
+      "Creator",
+      creator_free_test{"Free Test"}
+    );
     
     runner.add_test_family(
       "Algorithms",

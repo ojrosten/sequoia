@@ -16,7 +16,7 @@
 #include "sequoia/TestFramework/AllocationCheckersCore.hpp"
 #include "sequoia/TestFramework/FreeCheckers.hpp"
 
-#include "sequoia/Core/Utilities/ArrayUtilities.hpp"
+#include "sequoia/Core/ContainerUtilities/ArrayUtilities.hpp"
 #include "sequoia/Core/Meta/Utilities.hpp"
 
 namespace sequoia::testing

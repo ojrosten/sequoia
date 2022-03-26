@@ -13,7 +13,7 @@
  */
 
 #include "sequoia/Algorithms/Algorithms.hpp"
-#include "sequoia/Core/Utilities/ArrayUtilities.hpp"
+#include "sequoia/Core/ContainerUtilities/ArrayUtilities.hpp"
 
 #include <functional>
 

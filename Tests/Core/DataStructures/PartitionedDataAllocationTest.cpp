@@ -28,10 +28,10 @@ namespace sequoia::testing
   {
     using namespace object;
 
-    test_bucketed_allocation<int, independent<int>, PropagateCopy, PropagateMove, PropagateSwap>();
+    test_bucketed_allocation<int, by_value<int>, PropagateCopy, PropagateMove, PropagateSwap>();
     test_bucketed_allocation<int, shared<int>, PropagateCopy, PropagateMove, PropagateSwap>();
 
-    test_contiguous_allocation<int, independent<int>, PropagateCopy, PropagateMove, PropagateSwap>();
+    test_contiguous_allocation<int, by_value<int>, PropagateCopy, PropagateMove, PropagateSwap>();
     test_contiguous_allocation<int, shared<int>, PropagateCopy, PropagateMove, PropagateSwap>();
   }
 

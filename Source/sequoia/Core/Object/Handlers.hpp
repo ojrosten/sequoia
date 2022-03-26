@@ -67,7 +67,7 @@ namespace sequoia::object
   };
 
   template<class T>
-  struct independent
+  struct by_value
   {
   public:
     using product_type  = T;

@@ -16,7 +16,7 @@
 
 #include "sequoia/Core/Object/Creator.hpp"
 #include "sequoia/Core/Object/FaithfulWrapper.hpp"
-#include "sequoia/Core/Utilities/Iterator.hpp"
+#include "sequoia/Core/ContainerUtilities/Iterator.hpp"
 
 #include <vector>
 #include <memory>

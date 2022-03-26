@@ -17,6 +17,9 @@ namespace sequoia
 {
   namespace testing
   {
+    using namespace data_structures;
+    using namespace object;
+
     [[nodiscard]]
     std::string_view partitioned_data_test::source_file() const noexcept
     {
@@ -25,29 +28,25 @@ namespace sequoia
 
     void partitioned_data_test::run_tests()
     {
-      using namespace object;
-      using namespace data_structures;
-      test_iterators<independent>();
+      test_iterators<by_value>();
       test_iterators<shared>();
       test_storage();
 
       test_static_storage();
 
-      test_contiguous_capacity<int, independent<int>, true>();
+      test_contiguous_capacity<int, by_value<int>, true>();
       test_contiguous_capacity<int, shared<int>, true>();
-      test_contiguous_capacity<int, independent<int>, false>();
+      test_contiguous_capacity<int, by_value<int>, false>();
       test_contiguous_capacity<int, shared<int>, false>();
 
-      test_bucketed_capacity<int, independent<int>, true>();
+      test_bucketed_capacity<int, by_value<int>, true>();
       test_bucketed_capacity<int, shared<int>, true>();
-      test_bucketed_capacity<int, independent<int>, false>();
+      test_bucketed_capacity<int, by_value<int>, false>();
       test_bucketed_capacity<int, shared<int>, false>();
     }
 
     void partitioned_data_test::test_static_storage()
     {
-      using namespace data_structures;
-
       {
         using prediction_t = std::initializer_list<std::initializer_list<int>>;
 
@@ -111,9 +110,6 @@ namespace sequoia
 
     void partitioned_data_test::test_storage()
     {
-      using namespace data_structures;
-      using namespace object;
-
       {
         auto storage1 = test_generic_storage<bucketed_sequence<int, shared<int>>>();
         auto storage2 = test_generic_storage<partitioned_sequence<int,shared<int>>>();
@@ -123,8 +119,8 @@ namespace sequoia
       }
 
       {
-        auto storage1 = test_generic_storage<bucketed_sequence<int, independent<int>>>();
-        auto storage2 = test_generic_storage<partitioned_sequence<int, independent<int>>>();
+        auto storage1 = test_generic_storage<bucketed_sequence<int, by_value<int>>>();
+        auto storage2 = test_generic_storage<partitioned_sequence<int, by_value<int>>>();
 
         check(LINE(""), isomorphic(storage1, storage2));
       }
@@ -133,8 +129,6 @@ namespace sequoia
     template <class Storage>
     Storage partitioned_data_test::test_generic_storage()
     {
-      using namespace data_structures;
-      using namespace object;
       using value_type = typename Storage::value_type;
       using equivalent_type = std::initializer_list<std::initializer_list<value_type>>;
 
@@ -417,7 +411,7 @@ namespace sequoia
       {
         iter = storage.begin_partition(0);
         *iter = 2;
-        // shared: [2][3][2][4], independent: [2][3][1][4]
+        // shared: [2][3][2][4], by_value: [2][3][1][4]
         check(equality, LINE(""), storage, sharedData ? Storage{{2}, {3}, {2}, {4}} : Storage{{2}, {3}, {1}, {4}});
         check_semantics(LINE(""), storage, Storage{{1}, {3}, {1}, {4}});
 
@@ -427,7 +421,7 @@ namespace sequoia
 
         iter = storage.begin_partition(2);
         *iter = -2;
-        // shared: [-2][3][-2][4], independent: [-2][3][1][4]
+        // shared: [-2][3][-2][4], by_value: [-2][3][1][4]
         check(equality, LINE(""), storage, sharedData ? Storage{{-2}, {3}, {-2}, {4}} : Storage{{1}, {3}, {-2}, {4}});
         *iter = 1;
         // [1][3][1][4]
@@ -464,7 +458,7 @@ namespace sequoia
         iter = storage.begin_partition(0);
         ++iter;
         *iter = 2;
-        // shared [3,2][4,2], independent: [3,2][4,-5]
+        // shared [3,2][4,2], by_value: [3,2][4,-5]
         check(equality, LINE(""), storage, sharedData ? Storage{{3, 2}, {4, 2}} : Storage{{3, 2}, {4, -5}});
         check_semantics(LINE(""), storage, Storage{{3, -5}, {4, -5}});
 
@@ -475,7 +469,7 @@ namespace sequoia
         iter = storage.begin_partition(1);
         ++iter;
         *iter = -2;
-        // shared [3,-2][4,-2], independent: [3,-5][4,-2]
+        // shared [3,-2][4,-2], by_value: [3,-5][4,-2]
         check(equality, LINE(""), storage, sharedData ? Storage{{3, -2}, {4, -2}} : Storage{{3, -5}, {4, -2}});
 
         *iter = -5;
@@ -584,8 +578,6 @@ namespace sequoia
     template<template<class> class Handler>
     void partitioned_data_test::test_iterators()
     {
-      using namespace data_structures;
-
       test_generic_iterator_properties<traits, Handler, partition_impl::mutable_reference>();
       test_generic_iterator_properties<traits, Handler, partition_impl::const_reference>();
     }
@@ -593,8 +585,6 @@ namespace sequoia
     template<class Traits, template<class> class Handler, template<class> class ReferencePolicy>
     void partitioned_data_test::test_generic_iterator_properties()
     {
-      using namespace data_structures;
-
       using container_t = std::vector<typename Handler<int>::product_type>;
 
       container_t vec{Handler<int>::producer_type::make(1), Handler<int>::producer_type::make(2), Handler<int>::producer_type::make(3)};
@@ -670,8 +660,6 @@ namespace sequoia
     template<class T, class Handler, bool ThrowOnRangeError>
     void partitioned_data_test::test_contiguous_capacity()
     {
-      using namespace data_structures;
-
       partitioned_sequence<T, Handler> s{};
       check(equality, LINE(""), s.capacity(), 0_sz);
       check(equality, LINE(""), s.num_partitions_capacity(), 0_sz);
@@ -692,8 +680,6 @@ namespace sequoia
     template<class T, class Handler, bool ThrowOnRangeError>
     void partitioned_data_test::test_bucketed_capacity()
     {
-      using namespace data_structures;
-
       bucketed_sequence<T, Handler> s{};
 
       check(equality, LINE(""), s.num_partitions_capacity(), 0_sz);

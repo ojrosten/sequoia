@@ -162,11 +162,11 @@ namespace sequoia::data_structures::partition_impl
 
   template<class Handler, class T>
     requires object::handler<Handler>
-  inline constexpr bool direct_copy_v{std::is_same_v<Handler, object::independent<T>>};
+  inline constexpr bool direct_copy_v{std::is_same_v<Handler, object::by_value<T>>};
 
   template<class T> class data_duplicator;
 
-  template<class T> class data_duplicator<object::independent<T>>
+  template<class T> class data_duplicator<object::by_value<T>>
   {
   public:
     [[nodiscard]]

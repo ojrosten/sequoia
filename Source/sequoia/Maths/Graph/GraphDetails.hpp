@@ -21,7 +21,7 @@ namespace sequoia
   namespace object
   {
     template <class> struct shared;
-    template <class> struct independent;
+    template <class> struct by_value;
   }
 
   namespace maths
@@ -66,7 +66,7 @@ namespace sequoia
       }
 
       template<bool Shared, class Proxy>
-      using shared_to_handler_t = std::conditional_t<Shared, object::shared<Proxy>, object::independent<Proxy>>;
+      using shared_to_handler_t = std::conditional_t<Shared, object::shared<Proxy>, object::by_value<Proxy>>;
 
       template<class EdgeWeightCreator>
         requires object::creator<EdgeWeightCreator>
@@ -155,7 +155,7 @@ namespace sequoia
       {
         using weight_type    = typename Edge::weight_type;
         using proxy_type     = object::faithful_wrapper<weight_type>;
-        using handler_type   = object::independent<proxy_type>;
+        using handler_type   = object::by_value<proxy_type>;
         using index_type     = typename Edge::index_type;
         using edge_init_type = std::conditional_t<Embedded,
                                                   std::conditional_t<Edge::flavour == edge_flavour::partial_embedded,
