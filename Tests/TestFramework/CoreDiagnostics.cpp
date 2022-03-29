@@ -8,7 +8,7 @@
 /*! \file */
 
 #include "CoreDiagnostics.hpp"
-#include "CoreDiagnosticsUtilities.hpp"
+#include "ContainerDiagnosticsUtilities.hpp"
 #include "sequoia/TextProcessing/Substitutions.hpp"
 
 #include <complex>

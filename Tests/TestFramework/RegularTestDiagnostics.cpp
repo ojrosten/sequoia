@@ -8,7 +8,7 @@
 /*! \file */
 
 #include "RegularTestDiagnostics.hpp"
-#include "CoreDiagnosticsUtilities.hpp"
+#include "ContainerDiagnosticsUtilities.hpp"
 
 namespace sequoia::testing
 {

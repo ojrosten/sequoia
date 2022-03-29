@@ -9,7 +9,7 @@
 
 #include "RegularAllocationTestDiagnostics.hpp"
 
-#include "CoreDiagnosticsUtilities.hpp"
+#include "ContainerDiagnosticsUtilities.hpp"
 #include "AllocationTestDiagnosticsUtilities.hpp"
 
 #include <vector>
