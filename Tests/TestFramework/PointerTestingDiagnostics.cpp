@@ -7,7 +7,7 @@
 
 /*! \file */
 
-#include "PointerTestingDiagnosticsTest.hpp"
+#include "PointerTestingDiagnostics.hpp"
 #include "CoreDiagnosticsUtilities.hpp"
 
 #include "sequoia/TestFramework/ConcreteTypeCheckers.hpp"

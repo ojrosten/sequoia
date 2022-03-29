@@ -1,5 +1,5 @@
 	False Positive Failure:
-	Tests/TestFramework/PointerTestingDiagnosticsTest.cpp, Line 77
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 77
 	Equality of pointer with itself
 
 	[std::unique_ptr<int, std::default_delete<int> >]
@@ -7,7 +7,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/PointerTestingDiagnosticsTest.cpp, Line 78
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 78
 	Different pointees holding identical values
 
 	Comparison performed using:
@@ -18,7 +18,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/PointerTestingDiagnosticsTest.cpp, Line 83
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 83
 	Different pointees holding identical values
 
 	Comparison performed using:
@@ -29,7 +29,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/PointerTestingDiagnosticsTest.cpp, Line 90
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 90
 	Different pointees holding identical values
 
 	Comparison performed using:
@@ -40,7 +40,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/PointerTestingDiagnosticsTest.cpp, Line 98
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 98
 	Different pointees holding identical values
 
 	Comparison performed using:

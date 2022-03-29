@@ -83,7 +83,7 @@
 #include "TestFramework/OrderableRegularTestDiagnostics.hpp"
 #include "TestFramework/OutputFreeTest.hpp"
 #include "TestFramework/PerformanceTestDiagnostics.hpp"
-#include "TestFramework/PointerTestingDiagnosticsTest.hpp"
+#include "TestFramework/PointerTestingDiagnostics.hpp"
 #include "TestFramework/RegularAllocationTestDiagnostics.hpp"
 #include "TestFramework/RegularStateTransitionDiagnostics.hpp"
 #include "TestFramework/RegularTestDiagnostics.hpp"

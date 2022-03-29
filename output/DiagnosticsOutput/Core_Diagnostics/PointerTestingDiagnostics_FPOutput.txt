@@ -1,4 +1,4 @@
-	Tests/TestFramework/PointerTestingDiagnosticsTest.cpp, Line 32
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 32
 	null vs. not null
 
 	[std::unique_ptr<int, std::default_delete<int> >]
@@ -11,7 +11,7 @@
 
 	=======================================
 
-	Tests/TestFramework/PointerTestingDiagnosticsTest.cpp, Line 33
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 33
 	not null vs. null 
 
 	[std::unique_ptr<int, std::default_delete<int> >]
@@ -24,7 +24,7 @@
 
 	=======================================
 
-	Tests/TestFramework/PointerTestingDiagnosticsTest.cpp, Line 34
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 34
 	Different pointers
 
 	[std::unique_ptr<int, std::default_delete<int> >]
@@ -37,7 +37,7 @@
 
 	=======================================
 
-	Tests/TestFramework/PointerTestingDiagnosticsTest.cpp, Line 35
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 35
 	Different pointees holding different values
 
 	Comparison performed using:
@@ -53,7 +53,7 @@
 
 	=======================================
 
-	Tests/TestFramework/PointerTestingDiagnosticsTest.cpp, Line 40
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 40
 	Different pointees holding different values
 
 	Comparison performed using:
@@ -71,7 +71,7 @@
 
 	=======================================
 
-	Tests/TestFramework/PointerTestingDiagnosticsTest.cpp, Line 47
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 47
 	Different pointees holding different values
 
 	Comparison performed using:
@@ -95,7 +95,7 @@
 
 	=======================================
 
-	Tests/TestFramework/PointerTestingDiagnosticsTest.cpp, Line 55
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 55
 	Different pointees holding different values
 
 	Comparison performed using:
