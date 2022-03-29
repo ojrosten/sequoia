@@ -5,7 +5,7 @@
 	operator== returned false
 
 	  Underlying pointers differ
-	  [int *]
+	  [int*]
 	  operator== returned false
 	  Expected non-null pointer, but found null
 
@@ -18,7 +18,7 @@
 	operator== returned false
 
 	  Underlying pointers differ
-	  [int *]
+	  [int*]
 	  operator== returned false
 	  Expected null pointer, but found non-null
 
@@ -31,7 +31,7 @@
 	operator== returned false
 
 	  Underlying pointers differ
-	  [int *]
+	  [int*]
 	  operator== returned false
 	  Pointers both non-null, but different
 

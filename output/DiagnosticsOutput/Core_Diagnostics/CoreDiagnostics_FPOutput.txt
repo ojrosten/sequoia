@@ -132,9 +132,9 @@
 	Tests/TestFramework/CoreDiagnostics.cpp, Line 147
 
 	Comparison performed using:
-	[sequoia::testing::value_tester<std::pair<int const &, double> >]
+	[sequoia::testing::value_tester<std::pair<int const&, double> >]
 	Checking for equivalence with:
-	[std::pair<int, double const &>]
+	[std::pair<int, double const&>]
 
 	  First element of pair is incorrect
 	  [int]
@@ -153,9 +153,9 @@
 	Tests/TestFramework/CoreDiagnostics.cpp, Line 148
 
 	Comparison performed using:
-	[sequoia::testing::value_tester<std::pair<int const &, double> >]
+	[sequoia::testing::value_tester<std::pair<int const&, double> >]
 	Checking for weak equivalence with:
-	[std::pair<int, double const &>]
+	[std::pair<int, double const&>]
 
 	  First element of pair is incorrect
 	  [int]
@@ -214,9 +214,9 @@
 	Tests/TestFramework/CoreDiagnostics.cpp, Line 153
 
 	Comparison performed using:
-	[sequoia::testing::value_tester<std::tuple<int const &, double> >]
+	[sequoia::testing::value_tester<std::tuple<int const&, double> >]
 	Checking for equivalence with:
-	[std::tuple<int, double const &>]
+	[std::tuple<int, double const&>]
 
 	  Element 0 of tuple incorrect
 	  [int]
