@@ -8,6 +8,8 @@
 /*! \file */
 
 #include "PointerTestingDiagnosticsTest.hpp"
+#include "CoreDiagnosticsUtilities.hpp"
+
 #include "sequoia/TestFramework/ConcreteTypeCheckers.hpp"
 
 namespace sequoia::testing
@@ -30,7 +32,21 @@ namespace sequoia::testing
       check(equality, LINE("null vs. not null"), ptr_t{}, std::make_unique<int>(42));
       check(equality, LINE("not null vs. null "), std::make_unique<int>(42), ptr_t{});
       check(equality, LINE("Different pointers"), std::make_unique<int>(42), std::make_unique<int>(42));
-      check(equivalence, LINE("Different pointees hold different values"), std::make_unique<int>(42), std::make_unique<int>(43));
+      check(equivalence, LINE("Different pointees holding different values"), std::make_unique<int>(42), std::make_unique<int>(43));
+    }
+
+    {
+      check(equivalence,
+            LINE("Different pointees holding different values"),
+            std::make_unique<only_equivalence_checkable>(1.0),
+            std::make_unique<only_equivalence_checkable>(2.0));
+    }
+
+    {
+      check(equivalence,
+            LINE("Different pointees holding different values"),
+            std::make_unique<only_weakly_checkable>(42, 1.0),
+            std::make_unique<only_weakly_checkable>(43, -2.0));
     }
   }
 
@@ -52,6 +68,20 @@ namespace sequoia::testing
       ptr_t p{};
       check(equality, LINE("Equality of pointer with itself"), p, p);
       check(equivalence, LINE("Different pointees holding identical values"), std::make_unique<int>(42), std::make_unique<int>(42));
+    }
+
+    {
+      check(equivalence,
+            LINE("Different pointees holding identical values"),
+            std::make_unique<only_equivalence_checkable>(1.0),
+            std::make_unique<only_equivalence_checkable>(1.0));
+    }
+
+    {
+      check(equivalence,
+            LINE("Different pointees holding different values"),
+            std::make_unique<only_weakly_checkable>(42, -2.0),
+            std::make_unique<only_weakly_checkable>(42, -2.0));
     }
   }
 }

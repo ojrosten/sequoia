@@ -1,5 +1,5 @@
 	False Positive Failure:
-	Tests/TestFramework/PointerTestingDiagnosticsTest.cpp, Line 53
+	Tests/TestFramework/PointerTestingDiagnosticsTest.cpp, Line 69
 	Equality of pointer with itself
 
 	[std::unique_ptr<int, std::default_delete<int> >]
@@ -7,13 +7,35 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/PointerTestingDiagnosticsTest.cpp, Line 54
+	Tests/TestFramework/PointerTestingDiagnosticsTest.cpp, Line 70
 	Different pointees holding identical values
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<std::unique_ptr<int, std::default_delete<int> > >]
 	Checking for equivalence with:
 	[std::unique_ptr<int, std::default_delete<int> >]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/PointerTestingDiagnosticsTest.cpp, Line 75
+	Different pointees holding identical values
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<std::unique_ptr<sequoia::testing::only_equivalence_checkable, std::default_delete<sequoia::testing::only_equivalence_checkable> > >]
+	Checking for equivalence with:
+	[std::unique_ptr<sequoia::testing::only_equivalence_checkable, std::default_delete<sequoia::testing::only_equivalence_checkable> >]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/PointerTestingDiagnosticsTest.cpp, Line 82
+	Different pointees holding different values
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<std::unique_ptr<sequoia::testing::only_weakly_checkable, std::default_delete<sequoia::testing::only_weakly_checkable> > >]
+	Checking for equivalence with:
+	[std::unique_ptr<sequoia::testing::only_weakly_checkable, std::default_delete<sequoia::testing::only_weakly_checkable> >]
 
 	=======================================
 

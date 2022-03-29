@@ -1,4 +1,4 @@
-	Tests/TestFramework/PointerTestingDiagnosticsTest.cpp, Line 30
+	Tests/TestFramework/PointerTestingDiagnosticsTest.cpp, Line 32
 	null vs. not null
 
 	[std::unique_ptr<int, std::default_delete<int> >]
@@ -11,7 +11,7 @@
 
 	=======================================
 
-	Tests/TestFramework/PointerTestingDiagnosticsTest.cpp, Line 31
+	Tests/TestFramework/PointerTestingDiagnosticsTest.cpp, Line 33
 	not null vs. null 
 
 	[std::unique_ptr<int, std::default_delete<int> >]
@@ -24,7 +24,7 @@
 
 	=======================================
 
-	Tests/TestFramework/PointerTestingDiagnosticsTest.cpp, Line 32
+	Tests/TestFramework/PointerTestingDiagnosticsTest.cpp, Line 34
 	Different pointers
 
 	[std::unique_ptr<int, std::default_delete<int> >]
@@ -37,8 +37,8 @@
 
 	=======================================
 
-	Tests/TestFramework/PointerTestingDiagnosticsTest.cpp, Line 33
-	Different pointees hold different values
+	Tests/TestFramework/PointerTestingDiagnosticsTest.cpp, Line 35
+	Different pointees holding different values
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<std::unique_ptr<int, std::default_delete<int> > >]
@@ -50,6 +50,48 @@
 	  operator== returned false
 	  Obtained : 42
 	  Predicted: 43
+
+	=======================================
+
+	Tests/TestFramework/PointerTestingDiagnosticsTest.cpp, Line 40
+	Different pointees holding different values
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<std::unique_ptr<sequoia::testing::only_equivalence_checkable, std::default_delete<sequoia::testing::only_equivalence_checkable> > >]
+	Checking for equivalence with:
+	[std::unique_ptr<sequoia::testing::only_equivalence_checkable, std::default_delete<sequoia::testing::only_equivalence_checkable> >]
+
+	  Pointees differ
+	  [sequoia::testing::only_equivalence_checkable]
+	    Wrapped float
+	    [double]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 2
+
+	=======================================
+
+	Tests/TestFramework/PointerTestingDiagnosticsTest.cpp, Line 47
+	Different pointees holding different values
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<std::unique_ptr<sequoia::testing::only_weakly_checkable, std::default_delete<sequoia::testing::only_weakly_checkable> > >]
+	Checking for equivalence with:
+	[std::unique_ptr<sequoia::testing::only_weakly_checkable, std::default_delete<sequoia::testing::only_weakly_checkable> >]
+
+	  Pointees differ
+	  [sequoia::testing::only_weakly_checkable]
+	    Wrapped int
+	    [int]
+	    operator== returned false
+	    Obtained : 42
+	    Predicted: 43
+
+	    Wrapped double
+	    [double]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: -2
 
 	=======================================
 
