@@ -30,11 +30,15 @@ namespace sequoia::testing
 
   struct only_equivalence_checkable
   {
+    only_equivalence_checkable(double val) : x{val} {}
+    
     double x{};
   };
 
   struct only_weakly_checkable
   {
+    only_weakly_checkable(int j, double y) : i{j}, x{y} {}
+    
     int i{};
     double x{};
   };

@@ -53,8 +53,8 @@ namespace sequoia::testing
       using type = std::tuple<int, only_equivalence_checkable, only_weakly_checkable>;
       check(equivalence,
             LINE("Different pointees holding different values"),
-            std::make_unique<type>(1, 2.0, only_weakly_checkable{42, 1.0}),
-            std::make_unique<type>(-1, 3.0, only_weakly_checkable{43, -2.0}));
+            std::make_unique<type>(1, only_equivalence_checkable{2.0}, only_weakly_checkable{42, 1.0}),
+            std::make_unique<type>(-1, only_equivalence_checkable{3.0}, only_weakly_checkable{43, -2.0}));
     }
   }
 
@@ -96,8 +96,8 @@ namespace sequoia::testing
       using type = std::tuple<int, only_equivalence_checkable, only_weakly_checkable>;
       check(equivalence,
             LINE("Different pointees holding identical values"),
-            std::make_unique<type>(-1, 2.0, only_weakly_checkable{42, 1.0}),
-            std::make_unique<type>(-1, 2.0, only_weakly_checkable{42, 1.0}));
+            std::make_unique<type>(-1, only_equivalence_checkable{2.0}, only_weakly_checkable{42, 1.0}),
+            std::make_unique<type>(-1, only_equivalence_checkable{2.0}, only_weakly_checkable{42, 1.0}));
     }
   }
 }
