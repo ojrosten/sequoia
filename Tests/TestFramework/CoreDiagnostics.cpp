@@ -161,7 +161,6 @@ namespace sequoia::testing
     test_heterogeneous();
     test_variant();
     test_optional();
-    test_unique_ptr();
     test_container_checks();
     test_strings<std::string>();
     test_strings<std::string_view>();
@@ -228,17 +227,6 @@ namespace sequoia::testing
     check(equality, LINE(""), opt{}, opt{0});
     check(equality, LINE(""), opt{0}, opt{});
     check(equality, LINE(""), opt{2}, opt{0});
-  }
-
-  void false_positive_diagnostics::test_unique_ptr()
-  {
-    {
-      using ptr_t = std::unique_ptr<int>;
-      check(equality, LINE("null vs. not null"), ptr_t{}, std::make_unique<int>(42));
-      check(equality, LINE("not null vs. null "), std::make_unique<int>(42), ptr_t{});
-      check(equality, LINE("Different pointers"), std::make_unique<int>(42), std::make_unique<int>(42));
-      check(equivalence, LINE("Different pointees hold different values"), std::make_unique<int>(42), std::make_unique<int>(43));
-    }
   }
 
   void false_positive_diagnostics::test_container_checks()
@@ -548,7 +536,6 @@ namespace sequoia::testing
     test_heterogeneous();
     test_variant();
     test_optional();
-    test_unique_ptr();
     test_container_checks();
     test_strings();
     test_mixed();
@@ -597,16 +584,6 @@ namespace sequoia::testing
     check(equality, LINE(""), opt{}, opt{});
     check(equality, LINE(""), opt{0}, opt{0});
     check(equality, LINE(""), opt{-1}, opt{-1});
-  }
-
-  void false_negative_diagnostics::test_unique_ptr()
-  {
-    {
-      using ptr_t = std::unique_ptr<int>;
-      ptr_t p{};
-      check(equality, LINE("Equality of pointer with itself"), p, p);
-      check(equivalence, LINE("Different pointees holding identical values"), std::make_unique<int>(42), std::make_unique<int>(42));
-    }
   }
 
   void false_negative_diagnostics::test_container_checks()

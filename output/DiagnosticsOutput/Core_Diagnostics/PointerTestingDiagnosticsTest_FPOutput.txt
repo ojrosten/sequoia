@@ -1,0 +1,55 @@
+	Tests/TestFramework/PointerTestingDiagnosticsTest.cpp, Line 30
+	null vs. not null
+
+	[std::unique_ptr<int, std::default_delete<int> >]
+	operator== returned false
+
+	  Underlying pointers differ
+	  [int *]
+	  operator== returned false
+	  Expected non-null pointer, but found null
+
+	=======================================
+
+	Tests/TestFramework/PointerTestingDiagnosticsTest.cpp, Line 31
+	not null vs. null 
+
+	[std::unique_ptr<int, std::default_delete<int> >]
+	operator== returned false
+
+	  Underlying pointers differ
+	  [int *]
+	  operator== returned false
+	  Expected null pointer, but found non-null
+
+	=======================================
+
+	Tests/TestFramework/PointerTestingDiagnosticsTest.cpp, Line 32
+	Different pointers
+
+	[std::unique_ptr<int, std::default_delete<int> >]
+	operator== returned false
+
+	  Underlying pointers differ
+	  [int *]
+	  operator== returned false
+	  Pointers both non-null, but different
+
+	=======================================
+
+	Tests/TestFramework/PointerTestingDiagnosticsTest.cpp, Line 33
+	Different pointees hold different values
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<std::unique_ptr<int, std::default_delete<int> > >]
+	Checking for equivalence with:
+	[std::unique_ptr<int, std::default_delete<int> >]
+
+	  Pointees differ
+	  [int]
+	  operator== returned false
+	  Obtained : 42
+	  Predicted: 43
+
+	=======================================
+

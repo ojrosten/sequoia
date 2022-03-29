@@ -1,0 +1,19 @@
+	False Positive Failure:
+	Tests/TestFramework/PointerTestingDiagnosticsTest.cpp, Line 53
+	Equality of pointer with itself
+
+	[std::unique_ptr<int, std::default_delete<int> >]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/PointerTestingDiagnosticsTest.cpp, Line 54
+	Different pointees holding identical values
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<std::unique_ptr<int, std::default_delete<int> > >]
+	Checking for equivalence with:
+	[std::unique_ptr<int, std::default_delete<int> >]
+
+	=======================================
+

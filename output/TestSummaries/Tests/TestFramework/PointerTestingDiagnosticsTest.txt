@@ -1,0 +1,4 @@
+Pointer False Positive Diagnostics
+False Positive Checks:                     4;  Failures:  0
+Pointer False Negative Diagnostics
+False Negative Checks:                     2;  Failures:  0

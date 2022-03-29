@@ -48,7 +48,9 @@ int main(int argc, char** argv)
     runner.add_test_family(
       "Core Diagnostics",
       false_positive_diagnostics{"False Positive Diagnostics"},
-      false_negative_diagnostics{"False Negative Diagnostics"}
+      false_negative_diagnostics{"False Negative Diagnostics"},
+      pointer_testing_false_positive_diagnostics{"Pointer False Positive Diagnostics"},
+      pointer_testing_false_negative_diagnostics{"Pointer False Negative Diagnostics"}
     );
     
     runner.add_test_family(
