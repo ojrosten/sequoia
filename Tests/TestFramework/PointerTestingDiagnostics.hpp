@@ -25,6 +25,7 @@ namespace sequoia::testing
     void run_tests() final;
 
     void test_unique_ptr();
+    void test_shared_ptr();
   };
 
   class pointer_testing_false_negative_diagnostics final : public free_false_negative_test
@@ -39,5 +40,6 @@ namespace sequoia::testing
     void run_tests() final;
 
     void test_unique_ptr();
+    void test_shared_ptr();
   };
 }

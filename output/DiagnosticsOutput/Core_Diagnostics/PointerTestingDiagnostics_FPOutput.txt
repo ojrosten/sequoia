@@ -1,4 +1,4 @@
-	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 32
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 33
 	null vs. not null
 
 	[std::unique_ptr<int, std::default_delete<int> >]
@@ -11,7 +11,7 @@
 
 	=======================================
 
-	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 33
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 34
 	not null vs. null 
 
 	[std::unique_ptr<int, std::default_delete<int> >]
@@ -24,7 +24,7 @@
 
 	=======================================
 
-	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 34
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 35
 	Different pointers
 
 	[std::unique_ptr<int, std::default_delete<int> >]
@@ -37,7 +37,7 @@
 
 	=======================================
 
-	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 35
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 36
 	Different pointees holding different values
 
 	Comparison performed using:
@@ -53,7 +53,7 @@
 
 	=======================================
 
-	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 40
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 41
 	Different pointees holding different values
 
 	Comparison performed using:
@@ -71,7 +71,7 @@
 
 	=======================================
 
-	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 47
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 48
 	Different pointees holding different values
 
 	Comparison performed using:
@@ -95,7 +95,7 @@
 
 	=======================================
 
-	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 55
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 56
 	Different pointees holding different values
 
 	Comparison performed using:
@@ -132,6 +132,77 @@
 	      operator== returned false
 	      Obtained : 1
 	      Predicted: -2
+
+	=======================================
+
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 66
+	null vs. not null
+
+	[std::shared_ptr<int>]
+	operator== returned false
+
+	  Underlying pointers differ
+	  [int*]
+	  operator== returned false
+	  Expected non-null pointer, but found null
+
+	=======================================
+
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 67
+	not null vs. null 
+
+	[std::shared_ptr<int>]
+	operator== returned false
+
+	  Underlying pointers differ
+	  [int*]
+	  operator== returned false
+	  Expected null pointer, but found non-null
+
+	=======================================
+
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 68
+	Different pointers
+
+	[std::shared_ptr<int>]
+	operator== returned false
+
+	  Underlying pointers differ
+	  [int*]
+	  operator== returned false
+	  Pointers both non-null, but different
+
+	=======================================
+
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 69
+	Different pointees holding different values
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<std::shared_ptr<int> >]
+	Checking for equivalence with:
+	[std::shared_ptr<int>]
+
+	  Pointees differ
+	  [int]
+	  operator== returned false
+	  Obtained : 42
+	  Predicted: 43
+
+	=======================================
+
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 72
+	Different use counts
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<std::shared_ptr<int> >]
+	Checking for equivalence with:
+	[std::shared_ptr<int>]
+
+	  Use count
+	  [long]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
 
 	=======================================
 

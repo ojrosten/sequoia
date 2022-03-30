@@ -23,6 +23,7 @@ namespace sequoia::testing
   void pointer_testing_false_positive_diagnostics::run_tests()
   {
     test_unique_ptr();
+    test_shared_ptr();
   }
 
   void pointer_testing_false_positive_diagnostics::test_unique_ptr()
@@ -58,6 +59,21 @@ namespace sequoia::testing
     }
   }
 
+  void pointer_testing_false_positive_diagnostics::test_shared_ptr()
+  {
+    {
+      using ptr_t = std::shared_ptr<int>;
+      check(equality, LINE("null vs. not null"), ptr_t{}, std::make_shared<int>(42));
+      check(equality, LINE("not null vs. null "), std::make_shared<int>(42), ptr_t{});
+      check(equality, LINE("Different pointers"), std::make_shared<int>(42), std::make_shared<int>(42));
+      check(equivalence, LINE("Different pointees holding different values"), std::make_shared<int>(42), std::make_shared<int>(43));
+
+      auto p{std::make_shared<int>(42)}, q{p};
+      check(equivalence, LINE("Different use counts"), p, std::make_shared<int>(42));
+    }
+  }
+
+
   [[nodiscard]]
   std::string_view pointer_testing_false_negative_diagnostics::source_file() const noexcept
   {
@@ -67,6 +83,7 @@ namespace sequoia::testing
   void pointer_testing_false_negative_diagnostics::run_tests()
   {
     test_unique_ptr();
+    test_shared_ptr();
   }
 
   void pointer_testing_false_negative_diagnostics::test_unique_ptr()
@@ -98,6 +115,16 @@ namespace sequoia::testing
             LINE("Different pointees holding identical values"),
             std::make_unique<type>(-1, only_equivalence_checkable{2.0}, only_weakly_checkable{42, 1.0}),
             std::make_unique<type>(-1, only_equivalence_checkable{2.0}, only_weakly_checkable{42, 1.0}));
+    }
+  }
+
+  void pointer_testing_false_negative_diagnostics::test_shared_ptr()
+  {
+    {
+      using ptr_t = std::shared_ptr<int>;
+      ptr_t p{};
+      check(equality, LINE("Equality of pointer with itself"), p, p);
+      check(equivalence, LINE("Different pointees holding identical values"), std::make_shared<int>(42), std::make_shared<int>(42));
     }
   }
 }
