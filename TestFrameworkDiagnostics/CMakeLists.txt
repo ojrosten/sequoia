@@ -36,6 +36,7 @@ target_sources(TestFrameworkDiagnostics PRIVATE
                ${TestDir}/TestFramework/OrderableRegularTestDiagnostics.cpp
                ${TestDir}/TestFramework/OutputFreeTest.cpp
                ${TestDir}/TestFramework/PerformanceTestDiagnostics.cpp
+               ${TestDir}/TestFramework/PointerTestingDiagnostics.cpp
                ${TestDir}/TestFramework/RegularAllocationTestDiagnostics.cpp
                ${TestDir}/TestFramework/RegularStateTransitionDiagnostics.cpp
                ${TestDir}/TestFramework/RegularTestDiagnostics.cpp

@@ -180,6 +180,21 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
+  std::string pointer_prediction_message(bool obtainedIsNull, bool predictionIsNull)
+  {
+    if(obtainedIsNull && predictionIsNull)
+      return "Pointers both non-null, but different";
+
+    if(obtainedIsNull && !predictionIsNull)
+      return "Expected null pointer, but found non-null";
+
+    if(predictionIsNull)
+      return "Expected non-null pointer, but found null";
+
+    return "Pointers both null";
+  }
+
+  [[nodiscard]]
   std::string report_line(const std::filesystem::path& file, const int line, std::string_view message, const std::filesystem::path& repository)
   {
     auto pathToString{
@@ -268,7 +283,7 @@ namespace sequoia::testing
 
     replace_all(name, ",", ", ");
 
-    replace_all(name, " & __ptr64", "&");
+    replace_all(name, " __ptr64", "");
 
     replace_all(name, "`anonymous namespace'", "(anonymous namespace)");
 

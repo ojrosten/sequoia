@@ -9,6 +9,7 @@
 
 #include "CoreDiagnostics.hpp"
 #include "CoreDiagnosticsUtilities.hpp"
+#include "ContainerDiagnosticsUtilities.hpp"
 #include "sequoia/TextProcessing/Substitutions.hpp"
 
 #include <complex>
@@ -25,21 +26,6 @@ namespace sequoia::testing
 
   namespace
   {
-    struct bland
-    {
-      [[nodiscard]]
-      std::string operator()(int, int) const
-      {
-        return {"Integer advice"};
-      }
-
-      [[nodiscard]]
-      std::string operator()(double, double) const
-      {
-        return {"Double advice"};
-      }
-    };
-
     struct dummy_file_comparer
     {
       template<test_mode Mode>
@@ -60,17 +46,6 @@ namespace sequoia::testing
 
       [[nodiscard]]
       friend constexpr auto operator<=>(const foo&, const foo&) = default;
-    };
-
-    struct only_weakly_checkable
-    {
-      int i{};
-      double x{};
-    };
-
-    struct only_equivalence_checkable
-    {
-      double x{};
     };
   }
 
@@ -100,40 +75,6 @@ namespace sequoia::testing
     static void test(weak_equivalence_check_t, test_logger<Mode>& logger, const std::vector<foo>& f, const prediction_t& p, tutor<bland> advisor)
     {
       check(equivalence, "Vector equivalence", logger, f.begin(), f.end(), p.begin(), p.end(), advisor);
-    }
-  };
-
-  template<>
-  struct value_tester<only_weakly_checkable>
-  {
-    template<test_mode Mode>
-    static void test(weak_equivalence_check_t, test_logger<Mode>& logger, const only_weakly_checkable& obtained, const std::pair<int, double>& prediction, tutor<bland> advisor)
-    {
-      check(equality, "Wrapped int", logger, obtained.i, prediction.first, advisor);
-      check(equality, "Wrapped double", logger, obtained.x, prediction.second, advisor);
-    }
-
-    template<test_mode Mode, class Advisor=null_advisor>
-    static void test(weak_equivalence_check_t, test_logger<Mode>& logger, const only_weakly_checkable& obtained, const only_weakly_checkable& prediction, const tutor<Advisor>& advisor = {})
-    {
-      check(equality, "Wrapped int", logger, obtained.i, prediction.i, advisor);
-      check(equality, "Wrapped double", logger, obtained.x, prediction.x, advisor);
-    }
-  };
-
-  template<>
-  struct value_tester<only_equivalence_checkable>
-  {
-    template<test_mode Mode>
-    static void test(weak_equivalence_check_t, test_logger<Mode>& logger, const only_equivalence_checkable& obtained, double prediction, tutor<bland> advisor)
-    {
-      check(equality, "Wrapped float", logger, obtained.x, prediction, advisor);
-    }
-
-    template<test_mode Mode, class Advisor = null_advisor>
-    static void test(weak_equivalence_check_t, test_logger<Mode>& logger, const only_equivalence_checkable& obtained, const only_equivalence_checkable& prediction, const tutor<Advisor>& advisor = {})
-    {
-      check(equality, "Wrapped float", logger, obtained.x, prediction.x, advisor);
     }
   };
 

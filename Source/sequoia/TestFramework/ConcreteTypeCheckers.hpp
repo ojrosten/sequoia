@@ -54,6 +54,7 @@
 
 #include <array>
 #include <functional>
+#include <memory>
 #include <optional>
 #include <tuple>
 #include <variant>
@@ -284,7 +285,7 @@ namespace sequoia::testing
     static void check_tuple_elements(CheckType flavour, test_logger<Mode>& logger, const std::tuple<T...>& value, const std::tuple<U...>& prediction, const tutor<Advisor>& advisor)
     {
       const std::string message{"Element " + std::to_string(I) + " of tuple incorrect"};
-      check(equality, message, logger, std::get<I>(value), std::get<I>(prediction), advisor);
+      check(flavour, message, logger, std::get<I>(value), std::get<I>(prediction), advisor);
       check_tuple_elements<I+1>(flavour, logger, value, prediction, advisor);
     }
 
@@ -589,6 +590,54 @@ namespace sequoia::testing
         {
           check(flavour, "Contents of optional", logger, *obtained, *prediction, advisor);
         }
+      }
+    }
+  };
+
+  /*! \brief Compares instance of `std::unique_ptr`
+
+      The `test(equality_check_t,...)` overload checks that the underlying pointers point to the same thing.
+
+      The `test(equivalence_check_t,...)` overload checks whether the pointers either both point to
+      something or both point to nullptr, reporting a failure if this is not the case. If both
+      pointers are not null, a check is dispatched to test the underlying type. This is done using
+      the strongest available check.
+   */
+
+  template<class T>
+  struct value_tester<std::unique_ptr<T>>
+  {
+    using type = std::unique_ptr<T>;
+
+    template<test_mode Mode>
+    static void test(equality_check_t, test_logger<Mode>& logger, const type& obtained, const type& prediction)
+    {
+      check(equality, "Underlying pointers differ", logger, obtained.get(), prediction.get());
+    }
+
+    template<test_mode Mode>
+    static void test(equivalence_check_t, test_logger<Mode>& logger, const type& obtained, const type& prediction)
+    {
+      if(obtained && prediction)
+      {
+        check(with_best_available, "Pointees differ", logger, *obtained, *prediction);
+      }
+      else
+      {
+        const bool obtainedIsBound{obtained}, predictionIsBound{prediction};
+
+        auto messageFn{[](std::string_view name, const bool bound) -> std::string {
+            auto mess{std::string{name} + " is "};
+            if(!bound) mess.append("not ");
+            return mess.append("null");
+          }
+        };
+
+        check(equality,
+              messageFn("obtained", obtainedIsBound).append(" but ").append(messageFn("prediction", predictionIsBound)),
+              logger,
+              static_cast<bool>(obtained),
+              static_cast<bool>(prediction));
       }
     }
   };

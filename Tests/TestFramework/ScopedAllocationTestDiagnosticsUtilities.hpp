@@ -11,7 +11,7 @@
 
 
 #include "sequoia/TestFramework/RegularTestCore.hpp"
-#include "CoreDiagnosticsUtilities.hpp"
+#include "ContainerDiagnosticsUtilities.hpp"
 
 #include <vector>
 #include <string>

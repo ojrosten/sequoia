@@ -95,6 +95,9 @@ namespace sequoia::testing
   std::string default_prediction_message(std::string_view obtained, std::string_view prediction);
 
   [[nodiscard]]
+  std::string pointer_prediction_message(bool obtainedIsNull, bool predictionIsNull);
+
+  [[nodiscard]]
   std::string prediction_message(const std::string& obtained, const std::string& prediction);
 
   template<class Char>
@@ -105,8 +108,16 @@ namespace sequoia::testing
     return prediction_message(display_character(obtained), display_character(prediction));
   }
 
+  template<class Ptr>
+    requires std::is_pointer_v<Ptr> || is_const_pointer_v<Ptr>
+  [[nodiscard]]
+  std::string prediction_message(Ptr obtained, Ptr prediction)
+  {
+    return pointer_prediction_message(obtained, prediction);
+  }
+
   template<serializable T>
-    requires (!is_character_v<T>)
+    requires (!is_character_v<T> && !std::is_pointer_v<T> && !is_const_pointer_v<T>)
   [[nodiscard]]
   std::string prediction_message(const T& obtained, const T& prediction)
   {

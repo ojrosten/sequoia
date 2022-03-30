@@ -1,0 +1,137 @@
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 32
+	null vs. not null
+
+	[std::unique_ptr<int, std::default_delete<int> >]
+	operator== returned false
+
+	  Underlying pointers differ
+	  [int*]
+	  operator== returned false
+	  Expected non-null pointer, but found null
+
+	=======================================
+
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 33
+	not null vs. null 
+
+	[std::unique_ptr<int, std::default_delete<int> >]
+	operator== returned false
+
+	  Underlying pointers differ
+	  [int*]
+	  operator== returned false
+	  Expected null pointer, but found non-null
+
+	=======================================
+
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 34
+	Different pointers
+
+	[std::unique_ptr<int, std::default_delete<int> >]
+	operator== returned false
+
+	  Underlying pointers differ
+	  [int*]
+	  operator== returned false
+	  Pointers both non-null, but different
+
+	=======================================
+
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 35
+	Different pointees holding different values
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<std::unique_ptr<int, std::default_delete<int> > >]
+	Checking for equivalence with:
+	[std::unique_ptr<int, std::default_delete<int> >]
+
+	  Pointees differ
+	  [int]
+	  operator== returned false
+	  Obtained : 42
+	  Predicted: 43
+
+	=======================================
+
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 40
+	Different pointees holding different values
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<std::unique_ptr<sequoia::testing::only_equivalence_checkable, std::default_delete<sequoia::testing::only_equivalence_checkable> > >]
+	Checking for equivalence with:
+	[std::unique_ptr<sequoia::testing::only_equivalence_checkable, std::default_delete<sequoia::testing::only_equivalence_checkable> >]
+
+	  Pointees differ
+	  [sequoia::testing::only_equivalence_checkable]
+	    Wrapped float
+	    [double]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 2
+
+	=======================================
+
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 47
+	Different pointees holding different values
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<std::unique_ptr<sequoia::testing::only_weakly_checkable, std::default_delete<sequoia::testing::only_weakly_checkable> > >]
+	Checking for equivalence with:
+	[std::unique_ptr<sequoia::testing::only_weakly_checkable, std::default_delete<sequoia::testing::only_weakly_checkable> >]
+
+	  Pointees differ
+	  [sequoia::testing::only_weakly_checkable]
+	    Wrapped int
+	    [int]
+	    operator== returned false
+	    Obtained : 42
+	    Predicted: 43
+
+	    Wrapped double
+	    [double]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: -2
+
+	=======================================
+
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 55
+	Different pointees holding different values
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<std::unique_ptr<std::tuple<int, sequoia::testing::only_equivalence_checkable, sequoia::testing::only_weakly_checkable>, std::default_delete<std::tuple<int, sequoia::testing::only_equivalence_checkable, sequoia::testing::only_weakly_checkable> > > >]
+	Checking for equivalence with:
+	[std::unique_ptr<std::tuple<int, sequoia::testing::only_equivalence_checkable, sequoia::testing::only_weakly_checkable>, std::default_delete<std::tuple<int, sequoia::testing::only_equivalence_checkable, sequoia::testing::only_weakly_checkable> > >]
+
+	  Pointees differ
+	  [std::tuple<int, sequoia::testing::only_equivalence_checkable, sequoia::testing::only_weakly_checkable>]
+	    Element 0 of tuple incorrect
+	    [int]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: -1
+
+	    Element 1 of tuple incorrect
+	    [sequoia::testing::only_equivalence_checkable]
+	      Wrapped float
+	      [double]
+	      operator== returned false
+	      Obtained : 2
+	      Predicted: 3
+
+	    Element 2 of tuple incorrect
+	    [sequoia::testing::only_weakly_checkable]
+	      Wrapped int
+	      [int]
+	      operator== returned false
+	      Obtained : 42
+	      Predicted: 43
+
+	      Wrapped double
+	      [double]
+	      operator== returned false
+	      Obtained : 1
+	      Predicted: -2
+
+	=======================================
+
