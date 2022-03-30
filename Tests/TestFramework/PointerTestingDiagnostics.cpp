@@ -71,6 +71,14 @@ namespace sequoia::testing
       auto p{std::make_shared<int>(42)}, q{p};
       check(equivalence, LINE("Different use counts"), p, std::make_shared<int>(42));
     }
+
+    {
+      using type = std::tuple<int, only_equivalence_checkable, only_weakly_checkable>;
+      check(equivalence,
+            LINE("Different pointees holding different values"),
+            std::make_shared<type>(1, only_equivalence_checkable{2.0}, only_weakly_checkable{42, 1.0}),
+            std::make_shared<type>(-1, only_equivalence_checkable{3.0}, only_weakly_checkable{43, -2.0}));
+    }
   }
 
 
@@ -125,6 +133,14 @@ namespace sequoia::testing
       ptr_t p{};
       check(equality, LINE("Equality of pointer with itself"), p, p);
       check(equivalence, LINE("Different pointees holding identical values"), std::make_shared<int>(42), std::make_shared<int>(42));
+    }
+
+    {
+      using type = std::tuple<int, only_equivalence_checkable, only_weakly_checkable>;
+      check(equivalence,
+            LINE("Different pointees holding identical values"),
+            std::make_shared<type>(-1, only_equivalence_checkable{2.0}, only_weakly_checkable{42, 1.0}),
+            std::make_shared<type>(-1, only_equivalence_checkable{2.0}, only_weakly_checkable{42, 1.0}));
     }
   }
 }

@@ -1,5 +1,5 @@
 	False Positive Failure:
-	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 94
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 102
 	Equality of pointer with itself
 
 	[std::unique_ptr<int, std::default_delete<int> >]
@@ -7,7 +7,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 95
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 103
 	Different pointees holding identical values
 
 	Comparison performed using:
@@ -18,7 +18,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 100
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 108
 	Different pointees holding identical values
 
 	Comparison performed using:
@@ -29,7 +29,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 107
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 115
 	Different pointees holding identical values
 
 	Comparison performed using:
@@ -40,7 +40,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 115
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 123
 	Different pointees holding identical values
 
 	Comparison performed using:
@@ -51,7 +51,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 126
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 134
 	Equality of pointer with itself
 
 	[std::shared_ptr<int>]
@@ -59,13 +59,24 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 127
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 135
 	Different pointees holding identical values
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<std::shared_ptr<int> >]
 	Checking for equivalence with:
 	[std::shared_ptr<int>]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 141
+	Different pointees holding identical values
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<std::shared_ptr<std::tuple<int, sequoia::testing::only_equivalence_checkable, sequoia::testing::only_weakly_checkable> > >]
+	Checking for equivalence with:
+	[std::shared_ptr<std::tuple<int, sequoia::testing::only_equivalence_checkable, sequoia::testing::only_weakly_checkable> >]
 
 	=======================================
 
