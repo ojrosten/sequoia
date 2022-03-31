@@ -229,9 +229,11 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    static 
-    std::string duplication_message(std::string_view familyName,
-                                    std::string_view testName,
-                                    const std::filesystem::path& source);
+    static std::string duplication_message(std::string_view familyName,
+                                           std::string_view testName,
+                                           const std::filesystem::path& source);
+
+    [[nodiscard]]
+    std::filesystem::path make_prune_path() const;
   };
 }

@@ -116,8 +116,9 @@ namespace sequoia::testing
   {
     {
       using ptr_t = std::unique_ptr<int>;
-      ptr_t p{};
+      ptr_t p{}, q{std::make_unique<int>(42)};
       check(equality, LINE("Equality of null pointer with itself"), p, p);
+      check(equality, LINE("Equality of non-null pointer with itself"), q, q);
       check(equivalence, LINE("Different pointers pointing to identical values"), std::make_unique<int>(42), std::make_unique<int>(42));
     }
 
@@ -148,8 +149,9 @@ namespace sequoia::testing
   {
     {
       using ptr_t = std::shared_ptr<int>;
-      ptr_t p{};
+      ptr_t p{}, q{std::make_shared<int>(42)};
       check(equality, LINE("Equality of null pointer with itself"), p, p);
+      check(equality, LINE("Equality of non-null pointer with itself"), q, q);
       check(equivalence, LINE("Different pointers pointing to identical values"), std::make_shared<int>(42), std::make_shared<int>(42));
     }
 
