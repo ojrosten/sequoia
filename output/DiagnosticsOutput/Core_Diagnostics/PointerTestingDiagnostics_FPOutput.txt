@@ -246,7 +246,7 @@
 
 	=======================================
 
-	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 95
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 94
 	null vs. not null
 
 	[std::weak_ptr<int>]
@@ -261,7 +261,7 @@
 
 	=======================================
 
-	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 96
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 95
 	not null vs. null 
 
 	[std::weak_ptr<int>]
@@ -276,7 +276,7 @@
 
 	=======================================
 
-	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 97
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 96
 	Different pointers
 
 	[std::weak_ptr<int>]
@@ -291,7 +291,7 @@
 
 	=======================================
 
-	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 98
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 97
 	Different pointers pointing to different values
 
 	Comparison performed using:
