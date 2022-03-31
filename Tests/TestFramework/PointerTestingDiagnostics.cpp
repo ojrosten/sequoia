@@ -86,7 +86,6 @@ namespace sequoia::testing
   {
 
     {
-      using ptr_t  = std::shared_ptr<int>;
       using wptr_t = std::weak_ptr<int>;
 
       auto p{std::make_shared<int>(42)}, q{std::make_shared<int>(43)};
@@ -167,7 +166,6 @@ namespace sequoia::testing
   void pointer_testing_false_negative_diagnostics::test_weak_ptr()
   {
     {
-      using ptr_t = std::shared_ptr<int>;
       using wptr_t = std::weak_ptr<int>;
       wptr_t wp{};
       check(equality, LINE("Equality of null pointer with itself"), wp, wp);
