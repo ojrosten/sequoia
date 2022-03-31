@@ -38,7 +38,7 @@
 	=======================================
 
 	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 37
-	Different pointees holding different values
+	Different pointers pointing to different values
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<std::unique_ptr<int, std::default_delete<int> > >]
@@ -54,7 +54,7 @@
 	=======================================
 
 	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 42
-	Different pointees holding different values
+	Different pointers pointing to different values
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<std::unique_ptr<sequoia::testing::only_equivalence_checkable, std::default_delete<sequoia::testing::only_equivalence_checkable> > >]
@@ -72,7 +72,7 @@
 	=======================================
 
 	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 49
-	Different pointees holding different values
+	Different pointers pointing to different values
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<std::unique_ptr<sequoia::testing::only_weakly_checkable, std::default_delete<sequoia::testing::only_weakly_checkable> > >]
@@ -96,7 +96,7 @@
 	=======================================
 
 	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 57
-	Different pointees holding different values
+	Different pointers pointing to different values
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<std::unique_ptr<std::tuple<int, sequoia::testing::only_equivalence_checkable, sequoia::testing::only_weakly_checkable>, std::default_delete<std::tuple<int, sequoia::testing::only_equivalence_checkable, sequoia::testing::only_weakly_checkable> > > >]
@@ -175,7 +175,7 @@
 	=======================================
 
 	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 70
-	Different pointees holding different values
+	Different pointers pointing to different values
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<std::shared_ptr<int> >]
@@ -207,7 +207,7 @@
 	=======================================
 
 	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 79
-	Different pointees holding different values
+	Different pointers pointing to different values
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<std::shared_ptr<std::tuple<int, sequoia::testing::only_equivalence_checkable, sequoia::testing::only_weakly_checkable> > >]
@@ -292,7 +292,7 @@
 	=======================================
 
 	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 98
-	Different pointees holding different values
+	Different pointers pointing to different values
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<std::weak_ptr<int> >]

@@ -34,19 +34,19 @@ namespace sequoia::testing
       check(equality, LINE("null vs. not null"), ptr_t{}, std::make_unique<int>(42));
       check(equality, LINE("not null vs. null "), std::make_unique<int>(42), ptr_t{});
       check(equality, LINE("Different pointers"), std::make_unique<int>(42), std::make_unique<int>(42));
-      check(equivalence, LINE("Different pointees holding different values"), std::make_unique<int>(42), std::make_unique<int>(43));
+      check(equivalence, LINE("Different pointers pointing to different values"), std::make_unique<int>(42), std::make_unique<int>(43));
     }
 
     {
       check(equivalence,
-            LINE("Different pointees holding different values"),
+            LINE("Different pointers pointing to different values"),
             std::make_unique<only_equivalence_checkable>(1.0),
             std::make_unique<only_equivalence_checkable>(2.0));
     }
 
     {
       check(equivalence,
-            LINE("Different pointees holding different values"),
+            LINE("Different pointers pointing to different values"),
             std::make_unique<only_weakly_checkable>(42, 1.0),
             std::make_unique<only_weakly_checkable>(43, -2.0));
     }
@@ -54,7 +54,7 @@ namespace sequoia::testing
     {
       using type = std::tuple<int, only_equivalence_checkable, only_weakly_checkable>;
       check(equivalence,
-            LINE("Different pointees holding different values"),
+            LINE("Different pointers pointing to different values"),
             std::make_unique<type>(1, only_equivalence_checkable{2.0}, only_weakly_checkable{42, 1.0}),
             std::make_unique<type>(-1, only_equivalence_checkable{3.0}, only_weakly_checkable{43, -2.0}));
     }
@@ -67,7 +67,7 @@ namespace sequoia::testing
       check(equality, LINE("null vs. not null"), ptr_t{}, std::make_shared<int>(42));
       check(equality, LINE("not null vs. null "), std::make_shared<int>(42), ptr_t{});
       check(equality, LINE("Different pointers"), std::make_shared<int>(42), std::make_shared<int>(42));
-      check(equivalence, LINE("Different pointees holding different values"), std::make_shared<int>(42), std::make_shared<int>(43));
+      check(equivalence, LINE("Different pointers pointing to different values"), std::make_shared<int>(42), std::make_shared<int>(43));
 
       auto p{std::make_shared<int>(42)}, q{p};
       check(equivalence, LINE("Different use counts"), p, std::make_shared<int>(42));
@@ -76,7 +76,7 @@ namespace sequoia::testing
     {
       using type = std::tuple<int, only_equivalence_checkable, only_weakly_checkable>;
       check(equivalence,
-            LINE("Different pointees holding different values"),
+            LINE("Different pointers pointing to different values"),
             std::make_shared<type>(1, only_equivalence_checkable{2.0}, only_weakly_checkable{42, 1.0}),
             std::make_shared<type>(-1, only_equivalence_checkable{3.0}, only_weakly_checkable{43, -2.0}));
     }
@@ -95,7 +95,7 @@ namespace sequoia::testing
       check(equality, LINE("null vs. not null"), wptr_t{}, wp);
       check(equality, LINE("not null vs. null "), wp, wptr_t{});
       check(equality, LINE("Different pointers"), wp, wq);
-      check(equivalence, LINE("Different pointees holding different values"), wp, wq);
+      check(equivalence, LINE("Different pointers pointing to different values"), wp, wq);
     }
   }
 
@@ -117,20 +117,20 @@ namespace sequoia::testing
     {
       using ptr_t = std::unique_ptr<int>;
       ptr_t p{};
-      check(equality, LINE("Equality of pointer with itself"), p, p);
-      check(equivalence, LINE("Different pointees holding identical values"), std::make_unique<int>(42), std::make_unique<int>(42));
+      check(equality, LINE("Equality of null pointer with itself"), p, p);
+      check(equivalence, LINE("Different pointers pointing to identical values"), std::make_unique<int>(42), std::make_unique<int>(42));
     }
 
     {
       check(equivalence,
-            LINE("Different pointees holding identical values"),
+            LINE("Different pointers pointing to identical values"),
             std::make_unique<only_equivalence_checkable>(1.0),
             std::make_unique<only_equivalence_checkable>(1.0));
     }
 
     {
       check(equivalence,
-            LINE("Different pointees holding identical values"),
+            LINE("Different pointers pointing to identical values"),
             std::make_unique<only_weakly_checkable>(42, -2.0),
             std::make_unique<only_weakly_checkable>(42, -2.0));
     }
@@ -138,7 +138,7 @@ namespace sequoia::testing
     {
       using type = std::tuple<int, only_equivalence_checkable, only_weakly_checkable>;
       check(equivalence,
-            LINE("Different pointees holding identical values"),
+            LINE("Different pointers pointing to identical values"),
             std::make_unique<type>(-1, only_equivalence_checkable{2.0}, only_weakly_checkable{42, 1.0}),
             std::make_unique<type>(-1, only_equivalence_checkable{2.0}, only_weakly_checkable{42, 1.0}));
     }
@@ -149,14 +149,14 @@ namespace sequoia::testing
     {
       using ptr_t = std::shared_ptr<int>;
       ptr_t p{};
-      check(equality, LINE("Equality of pointer with itself"), p, p);
-      check(equivalence, LINE("Different pointees holding identical values"), std::make_shared<int>(42), std::make_shared<int>(42));
+      check(equality, LINE("Equality of null pointer with itself"), p, p);
+      check(equivalence, LINE("Different pointers pointing to identical values"), std::make_shared<int>(42), std::make_shared<int>(42));
     }
 
     {
       using type = std::tuple<int, only_equivalence_checkable, only_weakly_checkable>;
       check(equivalence,
-            LINE("Different pointees holding identical values"),
+            LINE("Different pointers pointing to identical values"),
             std::make_shared<type>(-1, only_equivalence_checkable{2.0}, only_weakly_checkable{42, 1.0}),
             std::make_shared<type>(-1, only_equivalence_checkable{2.0}, only_weakly_checkable{42, 1.0}));
     }
@@ -165,9 +165,15 @@ namespace sequoia::testing
   void pointer_testing_false_negative_diagnostics::test_weak_ptr()
   {
     {
-      using ptr_t = std::weak_ptr<int>;
-      ptr_t p{};
-      check(equality, LINE("Equality of pointer with itself"), p, p);
+      using ptr_t = std::shared_ptr<int>;
+      using wptr_t = std::weak_ptr<int>;
+      wptr_t wp{};
+      check(equality, LINE("Equality of null pointer with itself"), wp, wp);
+
+      auto q{std::make_shared<int>(42)}, r{std::make_shared<int>(42)};
+      wptr_t wq{q}, wr{r};
+
+      check(equivalence, LINE("Different pointers weakly pointing to identical values"), wq, wr);
     }
   }
 }
