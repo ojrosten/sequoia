@@ -77,15 +77,9 @@ namespace sequoia::testing
     m_SelectedSources.emplace_back(std::move(file), false);
   }
 
-  [[nodiscard]]
-  std::filesystem::path family_selector::make_prune_path() const
-  {
-    return prune_path(proj_paths().output(), proj_paths().main_cpp_dir());
-  }
-
   void family_selector::enable_prune()
   {
-    m_PruneInfo.stamps.ondisk = time_stamps::from_file(make_prune_path());
+    m_PruneInfo.stamps.ondisk = time_stamps::from_file(prune_path(proj_paths()));
   }
 
   void family_selector::set_prune_cutoff(std::string cutoff)
@@ -100,7 +94,7 @@ namespace sequoia::testing
     stream << "\nAnalyzing dependencies...\n";
     const timer t{};
 
-    if(auto maybeToRun{tests_to_run(proj_paths().source_root(), proj_paths().tests(), proj_paths().test_materials(), make_prune_path(), m_PruneInfo.stamps.ondisk, m_PruneInfo.stamps.executable, m_PruneInfo.include_cutoff)})
+    if(auto maybeToRun{tests_to_run(proj_paths().source_root(), proj_paths().tests(), proj_paths().test_materials(), prune_path(proj_paths()), m_PruneInfo.stamps.ondisk, m_PruneInfo.stamps.executable, m_PruneInfo.include_cutoff)})
     {
       auto& toRun{maybeToRun.value()};
 
@@ -118,7 +112,7 @@ namespace sequoia::testing
     if(!bespoke_selection() || pruned())
     {
       std::sort(startFailedTests, endFailedTests);
-      const auto stampFile{make_prune_path()};
+      const auto stampFile{prune_path(proj_paths())};
 
       auto write{
         [&stampFile](Iter start, Iter end){

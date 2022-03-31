@@ -134,7 +134,7 @@ namespace sequoia::testing
   std::filesystem::path temp_test_summaries_path(std::filesystem::path outputDir);
 
   [[nodiscard]]
-  std::filesystem::path prune_path(std::filesystem::path outputDir, const std::filesystem::path& testMainDir);
+  std::filesystem::path prune_path(const project_paths& projPaths);
 
   template<std::predicate<std::filesystem::path> Pred>
   void throw_if(const std::filesystem::path& p, std::string_view message, Pred pred)

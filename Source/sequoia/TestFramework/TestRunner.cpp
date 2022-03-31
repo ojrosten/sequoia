@@ -456,7 +456,7 @@ namespace sequoia::testing
       fs::remove_all(temp_test_summaries_path(proj_paths().output()));
 
       if(m_Selector.pruned())
-        fs::remove(prune_path(proj_paths().output(), proj_paths().main_cpp_dir()));
+        fs::remove(prune_path(proj_paths()));
     }
 
     if(m_InstabilityMode == instability_mode::coordinator)
