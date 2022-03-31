@@ -684,6 +684,31 @@ namespace sequoia::testing
     }
   };
 
+  /*! \brief Compares instance of `std::weak_ptr`
+
+      Comparison is performed by calling lock on the `obtained` and `predicted`
+      `std::weak_ptr`s and then comparing the nascent `std::shared_ptr`s.
+   */
+
+  template<class T>
+  struct value_tester<std::weak_ptr<T>>
+  {
+    using type = std::weak_ptr<T>;
+
+    template<test_mode Mode>
+    static void test(equality_check_t, test_logger<Mode>& logger, const type& obtained, const type& prediction)
+    {
+      check(equality, "Underlying pointers differ", logger, obtained.lock(), prediction.lock());
+    }
+
+    template<test_mode Mode>
+    static void test(equivalence_check_t, test_logger<Mode>& logger, const type& obtained, const type& prediction)
+    {
+      check(equivalence, "Underlying pointers differ", logger, obtained.lock(), prediction.lock());
+    }
+  };
+
+
   /*! \brief Provides a `weak_equivalence` test for `std::function`
 
       Two instances of `std::function<R (Args...)>` are taken to be weakly equivalent

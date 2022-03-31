@@ -24,6 +24,7 @@ namespace sequoia::testing
   {
     test_unique_ptr();
     test_shared_ptr();
+    test_weak_ptr();
   }
 
   void pointer_testing_false_positive_diagnostics::test_unique_ptr()
@@ -81,6 +82,22 @@ namespace sequoia::testing
     }
   }
 
+  void pointer_testing_false_positive_diagnostics::test_weak_ptr()
+  {
+
+    {
+      using ptr_t  = std::shared_ptr<int>;
+      using wptr_t = std::weak_ptr<int>;
+
+      auto p{std::make_shared<int>(42)}, q{std::make_shared<int>(43)};
+      wptr_t wp{p}, wq{q};
+
+      check(equality, LINE("null vs. not null"), wptr_t{}, wp);
+      check(equality, LINE("not null vs. null "), wp, wptr_t{});
+      check(equality, LINE("Different pointers"), wp, wq);
+      check(equivalence, LINE("Different pointees holding different values"), wp, wq);
+    }
+  }
 
   [[nodiscard]]
   std::string_view pointer_testing_false_negative_diagnostics::source_file() const noexcept
@@ -92,6 +109,7 @@ namespace sequoia::testing
   {
     test_unique_ptr();
     test_shared_ptr();
+    test_weak_ptr();
   }
 
   void pointer_testing_false_negative_diagnostics::test_unique_ptr()
@@ -141,6 +159,15 @@ namespace sequoia::testing
             LINE("Different pointees holding identical values"),
             std::make_shared<type>(-1, only_equivalence_checkable{2.0}, only_weakly_checkable{42, 1.0}),
             std::make_shared<type>(-1, only_equivalence_checkable{2.0}, only_weakly_checkable{42, 1.0}));
+    }
+  }
+
+  void pointer_testing_false_negative_diagnostics::test_weak_ptr()
+  {
+    {
+      using ptr_t = std::weak_ptr<int>;
+      ptr_t p{};
+      check(equality, LINE("Equality of pointer with itself"), p, p);
     }
   }
 }
