@@ -1,4 +1,4 @@
-	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 32
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 34
 	null vs. not null
 
 	[std::unique_ptr<int, std::default_delete<int> >]
@@ -11,7 +11,7 @@
 
 	=======================================
 
-	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 33
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 35
 	not null vs. null 
 
 	[std::unique_ptr<int, std::default_delete<int> >]
@@ -24,7 +24,7 @@
 
 	=======================================
 
-	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 34
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 36
 	Different pointers
 
 	[std::unique_ptr<int, std::default_delete<int> >]
@@ -37,8 +37,8 @@
 
 	=======================================
 
-	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 35
-	Different pointees holding different values
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 37
+	Different pointers pointing to different values
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<std::unique_ptr<int, std::default_delete<int> > >]
@@ -53,8 +53,8 @@
 
 	=======================================
 
-	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 40
-	Different pointees holding different values
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 42
+	Different pointers pointing to different values
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<std::unique_ptr<sequoia::testing::only_equivalence_checkable, std::default_delete<sequoia::testing::only_equivalence_checkable> > >]
@@ -71,8 +71,8 @@
 
 	=======================================
 
-	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 47
-	Different pointees holding different values
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 49
+	Different pointers pointing to different values
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<std::unique_ptr<sequoia::testing::only_weakly_checkable, std::default_delete<sequoia::testing::only_weakly_checkable> > >]
@@ -95,8 +95,8 @@
 
 	=======================================
 
-	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 55
-	Different pointees holding different values
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 57
+	Different pointers pointing to different values
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<std::unique_ptr<std::tuple<int, sequoia::testing::only_equivalence_checkable, sequoia::testing::only_weakly_checkable>, std::default_delete<std::tuple<int, sequoia::testing::only_equivalence_checkable, sequoia::testing::only_weakly_checkable> > > >]
@@ -132,6 +132,184 @@
 	      operator== returned false
 	      Obtained : 1
 	      Predicted: -2
+
+	=======================================
+
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 67
+	null vs. not null
+
+	[std::shared_ptr<int>]
+	operator== returned false
+
+	  Underlying pointers differ
+	  [int*]
+	  operator== returned false
+	  Expected non-null pointer, but found null
+
+	=======================================
+
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 68
+	not null vs. null 
+
+	[std::shared_ptr<int>]
+	operator== returned false
+
+	  Underlying pointers differ
+	  [int*]
+	  operator== returned false
+	  Expected null pointer, but found non-null
+
+	=======================================
+
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 69
+	Different pointers
+
+	[std::shared_ptr<int>]
+	operator== returned false
+
+	  Underlying pointers differ
+	  [int*]
+	  operator== returned false
+	  Pointers both non-null, but different
+
+	=======================================
+
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 70
+	Different pointers pointing to different values
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<std::shared_ptr<int> >]
+	Checking for equivalence with:
+	[std::shared_ptr<int>]
+
+	  Pointees differ
+	  [int]
+	  operator== returned false
+	  Obtained : 42
+	  Predicted: 43
+
+	=======================================
+
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 73
+	Different use counts
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<std::shared_ptr<int> >]
+	Checking for equivalence with:
+	[std::shared_ptr<int>]
+
+	  Use count
+	  [long]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
+
+	=======================================
+
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 79
+	Different pointers pointing to different values
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<std::shared_ptr<std::tuple<int, sequoia::testing::only_equivalence_checkable, sequoia::testing::only_weakly_checkable> > >]
+	Checking for equivalence with:
+	[std::shared_ptr<std::tuple<int, sequoia::testing::only_equivalence_checkable, sequoia::testing::only_weakly_checkable> >]
+
+	  Pointees differ
+	  [std::tuple<int, sequoia::testing::only_equivalence_checkable, sequoia::testing::only_weakly_checkable>]
+	    Element 0 of tuple incorrect
+	    [int]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: -1
+
+	    Element 1 of tuple incorrect
+	    [sequoia::testing::only_equivalence_checkable]
+	      Wrapped float
+	      [double]
+	      operator== returned false
+	      Obtained : 2
+	      Predicted: 3
+
+	    Element 2 of tuple incorrect
+	    [sequoia::testing::only_weakly_checkable]
+	      Wrapped int
+	      [int]
+	      operator== returned false
+	      Obtained : 42
+	      Predicted: 43
+
+	      Wrapped double
+	      [double]
+	      operator== returned false
+	      Obtained : 1
+	      Predicted: -2
+
+	=======================================
+
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 94
+	null vs. not null
+
+	[std::weak_ptr<int>]
+	  Underlying pointers differ
+	  [std::shared_ptr<int>]
+	  operator== returned false
+
+	    Underlying pointers differ
+	    [int*]
+	    operator== returned false
+	    Expected non-null pointer, but found null
+
+	=======================================
+
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 95
+	not null vs. null 
+
+	[std::weak_ptr<int>]
+	  Underlying pointers differ
+	  [std::shared_ptr<int>]
+	  operator== returned false
+
+	    Underlying pointers differ
+	    [int*]
+	    operator== returned false
+	    Expected null pointer, but found non-null
+
+	=======================================
+
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 96
+	Different pointers
+
+	[std::weak_ptr<int>]
+	  Underlying pointers differ
+	  [std::shared_ptr<int>]
+	  operator== returned false
+
+	    Underlying pointers differ
+	    [int*]
+	    operator== returned false
+	    Pointers both non-null, but different
+
+	=======================================
+
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 97
+	Different pointers pointing to different values
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<std::weak_ptr<int> >]
+	Checking for equivalence with:
+	[std::weak_ptr<int>]
+
+	  Underlying pointers differ
+	  Comparison performed using:
+	  [sequoia::testing::value_tester<std::shared_ptr<int> >]
+	  Checking for equivalence with:
+	  [std::shared_ptr<int>]
+
+	    Pointees differ
+	    [int]
+	    operator== returned false
+	    Obtained : 42
+	    Predicted: 43
 
 	=======================================
 

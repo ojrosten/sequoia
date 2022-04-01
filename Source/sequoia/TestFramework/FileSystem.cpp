@@ -16,16 +16,18 @@
 
 namespace sequoia::testing
 {
+  namespace fs = std::filesystem;
+
   [[nodiscard]]
-  std::string serializer<std::filesystem::path>::make(const std::filesystem::path& p)
+  std::string serializer<fs::path>::make(const fs::path& p)
   {
     return p.generic_string();
   }
 
   [[nodiscard]]
-  std::string serializer<std::filesystem::file_type>::make(const std::filesystem::file_type& val)
+  std::string serializer<fs::file_type>::make(const fs::file_type& val)
   {
-    using ft = std::filesystem::file_type;
+    using ft = fs::file_type;
     switch(val)
     {
     case ft::none:
@@ -54,16 +56,14 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path working_path()
+  fs::path working_path()
   {
     return working_path_v;
   }
 
   [[nodiscard]]
-  std::filesystem::path project_root(int argc, char** argv, const std::filesystem::path& fallback)
+  fs::path project_root(int argc, char** argv, const fs::path& fallback)
   {
-    namespace fs = std::filesystem;
-
     if(argc)
     {
       std::string_view zeroth{argv[0]};
@@ -91,11 +91,11 @@ namespace sequoia::testing
     return fallback;
   }
 
-  project_paths::project_paths(const std::filesystem::path& projectRoot)
+  project_paths::project_paths(const fs::path& projectRoot)
     : project_paths{projectRoot, projectRoot / "TestAll" / "TestAllMain.cpp", projectRoot / "TestAll" / "TestAllMain.cpp"}
   {}
 
-  project_paths::project_paths(const std::filesystem::path& projectRoot, std::filesystem::path mainCpp, std::filesystem::path includePath)
+  project_paths::project_paths(const fs::path& projectRoot, fs::path mainCpp, fs::path includePath)
     : m_ProjectRoot{projectRoot}
     , m_Source{source_path(projectRoot)}
     , m_SourceRoot{m_Source.parent_path()}
@@ -113,9 +113,9 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path project_paths::cmade_build_dir(const std::filesystem::path& projectRoot, const std::filesystem::path& mainCppDir)
+  fs::path project_paths::cmade_build_dir(const fs::path& projectRoot, const fs::path& mainCppDir)
   {
-    std::filesystem::path dir{projectRoot / "build" / "CMade"};
+    fs::path dir{projectRoot / "build" / "CMade"};
     if constexpr(with_msvc_v)
     {
       dir /= "win";
@@ -129,12 +129,11 @@ namespace sequoia::testing
       dir /= "gcc";
     }
 
-    namespace fs = std::filesystem;
     return dir /= fs::relative(mainCppDir, projectRoot);
   }
 
   [[nodiscard]]
-  std::filesystem::path project_paths::source_path(const std::filesystem::path& projectRoot)
+  fs::path project_paths::source_path(const fs::path& projectRoot)
   {
     if(projectRoot.empty())
       throw std::runtime_error{"Project root should not be empty"};
@@ -143,162 +142,163 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  const std::filesystem::path& project_paths::project_root() const noexcept
+  const fs::path& project_paths::project_root() const noexcept
   {
     return m_ProjectRoot;
   }
 
   [[nodiscard]]
-  const std::filesystem::path& project_paths::source() const noexcept
+  const fs::path& project_paths::source() const noexcept
   {
     return m_Source;
   }
 
   [[nodiscard]]
-  const std::filesystem::path& project_paths::source_root() const noexcept
+  const fs::path& project_paths::source_root() const noexcept
   {
     return m_SourceRoot;
   }
 
   [[nodiscard]]
-  const std::filesystem::path& project_paths::tests() const noexcept
+  const fs::path& project_paths::tests() const noexcept
   {
     return m_Tests;
   }
 
   [[nodiscard]]
-  const std::filesystem::path& project_paths::test_materials() const noexcept
+  const fs::path& project_paths::test_materials() const noexcept
   {
     return m_TestMaterials;
   }
 
   [[nodiscard]]
-  const std::filesystem::path& project_paths::output() const noexcept
+  const fs::path& project_paths::output() const noexcept
   {
     return m_Output;
   }
 
   [[nodiscard]]
-  const std::filesystem::path& project_paths::main_cpp() const noexcept
+  const fs::path& project_paths::main_cpp() const noexcept
   {
     return m_MainCpp;
   }
 
   [[nodiscard]]
-  const std::filesystem::path& project_paths::main_cpp_dir() const noexcept
+  const fs::path& project_paths::main_cpp_dir() const noexcept
   {
     return m_MainCppDir;
   }
 
   [[nodiscard]]
-  const std::filesystem::path& project_paths::include_target() const noexcept
+  const fs::path& project_paths::include_target() const noexcept
   {
     return m_IncludeTarget;
   }
 
   [[nodiscard]]
-  const std::filesystem::path& project_paths::cmade_build_dir() const noexcept
+  const fs::path& project_paths::cmade_build_dir() const noexcept
   {
     return m_CMadeBuildDir;
   }
 
   [[nodiscard]]
-  std::filesystem::path aux_files_path(std::filesystem::path projectRoot)
+  fs::path aux_files_path(fs::path projectRoot)
   {
     return projectRoot/"aux_files";
   }
 
   [[nodiscard]]
-  std::filesystem::path build_system_path(std::filesystem::path projectRoot)
+  fs::path build_system_path(fs::path projectRoot)
   {
     return projectRoot / "build_system";
   }
 
   [[nodiscard]]
-  std::filesystem::path code_templates_path(std::filesystem::path projectRoot)
+  fs::path code_templates_path(fs::path projectRoot)
   {
     return projectRoot/"aux_files"/"TestTemplates";
   }
 
   [[nodiscard]]
-  std::filesystem::path source_templates_path(std::filesystem::path projectRoot)
+  fs::path source_templates_path(fs::path projectRoot)
   {
     return projectRoot / "aux_files" / "SourceTemplates";
   }
 
   [[nodiscard]]
-  std::filesystem::path project_template_path(std::filesystem::path projectRoot)
+  fs::path project_template_path(fs::path projectRoot)
   {
     return projectRoot/"aux_files"/"ProjectTemplate";
   }
 
   [[nodiscard]]
-  std::filesystem::path recovery_path(std::filesystem::path outputDir)
+  fs::path recovery_path(fs::path outputDir)
   {
     return outputDir /= "Recovery";
   }
 
   [[nodiscard]]
-  std::filesystem::path tests_temporary_data_path(std::filesystem::path outputDir)
+  fs::path tests_temporary_data_path(fs::path outputDir)
   {
     return outputDir /= "TestsTemporaryData";
   }
 
   [[nodiscard]]
-  std::filesystem::path diagnostics_output_path(std::filesystem::path outputDir)
+  fs::path diagnostics_output_path(fs::path outputDir)
   {
     return outputDir /= "DiagnosticsOutput";
   }
 
   [[nodiscard]]
-  std::filesystem::path test_summaries_path(std::filesystem::path outputDir)
+  fs::path test_summaries_path(fs::path outputDir)
   {
     return outputDir /= "TestSummaries";
   }
 
   [[nodiscard]]
-  std::filesystem::path temp_test_summaries_path(std::filesystem::path outputDir)
+  fs::path temp_test_summaries_path(fs::path outputDir)
   {
     return tests_temporary_data_path(outputDir) /= "InstabilityAnalysis";
   }
 
   [[nodiscard]]
-  std::filesystem::path prune_path(std::filesystem::path outputDir, const std::filesystem::path& testMainDir)
+  fs::path prune_path(const project_paths& projPaths)
   {
-    throw_unless_exists(testMainDir);
+    const auto& cmadeBuildDir{projPaths.cmade_build_dir()};
+    if(cmadeBuildDir.empty())
+      throw std::runtime_error{"Build directory required for pruning"};
 
-    return (outputDir /= *(--testMainDir.end())).concat(".prune");
+    const auto relPath{fs::relative(cmadeBuildDir, projPaths.project_root())};
+    auto outputDir{projPaths.output() / relPath};
+
+    fs::create_directories(outputDir);
+
+    return (outputDir /= *(--cmadeBuildDir.end())).concat(".prune");
   }
 
-  void throw_unless_exists(const std::filesystem::path& p, std::string_view message)
+  void throw_unless_exists(const fs::path& p, std::string_view message)
   {
-    namespace fs = std::filesystem;
-
     throw_if(p, append_lines(p.empty() ? "File path is empty" :"not found", message),
              [](const fs::path& p){ return !fs::exists(p); });
   }
 
-  void throw_unless_directory(const std::filesystem::path& p, std::string_view message)
+  void throw_unless_directory(const fs::path& p, std::string_view message)
   {
-    namespace fs = std::filesystem;
-
     throw_if(p, append_lines(p.empty() ? "File path is empty" : "is not a directory", message), [](const fs::path& p){ return !fs::is_directory(p); });
   }
 
-  void throw_unless_regular_file(const std::filesystem::path& p, std::string_view message)
+  void throw_unless_regular_file(const fs::path& p, std::string_view message)
   {
-    namespace fs = std::filesystem;
-
     throw_unless_exists(p, message);
     throw_if(p, append_lines(" is not a regular file", message), [](const fs::path& p){ return !fs::is_regular_file(p); });
   }
 
   [[nodiscard]]
-  std::filesystem::path find_in_tree(const std::filesystem::path& root, const std::filesystem::path& toFind)
+  fs::path find_in_tree(const fs::path& root, const fs::path& toFind)
   {
     throw_unless_directory(root, "");
 
-    using dir_iter = std::filesystem::recursive_directory_iterator;
+    using dir_iter = fs::recursive_directory_iterator;
 
     if(const auto toFindLen{std::distance(toFind.begin(), toFind.end())}; toFindLen)
     {
@@ -331,10 +331,8 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path rebase_from(const std::filesystem::path& p, const std::filesystem::path& dir)
+  fs::path rebase_from(const fs::path& p, const fs::path& dir)
   {
-    namespace fs = std::filesystem;
-
     if(fs::exists(dir) && !fs::is_directory(dir))
       throw std::logic_error{"Trying to rebase from something other than a directory"};
 

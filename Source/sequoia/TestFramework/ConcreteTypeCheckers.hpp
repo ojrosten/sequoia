@@ -594,29 +594,21 @@ namespace sequoia::testing
     }
   };
 
-  /*! \brief Compares instance of `std::unique_ptr`
-
-      The `test(equality_check_t,...)` overload checks that the underlying pointers point to the same thing.
-
-      The `test(equivalence_check_t,...)` overload checks whether the pointers either both point to
-      something or both point to nullptr, reporting a failure if this is not the case. If both
-      pointers are not null, a check is dispatched to test the underlying type. This is done using
-      the strongest available check.
-   */
-
   template<class T>
-  struct value_tester<std::unique_ptr<T>>
+  struct smart_pointer_tester
   {
-    using type = std::unique_ptr<T>;
+    using type = T;
 
     template<test_mode Mode>
     static void test(equality_check_t, test_logger<Mode>& logger, const type& obtained, const type& prediction)
     {
       check(equality, "Underlying pointers differ", logger, obtained.get(), prediction.get());
     }
+  protected:
+    ~smart_pointer_tester() = default;
 
     template<test_mode Mode>
-    static void test(equivalence_check_t, test_logger<Mode>& logger, const type& obtained, const type& prediction)
+    static void test_pointees(test_logger<Mode>& logger, const type& obtained, const type& prediction)
     {
       if(obtained && prediction)
       {
@@ -634,13 +626,88 @@ namespace sequoia::testing
         };
 
         check(equality,
-              messageFn("obtained", obtainedIsBound).append(" but ").append(messageFn("prediction", predictionIsBound)),
-              logger,
-              static_cast<bool>(obtained),
-              static_cast<bool>(prediction));
+          messageFn("obtained", obtainedIsBound).append(" but ").append(messageFn("prediction", predictionIsBound)),
+          logger,
+          static_cast<bool>(obtained),
+          static_cast<bool>(prediction));
       }
     }
   };
+
+  /*! \brief Compares instance of `std::unique_ptr`
+
+      The `test(equality_check_t,...)` overload checks that the underlying pointers point to the same thing.
+
+      The `test(equivalence_check_t,...)` overload checks whether the pointers either both point to
+      something or both point to nullptr, reporting a failure if this is not the case. If both
+      pointers are not null, a check is dispatched to test the underlying type. This is done using
+      the strongest available check.
+   */
+
+  template<class T>
+  struct value_tester<std::unique_ptr<T>> : smart_pointer_tester<std::unique_ptr<T>>
+  {
+    using type = std::unique_ptr<T>;
+    using base_t = smart_pointer_tester<std::unique_ptr<T>>;
+    using base_t::test;
+
+    template<test_mode Mode>
+    static void test(equivalence_check_t, test_logger<Mode>& logger, const type& obtained, const type& prediction)
+    {
+      using base_t = base_t;
+      base_t::test_pointees(logger, obtained, prediction);
+    }
+  };
+
+  /*! \brief Compares instance of `std::shared_ptr`
+
+      The `test(equality_check_t,...)` overload checks that the underlying pointers point to the same thing.
+
+      The `test(equivalence_check_t,...)` overload checks whether the pointers either both point to
+      something or both point to nullptr, reporting a failure if this is not the case. If both
+      pointers are not null, a check is dispatched to test the underlying type. This is done using
+      the strongest available check. In addition, the the `use_counts` are compared.
+   */
+
+  template<class T>
+  struct value_tester<std::shared_ptr<T>> : smart_pointer_tester<std::shared_ptr<T>>
+  {
+    using type = std::shared_ptr<T>;
+    using base_t = smart_pointer_tester<std::shared_ptr<T>>;
+    using base_t::test;
+
+    template<test_mode Mode>
+    static void test(equivalence_check_t, test_logger<Mode>& logger, const type& obtained, const type& prediction)
+    {
+      check(equality, "Use count", logger, obtained.use_count(), prediction.use_count());
+      base_t::test_pointees(logger, obtained, prediction);
+    }
+  };
+
+  /*! \brief Compares instance of `std::weak_ptr`
+
+      Comparison is performed by calling lock on the `obtained` and `predicted`
+      `std::weak_ptr`s and then comparing the nascent `std::shared_ptr`s.
+   */
+
+  template<class T>
+  struct value_tester<std::weak_ptr<T>>
+  {
+    using type = std::weak_ptr<T>;
+
+    template<test_mode Mode>
+    static void test(equality_check_t, test_logger<Mode>& logger, const type& obtained, const type& prediction)
+    {
+      check(equality, "Underlying pointers differ", logger, obtained.lock(), prediction.lock());
+    }
+
+    template<test_mode Mode>
+    static void test(equivalence_check_t, test_logger<Mode>& logger, const type& obtained, const type& prediction)
+    {
+      check(equivalence, "Underlying pointers differ", logger, obtained.lock(), prediction.lock());
+    }
+  };
+
 
   /*! \brief Provides a `weak_equivalence` test for `std::function`
 
