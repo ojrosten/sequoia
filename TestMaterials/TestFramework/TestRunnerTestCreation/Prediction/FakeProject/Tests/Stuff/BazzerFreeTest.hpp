@@ -13,7 +13,7 @@
 
 namespace sequoia::testing
 {
-    class bazzer_test final : public free_test
+    class bazzer_free_test final : public free_test
     {
     public:
         using free_test::free_test;

@@ -79,6 +79,11 @@ namespace sequoia::testing
 
     void forename(std::string name) { m_Forename = std::move(name); }
 
+    [[nodiscard]]
+    const std::string& surname() const noexcept { return m_Surname; }
+
+    void surname(std::string name) { m_Surname = std::move(name); }
+
     void generate_source_files(gen_source_option opt)
     {
       m_SourceOption = opt;
@@ -149,7 +154,7 @@ namespace sequoia::testing
     indentation m_CodeIndent{"  "};
     std::ostream* m_Stream;
 
-    std::string m_Family{}, m_TestType{}, m_Forename{}, m_CamelName{};
+    std::string m_Family{}, m_TestType{}, m_Forename{}, m_Surname{}, m_CamelName{};
     std::filesystem::path m_Header{}, m_HostDir{}, m_HeaderPath{};
     gen_source_option m_SourceOption{};
 

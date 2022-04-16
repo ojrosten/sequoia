@@ -21,7 +21,7 @@ create | c |
     --header | -h | header of class to test
   free_test | free | header
     --family | -f | family
-    --forename | -name | forename
+    --test-class-forename | --forename | test class is named <forename>_...
     gen-source | g | namespace
   performance_test | performance | header
     --family | -f | family

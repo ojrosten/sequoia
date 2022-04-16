@@ -13,7 +13,7 @@
 
 namespace sequoia::testing
 {
-	class ?forename_false_positive_test final : public ?_false_positive_test
+	class ?forename_false_positive_?surname final : public ?_false_positive_test
 	{
 	public:
 		using ?_false_positive_test::?_false_positive_test;

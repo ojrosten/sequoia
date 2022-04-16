@@ -138,7 +138,7 @@ namespace sequoia::testing
       }
     };
 
-    const option nameOption{"--forename", {"-name"}, {"forename"},
+    const option forenameOption{"--test-class-forename", {"--forename"}, {"test class is named <forename>_..."},
       [&nascentTests](const arg_list& args){
         if(nascentTests.empty())
           throw std::logic_error{"Unable to find nascent test"};
@@ -192,7 +192,7 @@ namespace sequoia::testing
     const std::initializer_list<maths::tree_initializer<option>> semanticsOptions{{equivOption}, {familyOption}, {headerOption}, {genSemanticsSourceOption}};
     const std::initializer_list<maths::tree_initializer<option>> allocationOptions{{familyOption}, {headerOption}};
     const std::initializer_list<maths::tree_initializer<option>> performanceOptions{{familyOption}};
-    const std::initializer_list<maths::tree_initializer<option>> freeOptions{{familyOption}, {nameOption}, {genFreeSourceOption}};
+    const std::initializer_list<maths::tree_initializer<option>> freeOptions{{familyOption}, {forenameOption}, {genFreeSourceOption}};
 
     const auto help{
       parse_invoke_depth_first(argc, argv,

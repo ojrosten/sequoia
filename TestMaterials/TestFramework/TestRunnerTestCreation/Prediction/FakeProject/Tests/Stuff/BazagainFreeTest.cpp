@@ -5,23 +5,21 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#pragma once
-
 /*! \file */
 
-#include "sequoia/TestFramework/FreeTestCore.hpp"
+#include "BazagainFreeTest.hpp"
+#include "fakeProject/Stuff/Baz.h"
 
 namespace sequoia::testing
 {
-    class bazagain_test final : public free_test
+    [[nodiscard]]
+    std::string_view bazagain_free_test::source_file() const noexcept
     {
-    public:
-        using free_test::free_test;
+        return __FILE__;
+    }
 
-    private:
-        [[nodiscard]]
-        std::string_view source_file() const noexcept final;
-
-        void run_tests() final;
-    };
+    void bazagain_free_test::run_tests()
+    {
+        // e.g. check(equality, LINE("Useful description"), some_function(), 42);
+    }
 }

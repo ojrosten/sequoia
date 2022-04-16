@@ -7,18 +7,18 @@
 
 /*! \file */
 
-#include "BazagainTest.hpp"
+#include "BazzerFreeTest.hpp"
 #include "fakeProject/Stuff/Baz.h"
 
 namespace sequoia::testing
 {
     [[nodiscard]]
-    std::string_view bazagain_test::source_file() const noexcept
+    std::string_view bazzer_free_test::source_file() const noexcept
     {
         return __FILE__;
     }
 
-    void bazagain_test::run_tests()
+    void bazzer_free_test::run_tests()
     {
         // e.g. check(equality, LINE("Useful description"), some_function(), 42);
     }

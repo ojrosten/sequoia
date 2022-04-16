@@ -100,8 +100,8 @@ int main(int argc, char** argv)
 
         runner.add_test_family(
             "Bazzer",
-            bazagain_test{"Free Test"},
-            bazzer_test{"Free Test"}
+            bazagain_free_test{"Free Test"},
+            bazzer_free_test{"Free Test"}
         );
 
         runner.add_test_family(

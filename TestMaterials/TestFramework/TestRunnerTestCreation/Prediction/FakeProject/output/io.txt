@@ -95,12 +95,12 @@ Creating files for new test:
 "Tests/Utilities/UtilitiesFreeTest.cpp"
 
 Creating files for new test:
-"Tests/Stuff/BazzerTest.hpp"
-"Tests/Stuff/BazzerTest.cpp"
+"Tests/Stuff/BazzerFreeTest.hpp"
+"Tests/Stuff/BazzerFreeTest.cpp"
 
 Creating files for new test:
-"Tests/Stuff/BazagainTest.hpp"
-"Tests/Stuff/BazagainTest.cpp"
+"Tests/Stuff/BazagainFreeTest.hpp"
+"Tests/Stuff/BazagainFreeTest.cpp"
 
 Creating files for new test:
 Source/fakeProject/Stuff/Doohicky.hpp
