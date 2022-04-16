@@ -530,7 +530,7 @@ namespace sequoia::testing
     }
 
     replace_all(text, {{"::?_class", m_QualifiedName},
-                       {"?_class", forename()},
+                       {"?forename", forename()},
                        {"?Class.hpp", header_path().generic_string()},
                        {"?Class", camel_name()},
                        {"?Test", to_camel_case(test_type()).append("Test")},
@@ -600,7 +600,7 @@ namespace sequoia::testing
   {
     tabs_to_spacing(text, code_indent());
 
-    replace_all(text, {{"?_behavioural", forename()},
+    replace_all(text, {{"?forename", forename()},
                        {"?Behavioural", camel_name()},
                        {"?Test", to_camel_case(test_type()).append("Test")},
                        {"?Header.hpp", header_path().generic_string()},
@@ -632,7 +632,7 @@ namespace sequoia::testing
   {
     tabs_to_spacing(text, code_indent());
 
-    replace_all(text, {{"?_class", forename()},
+    replace_all(text, {{"?forename", forename()},
                        {"?Class", camel_name()},
                        {"?Allocation", to_camel_case(test_type())},
                        {"?_allocation", test_type()}});

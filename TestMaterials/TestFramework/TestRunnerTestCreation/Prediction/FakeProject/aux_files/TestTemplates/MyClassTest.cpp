@@ -12,12 +12,12 @@
 namespace sequoia::testing
 {
 	[[nodiscard]]
-	std::string_view ?_class_test::source_file() const noexcept
+	std::string_view ?forename_test::source_file() const noexcept
 	{
 		return __FILE__;
 	}
 
-	void ?_class_test::run_tests()
+	void ?forename_test::run_tests()
 	{
 		// For example:
 $Regular
