@@ -430,7 +430,7 @@ namespace sequoia::testing
           std::vector<only_weakly_checkable>{{42, 3.14}},
           std::vector<std::pair<int, double>>{{41, 3.13}}, tutor{bland{}});
 
-    check(weak_equivalence, 
+    check(weak_equivalence,
           LINE("Advice for range weak equivalence, where the containerized form is not explicitly specialized"),
           std::list<only_weakly_checkable>{{42, 3.14}},
           std::list<std::pair<int, double>>{{41, 3.13}}, tutor{bland{}});

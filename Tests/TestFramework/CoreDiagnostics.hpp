@@ -9,9 +9,9 @@
 
 /*! \file */
 
-#include "sequoia/TestFramework/RegularTestCore.hpp"
+#include "sequoia/TestFramework/FreeTestCore.hpp"
 
-namespace sequoia:: testing
+namespace sequoia::testing
 {
   log_summary& postprocess(log_summary& summary, const std::filesystem::path& testRepo);
 
@@ -48,10 +48,10 @@ namespace sequoia:: testing
     void test_with_best_available_checks();
   };
 
-  class false_negative_diagnostics final : public regular_false_negative_test
+  class false_negative_diagnostics final : public free_false_negative_test
   {
   public:
-    using regular_false_negative_test::regular_false_negative_test;
+    using free_false_negative_test::free_false_negative_test;
 
     [[nodiscard]]
     std::string_view source_file() const noexcept final;
@@ -61,7 +61,7 @@ namespace sequoia:: testing
     [[nodiscard]]
     log_summary summarize(duration delta) const override
     {
-      auto summary{regular_false_negative_test::summarize(delta)};
+      auto summary{free_false_negative_test::summarize(delta)};
       return postprocess(summary, this->test_repository());
     }
 
