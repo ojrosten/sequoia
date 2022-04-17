@@ -50,6 +50,20 @@ namespace sequoia::testing
         replace_all(text, {{"namespace", std::string{"namespace "}.append(nameSpace)}, {"?{", "{"}, {"?}", "}"}});
       }
     }
+
+    [[nodiscard]]
+    std::string to_surname(nascent_test_flavour f)
+    {
+      switch(f)
+      {
+      case nascent_test_flavour::standard:
+        return "test";
+      case nascent_test_flavour::framework_diagnostics:
+        return "diagnostics";
+      }
+
+      throw std::logic_error{"Unrecognized option for nascent_test_flavour"};
+    }
   }
 
   [[nodiscard]]
@@ -406,7 +420,7 @@ namespace sequoia::testing
       }
     }
 
-    if(surname().empty()) surname("test");
+    if(surname().empty()) surname(to_surname(flavour()));
 
     camel_name(forename());
     finalize_family(camel_name());
@@ -563,7 +577,7 @@ namespace sequoia::testing
 
     if(forename().empty()) forename(to_snake_case(fallbackFamily));
 
-    if(surname().empty()) surname(std::string{test_type()}.append("_test"));
+    if(surname().empty()) surname(std::string{test_type()}.append("_").append(to_surname(flavour())));
 
     camel_name(std::string{forename()}.append("_").append(test_type()));
 
@@ -612,7 +626,7 @@ namespace sequoia::testing
 
   void nascent_allocation_test::finalize()
   {
-    if(surname().empty()) surname("allocation_test");
+    if(surname().empty()) surname(std::string{"allocation_"}.append(to_surname(flavour())));
     camel_name(forename());
     finalize_family(camel_name());
     if(header().empty()) header(std::filesystem::path{camel_name()}.concat(".hpp"));

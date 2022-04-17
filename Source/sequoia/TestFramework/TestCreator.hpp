@@ -47,6 +47,8 @@ namespace sequoia::testing
 
   void cmake_nascent_tests(const std::filesystem::path& mainCppDir, const std::filesystem::path& buildDir, std::ostream& stream);
 
+  enum class nascent_test_flavour { standard, framework_diagnostics };
+
   class nascent_test_base
   {
   public:
@@ -58,6 +60,11 @@ namespace sequoia::testing
       , m_CodeIndent{codeIndent}
       , m_Stream{&stream}
     {}
+
+    [[nodiscard]]
+    nascent_test_flavour flavour() const noexcept { return m_Flavour; }
+
+    void flavour(nascent_test_flavour f) { m_Flavour = f; }
 
     [[nodiscard]]
     const std::string& family() const noexcept { return m_Family; }
@@ -146,6 +153,12 @@ namespace sequoia::testing
     std::ostream& stream() noexcept { return *m_Stream; }
 
     void finalize_family(std::string_view fallbackIngredient);
+
+    [[nodiscard]]
+    constexpr static std::array<std::string_view, 2> framework_diagnostics_stubs() noexcept
+    {
+      return {"Diagnostics.hpp", "Diagnostics.cpp"};
+    };
   private:
     constexpr static std::array<std::string_view, 3> st_HeaderExtensions{".hpp", ".h", ".hxx"};
 
@@ -154,6 +167,7 @@ namespace sequoia::testing
     indentation m_CodeIndent{"  "};
     std::ostream* m_Stream;
 
+    nascent_test_flavour m_Flavour{nascent_test_flavour::standard};
     std::string m_Family{}, m_TestType{}, m_Forename{}, m_Surname{}, m_CamelName{};
     std::filesystem::path m_Header{}, m_HostDir{}, m_HeaderPath{};
     gen_source_option m_SourceOption{};
@@ -190,6 +204,7 @@ namespace sequoia::testing
     [[nodiscard]]
     friend bool operator!=(const nascent_semantics_test&, const nascent_semantics_test&) noexcept = default;
 
+    [[nodiscard]]
     constexpr static std::array<std::string_view, 5> stubs() noexcept
     {
       return {"TestingUtilities.hpp",
@@ -220,6 +235,7 @@ namespace sequoia::testing
   public:
     using nascent_test_base::nascent_test_base;
 
+    [[nodiscard]]
     constexpr static std::array<std::string_view, 2> stubs() noexcept
     {
       return {"AllocationTest.hpp",
@@ -250,6 +266,7 @@ namespace sequoia::testing
     [[nodiscard]]
     friend bool operator!=(const nascent_behavioural_test&, const nascent_behavioural_test&) noexcept = default;
 
+    [[nodiscard]]
     constexpr static std::array<std::string_view, 2> stubs() noexcept
     {
       return {"Test.hpp", "Test.cpp"};

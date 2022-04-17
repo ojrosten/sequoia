@@ -23,6 +23,7 @@ create | c |
     --family | -f | family
     --test-class-forename | --forename | test class is named <forename>_...
     gen-source | g | namespace
+    --framework-diagnostics | --diagnostics |
   performance_test | performance | header
     --family | -f | family
 init | i | copyright owner, path ending with project name, code indent

@@ -113,6 +113,15 @@ namespace sequoia::testing
       }
     };
 
+    const option diagnosticsOption{"--framework-diagnostics", {"--diagnostics"}, {},
+      [&nascentTests](const arg_list&) {
+        if(nascentTests.empty())
+          throw std::logic_error{"Unable to find nascent test"};
+
+        std::visit(variant_visitor{[](auto& nascent) { nascent.flavour(nascent_test_flavour::framework_diagnostics); }}, nascentTests.back());
+      }
+    };
+
     const option equivOption{"--equivalent-type", {"-e"}, {"equivalent_type"},
       [&nascentTests](const arg_list& args){
         if(nascentTests.empty())
@@ -192,7 +201,7 @@ namespace sequoia::testing
     const std::initializer_list<maths::tree_initializer<option>> semanticsOptions{{equivOption}, {familyOption}, {headerOption}, {genSemanticsSourceOption}};
     const std::initializer_list<maths::tree_initializer<option>> allocationOptions{{familyOption}, {headerOption}};
     const std::initializer_list<maths::tree_initializer<option>> performanceOptions{{familyOption}};
-    const std::initializer_list<maths::tree_initializer<option>> freeOptions{{familyOption}, {forenameOption}, {genFreeSourceOption}};
+    const std::initializer_list<maths::tree_initializer<option>> freeOptions{{familyOption}, {forenameOption}, {genFreeSourceOption}, {diagnosticsOption}};
 
     const auto help{
       parse_invoke_depth_first(argc, argv,
