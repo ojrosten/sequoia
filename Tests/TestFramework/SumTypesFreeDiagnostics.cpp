@@ -79,6 +79,9 @@ namespace sequoia::testing
     check(equivalence, LINE("Empty std::any"), std::any{}, 1);
     check(equivalence, LINE("std::any holding the wrong type"), std::any{1},1.0);
     check(equivalence, LINE("std::any holding the wrong value"), std::any{1}, 2);
+
+    check(equivalence, LINE(""), std::any{only_equivalence_checkable{1}}, only_equivalence_checkable{2});
+    check(equivalence, LINE(""), std::any{only_weakly_checkable{1, 1.0}}, only_weakly_checkable{2, 2.0});
   }
 
   [[nodiscard]]
@@ -144,5 +147,7 @@ namespace sequoia::testing
   void sum_types_false_negative_free_diagnostics::test_any()
   {
     check(equivalence, LINE(""), std::any{1}, 1);
+    check(equivalence, LINE(""), std::any{only_equivalence_checkable{1}}, only_equivalence_checkable{1});
+    check(equivalence, LINE(""), std::any{only_weakly_checkable{1, 1.0}}, only_weakly_checkable{1, 1.0});
   }
 }

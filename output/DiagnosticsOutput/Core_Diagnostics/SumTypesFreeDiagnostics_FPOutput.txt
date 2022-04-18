@@ -265,3 +265,43 @@
 
 	=======================================
 
+	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 83
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<std::any>]
+	Checking for equivalence with:
+	[sequoia::testing::only_equivalence_checkable]
+
+	  Value held by std::any
+	  [sequoia::testing::only_equivalence_checkable]
+	    Wrapped float
+	    [double]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 2
+
+	=======================================
+
+	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 84
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<std::any>]
+	Checking for equivalence with:
+	[sequoia::testing::only_weakly_checkable]
+
+	  Value held by std::any
+	  [sequoia::testing::only_weakly_checkable]
+	    Wrapped int
+	    [int]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 2
+
+	    Wrapped double
+	    [double]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 2
+
+	=======================================
+

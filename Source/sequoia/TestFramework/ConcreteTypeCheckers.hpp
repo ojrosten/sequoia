@@ -595,7 +595,12 @@ namespace sequoia::testing
     }
   };
 
-  /*! Compares an instance of std::any to the value of the type it purportedly holds */
+  /*! \brief Compares an instance of `std::any` to the value of the type it purportedly holds
+
+      The semantics are such that, under the hood, `with_best_available` is utilized. Therefore,
+      the equivalence of `std::any` to the value of a purported type may ultimately delegate
+      to an `equality`/`equivalence`/`weak_equivalence` check.
+   */
 
   template<>
   struct value_tester<std::any>
