@@ -1,54 +1,126 @@
 	False Positive Failure:
-	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 70
+	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 102
 
 	[std::variant<int, double>]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 71
+	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 103
 
 	[std::variant<int, double>]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 72
+	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 104
 
 	[std::variant<int, double>]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 73
+	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 105
 
 	[std::variant<int, double>]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 79
+	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 106
+
+	[std::variant<int, double>]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 112
+
+	[std::variant<int, sequoia::testing::only_equivalence_checkable, sequoia::testing::only_weakly_checkable>]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 113
+
+	[std::variant<int, sequoia::testing::only_equivalence_checkable, sequoia::testing::only_weakly_checkable>]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 114
+
+	[std::variant<int, sequoia::testing::only_equivalence_checkable, sequoia::testing::only_weakly_checkable>]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 123
 
 	[std::optional<int>]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 80
+	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 124
 
 	[std::optional<int>]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 81
+	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 125
 
 	[std::optional<int>]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 86
+	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 131
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<std::optional<sequoia::testing::only_equivalence_checkable> >]
+	Checking for equivalence with:
+	[std::optional<sequoia::testing::only_equivalence_checkable>]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 132
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<std::optional<sequoia::testing::only_equivalence_checkable> >]
+	Checking for equivalence with:
+	[std::optional<sequoia::testing::only_equivalence_checkable>]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 133
+
+	[std::optional<sequoia::testing::only_equivalence_checkable>]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 139
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<std::optional<sequoia::testing::only_weakly_checkable> >]
+	Checking for weak equivalence with:
+	[std::optional<sequoia::testing::only_weakly_checkable>]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 140
+
+	[std::optional<sequoia::testing::only_weakly_checkable>]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 146
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<std::any>]

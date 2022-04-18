@@ -53,7 +53,7 @@ namespace sequoia::testing
     }
 
     template<test_mode Mode, class Advisor = null_advisor>
-    static void test(weak_equivalence_check_t, test_logger<Mode>& logger, const only_equivalence_checkable& obtained, const only_equivalence_checkable& prediction, const tutor<Advisor>& advisor = {})
+    static void test(equivalence_check_t, test_logger<Mode>& logger, const only_equivalence_checkable& obtained, const only_equivalence_checkable& prediction, const tutor<Advisor>& advisor = {})
     {
       check(equality, "Wrapped float", logger, obtained.x, prediction.x, advisor);
     }
