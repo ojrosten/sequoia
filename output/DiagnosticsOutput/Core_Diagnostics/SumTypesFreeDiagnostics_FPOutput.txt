@@ -1,4 +1,5 @@
 	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 32
+	Variant holding different types but with the same value
 
 	[std::variant<int, double>]
 	operator== returned false
@@ -12,6 +13,7 @@
 	=======================================
 
 	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 33
+	Variant holding the zeroth type, but with different values
 
 	[std::variant<int, double>]
 	operator== returned false
@@ -25,6 +27,7 @@
 	=======================================
 
 	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 34
+	Variant holding the first type, but with different values
 
 	[std::variant<int, double>]
 	operator== returned false
@@ -38,6 +41,7 @@
 	=======================================
 
 	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 40
+	Empty vs non-empty optional
 
 	[std::optional<int>]
 	operator== returned false
@@ -49,6 +53,7 @@
 	=======================================
 
 	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 41
+	Non-empty vs empty optional
 
 	[std::optional<int>]
 	operator== returned false
@@ -60,6 +65,7 @@
 	=======================================
 
 	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 42
+	Two optionals holdings different values
 
 	[std::optional<int>]
 	operator== returned false

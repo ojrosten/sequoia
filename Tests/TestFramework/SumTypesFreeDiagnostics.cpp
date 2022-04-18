@@ -29,17 +29,17 @@ namespace sequoia::testing
   {
     using var = std::variant<int, double>;
 
-    check(equality, LINE(""), var{0}, var{0.0});
-    check(equality, LINE(""), var{1}, var{2});
-    check(equality, LINE(""), var{-0.1}, var{0.0});
+    check(equality, LINE("Variant holding different types but with the same value"), var{0}, var{0.0});
+    check(equality, LINE("Variant holding the zeroth type, but with different values"), var{1}, var{2});
+    check(equality, LINE("Variant holding the first type, but with different values"), var{-0.1}, var{0.0});
   }
 
   void sum_types_false_positive_free_diagnostics::test_optional()
   {
     using opt = std::optional<int>;
-    check(equality, LINE(""), opt{}, opt{0});
-    check(equality, LINE(""), opt{0}, opt{});
-    check(equality, LINE(""), opt{2}, opt{0});
+    check(equality, LINE("Empty vs non-empty optional"), opt{}, opt{0});
+    check(equality, LINE("Non-empty vs empty optional"), opt{0}, opt{});
+    check(equality, LINE("Two optionals holdings different values"), opt{2}, opt{0});
   }
 
   [[nodiscard]]
