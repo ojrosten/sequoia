@@ -89,6 +89,7 @@
 #include "TestFramework/RegularTestDiagnostics.hpp"
 #include "TestFramework/RelationalTestDiagnostics.hpp"
 #include "TestFramework/ScopedAllocationTestDiagnostics.hpp"
+#include "TestFramework/SumTypesFreeDiagnostics.hpp"
 #include "TestFramework/TestRunnerDiagnostics.hpp"
 #include "TestFramework/TestRunnerEndToEndFreeTest.hpp"
 #include "TestFramework/TestRunnerProjectCreation.hpp"

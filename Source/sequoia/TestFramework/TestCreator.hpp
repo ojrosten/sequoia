@@ -107,6 +107,9 @@ namespace sequoia::testing
 
     [[nodiscard]]
     friend bool operator!=(const nascent_test_base&, const nascent_test_base&) noexcept = default;
+
+    [[nodiscard]]
+    static std::vector<std::string> framework_diagnostics_stubs();
   protected:
     nascent_test_base(const nascent_test_base&)     = default;
     nascent_test_base(nascent_test_base&&) noexcept = default;
@@ -124,9 +127,9 @@ namespace sequoia::testing
     [[nodiscard]]
     std::filesystem::path build_source_path(const std::filesystem::path& filename) const;
 
-    template<invocable_r<std::filesystem::path, std::filesystem::path> WhenAbsent, std::size_t N, std::invocable<std::string&> FileTransformer>
+    template<invocable_r<std::filesystem::path, std::filesystem::path> WhenAbsent,std::invocable<std::string&> FileTransformer>
     void finalize(WhenAbsent fn,
-                  const std::array<std::string_view, N>& stubs,
+                  const std::vector<std::string>& stubs,
                   const std::vector<std::string>& constructors,
                   std::string_view nameStub,
                   FileTransformer transformer);
@@ -153,12 +156,6 @@ namespace sequoia::testing
     std::ostream& stream() noexcept { return *m_Stream; }
 
     void finalize_family(std::string_view fallbackIngredient);
-
-    [[nodiscard]]
-    constexpr static std::array<std::string_view, 2> framework_diagnostics_stubs() noexcept
-    {
-      return {"Diagnostics.hpp", "Diagnostics.cpp"};
-    };
   private:
     constexpr static std::array<std::string_view, 3> st_HeaderExtensions{".hpp", ".h", ".hxx"};
 
@@ -204,15 +201,9 @@ namespace sequoia::testing
     [[nodiscard]]
     friend bool operator!=(const nascent_semantics_test&, const nascent_semantics_test&) noexcept = default;
 
+
     [[nodiscard]]
-    constexpr static std::array<std::string_view, 5> stubs() noexcept
-    {
-      return {"TestingUtilities.hpp",
-              "TestingDiagnostics.hpp",
-              "TestingDiagnostics.cpp",
-              "Test.hpp",
-              "Test.cpp"};
-    };
+    static std::vector<std::string> stubs();
   private:
     std::string m_QualifiedName{};
 
@@ -236,11 +227,7 @@ namespace sequoia::testing
     using nascent_test_base::nascent_test_base;
 
     [[nodiscard]]
-    constexpr static std::array<std::string_view, 2> stubs() noexcept
-    {
-      return {"AllocationTest.hpp",
-              "AllocationTest.cpp"};
-    };
+    static std::vector<std::string> stubs();
 
     void finalize();
 
@@ -267,10 +254,7 @@ namespace sequoia::testing
     friend bool operator!=(const nascent_behavioural_test&, const nascent_behavioural_test&) noexcept = default;
 
     [[nodiscard]]
-    constexpr static std::array<std::string_view, 2> stubs() noexcept
-    {
-      return {"Test.hpp", "Test.cpp"};
-    };
+    static std::vector<std::string> stubs();
 
     void set_namespace(std::string n) { m_Namespace = std::move(n); }
   private:
