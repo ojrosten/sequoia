@@ -1,0 +1,49 @@
+	False Positive Failure:
+	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 61
+
+	[std::variant<int, double>]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 62
+
+	[std::variant<int, double>]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 63
+
+	[std::variant<int, double>]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 64
+
+	[std::variant<int, double>]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 70
+
+	[std::optional<int>]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 71
+
+	[std::optional<int>]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 72
+
+	[std::optional<int>]
+
+	=======================================
+

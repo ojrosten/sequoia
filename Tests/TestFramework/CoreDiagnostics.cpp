@@ -100,8 +100,6 @@ namespace sequoia::testing
     basic_tests();
     test_exceptions();
     test_heterogeneous();
-    test_variant();
-    test_optional();
     test_container_checks();
     test_strings<std::string>();
     test_strings<std::string_view>();
@@ -151,23 +149,6 @@ namespace sequoia::testing
     check(equality, LINE(""), std::tuple<int, double, float>{4, 3.4, -9.2f}, std::tuple<int, double, float>{4, 0.0, -9.2f}, tutor{bland{}});
     check(equality, LINE(""), std::tuple<int, double, float>{4, 3.4, -9.2f}, std::tuple<int, double, float>{4, 3.4, -0.0f});
     check(equivalence, LINE(""), std::tuple<const int&, double>{5, 7.8}, std::tuple<int, const double&>{-5, 6.8});
-  }
-
-  void false_positive_diagnostics::test_variant()
-  {
-    using var = std::variant<int, double>;
-
-    check(equality, LINE(""), var{0}, var{0.0});
-    check(equality, LINE(""), var{1}, var{2});
-    check(equality, LINE(""), var{-0.1}, var{0.0});
-  }
-
-  void false_positive_diagnostics::test_optional()
-  {
-    using opt = std::optional<int>;
-    check(equality, LINE(""), opt{}, opt{0});
-    check(equality, LINE(""), opt{0}, opt{});
-    check(equality, LINE(""), opt{2}, opt{0});
   }
 
   void false_positive_diagnostics::test_container_checks()
@@ -475,8 +456,6 @@ namespace sequoia::testing
     basic_tests();
     test_exceptions();
     test_heterogeneous();
-    test_variant();
-    test_optional();
     test_container_checks();
     test_strings();
     test_mixed();
@@ -509,24 +488,6 @@ namespace sequoia::testing
     check(equality, LINE(""), std::tuple<int, double, float>{4, 3.4, -9.2f}, std::tuple<int, double, float>{4, 3.4, -9.2f});
   }
 
-  void false_negative_diagnostics::test_variant()
-  {
-    using var = std::variant<int, double>;
-
-    check(equality, LINE(""), var{0}, var{0});
-    check(equality, LINE(""), var{0.0}, var{0.0});
-    check(equality, LINE(""), var{3}, var{3});
-    check(equality, LINE(""), var{4.0}, var{4.0});
-  }
-
-  void false_negative_diagnostics::test_optional()
-  {
-    using opt = std::optional<int>;
-    check(equality, LINE(""), opt{}, opt{});
-    check(equality, LINE(""), opt{0}, opt{0});
-    check(equality, LINE(""), opt{-1}, opt{-1});
-  }
-
   void false_negative_diagnostics::test_container_checks()
   {
     check(equality, LINE("Empty vector check which should pass"), std::vector<double>{}, std::vector<double>{});
@@ -537,7 +498,6 @@ namespace sequoia::testing
 
     check(equality, LINE("Iterators demarcate identical elements"), refs.cbegin(), refs.cbegin()+3, ans.cbegin()+1, ans.cbegin()+4);
   }
-
 
   void false_negative_diagnostics::test_strings()
   {

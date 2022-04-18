@@ -23,6 +23,9 @@ namespace sequoia::testing
     std::string_view source_file() const noexcept final;
 
     void run_tests() final;
+
+    void test_variant();
+    void test_optional();
   };
   
   class sum_types_false_negative_free_diagnostics final : public free_false_negative_test
@@ -35,5 +38,8 @@ namespace sequoia::testing
     std::string_view source_file() const noexcept final;
 
     void run_tests() final;
+
+    void test_variant();
+    void test_optional();
   };
 }

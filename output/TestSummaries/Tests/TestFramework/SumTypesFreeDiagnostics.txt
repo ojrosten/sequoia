@@ -1,2 +1,4 @@
 SumTypes Free False Positive Diagnostics
+False Positive Checks:                     6;  Failures:  0
 SumTypes Free False Negative Diagnostics
+False Negative Checks:                     7;  Failures:  0

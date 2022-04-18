@@ -1,0 +1,74 @@
+	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 32
+
+	[std::variant<int, double>]
+	operator== returned false
+
+	  Variant Index
+	  [unsigned long long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	=======================================
+
+	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 33
+
+	[std::variant<int, double>]
+	operator== returned false
+
+	  Variant Contents
+	  [int]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 34
+
+	[std::variant<int, double>]
+	operator== returned false
+
+	  Variant Contents
+	  [double]
+	  operator== returned false
+	  Obtained : -0.1
+	  Predicted: 0
+
+	=======================================
+
+	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 40
+
+	[std::optional<int>]
+	operator== returned false
+
+	  Has value
+	  [bool]
+	  check failed
+
+	=======================================
+
+	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 41
+
+	[std::optional<int>]
+	operator== returned false
+
+	  Has value
+	  [bool]
+	  check failed
+
+	=======================================
+
+	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 42
+
+	[std::optional<int>]
+	operator== returned false
+
+	  Contents of optional
+	  [int]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 0
+
+	=======================================
+
