@@ -22,6 +22,7 @@ namespace sequoia::testing
   {
     test_variant();
     test_optional();
+    test_any();
   }
 
 
@@ -29,17 +30,24 @@ namespace sequoia::testing
   {
     using var = std::variant<int, double>;
 
-    check(equality, LINE("Variant holding different types but with the same value"), var{0}, var{0.0});
-    check(equality, LINE("Variant holding the zeroth type, but with different values"), var{1}, var{2});
-    check(equality, LINE("Variant holding the first type, but with different values"), var{-0.1}, var{0.0});
+    check(equality, LINE("std::variant holding different types but with the same value"), var{0}, var{0.0});
+    check(equality, LINE("std::variant holding the zeroth type, but with different values"), var{1}, var{2});
+    check(equality, LINE("std::variant holding the first type, but with different values"), var{-0.1}, var{0.0});
   }
 
   void sum_types_false_positive_free_diagnostics::test_optional()
   {
     using opt = std::optional<int>;
-    check(equality, LINE("Empty vs non-empty optional"), opt{}, opt{0});
-    check(equality, LINE("Non-empty vs empty optional"), opt{0}, opt{});
-    check(equality, LINE("Two optionals holdings different values"), opt{2}, opt{0});
+    check(equality, LINE("Empty vs non-empty std::optional"), opt{}, opt{0});
+    check(equality, LINE("Non-empty vs empty std::optional"), opt{0}, opt{});
+    check(equality, LINE("Two std::optionals holdings different values"), opt{2}, opt{0});
+  }
+
+  void sum_types_false_positive_free_diagnostics::test_any()
+  {
+    check(equivalence, LINE("Empty std::any"), std::any{}, 1);
+    check(equivalence, LINE("std::any holding the wrong type"), std::any{1},1.0);
+    check(equivalence, LINE("std::any holding the wrong value"), std::any{1}, 2);
   }
 
   [[nodiscard]]
@@ -52,6 +60,7 @@ namespace sequoia::testing
   {
     test_variant();
     test_optional();
+    test_any();
   }
 
   void sum_types_false_negative_free_diagnostics::test_variant()
@@ -70,5 +79,10 @@ namespace sequoia::testing
     check(equality, LINE(""), opt{}, opt{});
     check(equality, LINE(""), opt{0}, opt{0});
     check(equality, LINE(""), opt{-1}, opt{-1});
+  }
+
+  void sum_types_false_negative_free_diagnostics::test_any()
+  {
+    check(equivalence, LINE(""), std::any{1}, 1);
   }
 }

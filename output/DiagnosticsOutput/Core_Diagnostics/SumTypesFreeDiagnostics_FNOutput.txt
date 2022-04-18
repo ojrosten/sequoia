@@ -1,49 +1,59 @@
 	False Positive Failure:
-	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 61
-
-	[std::variant<int, double>]
-
-	=======================================
-
-	False Positive Failure:
-	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 62
-
-	[std::variant<int, double>]
-
-	=======================================
-
-	False Positive Failure:
-	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 63
-
-	[std::variant<int, double>]
-
-	=======================================
-
-	False Positive Failure:
-	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 64
-
-	[std::variant<int, double>]
-
-	=======================================
-
-	False Positive Failure:
 	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 70
 
-	[std::optional<int>]
+	[std::variant<int, double>]
 
 	=======================================
 
 	False Positive Failure:
 	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 71
 
-	[std::optional<int>]
+	[std::variant<int, double>]
 
 	=======================================
 
 	False Positive Failure:
 	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 72
 
+	[std::variant<int, double>]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 73
+
+	[std::variant<int, double>]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 79
+
 	[std::optional<int>]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 80
+
+	[std::optional<int>]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 81
+
+	[std::optional<int>]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 86
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<std::any>]
+	Checking for equivalence with:
+	[int]
 
 	=======================================
 

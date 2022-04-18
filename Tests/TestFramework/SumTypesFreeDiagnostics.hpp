@@ -26,6 +26,7 @@ namespace sequoia::testing
 
     void test_variant();
     void test_optional();
+    void test_any();
   };
   
   class sum_types_false_negative_free_diagnostics final : public free_false_negative_test
@@ -41,5 +42,6 @@ namespace sequoia::testing
 
     void test_variant();
     void test_optional();
+    void test_any();
   };
 }

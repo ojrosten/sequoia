@@ -52,6 +52,7 @@
 #include "sequoia/Core/Object/Factory.hpp"
 #include "sequoia/Streaming/Streaming.hpp"
 
+#include <any>
 #include <array>
 #include <functional>
 #include <memory>
@@ -545,7 +546,7 @@ namespace sequoia::testing
     template<class CheckType, test_mode Mode, class Advisor>
     static void test(CheckType flavour, test_logger<Mode>& logger, const type& obtained, const type& prediction, tutor<Advisor> advisor)
     {
-      if(check(flavour, "Variant Index", logger, obtained.index(), prediction.index()))
+      if(check(equality, "Variant Index", logger, obtained.index(), prediction.index()))
       {
         check_value(flavour, logger, obtained, prediction, advisor, std::make_index_sequence<sizeof...(Ts)>());
       }
@@ -582,13 +583,38 @@ namespace sequoia::testing
     using type = std::optional<T>;
 
     template<class CheckType, test_mode Mode, class Advisor>
-    static void test(CheckType flavour, test_logger<Mode>& logger, const type& obtained, const type& prediction, tutor<Advisor> advisor)
+    static void test(CheckType flavour, test_logger<Mode>& logger, const type& obtained, const type& prediction, const tutor<Advisor>& advisor)
     {
-      if(check(flavour, "Has value", logger, obtained.has_value(), prediction.has_value()))
+      if(check(equality, "Has value", logger, obtained.has_value(), prediction.has_value()))
       {
         if(obtained && prediction)
         {
           check(flavour, "Contents of optional", logger, *obtained, *prediction, advisor);
+        }
+      }
+    }
+  };
+
+  /*! Compares an instance of std::any to the value of the type it purportedly holds */
+
+  template<>
+  struct value_tester<std::any>
+  {
+    using type = std::any;
+
+    template<test_mode Mode, class T, class Advisor>
+    static void test(equivalence_check_t, test_logger<Mode>& logger, const type& obtained, const T& prediction, const tutor<Advisor>& advisor)
+    {
+      if(check("Has value", logger, obtained.has_value()))
+      {
+        try
+        {
+          const auto& val{std::any_cast<T>(obtained)};
+          check(with_best_available, "Value held by std::any", logger, val, prediction, advisor);
+        }
+        catch(const std::bad_any_cast&)
+        {
+          check("std::any does not hold the expected type", logger, false);
         }
       }
     }

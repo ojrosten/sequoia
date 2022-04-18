@@ -1,5 +1,5 @@
-	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 32
-	Variant holding different types but with the same value
+	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 33
+	std::variant holding different types but with the same value
 
 	[std::variant<int, double>]
 	operator== returned false
@@ -12,8 +12,8 @@
 
 	=======================================
 
-	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 33
-	Variant holding the zeroth type, but with different values
+	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 34
+	std::variant holding the zeroth type, but with different values
 
 	[std::variant<int, double>]
 	operator== returned false
@@ -26,8 +26,8 @@
 
 	=======================================
 
-	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 34
-	Variant holding the first type, but with different values
+	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 35
+	std::variant holding the first type, but with different values
 
 	[std::variant<int, double>]
 	operator== returned false
@@ -40,20 +40,8 @@
 
 	=======================================
 
-	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 40
-	Empty vs non-empty optional
-
-	[std::optional<int>]
-	operator== returned false
-
-	  Has value
-	  [bool]
-	  check failed
-
-	=======================================
-
 	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 41
-	Non-empty vs empty optional
+	Empty vs non-empty std::optional
 
 	[std::optional<int>]
 	operator== returned false
@@ -65,7 +53,19 @@
 	=======================================
 
 	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 42
-	Two optionals holdings different values
+	Non-empty vs empty std::optional
+
+	[std::optional<int>]
+	operator== returned false
+
+	  Has value
+	  [bool]
+	  check failed
+
+	=======================================
+
+	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 43
+	Two std::optionals holdings different values
 
 	[std::optional<int>]
 	operator== returned false
@@ -75,6 +75,50 @@
 	  operator== returned false
 	  Obtained : 2
 	  Predicted: 0
+
+	=======================================
+
+	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 48
+	Empty std::any
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<std::any>]
+	Checking for equivalence with:
+	[int]
+
+	  Has value
+	  [bool]
+	  check failed
+
+	=======================================
+
+	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 49
+	std::any holding the wrong type
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<std::any>]
+	Checking for equivalence with:
+	[double]
+
+	  std::any does not hold the expected type
+	  [bool]
+	  check failed
+
+	=======================================
+
+	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 50
+	std::any holding the wrong value
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<std::any>]
+	Checking for equivalence with:
+	[int]
+
+	  Value held by std::any
+	  [int]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
 
 	=======================================
 
