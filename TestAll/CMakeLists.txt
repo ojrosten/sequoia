@@ -98,6 +98,7 @@ target_sources(TestAll PRIVATE
                ${TestDir}/TestFramework/RegularTestDiagnostics.cpp
                ${TestDir}/TestFramework/RelationalTestDiagnostics.cpp
                ${TestDir}/TestFramework/ScopedAllocationTestDiagnostics.cpp
+               ${TestDir}/TestFramework/SumTypesFreeDiagnostics.cpp
                ${TestDir}/TestFramework/TestRunnerDiagnostics.cpp
                ${TestDir}/TestFramework/TestRunnerDiagnosticsUtilities.cpp
                ${TestDir}/TestFramework/TestRunnerEndToEndFreeTest.cpp
