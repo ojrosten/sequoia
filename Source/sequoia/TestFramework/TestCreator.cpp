@@ -696,7 +696,7 @@ namespace sequoia::testing
 
         return mess.append(surname())
                    .append("{\"")
-                   .append(to_camel_case(forename())).append(" ").append(to_camel_case(test_type())).append(" ").append(phraseEnding)
+                   .append(to_camel_case(forename(), " ")).append(" ").append(to_camel_case(test_type())).append(" ").append(phraseEnding)
                    .append("\"}");
       }
     };

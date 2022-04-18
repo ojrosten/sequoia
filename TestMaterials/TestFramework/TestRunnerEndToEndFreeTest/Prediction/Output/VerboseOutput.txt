@@ -9,60 +9,60 @@ Utilities:
 	Utilities Free Test
 	[0ms]
 Useful Things:
-[3 (0)ms]
-	UsefulThings Free Test
+[1 (0)ms]
+	Useful Things Free Test
 	[0ms]
 Bar:
 [2 (0)ms]
 	Bar Free Test
 	[0ms]
 Unstable:
-[4 (0)ms]
+[1 (0)ms]
 	Flipper Free Test
 	[0ms]
 Maybe:
-[6 (0)ms]
+[5 (0)ms]
 	False Positive Test
 	[0ms]
 	Unit Test
 	[0ms]
 Oldschool:
-[6 (0)ms]
+[5 (0)ms]
 	False Positive Test
 	[0ms]
 	Unit Test
 	[0ms]
 Probability:
-[4 (0)ms]
+[7 (0)ms]
 	False Positive Test
 	[0ms]
 	Unit Test
 	[0ms]
 Foo:
-[3 (0)ms]
+[5 (0)ms]
 	False Positive Test
 	[0ms]
 	Unit Test
 	[0ms]
 Unique Thing:
-[6 (0)ms]
+[5 (0)ms]
 	False Positive Test
 	[0ms]
 	Unit Test
 	[0ms]
 Container:
-[6 (0)ms]
+[5 (0)ms]
 	Container Performance Test
 	[0ms]
 	Allocation Test
 	[0ms]
 House:
-[2 (0)ms]
+[4 (0)ms]
 	Allocation Test
 	[0ms]
 
 -----------Grand Totals-----------
-[9 (0)ms]
+[10 (0)ms]
 	Standard Top Level Checks:                 0;  Failures:  0
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

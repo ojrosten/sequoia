@@ -35,7 +35,12 @@ namespace sequoia::testing
     check(equality, LINE("Camel from empty string"), to_camel_case(""), ""s);
     check(equality, LINE("Camel from letter"), to_camel_case("a"), "A"s);
     check(equality, LINE("Camel from minimal snake"), to_camel_case("a_b"), "AB"s);
-    check(equality, LINE(""), to_camel_case("foo_bar_baz"), "FooBarBaz"s);
+    check(equality, LINE("Camel from three segment snake"), to_camel_case("foo_bar_baz"), "FooBarBaz"s);
+
+    check(equality, LINE("Modified Camel from empty string"), to_camel_case("", " "), ""s);
+    check(equality, LINE("Modified Camel from letter"), to_camel_case("a", " "), "A"s);
+    check(equality, LINE("Modified Camel from minimal snake"), to_camel_case("a_b", " "), "A B"s);
+    check(equality, LINE("Modified Camel from three segment snake"), to_camel_case("foo_bar_baz", " "), "Foo Bar Baz"s);
   }
 
   void substitutions_free_test::test_camel_to_words()

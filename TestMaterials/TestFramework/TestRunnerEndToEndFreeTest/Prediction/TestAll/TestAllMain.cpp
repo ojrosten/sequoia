@@ -45,7 +45,7 @@ int main(int argc, char** argv)
 
 		runner.add_test_family(
 			"Useful Things",
-			useful_things_free_test{"UsefulThings Free Test"}
+			useful_things_free_test{"Useful Things Free Test"}
 		);
 
 		runner.add_test_family(
