@@ -77,7 +77,7 @@
 	operator== returned false
 
 	  Variant Contents
-	  [int]
+	  [double]
 	  operator== returned false
 	  Obtained : -1
 	  Predicted: 0

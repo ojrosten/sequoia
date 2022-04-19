@@ -51,9 +51,9 @@ namespace sequoia::testing
 
       check(equality,
             LINE("std::variant advice ignored due to type mismatch"),
-            var{-1},
-            var{0},
-            tutor{[](const std::string&, const std::string&) { return std::string{"Ignored advice"}; }});
+            var{-1.0},
+            var{0.0},
+            tutor{[](int, int) { return std::string{"Ignored advice, since double to int is a narrowing conversion"}; }});
     }
 
     {
