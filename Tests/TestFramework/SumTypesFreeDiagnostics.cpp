@@ -41,13 +41,13 @@ namespace sequoia::testing
             LINE("std::variant proffering advice for different values of the zeroth type"),
             var{-1},
             var{0},
-            tutor{[](int, int) { return std::string{"Int advice"}; }});
+            tutor{[](int, int) { return std::string{"int advice"}; }});
 
       check(equality,
             LINE("std::variant proffering advice for different values of the first type"),
             var{-0.1},
             var{0.0},
-            tutor{[](double, double) { return std::string{"Double advice"}; }});
+            tutor{[](double, double) { return std::string{"double advice"}; }});
 
       check(equality,
             LINE("std::variant advice ignored due to type mismatch"),
@@ -62,6 +62,8 @@ namespace sequoia::testing
       check(with_best_available, LINE(""), var{1}, var{2});
       check(with_best_available, LINE(""), var{only_equivalence_checkable{41}}, var{only_equivalence_checkable{42}});
       check(with_best_available, LINE(""), var{only_weakly_checkable{1, 1.5}}, var{only_weakly_checkable{1, 2.5}});
+
+      check(with_best_available, LINE(""), var{1}, var{2}, tutor{[](int, int) { return "int advice"; }});
     }
   }
 
@@ -73,6 +75,12 @@ namespace sequoia::testing
       check(equality, LINE("Empty vs non-empty std::optional"), opt{}, opt{0});
       check(equality, LINE("Non-empty vs empty std::optional"), opt{0}, opt{});
       check(equality, LINE("Two std::optionals holdings different values"), opt{2}, opt{0});
+
+      check(equality,
+            LINE("Advice for two std::optionals holdings different values"),
+            opt{2},
+            opt{0},
+            tutor{[](int, int) { return "int advice"; }});
     }
 
     {
@@ -100,6 +108,12 @@ namespace sequoia::testing
 
     check(equivalence, LINE(""), std::any{only_equivalence_checkable{1}}, only_equivalence_checkable{2});
     check(equivalence, LINE(""), std::any{only_weakly_checkable{1, 1.0}}, only_weakly_checkable{2, 2.0});
+
+    check(equivalence,
+          LINE("Advice for std::any holding the wrong value"),
+          std::any{1},
+          2,
+          tutor{[](int, int) { return "int advice";}});
   }
 
   [[nodiscard]]
