@@ -1,4 +1,4 @@
-	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 49
+	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 60
 	Inequivalence of two different paths, neither of which exists
 
 	Comparison performed using:
@@ -14,7 +14,7 @@
 
 	=======================================
 
-	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 54
+	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 65
 	Inequivalence of two different paths, one of which exists
 
 	Comparison performed using:
@@ -23,9 +23,9 @@
 	[std::filesystem::path]
 
 	  Path type
-	  C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/Stuff/Blah
+	  output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/Stuff/Blah
 	  vs
-	  C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/Stuff/A
+	  output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/Stuff/A
 
 	  [std::filesystem::file_type]
 	  operator== returned false
@@ -34,7 +34,7 @@
 
 	=======================================
 
-	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 59
+	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 70
 	Inequivalence of directory/file
 
 	Comparison performed using:
@@ -43,9 +43,9 @@
 	[std::filesystem::path]
 
 	  Path type
-	  C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/Stuff/A
+	  output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/Stuff/A
 	  vs
-	  C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/Stuff/A/foo.txt
+	  output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/Stuff/A/foo.txt
 
 	  [std::filesystem::file_type]
 	  operator== returned false
@@ -54,7 +54,7 @@
 
 	=======================================
 
-	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 64
+	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 75
 	Inequivalence of differently named files
 
 	Comparison performed using:
@@ -63,9 +63,9 @@
 	[std::filesystem::path]
 
 	  Path type
-	  C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/Stuff/B/foo.txt
+	  output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/Stuff/B/foo.txt
 	  vs
-	  C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/Stuff/B/bar.txt
+	  output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/Stuff/B/bar.txt
 
 	  [std::filesystem::file_type]
 	  operator== returned false
@@ -74,7 +74,7 @@
 
 	=======================================
 
-	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 69
+	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 80
 	Inequivalence of file contents
 
 	Comparison performed using:
@@ -83,9 +83,9 @@
 	[std::filesystem::path]
 
 	  Contents of
-	  C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/Stuff/A/foo.txt
+	  output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/Stuff/A/foo.txt
 	  vs
-	  C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/Stuff/B/foo.txt
+	  output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/Stuff/B/foo.txt
 
 	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
 	  operator== returned false
@@ -102,7 +102,7 @@
 
 	=======================================
 
-	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 74
+	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 85
 	Inequivalence of differently named directories with the same contents
 
 	Comparison performed using:
@@ -118,7 +118,7 @@
 
 	=======================================
 
-	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 79
+	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 90
 	Inequivalence of directories with the same files but different contents
 
 	Comparison performed using:
@@ -127,9 +127,9 @@
 	[std::filesystem::path]
 
 	  Contents of
-	  C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/Stuff/A/foo.txt
+	  output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/Stuff/A/foo.txt
 	  vs
-	  C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/MoreStuff/A/foo.txt
+	  output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/MoreStuff/A/foo.txt
 
 	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
 	  operator== returned false
@@ -146,7 +146,7 @@
 
 	=======================================
 
-	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 84
+	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 95
 	Inequivalence of directories with some common files
 
 	Comparison performed using:
@@ -154,7 +154,7 @@
 	Checking for equivalence with:
 	[std::filesystem::path]
 
-	  Number of directory entries for C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/Stuff/B
+	  Number of directory entries for output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/Stuff/B
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 1
@@ -163,12 +163,12 @@
 	  First directory entry mismatch
 	  [std::filesystem::path]
 	  operator== returned false
-	  Obtained : C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/Stuff/B/foo.txt
-	  Predicted: C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/MoreStuff/B/bar.txt
+	  Obtained : output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/Stuff/B/foo.txt
+	  Predicted: output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/MoreStuff/B/bar.txt
 
 	=======================================
 
-	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 89
+	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 100
 	Inequivalence of directories with some common files
 
 	Comparison performed using:
@@ -176,7 +176,7 @@
 	Checking for equivalence with:
 	[std::filesystem::path]
 
-	  Number of directory entries for C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/MoreStuff/B
+	  Number of directory entries for output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/MoreStuff/B
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 2
@@ -185,12 +185,12 @@
 	  First directory entry mismatch
 	  [std::filesystem::path]
 	  operator== returned false
-	  Obtained : C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/MoreStuff/B/bar.txt
-	  Predicted: C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/Stuff/B/foo.txt
+	  Obtained : output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/MoreStuff/B/bar.txt
+	  Predicted: output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/Stuff/B/foo.txt
 
 	=======================================
 
-	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 94
+	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 105
 	File inequivalence when default file checking is used
 
 	Comparison performed using:
@@ -199,9 +199,9 @@
 	[std::filesystem::path]
 
 	  Contents of
-	  C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/CustomComparison/A/DifferingContent.ignore
+	  output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/CustomComparison/A/DifferingContent.ignore
 	  vs
-	  C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/CustomComparison/B/DifferingContent.ignore
+	  output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/CustomComparison/B/DifferingContent.ignore
 
 	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
 	  operator== returned false
@@ -218,7 +218,7 @@
 
 	=======================================
 
-	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 99
+	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 110
 	Range inequivalence when default file checking us used
 
 	[std::vector<std::filesystem::path, std::allocator<std::filesystem::path> >]
@@ -230,9 +230,9 @@
 	  [std::filesystem::path]
 
 	    Contents of
-	    C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/CustomComparison/A/DifferingContent.ignore
+	    output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/CustomComparison/A/DifferingContent.ignore
 	    vs
-	    C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/CustomComparison/B/DifferingContent.ignore
+	    output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/CustomComparison/B/DifferingContent.ignore
 
 	    [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
 	    operator== returned false
@@ -249,7 +249,7 @@
 
 	=======================================
 
-	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 104
+	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 115
 	Weak inequivalence of directories with some common files
 
 	Comparison performed using:
@@ -257,7 +257,7 @@
 	Checking for weak equivalence with:
 	[std::filesystem::path]
 
-	  Number of directory entries for C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/MoreStuff/B
+	  Number of directory entries for output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/MoreStuff/B
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 2
@@ -266,12 +266,12 @@
 	  First directory entry mismatch
 	  [std::filesystem::path]
 	  operator== returned false
-	  Obtained : C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/MoreStuff/B/bar.txt
-	  Predicted: C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/Stuff/B/foo.txt
+	  Obtained : output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/MoreStuff/B/bar.txt
+	  Predicted: output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/Stuff/B/foo.txt
 
 	=======================================
 
-	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 109
+	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 120
 	Directory weak inequivalence when default file checking is used
 
 	Comparison performed using:
@@ -280,9 +280,9 @@
 	[std::filesystem::path]
 
 	  Contents of
-	  C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/CustomComparison/A/DifferingContent.ignore
+	  output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/CustomComparison/A/DifferingContent.ignore
 	  vs
-	  C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/CustomComparison/B/DifferingContent.ignore
+	  output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/CustomComparison/B/DifferingContent.ignore
 
 	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
 	  operator== returned false
@@ -299,7 +299,7 @@
 
 	=======================================
 
-	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 114
+	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 125
 	Weak inequivalence of range when default file checking is used
 
 	[std::vector<std::filesystem::path, std::allocator<std::filesystem::path> >]
@@ -311,9 +311,9 @@
 	  [std::filesystem::path]
 
 	    Contents of
-	    C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/CustomComparison/A/DifferingContent.ignore
+	    output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/CustomComparison/A/DifferingContent.ignore
 	    vs
-	    C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/CustomComparison/B/DifferingContent.ignore
+	    output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/CustomComparison/B/DifferingContent.ignore
 
 	    [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
 	    operator== returned false

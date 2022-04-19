@@ -13,6 +13,8 @@
 
 namespace sequoia::testing
 {
+  log_summary& postprocess(log_summary& summary, const std::filesystem::path& testRepo);
+
   class path_false_positive_free_diagnostics final : public free_false_positive_test
   {
   public:
@@ -23,6 +25,13 @@ namespace sequoia::testing
     std::string_view source_file() const noexcept final;
 
     void run_tests() final;
+
+    [[nodiscard]]
+    log_summary summarize(duration delta) const final
+    {
+      auto summary{free_false_positive_test::summarize(delta)};
+      return postprocess(summary, this->test_repository());
+    }
 
     void test_paths();
   };
@@ -37,6 +46,13 @@ namespace sequoia::testing
     std::string_view source_file() const noexcept final;
 
     void run_tests() final;
+
+    [[nodiscard]]
+    log_summary summarize(duration delta) const final
+    {
+      auto summary{free_false_negative_test::summarize(delta)};
+      return postprocess(summary, this->test_repository());
+    }
 
     void test_paths();
   };

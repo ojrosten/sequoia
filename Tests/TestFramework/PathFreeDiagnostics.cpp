@@ -31,6 +31,17 @@ namespace sequoia::testing
     const general_weak_equivalence_check_t<bespoke_file_checker_t> bespoke_path_weak_equivalence{bespoke_file_checker};
   }
 
+  log_summary& postprocess(log_summary& summary, const std::filesystem::path& testRepo)
+  {
+    std::string updatedOutput{summary.diagnostics_output()};
+
+    replace_all(updatedOutput, testRepo.parent_path().generic_string() + "/", "");
+
+    summary.diagnostics_output(updatedOutput);
+
+    return summary;
+  }
+
   [[nodiscard]]
   std::string_view path_false_positive_free_diagnostics::source_file() const noexcept
   {

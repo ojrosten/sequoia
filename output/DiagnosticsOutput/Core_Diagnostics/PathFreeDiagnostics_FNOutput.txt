@@ -1,5 +1,5 @@
 	False Positive Failure:
-	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 134
+	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 145
 	Equivalence of a file to itself
 
 	Comparison performed using:
@@ -10,7 +10,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 139
+	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 150
 	Equivalence of a directory to itself
 
 	Comparison performed using:
@@ -21,7 +21,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 144
+	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 155
 	Equivalence of a directory, with sub-directories to itself
 
 	Comparison performed using:
@@ -32,7 +32,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 149
+	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 160
 	Equivalence of identical directories in different locations
 
 	Comparison performed using:
@@ -43,7 +43,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 154
+	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 165
 	File equivalence when .ignore is ignored
 
 	Comparison performed using:
@@ -54,7 +54,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 159
+	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 170
 	Range equivalence when .ignore is ignored
 
 	[std::vector<std::filesystem::path, std::allocator<std::filesystem::path> >]
@@ -62,7 +62,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 164
+	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 175
 	Weak equivalence of directories in with the same contents but different names
 
 	Comparison performed using:
@@ -73,7 +73,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 169
+	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 180
 	Weak equivalence when .ignore is ignored
 
 	Comparison performed using:
@@ -84,7 +84,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 174
+	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 185
 	Weak equivalence of range when .ignore is ignored
 
 	[std::vector<std::filesystem::path, std::allocator<std::filesystem::path> >]
