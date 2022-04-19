@@ -689,30 +689,29 @@ namespace sequoia::testing
   [[nodiscard]]
   std::vector<std::string> nascent_behavioural_test::constructors() const
   {
-    auto make{
-      [this](std::string_view middlename, std::string_view phraseEnding) -> std::string {
-        auto mess{std::string{forename()}.append("_")};
-        if(!middlename.empty()) mess.append(middlename).append("_");
+    auto makeClassName{
+      [this](std::string_view middlename) -> std::string {
+        auto testClass{std::string{forename()}.append("_")};
+        if(!middlename.empty()) testClass.append(middlename).append("_");
+        return testClass.append(surname());
+      }
+    };
 
-        return mess.append(surname())
-                   .append("{\"")
-                     .append(to_camel_case(forename(), " "))
-                     .append(" ")
-                     .append(to_camel_case(middlename, " "))
-                     .append(" ")
-                     .append(to_camel_case(test_type()))
-                     .append(" ")
-                     .append(phraseEnding)
-                   .append("\"}");
+    auto make{
+      [makeClassName](std::string_view middlename) -> std::string {
+        const auto testClass{makeClassName(middlename)};
+        const auto testName{to_camel_case(testClass, " ")};
+
+        return std::string{testClass}.append("{\"").append(testName).append("\"}");
       }
     };
 
     switch(flavour())
     {
     case nascent_test_flavour::standard:
-      return { make("", "Test") };
+      return { make("") };
     case nascent_test_flavour::framework_diagnostics:
-      return { make("false_negative", "Diagnostics"), make("false_positive", "Diagnostics")};
+      return { make("false_negative"), make("false_positive")};
     }
 
     throw std::logic_error{"Unrecognized option for nascent_test_flavour"};

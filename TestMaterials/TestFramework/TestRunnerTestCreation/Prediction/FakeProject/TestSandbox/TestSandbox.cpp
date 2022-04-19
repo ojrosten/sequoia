@@ -63,7 +63,7 @@ int main(int argc, char** argv)
 
         runner.add_test_family(
             "Container",
-            container_performance_test{"Container  Performance Test"},
+            container_performance_test{"Container Performance Test"},
             container_allocation_test{"Allocation Test"},
             container_false_positive_test{"False Positive Test"},
             container_test{"Unit Test"}
@@ -95,28 +95,28 @@ int main(int argc, char** argv)
 
         runner.add_test_family(
             "Utilities",
-            utilities_free_test{"Utilities  Free Test"}
+            utilities_free_test{"Utilities Free Test"}
         );
 
         runner.add_test_family(
             "Bazzer",
-            bazagain_free_test{"Bazagain  Free Test"},
-            bazzer_free_test{"Bazzer  Free Test"}
+            bazagain_free_test{"Bazagain Free Test"},
+            bazzer_free_test{"Bazzer Free Test"}
         );
 
         runner.add_test_family(
             "Doohicky",
-            doohicky_free_test{"Doohicky  Free Test"}
+            doohicky_free_test{"Doohicky Free Test"}
         );
 
         runner.add_test_family(
             "Global",
-            global_free_test{"Global  Free Test"}
+            global_free_test{"Global Free Test"}
         );
 
         runner.add_test_family(
             "Defs",
-            defs_free_test{"Defs  Free Test"}
+            defs_free_test{"Defs Free Test"}
         );
 
 		runner.execute(timer_resolution{1ms});

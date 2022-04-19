@@ -76,6 +76,7 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Runtime/ShellCommandsTest.cpp
                ${TestDir}/Runtime/ShellCommandsTestingDiagnostics.cpp
                ${TestDir}/Streaming/StreamingFreeTest.cpp
+               ${TestDir}/TestFramework/ContainerFreeDiagnostics.cpp
                ${TestDir}/TestFramework/CoreDiagnostics.cpp
                ${TestDir}/TestFramework/DependencyAnalyzerFreeTest.cpp
                ${TestDir}/TestFramework/FailureInfoTest.cpp
@@ -91,6 +92,7 @@ target_sources(TestAll PRIVATE
                ${TestDir}/TestFramework/OrderableRegularAllocationTestDiagnostics.cpp
                ${TestDir}/TestFramework/OrderableRegularTestDiagnostics.cpp
                ${TestDir}/TestFramework/OutputFreeTest.cpp
+               ${TestDir}/TestFramework/PathFreeDiagnostics.cpp
                ${TestDir}/TestFramework/PerformanceTestDiagnostics.cpp
                ${TestDir}/TestFramework/PointerTestingDiagnostics.cpp
                ${TestDir}/TestFramework/RegularAllocationTestDiagnostics.cpp
@@ -98,6 +100,7 @@ target_sources(TestAll PRIVATE
                ${TestDir}/TestFramework/RegularTestDiagnostics.cpp
                ${TestDir}/TestFramework/RelationalTestDiagnostics.cpp
                ${TestDir}/TestFramework/ScopedAllocationTestDiagnostics.cpp
+               ${TestDir}/TestFramework/StringFreeDiagnostics.cpp
                ${TestDir}/TestFramework/SumTypesFreeDiagnostics.cpp
                ${TestDir}/TestFramework/TestRunnerDiagnostics.cpp
                ${TestDir}/TestFramework/TestRunnerDiagnosticsUtilities.cpp
