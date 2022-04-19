@@ -630,20 +630,20 @@ namespace sequoia::testing
   {
     using type = T;
 
-    template<test_mode Mode>
-    static void test(equality_check_t, test_logger<Mode>& logger, const type& obtained, const type& prediction)
+    template<test_mode Mode, class Advisor>
+    static void test(equality_check_t, test_logger<Mode>& logger, const type& obtained, const type& prediction, const tutor<Advisor>& advisor)
     {
-      check(equality, "Underlying pointers differ", logger, obtained.get(), prediction.get());
+      check(equality, "Underlying pointers differ", logger, obtained.get(), prediction.get(), advisor);
     }
   protected:
     ~smart_pointer_tester() = default;
 
-    template<test_mode Mode>
-    static void test_pointees(test_logger<Mode>& logger, const type& obtained, const type& prediction)
+    template<test_mode Mode, class Advisor>
+    static void test_pointees(test_logger<Mode>& logger, const type& obtained, const type& prediction, const tutor<Advisor>& advisor)
     {
       if(obtained && prediction)
       {
-        check(with_best_available, "Pointees differ", logger, *obtained, *prediction);
+        check(with_best_available, "Pointees differ", logger, *obtained, *prediction, advisor);
       }
       else
       {
@@ -657,10 +657,10 @@ namespace sequoia::testing
         };
 
         check(equality,
-          messageFn("obtained", obtainedIsBound).append(" but ").append(messageFn("prediction", predictionIsBound)),
-          logger,
-          static_cast<bool>(obtained),
-          static_cast<bool>(prediction));
+              messageFn("obtained", obtainedIsBound).append(" but ").append(messageFn("prediction", predictionIsBound)),
+              logger,
+              static_cast<bool>(obtained),
+              static_cast<bool>(prediction));
       }
     }
   };
@@ -682,11 +682,11 @@ namespace sequoia::testing
     using base_t = smart_pointer_tester<std::unique_ptr<T>>;
     using base_t::test;
 
-    template<test_mode Mode>
-    static void test(equivalence_check_t, test_logger<Mode>& logger, const type& obtained, const type& prediction)
+    template<test_mode Mode, class Advisor>
+    static void test(equivalence_check_t, test_logger<Mode>& logger, const type& obtained, const type& prediction, const tutor<Advisor>& advisor)
     {
       using base_t = base_t;
-      base_t::test_pointees(logger, obtained, prediction);
+      base_t::test_pointees(logger, obtained, prediction, advisor);
     }
   };
 
@@ -707,11 +707,11 @@ namespace sequoia::testing
     using base_t = smart_pointer_tester<std::shared_ptr<T>>;
     using base_t::test;
 
-    template<test_mode Mode>
-    static void test(equivalence_check_t, test_logger<Mode>& logger, const type& obtained, const type& prediction)
+    template<test_mode Mode, class Advisor>
+    static void test(equivalence_check_t, test_logger<Mode>& logger, const type& obtained, const type& prediction, const tutor<Advisor>& advisor)
     {
       check(equality, "Use count", logger, obtained.use_count(), prediction.use_count());
-      base_t::test_pointees(logger, obtained, prediction);
+      base_t::test_pointees(logger, obtained, prediction, advisor);
     }
   };
 

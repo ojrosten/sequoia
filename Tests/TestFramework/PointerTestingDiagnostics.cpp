@@ -35,6 +35,12 @@ namespace sequoia::testing
       check(equality, LINE("not null vs. null "), std::make_unique<int>(42), ptr_t{});
       check(equality, LINE("Different pointers"), std::make_unique<int>(42), std::make_unique<int>(42));
       check(equivalence, LINE("Different pointers pointing to different values"), std::make_unique<int>(42), std::make_unique<int>(43));
+
+      check(equivalence,
+            LINE("Advice for different pointers pointing to different values"),
+            std::make_unique<int>(42),
+            std::make_unique<int>(43),
+            tutor{[](int, int) { return "int advice"; }});
     }
 
     {
@@ -68,6 +74,12 @@ namespace sequoia::testing
       check(equality, LINE("not null vs. null "), std::make_shared<int>(42), ptr_t{});
       check(equality, LINE("Different pointers"), std::make_shared<int>(42), std::make_shared<int>(42));
       check(equivalence, LINE("Different pointers pointing to different values"), std::make_shared<int>(42), std::make_shared<int>(43));
+
+      check(equivalence,
+            LINE("Advice for different pointers pointing to different values"),
+            std::make_shared<int>(42),
+            std::make_shared<int>(43),
+            tutor{[](int, int) { return "int advice"; }});
 
       auto p{std::make_shared<int>(42)}, q{p};
       check(equivalence, LINE("Different use counts"), p, std::make_shared<int>(42));
