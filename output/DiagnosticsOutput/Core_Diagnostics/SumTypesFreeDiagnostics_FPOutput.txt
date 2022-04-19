@@ -40,7 +40,51 @@
 
 	=======================================
 
-	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 44
+	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 41
+	std::variant proffering advice for different values of the zeroth type
+
+	[std::variant<int, double>]
+	operator== returned false
+
+	  Variant Contents
+	  [int]
+	  operator== returned false
+	  Obtained : -1
+	  Predicted: 0
+	  Advice: Int advice
+
+	=======================================
+
+	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 47
+	std::variant proffering advice for different values of the first type
+
+	[std::variant<int, double>]
+	operator== returned false
+
+	  Variant Contents
+	  [double]
+	  operator== returned false
+	  Obtained : -0.1
+	  Predicted: 0
+	  Advice: Double advice
+
+	=======================================
+
+	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 53
+	std::variant advice ignored due to type mismatch
+
+	[std::variant<int, double>]
+	operator== returned false
+
+	  Variant Contents
+	  [int]
+	  operator== returned false
+	  Obtained : -1
+	  Predicted: 0
+
+	=======================================
+
+	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 62
 
 	[std::variant<int, sequoia::testing::only_equivalence_checkable, sequoia::testing::only_weakly_checkable>]
 	  Variant Contents
@@ -51,7 +95,7 @@
 
 	=======================================
 
-	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 45
+	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 63
 
 	[std::variant<int, sequoia::testing::only_equivalence_checkable, sequoia::testing::only_weakly_checkable>]
 	  Variant Contents
@@ -64,7 +108,7 @@
 
 	=======================================
 
-	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 46
+	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 64
 
 	[std::variant<int, sequoia::testing::only_equivalence_checkable, sequoia::testing::only_weakly_checkable>]
 	  Variant Contents
@@ -77,7 +121,7 @@
 
 	=======================================
 
-	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 55
+	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 73
 	Empty vs non-empty std::optional
 
 	[std::optional<int>]
@@ -89,7 +133,7 @@
 
 	=======================================
 
-	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 56
+	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 74
 	Non-empty vs empty std::optional
 
 	[std::optional<int>]
@@ -101,7 +145,7 @@
 
 	=======================================
 
-	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 57
+	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 75
 	Two std::optionals holdings different values
 
 	[std::optional<int>]
@@ -115,7 +159,7 @@
 
 	=======================================
 
-	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 63
+	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 81
 	Empty vs non-empty std::optional
 
 	Comparison performed using:
@@ -129,7 +173,7 @@
 
 	=======================================
 
-	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 64
+	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 82
 	Non-empty vs empty std::optional
 
 	Comparison performed using:
@@ -143,7 +187,7 @@
 
 	=======================================
 
-	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 65
+	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 83
 	Two std::optionals holdings different values
 
 	Comparison performed using:
@@ -165,7 +209,7 @@
 
 	=======================================
 
-	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 71
+	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 89
 	Empty vs non-empty std::optional
 
 	Comparison performed using:
@@ -179,7 +223,7 @@
 
 	=======================================
 
-	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 72
+	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 90
 	Non-empty vs empty std::optional
 
 	Comparison performed using:
@@ -193,7 +237,7 @@
 
 	=======================================
 
-	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 73
+	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 91
 	Two std::optionals holdings different values
 
 	Comparison performed using:
@@ -221,7 +265,7 @@
 
 	=======================================
 
-	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 79
+	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 97
 	Empty std::any
 
 	Comparison performed using:
@@ -235,7 +279,7 @@
 
 	=======================================
 
-	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 80
+	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 98
 	std::any holding the wrong type
 
 	Comparison performed using:
@@ -249,7 +293,7 @@
 
 	=======================================
 
-	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 81
+	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 99
 	std::any holding the wrong value
 
 	Comparison performed using:
@@ -265,7 +309,7 @@
 
 	=======================================
 
-	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 83
+	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 101
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<std::any>]
@@ -282,7 +326,7 @@
 
 	=======================================
 
-	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 84
+	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 102
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<std::any>]

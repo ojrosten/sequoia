@@ -36,6 +36,24 @@ namespace sequoia::testing
       check(equality, LINE("std::variant holding different types but with the same value"), var{0}, var{0.0});
       check(equality, LINE("std::variant holding the zeroth type, but with different values"), var{1}, var{2});
       check(equality, LINE("std::variant holding the first type, but with different values"), var{-0.1}, var{0.0});
+
+      check(equality,
+            LINE("std::variant proffering advice for different values of the zeroth type"),
+            var{-1},
+            var{0},
+            tutor{[](int, int) { return std::string{"Int advice"}; }});
+
+      check(equality,
+            LINE("std::variant proffering advice for different values of the first type"),
+            var{-0.1},
+            var{0.0},
+            tutor{[](double, double) { return std::string{"Double advice"}; }});
+
+      check(equality,
+            LINE("std::variant advice ignored due to type mismatch"),
+            var{-1},
+            var{0},
+            tutor{[](const std::string&, const std::string&) { return std::string{"Ignored advice"}; }});
     }
 
     {
