@@ -55,10 +55,10 @@ int main(int argc, char** argv)
       string_false_negative_free_diagnostics{"String False Negative Free Diagnostics"},
       sum_types_false_positive_free_diagnostics{"Sum Types False Positive Free Diagnostics"},
       sum_types_false_negative_free_diagnostics{"Sum Types False Negative Free Diagnostics"},
+      smart_pointer_false_positive_free_diagnostics{"Smart Pointer False Positive Free Diagnostics"},
+      smart_pointer_false_negative_free_diagnostics{"Smart Pointer False Negative Free Diagnostics"},
       false_positive_diagnostics{"False Positive Diagnostics"},
-      false_negative_diagnostics{"False Negative Diagnostics"},
-      pointer_testing_false_positive_diagnostics{"Pointer False Positive Diagnostics"},
-      pointer_testing_false_negative_diagnostics{"Pointer False Negative Diagnostics"}
+      false_negative_diagnostics{"False Negative Diagnostics"}
     );
     
     runner.add_test_family(

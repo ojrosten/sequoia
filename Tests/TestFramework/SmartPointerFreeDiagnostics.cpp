@@ -7,7 +7,7 @@
 
 /*! \file */
 
-#include "PointerTestingDiagnostics.hpp"
+#include "SmartPointerFreeDiagnostics.hpp"
 #include "CoreDiagnosticsUtilities.hpp"
 
 #include "sequoia/TestFramework/ConcreteTypeCheckers.hpp"
@@ -15,19 +15,19 @@
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::string_view pointer_testing_false_positive_diagnostics::source_file() const noexcept
+  std::string_view smart_pointer_false_positive_free_diagnostics::source_file() const noexcept
   {
     return __FILE__;
   }
 
-  void pointer_testing_false_positive_diagnostics::run_tests()
+  void smart_pointer_false_positive_free_diagnostics::run_tests()
   {
     test_unique_ptr();
     test_shared_ptr();
     test_weak_ptr();
   }
 
-  void pointer_testing_false_positive_diagnostics::test_unique_ptr()
+  void smart_pointer_false_positive_free_diagnostics::test_unique_ptr()
   {
     {
       using ptr_t = std::unique_ptr<int>;
@@ -66,7 +66,7 @@ namespace sequoia::testing
     }
   }
 
-  void pointer_testing_false_positive_diagnostics::test_shared_ptr()
+  void smart_pointer_false_positive_free_diagnostics::test_shared_ptr()
   {
     {
       using ptr_t = std::shared_ptr<int>;
@@ -94,7 +94,7 @@ namespace sequoia::testing
     }
   }
 
-  void pointer_testing_false_positive_diagnostics::test_weak_ptr()
+  void smart_pointer_false_positive_free_diagnostics::test_weak_ptr()
   {
 
     {
@@ -111,19 +111,19 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string_view pointer_testing_false_negative_diagnostics::source_file() const noexcept
+  std::string_view smart_pointer_false_negative_free_diagnostics::source_file() const noexcept
   {
     return __FILE__;
   }
 
-  void pointer_testing_false_negative_diagnostics::run_tests()
+  void smart_pointer_false_negative_free_diagnostics::run_tests()
   {
     test_unique_ptr();
     test_shared_ptr();
     test_weak_ptr();
   }
 
-  void pointer_testing_false_negative_diagnostics::test_unique_ptr()
+  void smart_pointer_false_negative_free_diagnostics::test_unique_ptr()
   {
     {
       using ptr_t = std::unique_ptr<int>;
@@ -156,7 +156,7 @@ namespace sequoia::testing
     }
   }
 
-  void pointer_testing_false_negative_diagnostics::test_shared_ptr()
+  void smart_pointer_false_negative_free_diagnostics::test_shared_ptr()
   {
     {
       using ptr_t = std::shared_ptr<int>;
@@ -175,7 +175,7 @@ namespace sequoia::testing
     }
   }
 
-  void pointer_testing_false_negative_diagnostics::test_weak_ptr()
+  void smart_pointer_false_negative_free_diagnostics::test_weak_ptr()
   {
     {
       using wptr_t = std::weak_ptr<int>;
