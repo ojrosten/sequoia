@@ -1,0 +1,44 @@
+	False Positive Failure:
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 79
+	Empty vector check which should pass
+
+	[std::vector<double, std::allocator<double> >]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 80
+	One element vector check which should pass
+
+	[std::vector<double, std::allocator<double> >]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 81
+	Multi-element vector comparison which should pass
+
+	[std::vector<double, std::allocator<double> >]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 85
+	Iterators demarcate identical elements
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 90
+
+	[std::pair<int, double>]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 92
+
+	[std::tuple<int, double, float>]
+
+	=======================================
+

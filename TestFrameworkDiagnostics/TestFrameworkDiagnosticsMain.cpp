@@ -47,8 +47,14 @@ int main(int argc, char** argv)
 
     runner.add_test_family(
       "Core Diagnostics",
-      sum_types_false_positive_free_diagnostics{"Sum Types Free False Positive Diagnostics"},
-      sum_types_false_negative_free_diagnostics{"Sum Types Free False Negative Diagnostics"},
+      container_false_positive_free_diagnostics{"Container False Positive Free Diagnostics"},
+      container_false_negative_free_diagnostics{"Container False Negative Free Diagnostics"},
+      path_false_positive_free_diagnostics{"Path False Positive Free Diagnostics"},
+      path_false_negative_free_diagnostics{"Path False Negative Free Diagnostics"},
+      string_false_positive_free_diagnostics{"String False Positive Free Diagnostics"},
+      string_false_negative_free_diagnostics{"String False Negative Free Diagnostics"},
+      sum_types_false_positive_free_diagnostics{"Sum Types False Positive Free Diagnostics"},
+      sum_types_false_negative_free_diagnostics{"Sum Types False Negative Free Diagnostics"},
       false_positive_diagnostics{"False Positive Diagnostics"},
       false_negative_diagnostics{"False Negative Diagnostics"},
       pointer_testing_false_positive_diagnostics{"Pointer False Positive Diagnostics"},

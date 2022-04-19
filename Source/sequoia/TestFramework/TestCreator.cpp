@@ -696,7 +696,13 @@ namespace sequoia::testing
 
         return mess.append(surname())
                    .append("{\"")
-                   .append(to_camel_case(forename(), " ")).append(" ").append(to_camel_case(test_type())).append(" ").append(phraseEnding)
+                     .append(to_camel_case(forename(), " "))
+                     .append(" ")
+                     .append(to_camel_case(middlename, " "))
+                     .append(" ")
+                     .append(to_camel_case(test_type()))
+                     .append(" ")
+                     .append(phraseEnding)
                    .append("\"}");
       }
     };
@@ -706,7 +712,7 @@ namespace sequoia::testing
     case nascent_test_flavour::standard:
       return { make("", "Test") };
     case nascent_test_flavour::framework_diagnostics:
-      return { make("false_negative", "False Negative Diagnostics"), make("false_positive", "False Positive Diagnostics")};
+      return { make("false_negative", "Diagnostics"), make("false_positive", "Diagnostics")};
     }
 
     throw std::logic_error{"Unrecognized option for nascent_test_flavour"};

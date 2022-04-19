@@ -1,0 +1,316 @@
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 31
+	Empty vector check which should fail
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Container size wrong
+	  [unsigned long long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	=======================================
+
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 32
+	One element vector check which should fail due to wrong value
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 34
+	Advice for one element vector check which should fail due to wrong value
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+	  Advice: Vector element advice
+
+	=======================================
+
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 38
+	One element vector check which should fail due to differing sizes
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Container size wrong
+	  [unsigned long long]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 39
+	Multi-element vector comparison which should fail due to last element
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 1 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 5
+	  Predicted: 4
+
+	=======================================
+
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 40
+	Multi-element vector comparison which should fail due to first element
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 0 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
+
+	=======================================
+
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 41
+	Multi-element vector comparison which should fail due to middle element
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Element 1 of range incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 3.2
+	  Predicted: 3.3
+
+	=======================================
+
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 42
+	Multi-element vector comparison which should fail due to different sizes
+
+	[std::vector<double, std::allocator<double> >]
+	operator== returned false
+
+	  Container size wrong
+	  [unsigned long long]
+	  operator== returned false
+	  Obtained : 3
+	  Predicted: 2
+
+	=======================================
+
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 46
+	Iterators demarcate differing numbers of elements
+
+	  Container size wrong
+	  [unsigned long long]
+	  operator== returned false
+	  Obtained : 4
+	  Predicted: 6
+
+	=======================================
+
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 47
+	Iterators demarcate differing elements
+
+	  Element 0 of range incorrect
+	  [float]
+	  operator== returned false
+	  Obtained : -4.3
+	  Predicted: 1.1
+
+	  Element 1 of range incorrect
+	  [float]
+	  operator== returned false
+	  Obtained : 2.8
+	  Predicted: -4.3
+
+	  Element 2 of range incorrect
+	  [float]
+	  operator== returned false
+	  Obtained : 6.2
+	  Predicted: 2.8
+
+	  Element 3 of range incorrect
+	  [float]
+	  operator== returned false
+	  Obtained : 7.3
+	  Predicted: 6.2
+
+	=======================================
+
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 52
+
+	[std::pair<int, double>]
+	operator== returned false
+
+	  Second element of pair is incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 7.8
+	  Predicted: -7.8
+
+	=======================================
+
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 53
+
+	[std::pair<int, double>]
+	operator== returned false
+
+	  First element of pair is incorrect
+	  [int]
+	  operator== returned false
+	  Obtained : 5
+	  Predicted: -5
+
+	=======================================
+
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 54
+
+	[std::pair<int, double>]
+	operator== returned false
+
+	  First element of pair is incorrect
+	  [int]
+	  operator== returned false
+	  Obtained : 5
+	  Predicted: -5
+	  Advice: Integer advice
+
+	  Second element of pair is incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 7.8
+	  Predicted: 6.8
+	  Advice: Double advice
+
+	=======================================
+
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 55
+
+	[std::pair<int, double>]
+	operator== returned false
+
+	  Second element of pair is incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 7.8
+	  Predicted: -7.8
+
+	=======================================
+
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 56
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<std::pair<int const&, double> >]
+	Checking for equivalence with:
+	[std::pair<int, double const&>]
+
+	  First element of pair is incorrect
+	  [int]
+	  operator== returned false
+	  Obtained : 5
+	  Predicted: -5
+
+	  Second element of pair is incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 7.8
+	  Predicted: 6.8
+
+	=======================================
+
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 57
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<std::pair<int const&, double> >]
+	Checking for weak equivalence with:
+	[std::pair<int, double const&>]
+
+	  First element of pair is incorrect
+	  [int]
+	  operator== returned false
+	  Obtained : 5
+	  Predicted: -5
+
+	  Second element of pair is incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 7.8
+	  Predicted: 6.8
+
+	=======================================
+
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 59
+
+	[std::tuple<int, double, float>]
+	operator== returned false
+
+	  Element 0 of tuple incorrect
+	  [int]
+	  operator== returned false
+	  Obtained : 4
+	  Predicted: 0
+
+	=======================================
+
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 60
+
+	[std::tuple<int, double, float>]
+	operator== returned false
+
+	  Element 1 of tuple incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 3.4
+	  Predicted: 0
+	  Advice: Double advice
+
+	=======================================
+
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 61
+
+	[std::tuple<int, double, float>]
+	operator== returned false
+
+	  Element 2 of tuple incorrect
+	  [float]
+	  operator== returned false
+	  Obtained : -9.2
+	  Predicted: -0
+
+	=======================================
+
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 62
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<std::tuple<int const&, double> >]
+	Checking for equivalence with:
+	[std::tuple<int, double const&>]
+
+	  Element 0 of tuple incorrect
+	  [int]
+	  operator== returned false
+	  Obtained : 5
+	  Predicted: -5
+
+	  Element 1 of tuple incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 7.8
+	  Predicted: 6.8
+
+	=======================================
+

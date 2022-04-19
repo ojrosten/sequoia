@@ -34,12 +34,7 @@ namespace sequoia::testing
 
     void basic_tests();
     void test_exceptions();
-    void test_heterogeneous();
-    void test_container_checks();
-    template<class String> void test_strings();
-    template<class String> void test_wstrings();
     void test_mixed();
-    void test_paths();
     void test_function();
     void test_equivalence_checks();
     void test_weak_equivalence_checks();
@@ -65,11 +60,7 @@ namespace sequoia::testing
 
     void basic_tests();
     void test_exceptions();
-    void test_heterogeneous();
-    void test_container_checks();
-    void test_strings();
     void test_mixed();
-    void test_paths();
     void test_function();
     void test_equivalence_checks();
     void test_weak_equivalence_checks();
