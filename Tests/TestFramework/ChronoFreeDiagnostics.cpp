@@ -22,10 +22,14 @@ namespace sequoia::testing
 
   void chrono_false_positive_free_diagnostics::run_tests()
   {
-    using sec = std::chrono::seconds;
+    // TO DO: remove one libc++ supports operator<< for chrono::duration
+    if constexpr(!with_clang_v)
+    {
+      using sec = std::chrono::seconds;
 
-    check(equality, LINE(""), sec{}, sec{1});
-    check(equality, LINE(""), sec{}, sec{1}, tutor{[](sec, sec) { return "Temporal advice"; }});
+      check(equality, LINE(""), sec{}, sec{1});
+      check(equality, LINE(""), sec{}, sec{1}, tutor{[](sec, sec) { return "Temporal advice"; }});
+    }
   }
   
   [[nodiscard]]
@@ -36,8 +40,12 @@ namespace sequoia::testing
 
   void chrono_false_negative_free_diagnostics::run_tests()
   {
-    using sec = std::chrono::seconds;
+    // TO DO: remove one libc++ supports operator<< for chrono::duration
+    if constexpr(!with_clang_v)
+    {
+      using sec = std::chrono::seconds;
 
-    check(equality, LINE(""), sec{1}, sec{1});
+      check(equality, LINE(""), sec{1}, sec{1});
+    }
   }
 }
