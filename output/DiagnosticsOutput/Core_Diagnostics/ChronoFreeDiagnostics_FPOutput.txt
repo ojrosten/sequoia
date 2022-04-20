@@ -1,4 +1,4 @@
-	Tests/TestFramework/ChronoFreeDiagnostics.cpp, Line 27
+	Tests/TestFramework/ChronoFreeDiagnostics.cpp, Line 30
 
 	[std::chrono::duration<long long, std::ratio<1, 1> >]
 	operator== returned false
@@ -7,7 +7,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ChronoFreeDiagnostics.cpp, Line 28
+	Tests/TestFramework/ChronoFreeDiagnostics.cpp, Line 31
 
 	[std::chrono::duration<long long, std::ratio<1, 1> >]
 	operator== returned false
