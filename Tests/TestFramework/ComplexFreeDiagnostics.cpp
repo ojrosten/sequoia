@@ -10,6 +10,8 @@
 #include "ComplexFreeDiagnostics.hpp"
 #include "sequoia/TestFramework/ConcreteTypeCheckers.hpp"
 
+#include <complex>
+
 namespace sequoia::testing
 {
   [[nodiscard]]
@@ -20,7 +22,10 @@ namespace sequoia::testing
 
   void complex_false_positive_free_diagnostics::run_tests()
   {
-    // e.g. check(equality, LINE("Useful description"), some_function(), 42);
+    using complex = std::complex<double>;
+
+    check(equality, LINE(""), complex{}, complex{1.0});
+    check(equality, LINE(""), complex{}, complex{1.0, 2.0});
   }
   
   [[nodiscard]]
@@ -31,6 +36,8 @@ namespace sequoia::testing
 
   void complex_false_negative_free_diagnostics::run_tests()
   {
-    // e.g. check(equality, LINE("Useful description"), some_function(), 42);
+    using complex = std::complex<double>;
+
+    check(equality, LINE(""), complex{1.0}, complex{1.0});
   }
 }
