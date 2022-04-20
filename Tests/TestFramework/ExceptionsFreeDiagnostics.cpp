@@ -20,7 +20,9 @@ namespace sequoia::testing
 
   void exceptions_false_positive_free_diagnostics::run_tests()
   {
-    // e.g. check(equality, LINE("Useful description"), some_function(), 42);
+    check_exception_thrown<std::runtime_error>(LINE("Exception expected but nothing thrown"), []() {});
+    check_exception_thrown<std::runtime_error>(LINE("Exception thrown but of wrong type"), []() { throw std::logic_error("Error"); });
+    check_exception_thrown<std::runtime_error>(LINE("Exception thrown but of unknown type"), []() { throw 1; });
   }
   
   [[nodiscard]]
@@ -31,6 +33,8 @@ namespace sequoia::testing
 
   void exceptions_false_negative_free_diagnostics::run_tests()
   {
-    // e.g. check(equality, LINE("Useful description"), some_function(), 42);
+    check_exception_thrown<std::runtime_error>(LINE(""), []() { throw std::runtime_error("Error"); });
+
+    check_exception_thrown<int>(LINE(""), []() { throw 1; });
   }
 }

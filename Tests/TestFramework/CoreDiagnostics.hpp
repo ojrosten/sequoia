@@ -24,7 +24,6 @@ namespace sequoia::testing
     void run_tests() final;
 
     void basic_tests();
-    void test_exceptions();
     void test_mixed();
     void test_function();
     void test_equivalence_checks();
@@ -43,7 +42,6 @@ namespace sequoia::testing
     void run_tests() final;
 
     void basic_tests();
-    void test_exceptions();
     void test_mixed();
     void test_function();
     void test_equivalence_checks();

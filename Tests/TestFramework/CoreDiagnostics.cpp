@@ -71,7 +71,6 @@ namespace sequoia::testing
   void false_positive_diagnostics::run_tests()
   {
     basic_tests();
-    test_exceptions();
     test_mixed();
     test_function();
     test_equivalence_checks();
@@ -93,13 +92,6 @@ namespace sequoia::testing
     check(equality, LINE(""), 6.5, 5.6, tutor{[](double, double){
         return std::string{"Double, double, toil and trouble"};
       }});
-  }
-
-  void false_positive_diagnostics::test_exceptions()
-  {
-    check_exception_thrown<std::runtime_error>(LINE("Exception expected but nothing thrown"), [](){});
-    check_exception_thrown<std::runtime_error>(LINE("Exception thrown but of wrong type"), [](){ throw std::logic_error("Error"); });
-    check_exception_thrown<std::runtime_error>(LINE("Exception thrown but of unknown type"), [](){ throw 1; });
   }
 
   void false_positive_diagnostics::test_mixed()
@@ -266,7 +258,6 @@ namespace sequoia::testing
   void false_negative_diagnostics::run_tests()
   {
     basic_tests();
-    test_exceptions();
     test_mixed();
     test_function();
     test_equivalence_checks();
@@ -280,13 +271,6 @@ namespace sequoia::testing
 
     check(equality, LINE(""), 5, 5);
     check(equality, LINE(""), 5.0, 5.0);
-  }
-
-  void false_negative_diagnostics::test_exceptions()
-  {
-    check_exception_thrown<std::runtime_error>(LINE(""), [](){ throw std::runtime_error("Error");});
-
-    check_exception_thrown<int>(LINE(""), [](){ throw 1; });
   }
 
   void false_negative_diagnostics::test_mixed()
