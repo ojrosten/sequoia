@@ -37,12 +37,33 @@ namespace sequoia::testing
   [[nodiscard]]
   std::filesystem::path working_path();
 
+  class file_info
+  {
+  public:
+    file_info(std::filesystem::path file);
+
+    [[nodiscard]]
+    const std::filesystem::path& file() const noexcept { return m_File; }
+
+    [[nodiscard]]
+    const std::filesystem::path& dir() const noexcept { return m_Dir; }
+  private:
+    std::filesystem::path m_File{}, m_Dir{};
+  };
+
   class project_paths
   {
   public:
     explicit project_paths(const std::filesystem::path& projectRoot);
 
-    project_paths(const std::filesystem::path& projectRoot, std::filesystem::path mainCpp, std::filesystem::path includePath);
+    project_paths(const std::filesystem::path& projectRoot,
+                  file_info mainCpp,
+                  std::filesystem::path includePath);
+
+    project_paths(const std::filesystem::path& projectRoot,
+                  file_info mainCpp,
+                  const std::vector<file_info>& ancilliaryMainCpps,
+                  std::filesystem::path includePath);
 
     [[nodiscard]]
     static std::filesystem::path source_path(const std::filesystem::path& projectRoot);
@@ -66,16 +87,16 @@ namespace sequoia::testing
     const std::filesystem::path& output() const noexcept;
 
     [[nodiscard]]
-    const std::filesystem::path& main_cpp() const noexcept;
-
-    [[nodiscard]]
-    const std::filesystem::path& main_cpp_dir() const noexcept;
+    const file_info& main_cpp() const noexcept;
 
     [[nodiscard]]
     const std::filesystem::path& include_target() const noexcept;
 
     [[nodiscard]]
     const std::filesystem::path& cmade_build_dir() const noexcept;
+
+    [[nodiscard]]
+    const std::vector<file_info>& ancilliary_main_cpps() const noexcept;
 
     [[nodiscard]]
     friend bool operator==(const project_paths&, const project_paths&) noexcept = default;
@@ -86,6 +107,8 @@ namespace sequoia::testing
     [[nodiscard]]
     static std::filesystem::path cmade_build_dir(const std::filesystem::path& projectRoot, const std::filesystem::path& mainCppDir);
   private:
+    file_info m_MainCpp;
+
     std::filesystem::path
       m_ProjectRoot{},
       m_Source{},
@@ -93,10 +116,10 @@ namespace sequoia::testing
       m_Tests{},
       m_TestMaterials{},
       m_Output{},
-      m_MainCpp{},
-      m_MainCppDir{},
       m_IncludeTarget{},
       m_CMadeBuildDir{};
+
+    std::vector<file_info> m_AncilliaryMainCpps{};
   };
 
 

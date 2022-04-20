@@ -67,6 +67,7 @@
 #include "Runtime/ShellCommandsTest.hpp"
 #include "Runtime/ShellCommandsTestingDiagnostics.hpp"
 #include "Streaming/StreamingFreeTest.hpp"
+#include "TestFramework/ComplexFreeDiagnostics.hpp"
 #include "TestFramework/ContainerFreeDiagnostics.hpp"
 #include "TestFramework/CoreDiagnostics.hpp"
 #include "TestFramework/DependencyAnalyzerFreeTest.hpp"

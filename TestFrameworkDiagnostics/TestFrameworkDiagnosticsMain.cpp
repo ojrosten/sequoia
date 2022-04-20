@@ -24,6 +24,7 @@ int main(int argc, char** argv)
                        "Oliver J. Rosten",
                        project_paths{root,
                                      root / "TestFrameworkDiagnostics" / "TestFrameworkDiagnosticsMain.cpp",
+                                     {root / "TestAll" / "TestMain.cpp"},
                                      root / "TestCommon" / "TestIncludes.hpp"}
     };
 
@@ -47,6 +48,8 @@ int main(int argc, char** argv)
 
     runner.add_test_family(
       "Core Diagnostics",
+      complex_false_positive_free_diagnostics{"Complex False Positive Free Diagnostics"},
+      complex_false_negative_free_diagnostics{"Complex False Negative Free Diagnostics"},
       container_false_positive_free_diagnostics{"Container False Positive Free Diagnostics"},
       container_false_negative_free_diagnostics{"Container False Negative Free Diagnostics"},
       path_false_positive_free_diagnostics{"Path False Positive Free Diagnostics"},

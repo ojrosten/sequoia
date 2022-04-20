@@ -172,7 +172,7 @@ namespace sequoia::testing
         std::stringstream outputStream{};
         const auto includeTarget{working().append("TestShared").append("SharedIncludes.hpp")};
         commandline_arguments args{"", "create", "free", "Plurgh.h"};
-        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", project_paths{working(), "", includeTarget}, "  ", outputStream};
+        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", project_paths{working(), file_info{""}, includeTarget}, "  ", outputStream};
       });
 
     check_exception_thrown<std::runtime_error>(
@@ -181,7 +181,7 @@ namespace sequoia::testing
         std::stringstream outputStream{};
         const auto includeTarget{working().append("TestShared").append("SharedIncludes.hpp")};
         commandline_arguments args{"", "create", "free", "Plurgh.h"};
-        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", project_paths{working(), "FooMain.cpp", includeTarget}, "  ", outputStream};
+        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", project_paths{working(), file_info{"FooMain.cpp"}, includeTarget}, "  ", outputStream};
       });
 
     check_exception_thrown<std::runtime_error>(

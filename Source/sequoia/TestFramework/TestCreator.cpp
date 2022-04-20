@@ -79,6 +79,16 @@ namespace sequoia::testing
 
       throw std::logic_error{"Unrecognized option for nascent_test_flavour"};
     }
+
+    template<std::invocable<fs::path> Amender, invocable_r<fs::path, file_info> PathGenerator>
+    void ammend_file(const project_paths& projPaths, Amender f, PathGenerator g)
+    {
+      f(g(projPaths.main_cpp()));
+      for(const auto& mainCpp : projPaths.ancilliary_main_cpps())
+      {
+        f(g(mainCpp));
+      }
+    }
   }
 
   [[nodiscard]]
@@ -286,7 +296,13 @@ namespace sequoia::testing
     }
     else if(outputFile.extension() == ".cpp")
     {
-      add_to_cmake(m_Paths.main_cpp_dir(), m_Paths.tests(), outputFile, "target_sources(", ")\n", "${TestDir}/");
+      auto addToCMake{
+        [this, outputFile](const fs::path& cppDir) {
+          add_to_cmake(cppDir,  m_Paths.tests(), outputFile, "target_sources(", ")\n", "${TestDir}/");
+        }
+      };
+
+      ammend_file(m_Paths, addToCMake, [](const file_info& info) { return info.dir(); });
     }
 
     return stringify(outputFile);
@@ -320,7 +336,13 @@ namespace sequoia::testing
       stream() << std::quoted(create_file(nameStub, stub, transformer)) << '\n';
     }
 
-    add_to_family(m_Paths.main_cpp(), family(), m_CodeIndent, constructors);
+    auto addToFamily{
+      [this, &constructors](const fs::path& mainCpp) {
+        add_to_family(mainCpp, family(), m_CodeIndent, constructors);
+      }
+    };
+
+    ammend_file(m_Paths, addToFamily, [](const file_info& info) { return info.file(); });
 
     stream() << '\n';
   }
@@ -382,7 +404,7 @@ namespace sequoia::testing
 
     add_to_cmake(sourceRoot, sourceRoot, srcPath, "set(SourceList", ")\n", "");
 
-    read_modify_write(paths().main_cpp_dir() / "CMakeLists.txt", [&root=paths().project_root()](std::string& text) {
+    read_modify_write(paths().main_cpp().dir() / "CMakeLists.txt", [&root = paths().project_root()](std::string& text) {
         replace_all(text, "#!", "");
       }
     );

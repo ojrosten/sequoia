@@ -91,24 +91,34 @@ namespace sequoia::testing
     return fallback;
   }
 
+  file_info::file_info(fs::path file)
+    : m_File{std::move(file)}
+    , m_Dir{m_File.parent_path()}
+  {
+    throw_unless_regular_file(m_File, "\nTry ensuring that the application is run from the appropriate directory");
+  }
+
   project_paths::project_paths(const fs::path& projectRoot)
     : project_paths{projectRoot, projectRoot / "TestAll" / "TestAllMain.cpp", projectRoot / "TestAll" / "TestAllMain.cpp"}
   {}
 
-  project_paths::project_paths(const fs::path& projectRoot, fs::path mainCpp, fs::path includePath)
-    : m_ProjectRoot{projectRoot}
+  project_paths::project_paths(const fs::path& projectRoot, file_info mainCpp, fs::path includePath)
+    : project_paths(projectRoot, std::move(mainCpp), {}, std::move(includePath))
+  {}
+
+  project_paths::project_paths(const fs::path& projectRoot, file_info mainCpp, const std::vector<file_info>& ancilliaryMainCpps, fs::path includePath)
+    : m_MainCpp{std::move(mainCpp)}
+    , m_ProjectRoot{projectRoot}
     , m_Source{source_path(projectRoot)}
     , m_SourceRoot{m_Source.parent_path()}
     , m_Tests{projectRoot / "Tests"}
     , m_TestMaterials{projectRoot / "TestMaterials"}
     , m_Output{projectRoot / "output"}
-    , m_MainCpp{std::move(mainCpp)}
-    , m_MainCppDir{m_MainCpp.parent_path()}
     , m_IncludeTarget{std::move(includePath)}
-    , m_CMadeBuildDir{cmade_build_dir(m_ProjectRoot, m_MainCppDir)}
+    , m_CMadeBuildDir{cmade_build_dir(m_ProjectRoot, m_MainCpp.dir())}
+    , m_AncilliaryMainCpps{ancilliaryMainCpps}
   {
     throw_unless_directory(m_ProjectRoot, "\nTest repository not found");
-    throw_unless_regular_file(m_MainCpp, "\nTry ensuring that the application is run from the appropriate directory");
     throw_unless_regular_file(m_IncludeTarget, "\nInclude target not found");
   }
 
@@ -178,15 +188,9 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  const fs::path& project_paths::main_cpp() const noexcept
+  const file_info& project_paths::main_cpp() const noexcept
   {
     return m_MainCpp;
-  }
-
-  [[nodiscard]]
-  const fs::path& project_paths::main_cpp_dir() const noexcept
-  {
-    return m_MainCppDir;
   }
 
   [[nodiscard]]
@@ -199,6 +203,11 @@ namespace sequoia::testing
   const fs::path& project_paths::cmade_build_dir() const noexcept
   {
     return m_CMadeBuildDir;
+  }
+
+  const std::vector<file_info>& project_paths::ancilliary_main_cpps() const noexcept
+  {
+    return m_AncilliaryMainCpps;
   }
 
   [[nodiscard]]
