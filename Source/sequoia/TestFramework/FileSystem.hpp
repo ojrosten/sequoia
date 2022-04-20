@@ -47,6 +47,12 @@ namespace sequoia::testing
 
     [[nodiscard]]
     const std::filesystem::path& dir() const noexcept { return m_Dir; }
+
+    [[nodiscard]]
+    friend bool operator==(const file_info&, const file_info&) noexcept = default;
+
+    [[nodiscard]]
+    friend bool operator!=(const file_info&, const file_info&) noexcept = default;
   private:
     std::filesystem::path m_File{}, m_Dir{};
   };
