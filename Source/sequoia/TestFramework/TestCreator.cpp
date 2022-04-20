@@ -84,7 +84,7 @@ namespace sequoia::testing
     void ammend_file(const project_paths& projPaths, Amender f, PathGenerator g)
     {
       f(g(projPaths.main_cpp()));
-      for(const auto& mainCpp : projPaths.ancilliary_main_cpps())
+      for(const auto& mainCpp : projPaths.ancillary_main_cpps())
       {
         f(g(mainCpp));
       }
@@ -212,14 +212,24 @@ namespace sequoia::testing
     return decomposition;
   }
 
-  void cmake_nascent_tests(const std::filesystem::path& mainCppDir, const std::filesystem::path& buildDir, std::ostream& stream)
+  void cmake_nascent_tests(const project_paths& projPaths, std::ostream& stream)
   {
     using namespace runtime;
 
-    if(fs::exists(mainCppDir) && fs::exists(buildDir))
+    auto cmake{
+      [&stream](const fs::path& mainCppDir, const fs::path& cmadeBuildDir){
+        if(fs::exists(mainCppDir) && fs::exists(cmadeBuildDir))
+        {
+          stream << "\n";
+          invoke(cd_cmd(mainCppDir) && cmake_cmd(std::nullopt, cmadeBuildDir, {}));
+        }
+      }
+    };
+
+    cmake(projPaths.main_cpp().dir(), projPaths.cmade_build_dir());
+    for(const auto& mainCpp : projPaths.ancillary_main_cpps())
     {
-      stream << "\n";
-      invoke(cd_cmd(mainCppDir) && cmake_cmd(std::nullopt, buildDir, {}));
+      cmake(mainCpp.dir(), project_paths::cmade_build_dir(projPaths.project_root(), mainCpp.dir()));
     }
   }
 

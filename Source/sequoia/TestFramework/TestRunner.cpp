@@ -387,7 +387,7 @@ namespace sequoia::testing
       check_argument_consistency();
 
       if(mode(runner_mode::create))
-        cmake_nascent_tests(proj_paths().main_cpp().dir(), proj_paths().cmade_build_dir(), stream());
+        cmake_nascent_tests(proj_paths(), stream());
   
       if(mode(runner_mode::init))
         init_projects(proj_paths().project_root(), nascentProjects, stream());

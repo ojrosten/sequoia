@@ -62,7 +62,7 @@ namespace sequoia::testing
 
     project_paths(const std::filesystem::path& projectRoot,
                   file_info mainCpp,
-                  const std::vector<file_info>& ancilliaryMainCpps,
+                  const std::vector<file_info>& ancillaryMainCpps,
                   std::filesystem::path includePath);
 
     [[nodiscard]]
@@ -96,7 +96,7 @@ namespace sequoia::testing
     const std::filesystem::path& cmade_build_dir() const noexcept;
 
     [[nodiscard]]
-    const std::vector<file_info>& ancilliary_main_cpps() const noexcept;
+    const std::vector<file_info>& ancillary_main_cpps() const noexcept;
 
     [[nodiscard]]
     friend bool operator==(const project_paths&, const project_paths&) noexcept = default;
