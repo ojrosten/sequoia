@@ -7,3 +7,13 @@
 
 	=======================================
 
+	Tests/TestFramework/ChronoFreeDiagnostics.cpp, Line 28
+
+	[std::chrono::duration<long long, std::ratio<1, 1> >]
+	operator== returned false
+	Obtained : 0s
+	Predicted: 1s
+	Advice: Temporal advice
+
+	=======================================
+

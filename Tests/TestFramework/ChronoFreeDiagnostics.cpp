@@ -25,6 +25,7 @@ namespace sequoia::testing
     using sec = std::chrono::seconds;
 
     check(equality, LINE(""), sec{}, sec{1});
+    check(equality, LINE(""), sec{}, sec{1}, tutor{[](sec, sec) { return "Temporal advice"; }});
   }
   
   [[nodiscard]]

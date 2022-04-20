@@ -1,4 +1,4 @@
 Complex False Positive Free Diagnostics
-False Positive Checks:                     2;  Failures:  0
+False Positive Checks:                     3;  Failures:  0
 Complex False Negative Free Diagnostics
 False Negative Checks:                     1;  Failures:  0
