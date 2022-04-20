@@ -10,6 +10,8 @@
 #include "ChronoFreeDiagnostics.hpp"
 #include "sequoia/TestFramework/ConcreteTypeCheckers.hpp"
 
+#include <chrono>
+
 namespace sequoia::testing
 {
   [[nodiscard]]
@@ -20,7 +22,9 @@ namespace sequoia::testing
 
   void chrono_false_positive_free_diagnostics::run_tests()
   {
-    // e.g. check(equality, LINE("Useful description"), some_function(), 42);
+    using sec = std::chrono::seconds;
+
+    check(equality, LINE(""), sec{}, sec{1});
   }
   
   [[nodiscard]]
@@ -31,6 +35,8 @@ namespace sequoia::testing
 
   void chrono_false_negative_free_diagnostics::run_tests()
   {
-    // e.g. check(equality, LINE("Useful description"), some_function(), 42);
+    using sec = std::chrono::seconds;
+
+    check(equality, LINE(""), sec{1}, sec{1});
   }
 }
