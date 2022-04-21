@@ -1,4 +1,5 @@
-	Tests/TestFramework/ChronoFreeDiagnostics.cpp, Line 30
+	Tests/TestFramework/ChronoFreeDiagnostics.cpp, Line 31
+	Duration
 
 	[std::chrono::duration<long long, std::ratio<1, 1> >]
 	operator== returned false
@@ -7,13 +8,43 @@
 
 	=======================================
 
-	Tests/TestFramework/ChronoFreeDiagnostics.cpp, Line 31
+	Tests/TestFramework/ChronoFreeDiagnostics.cpp, Line 32
+	Duration with advice
 
 	[std::chrono::duration<long long, std::ratio<1, 1> >]
 	operator== returned false
 	Obtained : 0s
 	Predicted: 1s
 	Advice: Temporal advice
+
+	=======================================
+
+	Tests/TestFramework/ChronoFreeDiagnostics.cpp, Line 35
+	Time point
+
+	[std::chrono::time_point<std::chrono::steady_clock, std::chrono::duration<long long, std::ratio<1, 1000000000> > >]
+	operator== returned false
+
+	  Time since epoch
+	  [std::chrono::duration<long long, std::ratio<1, 1000000000> >]
+	  operator== returned false
+	  Obtained : 0ns
+	  Predicted: 1000000000ns
+
+	=======================================
+
+	Tests/TestFramework/ChronoFreeDiagnostics.cpp, Line 36
+	Time point
+
+	[std::chrono::time_point<std::chrono::steady_clock, std::chrono::duration<long long, std::ratio<1, 1000000000> > >]
+	operator== returned false
+
+	  Time since epoch
+	  [std::chrono::duration<long long, std::ratio<1, 1000000000> >]
+	  operator== returned false
+	  Obtained : 0ns
+	  Predicted: 1000000000ns
+	  Advice: Advice for time_point needs to be in nanoseconds
 
 	=======================================
 

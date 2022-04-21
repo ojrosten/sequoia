@@ -21,14 +21,19 @@ namespace sequoia::testing
   }
 
   void chrono_false_positive_free_diagnostics::run_tests()
-  {    
+  {
     // TO DO: remove once libc++/libstdc++ supports operator<< for chrono::duration
     if constexpr(with_msvc_v)
     {
       using sec = std::chrono::seconds;
+      using ns = std::chrono::nanoseconds;
 
-      check(equality, LINE(""), sec{}, sec{1});
-      check(equality, LINE(""), sec{}, sec{1}, tutor{[](sec, sec) { return "Temporal advice"; }});
+      check(equality, LINE("Duration"), sec{}, sec{1});
+      check(equality, LINE("Duration with advice"), sec{}, sec{1}, tutor{[](sec, sec) { return "Temporal advice"; }});
+
+      using TimePoint = std::chrono::time_point<std::chrono::steady_clock>;
+      check(equality, LINE("Time point"), TimePoint{sec{}}, TimePoint{sec{1}});
+      check(equality, LINE("Time point"), TimePoint{sec{}}, TimePoint{sec{1}}, tutor{[](ns, ns) { return "Advice for time_point needs to be in nanoseconds"; }});
     }
   }
   
@@ -46,6 +51,9 @@ namespace sequoia::testing
       using sec = std::chrono::seconds;
 
       check(equality, LINE(""), sec{1}, sec{1});
+
+      using TimePoint = std::chrono::time_point<std::chrono::steady_clock>;
+      check(equality, LINE("Time point"), TimePoint{sec{1}}, TimePoint{sec{1}});
     }
   }
 }
