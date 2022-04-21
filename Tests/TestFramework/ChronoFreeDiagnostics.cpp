@@ -21,9 +21,9 @@ namespace sequoia::testing
   }
 
   void chrono_false_positive_free_diagnostics::run_tests()
-  {
-    // TO DO: remove one libc++ supports operator<< for chrono::duration
-    if constexpr(!with_clang_v)
+  {    
+    // TO DO: remove once libc++/libstdc++ supports operator<< for chrono::duration
+    if constexpr(with_msvc_v)
     {
       using sec = std::chrono::seconds;
 
@@ -40,8 +40,8 @@ namespace sequoia::testing
 
   void chrono_false_negative_free_diagnostics::run_tests()
   {
-    // TO DO: remove one libc++ supports operator<< for chrono::duration
-    if constexpr(!with_clang_v)
+    // TO DO: remove once libc++/libstdc++ supports operator<< for chrono::duration
+    if constexpr(with_msvc_v)
     {
       using sec = std::chrono::seconds;
 
