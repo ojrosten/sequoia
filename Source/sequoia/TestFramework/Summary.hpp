@@ -11,6 +11,7 @@
     \brief Utilities for summarizing results of tests.
 */
 
+#include "sequoia/Core/Logic/Bitmask.hpp"
 #include "sequoia/TestFramework/TestLogger.hpp"
 
 #include <optional>
@@ -19,11 +20,17 @@ namespace sequoia::testing
 {
   /*! bit mask for the level of detail */
   enum class summary_detail { none=0, absent_checks=1, failure_messages=2, timings=4};
+}
 
+namespace sequoia
+{
   template<>
-  struct as_bitmask<summary_detail> : std::true_type
+  struct as_bitmask<testing::summary_detail> : std::true_type
   {};
+}
 
+namespace sequoia::testing
+{
   template<std::forward_iterator Iter> void pad_right(Iter begin, Iter end, std::string_view suffix)
   {
     auto maxIter{

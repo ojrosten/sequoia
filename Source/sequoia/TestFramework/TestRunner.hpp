@@ -13,6 +13,7 @@
 
 #include "sequoia/TestFramework/TestFamilySelector.hpp"
 
+#include "sequoia/Core/Logic/Bitmask.hpp"
 #include "sequoia/PlatformSpecific/Helpers.hpp"
 #include "sequoia/TextProcessing/Indent.hpp"
 
@@ -22,11 +23,16 @@
 namespace sequoia::testing
 {
   enum class runner_mode { none=0, help=1, test=2, create=4, init=8};
+}
 
+namespace sequoia
+{
   template<>
-  struct as_bitmask<runner_mode> : std::true_type
-  {};
+  struct as_bitmask<testing::runner_mode> : std::true_type {};
+}
 
+namespace sequoia::testing
+{
   [[nodiscard]]
   std::string report_time(const family_summary& s);
 
