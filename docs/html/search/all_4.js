@@ -11,7 +11,7 @@ var searchData=
   ['edge_5ftracker_8',['edge_tracker',['../d3/dc1/classsequoia_1_1testing_1_1edge__tracker.html',1,'sequoia::testing']]],
   ['edge_5ftype_5fgenerator_9',['edge_type_generator',['../d1/d76/structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator.html',1,'sequoia::maths::graph_impl']]],
   ['edge_5ftype_5fgenerator_3c_20graphflavour_2c_20edgeweightcreator_2c_20indextype_2c_20edgestoragetraits_3a_3aedge_5fsharing_20_3e_10',['edge_type_generator&lt; GraphFlavour, EdgeWeightCreator, IndexType, EdgeStorageTraits::edge_sharing &gt;',['../d1/d76/structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator.html',1,'sequoia::maths::graph_impl']]],
-  ['edge_5ftype_5fgenerator_3c_20graphflavour_2c_20ownership_3a_3aspawner_3c_20edgeweight_20_3e_2c_20indextype_2c_20edge_5fsharing_5fpreference_3a_3aindependent_20_3e_11',['edge_type_generator&lt; GraphFlavour, ownership::spawner&lt; EdgeWeight &gt;, IndexType, edge_sharing_preference::independent &gt;',['../d1/d76/structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator.html',1,'sequoia::maths::graph_impl']]],
+  ['edge_5ftype_5fgenerator_3c_20graphflavour_2c_20object_3a_3afaithful_5fproducer_3c_20edgeweight_20_3e_2c_20indextype_2c_20edge_5fsharing_5fpreference_3a_3aindependent_20_3e_11',['edge_type_generator&lt; GraphFlavour, object::faithful_producer&lt; EdgeWeight &gt;, IndexType, edge_sharing_preference::independent &gt;',['../d1/d76/structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator.html',1,'sequoia::maths::graph_impl']]],
   ['edgesandnodesutilities_2ehpp_12',['EdgesAndNodesUtilities.hpp',['../db/d4a/EdgesAndNodesUtilities_8hpp.html',1,'']]],
   ['edgetest_2ecpp_13',['EdgeTest.cpp',['../dd/dfc/EdgeTest_8cpp.html',1,'']]],
   ['edgetest_2ehpp_14',['EdgeTest.hpp',['../dd/ddf/EdgeTest_8hpp.html',1,'']]],
@@ -29,7 +29,11 @@ var searchData=
   ['equivalent_5ftype_5fprocessor_3c_20ts_2e_2e_2e_20_3e_26',['equivalent_type_processor&lt; Ts... &gt;',['../d6/d0d/structsequoia_1_1testing_1_1equivalent__type__processor_3_01Ts_8_8_8_01_4.html',1,'sequoia::testing']]],
   ['exception_5fmessage_5fextractor_27',['exception_message_extractor',['../d5/d02/structsequoia_1_1testing_1_1exception__message__extractor.html',1,'sequoia::testing']]],
   ['exception_5fmessage_5fextractor_3c_20e_20_3e_28',['exception_message_extractor&lt; E &gt;',['../d4/df9/structsequoia_1_1testing_1_1exception__message__extractor_3_01E_01_4.html',1,'sequoia::testing']]],
-  ['experimental_5ftest_29',['experimental_test',['../d9/d26/classsequoia_1_1testing_1_1experimental__test.html',1,'sequoia::testing']]],
-  ['experimentaltest_2ecpp_30',['ExperimentalTest.cpp',['../d9/dda/ExperimentalTest_8cpp.html',1,'']]],
-  ['experimentaltest_2ehpp_31',['ExperimentalTest.hpp',['../d6/daa/ExperimentalTest_8hpp.html',1,'']]]
+  ['exceptions_5ffalse_5fnegative_5ffree_5fdiagnostics_29',['exceptions_false_negative_free_diagnostics',['../dc/d68/classsequoia_1_1testing_1_1exceptions__false__negative__free__diagnostics.html',1,'sequoia::testing']]],
+  ['exceptions_5ffalse_5fpositive_5ffree_5fdiagnostics_30',['exceptions_false_positive_free_diagnostics',['../dc/d66/classsequoia_1_1testing_1_1exceptions__false__positive__free__diagnostics.html',1,'sequoia::testing']]],
+  ['exceptionsfreediagnostics_2ecpp_31',['ExceptionsFreeDiagnostics.cpp',['../df/dd2/ExceptionsFreeDiagnostics_8cpp.html',1,'']]],
+  ['exceptionsfreediagnostics_2ehpp_32',['ExceptionsFreeDiagnostics.hpp',['../d6/da3/ExceptionsFreeDiagnostics_8hpp.html',1,'']]],
+  ['experimental_5ftest_33',['experimental_test',['../d9/d26/classsequoia_1_1testing_1_1experimental__test.html',1,'sequoia::testing']]],
+  ['experimentaltest_2ecpp_34',['ExperimentalTest.cpp',['../d9/dda/ExperimentalTest_8cpp.html',1,'']]],
+  ['experimentaltest_2ehpp_35',['ExperimentalTest.hpp',['../d6/daa/ExperimentalTest_8hpp.html',1,'']]]
 ];

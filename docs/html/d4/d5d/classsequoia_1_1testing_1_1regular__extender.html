@@ -99,24 +99,24 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a28bdb4d6150274c6ef1370c370350127"><td class="memTemplParams" colspan="2"><a id="a28bdb4d6150274c6ef1370c370350127" name="a28bdb4d6150274c6ef1370c370350127"></a>
 template&lt;pseudoregular T&gt; <br />
 requires (!std::totally_ordered&lt;T&gt;)</td></tr>
-<tr class="memitem:a28bdb4d6150274c6ef1370c370350127"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_semantics</b> (std::string_view description, const T &amp;<a class="el" href="../../d6/d61/structsequoia_1_1testing_1_1x.html">x</a>, const T &amp;<a class="el" href="../../d9/dfe/structsequoia_1_1testing_1_1y.html">y</a>)</td></tr>
+<tr class="memitem:a28bdb4d6150274c6ef1370c370350127"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_semantics</b> (std::string_view description, const T &amp;x, const T &amp;y)</td></tr>
 <tr class="memdesc:a28bdb4d6150274c6ef1370c370350127"><td class="mdescLeft">&#160;</td><td class="mdescRight">Precondition: x!=y. <br /></td></tr>
 <tr class="separator:a28bdb4d6150274c6ef1370c370350127"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad7f8da34b8519278b0bc97e005ef695f"><td class="memTemplParams" colspan="2"><a id="ad7f8da34b8519278b0bc97e005ef695f" name="ad7f8da34b8519278b0bc97e005ef695f"></a>
 template&lt;pseudoregular T&gt; <br />
 requires std::totally_ordered&lt;T&gt;</td></tr>
-<tr class="memitem:ad7f8da34b8519278b0bc97e005ef695f"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_semantics</b> (std::string_view description, const T &amp;<a class="el" href="../../d6/d61/structsequoia_1_1testing_1_1x.html">x</a>, const T &amp;<a class="el" href="../../d9/dfe/structsequoia_1_1testing_1_1y.html">y</a>, std::weak_ordering order)</td></tr>
+<tr class="memitem:ad7f8da34b8519278b0bc97e005ef695f"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_semantics</b> (std::string_view description, const T &amp;x, const T &amp;y, std::weak_ordering order)</td></tr>
 <tr class="memdesc:ad7f8da34b8519278b0bc97e005ef695f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Precondition: x!=y, with values consistent with order. <br /></td></tr>
 <tr class="separator:ad7f8da34b8519278b0bc97e005ef695f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1ac78339637ba1fc151107c5d21cd176"><td class="memTemplParams" colspan="2"><a id="a1ac78339637ba1fc151107c5d21cd176" name="a1ac78339637ba1fc151107c5d21cd176"></a>
 template&lt;pseudoregular T, std::invocable&lt; T &amp; &gt; Mutator&gt; </td></tr>
-<tr class="memitem:a1ac78339637ba1fc151107c5d21cd176"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_semantics</b> (std::string_view description, const T &amp;<a class="el" href="../../d6/d61/structsequoia_1_1testing_1_1x.html">x</a>, const T &amp;<a class="el" href="../../d9/dfe/structsequoia_1_1testing_1_1y.html">y</a>, Mutator m)</td></tr>
+<tr class="memitem:a1ac78339637ba1fc151107c5d21cd176"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_semantics</b> (std::string_view description, const T &amp;x, const T &amp;y, Mutator m)</td></tr>
 <tr class="memdesc:a1ac78339637ba1fc151107c5d21cd176"><td class="mdescLeft">&#160;</td><td class="mdescRight">Precondition: x!=y. <br /></td></tr>
 <tr class="separator:a1ac78339637ba1fc151107c5d21cd176"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0edc138fea1a250e3d9f06f649d870f9"><td class="memTemplParams" colspan="2"><a id="a0edc138fea1a250e3d9f06f649d870f9" name="a0edc138fea1a250e3d9f06f649d870f9"></a>
 template&lt;pseudoregular T, std::invocable&lt; T &amp; &gt; Mutator&gt; <br />
 requires std::totally_ordered&lt;T&gt;</td></tr>
-<tr class="memitem:a0edc138fea1a250e3d9f06f649d870f9"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_semantics</b> (std::string_view description, const T &amp;<a class="el" href="../../d6/d61/structsequoia_1_1testing_1_1x.html">x</a>, const T &amp;<a class="el" href="../../d9/dfe/structsequoia_1_1testing_1_1y.html">y</a>, std::weak_ordering order, Mutator m)</td></tr>
+<tr class="memitem:a0edc138fea1a250e3d9f06f649d870f9"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_semantics</b> (std::string_view description, const T &amp;x, const T &amp;y, std::weak_ordering order, Mutator m)</td></tr>
 <tr class="memdesc:a0edc138fea1a250e3d9f06f649d870f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Precondition: x!=y, with values consistent with order. <br /></td></tr>
 <tr class="separator:a0edc138fea1a250e3d9f06f649d870f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">

@@ -84,15 +84,15 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:af187289aaa82717c1318ffbdf9a22d30"><td class="memItemLeft" align="right" valign="top"><a id="af187289aaa82717c1318ffbdf9a22d30" name="af187289aaa82717c1318ffbdf9a22d30"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>handle_type</b> = Handle</td></tr>
-<tr class="separator:af187289aaa82717c1318ffbdf9a22d30"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0fbafbebf050b14fc2d77d9f1482353c"><td class="memItemLeft" align="right" valign="top"><a id="a0fbafbebf050b14fc2d77d9f1482353c" name="a0fbafbebf050b14fc2d77d9f1482353c"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>product_type</b> = Handle</td></tr>
+<tr class="separator:a0fbafbebf050b14fc2d77d9f1482353c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a76b6e6acd1dff99d808fe9a15cdd4fd8"><td class="memItemLeft" align="right" valign="top"><a id="a76b6e6acd1dff99d808fe9a15cdd4fd8" name="a76b6e6acd1dff99d808fe9a15cdd4fd8"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>allocator_type</b> = Allocator</td></tr>
 <tr class="separator:a76b6e6acd1dff99d808fe9a15cdd4fd8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab2414d8fac52cbbc2fac4e265ca80b75"><td class="memItemLeft" align="right" valign="top"><a id="ab2414d8fac52cbbc2fac4e265ca80b75" name="ab2414d8fac52cbbc2fac4e265ca80b75"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>container_type</b> = std::vector&lt; handle_type, allocator_type &gt;</td></tr>
-<tr class="separator:ab2414d8fac52cbbc2fac4e265ca80b75"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b34e68208e8428c91422d4f742018fd"><td class="memItemLeft" align="right" valign="top"><a id="a0b34e68208e8428c91422d4f742018fd" name="a0b34e68208e8428c91422d4f742018fd"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>container_type</b> = std::vector&lt; product_type, allocator_type &gt;</td></tr>
+<tr class="separator:a0b34e68208e8428c91422d4f742018fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -121,7 +121,7 @@ Public Member Functions</h2></td></tr>
 <a class="el" href="../../d2/dd8/structsequoia_1_1testing_1_1perfectly__sharing__beast.html">perfectly_sharing_beast</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="../../d2/dd8/structsequoia_1_1testing_1_1perfectly__sharing__beast.html">perfectly_sharing_beast</a> &amp;&amp;)=default</td></tr>
 <tr class="separator:a34cb8d919b1fc3dfe3663de217278f80"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a28fae5d8baf97cda837cd4ba0cb45106"><td class="memItemLeft" align="right" valign="top"><a id="a28fae5d8baf97cda837cd4ba0cb45106" name="a28fae5d8baf97cda837cd4ba0cb45106"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>swap</b> (<a class="el" href="../../d2/dd8/structsequoia_1_1testing_1_1perfectly__sharing__beast.html">perfectly_sharing_beast</a> &amp;other) noexcept(noexcept(std::swap(this-&gt;<a class="el" href="../../d6/d61/structsequoia_1_1testing_1_1x.html">x</a>, other.x)))</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>swap</b> (<a class="el" href="../../d2/dd8/structsequoia_1_1testing_1_1perfectly__sharing__beast.html">perfectly_sharing_beast</a> &amp;other) noexcept(noexcept(std::swap(this-&gt;x, other.x)))</td></tr>
 <tr class="separator:a28fae5d8baf97cda837cd4ba0cb45106"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afd3daea2cadb74626cd01b945b48cd55"><td class="memItemLeft" align="right" valign="top"><a id="afd3daea2cadb74626cd01b945b48cd55" name="afd3daea2cadb74626cd01b945b48cd55"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>reset</b> (const allocator_type &amp;a)</td></tr>
@@ -150,7 +150,7 @@ template&lt;class Stream &gt; </td></tr>
 <tr class="separator:af4c7a87907d7a0975be6ef347b0a26fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this struct was generated from the following file:<ul>
-<li>C:/Users/olive/OneDrive/sequoia/Tests/TestFramework/<a class="el" href="../../d3/dcb/CoreDiagnosticsUtilities_8hpp_source.html">CoreDiagnosticsUtilities.hpp</a></li>
+<li>C:/Users/olive/OneDrive/sequoia/Tests/TestFramework/<a class="el" href="../../d0/df9/ContainerDiagnosticsUtilities_8hpp_source.html">ContainerDiagnosticsUtilities.hpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

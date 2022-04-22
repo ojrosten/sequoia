@@ -79,8 +79,8 @@ $(function() {
 <p>Meta-programming elements for graph implementation.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="../../dc/d91/Edge_8hpp_source.html">sequoia/Maths/Graph/Edge.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d5/d5f/DataPoolTraits_8hpp_source.html">sequoia/Core/Ownership/DataPoolTraits.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d9/d8f/UniformWrapper_8hpp_source.html">sequoia/Core/Utilities/UniformWrapper.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d3/da1/Creator_8hpp_source.html">sequoia/Core/Object/Creator.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d7/d7b/FaithfulWrapper_8hpp_source.html">sequoia/Core/Object/FaithfulWrapper.hpp</a>&quot;</code><br />
 </div>
 <p><a href="../../d3/d76/GraphDetails_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -109,14 +109,14 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::maths::undi
 <tr class="memitem:a303b9824624e1220b8aaf41ae13b2374"><td class="memItemLeft" align="right" valign="top"><a id="a303b9824624e1220b8aaf41ae13b2374" name="a303b9824624e1220b8aaf41ae13b2374"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::maths::directed_type</b> = directed_flavour_constant&lt; directed_flavour::directed &gt;</td></tr>
 <tr class="separator:a303b9824624e1220b8aaf41ae13b2374"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0c0ceb49d9ca91eb5c90313a6929d438"><td class="memTemplParams" colspan="2"><a id="a0c0ceb49d9ca91eb5c90313a6929d438" name="a0c0ceb49d9ca91eb5c90313a6929d438"></a>
+<tr class="memitem:a863020f7cbaabba25d4c2bc10cae618a"><td class="memTemplParams" colspan="2"><a id="a863020f7cbaabba25d4c2bc10cae618a" name="a863020f7cbaabba25d4c2bc10cae618a"></a>
 template&lt;bool Shared, class Proxy &gt; </td></tr>
-<tr class="memitem:a0c0ceb49d9ca91eb5c90313a6929d438"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::graph_impl::shared_to_handler_t</b> = std::conditional_t&lt; Shared, ownership::shared&lt; Proxy &gt;, ownership::independent&lt; Proxy &gt; &gt;</td></tr>
-<tr class="separator:a0c0ceb49d9ca91eb5c90313a6929d438"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2272d8b0afa4364d6a5638849b7c57aa"><td class="memTemplParams" colspan="2"><a id="a2272d8b0afa4364d6a5638849b7c57aa" name="a2272d8b0afa4364d6a5638849b7c57aa"></a>
+<tr class="memitem:a863020f7cbaabba25d4c2bc10cae618a"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::graph_impl::shared_to_handler_t</b> = std::conditional_t&lt; Shared, object::shared&lt; Proxy &gt;, object::by_value&lt; Proxy &gt; &gt;</td></tr>
+<tr class="separator:a863020f7cbaabba25d4c2bc10cae618a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9538813ba80430c936dcf061ebdcde92"><td class="memTemplParams" colspan="2"><a id="a9538813ba80430c936dcf061ebdcde92" name="a9538813ba80430c936dcf061ebdcde92"></a>
 template&lt;class EdgeWeightCreator &gt; </td></tr>
-<tr class="memitem:a2272d8b0afa4364d6a5638849b7c57aa"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::graph_impl::edge_weight_proxy_t</b> = typename EdgeWeightCreator::proxy</td></tr>
-<tr class="separator:a2272d8b0afa4364d6a5638849b7c57aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9538813ba80430c936dcf061ebdcde92"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::graph_impl::edge_weight_proxy_t</b> = typename EdgeWeightCreator::product_type</td></tr>
+<tr class="separator:a9538813ba80430c936dcf061ebdcde92"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2506496299159e25adaedd91e3060d36"><td class="memTemplParams" colspan="2"><a id="a2506496299159e25adaedd91e3060d36" name="a2506496299159e25adaedd91e3060d36"></a>
 template&lt;graph_flavour GraphFlavour, class Handler , std::integral IndexType, bool SharedEdge&gt; </td></tr>
 <tr class="memitem:a2506496299159e25adaedd91e3060d36"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::graph_impl::flavour_to_edge_t</b> = typename flavour_to_edge&lt; GraphFlavour, Handler, IndexType, SharedEdge &gt;::edge_type</td></tr>
@@ -159,16 +159,16 @@ constexpr directed_flavour&#160;</td><td class="memItemRight" valign="bottom"><b
 <tr class="memitem:a0912ed76c56b2ae1ff9da923d53227c6"><td class="memItemLeft" align="right" valign="top"><a id="a0912ed76c56b2ae1ff9da923d53227c6" name="a0912ed76c56b2ae1ff9da923d53227c6"></a>
 constexpr std::size_t&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::maths::graph_impl::num_static_edges</b> (const graph_flavour flavour, const std::size_t size) noexcept</td></tr>
 <tr class="separator:a0912ed76c56b2ae1ff9da923d53227c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a78ffaa6cb081511ebc0b8096887ed926"><td class="memTemplParams" colspan="2"><a id="a78ffaa6cb081511ebc0b8096887ed926" name="a78ffaa6cb081511ebc0b8096887ed926"></a>
+<tr class="memitem:a4e6b9551da8eacd3d122918c929c5d44"><td class="memTemplParams" colspan="2"><a id="a4e6b9551da8eacd3d122918c929c5d44" name="a4e6b9551da8eacd3d122918c929c5d44"></a>
 template&lt;class EdgeWeightCreator &gt; <br />
-requires ownership::creator&lt;EdgeWeightCreator&gt;</td></tr>
-<tr class="memitem:a78ffaa6cb081511ebc0b8096887ed926"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::graph_impl::big_proxy</b> () noexcept</td></tr>
-<tr class="separator:a78ffaa6cb081511ebc0b8096887ed926"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac2c94715b60c6dc39ebfb605baf3c1b6"><td class="memTemplParams" colspan="2"><a id="ac2c94715b60c6dc39ebfb605baf3c1b6" name="ac2c94715b60c6dc39ebfb605baf3c1b6"></a>
+requires object::creator&lt;EdgeWeightCreator&gt;</td></tr>
+<tr class="memitem:a4e6b9551da8eacd3d122918c929c5d44"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::graph_impl::big_proxy</b> () noexcept</td></tr>
+<tr class="separator:a4e6b9551da8eacd3d122918c929c5d44"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a816e0643b6b62a451e4377ae84958f86"><td class="memTemplParams" colspan="2"><a id="a816e0643b6b62a451e4377ae84958f86" name="a816e0643b6b62a451e4377ae84958f86"></a>
 template&lt;class EdgeWeightCreator &gt; <br />
-requires ownership::creator&lt;EdgeWeightCreator&gt;</td></tr>
-<tr class="memitem:ac2c94715b60c6dc39ebfb605baf3c1b6"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::graph_impl::copy_constructible_proxy</b> () noexcept</td></tr>
-<tr class="separator:ac2c94715b60c6dc39ebfb605baf3c1b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+requires object::creator&lt;EdgeWeightCreator&gt;</td></tr>
+<tr class="memitem:a816e0643b6b62a451e4377ae84958f86"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::graph_impl::copy_constructible_proxy</b> () noexcept</td></tr>
+<tr class="separator:a816e0643b6b62a451e4377ae84958f86"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>

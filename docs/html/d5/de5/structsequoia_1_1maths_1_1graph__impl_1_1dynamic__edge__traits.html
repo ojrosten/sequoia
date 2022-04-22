@@ -91,9 +91,9 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>edge_type_gen</b> = 
 <tr class="memitem:af3e7d7e0df123eb3920e731cc3ce6e62"><td class="memItemLeft" align="right" valign="top"><a id="af3e7d7e0df123eb3920e731cc3ce6e62" name="af3e7d7e0df123eb3920e731cc3ce6e62"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>edge_type</b> = typename edge_type_gen::edge_type</td></tr>
 <tr class="separator:af3e7d7e0df123eb3920e731cc3ce6e62"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a18b0eca78e8d1d46468eba5e72c434e9"><td class="memItemLeft" align="right" valign="top"><a id="a18b0eca78e8d1d46468eba5e72c434e9" name="a18b0eca78e8d1d46468eba5e72c434e9"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>edge_storage_handler</b> = std::conditional_t&lt; shared_edge_v, <a class="el" href="../../d3/d1c/structsequoia_1_1ownership_1_1shared.html">ownership::shared</a>&lt; edge_type &gt;, <a class="el" href="../../de/db9/structsequoia_1_1ownership_1_1independent.html">ownership::independent</a>&lt; edge_type &gt; &gt;</td></tr>
-<tr class="separator:a18b0eca78e8d1d46468eba5e72c434e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a641b770ec65ede6a1ebcc48c4afc2af9"><td class="memItemLeft" align="right" valign="top"><a id="a641b770ec65ede6a1ebcc48c4afc2af9" name="a641b770ec65ede6a1ebcc48c4afc2af9"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>edge_storage_handler</b> = std::conditional_t&lt; shared_edge_v, <a class="el" href="../../d4/d54/structsequoia_1_1object_1_1shared.html">object::shared</a>&lt; edge_type &gt;, <a class="el" href="../../da/de1/structsequoia_1_1object_1_1by__value.html">object::by_value</a>&lt; edge_type &gt; &gt;</td></tr>
+<tr class="separator:a641b770ec65ede6a1ebcc48c4afc2af9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a99025750359a3261ad5e2bd89193586f"><td class="memItemLeft" align="right" valign="top"><a id="a99025750359a3261ad5e2bd89193586f" name="a99025750359a3261ad5e2bd89193586f"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>edge_storage_traits</b> = typename EdgeStorageTraits::template traits_type&lt; edge_type, edge_storage_handler &gt;</td></tr>
 <tr class="separator:a99025750359a3261ad5e2bd89193586f"><td class="memSeparator" colspan="2">&#160;</td></tr>

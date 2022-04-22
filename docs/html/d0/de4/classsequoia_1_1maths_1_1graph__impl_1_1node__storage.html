@@ -83,11 +83,11 @@ Inheritance diagram for sequoia::maths::graph_impl::node_storage&lt; WeightMaker
  <div class="center">
   <img src="../../d0/de4/classsequoia_1_1maths_1_1graph__impl_1_1node__storage.png" usemap="#sequoia::maths::graph_5Fimpl::node_5Fstorage_3C_20WeightMaker_2C_20Traits_20_3E_map" alt=""/>
   <map id="sequoia::maths::graph_5Fimpl::node_5Fstorage_3C_20WeightMaker_2C_20Traits_20_3E_map" name="sequoia::maths::graph_5Fimpl::node_5Fstorage_3C_20WeightMaker_2C_20Traits_20_3E_map">
-<area href="../../d7/d30/classsequoia_1_1maths_1_1graph__impl_1_1static__node__storage.html" alt="sequoia::maths::graph_impl::static_node_storage&lt; ownership::spawner&lt; NodeWeight &gt;, Order &gt;" shape="rect" coords="1110,56,3321,80"/>
-<area href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html" alt="sequoia::maths::graph_primitive&lt; connectivity&lt; Directedness, graph_impl::static_edge_traits&lt;(Directedness==directed_flavour::directed) ? graph_flavour::directed_embedded :graph_flavour::undirected_embedded, Order, Size, EdgeWeight, Traits::edge_index_type &gt;, ownership::spawner&lt; EdgeWeight &gt; &gt;, graph_impl::static_node_storage&lt; ownership::spawner&lt; NodeWeight &gt;, Order &gt; &gt;" shape="rect" coords="0,112,2211,136"/>
-<area href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html" alt="sequoia::maths::graph_primitive&lt; connectivity&lt; Directedness, graph_impl::static_edge_traits&lt;(Directedness==directed_flavour::directed) ? graph_flavour::directed :graph_flavour::undirected, Order, Size, EdgeWeight, Traits::edge_index_type &gt;, ownership::spawner&lt; EdgeWeight &gt; &gt;, graph_impl::static_node_storage&lt; ownership::spawner&lt; NodeWeight &gt;, Order &gt; &gt;" shape="rect" coords="2221,112,4432,136"/>
-<area href="../../de/d58/classsequoia_1_1maths_1_1static__embedded__graph.html" alt="sequoia::maths::static_embedded_graph&lt; Directedness, Size, Order, EdgeWeight, NodeWeight, Traits &gt;" shape="rect" coords="0,168,2211,192"/>
-<area href="../../d1/dde/classsequoia_1_1maths_1_1static__graph.html" alt="sequoia::maths::static_graph&lt; Directedness, Size, Order, EdgeWeight, NodeWeight, Traits &gt;" shape="rect" coords="2221,168,4432,192"/>
+<area href="../../d7/d30/classsequoia_1_1maths_1_1graph__impl_1_1static__node__storage.html" alt="sequoia::maths::graph_impl::static_node_storage&lt; object::faithful_producer&lt; NodeWeight &gt;, Order &gt;" shape="rect" coords="1135,56,3396,80"/>
+<area href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html" alt="sequoia::maths::graph_primitive&lt; connectivity&lt; Directedness, graph_impl::static_edge_traits&lt;(Directedness==directed_flavour::directed) ? graph_flavour::directed_embedded :graph_flavour::undirected_embedded, Order, Size, EdgeWeight, Traits::edge_index_type &gt;, object::faithful_producer&lt; EdgeWeight &gt; &gt;, graph_impl::static_node_storage&lt; object::faithful_producer&lt; NodeWeight &gt;, Order &gt; &gt;" shape="rect" coords="0,112,2261,136"/>
+<area href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html" alt="sequoia::maths::graph_primitive&lt; connectivity&lt; Directedness, graph_impl::static_edge_traits&lt;(Directedness==directed_flavour::directed) ? graph_flavour::directed :graph_flavour::undirected, Order, Size, EdgeWeight, Traits::edge_index_type &gt;, object::faithful_producer&lt; EdgeWeight &gt; &gt;, graph_impl::static_node_storage&lt; object::faithful_producer&lt; NodeWeight &gt;, Order &gt; &gt;" shape="rect" coords="2271,112,4532,136"/>
+<area href="../../de/d58/classsequoia_1_1maths_1_1static__embedded__graph.html" alt="sequoia::maths::static_embedded_graph&lt; Directedness, Size, Order, EdgeWeight, NodeWeight, Traits &gt;" shape="rect" coords="0,168,2261,192"/>
+<area href="../../d1/dde/classsequoia_1_1maths_1_1static__graph.html" alt="sequoia::maths::static_graph&lt; Directedness, Size, Order, EdgeWeight, NodeWeight, Traits &gt;" shape="rect" coords="2271,168,4532,192"/>
   </map>
 </div></div>
 <table class="memberdecls">
@@ -99,9 +99,9 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>weight_maker_type</b
 <tr class="memitem:a79b2084a52ba81fef15903bfc12666e5"><td class="memItemLeft" align="right" valign="top"><a id="a79b2084a52ba81fef15903bfc12666e5" name="a79b2084a52ba81fef15903bfc12666e5"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>traits_type</b> = Traits</td></tr>
 <tr class="separator:a79b2084a52ba81fef15903bfc12666e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0b640650002cc2f4f0eb83ebeb77c40a"><td class="memItemLeft" align="right" valign="top"><a id="a0b640650002cc2f4f0eb83ebeb77c40a" name="a0b640650002cc2f4f0eb83ebeb77c40a"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>weight_proxy_type</b> = typename WeightMaker::proxy</td></tr>
-<tr class="separator:a0b640650002cc2f4f0eb83ebeb77c40a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1862dd7a4560c6ce653128a762d75624"><td class="memItemLeft" align="right" valign="top"><a id="a1862dd7a4560c6ce653128a762d75624" name="a1862dd7a4560c6ce653128a762d75624"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>weight_proxy_type</b> = typename WeightMaker::product_type</td></tr>
+<tr class="separator:a1862dd7a4560c6ce653128a762d75624"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adb7565dd8ebe991f09af3189fefbb80e"><td class="memItemLeft" align="right" valign="top"><a id="adb7565dd8ebe991f09af3189fefbb80e" name="adb7565dd8ebe991f09af3189fefbb80e"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>node_weight_container_type</b> = Container&lt; weight_proxy_type &gt;</td></tr>
 <tr class="separator:adb7565dd8ebe991f09af3189fefbb80e"><td class="memSeparator" colspan="2">&#160;</td></tr>

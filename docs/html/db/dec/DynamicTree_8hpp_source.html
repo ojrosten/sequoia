@@ -87,12 +87,12 @@ $(function() {
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    tree_link_direction TreeLinkDir,</div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    <span class="keyword">class </span>EdgeWeight,</div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>    <span class="keyword">class </span>NodeWeight,</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>    <span class="keyword">class </span>EdgeWeightCreator = ownership::spawner&lt;EdgeWeight&gt;,</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>    <span class="keyword">class </span>NodeWeightCreator = ownership::spawner&lt;NodeWeight&gt;,</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>    <span class="keyword">class </span>EdgeWeightCreator = object::faithful_producer&lt;EdgeWeight&gt;,</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>    <span class="keyword">class </span>NodeWeightCreator = object::faithful_producer&lt;NodeWeight&gt;,</div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    <span class="keyword">class </span>EdgeStorageTraits = bucketed_edge_storage_traits,</div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    <span class="keyword">class </span>NodeWeightStorageTraits = node_weight_storage_traits&lt;NodeWeight&gt;</div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>  &gt;</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    <span class="keyword">requires</span> (      ownership::creator&lt;EdgeWeightCreator&gt; &amp;&amp; ownership::creator&lt;NodeWeightCreator&gt;</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    <span class="keyword">requires</span> (      object::creator&lt;EdgeWeightCreator&gt; &amp;&amp; object::creator&lt;NodeWeightCreator&gt;</div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>               &amp;&amp; ((TreeLinkDir == tree_link_direction::symmetric) || (Directedness == directed_flavour::directed)))</div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno"><a class="line" href="../../d6/dce/classsequoia_1_1maths_1_1tree.html">   31</a></span>    <span class="keyword">class </span><a class="code hl_class" href="../../d6/dce/classsequoia_1_1maths_1_1tree.html">tree</a> final : <span class="keyword">public</span></div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>      <a class="code hl_class" href="../../de/d2b/classsequoia_1_1maths_1_1graph__base.html">graph_base</a></div>

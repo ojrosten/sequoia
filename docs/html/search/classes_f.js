@@ -16,9 +16,10 @@ var searchData=
   ['regular_5finverted_5fcomparisons_13',['regular_inverted_comparisons',['../d1/d55/structsequoia_1_1testing_1_1regular__inverted__comparisons.html',1,'sequoia::testing']]],
   ['regular_5fstate_5ftransition_5ffalse_5fnegative_5fdiagnostics_14',['regular_state_transition_false_negative_diagnostics',['../da/d2c/classsequoia_1_1testing_1_1regular__state__transition__false__negative__diagnostics.html',1,'sequoia::testing']]],
   ['regular_5fstate_5ftransition_5ffalse_5fpositive_5fdiagnostics_15',['regular_state_transition_false_positive_diagnostics',['../df/d35/classsequoia_1_1testing_1_1regular__state__transition__false__positive__diagnostics.html',1,'sequoia::testing']]],
-  ['relational_5ffalse_5fnegative_5fdiagnostics_16',['relational_false_negative_diagnostics',['../dd/d50/classsequoia_1_1testing_1_1relational__false__negative__diagnostics.html',1,'sequoia::testing']]],
-  ['relational_5ffalse_5fpositive_5fdiagnostics_17',['relational_false_positive_diagnostics',['../da/d4f/classsequoia_1_1testing_1_1relational__false__positive__diagnostics.html',1,'sequoia::testing']]],
-  ['replacement_18',['replacement',['../da/dd8/structsequoia_1_1replacement.html',1,'sequoia']]],
-  ['resolve_5fto_5fcopy_19',['resolve_to_copy',['../dc/d48/structsequoia_1_1resolve__to__copy.html',1,'sequoia']]],
-  ['resource_5fbinder_20',['resource_binder',['../de/d91/classsequoia_1_1testing_1_1resource__binder.html',1,'sequoia::testing']]]
+  ['regular_5ftype_16',['regular_type',['../dd/dab/structsequoia_1_1testing_1_1regular__type.html',1,'sequoia::testing']]],
+  ['relational_5ffalse_5fnegative_5fdiagnostics_17',['relational_false_negative_diagnostics',['../dd/d50/classsequoia_1_1testing_1_1relational__false__negative__diagnostics.html',1,'sequoia::testing']]],
+  ['relational_5ffalse_5fpositive_5fdiagnostics_18',['relational_false_positive_diagnostics',['../da/d4f/classsequoia_1_1testing_1_1relational__false__positive__diagnostics.html',1,'sequoia::testing']]],
+  ['replacement_19',['replacement',['../da/dd8/structsequoia_1_1replacement.html',1,'sequoia']]],
+  ['resolve_5fto_5fcopy_20',['resolve_to_copy',['../dc/d48/structsequoia_1_1resolve__to__copy.html',1,'sequoia']]],
+  ['resource_5fbinder_21',['resource_binder',['../de/d91/classsequoia_1_1testing_1_1resource__binder.html',1,'sequoia::testing']]]
 ];

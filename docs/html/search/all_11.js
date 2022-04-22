@@ -66,7 +66,7 @@ var searchData=
   ['thread_5fpool_63',['thread_pool',['../d4/d85/classsequoia_1_1concurrency_1_1thread__pool.html',1,'sequoia::concurrency']]],
   ['threading_5fmodels_5fperformance_5ftest_64',['threading_models_performance_test',['../df/da0/classsequoia_1_1testing_1_1threading__models__performance__test.html',1,'sequoia::testing']]],
   ['threading_5fmodels_5ftest_65',['threading_models_test',['../d4/d68/classsequoia_1_1testing_1_1threading__models__test.html',1,'sequoia::testing']]],
-  ['tidy_66',['tidy',['../d3/d2a/classsequoia_1_1ownership_1_1data__pool.html#ac20dc8ea07b331547bdde852ac4c7a72',1,'sequoia::ownership::data_pool']]],
+  ['tidy_66',['tidy',['../d3/dba/classsequoia_1_1object_1_1data__pool.html#a38cac17ec1d72ed0f87485ef7c5920a5',1,'sequoia::object::data_pool']]],
   ['timer_67',['timer',['../d4/d25/classsequoia_1_1testing_1_1timer.html',1,'sequoia::testing']]],
   ['timer_5fresolution_68',['timer_resolution',['../d2/daa/classsequoia_1_1timer__resolution.html',1,'sequoia']]],
   ['transition_5fchecker_69',['transition_checker',['../da/d5a/structsequoia_1_1testing_1_1transition__checker.html',1,'sequoia::testing']]],

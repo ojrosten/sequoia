@@ -80,48 +80,51 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:adbf1dcdfb942149f5dddcf795db3d76a"><td class="memItemLeft" align="right" valign="top"><a id="adbf1dcdfb942149f5dddcf795db3d76a" name="adbf1dcdfb942149f5dddcf795db3d76a"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>project_paths</b> (const std::filesystem::path &amp;projectRoot)</td></tr>
 <tr class="separator:adbf1dcdfb942149f5dddcf795db3d76a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad9a3d2ee1dab8f5ba356bfdada2251f3"><td class="memItemLeft" align="right" valign="top"><a id="ad9a3d2ee1dab8f5ba356bfdada2251f3" name="ad9a3d2ee1dab8f5ba356bfdada2251f3"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>project_paths</b> (const std::filesystem::path &amp;projectRoot, std::filesystem::path mainCpp, std::filesystem::path includePath)</td></tr>
-<tr class="separator:ad9a3d2ee1dab8f5ba356bfdada2251f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a191da0fec8b0b37348e1096dab5680a5"><td class="memItemLeft" align="right" valign="top"><a id="a191da0fec8b0b37348e1096dab5680a5" name="a191da0fec8b0b37348e1096dab5680a5"></a>
+<tr class="memitem:a85d5db504bd08e03be53ceb05759e77d"><td class="memItemLeft" align="right" valign="top"><a id="a85d5db504bd08e03be53ceb05759e77d" name="a85d5db504bd08e03be53ceb05759e77d"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>project_paths</b> (const std::filesystem::path &amp;projectRoot, file_info mainCpp, std::filesystem::path includePath)</td></tr>
+<tr class="separator:a85d5db504bd08e03be53ceb05759e77d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a265ca0ffd4ec49618a20861b4e2b7409"><td class="memItemLeft" align="right" valign="top"><a id="a265ca0ffd4ec49618a20861b4e2b7409" name="a265ca0ffd4ec49618a20861b4e2b7409"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>project_paths</b> (const std::filesystem::path &amp;projectRoot, file_info mainCpp, const std::vector&lt; file_info &gt; &amp;ancillaryMainCpps, std::filesystem::path includePath)</td></tr>
+<tr class="separator:a265ca0ffd4ec49618a20861b4e2b7409"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac3a8b47a412524fa104db88172174004"><td class="memItemLeft" align="right" valign="top"><a id="ac3a8b47a412524fa104db88172174004" name="ac3a8b47a412524fa104db88172174004"></a>
 const std::filesystem::path &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>project_root</b> () const noexcept</td></tr>
-<tr class="separator:a191da0fec8b0b37348e1096dab5680a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8317039502e9d5135f73ae1af6063112"><td class="memItemLeft" align="right" valign="top"><a id="a8317039502e9d5135f73ae1af6063112" name="a8317039502e9d5135f73ae1af6063112"></a>
+<tr class="separator:ac3a8b47a412524fa104db88172174004"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa70f9f26fe232c1608c1a8f18ac546e4"><td class="memItemLeft" align="right" valign="top"><a id="aa70f9f26fe232c1608c1a8f18ac546e4" name="aa70f9f26fe232c1608c1a8f18ac546e4"></a>
 const std::filesystem::path &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>source</b> () const noexcept</td></tr>
-<tr class="separator:a8317039502e9d5135f73ae1af6063112"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a34229ef811697e83ff689d25f48f9438"><td class="memItemLeft" align="right" valign="top"><a id="a34229ef811697e83ff689d25f48f9438" name="a34229ef811697e83ff689d25f48f9438"></a>
+<tr class="separator:aa70f9f26fe232c1608c1a8f18ac546e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3bf23cc708b52b82087a22f7da2b56e2"><td class="memItemLeft" align="right" valign="top"><a id="a3bf23cc708b52b82087a22f7da2b56e2" name="a3bf23cc708b52b82087a22f7da2b56e2"></a>
 const std::filesystem::path &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>source_root</b> () const noexcept</td></tr>
-<tr class="separator:a34229ef811697e83ff689d25f48f9438"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae8f88216b3ca5248aaa5a85f63dc1dd7"><td class="memItemLeft" align="right" valign="top"><a id="ae8f88216b3ca5248aaa5a85f63dc1dd7" name="ae8f88216b3ca5248aaa5a85f63dc1dd7"></a>
+<tr class="separator:a3bf23cc708b52b82087a22f7da2b56e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae71aeac03ccb813526f44d60ab97e7ea"><td class="memItemLeft" align="right" valign="top"><a id="ae71aeac03ccb813526f44d60ab97e7ea" name="ae71aeac03ccb813526f44d60ab97e7ea"></a>
 const std::filesystem::path &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>tests</b> () const noexcept</td></tr>
-<tr class="separator:ae8f88216b3ca5248aaa5a85f63dc1dd7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a538056daf55ec1da7afe867621310303"><td class="memItemLeft" align="right" valign="top"><a id="a538056daf55ec1da7afe867621310303" name="a538056daf55ec1da7afe867621310303"></a>
+<tr class="separator:ae71aeac03ccb813526f44d60ab97e7ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abf25bf200665540538b2dec6672e2830"><td class="memItemLeft" align="right" valign="top"><a id="abf25bf200665540538b2dec6672e2830" name="abf25bf200665540538b2dec6672e2830"></a>
 const std::filesystem::path &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>test_materials</b> () const noexcept</td></tr>
-<tr class="separator:a538056daf55ec1da7afe867621310303"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a07f3da5b142fdf18752a1cb9cf7cbb2f"><td class="memItemLeft" align="right" valign="top"><a id="a07f3da5b142fdf18752a1cb9cf7cbb2f" name="a07f3da5b142fdf18752a1cb9cf7cbb2f"></a>
+<tr class="separator:abf25bf200665540538b2dec6672e2830"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6c1976e50b5691fc33355d213258df68"><td class="memItemLeft" align="right" valign="top"><a id="a6c1976e50b5691fc33355d213258df68" name="a6c1976e50b5691fc33355d213258df68"></a>
 const std::filesystem::path &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>output</b> () const noexcept</td></tr>
-<tr class="separator:a07f3da5b142fdf18752a1cb9cf7cbb2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0396d8f36bcf5b754c2a0b63377832db"><td class="memItemLeft" align="right" valign="top"><a id="a0396d8f36bcf5b754c2a0b63377832db" name="a0396d8f36bcf5b754c2a0b63377832db"></a>
-const std::filesystem::path &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>main_cpp</b> () const noexcept</td></tr>
-<tr class="separator:a0396d8f36bcf5b754c2a0b63377832db"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a10e398ef3556c97b901c50765f6429f3"><td class="memItemLeft" align="right" valign="top"><a id="a10e398ef3556c97b901c50765f6429f3" name="a10e398ef3556c97b901c50765f6429f3"></a>
-const std::filesystem::path &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>main_cpp_dir</b> () const noexcept</td></tr>
-<tr class="separator:a10e398ef3556c97b901c50765f6429f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a175cf4a2f66a529117b145bbaeb51b55"><td class="memItemLeft" align="right" valign="top"><a id="a175cf4a2f66a529117b145bbaeb51b55" name="a175cf4a2f66a529117b145bbaeb51b55"></a>
+<tr class="separator:a6c1976e50b5691fc33355d213258df68"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3b9dac4630c0154db673a4bd6cf19f89"><td class="memItemLeft" align="right" valign="top"><a id="a3b9dac4630c0154db673a4bd6cf19f89" name="a3b9dac4630c0154db673a4bd6cf19f89"></a>
+const file_info &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>main_cpp</b> () const noexcept</td></tr>
+<tr class="separator:a3b9dac4630c0154db673a4bd6cf19f89"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a04b8988d479ce30374e323c28b7d88ca"><td class="memItemLeft" align="right" valign="top"><a id="a04b8988d479ce30374e323c28b7d88ca" name="a04b8988d479ce30374e323c28b7d88ca"></a>
 const std::filesystem::path &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>include_target</b> () const noexcept</td></tr>
-<tr class="separator:a175cf4a2f66a529117b145bbaeb51b55"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a487f5b05b538be7add20337bdffb821d"><td class="memItemLeft" align="right" valign="top"><a id="a487f5b05b538be7add20337bdffb821d" name="a487f5b05b538be7add20337bdffb821d"></a>
+<tr class="separator:a04b8988d479ce30374e323c28b7d88ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae01066e1ba0f6086fe868a741c7c5ce7"><td class="memItemLeft" align="right" valign="top"><a id="ae01066e1ba0f6086fe868a741c7c5ce7" name="ae01066e1ba0f6086fe868a741c7c5ce7"></a>
 const std::filesystem::path &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>cmade_build_dir</b> () const noexcept</td></tr>
-<tr class="separator:a487f5b05b538be7add20337bdffb821d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:ae01066e1ba0f6086fe868a741c7c5ce7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4698ec9dc379274a646d3f963fda2726"><td class="memItemLeft" align="right" valign="top"><a id="a4698ec9dc379274a646d3f963fda2726" name="a4698ec9dc379274a646d3f963fda2726"></a>
+const std::vector&lt; file_info &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>ancillary_main_cpps</b> () const noexcept</td></tr>
+<tr class="separator:a4698ec9dc379274a646d3f963fda2726"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a2a038e3c07080086107f2ca231f24254"><td class="memItemLeft" align="right" valign="top"><a id="a2a038e3c07080086107f2ca231f24254" name="a2a038e3c07080086107f2ca231f24254"></a>
+<tr class="memitem:a68abab1e4358b7df60a00fe0539e38fd"><td class="memItemLeft" align="right" valign="top"><a id="a68abab1e4358b7df60a00fe0539e38fd" name="a68abab1e4358b7df60a00fe0539e38fd"></a>
 static std::filesystem::path&#160;</td><td class="memItemRight" valign="bottom"><b>source_path</b> (const std::filesystem::path &amp;projectRoot)</td></tr>
-<tr class="separator:a2a038e3c07080086107f2ca231f24254"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a42bceb27dd613b7c2d9d93cb009c664c"><td class="memItemLeft" align="right" valign="top"><a id="a42bceb27dd613b7c2d9d93cb009c664c" name="a42bceb27dd613b7c2d9d93cb009c664c"></a>
+<tr class="separator:a68abab1e4358b7df60a00fe0539e38fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4c010eea61a77c0626a35ef834e977b3"><td class="memItemLeft" align="right" valign="top"><a id="a4c010eea61a77c0626a35ef834e977b3" name="a4c010eea61a77c0626a35ef834e977b3"></a>
 static std::filesystem::path&#160;</td><td class="memItemRight" valign="bottom"><b>cmade_build_dir</b> (const std::filesystem::path &amp;projectRoot, const std::filesystem::path &amp;mainCppDir)</td></tr>
-<tr class="separator:a42bceb27dd613b7c2d9d93cb009c664c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:a4c010eea61a77c0626a35ef834e977b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="friends" name="friends"></a>
 Friends</h2></td></tr>

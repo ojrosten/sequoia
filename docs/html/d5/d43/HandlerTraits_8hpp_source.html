@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.2"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Sequoia: C:/Users/olive/OneDrive/sequoia/Source/sequoia/Core/Ownership/HandlerTraits.hpp Source File</title>
+<title>Sequoia: C:/Users/olive/OneDrive/sequoia/Source/sequoia/Core/Object/HandlerTraits.hpp Source File</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -62,7 +62,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="../../dir_74389ed8173ad57b461b9d623a1f3867.html">Source</a></li><li class="navelem"><a class="el" href="../../dir_2cc7e707cf7d8b577b4d17c7cb9b6739.html">sequoia</a></li><li class="navelem"><a class="el" href="../../dir_af73bbb9d00c4493f0602a21eb50c280.html">Core</a></li><li class="navelem"><a class="el" href="../../dir_84705664fc2a7be4834ebdee19b6dfce.html">Ownership</a></li>  </ul>
+<li class="navelem"><a class="el" href="../../dir_74389ed8173ad57b461b9d623a1f3867.html">Source</a></li><li class="navelem"><a class="el" href="../../dir_2cc7e707cf7d8b577b4d17c7cb9b6739.html">sequoia</a></li><li class="navelem"><a class="el" href="../../dir_af73bbb9d00c4493f0602a21eb50c280.html">Core</a></li><li class="navelem"><a class="el" href="../../dir_df38718cd72b94194e0ba7ea51278eed.html">Object</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -79,17 +79,17 @@ $(function() {
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &quot;<a class="code" href="../../d3/d84/Concepts_8hpp.html">sequoia/Core/Meta/Concepts.hpp</a>&quot;</span></div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="keyword">namespace </span>sequoia::ownership</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="keyword">namespace </span>sequoia::object</div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>{</div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>  <span class="keyword">template</span>&lt;<span class="keyword">class</span> H&gt;</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>  <span class="keyword">concept </span>handler = <span class="keyword">requires</span>(H&amp; h, <span class="keyword">typename</span> H::handle_type&amp; x, <span class="keyword">const</span> <span class="keyword">typename</span> H::handle_type&amp; cx){</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    <span class="keyword">typename</span> H::handle_type;</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    <span class="keyword">typename</span> H::elementary_type;</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>  <span class="keyword">concept </span>handler = <span class="keyword">requires</span>(H&amp; h, <span class="keyword">typename</span> H::product_type&amp; x, <span class="keyword">const</span> <span class="keyword">typename</span> H::product_type&amp; cx){</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    <span class="keyword">typename</span> H::product_type;</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    <span class="keyword">typename</span> H::value_type;</div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>    { h.get(x) }      -&gt; std::same_as&lt;typename H::elementary_type&amp;&gt;;</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>    { h.get_ptr(x) }  -&gt; std::same_as&lt;typename H::elementary_type*&gt;;</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    { h.get(cx) }     -&gt; std::same_as&lt;const typename H::elementary_type&amp;&gt;;</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    { h.get_ptr(cx) } -&gt; std::same_as&lt;const typename H::elementary_type*&gt;;</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>    { h.get(x) }      -&gt; std::same_as&lt;typename H::value_type&amp;&gt;;</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>    { h.get_ptr(x) }  -&gt; std::same_as&lt;typename H::value_type*&gt;;</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    { h.get(cx) }     -&gt; std::same_as&lt;const typename H::value_type&amp;&gt;;</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    { h.get_ptr(cx) } -&gt; std::same_as&lt;const typename H::value_type*&gt;;</div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>  };</div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>}</div>
 <div class="ttc" id="aConcepts_8hpp_html"><div class="ttname"><a href="../../d3/d84/Concepts_8hpp.html">Concepts.hpp</a></div><div class="ttdoc">Concepts which are sufficiently general to appear in the sequoia namespace.</div></div>

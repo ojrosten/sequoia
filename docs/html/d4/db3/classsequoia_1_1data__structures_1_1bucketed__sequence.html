@@ -274,8 +274,8 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator!=</b> (const
 <tr class="separator:ac5825321c00ab8a80a6c472a8effaee9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><div class="compoundTemplParams">template&lt;class T, class Handler = ownership::independent&lt;T&gt;, class Traits = bucketed_storage_traits&lt;T, Handler&gt;&gt;<br />
-requires ownership::handler&lt;Handler&gt;<br />
+<div class="textblock"><div class="compoundTemplParams">template&lt;class T, class Handler = object::by_value&lt;T&gt;, class Traits = bucketed_sequence_traits&lt;T, Handler&gt;&gt;<br />
+requires object::handler&lt;Handler&gt;<br />
 class sequoia::data_structures::bucketed_sequence&lt; T, Handler, Traits &gt;</div><p >Storage for partitioned data such that data within each partition is contiguous. </p>
 </div><hr/>The documentation for this class was generated from the following file:<ul>
 <li>C:/Users/olive/OneDrive/sequoia/Source/sequoia/Core/DataStructures/<a class="el" href="../../d3/d6e/PartitionedData_8hpp_source.html">PartitionedData.hpp</a></li>

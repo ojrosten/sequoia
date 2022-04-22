@@ -211,10 +211,16 @@ template&lt;class... Ts&gt; </td></tr>
 template&lt;class T &gt; </td></tr>
 <tr class="memitem:a7116cfb2d39c72b37dadc705ff3e4d5d"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::has_allocator_type_v</b> {has_allocator_type&lt;T&gt;::value}</td></tr>
 <tr class="separator:a7116cfb2d39c72b37dadc705ff3e4d5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga0656ffe59680e41d0acf4c9a4dd39c96"><td class="memTemplParams" colspan="2">
+<tr class="memitem:a0656ffe59680e41d0acf4c9a4dd39c96"><td class="memTemplParams" colspan="2"><a id="a0656ffe59680e41d0acf4c9a4dd39c96" name="a0656ffe59680e41d0acf4c9a4dd39c96"></a>
 template&lt;class T &gt; </td></tr>
-<tr class="memitem:ga0656ffe59680e41d0acf4c9a4dd39c96"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::has_value_type</b> { requires { typename T::value_type; }}</td></tr>
-<tr class="separator:ga0656ffe59680e41d0acf4c9a4dd39c96"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0656ffe59680e41d0acf4c9a4dd39c96"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::has_value_type</b> {requires { typename T::value_type; }}</td></tr>
+<tr class="memdesc:a0656ffe59680e41d0acf4c9a4dd39c96"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks for dependent type <code>value_type</code> <br /></td></tr>
+<tr class="separator:a0656ffe59680e41d0acf4c9a4dd39c96"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae1abe0fd3876fda7eee1dce8562381df"><td class="memTemplParams" colspan="2"><a id="ae1abe0fd3876fda7eee1dce8562381df" name="ae1abe0fd3876fda7eee1dce8562381df"></a>
+template&lt;class T &gt; </td></tr>
+<tr class="memitem:ae1abe0fd3876fda7eee1dce8562381df"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::has_element_type</b> {requires { typename T::element_type; }}</td></tr>
+<tr class="memdesc:ae1abe0fd3876fda7eee1dce8562381df"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks for dependent type <code>element_type</code> <br /></td></tr>
+<tr class="separator:ae1abe0fd3876fda7eee1dce8562381df"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gadd724ce6e180a6f230bb0ae6deb54571"><td class="memTemplParams" colspan="2">
 template&lt;class T &gt; </td></tr>
 <tr class="memitem:gadd724ce6e180a6f230bb0ae6deb54571"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::has_gettable_elements</b> {requires (T &amp; t) { std::get&lt;0&gt;(t); }}</td></tr>

@@ -146,6 +146,9 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testi
 <tr class="memitem:a1df9702ae3f6626b3b97532e56b4ddb8"><td class="memItemLeft" align="right" valign="top"><a id="a1df9702ae3f6626b3b97532e56b4ddb8" name="a1df9702ae3f6626b3b97532e56b4ddb8"></a>
 std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::default_prediction_message</b> (std::string_view obtained, std::string_view prediction)</td></tr>
 <tr class="separator:a1df9702ae3f6626b3b97532e56b4ddb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4dcb684360635531a78c493848928fa9"><td class="memItemLeft" align="right" valign="top"><a id="a4dcb684360635531a78c493848928fa9" name="a4dcb684360635531a78c493848928fa9"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::pointer_prediction_message</b> (bool obtainedIsNull, bool predictionIsNull)</td></tr>
+<tr class="separator:a4dcb684360635531a78c493848928fa9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6a63d974623d7fdcaadaf50b528b3a78"><td class="memItemLeft" align="right" valign="top"><a id="a6a63d974623d7fdcaadaf50b528b3a78" name="a6a63d974623d7fdcaadaf50b528b3a78"></a>
 std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::prediction_message</b> (const std::string &amp;obtained, const std::string &amp;prediction)</td></tr>
 <tr class="separator:a6a63d974623d7fdcaadaf50b528b3a78"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -154,11 +157,16 @@ template&lt;class Char &gt; <br />
 requires is_character_v&lt;Char&gt;</td></tr>
 <tr class="memitem:aec768483d3d9785f332814eabf56dd97"><td class="memTemplItemLeft" align="right" valign="top">std::string&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::prediction_message</b> (Char obtained, Char prediction)</td></tr>
 <tr class="separator:aec768483d3d9785f332814eabf56dd97"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8b2f67077d3913979ee354d42b646d69"><td class="memTemplParams" colspan="2"><a id="a8b2f67077d3913979ee354d42b646d69" name="a8b2f67077d3913979ee354d42b646d69"></a>
+<tr class="memitem:a9540ee75ef24c7ae3de05051e79e6614"><td class="memTemplParams" colspan="2"><a id="a9540ee75ef24c7ae3de05051e79e6614" name="a9540ee75ef24c7ae3de05051e79e6614"></a>
+template&lt;class Ptr &gt; <br />
+requires std::is_pointer_v&lt;Ptr&gt; || is_const_pointer_v&lt;Ptr&gt;</td></tr>
+<tr class="memitem:a9540ee75ef24c7ae3de05051e79e6614"><td class="memTemplItemLeft" align="right" valign="top">std::string&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::prediction_message</b> (Ptr obtained, Ptr prediction)</td></tr>
+<tr class="separator:a9540ee75ef24c7ae3de05051e79e6614"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa5ef1de39700d1896691df229581ec37"><td class="memTemplParams" colspan="2"><a id="aa5ef1de39700d1896691df229581ec37" name="aa5ef1de39700d1896691df229581ec37"></a>
 template&lt;serializable T&gt; <br />
-requires (!is_character_v&lt;T&gt;)</td></tr>
-<tr class="memitem:a8b2f67077d3913979ee354d42b646d69"><td class="memTemplItemLeft" align="right" valign="top">std::string&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::prediction_message</b> (const T &amp;obtained, const T &amp;prediction)</td></tr>
-<tr class="separator:a8b2f67077d3913979ee354d42b646d69"><td class="memSeparator" colspan="2">&#160;</td></tr>
+requires (!is_character_v&lt;T&gt; &amp;&amp; !std::is_pointer_v&lt;T&gt; &amp;&amp; !is_const_pointer_v&lt;T&gt;)</td></tr>
+<tr class="memitem:aa5ef1de39700d1896691df229581ec37"><td class="memTemplItemLeft" align="right" valign="top">std::string&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::prediction_message</b> (const T &amp;obtained, const T &amp;prediction)</td></tr>
+<tr class="separator:aa5ef1de39700d1896691df229581ec37"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2522541db7e1d610bf0a4e016b3397d3"><td class="memTemplParams" colspan="2"><a id="a2522541db7e1d610bf0a4e016b3397d3" name="a2522541db7e1d610bf0a4e016b3397d3"></a>
 template&lt;reportable T&gt; <br />
 requires std::is_same_v&lt;T, bool&gt;</td></tr>

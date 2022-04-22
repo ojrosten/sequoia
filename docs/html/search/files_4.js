@@ -7,6 +7,8 @@ var searchData=
   ['edgetestingdiagnostics_2ecpp_4',['EdgeTestingDiagnostics.cpp',['../d5/dc9/EdgeTestingDiagnostics_8cpp.html',1,'']]],
   ['edgetestingdiagnostics_2ehpp_5',['EdgeTestingDiagnostics.hpp',['../d0/dde/EdgeTestingDiagnostics_8hpp.html',1,'']]],
   ['edgetestingutilities_2ehpp_6',['EdgeTestingUtilities.hpp',['../d0/d08/EdgeTestingUtilities_8hpp.html',1,'']]],
-  ['experimentaltest_2ecpp_7',['ExperimentalTest.cpp',['../d9/dda/ExperimentalTest_8cpp.html',1,'']]],
-  ['experimentaltest_2ehpp_8',['ExperimentalTest.hpp',['../d6/daa/ExperimentalTest_8hpp.html',1,'']]]
+  ['exceptionsfreediagnostics_2ecpp_7',['ExceptionsFreeDiagnostics.cpp',['../df/dd2/ExceptionsFreeDiagnostics_8cpp.html',1,'']]],
+  ['exceptionsfreediagnostics_2ehpp_8',['ExceptionsFreeDiagnostics.hpp',['../d6/da3/ExceptionsFreeDiagnostics_8hpp.html',1,'']]],
+  ['experimentaltest_2ecpp_9',['ExperimentalTest.cpp',['../d9/dda/ExperimentalTest_8cpp.html',1,'']]],
+  ['experimentaltest_2ehpp_10',['ExperimentalTest.hpp',['../d6/daa/ExperimentalTest_8hpp.html',1,'']]]
 ];
