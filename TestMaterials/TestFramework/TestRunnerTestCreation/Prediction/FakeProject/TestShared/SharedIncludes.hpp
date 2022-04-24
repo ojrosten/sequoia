@@ -9,6 +9,7 @@
 #include "CoupleTestingDiagnostics.hpp"
 #include "Global/Stuff/DefsFreeTest.hpp"
 #include "Global/Stuff/GlobalFreeTest.hpp"
+#include "Maths/AngleFreeDiagnostics.hpp"
 #include "Maths/AngleTest.hpp"
 #include "Maths/AngleTestingDiagnostics.hpp"
 #include "Maths/ProbabilityTest.hpp"

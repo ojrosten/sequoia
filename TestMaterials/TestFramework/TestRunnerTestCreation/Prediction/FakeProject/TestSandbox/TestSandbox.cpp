@@ -51,6 +51,8 @@ int main(int argc, char** argv)
 
         runner.add_test_family(
             "Angle",
+            angle_false_positive_free_diagnostics{"Angle False Positive Free Diagnostics"},
+            angle_false_negative_free_diagnostics{"Angle False Negative Free Diagnostics"},
             angle_false_positive_test{"False Positive Test"},
             angle_test{"Unit Test"}
         );

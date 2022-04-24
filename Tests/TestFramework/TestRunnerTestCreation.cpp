@@ -132,6 +132,7 @@ namespace sequoia::testing
                                  , "create", "free_test", "Stuff/Doohicky.hpp", "gen-source", "bar::things"
                                  , "create", "free_test", "Global/Stuff/Global.hpp", "gen-source", "::"
                                  , "create", "free_test", "Global/Stuff/Defs.hpp", "gen-source", ""
+                                 , "create", "free", "fakeProject/Maths/Angle.hpp", "--diagnostics"
                                  , "create", "regular_allocation_test", "container"
                                  , "create", "move_only_allocation_test", "foo", "--family", "Iterator"
                                  , "create", "performance_test", "Container.hpp"

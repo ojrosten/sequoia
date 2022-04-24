@@ -20,6 +20,7 @@ target_sources(TestAll PRIVATE
                ${TestDir}/CoupleTestingDiagnostics.cpp
                ${TestDir}/Global/Stuff/DefsFreeTest.cpp
                ${TestDir}/Global/Stuff/GlobalFreeTest.cpp
+               ${TestDir}/Maths/AngleFreeDiagnostics.cpp
                ${TestDir}/Maths/AngleTest.cpp
                ${TestDir}/Maths/AngleTestingDiagnostics.cpp
                ${TestDir}/Maths/ProbabilityTest.cpp

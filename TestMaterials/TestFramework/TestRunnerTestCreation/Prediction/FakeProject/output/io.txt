@@ -121,6 +121,10 @@ Source/fakeProject/Global/Stuff/Defs.hpp
 "Tests/Global/Stuff/DefsFreeTest.cpp"
 
 Creating files for new test:
+"Tests/Maths/AngleFreeDiagnostics.hpp"
+"Tests/Maths/AngleFreeDiagnostics.cpp"
+
+Creating files for new test:
 "Tests/Stuff/ContainerAllocationTest.hpp"
 "Tests/Stuff/ContainerAllocationTest.cpp"
 
