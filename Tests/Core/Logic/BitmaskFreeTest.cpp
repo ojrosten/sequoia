@@ -16,24 +16,10 @@ namespace sequoia::testing
   {
     enum class mask { none = 0, a = 1, b = 2, c = 4 };
 
-    [[nodiscard]]
-    std::string to_string(mask m)
-    {
-      switch(m)
-      {
-      case mask::none: return "none";
-      case mask::a:    return "a";
-      case mask::b:    return "b";
-      case mask::c:    return "c";
-      }
-
-      throw std::logic_error{"Invalid value for enum 'mask'"};
-    }
-
     template<class Stream>
     Stream& operator<<(Stream& stream, mask m)
     {
-      return (stream << to_string(m));
+      return (stream << static_cast<int>(m));
     }
   }
 }
