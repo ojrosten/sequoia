@@ -57,6 +57,6 @@ namespace sequoia::testing
     mask m{mask::none};
     m |= mask::a;
 
-    check(equality, LINE("!="), m, mask::a);
+    check(equality, LINE("|="), m, mask::a);
   }
 }
