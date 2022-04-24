@@ -21,6 +21,7 @@
 #include "Core/DataStructures/StaticQueueTestingDiagnostics.hpp"
 #include "Core/DataStructures/StaticStackTest.hpp"
 #include "Core/DataStructures/StaticStackTestingDiagnostics.hpp"
+#include "Core/Logic/BitmaskFreeTest.hpp"
 #include "Core/Meta/ConceptsTest.hpp"
 #include "Core/Meta/TypeTraitsTest.hpp"
 #include "Core/Meta/UtilitiesTest.hpp"

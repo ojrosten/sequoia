@@ -28,6 +28,7 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Core/DataStructures/StaticQueueTestingDiagnostics.cpp
                ${TestDir}/Core/DataStructures/StaticStackTest.cpp
                ${TestDir}/Core/DataStructures/StaticStackTestingDiagnostics.cpp
+               ${TestDir}/Core/Logic/BitmaskFreeTest.cpp
                ${TestDir}/Core/Meta/ConceptsTest.cpp
                ${TestDir}/Core/Meta/TypeTraitsTest.cpp
                ${TestDir}/Core/Meta/UtilitiesTest.cpp

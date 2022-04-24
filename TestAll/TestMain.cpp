@@ -296,6 +296,11 @@ int main(int argc, char** argv)
       tree_test{"Unit Test"}
     );
 
+    runner.add_test_family(
+      "Bitmask",
+      bitmask_free_test{"Bitmask Free Test"}
+    );
+
     runner.execute(timer_resolution{1ms});
   }
   catch(const std::exception& e)
