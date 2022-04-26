@@ -85,18 +85,26 @@ namespace sequoia
   template<class T>
     requires as_bitmask_v<T>
   [[nodiscard]]
-  constexpr T operator~(T om)
+  constexpr T operator^(T lhs, T rhs) noexcept
   {
     using underlying = std::underlying_type_t<T>;
-    return static_cast<T>(~static_cast<underlying>(om));
+    return static_cast<T>(static_cast<underlying>(lhs) ^ static_cast<underlying>(rhs));
+  }
+
+  template<class T>
+    requires as_bitmask_v<T>
+  constexpr T& operator^=(T& lhs, T rhs) noexcept
+  {
+    lhs = lhs ^ rhs;
+    return lhs;
   }
 
   template<class T>
     requires as_bitmask_v<T>
   [[nodiscard]]
-  constexpr T operator^(T lhs, T rhs) noexcept
+  constexpr T operator~(T om)
   {
     using underlying = std::underlying_type_t<T>;
-    return static_cast<T>(static_cast<underlying>(lhs) ^ static_cast<underlying>(rhs));
+    return static_cast<T>(~static_cast<underlying>(om));
   }
 }
