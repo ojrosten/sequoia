@@ -42,10 +42,10 @@ namespace sequoia::testing
 
   void bitmask_free_test::run_tests()
   {
-    using foo_graph = transition_checker<mask>::transition_graph;
+    using mask_graph = transition_checker<mask>::transition_graph;
     using edge_t = transition_checker<mask>::edge;
 
-    foo_graph g{
+    mask_graph g{
       { { edge_t{1, "none | a", [](mask m) -> mask { return {m | mask::a}; }, std::strong_ordering::greater} }, // 0: none
         { edge_t{3, "a | b", [](mask m) -> mask { return {m | mask::b}; }, std::strong_ordering::greater},
           edge_t{7, "a |= (b |= c)", [](mask m) -> mask {(m |= mask::b) |= mask::c; return m; }, std::strong_ordering::greater},
