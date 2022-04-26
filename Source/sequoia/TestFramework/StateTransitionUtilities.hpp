@@ -18,25 +18,22 @@
 
 namespace sequoia::testing
 {
-  namespace impl
+  template<class T, invocable_r<T, const T&> TransitionFn>
+  struct transition_info_base
   {
-    template<class T, invocable_r<T, const T&> TransitionFn>
-    struct transition_info_base
-    {
-      std::string description;
-      TransitionFn fn;
-    };
+    std::string description;
+    TransitionFn fn;
+  };
 
-    template<class T, invocable_r<T, const T&> TransitionFn>
-    struct transition_info : transition_info_base<T, TransitionFn>
-    {};
+  template<class T, invocable_r<T, const T&> TransitionFn>
+  struct transition_info : transition_info_base<T, TransitionFn>
+  {};
 
-    template<std::totally_ordered T, invocable_r<T, const T&> TransitionFn>
-    struct transition_info<T, TransitionFn> : transition_info_base<T, TransitionFn>
-    {
-      std::weak_ordering ordering;
-    };
-  }
+  template<std::totally_ordered T, invocable_r<T, const T&> TransitionFn>
+  struct transition_info<T, TransitionFn> : transition_info_base<T, TransitionFn>
+  {
+    std::weak_ordering ordering;
+  };
 
   template<class T>
   struct object_generator
@@ -57,7 +54,7 @@ namespace sequoia::testing
   template<class T, invocable_r<T, const T&> TransitionFn = std::function<T(const T&)>>
   struct transition_checker
   {
-    using transition_graph = maths::graph<maths::directed_flavour::directed, impl::transition_info<T, TransitionFn>, object_generator<T>>;
+    using transition_graph = maths::graph<maths::directed_flavour::directed, transition_info<T, TransitionFn>, object_generator<T>>;
     using edge = typename transition_graph::edge_type;
 
     template<std::invocable<std::string, T, T> CheckFn>
