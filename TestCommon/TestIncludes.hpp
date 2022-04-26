@@ -77,6 +77,7 @@
 #include "TestFramework/FailureInfoTest.hpp"
 #include "TestFramework/FailureInfoTestingDiagnostics.hpp"
 #include "TestFramework/FileSystemFreeTest.hpp"
+#include "TestFramework/FunctionFreeDiagnostics.hpp"
 #include "TestFramework/MaterialsUpdaterFreeTest.hpp"
 #include "TestFramework/MoveOnlyAllocationTestDiagnostics.hpp"
 #include "TestFramework/MoveOnlyScopedAllocationTestDiagnostics.hpp"

@@ -72,7 +72,6 @@ namespace sequoia::testing
   {
     basic_tests();
     test_mixed();
-    test_function();
     test_equivalence_checks();
     test_weak_equivalence_checks();
     test_with_best_available_checks();
@@ -120,48 +119,6 @@ namespace sequoia::testing
     check(equivalence, LINE(""), std::vector<std::string>{ {"a"}, {"b"}}, std::initializer_list<std::string_view>{"a", "c"}, tutor{[](char, char) {
         return "Ah, chars. So easy to get wrong.";
     }});
-  }
-
-  void false_positive_diagnostics::test_function()
-  {
-    {
-      using function = std::function<void()>;
-      check(weak_equivalence,
-        LINE("Obtained bound but prediction not"),
-        function{[]() {}},
-        function{});
-
-      check(weak_equivalence,
-        LINE("Prediction bound but obtained not"),
-        function{},
-        function{[]() {}});
-    }
-
-    {
-      using function = std::function<int()>;
-      check(weak_equivalence,
-            LINE("Obtained bound but prediction not"),
-            function{[]() { return 42; }},
-            function{});
-
-      check(weak_equivalence,
-            LINE("Prediction bound but obtained not"),
-            function{},
-            function{[]() { return 42; }});
-    }
-
-    {
-      using function = std::function<void(int)>;
-      check(weak_equivalence,
-            LINE("Obtained bound but prediction not"),
-            function{[](int) {}},
-            function{});
-
-      check(weak_equivalence,
-            LINE("Prediction bound but obtained not"),
-            function{},
-            function{[](int) {}});
-    }
   }
 
   void false_positive_diagnostics::test_equivalence_checks()
@@ -259,7 +216,6 @@ namespace sequoia::testing
   {
     basic_tests();
     test_mixed();
-    test_function();
     test_equivalence_checks();
     test_weak_equivalence_checks();
     test_with_best_available_checks();
@@ -286,27 +242,6 @@ namespace sequoia::testing
     check(equality, LINE(""), a, b);
 
     check(equivalence, LINE(""), std::vector<std::string>{ {"a"}, {"b"}}, std::initializer_list<std::string_view>{"a", "b"});
-  }
-
-  void false_negative_diagnostics::test_function()
-  {
-    {
-      using function = std::function<void()>;
-      check(weak_equivalence, LINE("Both bound"), function{[]() {}}, function{[]() {}});
-      check(weak_equivalence, LINE("Neither bound"), function{}, function{});
-    }
-
-    {
-      using function = std::function<int()>;
-      check(weak_equivalence, LINE("Both bound"), function{[]() { return 42; }}, function{[]() { return 42; }});
-      check(weak_equivalence, LINE("Neither bound"), function{}, function{});
-    }
-
-    {
-      using function = std::function<void(int)>;
-      check(weak_equivalence, LINE("Both bound"), function{[](int) {}}, function{[](int) {}});
-      check(weak_equivalence, LINE("Neither bound"), function{}, function{});
-    }
   }
 
   void false_negative_diagnostics::test_equivalence_checks()

@@ -29,6 +29,7 @@ target_sources(TestFrameworkDiagnostics PRIVATE
                ${TestDir}/TestFramework/FailureInfoTest.cpp
                ${TestDir}/TestFramework/FailureInfoTestingDiagnostics.cpp
                ${TestDir}/TestFramework/FileSystemFreeTest.cpp
+               ${TestDir}/TestFramework/FunctionFreeDiagnostics.cpp
                ${TestDir}/TestFramework/MaterialsUpdaterFreeTest.cpp
                ${TestDir}/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp
                ${TestDir}/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp

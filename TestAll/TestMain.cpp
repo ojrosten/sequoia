@@ -47,6 +47,8 @@ int main(int argc, char** argv)
 
     runner.add_test_family(
       "Core Diagnostics",
+      function_false_positive_free_diagnostics{"Function False Positive Free Diagnostics"},
+      function_false_negative_free_diagnostics{"Function False Negative Free Diagnostics"},
       exceptions_false_positive_free_diagnostics{"Exceptions False Positive Free Diagnostics"},
       exceptions_false_negative_free_diagnostics{"Exceptions False Negative Free Diagnostics"},
       chrono_false_positive_free_diagnostics{"Chrono False Positive Free Diagnostics"},

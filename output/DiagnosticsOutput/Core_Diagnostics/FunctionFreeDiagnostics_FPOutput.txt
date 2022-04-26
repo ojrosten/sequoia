@@ -1,0 +1,84 @@
+	Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 26
+	Obtained bound but prediction not
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<std::function<void ()> >]
+	Checking for weak equivalence with:
+	[std::function<void ()>]
+
+	  obtained has a function bound but prediction has a function not bound
+	  [bool]
+	  check failed
+
+	=======================================
+
+	Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 31
+	Prediction bound but obtained not
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<std::function<void ()> >]
+	Checking for weak equivalence with:
+	[std::function<void ()>]
+
+	  obtained has a function not bound but prediction has a function bound
+	  [bool]
+	  check failed
+
+	=======================================
+
+	Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 39
+	Obtained bound but prediction not
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<std::function<int ()> >]
+	Checking for weak equivalence with:
+	[std::function<int ()>]
+
+	  obtained has a function bound but prediction has a function not bound
+	  [bool]
+	  check failed
+
+	=======================================
+
+	Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 44
+	Prediction bound but obtained not
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<std::function<int ()> >]
+	Checking for weak equivalence with:
+	[std::function<int ()>]
+
+	  obtained has a function not bound but prediction has a function bound
+	  [bool]
+	  check failed
+
+	=======================================
+
+	Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 52
+	Obtained bound but prediction not
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<std::function<void (int)> >]
+	Checking for weak equivalence with:
+	[std::function<void (int)>]
+
+	  obtained has a function bound but prediction has a function not bound
+	  [bool]
+	  check failed
+
+	=======================================
+
+	Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 57
+	Prediction bound but obtained not
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<std::function<void (int)> >]
+	Checking for weak equivalence with:
+	[std::function<void (int)>]
+
+	  obtained has a function not bound but prediction has a function bound
+	  [bool]
+	  check failed
+
+	=======================================
+
