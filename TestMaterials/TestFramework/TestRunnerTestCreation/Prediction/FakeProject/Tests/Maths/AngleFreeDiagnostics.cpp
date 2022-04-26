@@ -22,7 +22,7 @@ namespace sequoia::testing
     {
         // e.g. check(equality, LINE("Useful description"), some_function(), 42);
     }
-    
+
     [[nodiscard]]
     std::string_view angle_false_negative_free_diagnostics::source_file() const noexcept
     {

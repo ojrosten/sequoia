@@ -22,7 +22,7 @@ namespace sequoia::testing
 	{
 		// e.g. check(equality, LINE("Useful description"), some_function(), 42);
 	}
-	
+
 	[[nodiscard]]
 	std::string_view ?forename_false_negative_?surname::source_file() const noexcept
 	{
