@@ -62,7 +62,7 @@
 
 namespace sequoia::testing
 {
-  /*! \brief Checks equality of `std::basic_string_view`
+  /*! \brief Comparisons for `std::basic_string_view`
   
       Some support is offered for wide string views etc., though test failures are ultimately reported
       using normal strings, which has its limitations when the character type is bigger than a `char`. 
@@ -71,6 +71,9 @@ namespace sequoia::testing
   struct value_tester<std::basic_string_view<Char, Traits>>
   {
     using string_view_type = std::basic_string_view<Char, Traits>;
+
+    template<class Allocator>
+    using string_type      = std::basic_string<Char, Traits, Allocator>;
   private:
     using iter_type = typename string_view_type::const_iterator;
     using size_type = typename string_view_type::size_type;
@@ -209,9 +212,15 @@ namespace sequoia::testing
         }
       }
     }
+
+    template<test_mode Mode, class Advisor, class Allocator>
+    static void test(equivalence_check_t, test_logger<Mode>& logger, string_view_type obtained, string_type<Allocator> prediction, const tutor<Advisor>& advisor)
+    {
+      test(equality, logger, obtained, string_view_type{prediction}, advisor);
+    }
   };
 
-  /*! \brief Checks equality of `std::basic_string_view`
+  /*! \brief Comparisons for `std::basic_string`
 
       Some support is offered for wide string views etc., though test failures are ultimately reported
       using normal strings, which has its limitations when the character type is bigger than a `char`.

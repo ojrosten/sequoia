@@ -1236,13 +1236,20 @@
 
 	Tests/TestFramework/StringFreeDiagnostics.cpp, Line 92
 
-	[std::basic_string_view<char, std::char_traits<char> >]
+	Comparison performed using:
+	[sequoia::testing::value_tester<std::basic_string_view<char, std::char_traits<char> > >]
+	Checking for equivalence with:
+	[std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
 
-	  Element 2 of range incorrect
+	  First difference detected at character 2:
 	  [char]
 	  operator== returned false
 	  Obtained : o
 	  Predicted: b
+
+	  Full strings:
+	  Obtained : foo
+	  Predicted: fob
 
 	=======================================
 
@@ -1267,13 +1274,20 @@
 
 	Tests/TestFramework/StringFreeDiagnostics.cpp, Line 98
 
-	[std::basic_string_view<wchar_t, std::char_traits<wchar_t> >]
+	Comparison performed using:
+	[sequoia::testing::value_tester<std::basic_string_view<wchar_t, std::char_traits<wchar_t> > >]
+	Checking for equivalence with:
+	[std::basic_string<wchar_t, std::char_traits<wchar_t>, std::allocator<wchar_t> >]
 
-	  Element 2 of range incorrect
+	  First difference detected at character 2:
 	  [wchar_t]
 	  operator== returned false
 	  Obtained : o
 	  Predicted: b
+
+	  Full strings:
+	  Obtained : foo
+	  Predicted: fob
 
 	=======================================
 
