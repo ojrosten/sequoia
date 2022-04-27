@@ -1,4 +1,4 @@
 Container False Positive Free Diagnostics
-False Positive Checks:                    22;  Failures:  0
+False Positive Checks:                    26;  Failures:  0
 Container False Negative Free Diagnostics
-False Negative Checks:                     8;  Failures:  0
+False Negative Checks:                    10;  Failures:  0

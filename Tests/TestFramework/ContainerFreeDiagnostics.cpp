@@ -12,6 +12,7 @@
 
 #include "sequoia/TestFramework/ConcreteTypeCheckers.hpp"
 
+#include <complex>
 #include <set>
 
 namespace sequoia::testing
@@ -66,6 +67,7 @@ namespace sequoia::testing
   {
     test_homogeneous();
     test_heterogeneous();
+    test_mixed();
   }
 
   void container_false_positive_free_diagnostics::test_homogeneous()
@@ -117,6 +119,34 @@ namespace sequoia::testing
     check(equivalence, LINE(""), std::tuple<const int&, double>{5, 7.8}, std::tuple<int, const double&>{-5, 6.8});
   }
 
+  void container_false_positive_free_diagnostics::test_mixed()
+  {
+    using t_0 = std::vector<std::pair<int, float>>;
+    using t_1 = std::set<double>;
+    using t_2 = std::complex<double>;
+    using type = std::tuple<t_0, t_1, t_2>;
+
+    type a{t_0{{1, 2.1f}, {2, 2.8f}}, {3.3, -9.6, 3.2}, {1.1, 0.2}};
+
+    {
+      type b{t_0{{2, 2.1f}, {2, 2.8f}}, {3.3, -9.6, 3.2}, {1.1, 0.2}};
+      check(equality, LINE(""), a, b, tutor{[](int, int){ return "Nested int advice"; }});
+    }
+
+    {
+      type b{t_0{{1, 2.1f}, {2, 2.8f}}, {3.4, -9.6, 3.2}, {1.1, 0.2}};
+      check(equality, LINE(""), a, b, tutor{[](const std::set<double>&, const std::set<double>&){
+                                       return "Note reordering of elements upon set construction";
+                                     }});
+    }
+
+    check(equivalence, LINE(""), std::vector<std::string>{ {"a"}, {"b"}}, std::initializer_list<std::string_view>{"a", "c"});
+
+    check(equivalence, LINE(""), std::vector<std::string>{ {"a"}, {"b"}}, std::initializer_list<std::string_view>{"a", "c"}, tutor{[](char, char) {
+        return "Ah, chars. So easy to get wrong.";
+    }});
+  }
+
   [[nodiscard]]
   std::string_view container_false_negative_free_diagnostics::source_file() const noexcept
   {
@@ -127,6 +157,7 @@ namespace sequoia::testing
   {
     test_homogeneous();
     test_heterogeneous();
+    test_mixed();
   }
 
   void container_false_negative_free_diagnostics::test_homogeneous()
@@ -157,5 +188,20 @@ namespace sequoia::testing
     check(equality, LINE(""), std::pair<int, double>{5, 7.8}, std::pair<int, double>{5, 7.8});
 
     check(equality, LINE(""), std::tuple<int, double, float>{4, 3.4, -9.2f}, std::tuple<int, double, float>{4, 3.4, -9.2f});
+  }
+
+  void container_false_negative_free_diagnostics::test_mixed()
+  {
+    using t_0 = std::vector<std::pair<int, float>>;
+    using t_1 = std::set<double>;
+    using t_2 = std::complex<double>;
+    using type = std::tuple<t_0, t_1, t_2>;
+
+    type a{t_0{{1, 2.1f}, {2, 2.8f}}, {3.3, -9.6, 3.2}, {1.1, 0.2}};
+    type b{t_0{{1, 2.1f}, {2, 2.8f}}, {3.3, -9.6, 3.2}, {1.1, 0.2}};
+
+    check(equality, LINE(""), a, b);
+
+    check(equivalence, LINE(""), std::vector<std::string>{ {"a"}, {"b"}}, std::initializer_list<std::string_view>{"a", "b"});
   }
 }

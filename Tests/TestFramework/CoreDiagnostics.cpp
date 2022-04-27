@@ -31,7 +31,6 @@ namespace sequoia::testing
   void false_positive_diagnostics::run_tests()
   {
     basic_tests();
-    test_mixed();
     test_equivalence_checks();
     test_weak_equivalence_checks();
     test_with_best_available_checks();
@@ -53,36 +52,9 @@ namespace sequoia::testing
       }});
   }
 
-  void false_positive_diagnostics::test_mixed()
-  {
-    using t_0 = std::vector<std::pair<int, float>>;
-    using t_1 = std::set<double>;
-    using t_2 = std::complex<double>;
-    using type = std::tuple<t_0, t_1, t_2>;
-
-    type a{t_0{{1, 2.1f}, {2, 2.8f}}, {3.3, -9.6, 3.2}, {1.1, 0.2}};
-
-    {
-      type b{t_0{{2, 2.1f}, {2, 2.8f}}, {3.3, -9.6, 3.2}, {1.1, 0.2}};
-      check(equality, LINE(""), a, b, tutor{[](int, int){ return "Nested int advice";}});
-    }
-
-    {
-      type b{t_0{{1, 2.1f}, {2, 2.8f}}, {3.4, -9.6, 3.2}, {1.1, 0.2}};
-      check(equality, LINE(""), a, b, tutor{[](const std::set<double>&, const std::set<double>&){
-                                       return "Note reordering of elements upon set construction";
-                                     }});
-    }
-
-    check(equivalence, LINE(""), std::vector<std::string>{ {"a"}, {"b"}}, std::initializer_list<std::string_view>{"a", "c"});
-
-    check(equivalence, LINE(""), std::vector<std::string>{ {"a"}, {"b"}}, std::initializer_list<std::string_view>{"a", "c"}, tutor{[](char, char) {
-        return "Ah, chars. So easy to get wrong.";
-    }});
-  }
-
   void false_positive_diagnostics::test_equivalence_checks()
   {
+    check(equivalence, LINE("Equivalence checking"), only_equivalence_checkable{42}, 41);
     check(equivalence, LINE("Advice for equivalence checking"), only_equivalence_checkable{42}, 41, tutor{bland{}});
   }
 
@@ -159,7 +131,6 @@ namespace sequoia::testing
   void false_negative_diagnostics::run_tests()
   {
     basic_tests();
-    test_mixed();
     test_equivalence_checks();
     test_weak_equivalence_checks();
     test_with_best_available_checks();
@@ -173,23 +144,9 @@ namespace sequoia::testing
     check(equality, LINE(""), 5.0, 5.0);
   }
 
-  void false_negative_diagnostics::test_mixed()
-  {
-    using t_0 = std::vector<std::pair<int, float>>;
-    using t_1 = std::set<double>;
-    using t_2 = std::complex<double>;
-    using type = std::tuple<t_0, t_1, t_2>;
-
-    type a{t_0{{1, 2.1f}, {2, 2.8f}}, {3.3, -9.6, 3.2}, {1.1, 0.2}};
-    type b{t_0{{1, 2.1f}, {2, 2.8f}}, {3.3, -9.6, 3.2}, {1.1, 0.2}};
-
-    check(equality, LINE(""), a, b);
-
-    check(equivalence, LINE(""), std::vector<std::string>{ {"a"}, {"b"}}, std::initializer_list<std::string_view>{"a", "b"});
-  }
-
   void false_negative_diagnostics::test_equivalence_checks()
   {
+    check(equivalence, LINE("Equivalence checking"), only_equivalence_checkable{42}, 42);
     check(equivalence, LINE("Advice for equivalence checking"), only_equivalence_checkable{42}, 42, tutor{bland{}});
   }
 

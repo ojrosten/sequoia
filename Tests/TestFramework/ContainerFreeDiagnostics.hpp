@@ -26,6 +26,7 @@ namespace sequoia::testing
 
     void test_homogeneous();
     void test_heterogeneous();
+    void test_mixed();
   };
   
   class container_false_negative_free_diagnostics final : public free_false_negative_test
@@ -41,5 +42,6 @@ namespace sequoia::testing
 
     void test_homogeneous();
     void test_heterogeneous();
+    void test_mixed();
   };
 }

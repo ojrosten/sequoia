@@ -1,40 +1,37 @@
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 170
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 141
 
 	[bool]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 172
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 143
 
 	[int]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 173
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 144
 
 	[double]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 186
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 149
+	Equivalence checking
 
-	[std::tuple<std::vector<std::pair<int, float>, std::allocator<std::pair<int, float> > >, std::set<double, std::less<double>, std::allocator<double> >, std::complex<double> >]
-
-	=======================================
-
-	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 188
-
-	[std::vector<std::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::basic_string<char, std::char_traits<char>, std::allocator<char> > > >]
+	Comparison performed using:
+	[sequoia::testing::value_tester<sequoia::testing::only_equivalence_checkable>]
+	Checking for equivalence with:
+	[int]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 193
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 150
 	Advice for equivalence checking
 
 	Comparison performed using:
@@ -45,7 +42,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 199
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 156
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > >]
@@ -55,14 +52,14 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 202
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 159
 
 	[std::vector<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> >, std::allocator<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > > >]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 204
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 161
 	Advice for weak equivalence checking
 
 	Comparison performed using:
@@ -73,7 +70,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 207
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 164
 	Advice for range weak equivalence, where the containerized form is explicitly specialized
 
 	[std::vector<sequoia::testing::only_weakly_checkable, std::allocator<sequoia::testing::only_weakly_checkable> >]
@@ -81,7 +78,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 212
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 169
 	Advice for range weak equivalence, where the containerized form is not explicitly specialized
 
 	[std::list<sequoia::testing::only_weakly_checkable, std::allocator<sequoia::testing::only_weakly_checkable> >]
@@ -89,28 +86,28 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 222
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 179
 
 	[std::pair<int, double>]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 228
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 185
 
 	[std::pair<int, sequoia::testing::only_weakly_checkable>]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 234
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 191
 
 	[std::pair<int, sequoia::testing::only_equivalence_checkable>]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 235
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 192
 
 	[std::pair<int, sequoia::testing::only_equivalence_checkable>]
 

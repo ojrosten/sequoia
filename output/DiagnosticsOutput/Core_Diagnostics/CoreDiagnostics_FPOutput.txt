@@ -1,11 +1,11 @@
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 42
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 41
 
 	[bool]
 	check failed
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 43
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 42
 
 	[bool]
 	check failed
@@ -13,7 +13,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 46
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 45
 	Advisor ignored
 
 	[bool]
@@ -21,7 +21,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 50
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 49
 	Integers which should compare different
 
 	[int]
@@ -31,7 +31,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 51
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 50
 
 	[double]
 	operator== returned false
@@ -41,92 +41,23 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 67
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 57
+	Equivalence checking
 
-	[std::tuple<std::vector<std::pair<int, float>, std::allocator<std::pair<int, float> > >, std::set<double, std::less<double>, std::allocator<double> >, std::complex<double> >]
-	operator== returned false
+	Comparison performed using:
+	[sequoia::testing::value_tester<sequoia::testing::only_equivalence_checkable>]
+	Checking for equivalence with:
+	[int]
 
-	  Element 0 of tuple incorrect
-	  [std::vector<std::pair<int, float>, std::allocator<std::pair<int, float> > >]
+	  Wrapped float
+	  [double]
 	  operator== returned false
-
-	    Element 0 of range incorrect
-	    [std::pair<int, float>]
-	    operator== returned false
-
-	      First element of pair is incorrect
-	      [int]
-	      operator== returned false
-	      Obtained : 1
-	      Predicted: 2
-	      Advice: Nested int advice
+	  Obtained : 42
+	  Predicted: 41
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 72
-
-	[std::tuple<std::vector<std::pair<int, float>, std::allocator<std::pair<int, float> > >, std::set<double, std::less<double>, std::allocator<double> >, std::complex<double> >]
-	operator== returned false
-
-	  Element 1 of tuple incorrect
-	  [std::set<double, std::less<double>, std::allocator<double> >]
-	  operator== returned false
-	  Advice: Note reordering of elements upon set construction
-
-	    Element 2 of range incorrect
-	    [double]
-	    operator== returned false
-	    Obtained : 3.3
-	    Predicted: 3.4
-
-	=======================================
-
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 77
-
-	[std::vector<std::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::basic_string<char, std::char_traits<char>, std::allocator<char> > > >]
-
-	  Element 1 of range incorrect
-	  Comparison performed using:
-	  [sequoia::testing::value_tester<std::basic_string<char, std::char_traits<char>, std::allocator<char> > >]
-	  Checking for equivalence with:
-	  [std::basic_string_view<char, std::char_traits<char> >]
-
-	    First difference detected at character 0:
-	    [char]
-	    operator== returned false
-	    Obtained : b
-	    Predicted: c
-
-	    Full strings:
-	    Obtained : b
-	    Predicted: c
-
-	=======================================
-
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 79
-
-	[std::vector<std::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::basic_string<char, std::char_traits<char>, std::allocator<char> > > >]
-
-	  Element 1 of range incorrect
-	  Comparison performed using:
-	  [sequoia::testing::value_tester<std::basic_string<char, std::char_traits<char>, std::allocator<char> > >]
-	  Checking for equivalence with:
-	  [std::basic_string_view<char, std::char_traits<char> >]
-
-	    First difference detected at character 0:
-	    [char]
-	    operator== returned false
-	    Obtained : b
-	    Predicted: c
-
-	    Full strings:
-	    Obtained : b
-	    Predicted: c
-	    Advice: Ah, chars. So easy to get wrong.
-
-	=======================================
-
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 86
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 58
 	Advice for equivalence checking
 
 	Comparison performed using:
@@ -143,7 +74,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 92
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 64
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > >]
@@ -158,7 +89,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 93
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 65
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > >]
@@ -174,7 +105,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 98
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 70
 
 	[std::vector<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> >, std::allocator<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > > >]
 
@@ -192,7 +123,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 101
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 73
 
 	[std::vector<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> >, std::allocator<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > > >]
 
@@ -211,7 +142,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 109
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 81
 	Advice for weak equivalence checking
 
 	Comparison performed using:
@@ -235,7 +166,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 115
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 87
 	Advice for range weak equivalence, where the containerized form is explicitly specialized
 
 	[std::vector<sequoia::testing::only_weakly_checkable, std::allocator<sequoia::testing::only_weakly_checkable> >]
@@ -262,7 +193,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 120
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 92
 	Advice for range weak equivalence, where the containerized form is not explicitly specialized
 
 	[std::list<sequoia::testing::only_weakly_checkable, std::allocator<sequoia::testing::only_weakly_checkable> >]
@@ -289,7 +220,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 131
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 103
 
 	[std::pair<int, double>]
 	operator== returned false
@@ -302,7 +233,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 137
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 109
 
 	[std::pair<int, sequoia::testing::only_weakly_checkable>]
 	  First element of pair is incorrect
@@ -313,7 +244,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 138
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 110
 
 	[std::pair<int, sequoia::testing::only_weakly_checkable>]
 	  Second element of pair is incorrect
@@ -326,7 +257,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 139
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 111
 
 	[std::pair<int, sequoia::testing::only_weakly_checkable>]
 	  First element of pair is incorrect
@@ -345,7 +276,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 140
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 112
 
 	[std::pair<int, sequoia::testing::only_weakly_checkable>]
 	  Second element of pair is incorrect
@@ -359,7 +290,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 146
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 118
 
 	[std::pair<int, sequoia::testing::only_equivalence_checkable>]
 	  First element of pair is incorrect
@@ -370,7 +301,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 147
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 119
 
 	[std::pair<int, sequoia::testing::only_equivalence_checkable>]
 	  Second element of pair is incorrect
@@ -383,7 +314,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 148
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 120
 
 	[std::pair<int, sequoia::testing::only_equivalence_checkable>]
 	  First element of pair is incorrect
@@ -402,7 +333,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 149
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 121
 
 	[std::pair<int, sequoia::testing::only_equivalence_checkable>]
 	  First element of pair is incorrect
