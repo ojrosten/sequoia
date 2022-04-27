@@ -152,6 +152,30 @@ namespace sequoia::testing
     check(equality, LINE(""), std::tuple<int, double, float>{4, 3.4, -9.2f}, std::tuple<int, double, float>{4, 0.0, -9.2f}, tutor{bland{}});
     check(equality, LINE(""), std::tuple<int, double, float>{4, 3.4, -9.2f}, std::tuple<int, double, float>{4, 3.4, -0.0f});
     check(equivalence, LINE(""), std::tuple<const int&, double>{5, 7.8}, std::tuple<int, const double&>{-5, 6.8});
+
+    {
+      using type = std::pair<int, double>;
+
+      check(with_best_available, LINE(""), type{}, type{1, 0.0});
+    }
+
+    {
+      using type = std::pair<int, only_weakly_checkable>;
+
+      check(with_best_available, LINE(""), type{1, {0, 2.0}}, type{0, {0, 2.0}});
+      check(with_best_available, LINE(""), type{1, {0, 2.0}}, type{1, {0, 2.1}});
+      check(with_best_available, LINE(""), type{1, {0, 2.0}}, type{0, {0, 2.1}});
+      check(with_best_available, LINE(""), type{1, {0, 2.0}}, type{1, {0, 2.1}}, tutor{bland{}});
+    }
+
+    {
+      using type = std::pair<int, only_equivalence_checkable>;
+
+      check(with_best_available, LINE(""), type{1, {1.5}}, type{0, {1.5}});
+      check(with_best_available, LINE(""), type{1, {1.5}}, type{1, {1.4}});
+      check(with_best_available, LINE(""), type{0, {1.5}}, type{1, {1.4}});
+      check(with_best_available, LINE(""), type{1, {1.4}}, type{0, {1.4}}, tutor{bland{}});
+    }
   }
 
   void container_false_positive_free_diagnostics::test_mixed()
@@ -223,6 +247,25 @@ namespace sequoia::testing
     check(equality, LINE(""), std::pair<int, double>{5, 7.8}, std::pair<int, double>{5, 7.8});
 
     check(equality, LINE(""), std::tuple<int, double, float>{4, 3.4, -9.2f}, std::tuple<int, double, float>{4, 3.4, -9.2f});
+
+    {
+      using type = std::pair<int, double>;
+
+      check(with_best_available, LINE(""), type{1, 0.0}, type{1, 0.0});
+    }
+
+    {
+      using type = std::pair<int, only_weakly_checkable>;
+
+      check(with_best_available, LINE(""), type{1, {0, 2.0}}, type{1, {0, 2.0}});
+    }
+
+    {
+      using type = std::pair<int, only_equivalence_checkable>;
+
+      check(with_best_available, LINE(""), type{1, {1.4}}, type{1, {1.4}});
+      check(with_best_available, LINE(""), type{1, {1.4}}, type{1, {1.4}}, tutor{bland{}});
+    }
   }
 
   void container_false_negative_free_diagnostics::test_mixed()

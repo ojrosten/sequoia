@@ -97,29 +97,28 @@ namespace sequoia::testing
 
   void false_positive_diagnostics::test_with_best_available_checks()
   {
-    {
-      using type = std::pair<int, double>;
+    check(with_best_available, LINE("Best available for int"), 1, 2);
+    check(with_best_available, LINE("Advice for best available for int"), 1, 2, tutor{[](int, int) { return "int advice"; }});
 
-      check(with_best_available, LINE(""), type{}, type{1, 0.0});
-    }
+    check(with_best_available,
+          LINE("Best available for only_equivalence_checkable"),
+          only_equivalence_checkable{1},
+          only_equivalence_checkable{2});
+    check(with_best_available,
+          LINE("Advice for best available for only_equivalence_checkable"),
+          only_equivalence_checkable{1},
+          only_equivalence_checkable{2},
+          tutor{[](only_equivalence_checkable, only_equivalence_checkable) { return "only_equivalence_checkable advice"; }});
 
-    {
-      using type = std::pair<int, only_weakly_checkable>;
-
-      check(with_best_available, LINE(""), type{1, {0, 2.0}}, type{0, {0, 2.0}});
-      check(with_best_available, LINE(""), type{1, {0, 2.0}}, type{1, {0, 2.1}});
-      check(with_best_available, LINE(""), type{1, {0, 2.0}}, type{0, {0, 2.1}});
-      check(with_best_available, LINE(""), type{1, {0, 2.0}}, type{1, {0, 2.1}}, tutor{bland{}});
-    }
-
-    {
-      using type = std::pair<int, only_equivalence_checkable>;
-
-      check(with_best_available, LINE(""), type{1, {1.5}}, type{0, {1.5}});
-      check(with_best_available, LINE(""), type{1, {1.5}}, type{1, {1.4}});
-      check(with_best_available, LINE(""), type{0, {1.5}}, type{1, {1.4}});
-      check(with_best_available, LINE(""), type{1, {1.4}}, type{0, {1.4}}, tutor{bland{}});
-    }
+    check(with_best_available,
+          LINE("Best available for only_weakly_checkable"),
+          only_weakly_checkable{1, -1.4},
+          only_weakly_checkable{2, 6.7});
+    check(with_best_available,
+          LINE("Advice for best available for only_weakly_checkable"),
+          only_weakly_checkable{1, -1.4},
+          only_weakly_checkable{2, 6.7},
+          tutor{[](only_weakly_checkable, only_weakly_checkable) { return "only_weakly_checkable advice"; }});
   }
 
   [[nodiscard]]
@@ -173,23 +172,16 @@ namespace sequoia::testing
 
   void false_negative_diagnostics::test_with_best_available_checks()
   {
-    {
-      using type = std::pair<int, double>;
+    check(with_best_available, LINE("Best available for int"), 1, 1);
 
-      check(with_best_available, LINE(""), type{1, 0.0}, type{1, 0.0});
-    }
+    check(with_best_available,
+          LINE("Best available for only_weakly_checkable"),
+          only_weakly_checkable{2, -1.4},
+          only_weakly_checkable{2, -1.4});
 
-    {
-      using type = std::pair<int, only_weakly_checkable>;
-
-      check(with_best_available, LINE(""), type{1, {0, 2.0}}, type{1, {0, 2.0}});
-    }
-
-    {
-      using type = std::pair<int, only_equivalence_checkable>;
-
-      check(with_best_available, LINE(""), type{1, {1.4}}, type{1, {1.4}});
-      check(with_best_available, LINE(""), type{1, {1.4}}, type{1, {1.4}}, tutor{bland{}});
-    }
+    check(with_best_available,
+          LINE("Best available for only_weakly_checkable"),
+          only_weakly_checkable{1, 6.7},
+          only_weakly_checkable{1, 6.7});
   }
 }
