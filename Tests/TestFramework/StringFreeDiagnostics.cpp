@@ -89,11 +89,13 @@ namespace sequoia::testing
     using namespace std::string_literals;
     using namespace std::string_view_literals;
     check(equivalence, LINE(""), "foo"s, "fob"sv);
+    check(equivalence, LINE(""), "foo"sv, "fob"s);
   }
 
   void string_false_positive_free_diagnostics::test_wstring_equivalences()
   {
-    check(equivalence, LINE(""), std::wstring{L"foo"}, std::wstring{L"fob"});
+    check(equivalence, LINE(""), std::wstring{L"foo"}, std::wstring_view{L"fob"});
+    check(equivalence, LINE(""), std::wstring_view{L"foo"}, std::wstring{L"fob"});
   }
 
   [[nodiscard]]
@@ -125,6 +127,6 @@ namespace sequoia::testing
 
   void string_false_negative_free_diagnostics::test_wstring_equivalences()
   {
-    check(equivalence, LINE(""), std::wstring{L"foo"}, std::wstring{L"foo"});
+    check(equivalence, LINE(""), std::wstring{L"foo"}, std::wstring_view{L"foo"});
   }
 }
