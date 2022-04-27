@@ -166,61 +166,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 87
-	Advice for range weak equivalence, where the containerized form is explicitly specialized
-
-	[std::vector<sequoia::testing::only_weakly_checkable, std::allocator<sequoia::testing::only_weakly_checkable> >]
-
-	  Element 0 of range incorrect
-	  Comparison performed using:
-	  [sequoia::testing::value_tester<sequoia::testing::only_weakly_checkable>]
-	  Checking for weak equivalence with:
-	  [std::pair<int, double>]
-
-	    Wrapped int
-	    [int]
-	    operator== returned false
-	    Obtained : 42
-	    Predicted: 41
-	    Advice: Integer advice
-
-	    Wrapped double
-	    [double]
-	    operator== returned false
-	    Obtained : 3.14
-	    Predicted: 3.13
-	    Advice: Double advice
-
-	=======================================
-
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 92
-	Advice for range weak equivalence, where the containerized form is not explicitly specialized
-
-	[std::list<sequoia::testing::only_weakly_checkable, std::allocator<sequoia::testing::only_weakly_checkable> >]
-
-	  Element 0 of range incorrect
-	  Comparison performed using:
-	  [sequoia::testing::value_tester<sequoia::testing::only_weakly_checkable>]
-	  Checking for weak equivalence with:
-	  [std::pair<int, double>]
-
-	    Wrapped int
-	    [int]
-	    operator== returned false
-	    Obtained : 42
-	    Predicted: 41
-	    Advice: Integer advice
-
-	    Wrapped double
-	    [double]
-	    operator== returned false
-	    Obtained : 3.14
-	    Predicted: 3.13
-	    Advice: Double advice
-
-	=======================================
-
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 100
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 90
 	Best available for int
 
 	[int]
@@ -230,7 +176,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 101
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 91
 	Advice for best available for int
 
 	[int]
@@ -241,7 +187,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 104
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 94
 	Best available for only_equivalence_checkable
 
 	[sequoia::testing::only_equivalence_checkable]
@@ -253,7 +199,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 108
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 98
 	Advice for best available for only_equivalence_checkable
 
 	[sequoia::testing::only_equivalence_checkable]
@@ -266,7 +212,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 114
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 104
 	Best available for only_weakly_checkable
 
 	[sequoia::testing::only_weakly_checkable]
@@ -284,7 +230,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 118
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 108
 	Advice for best available for only_weakly_checkable
 
 	[sequoia::testing::only_weakly_checkable]

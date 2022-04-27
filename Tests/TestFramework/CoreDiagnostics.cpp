@@ -82,16 +82,6 @@ namespace sequoia::testing
           only_weakly_checkable{42, 3.14},
           std::pair<int, double>{41, 3.13},
           tutor{bland{}});
-
-    check(weak_equivalence,
-          LINE("Advice for range weak equivalence, where the containerized form is explicitly specialized"),
-          std::vector<only_weakly_checkable>{{42, 3.14}},
-          std::vector<std::pair<int, double>>{{41, 3.13}}, tutor{bland{}});
-
-    check(weak_equivalence,
-          LINE("Advice for range weak equivalence, where the containerized form is not explicitly specialized"),
-          std::list<only_weakly_checkable>{{42, 3.14}},
-          std::list<std::pair<int, double>>{{41, 3.13}}, tutor{bland{}});
   }
 
 
@@ -158,16 +148,6 @@ namespace sequoia::testing
     check(weak_equivalence, LINE(""), std::vector<beast>{{1, 2}, {3, 4}}, prediction{{1, 2}, {3, 4}});
 
     check(weak_equivalence, LINE("Advice for weak equivalence checking"), only_weakly_checkable{42, 3.14}, std::pair<int, double>{42, 3.14}, tutor{bland{}});
-
-    check(weak_equivalence,
-          LINE("Advice for range weak equivalence, where the containerized form is explicitly specialized"),
-          std::vector<only_weakly_checkable>{{42, 3.14}},
-          std::vector<std::pair<int, double>>{{42, 3.14}}, tutor{bland{}});
-
-    check(weak_equivalence,
-          LINE("Advice for range weak equivalence, where the containerized form is not explicitly specialized"),
-          std::list<only_weakly_checkable>{{42, 3.14}},
-          std::list<std::pair<int, double>>{{42, 3.14}}, tutor{bland{}});
   }
 
   void false_negative_diagnostics::test_with_best_available_checks()
