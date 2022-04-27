@@ -80,7 +80,25 @@ namespace sequoia::testing
           only_equivalence_checkable{42},
           only_equivalence_checkable{41},
           tutor{[](double, double) { return "double advice"; }});
-    
+
+    check(weak_equivalence, LINE("Equivalence checking via fallback"), only_equivalence_checkable{42}, 41);
+    check(weak_equivalence,
+          LINE("Equivalence checking via fallback with propagated advice"),
+          only_equivalence_checkable{42},
+          41,
+          tutor{[](double, double) { return "double advice"; }});
+
+    check(weak_equivalence, LINE("Self-equivalence checking via fallback"), only_equivalence_checkable{42}, only_equivalence_checkable{41});
+    check(weak_equivalence,
+          LINE("Self-equivalence checking via fallback with advice"),
+          only_equivalence_checkable{42},
+          only_equivalence_checkable{41},
+          tutor{[](only_equivalence_checkable, only_equivalence_checkable) { return "only_equivalence_checkable advice"; }});
+    check(weak_equivalence,
+          LINE("Self-equivalence checking via fallback with propagated advice"),
+          only_equivalence_checkable{42},
+          only_equivalence_checkable{41},
+          tutor{[](double, double) { return "double advice"; }});
   }
 
   void false_positive_diagnostics::test_weak_equivalence_checks()

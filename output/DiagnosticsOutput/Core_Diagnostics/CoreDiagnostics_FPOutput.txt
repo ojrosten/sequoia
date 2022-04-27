@@ -158,7 +158,90 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 89
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 84
+	Equivalence checking via fallback
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<sequoia::testing::only_equivalence_checkable>]
+	Checking for equivalence with:
+	[int]
+
+	  Wrapped double
+	  [double]
+	  operator== returned false
+	  Obtained : 42
+	  Predicted: 41
+
+	=======================================
+
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 86
+	Equivalence checking via fallback with propagated advice
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<sequoia::testing::only_equivalence_checkable>]
+	Checking for equivalence with:
+	[int]
+
+	  Wrapped double
+	  [double]
+	  operator== returned false
+	  Obtained : 42
+	  Predicted: 41
+	  Advice: double advice
+
+	=======================================
+
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 91
+	Self-equivalence checking via fallback
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<sequoia::testing::only_equivalence_checkable>]
+	Checking for equivalence with:
+	[sequoia::testing::only_equivalence_checkable]
+
+	  Wrapped double
+	  [double]
+	  operator== returned false
+	  Obtained : 42
+	  Predicted: 41
+
+	=======================================
+
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 93
+	Self-equivalence checking via fallback with advice
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<sequoia::testing::only_equivalence_checkable>]
+	Checking for equivalence with:
+	[sequoia::testing::only_equivalence_checkable]
+
+	  Wrapped double
+	  [double]
+	  operator== returned false
+	  Obtained : 42
+	  Predicted: 41
+	  Advice: only_equivalence_checkable advice
+
+	=======================================
+
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 98
+	Self-equivalence checking via fallback with propagated advice
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<sequoia::testing::only_equivalence_checkable>]
+	Checking for equivalence with:
+	[sequoia::testing::only_equivalence_checkable]
+
+	  Wrapped double
+	  [double]
+	  operator== returned false
+	  Obtained : 42
+	  Predicted: 41
+	  Advice: double advice
+
+	=======================================
+
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 107
 	Weak equivalence checking
 
 	Comparison performed using:
@@ -180,7 +263,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 93
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 111
 	Weak equivalence checking with propagated advice
 
 	Comparison performed using:
@@ -204,7 +287,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 98
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 116
 	Self-weak-equivalence checking
 
 	Comparison performed using:
@@ -226,7 +309,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 100
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 118
 	Self-weak-equivalence checking with advice
 
 	Comparison performed using:
@@ -248,7 +331,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 105
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 123
 	Self-weak-equivalence checking with propagated advice
 
 	Comparison performed using:
@@ -272,7 +355,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 114
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 132
 	Best available for int
 
 	[int]
@@ -282,7 +365,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 115
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 133
 	Advice for best available for int
 
 	[int]
@@ -293,7 +376,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 118
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 136
 	Best available for only_equivalence_checkable
 
 	[sequoia::testing::only_equivalence_checkable]
@@ -305,7 +388,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 122
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 140
 	Best available for only_equivalence_checkable with advice
 
 	[sequoia::testing::only_equivalence_checkable]
@@ -318,7 +401,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 128
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 146
 	Best available for only_weakly_checkable
 
 	[sequoia::testing::only_weakly_checkable]
@@ -336,7 +419,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 132
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 150
 	Best available for only_weakly_checkable with advice
 
 	[sequoia::testing::only_weakly_checkable]
