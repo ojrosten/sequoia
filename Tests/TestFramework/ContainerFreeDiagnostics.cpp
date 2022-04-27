@@ -31,8 +31,8 @@ namespace sequoia::testing
   template<>
   struct value_tester<foo>
   {
-    template<test_mode Mode>
-    static void test(equivalence_check_t, test_logger<Mode>& logger, const foo& f, int i, tutor<bland> advisor)
+    template<test_mode Mode, class Advisor>
+    static void test(equivalence_check_t, test_logger<Mode>& logger, const foo& f, int i, const tutor<Advisor>& advisor)
     {
       check(equality, "Wrapped value", logger, f.i, i, advisor);
     }
@@ -43,9 +43,15 @@ namespace sequoia::testing
   struct value_tester<std::vector<foo>>
   {
     template<test_mode Mode>
-    static void test(equivalence_check_t, test_logger<Mode>& logger, const std::vector<foo>& f, const std::vector<int>& i, tutor<bland> advisor)
+    static void test(equivalence_check_t, test_logger<Mode>& logger, const std::vector<foo>& obtained, const std::vector<int>& prediction, tutor<bland> advisor)
     {
-      check(equivalence, "Vector equivalence", logger, f.begin(), f.end(), i.begin(), i.end(), advisor);
+      check(equivalence, "Vector equivalence", logger, obtained.begin(), obtained.end(), prediction.begin(), prediction.end(), advisor);
+    }
+
+    template<test_mode Mode>
+    static void test(weak_equivalence_check_t, test_logger<Mode>& logger, const std::vector<foo>& obtained, const std::list<int>& prediction, tutor<bland> advisor)
+    {
+      check(equivalence, "Vector equivalence", logger, obtained.begin(), obtained.end(), prediction.begin(), prediction.end(), advisor);
     }
   };
 
@@ -83,15 +89,36 @@ namespace sequoia::testing
     check(equality, LINE("Iterators demarcate differing elements"), refs.cbegin(), refs.cend(), ans.cbegin(), ans.cbegin() + 4);
 
     check(equivalence,
+          LINE("Range equivalence, where the containerized form is explicitly specialized"),
+          std::vector<foo>{{42}},
+          std::vector<int>{41});
+
+    check(equivalence,
           LINE("Advice for range equivalence, where the containerized form is explicitly specialized"),
           std::vector<foo>{{42}},
           std::vector<int>{41},
           tutor{bland{}});
 
     check(equivalence,
+          LINE("Range equivalence, where the containerized form is not explicitly specialized"),
+          std::set<foo>{{42}},
+          std::set<int>{41});
+
+    check(equivalence,
           LINE("Advice for range equivalence, where the containerized form is not explicitly specialized"),
           std::set<foo>{{42}},
           std::set<int>{41},
+          tutor{bland{}});
+
+    check(weak_equivalence,
+          LINE("Range weak equivalence, where the containerized form is explicitly specialized"),
+          std::vector<foo>{{42}},
+          std::list<int>{41});
+
+    check(weak_equivalence,
+          LINE("Advice for range weak equivalence, where the containerized form is explicitly specialized"),
+          std::vector<foo>{ {42}},
+          std::list<int>{41},
           tutor{bland{}});
   }
 
