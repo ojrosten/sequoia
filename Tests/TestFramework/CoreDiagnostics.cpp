@@ -22,46 +22,6 @@
 
 namespace sequoia::testing
 {
-  namespace
-  {
-    struct foo
-    {
-      int i{};
-
-      [[nodiscard]]
-      friend constexpr auto operator<=>(const foo&, const foo&) = default;
-    };
-  }
-
-  template<>
-  struct value_tester<foo>
-  {
-    template<test_mode Mode>
-    static void test(equivalence_check_t, test_logger<Mode>& logger, const foo& f, int i, tutor<bland> advisor)
-    {
-      check(equality, "Wrapped value", logger, f.i, i, advisor);
-    }
-  };
-
-  // Explicit container specialization to testing propagation of tutor through check_range_equivalence
-  template<>
-  struct value_tester<std::vector<foo>>
-  {
-    template<test_mode Mode>
-    static void test(equivalence_check_t, test_logger<Mode>& logger, const std::vector<foo>& f, const std::vector<int>& i, tutor<bland> advisor)
-    {
-      check(equivalence, "Vector equivalence", logger, f.begin(), f.end(), i.begin(), i.end(), advisor);
-    }
-
-    using prediction_t = std::vector<std::pair<int, double>>;
-
-    template<test_mode Mode>
-    static void test(weak_equivalence_check_t, test_logger<Mode>& logger, const std::vector<foo>& f, const prediction_t& p, tutor<bland> advisor)
-    {
-      check(equivalence, "Vector equivalence", logger, f.begin(), f.end(), p.begin(), p.end(), advisor);
-    }
-  };
-
   [[nodiscard]]
   std::string_view false_positive_diagnostics::source_file() const noexcept
   {
@@ -123,19 +83,7 @@ namespace sequoia::testing
 
   void false_positive_diagnostics::test_equivalence_checks()
   {
-    check(equivalence, LINE("Advice for equivalence checking"), foo{42}, 41, tutor{bland{}});
-
-    check(equivalence,
-          LINE("Advice for range equivalence, where the containerized form is explicitly specialized"),
-          std::vector<foo>{{42}},
-          std::vector<int>{41},
-          tutor{bland{}});
-
-    check(equivalence,
-          LINE("Advice for range equivalence, where the containerized form is not explicitly specialized"),
-          std::set<foo>{{42}},
-          std::set<int>{41},
-          tutor{bland{}});
+    check(equivalence, LINE("Advice for equivalence checking"), only_equivalence_checkable{42}, 41, tutor{bland{}});
   }
 
   void false_positive_diagnostics::test_weak_equivalence_checks()
@@ -242,13 +190,7 @@ namespace sequoia::testing
 
   void false_negative_diagnostics::test_equivalence_checks()
   {
-    check(equivalence, LINE("Advice for equivalence checking"), foo{42}, 42, tutor{bland{}});
-
-    check(equivalence, LINE("Advice for range equivalence, where the containerized for is explicitly specialized"), 
-                      std::vector<foo>{{42}}, std::vector<int>{42}, tutor{bland{}});
-
-    check(equivalence, LINE("Advice for range equivalence, where the containerized for is not explicitly specialized"),
-      std::set<foo>{{42}}, std::set<int>{42}, tutor{bland{}});
+    check(equivalence, LINE("Advice for equivalence checking"), only_equivalence_checkable{42}, 42, tutor{bland{}});
   }
 
   void false_negative_diagnostics::test_weak_equivalence_checks()

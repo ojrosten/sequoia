@@ -1,5 +1,5 @@
 	False Positive Failure:
-	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 79
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 134
 	Empty vector check which should pass
 
 	[std::vector<double, std::allocator<double> >]
@@ -7,7 +7,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 80
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 135
 	One element vector check which should pass
 
 	[std::vector<double, std::allocator<double> >]
@@ -15,7 +15,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 81
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 136
 	Multi-element vector comparison which should pass
 
 	[std::vector<double, std::allocator<double> >]
@@ -23,20 +23,39 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 85
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 140
 	Iterators demarcate identical elements
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 90
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 143
+	Advice for range equivalence, where the containerized form is explicitly specialized
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<std::vector<sequoia::testing::(anonymous namespace)::foo, std::allocator<sequoia::testing::(anonymous namespace)::foo> > >]
+	Checking for equivalence with:
+	[std::vector<int, std::allocator<int> >]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 149
+	Advice for range equivalence, where the containerized form is not explicitly specialized
+
+	[std::set<sequoia::testing::(anonymous namespace)::foo, std::less<sequoia::testing::(anonymous namespace)::foo>, std::allocator<sequoia::testing::(anonymous namespace)::foo> >]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 157
 
 	[std::pair<int, double>]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 92
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 159
 
 	[std::tuple<int, double, float>]
 

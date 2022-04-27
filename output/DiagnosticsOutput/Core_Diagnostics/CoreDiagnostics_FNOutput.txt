@@ -1,70 +1,51 @@
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 222
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 170
 
 	[bool]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 224
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 172
 
 	[int]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 225
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 173
 
 	[double]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 238
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 186
 
 	[std::tuple<std::vector<std::pair<int, float>, std::allocator<std::pair<int, float> > >, std::set<double, std::less<double>, std::allocator<double> >, std::complex<double> >]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 240
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 188
 
 	[std::vector<std::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::basic_string<char, std::char_traits<char>, std::allocator<char> > > >]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 245
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 193
 	Advice for equivalence checking
 
 	Comparison performed using:
-	[sequoia::testing::value_tester<sequoia::testing::(anonymous namespace)::foo>]
+	[sequoia::testing::value_tester<sequoia::testing::only_equivalence_checkable>]
 	Checking for equivalence with:
 	[int]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 247
-	Advice for range equivalence, where the containerized for is explicitly specialized
-
-	Comparison performed using:
-	[sequoia::testing::value_tester<std::vector<sequoia::testing::(anonymous namespace)::foo, std::allocator<sequoia::testing::(anonymous namespace)::foo> > >]
-	Checking for equivalence with:
-	[std::vector<int, std::allocator<int> >]
-
-	=======================================
-
-	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 250
-	Advice for range equivalence, where the containerized for is not explicitly specialized
-
-	[std::set<sequoia::testing::(anonymous namespace)::foo, std::less<sequoia::testing::(anonymous namespace)::foo>, std::allocator<sequoia::testing::(anonymous namespace)::foo> >]
-
-	=======================================
-
-	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 257
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 199
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > >]
@@ -74,14 +55,14 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 260
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 202
 
 	[std::vector<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> >, std::allocator<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > > >]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 262
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 204
 	Advice for weak equivalence checking
 
 	Comparison performed using:
@@ -92,7 +73,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 265
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 207
 	Advice for range weak equivalence, where the containerized form is explicitly specialized
 
 	[std::vector<sequoia::testing::only_weakly_checkable, std::allocator<sequoia::testing::only_weakly_checkable> >]
@@ -100,7 +81,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 270
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 212
 	Advice for range weak equivalence, where the containerized form is not explicitly specialized
 
 	[std::list<sequoia::testing::only_weakly_checkable, std::allocator<sequoia::testing::only_weakly_checkable> >]
@@ -108,28 +89,28 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 280
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 222
 
 	[std::pair<int, double>]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 286
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 228
 
 	[std::pair<int, sequoia::testing::only_weakly_checkable>]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 292
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 234
 
 	[std::pair<int, sequoia::testing::only_equivalence_checkable>]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 293
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 235
 
 	[std::pair<int, sequoia::testing::only_equivalence_checkable>]
 

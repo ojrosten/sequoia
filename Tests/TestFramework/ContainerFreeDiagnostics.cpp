@@ -12,8 +12,50 @@
 
 #include "sequoia/TestFramework/ConcreteTypeCheckers.hpp"
 
+#include <set>
+
 namespace sequoia::testing
 {
+  namespace
+  {
+    struct foo
+    {
+      int i{};
+
+      [[nodiscard]]
+      friend constexpr auto operator<=>(const foo&, const foo&) = default;
+    };
+  }
+
+  template<>
+  struct value_tester<foo>
+  {
+    template<test_mode Mode>
+    static void test(equivalence_check_t, test_logger<Mode>& logger, const foo& f, int i, tutor<bland> advisor)
+    {
+      check(equality, "Wrapped value", logger, f.i, i, advisor);
+    }
+  };
+
+  // Explicit container specialization to test propagation of tutor
+  template<>
+  struct value_tester<std::vector<foo>>
+  {
+    template<test_mode Mode>
+    static void test(equivalence_check_t, test_logger<Mode>& logger, const std::vector<foo>& f, const std::vector<int>& i, tutor<bland> advisor)
+    {
+      check(equivalence, "Vector equivalence", logger, f.begin(), f.end(), i.begin(), i.end(), advisor);
+    }
+
+    using prediction_t = std::vector<std::pair<int, double>>;
+
+    template<test_mode Mode>
+    static void test(weak_equivalence_check_t, test_logger<Mode>& logger, const std::vector<foo>& f, const prediction_t& p, tutor<bland> advisor)
+    {
+      check(equivalence, "Vector equivalence", logger, f.begin(), f.end(), p.begin(), p.end(), advisor);
+    }
+  };
+
   [[nodiscard]]
   std::string_view container_false_positive_free_diagnostics::source_file() const noexcept
   {
@@ -45,6 +87,19 @@ namespace sequoia::testing
 
     check(equality, LINE("Iterators demarcate differing numbers of elements"), refs.cbegin(), refs.cend(), ans.cbegin(), ans.cend());
     check(equality, LINE("Iterators demarcate differing elements"), refs.cbegin(), refs.cend(), ans.cbegin(), ans.cbegin() + 4);
+
+    
+    check(equivalence,
+          LINE("Advice for range equivalence, where the containerized form is explicitly specialized"),
+          std::vector<foo>{{42}},
+          std::vector<int>{41},
+          tutor{bland{}});
+
+    check(equivalence,
+          LINE("Advice for range equivalence, where the containerized form is not explicitly specialized"),
+          std::set<foo>{{42}},
+          std::set<int>{41},
+          tutor{bland{}});
   }
 
   void container_false_positive_free_diagnostics::test_heterogeneous()
@@ -83,6 +138,18 @@ namespace sequoia::testing
     std::vector<float> refs{-4.3f, 2.8f, 6.2f, 7.3f}, ans{1.1f, -4.3f, 2.8f, 6.2f, 8.4f, 7.3f};
 
     check(equality, LINE("Iterators demarcate identical elements"), refs.cbegin(), refs.cbegin() + 3, ans.cbegin() + 1, ans.cbegin() + 4);
+
+    check(equivalence,
+          LINE("Advice for range equivalence, where the containerized form is explicitly specialized"),
+          std::vector<foo>{ {42}},
+          std::vector<int>{42},
+          tutor{bland{}});
+
+    check(equivalence,
+          LINE("Advice for range equivalence, where the containerized form is not explicitly specialized"),
+          std::set<foo>{{42}},
+          std::set<int>{42},
+          tutor{bland{}});
   }
 
   void container_false_negative_free_diagnostics::test_heterogeneous()
