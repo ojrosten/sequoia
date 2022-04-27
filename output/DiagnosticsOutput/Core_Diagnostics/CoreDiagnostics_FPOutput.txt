@@ -126,27 +126,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 128
-	string and string_view
-
-	Comparison performed using:
-	[sequoia::testing::value_tester<std::basic_string<char, std::char_traits<char>, std::allocator<char> > >]
-	Checking for equivalence with:
-	[std::basic_string_view<char, std::char_traits<char> >]
-
-	  First difference detected at character 2:
-	  [char]
-	  operator== returned false
-	  Obtained : o
-	  Predicted: b
-
-	  Full strings:
-	  Obtained : foo
-	  Predicted: fob
-
-	=======================================
-
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 130
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 126
 	Advice for equivalence checking
 
 	Comparison performed using:
@@ -163,7 +143,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 133
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 129
 	Advice for range equivalence, where the containerized form is explicitly specialized
 
 	Comparison performed using:
@@ -188,7 +168,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 139
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 135
 	Advice for range equivalence, where the containerized form is not explicitly specialized
 
 	[std::set<sequoia::testing::(anonymous namespace)::foo, std::less<sequoia::testing::(anonymous namespace)::foo>, std::allocator<sequoia::testing::(anonymous namespace)::foo> >]
@@ -208,7 +188,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 148
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 144
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > >]
@@ -223,7 +203,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 149
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 145
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > >]
@@ -239,7 +219,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 154
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 150
 
 	[std::vector<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> >, std::allocator<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > > >]
 
@@ -257,7 +237,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 157
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 153
 
 	[std::vector<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> >, std::allocator<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > > >]
 
@@ -276,7 +256,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 165
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 161
 	Advice for weak equivalence checking
 
 	Comparison performed using:
@@ -300,7 +280,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 171
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 167
 	Advice for range weak equivalence, where the containerized form is explicitly specialized
 
 	[std::vector<sequoia::testing::only_weakly_checkable, std::allocator<sequoia::testing::only_weakly_checkable> >]
@@ -327,7 +307,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 176
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 172
 	Advice for range weak equivalence, where the containerized form is not explicitly specialized
 
 	[std::list<sequoia::testing::only_weakly_checkable, std::allocator<sequoia::testing::only_weakly_checkable> >]
@@ -354,7 +334,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 187
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 183
 
 	[std::pair<int, double>]
 	operator== returned false
@@ -367,7 +347,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 193
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 189
 
 	[std::pair<int, sequoia::testing::only_weakly_checkable>]
 	  First element of pair is incorrect
@@ -378,7 +358,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 194
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 190
 
 	[std::pair<int, sequoia::testing::only_weakly_checkable>]
 	  Second element of pair is incorrect
@@ -391,7 +371,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 195
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 191
 
 	[std::pair<int, sequoia::testing::only_weakly_checkable>]
 	  First element of pair is incorrect
@@ -410,7 +390,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 196
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 192
 
 	[std::pair<int, sequoia::testing::only_weakly_checkable>]
 	  Second element of pair is incorrect
@@ -424,7 +404,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 202
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 198
 
 	[std::pair<int, sequoia::testing::only_equivalence_checkable>]
 	  First element of pair is incorrect
@@ -435,7 +415,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 203
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 199
 
 	[std::pair<int, sequoia::testing::only_equivalence_checkable>]
 	  Second element of pair is incorrect
@@ -448,7 +428,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 204
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 200
 
 	[std::pair<int, sequoia::testing::only_equivalence_checkable>]
 	  First element of pair is incorrect
@@ -467,7 +447,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 205
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 201
 
 	[std::pair<int, sequoia::testing::only_equivalence_checkable>]
 	  First element of pair is incorrect

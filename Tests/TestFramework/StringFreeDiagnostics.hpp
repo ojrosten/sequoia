@@ -26,6 +26,8 @@ namespace sequoia::testing
 
     template<class String> void test_strings();
     template<class String> void test_wstrings();
+    void test_string_equivalences();
+    void test_wstring_equivalences();
   };
   
   class string_false_negative_free_diagnostics final : public free_false_negative_test
@@ -40,5 +42,8 @@ namespace sequoia::testing
     void run_tests() final;
 
     void test_strings();
+
+    void test_string_equivalences();
+    void test_wstring_equivalences();
   };
 }

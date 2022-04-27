@@ -123,10 +123,6 @@ namespace sequoia::testing
 
   void false_positive_diagnostics::test_equivalence_checks()
   {
-    using namespace std::string_literals;
-    using namespace std::string_view_literals;
-    check(equivalence, LINE("string and string_view"), "foo"s, "fob"sv);
-
     check(equivalence, LINE("Advice for equivalence checking"), foo{42}, 41, tutor{bland{}});
 
     check(equivalence,
@@ -253,10 +249,6 @@ namespace sequoia::testing
 
     check(equivalence, LINE("Advice for range equivalence, where the containerized for is not explicitly specialized"),
       std::set<foo>{{42}}, std::set<int>{42}, tutor{bland{}});
-
-    using namespace std::string_literals;
-    using namespace std::string_view_literals;
-    check(equivalence, LINE("string and string_view"), "foo"s, "foo"sv);
   }
 
   void false_negative_diagnostics::test_weak_equivalence_checks()
