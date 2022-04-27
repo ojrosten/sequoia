@@ -47,15 +47,15 @@ namespace sequoia::testing
   struct value_tester<only_equivalence_checkable>
   {
     template<test_mode Mode>
-    static void test(weak_equivalence_check_t, test_logger<Mode>& logger, const only_equivalence_checkable& obtained, double prediction, tutor<bland> advisor)
+    static void test(equivalence_check_t, test_logger<Mode>& logger, const only_equivalence_checkable& obtained, double prediction, tutor<bland> advisor)
     {
-      check(equality, "Wrapped float", logger, obtained.x, prediction, advisor);
+      check(equality, "Wrapped double", logger, obtained.x, prediction, advisor);
     }
 
     template<test_mode Mode, class Advisor = null_advisor>
     static void test(equivalence_check_t, test_logger<Mode>& logger, const only_equivalence_checkable& obtained, const only_equivalence_checkable& prediction, const tutor<Advisor>& advisor = {})
     {
-      check(equality, "Wrapped float", logger, obtained.x, prediction.x, advisor);
+      check(equality, "Wrapped double", logger, obtained.x, prediction.x, advisor);
     }
   };
 

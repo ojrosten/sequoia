@@ -49,7 +49,7 @@
 	Checking for equivalence with:
 	[int]
 
-	  Wrapped float
+	  Wrapped double
 	  [double]
 	  operator== returned false
 	  Obtained : 42
@@ -65,7 +65,7 @@
 	Checking for equivalence with:
 	[int]
 
-	  Wrapped float
+	  Wrapped double
 	  [double]
 	  operator== returned false
 	  Obtained : 42
@@ -306,7 +306,7 @@
 	[std::pair<int, sequoia::testing::only_equivalence_checkable>]
 	  Second element of pair is incorrect
 	  [sequoia::testing::only_equivalence_checkable]
-	    Wrapped float
+	    Wrapped double
 	    [double]
 	    operator== returned false
 	    Obtained : 1.5
@@ -325,7 +325,7 @@
 
 	  Second element of pair is incorrect
 	  [sequoia::testing::only_equivalence_checkable]
-	    Wrapped float
+	    Wrapped double
 	    [double]
 	    operator== returned false
 	    Obtained : 1.5

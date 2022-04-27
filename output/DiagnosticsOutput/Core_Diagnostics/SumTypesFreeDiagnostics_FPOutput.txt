@@ -100,7 +100,7 @@
 	[std::variant<int, sequoia::testing::only_equivalence_checkable, sequoia::testing::only_weakly_checkable>]
 	  Variant Contents
 	  [sequoia::testing::only_equivalence_checkable]
-	    Wrapped float
+	    Wrapped double
 	    [double]
 	    operator== returned false
 	    Obtained : 41
@@ -228,7 +228,7 @@
 	  Checking for equivalence with:
 	  [sequoia::testing::only_equivalence_checkable]
 
-	    Wrapped float
+	    Wrapped double
 	    [double]
 	    operator== returned false
 	    Obtained : 2
@@ -345,7 +345,7 @@
 
 	  Value held by std::any
 	  [sequoia::testing::only_equivalence_checkable]
-	    Wrapped float
+	    Wrapped double
 	    [double]
 	    operator== returned false
 	    Obtained : 1
