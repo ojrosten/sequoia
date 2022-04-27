@@ -36,6 +36,12 @@ namespace sequoia::testing
     {
       check(equality, "Wrapped value", logger, f.i, i, advisor);
     }
+
+    template<test_mode Mode, class Advisor>
+    static void test(weak_equivalence_check_t, test_logger<Mode>& logger, const foo& f, double d, const tutor<Advisor>& advisor)
+    {
+      check(equality, "Wrapped value", logger, f.i, static_cast<int>(d), advisor);
+    }
   };
 
   // Explicit container specialization to test propagation of tutor
@@ -117,8 +123,19 @@ namespace sequoia::testing
 
     check(weak_equivalence,
           LINE("Advice for range weak equivalence, where the containerized form is explicitly specialized"),
-          std::vector<foo>{ {42}},
+          std::vector<foo>{{42}},
           std::list<int>{41},
+          tutor{bland{}});
+
+    check(weak_equivalence,
+          LINE("Range weak equivalence, where the containerized form is not explicitly specialized"),
+          std::list<foo>{{42}},
+          std::array<double, 1>{41});
+
+    check(weak_equivalence,
+          LINE("Advice for range weak equivalence, where the containerized form is not explicitly specialized"),
+          std::list<foo>{ {42}},
+          std::array<double, 1>{41},
           tutor{bland{}});
   }
 
