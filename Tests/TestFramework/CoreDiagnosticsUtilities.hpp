@@ -46,14 +46,14 @@ namespace sequoia::testing
   template<>
   struct value_tester<only_equivalence_checkable>
   {
-    template<test_mode Mode>
-    static void test(equivalence_check_t, test_logger<Mode>& logger, const only_equivalence_checkable& obtained, double prediction, tutor<bland> advisor)
+    template<test_mode Mode, class Advisor>
+    static void test(equivalence_check_t, test_logger<Mode>& logger, const only_equivalence_checkable& obtained, double prediction, const tutor<Advisor>& advisor)
     {
       check(equality, "Wrapped double", logger, obtained.x, prediction, advisor);
     }
 
-    template<test_mode Mode, class Advisor = null_advisor>
-    static void test(equivalence_check_t, test_logger<Mode>& logger, const only_equivalence_checkable& obtained, const only_equivalence_checkable& prediction, const tutor<Advisor>& advisor = {})
+    template<test_mode Mode, class Advisor>
+    static void test(equivalence_check_t, test_logger<Mode>& logger, const only_equivalence_checkable& obtained, const only_equivalence_checkable& prediction, const tutor<Advisor>& advisor)
     {
       check(equality, "Wrapped double", logger, obtained.x, prediction.x, advisor);
     }
@@ -62,15 +62,15 @@ namespace sequoia::testing
   template<>
   struct value_tester<only_weakly_checkable>
   {
-    template<test_mode Mode>
-    static void test(weak_equivalence_check_t, test_logger<Mode>& logger, const only_weakly_checkable& obtained, const std::pair<int, double>& prediction, tutor<bland> advisor)
+    template<test_mode Mode, class Advisor>
+    static void test(weak_equivalence_check_t, test_logger<Mode>& logger, const only_weakly_checkable& obtained, const std::pair<int, double>& prediction, const tutor<Advisor>& advisor)
     {
       check(equality, "Wrapped int", logger, obtained.i, prediction.first, advisor);
       check(equality, "Wrapped double", logger, obtained.x, prediction.second, advisor);
     }
 
-    template<test_mode Mode, class Advisor = null_advisor>
-    static void test(weak_equivalence_check_t, test_logger<Mode>& logger, const only_weakly_checkable& obtained, const only_weakly_checkable& prediction, const tutor<Advisor>& advisor = {})
+    template<test_mode Mode, class Advisor>
+    static void test(weak_equivalence_check_t, test_logger<Mode>& logger, const only_weakly_checkable& obtained, const only_weakly_checkable& prediction, const tutor<Advisor>& advisor)
     {
       check(equality, "Wrapped int", logger, obtained.i, prediction.i, advisor);
       check(equality, "Wrapped double", logger, obtained.x, prediction.x, advisor);

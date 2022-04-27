@@ -91,57 +91,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 66
-	Self-equivalence checking
-
-	Comparison performed using:
-	[sequoia::testing::value_tester<sequoia::testing::only_equivalence_checkable>]
-	Checking for equivalence with:
-	[sequoia::testing::only_equivalence_checkable]
-
-	  Wrapped double
-	  [double]
-	  operator== returned false
-	  Obtained : 42
-	  Predicted: 41
-
-	=======================================
-
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 68
-	Self-equivalence checking with advice
-
-	Comparison performed using:
-	[sequoia::testing::value_tester<sequoia::testing::only_equivalence_checkable>]
-	Checking for equivalence with:
-	[sequoia::testing::only_equivalence_checkable]
-
-	  Wrapped double
-	  [double]
-	  operator== returned false
-	  Obtained : 42
-	  Predicted: 41
-	  Advice: only_equivalence_checkable advice
-
-	=======================================
-
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 73
-	Self-equivalence checking with propagated advice
-
-	Comparison performed using:
-	[sequoia::testing::value_tester<sequoia::testing::only_equivalence_checkable>]
-	Checking for equivalence with:
-	[sequoia::testing::only_equivalence_checkable]
-
-	  Wrapped double
-	  [double]
-	  operator== returned false
-	  Obtained : 42
-	  Predicted: 41
-	  Advice: double advice
-
-	=======================================
-
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 78
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 67
 	Equivalence checking with propagated advice
 
 	Comparison performed using:
@@ -158,81 +108,153 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 88
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 72
+	Self-equivalence checking
 
 	Comparison performed using:
-	[sequoia::testing::value_tester<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > >]
-	Checking for weak equivalence with:
-	[std::initializer_list<int>]
+	[sequoia::testing::value_tester<sequoia::testing::only_equivalence_checkable>]
+	Checking for equivalence with:
+	[sequoia::testing::only_equivalence_checkable]
 
-	  Element 1 of range incorrect
-	  [int]
+	  Wrapped double
+	  [double]
 	  operator== returned false
-	  Obtained : 2
-	  Predicted: 1
+	  Obtained : 42
+	  Predicted: 41
+
+	=======================================
+
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 74
+	Self-equivalence checking with advice
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<sequoia::testing::only_equivalence_checkable>]
+	Checking for equivalence with:
+	[sequoia::testing::only_equivalence_checkable]
+
+	  Wrapped double
+	  [double]
+	  operator== returned false
+	  Obtained : 42
+	  Predicted: 41
+	  Advice: only_equivalence_checkable advice
+
+	=======================================
+
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 79
+	Self-equivalence checking with propagated advice
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<sequoia::testing::only_equivalence_checkable>]
+	Checking for equivalence with:
+	[sequoia::testing::only_equivalence_checkable]
+
+	  Wrapped double
+	  [double]
+	  operator== returned false
+	  Obtained : 42
+	  Predicted: 41
+	  Advice: double advice
 
 	=======================================
 
 	Tests/TestFramework/CoreDiagnostics.cpp, Line 89
-
-	Comparison performed using:
-	[sequoia::testing::value_tester<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > >]
-	Checking for weak equivalence with:
-	[std::initializer_list<int>]
-
-	  Element 1 of range incorrect
-	  [int]
-	  operator== returned false
-	  Obtained : 2
-	  Predicted: 1
-	  Advice: Don't mess with the beast.
-
-	=======================================
-
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 94
-
-	[std::vector<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> >, std::allocator<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > > >]
-
-	  Element 1 of range incorrect
-	  Comparison performed using:
-	  [sequoia::testing::value_tester<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > >]
-	  Checking for weak equivalence with:
-	  [std::initializer_list<int>]
-
-	    Element 1 of range incorrect
-	    [int]
-	    operator== returned false
-	    Obtained : 4
-	    Predicted: 5
-
-	=======================================
-
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 97
-
-	[std::vector<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> >, std::allocator<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > > >]
-
-	  Element 1 of range incorrect
-	  Comparison performed using:
-	  [sequoia::testing::value_tester<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > >]
-	  Checking for weak equivalence with:
-	  [std::initializer_list<int>]
-
-	    Element 1 of range incorrect
-	    [int]
-	    operator== returned false
-	    Obtained : 4
-	    Predicted: 5
-	    Advice: Or at least don't mess with a vector of beasts.
-
-	=======================================
-
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 105
-	Advice for weak equivalence checking
+	Weak equivalence checking
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::testing::only_weakly_checkable>]
 	Checking for weak equivalence with:
 	[std::pair<int, double>]
+
+	  Wrapped int
+	  [int]
+	  operator== returned false
+	  Obtained : 42
+	  Predicted: 41
+
+	  Wrapped double
+	  [double]
+	  operator== returned false
+	  Obtained : 3.14
+	  Predicted: 3.13
+
+	=======================================
+
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 93
+	Weak equivalence checking with propagated advice
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<sequoia::testing::only_weakly_checkable>]
+	Checking for weak equivalence with:
+	[std::pair<int, double>]
+
+	  Wrapped int
+	  [int]
+	  operator== returned false
+	  Obtained : 42
+	  Predicted: 41
+	  Advice: Integer advice
+
+	  Wrapped double
+	  [double]
+	  operator== returned false
+	  Obtained : 3.14
+	  Predicted: 3.13
+	  Advice: Double advice
+
+	=======================================
+
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 98
+	Self-weak-equivalence checking
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<sequoia::testing::only_weakly_checkable>]
+	Checking for weak equivalence with:
+	[sequoia::testing::only_weakly_checkable]
+
+	  Wrapped int
+	  [int]
+	  operator== returned false
+	  Obtained : 42
+	  Predicted: 41
+
+	  Wrapped double
+	  [double]
+	  operator== returned false
+	  Obtained : 3.14
+	  Predicted: 3.13
+
+	=======================================
+
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 100
+	Self-weak-equivalence checking with advice
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<sequoia::testing::only_weakly_checkable>]
+	Checking for weak equivalence with:
+	[sequoia::testing::only_weakly_checkable]
+
+	  Wrapped int
+	  [int]
+	  operator== returned false
+	  Obtained : 42
+	  Predicted: 41
+
+	  Wrapped double
+	  [double]
+	  operator== returned false
+	  Obtained : 3.14
+	  Predicted: 3.13
+
+	=======================================
+
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 105
+	Self-weak-equivalence checking with propagated advice
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<sequoia::testing::only_weakly_checkable>]
+	Checking for weak equivalence with:
+	[sequoia::testing::only_weakly_checkable]
 
 	  Wrapped int
 	  [int]
@@ -284,7 +306,7 @@
 	=======================================
 
 	Tests/TestFramework/CoreDiagnostics.cpp, Line 122
-	Advice for best available for only_equivalence_checkable
+	Best available for only_equivalence_checkable with advice
 
 	[sequoia::testing::only_equivalence_checkable]
 	  Wrapped double
@@ -315,7 +337,7 @@
 	=======================================
 
 	Tests/TestFramework/CoreDiagnostics.cpp, Line 132
-	Advice for best available for only_weakly_checkable
+	Best available for only_weakly_checkable with advice
 
 	[sequoia::testing::only_weakly_checkable]
 	  Wrapped int

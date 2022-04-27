@@ -9,7 +9,7 @@
 
 #include "CoreDiagnostics.hpp"
 #include "CoreDiagnosticsUtilities.hpp"
-#include "ContainerDiagnosticsUtilities.hpp"
+
 #include "sequoia/TextProcessing/Substitutions.hpp"
 
 #include <complex>
@@ -63,48 +63,48 @@ namespace sequoia::testing
   void false_positive_diagnostics::test_equivalence_checks()
   {
     check(equivalence, LINE("Equivalence checking"), only_equivalence_checkable{42}, 41);
-    check(equivalence, LINE("Self-equivalence checking"), only_equivalence_checkable{42}, only_equivalence_checkable{41});
-    check(equivalence,
-      LINE("Self-equivalence checking with advice"),
-      only_equivalence_checkable{42},
-      only_equivalence_checkable{41},
-      tutor{[](only_equivalence_checkable, only_equivalence_checkable) { return "only_equivalence_checkable advice"; }});
-    check(equivalence,
-          LINE("Self-equivalence checking with propagated advice"),
-          only_equivalence_checkable{42},
-          only_equivalence_checkable{41},
-          tutor{[](double, double) { return "double advice"; }});
     check(equivalence,
           LINE("Equivalence checking with propagated advice"),
           only_equivalence_checkable{42},
           41,
+          tutor{[](double, double) { return "double advice"; }});
+
+    check(equivalence, LINE("Self-equivalence checking"), only_equivalence_checkable{42}, only_equivalence_checkable{41});
+    check(equivalence,
+          LINE("Self-equivalence checking with advice"),
+          only_equivalence_checkable{42},
+          only_equivalence_checkable{41},
+          tutor{[](only_equivalence_checkable, only_equivalence_checkable) { return "only_equivalence_checkable advice"; }});
+    check(equivalence,
+          LINE("Self-equivalence checking with propagated advice"),
+          only_equivalence_checkable{42},
+          only_equivalence_checkable{41},
           tutor{[](double, double) { return "double advice"; }});
     
   }
 
   void false_positive_diagnostics::test_weak_equivalence_checks()
   {
-    using beast = perfectly_normal_beast<int>;
-    check(weak_equivalence, LINE(""), beast{1, 2}, std::initializer_list<int>{1, 1});
-    check(weak_equivalence, LINE(""), beast{1, 2}, std::initializer_list<int>{1, 1}, tutor{[](int, int){
-        return "Don't mess with the beast.";
-      }});
-
-    using prediction = std::initializer_list<std::initializer_list<int>>;
-    check(weak_equivalence, LINE(""), std::vector<beast>{{1, 2}, {3, 4}}, prediction{{1, 2}, {3, 5}});
-
     check(weak_equivalence,
-          LINE(""),
-          std::vector<beast>{{1, 2}, {3, 4}},
-          prediction{{1, 2}, {3, 5}},
-          tutor{[](int, int){
-            return "Or at least don't mess with a vector of beasts.";
-          }});
-
+          LINE("Weak equivalence checking"),
+          only_weakly_checkable{42, 3.14},
+          std::pair<int, double>{41, 3.13});
     check(weak_equivalence,
-          LINE("Advice for weak equivalence checking"),
+          LINE("Weak equivalence checking with propagated advice"),
           only_weakly_checkable{42, 3.14},
           std::pair<int, double>{41, 3.13},
+          tutor{bland{}});
+
+    check(weak_equivalence, LINE("Self-weak-equivalence checking"), only_weakly_checkable{42, 3.14}, only_weakly_checkable{41, 3.13});
+    check(weak_equivalence,
+          LINE("Self-weak-equivalence checking with advice"),
+          only_weakly_checkable{42, 3.14},
+          only_weakly_checkable{41, 3.13},
+          tutor{[](only_weakly_checkable, only_weakly_checkable) { return "only_weakly_checkable advice"; }});
+    check(weak_equivalence,
+          LINE("Self-weak-equivalence checking with propagated advice"),
+          only_weakly_checkable{42, 3.14},
+          only_weakly_checkable{41, 3.13},
           tutor{bland{}});
   }
 
@@ -119,7 +119,7 @@ namespace sequoia::testing
           only_equivalence_checkable{1},
           only_equivalence_checkable{2});
     check(with_best_available,
-          LINE("Advice for best available for only_equivalence_checkable"),
+          LINE("Best available for only_equivalence_checkable with advice"),
           only_equivalence_checkable{1},
           only_equivalence_checkable{2},
           tutor{[](only_equivalence_checkable, only_equivalence_checkable) { return "only_equivalence_checkable advice"; }});
@@ -129,7 +129,7 @@ namespace sequoia::testing
           only_weakly_checkable{1, -1.4},
           only_weakly_checkable{2, 6.7});
     check(with_best_available,
-          LINE("Advice for best available for only_weakly_checkable"),
+          LINE("Best available for only_weakly_checkable with advice"),
           only_weakly_checkable{1, -1.4},
           only_weakly_checkable{2, 6.7},
           tutor{[](only_weakly_checkable, only_weakly_checkable) { return "only_weakly_checkable advice"; }});
@@ -160,18 +160,21 @@ namespace sequoia::testing
   void false_negative_diagnostics::test_equivalence_checks()
   {
     check(equivalence, LINE("Equivalence checking"), only_equivalence_checkable{42}, 42);
-    check(equivalence, LINE("Advice for equivalence checking"), only_equivalence_checkable{42}, 42, tutor{bland{}});
+    check(equivalence, LINE("Eequivalence checking with advice"), only_equivalence_checkable{42}, 42, tutor{bland{}});
   }
 
   void false_negative_diagnostics::test_weak_equivalence_checks()
   {
-    using beast = perfectly_normal_beast<int>;
-    check(weak_equivalence, LINE(""), beast{1, 2}, std::initializer_list<int>{1, 2});
+    check(weak_equivalence,
+          LINE("Weak equivalence checking"),
+          only_weakly_checkable{42, 3.14},
+          std::pair<int, double>{42, 3.14});
 
-    using prediction = std::initializer_list<std::initializer_list<int>>;
-    check(weak_equivalence, LINE(""), std::vector<beast>{{1, 2}, {3, 4}}, prediction{{1, 2}, {3, 4}});
-
-    check(weak_equivalence, LINE("Advice for weak equivalence checking"), only_weakly_checkable{42, 3.14}, std::pair<int, double>{42, 3.14}, tutor{bland{}});
+    check(weak_equivalence,
+          LINE("Weak equivalence checking with advice"),
+          only_weakly_checkable{42, 3.14},
+          std::pair<int, double>{42, 3.14},
+          tutor{bland{}});
   }
 
   void false_negative_diagnostics::test_with_best_available_checks()

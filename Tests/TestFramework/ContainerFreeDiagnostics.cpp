@@ -9,6 +9,7 @@
 
 #include "ContainerFreeDiagnostics.hpp"
 #include "CoreDiagnosticsUtilities.hpp"
+#include "ContainerDiagnosticsUtilities.hpp"
 
 #include "sequoia/TestFramework/ConcreteTypeCheckers.hpp"
 
@@ -137,6 +138,24 @@ namespace sequoia::testing
           std::list<foo>{ {42}},
           std::array<double, 1>{41},
           tutor{bland{}});
+
+
+    using beast = perfectly_normal_beast<int>;
+    check(weak_equivalence, LINE(""), beast{1, 2}, std::initializer_list<int>{1, 1});
+    check(weak_equivalence, LINE(""), beast{1, 2}, std::initializer_list<int>{1, 1}, tutor{[](int, int) {
+        return "Don't mess with the beast.";
+      }});
+
+    using prediction = std::initializer_list<std::initializer_list<int>>;
+    check(weak_equivalence, LINE(""), std::vector<beast>{ {1, 2}, {3, 4}}, prediction{{1, 2}, {3, 5}});
+
+    check(weak_equivalence,
+      LINE(""),
+      std::vector<beast>{ {1, 2}, {3, 4}},
+      prediction{{1, 2}, {3, 5}},
+      tutor{[](int, int) {
+        return "Or at least don't mess with a vector of beasts.";
+      }});
   }
 
   void container_false_positive_free_diagnostics::test_heterogeneous()
@@ -240,6 +259,14 @@ namespace sequoia::testing
           std::set<foo>{{42}},
           std::set<int>{42},
           tutor{bland{}});
+
+    using beast = perfectly_normal_beast<int>;
+    check(weak_equivalence, LINE(""), beast{1, 2}, std::initializer_list<int>{1, 2});
+
+    using prediction = std::initializer_list<std::initializer_list<int>>;
+    check(weak_equivalence, LINE(""), std::vector<beast>{ {1, 2}, {3, 4}}, prediction{{1, 2}, {3, 4}});
+
+    check(weak_equivalence, LINE("Advice for weak equivalence checking"), only_weakly_checkable{42, 3.14}, std::pair<int, double>{42, 3.14}, tutor{bland{}});
   }
 
   void container_false_negative_free_diagnostics::test_heterogeneous()
