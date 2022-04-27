@@ -30,13 +30,14 @@ namespace sequoia::testing
 
   void false_positive_diagnostics::run_tests()
   {
-    basic_tests();
+    built_in_type_tests();
+    test_equality_checks();
     test_equivalence_checks();
     test_weak_equivalence_checks();
     test_with_best_available_checks();
   }
 
-  void false_positive_diagnostics::basic_tests()
+  void false_positive_diagnostics::built_in_type_tests()
   {
     check(LINE("Boolean check"), false);
     check(LINE("Boolean check with advice"), false, tutor{[](bool, bool){
@@ -51,6 +52,16 @@ namespace sequoia::testing
       return "int advice";
       }});
 
+    check(equivalence, LINE("Integer check via fallback"), 5, 4);
+    check(equivalence, LINE("Integer check with fallback"), 5, 4, tutor{[](int, int) {
+      return "int advice";
+      }});
+
+    check(weak_equivalence, LINE("Integer check via two fallbacks"), 5, 4);
+    check(weak_equivalence, LINE("Integer check with two fallbacks"), 5, 4, tutor{[](int, int) {
+      return "int advice";
+      }});
+
     check(equality, LINE("Double check"), 6.5, 5.6);
     check(equality, LINE("Double check with advice"), 6.5, 5.6, tutor{[](double, double){
         return "Double, double, toil and trouble";
@@ -58,6 +69,11 @@ namespace sequoia::testing
     check(equality, LINE("Double check with ignored advice"), 6.5, 5.6, tutor{[](int, int) {
         return "int adivce";
       }});
+  }
+
+  void false_positive_diagnostics::test_equality_checks()
+  {
+
   }
 
   void false_positive_diagnostics::test_equivalence_checks()
@@ -161,13 +177,14 @@ namespace sequoia::testing
 
   void false_negative_diagnostics::run_tests()
   {
-    basic_tests();
+    built_in_type_tests();
+    test_equality_checks();
     test_equivalence_checks();
     test_weak_equivalence_checks();
     test_with_best_available_checks();
   }
 
-  void false_negative_diagnostics::basic_tests()
+  void false_negative_diagnostics::built_in_type_tests()
   {
     check(LINE("Boolean test"), true);
 
@@ -208,5 +225,10 @@ namespace sequoia::testing
           LINE("Best available for only_weakly_checkable"),
           only_weakly_checkable{1, 6.7},
           only_weakly_checkable{1, 6.7});
+  }
+
+  void false_negative_diagnostics::test_equality_checks()
+  {
+
   }
 }

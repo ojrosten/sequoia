@@ -23,7 +23,8 @@ namespace sequoia::testing
   private:
     void run_tests() final;
 
-    void basic_tests();
+    void built_in_type_tests();
+    void test_equality_checks();
     void test_equivalence_checks();
     void test_weak_equivalence_checks();
     void test_with_best_available_checks();
@@ -39,7 +40,8 @@ namespace sequoia::testing
   private:
     void run_tests() final;
 
-    void basic_tests();
+    void built_in_type_tests();
+    void test_equality_checks();
     void test_equivalence_checks();
     void test_weak_equivalence_checks();
     void test_with_best_available_checks();
