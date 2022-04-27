@@ -151,10 +151,10 @@ namespace sequoia::testing
 
   void false_negative_diagnostics::basic_tests()
   {
-    check(LINE(""), true);
+    check(LINE("Boolean test"), true);
 
-    check(equality, LINE(""), 5, 5);
-    check(equality, LINE(""), 5.0, 5.0);
+    check(equality, LINE("Integer test"), 5, 5);
+    check(equality, LINE("Double test"), 5.0, 5.0);
   }
 
   void false_negative_diagnostics::test_equivalence_checks()

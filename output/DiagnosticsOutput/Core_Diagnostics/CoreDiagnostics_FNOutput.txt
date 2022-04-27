@@ -1,5 +1,6 @@
 	False Positive Failure:
 	Tests/TestFramework/CoreDiagnostics.cpp, Line 154
+	Boolean test
 
 	[bool]
 
@@ -7,6 +8,7 @@
 
 	False Positive Failure:
 	Tests/TestFramework/CoreDiagnostics.cpp, Line 156
+	Integer test
 
 	[int]
 
@@ -14,6 +16,7 @@
 
 	False Positive Failure:
 	Tests/TestFramework/CoreDiagnostics.cpp, Line 157
+	Double test
 
 	[double]
 
