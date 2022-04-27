@@ -38,17 +38,25 @@ namespace sequoia::testing
 
   void false_positive_diagnostics::basic_tests()
   {
-    check(LINE(""), false);
-    check(LINE(""), false, tutor{[](bool, bool){
-        return std::string{"I pity the fool who confuses the bool."};
+    check(LINE("Boolean check"), false);
+    check(LINE("Boolean check with advice"), false, tutor{[](bool, bool){
+        return "I pity the fool who confuses the bool.";
       }});
-    check(LINE("Advisor ignored"), false, tutor{[](const std::string&, const std::string&){
-        return std::string{"I pity the fool who confuses the bool."};}
+    check(LINE("Boolean check with ignored advice"), false, tutor{[](const std::string&, const std::string&){
+        return "I pity the fool who confuses the bool.";}
       });
 
-    check(equality, LINE("Integers which should compare different"), 5, 4);
-    check(equality, LINE(""), 6.5, 5.6, tutor{[](double, double){
-        return std::string{"Double, double, toil and trouble"};
+    check(equality, LINE("Integer check"), 5, 4);
+    check(equality, LINE("Integer check with advice"), 5, 4, tutor{[](int, int) {
+      return "int advice";
+      }});
+
+    check(equality, LINE("Double check"), 6.5, 5.6);
+    check(equality, LINE("Double check with advice"), 6.5, 5.6, tutor{[](double, double){
+        return "Double, double, toil and trouble";
+      }});
+    check(equality, LINE("Double check with ignored advice"), 6.5, 5.6, tutor{[](int, int) {
+        return "int adivce";
       }});
   }
 
