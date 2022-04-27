@@ -63,7 +63,23 @@ namespace sequoia::testing
   void false_positive_diagnostics::test_equivalence_checks()
   {
     check(equivalence, LINE("Equivalence checking"), only_equivalence_checkable{42}, 41);
-    check(equivalence, LINE("Advice for equivalence checking"), only_equivalence_checkable{42}, 41, tutor{bland{}});
+    check(equivalence, LINE("Self-equivalence checking"), only_equivalence_checkable{42}, only_equivalence_checkable{41});
+    check(equivalence,
+      LINE("Self-equivalence checking with advice"),
+      only_equivalence_checkable{42},
+      only_equivalence_checkable{41},
+      tutor{[](only_equivalence_checkable, only_equivalence_checkable) { return "only_equivalence_checkable advice"; }});
+    check(equivalence,
+          LINE("Self-equivalence checking with propagated advice"),
+          only_equivalence_checkable{42},
+          only_equivalence_checkable{41},
+          tutor{[](double, double) { return "double advice"; }});
+    check(equivalence,
+          LINE("Equivalence checking with propagated advice"),
+          only_equivalence_checkable{42},
+          41,
+          tutor{[](double, double) { return "double advice"; }});
+    
   }
 
   void false_positive_diagnostics::test_weak_equivalence_checks()

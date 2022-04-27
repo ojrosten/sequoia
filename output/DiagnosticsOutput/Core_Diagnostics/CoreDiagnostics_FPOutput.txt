@@ -92,7 +92,57 @@
 	=======================================
 
 	Tests/TestFramework/CoreDiagnostics.cpp, Line 66
-	Advice for equivalence checking
+	Self-equivalence checking
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<sequoia::testing::only_equivalence_checkable>]
+	Checking for equivalence with:
+	[sequoia::testing::only_equivalence_checkable]
+
+	  Wrapped double
+	  [double]
+	  operator== returned false
+	  Obtained : 42
+	  Predicted: 41
+
+	=======================================
+
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 68
+	Self-equivalence checking with advice
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<sequoia::testing::only_equivalence_checkable>]
+	Checking for equivalence with:
+	[sequoia::testing::only_equivalence_checkable]
+
+	  Wrapped double
+	  [double]
+	  operator== returned false
+	  Obtained : 42
+	  Predicted: 41
+	  Advice: only_equivalence_checkable advice
+
+	=======================================
+
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 73
+	Self-equivalence checking with propagated advice
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<sequoia::testing::only_equivalence_checkable>]
+	Checking for equivalence with:
+	[sequoia::testing::only_equivalence_checkable]
+
+	  Wrapped double
+	  [double]
+	  operator== returned false
+	  Obtained : 42
+	  Predicted: 41
+	  Advice: double advice
+
+	=======================================
+
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 78
+	Equivalence checking with propagated advice
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::testing::only_equivalence_checkable>]
@@ -104,11 +154,11 @@
 	  operator== returned false
 	  Obtained : 42
 	  Predicted: 41
-	  Advice: Double advice
+	  Advice: double advice
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 72
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 88
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > >]
@@ -123,7 +173,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 73
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 89
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > >]
@@ -139,7 +189,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 78
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 94
 
 	[std::vector<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> >, std::allocator<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > > >]
 
@@ -157,7 +207,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 81
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 97
 
 	[std::vector<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> >, std::allocator<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > > >]
 
@@ -176,7 +226,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 89
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 105
 	Advice for weak equivalence checking
 
 	Comparison performed using:
@@ -200,7 +250,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 98
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 114
 	Best available for int
 
 	[int]
@@ -210,7 +260,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 99
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 115
 	Advice for best available for int
 
 	[int]
@@ -221,7 +271,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 102
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 118
 	Best available for only_equivalence_checkable
 
 	[sequoia::testing::only_equivalence_checkable]
@@ -233,7 +283,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 106
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 122
 	Advice for best available for only_equivalence_checkable
 
 	[sequoia::testing::only_equivalence_checkable]
@@ -246,7 +296,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 112
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 128
 	Best available for only_weakly_checkable
 
 	[sequoia::testing::only_weakly_checkable]
@@ -264,7 +314,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 116
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 132
 	Advice for best available for only_weakly_checkable
 
 	[sequoia::testing::only_weakly_checkable]
