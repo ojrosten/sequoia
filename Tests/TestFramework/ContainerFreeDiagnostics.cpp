@@ -47,14 +47,6 @@ namespace sequoia::testing
     {
       check(equivalence, "Vector equivalence", logger, f.begin(), f.end(), i.begin(), i.end(), advisor);
     }
-
-    using prediction_t = std::vector<std::pair<int, double>>;
-
-    template<test_mode Mode>
-    static void test(weak_equivalence_check_t, test_logger<Mode>& logger, const std::vector<foo>& f, const prediction_t& p, tutor<bland> advisor)
-    {
-      check(equivalence, "Vector equivalence", logger, f.begin(), f.end(), p.begin(), p.end(), advisor);
-    }
   };
 
   [[nodiscard]]
@@ -90,7 +82,6 @@ namespace sequoia::testing
     check(equality, LINE("Iterators demarcate differing numbers of elements"), refs.cbegin(), refs.cend(), ans.cbegin(), ans.cend());
     check(equality, LINE("Iterators demarcate differing elements"), refs.cbegin(), refs.cend(), ans.cbegin(), ans.cbegin() + 4);
 
-    
     check(equivalence,
           LINE("Advice for range equivalence, where the containerized form is explicitly specialized"),
           std::vector<foo>{{42}},

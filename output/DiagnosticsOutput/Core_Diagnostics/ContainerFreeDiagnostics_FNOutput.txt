@@ -1,5 +1,5 @@
 	False Positive Failure:
-	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 165
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 156
 	Empty vector check which should pass
 
 	[std::vector<double, std::allocator<double> >]
@@ -7,7 +7,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 166
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 157
 	One element vector check which should pass
 
 	[std::vector<double, std::allocator<double> >]
@@ -15,7 +15,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 167
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 158
 	Multi-element vector comparison which should pass
 
 	[std::vector<double, std::allocator<double> >]
@@ -23,13 +23,13 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 171
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 162
 	Iterators demarcate identical elements
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 174
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 165
 	Advice for range equivalence, where the containerized form is explicitly specialized
 
 	Comparison performed using:
@@ -40,7 +40,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 180
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 171
 	Advice for range equivalence, where the containerized form is not explicitly specialized
 
 	[std::set<sequoia::testing::(anonymous namespace)::foo, std::less<sequoia::testing::(anonymous namespace)::foo>, std::allocator<sequoia::testing::(anonymous namespace)::foo> >]
@@ -48,28 +48,28 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 188
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 179
 
 	[std::pair<int, double>]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 190
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 181
 
 	[std::tuple<int, double, float>]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 203
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 194
 
 	[std::tuple<std::vector<std::pair<int, float>, std::allocator<std::pair<int, float> > >, std::set<double, std::less<double>, std::allocator<double> >, std::complex<double> >]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 205
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 196
 
 	[std::vector<std::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::basic_string<char, std::char_traits<char>, std::allocator<char> > > >]
 
