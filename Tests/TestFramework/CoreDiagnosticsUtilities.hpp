@@ -30,6 +30,8 @@ namespace sequoia::testing
 
   struct perfectly_normal_type
   {
+    perfectly_normal_type(int j) : i{j} {}
+
     int i{};
 
     [[nodiscard]]

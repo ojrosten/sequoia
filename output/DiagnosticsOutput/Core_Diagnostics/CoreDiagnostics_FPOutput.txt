@@ -143,6 +143,7 @@
 	  operator== returned false
 	  Obtained : 42
 	  Predicted: 43
+	  Advice: perfectly_normal_type advice
 
 	=======================================
 
