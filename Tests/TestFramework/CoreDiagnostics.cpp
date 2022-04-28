@@ -73,7 +73,17 @@ namespace sequoia::testing
 
   void false_positive_diagnostics::test_equality_checks()
   {
-
+    check(equality, LINE("Equality checking"), perfectly_normal_type{42}, perfectly_normal_type{43});
+    check(equality,
+          LINE("Equality checking with advice"),
+          perfectly_normal_type{42},
+          perfectly_normal_type{43},
+          tutor{[](perfectly_normal_type, perfectly_normal_type) { return "perfectly_normal_type advice"; }});
+    check(equality,
+          LINE("Equality checking with propagated advice"),
+          perfectly_normal_type{42},
+          perfectly_normal_type{43},
+          tutor{[](int, int) { return "int advice"; }});
   }
 
   void false_positive_diagnostics::test_equivalence_checks()
@@ -229,6 +239,6 @@ namespace sequoia::testing
 
   void false_negative_diagnostics::test_equality_checks()
   {
-
+    check(equality, LINE("Equality checking"), perfectly_normal_type{42}, perfectly_normal_type{42});
   }
 }

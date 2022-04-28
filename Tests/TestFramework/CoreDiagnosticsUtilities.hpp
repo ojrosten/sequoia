@@ -18,15 +18,46 @@ namespace sequoia::testing
     [[nodiscard]]
     std::string operator()(int, int) const
     {
-      return {"Integer advice"};
+      return "Integer advice";
     }
 
     [[nodiscard]]
     std::string operator()(double, double) const
     {
-      return {"Double advice"};
+      return "Double advice";
     }
   };
+
+  struct perfectly_normal_type
+  {
+    int i{};
+
+    [[nodiscard]]
+    friend constexpr auto operator<=>(const perfectly_normal_type&, const perfectly_normal_type&) = default;
+  };
+
+  template<>
+  struct value_tester<perfectly_normal_type>
+  {
+    template<test_mode Mode, class Advisor>
+    static void test(equality_check_t, test_logger<Mode>& logger, const perfectly_normal_type& obtained, const perfectly_normal_type& prediction, const tutor<Advisor>& advisor)
+    {
+      check(equality, "Wrapped value", logger, obtained.i, prediction.i, advisor);
+    }
+
+    template<test_mode Mode, class Advisor>
+    static void test(equivalence_check_t, test_logger<Mode>& logger, const perfectly_normal_type& f, int i, const tutor<Advisor>& advisor)
+    {
+      check(equality, "Wrapped value", logger, f.i, i, advisor);
+    }
+
+    template<test_mode Mode, class Advisor>
+    static void test(weak_equivalence_check_t, test_logger<Mode>& logger, const perfectly_normal_type& f, double d, const tutor<Advisor>& advisor)
+    {
+      check(equality, "Wrapped value", logger, f.i, static_cast<int>(d), advisor);
+    }
+  };
+
 
   struct only_equivalence_checkable
   {
