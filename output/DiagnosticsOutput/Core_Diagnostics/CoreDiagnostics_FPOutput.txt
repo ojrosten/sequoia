@@ -162,7 +162,97 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 91
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 88
+	Equality checking via fallback
+
+	[sequoia::testing::perfectly_normal_type]
+	operator== returned false
+
+	  Wrapped value
+	  [int]
+	  operator== returned false
+	  Obtained : 42
+	  Predicted: 43
+
+	=======================================
+
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 90
+	Equality checking via fallback with advice
+
+	[sequoia::testing::perfectly_normal_type]
+	operator== returned false
+	Advice: perfectly_normal_type advice
+
+	  Wrapped value
+	  [int]
+	  operator== returned false
+	  Obtained : 42
+	  Predicted: 43
+	  Advice: perfectly_normal_type advice
+
+	=======================================
+
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 95
+	Equality checking via fallback with propagated advice
+
+	[sequoia::testing::perfectly_normal_type]
+	operator== returned false
+
+	  Wrapped value
+	  [int]
+	  operator== returned false
+	  Obtained : 42
+	  Predicted: 43
+	  Advice: int advice
+
+	=======================================
+
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 100
+	Equality checking via two fallbacks
+
+	[sequoia::testing::perfectly_normal_type]
+	operator== returned false
+
+	  Wrapped value
+	  [int]
+	  operator== returned false
+	  Obtained : 42
+	  Predicted: 43
+
+	=======================================
+
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 102
+	Equality checking via two fallbacks with advice
+
+	[sequoia::testing::perfectly_normal_type]
+	operator== returned false
+	Advice: perfectly_normal_type advice
+
+	  Wrapped value
+	  [int]
+	  operator== returned false
+	  Obtained : 42
+	  Predicted: 43
+	  Advice: perfectly_normal_type advice
+
+	=======================================
+
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 107
+	Equality checking via two fallbacks with propagated advice
+
+	[sequoia::testing::perfectly_normal_type]
+	operator== returned false
+
+	  Wrapped value
+	  [int]
+	  operator== returned false
+	  Obtained : 42
+	  Predicted: 43
+	  Advice: int advice
+
+	=======================================
+
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 115
 	Equivalence checking
 
 	Comparison performed using:
@@ -178,7 +268,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 93
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 117
 	Equivalence checking with propagated advice
 
 	Comparison performed using:
@@ -195,7 +285,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 98
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 122
 	Self-equivalence checking
 
 	Comparison performed using:
@@ -211,7 +301,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 100
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 124
 	Self-equivalence checking with advice
 
 	Comparison performed using:
@@ -228,7 +318,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 105
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 129
 	Self-equivalence checking with propagated advice
 
 	Comparison performed using:
@@ -245,7 +335,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 110
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 134
 	Equivalence checking via fallback
 
 	Comparison performed using:
@@ -261,7 +351,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 112
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 136
 	Equivalence checking via fallback with propagated advice
 
 	Comparison performed using:
@@ -278,7 +368,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 117
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 141
 	Self-equivalence checking via fallback
 
 	Comparison performed using:
@@ -294,7 +384,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 119
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 143
 	Self-equivalence checking via fallback with advice
 
 	Comparison performed using:
@@ -311,7 +401,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 124
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 148
 	Self-equivalence checking via fallback with propagated advice
 
 	Comparison performed using:
@@ -328,7 +418,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 133
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 157
 	Weak equivalence checking
 
 	Comparison performed using:
@@ -350,7 +440,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 137
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 161
 	Weak equivalence checking with propagated advice
 
 	Comparison performed using:
@@ -374,7 +464,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 142
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 166
 	Self-weak-equivalence checking
 
 	Comparison performed using:
@@ -396,7 +486,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 144
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 168
 	Self-weak-equivalence checking with advice
 
 	Comparison performed using:
@@ -418,7 +508,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 149
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 173
 	Self-weak-equivalence checking with propagated advice
 
 	Comparison performed using:
@@ -442,7 +532,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 158
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 182
 	Best available for int
 
 	[int]
@@ -452,7 +542,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 159
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 183
 	Advice for best available for int
 
 	[int]
@@ -463,7 +553,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 162
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 186
 	Best available for only_equivalence_checkable
 
 	[sequoia::testing::only_equivalence_checkable]
@@ -475,7 +565,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 166
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 190
 	Best available for only_equivalence_checkable with advice
 
 	[sequoia::testing::only_equivalence_checkable]
@@ -488,7 +578,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 172
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 196
 	Best available for only_weakly_checkable
 
 	[sequoia::testing::only_weakly_checkable]
@@ -506,7 +596,7 @@
 
 	=======================================
 
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 176
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 200
 	Best available for only_weakly_checkable with advice
 
 	[sequoia::testing::only_weakly_checkable]

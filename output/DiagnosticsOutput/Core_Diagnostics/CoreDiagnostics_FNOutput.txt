@@ -1,5 +1,5 @@
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 199
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 223
 	Boolean test
 
 	[bool]
@@ -7,7 +7,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 201
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 225
 	Integer test
 
 	[int]
@@ -15,7 +15,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 202
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 226
 	Double test
 
 	[double]
@@ -23,7 +23,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 242
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 266
 	Equality checking
 
 	[sequoia::testing::perfectly_normal_type]
@@ -31,7 +31,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 207
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 231
 	Equivalence checking
 
 	Comparison performed using:
@@ -42,7 +42,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 208
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 232
 	Eequivalence checking with advice
 
 	Comparison performed using:
@@ -53,7 +53,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 214
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 238
 	Weak equivalence checking
 
 	Comparison performed using:
@@ -64,7 +64,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 219
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 243
 	Weak equivalence checking with advice
 
 	Comparison performed using:
@@ -75,7 +75,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 227
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 251
 	Best available for int
 
 	[int]
@@ -83,7 +83,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 230
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 254
 	Best available for only_weakly_checkable
 
 	[sequoia::testing::only_weakly_checkable]
@@ -91,7 +91,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/CoreDiagnostics.cpp, Line 235
+	Tests/TestFramework/CoreDiagnostics.cpp, Line 259
 	Best available for only_weakly_checkable
 
 	[sequoia::testing::only_weakly_checkable]

@@ -84,6 +84,30 @@ namespace sequoia::testing
           perfectly_normal_type{42},
           perfectly_normal_type{43},
           tutor{[](int, int) { return "int advice"; }});
+
+    check(equivalence, LINE("Equality checking via fallback"), perfectly_normal_type{42}, perfectly_normal_type{43});
+    check(equivalence,
+          LINE("Equality checking via fallback with advice"),
+          perfectly_normal_type{42},
+          perfectly_normal_type{43},
+          tutor{[](perfectly_normal_type, perfectly_normal_type) { return "perfectly_normal_type advice"; }});
+    check(equivalence,
+          LINE("Equality checking via fallback with propagated advice"),
+          perfectly_normal_type{42},
+          perfectly_normal_type{43},
+          tutor{[](int, int) { return "int advice"; }});
+
+    check(weak_equivalence, LINE("Equality checking via two fallbacks"), perfectly_normal_type{42}, perfectly_normal_type{43});
+    check(weak_equivalence,
+          LINE("Equality checking via two fallbacks with advice"),
+          perfectly_normal_type{42},
+          perfectly_normal_type{43},
+          tutor{[](perfectly_normal_type, perfectly_normal_type) { return "perfectly_normal_type advice"; }});
+    check(weak_equivalence,
+          LINE("Equality checking via two fallbacks with propagated advice"),
+          perfectly_normal_type{42},
+          perfectly_normal_type{43},
+          tutor{[](int, int) { return "int advice"; }});
   }
 
   void false_positive_diagnostics::test_equivalence_checks()
