@@ -13,7 +13,7 @@
 
 namespace sequoia::testing
 {
-  class false_positive_diagnostics final : public free_false_positive_test
+  class elementary_false_positive_free_diagnostics final : public free_false_positive_test
   {
   public:
     using free_false_positive_test::free_false_positive_test;
@@ -30,7 +30,7 @@ namespace sequoia::testing
     void test_with_best_available_checks();
   };
 
-  class false_negative_diagnostics final : public free_false_negative_test
+  class elementary_false_negative_free_diagnostics final : public free_false_negative_test
   {
   public:
     using free_false_negative_test::free_false_negative_test;
