@@ -1,5 +1,5 @@
 	False Positive Failure:
-	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 243
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 244
 	Empty vector check which should pass
 
 	[std::vector<double, std::allocator<double> >]
@@ -7,7 +7,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 244
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 245
 	One element vector check which should pass
 
 	[std::vector<double, std::allocator<double> >]
@@ -15,7 +15,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 245
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 246
 	Multi-element vector comparison which should pass
 
 	[std::vector<double, std::allocator<double> >]
@@ -23,13 +23,13 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 249
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 250
 	Iterators demarcate identical elements
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 252
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 253
 	Advice for range equivalence, where the containerized form is explicitly specialized
 
 	Comparison performed using:
@@ -40,7 +40,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 258
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 259
 	Advice for range equivalence, where the containerized form is not explicitly specialized
 
 	[std::set<sequoia::testing::(anonymous namespace)::foo, std::less<sequoia::testing::(anonymous namespace)::foo>, std::allocator<sequoia::testing::(anonymous namespace)::foo> >]
@@ -48,7 +48,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 264
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 265
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > >]
@@ -58,14 +58,14 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 267
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 268
 
 	[std::vector<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> >, std::allocator<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > > >]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 269
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 270
 	Advice for weak equivalence checking
 
 	Comparison performed using:
@@ -76,37 +76,30 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 274
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 275
 
 	[std::pair<int, double>]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 276
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 277
 
 	[std::tuple<int, double, float>]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 281
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 282
 
 	[std::pair<int, double>]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 287
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 288
 
 	[std::pair<int, sequoia::testing::only_weakly_checkable>]
-
-	=======================================
-
-	False Positive Failure:
-	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 293
-
-	[std::pair<int, sequoia::testing::only_equivalence_checkable>]
 
 	=======================================
 
@@ -118,14 +111,21 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 308
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 295
+
+	[std::pair<int, sequoia::testing::only_equivalence_checkable>]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 309
 
 	[std::tuple<std::vector<std::pair<int, float>, std::allocator<std::pair<int, float> > >, std::set<double, std::less<double>, std::allocator<double> >, std::complex<double> >]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 310
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 311
 
 	[std::vector<std::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::basic_string<char, std::char_traits<char>, std::allocator<char> > > >]
 
