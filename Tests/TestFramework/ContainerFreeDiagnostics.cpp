@@ -14,6 +14,7 @@
 #include "sequoia/TestFramework/ConcreteTypeCheckers.hpp"
 
 #include <complex>
+#include <list>
 #include <set>
 
 namespace sequoia::testing
