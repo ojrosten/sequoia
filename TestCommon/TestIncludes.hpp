@@ -71,7 +71,7 @@
 #include "TestFramework/ChronoFreeDiagnostics.hpp"
 #include "TestFramework/ComplexFreeDiagnostics.hpp"
 #include "TestFramework/ContainerFreeDiagnostics.hpp"
-#include "TestFramework/CoreDiagnostics.hpp"
+#include "TestFramework/ElementaryFreeDiagnostics.hpp"
 #include "TestFramework/DependencyAnalyzerFreeTest.hpp"
 #include "TestFramework/ExceptionsFreeDiagnostics.hpp"
 #include "TestFramework/FailureInfoTest.hpp"

@@ -8,7 +8,7 @@
 /*! \file */
 
 #include "SmartPointerFreeDiagnostics.hpp"
-#include "CoreDiagnosticsUtilities.hpp"
+#include "ElementaryFreeDiagnosticsUtilities.hpp"
 
 #include "sequoia/TestFramework/ConcreteTypeCheckers.hpp"
 

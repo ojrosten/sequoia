@@ -7,8 +7,8 @@
 
 /*! \file */
 
-#include "CoreDiagnostics.hpp"
-#include "CoreDiagnosticsUtilities.hpp"
+#include "ElementaryFreeDiagnostics.hpp"
+#include "ElementaryFreeDiagnosticsUtilities.hpp"
 
 #include "sequoia/TextProcessing/Substitutions.hpp"
 

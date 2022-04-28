@@ -8,7 +8,7 @@
 /*! \file */
 
 #include "ContainerFreeDiagnostics.hpp"
-#include "CoreDiagnosticsUtilities.hpp"
+#include "ElementaryFreeDiagnosticsUtilities.hpp"
 #include "ContainerDiagnosticsUtilities.hpp"
 
 #include "sequoia/TestFramework/ConcreteTypeCheckers.hpp"
