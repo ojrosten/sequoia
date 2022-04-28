@@ -74,7 +74,7 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>Checks equality of <code>std::basic_string_view</code>  
+<p>Comparisons for <code>std::basic_string_view</code>  
  <a href="../../d4/de0/structsequoia_1_1testing_1_1value__tester_3_01std_1_1basic__string__view_3_01Char_00_01Traits_01_4_01_4.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="../../dc/d9c/ConcreteTypeCheckers_8hpp_source.html">ConcreteTypeCheckers.hpp</a>&gt;</code></p>
@@ -84,6 +84,10 @@ Public Types</h2></td></tr>
 <tr class="memitem:a0eacbf2ca6548e31f4de11b8beedecc0"><td class="memItemLeft" align="right" valign="top"><a id="a0eacbf2ca6548e31f4de11b8beedecc0" name="a0eacbf2ca6548e31f4de11b8beedecc0"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>string_view_type</b> = std::basic_string_view&lt; Char, Traits &gt;</td></tr>
 <tr class="separator:a0eacbf2ca6548e31f4de11b8beedecc0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a107c489fbffb7f1eb07bec5a0901a9df"><td class="memTemplParams" colspan="2"><a id="a107c489fbffb7f1eb07bec5a0901a9df" name="a107c489fbffb7f1eb07bec5a0901a9df"></a>
+template&lt;class Allocator &gt; </td></tr>
+<tr class="memitem:a107c489fbffb7f1eb07bec5a0901a9df"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>string_type</b> = std::basic_string&lt; Char, Traits, Allocator &gt;</td></tr>
+<tr class="separator:a107c489fbffb7f1eb07bec5a0901a9df"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
@@ -91,10 +95,14 @@ Static Public Member Functions</h2></td></tr>
 template&lt;<a class="el" href="../../d5/d05/TestLogger_8hpp.html#ae4e97c9d45a89647799f0d308ba6d244">test_mode</a> Mode, class Advisor &gt; </td></tr>
 <tr class="memitem:a27035a69c63b94e330ba3b45c5e25803"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>test</b> (<a class="el" href="../../d2/d95/structsequoia_1_1testing_1_1equality__check__t.html">equality_check_t</a>, <a class="el" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger</a>&lt; Mode &gt; &amp;logger, string_view_type obtained, string_view_type prediction, const <a class="el" href="../../d6/d71/classsequoia_1_1testing_1_1tutor.html">tutor</a>&lt; Advisor &gt; &amp;advisor)</td></tr>
 <tr class="separator:a27035a69c63b94e330ba3b45c5e25803"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9a02d6fac56e70624a8613e2ebe37f30"><td class="memTemplParams" colspan="2"><a id="a9a02d6fac56e70624a8613e2ebe37f30" name="a9a02d6fac56e70624a8613e2ebe37f30"></a>
+template&lt;<a class="el" href="../../d5/d05/TestLogger_8hpp.html#ae4e97c9d45a89647799f0d308ba6d244">test_mode</a> Mode, class Advisor , class Allocator &gt; </td></tr>
+<tr class="memitem:a9a02d6fac56e70624a8613e2ebe37f30"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>test</b> (<a class="el" href="../../df/d9e/structsequoia_1_1testing_1_1general__equivalence__check__t.html">equivalence_check_t</a>, <a class="el" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger</a>&lt; Mode &gt; &amp;logger, string_view_type obtained, string_type&lt; Allocator &gt; prediction, const <a class="el" href="../../d6/d71/classsequoia_1_1testing_1_1tutor.html">tutor</a>&lt; Advisor &gt; &amp;advisor)</td></tr>
+<tr class="separator:a9a02d6fac56e70624a8613e2ebe37f30"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;class Char, class Traits&gt;<br />
-struct sequoia::testing::value_tester&lt; std::basic_string_view&lt; Char, Traits &gt; &gt;</div><p >Checks equality of <code>std::basic_string_view</code> </p>
+struct sequoia::testing::value_tester&lt; std::basic_string_view&lt; Char, Traits &gt; &gt;</div><p >Comparisons for <code>std::basic_string_view</code> </p>
 <p >Some support is offered for wide string views etc., though test failures are ultimately reported using normal strings, which has its limitations when the character type is bigger than a <code>char</code>. </p>
 </div><hr/>The documentation for this struct was generated from the following file:<ul>
 <li>C:/Users/olive/OneDrive/sequoia/Source/sequoia/TestFramework/<a class="el" href="../../dc/d9c/ConcreteTypeCheckers_8hpp_source.html">ConcreteTypeCheckers.hpp</a></li>

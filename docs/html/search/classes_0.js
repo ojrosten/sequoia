@@ -51,13 +51,14 @@ var searchData=
   ['argument_5fparser_48',['argument_parser',['../df/dd0/classsequoia_1_1parsing_1_1commandline_1_1argument__parser.html',1,'sequoia::parsing::commandline']]],
   ['array_5futilities_5ftest_49',['array_utilities_test',['../d2/dda/classsequoia_1_1testing_1_1array__utilities__test.html',1,'sequoia::testing']]],
   ['as_5fbitmask_50',['as_bitmask',['../d0/d26/structsequoia_1_1as__bitmask.html',1,'sequoia']]],
-  ['as_5fbitmask_3c_20testing_3a_3arunner_5fmode_20_3e_51',['as_bitmask&lt; testing::runner_mode &gt;',['../d1/db5/structsequoia_1_1as__bitmask_3_01testing_1_1runner__mode_01_4.html',1,'sequoia']]],
-  ['as_5fbitmask_3c_20testing_3a_3asummary_5fdetail_20_3e_52',['as_bitmask&lt; testing::summary_detail &gt;',['../dc/d90/structsequoia_1_1as__bitmask_3_01testing_1_1summary__detail_01_4.html',1,'sequoia']]],
-  ['assignment_5fallocation_5fpredictions_53',['assignment_allocation_predictions',['../dd/db4/structsequoia_1_1testing_1_1assignment__allocation__predictions.html',1,'sequoia::testing']]],
-  ['assignment_5fhelper_54',['assignment_helper',['../d9/d8d/structsequoia_1_1assignment__helper.html',1,'sequoia']]],
-  ['assignment_5fmove_5fonly_5fallocation_5fpredictions_55',['assignment_move_only_allocation_predictions',['../dc/d54/structsequoia_1_1testing_1_1assignment__move__only__allocation__predictions.html',1,'sequoia::testing']]],
-  ['asynchronous_56',['asynchronous',['../d0/d11/classsequoia_1_1concurrency_1_1asynchronous.html',1,'sequoia::concurrency']]],
-  ['auxiliary_5fdata_57',['auxiliary_data',['../d9/d65/structsequoia_1_1testing_1_1impl_1_1auxiliary__data.html',1,'sequoia::testing::impl']]],
-  ['auxiliary_5fdata_5fpolicy_58',['auxiliary_data_policy',['../dc/dff/structsequoia_1_1testing_1_1impl_1_1auxiliary__data__policy.html',1,'sequoia::testing::impl']]],
-  ['auxiliary_5fdata_5fpolicy_3c_20t_20_3e_59',['auxiliary_data_policy&lt; T &gt;',['../dc/d6d/structsequoia_1_1testing_1_1impl_1_1auxiliary__data__policy_3_01T_01_4.html',1,'sequoia::testing::impl']]]
+  ['as_5fbitmask_3c_20testing_3a_3amask_20_3e_51',['as_bitmask&lt; testing::mask &gt;',['../d1/dcc/structsequoia_1_1as__bitmask_3_01testing_1_1mask_01_4.html',1,'sequoia']]],
+  ['as_5fbitmask_3c_20testing_3a_3arunner_5fmode_20_3e_52',['as_bitmask&lt; testing::runner_mode &gt;',['../d1/db5/structsequoia_1_1as__bitmask_3_01testing_1_1runner__mode_01_4.html',1,'sequoia']]],
+  ['as_5fbitmask_3c_20testing_3a_3asummary_5fdetail_20_3e_53',['as_bitmask&lt; testing::summary_detail &gt;',['../dc/d90/structsequoia_1_1as__bitmask_3_01testing_1_1summary__detail_01_4.html',1,'sequoia']]],
+  ['assignment_5fallocation_5fpredictions_54',['assignment_allocation_predictions',['../dd/db4/structsequoia_1_1testing_1_1assignment__allocation__predictions.html',1,'sequoia::testing']]],
+  ['assignment_5fhelper_55',['assignment_helper',['../d9/d8d/structsequoia_1_1assignment__helper.html',1,'sequoia']]],
+  ['assignment_5fmove_5fonly_5fallocation_5fpredictions_56',['assignment_move_only_allocation_predictions',['../dc/d54/structsequoia_1_1testing_1_1assignment__move__only__allocation__predictions.html',1,'sequoia::testing']]],
+  ['asynchronous_57',['asynchronous',['../d0/d11/classsequoia_1_1concurrency_1_1asynchronous.html',1,'sequoia::concurrency']]],
+  ['auxiliary_5fdata_58',['auxiliary_data',['../d9/d65/structsequoia_1_1testing_1_1impl_1_1auxiliary__data.html',1,'sequoia::testing::impl']]],
+  ['auxiliary_5fdata_5fpolicy_59',['auxiliary_data_policy',['../dc/dff/structsequoia_1_1testing_1_1impl_1_1auxiliary__data__policy.html',1,'sequoia::testing::impl']]],
+  ['auxiliary_5fdata_5fpolicy_3c_20t_20_3e_60',['auxiliary_data_policy&lt; T &gt;',['../dc/d6d/structsequoia_1_1testing_1_1impl_1_1auxiliary__data__policy_3_01T_01_4.html',1,'sequoia::testing::impl']]]
 ];

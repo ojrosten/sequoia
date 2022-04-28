@@ -28,5 +28,7 @@ var searchData=
   ['fixedtopologygenerictests_2ehpp_25',['FixedTopologyGenericTests.hpp',['../d5/da8/FixedTopologyGenericTests_8hpp.html',1,'']]],
   ['freecheckers_2ehpp_26',['FreeCheckers.hpp',['../d2/d0d/FreeCheckers_8hpp.html',1,'']]],
   ['freetestcore_2ecpp_27',['FreeTestCore.cpp',['../de/dc0/FreeTestCore_8cpp.html',1,'']]],
-  ['freetestcore_2ehpp_28',['FreeTestCore.hpp',['../dd/d3e/FreeTestCore_8hpp.html',1,'']]]
+  ['freetestcore_2ehpp_28',['FreeTestCore.hpp',['../dd/d3e/FreeTestCore_8hpp.html',1,'']]],
+  ['functionfreediagnostics_2ecpp_29',['FunctionFreeDiagnostics.cpp',['../d6/d8e/FunctionFreeDiagnostics_8cpp.html',1,'']]],
+  ['functionfreediagnostics_2ehpp_30',['FunctionFreeDiagnostics.hpp',['../db/d01/FunctionFreeDiagnostics_8hpp.html',1,'']]]
 ];
