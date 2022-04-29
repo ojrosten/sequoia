@@ -385,20 +385,8 @@
 
 	=======================================
 
-	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 164
-
-	[std::pair<int, double>]
-	operator== returned false
-
-	  Second element of pair is incorrect
-	  [double]
-	  operator== returned false
-	  Obtained : 7.8
-	  Predicted: -7.8
-
-	=======================================
-
-	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 165
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 167
+	Pair for which the first element differs
 
 	[std::pair<int, double>]
 	operator== returned false
@@ -411,7 +399,42 @@
 
 	=======================================
 
-	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 166
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 168
+	Pair for which the second element differs
+
+	[std::pair<int, double>]
+	operator== returned false
+
+	  Second element of pair is incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 7.8
+	  Predicted: -7.8
+
+	=======================================
+
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 169
+	Pair for which both elements differs
+
+	[std::pair<int, double>]
+	operator== returned false
+
+	  First element of pair is incorrect
+	  [int]
+	  operator== returned false
+	  Obtained : 5
+	  Predicted: -5
+
+	  Second element of pair is incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 7.8
+	  Predicted: 6.8
+
+	=======================================
+
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 170
+	Pair for which both elements differs with advice
 
 	[std::pair<int, double>]
 	operator== returned false
@@ -432,7 +455,100 @@
 
 	=======================================
 
-	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 167
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 173
+	Pair for which both elements differs via fallback
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<std::pair<int, double> >]
+	Checking for equivalence with:
+	[std::pair<int, double>]
+
+	  First element of pair is incorrect
+	  [int]
+	  operator== returned false
+	  Obtained : 5
+	  Predicted: -5
+
+	  Second element of pair is incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 7.8
+	  Predicted: 6.8
+
+	=======================================
+
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 177
+	Pair for which both elements differs via fallback with advice
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<std::pair<int, double> >]
+	Checking for equivalence with:
+	[std::pair<int, double>]
+
+	  First element of pair is incorrect
+	  [int]
+	  operator== returned false
+	  Obtained : 5
+	  Predicted: -5
+	  Advice: Integer advice
+
+	  Second element of pair is incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 7.8
+	  Predicted: 6.8
+	  Advice: Double advice
+
+	=======================================
+
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 183
+	Pair for which both elements differs via two fallbacks
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<std::pair<int, double> >]
+	Checking for weak equivalence with:
+	[std::pair<int, double>]
+
+	  First element of pair is incorrect
+	  [int]
+	  operator== returned false
+	  Obtained : 5
+	  Predicted: -5
+
+	  Second element of pair is incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 7.8
+	  Predicted: 6.8
+
+	=======================================
+
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 187
+	Pair for which both elements differs via two fallbacks with advice
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<std::pair<int, double> >]
+	Checking for weak equivalence with:
+	[std::pair<int, double>]
+
+	  First element of pair is incorrect
+	  [int]
+	  operator== returned false
+	  Obtained : 5
+	  Predicted: -5
+	  Advice: Integer advice
+
+	  Second element of pair is incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 7.8
+	  Predicted: 6.8
+	  Advice: Double advice
+
+	=======================================
+
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 192
+	Best available
 
 	[std::pair<int, double>]
 	operator== returned false
@@ -445,7 +561,22 @@
 
 	=======================================
 
-	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 168
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 193
+	Best available with advice
+
+	[std::pair<int, double>]
+	operator== returned false
+
+	  Second element of pair is incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 7.8
+	  Predicted: -7.8
+	  Advice: Double advice
+
+	=======================================
+
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 200
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<std::pair<int const&, double> >]
@@ -466,7 +597,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 169
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 201
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<std::pair<int const&, double> >]
@@ -487,7 +618,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 171
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 207
 
 	[std::tuple<int, double, float>]
 	operator== returned false
@@ -500,7 +631,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 172
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 208
 
 	[std::tuple<int, double, float>]
 	operator== returned false
@@ -514,7 +645,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 173
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 209
 
 	[std::tuple<int, double, float>]
 	operator== returned false
@@ -527,41 +658,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 174
-
-	Comparison performed using:
-	[sequoia::testing::value_tester<std::tuple<int const&, double> >]
-	Checking for equivalence with:
-	[std::tuple<int, double const&>]
-
-	  Element 0 of tuple incorrect
-	  [int]
-	  operator== returned false
-	  Obtained : 5
-	  Predicted: -5
-
-	  Element 1 of tuple incorrect
-	  [double]
-	  operator== returned false
-	  Obtained : 7.8
-	  Predicted: 6.8
-
-	=======================================
-
-	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 179
-
-	[std::pair<int, double>]
-	operator== returned false
-
-	  First element of pair is incorrect
-	  [int]
-	  operator== returned false
-	  Obtained : 0
-	  Predicted: 1
-
-	=======================================
-
-	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 185
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 215
 
 	[std::pair<int, sequoia::testing::only_weakly_checkable>]
 	  First element of pair is incorrect
@@ -572,7 +669,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 186
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 216
 
 	[std::pair<int, sequoia::testing::only_weakly_checkable>]
 	  Second element of pair is incorrect
@@ -585,7 +682,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 187
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 217
 
 	[std::pair<int, sequoia::testing::only_weakly_checkable>]
 	  First element of pair is incorrect
@@ -604,7 +701,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 188
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 218
 
 	[std::pair<int, sequoia::testing::only_weakly_checkable>]
 	  Second element of pair is incorrect
@@ -618,7 +715,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 194
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 224
 
 	[std::pair<int, sequoia::testing::only_equivalence_checkable>]
 	  First element of pair is incorrect
@@ -629,7 +726,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 195
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 225
 
 	[std::pair<int, sequoia::testing::only_equivalence_checkable>]
 	  Second element of pair is incorrect
@@ -642,7 +739,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 196
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 226
 
 	[std::pair<int, sequoia::testing::only_equivalence_checkable>]
 	  First element of pair is incorrect
@@ -661,7 +758,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 197
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 227
 
 	[std::pair<int, sequoia::testing::only_equivalence_checkable>]
 	  First element of pair is incorrect
@@ -673,7 +770,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 212
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 242
 
 	[std::tuple<std::vector<std::pair<int, float>, std::allocator<std::pair<int, float> > >, std::set<double, std::less<double>, std::allocator<double> >, std::complex<double> >]
 	operator== returned false
@@ -695,7 +792,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 217
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 247
 
 	[std::tuple<std::vector<std::pair<int, float>, std::allocator<std::pair<int, float> > >, std::set<double, std::less<double>, std::allocator<double> >, std::complex<double> >]
 	operator== returned false
@@ -713,7 +810,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 222
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 252
 
 	[std::vector<std::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::basic_string<char, std::char_traits<char>, std::allocator<char> > > >]
 
@@ -735,7 +832,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 224
+	Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 254
 
 	[std::vector<std::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::basic_string<char, std::char_traits<char>, std::allocator<char> > > >]
 

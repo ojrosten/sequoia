@@ -151,32 +151,62 @@ namespace sequoia::testing
     check(weak_equivalence, LINE(""), std::vector<beast>{ {1, 2}, {3, 4}}, prediction{{1, 2}, {3, 5}});
 
     check(weak_equivalence,
-      LINE(""),
-      std::vector<beast>{ {1, 2}, {3, 4}},
-      prediction{{1, 2}, {3, 5}},
-      tutor{[](int, int) {
-        return "Or at least don't mess with a vector of beasts.";
-      }});
+          LINE(""),
+          std::vector<beast>{ {1, 2}, {3, 4}},
+          prediction{{1, 2}, {3, 5}},
+          tutor{[](int, int) {
+            return "Or at least don't mess with a vector of beasts.";
+          }});
   }
 
   void container_false_positive_free_diagnostics::test_heterogeneous()
   {
-    check(equality, LINE(""), std::pair<int, double>{5, 7.8}, std::pair<int, double>{5, -7.8});
-    check(equality, LINE(""), std::pair<int, double>{5, 7.8}, std::pair<int, double>{-5, 7.8});
-    check(equality, LINE(""), std::pair<int, double>{5, 7.8}, std::pair<int, double>{-5, 6.8}, tutor{bland{}});
-    check(with_best_available, LINE(""), std::pair<int, double>{5, 7.8}, std::pair<int, double>{5, -7.8});
-    check(equivalence, LINE(""), std::pair<const int&, double>{5, 7.8}, std::pair<int, const double&>{-5, 6.8});
-    check(weak_equivalence, LINE(""), std::pair<const int&, double>{5, 7.8}, std::pair<int, const double&>{-5, 6.8});
-
-    check(equality, LINE(""), std::tuple<int, double, float>{4, 3.4, -9.2f}, std::tuple<int, double, float>{0, 3.4, -9.2f});
-    check(equality, LINE(""), std::tuple<int, double, float>{4, 3.4, -9.2f}, std::tuple<int, double, float>{4, 0.0, -9.2f}, tutor{bland{}});
-    check(equality, LINE(""), std::tuple<int, double, float>{4, 3.4, -9.2f}, std::tuple<int, double, float>{4, 3.4, -0.0f});
-    check(equivalence, LINE(""), std::tuple<const int&, double>{5, 7.8}, std::tuple<int, const double&>{-5, 6.8});
-
     {
       using type = std::pair<int, double>;
 
-      check(with_best_available, LINE(""), type{}, type{1, 0.0});
+      check(equality, LINE("Pair for which the first element differs"), type{5, 7.8}, type{-5, 7.8});
+      check(equality, LINE("Pair for which the second element differs"), type{5, 7.8}, type{5, -7.8});
+      check(equality, LINE("Pair for which both elements differs"), type{5, 7.8}, type{-5, 6.8});
+      check(equality, LINE("Pair for which both elements differs with advice"), type{5, 7.8}, type{-5, 6.8}, tutor{bland{}});
+
+      check(equivalence,
+            LINE("Pair for which both elements differs via fallback"),
+            type{5, 7.8},
+            type{-5, 6.8});
+      check(equivalence,
+           LINE("Pair for which both elements differs via fallback with advice"),
+           type{5, 7.8},
+           type{-5, 6.8},
+           tutor{bland{}});
+
+      check(weak_equivalence,
+            LINE("Pair for which both elements differs via two fallbacks"),
+            type{5, 7.8},
+            type{-5, 6.8});
+      check(weak_equivalence,
+            LINE("Pair for which both elements differs via two fallbacks with advice"),
+            type{5, 7.8},
+            type{-5, 6.8},
+            tutor{bland{}});
+
+      check(with_best_available, LINE("Best available"), type{5, 7.8}, type{5, -7.8});
+      check(with_best_available, LINE("Best available with advice"), type{5, 7.8}, type{5, -7.8}, tutor{bland{}});
+    }
+
+    {
+      using type0 = std::pair<const int&, double>;
+      using type1 = std::pair<int, const double&>;
+
+      check(equivalence, LINE(""), type0{5, 7.8}, type1{-5, 6.8});
+      check(weak_equivalence, LINE(""), type0{5, 7.8}, type1{-5, 6.8});
+    }
+
+    {
+      using type = std::tuple<int, double, float>;
+
+      check(equality, LINE(""), type{4, 3.4, -9.2f}, type{0, 3.4, -9.2f});
+      check(equality, LINE(""), type{4, 3.4, -9.2f}, type{4, 0.0, -9.2f}, tutor{bland{}});
+      check(equality, LINE(""), type{4, 3.4, -9.2f}, type{4, 3.4, -0.0f});
     }
 
     {
