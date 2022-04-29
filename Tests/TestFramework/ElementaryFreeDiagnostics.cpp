@@ -165,7 +165,8 @@ namespace sequoia::testing
 
     check(weak_equivalence, LINE("Self-weak-equivalence checking"), only_weakly_checkable{42, 3.14}, only_weakly_checkable{41, 3.13});
     check(weak_equivalence,
-          LINE("Self-weak-equivalence checking with advice requiring implicit conversion"),
+          LINE("Self-weak-equivalence checking with ignored advice because implicit conversions"
+               "from either int or double to only_weakly_checkable don't exist"),
           only_weakly_checkable{42, 3.14},
           only_weakly_checkable{41, 3.13},
           tutor{[](only_weakly_checkable, only_weakly_checkable) { return "only_weakly_checkable advice"; }});
@@ -197,10 +198,10 @@ namespace sequoia::testing
           only_weakly_checkable{1, -1.4},
           only_weakly_checkable{2, 6.7});
     check(with_best_available,
-          LINE("Best available for only_weakly_checkable with advice requiring implicit conversion"),
+          LINE("Best available for only_weakly_checkable with advice"),
           only_weakly_checkable{1, -1.4},
           only_weakly_checkable{2, 6.7},
-          tutor{[](only_weakly_checkable, only_weakly_checkable) { return "only_weakly_checkable advice"; }});
+          tutor{bland{}});
   }
 
   [[nodiscard]]

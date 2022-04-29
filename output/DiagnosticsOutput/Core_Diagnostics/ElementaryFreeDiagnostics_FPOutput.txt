@@ -486,8 +486,8 @@
 
 	=======================================
 
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 168
-	Self-weak-equivalence checking with advice requiring implicit conversion
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 169
+	Self-weak-equivalence checking with ignored advice because implicit conversionsfrom either int or double to only_weakly_checkable don't exist
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::testing::only_weakly_checkable>]
@@ -508,7 +508,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 173
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 174
 	Self-weak-equivalence checking with advice
 
 	Comparison performed using:
@@ -532,7 +532,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 182
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 183
 	Best available for int
 
 	[int]
@@ -542,7 +542,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 183
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 184
 	Advice for best available for int
 
 	[int]
@@ -553,7 +553,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 186
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 187
 	Best available for only_equivalence_checkable
 
 	[sequoia::testing::only_equivalence_checkable]
@@ -565,7 +565,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 190
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 191
 	Best available for only_equivalence_checkable with advice requiring implicit conversion
 
 	[sequoia::testing::only_equivalence_checkable]
@@ -578,7 +578,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 196
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 197
 	Best available for only_weakly_checkable
 
 	[sequoia::testing::only_weakly_checkable]
@@ -596,8 +596,8 @@
 
 	=======================================
 
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 200
-	Best available for only_weakly_checkable with advice requiring implicit conversion
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 201
+	Best available for only_weakly_checkable with advice
 
 	[sequoia::testing::only_weakly_checkable]
 	  Wrapped int
@@ -605,12 +605,14 @@
 	  operator== returned false
 	  Obtained : 1
 	  Predicted: 2
+	  Advice: Integer advice
 
 	  Wrapped double
 	  [double]
 	  operator== returned false
 	  Obtained : -1.4
 	  Predicted: 6.7
+	  Advice: Double advice
 
 	=======================================
 

@@ -1,5 +1,5 @@
 	False Positive Failure:
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 223
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 224
 	Boolean test
 
 	[bool]
@@ -7,7 +7,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 225
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 226
 	Integer test
 
 	[int]
@@ -15,7 +15,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 226
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 227
 	Double test
 
 	[double]
@@ -23,7 +23,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 266
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 267
 	Equality checking
 
 	[sequoia::testing::perfectly_normal_type]
@@ -31,7 +31,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 231
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 232
 	Equivalence checking
 
 	Comparison performed using:
@@ -42,7 +42,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 232
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 233
 	Eequivalence checking with advice
 
 	Comparison performed using:
@@ -53,7 +53,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 238
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 239
 	Weak equivalence checking
 
 	Comparison performed using:
@@ -64,7 +64,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 243
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 244
 	Weak equivalence checking with advice
 
 	Comparison performed using:
@@ -75,7 +75,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 251
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 252
 	Best available for int
 
 	[int]
@@ -83,7 +83,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 254
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 255
 	Best available for only_weakly_checkable
 
 	[sequoia::testing::only_weakly_checkable]
@@ -91,7 +91,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 259
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 260
 	Best available for only_weakly_checkable
 
 	[sequoia::testing::only_weakly_checkable]
