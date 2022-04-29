@@ -132,7 +132,7 @@
 	=======================================
 
 	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 78
-	Equality checking with advice
+	Equality checking with advice requiring implicit conversion
 
 	[sequoia::testing::perfectly_normal_type]
 	operator== returned false
@@ -148,7 +148,7 @@
 	=======================================
 
 	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 83
-	Equality checking with propagated advice
+	Equality checking with advice
 
 	[sequoia::testing::perfectly_normal_type]
 	operator== returned false
@@ -177,7 +177,7 @@
 	=======================================
 
 	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 90
-	Equality checking via fallback with advice
+	Equality checking via fallback with advice requiring implicit conversion
 
 	[sequoia::testing::perfectly_normal_type]
 	operator== returned false
@@ -193,7 +193,7 @@
 	=======================================
 
 	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 95
-	Equality checking via fallback with propagated advice
+	Equality checking via fallback with advice
 
 	[sequoia::testing::perfectly_normal_type]
 	operator== returned false
@@ -222,7 +222,7 @@
 	=======================================
 
 	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 102
-	Equality checking via two fallbacks with advice
+	Equality checking via two fallbacks with advice requiring implicit conversion
 
 	[sequoia::testing::perfectly_normal_type]
 	operator== returned false
@@ -238,7 +238,7 @@
 	=======================================
 
 	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 107
-	Equality checking via two fallbacks with propagated advice
+	Equality checking via two fallbacks with advice
 
 	[sequoia::testing::perfectly_normal_type]
 	operator== returned false
@@ -269,7 +269,7 @@
 	=======================================
 
 	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 117
-	Equivalence checking with propagated advice
+	Equivalence checking with advice
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::testing::only_equivalence_checkable>]
@@ -302,7 +302,7 @@
 	=======================================
 
 	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 124
-	Self-equivalence checking with advice
+	Self-equivalence checking with advice requiring implicit conversion
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::testing::only_equivalence_checkable>]
@@ -319,7 +319,7 @@
 	=======================================
 
 	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 129
-	Self-equivalence checking with propagated advice
+	Self-equivalence checking with advice
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::testing::only_equivalence_checkable>]
@@ -352,7 +352,7 @@
 	=======================================
 
 	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 136
-	Equivalence checking via fallback with propagated advice
+	Equivalence checking via fallback with advice
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::testing::only_equivalence_checkable>]
@@ -385,7 +385,7 @@
 	=======================================
 
 	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 143
-	Self-equivalence checking via fallback with advice
+	Self-equivalence checking via fallback with advice requiring implicit conversion
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::testing::only_equivalence_checkable>]
@@ -402,7 +402,7 @@
 	=======================================
 
 	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 148
-	Self-equivalence checking via fallback with propagated advice
+	Self-equivalence checking via fallback with advice
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::testing::only_equivalence_checkable>]
@@ -441,7 +441,7 @@
 	=======================================
 
 	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 161
-	Weak equivalence checking with propagated advice
+	Weak equivalence checking with advice
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::testing::only_weakly_checkable>]
@@ -487,7 +487,7 @@
 	=======================================
 
 	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 168
-	Self-weak-equivalence checking with advice
+	Self-weak-equivalence checking with advice requiring implicit conversion
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::testing::only_weakly_checkable>]
@@ -509,7 +509,7 @@
 	=======================================
 
 	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 173
-	Self-weak-equivalence checking with propagated advice
+	Self-weak-equivalence checking with advice
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<sequoia::testing::only_weakly_checkable>]
@@ -566,7 +566,7 @@
 	=======================================
 
 	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 190
-	Best available for only_equivalence_checkable with advice
+	Best available for only_equivalence_checkable with advice requiring implicit conversion
 
 	[sequoia::testing::only_equivalence_checkable]
 	  Wrapped double
@@ -597,7 +597,7 @@
 	=======================================
 
 	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 200
-	Best available for only_weakly_checkable with advice
+	Best available for only_weakly_checkable with advice requiring implicit conversion
 
 	[sequoia::testing::only_weakly_checkable]
 	  Wrapped int
