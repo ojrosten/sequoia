@@ -18,7 +18,6 @@
 namespace sequoia::testing
 {
   inline constexpr std::string_view seqpat{".seqpat"};
-  const static auto working_path_v{std::filesystem::current_path().lexically_normal()};
 
   template<>
   struct serializer<std::filesystem::path>
@@ -35,7 +34,7 @@ namespace sequoia::testing
   };
 
   [[nodiscard]]
-  std::filesystem::path working_path();
+  const std::filesystem::path& working_path();
 
   class file_info
   {

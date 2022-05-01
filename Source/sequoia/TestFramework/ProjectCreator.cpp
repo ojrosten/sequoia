@@ -175,7 +175,7 @@ namespace sequoia::testing
         const auto buildDir{project_paths::cmade_build_dir(data.project_root, mainDir)};
 
         invoke(cd_cmd(mainDir)
-            && cmake_cmd(working_path_v, buildDir, data.output)
+            && cmake_cmd(working_path(), buildDir, data.output)
             && build_cmd(buildDir, data.output)
             && git_first_cmd(data.project_root, data.output)
             && (data.do_build == build_invocation::launch_ide ? launch_cmd(data.project_root, buildDir) : shell_command{})

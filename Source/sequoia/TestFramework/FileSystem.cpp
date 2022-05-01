@@ -56,13 +56,14 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  fs::path working_path()
+  const fs::path& working_path()
   {
-    return working_path_v;
+    const static auto working{std::filesystem::current_path().lexically_normal()};
+    return working;
   }
 
   [[nodiscard]]
-  fs::path project_root(int argc, char** argv, const fs::path& fallback)
+  fs::path project_root(int argc, char** argv, const std::filesystem::path& fallback)
   {
     if(argc)
     {
