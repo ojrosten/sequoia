@@ -18,6 +18,8 @@
 
 namespace sequoia::testing
 {
+  class project_paths;
+
   enum class build_invocation { no = 0, yes, launch_ide };
 
   struct project_data
@@ -35,7 +37,7 @@ namespace sequoia::testing
 
   void generate_build_system_files(const std::filesystem::path& parentProjRoot, const std::filesystem::path& projRoot);
 
-  void init_projects(const std::filesystem::path& parentProjRoot, const std::vector<project_data>& projects, std::ostream& stream);
+  void init_projects(const project_paths& parentProjectPaths, const std::vector<project_data>& projects, std::ostream& stream);
 
   [[nodiscard]]
   runtime::shell_command git_first_cmd(const std::filesystem::path& root, const std::filesystem::path& output);

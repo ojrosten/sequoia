@@ -390,7 +390,7 @@ namespace sequoia::testing
         cmake_nascent_tests(proj_paths(), stream());
   
       if(mode(runner_mode::init))
-        init_projects(proj_paths().project_root(), nascentProjects, stream());
+        init_projects(proj_paths(), nascentProjects, stream());
 
       if(mode(runner_mode::test))
         m_Selector.prune(stream());

@@ -131,7 +131,7 @@ namespace sequoia::testing
     );
   }
 
-  void init_projects(const std::filesystem::path& parentProjRoot, const std::vector<project_data>& projects, std::ostream& stream)
+  void init_projects(const project_paths& parentProjectPaths, const std::vector<project_data>& projects, std::ostream& stream)
   {
     stream << "Initializing Project(s)....\n\n";
 
@@ -161,6 +161,7 @@ namespace sequoia::testing
 
       report(stream, "Creating new project at location:", data.project_root.generic_string());
 
+      const auto& parentProjRoot{parentProjectPaths.project_root()};
       fs::create_directories(data.project_root);
       fs::copy(project_template_path(parentProjRoot), data.project_root, fs::copy_options::recursive | fs::copy_options::skip_existing);
       fs::create_directory(project_paths::source_path(data.project_root));
@@ -175,7 +176,7 @@ namespace sequoia::testing
         const auto buildDir{project_paths::cmade_build_dir(data.project_root, mainDir)};
 
         invoke(cd_cmd(mainDir)
-            && cmake_cmd(working_path(), buildDir, data.output)
+            && cmake_cmd(parentProjectPaths.cmade_build_dir(), buildDir, data.output)
             && build_cmd(buildDir, data.output)
             && git_first_cmd(data.project_root, data.output)
             && (data.do_build == build_invocation::launch_ide ? launch_cmd(data.project_root, buildDir) : shell_command{})
