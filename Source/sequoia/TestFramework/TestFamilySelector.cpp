@@ -72,9 +72,9 @@ namespace sequoia::testing
     m_SelectedFamilies.emplace(std::move(name), false);
   }
 
-  void family_selector::select_source_file(std::filesystem::path file)
+  void family_selector::select_source_file(const std::filesystem::path& file)
   {
-    m_SelectedSources.emplace_back(std::move(file), false);
+    m_SelectedSources.emplace_back(file.lexically_normal(), false);
   }
 
   void family_selector::enable_prune()
@@ -258,12 +258,6 @@ namespace sequoia::testing
         return false;
 
       if(filename == source) return true;
-
-      if(filename.is_absolute())
-      {
-        if(rebase_from(filename, root) == rebase_from(source, working_path()))
-          return true;
-      }
 
       // filename is relative to where compilation was performed which
       // cannot be known here. Therefore fallback to assuming the 'selected sources'

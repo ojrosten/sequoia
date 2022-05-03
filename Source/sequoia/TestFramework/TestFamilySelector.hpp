@@ -80,7 +80,7 @@ namespace sequoia::testing
 
     void select_family(std::string name);
 
-    void select_source_file(std::filesystem::path file);
+    void select_source_file(const std::filesystem::path& file);
 
     void enable_prune();
 
