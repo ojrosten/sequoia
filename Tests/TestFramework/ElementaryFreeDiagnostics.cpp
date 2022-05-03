@@ -165,8 +165,7 @@ namespace sequoia::testing
 
     check(weak_equivalence, LINE("Self-weak-equivalence checking"), only_weakly_checkable{42, 3.14}, only_weakly_checkable{41, 3.13});
     check(weak_equivalence,
-          LINE("Self-weak-equivalence checking with ignored advice because implicit conversions"
-               "from either int or double to only_weakly_checkable don't exist"),
+          LINE("Self-weak-equivalence checking with advice ignored because implicit conversions from either int or double to only_weakly_checkable don't exist"),
           only_weakly_checkable{42, 3.14},
           only_weakly_checkable{41, 3.13},
           tutor{[](only_weakly_checkable, only_weakly_checkable) { return "only_weakly_checkable advice"; }});
