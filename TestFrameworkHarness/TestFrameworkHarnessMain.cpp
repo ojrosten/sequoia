@@ -17,14 +17,10 @@ int main(int argc, char** argv)
     using namespace testing;
     using namespace std::literals::chrono_literals;
 
-    const auto root{project_root(argc, argv)};
     test_runner runner{argc,
                        argv,
                        "Oliver J. Rosten",
-                       project_paths{root,
-                                     root / "TestFrameworkHarness" / "TestFrameworkHarnessMain.cpp",
-                                     root / "TestCommon" / "TestIncludes.hpp"}
-    };
+                       {"TestFrameworkHarness/TestFrameworkHarnessMain.cpp", {}, "TestCommon/TestIncludes.hpp"}};
 
     runner.add_test_family(
       "Test Runner",

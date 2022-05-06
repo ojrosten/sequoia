@@ -17,7 +17,6 @@ int main(int argc, char** argv)
     using namespace testing;
     using namespace std::literals::chrono_literals;
 
-    const auto root{project_root(argc, argv)};
     test_runner runner{argc,
                        argv,
                        "Oliver J. Rosten",
