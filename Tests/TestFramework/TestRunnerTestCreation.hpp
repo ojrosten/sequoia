@@ -30,5 +30,11 @@ namespace sequoia::testing
     void test_creation();
 
     void test_creation_failure();
+
+    [[nodiscard]]
+    std::filesystem::path fake_project() const;
+
+    [[nodiscard]]
+    std::string zeroth_arg() const;
   };
 }

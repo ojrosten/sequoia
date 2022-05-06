@@ -25,6 +25,18 @@ namespace sequoia::testing
     return __FILE__;
   }
 
+  [[nodiscard]]
+  std::filesystem::path test_runner_test_creation::fake_project() const
+  {
+    return working_materials() / "FakeProject";
+  }
+
+  [[nodiscard]]
+  std::string test_runner_test_creation::zeroth_arg() const
+  {
+    return (fake_project() / "build").generic_string();
+  }
+
   void test_runner_test_creation::run_tests()
   {
     test_type_handling();
@@ -91,73 +103,64 @@ namespace sequoia::testing
 
   void test_runner_test_creation::test_creation()
   {
-    auto working{
-      [&mat=working_materials()]() { return mat / "FakeProject"; }
-    };
-
     namespace fs = std::filesystem;
 
     const auto root{test_repository().parent_path()};
-    fs::copy(aux_files_path(root), aux_files_path(working()), fs::copy_options::recursive);
-    fs::create_directory(working() / "TestSandbox");
-    fs::copy(project_template_path(root) / "Source" / "CMakeLists.txt", working() / "Source");
-    fs::copy(project_template_path(root) / "TestAll" / "CMakeLists.txt", working() / "TestSandbox");
-    fs::copy(project_template_path(root) / "TestAll"/ "TestAllMain.cpp", working() / "TestSandbox" / "TestSandbox.cpp");
-    read_modify_write(working() / "TestSandbox" / "CMakeLists.txt" , [](std::string& text) {
+    fs::copy(aux_files_path(root), aux_files_path(fake_project()), fs::copy_options::recursive);
+    fs::create_directory(fake_project() / "TestSandbox");
+    fs::copy(project_template_path(root) / "Source" / "CMakeLists.txt", fake_project() / "Source");
+    fs::copy(project_template_path(root) / "TestAll" / "CMakeLists.txt", fake_project() / "TestSandbox");
+    fs::copy(project_template_path(root) / "TestAll"/ "TestAllMain.cpp", fake_project() / "TestSandbox" / "TestSandbox.cpp");
+    read_modify_write(fake_project() / "TestSandbox" / "CMakeLists.txt" , [](std::string& text) {
         replace_all(text, "TestAllMain.cpp", "TestSandbox.cpp");
       }
     );
 
-    const auto testMain{working().append("TestSandbox").append("TestSandbox.cpp")};
-    const auto includeTarget{working().append("TestShared").append("SharedIncludes.hpp")};
+    const auto testMain{fake_project().append("TestSandbox").append("TestSandbox.cpp")};
+    const auto includeTarget{fake_project().append("TestShared").append("SharedIncludes.hpp")};
 
-    const project_paths paths{working(), testMain, includeTarget};
-
-    commandline_arguments args{"", "create", "regular_test", "other::functional::maybe<class T>", "std::optional<T>"
-                                 , "create", "regular", "utilities::iterator", "int*"
-                                 , "create", "regular_test", "stuff::widget", "std::vector<int>", "gen-source", "Stuff"
-                                 , "create", "regular_test", "maths::probability", "double", "g", "Maths"
-                                 , "create", "regular_test", "maths::angle", "long double", "gen-source", "Maths"
-                                 , "create", "regular_test", "stuff::thingummy<class T>", "std::vector<T>", "g", "Thingummies"
-                                 , "create", "regular_test", "container<class T>", "const std::vector<T>"
-                                 , "create", "regular_test", "other::couple<class S, class T>", "S", "-e", "T",
-                                                "-f", "partners", "-h", "Couple.hpp"
-                                 , "create", "regular_test", "bar::things", "double", "-h", "fakeProject/Stuff/Things.hpp"
-                                 , "create", "move_only_test", "bar::baz::foo<maths::floating_point T>", "T", "--family", "Iterator"
-                                 , "create", "move_only", "variadic<class... T>", "std::tuple<T...>"
-                                 , "create", "move_only_test", "multiple<class... T>", "std::tuple<T...>", "gen-source", "Utilities"
-                                 , "create", "free_test", "Utilities.h"
-                                 , "create", "free_test", "Source/fakeProject/Stuff/Baz.h", "--forename", "bazzer"
-                                 , "create", "free_test", "Source/fakeProject/Stuff/Baz.h", "--forename", "bazagain", "--family", "Bazzer"
-                                 , "create", "free_test", "Stuff/Doohicky.hpp", "gen-source", "bar::things"
-                                 , "create", "free_test", "Global/Stuff/Global.hpp", "gen-source", "::"
-                                 , "create", "free_test", "Global/Stuff/Defs.hpp", "gen-source", ""
-                                 , "create", "free", "fakeProject/Maths/Angle.hpp", "--diagnostics"
-                                 , "create", "regular_allocation_test", "container"
-                                 , "create", "move_only_allocation_test", "foo", "--family", "Iterator"
-                                 , "create", "performance_test", "Container.hpp"
-                                 , "create", "performance_test", "Container.hpp"
+    commandline_arguments args{  zeroth_arg()
+                               , "create", "regular_test", "other::functional::maybe<class T>", "std::optional<T>"
+                               , "create", "regular", "utilities::iterator", "int*"
+                               , "create", "regular_test", "stuff::widget", "std::vector<int>", "gen-source", "Stuff"
+                               , "create", "regular_test", "maths::probability", "double", "g", "Maths"
+                               , "create", "regular_test", "maths::angle", "long double", "gen-source", "Maths"
+                               , "create", "regular_test", "stuff::thingummy<class T>", "std::vector<T>", "g", "Thingummies"
+                               , "create", "regular_test", "container<class T>", "const std::vector<T>"
+                               , "create", "regular_test", "other::couple<class S, class T>", "S", "-e", "T",
+                                              "-f", "partners", "-h", "Couple.hpp"
+                               , "create", "regular_test", "bar::things", "double", "-h", "fakeProject/Stuff/Things.hpp"
+                               , "create", "move_only_test", "bar::baz::foo<maths::floating_point T>", "T", "--family", "Iterator"
+                               , "create", "move_only", "variadic<class... T>", "std::tuple<T...>"
+                               , "create", "move_only_test", "multiple<class... T>", "std::tuple<T...>", "gen-source", "Utilities"
+                               , "create", "free_test", "Utilities.h"
+                               , "create", "free_test", "Source/fakeProject/Stuff/Baz.h", "--forename", "bazzer"
+                               , "create", "free_test", "Source/fakeProject/Stuff/Baz.h", "--forename", "bazagain", "--family", "Bazzer"
+                               , "create", "free_test", "Stuff/Doohicky.hpp", "gen-source", "bar::things"
+                               , "create", "free_test", "Global/Stuff/Global.hpp", "gen-source", "::"
+                               , "create", "free_test", "Global/Stuff/Defs.hpp", "gen-source", ""
+                               , "create", "free", "fakeProject/Maths/Angle.hpp", "--diagnostics"
+                               , "create", "regular_allocation_test", "container"
+                               , "create", "move_only_allocation_test", "foo", "--family", "Iterator"
+                               , "create", "performance_test", "Container.hpp"
+                               , "create", "performance_test", "Container.hpp"
     };
 
     std::stringstream outputStream{};
-    test_runner tr{args.size(), args.get(), "Oliver Jacob Rosten", paths, "    ", outputStream};
+    test_runner tr{args.size(), args.get(), "Oliver Jacob Rosten", {"TestSandbox/TestSandbox.cpp", {}, "TestShared/SharedIncludes.hpp"}, "    ", outputStream};
 
     tr.execute();
 
-    if(std::ofstream file{working() / "output" / "io.txt"})
+    if(std::ofstream file{fake_project() / "output" / "io.txt"})
     {
       file << outputStream.str();
     }
 
-    check(equivalence, LINE(""), working(), predictive_materials() / "FakeProject");
+    check(equivalence, LINE(""), fake_project(), predictive_materials() / "FakeProject");
   }
 
   void test_runner_test_creation::test_creation_failure()
   {
-    auto working{
-      [&mat=working_materials()]() { return mat / "FakeProject"; }
-    };
-
     auto pathTrimmer{
       [](std::string mess) {
         const auto pos{mess.find("output/")};
@@ -169,89 +172,76 @@ namespace sequoia::testing
 
     check_exception_thrown<std::runtime_error>(
       LINE("Test Main has empty path"),
-      [working]() {
+      [this]() {
         std::stringstream outputStream{};
-        const auto includeTarget{working().append("TestShared").append("SharedIncludes.hpp")};
-        commandline_arguments args{"", "create", "free", "Plurgh.h"};
-        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", project_paths{working(), file_info{""}, includeTarget}, "  ", outputStream};
+        commandline_arguments args{zeroth_arg(), "create", "free", "Plurgh.h"};
+        test_runner tr{args.size(), args.get(), "Oliver J. Rosten",{"", {}, "TestShared/SharedIncludes.hpp"}, "  ", outputStream};
       });
 
     check_exception_thrown<std::runtime_error>(
       LINE("Test Main does not exist"),
-      [working]() {
+      [this]() {
         std::stringstream outputStream{};
-        const auto includeTarget{working().append("TestShared").append("SharedIncludes.hpp")};
-        commandline_arguments args{"", "create", "free", "Plurgh.h"};
-        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", project_paths{working(), file_info{"FooMain.cpp"}, includeTarget}, "  ", outputStream};
+        commandline_arguments args{zeroth_arg(), "create", "free", "Plurgh.h"};
+        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", {"FooMain.cpp", {}, "TestShared/SharedIncludes.hpp"}, "  ", outputStream};
       });
 
     check_exception_thrown<std::runtime_error>(
       LINE("Include Target has empty path"),
-      [working]() {
-        const auto testMain{working().append("TestSandbox").append("TestSandbox.cpp")};
+      [this]() {
         std::stringstream outputStream{};
-        commandline_arguments args{"", "create", "free", "Plurgh.h"};
-        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", project_paths{working(), testMain, ""}, "  ", outputStream};
+        commandline_arguments args{zeroth_arg(), "create", "free", "Plurgh.h"};
+        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", {"TestSandbox/TestSandbox.cpp", {}, ""}, "  ", outputStream};
       });
 
     check_exception_thrown<std::runtime_error>(
       LINE("Include Target does not exist"),
-      [working]() {
-        const auto testMain{working().append("TestSandbox").append("TestSandbox.cpp")};
+      [this]() {
         std::stringstream outputStream{};
-        commandline_arguments args{"", "create", "free", "Plurgh.h"};
-        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", project_paths{working(), testMain, "FooPath.hpp"}, "  ", outputStream};
+        commandline_arguments args{zeroth_arg(), "create", "free", "Plurgh.h"};
+        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", {"TestSandbox/TestSandbox.cpp", {}, "FooPath.hpp"}, "  ", outputStream};
       });
 
      check_exception_thrown<std::runtime_error>(
        LINE("Project root is empty"),
-       [working]() {
-         const auto testMain{working().append("TestSandbox").append("TestSandbox.cpp")};
-         const auto includeTarget{working().append("TestShared").append("SharedIncludes.hpp")};
+       [this]() {
          std::stringstream outputStream{};
          commandline_arguments args{"", "create", "free", "Plurgh.h"};
-         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", project_paths{"", testMain, includeTarget}, "  ", outputStream};
+         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", {"TestSandbox/TestSandbox.cpp", {}, "TestShared/SharedIncludes.hpp"}, "  ", outputStream};
        });
 
      check_exception_thrown<std::runtime_error>(
        LINE("Project root does not exist"),
-       [working]() {
-         const auto testMain{working().append("TestSandbox").append("TestSandbox.cpp")};
-         const auto includeTarget{working().append("TestShared").append("SharedIncludes.hpp")};
+       [this]() {
          std::stringstream outputStream{};
-         commandline_arguments args{"", "create", "free", "Plurgh.h"};
-         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", project_paths{working() / "FooRepo", testMain, includeTarget}, "  ", outputStream};
+         commandline_arguments args{(fake_project() / "FooRepo").generic_string(), "create", "free", "Plurgh.h"};
+         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", {"TestSandbox/TestSandbox.cpp", {}, "TestShared/SharedIncludes.hpp"}, "  ", outputStream};
        }, pathTrimmer);
 
      check_exception_thrown<std::runtime_error>(
        LINE("Project root not a directory"),
-       [working]() {
-         const auto testMain{working().append("TestSandbox").append("TestSandbox.cpp")};
-         const auto includeTarget{working().append("TestShared").append("SharedIncludes.hpp")};
+       [this]() {
+         const auto includeTarget{fake_project().append("TestShared").append("SharedIncludes.hpp")};
          std::stringstream outputStream{};
-         commandline_arguments args{"", "create", "free", "Plurgh.h"};
-         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", project_paths{includeTarget, testMain, includeTarget}, "  ", outputStream};
+         commandline_arguments args{includeTarget.generic_string(), "create", "free", "Plurgh.h"};
+         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", {"TestSandbox/TestSandbox.cpp", {}, includeTarget}, "  ", outputStream};
        }, pathTrimmer);
 
       check_exception_thrown<std::runtime_error>(
         LINE("Plurgh.h does not exist"),
-        [working]() {
-          const auto testMain{working().append("TestSandbox").append("TestSandbox.cpp")};
-          const auto includeTarget{working().append("TestShared").append("SharedIncludes.hpp")};
+        [this]() {
           std::stringstream outputStream{};
-          commandline_arguments args{"", "create", "free", "Plurgh.h"};
-          test_runner tr{args.size(), args.get(), "Oliver J. Rosten", project_paths{working(), testMain, includeTarget}, "  ", outputStream};
+          commandline_arguments args{zeroth_arg(), "create", "free", "Plurgh.h"};
+          test_runner tr{args.size(), args.get(), "Oliver J. Rosten", {"TestSandbox/TestSandbox.cpp", {}, "TestShared/SharedIncludes.hpp"}, "  ", outputStream};
           tr.execute();
         });
 
       check_exception_thrown<std::runtime_error>(
         LINE("Typo in specified class header"),
-        [working]() {
-          const auto testMain{working().append("TestSandbox").append("TestSandbox.cpp")};
-          const auto includeTarget{working().append("TestShared").append("SharedIncludes.hpp")};
+        [this]() {
           std::stringstream outputStream{};
-          commandline_arguments args{"", "create", "regular_test", "bar::things", "double", "-h", "fakeProject/Stuff/Thingz.hpp"};
-          test_runner tr{args.size(), args.get(), "Oliver J. Rosten", project_paths{working(), testMain, includeTarget}, "  ", outputStream};
+          commandline_arguments args{zeroth_arg(), "create", "regular_test", "bar::things", "double", "-h", "fakeProject/Stuff/Thingz.hpp"};
+          test_runner tr{args.size(), args.get(), "Oliver J. Rosten", {"TestSandbox/TestSandbox.cpp", {}, "TestShared/SharedIncludes.hpp"}, "  ", outputStream};
         });
   }
 }

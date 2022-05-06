@@ -26,8 +26,13 @@ namespace sequoia::testing
     void test_exceptions();
     void test_project_creation();
 
+    [[nodiscard]]
     std::filesystem::path fake_project() const;
 
-    project_paths make_project_paths() const;
+    [[nodiscard]]
+    std::string zeroth_arg() const;
+
+    [[nodiscard]]
+    project_paths::initializer make_project_paths() const;
   };
 }

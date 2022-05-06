@@ -267,15 +267,13 @@ namespace sequoia::testing
     check_exception_thrown<std::runtime_error>(
       LINE("Neither name nor source unique"),
       [this](){
-        commandline_arguments args{""};
-        const auto testMain{aux_project().append("TestSandbox").append("TestSandbox.cpp")};
-        const auto includeTarget{aux_project().append("TestShared").append("SharedIncludes.hpp")};
+        commandline_arguments args{(aux_project() / "build").generic_string()};
         std::stringstream outputStream{};
   
         test_runner runner{args.size(),
                            args.get(),
                            "Oliver J. Rosten",
-                           project_paths{aux_project(), testMain, includeTarget},
+                           {"TestSandbox/TestSandbox.cpp", {}, "TestShared/SharedIncludes.hpp"},
                            "  ",
                            outputStream};
 
@@ -322,17 +320,14 @@ namespace sequoia::testing
     // This is scoped to ensure destruction of the runner - and therefore loggers -
     // before dumping output to a file. The destructors are not trivial in recovery mode.
     {
-      commandline_arguments args{"", "-v", "--recovery", "dump",
+      commandline_arguments args{(aux_project() / "build").generic_string(), "-v", "--recovery", "dump",
                                  "test", "Bar",
                                  "test", "Foo"};
-
-      const auto testMain{aux_project().append("TestSandbox").append("TestSandbox.cpp")};
-      const auto includeTarget{aux_project().append("TestShared").append("SharedIncludes.hpp")};
   
       test_runner runner{args.size(),
                          args.get(),
                          "Oliver J. Rosten",
-                         project_paths{aux_project(), testMain, includeTarget},
+                         {"TestSandbox/TestSandbox.cpp", {}, "TestShared/SharedIncludes.hpp"},
                          "  ",
                          outputStream};
 
@@ -376,15 +371,12 @@ namespace sequoia::testing
   void test_runner_test::test_basic_output()
   {
     std::stringstream outputStream{};
-    commandline_arguments args{""};
-
-    const auto testMain{aux_project().append("TestSandbox").append("TestSandbox.cpp")};
-    const auto includeTarget{aux_project().append("TestShared").append("SharedIncludes.hpp")};
+    commandline_arguments args{(aux_project() / "build").generic_string()};
 
     test_runner runner{args.size(),
                        args.get(),
                        "Oliver J. Rosten",
-                       project_paths{aux_project(), testMain, includeTarget},
+                       {"TestSandbox/TestSandbox.cpp", {}, "TestShared/SharedIncludes.hpp"},
                        "  ",
                        outputStream};
 
@@ -489,8 +481,8 @@ namespace sequoia::testing
     std::stringstream outputStream{};
 
     auto argGenerator{
-      [&extraArgs, numRuns](){
-         std::vector<std::string> argList{"", "locate-instabilities", std::string{numRuns}};
+      [this,&extraArgs, numRuns](){
+         std::vector<std::string> argList{(aux_project() / "build").generic_string(), "locate-instabilities", std::string{numRuns}};
          argList.insert(argList.end(), extraArgs.begin(), extraArgs.end());
          return argList;
       }
@@ -498,15 +490,13 @@ namespace sequoia::testing
 
     commandline_arguments args{argGenerator()};
 
-    const auto testMain{aux_project().append("TestSandbox").append("TestSandbox.cpp")};
-    const auto includeTarget{aux_project().append("TestShared").append("SharedIncludes.hpp")};
 
     test_runner runner{args.size(),
-      args.get(),
-      "Oliver J. Rosten",
-      project_paths{aux_project(), testMain, includeTarget},
-      "  ",
-      outputStream};
+                       args.get(),
+                       "Oliver J. Rosten",
+                       {"TestSandbox/TestSandbox.cpp", {}, "TestShared/SharedIncludes.hpp"},
+                       "  ",
+                       outputStream};
 
     runner.add_test_family(
       "Family",

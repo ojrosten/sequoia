@@ -33,7 +33,7 @@ namespace sequoia::testing
     check_exception_thrown<std::runtime_error>(
       LINE("Project name with space"),
       [this]() {
-        commandline_arguments args{"", "init", "Oliver Jacob Rosten", (working_materials() / "Generated Project").string(), "  "};
+        commandline_arguments args{zeroth_arg(), "init", "Oliver Jacob Rosten", (working_materials() / "Generated Project").string(), "  "};
 
         std::stringstream outputStream{};
         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", make_project_paths(), "  ", outputStream};
@@ -44,7 +44,7 @@ namespace sequoia::testing
     check_exception_thrown<std::runtime_error>(
       LINE("Project name with $"),
       [this]() {
-        commandline_arguments args{"", "init", "Oliver Jacob Rosten", (working_materials() / "Generated$Project").string(), "  "};
+        commandline_arguments args{zeroth_arg(), "init", "Oliver Jacob Rosten", (working_materials() / "Generated$Project").string(), "  "};
 
         std::stringstream outputStream{};
         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", make_project_paths(), "  ", outputStream};
@@ -55,7 +55,7 @@ namespace sequoia::testing
     check_exception_thrown<std::runtime_error>(
       LINE("Project path that is not absolute"),
       [this]() {
-        commandline_arguments args{"", "init", "Oliver Jacob Rosten", "Generated_Project", "  "};
+        commandline_arguments args{zeroth_arg(), "init", "Oliver Jacob Rosten", "Generated_Project", "  "};
 
         std::stringstream outputStream{};
         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", make_project_paths(), "  ", outputStream};
@@ -66,7 +66,7 @@ namespace sequoia::testing
     check_exception_thrown<std::runtime_error>(
       LINE("Empty project path"),
       [this]() {
-        commandline_arguments args{"", "init", "Oliver Jacob Rosten", "", "  "};
+        commandline_arguments args{zeroth_arg(), "init", "Oliver Jacob Rosten", "", "  "};
 
         std::stringstream outputStream{};
         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", make_project_paths(), "  ", outputStream};
@@ -77,7 +77,7 @@ namespace sequoia::testing
     check_exception_thrown<std::runtime_error>(
       LINE("Project name clash"),
       [this]() {
-        commandline_arguments args{"", "init", "Oliver Jacob Rosten", working_materials().string(), "  "};
+        commandline_arguments args{zeroth_arg(), "init", "Oliver Jacob Rosten", working_materials().string(), "  "};
 
         std::stringstream outputStream{};
         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", make_project_paths(), "  ", outputStream};
@@ -95,7 +95,7 @@ namespace sequoia::testing
     check_exception_thrown<std::runtime_error>(
       LINE("Illegal indent"),
       [this]() {
-        commandline_arguments args{"", "init", "Oliver Jacob Rosten", (working_materials() / "GeneratedProject").string(), "  "};
+        commandline_arguments args{zeroth_arg(), "init", "Oliver Jacob Rosten", (working_materials() / "GeneratedProject").string(), "  "};
 
         std::stringstream outputStream{};
         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", make_project_paths(), "\t  x", outputStream};
@@ -106,7 +106,7 @@ namespace sequoia::testing
     check_exception_thrown<std::runtime_error>(
       LINE("Illegal init indent"),
       [this]() {
-        commandline_arguments args{"", "init", "Oliver Jacob Rosten", (working_materials() / "GeneratedProject").string(), "\n"};
+        commandline_arguments args{zeroth_arg(), "init", "Oliver Jacob Rosten", (working_materials() / "GeneratedProject").string(), "\n"};
 
         std::stringstream outputStream{};
         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", make_project_paths(), "  ", outputStream};
@@ -115,20 +115,23 @@ namespace sequoia::testing
       });
   }
 
-
-  project_paths test_runner_project_creation::make_project_paths() const
+  [[nodiscard]]
+  project_paths::initializer test_runner_project_creation::make_project_paths() const
   {
-    const auto testMain{fake_project().append("TestSandbox").append("TestSandbox.cpp")};
-    const auto includeTarget{fake_project().append("TestShared").append("SharedIncludes.hpp")};
-
-    return {fake_project(), testMain, includeTarget};
+    return {"TestSandbox/TestSandbox.cpp", {}, "TestShared/SharedIncludes.hpp"};
   }
 
+  [[nodiscard]]
   std::filesystem::path test_runner_project_creation::fake_project() const
   {
     return working_materials() / "FakeProject";
   }
 
+  [[nodiscard]]
+  std::string test_runner_project_creation::zeroth_arg() const
+  {
+    return (fake_project() / "build").generic_string();
+  }
 
   void test_runner_project_creation::test_project_creation()
   {
@@ -140,7 +143,7 @@ namespace sequoia::testing
         [&mat=working_materials()] () { return mat / "GeneratedProject"; }
       };
 
-      commandline_arguments args{"", "init", "Oliver Jacob Rosten", generated().string(), "  ", "--no-build"};
+      commandline_arguments args{zeroth_arg(), "init", "Oliver Jacob Rosten", generated().string(), "  ", "--no-build"};
 
       std::stringstream outputStream{};
       test_runner tr{args.size(), args.get(), "Oliver J. Rosten", make_project_paths(), "\t", outputStream};
@@ -158,7 +161,7 @@ namespace sequoia::testing
 
     {
       const auto hostDir{working_materials() / "AnotherGeneratedProject"};
-      commandline_arguments args{"", "init", "Oliver Jacob Rosten", hostDir.generic_string(), "  ", "--no-build"};
+      commandline_arguments args{zeroth_arg(), "init", "Oliver Jacob Rosten", hostDir.generic_string(), "  ", "--no-build"};
 
       std::stringstream outputStream{};
       test_runner tr{args.size(), args.get(), "Oliver J. Rosten", make_project_paths(), "\t", outputStream};

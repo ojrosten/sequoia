@@ -18,6 +18,22 @@ namespace sequoia::testing
 {
   namespace fs = std::filesystem;
 
+  namespace
+  {
+    [[nodiscard]]
+    std::vector<file_info> make_ancillary_info(const fs::path& root, const project_paths::initializer& initializer)
+    {
+      std::vector<file_info> ancillaryInfo;
+
+      std::transform(initializer.ancillaryMainCpps.begin(),
+        initializer.ancillaryMainCpps.end(),
+        std::back_inserter(ancillaryInfo),
+        [&root](const fs::path& relPath) { return root / relPath; });
+
+      return ancillaryInfo;
+    }
+  }
+
   [[nodiscard]]
   std::string serializer<fs::path>::make(const fs::path& p)
   {
@@ -68,7 +84,7 @@ namespace sequoia::testing
     if(argc)
     {
       std::string_view zeroth{argv[0]};
-      auto p{fs::canonical(fs::path(zeroth)).parent_path()};
+      auto p{fs::canonical(fs::path(zeroth))};
       if(!p.empty())
       {
         auto back{[](const fs::path& p) { return *(--p.end()); }};
@@ -79,7 +95,8 @@ namespace sequoia::testing
           const auto parent{p.parent_path()};
 
           if(p == parent)
-            throw std::runtime_error{"Unable to locate project root; please ensure that the build directory is a subdirectory of sequoia/build!"};
+            throw std::runtime_error{std::string{"Unable to locate project root from "}.append(zeroth)
+                        .append(" Please ensure that the build directory is a subdirectory of <project> / build!")};
 
           p = parent;
           if(last == "build") break;
@@ -99,28 +116,20 @@ namespace sequoia::testing
     throw_unless_regular_file(m_File, "\nTry ensuring that the application is run from the appropriate directory");
   }
 
-  project_paths::project_paths(const fs::path& projectRoot)
-    : project_paths{projectRoot, projectRoot / "TestAll" / "TestAllMain.cpp", projectRoot / "TestAll" / "TestAllMain.cpp"}
-  {}
-
-  project_paths::project_paths(const fs::path& projectRoot, file_info mainCpp, fs::path includePath)
-    : project_paths(projectRoot, std::move(mainCpp), {}, std::move(includePath))
-  {}
-
-  project_paths::project_paths(const fs::path& projectRoot, file_info mainCpp, const std::vector<file_info>& ancillaryMainCpps, fs::path includePath)
-    : m_MainCpp{std::move(mainCpp)}
-    , m_ProjectRoot{projectRoot}
-    , m_Source{source_path(projectRoot)}
+  project_paths::project_paths(int argc, char** argv, const initializer& pathsFromRoot)
+    : m_ProjectRoot{testing::project_root(argc, argv)}
+    , m_MainCpp{m_ProjectRoot / pathsFromRoot.mainCpp}
+    , m_Source{source_path(m_ProjectRoot)}
     , m_SourceRoot{m_Source.parent_path()}
-    , m_Tests{projectRoot / "Tests"}
-    , m_TestMaterials{projectRoot / "TestMaterials"}
-    , m_Output{projectRoot / "output"}
-    , m_IncludeTarget{std::move(includePath)}
+    , m_Tests{m_ProjectRoot / "Tests"}
+    , m_TestMaterials{m_ProjectRoot / "TestMaterials"}
+    , m_Output{m_ProjectRoot / "output"}
+    , m_CommonIncludes{m_ProjectRoot / pathsFromRoot.commonIncludes}
     , m_CMadeBuildDir{cmade_build_dir(m_ProjectRoot, m_MainCpp.dir())}
-    , m_AncilliaryMainCpps{ancillaryMainCpps}
+    , m_AncillaryMainCpps{make_ancillary_info(m_ProjectRoot, pathsFromRoot)}
   {
-    throw_unless_directory(m_ProjectRoot, "\nTest repository not found");
-    throw_unless_regular_file(m_IncludeTarget, "\nInclude target not found");
+    throw_unless_directory(m_ProjectRoot, "\nRepository root not found");
+    throw_unless_regular_file(m_CommonIncludes, "\nCommon includes not found");
   }
 
   [[nodiscard]]
@@ -197,7 +206,7 @@ namespace sequoia::testing
   [[nodiscard]]
   const fs::path& project_paths::include_target() const noexcept
   {
-    return m_IncludeTarget;
+    return m_CommonIncludes;
   }
 
   [[nodiscard]]
@@ -208,7 +217,7 @@ namespace sequoia::testing
 
   const std::vector<file_info>& project_paths::ancillary_main_cpps() const noexcept
   {
-    return m_AncilliaryMainCpps;
+    return m_AncillaryMainCpps;
   }
 
   [[nodiscard]]

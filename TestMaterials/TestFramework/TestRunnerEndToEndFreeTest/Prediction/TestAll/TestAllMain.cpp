@@ -35,8 +35,7 @@ int main(int argc, char** argv)
 		using namespace testing;
 		using namespace std::literals::chrono_literals;
 
-		const auto paths{project_paths{project_root(argc, argv)}};
-		test_runner runner{argc, argv, "Oliver Jacob Rosten", paths, "\t"};
+		test_runner runner{argc, argv, "Oliver Jacob Rosten", "\t"};
 
 		runner.add_test_family(
 			"Utilities",

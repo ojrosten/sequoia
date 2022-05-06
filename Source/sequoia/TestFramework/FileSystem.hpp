@@ -59,16 +59,16 @@ namespace sequoia::testing
   class project_paths
   {
   public:
-    explicit project_paths(const std::filesystem::path& projectRoot);
+    struct initializer
+    {
+      std::filesystem::path mainCpp;
 
-    project_paths(const std::filesystem::path& projectRoot,
-                  file_info mainCpp,
-                  std::filesystem::path includePath);
+      std::vector<std::string> ancillaryMainCpps{};
 
-    project_paths(const std::filesystem::path& projectRoot,
-                  file_info mainCpp,
-                  const std::vector<file_info>& ancillaryMainCpps,
-                  std::filesystem::path includePath);
+      std::filesystem::path commonIncludes{};
+    };
+
+    project_paths(int argc, char** argv, const initializer& pathsFromRoot);
 
     [[nodiscard]]
     static std::filesystem::path source_path(const std::filesystem::path& projectRoot);
@@ -112,19 +112,21 @@ namespace sequoia::testing
     [[nodiscard]]
     static std::filesystem::path cmade_build_dir(const std::filesystem::path& projectRoot, const std::filesystem::path& mainCppDir);
   private:
-    file_info m_MainCpp;
-
     std::filesystem::path
-      m_ProjectRoot{},
+      m_ProjectRoot{};
+
+    file_info m_MainCpp;
+    
+    std::filesystem::path
       m_Source{},
       m_SourceRoot{},
       m_Tests{},
       m_TestMaterials{},
       m_Output{},
-      m_IncludeTarget{},
+      m_CommonIncludes{},
       m_CMadeBuildDir{};
 
-    std::vector<file_info> m_AncilliaryMainCpps{};
+    std::vector<file_info> m_AncillaryMainCpps{};
   };
 
 

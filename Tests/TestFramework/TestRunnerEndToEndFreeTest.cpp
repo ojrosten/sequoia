@@ -212,14 +212,10 @@ namespace sequoia::testing
   void test_runner_end_to_end_test::test_project_creation()
   {
     const auto seqRoot{test_repository().parent_path()};
-    const auto testMain{seqRoot/"TestAll/TestMain.cpp"};
-    const auto includeTarget{seqRoot/"TestCommon/TestIncludes.hpp"};
-
-    const project_paths paths{seqRoot, testMain, includeTarget};
 
     check(LINE("Command processor existance"), std::system(nullptr) > 0);
 
-    commandline_arguments args{"",
+    commandline_arguments args{(seqRoot / "build").generic_string(),
                                "init",
                                "Oliver Jacob Rosten",
                                generated_project().string(),
@@ -228,7 +224,7 @@ namespace sequoia::testing
                                "--no-ide"};
 
     std::stringstream outputStream{};
-    test_runner tr{args.size(), args.get(), "Oliver J. Rosten", paths, "  ", outputStream};
+    test_runner tr{args.size(), args.get(), "Oliver J. Rosten", {"TestAll/TestMain.cpp", {}, "TestCommon/TestIncludes.hpp"}, "  ", outputStream};
 
     //=================== Initialize, cmake and build new project ===================//
 
