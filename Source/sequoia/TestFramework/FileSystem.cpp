@@ -79,7 +79,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  fs::path project_root(int argc, char** argv, const std::filesystem::path& fallback)
+  fs::path project_root(int argc, char** argv)
   {
     if(argc)
     {
@@ -94,19 +94,18 @@ namespace sequoia::testing
           const auto last{back(p)};
           const auto parent{p.parent_path()};
 
-          if(p == parent)
-            throw std::runtime_error{std::string{"Unable to locate project root from "}.append(zeroth)
-                        .append(" Please ensure that the build directory is a subdirectory of <project> / build!")};
+          if(p == parent) break;
 
           p = parent;
-          if(last == "build") break;
+          if(last == "build") return p;
         }
-
-        return p;
       }
+
+      throw std::runtime_error{std::string{"Unable to locate project root from path \""}.append(zeroth)
+                  .append("\". Please ensure that the build directory is a subdirectory of <project>/build.")};
     }
 
-    return fallback;
+    throw std::runtime_error{"Unable to locate project root as no commandline arguments supplied."};
   }
 
   file_info::file_info(fs::path file)

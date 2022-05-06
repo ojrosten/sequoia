@@ -219,12 +219,12 @@ namespace sequoia::testing
        }, pathTrimmer);
 
      check_exception_thrown<std::runtime_error>(
-       LINE("Project root not a directory"),
+       LINE("Project root not findable"),
        [this]() {
-         const auto includeTarget{fake_project().append("TestShared").append("SharedIncludes.hpp")};
+         const auto zerothArg{fake_project().append("TestShared").generic_string()};
          std::stringstream outputStream{};
-         commandline_arguments args{includeTarget.generic_string(), "create", "free", "Plurgh.h"};
-         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", {"TestSandbox/TestSandbox.cpp", {}, includeTarget}, "  ", outputStream};
+         commandline_arguments args{zerothArg, "create", "free", "Plurgh.h"};
+         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", {"TestSandbox/TestSandbox.cpp", {}, "TestShared/SharedIncludes.hpp"}, "  ", outputStream};
        }, pathTrimmer);
 
       check_exception_thrown<std::runtime_error>(

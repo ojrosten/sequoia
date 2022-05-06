@@ -131,7 +131,7 @@ namespace sequoia::testing
 
 
   [[nodiscard]]
-  std::filesystem::path project_root(int argc, char** argv, const std::filesystem::path& fallback=working_path().parent_path());
+  std::filesystem::path project_root(int argc, char** argv);
 
   [[nodiscard]]
   std::filesystem::path aux_files_path(std::filesystem::path projectRoot);

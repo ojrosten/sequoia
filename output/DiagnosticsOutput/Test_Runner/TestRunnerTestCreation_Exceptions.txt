@@ -101,9 +101,7 @@ Project root is empty
 
 Expected Exception Type:
 [std::runtime_error]
-C:/Users/olive/OneDrive/sequoia/build/CMade/win/TestSandbox/TestSandbox.cpp not found
-
-Try ensuring that the application is run from the appropriate directory
+Unable to locate project root from path "". Please ensure that the build directory is a subdirectory of <project>/build.
 
 	=======================================
 
@@ -117,11 +115,11 @@ output/TestsTemporaryData/TestFramework/TestRunnerTestCreation/WorkingCopy/FakeP
 	=======================================
 
 Tests/TestFramework/TestRunnerTestCreation.cpp, Line 222
-Project root not a directory
+Project root not findable
 
 Expected Exception Type:
 [std::runtime_error]
-output/TestsTemporaryData/TestFramework/TestRunnerTestCreation/WorkingCopy/FakeProject/TestShared/SharedIncludes.hpp Please ensure that the build directory is a subdirectory of <project> / build!
+output/TestsTemporaryData/TestFramework/TestRunnerTestCreation/WorkingCopy/FakeProject/TestShared". Please ensure that the build directory is a subdirectory of <project>/build.
 
 	=======================================
 
