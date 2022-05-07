@@ -83,26 +83,27 @@ namespace sequoia::testing
   {
     if(argc)
     {
-      std::string_view zeroth{argv[0]};
-      auto p{fs::canonical(fs::path(zeroth))};
-      if(!p.empty())
+      if(std::string_view zeroth{argv[0]}; !zeroth.empty())
       {
-        auto back{[](const fs::path& p) { return *(--p.end()); }};
-
-        while((std::distance(p.begin(), p.end()) > 1))
+        if(auto p{fs::canonical(fs::path(zeroth))}; !p.empty())
         {
-          const auto last{back(p)};
-          const auto parent{p.parent_path()};
+          auto back{[](const fs::path& p) { return *(--p.end()); }};
 
-          if(p == parent) break;
+          while((std::distance(p.begin(), p.end()) > 1))
+          {
+            const auto last{back(p)};
+            const auto parent{p.parent_path()};
 
-          p = parent;
-          if(last == "build") return p;
+            if(p == parent) break;
+
+            p = parent;
+            if(last == "build") return p;
+          }
         }
-      }
 
-      throw std::runtime_error{std::string{"Unable to locate project root from path \""}.append(zeroth)
-                  .append("\". Please ensure that the build directory is a subdirectory of <project>/build.")};
+        throw std::runtime_error{std::string{"Unable to locate project root from path:\n"}.append(zeroth)
+                    .append("\nPlease ensure that the build directory is a subdirectory of <project>/build.")};
+      }
     }
 
     throw std::runtime_error{"Unable to locate project root as no commandline arguments supplied."};

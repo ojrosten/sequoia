@@ -52,60 +52,60 @@ Expected Exception Type:
 
 	=======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 174
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 179
 Test Main has empty path
 
 Expected Exception Type:
 [std::runtime_error]
-C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTestCreation/WorkingCopy/FakeProject/  is not a regular file
+output/TestsTemporaryData/TestFramework/TestRunnerTestCreation/WorkingCopy/FakeProject/  is not a regular file
 
 Try ensuring that the application is run from the appropriate directory
 
 	=======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 182
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 188
 Test Main does not exist
 
 Expected Exception Type:
 [std::runtime_error]
-C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTestCreation/WorkingCopy/FakeProject/FooMain.cpp not found
+output/TestsTemporaryData/TestFramework/TestRunnerTestCreation/WorkingCopy/FakeProject/FooMain.cpp not found
 
 Try ensuring that the application is run from the appropriate directory
 
 	=======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 190
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 197
 Include Target has empty path
 
 Expected Exception Type:
 [std::runtime_error]
-C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTestCreation/WorkingCopy/FakeProject/  is not a regular file
-
-Common includes not found
-
-	=======================================
-
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 198
-Include Target does not exist
-
-Expected Exception Type:
-[std::runtime_error]
-C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTestCreation/WorkingCopy/FakeProject/FooPath.hpp not found
+output/TestsTemporaryData/TestFramework/TestRunnerTestCreation/WorkingCopy/FakeProject/  is not a regular file
 
 Common includes not found
 
 	=======================================
 
 Tests/TestFramework/TestRunnerTestCreation.cpp, Line 206
+Include Target does not exist
+
+Expected Exception Type:
+[std::runtime_error]
+output/TestsTemporaryData/TestFramework/TestRunnerTestCreation/WorkingCopy/FakeProject/FooPath.hpp not found
+
+Common includes not found
+
+	=======================================
+
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 215
 Project root is empty
 
 Expected Exception Type:
 [std::runtime_error]
-Unable to locate project root from path "". Please ensure that the build directory is a subdirectory of <project>/build.
+Unable to locate project root as no commandline arguments supplied.
 
 	=======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 214
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 223
 Project root does not exist
 
 Expected Exception Type:
@@ -114,16 +114,18 @@ output/TestsTemporaryData/TestFramework/TestRunnerTestCreation/WorkingCopy/FakeP
 
 	=======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 222
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 231
 Project root not findable
 
 Expected Exception Type:
 [std::runtime_error]
-output/TestsTemporaryData/TestFramework/TestRunnerTestCreation/WorkingCopy/FakeProject/TestShared". Please ensure that the build directory is a subdirectory of <project>/build.
+Unable to locate project root from path:
+output/TestsTemporaryData/TestFramework/TestRunnerTestCreation/WorkingCopy/FakeProject/TestShared
+Please ensure that the build directory is a subdirectory of <project>/build.
 
 	=======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 231
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 240
 Plurgh.h does not exist
 
 Expected Exception Type:
@@ -133,7 +135,7 @@ Unable to locate file Plurgh.h or Plurgh.hpp or Plurgh.hxx in the source reposit
 
 	=======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 240
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 249
 Typo in specified class header
 
 Expected Exception Type:

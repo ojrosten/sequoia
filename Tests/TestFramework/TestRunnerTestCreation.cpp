@@ -163,8 +163,13 @@ namespace sequoia::testing
   {
     auto pathTrimmer{
       [](std::string mess) {
-        const auto pos{mess.find("output/")};
-        if(pos < mess.size()) mess.erase(0, pos);
+        if(const auto pos{mess.find("output/")}; pos < mess.size())
+        {
+          const auto startPos{mess.rfind('\n', pos)};
+          const auto eraseFrom{startPos < pos ? startPos+1 : 0};
+
+          mess.erase(eraseFrom, pos-eraseFrom);
+        }
 
         return mess;
       }
@@ -176,7 +181,8 @@ namespace sequoia::testing
         std::stringstream outputStream{};
         commandline_arguments args{zeroth_arg(), "create", "free", "Plurgh.h"};
         test_runner tr{args.size(), args.get(), "Oliver J. Rosten",{"", {}, "TestShared/SharedIncludes.hpp"}, "  ", outputStream};
-      });
+      },
+      pathTrimmer);
 
     check_exception_thrown<std::runtime_error>(
       LINE("Test Main does not exist"),
@@ -184,7 +190,8 @@ namespace sequoia::testing
         std::stringstream outputStream{};
         commandline_arguments args{zeroth_arg(), "create", "free", "Plurgh.h"};
         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", {"FooMain.cpp", {}, "TestShared/SharedIncludes.hpp"}, "  ", outputStream};
-      });
+      },
+      pathTrimmer);
 
     check_exception_thrown<std::runtime_error>(
       LINE("Include Target has empty path"),
@@ -192,7 +199,8 @@ namespace sequoia::testing
         std::stringstream outputStream{};
         commandline_arguments args{zeroth_arg(), "create", "free", "Plurgh.h"};
         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", {"TestSandbox/TestSandbox.cpp", {}, ""}, "  ", outputStream};
-      });
+      },
+      pathTrimmer);
 
     check_exception_thrown<std::runtime_error>(
       LINE("Include Target does not exist"),
@@ -200,7 +208,8 @@ namespace sequoia::testing
         std::stringstream outputStream{};
         commandline_arguments args{zeroth_arg(), "create", "free", "Plurgh.h"};
         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", {"TestSandbox/TestSandbox.cpp", {}, "FooPath.hpp"}, "  ", outputStream};
-      });
+      },
+      pathTrimmer);
 
      check_exception_thrown<std::runtime_error>(
        LINE("Project root is empty"),
