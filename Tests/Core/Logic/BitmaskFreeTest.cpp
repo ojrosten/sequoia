@@ -50,15 +50,15 @@ namespace sequoia::testing
     using edge_t = transition_checker<mask>::edge;
 
     mask_graph g{
-      { { edge_t{1, "none | a", [](mask m) -> mask { return {m | mask::a}; }} }, // 0: none
-        { edge_t{3, "a | b", [](mask m) -> mask { return {m | mask::b}; }},
+      { { edge_t{1, "none | a", [](mask m) -> mask { return m | mask::a; }} }, // 0: none
+        { edge_t{3, "a | b", [](mask m) -> mask { return m | mask::b; }},
           edge_t{7, "a |= (b |= c)", [](mask m) -> mask {(m |= mask::b) |= mask::c; return m; }},
-          edge_t{0, "a ^ a", [](mask m) -> mask { return {m ^ mask::a}; }},
-          edge_t{1, "a & a", [](mask m) -> mask { return {m & mask::a}; }}
+          edge_t{0, "a ^ a", [](mask m) -> mask { return m ^ mask::a; }},
+          edge_t{1, "a & a", [](mask m) -> mask { return m & mask::a; }}
         }, // 1: a
         { }, // 2: b
-        { edge_t{1, "a|b & ~b", [](mask m) -> mask { return {m & ~mask::b}; }},
-          edge_t{2, "a|b & ~a", [](mask m) -> mask { return {m & ~mask::a}; }},
+        { edge_t{1, "a|b & ~b", [](mask m) -> mask { return m & ~mask::b; }},
+          edge_t{2, "a|b & ~a", [](mask m) -> mask { return m & ~mask::a; }},
           edge_t{6, "((a|b) ^= a) ^= c", [](mask m) -> mask { (m ^= mask::a) ^= mask::c; return m; }}}, // 3: a|b
         {  }, // 4: c
         {  }, // 5: a|c
