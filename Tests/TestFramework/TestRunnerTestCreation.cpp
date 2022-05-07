@@ -163,7 +163,11 @@ namespace sequoia::testing
   {
     auto pathTrimmer{
       [](std::string mess) {
-        if(const auto pos{mess.find("output/")}; pos < mess.size())
+        if(mess.find("canonical") != std::string::npos)
+        {
+          mess = "canonical: unable to find path";
+        }
+        else if(const auto pos{mess.find("output/")}; pos < mess.size())
         {
           const auto startPos{mess.rfind('\n', pos)};
           const auto eraseFrom{startPos < pos ? startPos+1 : 0};
