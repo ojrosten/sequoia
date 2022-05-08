@@ -52,80 +52,7 @@ Expected Exception Type:
 
 	=======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 183
-Test Main has empty path
-
-Expected Exception Type:
-[std::runtime_error]
-output/TestsTemporaryData/TestFramework/TestRunnerTestCreation/WorkingCopy/FakeProject/  is not a regular file
-
-Try ensuring that the application is run from the appropriate directory
-
-	=======================================
-
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 192
-Test Main does not exist
-
-Expected Exception Type:
-[std::runtime_error]
-output/TestsTemporaryData/TestFramework/TestRunnerTestCreation/WorkingCopy/FakeProject/FooMain.cpp not found
-
-Try ensuring that the application is run from the appropriate directory
-
-	=======================================
-
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 201
-Include Target has empty path
-
-Expected Exception Type:
-[std::runtime_error]
-output/TestsTemporaryData/TestFramework/TestRunnerTestCreation/WorkingCopy/FakeProject/  is not a regular file
-
-Common includes not found
-
-	=======================================
-
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 210
-Include Target does not exist
-
-Expected Exception Type:
-[std::runtime_error]
-output/TestsTemporaryData/TestFramework/TestRunnerTestCreation/WorkingCopy/FakeProject/FooPath.hpp not found
-
-Common includes not found
-
-	=======================================
-
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 219
-Project root is empty
-
-Expected Exception Type:
-[std::runtime_error]
-Unable to locate project root as no commandline arguments supplied.
-
-	=======================================
-
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 227
-Project root does not exist
-
-Expected Exception Type:
-[std::runtime_error]
-canonical: unable to find path
-
-	=======================================
-
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 235
-Project root not findable
-
-Expected Exception Type:
-[std::runtime_error]
-Unable to locate project root from path:
-output/TestsTemporaryData/TestFramework/TestRunnerTestCreation/WorkingCopy/FakeProject/TestShared
-Please ensure that the build directory is a subdirectory of <project>/build.
-
-	=======================================
-
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 244
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 165
 Plurgh.h does not exist
 
 Expected Exception Type:
@@ -135,7 +62,7 @@ Unable to locate file Plurgh.h or Plurgh.hpp or Plurgh.hxx in the source reposit
 
 	=======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 253
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 174
 Typo in specified class header
 
 Expected Exception Type:

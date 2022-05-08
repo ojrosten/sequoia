@@ -257,17 +257,104 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path test_runner_test::aux_project() const
+  std::filesystem::path test_runner_test::fake_project() const
   {
     return auxiliary_materials() /  "FakeProject";
   }
 
+  [[nodiscard]]
+  std::string test_runner_test::zeroth_arg() const
+  {
+    return (fake_project() / "build").generic_string();
+  }
+
   void test_runner_test::test_exceptions()
   {
+    auto pathTrimmer{
+      [](std::string mess) {
+        if(mess.find("canonical") != std::string::npos)
+        {
+          mess = "canonical: unable to find path";
+        }
+        else if(const auto pos{mess.find("output/")}; pos < mess.size())
+        {
+          const auto startPos{mess.rfind('\n', pos)};
+          const auto eraseFrom{startPos < pos ? startPos + 1 : 0};
+
+          mess.erase(eraseFrom, pos - eraseFrom);
+        }
+
+        return mess;
+      }
+    };
+
+    check_exception_thrown<std::runtime_error>(
+      LINE("Test Main has empty path"),
+      [this]() {
+        std::stringstream outputStream{};
+        commandline_arguments args{zeroth_arg()};
+        test_runner tr{args.size(), args.get(), "Oliver J. Rosten",{"", {}, "TestShared/SharedIncludes.hpp"}, "  ", outputStream};
+      },
+      pathTrimmer);
+
+    check_exception_thrown<std::runtime_error>(
+      LINE("Test Main does not exist"),
+      [this]() {
+        std::stringstream outputStream{};
+        commandline_arguments args{zeroth_arg()};
+        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", {"FooMain.cpp", {}, "TestShared/SharedIncludes.hpp"}, "  ", outputStream};
+      },
+      pathTrimmer);
+
+    check_exception_thrown<std::runtime_error>(
+      LINE("Include Target has empty path"),
+      [this]() {
+        std::stringstream outputStream{};
+        commandline_arguments args{zeroth_arg()};
+        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", {"TestSandbox/TestSandbox.cpp", {}, ""}, "  ", outputStream};
+      },
+      pathTrimmer);
+
+    check_exception_thrown<std::runtime_error>(
+      LINE("Include Target does not exist"),
+      [this]() {
+        std::stringstream outputStream{};
+        commandline_arguments args{zeroth_arg()};
+        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", {"TestSandbox/TestSandbox.cpp", {}, "FooPath.hpp"}, "  ", outputStream};
+      },
+      pathTrimmer);
+
+    check_exception_thrown<std::runtime_error>(
+      LINE("Project root is empty"),
+      [this]() {
+        std::stringstream outputStream{};
+        commandline_arguments args{""};
+        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", {"TestSandbox/TestSandbox.cpp", {}, "TestShared/SharedIncludes.hpp"}, "  ", outputStream};
+      });
+
+    check_exception_thrown<std::runtime_error>(
+      LINE("Project root does not exist"),
+      [this]() {
+        std::stringstream outputStream{};
+        commandline_arguments args{(fake_project() / "FooRepo").generic_string()};
+        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", {"TestSandbox/TestSandbox.cpp", {}, "TestShared/SharedIncludes.hpp"}, "  ", outputStream};
+      },
+      pathTrimmer);
+
+    check_exception_thrown<std::runtime_error>(
+      LINE("Project root not findable"),
+      [this]() {
+        const auto zerothArg{fake_project().append("TestShared").generic_string()};
+        std::stringstream outputStream{};
+        commandline_arguments args{zerothArg};
+        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", {"TestSandbox/TestSandbox.cpp", {}, "TestShared/SharedIncludes.hpp"}, "  ", outputStream};
+      },
+      pathTrimmer);
+
     check_exception_thrown<std::runtime_error>(
       LINE("Neither name nor source unique"),
       [this](){
-        commandline_arguments args{(aux_project() / "build").generic_string()};
+        commandline_arguments args{(fake_project() / "build").generic_string()};
         std::stringstream outputStream{};
   
         test_runner runner{args.size(),
@@ -320,7 +407,7 @@ namespace sequoia::testing
     // This is scoped to ensure destruction of the runner - and therefore loggers -
     // before dumping output to a file. The destructors are not trivial in recovery mode.
     {
-      commandline_arguments args{(aux_project() / "build").generic_string(), "-v", "--recovery", "dump",
+      commandline_arguments args{(fake_project() / "build").generic_string(), "-v", "--recovery", "dump",
                                  "test", "Bar",
                                  "test", "Foo"};
   
@@ -357,9 +444,9 @@ namespace sequoia::testing
       file << outputStream.str();
     }
 
-    fs::copy(aux_project() / "output" / "Recovery" / "Recovery.txt", working_materials() / "RecoveryAndDumpOutput");
-    fs::copy(aux_project() / "output" / "Recovery" / "Dump.txt", working_materials() / "RecoveryAndDumpOutput");
-    fs::copy(aux_project() / "output" / "TestSummaries",
+    fs::copy(fake_project() / "output" / "Recovery" / "Recovery.txt", working_materials() / "RecoveryAndDumpOutput");
+    fs::copy(fake_project() / "output" / "Recovery" / "Dump.txt", working_materials() / "RecoveryAndDumpOutput");
+    fs::copy(fake_project() / "output" / "TestSummaries",
              working_materials() / "RecoveryAndDumpOutput" / "TestSummaries",
              fs::copy_options::recursive);
 
@@ -371,7 +458,7 @@ namespace sequoia::testing
   void test_runner_test::test_basic_output()
   {
     std::stringstream outputStream{};
-    commandline_arguments args{(aux_project() / "build").generic_string()};
+    commandline_arguments args{(fake_project() / "build").generic_string()};
 
     test_runner runner{args.size(),
                        args.get(),
@@ -482,7 +569,7 @@ namespace sequoia::testing
 
     auto argGenerator{
       [this,&extraArgs, numRuns](){
-         std::vector<std::string> argList{(aux_project() / "build").generic_string(), "locate-instabilities", std::string{numRuns}};
+         std::vector<std::string> argList{(fake_project() / "build").generic_string(), "locate-instabilities", std::string{numRuns}};
          argList.insert(argList.end(), extraArgs.begin(), extraArgs.end());
          return argList;
       }

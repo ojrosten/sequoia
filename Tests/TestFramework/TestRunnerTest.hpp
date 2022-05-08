@@ -55,6 +55,9 @@ namespace sequoia::testing
                                    Ts&&... ts);
 
     [[nodiscard]]
-    std::filesystem::path aux_project() const;
+    std::filesystem::path fake_project() const;
+
+    [[nodiscard]]
+    std::string zeroth_arg() const;
   };
 }
