@@ -33,9 +33,6 @@ namespace sequoia::testing
     static std::string make(const std::filesystem::file_type& val);
   };
 
-  [[nodiscard]]
-  const std::filesystem::path& working_path();
-
   class file_info
   {
   public:
@@ -54,6 +51,11 @@ namespace sequoia::testing
     friend bool operator!=(const file_info&, const file_info&) noexcept = default;
   private:
     std::filesystem::path m_File{}, m_Dir{};
+  };
+
+  struct discoverable_paths
+  {
+    std::filesystem::path root, executable;
   };
 
   class project_paths
@@ -75,6 +77,9 @@ namespace sequoia::testing
 
     [[nodiscard]]
     const std::filesystem::path& project_root() const noexcept;
+
+    [[nodiscard]]
+    const std::filesystem::path& executable() const noexcept;
 
     [[nodiscard]]
     const std::filesystem::path& source() const noexcept;
@@ -112,8 +117,7 @@ namespace sequoia::testing
     [[nodiscard]]
     static std::filesystem::path cmade_build_dir(const std::filesystem::path& projectRoot, const std::filesystem::path& mainCppDir);
   private:
-    std::filesystem::path
-      m_ProjectRoot{};
+    discoverable_paths m_Discovered;
 
     file_info m_MainCpp;
     
@@ -131,7 +135,7 @@ namespace sequoia::testing
 
 
   [[nodiscard]]
-  std::filesystem::path project_root(int argc, char** argv);
+  discoverable_paths discover_paths(int argc, char** argv);
 
   [[nodiscard]]
   std::filesystem::path aux_files_path(std::filesystem::path projectRoot);

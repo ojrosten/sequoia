@@ -72,32 +72,26 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  const fs::path& working_path()
-  {
-    const static auto working{std::filesystem::current_path().lexically_normal()};
-    return working;
-  }
-
-  [[nodiscard]]
-  fs::path project_root(int argc, char** argv)
+  discoverable_paths discover_paths(int argc, char** argv)
   {
     if(argc)
     {
       if(std::string_view zeroth{argv[0]}; !zeroth.empty())
       {
-        if(auto p{fs::canonical(fs::path(zeroth))}; !p.empty())
+        if(const auto exectable{fs::canonical(fs::path(zeroth))}; !exectable.empty())
         {
           auto back{[](const fs::path& p) { return *(--p.end()); }};
 
-          while((std::distance(p.begin(), p.end()) > 1))
+          auto trialRoot{exectable};
+          while((std::distance(trialRoot.begin(), trialRoot.end()) > 1))
           {
-            const auto last{back(p)};
-            const auto parent{p.parent_path()};
+            const auto last{back(trialRoot)};
+            const auto parent{trialRoot.parent_path()};
 
-            if(p == parent) break;
+            if(trialRoot == parent) break;
 
-            p = parent;
-            if(last == "build") return p;
+            trialRoot = parent;
+            if(last == "build") return {trialRoot, exectable};
           }
         }
 
@@ -117,18 +111,18 @@ namespace sequoia::testing
   }
 
   project_paths::project_paths(int argc, char** argv, const initializer& pathsFromRoot)
-    : m_ProjectRoot{testing::project_root(argc, argv)}
-    , m_MainCpp{m_ProjectRoot / pathsFromRoot.mainCpp}
-    , m_Source{source_path(m_ProjectRoot)}
+    : m_Discovered{discover_paths(argc, argv)}
+    , m_MainCpp{project_root() / pathsFromRoot.mainCpp}
+    , m_Source{source_path(project_root())}
     , m_SourceRoot{m_Source.parent_path()}
-    , m_Tests{m_ProjectRoot / "Tests"}
-    , m_TestMaterials{m_ProjectRoot / "TestMaterials"}
-    , m_Output{m_ProjectRoot / "output"}
-    , m_CommonIncludes{m_ProjectRoot / pathsFromRoot.commonIncludes}
-    , m_CMadeBuildDir{cmade_build_dir(m_ProjectRoot, m_MainCpp.dir())}
-    , m_AncillaryMainCpps{make_ancillary_info(m_ProjectRoot, pathsFromRoot)}
+    , m_Tests{project_root() / "Tests"}
+    , m_TestMaterials{project_root() / "TestMaterials"}
+    , m_Output{project_root() / "output"}
+    , m_CommonIncludes{project_root() / pathsFromRoot.commonIncludes}
+    , m_CMadeBuildDir{cmade_build_dir(project_root(), m_MainCpp.dir())}
+    , m_AncillaryMainCpps{make_ancillary_info(project_root(), pathsFromRoot)}
   {
-    throw_unless_directory(m_ProjectRoot, "\nRepository root not found");
+    throw_unless_directory(project_root(), "\nRepository root not found");
     throw_unless_regular_file(m_CommonIncludes, "\nCommon includes not found");
   }
 
@@ -164,7 +158,13 @@ namespace sequoia::testing
   [[nodiscard]]
   const fs::path& project_paths::project_root() const noexcept
   {
-    return m_ProjectRoot;
+    return m_Discovered.root;
+  }
+
+  [[nodiscard]]
+  const fs::path& project_paths::executable() const noexcept
+  {
+    return m_Discovered.executable;
   }
 
   [[nodiscard]]

@@ -94,8 +94,6 @@ namespace sequoia::testing
     template<std::input_or_output_iterator Iter, std::sentinel_for<Iter> Sentinel>
     void update_prune_info(Iter startFailedTests, Sentinel endFailedTests);
 
-    void executable_time_stamp(const std::filesystem::path& exe);
-
     [[nodiscard]]
     std::string check_argument_consistency(concurrency_mode mode);
 
@@ -182,6 +180,8 @@ namespace sequoia::testing
     std::vector<family_vessel> m_Families{};
     family_map                 m_SelectedFamilies{};
     source_list                m_SelectedSources{};
+
+    void store_executable_time_stamp();
 
     bool mark_family(std::string_view name);
 

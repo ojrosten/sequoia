@@ -38,7 +38,9 @@ namespace sequoia::testing
 
   family_selector::family_selector(project_paths paths)
     : m_Paths{std::move(paths)}
-  {}
+  {
+    store_executable_time_stamp();
+  }
 
   const project_paths& family_selector::proj_paths() const noexcept
   {
@@ -153,10 +155,10 @@ namespace sequoia::testing
     }
   }
 
-  void family_selector::executable_time_stamp(const std::filesystem::path& exe)
+  void family_selector::store_executable_time_stamp()
   {
-    if(fs::exists(exe))
-      m_PruneInfo.stamps.executable = fs::last_write_time(exe);
+    if(fs::exists(m_Paths.executable()))
+      m_PruneInfo.stamps.executable = fs::last_write_time(m_Paths.executable());
   }
 
   [[nodiscard]]

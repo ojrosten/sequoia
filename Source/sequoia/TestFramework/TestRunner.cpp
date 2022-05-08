@@ -380,11 +380,7 @@ namespace sequoia::testing
                     }
                   }}}
                 },
-                [this](std::string_view exe){
-                    const fs::path executable{exe};
-                    m_Executable = executable.is_absolute() ? executable : working_path() / executable;
-                    m_Selector.executable_time_stamp(m_Executable);
-                })
+                [this](std::string_view){})
         };
 
     if(!help.empty())
@@ -483,7 +479,7 @@ namespace sequoia::testing
 
     if(m_InstabilityMode == instability_mode::coordinator)
     {
-      if(m_Executable.empty())
+      if(proj_paths().executable().empty())
         throw std::runtime_error{"Unable to run in sandbox mode, as executable cannot be found"};
 
       const auto specified{
@@ -524,9 +520,9 @@ namespace sequoia::testing
 
       for(std::size_t i{}; i < m_NumReps; ++i)
       {
-        invoke(runtime::shell_command(m_Executable.string().append(" locate ").append(std::to_string(m_NumReps))
-                                                           .append(" --runner-id ").append(std::to_string(i)).append(specified)
-                                                           .append(asyncOption())));
+        invoke(runtime::shell_command(proj_paths().executable().string().append(" locate ").append(std::to_string(m_NumReps))
+                                                               .append(" --runner-id ").append(std::to_string(i)).append(specified)
+                                                               .append(asyncOption())));
       }
     }
     else
