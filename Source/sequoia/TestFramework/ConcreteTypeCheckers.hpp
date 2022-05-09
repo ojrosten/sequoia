@@ -50,6 +50,7 @@
 #include "sequoia/TestFramework/FileEditors.hpp"
 #include "sequoia/TestFramework/FileSystemUtilities.hpp"
 #include "sequoia/Core/Object/Factory.hpp"
+#include "sequoia/FileSystem/FileSystem.hpp"
 #include "sequoia/Streaming/Streaming.hpp"
 
 #include <any>
@@ -462,8 +463,8 @@ namespace sequoia::testing
       {
         if(!path.empty())
         {
-          const auto pathFinalToken{*(--path.end())};
-          const auto predictionFinalToken{*(--prediction.end())};
+          const auto pathFinalToken{back(path)};
+          const auto predictionFinalToken{back(prediction)};
           if(compare(pathFinalToken, predictionFinalToken))
           {
             switch(pathType)

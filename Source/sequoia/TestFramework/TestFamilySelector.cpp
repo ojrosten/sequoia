@@ -12,6 +12,7 @@
 #include "sequoia/TestFramework/TestFamilySelector.hpp"
 
 #include "sequoia/TestFramework/DependencyAnalyzer.hpp"
+#include "sequoia/FileSystem/FileSystem.hpp"
 #include "sequoia/Parsing/CommandLineArguments.hpp"
 
 #include <fstream>
@@ -256,7 +257,7 @@ namespace sequoia::testing
       [&filename, &repo = m_Paths.tests(), &root = m_Paths.project_root()](const auto& element){
       const auto& source{element.first};
 
-      if(filename.empty() || source.empty() || ((*--source.end()) != (*--filename.end())))
+      if(filename.empty() || source.empty() || (back(source) != back(filename)))
         return false;
 
       if(filename == source) return true;

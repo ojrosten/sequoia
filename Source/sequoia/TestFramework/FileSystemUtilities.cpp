@@ -9,6 +9,7 @@
     \brief Definitions for FileSystemUtilities.hpp
  */
 
+#include "sequoia/FileSystem/FileSystem.hpp"
 #include "sequoia/TestFramework/FileSystemUtilities.hpp"
 
 #include "sequoia/TestFramework/Output.hpp"
@@ -80,8 +81,6 @@ namespace sequoia::testing
       {
         if(const auto exectable{fs::canonical(fs::path(zeroth))}; !exectable.empty())
         {
-          auto back{[](const fs::path& p) { return *(--p.end()); }};
-
           auto trialRoot{exectable};
           while((std::distance(trialRoot.begin(), trialRoot.end()) > 1))
           {
@@ -292,7 +291,7 @@ namespace sequoia::testing
 
     fs::create_directories(outputDir);
 
-    return (outputDir /= *(--cmadeBuildDir.end())).concat(".prune");
+    return (outputDir /= back(cmadeBuildDir)).concat(".prune");
   }
 
   void throw_unless_exists(const fs::path& p, std::string_view message)

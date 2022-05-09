@@ -10,6 +10,8 @@
  */
 
 #include "sequoia/TestFramework/Output.hpp"
+
+#include "sequoia/FileSystem/FileSystem.hpp"
 #include "sequoia/TextProcessing/Patterns.hpp"
 #include "sequoia/TextProcessing/Substitutions.hpp"
 #include "sequoia/PlatformSpecific/Preprocessor.hpp"
@@ -226,7 +228,7 @@ namespace sequoia::testing
             ++filepathIter;
           }
 
-          std::filesystem::path p{*(--repository.end())};
+          std::filesystem::path p{back(repository)};
           for(; filepathIter != file.end(); ++filepathIter)
           {
             p /= *filepathIter;

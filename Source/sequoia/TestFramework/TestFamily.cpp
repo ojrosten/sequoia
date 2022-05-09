@@ -13,6 +13,7 @@
 #include "sequoia/TestFramework/MaterialsUpdater.hpp"
 #include "sequoia/TestFramework/Summary.hpp"
 
+#include "sequoia/FileSystem/FileSystem.hpp"
 #include "sequoia/Parsing/CommandLineArguments.hpp"
 
 #include <fstream>
@@ -36,8 +37,7 @@ namespace sequoia::testing
       {
         if(!testRepo.empty())
         {
-          auto back{*(--testRepo.end())};
-          return test_summaries_path(outputDir) / back / rebase_from(name, testRepo);
+          return test_summaries_path(outputDir) / back(testRepo) / rebase_from(name, testRepo);
         }
       }
       else

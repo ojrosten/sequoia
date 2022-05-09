@@ -13,6 +13,7 @@
 #include "sequoia/TestFramework/FileSystemUtilities.hpp"
 #include "sequoia/TestFramework/TestRunnerUtilities.hpp"
 
+#include "sequoia/FileSystem/FileSystem.hpp"
 #include "sequoia/PlatformSpecific/Preprocessor.hpp"
 #include "sequoia/Streaming/Streaming.hpp"
 #include "sequoia/TextProcessing/Substitutions.hpp"
@@ -231,7 +232,7 @@ namespace sequoia::testing
       {
         const auto devenv{vs2019Dir / "Common7" / "IDE" / "devenv"};
 
-        const auto token{*(--root.end())};
+        const auto token{back(root)};
         const auto sln{(buildDir / token).concat("Tests.sln")};
 
         return {"Attempting to open IDE...", std::string{"\""}.append(devenv.string()).append("\" ").append("/Run ").append(sln.string()), ""};
