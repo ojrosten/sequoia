@@ -7,24 +7,24 @@
 
 /*! \file */
 
-#include "FileSystemFreeTest.hpp"
-#include "sequoia/TestFramework/FileSystem.hpp"
+#include "FileSystemUtilitiesFreeTest.hpp"
+#include "sequoia/TestFramework/FileSystemUtilities.hpp"
 
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::string_view file_system_free_test::source_file() const noexcept
+  std::string_view file_system_utilities_free_test::source_file() const noexcept
   {
     return __FILE__;
   }
 
-  void file_system_free_test::run_tests()
+  void file_system_utilities_free_test::run_tests()
   {
     test_find_in_tree();
     test_rebase_from();
   }
 
-  void file_system_free_test::test_find_in_tree()
+  void file_system_utilities_free_test::test_find_in_tree()
   {
     namespace fs = std::filesystem;
 
@@ -58,7 +58,7 @@ namespace sequoia::testing
     check(equality, LINE("Absolute path: not found"), find_in_tree(root, fooPath / "Baz"), fs::path{});
   }
 
-  void file_system_free_test::test_rebase_from()
+  void file_system_utilities_free_test::test_rebase_from()
   {
     namespace fs = std::filesystem;
 

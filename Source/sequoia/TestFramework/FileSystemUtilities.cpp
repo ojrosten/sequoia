@@ -6,10 +6,10 @@
 ////////////////////////////////////////////////////////////////////
 
 /*! \file
-    \brief Definitions for FileSystem.hpp
+    \brief Definitions for FileSystemUtilities.hpp
  */
 
-#include "sequoia/TestFramework/FileSystem.hpp"
+#include "sequoia/TestFramework/FileSystemUtilities.hpp"
 
 #include "sequoia/TestFramework/Output.hpp"
 #include "sequoia/TextProcessing/Substitutions.hpp"

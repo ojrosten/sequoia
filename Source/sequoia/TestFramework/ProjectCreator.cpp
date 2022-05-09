@@ -10,7 +10,7 @@
  */
 
 #include "sequoia/TestFramework/ProjectCreator.hpp"
-#include "sequoia/TestFramework/FileSystem.hpp"
+#include "sequoia/TestFramework/FileSystemUtilities.hpp"
 #include "sequoia/TestFramework/TestRunnerUtilities.hpp"
 
 #include "sequoia/PlatformSpecific/Preprocessor.hpp"

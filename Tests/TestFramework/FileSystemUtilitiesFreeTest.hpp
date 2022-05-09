@@ -13,7 +13,7 @@
 
 namespace sequoia::testing
 {
-  class file_system_free_test final : public free_test
+  class file_system_utilities_free_test final : public free_test
   {
   public:
     using free_test::free_test;

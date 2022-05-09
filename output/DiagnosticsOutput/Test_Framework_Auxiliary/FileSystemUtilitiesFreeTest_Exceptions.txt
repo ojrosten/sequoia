@@ -1,0 +1,25 @@
+Tests/TestFramework/FileSystemUtilitiesFreeTest.cpp, Line 45
+
+Expected Exception Type:
+[std::runtime_error]
+output/TestsTemporaryData/TestFramework/FileSystemUtilitiesFreeTest/Foo/Bar/baz.txt is not a directory
+
+	=======================================
+
+Tests/TestFramework/FileSystemUtilitiesFreeTest.cpp, Line 48
+
+Expected Exception Type:
+[std::runtime_error]
+output/TestsTemporaryData/TestFramework/FileSystemUtilitiesFreeTest/Foo/Stuff is not a directory
+
+	=======================================
+
+Tests/TestFramework/FileSystemUtilitiesFreeTest.cpp, Line 65
+Attempt to rebase from file
+
+Expected Exception Type:
+[std::logic_error]
+Trying to rebase from something other than a directory
+
+	=======================================
+

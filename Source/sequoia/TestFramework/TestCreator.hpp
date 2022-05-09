@@ -12,7 +12,7 @@
   */
 
 #include "sequoia/Core/Object/Factory.hpp"
-#include "sequoia/TestFramework/FileSystem.hpp"
+#include "sequoia/TestFramework/FileSystemUtilities.hpp"
 #include "sequoia/TextProcessing/Indent.hpp"
 
 #include <array>

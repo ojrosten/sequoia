@@ -15,7 +15,7 @@ set(SourceList sequoia/TestFramework/Advice.cpp
     sequoia/TestFramework/DependencyAnalyzer.cpp
     sequoia/TestFramework/FailureInfo.cpp
     sequoia/TestFramework/FileEditors.cpp
-    sequoia/TestFramework/FileSystem.cpp
+    sequoia/TestFramework/FileSystemUtilities.cpp
     sequoia/TestFramework/FreeTestCore.cpp
     sequoia/TestFramework/MaterialsUpdater.cpp
     sequoia/TestFramework/MoveOnlyTestCore.cpp

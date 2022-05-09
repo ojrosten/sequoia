@@ -10,7 +10,7 @@
 */
 
 #include "sequoia/TestFramework/FailureInfo.hpp"
-#include "sequoia/TestFramework/FileSystem.hpp"
+#include "sequoia/TestFramework/FileSystemUtilities.hpp"
 #include "sequoia/TestFramework/Output.hpp"
 #include "sequoia/TextProcessing/Substitutions.hpp"
 #include "sequoia/Streaming/Streaming.hpp"

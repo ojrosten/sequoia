@@ -10,7 +10,7 @@
  */
 
 #include "sequoia/TestFramework/DependencyAnalyzer.hpp"
-#include "sequoia/TestFramework/FileSystem.hpp"
+#include "sequoia/TestFramework/FileSystemUtilities.hpp"
 
 #include "sequoia/Maths/Graph/DynamicGraph.hpp"
 #include "sequoia/Maths/Graph/GraphTraversalFunctions.hpp"
@@ -154,12 +154,12 @@ namespace sequoia::testing
                     return "";
                   }()
                 };
-                
 
                 if(includedFile.has_extension())
                 {
                   if(includedFile.parent_path().empty())
                   {
+                    // Maybe check if this file actually exists... if path is absolute
                     includedFile = file.parent_path() / includedFile;
                   }
 
@@ -199,13 +199,16 @@ namespace sequoia::testing
       }
     }
 
-    // pre-condition: the nodes of g have been sorted by file path
-    void build_dependencies(tests_dependency_graph& g,
-                            const std::filesystem::path& sourceRepo,
-                            const std::filesystem::path& testRepo,
-                            std::string_view cutoff)
+    /// pre-condition: the nodes of g have been sorted by file path
+    /// Return value: external dependencies
+    [[nodiscard]]
+    std::set<std::string> build_dependencies(tests_dependency_graph& g,
+                                             const std::filesystem::path& sourceRepo,
+                                             const std::filesystem::path& testRepo,
+                                             std::string_view cutoff)
     {
       using size_type = tests_dependency_graph::size_type;
+      std::set<std::string> externalDependencies{};
 
       for(auto i{g.cbegin_node_weights()}; i != g.cend_node_weights(); ++i)
       {
@@ -271,9 +274,15 @@ namespace sequoia::testing
                 }
               }
             }
+            else
+            {
+              externalDependencies.insert(includedFile.generic_string());
+            }
           }
         }
       }
+
+      return externalDependencies;
     }
 
     void consider_materials(tests_dependency_graph& g,
@@ -329,7 +338,7 @@ namespace sequoia::testing
         return lname != rname ? lname < rname : lfile < rfile ;
       });
 
-    build_dependencies(g, sourceRepo, testRepo, cutoff);
+    const auto externalDependencies{build_dependencies(g, sourceRepo, testRepo, cutoff)};
 
     auto nodesLate{
       [&g](const std::size_t node) {
