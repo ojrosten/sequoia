@@ -107,7 +107,7 @@ namespace sequoia::testing
             {
               const auto count{pos - left + token.size()};
               const auto relPath{fs::relative(parentProjRoot / "TestAll" / text.substr(left, count), newProjRoot / "TestAll")};
-              text.replace(left, count, relPath.lexically_normal().generic_string());
+              text.replace(left, count, relPath.generic_string());
             }
           }
         }

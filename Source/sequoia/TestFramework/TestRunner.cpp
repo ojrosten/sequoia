@@ -488,7 +488,7 @@ namespace sequoia::testing
           // TO DO: use ranges when supported by libc++
           for(auto i{selector.begin_selected_sources()}; i != selector.end_selected_sources(); ++i)
           {
-            if(i->second) srcs.append(" select " + i->first.generic_string());
+            if(i->second) srcs.append(" select " + i->first.path().generic_string());
           }
 
           for(auto i{selector.begin_selected_families()}; i != selector.end_selected_families(); ++i)

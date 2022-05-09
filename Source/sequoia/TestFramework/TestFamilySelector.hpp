@@ -14,7 +14,8 @@
 #include "sequoia/TestFramework/FileSystemUtilities.hpp"
 #include "sequoia/TestFramework/TestFamily.hpp"
 
-#include <filesystem>
+#include "sequoia/FileSystem/FileSystem.hpp"
+
 #include <optional>
 #include <map>
 
@@ -80,7 +81,7 @@ namespace sequoia::testing
 
     void select_family(std::string name);
 
-    void select_source_file(const std::filesystem::path& file);
+    void select_source_file(const normal_path& file);
 
     void enable_prune();
 
@@ -172,7 +173,7 @@ namespace sequoia::testing
     };
 
     using family_map = std::map<std::string, bool, std::less<>>;
-    using source_list = std::vector<std::pair<std::filesystem::path, bool>>;
+    using source_list = std::vector<std::pair<normal_path, bool>>;
 
     project_paths              m_Paths;
     recovery_paths             m_Recovery{};
@@ -186,7 +187,7 @@ namespace sequoia::testing
     bool mark_family(std::string_view name);
 
     [[nodiscard]]
-    auto find_filename(const std::filesystem::path& filename)->source_list::iterator;
+    auto find_filename(const normal_path& filename)->source_list::iterator;
 
     using duplicate_set = std::set<std::pair<std::string_view, std::filesystem::path>>;
 

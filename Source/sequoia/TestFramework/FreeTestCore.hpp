@@ -19,6 +19,7 @@
 #include "sequoia/TestFramework/FileSystemUtilities.hpp"
 
 #include "sequoia/Core/Meta/Concepts.hpp"
+#include "sequoia/FileSystem/FileSystem.hpp"
 #include "sequoia/TextProcessing/Substitutions.hpp"
 
 #include <memory>
@@ -108,9 +109,9 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    std::filesystem::path source_filename() const noexcept
+    normal_path source_filename() const noexcept
     {
-      return std::filesystem::path{source_file()}.lexically_normal();
+      return {source_file()};
     }
 
     [[nodiscard]]

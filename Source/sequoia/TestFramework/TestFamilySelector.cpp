@@ -12,7 +12,6 @@
 #include "sequoia/TestFramework/TestFamilySelector.hpp"
 
 #include "sequoia/TestFramework/DependencyAnalyzer.hpp"
-#include "sequoia/FileSystem/FileSystem.hpp"
 #include "sequoia/Parsing/CommandLineArguments.hpp"
 
 #include <fstream>
@@ -75,9 +74,9 @@ namespace sequoia::testing
     m_SelectedFamilies.emplace(std::move(name), false);
   }
 
-  void family_selector::select_source_file(const std::filesystem::path& file)
+  void family_selector::select_source_file(const normal_path& file)
   {
-    m_SelectedSources.emplace_back(file.lexically_normal(), false);
+    m_SelectedSources.emplace_back(file, false);
   }
 
   void family_selector::enable_prune()
@@ -251,13 +250,13 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  auto family_selector::find_filename(const std::filesystem::path& filename) -> source_list::iterator
+  auto family_selector::find_filename(const normal_path& filename) -> source_list::iterator
   {
     return std::find_if(m_SelectedSources.begin(), m_SelectedSources.end(),
       [&filename, &repo = m_Paths.tests(), &root = m_Paths.project_root()](const auto& element){
       const auto& source{element.first};
 
-      if(filename.empty() || source.empty() || (back(source) != back(filename)))
+      if(filename.path().empty() || source.path().empty() || (back(source) != back(filename)))
         return false;
 
       if(filename == source) return true;
