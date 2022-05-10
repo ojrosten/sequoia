@@ -119,6 +119,8 @@ namespace sequoia::testing
     , m_Output{project_root() / "output"}
     , m_CommonIncludes{project_root() / pathsFromRoot.commonIncludes}
     , m_CMadeBuildDir{cmade_build_dir(project_root(), m_MainCpp.dir())}
+    , m_PruneDir{output() / fs::relative(cmade_build_dir(), project_root())}
+    , m_InstabilityAnalysisPruneDir{prune_dir() / "InstabilityAnalysis"}
     , m_AncillaryMainCpps{make_ancillary_info(project_root(), pathsFromRoot)}
   {
     throw_unless_directory(project_root(), "\nRepository root not found");
@@ -214,6 +216,31 @@ namespace sequoia::testing
     return m_CMadeBuildDir;
   }
 
+  [[nodiscard]]
+  const fs::path& project_paths::prune_dir() const noexcept
+  {
+    return m_PruneDir;
+  }
+
+  [[nodiscard]]
+  const fs::path& project_paths::instability_analysis_prune_dir() const noexcept
+  {
+    return m_InstabilityAnalysisPruneDir;
+  }
+
+  [[nodiscard]]
+  fs::path project_paths::prune_file_path(std::optional<std::size_t> id) const
+  {
+    auto [dir, num] {
+      [id,this]() {
+        return (id == std::nullopt) ? std::make_pair(prune_dir(), std::string{})
+                                    : std::make_pair(instability_analysis_prune_dir(), std::to_string(id.value()));
+      }()
+    };
+
+    return (dir /= back(cmade_build_dir())).concat(num).concat(".prune");
+  }
+
   const std::vector<file_info>& project_paths::ancillary_main_cpps() const noexcept
   {
     return m_AncillaryMainCpps;
@@ -277,21 +304,6 @@ namespace sequoia::testing
   fs::path temp_test_summaries_path(fs::path outputDir)
   {
     return tests_temporary_data_path(outputDir) /= "InstabilityAnalysis";
-  }
-
-  [[nodiscard]]
-  fs::path prune_path(const project_paths& projPaths)
-  {
-    const auto& cmadeBuildDir{projPaths.cmade_build_dir()};
-    if(cmadeBuildDir.empty())
-      throw std::runtime_error{"Build directory required for pruning"};
-
-    const auto relPath{fs::relative(cmadeBuildDir, projPaths.project_root())};
-    auto outputDir{projPaths.output() / relPath};
-
-    fs::create_directories(outputDir);
-
-    return (outputDir /= back(cmadeBuildDir)).concat(".prune");
   }
 
   void throw_unless_exists(const fs::path& p, std::string_view message)

@@ -113,7 +113,7 @@ namespace sequoia::testing
 
     void check_argument_consistency();
 
-    void run_tests(std::optional<std::size_t> index);
+    void run_tests(std::optional<std::size_t> id);
 
     [[nodiscard]]
     bool mode(runner_mode m) const noexcept

@@ -14,6 +14,7 @@
 #include "sequoia/TestFramework/CoreInfrastructure.hpp"
 
 #include <filesystem>
+#include <optional>
 
 namespace sequoia::testing
 {
@@ -106,7 +107,16 @@ namespace sequoia::testing
     const std::filesystem::path& cmade_build_dir() const noexcept;
 
     [[nodiscard]]
+    const std::filesystem::path& prune_dir() const noexcept;
+
+    [[nodiscard]]
+    const std::filesystem::path& instability_analysis_prune_dir() const noexcept;
+
+    [[nodiscard]]
     const std::vector<file_info>& ancillary_main_cpps() const noexcept;
+
+    [[nodiscard]]
+    std::filesystem::path prune_file_path(std::optional<std::size_t> id) const;
 
     [[nodiscard]]
     friend bool operator==(const project_paths&, const project_paths&) noexcept = default;
@@ -128,7 +138,9 @@ namespace sequoia::testing
       m_TestMaterials{},
       m_Output{},
       m_CommonIncludes{},
-      m_CMadeBuildDir{};
+      m_CMadeBuildDir{},
+      m_PruneDir{},
+      m_InstabilityAnalysisPruneDir{};
 
     std::vector<file_info> m_AncillaryMainCpps{};
   };
@@ -166,9 +178,6 @@ namespace sequoia::testing
 
   [[nodiscard]]
   std::filesystem::path temp_test_summaries_path(std::filesystem::path outputDir);
-
-  [[nodiscard]]
-  std::filesystem::path prune_path(const project_paths& projPaths);
 
   template<std::predicate<std::filesystem::path> Pred>
   void throw_if(const std::filesystem::path& p, std::string_view message, Pred pred)

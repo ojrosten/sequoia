@@ -72,6 +72,24 @@ namespace sequoia::testing
 
       nascent_tests.emplace_back(std::move(nascent));
     }
+
+    [[nodiscard]]
+    std::string to_async_option(concurrency_mode mode)
+    {
+      switch(mode)
+      {
+      case concurrency_mode::serial:
+        return " -a null";
+      case concurrency_mode::dynamic:
+        return "";
+      case concurrency_mode::family:
+        return " -a family";
+      case concurrency_mode::unit:
+        return " -a unit";
+      }
+
+      throw std::logic_error{"Illegal option for concurrency_mode"};
+    }
   }
 
   [[nodiscard]]
@@ -108,6 +126,7 @@ namespace sequoia::testing
     fs::create_directory(proj_paths().output());
     fs::create_directory(diagnostics_output_path(proj_paths().output()));
     fs::create_directory(test_summaries_path(proj_paths().output()));
+    fs::create_directories(proj_paths().prune_dir());
   }
 
   void test_runner::process_args(int argc, char** argv)
@@ -402,7 +421,15 @@ namespace sequoia::testing
         init_projects(proj_paths(), nascentProjects, stream());
 
       if(mode(runner_mode::test))
+      {
+        if((m_InstabilityMode == instability_mode::single_instance) || m_InstabilityMode == instability_mode::coordinator)
+        {
+          fs::remove_all(proj_paths().instability_analysis_prune_dir());
+          fs::create_directories(proj_paths().instability_analysis_prune_dir());
+        }
+
         m_Selector.prune(stream());
+      }
     }
   }
 
@@ -472,9 +499,6 @@ namespace sequoia::testing
     if((m_InstabilityMode != instability_mode::sandbox))
     {
       fs::remove_all(temp_test_summaries_path(proj_paths().output()));
-
-      if(m_Selector.pruned())
-        fs::remove(prune_path(proj_paths()));
     }
 
     if(m_InstabilityMode == instability_mode::coordinator)
@@ -500,29 +524,11 @@ namespace sequoia::testing
         }()
       };
 
-      auto asyncOption{
-        [mode{m_ConcurrencyMode}] (){
-          switch(mode)
-          {
-          case concurrency_mode::serial:
-            return " -a null";
-          case concurrency_mode::dynamic:
-            return "";
-          case concurrency_mode::family:
-            return " -a family";
-          case concurrency_mode::unit:
-            return " -a unit";
-          }
-
-          throw std::logic_error{"Illegal option for concurrency_mode"};
-        }
-      };
-
       for(std::size_t i{}; i < m_NumReps; ++i)
       {
         invoke(runtime::shell_command(proj_paths().executable().string().append(" locate ").append(std::to_string(m_NumReps))
                                                                .append(" --runner-id ").append(std::to_string(i)).append(specified)
-                                                               .append(asyncOption())));
+                                                               .append(to_async_option(m_ConcurrencyMode))));
       }
     }
     else
@@ -549,6 +555,7 @@ namespace sequoia::testing
     if(   (m_InstabilityMode == instability_mode::single_instance)
        || (m_InstabilityMode == instability_mode::coordinator))
     {
+      m_Selector.aggregate_instability_analysis_prune_files(m_NumReps);
       const auto outputDir{temp_test_summaries_path(m_Selector.proj_paths().output())};
       stream() << instability_analysis(outputDir, m_NumReps);
     }
@@ -566,7 +573,7 @@ namespace sequoia::testing
     }
   }
 
-  void test_runner::run_tests(const std::optional<std::size_t> index)
+  void test_runner::run_tests(const std::optional<std::size_t> id)
   {
     const timer t{};
     log_summary summary{};
@@ -577,7 +584,7 @@ namespace sequoia::testing
       for(auto& family : m_Selector)
       {
         stream() << family.name() << ":\n";
-        summary += process_family(family.execute(m_UpdateMode, m_ConcurrencyMode, index)).log;
+        summary += process_family(family.execute(m_UpdateMode, m_ConcurrencyMode, id)).log;
       }
     }
     else
@@ -592,8 +599,8 @@ namespace sequoia::testing
       for(auto& family : m_Selector)
       {
         results.emplace_back(family.name(),
-          std::async([&family, umode = m_UpdateMode, cmode = m_ConcurrencyMode, index](){
-            return family.execute(umode, cmode, index); }));
+          std::async([&family, umode=m_UpdateMode, cmode=m_ConcurrencyMode, id](){
+            return family.execute(umode, cmode, id); }));
       }
 
       for(auto& res : results)
@@ -605,6 +612,7 @@ namespace sequoia::testing
     stream() << "\n-----------Grand Totals-----------\n";
     stream() << summarize(summary, t.time_elapsed(), summary_detail::absent_checks | summary_detail::timings, indentation{"\t"}, no_indent);
 
-    m_Selector.update_prune_info(m_FailedTestSourceFiles.begin(), m_FailedTestSourceFiles.end());
+    m_Selector.update_prune_info(m_FailedTestSourceFiles.begin(), m_FailedTestSourceFiles.end(), id);
+    m_FailedTestSourceFiles.clear();
   }
 }
