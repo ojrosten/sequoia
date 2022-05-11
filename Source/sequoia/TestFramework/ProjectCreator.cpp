@@ -126,7 +126,7 @@ namespace sequoia::testing
       }
     );
 
-    read_modify_write(project_template_path(newProjRoot) / relCmakeLocation, [setBuildSysPath](std::string& text) {
+    read_modify_write(auxiliary_paths::project_template(newProjRoot) / relCmakeLocation, [setBuildSysPath](std::string& text) {
         setBuildSysPath(text);
       }
     );
@@ -164,9 +164,9 @@ namespace sequoia::testing
 
       const auto& parentProjRoot{parentProjectPaths.project_root()};
       fs::create_directories(data.project_root);
-      fs::copy(project_template_path(parentProjRoot), data.project_root, fs::copy_options::recursive | fs::copy_options::skip_existing);
+      fs::copy(parentProjectPaths.aux_paths().project_template(), data.project_root, fs::copy_options::recursive | fs::copy_options::skip_existing);
       fs::create_directory(project_paths::source(data.project_root));
-      fs::copy(parentProjectPaths.aux_files(), project_paths::aux_files(data.project_root), fs::copy_options::recursive | fs::copy_options::skip_existing);
+      fs::copy(parentProjectPaths.aux_paths().dir(), auxiliary_paths::dir(data.project_root), fs::copy_options::recursive | fs::copy_options::skip_existing);
 
       generate_test_main(data.copyright, data.project_root, data.code_indent);
       generate_build_system_files(parentProjRoot, data.project_root);

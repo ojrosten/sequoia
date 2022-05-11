@@ -109,6 +109,37 @@ namespace sequoia::testing
     throw_unless_regular_file(m_File, "\nTry ensuring that the application is run from the appropriate directory");
   }
 
+  auxiliary_paths::auxiliary_paths(const std::filesystem::path& projectRoot)
+    : m_Dir{dir(projectRoot)}
+    , m_TestTemplates{test_templates(projectRoot)}
+    , m_SourceTemplates{source_templates(projectRoot)}
+    , m_ProjectTemplate{project_template(projectRoot)}
+  {}
+
+  [[nodiscard]]
+  fs::path auxiliary_paths::dir(fs::path projectRoot)
+  {
+    return projectRoot /= "aux_files";
+  }
+
+  [[nodiscard]]
+  std::filesystem::path auxiliary_paths::test_templates(std::filesystem::path projectRoot)
+  {
+    return dir(projectRoot) /= "TestTemplates";
+  }
+
+  [[nodiscard]]
+  std::filesystem::path auxiliary_paths::source_templates(std::filesystem::path projectRoot)
+  {
+    return dir(projectRoot) /= "SourceTemplates";
+  }
+
+  [[nodiscard]]
+  std::filesystem::path auxiliary_paths::project_template(std::filesystem::path projectRoot)
+  {
+    return dir(projectRoot) /= "ProjectTemplate";
+  }
+
   project_paths::project_paths(int argc, char** argv, const initializer& pathsFromRoot)
     : m_Discovered{discover_paths(argc, argv)}
     , m_MainCpp{project_root() / pathsFromRoot.mainCpp}
@@ -118,7 +149,8 @@ namespace sequoia::testing
     , m_TestMaterials{test_materials(project_root())}
     , m_Output{output(project_root())}
     , m_Build{build(project_root())}
-    , m_AuxFiles{aux_files(project_root())}
+    , m_BuildSystem{build_system(project_root())}
+    , m_AuxPaths{project_root()}
     , m_CommonIncludes{project_root() / pathsFromRoot.commonIncludes}
     , m_CMadeBuildDir{cmade_build_dir(project_root(), m_MainCpp.dir())}
     , m_PruneDir{output() / fs::relative(cmade_build_dir(), project_root())}
@@ -180,9 +212,9 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  fs::path project_paths::aux_files(fs::path projectRoot)
+  fs::path project_paths::build_system(fs::path projectRoot)
   {
-    return projectRoot /= "aux_files";
+    return projectRoot /= "build_system";
   }
 
   [[nodiscard]]
@@ -196,30 +228,6 @@ namespace sequoia::testing
     };
 
     return (dir /= back(cmade_build_dir())).concat(num).concat(".prune");
-  }
-
-  [[nodiscard]]
-  fs::path build_system_path(fs::path projectRoot)
-  {
-    return projectRoot / "build_system";
-  }
-
-  [[nodiscard]]
-  fs::path code_templates_path(fs::path projectRoot)
-  {
-    return projectRoot/"aux_files"/"TestTemplates";
-  }
-
-  [[nodiscard]]
-  fs::path source_templates_path(fs::path projectRoot)
-  {
-    return projectRoot / "aux_files" / "SourceTemplates";
-  }
-
-  [[nodiscard]]
-  fs::path project_template_path(fs::path projectRoot)
-  {
-    return projectRoot/"aux_files"/"ProjectTemplate";
   }
 
   [[nodiscard]]

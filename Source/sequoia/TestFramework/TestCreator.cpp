@@ -279,7 +279,7 @@ namespace sequoia::testing
       return warning(stringify(outputFile).append(" already exists, so not created\n"));
     }
 
-    const auto inputFile{(code_templates_path(m_Paths.project_root()) / nameStub).concat(nameEnding)};
+    const auto inputFile{(m_Paths.aux_paths().test_templates() / nameStub).concat(nameEnding)};
 
     fs::copy_file(inputFile, outputFile, fs::copy_options::overwrite_existing);
     if(auto contents{read_to_string(outputFile)})
@@ -399,7 +399,7 @@ namespace sequoia::testing
 
     const auto sourceRoot{paths().source_root()};
     stream() << std::quoted(fs::relative(srcPath, paths().project_root()) .generic_string()) << '\n';
-    fs::copy_file(source_templates_path(paths().project_root()) / "MyCpp.cpp", srcPath);
+    fs::copy_file(paths().aux_paths().source_templates() / "MyCpp.cpp", srcPath);
 
     auto setCppText{
         [&](std::string& text) {
@@ -505,7 +505,7 @@ namespace sequoia::testing
 
     stream() << std::quoted(fs::relative(headerPath, paths().project_root()).generic_string()) << '\n';
     fs::create_directories(headerPath.parent_path());
-    fs::copy_file(source_templates_path(paths().project_root()) / headerTemplate, headerPath);
+    fs::copy_file(paths().aux_paths().source_templates() / headerTemplate, headerPath);
 
     read_modify_write(headerPath, [this, &nameSpace](std::string& text) { set_header_text(text, copyright(), nameSpace); });
 
@@ -709,7 +709,7 @@ namespace sequoia::testing
 
     stream() << fs::relative(headerPath, paths().project_root()).generic_string() << '\n';
     fs::create_directories(headerPath.parent_path());
-    fs::copy_file(source_templates_path(paths().project_root()) / "MyFreeFunctions.hpp", headerPath);
+    fs::copy_file(paths().aux_paths().source_templates() / "MyFreeFunctions.hpp", headerPath);
 
     read_modify_write(headerPath, [&nameSpace = m_Namespace](std::string& text) { process_namespace(text, nameSpace); });
 

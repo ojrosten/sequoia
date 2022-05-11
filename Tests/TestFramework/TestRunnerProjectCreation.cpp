@@ -136,7 +136,7 @@ namespace sequoia::testing
   void test_runner_project_creation::test_project_creation()
   {
     namespace fs = std::filesystem;
-    fs::copy(project_paths::aux_files(test_repository().parent_path()), project_paths::aux_files(fake_project()), fs::copy_options::recursive);
+    fs::copy(auxiliary_paths::dir(test_repository().parent_path()), auxiliary_paths::dir(fake_project()), fs::copy_options::recursive);
 
     {
       auto generated{

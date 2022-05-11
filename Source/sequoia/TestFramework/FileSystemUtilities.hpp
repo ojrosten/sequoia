@@ -65,6 +65,60 @@ namespace sequoia::testing
     friend bool operator!=(const discoverable_paths&, const discoverable_paths&) noexcept = default;
   };
 
+  class auxiliary_paths
+  {
+  public:
+    auxiliary_paths(const std::filesystem::path& projectRoot);
+
+    [[nodiscard]]
+    const std::filesystem::path& dir() const noexcept
+    {
+      return m_Dir;
+    }
+
+    [[nodiscard]]
+    static std::filesystem::path dir(std::filesystem::path projectRoot);
+
+    [[nodiscard]]
+    const std::filesystem::path& test_templates() const noexcept
+    {
+      return m_TestTemplates;
+    }
+
+    [[nodiscard]]
+    static std::filesystem::path test_templates(std::filesystem::path projectRoot);
+
+    [[nodiscard]]
+    const std::filesystem::path& source_templates() const noexcept
+    {
+      return m_SourceTemplates;
+    }
+
+    [[nodiscard]]
+    static std::filesystem::path source_templates(std::filesystem::path projectRoot);
+
+    [[nodiscard]]
+    const std::filesystem::path& project_template() const noexcept
+    {
+      return m_ProjectTemplate;
+    }
+
+    [[nodiscard]]
+    static std::filesystem::path project_template(std::filesystem::path projectRoot);
+
+    [[nodiscard]]
+    friend bool operator==(const auxiliary_paths&, const auxiliary_paths&) noexcept = default;
+
+    [[nodiscard]]
+    friend bool operator!=(const auxiliary_paths&, const auxiliary_paths&) noexcept = default;
+  private:
+    std::filesystem::path
+      m_Dir{},
+      m_TestTemplates{},
+      m_SourceTemplates{},
+      m_ProjectTemplate{};
+  };
+
   class project_paths
   {
   public:
@@ -140,16 +194,22 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    static std::filesystem::path build(std::filesystem::path projectRoot);
-
-    [[nodiscard]]
-    const std::filesystem::path& aux_files() const noexcept
+    const std::filesystem::path& build_system() const noexcept
     {
-      return m_AuxFiles;
+      return m_BuildSystem;
     }
 
     [[nodiscard]]
-    static std::filesystem::path aux_files(std::filesystem::path projectRoot);
+    static std::filesystem::path build_system(std::filesystem::path projectRoot);
+
+    [[nodiscard]]
+    static std::filesystem::path build(std::filesystem::path projectRoot);
+
+    [[nodiscard]]
+    const auxiliary_paths& aux_paths() const noexcept
+    {
+      return m_AuxPaths;
+    }
 
     [[nodiscard]]
     const file_info& main_cpp() const noexcept
@@ -202,7 +262,7 @@ namespace sequoia::testing
     discoverable_paths m_Discovered;
 
     file_info m_MainCpp;
-    
+
     std::filesystem::path
       m_Source{},
       m_SourceRoot{},
@@ -210,7 +270,11 @@ namespace sequoia::testing
       m_TestMaterials{},
       m_Output{},
       m_Build{},
-      m_AuxFiles{},
+      m_BuildSystem{};
+
+    auxiliary_paths m_AuxPaths;
+
+    std::filesystem::path
       m_CommonIncludes{},
       m_CMadeBuildDir{},
       m_PruneDir{},
@@ -222,18 +286,6 @@ namespace sequoia::testing
 
   [[nodiscard]]
   discoverable_paths discover_paths(int argc, char** argv);
-
-  [[nodiscard]]
-  std::filesystem::path build_system_path(std::filesystem::path projectRoot);
-
-  [[nodiscard]]
-  std::filesystem::path code_templates_path(std::filesystem::path projectRoot);
-
-  [[nodiscard]]
-  std::filesystem::path source_templates_path(std::filesystem::path projectRoot);
-
-  [[nodiscard]]
-  std::filesystem::path project_template_path(std::filesystem::path projectRoot);
 
   [[nodiscard]]
   std::filesystem::path recovery_path(std::filesystem::path outputDir);
