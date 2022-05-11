@@ -74,46 +74,112 @@ namespace sequoia::testing
     project_paths(int argc, char** argv, const initializer& pathsFromRoot);
 
     [[nodiscard]]
-    static std::filesystem::path source_path(const std::filesystem::path& projectRoot);
+    const std::filesystem::path& project_root() const noexcept
+    {
+      return m_Discovered.root;
+    }
 
     [[nodiscard]]
-    const std::filesystem::path& project_root() const noexcept;
+    const std::filesystem::path& executable() const noexcept
+    {
+      return m_Discovered.executable;
+    }
 
     [[nodiscard]]
-    const std::filesystem::path& executable() const noexcept;
+    const std::filesystem::path& source() const noexcept
+    {
+      return m_Source;
+    }
 
     [[nodiscard]]
-    const std::filesystem::path& source() const noexcept;
+    static std::filesystem::path source(std::filesystem::path projectRoot);
 
     [[nodiscard]]
-    const std::filesystem::path& source_root() const noexcept;
+    const std::filesystem::path& source_root() const noexcept
+    {
+      return m_SourceRoot;
+    }
 
     [[nodiscard]]
-    const std::filesystem::path& tests() const noexcept;
+    const std::filesystem::path& tests() const noexcept
+    {
+      return m_Tests;
+    }
 
     [[nodiscard]]
-    const std::filesystem::path& test_materials() const noexcept;
+    static std::filesystem::path tests(std::filesystem::path projectRoot);
 
     [[nodiscard]]
-    const std::filesystem::path& output() const noexcept;
+    const std::filesystem::path& test_materials() const noexcept
+    {
+      return m_TestMaterials;
+    }
 
     [[nodiscard]]
-    const file_info& main_cpp() const noexcept;
+    static std::filesystem::path test_materials(std::filesystem::path projectRoot);
 
     [[nodiscard]]
-    const std::filesystem::path& include_target() const noexcept;
+    const std::filesystem::path& output() const noexcept
+    {
+      return m_Output;
+    }
 
     [[nodiscard]]
-    const std::filesystem::path& cmade_build_dir() const noexcept;
+    static std::filesystem::path output(std::filesystem::path projectRoot);
 
     [[nodiscard]]
-    const std::filesystem::path& prune_dir() const noexcept;
+    const std::filesystem::path& build() const noexcept
+    {
+      return m_Build;
+    }
 
     [[nodiscard]]
-    const std::filesystem::path& instability_analysis_prune_dir() const noexcept;
+    static std::filesystem::path build(std::filesystem::path projectRoot);
 
     [[nodiscard]]
-    const std::vector<file_info>& ancillary_main_cpps() const noexcept;
+    const std::filesystem::path& aux_files() const noexcept
+    {
+      return m_AuxFiles;
+    }
+
+    [[nodiscard]]
+    static std::filesystem::path aux_files(std::filesystem::path projectRoot);
+
+    [[nodiscard]]
+    const file_info& main_cpp() const noexcept
+    {
+      return m_MainCpp;
+    }
+
+    [[nodiscard]]
+    const std::filesystem::path& common_includes() const noexcept
+    {
+      return m_CommonIncludes;
+    }
+
+    [[nodiscard]]
+    const std::filesystem::path& cmade_build_dir() const noexcept
+    {
+      return m_CMadeBuildDir;
+    }
+
+    [[nodiscard]]
+    const std::filesystem::path& prune_dir() const noexcept
+    {
+      return m_PruneDir;
+    }
+
+    [[nodiscard]]
+    const std::filesystem::path& instability_analysis_prune_dir() const noexcept
+    {
+      return m_InstabilityAnalysisPruneDir;
+    }
+
+    [[nodiscard]]
+    const std::vector<file_info>& ancillary_main_cpps() const noexcept
+    {
+      return m_AncillaryMainCpps;
+    }
 
     [[nodiscard]]
     std::filesystem::path prune_file_path(std::optional<std::size_t> id) const;
@@ -137,6 +203,8 @@ namespace sequoia::testing
       m_Tests{},
       m_TestMaterials{},
       m_Output{},
+      m_Build{},
+      m_AuxFiles{},
       m_CommonIncludes{},
       m_CMadeBuildDir{},
       m_PruneDir{},

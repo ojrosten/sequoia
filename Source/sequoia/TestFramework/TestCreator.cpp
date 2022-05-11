@@ -301,7 +301,7 @@ namespace sequoia::testing
     {
       if(const auto str{outputFile.string()}; str.find("Utilities.hpp") == npos)
       {
-        add_include(m_Paths.include_target(), fs::relative(outputFile, m_Paths.tests()).generic_string());
+        add_include(m_Paths.common_includes(), fs::relative(outputFile, m_Paths.tests()).generic_string());
       }
     }
     else if(outputFile.extension() == ".cpp")

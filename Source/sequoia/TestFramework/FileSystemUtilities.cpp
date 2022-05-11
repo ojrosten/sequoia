@@ -112,11 +112,12 @@ namespace sequoia::testing
   project_paths::project_paths(int argc, char** argv, const initializer& pathsFromRoot)
     : m_Discovered{discover_paths(argc, argv)}
     , m_MainCpp{project_root() / pathsFromRoot.mainCpp}
-    , m_Source{source_path(project_root())}
+    , m_Source{source(project_root())}
     , m_SourceRoot{m_Source.parent_path()}
-    , m_Tests{project_root() / "Tests"}
-    , m_TestMaterials{project_root() / "TestMaterials"}
-    , m_Output{project_root() / "output"}
+    , m_Tests{tests(project_root())}
+    , m_TestMaterials{test_materials(project_root())}
+    , m_Output{output(project_root())}
+    , m_Build{build(project_root())}
     , m_CommonIncludes{project_root() / pathsFromRoot.commonIncludes}
     , m_CMadeBuildDir{cmade_build_dir(project_root(), m_MainCpp.dir())}
     , m_PruneDir{output() / fs::relative(cmade_build_dir(), project_root())}
@@ -148,84 +149,39 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  fs::path project_paths::source_path(const fs::path& projectRoot)
+  fs::path project_paths::source(fs::path projectRoot)
   {
-    if(projectRoot.empty())
-      throw std::runtime_error{"Project root should not be empty"};
-
-    return projectRoot / "Source" / uncapitalize((--projectRoot.end())->generic_string());
+    return (projectRoot /= "Source") /= uncapitalize((--projectRoot.end())->generic_string());
   }
 
   [[nodiscard]]
-  const fs::path& project_paths::project_root() const noexcept
+  fs::path project_paths::tests(fs::path projectRoot)
   {
-    return m_Discovered.root;
+    return projectRoot /= "Tests";
   }
 
   [[nodiscard]]
-  const fs::path& project_paths::executable() const noexcept
+  fs::path project_paths::test_materials(fs::path projectRoot)
   {
-    return m_Discovered.executable;
+    return projectRoot /= "TestMaterials";
   }
 
   [[nodiscard]]
-  const fs::path& project_paths::source() const noexcept
+  fs::path project_paths::output(fs::path projectRoot)
   {
-    return m_Source;
+    return projectRoot /= "output";
   }
 
   [[nodiscard]]
-  const fs::path& project_paths::source_root() const noexcept
+  fs::path project_paths::build(fs::path projectRoot)
   {
-    return m_SourceRoot;
+    return projectRoot /= "build";
   }
 
   [[nodiscard]]
-  const fs::path& project_paths::tests() const noexcept
+  fs::path project_paths::aux_files(fs::path projectRoot)
   {
-    return m_Tests;
-  }
-
-  [[nodiscard]]
-  const fs::path& project_paths::test_materials() const noexcept
-  {
-    return m_TestMaterials;
-  }
-
-  [[nodiscard]]
-  const fs::path& project_paths::output() const noexcept
-  {
-    return m_Output;
-  }
-
-  [[nodiscard]]
-  const file_info& project_paths::main_cpp() const noexcept
-  {
-    return m_MainCpp;
-  }
-
-  [[nodiscard]]
-  const fs::path& project_paths::include_target() const noexcept
-  {
-    return m_CommonIncludes;
-  }
-
-  [[nodiscard]]
-  const fs::path& project_paths::cmade_build_dir() const noexcept
-  {
-    return m_CMadeBuildDir;
-  }
-
-  [[nodiscard]]
-  const fs::path& project_paths::prune_dir() const noexcept
-  {
-    return m_PruneDir;
-  }
-
-  [[nodiscard]]
-  const fs::path& project_paths::instability_analysis_prune_dir() const noexcept
-  {
-    return m_InstabilityAnalysisPruneDir;
+    return projectRoot /= "aux_files";
   }
 
   [[nodiscard]]
@@ -241,15 +197,10 @@ namespace sequoia::testing
     return (dir /= back(cmade_build_dir())).concat(num).concat(".prune");
   }
 
-  const std::vector<file_info>& project_paths::ancillary_main_cpps() const noexcept
-  {
-    return m_AncillaryMainCpps;
-  }
-
   [[nodiscard]]
   fs::path aux_files_path(fs::path projectRoot)
   {
-    return projectRoot/"aux_files";
+    return projectRoot / "aux_files";
   }
 
   [[nodiscard]]

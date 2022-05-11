@@ -165,7 +165,7 @@ namespace sequoia::testing
       const auto& parentProjRoot{parentProjectPaths.project_root()};
       fs::create_directories(data.project_root);
       fs::copy(project_template_path(parentProjRoot), data.project_root, fs::copy_options::recursive | fs::copy_options::skip_existing);
-      fs::create_directory(project_paths::source_path(data.project_root));
+      fs::create_directory(project_paths::source(data.project_root));
       fs::copy(aux_files_path(parentProjRoot), aux_files_path(data.project_root), fs::copy_options::recursive | fs::copy_options::skip_existing);
 
       generate_test_main(data.copyright, data.project_root, data.code_indent);
