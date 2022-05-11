@@ -106,7 +106,7 @@ namespace sequoia::testing
     namespace fs = std::filesystem;
 
     const auto root{test_repository().parent_path()};
-    fs::copy(aux_files_path(root), aux_files_path(fake_project()), fs::copy_options::recursive);
+    fs::copy(project_paths::aux_files(root), project_paths::aux_files(fake_project()), fs::copy_options::recursive);
     fs::create_directory(fake_project() / "TestSandbox");
     fs::copy(project_template_path(root) / "Source" / "CMakeLists.txt", fake_project() / "Source");
     fs::copy(project_template_path(root) / "TestAll" / "CMakeLists.txt", fake_project() / "TestSandbox");

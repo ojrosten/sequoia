@@ -218,9 +218,6 @@ namespace sequoia::testing
   discoverable_paths discover_paths(int argc, char** argv);
 
   [[nodiscard]]
-  std::filesystem::path aux_files_path(std::filesystem::path projectRoot);
-
-  [[nodiscard]]
   std::filesystem::path build_system_path(std::filesystem::path projectRoot);
 
   [[nodiscard]]

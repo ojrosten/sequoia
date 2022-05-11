@@ -118,6 +118,7 @@ namespace sequoia::testing
     , m_TestMaterials{test_materials(project_root())}
     , m_Output{output(project_root())}
     , m_Build{build(project_root())}
+    , m_AuxFiles{aux_files(project_root())}
     , m_CommonIncludes{project_root() / pathsFromRoot.commonIncludes}
     , m_CMadeBuildDir{cmade_build_dir(project_root(), m_MainCpp.dir())}
     , m_PruneDir{output() / fs::relative(cmade_build_dir(), project_root())}
@@ -195,12 +196,6 @@ namespace sequoia::testing
     };
 
     return (dir /= back(cmade_build_dir())).concat(num).concat(".prune");
-  }
-
-  [[nodiscard]]
-  fs::path aux_files_path(fs::path projectRoot)
-  {
-    return projectRoot / "aux_files";
   }
 
   [[nodiscard]]
