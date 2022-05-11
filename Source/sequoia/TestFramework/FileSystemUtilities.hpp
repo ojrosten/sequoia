@@ -57,6 +57,12 @@ namespace sequoia::testing
   struct discoverable_paths
   {
     std::filesystem::path root, executable;
+
+    [[nodiscard]]
+    friend bool operator==(const discoverable_paths&, const discoverable_paths&) noexcept = default;
+
+    [[nodiscard]]
+    friend bool operator!=(const discoverable_paths&, const discoverable_paths&) noexcept = default;
   };
 
   class project_paths
