@@ -54,15 +54,35 @@ namespace sequoia::testing
     std::filesystem::path m_File{}, m_Dir{};
   };
 
-  struct discoverable_paths
+  class discoverable_paths
   {
-    std::filesystem::path root, executable;
+  public:
+    discoverable_paths(int argc, char** argv);
+
+    [[nodiscard]]
+    const std::filesystem::path& root() const noexcept
+    {
+      return m_Root;
+    }
+
+    [[nodiscard]]
+    const std::filesystem::path& executable() const noexcept
+    {
+      return m_Executable;
+    }
 
     [[nodiscard]]
     friend bool operator==(const discoverable_paths&, const discoverable_paths&) noexcept = default;
 
     [[nodiscard]]
     friend bool operator!=(const discoverable_paths&, const discoverable_paths&) noexcept = default;
+  private:
+    std::filesystem::path m_Root, m_Executable;
+
+    discoverable_paths(std::filesystem::path rt, std::filesystem::path ex);
+
+    [[nodiscard]]
+    static discoverable_paths make(int argc, char** argv);
   };
 
   class auxiliary_paths
@@ -210,13 +230,13 @@ namespace sequoia::testing
     [[nodiscard]]
     const std::filesystem::path& project_root() const noexcept
     {
-      return m_Discovered.root;
+      return m_Discovered.root();
     }
 
     [[nodiscard]]
     const std::filesystem::path& executable() const noexcept
     {
-      return m_Discovered.executable;
+      return m_Discovered.executable();
     }
 
     [[nodiscard]]
@@ -354,10 +374,6 @@ namespace sequoia::testing
     std::vector<file_info> m_AncillaryMainCpps{};
   };
 
-
-  [[nodiscard]]
-  discoverable_paths discover_paths(int argc, char** argv);
-
   template<std::predicate<std::filesystem::path> Pred>
   void throw_if(const std::filesystem::path& p, std::string_view message, Pred pred)
   {
@@ -375,7 +391,7 @@ namespace sequoia::testing
 
   [[nodiscard]]
   std::filesystem::path find_in_tree(const std::filesystem::path& root, const std::filesystem::path& toFind);
-  
+
   [[nodiscard]]
   std::filesystem::path rebase_from(const std::filesystem::path& filename, const std::filesystem::path& dir);
 }

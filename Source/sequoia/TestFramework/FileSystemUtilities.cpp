@@ -72,8 +72,17 @@ namespace sequoia::testing
     }
   }
 
+  discoverable_paths::discoverable_paths(int argc, char** argv)
+    : discoverable_paths{make(argc, argv)}
+  {}
+
+  discoverable_paths::discoverable_paths(fs::path rt, fs::path ex)
+    : m_Root{std::move(rt)}
+    , m_Executable{std::move(ex)}
+  {}
+
   [[nodiscard]]
-  discoverable_paths discover_paths(int argc, char** argv)
+  discoverable_paths discoverable_paths::make(int argc, char** argv)
   {
     if(argc)
     {
@@ -192,7 +201,7 @@ namespace sequoia::testing
   //===================================== project_paths =====================================//
 
   project_paths::project_paths(int argc, char** argv, const initializer& pathsFromRoot)
-    : m_Discovered{discover_paths(argc, argv)}
+    : m_Discovered{argc, argv}
     , m_MainCpp{project_root() / pathsFromRoot.mainCpp}
     , m_Source{source(project_root())}
     , m_SourceRoot{m_Source.parent_path()}
