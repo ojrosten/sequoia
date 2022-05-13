@@ -87,16 +87,16 @@ namespace sequoia::testing
     std::vector<std::filesystem::path> failed_tests{};
   };
 
-  struct paths
+  struct test_paths
   {
 #ifdef _MSC_VER
     // TO DO: remove once there's a Workaround for msvc bug which manifests when
     // a type lacking a default constructor is used in a std::future.
     // https://developercommunity.visualstudio.com/content/problem/60897/c-shared-state-futuresstate-default-constructs-the.html
-    paths() = default;
+    test_paths() = default;
 #endif
 
-    paths(const std::filesystem::path& sourceFile,
+    test_paths(const std::filesystem::path& sourceFile,
           const std::filesystem::path& workingMaterials,
           const std::filesystem::path& predictiveMaterials,
           const project_paths& projPaths);
@@ -112,7 +112,7 @@ namespace sequoia::testing
   struct paths_comparator
   {
     [[nodiscard]]
-    bool operator()(const paths& lhs, const paths& rhs) const noexcept
+    bool operator()(const test_paths& lhs, const test_paths& rhs) const noexcept
     {
       return lhs.workingMaterials < rhs.workingMaterials;
     }
@@ -133,7 +133,7 @@ namespace sequoia::testing
   public:
     explicit family_processor(update_mode mode);
 
-    void process(log_summary summary, const paths& files);
+    void process(log_summary summary, const test_paths& files);
 
     [[nodiscard]]
     family_results finalize_and_acquire();
@@ -141,7 +141,7 @@ namespace sequoia::testing
     update_mode m_Mode{};
     timer m_Timer{};
     std::set<std::filesystem::path> m_FilesWrittenTo{};
-    std::set<paths, paths_comparator> m_Updateables{};
+    std::set<test_paths, paths_comparator> m_Updateables{};
     family_results m_Results{};
 
     void to_file(const std::filesystem::path& filename, const log_summary& summary);
@@ -198,7 +198,7 @@ namespace sequoia::testing
     {
       family_processor processor{updateMode};
       auto pathsMaker{
-        [&info=m_Info](auto& test) -> paths {
+        [&info=m_Info](auto& test) -> test_paths {
           return {test.source_filename(),
                   test.working_materials(),
                   test.predictive_materials(),
@@ -221,7 +221,7 @@ namespace sequoia::testing
       }
       else
       {
-        using data = std::pair<log_summary, paths>;
+        using data = std::pair<log_summary, test_paths>;
         std::vector<std::future<data>> results{};
 
         auto generator{
@@ -240,8 +240,8 @@ namespace sequoia::testing
 
         for(auto& r : results)
         {
-          const auto[summary, paths]{r.get()};
-          processor.process(summary, paths);
+          const auto[summary, test_paths]{r.get()};
+          processor.process(summary, test_paths);
         }
       }
 

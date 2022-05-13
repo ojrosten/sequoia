@@ -71,12 +71,12 @@ namespace sequoia::testing
     throw std::logic_error{"Unknown option for concurrency_mode"};
   }
 
-  //============================== paths ==============================//
+  //============================== test_paths ==============================//
   
-  paths::paths(const fs::path& sourceFile,
-               const fs::path& workingMaterials,
-               const fs::path& predictiveMaterials,
-               const project_paths& projPaths)
+  test_paths::test_paths(const fs::path& sourceFile,
+                         const fs::path& workingMaterials,
+                         const fs::path& predictiveMaterials,
+                         const project_paths& projPaths)
     : test_file{sourceFile}
     , summary{test_summary_filename(sourceFile, projPaths)}
     , workingMaterials{workingMaterials}
@@ -89,7 +89,7 @@ namespace sequoia::testing
 
   //============================== family_processor ==============================//
   
-  void family_processor::process(log_summary summary, const paths& files)
+  void family_processor::process(log_summary summary, const test_paths& files)
   {
     if(summary.soft_failures() || summary.critical_failures())
       m_Results.failed_tests.push_back(files.test_file);
