@@ -109,6 +109,8 @@ namespace sequoia::testing
     throw_unless_regular_file(m_File, "\nTry ensuring that the application is run from the appropriate directory");
   }
 
+  //===================================== auxiliary_paths =====================================//
+
   auxiliary_paths::auxiliary_paths(const std::filesystem::path& projectRoot)
     : m_Dir{dir(projectRoot)}
     , m_TestTemplates{test_templates(projectRoot)}
@@ -140,6 +142,55 @@ namespace sequoia::testing
     return dir(projectRoot) /= "ProjectTemplate";
   }
 
+  //===================================== output_paths =====================================//
+
+  output_paths::output_paths(const fs::path& projectRoot)
+    : m_Dir{dir(projectRoot)}
+    , m_Recovery{recovery(projectRoot)}
+    , m_TestsTemporaryData{tests_temporary_data(projectRoot)}
+    , m_Diagnostics{diagnostics(projectRoot)}
+    , m_TestSummaries{test_summaries(projectRoot)}
+    , m_InstabilityAnalysis{instability_analysis(projectRoot)}
+  {}
+
+  [[nodiscard]]
+  fs::path output_paths::dir(fs::path projectRoot)
+  {
+    return projectRoot /= "output";
+  }
+
+  [[nodiscard]]
+  fs::path output_paths::recovery(fs::path projectRoot)
+  {
+    return dir(projectRoot) /= "Recovery";
+  }
+
+  [[nodiscard]]
+  fs::path output_paths::tests_temporary_data(fs::path projectRoot)
+  {
+    return dir(projectRoot) /= "TestsTemporaryData";
+  }
+
+  [[nodiscard]]
+  fs::path output_paths::diagnostics(fs::path projectRoot)
+  {
+    return dir(projectRoot) /= "DiagnosticsOutput";
+  }
+
+  [[nodiscard]]
+  fs::path output_paths::test_summaries(fs::path projectRoot)
+  {
+    return dir(projectRoot) /= "TestSummaries";
+  }
+
+  [[nodiscard]]
+  fs::path output_paths::instability_analysis(fs::path projectRoot)
+  {
+    return tests_temporary_data(projectRoot) /= "InstabilityAnalysis";
+  }
+
+  //===================================== project_paths =====================================//
+
   project_paths::project_paths(int argc, char** argv, const initializer& pathsFromRoot)
     : m_Discovered{discover_paths(argc, argv)}
     , m_MainCpp{project_root() / pathsFromRoot.mainCpp}
@@ -147,13 +198,13 @@ namespace sequoia::testing
     , m_SourceRoot{m_Source.parent_path()}
     , m_Tests{tests(project_root())}
     , m_TestMaterials{test_materials(project_root())}
-    , m_Output{output(project_root())}
     , m_Build{build(project_root())}
     , m_BuildSystem{build_system(project_root())}
-    , m_AuxPaths{project_root()}
+    , m_Auxiliary{project_root()}
+    , m_Output{project_root()}
     , m_CommonIncludes{project_root() / pathsFromRoot.commonIncludes}
     , m_CMadeBuildDir{cmade_build_dir(project_root(), m_MainCpp.dir())}
-    , m_PruneDir{output() / fs::relative(cmade_build_dir(), project_root())}
+    , m_PruneDir{output().dir() / fs::relative(cmade_build_dir(), project_root())}
     , m_InstabilityAnalysisPruneDir{prune_dir() / "InstabilityAnalysis"}
     , m_AncillaryMainCpps{make_ancillary_info(project_root(), pathsFromRoot)}
   {
@@ -200,12 +251,6 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  fs::path project_paths::output(fs::path projectRoot)
-  {
-    return projectRoot /= "output";
-  }
-
-  [[nodiscard]]
   fs::path project_paths::build(fs::path projectRoot)
   {
     return projectRoot /= "build";
@@ -228,36 +273,6 @@ namespace sequoia::testing
     };
 
     return (dir /= back(cmade_build_dir())).concat(num).concat(".prune");
-  }
-
-  [[nodiscard]]
-  fs::path recovery_path(fs::path outputDir)
-  {
-    return outputDir /= "Recovery";
-  }
-
-  [[nodiscard]]
-  fs::path tests_temporary_data_path(fs::path outputDir)
-  {
-    return outputDir /= "TestsTemporaryData";
-  }
-
-  [[nodiscard]]
-  fs::path diagnostics_output_path(fs::path outputDir)
-  {
-    return outputDir /= "DiagnosticsOutput";
-  }
-
-  [[nodiscard]]
-  fs::path test_summaries_path(fs::path outputDir)
-  {
-    return outputDir /= "TestSummaries";
-  }
-
-  [[nodiscard]]
-  fs::path temp_test_summaries_path(fs::path outputDir)
-  {
-    return tests_temporary_data_path(outputDir) /= "InstabilityAnalysis";
   }
 
   void throw_unless_exists(const fs::path& p, std::string_view message)

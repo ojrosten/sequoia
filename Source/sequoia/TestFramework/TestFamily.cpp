@@ -25,9 +25,7 @@ namespace sequoia::testing
   namespace
   {
     [[nodiscard]]
-    std::filesystem::path test_summary_filename(const fs::path& sourceFile,
-                                                const std::filesystem::path& outputDir,
-                                                const std::filesystem::path& testRepo)
+    std::filesystem::path test_summary_filename(const fs::path& sourceFile, const project_paths& projPaths)
     {
       const auto name{fs::path{sourceFile}.replace_extension(".txt")};
       if(name.empty())
@@ -35,14 +33,14 @@ namespace sequoia::testing
       
       if(!name.is_absolute())
       {
-        if(!testRepo.empty())
+        if(const auto testRepo{projPaths.tests()}; !testRepo.empty())
         {
-          return test_summaries_path(outputDir) / back(testRepo) / rebase_from(name, testRepo);
+          return projPaths.output().test_summaries() / back(projPaths.tests()) / rebase_from(name, testRepo);
         }
       }
       else
       {
-        auto summaryFile{test_summaries_path(outputDir)};
+        auto summaryFile{projPaths.output().test_summaries()};
         auto iters{std::mismatch(name.begin(), name.end(), summaryFile.begin(), summaryFile.end())};
 
         while(iters.first != name.end())
@@ -78,10 +76,9 @@ namespace sequoia::testing
   paths::paths(const fs::path& sourceFile,
                const fs::path& workingMaterials,
                const fs::path& predictiveMaterials,
-               const std::filesystem::path& outputDir,
-               const std::filesystem::path& testRepo)
+               const project_paths& projPaths)
     : test_file{sourceFile}
-    , summary{test_summary_filename(sourceFile, outputDir, testRepo)}
+    , summary{test_summary_filename(sourceFile, projPaths)}
     , workingMaterials{workingMaterials}
     , predictions{predictiveMaterials}
   {}
@@ -161,21 +158,21 @@ namespace sequoia::testing
   materials_info family_info::materials_setter::set_materials(const std::filesystem::path& sourceFile)
   {
     const auto rel{
-      [&sourceFile, &testRepo=m_pInfo->m_TestRepo, &materialsRepo=m_pInfo->m_TestMaterialsRepo](){
-        if(testRepo.empty()) return fs::path{};
+      [&sourceFile, &projPaths=m_pInfo->proj_paths()] (){
+        if(projPaths.tests().empty()) return fs::path{};
 
         auto folderName{fs::path{sourceFile}.replace_extension()};
         if(folderName.is_absolute())
-          folderName = fs::relative(folderName, materialsRepo);
+          folderName = fs::relative(folderName, projPaths.test_materials());
 
-        return rebase_from(folderName, testRepo);
+        return rebase_from(folderName, projPaths.tests());
       }()
     };
 
-    const auto materials{!rel.empty() ? m_pInfo->m_TestMaterialsRepo / rel : fs::path{}};
+    const auto materials{!rel.empty() ? m_pInfo->proj_paths().test_materials() / rel : fs::path{}};
     if(fs::exists(materials))
     {
-      const auto output{tests_temporary_data_path(m_pInfo->m_OutputDir) /= rel};
+      const auto output{m_pInfo->proj_paths().output().tests_temporary_data() / rel};
 
       const auto[original, workingCopy, prediction, originalAux, workingAux]{
          [&output,&materials] () -> std::array<fs::path, 5>{
@@ -219,15 +216,9 @@ namespace sequoia::testing
     return {};
   }
 
-  family_info::family_info(std::string_view name,
-                std::filesystem::path testRepo,
-                std::filesystem::path testMaterialsRepo,
-                std::filesystem::path outputDir,
-                recovery_paths recovery)
+  family_info::family_info(std::string_view name, const project_paths& projPaths, recovery_paths recovery)
     : m_Name{name}
-    , m_TestRepo{std::move(testRepo)}
-    , m_TestMaterialsRepo{std::move(testMaterialsRepo)}
-    , m_OutputDir{std::move(outputDir)}
+    , m_Paths{&projPaths}
     , m_Recovery{std::move(recovery)}
   {}
 

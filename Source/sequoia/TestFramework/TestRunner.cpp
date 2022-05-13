@@ -123,9 +123,9 @@ namespace sequoia::testing
 
     process_args(argc, argv);
 
-    fs::create_directory(proj_paths().output());
-    fs::create_directory(diagnostics_output_path(proj_paths().output()));
-    fs::create_directory(test_summaries_path(proj_paths().output()));
+    fs::create_directory(proj_paths().output().dir());
+    fs::create_directory(proj_paths().output().diagnostics());
+    fs::create_directory(proj_paths().output().test_summaries());
     fs::create_directories(proj_paths().prune_dir());
   }
 
@@ -359,7 +359,7 @@ namespace sequoia::testing
                     }
                   }},
                   {{{"dump", {}, {},
-                    [this, recoveryDir{recovery_path(proj_paths().output())}](const arg_list&) {
+                    [this, &recoveryDir{proj_paths().output().recovery()}](const arg_list&) {
                       std::filesystem::create_directory(recoveryDir);
                       m_Selector.dump_file(recoveryDir / "Dump.txt");
                       std::filesystem::remove(m_Selector.dump_file());
@@ -391,7 +391,7 @@ namespace sequoia::testing
                   }}},
                   {{{"--verbose",  {"-v"}, {}, [this](const arg_list&) { m_OutputMode = output_mode::verbose; }}}},
                   {{{"--recovery", {"-r"}, {},
-                    [this,recoveryDir{recovery_path(proj_paths().output())}] (const arg_list&) {
+                    [this, &recoveryDir{proj_paths().output().recovery()}](const arg_list&) {
                       std::filesystem::create_directory(recoveryDir);
                       m_Selector.recovery_file(recoveryDir / "Recovery.txt");
                       std::filesystem::remove(m_Selector.recovery_file());
@@ -498,7 +498,7 @@ namespace sequoia::testing
 
     if((m_InstabilityMode != instability_mode::sandbox))
     {
-      fs::remove_all(temp_test_summaries_path(proj_paths().output()));
+      fs::remove_all(proj_paths().output().instability_analysis());
     }
 
     if(m_InstabilityMode == instability_mode::coordinator)
@@ -556,7 +556,7 @@ namespace sequoia::testing
        || (m_InstabilityMode == instability_mode::coordinator))
     {
       m_Selector.aggregate_instability_analysis_prune_files(m_NumReps);
-      const auto outputDir{temp_test_summaries_path(m_Selector.proj_paths().output())};
+      const auto outputDir{m_Selector.proj_paths().output().instability_analysis()};
       stream() << instability_analysis(outputDir, m_NumReps);
     }
   }

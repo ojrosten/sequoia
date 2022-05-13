@@ -197,11 +197,11 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path directory_for_instability_analysis(const fs::path& outputDir, fs::path source, std::string_view name)
+  std::filesystem::path directory_for_instability_analysis(const project_paths& projPaths, fs::path source, std::string_view name)
   {
     const auto ext{replace(source.filename().extension().string(), ".", "_")};
 
-    return temp_test_summaries_path(outputDir)
+    return projPaths.output().instability_analysis()
         / source.filename().replace_extension().concat(ext)
         / replace_all(name, " ", "_");
   }

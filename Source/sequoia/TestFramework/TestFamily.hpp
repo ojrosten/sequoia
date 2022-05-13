@@ -12,6 +12,7 @@
 
  */
 
+#include "sequoia/TestFramework/FileSystemUtilities.hpp"
 #include "sequoia/TestFramework/FreeTestCore.hpp"
 #include "sequoia/TestFramework/Summary.hpp"
 
@@ -62,28 +63,20 @@ namespace sequoia::testing
       std::vector<std::filesystem::path> m_MaterialsPaths{};
     };
     
-    family_info(std::string_view name,
-                std::filesystem::path testRepo,
-                std::filesystem::path testMaterialsRepo,
-                std::filesystem::path outputDir,
-                recovery_paths recovery);
+    family_info(std::string_view name, const project_paths& projPaths, recovery_paths recovery);
 
     [[nodiscard]]
     const std::string& name() const noexcept { return m_Name; }
 
     [[nodiscard]]
-    const std::filesystem::path& test_repo() const noexcept { return m_TestRepo; }
+    const project_paths& proj_paths() const noexcept { return *m_Paths; }
 
-    [[nodiscard]]
-    const std::filesystem::path& output_dir() const noexcept { return m_OutputDir; }
-
-    [[nodiscard]]
     const recovery_paths& recovery() const noexcept { return m_Recovery; }
   private:
     friend materials_setter;
     
     std::string m_Name{};
-    std::filesystem::path m_TestRepo{}, m_TestMaterialsRepo{}, m_OutputDir{};
+    const project_paths* m_Paths;
     recovery_paths m_Recovery;
   };
 
@@ -106,8 +99,7 @@ namespace sequoia::testing
     paths(const std::filesystem::path& sourceFile,
           const std::filesystem::path& workingMaterials,
           const std::filesystem::path& predictiveMaterials,
-          const std::filesystem::path& outputDir,
-          const std::filesystem::path& testRepo);
+          const project_paths& projPaths);
 
     std::filesystem::path
       test_file,
@@ -162,17 +154,8 @@ namespace sequoia::testing
   class test_family
   {
   public:
-    test_family(std::string name,
-                std::filesystem::path testRepo,
-                std::filesystem::path testMaterialsRepo,
-                std::filesystem::path outputDir,
-                recovery_paths recovery,
-                Tests... tests)
-      : m_Info{std::move(name),
-               std::move(testRepo),
-               std::move(testMaterialsRepo),
-               std::move(outputDir),
-               std::move(recovery)}
+    test_family(std::string name, const project_paths& projPaths, recovery_paths recovery, Tests... tests)
+      : m_Info{std::move(name), projPaths, std::move(recovery)}
       , m_Tests{std::move(tests)...}
     {
       family_info::materials_setter setter{m_Info};
@@ -182,16 +165,8 @@ namespace sequoia::testing
       );
     }
 
-    test_family(std::string name,
-                std::filesystem::path testRepo,
-                std::filesystem::path testMaterialsRepo,
-                std::filesystem::path outputDir,
-                recovery_paths recovery)
-      : m_Info{std::move(name),
-               std::move(testRepo),
-               std::move(testMaterialsRepo),
-               std::move(outputDir),
-               std::move(recovery)}
+    test_family(std::string name, const project_paths& projPaths, recovery_paths recovery)
+      : m_Info{std::move(name), projPaths, std::move(recovery)}
     {}
 
     test_family(const test_family&)     = delete;
@@ -227,8 +202,7 @@ namespace sequoia::testing
           return {test.source_filename(),
                   test.working_materials(),
                   test.predictive_materials(),
-                  info.output_dir(),
-                  info.test_repo()};
+                  info.proj_paths()};
         }
       };
 
@@ -321,7 +295,7 @@ namespace sequoia::testing
     {
       if(t.has_value())
       {
-        t->set_filesystem_data(m_Info.test_repo(), m_Info.output_dir(), name());
+        t->set_filesystem_data(m_Info.proj_paths(), name());
         t->set_recovery_paths(m_Info.recovery());
 
         const auto info{setter.set_materials(t->source_filename())};

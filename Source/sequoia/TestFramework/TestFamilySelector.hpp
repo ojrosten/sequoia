@@ -36,7 +36,7 @@ namespace sequoia::testing
           if(!m_SelectedSources.empty())
           {
             using family_t = test_family<std::remove_cvref_t<Test>, std::remove_cvref_t<Tests>...>;
-            family_t f{std::string{name}, m_Paths.tests(), m_Paths.test_materials(), m_Paths.output(), m_Recovery};
+            family_t f{std::string{name}, m_Paths, m_Recovery};
             auto setter{f.make_materials_setter()};
 
             add_tests(f, setter, std::move(test), std::move(tests)...);
@@ -56,13 +56,7 @@ namespace sequoia::testing
       {
         if(mark_family(name))
         {
-          m_Families.push_back(test_family{std::string{name},
-                                           m_Paths.tests(),
-                                           m_Paths.test_materials(),
-                                           m_Paths.output(),
-                                           m_Recovery,
-                                           std::move(test),
-                                           std::move(tests)...});
+          m_Families.push_back(test_family{std::string{name}, m_Paths,m_Recovery, std::move(test), std::move(tests)...});
         }
       }
     }

@@ -162,7 +162,7 @@ namespace sequoia::testing
       return testing::report_line(file, line, message, test_repository());
     }
 
-    void set_filesystem_data(std::filesystem::path testRepo, const std::filesystem::path& outputDir, std::string_view familyName)
+    void set_filesystem_data(const project_paths& projPaths, std::string_view familyName)
     {
       namespace fs = std::filesystem;
 
@@ -179,10 +179,10 @@ namespace sequoia::testing
         }
       };
 
-      m_TestRepo                = std::move(testRepo);
-      m_DiagnosticsOutput       = makePath(diagnostics_output_path(outputDir),  "Output");
-      m_CaughtExceptionsOutput  = makePath(diagnostics_output_path(outputDir),  "Exceptions");
-      m_InstabilityAnalysisDir  = directory_for_instability_analysis(outputDir, source_file(), name());
+      m_TestRepo                = projPaths.tests();
+      m_DiagnosticsOutput       = makePath(projPaths.output().diagnostics(),  "Output");
+      m_CaughtExceptionsOutput  = makePath(projPaths.output().diagnostics(),  "Exceptions");
+      m_InstabilityAnalysisDir  = directory_for_instability_analysis(projPaths, source_file(), name());
 
       fs::create_directories(m_DiagnosticsOutput.parent_path());
     }

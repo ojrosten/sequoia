@@ -119,6 +119,80 @@ namespace sequoia::testing
       m_ProjectTemplate{};
   };
 
+  class output_paths
+  {
+  public:
+    output_paths(const std::filesystem::path& projectRoot);
+
+    [[nodiscard]]
+    const std::filesystem::path& dir() const noexcept
+    {
+      return m_Dir;
+    }
+
+    [[nodiscard]]
+    static std::filesystem::path dir(std::filesystem::path projectRoot);
+
+    [[nodiscard]]
+    const std::filesystem::path& recovery() const noexcept
+    {
+      return m_Recovery;
+    }
+
+    [[nodiscard]]
+    static std::filesystem::path recovery(std::filesystem::path projectRoot);
+
+    [[nodiscard]]
+    const std::filesystem::path tests_temporary_data() const noexcept
+    {
+      return m_TestsTemporaryData;
+    }
+
+    [[nodiscard]]
+    static std::filesystem::path tests_temporary_data(std::filesystem::path projectRoot);
+
+    [[nodiscard]]
+    const std::filesystem::path& diagnostics() const noexcept
+    {
+      return m_Diagnostics;
+    }
+
+    [[nodiscard]]
+    static std::filesystem::path diagnostics(std::filesystem::path projectRoot);
+
+    [[nodiscard]]
+    const std::filesystem::path& test_summaries() const noexcept
+    {
+      return m_TestSummaries;
+    }
+
+    [[nodiscard]]
+    static std::filesystem::path test_summaries(std::filesystem::path projectRoot);
+
+    [[nodiscard]]
+    const std::filesystem::path& instability_analysis() const noexcept
+    {
+      return m_InstabilityAnalysis;
+    }
+
+    [[nodiscard]]
+    static std::filesystem::path instability_analysis(std::filesystem::path projectRoot);
+
+    [[nodiscard]]
+    friend bool operator==(const output_paths&, const output_paths&) noexcept = default;
+
+    [[nodiscard]]
+    friend bool operator!=(const output_paths&, const output_paths&) noexcept = default;
+  private:
+    std::filesystem::path
+      m_Dir{},
+      m_Recovery{},
+      m_TestsTemporaryData{},
+      m_Diagnostics{},
+      m_TestSummaries{},
+      m_InstabilityAnalysis{};
+  };
+
   class project_paths
   {
   public:
@@ -179,15 +253,6 @@ namespace sequoia::testing
     static std::filesystem::path test_materials(std::filesystem::path projectRoot);
 
     [[nodiscard]]
-    const std::filesystem::path& output() const noexcept
-    {
-      return m_Output;
-    }
-
-    [[nodiscard]]
-    static std::filesystem::path output(std::filesystem::path projectRoot);
-
-    [[nodiscard]]
     const std::filesystem::path& build() const noexcept
     {
       return m_Build;
@@ -208,7 +273,13 @@ namespace sequoia::testing
     [[nodiscard]]
     const auxiliary_paths& aux_paths() const noexcept
     {
-      return m_AuxPaths;
+      return m_Auxiliary;
+    }
+
+    [[nodiscard]]
+    const output_paths& output() const noexcept
+    {
+      return m_Output;
     }
 
     [[nodiscard]]
@@ -268,11 +339,11 @@ namespace sequoia::testing
       m_SourceRoot{},
       m_Tests{},
       m_TestMaterials{},
-      m_Output{},
       m_Build{},
       m_BuildSystem{};
 
-    auxiliary_paths m_AuxPaths;
+    auxiliary_paths m_Auxiliary;
+    output_paths m_Output;
 
     std::filesystem::path
       m_CommonIncludes{},
@@ -286,21 +357,6 @@ namespace sequoia::testing
 
   [[nodiscard]]
   discoverable_paths discover_paths(int argc, char** argv);
-
-  [[nodiscard]]
-  std::filesystem::path recovery_path(std::filesystem::path outputDir);
-
-  [[nodiscard]]
-  std::filesystem::path tests_temporary_data_path(std::filesystem::path outputDir);
-
-  [[nodiscard]]
-  std::filesystem::path diagnostics_output_path(std::filesystem::path outputDir);
-
-  [[nodiscard]]
-  std::filesystem::path test_summaries_path(std::filesystem::path outputDir);
-
-  [[nodiscard]]
-  std::filesystem::path temp_test_summaries_path(std::filesystem::path outputDir);
 
   template<std::predicate<std::filesystem::path> Pred>
   void throw_if(const std::filesystem::path& p, std::string_view message, Pred pred)
