@@ -213,7 +213,7 @@ namespace sequoia::testing
     , m_Output{project_root()}
     , m_CommonIncludes{project_root() / pathsFromRoot.commonIncludes}
     , m_CMadeBuildDir{cmade_build_dir(project_root(), m_MainCpp.dir())}
-    , m_PruneDir{output().dir() / fs::relative(cmade_build_dir(), project_root())}
+    , m_PruneDir{output().dir() / "Prune" / fs::relative(cmade_build_dir(), build())}
     , m_InstabilityAnalysisPruneDir{prune_dir() / "InstabilityAnalysis"}
     , m_AncillaryMainCpps{make_ancillary_info(project_root(), pathsFromRoot)}
   {
