@@ -57,27 +57,15 @@ namespace sequoia::testing
     std::filesystem::path working, prediction, auxiliary;
   };
 
+  /*! \brief helper class for test_family
+
+      The primary purpose of this class to allow code that would otherwise appear
+      in the class template test_family to be moved out of thia header and into
+      the associated cpp.
+   */
   class family_info
   {
   public:
-    class [[nodiscard]] materials_setter
-    {
-    public:
-      explicit materials_setter(family_info& info);
-
-      materials_setter(const materials_setter&)     = delete;
-      materials_setter(materials_setter&&) noexcept = default;
-
-      materials_setter& operator=(const materials_setter&)     = delete;
-      materials_setter& operator=(materials_setter&&) noexcept = default;
-
-      [[nodiscard]]
-      materials_info set_materials(const std::filesystem::path& sourceFile);
-    private:
-      family_info* m_pInfo;
-      std::vector<std::filesystem::path> m_MaterialsPaths{};
-    };
-    
     family_info(std::string_view name, const project_paths& projPaths, recovery_mode recoveryMode);
 
     [[nodiscard]]
@@ -91,9 +79,10 @@ namespace sequoia::testing
     {
       return m_Recovery;
     }
+
+    [[nodiscard]]
+    materials_info set_materials(const std::filesystem::path& sourceFile, std::vector<std::filesystem::path>& materialsPaths);
   private:
-    friend materials_setter;
-    
     std::string m_Name{};
     const project_paths* m_Paths;
     recovery_mode m_Recovery;
@@ -177,9 +166,10 @@ namespace sequoia::testing
       : m_Info{std::move(name), projPaths, recoveryMode}
       , m_Tests{std::move(tests)...}
     {
-      family_info::materials_setter setter{m_Info};
+      std::vector<std::filesystem::path> materialsPaths{};
+
       std::apply(
-        [this,recoveryMode,&setter](auto&... t) { ( set_materials(recoveryMode, setter, t), ... ); },
+        [this,recoveryMode,&materialsPaths](auto&... t) { ( set_materials(recoveryMode, materialsPaths, t), ... ); },
         m_Tests
       );
     }
@@ -194,20 +184,14 @@ namespace sequoia::testing
     test_family& operator=(const test_family&)     = delete;
     test_family& operator=(test_family&&) noexcept = default;
 
-    [[nodiscard]]
-    family_info::materials_setter make_materials_setter()
-    {
-      return family_info::materials_setter{m_Info};
-    }
-
     template<concrete_test T>
-    void add_test(family_info::materials_setter& setter, T test)
+    void add_test(std::vector<std::filesystem::path>& materialsPaths, T test)
     {
       using test_type = std::optional<std::remove_cvref_t<T>>;
 
       auto& t{std::get<test_type>(m_Tests)};
       t = std::move(test);
-      set_materials(m_Info.get_recovery_mode(), setter, t);
+      set_materials(m_Info.get_recovery_mode(), materialsPaths, t);
     }
 
     [[nodiscard]]
@@ -290,15 +274,15 @@ namespace sequoia::testing
 
     void reset()
     {
-      family_info::materials_setter setter{m_Info};
-      
+      std::vector<std::filesystem::path> materialsPaths{};
+
       auto reset{
-        [this,&setter](auto& optTest){
+        [this,&materialsPaths](auto& optTest){
           if(optTest)
           {
             using type = typename std::remove_cvref_t<decltype(optTest)>::value_type;
             *optTest = type{optTest->name()};
-            set_materials(m_Info.get_recovery_mode(), setter, optTest);
+            set_materials(m_Info.get_recovery_mode(), materialsPaths, optTest);
           }
         }
       };
@@ -310,14 +294,14 @@ namespace sequoia::testing
     std::tuple<std::optional<Tests>...> m_Tests;
 
     template<concrete_test T>
-    void set_materials(recovery_mode recoveryMode, family_info::materials_setter& setter, std::optional<T>& t)
+    void set_materials(recovery_mode recoveryMode, std::vector<std::filesystem::path>& materialsPaths, std::optional<T>& t)
     {
       if(t.has_value())
       {
         t->set_filesystem_data(m_Info.proj_paths(), name());
         t->set_recovery_paths(make_active_paths(recoveryMode, m_Info.proj_paths()));
 
-        const auto info{setter.set_materials(t->source_filename())};
+        const auto info{m_Info.set_materials(t->source_filename(), materialsPaths)};
 
         t->set_materials(info.working, info.prediction, info.auxiliary);
       }

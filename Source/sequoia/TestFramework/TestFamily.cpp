@@ -164,15 +164,13 @@ namespace sequoia::testing
 
   //============================== family_info ==============================//
 
-  family_info::materials_setter::materials_setter(family_info& info)
-    : m_pInfo{&info}
-  {}
-
   [[nodiscard]]
-  materials_info family_info::materials_setter::set_materials(const std::filesystem::path& sourceFile)
+  materials_info family_info::set_materials(const std::filesystem::path& sourceFile, std::vector<std::filesystem::path>& materialsPaths)
   {
+    const auto& projPaths{*m_Paths};
+
     const auto rel{
-      [&sourceFile, &projPaths=m_pInfo->proj_paths()] (){
+      [&sourceFile, &projPaths] (){
         if(projPaths.tests().empty()) return fs::path{};
 
         auto folderName{fs::path{sourceFile}.replace_extension()};
@@ -183,10 +181,10 @@ namespace sequoia::testing
       }()
     };
 
-    const auto materials{!rel.empty() ? m_pInfo->proj_paths().test_materials() / rel : fs::path{}};
+    const auto materials{!rel.empty() ? m_Paths->test_materials() / rel : fs::path{}};
     if(fs::exists(materials))
     {
-      const auto output{m_pInfo->proj_paths().output().tests_temporary_data() / rel};
+      const auto output{projPaths.output().tests_temporary_data() / rel};
 
       const auto[original, workingCopy, prediction, originalAux, workingAux]{
          [&output,&materials] () -> std::array<fs::path, 5>{
@@ -205,7 +203,7 @@ namespace sequoia::testing
         }()
       };
 
-      if(std::find(m_MaterialsPaths.cbegin(), m_MaterialsPaths.cend(), workingCopy) == m_MaterialsPaths.cend())
+      if(std::find(materialsPaths.cbegin(), materialsPaths.cend(), workingCopy) == materialsPaths.cend())
       {
         fs::remove_all(output);
         fs::create_directories(output);
@@ -221,7 +219,7 @@ namespace sequoia::testing
         if(fs::exists(originalAux))
           fs::copy(originalAux, workingAux, fs::copy_options::recursive | fs::copy_options::overwrite_existing);
 
-        m_MaterialsPaths.emplace_back(workingCopy);
+        materialsPaths.emplace_back(workingCopy);
       }
 
       return {workingCopy, prediction, workingAux};

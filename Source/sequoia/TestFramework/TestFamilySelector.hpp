@@ -37,9 +37,9 @@ namespace sequoia::testing
           {
             using family_t = test_family<std::remove_cvref_t<Test>, std::remove_cvref_t<Tests>...>;
             family_t f{std::string{name}, m_Paths, recoveryMode};
-            auto setter{f.make_materials_setter()};
+            std::vector<std::filesystem::path> materialsPath{};
 
-            add_tests(f, setter, std::move(test), std::move(tests)...);
+            add_tests(f, materialsPath, std::move(test), std::move(tests)...);
             if(!f.empty())
             {
               m_Families.push_back(std::move(f));
@@ -200,18 +200,18 @@ namespace sequoia::testing
 
     template<concrete_test... AllTests, concrete_test Test, concrete_test... Tests>
     void add_tests(test_family<AllTests...>& f,
-                   family_info::materials_setter& setter,
+                   std::vector<std::filesystem::path>& materialsPath,
                    Test&& test,
                    Tests&&... tests)
     {
       auto i{find_filename(test.source_filename())};
       if(i != m_SelectedSources.end())
       {
-        f.add_test(setter, std::forward<Test>(test));
+        f.add_test(materialsPath, std::forward<Test>(test));
         i->second = true;
       }
 
-      if constexpr(sizeof...(Tests) > 0) add_tests(f, setter, std::forward<Tests>(tests)...);
+      if constexpr(sizeof...(Tests) > 0) add_tests(f, materialsPath, std::forward<Tests>(tests)...);
     }
 
     [[nodiscard]]
