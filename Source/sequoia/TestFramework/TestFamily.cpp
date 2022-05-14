@@ -73,7 +73,7 @@ namespace sequoia::testing
 
 
   [[nodiscard]]
-  active_recovery_files make_active_paths(recovery_mode mode, const project_paths& projPaths)
+  active_recovery_files make_active_recovery_paths(recovery_mode mode, const project_paths& projPaths)
   {
     active_recovery_files paths{};
     if((mode & recovery_mode::recovery) == recovery_mode::recovery)

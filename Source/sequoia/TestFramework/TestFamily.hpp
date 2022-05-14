@@ -50,7 +50,7 @@ namespace sequoia::testing
   std::string to_string(concurrency_mode mode);
 
   [[nodiscard]]
-  active_recovery_files make_active_paths(recovery_mode mode, const project_paths& projPaths);
+  active_recovery_files make_active_recovery_paths(recovery_mode mode, const project_paths& projPaths);
 
   struct materials_info
   {
@@ -299,7 +299,7 @@ namespace sequoia::testing
       if(t.has_value())
       {
         t->set_filesystem_data(m_Info.proj_paths(), name());
-        t->set_recovery_paths(make_active_paths(recoveryMode, m_Info.proj_paths()));
+        t->set_recovery_paths(make_active_recovery_paths(recoveryMode, m_Info.proj_paths()));
 
         const auto info{m_Info.set_materials(t->source_filename(), materialsPaths)};
 
