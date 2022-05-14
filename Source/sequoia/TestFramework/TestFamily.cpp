@@ -77,10 +77,10 @@ namespace sequoia::testing
   {
     active_recovery_files paths{};
     if((mode & recovery_mode::recovery) == recovery_mode::recovery)
-      paths.recovery_file = projPaths.output().recovery().recovery();
+      paths.recovery_file = projPaths.output().recovery().recovery_file();
 
     if((mode & recovery_mode::dump) == recovery_mode::dump)
-      paths.dump_file = projPaths.output().recovery().dump();
+      paths.dump_file = projPaths.output().recovery().dump_file();
 
     return paths;
   }

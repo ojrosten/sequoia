@@ -155,8 +155,6 @@ namespace sequoia::testing
 
   recovery_paths::recovery_paths(const fs::path& outputDir)
     : m_Dir{dir(outputDir)}
-    , m_Recovery{recovery(outputDir)}
-    , m_Dump{dump(outputDir)}
   {}
 
   [[nodiscard]]
@@ -166,15 +164,15 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  fs::path recovery_paths::recovery(std::filesystem::path outputDir)
+  fs::path recovery_paths::recovery_file() const
   {
-    return dir(outputDir) /= "Recovery.txt";
+    return fs::path{dir()} /= "Recovery.txt";
   }
 
   [[nodiscard]]
-  fs::path recovery_paths::dump(std::filesystem::path outputDir)
+  fs::path recovery_paths::dump_file() const
   {
-    return dir(outputDir) /= "Dump.txt";
+    return fs::path{dir()} /= "Dump.txt";
   }
 
   //===================================== output_paths =====================================//
@@ -185,7 +183,6 @@ namespace sequoia::testing
     , m_Diagnostics{diagnostics(projectRoot)}
     , m_TestSummaries{test_summaries(projectRoot)}
     , m_InstabilityAnalysis{instability_analysis(projectRoot)}
-    , m_Recovery{m_Dir}
   {}
 
   [[nodiscard]]

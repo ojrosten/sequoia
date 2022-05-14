@@ -159,22 +159,10 @@ namespace sequoia::testing
     static std::filesystem::path dir(std::filesystem::path outputDir);
 
     [[nodiscard]]
-    const std::filesystem::path& recovery() const noexcept
-    {
-      return m_Recovery;
-    }
+    std::filesystem::path recovery_file() const;
 
     [[nodiscard]]
-    static std::filesystem::path recovery(std::filesystem::path projectRoot);
-
-    [[nodiscard]]
-    const std::filesystem::path& dump() const noexcept
-    {
-      return m_Dump;
-    }
-
-    [[nodiscard]]
-    static std::filesystem::path dump(std::filesystem::path projectRoot);
+    std::filesystem::path dump_file() const;
 
     [[nodiscard]]
     friend bool operator==(const recovery_paths&, const recovery_paths&) noexcept = default;
@@ -182,7 +170,7 @@ namespace sequoia::testing
     [[nodiscard]]
     friend bool operator!=(const recovery_paths&, const recovery_paths&) noexcept = default;
   private:
-    std::filesystem::path m_Dir{}, m_Recovery{}, m_Dump{};
+    std::filesystem::path m_Dir{};
   };
 
   class output_paths
@@ -236,9 +224,9 @@ namespace sequoia::testing
     static std::filesystem::path instability_analysis(std::filesystem::path projectRoot);
 
     [[nodiscard]]
-    const recovery_paths& recovery() const noexcept
+    recovery_paths recovery() const
     {
-      return m_Recovery;
+      return {dir()};
     }
 
     [[nodiscard]]
@@ -253,8 +241,6 @@ namespace sequoia::testing
       m_Diagnostics{},
       m_TestSummaries{},
       m_InstabilityAnalysis{};
-
-    recovery_paths m_Recovery;
   };
 
   class project_paths
