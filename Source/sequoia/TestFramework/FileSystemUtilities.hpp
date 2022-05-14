@@ -139,6 +139,52 @@ namespace sequoia::testing
       m_ProjectTemplate{};
   };
 
+  /*! \brief Holds details of the file to which the last successfully completed test is registered.
+
+    If a check causes a crash, the recovery file may be used to provide a clue as to where this
+    happened.
+ */
+  class recovery_paths
+  {
+  public:
+    recovery_paths(const std::filesystem::path& outputDir);
+
+    [[nodiscard]]
+    const std::filesystem::path& dir() const noexcept
+    {
+      return m_Dir;
+    }
+
+    [[nodiscard]]
+    static std::filesystem::path dir(std::filesystem::path outputDir);
+
+    [[nodiscard]]
+    const std::filesystem::path& recovery() const noexcept
+    {
+      return m_Recovery;
+    }
+
+    [[nodiscard]]
+    static std::filesystem::path recovery(std::filesystem::path projectRoot);
+
+    [[nodiscard]]
+    const std::filesystem::path& dump() const noexcept
+    {
+      return m_Dump;
+    }
+
+    [[nodiscard]]
+    static std::filesystem::path dump(std::filesystem::path projectRoot);
+
+    [[nodiscard]]
+    friend bool operator==(const recovery_paths&, const recovery_paths&) noexcept = default;
+
+    [[nodiscard]]
+    friend bool operator!=(const recovery_paths&, const recovery_paths&) noexcept = default;
+  private:
+    std::filesystem::path m_Dir{}, m_Recovery{}, m_Dump{};
+  };
+
   class output_paths
   {
   public:
@@ -152,15 +198,6 @@ namespace sequoia::testing
 
     [[nodiscard]]
     static std::filesystem::path dir(std::filesystem::path projectRoot);
-
-    [[nodiscard]]
-    const std::filesystem::path& recovery() const noexcept
-    {
-      return m_Recovery;
-    }
-
-    [[nodiscard]]
-    static std::filesystem::path recovery(std::filesystem::path projectRoot);
 
     [[nodiscard]]
     const std::filesystem::path tests_temporary_data() const noexcept
@@ -199,6 +236,12 @@ namespace sequoia::testing
     static std::filesystem::path instability_analysis(std::filesystem::path projectRoot);
 
     [[nodiscard]]
+    const recovery_paths& recovery() const noexcept
+    {
+      return m_Recovery;
+    }
+
+    [[nodiscard]]
     friend bool operator==(const output_paths&, const output_paths&) noexcept = default;
 
     [[nodiscard]]
@@ -206,11 +249,12 @@ namespace sequoia::testing
   private:
     std::filesystem::path
       m_Dir{},
-      m_Recovery{},
       m_TestsTemporaryData{},
       m_Diagnostics{},
       m_TestSummaries{},
       m_InstabilityAnalysis{};
+
+    recovery_paths m_Recovery;
   };
 
   class project_paths

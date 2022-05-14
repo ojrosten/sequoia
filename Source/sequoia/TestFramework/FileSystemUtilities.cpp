@@ -151,27 +151,47 @@ namespace sequoia::testing
     return dir(projectRoot) /= "ProjectTemplate";
   }
 
+  //===================================== recovery_paths =====================================//
+
+  recovery_paths::recovery_paths(const fs::path& outputDir)
+    : m_Dir{dir(outputDir)}
+    , m_Recovery{recovery(outputDir)}
+    , m_Dump{dump(outputDir)}
+  {}
+
+  [[nodiscard]]
+  fs::path recovery_paths::dir(std::filesystem::path outputDir)
+  {
+    return outputDir /= "Recovery";
+  }
+
+  [[nodiscard]]
+  fs::path recovery_paths::recovery(std::filesystem::path outputDir)
+  {
+    return dir(outputDir) /= "Recovery.txt";
+  }
+
+  [[nodiscard]]
+  fs::path recovery_paths::dump(std::filesystem::path outputDir)
+  {
+    return dir(outputDir) /= "Dump.txt";
+  }
+
   //===================================== output_paths =====================================//
 
   output_paths::output_paths(const fs::path& projectRoot)
     : m_Dir{dir(projectRoot)}
-    , m_Recovery{recovery(projectRoot)}
     , m_TestsTemporaryData{tests_temporary_data(projectRoot)}
     , m_Diagnostics{diagnostics(projectRoot)}
     , m_TestSummaries{test_summaries(projectRoot)}
     , m_InstabilityAnalysis{instability_analysis(projectRoot)}
+    , m_Recovery{m_Dir}
   {}
 
   [[nodiscard]]
   fs::path output_paths::dir(fs::path projectRoot)
   {
     return projectRoot /= "output";
-  }
-
-  [[nodiscard]]
-  fs::path output_paths::recovery(fs::path projectRoot)
-  {
-    return dir(projectRoot) /= "Recovery";
   }
 
   [[nodiscard]]

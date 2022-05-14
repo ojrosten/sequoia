@@ -194,9 +194,9 @@ namespace sequoia::testing
       m_AuxiliaryMaterials  = std::move(auxiliaryMaterials);
     }
 
-    void set_recovery_paths(recovery_paths paths)
+    void set_recovery_paths(active_recovery_files files)
     {
-      Checker::recovery(std::move(paths));
+      Checker::recovery(std::move(files));
     }
   protected:
     using duration = std::chrono::steady_clock::duration;

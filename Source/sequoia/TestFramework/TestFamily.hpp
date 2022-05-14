@@ -24,8 +24,20 @@
 
 namespace sequoia::testing
 {
-  enum class update_mode { none=0, soft};
+  enum class update_mode { none = 0, soft };
 
+  enum class recovery_mode { none = 0, recovery = 1, dump = 2 };
+}
+
+namespace sequoia
+{
+  template<>
+  struct as_bitmask<testing::recovery_mode> : std::true_type {};
+}
+
+
+namespace sequoia::testing
+{
   /*! \brief Specifies the granularity at which concurrent execution is applied */
   enum class concurrency_mode {
     serial,    /// serial execution
@@ -36,6 +48,9 @@ namespace sequoia::testing
 
   [[nodiscard]]
   std::string to_string(concurrency_mode mode);
+
+  [[nodiscard]]
+  active_recovery_files make_active_paths(recovery_mode mode, const project_paths& projPaths);
 
   struct materials_info
   {
@@ -63,7 +78,7 @@ namespace sequoia::testing
       std::vector<std::filesystem::path> m_MaterialsPaths{};
     };
     
-    family_info(std::string_view name, const project_paths& projPaths, recovery_paths recovery);
+    family_info(std::string_view name, const project_paths& projPaths, recovery_mode recoveryMode);
 
     [[nodiscard]]
     const std::string& name() const noexcept { return m_Name; }
@@ -71,13 +86,17 @@ namespace sequoia::testing
     [[nodiscard]]
     const project_paths& proj_paths() const noexcept { return *m_Paths; }
 
-    const recovery_paths& recovery() const noexcept { return m_Recovery; }
+    [[nodiscard]]
+    recovery_mode get_recovery_mode() const noexcept
+    {
+      return m_Recovery;
+    }
   private:
     friend materials_setter;
     
     std::string m_Name{};
     const project_paths* m_Paths;
-    recovery_paths m_Recovery;
+    recovery_mode m_Recovery;
   };
 
   struct family_results
@@ -154,19 +173,19 @@ namespace sequoia::testing
   class test_family
   {
   public:
-    test_family(std::string name, const project_paths& projPaths, recovery_paths recovery, Tests... tests)
-      : m_Info{std::move(name), projPaths, std::move(recovery)}
+    test_family(std::string name, const project_paths& projPaths, recovery_mode recoveryMode, Tests... tests)
+      : m_Info{std::move(name), projPaths, recoveryMode}
       , m_Tests{std::move(tests)...}
     {
       family_info::materials_setter setter{m_Info};
       std::apply(
-        [this,&setter](auto&... t) { ( set_materials(setter, t), ... ); },
+        [this,recoveryMode,&setter](auto&... t) { ( set_materials(recoveryMode, setter, t), ... ); },
         m_Tests
       );
     }
 
-    test_family(std::string name, const project_paths& projPaths, recovery_paths recovery)
-      : m_Info{std::move(name), projPaths, std::move(recovery)}
+    test_family(std::string name, const project_paths& projPaths, recovery_mode recoveryMode)
+      : m_Info{std::move(name), projPaths, recoveryMode}
     {}
 
     test_family(const test_family&)     = delete;
@@ -188,7 +207,7 @@ namespace sequoia::testing
 
       auto& t{std::get<test_type>(m_Tests)};
       t = std::move(test);
-      set_materials(setter, t);
+      set_materials(m_Info.get_recovery_mode(), setter, t);
     }
 
     [[nodiscard]]
@@ -279,7 +298,7 @@ namespace sequoia::testing
           {
             using type = typename std::remove_cvref_t<decltype(optTest)>::value_type;
             *optTest = type{optTest->name()};
-            set_materials(setter, optTest);
+            set_materials(m_Info.get_recovery_mode(), setter, optTest);
           }
         }
       };
@@ -291,12 +310,12 @@ namespace sequoia::testing
     std::tuple<std::optional<Tests>...> m_Tests;
 
     template<concrete_test T>
-    void set_materials(family_info::materials_setter& setter, std::optional<T>& t)
+    void set_materials(recovery_mode recoveryMode, family_info::materials_setter& setter, std::optional<T>& t)
     {
       if(t.has_value())
       {
         t->set_filesystem_data(m_Info.proj_paths(), name());
-        t->set_recovery_paths(m_Info.recovery());
+        t->set_recovery_paths(make_active_paths(recoveryMode, m_Info.proj_paths()));
 
         const auto info{setter.set_materials(t->source_filename())};
 

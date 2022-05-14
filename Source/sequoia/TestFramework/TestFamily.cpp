@@ -71,6 +71,20 @@ namespace sequoia::testing
     throw std::logic_error{"Unknown option for concurrency_mode"};
   }
 
+
+  [[nodiscard]]
+  active_recovery_files make_active_paths(recovery_mode mode, const project_paths& projPaths)
+  {
+    active_recovery_files paths{};
+    if((mode & recovery_mode::recovery) == recovery_mode::recovery)
+      paths.recovery_file = projPaths.output().recovery().recovery();
+
+    if((mode & recovery_mode::dump) == recovery_mode::dump)
+      paths.dump_file = projPaths.output().recovery().dump();
+
+    return paths;
+  }
+
   //============================== test_paths ==============================//
   
   test_paths::test_paths(const fs::path& sourceFile,
@@ -216,10 +230,10 @@ namespace sequoia::testing
     return {};
   }
 
-  family_info::family_info(std::string_view name, const project_paths& projPaths, recovery_paths recovery)
+  family_info::family_info(std::string_view name, const project_paths& projPaths, recovery_mode recoveryMode)
     : m_Name{name}
     , m_Paths{&projPaths}
-    , m_Recovery{std::move(recovery)}
+    , m_Recovery{recoveryMode}
   {}
 
   [[nodiscard]]

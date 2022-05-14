@@ -831,9 +831,9 @@ namespace sequoia::testing
       return logger().failure_messages();
     }
 
-    void recovery(recovery_paths paths)
+    void recovery(active_recovery_files files)
     {
-      test_logger<Mode>::recovery(std::move(paths));
+      test_logger<Mode>::recovery(std::move(files));
     }
   private:
     [[nodiscard]]

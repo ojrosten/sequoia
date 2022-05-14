@@ -47,28 +47,6 @@ namespace sequoia::testing
     return m_Paths;
   }
 
-  [[nodiscard]]
-  const std::filesystem::path& family_selector::recovery_file() const noexcept
-  {
-    return m_Recovery.recovery_file;
-  }
-
-  void family_selector::recovery_file(std::filesystem::path recovery)
-  {
-    m_Recovery.recovery_file = std::move(recovery);
-  }
-
-  [[nodiscard]]
-  const std::filesystem::path& family_selector::dump_file() const noexcept
-  {
-    return m_Recovery.dump_file;
-  }
-
-  void family_selector::dump_file(std::filesystem::path dump)
-  {
-    m_Recovery.dump_file = std::move(dump);
-  }
-
   void family_selector::select_family(std::string name)
   {
     m_SelectedFamilies.emplace(std::move(name), false);
@@ -179,13 +157,8 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string family_selector::check_argument_consistency(concurrency_mode mode)
+  std::string family_selector::check_argument_consistency()
   {
-    using parsing::commandline::error;
-
-    if((mode != concurrency_mode::serial) && (!recovery_file().empty() || !dump_file().empty()))
-      throw std::runtime_error{error("Can't run asynchronously in recovery/dump mode\n")};
-
     if(pruned() && bespoke_selection())
     {
       using parsing::commandline::warning;

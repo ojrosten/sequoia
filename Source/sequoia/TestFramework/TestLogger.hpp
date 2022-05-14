@@ -28,22 +28,20 @@
 
 namespace sequoia::testing
 {
-  /*! \brief Holds details of the file to which the last successfully completed test is registered.
-
-      If a check causes a crash, the recovery file may be used to provide a clue as to where this
-      happened.
-   */
-  struct recovery_paths
-  {
-    std::filesystem::path recovery_file{};
-    std::filesystem::path dump_file{};
-  };
-
   /*! \brief Specifies whether tests are run as standard tests or in false postive/negative mode.
 
       \anchor test_mode_enum
    */
   enum class test_mode { standard, false_positive, false_negative };
+
+  /*! \brief Holds paths to files where recovery information will be written if the path is not empty
+  
+   */
+  struct active_recovery_files
+  {
+    std::filesystem::path recovery_file{};
+    std::filesystem::path dump_file{};
+  };
 
   /*! \class
       \brief Logs test results.
@@ -167,13 +165,13 @@ namespace sequoia::testing
     std::size_t performance_checks() const noexcept;
 
     [[nodiscard]]
-    const failure_output& failure_messages() const noexcept ;
+    const failure_output& failure_messages() const noexcept;
 
     [[nodiscard]]
-    const failure_output& diagnostics_output() const noexcept ;    
+    const failure_output& diagnostics_output() const noexcept;
 
     [[nodiscard]]
-    const failure_output& caught_exceptions_output() const noexcept ;
+    const failure_output& caught_exceptions_output() const noexcept;
 
     [[nodiscard]]
     const uncaught_exception_info& exceptions_detected_by_sentinel() const;
@@ -182,9 +180,9 @@ namespace sequoia::testing
     std::string_view top_level_message() const noexcept;
 
     [[nodiscard]]
-    const recovery_paths& recovery() const noexcept;
+    const active_recovery_files& recovery() const noexcept;
 
-    void recovery(recovery_paths paths);
+    void recovery(active_recovery_files paths);
   private:
     struct level_message
     {
@@ -216,7 +214,7 @@ namespace sequoia::testing
       m_Checks{},
       m_PerformanceChecks{};
 
-    recovery_paths m_Recovery{};
+    active_recovery_files m_Recovery{};
 
     [[nodiscard]]
     std::size_t depth() const noexcept;

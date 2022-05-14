@@ -27,16 +27,16 @@ namespace sequoia::testing
     explicit family_selector(project_paths paths);
 
     template<class Test, class... Tests>
-    void add_test_family(std::string_view name, Test test, Tests... tests)
+    void add_test_family(std::string_view name, recovery_mode recoveryMode, Test test, Tests... tests)
     {
       check_for_duplicates(name, test, tests...);
 
       const bool done{
-        [this, name](Test& test, Tests&... tests) {
+        [this, name, recoveryMode](Test& test, Tests&... tests) {
           if(!m_SelectedSources.empty())
           {
             using family_t = test_family<std::remove_cvref_t<Test>, std::remove_cvref_t<Tests>...>;
-            family_t f{std::string{name}, m_Paths, m_Recovery};
+            family_t f{std::string{name}, m_Paths, recoveryMode};
             auto setter{f.make_materials_setter()};
 
             add_tests(f, setter, std::move(test), std::move(tests)...);
@@ -56,22 +56,12 @@ namespace sequoia::testing
       {
         if(mark_family(name))
         {
-          m_Families.push_back(test_family{std::string{name}, m_Paths,m_Recovery, std::move(test), std::move(tests)...});
+          m_Families.push_back(test_family{std::string{name}, m_Paths, recoveryMode, std::move(test), std::move(tests)...});
         }
       }
     }
 
     const project_paths& proj_paths() const noexcept;
-
-    [[nodiscard]]
-    const std::filesystem::path& recovery_file() const noexcept;
-
-    void recovery_file(std::filesystem::path recovery);
-
-    [[nodiscard]]
-    const std::filesystem::path& dump_file() const noexcept;
-
-    void dump_file(std::filesystem::path dump);
 
     void select_family(std::string name);
 
@@ -92,7 +82,7 @@ namespace sequoia::testing
     void aggregate_instability_analysis_prune_files(const std::size_t numReps) const;
 
     [[nodiscard]]
-    std::string check_argument_consistency(concurrency_mode mode);
+    std::string check_argument_consistency();
 
     [[nodiscard]]
     std::string check_for_missing_tests() const;
@@ -172,7 +162,6 @@ namespace sequoia::testing
     using source_list = std::vector<std::pair<normal_path, bool>>;
 
     project_paths              m_Paths;
-    recovery_paths             m_Recovery{};
     prune_info                 m_PruneInfo{};
     std::vector<family_vessel> m_Families{};
     family_map                 m_SelectedFamilies{};

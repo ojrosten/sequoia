@@ -68,7 +68,7 @@ namespace sequoia::testing
     template<class Test, class... Tests>
     void add_test_family(std::string_view name, Test test, Tests... tests)
     {
-      m_Selector.add_test_family(name, std::move(test), std::move(tests)...);
+      m_Selector.add_test_family(name, m_RecoveryMode, std::move(test), std::move(tests)...);
     }
 
     void execute([[maybe_unused]] timer_resolution r={});
@@ -93,6 +93,7 @@ namespace sequoia::testing
     runner_mode      m_RunnerMode{runner_mode::none};
     output_mode      m_OutputMode{output_mode::standard};
     update_mode      m_UpdateMode{update_mode::none};
+    recovery_mode    m_RecoveryMode{recovery_mode::none};
     concurrency_mode m_ConcurrencyMode{concurrency_mode::dynamic};
     instability_mode m_InstabilityMode{instability_mode::none};
 

@@ -359,10 +359,12 @@ namespace sequoia::testing
                     }
                   }},
                   {{{"dump", {}, {},
-                    [this, &recoveryDir{proj_paths().output().recovery()}](const arg_list&) {
-                      std::filesystem::create_directory(recoveryDir);
-                      m_Selector.dump_file(recoveryDir / "Dump.txt");
-                      std::filesystem::remove(m_Selector.dump_file());
+                    [this, &recovery{proj_paths().output().recovery()}](const arg_list&) {
+                      if(!std::filesystem::create_directory(recovery.dir()))
+                      {
+                        std::filesystem::remove(recovery.dump());
+                      }
+                      m_RecoveryMode |= recovery_mode::dump;
                       m_ConcurrencyMode = concurrency_mode::serial;
                     }
                   }}},
@@ -391,10 +393,12 @@ namespace sequoia::testing
                   }}},
                   {{{"--verbose",  {"-v"}, {}, [this](const arg_list&) { m_OutputMode = output_mode::verbose; }}}},
                   {{{"--recovery", {"-r"}, {},
-                    [this, &recoveryDir{proj_paths().output().recovery()}](const arg_list&) {
-                      std::filesystem::create_directory(recoveryDir);
-                      m_Selector.recovery_file(recoveryDir / "Recovery.txt");
-                      std::filesystem::remove(m_Selector.recovery_file());
+                    [this, &recovery{proj_paths().output().recovery()}](const arg_list&) {
+                      if(!std::filesystem::create_directory(recovery.dir()))
+                      {
+                        std::filesystem::remove(recovery.recovery());
+                      }
+                      m_RecoveryMode |= recovery_mode::recovery;
                       m_ConcurrencyMode = concurrency_mode::serial;
                     }
                   }}}
@@ -435,15 +439,19 @@ namespace sequoia::testing
 
   void test_runner::check_argument_consistency()
   {
+    using parsing::commandline::warning;
+    using parsing::commandline::error;
+
     if((m_InstabilityMode != instability_mode::none) && (m_UpdateMode == update_mode::soft))
     {
-      using parsing::commandline::warning;
-
       m_UpdateMode = update_mode::none;
       stream() << warning("Update of materials suppressed when checking for instabilities\n");
     }
 
-    stream() << m_Selector.check_argument_consistency(m_ConcurrencyMode);
+    if((m_ConcurrencyMode != concurrency_mode::serial) && (m_RecoveryMode != recovery_mode::none))
+      throw std::runtime_error{error("Can't run asynchronously in recovery/dump mode\n")};
+
+    stream() << m_Selector.check_argument_consistency();
   }
 
   [[nodiscard]]
