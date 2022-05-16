@@ -365,7 +365,8 @@ namespace sequoia::testing
                         std::filesystem::remove(recovery.dump_file());
                       }
                       m_RecoveryMode |= recovery_mode::dump;
-                      m_ConcurrencyMode = concurrency_mode::serial;
+                      if(m_ConcurrencyMode == concurrency_mode::dynamic)
+                        m_ConcurrencyMode = concurrency_mode::serial;
                     }
                   }}},
                   {{{"--async-depth", {"-a"}, {"depth [null,family,unit]"},
@@ -399,7 +400,8 @@ namespace sequoia::testing
                         std::filesystem::remove(recovery.recovery_file());
                       }
                       m_RecoveryMode |= recovery_mode::recovery;
-                      m_ConcurrencyMode = concurrency_mode::serial;
+                      if(m_ConcurrencyMode == concurrency_mode::dynamic)
+                        m_ConcurrencyMode = concurrency_mode::serial;
                     }
                   }}}
                 },

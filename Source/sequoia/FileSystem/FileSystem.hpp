@@ -34,6 +34,10 @@ namespace sequoia
       return m_Path;
     }
 
+    // TO DO: use spaceship when supported by libc++ for fs::path
+    //[[nodiscard]]
+    //friend auto operator<=>(const normal_path&, const normal_path&) = default;
+
     [[nodiscard]]
     friend bool operator==(const normal_path&, const normal_path&) = default;
 
