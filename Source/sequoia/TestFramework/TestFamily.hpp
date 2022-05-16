@@ -105,9 +105,9 @@ namespace sequoia::testing
 #endif
 
     test_paths(const std::filesystem::path& sourceFile,
-          const std::filesystem::path& workingMaterials,
-          const std::filesystem::path& predictiveMaterials,
-          const project_paths& projPaths);
+               const std::filesystem::path& workingMaterials,
+               const std::filesystem::path& predictiveMaterials,
+               const project_paths& projPaths);
 
     std::filesystem::path
       test_file,
@@ -232,7 +232,7 @@ namespace sequoia::testing
             if(optTest.has_value())
             {
               results.emplace_back(
-                                   std::async([&test=*optTest,pathsMaker,index](){
+                std::async([&test=*optTest,pathsMaker,index](){
                   return std::make_pair(test.execute(index), pathsMaker(test)); })
               );
             }

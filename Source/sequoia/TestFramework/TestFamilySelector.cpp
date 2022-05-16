@@ -24,6 +24,40 @@ namespace sequoia::testing
   {
     const std::string& convert(const std::string& s) { return s; }
     std::string convert(const std::filesystem::path& p) { return p.generic_string(); }
+
+    [[nodiscard]]
+    std::vector<fs::path> read_failures(const fs::path& file)
+    {
+      std::vector<fs::path> failures{};
+      if(fs::exists(file))
+      {
+        if(std::ifstream ifile{file})
+        {
+          while(ifile)
+          {
+            fs::path filePath{};
+            ifile >> filePath;
+            if(!filePath.empty())
+              failures.push_back(std::move(filePath));
+          }
+        }
+      }
+
+      return failures;
+    }
+
+    template<std::input_or_output_iterator Iter, std::sentinel_for<Iter> Sentinel>
+      requires std::same_as<typename Iter::value_type, fs::path>
+    void write_failures(const fs::path& file, Iter first, Sentinel last)
+    {
+      if(std::ofstream ostream{file})
+      {
+        while(first != last)
+        {
+          ostream << (first++)->generic_string() << "\n";
+        }
+      }
+    }
   }
 
   auto family_selector::time_stamps::from_file(const std::filesystem::path& stampFile) -> stamp
@@ -38,9 +72,9 @@ namespace sequoia::testing
 
   family_selector::family_selector(project_paths paths)
     : m_Paths{std::move(paths)}
-  {
-    store_executable_time_stamp();
-  }
+    , m_PruneInfo{time_stamps::from_file(proj_paths().prune_file_path(std::nullopt)),
+                  time_stamps::from_file(proj_paths().executable())}
+  {}
 
   const project_paths& family_selector::proj_paths() const noexcept
   {
@@ -59,7 +93,7 @@ namespace sequoia::testing
 
   void family_selector::enable_prune()
   {
-    m_PruneInfo.stamps.ondisk = time_stamps::from_file(proj_paths().prune_file_path(std::nullopt));
+    m_PruneInfo.mode = prune_mode::active;
   }
 
   void family_selector::set_prune_cutoff(std::string cutoff)
@@ -89,31 +123,54 @@ namespace sequoia::testing
   template<std::input_or_output_iterator Iter, std::sentinel_for<Iter> Sentinel>
   void family_selector::update_prune_info(Iter startFailedTests, Sentinel endFailedTests, const std::optional<std::size_t> id)
   {
-    if(!bespoke_selection() || pruned())
+    std::sort(startFailedTests, endFailedTests);
+    if(!pruned() && bespoke_selection())
     {
-      std::sort(startFailedTests, endFailedTests);
-      const auto stampFile{proj_paths().prune_file_path(id)};
-
-      auto write{
-        [&stampFile](Iter start, Iter end){
-          if(std::ofstream ostream{stampFile})
-          {
-            while(start != end)
-            {
-              ostream << (start++)->generic_string() << "\n";
-            }
-          }
+      if(m_PruneInfo.stamps.ondisk.has_value())
+      {
+        std::vector<fs::path> executedTests{};
+        for(const auto& src : m_SelectedSources)
+        {
+          if(src.second) executedTests.push_back(src.first);
         }
-      };
 
-      write(startFailedTests, endFailedTests);
-      fs::last_write_time(stampFile, m_PruneInfo.stamps.current);
+        std::sort(executedTests.begin(), executedTests.end());
+
+        std::vector<fs::path> passingTests{};
+        std::set_difference(executedTests.begin(),
+                            executedTests.end(),
+                            startFailedTests,
+                            endFailedTests,
+                            std::back_inserter(passingTests));
+
+        if(!passingTests.empty())
+        {
+          const auto pruneFile{proj_paths().prune_file_path(id)};
+          auto previousFailures{read_failures(pruneFile)};
+
+          std::vector<fs::path> remainingFailures{};
+          std::set_difference(previousFailures.begin(),
+                              previousFailures.end(),
+                              passingTests.begin(),
+                              passingTests.end(),
+                              std::back_inserter(remainingFailures));
+
+          write_failures(pruneFile, remainingFailures.begin(), remainingFailures.end());
+          fs::last_write_time(pruneFile, m_PruneInfo.stamps.ondisk.value());
+        }
+      }
+    }
+    else
+    {
+      const auto pruneFile{proj_paths().prune_file_path(id)};
+      write_failures(pruneFile, startFailedTests, endFailedTests);
+      fs::last_write_time(pruneFile, m_PruneInfo.stamps.current);
     }
   }
 
   void family_selector::aggregate_instability_analysis_prune_files(const std::size_t numReps) const
   {
-    if(!bespoke_selection() || pruned())
+    if(!bespoke_selection() || m_PruneInfo.stamps.ondisk.has_value())
     {
       std::vector<fs::path> failures{};
       for(std::size_t i{}; i < numReps; ++i)
@@ -146,14 +203,8 @@ namespace sequoia::testing
           ofile << p.generic_string() << '\n';
       }
 
-      fs::last_write_time(grandPruneFile, m_PruneInfo.stamps.current);
+      fs::last_write_time(grandPruneFile, !bespoke_selection() ? m_PruneInfo.stamps.current : m_PruneInfo.stamps.ondisk.value());
     }
-  }
-
-  void family_selector::store_executable_time_stamp()
-  {
-    if(fs::exists(m_Paths.executable()))
-      m_PruneInfo.stamps.executable = fs::last_write_time(m_Paths.executable());
   }
 
   [[nodiscard]]
@@ -162,7 +213,7 @@ namespace sequoia::testing
     if(pruned() && bespoke_selection())
     {
       using parsing::commandline::warning;
-      m_PruneInfo.stamps.ondisk = std::nullopt;
+      m_PruneInfo.mode = prune_mode::passive;
       return warning("'prune' ignored if either test families or test source files are specified");
     }
 
@@ -219,7 +270,7 @@ namespace sequoia::testing
   [[nodiscard]]
   bool family_selector::pruned() const noexcept
   {
-    return m_PruneInfo.stamps.ondisk.has_value();
+    return m_PruneInfo.mode == prune_mode::active;
   }
 
   bool family_selector::mark_family(std::string_view name)

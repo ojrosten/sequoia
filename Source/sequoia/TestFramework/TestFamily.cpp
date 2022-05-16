@@ -91,7 +91,7 @@ namespace sequoia::testing
                          const fs::path& workingMaterials,
                          const fs::path& predictiveMaterials,
                          const project_paths& projPaths)
-    : test_file{sourceFile}
+    : test_file{rebase_from(sourceFile, projPaths.tests())}
     , summary{test_summary_filename(sourceFile, projPaths)}
     , workingMaterials{workingMaterials}
     , predictions{predictiveMaterials}

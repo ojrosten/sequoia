@@ -18,6 +18,7 @@
 
 #include <optional>
 #include <map>
+#include <set>
 
 namespace sequoia::testing
 {
@@ -82,10 +83,10 @@ namespace sequoia::testing
     void aggregate_instability_analysis_prune_files(const std::size_t numReps) const;
 
     [[nodiscard]]
-    std::string check_argument_consistency();
+    std::string check_for_missing_tests() const;
 
     [[nodiscard]]
-    std::string check_for_missing_tests() const;
+    std::string check_argument_consistency();
 
     [[nodiscard]]
     auto begin() noexcept
@@ -141,6 +142,8 @@ namespace sequoia::testing
       return m_SelectedFamilies.end();
     }
   private:
+    enum class prune_mode { passive, active };
+
     struct time_stamps
     {
       using time_type = std::filesystem::file_time_type;
@@ -148,13 +151,14 @@ namespace sequoia::testing
 
       static auto from_file(const std::filesystem::path& stampFile)->stamp;
 
-      time_type current{std::chrono::file_clock::now()};
       stamp ondisk, executable;
+      time_type current{std::chrono::file_clock::now()};
     };
 
     struct prune_info
     {
       time_stamps stamps{};
+      prune_mode mode{prune_mode::passive};
       std::string include_cutoff{};
     };
 
@@ -167,12 +171,10 @@ namespace sequoia::testing
     family_map                 m_SelectedFamilies{};
     source_list                m_SelectedSources{};
 
-    void store_executable_time_stamp();
-
     bool mark_family(std::string_view name);
 
     [[nodiscard]]
-    auto find_filename(const normal_path& filename)->source_list::iterator;
+    auto find_filename(const normal_path& filename) -> source_list::iterator;
 
     using duplicate_set = std::set<std::pair<std::string_view, std::filesystem::path>>;
 
@@ -204,10 +206,12 @@ namespace sequoia::testing
                    Test&& test,
                    Tests&&... tests)
     {
-      auto i{find_filename(test.source_filename())};
+      const normal_path src{test.source_filename()};
+      auto i{find_filename(src)};
       if(i != m_SelectedSources.end())
       {
         f.add_test(materialsPath, std::forward<Test>(test));
+        i->first = rebase_from(src, proj_paths().tests());
         i->second = true;
       }
 
