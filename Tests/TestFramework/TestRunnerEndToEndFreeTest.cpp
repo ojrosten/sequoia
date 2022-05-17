@@ -412,5 +412,26 @@ namespace sequoia::testing
     fs::create_directory(working_materials() / "RecoveryMidCheck");
     fs::copy(generated_project() / "output" / "Recovery" / "Recovery.txt", working_materials() / "RecoveryMidCheck");
     check(equivalence, LINE("Recovery File"), working_materials() / "RecoveryMidCheck", predictive_materials() / "RecoveryMidCheck");
+
+    //=================== Change one of the failing tests, and 'select' it  ===================//
+
+    copy_aux_materials("FurtherModifiedTests/UsefulThingsFreeTest.cpp", "Tests/Utilities");
+    rebuild_run_and_check(LINE("Rebuild, run and 'select' after fixing a test"), b, "RunSelectedFixedTest", "CMakeOutput5.txt", "BuildOutput5.txt", "select UsefulThingsFreeTest.cpp");
+
+    check(equivalence, LINE("Fixed Test Output"), working_materials() / "RunSelectedFixedTest", predictive_materials() / "RunSelectedFixedTest");
+
+    //=================== Rerun with prune to confirm that the previously selected test - now passing - is not run ===================//
+
+    run_and_check(LINE("Passing test not included by prune"), b, "PassingTestExcludedByPrune", "prune -c namespace");
+
+    //=================== Fix failing test and 'select' it===================//
+
+    fs::copy(generatedPredictive / "RepresentativeCasesTemp", generatedPredictive / "RepresentativeCases", fs::copy_options::recursive);
+    fs::remove_all(generatedPredictive / "RepresentativeCasesTemp");
+
+    fs::copy(generatedWorkingCopy / "RepresentativeCasesTemp", generatedWorkingCopy / "RepresentativeCases", fs::copy_options::recursive);
+    fs::remove_all(generatedWorkingCopy / "RepresentativeCasesTemp");
+
+    run_and_check(LINE("Critical failure fixed"), b, "RunFixedCriticalFailure", "select FooTest.cpp");
   }
 }

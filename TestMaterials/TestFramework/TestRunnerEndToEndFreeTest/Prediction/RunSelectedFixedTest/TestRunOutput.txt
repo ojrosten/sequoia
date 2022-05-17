@@ -1,0 +1,15 @@
+
+Running tests...
+
+Useful Things:
+[2 (0)ms]
+	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
+
+-----------Grand Totals-----------
+[2 (0)ms]
+	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
+	Standard Performance Checks:               0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
+	False Positive Checks:                     0;  Failures:  0
+	False Positive Performance Checks:         0;  Failures:  0
