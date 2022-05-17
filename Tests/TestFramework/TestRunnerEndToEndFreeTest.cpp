@@ -413,9 +413,10 @@ namespace sequoia::testing
     fs::copy(generated_project() / "output" / "Recovery" / "Recovery.txt", working_materials() / "RecoveryMidCheck");
     check(equivalence, LINE("Recovery File"), working_materials() / "RecoveryMidCheck", predictive_materials() / "RecoveryMidCheck");
 
-    //=================== Change one of the failing tests, and 'select' it  ===================//
+    //=================== Change one of the failing tests, and 'select' it at the same time as breaking a different test ===================//
 
     copy_aux_materials("FurtherModifiedTests/UsefulThingsFreeTest.cpp", "Tests/Utilities");
+    copy_aux_materials("FurtherModifiedTests/ProbabilityTest.cpp", "Tests/Maths");
     rebuild_run_and_check(LINE("Rebuild, run and 'select' after fixing a test"), b, "RunSelectedFixedTest", "CMakeOutput5.txt", "BuildOutput5.txt", "select UsefulThingsFreeTest.cpp");
 
     check(equivalence, LINE("Fixed Test Output"), working_materials() / "RunSelectedFixedTest", predictive_materials() / "RunSelectedFixedTest");
