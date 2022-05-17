@@ -126,7 +126,6 @@ namespace sequoia::testing
     fs::create_directory(proj_paths().output().dir());
     fs::create_directory(proj_paths().output().diagnostics());
     fs::create_directory(proj_paths().output().test_summaries());
-    fs::create_directories(proj_paths().prune_dir());
   }
 
   void test_runner::process_args(int argc, char** argv)
@@ -487,6 +486,8 @@ namespace sequoia::testing
   void test_runner::execute([[maybe_unused]] timer_resolution r)
   {
     if(!mode(runner_mode::test)) return;
+
+    fs::create_directories(proj_paths().prune_dir());
 
     stream() << m_Selector.check_for_missing_tests();
 
