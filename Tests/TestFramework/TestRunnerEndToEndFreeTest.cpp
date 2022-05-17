@@ -433,5 +433,9 @@ namespace sequoia::testing
     fs::remove_all(generatedWorkingCopy / "RepresentativeCasesTemp");
 
     run_and_check(LINE("Critical failure fixed"), b, "RunFixedCriticalFailure", "select FooTest.cpp");
+
+    //=================== Rerun with prune to confirm that the previously selected test - now passing - is not run ===================//
+
+    run_and_check(LINE("Passing test not included by prune"), b, "AnotherPassingTestExcludedByPrune", "prune -c namespace");
   }
 }
