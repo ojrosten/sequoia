@@ -54,6 +54,8 @@ namespace sequoia::testing
     std::filesystem::path m_File{}, m_Dir{};
   };
 
+  /*! \brief Paths which are potentially discoverable from the commandline arguments */
+
   class discoverable_paths
   {
   public:
@@ -84,6 +86,8 @@ namespace sequoia::testing
     [[nodiscard]]
     static discoverable_paths make(int argc, char** argv);
   };
+
+  /*! \brief Paths for auxiliary materials, used in creating projects/tests */
 
   class auxiliary_paths
   {
@@ -173,6 +177,49 @@ namespace sequoia::testing
     std::filesystem::path m_Dir{};
   };
 
+  /*! \brief Paths used when using dependencies to prune the number of tests */
+
+  class prune_paths
+  {
+  public:
+    prune_paths(std::filesystem::path outputDir, const std::filesystem::path& buildRoot, const std::filesystem::path& buildDir);
+
+    [[nodiscard]]
+    const std::filesystem::path& dir() const noexcept
+    {
+      return m_Dir;
+    }
+
+    [[nodiscard]]
+    std::filesystem::path stamp() const;
+
+    [[nodiscard]]
+    std::filesystem::path failures(std::optional<std::size_t> id) const;
+
+    [[nodiscard]]
+    std::filesystem::path selected_passes(std::optional<std::size_t> id) const;
+
+    [[nodiscard]]
+    std::filesystem::path instability_analysis() const;
+
+    [[nodiscard]]
+    friend bool operator==(const prune_paths&, const prune_paths&) noexcept = default;
+
+    [[nodiscard]]
+    friend bool operator!=(const prune_paths&, const prune_paths&) noexcept = default;
+  private:
+    std::filesystem::path m_Dir{}, m_Stem{};
+
+    [[nodiscard]]
+    static std::filesystem::path make_stem(const std::filesystem::path& buildDir);
+
+    [[nodiscard]]
+    std::filesystem::path make_path(std::optional<std::size_t> id, std::string_view extension) const;
+  };
+
+
+  /*! \brief Paths in the output directory */
+
   class output_paths
   {
   public:
@@ -230,6 +277,12 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
+    prune_paths prune(const std::filesystem::path& buildRoot, const std::filesystem::path& buildDir) const
+    {
+      return {dir(), buildRoot, buildDir};
+    }
+
+    [[nodiscard]]
     friend bool operator==(const output_paths&, const output_paths&) noexcept = default;
 
     [[nodiscard]]
@@ -242,6 +295,8 @@ namespace sequoia::testing
       m_TestSummaries{},
       m_InstabilityAnalysis{};
   };
+
+  /*! \brief Paths used by the project */
 
   class project_paths
   {
@@ -351,25 +406,13 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    const std::filesystem::path& prune_dir() const noexcept
-    {
-      return m_PruneDir;
-    }
-
-    [[nodiscard]]
-    const std::filesystem::path& instability_analysis_prune_dir() const noexcept
-    {
-      return m_InstabilityAnalysisPruneDir;
-    }
-
-    [[nodiscard]]
     const std::vector<file_info>& ancillary_main_cpps() const noexcept
     {
       return m_AncillaryMainCpps;
     }
 
     [[nodiscard]]
-    std::filesystem::path prune_file_path(std::optional<std::size_t> id) const;
+    prune_paths prune() const;
 
     [[nodiscard]]
     friend bool operator==(const project_paths&, const project_paths&) noexcept = default;
@@ -397,9 +440,7 @@ namespace sequoia::testing
 
     std::filesystem::path
       m_CommonIncludes{},
-      m_CMadeBuildDir{},
-      m_PruneDir{},
-      m_InstabilityAnalysisPruneDir{};
+      m_CMadeBuildDir{};
 
     std::vector<file_info> m_AncillaryMainCpps{};
   };

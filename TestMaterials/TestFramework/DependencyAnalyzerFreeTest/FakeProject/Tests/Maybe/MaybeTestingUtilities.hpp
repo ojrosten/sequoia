@@ -8,7 +8,7 @@
 #pragma once
 
 #include "sequoia/TestFramework/RegularTestCore.hpp"
-#include "generatedProject/Maybe/Maybe.hpp"
+#include "fakeProject/Maybe/Maybe.hpp"
 
 namespace sequoia::testing
 {

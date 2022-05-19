@@ -429,8 +429,9 @@ namespace sequoia::testing
       {
         if((m_InstabilityMode == instability_mode::single_instance) || m_InstabilityMode == instability_mode::coordinator)
         {
-          fs::remove_all(proj_paths().instability_analysis_prune_dir());
-          fs::create_directories(proj_paths().instability_analysis_prune_dir());
+          const auto dir{proj_paths().prune().instability_analysis()};
+          fs::remove_all(dir);
+          fs::create_directories(dir);
         }
 
         m_Selector.prune(stream());
@@ -487,7 +488,7 @@ namespace sequoia::testing
   {
     if(!mode(runner_mode::test)) return;
 
-    fs::create_directories(proj_paths().prune_dir());
+    fs::create_directories(proj_paths().prune().dir());
 
     stream() << m_Selector.check_for_missing_tests();
 

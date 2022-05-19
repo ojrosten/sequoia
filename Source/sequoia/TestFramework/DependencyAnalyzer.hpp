@@ -12,19 +12,10 @@
 
  */
 
-#include <filesystem>
-#include <optional>
-#include <string>
-#include <vector>
+#include "sequoia/TestFramework/FileSystemUtilities.hpp"
 
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::optional<std::vector<std::filesystem::path>> tests_to_run(const std::filesystem::path& sourceRepo,
-                                                                 const std::filesystem::path& testRepo,
-                                                                 const std::filesystem::path& materialsRepo,
-                                                                 const std::filesystem::path& previousFailures,
-                                                                 const std::optional<std::filesystem::file_time_type>& timeStamp,
-                                                                 const std::optional<std::filesystem::file_time_type>& exeTimeStamp,
-                                                                 std::string_view cutoff);
+  std::optional<std::vector<std::filesystem::path>> tests_to_run(const project_paths& projPaths, std::string_view cutoff);
 }

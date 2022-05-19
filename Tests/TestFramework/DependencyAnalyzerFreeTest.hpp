@@ -19,24 +19,22 @@ namespace sequoia::testing
     using free_test::free_test;
 
   private:
-    struct information
-    {
-      std::filesystem::path source_repo{}, tests_repo{}, materials{}, prune_file{};
-      std::filesystem::file_time_type reset_time{};
-      std::optional<std::filesystem::file_time_type> exe_time_stamp{};
-    };
-
-    information m_Info{};
+    std::filesystem::file_time_type m_ResetTime{};
 
     [[nodiscard]]
     std::string_view source_file() const noexcept final;
 
     void run_tests() final;
 
-    void test_exceptions();
+    void test_exceptions(const project_paths& projPaths);
 
-    void test_dependencies();
+    void test_dependencies(const project_paths& projPaths);
 
-    void check_tests_to_run(std::string_view description, const information& info, std::string_view cutoff, const std::vector<std::filesystem::path>& makeStale, const std::vector<std::filesystem::path>& toRun);
+    void check_tests_to_run(std::string_view description,
+                            const project_paths& projPaths,
+                            std::string_view cutoff,
+                            const std::vector<std::filesystem::path>& makeStale,
+                            std::vector<std::filesystem::path> failures,
+                            const std::vector<std::filesystem::path>& toRun);
   };
 }

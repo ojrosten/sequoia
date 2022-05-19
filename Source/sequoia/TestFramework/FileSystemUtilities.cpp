@@ -120,7 +120,7 @@ namespace sequoia::testing
 
   //===================================== auxiliary_paths =====================================//
 
-  auxiliary_paths::auxiliary_paths(const std::filesystem::path& projectRoot)
+  auxiliary_paths::auxiliary_paths(const fs::path& projectRoot)
     : m_Dir{dir(projectRoot)}
     , m_TestTemplates{test_templates(projectRoot)}
     , m_SourceTemplates{source_templates(projectRoot)}
@@ -134,19 +134,19 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path auxiliary_paths::test_templates(std::filesystem::path projectRoot)
+  fs::path auxiliary_paths::test_templates(fs::path projectRoot)
   {
     return dir(projectRoot) /= "TestTemplates";
   }
 
   [[nodiscard]]
-  std::filesystem::path auxiliary_paths::source_templates(std::filesystem::path projectRoot)
+  fs::path auxiliary_paths::source_templates(fs::path projectRoot)
   {
     return dir(projectRoot) /= "SourceTemplates";
   }
 
   [[nodiscard]]
-  std::filesystem::path auxiliary_paths::project_template(std::filesystem::path projectRoot)
+  fs::path auxiliary_paths::project_template(fs::path projectRoot)
   {
     return dir(projectRoot) /= "ProjectTemplate";
   }
@@ -158,7 +158,7 @@ namespace sequoia::testing
   {}
 
   [[nodiscard]]
-  fs::path recovery_paths::dir(std::filesystem::path outputDir)
+  fs::path recovery_paths::dir(fs::path outputDir)
   {
     return outputDir /= "Recovery";
   }
@@ -173,6 +173,56 @@ namespace sequoia::testing
   fs::path recovery_paths::dump_file() const
   {
     return fs::path{dir()} /= "Dump.txt";
+  }
+
+  //===================================== prune_paths =====================================//
+
+  prune_paths::prune_paths(fs::path outputDir, const fs::path& buildRoot, const fs::path& buildDir)
+    : m_Dir{(outputDir /= "Prune") /= fs::relative(buildDir, buildRoot)}
+    , m_Stem{make_stem(buildDir)}
+  {}
+
+  [[nodiscard]]
+  fs::path prune_paths::stamp() const
+  {
+    return (m_Dir / m_Stem).concat(".prune");
+  }
+
+  [[nodiscard]]
+  fs::path prune_paths::failures(std::optional<std::size_t> id) const
+  {
+    return make_path(id, ".failures");
+  }
+
+  [[nodiscard]]
+  fs::path prune_paths::selected_passes(std::optional<std::size_t> id) const
+  {
+    return make_path(id, ".passes");
+  }
+
+  [[nodiscard]]
+  fs::path prune_paths::instability_analysis() const
+  {
+    return m_Dir / "InstabilityAnalysis";
+  }
+
+  [[nodiscard]]
+  fs::path prune_paths::make_stem(const std::filesystem::path& buildDir)
+  {
+    if(buildDir.empty())
+      throw std::logic_error{"Build Dir required for pruning"};
+
+    return back(buildDir);
+  }
+
+  [[nodiscard]]
+  fs::path prune_paths::make_path(std::optional<std::size_t> id, std::string_view extension) const
+  {
+    auto [directory, num] {(id == std::nullopt) ? std::make_pair(dir(), std::string{})
+                                                : std::make_pair(instability_analysis(), std::to_string(id.value()))
+    };
+
+    return (directory /= m_Stem).concat(num).concat(extension);
   }
 
   //===================================== output_paths =====================================//
@@ -230,8 +280,6 @@ namespace sequoia::testing
     , m_Output{project_root()}
     , m_CommonIncludes{project_root() / pathsFromRoot.commonIncludes}
     , m_CMadeBuildDir{cmade_build_dir(project_root(), m_MainCpp.dir())}
-    , m_PruneDir{output().dir() / "Prune" / fs::relative(cmade_build_dir(), build())}
-    , m_InstabilityAnalysisPruneDir{prune_dir() / "InstabilityAnalysis"}
     , m_AncillaryMainCpps{make_ancillary_info(project_root(), pathsFromRoot)}
   {
     throw_unless_directory(project_root(), "\nRepository root not found");
@@ -261,7 +309,7 @@ namespace sequoia::testing
   [[nodiscard]]
   fs::path project_paths::source(fs::path projectRoot)
   {
-    return (projectRoot /= "Source") /= uncapitalize((--projectRoot.end())->generic_string());
+    return (projectRoot /= "Source") /= uncapitalize(back(projectRoot).generic_string());
   }
 
   [[nodiscard]]
@@ -289,16 +337,9 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  fs::path project_paths::prune_file_path(std::optional<std::size_t> id) const
+  prune_paths project_paths::prune() const
   {
-    auto [dir, num] {
-      [id,this]() {
-        return (id == std::nullopt) ? std::make_pair(prune_dir(), std::string{})
-                                    : std::make_pair(instability_analysis_prune_dir(), std::to_string(id.value()));
-      }()
-    };
-
-    return (dir /= back(cmade_build_dir())).concat(num).concat(".prune");
+    return output().prune(build(), cmade_build_dir());
   }
 
   void throw_unless_exists(const fs::path& p, std::string_view message)

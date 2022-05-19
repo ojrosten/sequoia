@@ -72,7 +72,7 @@ namespace sequoia::testing
 
   family_selector::family_selector(project_paths paths)
     : m_Paths{std::move(paths)}
-    , m_PruneInfo{time_stamps::from_file(proj_paths().prune_file_path(std::nullopt)),
+    , m_PruneInfo{time_stamps::from_file(proj_paths().prune().stamp()),
                   time_stamps::from_file(proj_paths().executable())}
   {}
 
@@ -108,7 +108,7 @@ namespace sequoia::testing
     stream << "\nAnalyzing dependencies...\n";
     const timer t{};
 
-    if(auto maybeToRun{tests_to_run(proj_paths().source_root(), proj_paths().tests(), proj_paths().test_materials(), proj_paths().prune_file_path(std::nullopt), m_PruneInfo.stamps.ondisk, m_PruneInfo.stamps.executable, m_PruneInfo.include_cutoff)})
+    if(auto maybeToRun{tests_to_run(proj_paths(), m_PruneInfo.include_cutoff)})
     {
       auto& toRun{maybeToRun.value()};
 
@@ -145,8 +145,8 @@ namespace sequoia::testing
 
         if(!passingTests.empty())
         {
-          const auto pruneFile{proj_paths().prune_file_path(id)};
-          auto previousFailures{read_failures(pruneFile)};
+          const auto failuresFile{proj_paths().prune().failures(id)};
+          auto previousFailures{read_failures(failuresFile)};
 
           std::vector<fs::path> remainingFailures{};
           std::set_difference(previousFailures.begin(),
@@ -155,55 +155,54 @@ namespace sequoia::testing
                               passingTests.end(),
                               std::back_inserter(remainingFailures));
 
-          write_failures(pruneFile, remainingFailures.begin(), remainingFailures.end());
-          fs::last_write_time(pruneFile, m_PruneInfo.stamps.current);
+          write_failures(failuresFile, remainingFailures.begin(), remainingFailures.end());
+          fs::last_write_time(failuresFile, m_PruneInfo.stamps.current);
         }
       }
     }
     else
     {
-      const auto pruneFile{proj_paths().prune_file_path(id)};
-      write_failures(pruneFile, startFailedTests, endFailedTests);
-      fs::last_write_time(pruneFile, m_PruneInfo.stamps.current);
+      const auto failuresFile{proj_paths().prune().failures(id)};
+      write_failures(failuresFile, startFailedTests, endFailedTests);
+      fs::last_write_time(failuresFile, m_PruneInfo.stamps.current);
+    }
+
+    {
+      const auto stamp{proj_paths().prune().stamp()};
+      { std::ofstream{stamp}; }
+      fs::last_write_time(stamp, m_PruneInfo.stamps.current);
     }
   }
 
   void family_selector::aggregate_instability_analysis_prune_files(const std::size_t numReps) const
   {
-    if(!bespoke_selection() || m_PruneInfo.stamps.ondisk.has_value())
+    std::vector<fs::path> tests{};
+    for(std::size_t i{}; i < numReps; ++i)
     {
-      std::vector<fs::path> failures{};
-      for(std::size_t i{}; i < numReps; ++i)
+      const auto file{proj_paths().prune().failures(i)};
+      if(fs::exists(file))
       {
-        const auto pruneFile{proj_paths().prune_file_path(i)};
-
-        if(fs::exists(pruneFile))
+        if(std::ifstream ifile{file})
         {
-          if(std::ifstream ifile{pruneFile})
+          while(ifile)
           {
-            while(ifile)
-            {
-              fs::path filePath{};
-              ifile >> filePath;
-              if(!filePath.empty())
-                failures.push_back(std::move(filePath));
-            }
+            fs::path filePath{};
+            ifile >> filePath;
+            if(!filePath.empty())
+              tests.push_back(std::move(filePath));
           }
         }
       }
+    }
 
-      std::sort(failures.begin(), failures.end());
-      auto last{std::unique(failures.begin(), failures.end())};
-      failures.erase(last, failures.end());
+    std::sort(tests.begin(), tests.end());
+    auto last{std::unique(tests.begin(), tests.end())};
+    tests.erase(last, tests.end());
 
-      const auto grandPruneFile{proj_paths().prune_file_path(std::nullopt)};
-      if(std::ofstream ofile{grandPruneFile})
-      {
-        for(const auto& p : failures)
-          ofile << p.generic_string() << '\n';
-      }
-
-      fs::last_write_time(grandPruneFile, !bespoke_selection() ? m_PruneInfo.stamps.current : m_PruneInfo.stamps.ondisk.value());
+    if(const auto grandFile{proj_paths().prune().failures(std::nullopt)};  std::ofstream ofile{grandFile})
+    {
+      for(const auto& p : tests)
+        ofile << p.generic_string() << '\n';
     }
   }
 

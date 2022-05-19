@@ -232,7 +232,7 @@ namespace sequoia::testing
                   if(includedFile.is_absolute())
                   {
                     if(b->file == includedFile) return b;
-                    else                       continue;
+                    else                        continue;
                   }
 
                   if((b->file == sourceRepo / includedFile) || (b->file == testRepo / includedFile))
@@ -304,19 +304,24 @@ namespace sequoia::testing
         }
       }
     }
+
+    [[nodiscard]]
+    std::optional<fs::file_time_type> get_stamp(const fs::path& file)
+    {
+      if(fs::exists(file)) return fs::last_write_time(file);
+
+      return std::nullopt;
+    }
   }
 
   [[nodiscard]]
   std::optional<std::vector<std::filesystem::path>>
-  tests_to_run(const fs::path& sourceRepo,
-               const fs::path& testRepo,
-               const fs::path& materialsRepo,
-               const std::filesystem::path& previousFailures,
-               const std::optional<fs::file_time_type>& timeStamp,
-               const std::optional<fs::file_time_type>& exeTimeStamp,
-               std::string_view cutoff)
+  tests_to_run(const project_paths& projPaths, std::string_view cutoff)
   {
     using namespace maths;
+
+    const auto timeStamp{get_stamp(projPaths.prune().stamp())};
+    const auto exeTimeStamp{get_stamp(projPaths.executable())};
 
     if(!timeStamp) return std::nullopt;
 
@@ -324,8 +329,8 @@ namespace sequoia::testing
 
     tests_dependency_graph g{};
 
-    add_files(g, sourceRepo, timeStamp.value(), exeTimeStamp);
-    add_files(g, testRepo, timeStamp.value(), exeTimeStamp);
+    add_files(g, projPaths.source(), timeStamp.value(), exeTimeStamp);
+    add_files(g, projPaths.tests(), timeStamp.value(), exeTimeStamp);
     g.sort_nodes([&g](auto i, auto j) {
         const fs::path&
           lfile{(g.cbegin_node_weights() + i)->file},
@@ -338,7 +343,7 @@ namespace sequoia::testing
         return lname != rname ? lname < rname : lfile < rfile ;
       });
 
-    const auto externalDependencies{build_dependencies(g, sourceRepo, testRepo, cutoff)};
+    const auto externalDependencies{build_dependencies(g, projPaths.source_root(), projPaths.tests(), cutoff)};
 
     auto nodesLate{
       [&g](const std::size_t node) {
@@ -357,17 +362,17 @@ namespace sequoia::testing
 
     for(auto i{g.cbegin_node_weights()}; i != g.cend_node_weights(); ++i)
     {
-      if(const auto& weight{*i}; is_cpp(weight.file) && in_repo(weight.file, testRepo))
+      if(const auto& weight{*i}; is_cpp(weight.file) && in_repo(weight.file, projPaths.tests()))
       {
-        const auto relPath{fs::relative(weight.file, testRepo)};
+        const auto relPath{fs::relative(weight.file, projPaths.tests())};
 
-        if(!weight.stale) consider_materials(g, i, relPath, materialsRepo, timeStamp.value());
+        if(!weight.stale) consider_materials(g, i, relPath, projPaths.test_materials(), timeStamp.value());
 
         if(weight.stale) testsToRun.push_back(relPath);
       }
     }
 
-    if(std::ifstream ifile{previousFailures})
+    if(std::ifstream ifile{projPaths.prune().failures(std::nullopt)})
     {
       while(ifile)
       {
@@ -375,7 +380,7 @@ namespace sequoia::testing
         ifile >> source;
         if(!source.empty())
         {
-          source = rebase_from(source, testRepo);
+          source = rebase_from(source, projPaths.tests());
           testsToRun.push_back(source);
         }
       }
