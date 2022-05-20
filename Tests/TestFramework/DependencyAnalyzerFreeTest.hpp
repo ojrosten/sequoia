@@ -35,6 +35,7 @@ namespace sequoia::testing
                             std::string_view cutoff,
                             const std::vector<std::filesystem::path>& makeStale,
                             std::vector<std::filesystem::path> failures,
+                            std::vector<std::filesystem::path> passes,
                             const std::vector<std::filesystem::path>& toRun);
   };
 }

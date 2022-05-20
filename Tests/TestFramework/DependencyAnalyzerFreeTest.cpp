@@ -27,7 +27,13 @@ namespace sequoia::testing
     return __FILE__;
   }
 
-  void dependency_analyzer_free_test::check_tests_to_run(std::string_view description, const project_paths& projPaths, std::string_view cutoff, const std::vector<std::filesystem::path>& makeStale, std::vector<std::filesystem::path> failures, const std::vector<std::filesystem::path>& toRun)
+  void dependency_analyzer_free_test::check_tests_to_run(std::string_view description,
+                                                         const project_paths& projPaths,
+                                                         std::string_view cutoff,
+                                                         const std::vector<std::filesystem::path>& makeStale,
+                                                         std::vector<std::filesystem::path> failures,
+                                                         std::vector<std::filesystem::path> passes,
+                                                         const std::vector<std::filesystem::path>& toRun)
   {
     namespace fs = std::filesystem;
 
@@ -109,12 +115,13 @@ namespace sequoia::testing
     const auto& sourceRepo{projPaths.source()};
     const auto& materials{projPaths.test_materials()};
 
-    check_tests_to_run(LINE("Nothing stale"), projPaths, "", {}, {}, {});
+    check_tests_to_run(LINE("Nothing stale"), projPaths, "", {}, {}, {}, {});
 
     check_tests_to_run(LINE("Test cpp stale (no cutoff)"),
                        projPaths,
                        "",
                        {{testRepo / "HouseAllocationTest.cpp"}},
+                       {},
                        {},
                        {"HouseAllocationTest.cpp"});
 
@@ -123,12 +130,14 @@ namespace sequoia::testing
                        "namespace",
                        {{testRepo / "HouseAllocationTest.cpp"}},
                        {},
+                       {},
                        {{"HouseAllocationTest.cpp"}});
 
     check_tests_to_run(LINE("Test hpp stale (no cutoff)"),
                        projPaths,
                        "",
                        {{testRepo / "HouseAllocationTest.hpp"}},
+                       {},
                        {},
                        {{"HouseAllocationTest.cpp"}});
 
@@ -137,12 +146,14 @@ namespace sequoia::testing
                        "namespace",
                        {{testRepo / "HouseAllocationTest.hpp"}},
                        {},
+                       {},
                        {{"HouseAllocationTest.cpp"}});
 
     check_tests_to_run(LINE("Test utils stale"),
                        projPaths,
                        "namespace",
                        {{testRepo / "Maths" / "ProbabilityTestingUtilities.hpp"}},
+                       {},
                        {},
                        {{"Maths/ProbabilityTest.cpp"}, {"Maths/ProbabilityTestingDiagnostics.cpp"}});
 
@@ -151,19 +162,22 @@ namespace sequoia::testing
                        "namespace",
                        {{testRepo / "Stuff" / "OldSchoolTestingUtilities.hpp"}},
                        {},
+                       {},
                        {{"Maybe/MaybeTest.cpp"}, {"Stuff/OldschoolTest.cpp"}, {"Stuff/OldschoolTestingDiagnostics.cpp"}});
 
     check_tests_to_run(LINE("Reused utils stale, relative path"),
                        projPaths,
                        "namespace",
                        {{testRepo / "Stuff" / "FooTestingUtilities.hpp"}},
-                        {},
+                       {},
+                       {},
                        {{"Stuff/FooTest.cpp"}, {"Stuff/FooTestingDiagnostics.cpp"}, {"Utilities/Thing/UniqueThingTest.cpp"}, {"Utilities/Thing/UniqueThingTestingDiagnostics.cpp"}});
 
     check_tests_to_run(LINE("Source cpp stale"),
                        projPaths,
                        "namespace",
                        {{sourceRepo / "Maths" / "Probability.cpp"}},
+                       {},
                        {},
                        {{"Maths/ProbabilityTest.cpp"}, {"Maths/ProbabilityTestingDiagnostics.cpp"}});
 
@@ -172,12 +186,14 @@ namespace sequoia::testing
                        "namespace",
                        {{sourceRepo / "Maths" / "Probability.hpp"}},
                        {},
+                       {},
                        {{"Maths/ProbabilityTest.cpp"}, {"Maths/ProbabilityTestingDiagnostics.cpp"}});
 
     check_tests_to_run(LINE("Source cpp indirectly stale via included header"),
                        projPaths,
                        "namespace",
                        {{sourceRepo / "Maths" / "Helper.hpp"}},
+                       {},
                        {},
                        {{"Maths/ProbabilityTest.cpp"}, {"Maths/ProbabilityTestingDiagnostics.cpp"}});
 
@@ -186,12 +202,14 @@ namespace sequoia::testing
                        "namespace",
                        {{sourceRepo / "Maths" / "Helper.cpp"}},
                        {},
+                       {},
                        {{"Maths/ProbabilityTest.cpp"}, {"Maths/ProbabilityTestingDiagnostics.cpp"}});
 
     check_tests_to_run(LINE("Materials stale"),
                        projPaths,
                        "namespace",
                        {{materials / "Stuff" / "FooTest" / "Prediction" / "RepresentativeCasesTemp" / "NoSeqpat" / "baz.txt"}},
+                       {},
                        {},
                        {{"Stuff/FooTest.cpp"}});
 
@@ -200,6 +218,7 @@ namespace sequoia::testing
                        "namespace",
                        {},
                        {{"Maths/ProbabilityTest.cpp"}},
+                       {},
                        {{"Maths/ProbabilityTest.cpp"}});
 
     check_tests_to_run(LINE("Both stale and a previous failure"),
@@ -207,6 +226,7 @@ namespace sequoia::testing
                        "namespace",
                        {{testRepo / "Maths/ProbabilityTest.cpp"}},
                        {{"Maths/ProbabilityTest.cpp"}},
+                       {},
                        {{"Maths/ProbabilityTest.cpp"}});
 
     check_tests_to_run(LINE("Nothing stale, but two previous failures"),
@@ -214,6 +234,8 @@ namespace sequoia::testing
                        "namespace",
                        {},
                        {{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}},
+                       {},
                        {{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}});
   }
+
 }
