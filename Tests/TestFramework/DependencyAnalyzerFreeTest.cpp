@@ -18,6 +18,23 @@ namespace sequoia::testing
 {
   namespace fs = std::filesystem;
 
+  namespace
+  {
+    void write_tests(const fs::path& file, std::vector<fs::path>& tests)
+    {
+      std::sort(tests.begin(), tests.end());
+      if(std::ofstream ofile{file})
+      {
+        for(const auto& f : tests)
+          ofile << f.generic_string() << "\n";
+      }
+      else
+      {
+        throw std::runtime_error{file.generic_string().append(" not found")};
+      }
+    }
+  }
+
   using test_list     = std::vector<fs::path>;
   using opt_test_list = std::optional<test_list>;
 
@@ -41,15 +58,9 @@ namespace sequoia::testing
 
     const auto prune{projPaths.prune()};
     const auto failureFile{prune.failures(std::nullopt)};
-    if(std::ofstream ofile{failureFile})
-    {
-      for(const auto& f : failures)
-        ofile << f.generic_string() << "\n";
-    }
-    else
-    {
-      throw std::runtime_error{failureFile.generic_string().append(" not found")};
-    }
+    const auto passesFile{prune.selected_passes(std::nullopt)};
+    write_tests(failureFile, failures);
+    write_tests(passesFile, passes);
 
     const auto staleTime{m_ResetTime + std::chrono::seconds{1}};
     for(const auto& f : makeStale)
@@ -70,6 +81,7 @@ namespace sequoia::testing
     }
 
     fs::remove(failureFile);
+    fs::remove(passesFile);
 
     check(equality, append_lines(description, "Nothing Stale"), tests_to_run(projPaths, cutoff), opt_test_list{test_list{}});
   }
@@ -125,13 +137,13 @@ namespace sequoia::testing
                        {},
                        {"HouseAllocationTest.cpp"});
 
-    check_tests_to_run(LINE("Test cpp stale"),
+    check_tests_to_run(LINE("Test cpp older than stamp, but has passed (when selected)"),
                        projPaths,
                        "namespace",
                        {{testRepo / "HouseAllocationTest.cpp"}},
                        {},
-                       {},
-                       {{"HouseAllocationTest.cpp"}});
+                       {{"HouseAllocationTest.cpp"}},
+                       {});
 
     check_tests_to_run(LINE("Test hpp stale (no cutoff)"),
                        projPaths,

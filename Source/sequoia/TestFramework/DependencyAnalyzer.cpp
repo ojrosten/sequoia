@@ -375,7 +375,7 @@ namespace sequoia::testing
     std::sort(naivelyStaleTests.begin(), naivelyStaleTests.end());
 
     std::vector<fs::path> passingTests{};
-    if(std::ifstream ifile{projPaths.prune().failures(std::nullopt)})
+    if(std::ifstream ifile{projPaths.prune().selected_passes(std::nullopt)})
     {
       fs::path source{};
       ifile >> source;
