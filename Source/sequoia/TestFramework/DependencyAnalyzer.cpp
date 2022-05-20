@@ -325,7 +325,7 @@ namespace sequoia::testing
 
     if(!timeStamp) return std::nullopt;
 
-    std::vector<std::filesystem::path> testsToRun{};
+    std::vector<fs::path> naivelyStaleTests{};
 
     tests_dependency_graph g{};
 
@@ -368,10 +368,29 @@ namespace sequoia::testing
 
         if(!weight.stale) consider_materials(g, i, relPath, projPaths.test_materials(), timeStamp.value());
 
-        if(weight.stale) testsToRun.push_back(relPath);
+        if(weight.stale) naivelyStaleTests.push_back(relPath);
       }
     }
 
+    std::sort(naivelyStaleTests.begin(), naivelyStaleTests.end());
+
+    std::vector<fs::path> passingTests{};
+    if(std::ifstream ifile{projPaths.prune().failures(std::nullopt)})
+    {
+      fs::path source{};
+      ifile >> source;
+      if(!source.empty())
+      {
+        passingTests.push_back(source);
+      }
+    }
+
+    std::sort(passingTests.begin(), passingTests.end());
+
+    std::vector<fs::path> staleTests{};
+    std::set_difference(naivelyStaleTests.begin(), naivelyStaleTests.end(), passingTests.begin(), passingTests.end(), std::back_inserter(staleTests));
+
+    std::vector<fs::path> failingTests{};
     if(std::ifstream ifile{projPaths.prune().failures(std::nullopt)})
     {
       while(ifile)
@@ -381,14 +400,15 @@ namespace sequoia::testing
         if(!source.empty())
         {
           source = rebase_from(source, projPaths.tests());
-          testsToRun.push_back(source);
+          failingTests.push_back(source);
         }
       }
     }
 
-    std::sort(testsToRun.begin(), testsToRun.end());
-    auto last{std::unique(testsToRun.begin(), testsToRun.end())};
-    testsToRun.erase(last, testsToRun.end());
+    std::sort(failingTests.begin(), failingTests.end());
+
+    std::vector<fs::path> testsToRun{};
+    std::set_union(staleTests.begin(), staleTests.end(), failingTests.begin(), failingTests.end(), std::back_inserter(testsToRun));
 
     return testsToRun;
   }

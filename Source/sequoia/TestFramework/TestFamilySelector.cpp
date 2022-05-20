@@ -156,7 +156,6 @@ namespace sequoia::testing
                               std::back_inserter(remainingFailures));
 
           write_failures(failuresFile, remainingFailures.begin(), remainingFailures.end());
-          fs::last_write_time(failuresFile, m_PruneInfo.stamps.current);
         }
       }
     }
@@ -164,7 +163,6 @@ namespace sequoia::testing
     {
       const auto failuresFile{proj_paths().prune().failures(id)};
       write_failures(failuresFile, startFailedTests, endFailedTests);
-      fs::last_write_time(failuresFile, m_PruneInfo.stamps.current);
     }
 
     {
