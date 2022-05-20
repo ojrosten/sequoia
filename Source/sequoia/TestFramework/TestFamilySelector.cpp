@@ -48,13 +48,13 @@ namespace sequoia::testing
 
     template<std::input_or_output_iterator Iter, std::sentinel_for<Iter> Sentinel>
       requires std::same_as<typename Iter::value_type, fs::path>
-    void write_failures(const fs::path& file, Iter first, Sentinel last)
+    void write_failures(const project_paths& projPaths, const fs::path& file, Iter first, Sentinel last)
     {
       if(std::ofstream ostream{file})
       {
         while(first != last)
         {
-          ostream << (first++)->generic_string() << "\n";
+          ostream << rebase_from(*(first++), projPaths.tests()).generic_string() << "\n";
         }
       }
     }
@@ -155,14 +155,14 @@ namespace sequoia::testing
                               passingTests.end(),
                               std::back_inserter(remainingFailures));
 
-          write_failures(failuresFile, remainingFailures.begin(), remainingFailures.end());
+          write_failures(m_Paths, failuresFile, remainingFailures.begin(), remainingFailures.end());
         }
       }
     }
     else
     {
       const auto failuresFile{proj_paths().prune().failures(id)};
-      write_failures(failuresFile, startFailedTests, endFailedTests);
+      write_failures(m_Paths, failuresFile, startFailedTests, endFailedTests);
     }
 
     {

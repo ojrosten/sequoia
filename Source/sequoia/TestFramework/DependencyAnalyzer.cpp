@@ -312,6 +312,27 @@ namespace sequoia::testing
 
       return std::nullopt;
     }
+
+    [[nodiscard]]
+    std::vector<fs::path> read_tests(const fs::path& file)
+    {
+      std::vector<fs::path> tests{};
+      if(std::ifstream ifile{file})
+      {
+        while(ifile)
+        {
+          fs::path source{};
+          ifile >> source;
+          if(!source.empty())
+          {
+            tests.push_back(source);
+          }
+        }
+      }
+
+      std::sort(tests.begin(), tests.end());
+      return tests;
+    }
   }
 
   [[nodiscard]]
@@ -374,38 +395,13 @@ namespace sequoia::testing
 
     std::sort(naivelyStaleTests.begin(), naivelyStaleTests.end());
 
-    std::vector<fs::path> passingTests{};
-    if(std::ifstream ifile{projPaths.prune().selected_passes(std::nullopt)})
-    {
-      fs::path source{};
-      ifile >> source;
-      if(!source.empty())
-      {
-        passingTests.push_back(source);
-      }
-    }
-
-    std::sort(passingTests.begin(), passingTests.end());
+    const auto prunePaths{projPaths.prune()};
+    const std::vector<fs::path> passingTests{read_tests(prunePaths.selected_passes(std::nullopt))};
 
     std::vector<fs::path> staleTests{};
     std::set_difference(naivelyStaleTests.begin(), naivelyStaleTests.end(), passingTests.begin(), passingTests.end(), std::back_inserter(staleTests));
 
-    std::vector<fs::path> failingTests{};
-    if(std::ifstream ifile{projPaths.prune().failures(std::nullopt)})
-    {
-      while(ifile)
-      {
-        fs::path source{};
-        ifile >> source;
-        if(!source.empty())
-        {
-          source = rebase_from(source, projPaths.tests());
-          failingTests.push_back(source);
-        }
-      }
-    }
-
-    std::sort(failingTests.begin(), failingTests.end());
+    const std::vector<fs::path> failingTests{read_tests(prunePaths.failures(std::nullopt))};
 
     std::vector<fs::path> testsToRun{};
     std::set_union(staleTests.begin(), staleTests.end(), failingTests.begin(), failingTests.end(), std::back_inserter(testsToRun));
