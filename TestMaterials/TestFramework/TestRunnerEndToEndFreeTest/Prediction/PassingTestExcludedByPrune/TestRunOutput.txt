@@ -1,12 +1,34 @@
 
 Analyzing dependencies...
-[22ms]
+[29ms]
 
 
 Running tests...
 
+
+	--Using asynchronous execution, level: Unit
+
+Probability:
+[3 (1)ms]
+	Standard Top Level Checks:                 3;  Failures:  1  [Deep checks: 39]
+
+	Tests/Maths/ProbabilityTest.cpp, Line 22
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<maths::probability>]
+	Checking for equivalence with:
+	[double]
+
+	  Description
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0.9
+
+	=======================================
+
 Foo:
-[4 (2)ms]
+[5 (3)ms]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 
 ******  Critical Failures:  1  ******
@@ -29,8 +51,8 @@ Foo:
 
 
 -----------Grand Totals-----------
-[4 (2)ms]
-	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
+[6 (5)ms]
+	Standard Top Level Checks:                 5;  Failures:  1  [Deep checks: 41]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
 	False Negative Performance Checks:         0;  Failures:  0

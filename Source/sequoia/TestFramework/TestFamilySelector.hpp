@@ -176,6 +176,11 @@ namespace sequoia::testing
     [[nodiscard]]
     auto find_filename(const normal_path& filename) -> source_list::iterator;
 
+    [[nodiscard]]
+    std::vector<std::filesystem::path> get_executed_tests() const;
+
+    void update_prune_stamp_on_disk(const prune_paths& prunePaths) const;
+
     using duplicate_set = std::set<std::pair<std::string_view, std::filesystem::path>>;
 
     template<class Test, class... Tests>

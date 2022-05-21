@@ -48,7 +48,7 @@ namespace sequoia::testing
 
     template<std::input_or_output_iterator Iter, std::sentinel_for<Iter> Sentinel>
       requires std::same_as<typename Iter::value_type, fs::path>
-    void write_failures(const project_paths& projPaths, const fs::path& file, Iter first, Sentinel last)
+    void write_tests(const project_paths& projPaths, const fs::path& file, Iter first, Sentinel last)
     {
       if(std::ofstream ostream{file})
       {
@@ -124,56 +124,66 @@ namespace sequoia::testing
   void family_selector::update_prune_info(Iter startFailedTests, Sentinel endFailedTests, const std::optional<std::size_t> id)
   {
     std::sort(startFailedTests, endFailedTests);
+    const auto prunePaths{m_Paths.prune()};
+    const auto failuresFile{prunePaths.failures(id)};
     if(!pruned() && bespoke_selection())
     {
-      if(m_PruneInfo.stamps.ondisk.has_value())
-      {
-        std::vector<fs::path> executedTests{};
-        for(const auto& src : m_SelectedSources)
-        {
-          if(src.second) executedTests.push_back(src.first);
-        }
+      const auto executedTests{get_executed_tests()};
+     
+      std::vector<fs::path> passingTests{};
+      std::set_difference(executedTests.begin(),
+                          executedTests.end(),
+                          startFailedTests,
+                          endFailedTests,
+                          std::back_inserter(passingTests));
 
-        std::sort(executedTests.begin(), executedTests.end());
+      auto previousFailures{read_failures(failuresFile)};
 
-        std::vector<fs::path> passingTests{};
-        std::set_difference(executedTests.begin(),
-                            executedTests.end(),
-                            startFailedTests,
-                            endFailedTests,
-                            std::back_inserter(passingTests));
+      std::vector<fs::path> remainingFailures{};
+      std::set_difference(previousFailures.begin(),
+                          previousFailures.end(),
+                          passingTests.begin(),
+                          passingTests.end(),
+                          std::back_inserter(remainingFailures));
 
-        if(!passingTests.empty())
-        {
-          const auto failuresFile{proj_paths().prune().failures(id)};
-          auto previousFailures{read_failures(failuresFile)};
-
-          std::vector<fs::path> remainingFailures{};
-          std::set_difference(previousFailures.begin(),
-                              previousFailures.end(),
-                              passingTests.begin(),
-                              passingTests.end(),
-                              std::back_inserter(remainingFailures));
-
-          write_failures(m_Paths, failuresFile, remainingFailures.begin(), remainingFailures.end());
-        }
-      }
+      write_tests(m_Paths, failuresFile, remainingFailures.begin(), remainingFailures.end());
+      write_tests(m_Paths, prunePaths.selected_passes(id), passingTests.begin(), passingTests.end());
     }
     else
     {
-      const auto failuresFile{proj_paths().prune().failures(id)};
-      write_failures(m_Paths, failuresFile, startFailedTests, endFailedTests);
+      write_tests(m_Paths, failuresFile, startFailedTests, endFailedTests);
+      update_prune_stamp_on_disk(prunePaths);
+    }
+  }
+
+  [[nodiscard]]
+  std::vector<std::filesystem::path> family_selector::get_executed_tests() const
+  {
+    std::vector<fs::path> executedTests{};
+    for(const auto& src : m_SelectedSources)
+    {
+      if(src.second) executedTests.push_back(src.first);
     }
 
+    std::sort(executedTests.begin(), executedTests.end());
+
+    return executedTests;
+  }
+
+  void family_selector::update_prune_stamp_on_disk(const prune_paths& prunePaths) const
+  {
+    const auto stamp{prunePaths.stamp()};
+    if(!fs::exists(stamp))
     {
-      const auto stamp{proj_paths().prune().stamp()};
-      { std::ofstream{stamp}; }
-      fs::last_write_time(stamp, m_PruneInfo.stamps.current);
+      std::ofstream{stamp};
     }
+    fs::last_write_time(stamp, m_PruneInfo.stamps.current);
   }
 
   void family_selector::aggregate_instability_analysis_prune_files(const std::size_t numReps) const
   {
+    // TO DO: extend this to deal with passing tests
+
     std::vector<fs::path> tests{};
     for(std::size_t i{}; i < numReps; ++i)
     {
