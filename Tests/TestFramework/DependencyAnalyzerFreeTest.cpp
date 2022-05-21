@@ -257,6 +257,14 @@ namespace sequoia::testing
                        {},
                        {{"Maths/ProbabilityTest.cpp"}});
 
+    check_tests_to_run(LINE("Inconsistency: both passed and failed; failure wins"),
+                       projPaths,
+                       "namespace",
+                       {},
+                       {{"Maths/ProbabilityTest.cpp"}},
+                       {{"Maths/ProbabilityTest.cpp"}},
+                       {{"Maths/ProbabilityTest.cpp"}});
+
     check_tests_to_run(LINE("Both stale and a previous failure"),
                        projPaths,
                        "namespace",
