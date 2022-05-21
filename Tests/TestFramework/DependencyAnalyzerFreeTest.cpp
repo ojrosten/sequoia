@@ -177,6 +177,30 @@ namespace sequoia::testing
                        {},
                        {{"Maybe/MaybeTest.cpp"}, {"Stuff/OldschoolTest.cpp"}, {"Stuff/OldschoolTestingDiagnostics.cpp"}});
 
+    check_tests_to_run(LINE("Reused utils stale, but one of the tests has passed"),
+                       projPaths,
+                       "namespace",
+                       {{testRepo / "Stuff" / "OldSchoolTestingUtilities.hpp"}},
+                       {},
+                       {{"Maybe/MaybeTest.cpp"}},
+                       {{"Stuff/OldschoolTest.cpp"}, {"Stuff/OldschoolTestingDiagnostics.cpp"}});
+
+    check_tests_to_run(LINE("Reused utils stale, but two of the tests have passed"),
+                       projPaths,
+                       "namespace",
+                       {{testRepo / "Stuff" / "OldSchoolTestingUtilities.hpp"}},
+                       {},
+                       {{"Maybe/MaybeTest.cpp"}, {"Stuff/OldschoolTest.cpp"}},
+                       {{"Stuff/OldschoolTestingDiagnostics.cpp"}});
+
+    check_tests_to_run(LINE("Reused utils stale, but two of the tests have passed and a different one has failed"),
+                       projPaths,
+                       "namespace",
+                       {{testRepo / "Stuff" / "OldSchoolTestingUtilities.hpp"}},
+                       {{"HouseAllocationTest.cpp"}},
+                       {{"Maybe/MaybeTest.cpp"}, {"Stuff/OldschoolTest.cpp"}},
+                       {{"Stuff/OldschoolTestingDiagnostics.cpp"}, {"HouseAllocationTest.cpp"}});
+
     check_tests_to_run(LINE("Reused utils stale, relative path"),
                        projPaths,
                        "namespace",
