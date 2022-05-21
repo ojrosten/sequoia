@@ -46,15 +46,13 @@ namespace sequoia::testing
       return failures;
     }
 
-    template<std::input_or_output_iterator Iter, std::sentinel_for<Iter> Sentinel>
-      requires std::same_as<typename Iter::value_type, fs::path>
-    void write_tests(const project_paths& projPaths, const fs::path& file, Iter first, Sentinel last)
+    void write_tests(const project_paths& projPaths, const fs::path& file, const std::vector<fs::path>& tests)
     {
       if(std::ofstream ostream{file})
       {
-        while(first != last)
+        for(const auto& test : tests)
         {
-          ostream << rebase_from(*(first++), projPaths.tests()).generic_string() << "\n";
+          ostream << rebase_from(test, projPaths.tests()).generic_string() << "\n";
         }
       }
     }
@@ -184,10 +182,9 @@ namespace sequoia::testing
     stream << "[" << dur << unit << "]\n\n";
   }
 
-  template<std::input_or_output_iterator Iter, std::sentinel_for<Iter> Sentinel>
-  void family_selector::update_prune_info(Iter startFailedTests, Sentinel endFailedTests, const std::optional<std::size_t> id)
+  void family_selector::update_prune_info(std::vector<fs::path> failedTests, const std::optional<std::size_t> id)
   {
-    std::sort(startFailedTests, endFailedTests);
+    std::sort(failedTests.begin(), failedTests.end());
     const auto prunePaths{m_Paths.prune()};
     const auto failuresFile{prunePaths.failures(id)};
     if(!pruned() && bespoke_selection())
@@ -197,8 +194,8 @@ namespace sequoia::testing
       std::vector<fs::path> passingTests{};
       std::set_difference(executedTests.begin(),
                           executedTests.end(),
-                          startFailedTests,
-                          endFailedTests,
+                          failedTests.begin(),
+                          failedTests.end(),
                           std::back_inserter(passingTests));
 
       auto previousFailures{read_failures(failuresFile)};
@@ -210,12 +207,12 @@ namespace sequoia::testing
                           passingTests.end(),
                           std::back_inserter(remainingFailures));
 
-      write_tests(m_Paths, failuresFile, remainingFailures.begin(), remainingFailures.end());
-      write_tests(m_Paths, prunePaths.selected_passes(id), passingTests.begin(), passingTests.end());
+      write_tests(m_Paths, failuresFile, remainingFailures);
+      write_tests(m_Paths, prunePaths.selected_passes(id), passingTests);
     }
     else
     {
-      write_tests(m_Paths, failuresFile, startFailedTests, endFailedTests);
+      write_tests(m_Paths, failuresFile, failedTests);
       update_prune_stamp_on_disk(prunePaths);
     }
   }
@@ -377,6 +374,4 @@ namespace sequoia::testing
                      " which both have the same name and are defined"
                      " in the same source file.\n"));
   }
-
-  template void family_selector::update_prune_info<std::vector<fs::path>::iterator>(std::vector<fs::path>::iterator, std::vector<fs::path>::iterator, std::optional<std::size_t>);
 }

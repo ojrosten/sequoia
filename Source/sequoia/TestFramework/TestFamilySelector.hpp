@@ -77,8 +77,7 @@ namespace sequoia::testing
 
     void prune(std::ostream& stream);
 
-    template<std::input_or_output_iterator Iter, std::sentinel_for<Iter> Sentinel>
-    void update_prune_info(Iter startFailedTests, Sentinel endFailedTests, std::optional<std::size_t> id);
+    void update_prune_info(std::vector<std::filesystem::path> failedTests, std::optional<std::size_t> id);
 
     void aggregate_instability_analysis_prune_files(const std::size_t numReps) const;
 

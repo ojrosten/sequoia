@@ -624,7 +624,7 @@ namespace sequoia::testing
     stream() << "\n-----------Grand Totals-----------\n";
     stream() << summarize(summary, t.time_elapsed(), summary_detail::absent_checks | summary_detail::timings, indentation{"\t"}, no_indent);
 
-    m_Selector.update_prune_info(m_FailedTestSourceFiles.begin(), m_FailedTestSourceFiles.end(), id);
+    m_Selector.update_prune_info(std::move(m_FailedTestSourceFiles), id);
     m_FailedTestSourceFiles.clear();
   }
 }
