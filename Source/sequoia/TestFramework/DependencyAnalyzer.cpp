@@ -333,26 +333,20 @@ namespace sequoia::testing
       std::sort(tests.begin(), tests.end());
       return tests;
     }
-  }
 
-  [[nodiscard]]
-  std::optional<std::vector<std::filesystem::path>>
-  tests_to_run(const project_paths& projPaths, std::string_view cutoff)
-  {
-    using namespace maths;
+    [[nodiscard]]
+    std::vector<fs::path> find_naively_stale_tests(fs::file_time_type timeStamp, const project_paths& projPaths, std::string_view cutoff)
+    {
+      using namespace maths;
 
-    const auto timeStamp{get_stamp(projPaths.prune().stamp())};
-    const auto exeTimeStamp{get_stamp(projPaths.executable())};
+      std::vector<fs::path> naivelyStaleTests{};
 
-    if(!timeStamp) return std::nullopt;
+      tests_dependency_graph g{};
 
-    std::vector<fs::path> naivelyStaleTests{};
-
-    tests_dependency_graph g{};
-
-    add_files(g, projPaths.source(), timeStamp.value(), exeTimeStamp);
-    add_files(g, projPaths.tests(), timeStamp.value(), exeTimeStamp);
-    g.sort_nodes([&g](auto i, auto j) {
+      const auto exeTimeStamp{get_stamp(projPaths.executable())};
+      add_files(g, projPaths.source(), timeStamp, exeTimeStamp);
+      add_files(g, projPaths.tests(), timeStamp, exeTimeStamp);
+      g.sort_nodes([&g](auto i, auto j) {
         const fs::path&
           lfile{(g.cbegin_node_weights() + i)->file},
           rfile{(g.cbegin_node_weights() + j)->file};
@@ -361,42 +355,56 @@ namespace sequoia::testing
           lname{lfile.filename()},
           rname{rfile.filename()};
 
-        return lname != rname ? lname < rname : lfile < rfile ;
-      });
+        return lname != rname ? lname < rname : lfile < rfile;
+        });
 
-    const auto externalDependencies{build_dependencies(g, projPaths.source_root(), projPaths.tests(), cutoff)};
+      // TO DO: process these!
+      const auto externalDependencies{build_dependencies(g, projPaths.source_root(), projPaths.tests(), cutoff)};
 
-    auto nodesLate{
-      [&g](const std::size_t node) {
-        for(auto i{g.cbegin_edges(node)}; i != g.cend_edges(node); ++i)
-        {
-          if((g.cbegin_node_weights() + i->target_node())->stale)
+      auto nodesLate{
+        [&g](const std::size_t node) {
+          for(auto i{g.cbegin_edges(node)}; i != g.cend_edges(node); ++i)
           {
-            g.mutate_node_weight(g.cbegin_node_weights() + node, [](auto& w) { w.stale = true; });
-            break;
+            if((g.cbegin_node_weights() + i->target_node())->stale)
+            {
+              g.mutate_node_weight(g.cbegin_node_weights() + node, [](auto& w) { w.stale = true; });
+              break;
+            }
           }
         }
-      }
-    };
+      };
 
-    depth_first_search(g, find_disconnected_t{0}, null_func_obj{}, nodesLate);
+      depth_first_search(g, find_disconnected_t{0}, null_func_obj{}, nodesLate);
 
-    for(auto i{g.cbegin_node_weights()}; i != g.cend_node_weights(); ++i)
-    {
-      if(const auto& weight{*i}; is_cpp(weight.file) && in_repo(weight.file, projPaths.tests()))
+      for(auto i{g.cbegin_node_weights()}; i != g.cend_node_weights(); ++i)
       {
-        const auto relPath{fs::relative(weight.file, projPaths.tests())};
+        if(const auto& weight{*i}; is_cpp(weight.file) && in_repo(weight.file, projPaths.tests()))
+        {
+          const auto relPath{fs::relative(weight.file, projPaths.tests())};
 
-        if(!weight.stale) consider_materials(g, i, relPath, projPaths.test_materials(), timeStamp.value());
+          if(!weight.stale) consider_materials(g, i, relPath, projPaths.test_materials(), timeStamp);
 
-        if(weight.stale) naivelyStaleTests.push_back(relPath);
+          if(weight.stale) naivelyStaleTests.push_back(relPath);
+        }
       }
+
+      std::sort(naivelyStaleTests.begin(), naivelyStaleTests.end());
+
+      return naivelyStaleTests;
     }
+  }
 
-    std::sort(naivelyStaleTests.begin(), naivelyStaleTests.end());
-
+  [[nodiscard]]
+  std::optional<std::vector<std::filesystem::path>>
+  tests_to_run(const project_paths& projPaths, std::string_view cutoff)
+  {
     const auto prunePaths{projPaths.prune()};
-    const std::vector<fs::path> passingTests{read_tests(prunePaths.selected_passes(std::nullopt))};
+    const auto timeStamp{get_stamp(prunePaths.stamp())};
+
+    if(!timeStamp) return std::nullopt;
+
+    const auto naivelyStaleTests{find_naively_stale_tests(timeStamp.value(), projPaths, cutoff)},
+               passingTests{read_tests(prunePaths.selected_passes(std::nullopt))};
 
     std::vector<fs::path> staleTests{};
     std::set_difference(naivelyStaleTests.begin(), naivelyStaleTests.end(), passingTests.begin(), passingTests.end(), std::back_inserter(staleTests));
