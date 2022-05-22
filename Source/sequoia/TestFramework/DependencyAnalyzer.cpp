@@ -314,27 +314,6 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    std::vector<fs::path> read_tests(const fs::path& file)
-    {
-      std::vector<fs::path> tests{};
-      if(std::ifstream ifile{file})
-      {
-        while(ifile)
-        {
-          fs::path source{};
-          ifile >> source;
-          if(!source.empty())
-          {
-            tests.push_back(source);
-          }
-        }
-      }
-
-      std::sort(tests.begin(), tests.end());
-      return tests;
-    }
-
-    [[nodiscard]]
     std::vector<fs::path> find_naively_stale_tests(fs::file_time_type timeStamp, const project_paths& projPaths, std::string_view cutoff)
     {
       using namespace maths;
@@ -391,6 +370,43 @@ namespace sequoia::testing
       std::sort(naivelyStaleTests.begin(), naivelyStaleTests.end());
 
       return naivelyStaleTests;
+    }
+  }
+
+  [[nodiscard]]
+  std::vector<std::filesystem::path>& read_tests(const fs::path& file, std::vector<std::filesystem::path>& tests)
+  {
+    if(std::ifstream ifile{file})
+    {
+      while(ifile)
+      {
+        fs::path source{};
+        ifile >> source;
+        if(!source.empty())
+        {
+          tests.push_back(source);
+        }
+      }
+    }
+
+    return tests;
+  }
+
+  [[nodiscard]]
+  std::vector<fs::path> read_tests(const fs::path& file)
+  {
+    std::vector<fs::path> tests{};
+    return read_tests(file, tests);
+  }
+
+  void write_tests(const project_paths& projPaths, const fs::path& file, const std::vector<fs::path>& tests)
+  {
+    if(std::ofstream ostream{file})
+    {
+      for(const auto& test : tests)
+      {
+        ostream << rebase_from(test, projPaths.tests()).generic_string() << "\n";
+      }
     }
   }
 

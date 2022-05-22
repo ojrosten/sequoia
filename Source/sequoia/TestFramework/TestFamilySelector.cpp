@@ -25,55 +25,6 @@ namespace sequoia::testing
     const std::string& convert(const std::string& s) { return s; }
     std::string convert(const std::filesystem::path& p) { return p.generic_string(); }
 
-    [[nodiscard]]
-    std::vector<fs::path> read_failures(const fs::path& file)
-    {
-      std::vector<fs::path> failures{};
-      if(fs::exists(file))
-      {
-        if(std::ifstream ifile{file})
-        {
-          while(ifile)
-          {
-            fs::path filePath{};
-            ifile >> filePath;
-            if(!filePath.empty())
-              failures.push_back(std::move(filePath));
-          }
-        }
-      }
-
-      return failures;
-    }
-
-    void write_tests(const project_paths& projPaths, const fs::path& file, const std::vector<fs::path>& tests)
-    {
-      if(std::ofstream ostream{file})
-      {
-        for(const auto& test : tests)
-        {
-          ostream << rebase_from(test, projPaths.tests()).generic_string() << "\n";
-        }
-      }
-    }
-
-    void read_tests(const fs::path& file, std::vector<fs::path>& tests)
-    {
-      if(fs::exists(file))
-      {
-        if(std::ifstream ifile{file})
-        {
-          while(ifile)
-          {
-            fs::path filePath{};
-            ifile >> filePath;
-            if(!filePath.empty())
-              tests.push_back(std::move(filePath));
-          }
-        }
-      }
-    }
-
     void aggregate_failures(const prune_paths& prunePaths, const std::size_t numReps)
     {
       std::vector<fs::path> allTests{};
@@ -182,7 +133,7 @@ namespace sequoia::testing
     stream << "[" << dur << unit << "]\n\n";
   }
 
-  void family_selector::update_prune_info(std::vector<fs::path> failedTests, const std::optional<std::size_t> id)
+  void family_selector::update_prune_info(std::vector<fs::path> failedTests, const std::optional<std::size_t> id) const
   {
     std::sort(failedTests.begin(), failedTests.end());
     const auto prunePaths{m_Paths.prune()};
@@ -198,7 +149,7 @@ namespace sequoia::testing
                           failedTests.end(),
                           std::back_inserter(passingTests));
 
-      auto previousFailures{read_failures(failuresFile)};
+      auto previousFailures{read_tests(failuresFile)};
 
       std::vector<fs::path> remainingFailures{};
       std::set_difference(previousFailures.begin(),
