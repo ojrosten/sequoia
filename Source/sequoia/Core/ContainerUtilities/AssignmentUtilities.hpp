@@ -87,8 +87,8 @@ namespace sequoia
 
         T tmp{from, get_allocator(to, from, allocGetters)...};
         constexpr bool
-          copyPropagation{copy_propagation<T, FilteredAllocGetters...>()},
-          movePropagation{move_propagation<T, FilteredAllocGetters...>()};
+          movePropagation{move_propagation<T, FilteredAllocGetters...>()},
+          copyPropagation{copy_propagation<T, FilteredAllocGetters...>()};
 
         if constexpr (movePropagation || !copyPropagation)
         {
