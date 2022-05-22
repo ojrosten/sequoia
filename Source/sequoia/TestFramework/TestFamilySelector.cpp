@@ -137,19 +137,27 @@ namespace sequoia::testing
   {
     std::sort(failedTests.begin(), failedTests.end());
     const auto prunePaths{m_Paths.prune()};
-    const auto failuresFile{prunePaths.failures(id)};
+    const auto failuresFile{prunePaths.failures(id)}, passesFile{prunePaths.selected_passes(id)};
     if(!pruned() && bespoke_selection())
     {
       const auto executedTests{get_executed_tests()};
+      const auto previousPasses{read_tests(passesFile)};
+      std::vector<fs::path> trialPasses{};
+
+      std::set_union(executedTests.begin(),
+                     executedTests.end(),
+                     previousPasses.begin(),
+                     previousPasses.end(),
+                     std::back_inserter(trialPasses));
      
       std::vector<fs::path> passingTests{};
-      std::set_difference(executedTests.begin(),
-                          executedTests.end(),
+      std::set_difference(trialPasses.begin(),
+                          trialPasses.end(),
                           failedTests.begin(),
                           failedTests.end(),
                           std::back_inserter(passingTests));
 
-      auto previousFailures{read_tests(failuresFile)};
+      const auto previousFailures{read_tests(failuresFile)};
 
       std::vector<fs::path> remainingFailures{};
       std::set_difference(previousFailures.begin(),
@@ -159,11 +167,12 @@ namespace sequoia::testing
                           std::back_inserter(remainingFailures));
 
       write_tests(m_Paths, failuresFile, remainingFailures);
-      write_tests(m_Paths, prunePaths.selected_passes(id), passingTests);
+      write_tests(m_Paths, passesFile, passingTests);
     }
     else
     {
       write_tests(m_Paths, failuresFile, failedTests);
+      fs::remove(passesFile);
       update_prune_stamp_on_disk(prunePaths);
     }
   }
