@@ -34,7 +34,7 @@ update-materials | u |
 locate-instabilities | locate | number of repetitions >= 2
   --sandbox | -s |
   --runner-id private option, best avoided
+recover
 dump
 --async-depth | -a | depth [null,family,unit]
 --verbose | -v |
---recovery | -r |

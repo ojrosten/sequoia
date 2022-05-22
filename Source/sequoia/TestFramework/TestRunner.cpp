@@ -357,6 +357,17 @@ namespace sequoia::testing
                         }}}
                     }
                   }},
+                  {{{"recover", {}, {},
+                    [this, recovery{proj_paths().output().recovery()}](const arg_list&) {
+                      if(!std::filesystem::create_directory(recovery.dir()))
+                      {
+                        std::filesystem::remove(recovery.recovery_file());
+                      }
+                      m_RecoveryMode |= recovery_mode::recovery;
+                      if(m_ConcurrencyMode == concurrency_mode::dynamic)
+                        m_ConcurrencyMode = concurrency_mode::serial;
+                    }
+                  }}},
                   {{{"dump", {}, {},
                     [this, recovery{proj_paths().output().recovery()}](const arg_list&) {
                       if(!std::filesystem::create_directory(recovery.dir()))
@@ -391,18 +402,7 @@ namespace sequoia::testing
                       }
                     }
                   }}},
-                  {{{"--verbose",  {"-v"}, {}, [this](const arg_list&) { m_OutputMode = output_mode::verbose; }}}},
-                  {{{"--recovery", {"-r"}, {},
-                    [this, recovery{proj_paths().output().recovery()}](const arg_list&) {
-                      if(!std::filesystem::create_directory(recovery.dir()))
-                      {
-                        std::filesystem::remove(recovery.recovery_file());
-                      }
-                      m_RecoveryMode |= recovery_mode::recovery;
-                      if(m_ConcurrencyMode == concurrency_mode::dynamic)
-                        m_ConcurrencyMode = concurrency_mode::serial;
-                    }
-                  }}}
+                  {{{"--verbose",  {"-v"}, {}, [this](const arg_list&) { m_OutputMode = output_mode::verbose; }}}}
                 },
                 [this](std::string_view){})
         };

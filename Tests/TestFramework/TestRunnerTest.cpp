@@ -407,7 +407,7 @@ namespace sequoia::testing
     // This is scoped to ensure destruction of the runner - and therefore loggers -
     // before dumping output to a file. The destructors are not trivial in recovery mode.
     {
-      commandline_arguments args{(fake_project() / "build").generic_string(), "-v", "--recovery", "dump",
+      commandline_arguments args{(fake_project() / "build").generic_string(), "-v", "recover", "dump",
                                  "test", "Bar",
                                  "test", "Foo"};
   

@@ -392,7 +392,7 @@ namespace sequoia::testing
     fs::copy(generatedWorkingCopy / "RepresentativeCases", generatedWorkingCopy / "RepresentativeCasesTemp", fs::copy_options::recursive);
     fs::remove_all(generatedWorkingCopy / "RepresentativeCases");
 
-    run_and_check(LINE("Recovery mode"), b, "RunRecovery", "--recovery");
+    run_and_check(LINE("Recovery mode"), b, "RunRecovery", "recover");
 
     fs::create_directory(working_materials() / "Recovery");
     fs::copy(generated_project() / "output" / "Recovery" / "Recovery.txt", working_materials() / "Recovery");
@@ -407,7 +407,7 @@ namespace sequoia::testing
     fs::copy(generatedPredictive / "RepresentativeCases", generatedPredictive / "RepresentativeCasesTemp", fs::copy_options::recursive);
     fs::remove_all(generatedPredictive / "RepresentativeCases");
 
-    run_and_check(LINE("Recovery mode, throw mid-check"), b, "RunRecoveryMidCheck", "--recovery");
+    run_and_check(LINE("Recovery mode, throw mid-check"), b, "RunRecoveryMidCheck", "recover");
 
     fs::create_directory(working_materials() / "RecoveryMidCheck");
     fs::copy(generated_project() / "output" / "Recovery" / "Recovery.txt", working_materials() / "RecoveryMidCheck");
