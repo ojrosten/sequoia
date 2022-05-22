@@ -107,6 +107,7 @@ target_sources(TestAll PRIVATE
                ${TestDir}/TestFramework/SmartPointerFreeDiagnostics.cpp
                ${TestDir}/TestFramework/StringFreeDiagnostics.cpp
                ${TestDir}/TestFramework/SumTypesFreeDiagnostics.cpp
+               ${TestDir}/TestFramework/TestFamilySelectorFreeTest.cpp
                ${TestDir}/TestFramework/TestRunnerDiagnostics.cpp
                ${TestDir}/TestFramework/TestRunnerDiagnosticsUtilities.cpp
                ${TestDir}/TestFramework/TestRunnerEndToEndFreeTest.cpp
