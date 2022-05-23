@@ -9,25 +9,41 @@
 
 #include "HeterogeneousNodeStorageTest.hpp"
 
+#include "sequoia/Maths/Graph/HeterogeneousNodeStorage.hpp"
+
 namespace sequoia::testing
 {
+  namespace
+  {
+    template<class... Ts>
+    class storage_tester : public maths::graph_impl::heterogeneous_node_storage<Ts...>
+    {
+    public:
+      template<class... Args>
+      constexpr explicit storage_tester(Args&&... args)
+        : maths::graph_impl::heterogeneous_node_storage<Ts...>(std::forward<Args>(args)...)
+      {
+      }
+    };
+
+    constexpr storage_tester<float, int> make_storage()
+    {
+      storage_tester<float, int> s{};
+
+      s.node_weight<0>(2.0f);
+      s.node_weight<int>(4);
+
+      s.mutate_node_weight<float>([](float& f) { f += 1; });
+      s.mutate_node_weight<int>([](int& i) { i -= 2; });
+
+      return s;
+    }
+  }
+
   [[nodiscard]]
   std::string_view test_heterogeneous_node_storage::source_file() const noexcept
   {
     return __FILE__;
-  }
-
-  constexpr auto test_heterogeneous_node_storage::make_storage() -> storage_tester<float, int>
-  {
-    storage_tester<float, int> s{};
-
-    s.node_weight<0>(2.0f);
-    s.node_weight<int>(4);
-
-    s.mutate_node_weight<float>([](float& f) { f+= 1.0; });
-    s.mutate_node_weight<int>([](int& i){ i -= 2; });
-
-    return s;
   }
 
   void test_heterogeneous_node_storage::run_tests()
