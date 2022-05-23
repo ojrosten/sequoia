@@ -9,7 +9,7 @@
 
 /*! \file
     \brief Mechanism for selecting which test families to run.
-  */
+ */
 
 #include "sequoia/TestFramework/FileSystemUtilities.hpp"
 #include "sequoia/TestFramework/TestFamily.hpp"
@@ -178,15 +178,13 @@ namespace sequoia::testing
     [[nodiscard]]
     std::vector<std::filesystem::path> get_executed_tests() const;
 
-    void update_prune_stamp_on_disk(const prune_paths& prunePaths) const;
-
     using duplicate_set = std::set<std::pair<std::string_view, std::filesystem::path>>;
 
     template<class Test, class... Tests>
     static void check_for_duplicates(std::string_view name, const Test& test, const Tests&... tests)
     {
        duplicate_set namesAndSources{};
-       check_for_duplicates(namesAndSources, name, test, tests...);   
+       check_for_duplicates(namesAndSources, name, test, tests...);
     }
 
     template<class Test, class... Tests>

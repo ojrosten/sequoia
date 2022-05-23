@@ -135,50 +135,18 @@ namespace sequoia::testing
 
   void family_selector::update_prune_info(std::vector<fs::path> failedTests, const std::optional<std::size_t> id) const
   {
-    std::sort(failedTests.begin(), failedTests.end());
-    const auto prunePaths{m_Paths.prune()};
-    const auto failuresFile{prunePaths.failures(id)}, passesFile{prunePaths.selected_passes(id)};
     if(!pruned() && bespoke_selection())
     {
-      const auto executedTests{get_executed_tests()};
-      const auto previousPasses{read_tests(passesFile)};
-      std::vector<fs::path> trialPasses{};
-
-      std::set_union(executedTests.begin(),
-                     executedTests.end(),
-                     previousPasses.begin(),
-                     previousPasses.end(),
-                     std::back_inserter(trialPasses));
-     
-      std::vector<fs::path> passingTests{};
-      std::set_difference(trialPasses.begin(),
-                          trialPasses.end(),
-                          failedTests.begin(),
-                          failedTests.end(),
-                          std::back_inserter(passingTests));
-
-      const auto previousFailures{read_tests(failuresFile)};
-
-      std::vector<fs::path> remainingFailures{};
-      std::set_difference(previousFailures.begin(),
-                          previousFailures.end(),
-                          passingTests.begin(),
-                          passingTests.end(),
-                          std::back_inserter(remainingFailures));
-
-      write_tests(m_Paths, failuresFile, remainingFailures);
-      write_tests(m_Paths, passesFile, passingTests);
+      testing::update_prune_files(m_Paths, get_executed_tests(), std::move(failedTests), id);
     }
     else
     {
-      write_tests(m_Paths, failuresFile, failedTests);
-      fs::remove(passesFile);
-      update_prune_stamp_on_disk(prunePaths);
+      testing::update_prune_files(m_Paths, std::move(failedTests), m_PruneInfo.stamps.current, id);
     }
   }
 
   [[nodiscard]]
-  std::vector<std::filesystem::path> family_selector::get_executed_tests() const
+  std::vector<fs::path> family_selector::get_executed_tests() const
   {
     std::vector<fs::path> executedTests{};
     for(const auto& src : m_SelectedSources)
@@ -186,19 +154,7 @@ namespace sequoia::testing
       if(src.second) executedTests.push_back(src.first);
     }
 
-    std::sort(executedTests.begin(), executedTests.end());
-
     return executedTests;
-  }
-
-  void family_selector::update_prune_stamp_on_disk(const prune_paths& prunePaths) const
-  {
-    const auto stamp{prunePaths.stamp()};
-    if(!fs::exists(stamp))
-    {
-      std::ofstream{stamp};
-    }
-    fs::last_write_time(stamp, m_PruneInfo.stamps.current);
   }
 
   void family_selector::aggregate_instability_analysis_prune_files(const std::size_t numReps) const

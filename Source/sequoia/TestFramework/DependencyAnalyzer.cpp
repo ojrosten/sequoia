@@ -65,14 +65,14 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    bool is_cpp(const std::filesystem::path& file)
+    bool is_cpp(const fs::path& file)
     {
       const auto ext{file.extension()};
       return (ext == ".cpp") || (ext == ".cc") || (ext == ".cxx");
     }
 
     [[nodiscard]]
-    bool is_header(const std::filesystem::path& file)
+    bool is_header(const fs::path& file)
     {
       const auto ext{file.extension()};
       return (ext == ".hpp") || (ext == ".h") || (ext == ".hxx");
@@ -187,7 +187,7 @@ namespace sequoia::testing
     using tests_dependency_graph = maths::graph<maths::directed_flavour::directed, maths::null_weight, file_info>;
     using node_iterator = tests_dependency_graph::const_iterator;
 
-    void add_files(tests_dependency_graph& g, const std::filesystem::path& repo, const fs::file_time_type& timeStamp, const std::optional<fs::file_time_type>& exeTimeStamp)
+    void add_files(tests_dependency_graph& g, const fs::path& repo, const fs::file_time_type& timeStamp, const std::optional<fs::file_time_type>& exeTimeStamp)
     {
       for(const auto& entry : fs::recursive_directory_iterator(repo))
       {
@@ -203,8 +203,8 @@ namespace sequoia::testing
     /// Return value: external dependencies
     [[nodiscard]]
     std::set<std::string> build_dependencies(tests_dependency_graph& g,
-                                             const std::filesystem::path& sourceRepo,
-                                             const std::filesystem::path& testRepo,
+                                             const fs::path& sourceRepo,
+                                             const fs::path& testRepo,
                                              std::string_view cutoff)
     {
       using size_type = tests_dependency_graph::size_type;
@@ -289,7 +289,7 @@ namespace sequoia::testing
                             node_iterator i,
                             const fs::path& relFilePath,
                             const fs::path& materialsRepo,
-                            const std::filesystem::file_time_type timeStamp)
+                            const fs::file_time_type timeStamp)
     {
       const auto materials{materialsRepo / fs::path{relFilePath}.replace_extension("")};
       if(fs::exists(materials))
@@ -371,10 +371,28 @@ namespace sequoia::testing
 
       return naivelyStaleTests;
     }
+
+    void update_prune_stamp_on_disk(const prune_paths& prunePaths, fs::file_time_type time)
+    {
+      const auto stamp{prunePaths.stamp()};
+      if(!fs::exists(stamp))
+      {
+        std::ofstream{stamp};
+      }
+      fs::last_write_time(stamp, time);
+    }
+
+    [[nodiscard]]
+    prune_paths prepare(const project_paths& projPaths, std::vector<fs::path>& failedTests)
+    {
+      std::sort(failedTests.begin(), failedTests.end());
+
+      return projPaths.prune();
+    }
   }
 
   [[nodiscard]]
-  std::vector<std::filesystem::path>& read_tests(const fs::path& file, std::vector<std::filesystem::path>& tests)
+  std::vector<fs::path>& read_tests(const fs::path& file, std::vector<fs::path>& tests)
   {
     if(std::ifstream ifile{file})
     {
@@ -411,7 +429,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::optional<std::vector<std::filesystem::path>>
+  std::optional<std::vector<fs::path>>
   tests_to_run(const project_paths& projPaths, std::string_view cutoff)
   {
     const auto prunePaths{projPaths.prune()};
@@ -431,5 +449,56 @@ namespace sequoia::testing
     std::set_union(staleTests.begin(), staleTests.end(), failingTests.begin(), failingTests.end(), std::back_inserter(testsToRun));
 
     return testsToRun;
+  }
+
+  void update_prune_files(const project_paths& projPaths,
+                          std::vector<fs::path> failedTests,
+                          fs::file_time_type updateTime,
+                          std::optional<std::size_t> id)
+  {
+    const auto prunePaths{prepare(projPaths, failedTests)};
+
+    write_tests(projPaths, prunePaths.failures(id), failedTests);
+    fs::remove(prunePaths.selected_passes(id));
+    update_prune_stamp_on_disk(prunePaths, updateTime);
+  }
+
+  void update_prune_files(const project_paths& projPaths,
+                          std::vector<fs::path> executedTests,
+                          std::vector<fs::path> failedTests,
+                          std::optional<std::size_t> id)
+  {
+    std::sort(executedTests.begin(), executedTests.end());
+    const auto prunePaths{prepare(projPaths, failedTests)};
+    const auto passesFile{prunePaths.selected_passes(id)},
+               failuresFile{prunePaths.failures(id)};
+
+    const auto previousPasses{read_tests(passesFile)};
+    std::vector<fs::path> trialPasses{};
+
+    std::set_union(executedTests.begin(),
+                   executedTests.end(),
+                   previousPasses.begin(),
+                   previousPasses.end(),
+                   std::back_inserter(trialPasses));
+
+    std::vector<fs::path> passingTests{};
+    std::set_difference(trialPasses.begin(),
+                        trialPasses.end(),
+                        failedTests.begin(),
+                        failedTests.end(),
+                        std::back_inserter(passingTests));
+
+    const auto previousFailures{read_tests(failuresFile)};
+
+    std::vector<fs::path> remainingFailures{};
+    std::set_difference(previousFailures.begin(),
+                        previousFailures.end(),
+                        passingTests.begin(),
+                        passingTests.end(),
+                        std::back_inserter(remainingFailures));
+
+    write_tests(projPaths, failuresFile, remainingFailures);
+    write_tests(projPaths, passesFile, passingTests);
   }
 }

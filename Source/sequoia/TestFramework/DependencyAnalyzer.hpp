@@ -25,4 +25,14 @@ namespace sequoia::testing
 
   [[nodiscard]]
   std::optional<std::vector<std::filesystem::path>> tests_to_run(const project_paths& projPaths, std::string_view cutoff);
+
+  void update_prune_files(const project_paths& projPaths,
+                          std::vector<std::filesystem::path> failedTests,
+                          std::filesystem::file_time_type updateTime,
+                          std::optional<std::size_t> id);
+
+  void update_prune_files(const project_paths& projPaths,
+                          std::vector<std::filesystem::path> executedTests,
+                          std::vector<std::filesystem::path> failedTests,
+                          std::optional<std::size_t> id);
 }
