@@ -324,40 +324,49 @@ namespace sequoia::testing
 
     const prune_graph g{
       {
-        { edge_t{1,
+        { edge_t{3,
                  "A single failure, no prune",
                  [update_no_prune](const auto&) { return update_no_prune({{"HouseAllocationTest.cpp"}}); }
           },
-          edge_t{2,
+          edge_t{4,
                  "Two failures, no prune",
                  [update_no_prune](const auto&) { return update_no_prune({{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}); }
           },
         }, // end node 0 edges
-        { edge_t{3,
+        {},// end node 1 edges
+        {},// end node 2 edges
+        { edge_t{5,
                  "An additional failure, with prune",
                  [update_with_prune](const auto&) { return update_with_prune({{"Maths/ProbabilityTest.cpp"}}, {{"Maths/ProbabilityTest.cpp"}}); }
           }
-        }, // end node 1 edges
+        }, // end node 3 edges
         {
-          edge_t{1,
+          edge_t{3,
                  "One failure fewer, no prune",
                  [update_no_prune](const auto&) { return update_no_prune({{"HouseAllocationTest.cpp"}}); }
           }
-        }, // end node 2 edges
+        }, // end node 4 edges
         {
-          edge_t{4,
+          edge_t{6,
                  "One failure fewer, with prune",
                  [update_with_prune](const auto&) { return update_with_prune({{"Maths/ProbabilityTest.cpp"}}, {}); }
           }
-        }, // end node 3 edges
-        {} // end node 4 edges
+        }, // end node 5 edges
+        {
+          edge_t{1,
+                 "No failures, no prune",
+                 [update_no_prune](const auto&) { return update_no_prune({}); }
+          }
+        } // end node 6 edges
       },
       {
-        data{{}, std::nullopt},
-        data{{{{"HouseAllocationTest.cpp"}}}, std::nullopt},
-        data{{{{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}}, std::nullopt},
-        data{{{{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}}, {{}}},
-        data{{{{"HouseAllocationTest.cpp"}}}, {{{"Maths/ProbabilityTest.cpp"}}}}
+        data{std::nullopt, std::nullopt}, // 0
+        data{std::vector<fs::path>{}, std::nullopt}, // 1
+        data{std::vector<fs::path>{}, std::vector<fs::path>{}}, // 2
+        data{{{{"HouseAllocationTest.cpp"}}}, std::nullopt}, // 3
+        data{{{{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}}, std::nullopt}, // 4
+        data{{{{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}}, {{}}}, // 5
+        data{{{{"HouseAllocationTest.cpp"}}}, {{{"Maths/ProbabilityTest.cpp"}}}} // 6
       }
     };
 
