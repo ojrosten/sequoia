@@ -288,12 +288,46 @@ namespace sequoia::testing
     const auto prune{projPaths.prune()};
     const auto failureFile{prune.failures(std::nullopt)};
     const auto passesFile{prune.selected_passes(std::nullopt)};
+    const auto time{m_ResetTime + std::chrono::seconds{1}};
 
-    std::vector<fs::path> failedTests{{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}};
-    update_prune_files(projPaths, failedTests, m_ResetTime + std::chrono::seconds{1}, std::nullopt);
+    {
+      std::vector<fs::path> failedTests{{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}};
+      update_prune_files(projPaths, failedTests, time, std::nullopt);
 
-    std::vector<fs::path> prunePaths{read_tests(failureFile)};
-    check(equality, LINE("Two failures without pruning"), prunePaths, failedTests);
+      check(equality, LINE("Two failures without pruning"), read_tests(failureFile), failedTests);
+      check(LINE("No .passes file"), !fs::exists(prune.selected_passes(std::nullopt)));
+    }
+
+    {
+      update_prune_files(projPaths,
+                         {{"Maths/ProbabilityTestingDiagnostics.cpp"}, {"HouseAllocationTest.cpp"}},
+                         time,
+                         std::nullopt);
+
+      check(equality,
+            LINE("Two failure which should overwrite the previous ones"),
+            read_tests(failureFile),
+            {{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTestingDiagnostics.cpp"}});
+
+      check(LINE("No .passes file"), !fs::exists(prune.selected_passes(std::nullopt)));
+    }
+
+    {
+      update_prune_files(projPaths,
+                         {{"HouseAllocationTest.cpp"}},
+                         std::vector<fs::path>{},
+                         std::nullopt);
+
+      check(equality,
+            LINE("One failure removed"),
+            read_tests(failureFile),
+            {{"Maths/ProbabilityTestingDiagnostics.cpp"}});
+
+      check(equality,
+            LINE("One passing test recorded"),
+            read_tests(passesFile),
+            {{"HouseAllocationTest.cpp"}});
+    }
   }
 
 }
