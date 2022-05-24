@@ -324,7 +324,11 @@ namespace sequoia::testing
 
     const prune_graph g{
       {
-        { edge_t{3,
+        { edge_t{2,
+                 "Nothing executed, with prune",
+                 [update_with_prune](const auto&) { return update_with_prune({}, {}); }
+          },
+          edge_t{3,
                  "A single failure, no prune",
                  [update_no_prune](const auto&) { return update_no_prune({{"HouseAllocationTest.cpp"}}); }
           },
