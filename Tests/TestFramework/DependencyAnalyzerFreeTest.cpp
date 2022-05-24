@@ -11,6 +11,7 @@
 #include "Parsing/CommandLineArgumentsTestingUtilities.hpp"
 
 #include "sequoia/TestFramework/DependencyAnalyzer.hpp"
+#include "sequoia/TestFramework/StateTransitionUtilities.hpp"
 
 #include <fstream>
 
@@ -32,6 +33,15 @@ namespace sequoia::testing
       {
         throw std::runtime_error{file.generic_string().append(" not found")};
       }
+    }
+
+
+
+    std::optional<std::vector<fs::path>> read(const fs::path& file)
+    {
+      if(fs::exists(file)) return read_tests(file);
+
+      return std::nullopt;
     }
   }
 
@@ -285,49 +295,80 @@ namespace sequoia::testing
 
   void dependency_analyzer_free_test::test_prune_update(const project_paths& projPaths)
   {
+    struct data
+    {
+      std::optional<std::vector<fs::path>> failures{}, passes{};
+    };
+
+    const auto updateTime{m_ResetTime + std::chrono::seconds{1}};
     const auto prune{projPaths.prune()};
     const auto failureFile{prune.failures(std::nullopt)};
     const auto passesFile{prune.selected_passes(std::nullopt)};
-    const auto time{m_ResetTime + std::chrono::seconds{1}};
 
-    {
-      std::vector<fs::path> failedTests{{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}};
-      update_prune_files(projPaths, failedTests, time, std::nullopt);
+    using prune_graph = transition_checker<data>::transition_graph;
+    using edge_t = transition_checker<data>::edge;
 
-      check(equality, LINE("Two failures without pruning"), read_tests(failureFile), failedTests);
-      check(LINE("No .passes file"), !fs::exists(prune.selected_passes(std::nullopt)));
-    }
+    auto update_no_prune{
+      [&](std::vector<fs::path> failures) {
+        update_prune_files(projPaths, std::move(failures), updateTime, std::nullopt);
+        return data{read(failureFile), {read(passesFile)}};
+      }
+    };
 
-    {
-      update_prune_files(projPaths,
-                         {{"Maths/ProbabilityTestingDiagnostics.cpp"}, {"HouseAllocationTest.cpp"}},
-                         time,
-                         std::nullopt);
+    auto update_with_prune{
+      [&](std::vector<fs::path> executed, std::vector<fs::path> failures) {
+        update_prune_files(projPaths, std::move(executed), std::move(failures), std::nullopt);
+        return data{read(failureFile), {read(passesFile)}};
+      }
+    };
 
-      check(equality,
-            LINE("Two failure which should overwrite the previous ones"),
-            read_tests(failureFile),
-            {{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTestingDiagnostics.cpp"}});
+    const prune_graph g{
+      {
+        { edge_t{1,
+                 "A single failure, no prune",
+                 [update_no_prune](const auto&) { return update_no_prune({{"HouseAllocationTest.cpp"}}); }
+          },
+          edge_t{2,
+                 "Two failures, no prune",
+                 [update_no_prune](const auto&) { return update_no_prune({{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}); }
+          },
+        }, // end node 0 edges
+        { edge_t{3,
+                 "An additional failure, with prune",
+                 [update_with_prune](const auto&) { return update_with_prune({{"Maths/ProbabilityTest.cpp"}}, {{"Maths/ProbabilityTest.cpp"}}); }
+          }
+        }, // end node 1 edges
+        {
+          edge_t{1,
+                 "One failure fewer, no prune",
+                 [update_no_prune](const auto&) { return update_no_prune({{"HouseAllocationTest.cpp"}}); }
+          }
+        }, // end node 2 edges
+        {
+          edge_t{4,
+                 "One failure fewer, with prune",
+                 [update_with_prune](const auto&) { return update_with_prune({{"Maths/ProbabilityTest.cpp"}}, {}); }
+          }
+        }, // end node 3 edges
+        {} // end node 4 edges
+      },
+      {
+        data{{}, std::nullopt},
+        data{{{{"HouseAllocationTest.cpp"}}}, std::nullopt},
+        data{{{{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}}, std::nullopt},
+        data{{{{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}}, {{}}},
+        data{{{{"HouseAllocationTest.cpp"}}}, {{{"Maths/ProbabilityTest.cpp"}}}}
+      }
+    };
 
-      check(LINE("No .passes file"), !fs::exists(prune.selected_passes(std::nullopt)));
-    }
+    auto checker{
+        [this](std::string_view description, const data& obtained, const data& prediction) {
+          check(equality, std::string{description}.append(": failures"), obtained.failures, prediction.failures);
+          check(equality, std::string{description}.append(": passes"), obtained.passes, prediction.passes);
+        }
+    };
 
-    {
-      update_prune_files(projPaths,
-                         {{"HouseAllocationTest.cpp"}},
-                         std::vector<fs::path>{},
-                         std::nullopt);
-
-      check(equality,
-            LINE("One failure removed"),
-            read_tests(failureFile),
-            {{"Maths/ProbabilityTestingDiagnostics.cpp"}});
-
-      check(equality,
-            LINE("One passing test recorded"),
-            read_tests(passesFile),
-            {{"HouseAllocationTest.cpp"}});
-    }
+    transition_checker<data>::check(LINE(""), g, checker);
   }
 
 }
