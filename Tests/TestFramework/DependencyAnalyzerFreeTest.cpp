@@ -108,6 +108,7 @@ namespace sequoia::testing
 
     test_exceptions(projPaths);
     test_dependencies(projPaths);
+    test_prune_update(projPaths);
   }
 
   void dependency_analyzer_free_test::test_exceptions(const project_paths& projPaths)
@@ -280,6 +281,19 @@ namespace sequoia::testing
                        {{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}},
                        {},
                        {{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}});
+  }
+
+  void dependency_analyzer_free_test::test_prune_update(const project_paths& projPaths)
+  {
+    const auto prune{projPaths.prune()};
+    const auto failureFile{prune.failures(std::nullopt)};
+    const auto passesFile{prune.selected_passes(std::nullopt)};
+
+    std::vector<fs::path> failedTests{{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}};
+    update_prune_files(projPaths, failedTests, m_ResetTime + std::chrono::seconds{1}, std::nullopt);
+
+    std::vector<fs::path> prunePaths{read_tests(failureFile)};
+    check(equality, LINE("Two failures without pruning"), prunePaths, failedTests);
   }
 
 }
