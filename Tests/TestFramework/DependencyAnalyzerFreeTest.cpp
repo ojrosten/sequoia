@@ -21,22 +21,6 @@ namespace sequoia::testing
 
   namespace
   {
-    void write_tests(const fs::path& file, std::vector<fs::path>& tests)
-    {
-      std::sort(tests.begin(), tests.end());
-      if(std::ofstream ofile{file})
-      {
-        for(const auto& f : tests)
-          ofile << f.generic_string() << "\n";
-      }
-      else
-      {
-        throw std::runtime_error{file.generic_string().append(" not found")};
-      }
-    }
-
-
-
     std::optional<std::vector<fs::path>> read(const fs::path& file)
     {
       if(fs::exists(file)) return read_tests(file);
@@ -65,12 +49,13 @@ namespace sequoia::testing
     namespace fs = std::filesystem;
 
     std::sort(failures.begin(), failures.end());
+    std::sort(passes.begin(), passes.end());
 
     const auto prune{projPaths.prune()};
     const auto failureFile{prune.failures(std::nullopt)};
     const auto passesFile{prune.selected_passes(std::nullopt)};
-    write_tests(failureFile, failures);
-    write_tests(passesFile, passes);
+    write_tests(projPaths, failureFile, failures);
+    write_tests(projPaths, passesFile, passes);
 
     const auto staleTime{m_ResetTime + std::chrono::seconds{1}};
     for(const auto& f : makeStale)
