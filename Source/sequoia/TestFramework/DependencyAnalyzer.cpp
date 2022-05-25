@@ -491,14 +491,21 @@ namespace sequoia::testing
 
     const auto previousFailures{read_tests(failuresFile)};
 
-    std::vector<fs::path> remainingFailures{};
+    std::vector<fs::path> remainingPreviousFailures{};
     std::set_difference(previousFailures.begin(),
                         previousFailures.end(),
                         passingTests.begin(),
                         passingTests.end(),
-                        std::back_inserter(remainingFailures));
+                        std::back_inserter(remainingPreviousFailures));
 
-    write_tests(projPaths, failuresFile, remainingFailures);
+    std::vector<fs::path> allFailures{};
+    std::set_union(remainingPreviousFailures.begin(),
+                   remainingPreviousFailures.end(),
+                   failedTests.begin(),
+                   failedTests.end(),
+                   std::back_inserter(allFailures));
+
+    write_tests(projPaths, failuresFile, allFailures);
     write_tests(projPaths, passesFile, passingTests);
   }
 }
