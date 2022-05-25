@@ -27,6 +27,23 @@ namespace sequoia::testing
 
       return std::nullopt;
     }
+
+    struct data
+    {
+      std::optional<std::vector<fs::path>> failures{}, passes{};
+    };
+
+    void write_or_remove(const project_paths& projPaths, const fs::path& file, const std::optional<std::vector<fs::path>>& tests)
+    {
+      if(tests) write_tests(projPaths, file, tests.value());
+      else      fs::remove(file);
+    }
+
+    void write_or_remove(const project_paths& projPaths, const fs::path& failureFile, const fs::path& passesFile, const data& d)
+    {
+      write_or_remove(projPaths, failureFile, d.failures);
+      write_or_remove(projPaths, passesFile, d.passes);
+    }
   }
 
   using test_list     = std::vector<fs::path>;
@@ -280,10 +297,6 @@ namespace sequoia::testing
 
   void dependency_analyzer_free_test::test_prune_update(const project_paths& projPaths)
   {
-    struct data
-    {
-      std::optional<std::vector<fs::path>> failures{}, passes{};
-    };
 
     const auto updateTime{m_ResetTime + std::chrono::seconds{1}};
     const auto prune{projPaths.prune()};
@@ -293,15 +306,19 @@ namespace sequoia::testing
     using prune_graph = transition_checker<data>::transition_graph;
     using edge_t = transition_checker<data>::edge;
 
-    auto update_no_prune{
-      [&](std::vector<fs::path> failures) {
+    auto update_with_prune{
+      [&](const data& d, std::vector<fs::path> failures) {
+        write_or_remove(projPaths, failureFile, passesFile, d);
+
         update_prune_files(projPaths, std::move(failures), updateTime, std::nullopt);
         return data{read(failureFile), {read(passesFile)}};
       }
     };
 
-    auto update_with_prune{
-      [&](std::vector<fs::path> executed, std::vector<fs::path> failures) {
+    auto update_with_select{
+      [&](const data& d, std::vector<fs::path> executed, std::vector<fs::path> failures) {
+        write_or_remove(projPaths, failureFile, passesFile, d);
+
         update_prune_files(projPaths, std::move(executed), std::move(failures), std::nullopt);
         return data{read(failureFile), {read(passesFile)}};
       }
@@ -310,41 +327,45 @@ namespace sequoia::testing
     const prune_graph g{
       {
         { edge_t{2,
-                 "Nothing executed, with prune",
-                 [update_with_prune](const auto&) { return update_with_prune({}, {}); }
+                 "Nothing executed, with select",
+                 [update_with_select](const data& d) { return update_with_select(d, {}, {}); }
           },
           edge_t{3,
-                 "A single failure, no prune",
-                 [update_no_prune](const auto&) { return update_no_prune({{"HouseAllocationTest.cpp"}}); }
+                 "A single failure, with prune",
+                 [update_with_prune](const data& d) { return update_with_prune(d, {{"HouseAllocationTest.cpp"}}); }
           },
           edge_t{4,
-                 "Two failures, no prune",
-                 [update_no_prune](const auto&) { return update_no_prune({{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}); }
+                 "Two failures, with prune",
+                 [update_with_prune](const data& d) { return update_with_prune(d, {{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}); }
           },
         }, // end node 0 edges
         {},// end node 1 edges
         {},// end node 2 edges
         { edge_t{5,
-                 "An additional failure, with prune",
-                 [update_with_prune](const auto&) { return update_with_prune({{"Maths/ProbabilityTest.cpp"}}, {{"Maths/ProbabilityTest.cpp"}}); }
+                 "An additional failure, with select",
+                 [update_with_select](const data& d) { return update_with_select(d, {{"Maths/ProbabilityTest.cpp"}}, {{"Maths/ProbabilityTest.cpp"}}); }
           }
         }, // end node 3 edges
         {
           edge_t{3,
-                 "One failure fewer, no prune",
-                 [update_no_prune](const auto&) { return update_no_prune({{"HouseAllocationTest.cpp"}}); }
+                 "One failure fewer, with prune",
+                 [update_with_prune](const data& d) { return update_with_prune(d, {{"HouseAllocationTest.cpp"}}); }
           }
         }, // end node 4 edges
         {
           edge_t{6,
-                 "One failure fewer, with prune",
-                 [update_with_prune](const auto&) { return update_with_prune({{"Maths/ProbabilityTest.cpp"}}, {}); }
+                 "One failure fewer, with select",
+                 [update_with_select](const data& d) { return update_with_select(d, {{"Maths/ProbabilityTest.cpp"}}, {}); }
           }
         }, // end node 5 edges
         {
           edge_t{1,
-                 "No failures, no prune",
-                 [update_no_prune](const auto&) { return update_no_prune({}); }
+                 "No failures, with prune",
+                 [update_with_prune](const data& d) { return update_with_prune(d, {}); }
+          },
+          edge_t{5,
+                 "Add a failure, with select",
+                 [update_with_select](const data& d) { return update_with_select(d, {{"Maths/ProbabilityTest.cpp"}}, {{"Maths/ProbabilityTest.cpp"}}); }
           }
         } // end node 6 edges
       },
@@ -354,7 +375,7 @@ namespace sequoia::testing
         data{std::vector<fs::path>{}, std::vector<fs::path>{}}, // 2
         data{{{{"HouseAllocationTest.cpp"}}}, std::nullopt}, // 3
         data{{{{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}}, std::nullopt}, // 4
-        data{{{{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}}, {{}}}, // 5
+        data{{{{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}}, std::vector<fs::path>{}}, // 5
         data{{{{"HouseAllocationTest.cpp"}}}, {{{"Maths/ProbabilityTest.cpp"}}}} // 6
       }
     };
