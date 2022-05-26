@@ -30,6 +30,14 @@ namespace sequoia::testing
 
     struct data
     {
+      data(std::optional<std::vector<fs::path>> fail, std::optional<std::vector<fs::path>> pass)
+        : failures{std::move(fail)}
+        , passes{std::move(passes)}
+      {
+        if(failures) std::sort(failures->begin(), failures->end());
+        if(passes) std::sort(passes->begin(), passes->end());
+      }
+
       std::optional<std::vector<fs::path>> failures{}, passes{};
     };
 
@@ -337,13 +345,25 @@ namespace sequoia::testing
           edge_t{4,
                  "Two failures, with prune",
                  [update_with_prune](const data& d) { return update_with_prune(d, {{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}); }
-          },
+          }
         }, // end node 0 edges
         {},// end node 1 edges
         {},// end node 2 edges
         { edge_t{5,
                  "An additional failure, with select",
                  [update_with_select](const data& d) { return update_with_select(d, {{"Maths/ProbabilityTest.cpp"}}, {{"Maths/ProbabilityTest.cpp"}}); }
+          },
+          edge_t{7,
+                 "Two additional failures, with select",
+                 [update_with_select](const data& d) { return update_with_select(d, {{"Maths/ProbabilityTest.cpp"}, {"Maybe/MaybeTest.cpp"}}, {{"Maths/ProbabilityTest.cpp"}, {"Maybe/MaybeTest.cpp"}}); }
+          },
+          edge_t{8,
+                 "One additional failure, one pass, with select",
+                 [update_with_select](const data& d) { return update_with_select(d, {{"Maths/ProbabilityTest.cpp"}, {"Maybe/MaybeTest.cpp"}}, {{"Maths/ProbabilityTest.cpp"}}); }
+          },
+          edge_t{9,
+                 "Two additional passes, with select",
+                 [update_with_select](const data& d) { return update_with_select(d, {{"Maths/ProbabilityTest.cpp"}, {"Maybe/MaybeTest.cpp"}}, {}); }
           }
         }, // end node 3 edges
         {
@@ -356,6 +376,10 @@ namespace sequoia::testing
           edge_t{6,
                  "One failure fewer, with select",
                  [update_with_select](const data& d) { return update_with_select(d, {{"Maths/ProbabilityTest.cpp"}}, {}); }
+          },
+          edge_t{7,
+                 "One more failure, with select",
+                 [update_with_select](const data& d) { return update_with_select(d, {{"Maybe/MaybeTest.cpp"}}, {{"Maybe/MaybeTest.cpp"}}); }
           }
         }, // end node 5 edges
         {
@@ -367,7 +391,15 @@ namespace sequoia::testing
                  "Add a failure, with select",
                  [update_with_select](const data& d) { return update_with_select(d, {{"Maths/ProbabilityTest.cpp"}}, {{"Maths/ProbabilityTest.cpp"}}); }
           }
-        } // end node 6 edges
+        }, // end node 6 edges
+       {}, // end node 7 edges
+       {}, // end node 8 edges
+       {edge_t{10,
+                 "Only failure becomes a pass, with select",
+                 [update_with_select](const data& d) { return update_with_select(d, {{"HouseAllocationTest.cpp"}}, {}); }
+          }
+       },  // end node 9 edges
+       {}, // end node 10 edges
       },
       {
         data{std::nullopt, std::nullopt}, // 0
@@ -376,9 +408,14 @@ namespace sequoia::testing
         data{{{{"HouseAllocationTest.cpp"}}}, std::nullopt}, // 3
         data{{{{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}}, std::nullopt}, // 4
         data{{{{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}}, std::vector<fs::path>{}}, // 5
-        data{{{{"HouseAllocationTest.cpp"}}}, {{{"Maths/ProbabilityTest.cpp"}}}} // 6
+        data{{{{"HouseAllocationTest.cpp"}}}, {{{"Maths/ProbabilityTest.cpp"}}}}, // 6
+        data{{{{"HouseAllocationTest.cpp"}, {"Maybe/MaybeTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}}, std::vector<fs::path>{}}, // 7
+        data{{{{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}}, {{{"Maybe/MaybeTest.cpp"}}}}, // 8
+        data{{{{"HouseAllocationTest.cpp"}}}, {{{"Maybe/MaybeTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}}}, // 9
+        data{std::vector<fs::path>{}, {{{"Maybe/MaybeTest.cpp"}, {"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}}} //10
       }
     };
+
 
     auto checker{
         [this](std::string_view description, const data& obtained, const data& prediction) {
