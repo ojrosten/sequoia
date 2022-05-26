@@ -128,6 +128,13 @@ namespace sequoia::testing
       std::transform(toRun.begin(), toRun.end(), std::back_inserter(m_SelectedSources),
         [](const fs::path& file) -> std::pair<fs::path, bool> { return {file, false}; });
     }
+    else
+    {
+      using parsing::commandline::warning;
+      stream << warning("Time stamp of previous run does not exist, so unable to prune.\n\t   This should be automatically rectified for the next run.\n");
+
+      m_PruneInfo.mode = prune_mode::passive;
+    }
 
     const auto [dur, unit] {testing::stringify(t.time_elapsed())};
     stream << "[" << dur << unit << "]\n\n";
