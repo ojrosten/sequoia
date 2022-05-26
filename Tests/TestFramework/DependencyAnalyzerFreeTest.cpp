@@ -392,14 +392,34 @@ namespace sequoia::testing
                  [update_with_select](const data& d) { return update_with_select(d, {{"Maths/ProbabilityTest.cpp"}}, {{"Maths/ProbabilityTest.cpp"}}); }
           }
         }, // end node 6 edges
-       {}, // end node 7 edges
-       {}, // end node 8 edges
-       {edge_t{10,
-                 "Only failure becomes a pass, with select",
-                 [update_with_select](const data& d) { return update_with_select(d, {{"HouseAllocationTest.cpp"}}, {}); }
-          }
+       {
+         edge_t{1,
+                "Three failures all pass, with prune",
+                [update_with_prune](const data& d) { return update_with_prune(d, {}); }
+         }
+       }, // end node 7 edges
+       {
+         edge_t{9,
+                "One of two failures becomes a pass, with select",
+                [update_with_select](const data& d) { return update_with_select(d, {{"Maths/ProbabilityTest.cpp"}}, {}); }
+         }
+       }, // end node 8 edges
+       {
+         edge_t{10,
+                "Only failure becomes a pass, with select",
+                [update_with_select](const data& d) { return update_with_select(d, {{"HouseAllocationTest.cpp"}}, {}); }
+         }
        },  // end node 9 edges
-       {}, // end node 10 edges
+       {
+         edge_t{9,
+                "One pass becomes a failure, with select",
+                [update_with_select](const data& d) { return update_with_select(d, {{"HouseAllocationTest.cpp"}}, {{"HouseAllocationTest.cpp"}}); }
+         },
+         edge_t{8,
+                "Two passes becomes failures, with select",
+                [update_with_select](const data& d) { return update_with_select(d, {{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}, {{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}); }
+         }
+       }, // end node 10 edges
       },
       {
         data{std::nullopt, std::nullopt}, // 0
