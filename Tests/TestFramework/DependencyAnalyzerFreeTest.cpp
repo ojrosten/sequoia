@@ -32,7 +32,7 @@ namespace sequoia::testing
     {
       data(std::optional<std::vector<fs::path>> fail, std::optional<std::vector<fs::path>> pass)
         : failures{std::move(fail)}
-        , passes{std::move(passes)}
+        , passes{std::move(pass)}
       {
         if(failures) std::sort(failures->begin(), failures->end());
         if(passes) std::sort(passes->begin(), passes->end());
