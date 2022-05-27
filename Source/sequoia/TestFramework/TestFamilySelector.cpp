@@ -24,53 +24,6 @@ namespace sequoia::testing
   {
     const std::string& convert(const std::string& s) { return s; }
     std::string convert(const std::filesystem::path& p) { return p.generic_string(); }
-
-    void aggregate_failures(const prune_paths& prunePaths, const std::size_t numReps)
-    {
-      std::vector<fs::path> allTests{};
-      for(std::size_t i{}; i < numReps; ++i)
-      {
-        const auto file{prunePaths.failures(i)};
-        read_tests(file, allTests);
-      }
-
-      std::sort(allTests.begin(), allTests.end());
-      auto last{std::unique(allTests.begin(), allTests.end())};
-      allTests.erase(last, allTests.end());
-
-      if(const auto grandFile{prunePaths.failures(std::nullopt)}; std::ofstream ofile{grandFile})
-      {
-        for(const auto& p : allTests)
-          ofile << p.generic_string() << '\n';
-      }
-    }
-
-    void aggregate_passes(const prune_paths& prunePaths, const std::size_t numReps)
-    {
-      std::vector<fs::path> intersection{};
-      for(std::size_t i{}; i < numReps; ++i)
-      {
-        const auto file{prunePaths.selected_passes(i)};
-        std::vector<fs::path> tests{};
-        read_tests(file, tests);
-        if(i)
-        {
-          std::vector<fs::path> currentIntersection{};
-          std::set_intersection(tests.begin(), tests.end(), intersection.begin(), intersection.end(), std::back_inserter(currentIntersection));
-          intersection = std::move(currentIntersection);
-        }
-        else
-        {
-          intersection = std::move(tests);
-        }
-      }
-
-      if(const auto grandFile{prunePaths.selected_passes(std::nullopt)}; std::ofstream ofile{grandFile})
-      {
-        for(const auto& p : intersection)
-          ofile << p.generic_string() << '\n';
-      }
-    }
   }
 
   auto family_selector::time_stamps::from_file(const std::filesystem::path& stampFile) -> stamp
@@ -162,13 +115,6 @@ namespace sequoia::testing
     }
 
     return executedTests;
-  }
-
-  void family_selector::aggregate_instability_analysis_prune_files(const std::size_t numReps) const
-  {
-    const auto prunePaths{proj_paths().prune()};
-    aggregate_failures(prunePaths, numReps);
-    aggregate_passes(prunePaths, numReps);
   }
 
   [[nodiscard]]

@@ -79,8 +79,6 @@ namespace sequoia::testing
 
     void update_prune_info(std::vector<std::filesystem::path> failedTests, std::optional<std::size_t> id) const;
 
-    void aggregate_instability_analysis_prune_files(const std::size_t numReps) const;
-
     [[nodiscard]]
     std::string check_for_missing_tests() const;
 

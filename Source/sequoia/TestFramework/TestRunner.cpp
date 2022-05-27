@@ -11,6 +11,7 @@
 
 #include "sequoia/TestFramework/TestRunner.hpp"
 
+#include "sequoia/TestFramework/DependencyAnalyzer.hpp"
 #include "sequoia/TestFramework/ProjectCreator.hpp"
 #include "sequoia/TestFramework/Summary.hpp"
 #include "sequoia/TestFramework/TestCreator.hpp"
@@ -567,7 +568,7 @@ namespace sequoia::testing
     if(   (m_InstabilityMode == instability_mode::single_instance)
        || (m_InstabilityMode == instability_mode::coordinator))
     {
-      m_Selector.aggregate_instability_analysis_prune_files(m_NumReps);
+      aggregate_instability_analysis_prune_files(m_Selector.proj_paths(), m_NumReps);
       const auto outputDir{m_Selector.proj_paths().output().instability_analysis()};
       stream() << instability_analysis(outputDir, m_NumReps);
     }

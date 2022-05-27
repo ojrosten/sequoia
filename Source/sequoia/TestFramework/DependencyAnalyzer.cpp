@@ -389,6 +389,53 @@ namespace sequoia::testing
 
       return projPaths.prune();
     }
+
+    void aggregate_failures(const prune_paths& prunePaths, const std::size_t numReps)
+    {
+      std::vector<fs::path> allTests{};
+      for(std::size_t i{}; i < numReps; ++i)
+      {
+        const auto file{prunePaths.failures(i)};
+        read_tests(file, allTests);
+      }
+
+      std::sort(allTests.begin(), allTests.end());
+      auto last{std::unique(allTests.begin(), allTests.end())};
+      allTests.erase(last, allTests.end());
+
+      if(const auto grandFile{prunePaths.failures(std::nullopt)}; std::ofstream ofile{grandFile})
+      {
+        for(const auto& p : allTests)
+          ofile << p.generic_string() << '\n';
+      }
+    }
+
+    void aggregate_passes(const prune_paths& prunePaths, const std::size_t numReps)
+    {
+      std::vector<fs::path> intersection{};
+      for(std::size_t i{}; i < numReps; ++i)
+      {
+        const auto file{prunePaths.selected_passes(i)};
+        std::vector<fs::path> tests{};
+        read_tests(file, tests);
+        if(i)
+        {
+          std::vector<fs::path> currentIntersection{};
+          std::set_intersection(tests.begin(), tests.end(), intersection.begin(), intersection.end(), std::back_inserter(currentIntersection));
+          intersection = std::move(currentIntersection);
+        }
+        else
+        {
+          intersection = std::move(tests);
+        }
+      }
+
+      if(const auto grandFile{prunePaths.selected_passes(std::nullopt)}; std::ofstream ofile{grandFile})
+      {
+        for(const auto& p : intersection)
+          ofile << p.generic_string() << '\n';
+      }
+    }
   }
 
   [[nodiscard]]
@@ -507,5 +554,13 @@ namespace sequoia::testing
 
     write_tests(projPaths, failuresFile, allFailures);
     write_tests(projPaths, passesFile, passingTests);
+  }
+
+
+  void aggregate_instability_analysis_prune_files(const project_paths& projPaths, const std::size_t numReps)
+  {
+    const auto prunePaths{projPaths.prune()};
+    aggregate_failures(prunePaths, numReps);
+    aggregate_passes(prunePaths, numReps);
   }
 }
