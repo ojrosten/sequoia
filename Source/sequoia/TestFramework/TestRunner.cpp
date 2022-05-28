@@ -487,25 +487,13 @@ namespace sequoia::testing
 
   void test_runner::execute([[maybe_unused]] timer_resolution r)
   {
-    if(!mode(runner_mode::test)) return;
+    if(!mode(runner_mode::test))
+      return;
 
     fs::create_directories(proj_paths().prune().dir());
-
     stream() << m_Selector.check_for_missing_tests();
 
-    if(m_Selector.empty())
-    {
-      if(m_Selector.pruned())
-      {
-        stream() << "Nothing to do: no changes since the last run, therefore 'prune' has pruned all tests\n";
-      }
-      else if(!m_Selector.bespoke_selection())
-      {
-        stream() << "Nothing to do; try creating some tests!\nRun with --help to see options\n";
-      }
-
-      return;
-    }
+    if(nothing_to_do()) return;
 
     finalize_concurrency_mode();
 
@@ -627,5 +615,24 @@ namespace sequoia::testing
 
     m_Selector.update_prune_info(std::move(m_FailedTestSourceFiles), id);
     m_FailedTestSourceFiles.clear();
+  }
+
+  [[nodiscard]]
+  bool test_runner::nothing_to_do()
+  {
+    if(!m_Selector.families_presented())
+    {
+      stream() << "Nothing to do: try creating some tests!\nRun with --help to see options\n";
+      return true;
+    }
+    else if(m_Selector.empty())
+    {
+      if(m_Selector.pruned())
+        stream() << "Nothing to do: no changes since the last run, therefore 'prune' has pruned all tests\n";
+
+      return true;
+    }
+
+    return false;
   }
 }

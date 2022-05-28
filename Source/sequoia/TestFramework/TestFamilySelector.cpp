@@ -84,7 +84,9 @@ namespace sequoia::testing
     else
     {
       using parsing::commandline::warning;
-      stream << warning("Time stamp of previous run does not exist, so unable to prune.\n\t   This should be automatically rectified for the next run.\n");
+      stream << warning({"Time stamp of previous run does not exist, so unable to prune.",
+                          "This should be automatically rectified for the next successful run.",
+                          "No action required"});
 
       m_PruneInfo.mode = prune_mode::passive;
     }
@@ -97,11 +99,11 @@ namespace sequoia::testing
   {
     if(!pruned() && bespoke_selection())
     {
-      testing::update_prune_files(m_Paths, get_executed_tests(), std::move(failedTests), id);
+      update_prune_files(m_Paths, get_executed_tests(), std::move(failedTests), id);
     }
     else
     {
-      testing::update_prune_files(m_Paths, std::move(failedTests), m_PruneInfo.stamps.current, id);
+      update_prune_files(m_Paths, std::move(failedTests), m_PruneInfo.stamps.current, id);
     }
   }
 

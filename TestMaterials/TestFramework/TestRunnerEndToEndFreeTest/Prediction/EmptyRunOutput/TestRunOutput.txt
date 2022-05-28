@@ -1,2 +1,2 @@
-Nothing to do; try creating some tests!
+Nothing to do: try creating some tests!
 Run with --help to see options

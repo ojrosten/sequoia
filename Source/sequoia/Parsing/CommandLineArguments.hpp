@@ -126,10 +126,16 @@ namespace sequoia::parsing::commandline
   };
 
   [[nodiscard]]
-  std::string error(std::string_view message, std::string_view prefix="\n  ");
+  std::string error(std::string_view message, std::string_view indent="  ");
 
   [[nodiscard]]
-  std::string warning(std::string_view message, std::string_view prefix="\n  ");
+  std::string error(std::initializer_list<std::string_view> messages, std::string_view indent = "  ");
+
+  [[nodiscard]]
+  std::string warning(std::string_view message, std::string_view indent="  ");
+
+  [[nodiscard]]
+  std::string warning(std::initializer_list<std::string_view> messages, std::string_view indent = "  ");
 
   [[nodiscard]]
   std::string pluralize(std::size_t n, std::string_view noun, std::string_view prefix=" ");

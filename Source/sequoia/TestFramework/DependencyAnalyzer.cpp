@@ -29,7 +29,7 @@ namespace sequoia::testing
     {
       const auto lwt{fs::last_write_time(file)};
       if(exeTimeStamp.has_value() && (lwt >= exeTimeStamp.value()))
-        throw std::runtime_error{"Exectuable is out of date; please build it!\n"};
+        throw std::runtime_error{"Executable is out of date; please build it!\n"};
 
       return lwt > timeStamp;
     }

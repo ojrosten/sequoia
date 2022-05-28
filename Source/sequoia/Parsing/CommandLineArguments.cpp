@@ -17,16 +17,51 @@
 
 namespace sequoia::parsing::commandline
 {
-  [[nodiscard]]
-  std::string error(std::string_view message, std::string_view prefix)
+  namespace
   {
-    return std::string{prefix}.append("Error: ").append(message);
+    [[nodiscard]]
+    std::string make(std::string_view type, std::string_view message, std::string_view indent)
+    {
+      return std::string{"\n"}.append(indent).append(type).append(": ").append(message);
+    }
+
+    [[nodiscard]]
+    std::string make(std::string_view type, std::initializer_list<std::string_view> messages, std::string_view indent)
+    {
+      std::string mess{};
+
+      for(auto i{messages.begin()}; i != messages.end(); ++i)
+      {
+        const std::string preamble{(i == messages.begin()) ? type : std::string(type.size() + 2, ' ')};
+        mess.append(make(preamble, *i, indent));
+      }
+
+      return mess;
+    }
   }
 
   [[nodiscard]]
-  std::string warning(std::string_view message, std::string_view prefix)
+  std::string error(std::string_view message, std::string_view indent)
   {
-    return std::string{prefix}.append("Warning: ").append(message);
+    return make("Error", message, indent);
+  }
+
+  [[nodiscard]]
+  std::string error(std::initializer_list<std::string_view> messages, std::string_view indent)
+  {
+    return make("Error", messages, indent);
+  }
+
+  [[nodiscard]]
+  std::string warning(std::string_view message, std::string_view indent)
+  {
+    return make("Warning", message, indent);
+  }
+
+  [[nodiscard]]
+  std::string warning(std::initializer_list<std::string_view> messages, std::string_view indent)
+  {
+    return make("Warning", messages, indent);
   }
 
   [[nodiscard]]

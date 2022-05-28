@@ -30,6 +30,8 @@ namespace sequoia::testing
     template<class Test, class... Tests>
     void add_test_family(std::string_view name, recovery_mode recoveryMode, Test test, Tests... tests)
     {
+      m_FamiliesPresented = true;
+
       check_for_duplicates(name, test, tests...);
 
       const bool done{
@@ -110,10 +112,11 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    bool bespoke_selection() const noexcept
+    bool families_presented() const noexcept
     {
-      return !m_SelectedFamilies.empty() || !m_SelectedSources.empty();
+      return m_FamiliesPresented;
     }
+
 
     [[nodiscard]]
     auto begin_selected_sources() const noexcept
@@ -167,6 +170,7 @@ namespace sequoia::testing
     std::vector<family_vessel> m_Families{};
     family_map                 m_SelectedFamilies{};
     source_list                m_SelectedSources{};
+    bool                       m_FamiliesPresented{};
 
     bool mark_family(std::string_view name);
 
@@ -216,6 +220,12 @@ namespace sequoia::testing
       }
 
       if constexpr(sizeof...(Tests) > 0) add_tests(f, materialsPath, std::forward<Tests>(tests)...);
+    }
+
+    [[nodiscard]]
+    bool bespoke_selection() const noexcept
+    {
+      return !m_SelectedFamilies.empty() || !m_SelectedSources.empty();
     }
 
     [[nodiscard]]

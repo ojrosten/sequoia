@@ -117,6 +117,9 @@ namespace sequoia::testing
     void run_tests(std::optional<std::size_t> id);
 
     [[nodiscard]]
+    bool nothing_to_do();
+
+    [[nodiscard]]
     bool mode(runner_mode m) const noexcept
     {
       return (m_RunnerMode & m) == m;
