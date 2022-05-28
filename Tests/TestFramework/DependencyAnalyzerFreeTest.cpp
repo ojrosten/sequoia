@@ -129,6 +129,7 @@ namespace sequoia::testing
     test_exceptions(projPaths);
     test_dependencies(projPaths);
     test_prune_update(projPaths);
+    test_instability_analysis_prune_upate(projPaths);
   }
 
   void dependency_analyzer_free_test::test_exceptions(const project_paths& projPaths)
@@ -139,7 +140,7 @@ namespace sequoia::testing
         return tests_to_run(projPaths, "");
       });
   }
-#
+
   void dependency_analyzer_free_test::test_dependencies(const project_paths& projPaths)
   {
     fs::last_write_time(projPaths.executable(), m_ResetTime + std::chrono::seconds{3});
@@ -305,7 +306,6 @@ namespace sequoia::testing
 
   void dependency_analyzer_free_test::test_prune_update(const project_paths& projPaths)
   {
-
     const auto updateTime{m_ResetTime + std::chrono::seconds{1}};
     const auto prune{projPaths.prune()};
     const auto failureFile{prune.failures(std::nullopt)};
@@ -445,6 +445,11 @@ namespace sequoia::testing
     };
 
     transition_checker<data>::check(LINE(""), g, checker);
+  }
+
+  void dependency_analyzer_free_test::test_instability_analysis_prune_upate(const project_paths& projPaths)
+  {
+
   }
 
 }

@@ -32,6 +32,8 @@ namespace sequoia::testing
 
     void test_prune_update(const project_paths& projPaths);
 
+    void test_instability_analysis_prune_upate(const project_paths& projPaths);
+
     void check_tests_to_run(std::string_view description,
                             const project_paths& projPaths,
                             std::string_view cutoff,
