@@ -100,14 +100,12 @@ namespace sequoia::testing
     std::size_t m_NumReps{1},
                 m_RunnerID{};
 
-    std::vector<std::filesystem::path> m_FailedTestSourceFiles;
-
     void process_args(int argc, char** argv);
 
     void finalize_concurrency_mode();
 
     [[nodiscard]]
-    family_summary process_family(const family_results& results);
+    family_summary process_family(family_results results);
 
     [[nodiscard]]
     bool concurrent_execution() const noexcept { return m_ConcurrencyMode != concurrency_mode::serial; }

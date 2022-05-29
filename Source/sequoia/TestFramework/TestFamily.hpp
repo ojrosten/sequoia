@@ -134,6 +134,7 @@ namespace sequoia::testing
 
     log_summary::duration execution_time{};
     log_summary log{};
+    std::vector<std::filesystem::path> failed_tests{};
   };
 
   class family_processor

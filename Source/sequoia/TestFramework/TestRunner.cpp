@@ -459,7 +459,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  family_summary test_runner::process_family(const family_results& results)
+  family_summary test_runner::process_family(family_results results)
   {
     family_summary familySummary{results.execution_time};
     std::string output{};
@@ -481,7 +481,8 @@ namespace sequoia::testing
 
     stream() << output;
 
-    std::copy(results.failed_tests.begin(), results.failed_tests.end(), std::back_inserter(m_FailedTestSourceFiles));
+
+    familySummary.failed_tests = std::move(results.failed_tests);
 
     return familySummary;
   }
@@ -579,6 +580,14 @@ namespace sequoia::testing
   {
     const timer t{};
     log_summary summary{};
+    std::vector<fs::path> failedTests;
+
+    auto update{
+      [&summary, &failedTests](const family_summary& familySummary) {
+        summary += familySummary.log;
+        failedTests.insert(failedTests.end(), familySummary.failed_tests.begin(), familySummary.failed_tests.end());
+      }
+    };
 
     stream() << "\nRunning tests...\n\n";
     if(!concurrent_execution())
@@ -586,7 +595,7 @@ namespace sequoia::testing
       for(auto& family : m_Selector)
       {
         stream() << family.name() << ":\n";
-        summary += process_family(family.execute(m_UpdateMode, m_ConcurrencyMode, id)).log;
+        update(process_family(family.execute(m_UpdateMode, m_ConcurrencyMode, id)));
       }
     }
     else
@@ -608,14 +617,13 @@ namespace sequoia::testing
       for(auto& res : results)
       {
         stream() << res.first << ":\n";
-        summary += process_family(res.second.get()).log;
+        update(process_family(res.second.get()));
       }
     }
     stream() << "\n-----------Grand Totals-----------\n";
     stream() << summarize(summary, t.time_elapsed(), summary_detail::absent_checks | summary_detail::timings, indentation{"\t"}, no_indent);
 
-    m_Selector.update_prune_info(std::move(m_FailedTestSourceFiles), id);
-    m_FailedTestSourceFiles.clear();
+    m_Selector.update_prune_info(std::move(failedTests), id);
   }
 
   [[nodiscard]]
