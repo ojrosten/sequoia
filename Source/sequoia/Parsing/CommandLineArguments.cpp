@@ -30,10 +30,17 @@ namespace sequoia::parsing::commandline
     {
       std::string mess{};
 
-      for(auto i{messages.begin()}; i != messages.end(); ++i)
+      if(messages.size())
       {
-        const std::string preamble{(i == messages.begin()) ? type : std::string(type.size() + 2, ' ')};
-        mess.append(make(preamble, *i, indent));
+        auto first{messages.begin()};
+        mess = make(type, *(first++), indent);
+
+        while(first != messages.end())
+        {
+          append_indented(mess, *(first++), indentation{std::string{indent}}.append(std::string(type.size() + 2, ' ')));
+        }
+
+        mess.append(2, '\n');
       }
 
       return mess;

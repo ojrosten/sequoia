@@ -253,6 +253,7 @@ namespace sequoia::testing
     test_exceptions();
     test_critical_errors();
     test_basic_output();
+    test_prune_basic_output();
     test_instability_analysis();
   }
 
@@ -495,6 +496,25 @@ namespace sequoia::testing
 
     write("BasicOutput", outputStream);
     check(equivalence, LINE("Basic Output"), working_materials() / "BasicOutput",  predictive_materials() / "BasicOutput");
+  }
+
+  void test_runner_test::test_prune_basic_output()
+  {
+    fs::remove_all(output_paths{fake_project()}.dir());
+
+    std::stringstream outputStream{};
+    commandline_arguments args{(fake_project() / "build").generic_string(), "prune"};
+
+    test_runner runner{args.size(),
+                       args.get(),
+                       "Oliver J. Rosten",
+                       {"TestSandbox/TestSandbox.cpp", {}, "TestShared/SharedIncludes.hpp"},
+                       "  ",
+                       outputStream};
+
+    runner.execute();
+    write("NoTestsWithPrune", outputStream);
+    check(equivalence, LINE("No tests with prune"), working_materials() / "NoTestsWithPrune", predictive_materials() / "NoTestsWithPrune");
   }
 
   void test_runner_test::test_instability_analysis()

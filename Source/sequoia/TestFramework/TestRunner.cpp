@@ -661,8 +661,8 @@ namespace sequoia::testing
       {
         using parsing::commandline::warning;
         stream() << warning({"Time stamp of previous run does not exist, so unable to prune.",
-                            "This should be automatically rectified for the next successful run."
-                            "No action required"});
+                            "This should be automatically rectified for the next successful run.",
+                            "No action required."});
       }
       break;
     case prune_outcome::success:
