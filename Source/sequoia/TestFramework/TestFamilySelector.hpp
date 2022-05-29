@@ -22,6 +22,8 @@
 
 namespace sequoia::testing
 {
+  enum class prune_outcome { not_attempted, no_time_stamp, success};
+
   class family_selector
   {
   public:
@@ -77,7 +79,8 @@ namespace sequoia::testing
     [[nodiscard]]
     bool pruned() const noexcept;
 
-    void prune(std::ostream& stream);
+    [[nodiscard]]
+    prune_outcome prune();
 
     void update_prune_info(std::vector<std::filesystem::path> failedTests, std::optional<std::size_t> id) const;
 

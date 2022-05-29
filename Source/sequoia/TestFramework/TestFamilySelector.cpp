@@ -67,12 +67,10 @@ namespace sequoia::testing
     m_PruneInfo.include_cutoff = std::move(cutoff);
   }
 
-  void family_selector::prune(std::ostream& stream)
+  [[nodiscard]]
+  prune_outcome family_selector::prune()
   {
-    if(!pruned()) return;
-
-    stream << "\nAnalyzing dependencies...\n";
-    const timer t{};
+    if(!pruned()) return prune_outcome::not_attempted;
 
     if(auto maybeToRun{tests_to_run(proj_paths(), m_PruneInfo.include_cutoff)})
     {
@@ -80,19 +78,13 @@ namespace sequoia::testing
 
       std::transform(toRun.begin(), toRun.end(), std::back_inserter(m_SelectedSources),
         [](const fs::path& file) -> std::pair<fs::path, bool> { return {file, false}; });
-    }
-    else
-    {
-      using parsing::commandline::warning;
-      stream << warning({"Time stamp of previous run does not exist, so unable to prune.",
-                          "This should be automatically rectified for the next successful run.",
-                          "No action required"});
 
-      m_PruneInfo.mode = prune_mode::passive;
+      return prune_outcome::success;
     }
 
-    const auto [dur, unit] {testing::stringify(t.time_elapsed())};
-    stream << "[" << dur << unit << "]\n\n";
+    m_PruneInfo.mode = prune_mode::passive;
+
+    return prune_outcome::no_time_stamp;
   }
 
   void family_selector::update_prune_info(std::vector<fs::path> failedTests, const std::optional<std::size_t> id) const

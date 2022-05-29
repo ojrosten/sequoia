@@ -124,5 +124,7 @@ namespace sequoia::testing
     {
       return (m_RunnerMode & m) == m;
     }
+
+    void prune();
  };
 }

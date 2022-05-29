@@ -435,7 +435,8 @@ namespace sequoia::testing
           fs::create_directories(dir);
         }
 
-        m_Selector.prune(stream());
+        // Note: this needs to be done here, before test families are added
+        prune();
       }
     }
   }
@@ -634,5 +635,34 @@ namespace sequoia::testing
     }
 
     return false;
+  }
+
+  void test_runner::prune()
+  {
+    if(!m_Selector.pruned()) return;
+
+    // Do this here: if pruning throws an exception, this output should make it clearer what's going on
+    stream() << "\nAnalyzing dependencies...\n";
+    const timer t{};
+
+    switch(m_Selector.prune())
+    {
+    case prune_outcome::not_attempted:
+      break;
+    case prune_outcome::no_time_stamp:
+      {
+        using parsing::commandline::warning;
+        stream() << warning({"Time stamp of previous run does not exist, so unable to prune.",
+                            "This should be automatically rectified for the next successful run."
+                            "No action required"});
+      }
+      break;
+    case prune_outcome::success:
+      {
+        const auto [dur, unit] {testing::stringify(t.time_elapsed())};
+        stream() << "[" << dur << unit << "]\n\n";
+      }
+      break;
+    } 
   }
 }
