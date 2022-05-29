@@ -63,5 +63,7 @@ namespace sequoia::testing
     std::string zeroth_arg() const;
 
     void write(std::string_view dirName, std::stringstream& output) const;
+
+    void check_output(std::string_view description, std::string_view dirName, std::stringstream& output);
   };
 }

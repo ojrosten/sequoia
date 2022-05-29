@@ -1,4 +1,4 @@
-Tests/TestFramework/TestRunnerTest.cpp, Line 306
+Tests/TestFramework/TestRunnerTest.cpp, Line 312
 Test Main has empty path
 
 Expected Exception Type:
@@ -9,7 +9,7 @@ Try ensuring that the application is run from the appropriate directory
 
 	=======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 315
+Tests/TestFramework/TestRunnerTest.cpp, Line 321
 Test Main does not exist
 
 Expected Exception Type:
@@ -20,7 +20,7 @@ Try ensuring that the application is run from the appropriate directory
 
 	=======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 324
+Tests/TestFramework/TestRunnerTest.cpp, Line 330
 Include Target has empty path
 
 Expected Exception Type:
@@ -31,7 +31,7 @@ Common includes not found
 
 	=======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 333
+Tests/TestFramework/TestRunnerTest.cpp, Line 339
 Include Target does not exist
 
 Expected Exception Type:
@@ -42,7 +42,7 @@ Common includes not found
 
 	=======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 342
+Tests/TestFramework/TestRunnerTest.cpp, Line 348
 Project root is empty
 
 Expected Exception Type:
@@ -51,7 +51,7 @@ Unable to locate project root as no commandline arguments supplied.
 
 	=======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 350
+Tests/TestFramework/TestRunnerTest.cpp, Line 356
 Project root does not exist
 
 Expected Exception Type:
@@ -60,7 +60,7 @@ canonical: unable to find path
 
 	=======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 359
+Tests/TestFramework/TestRunnerTest.cpp, Line 365
 Project root not findable
 
 Expected Exception Type:
@@ -71,7 +71,7 @@ Please ensure that the build directory is a subdirectory of <project>/build.
 
 	=======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 369
+Tests/TestFramework/TestRunnerTest.cpp, Line 375
 Neither name nor source unique
 
 Expected Exception Type:
@@ -83,7 +83,7 @@ Please do not include tests in the same family which both have the same name and
 
 	=======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 403
+Tests/TestFramework/TestRunnerTest.cpp, Line 409
 Invalid repetitions for instability analysis
 
 Expected Exception Type:
@@ -92,7 +92,7 @@ locate-instabilities: unable to interpret 'foo' as an integer number of repetiti
 
 	=======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 410
+Tests/TestFramework/TestRunnerTest.cpp, Line 416
 Insufficient repetitions for instability analysis
 
 Expected Exception Type:

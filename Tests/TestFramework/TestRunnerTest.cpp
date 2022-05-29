@@ -282,6 +282,12 @@ namespace sequoia::testing
     output.str("");
   }
 
+  void test_runner_test::check_output(std::string_view description, std::string_view dirName, std::stringstream& output)
+  {
+    write(dirName, output);
+    check(equivalence, description, working_materials() / dirName, predictive_materials() / dirName);
+  }
+
   void test_runner_test::test_exceptions()
   {
     auto pathTrimmer{
@@ -482,8 +488,7 @@ namespace sequoia::testing
                        outputStream};
 
     runner.execute();
-    write("NoTests", outputStream);
-    check(equivalence, LINE("No Tests"), working_materials() / "NoTests", predictive_materials() / "NoTests");
+    check_output(LINE("No Tests"), "NoTests", outputStream);
 
     runner.add_test_family(
       "Failing Family",
@@ -493,9 +498,7 @@ namespace sequoia::testing
     );
 
     runner.execute();
-
-    write("BasicOutput", outputStream);
-    check(equivalence, LINE("Basic Output"), working_materials() / "BasicOutput",  predictive_materials() / "BasicOutput");
+    check_output(LINE("Basic Output"), "BasicOutput", outputStream);
   }
 
   void test_runner_test::test_prune_basic_output()
@@ -513,8 +516,7 @@ namespace sequoia::testing
                        outputStream};
 
     runner.execute();
-    write("NoTestsWithPrune", outputStream);
-    check(equivalence, LINE("No tests with prune"), working_materials() / "NoTestsWithPrune", predictive_materials() / "NoTestsWithPrune");
+    check_output(LINE("No tests with prune"), "NoTestsWithPrune", outputStream);
   }
 
   void test_runner_test::test_instability_analysis()
