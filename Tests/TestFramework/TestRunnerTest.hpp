@@ -59,5 +59,7 @@ namespace sequoia::testing
 
     [[nodiscard]]
     std::string zeroth_arg() const;
+
+    void write(std::string_view dirName, std::stringstream& output) const;
   };
 }

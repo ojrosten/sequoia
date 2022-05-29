@@ -268,6 +268,19 @@ namespace sequoia::testing
     return (fake_project() / "build").generic_string();
   }
 
+  void test_runner_test::write(std::string_view dirName, std::stringstream& output) const
+  {
+    const auto outputDir{working_materials() / dirName};
+    fs::create_directory(outputDir);
+
+    if(std::ofstream file{outputDir / "io.txt"})
+    {
+      file << output.str();
+    }
+
+    output.str("");
+  }
+
   void test_runner_test::test_exceptions()
   {
     auto pathTrimmer{
@@ -467,6 +480,10 @@ namespace sequoia::testing
                        "  ",
                        outputStream};
 
+    runner.execute();
+    write("NoTests", outputStream);
+    check(equivalence, LINE("No Tests"), working_materials() / "NoTests", predictive_materials() / "NoTests");
+
     runner.add_test_family(
       "Failing Family",
       failing_test{"Free Test"},
@@ -476,14 +493,7 @@ namespace sequoia::testing
 
     runner.execute();
 
-    const auto outputDir{working_materials() / "BasicOutput"};
-    fs::create_directory(outputDir);
-
-    if(std::ofstream file{outputDir / "io.txt"})
-    {
-      file << outputStream.str();
-    }
-
+    write("BasicOutput", outputStream);
     check(equivalence, LINE("Basic Output"), working_materials() / "BasicOutput",  predictive_materials() / "BasicOutput");
   }
 
@@ -608,14 +618,14 @@ namespace sequoia::testing
   }
 
   template<concrete_test... Ts>
-    void test_runner_test::test_instability_analysis(std::string_view message,
-                                                     std::string_view outputDirName,
-                                                     std::string_view numRuns,
-                                                     std::initializer_list<std::string_view> extraArgs,
-                                                     Ts&&... ts)
-    {
-      test_instability_analysis(message, outputDirName, numRuns, extraArgs, [](test_runner&){}, std::forward<Ts>(ts)...);
-    }
+  void test_runner_test::test_instability_analysis(std::string_view message,
+                                                   std::string_view outputDirName,
+                                                   std::string_view numRuns,
+                                                   std::initializer_list<std::string_view> extraArgs,
+                                                   Ts&&... ts)
+  {
+    test_instability_analysis(message, outputDirName, numRuns, extraArgs, [](test_runner&){}, std::forward<Ts>(ts)...);
+  }
 
   template<concrete_test... Ts>
   void test_runner_test::test_instability_analysis(std::string_view message,
