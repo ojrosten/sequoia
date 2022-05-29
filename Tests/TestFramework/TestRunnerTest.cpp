@@ -516,7 +516,10 @@ namespace sequoia::testing
                        outputStream};
 
     runner.execute();
-    check_output(LINE("No tests with prune"), "NoTestsWithPrune", outputStream);
+    check_output(LINE("Prune with no stamp"), "PruneWithNoStamp", outputStream);
+
+    runner.execute();
+    check_output(LINE("Prune with no tests"), "PruneWithNoTests", outputStream);
   }
 
   void test_runner_test::test_instability_analysis()
