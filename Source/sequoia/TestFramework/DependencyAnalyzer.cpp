@@ -390,7 +390,8 @@ namespace sequoia::testing
       return projPaths.prune();
     }
 
-    void aggregate_failures(const prune_paths& prunePaths, const std::size_t numReps)
+    [[nodiscard]]
+    std::vector<fs::path> aggregate_failures(const prune_paths& prunePaths, const std::size_t numReps)
     {
       std::vector<fs::path> allTests{};
       for(std::size_t i{}; i < numReps; ++i)
@@ -403,14 +404,11 @@ namespace sequoia::testing
       auto last{std::unique(allTests.begin(), allTests.end())};
       allTests.erase(last, allTests.end());
 
-      if(const auto grandFile{prunePaths.failures(std::nullopt)}; std::ofstream ofile{grandFile})
-      {
-        for(const auto& p : allTests)
-          ofile << p.generic_string() << '\n';
-      }
+      return allTests;
     }
 
-    void aggregate_passes(const prune_paths& prunePaths, const std::size_t numReps)
+    [[nodiscard]]
+    std::vector<fs::path> aggregate_passes(const prune_paths& prunePaths, const std::size_t numReps)
     {
       std::vector<fs::path> intersection{};
       for(std::size_t i{}; i < numReps; ++i)
@@ -430,11 +428,7 @@ namespace sequoia::testing
         }
       }
 
-      if(const auto grandFile{prunePaths.selected_passes(std::nullopt)}; std::ofstream ofile{grandFile})
-      {
-        for(const auto& p : intersection)
-          ofile << p.generic_string() << '\n';
-      }
+      return intersection;
     }
   }
 
@@ -557,10 +551,26 @@ namespace sequoia::testing
   }
 
 
-  void aggregate_instability_analysis_prune_files(const project_paths& projPaths, const std::size_t numReps)
+  void aggregate_instability_analysis_prune_files(const project_paths& projPaths, prune_mode mode, std::filesystem::file_time_type timeStamp, std::size_t numReps)
   {
     const auto prunePaths{projPaths.prune()};
-    aggregate_failures(prunePaths, numReps);
-    aggregate_passes(prunePaths, numReps);
+    auto failingCases{aggregate_failures(prunePaths, numReps)};
+
+    switch(mode)
+    {
+    case prune_mode::passive:
+    {
+      update_prune_files(projPaths, std::move(failingCases), timeStamp, std::nullopt);
+      break;
+    }
+    case prune_mode::active:
+    {
+      auto executedCases{aggregate_passes(prunePaths, numReps)};
+      executedCases.insert(executedCases.end(), failingCases.begin(), failingCases.end());
+
+      update_prune_files(projPaths, std::move(executedCases), std::move(failingCases), std::nullopt);
+      break;
+    }
+    }
   }
 }

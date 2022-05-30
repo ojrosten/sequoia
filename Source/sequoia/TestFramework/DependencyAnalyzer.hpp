@@ -16,6 +16,8 @@
 
 namespace sequoia::testing
 {
+  enum class prune_mode { passive, active };
+
   std::vector<std::filesystem::path>& read_tests(const std::filesystem::path& file, std::vector<std::filesystem::path>& tests);
 
   [[nodiscard]]
@@ -37,5 +39,5 @@ namespace sequoia::testing
                           std::optional<std::size_t> id);
 
 
-  void aggregate_instability_analysis_prune_files(const project_paths& projPaths, const std::size_t numReps);
+  void aggregate_instability_analysis_prune_files(const project_paths& projPaths, prune_mode mode, std::filesystem::file_time_type timeStamp, std::size_t numReps);
 }

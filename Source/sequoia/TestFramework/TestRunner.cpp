@@ -558,7 +558,7 @@ namespace sequoia::testing
     if(   (m_InstabilityMode == instability_mode::single_instance)
        || (m_InstabilityMode == instability_mode::coordinator))
     {
-      aggregate_instability_analysis_prune_files(m_Selector.proj_paths(), m_NumReps);
+      aggregate_instability_analysis_prune_files(m_Selector.proj_paths(), m_Selector.pruned(), m_Selector.current_time_stamp(), m_NumReps);
       const auto outputDir{m_Selector.proj_paths().output().instability_analysis()};
       stream() << instability_analysis(outputDir, m_NumReps);
     }
@@ -636,7 +636,7 @@ namespace sequoia::testing
     }
     else if(m_Selector.empty())
     {
-      if(m_Selector.pruned())
+      if(m_Selector.pruned() == prune_mode::active)
         stream() << "Nothing to do: no changes since the last run, therefore 'prune' has pruned all tests\n";
 
       return true;
@@ -647,7 +647,7 @@ namespace sequoia::testing
 
   void test_runner::prune()
   {
-    if(!m_Selector.pruned()) return;
+    if(m_Selector.pruned() == prune_mode::passive) return;
 
     // Do this here: if pruning throws an exception, this output should make it clearer what's going on
     stream() << "\nAnalyzing dependencies...\n";

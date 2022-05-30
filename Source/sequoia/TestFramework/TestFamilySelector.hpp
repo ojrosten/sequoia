@@ -11,6 +11,7 @@
     \brief Mechanism for selecting which test families to run.
  */
 
+#include "sequoia/TestFramework/DependencyAnalyzer.hpp"
 #include "sequoia/TestFramework/FileSystemUtilities.hpp"
 #include "sequoia/TestFramework/TestFamily.hpp"
 
@@ -27,6 +28,8 @@ namespace sequoia::testing
   class family_selector
   {
   public:
+    using time_type = std::filesystem::file_time_type;
+
     explicit family_selector(project_paths paths);
 
     template<class Test, class... Tests>
@@ -57,7 +60,7 @@ namespace sequoia::testing
         }(test, tests...)
       };
 
-      if(!done && ((m_SelectedSources.empty() && !pruned()) || !m_SelectedFamilies.empty()))
+      if(!done && (((pruned() == prune_mode::passive) && m_SelectedSources.empty()) || !m_SelectedFamilies.empty()))
       {
         if(mark_family(name))
         {
@@ -77,10 +80,19 @@ namespace sequoia::testing
     void set_prune_cutoff(std::string cutoff);
 
     [[nodiscard]]
-    bool pruned() const noexcept;
+    prune_mode pruned() const noexcept
+    {
+      return m_PruneInfo.mode;
+    }
 
     [[nodiscard]]
     prune_outcome prune();
+
+    [[nodiscard]]
+    time_type current_time_stamp() const noexcept
+    {
+      return m_PruneInfo.stamps.current;
+    }
 
     void update_prune_info(std::vector<std::filesystem::path> failedTests, std::optional<std::size_t> id) const;
 
@@ -145,11 +157,9 @@ namespace sequoia::testing
       return m_SelectedFamilies.end();
     }
   private:
-    enum class prune_mode { passive, active };
 
     struct time_stamps
     {
-      using time_type = std::filesystem::file_time_type;
       using stamp = std::optional<time_type>;
 
       static auto from_file(const std::filesystem::path& stampFile)->stamp;

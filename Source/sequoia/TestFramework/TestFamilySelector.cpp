@@ -11,7 +11,6 @@
 
 #include "sequoia/TestFramework/TestFamilySelector.hpp"
 
-#include "sequoia/TestFramework/DependencyAnalyzer.hpp"
 #include "sequoia/Parsing/CommandLineArguments.hpp"
 
 #include <fstream>
@@ -70,7 +69,7 @@ namespace sequoia::testing
   [[nodiscard]]
   prune_outcome family_selector::prune()
   {
-    if(!pruned()) return prune_outcome::not_attempted;
+    if(pruned() == prune_mode::passive) return prune_outcome::not_attempted;
 
     if(auto maybeToRun{tests_to_run(proj_paths(), m_PruneInfo.include_cutoff)})
     {
@@ -89,7 +88,7 @@ namespace sequoia::testing
 
   void family_selector::update_prune_info(std::vector<fs::path> failedTests, const std::optional<std::size_t> id) const
   {
-    if(!pruned() && bespoke_selection())
+    if((pruned() == prune_mode::passive) && bespoke_selection())
     {
       update_prune_files(m_Paths, get_executed_tests(), std::move(failedTests), id);
     }
@@ -114,7 +113,7 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string family_selector::check_argument_consistency()
   {
-    if(pruned() && bespoke_selection())
+    if((pruned() == prune_mode::active) && bespoke_selection())
     {
       using parsing::commandline::warning;
       m_PruneInfo.mode = prune_mode::passive;
@@ -127,7 +126,7 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string family_selector::check_for_missing_tests() const
   {
-    if(pruned()) return "";
+    if(pruned() == prune_mode::active) return "";
 
     std::string messages{};
 
@@ -169,12 +168,6 @@ namespace sequoia::testing
     );
 
     return messages;
-  }
-
-  [[nodiscard]]
-  bool family_selector::pruned() const noexcept
-  {
-    return m_PruneInfo.mode == prune_mode::active;
   }
 
   bool family_selector::mark_family(std::string_view name)
