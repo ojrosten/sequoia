@@ -21,7 +21,10 @@ namespace sequoia::testing
 
   namespace
   {
-    std::optional<std::vector<fs::path>> read(const fs::path& file)
+    using test_list     = std::vector<fs::path>;
+    using opt_test_list = std::optional<test_list>;
+
+    opt_test_list read(const fs::path& file)
     {
       if(fs::exists(file)) return read_tests(file);
 
@@ -30,18 +33,24 @@ namespace sequoia::testing
 
     struct data
     {
-      data(std::optional<std::vector<fs::path>> fail, std::optional<std::vector<fs::path>> pass)
+      data(opt_test_list fail, opt_test_list pass)
         : failures{std::move(fail)}
         , passes{std::move(pass)}
       {
         if(failures) std::sort(failures->begin(), failures->end());
-        if(passes) std::sort(passes->begin(), passes->end());
+        if(passes)   std::sort(passes->begin(), passes->end());
       }
 
-      std::optional<std::vector<fs::path>> failures{}, passes{};
+      opt_test_list failures{}, passes{};
     };
 
-    void write_or_remove(const project_paths& projPaths, const fs::path& file, const std::optional<std::vector<fs::path>>& tests)
+    struct instability_data
+    {
+
+
+    };
+
+    void write_or_remove(const project_paths& projPaths, const fs::path& file, const opt_test_list& tests)
     {
       if(tests) write_tests(projPaths, file, tests.value());
       else      fs::remove(file);
@@ -53,9 +62,6 @@ namespace sequoia::testing
       write_or_remove(projPaths, passesFile, d.passes);
     }
   }
-
-  using test_list     = std::vector<fs::path>;
-  using opt_test_list = std::optional<test_list>;
 
   [[nodiscard]]
   std::string_view dependency_analyzer_free_test::source_file() const noexcept
@@ -315,7 +321,7 @@ namespace sequoia::testing
     using edge_t = transition_checker<data>::edge;
 
     auto update_with_prune{
-      [&](const data& d, std::vector<fs::path> failures) {
+      [&](const data& d, test_list failures) {
         write_or_remove(projPaths, failureFile, passesFile, d);
 
         update_prune_files(projPaths, std::move(failures), updateTime, std::nullopt);
@@ -324,7 +330,7 @@ namespace sequoia::testing
     };
 
     auto update_with_select{
-      [&](const data& d, std::vector<fs::path> executed, std::vector<fs::path> failures) {
+      [&](const data& d, test_list executed, test_list failures) {
         write_or_remove(projPaths, failureFile, passesFile, d);
 
         update_prune_files(projPaths, std::move(executed), std::move(failures), std::nullopt);
@@ -423,16 +429,16 @@ namespace sequoia::testing
       },
       {
         data{std::nullopt, std::nullopt}, // 0
-        data{std::vector<fs::path>{}, std::nullopt}, // 1
-        data{std::vector<fs::path>{}, std::vector<fs::path>{}}, // 2
+        data{test_list{}, std::nullopt}, // 1
+        data{test_list{}, test_list{}}, // 2
         data{{{{"HouseAllocationTest.cpp"}}}, std::nullopt}, // 3
         data{{{{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}}, std::nullopt}, // 4
-        data{{{{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}}, std::vector<fs::path>{}}, // 5
+        data{{{{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}}, test_list{}}, // 5
         data{{{{"HouseAllocationTest.cpp"}}}, {{{"Maths/ProbabilityTest.cpp"}}}}, // 6
-        data{{{{"HouseAllocationTest.cpp"}, {"Maybe/MaybeTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}}, std::vector<fs::path>{}}, // 7
+        data{{{{"HouseAllocationTest.cpp"}, {"Maybe/MaybeTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}}, test_list{}}, // 7
         data{{{{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}}, {{{"Maybe/MaybeTest.cpp"}}}}, // 8
         data{{{{"HouseAllocationTest.cpp"}}}, {{{"Maybe/MaybeTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}}}, // 9
-        data{std::vector<fs::path>{}, {{{"Maybe/MaybeTest.cpp"}, {"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}}} //10
+        data{test_list{}, {{{"Maybe/MaybeTest.cpp"}, {"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}}} //10
       }
     };
 
@@ -449,6 +455,11 @@ namespace sequoia::testing
 
   void dependency_analyzer_free_test::test_instability_analysis_prune_upate(const project_paths& projPaths)
   {
+    const auto updateTime{m_ResetTime + std::chrono::seconds{1}};
+    const auto prune{projPaths.prune()};
+    fs::remove_all(prune.dir());
+    fs::create_directory(prune.dir());
+
 
   }
 
