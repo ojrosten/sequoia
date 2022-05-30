@@ -21,8 +21,10 @@ namespace sequoia::testing
 
   namespace
   {
-    using test_list     = std::vector<fs::path>;
-    using opt_test_list = std::optional<test_list>;
+    using test_list           = std::vector<fs::path>;
+    using opt_test_list       = std::optional<test_list>;
+    using multi_test_list     = std::vector<test_list>;
+    using opt_multi_test_list = std::optional<multi_test_list>;
 
     opt_test_list read(const fs::path& file)
     {
@@ -46,8 +48,26 @@ namespace sequoia::testing
 
     struct instability_data
     {
+      instability_data(data pruneData, opt_multi_test_list instabilityFailures, opt_multi_test_list instabilityPasses)
+        : prune_data{pruneData}
+        , instability_failures{std::move(instabilityFailures)}
+        , instability_passes{std::move(instabilityPasses)}
+      {
+        auto sorter{
+          [](opt_multi_test_list& multiList) {
+            if(multiList)
+            {
+              for(auto& list : multiList.value()) std::sort(list.begin(), list.end());
+            }
+          }
+        };
 
+        sorter(instability_failures);
+        sorter(instability_passes);
+      }
 
+      data prune_data;
+      opt_multi_test_list instability_failures{}, instability_passes{};
     };
 
     void write_or_remove(const project_paths& projPaths, const fs::path& file, const opt_test_list& tests)
@@ -460,7 +480,26 @@ namespace sequoia::testing
     fs::remove_all(prune.dir());
     fs::create_directory(prune.dir());
 
+    using prune_graph = transition_checker<instability_data>::transition_graph;
+    using edge_t = transition_checker<instability_data>::edge;
 
+    const prune_graph g{
+      {
+        {} // 0
+      },
+      {
+        instability_data{{std::nullopt, std::nullopt}, std::nullopt, std::nullopt}
+      }
+    };
+
+    auto checker{
+        [this](std::string_view description, const instability_data& obtained, const instability_data& prediction) {
+          check(equality, std::string{description}.append(": failures"), obtained.prune_data.failures, prediction.prune_data.failures);
+          check(equality, std::string{description}.append(": passes"), obtained.prune_data.passes, prediction.prune_data.passes);
+        }
+    };
+
+    transition_checker<instability_data>::check(LINE(""), g, checker);
   }
 
 }
