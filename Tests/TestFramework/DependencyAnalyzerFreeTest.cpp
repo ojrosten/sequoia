@@ -548,11 +548,24 @@ namespace sequoia::testing
                  "A single failure in only the first of two instances, with select",
                  [update_with_select](const data& d) { return update_with_select(d, {{"HouseAllocationTest.cpp"}}, {{{"HouseAllocationTest.cpp"}}, {}}); }
           },
+          edge_t{4,
+                 "A single failure in only the second of two instances, with select",
+                 [update_with_select](const data& d) { return update_with_select(d, {{"HouseAllocationTest.cpp"}}, {{}, {{"HouseAllocationTest.cpp"}}}); }
+          },
+          edge_t{4,
+                 "A single failure in both instances, with select",
+                 [update_with_select](const data& d) { return update_with_select(d, {{"HouseAllocationTest.cpp"}}, {{{"HouseAllocationTest.cpp"}}, {{"HouseAllocationTest.cpp"}}}); }
+          },
+          edge_t{5,
+                 "Passes in both instances, with select",
+                 [update_with_select](const data& d) { return update_with_select(d, {{"HouseAllocationTest.cpp"}}, {{}, {}}); }
+          },
         }, // 0
         {}, // 1
         {}, // 2
         {}, // 3
         {}, // 4
+        {}, // 5
       },
       {
         data{std::nullopt, std::nullopt}, //0
@@ -560,6 +573,7 @@ namespace sequoia::testing
         data{test_list{}, test_list{}}, // 2
         data{{{{"HouseAllocationTest.cpp"}}}, std::nullopt}, // 3
         data{{{{"HouseAllocationTest.cpp"}}}, test_list{}}, // 4
+        data{test_list{}, {{{"HouseAllocationTest.cpp"}}}}, // 5
       }
     };
 
