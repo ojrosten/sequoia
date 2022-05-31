@@ -38,6 +38,7 @@ namespace sequoia::testing
                           std::vector<std::filesystem::path> failedTests,
                           std::optional<std::size_t> id);
 
+  void setup_instability_analysis_prune_folder(const project_paths& projPaths);
 
   void aggregate_instability_analysis_prune_files(const project_paths& projPaths, prune_mode mode, std::filesystem::file_time_type timeStamp, std::size_t numReps);
 }

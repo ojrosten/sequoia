@@ -550,6 +550,12 @@ namespace sequoia::testing
     write_tests(projPaths, passesFile, passingTests);
   }
 
+  void setup_instability_analysis_prune_folder(const project_paths& projPaths)
+  {
+    const auto dir{projPaths.prune().instability_analysis()};
+    fs::remove_all(dir);
+    fs::create_directories(dir);
+  }
 
   void aggregate_instability_analysis_prune_files(const project_paths& projPaths, prune_mode mode, std::filesystem::file_time_type timeStamp, std::size_t numReps)
   {
@@ -560,15 +566,15 @@ namespace sequoia::testing
     {
     case prune_mode::passive:
     {
-      update_prune_files(projPaths, std::move(failingCases), timeStamp, std::nullopt);
-      break;
-    }
-    case prune_mode::active:
-    {
       auto executedCases{aggregate_passes(prunePaths, numReps)};
       executedCases.insert(executedCases.end(), failingCases.begin(), failingCases.end());
 
       update_prune_files(projPaths, std::move(executedCases), std::move(failingCases), std::nullopt);
+      break;
+    }
+    case prune_mode::active:
+    {
+      update_prune_files(projPaths, std::move(failingCases), timeStamp, std::nullopt);
       break;
     }
     }

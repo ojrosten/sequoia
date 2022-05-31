@@ -430,9 +430,7 @@ namespace sequoia::testing
       {
         if((m_InstabilityMode == instability_mode::single_instance) || (m_InstabilityMode == instability_mode::coordinator))
         {
-          const auto dir{proj_paths().prune().instability_analysis()};
-          fs::remove_all(dir);
-          fs::create_directories(dir);
+          setup_instability_analysis_prune_folder(proj_paths());
         }
 
         // Note: this needs to be done here, before test families are added

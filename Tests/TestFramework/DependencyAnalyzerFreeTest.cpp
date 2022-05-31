@@ -480,6 +480,8 @@ namespace sequoia::testing
 
     auto update_with_prune{
       [&](const data& d, multi_test_list failures) -> data {
+        setup_instability_analysis_prune_folder(projPaths);
+
         write_or_remove(projPaths, failureFile, passesFile, d);
 
         for(std::size_t i{}; i < failures.size(); ++i)
@@ -499,6 +501,8 @@ namespace sequoia::testing
         if(failures.size() != passes.size())
           throw std::logic_error{"Instability analysis failures and passes of differing sizes"};
 
+        setup_instability_analysis_prune_folder(projPaths);
+
         write_or_remove(projPaths, failureFile, passesFile, d);
 
         for(std::size_t i{}; i < failures.size(); ++i)
@@ -506,7 +510,7 @@ namespace sequoia::testing
           update_prune_files(projPaths, std::move(failures[i]), std::move(passes[i]), i);
         }
 
-        aggregate_instability_analysis_prune_files(projPaths, prune_mode::active, updateTime, failures.size());
+        aggregate_instability_analysis_prune_files(projPaths, prune_mode::passive, updateTime, failures.size());
 
         return {read(failureFile), read(passesFile)};
       }
@@ -517,7 +521,11 @@ namespace sequoia::testing
         {
           edge_t{2,
                  "Nothing executed, with select",
-                 [update_with_select](const data& d) { return update_with_select(d, {}, {}); }
+                 [update_with_select](const data& d) { return update_with_select(d, {{}}, {{}}); }
+          },
+          edge_t{3,
+                 "A single failure in only of two instances, with prune",
+                 [update_with_prune](const data& d) { return update_with_prune(d, {{{"HouseAllocationTest.cpp"}}, {}}); }
           },
         }, // 0
         {}, // 1
