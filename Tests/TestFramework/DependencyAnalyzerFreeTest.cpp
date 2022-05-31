@@ -361,96 +361,102 @@ namespace sequoia::testing
                  [update_with_prune](const data& d) { return update_with_prune(d, {{"HouseAllocationTest.cpp"}}); }
           },
           edge_t{4,
+                 "A single failure, with select",
+                 [update_with_select](const data& d) { return update_with_select(d, {}, { {"HouseAllocationTest.cpp"}}); }
+          },
+          edge_t{5,
                  "Two failures, with prune",
                  [update_with_prune](const data& d) { return update_with_prune(d, {{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}); }
           }
         }, // end node 0 edges
         {},// end node 1 edges
         {},// end node 2 edges
-        { edge_t{5,
+        { edge_t{6,
                  "An additional failure, with select",
                  [update_with_select](const data& d) { return update_with_select(d, {{"Maths/ProbabilityTest.cpp"}}, {{"Maths/ProbabilityTest.cpp"}}); }
           },
-          edge_t{7,
+          edge_t{8,
                  "Two additional failures, with select",
                  [update_with_select](const data& d) { return update_with_select(d, {{"Maths/ProbabilityTest.cpp"}, {"Maybe/MaybeTest.cpp"}}, {{"Maths/ProbabilityTest.cpp"}, {"Maybe/MaybeTest.cpp"}}); }
           },
-          edge_t{8,
+          edge_t{9,
                  "One additional failure, one pass, with select",
                  [update_with_select](const data& d) { return update_with_select(d, {{"Maths/ProbabilityTest.cpp"}, {"Maybe/MaybeTest.cpp"}}, {{"Maths/ProbabilityTest.cpp"}}); }
           },
-          edge_t{9,
+          edge_t{10,
                  "Two additional passes, with select",
                  [update_with_select](const data& d) { return update_with_select(d, {{"Maths/ProbabilityTest.cpp"}, {"Maybe/MaybeTest.cpp"}}, {}); }
           }
         }, // end node 3 edges
+        {}, // end node 4 edges
         {
           edge_t{3,
                  "One failure fewer, with prune",
                  [update_with_prune](const data& d) { return update_with_prune(d, {{"HouseAllocationTest.cpp"}}); }
           }
-        }, // end node 4 edges
+        }, // end node 5 edges
         {
-          edge_t{6,
+          edge_t{7,
                  "One failure fewer, with select",
                  [update_with_select](const data& d) { return update_with_select(d, {{"Maths/ProbabilityTest.cpp"}}, {}); }
           },
-          edge_t{7,
+          edge_t{8,
                  "One more failure, with select",
                  [update_with_select](const data& d) { return update_with_select(d, {{"Maybe/MaybeTest.cpp"}}, {{"Maybe/MaybeTest.cpp"}}); }
           }
-        }, // end node 5 edges
+        }, // end node 6 edges
         {
           edge_t{1,
                  "No failures, with prune",
                  [update_with_prune](const data& d) { return update_with_prune(d, {}); }
           },
-          edge_t{5,
+          edge_t{6,
                  "Add a failure, with select",
                  [update_with_select](const data& d) { return update_with_select(d, {{"Maths/ProbabilityTest.cpp"}}, {{"Maths/ProbabilityTest.cpp"}}); }
           }
-        }, // end node 6 edges
+        }, // end node 7 edges
        {
          edge_t{1,
                 "Three failures all pass, with prune",
                 [update_with_prune](const data& d) { return update_with_prune(d, {}); }
          }
-       }, // end node 7 edges
-       {
-         edge_t{9,
-                "One of two failures becomes a pass, with select",
-                [update_with_select](const data& d) { return update_with_select(d, {{"Maths/ProbabilityTest.cpp"}}, {}); }
-         }
        }, // end node 8 edges
        {
          edge_t{10,
+                "One of two failures becomes a pass, with select",
+                [update_with_select](const data& d) { return update_with_select(d, {{"Maths/ProbabilityTest.cpp"}}, {}); }
+         }
+       }, // end node 9 edges
+       {
+         edge_t{11,
                 "Only failure becomes a pass, with select",
                 [update_with_select](const data& d) { return update_with_select(d, {{"HouseAllocationTest.cpp"}}, {}); }
          }
-       },  // end node 9 edges
+       },  // end node 10 edges
        {
-         edge_t{9,
+         edge_t{10,
                 "One pass becomes a failure, with select",
                 [update_with_select](const data& d) { return update_with_select(d, {{"HouseAllocationTest.cpp"}}, {{"HouseAllocationTest.cpp"}}); }
          },
-         edge_t{8,
+         edge_t{9,
                 "Two passes becomes failures, with select",
                 [update_with_select](const data& d) { return update_with_select(d, {{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}, {{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}); }
          }
-       }, // end node 10 edges
+       }, // end node 11 edges
       },
       {
         data{std::nullopt, std::nullopt}, // 0
         data{test_list{}, std::nullopt}, // 1
         data{test_list{}, test_list{}}, // 2
         data{{{{"HouseAllocationTest.cpp"}}}, std::nullopt}, // 3
-        data{{{{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}}, std::nullopt}, // 4
-        data{{{{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}}, test_list{}}, // 5
-        data{{{{"HouseAllocationTest.cpp"}}}, {{{"Maths/ProbabilityTest.cpp"}}}}, // 6
-        data{{{{"HouseAllocationTest.cpp"}, {"Maybe/MaybeTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}}, test_list{}}, // 7
-        data{{{{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}}, {{{"Maybe/MaybeTest.cpp"}}}}, // 8
-        data{{{{"HouseAllocationTest.cpp"}}}, {{{"Maybe/MaybeTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}}}, // 9
-        data{test_list{}, {{{"Maybe/MaybeTest.cpp"}, {"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}}} //10
+        data{{{{"HouseAllocationTest.cpp"}}}, test_list{}}, // 4
+        data{{{{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}}, std::nullopt}, // 5
+        data{{{{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}}, test_list{}}, // 6
+        data{{{{"HouseAllocationTest.cpp"}}}, {{{"Maths/ProbabilityTest.cpp"}}}}, // 7
+        data{{{{"HouseAllocationTest.cpp"}, {"Maybe/MaybeTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}}, test_list{}}, // 8
+        data{{{{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}}, {{{"Maybe/MaybeTest.cpp"}}}}, // 9
+        data{{{{"HouseAllocationTest.cpp"}}}, {{{"Maybe/MaybeTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}}}, // 10
+        data{test_list{}, {{{"Maybe/MaybeTest.cpp"}, {"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}}} // 11
       }
     };
 
@@ -524,7 +530,15 @@ namespace sequoia::testing
                  [update_with_select](const data& d) { return update_with_select(d, {{}}, {{}}); }
           },
           edge_t{3,
-                 "A single failure in only of two instances, with prune",
+                 "A single failure in only the first of two instances, with prune",
+                 [update_with_prune](const data& d) { return update_with_prune(d, {{{"HouseAllocationTest.cpp"}}, {}}); }
+          },
+          edge_t{3,
+                 "A single failure in only the second of two instances, with prune",
+                 [update_with_prune](const data& d) { return update_with_prune(d, {{{"HouseAllocationTest.cpp"}}, {}}); }
+          },
+          edge_t{3,
+                 "A single failure in both instances, with prune",
                  [update_with_prune](const data& d) { return update_with_prune(d, {{{"HouseAllocationTest.cpp"}}, {}}); }
           },
         }, // 0
