@@ -19,60 +19,31 @@ namespace sequoia::testing
 {
   namespace fs = std::filesystem;
 
-  namespace
+  dependency_analyzer_free_test::data::data(opt_test_list fail, opt_test_list pass)
+    : failures{std::move(fail)}
+    , passes{std::move(pass)}
   {
-    using test_list           = std::vector<fs::path>;
-    using opt_test_list       = std::optional<test_list>;
-    using multi_test_list     = std::vector<test_list>;
-    using opt_multi_test_list = std::optional<multi_test_list>;
+    if(failures) std::sort(failures->begin(), failures->end());
+    if(passes)   std::sort(passes->begin(), passes->end());
+  }
 
-    enum class file_contents{ passes, failures};
+  auto dependency_analyzer_free_test::read(const fs::path& file) -> opt_test_list
+  {
+    if(fs::exists(file)) return read_tests(file);
 
-    opt_test_list read(const fs::path& file)
-    {
-      if(fs::exists(file)) return read_tests(file);
+    return std::nullopt;
+  }
 
-      return std::nullopt;
-    }
+  void dependency_analyzer_free_test::write_or_remove(const project_paths& projPaths, const fs::path& file, const opt_test_list& tests)
+  {
+    if(tests) write_tests(projPaths, file, tests.value());
+    else      fs::remove(file);
+  }
 
-    struct data
-    {
-      data(opt_test_list fail, opt_test_list pass)
-        : failures{std::move(fail)}
-        , passes{std::move(pass)}
-      {
-        if(failures) std::sort(failures->begin(), failures->end());
-        if(passes)   std::sort(passes->begin(), passes->end());
-      }
-
-      opt_test_list failures{}, passes{};
-    };
-
-    void write_or_remove(const project_paths& projPaths, const fs::path& file, const opt_test_list& tests)
-    {
-      if(tests) write_tests(projPaths, file, tests.value());
-      else      fs::remove(file);
-    }
-
-    void write_or_remove(const project_paths& projPaths, const fs::path& failureFile, const fs::path& passesFile, const data& d)
-    {
-      write_or_remove(projPaths, failureFile, d.failures);
-      write_or_remove(projPaths, passesFile, d.passes);
-    }
-
-    void write_or_remove(const project_paths& projPaths, file_contents contents, const opt_multi_test_list& optMultiTests)
-    {
-      if(optMultiTests)
-      {
-        const auto& multiTests{optMultiTests.value()};
-        const auto prune{projPaths.prune()};
-        for(std::size_t i{}; i<multiTests.size(); ++i)
-        {
-          const auto file{contents == file_contents::failures ? prune.failures(i) : prune.selected_passes(i)};
-          write_tests(projPaths, file, multiTests[i]);
-        }
-      }
-    }
+  void dependency_analyzer_free_test::write_or_remove(const project_paths& projPaths, const fs::path& failureFile, const fs::path& passesFile, const data& d)
+  {
+    write_or_remove(projPaths, failureFile, d.failures);
+    write_or_remove(projPaths, passesFile, d.passes);
   }
 
   [[nodiscard]]
@@ -469,8 +440,7 @@ namespace sequoia::testing
 
     auto checker{
         [this](std::string_view description, const data& obtained, const data& prediction) {
-          check(equality, std::string{description}.append(": failures"), obtained.failures, prediction.failures);
-          check(equality, std::string{description}.append(": passes"), obtained.passes, prediction.passes);
+          check_data(description, obtained, prediction);
         }
     };
 
@@ -579,12 +549,17 @@ namespace sequoia::testing
 
     auto checker{
         [this](std::string_view description, const data& obtained, const data& prediction) {
-          check(equality, std::string{description}.append(": failures"), obtained.failures, prediction.failures);
-          check(equality, std::string{description}.append(": passes"), obtained.passes, prediction.passes);
+          check_data(description, obtained, prediction);
         }
     };
 
     transition_checker<data>::check(LINE(""), g, checker);
+  }
+
+  void dependency_analyzer_free_test::check_data(std::string_view description, const data& obtained, const data& prediction)
+  {
+    check(equality, std::string{description}.append(": failures"), obtained.failures, prediction.failures);
+    check(equality, std::string{description}.append(": passes"), obtained.passes, prediction.passes);
   }
 
 }

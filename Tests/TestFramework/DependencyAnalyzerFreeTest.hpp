@@ -18,7 +18,19 @@ namespace sequoia::testing
   public:
     using free_test::free_test;
 
+    using test_list           = std::vector<std::filesystem::path>;
+    using opt_test_list       = std::optional<test_list>;
+    using multi_test_list     = std::vector<test_list>;
+
   private:
+
+    struct data
+    {
+      data(opt_test_list fail, opt_test_list pass);
+
+      opt_test_list failures{}, passes{};
+    };
+
     std::filesystem::file_time_type m_ResetTime{};
 
     [[nodiscard]]
@@ -41,5 +53,13 @@ namespace sequoia::testing
                             std::vector<std::filesystem::path> failures,
                             std::vector<std::filesystem::path> passes,
                             const std::vector<std::filesystem::path>& toRun);
+
+    void check_data(std::string_view description, const data& obtained, const data& prediction);
+
+    static auto read(const std::filesystem::path& file) -> opt_test_list;
+
+    static void write_or_remove(const project_paths& projPaths, const std::filesystem::path& file, const opt_test_list& tests);
+
+    static void write_or_remove(const project_paths& projPaths, const std::filesystem::path& failureFile, const std::filesystem::path& passesFile, const data& d);
   };
 }
