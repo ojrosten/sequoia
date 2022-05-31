@@ -428,7 +428,7 @@ namespace sequoia::testing
 
       if(mode(runner_mode::test))
       {
-        if(m_InstabilityMode != instability_mode::none)
+        if((m_InstabilityMode == instability_mode::single_instance) || (m_InstabilityMode == instability_mode::coordinator))
         {
           const auto dir{proj_paths().prune().instability_analysis()};
           fs::remove_all(dir);
