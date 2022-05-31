@@ -26,6 +26,8 @@ namespace sequoia::testing
     using multi_test_list     = std::vector<test_list>;
     using opt_multi_test_list = std::optional<multi_test_list>;
 
+    enum class file_contents{ passes, failures};
+
     opt_test_list read(const fs::path& file)
     {
       if(fs::exists(file)) return read_tests(file);
@@ -46,30 +48,6 @@ namespace sequoia::testing
       opt_test_list failures{}, passes{};
     };
 
-    struct instability_data
-    {
-      instability_data(data pruneData, opt_multi_test_list instabilityFailures, opt_multi_test_list instabilityPasses)
-        : prune_data{pruneData}
-        , instability_failures{std::move(instabilityFailures)}
-        , instability_passes{std::move(instabilityPasses)}
-      {
-        auto sorter{
-          [](opt_multi_test_list& multiList) {
-            if(multiList)
-            {
-              for(auto& list : multiList.value()) std::sort(list.begin(), list.end());
-            }
-          }
-        };
-
-        sorter(instability_failures);
-        sorter(instability_passes);
-      }
-
-      data prune_data;
-      opt_multi_test_list instability_failures{}, instability_passes{};
-    };
-
     void write_or_remove(const project_paths& projPaths, const fs::path& file, const opt_test_list& tests)
     {
       if(tests) write_tests(projPaths, file, tests.value());
@@ -80,6 +58,20 @@ namespace sequoia::testing
     {
       write_or_remove(projPaths, failureFile, d.failures);
       write_or_remove(projPaths, passesFile, d.passes);
+    }
+
+    void write_or_remove(const project_paths& projPaths, file_contents contents, const opt_multi_test_list& optMultiTests)
+    {
+      if(optMultiTests)
+      {
+        const auto& multiTests{optMultiTests.value()};
+        const auto prune{projPaths.prune()};
+        for(std::size_t i{}; i<multiTests.size(); ++i)
+        {
+          const auto file{contents == file_contents::failures ? prune.failures(i) : prune.selected_passes(i)};
+          write_tests(projPaths, file, multiTests[i]);
+        }
+      }
     }
   }
 
@@ -477,29 +469,77 @@ namespace sequoia::testing
   {
     const auto updateTime{m_ResetTime + std::chrono::seconds{1}};
     const auto prune{projPaths.prune()};
+    const auto failureFile{prune.failures(std::nullopt)};
+    const auto passesFile{prune.selected_passes(std::nullopt)};
+
     fs::remove_all(prune.dir());
     fs::create_directory(prune.dir());
 
-    using prune_graph = transition_checker<instability_data>::transition_graph;
-    using edge_t = transition_checker<instability_data>::edge;
+    using prune_graph = transition_checker<data>::transition_graph;
+    using edge_t = transition_checker<data>::edge;
+
+    auto update_with_prune{
+      [&](const data& d, multi_test_list failures) -> data {
+        write_or_remove(projPaths, failureFile, passesFile, d);
+
+        for(std::size_t i{}; i < failures.size(); ++i)
+        {
+          update_prune_files(projPaths, std::move(failures[i]), updateTime, i);
+        }
+
+        aggregate_instability_analysis_prune_files(projPaths, prune_mode::active, updateTime, failures.size());
+
+        return {read(failureFile), read(passesFile)};
+      }
+    };
+
+    auto update_with_select{
+      [&](const data& d, multi_test_list failures, multi_test_list passes) -> data {
+
+        if(failures.size() != passes.size())
+          throw std::logic_error{"Instability analysis failures and passes of differing sizes"};
+
+        write_or_remove(projPaths, failureFile, passesFile, d);
+
+        for(std::size_t i{}; i < failures.size(); ++i)
+        {
+          update_prune_files(projPaths, std::move(failures[i]), std::move(passes[i]), i);
+        }
+
+        aggregate_instability_analysis_prune_files(projPaths, prune_mode::active, updateTime, failures.size());
+
+        return {read(failureFile), read(passesFile)};
+      }
+    };
 
     const prune_graph g{
       {
-        {} // 0
+        {
+          edge_t{2,
+                 "Nothing executed, with select",
+                 [update_with_select](const data& d) { return update_with_select(d, {}, {}); }
+          },
+        }, // 0
+        {}, // 1
+        {}, // 2
+        {}, // 3
       },
       {
-        instability_data{{std::nullopt, std::nullopt}, std::nullopt, std::nullopt}
+        data{std::nullopt, std::nullopt}, //0
+        data{test_list{}, std::nullopt}, // 1
+        data{test_list{}, test_list{}}, // 2
+        data{{{{"HouseAllocationTest.cpp"}}}, std::nullopt}, // 3
       }
     };
 
     auto checker{
-        [this](std::string_view description, const instability_data& obtained, const instability_data& prediction) {
-          check(equality, std::string{description}.append(": failures"), obtained.prune_data.failures, prediction.prune_data.failures);
-          check(equality, std::string{description}.append(": passes"), obtained.prune_data.passes, prediction.prune_data.passes);
+        [this](std::string_view description, const data& obtained, const data& prediction) {
+          check(equality, std::string{description}.append(": failures"), obtained.failures, prediction.failures);
+          check(equality, std::string{description}.append(": passes"), obtained.passes, prediction.passes);
         }
     };
 
-    transition_checker<instability_data>::check(LINE(""), g, checker);
+    transition_checker<data>::check(LINE(""), g, checker);
   }
 
 }

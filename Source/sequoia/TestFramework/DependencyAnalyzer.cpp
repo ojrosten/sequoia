@@ -572,5 +572,7 @@ namespace sequoia::testing
       break;
     }
     }
+
+    fs::remove_all(prunePaths.instability_analysis());
   }
 }
