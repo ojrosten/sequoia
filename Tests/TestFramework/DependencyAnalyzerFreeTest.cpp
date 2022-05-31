@@ -502,10 +502,7 @@ namespace sequoia::testing
     };
 
     auto update_with_select{
-      [&](const data& d, multi_test_list failures, multi_test_list passes) -> data {
-
-        if(failures.size() != passes.size())
-          throw std::logic_error{"Instability analysis failures and passes of differing sizes"};
+      [&](const data& d, test_list executed, multi_test_list failures) -> data {
 
         setup_instability_analysis_prune_folder(projPaths);
 
@@ -513,7 +510,7 @@ namespace sequoia::testing
 
         for(std::size_t i{}; i < failures.size(); ++i)
         {
-          update_prune_files(projPaths, std::move(failures[i]), std::move(passes[i]), i);
+          update_prune_files(projPaths, executed, std::move(failures[i]), i);
         }
 
         aggregate_instability_analysis_prune_files(projPaths, prune_mode::passive, updateTime, failures.size());
@@ -541,16 +538,22 @@ namespace sequoia::testing
                  "A single failure in both instances, with prune",
                  [update_with_prune](const data& d) { return update_with_prune(d, {{{"HouseAllocationTest.cpp"}}, {}}); }
           },
+          edge_t{4,
+                 "A single failure in only the first of two instances, with select",
+                 [update_with_select](const data& d) { return update_with_select(d, {{"HouseAllocationTest.cpp"}}, {{{"HouseAllocationTest.cpp"}}, {}}); }
+          },
         }, // 0
         {}, // 1
         {}, // 2
         {}, // 3
+        {}, // 4
       },
       {
         data{std::nullopt, std::nullopt}, //0
         data{test_list{}, std::nullopt}, // 1
         data{test_list{}, test_list{}}, // 2
         data{{{{"HouseAllocationTest.cpp"}}}, std::nullopt}, // 3
+        data{{{{"HouseAllocationTest.cpp"}}}, test_list{}}, // 4
       }
     };
 
