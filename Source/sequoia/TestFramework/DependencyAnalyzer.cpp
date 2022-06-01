@@ -285,24 +285,31 @@ namespace sequoia::testing
       return externalDependencies;
     }
 
-    void consider_materials(tests_dependency_graph& g,
-                            node_iterator i,
-                            const fs::path& relFilePath,
-                            const fs::path& materialsRepo,
-                            const fs::file_time_type timeStamp)
+    /// This returns the first write time that is greater than the argument `timeStamp`
+    /// and std::nullopt, otherwise. If a non-null stamp is returned, this function
+    /// also marks the corresponding node weight as stale
+    [[nodiscard]]
+    std::optional<fs::file_time_type>
+    consider_materials(tests_dependency_graph& g,
+                       node_iterator i,
+                       const fs::path& relFilePath,
+                       const fs::path& materialsRepo,
+                       const fs::file_time_type timeStamp)
     {
       const auto materials{materialsRepo / fs::path{relFilePath}.replace_extension("")};
       if(fs::exists(materials))
       {
         for(const auto& entry : fs::recursive_directory_iterator(materials))
         {
-          if(fs::last_write_time(entry) > timeStamp)
+          if(auto writeTime{fs::last_write_time(entry)}; writeTime > timeStamp)
           {
             g.mutate_node_weight(i, [](auto& w) { w.stale = true; });
-            break;
+            return writeTime;
           }
         }
       }
+
+      return std::nullopt;
     }
 
     void consider_passing_tests(tests_dependency_graph& g,
@@ -310,7 +317,7 @@ namespace sequoia::testing
                             const fs::path& relFilePath,
                             const std::vector<fs::path>& passingTests)
     {
-      if(auto iter{std::find(passingTests.begin(), passingTests.end(), relFilePath)}; iter != passingTests.end())
+      if(auto iter{std::lower_bound(passingTests.begin(), passingTests.end(), relFilePath)}; (iter != passingTests.end() && (*iter == relFilePath)))
       {
         g.mutate_node_weight(i, [](auto& w) { w.stale = false; });
       }
@@ -368,7 +375,6 @@ namespace sequoia::testing
       const auto passingTestsFromFile{read_tests(passesFile)};
       const auto passesStamp{get_stamp(passesFile)};
 
-
       std::vector<fs::path> staleTests{};
 
       for(auto i{g.cbegin_node_weights()}; i != g.cend_node_weights(); ++i)
@@ -377,9 +383,25 @@ namespace sequoia::testing
         {
           const auto relPath{fs::relative(weight.file, projPaths.tests())};
 
-          if(!weight.stale) consider_materials(g, i, relPath, projPaths.test_materials(), timeStamp);
+          const auto materialsWriteTime{
+            [&]() -> std::optional<fs::file_time_type> {
+              if(!weight.stale || std::binary_search(passingTestsFromFile.begin(), passingTestsFromFile.end(), relPath))
+                return consider_materials(g, i, relPath, projPaths.test_materials(), timeStamp);
 
-          if((passesStamp > fs::last_write_time(weight.file)) && weight.stale) consider_passing_tests(g, i, relPath, passingTestsFromFile);
+              return std::nullopt;
+            }()
+          };
+
+          const auto maxWriteTime{
+            [materialsWriteTime,&weight]() {
+              const auto fileWriteTime{fs::last_write_time(weight.file)};
+              return materialsWriteTime ? std::max(materialsWriteTime.value(), fileWriteTime) : fileWriteTime;
+            }()
+          };
+
+          // Note: if optional does not contain a value, it compares less than
+          if(weight.stale && (passesStamp > maxWriteTime))
+            consider_passing_tests(g, i, relPath, passingTestsFromFile);
 
           if(weight.stale) staleTests.push_back(relPath);
         }
