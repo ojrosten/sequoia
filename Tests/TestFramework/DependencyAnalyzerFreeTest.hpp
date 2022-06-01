@@ -23,6 +23,13 @@ namespace sequoia::testing
     using multi_test_list     = std::vector<test_list>;
 
   private:
+    enum class passing_status { stale, fresh };
+
+    struct passing_tests
+    {
+      std::vector<std::filesystem::path> tests{};
+      passing_status status{passing_status::stale};
+    };
 
     struct data
     {
@@ -51,7 +58,7 @@ namespace sequoia::testing
                             std::string_view cutoff,
                             const std::vector<std::filesystem::path>& makeStale,
                             std::vector<std::filesystem::path> failures,
-                            std::vector<std::filesystem::path> passes,
+                            passing_tests passes,
                             const std::vector<std::filesystem::path>& toRun);
 
     void check_data(std::string_view description, const data& obtained, const data& prediction);

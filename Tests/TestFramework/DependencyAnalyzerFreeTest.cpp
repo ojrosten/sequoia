@@ -19,6 +19,17 @@ namespace sequoia::testing
 {
   namespace fs = std::filesystem;
 
+  namespace
+  {
+    constexpr auto pruneOffset{std::chrono::seconds{-1}};
+    constexpr auto stalePassOffset{std::chrono::seconds{-2}};
+    constexpr auto freshPassOffset{std::chrono::seconds{3}};
+    constexpr auto editOffset{std::chrono::seconds{1}};
+    constexpr auto staleExecutableOffset{std::chrono::seconds{-3}};
+    constexpr auto freshExecutableOffset{std::chrono::seconds{2}};
+    constexpr auto updatePruneOffset{std::chrono::seconds{4}};
+  }
+
   dependency_analyzer_free_test::data::data(opt_test_list fail, opt_test_list pass)
     : failures{std::move(fail)}
     , passes{std::move(pass)}
@@ -55,23 +66,24 @@ namespace sequoia::testing
   void dependency_analyzer_free_test::check_tests_to_run(std::string_view description,
                                                          const project_paths& projPaths,
                                                          std::string_view cutoff,
-                                                         const std::vector<std::filesystem::path>& makeStale,
-                                                         std::vector<std::filesystem::path> failures,
-                                                         std::vector<std::filesystem::path> passes,
-                                                         const std::vector<std::filesystem::path>& toRun)
+                                                         const std::vector<fs::path>& makeStale,
+                                                         std::vector<fs::path> failures,
+                                                         passing_tests passes,
+                                                         const std::vector<fs::path>& toRun)
   {
-    namespace fs = std::filesystem;
-
     std::sort(failures.begin(), failures.end());
-    std::sort(passes.begin(), passes.end());
+    std::sort(passes.tests.begin(), passes.tests.end());
 
     const auto prune{projPaths.prune()};
     const auto failureFile{prune.failures(std::nullopt)};
     const auto passesFile{prune.selected_passes(std::nullopt)};
     write_tests(projPaths, failureFile, failures);
-    write_tests(projPaths, passesFile, passes);
+    write_tests(projPaths, passesFile, passes.tests);
 
-    const auto staleTime{m_ResetTime + std::chrono::seconds{1}};
+    const auto passingTimeOffest{(passes.status == passing_status::stale) ? stalePassOffset : freshPassOffset};
+    fs::last_write_time(passesFile, m_ResetTime + passingTimeOffest);
+
+    const auto staleTime{m_ResetTime + editOffset};
     for(const auto& f : makeStale)
     {
       fs::last_write_time(f, staleTime);
@@ -97,7 +109,7 @@ namespace sequoia::testing
 
   void dependency_analyzer_free_test::run_tests()
   {
-    m_ResetTime = std::chrono::file_clock::now() - std::chrono::seconds(1);
+    m_ResetTime = std::chrono::file_clock::now() + pruneOffset;
 
     const auto fake{working_materials() / "FakeProject"};
     const auto mainDir{fake / "TestAll"};
@@ -125,14 +137,14 @@ namespace sequoia::testing
   {
     check_exception_thrown<std::runtime_error>(LINE("Executable out of date"), 
       [this, projPaths]() {
-        fs::last_write_time(projPaths.executable(), m_ResetTime - std::chrono::seconds{3});
+        fs::last_write_time(projPaths.executable(), m_ResetTime + staleExecutableOffset);
         return tests_to_run(projPaths, "");
       });
   }
 
   void dependency_analyzer_free_test::test_dependencies(const project_paths& projPaths)
   {
-    fs::last_write_time(projPaths.executable(), m_ResetTime + std::chrono::seconds{3});
+    fs::last_write_time(projPaths.executable(), m_ResetTime + freshExecutableOffset);
 
     const auto& testRepo{projPaths.tests()};
     const auto& sourceRepo{projPaths.source()};
@@ -148,13 +160,21 @@ namespace sequoia::testing
                        {},
                        {"HouseAllocationTest.cpp"});
 
-    check_tests_to_run(LINE("Test cpp older than stamp, but has passed (when selected)"),
+    check_tests_to_run(LINE("Test cpp naively stale, but has passed (when selected)"),
                        projPaths,
                        "namespace",
                        {{testRepo / "HouseAllocationTest.cpp"}},
                        {},
-                       {{"HouseAllocationTest.cpp"}},
+                       {{{"HouseAllocationTest.cpp"}}, passing_status::fresh},
                        {});
+
+    check_tests_to_run(LINE("Test cpp stale; has previously passed (when selected), but this should be ignored"),
+                       projPaths,
+                       "namespace",
+                       {{testRepo / "HouseAllocationTest.cpp"}},
+                       {},
+                       {{{"HouseAllocationTest.cpp"}}, passing_status::stale},
+                       {{"HouseAllocationTest.cpp"}});
 
     check_tests_to_run(LINE("Test hpp stale (no cutoff)"),
                        projPaths,
@@ -193,7 +213,7 @@ namespace sequoia::testing
                        "namespace",
                        {{testRepo / "Stuff" / "OldSchoolTestingUtilities.hpp"}},
                        {},
-                       {{"Maybe/MaybeTest.cpp"}},
+                       {{{"Maybe/MaybeTest.cpp"}}, passing_status::fresh},
                        {{"Stuff/OldschoolTest.cpp"}, {"Stuff/OldschoolTestingDiagnostics.cpp"}});
 
     check_tests_to_run(LINE("Reused utils stale, but two of the tests have passed"),
@@ -201,7 +221,7 @@ namespace sequoia::testing
                        "namespace",
                        {{testRepo / "Stuff" / "OldSchoolTestingUtilities.hpp"}},
                        {},
-                       {{"Maybe/MaybeTest.cpp"}, {"Stuff/OldschoolTest.cpp"}},
+                       {{{"Maybe/MaybeTest.cpp"}, {"Stuff/OldschoolTest.cpp"}}, passing_status::fresh},
                        {{"Stuff/OldschoolTestingDiagnostics.cpp"}});
 
     check_tests_to_run(LINE("Reused utils stale, but two of the tests have passed and a different one has failed"),
@@ -209,7 +229,7 @@ namespace sequoia::testing
                        "namespace",
                        {{testRepo / "Stuff" / "OldSchoolTestingUtilities.hpp"}},
                        {{"HouseAllocationTest.cpp"}},
-                       {{"Maybe/MaybeTest.cpp"}, {"Stuff/OldschoolTest.cpp"}},
+                       {{{"Maybe/MaybeTest.cpp"}, {"Stuff/OldschoolTest.cpp"}}, passing_status::fresh},
                        {{"Stuff/OldschoolTestingDiagnostics.cpp"}, {"HouseAllocationTest.cpp"}});
 
     check_tests_to_run(LINE("Reused utils stale, relative path"),
@@ -273,7 +293,7 @@ namespace sequoia::testing
                        "namespace",
                        {},
                        {{"Maths/ProbabilityTest.cpp"}},
-                       {{"Maths/ProbabilityTest.cpp"}},
+                       {{{"Maths/ProbabilityTest.cpp"}}, passing_status::fresh},
                        {{"Maths/ProbabilityTest.cpp"}});
 
     check_tests_to_run(LINE("Both stale and a previous failure"),
@@ -295,7 +315,7 @@ namespace sequoia::testing
 
   void dependency_analyzer_free_test::test_prune_update(const project_paths& projPaths)
   {
-    const auto updateTime{m_ResetTime + std::chrono::seconds{1}};
+    const auto updateTime{m_ResetTime + updatePruneOffset};
     const auto prune{projPaths.prune()};
     const auto failureFile{prune.failures(std::nullopt)};
     const auto passesFile{prune.selected_passes(std::nullopt)};
@@ -449,7 +469,7 @@ namespace sequoia::testing
 
   void dependency_analyzer_free_test::test_instability_analysis_prune_upate(const project_paths& projPaths)
   {
-    const auto updateTime{m_ResetTime + std::chrono::seconds{1}};
+    const auto updateTime{m_ResetTime + updatePruneOffset};
     const auto prune{projPaths.prune()};
     const auto failureFile{prune.failures(std::nullopt)};
     const auto passesFile{prune.selected_passes(std::nullopt)};

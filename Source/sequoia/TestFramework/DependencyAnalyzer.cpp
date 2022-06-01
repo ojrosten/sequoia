@@ -25,7 +25,7 @@ namespace sequoia::testing
   namespace
   {
     [[nodiscard]]
-    bool is_stale(fs::path file, const fs::file_time_type& timeStamp, const std::optional<fs::file_time_type>& exeTimeStamp)
+    bool is_stale(const fs::path& file, const fs::file_time_type& timeStamp, const std::optional<fs::file_time_type>& exeTimeStamp)
     {
       const auto lwt{fs::last_write_time(file)};
       if(exeTimeStamp.has_value() && (lwt >= exeTimeStamp.value()))
@@ -305,6 +305,17 @@ namespace sequoia::testing
       }
     }
 
+    void consider_passing_tests(tests_dependency_graph& g,
+                            node_iterator i,
+                            const fs::path& relFilePath,
+                            const std::vector<fs::path>& passingTests)
+    {
+      if(auto iter{std::find(passingTests.begin(), passingTests.end(), relFilePath)}; iter != passingTests.end())
+      {
+        g.mutate_node_weight(i, [](auto& w) { w.stale = false; });
+      }
+    }
+
     [[nodiscard]]
     std::optional<fs::file_time_type> get_stamp(const fs::path& file)
     {
@@ -314,11 +325,9 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    std::vector<fs::path> find_naively_stale_tests(fs::file_time_type timeStamp, const project_paths& projPaths, std::string_view cutoff)
+    std::vector<fs::path> find_stale_tests(fs::file_time_type timeStamp, const project_paths& projPaths, std::string_view cutoff)
     {
       using namespace maths;
-
-      std::vector<fs::path> naivelyStaleTests{};
 
       tests_dependency_graph g{};
 
@@ -355,6 +364,13 @@ namespace sequoia::testing
 
       depth_first_search(g, find_disconnected_t{0}, null_func_obj{}, nodesLate);
 
+      const auto passesFile{projPaths.prune().selected_passes(std::nullopt)};
+      const auto passingTestsFromFile{read_tests(passesFile)};
+      const auto passesStamp{get_stamp(passesFile)};
+
+
+      std::vector<fs::path> staleTests{};
+
       for(auto i{g.cbegin_node_weights()}; i != g.cend_node_weights(); ++i)
       {
         if(const auto& weight{*i}; is_cpp(weight.file) && in_repo(weight.file, projPaths.tests()))
@@ -363,13 +379,15 @@ namespace sequoia::testing
 
           if(!weight.stale) consider_materials(g, i, relPath, projPaths.test_materials(), timeStamp);
 
-          if(weight.stale) naivelyStaleTests.push_back(relPath);
+          if((passesStamp > fs::last_write_time(weight.file)) && weight.stale) consider_passing_tests(g, i, relPath, passingTestsFromFile);
+
+          if(weight.stale) staleTests.push_back(relPath);
         }
       }
 
-      std::sort(naivelyStaleTests.begin(), naivelyStaleTests.end());
+      std::sort(staleTests.begin(), staleTests.end());
 
-      return naivelyStaleTests;
+      return staleTests;
     }
 
     void update_prune_stamp_on_disk(const prune_paths& prunePaths, fs::file_time_type time)
@@ -480,11 +498,7 @@ namespace sequoia::testing
 
     if(!timeStamp) return std::nullopt;
 
-    const auto naivelyStaleTests{find_naively_stale_tests(timeStamp.value(), projPaths, cutoff)},
-               passingTests{read_tests(prunePaths.selected_passes(std::nullopt))};
-
-    std::vector<fs::path> staleTests{};
-    std::set_difference(naivelyStaleTests.begin(), naivelyStaleTests.end(), passingTests.begin(), passingTests.end(), std::back_inserter(staleTests));
+    const auto staleTests{find_stale_tests(timeStamp.value(), projPaths, cutoff)};
 
     const std::vector<fs::path> failingTests{read_tests(prunePaths.failures(std::nullopt))};
 
