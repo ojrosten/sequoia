@@ -529,13 +529,27 @@ namespace sequoia::testing
           edge_t{5,
                  "Passes in both instances, with select",
                  [update_with_select](const data& d) { return update_with_select(d, {{"HouseAllocationTest.cpp"}}, {{}, {}}); }
-          },
+          }
         }, // 0
         {}, // 1
         {}, // 2
         {}, // 3
         {}, // 4
-        {}, // 5
+        {
+          edge_t{6,
+                 "Two failures, from differing instances, with prune",
+                 [update_with_prune](const data& d) { return update_with_prune(d, {{{"HouseAllocationTest.cpp"}}, {{"Maths/ProbabilityTest.cpp"}}}); }
+          },
+          edge_t{7,
+                 "Two failures, from three instances, with select",
+                 [update_with_select](const data& d) {
+                    return update_with_select(d,
+                                             {{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}},
+                                             {{{"Maths/ProbabilityTest.cpp"}}, {}, {"HouseAllocationTest.cpp"}}); }
+          }
+        }, // 5
+        {}, // 6
+        {} // 7
       },
       {
         data{std::nullopt, std::nullopt}, //0
@@ -544,6 +558,8 @@ namespace sequoia::testing
         data{{{{"HouseAllocationTest.cpp"}}}, std::nullopt}, // 3
         data{{{{"HouseAllocationTest.cpp"}}}, test_list{}}, // 4
         data{test_list{}, {{{"HouseAllocationTest.cpp"}}}}, // 5
+        data{{{{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}}, std::nullopt}, // 6
+        data{{{{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}}, test_list{}} // 7
       }
     };
 

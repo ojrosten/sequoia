@@ -1,2 +1,451 @@
 End to End Test
-Standard Top Level Checks:                57;  Failures:  0  [Deep checks: 612]
+Standard Top Level Checks:                57;  Failures: 13  [Deep checks: 629]
+
+	Tests/TestFramework/TestRunnerEndToEndFreeTest.cpp, Line 302
+	Change Materials (pruned)
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<std::filesystem::path>]
+	Checking for equivalence with:
+	[std::filesystem::path]
+
+	  Contents of
+	  C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/WorkingCopy/RunWithChangedMaterials/TestRunOutput.txt
+	  vs
+	  C:/Users/olive/OneDrive/sequoia/TestMaterials/TestFramework/TestRunnerEndToEndFreeTest/Prediction/RunWithChangedMaterials/TestRunOutput.txt
+
+	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
+	  operator== returned false
+
+	    First difference detected on line 5:
+	    [char]
+	    operator== returned false
+	    Obtained : N
+	    Predicted: '\n'
+
+	    Surrounding substring(s):
+	    Obtained : ...\nNothing to do: no changes since the last run, therefore 'prune' has pruned all tests
+
+	    Predicted: ...\n\n...
+
+	=======================================
+
+	Tests/TestFramework/TestRunnerEndToEndFreeTest.cpp, Line 311
+	Instability location suppressing update
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<std::filesystem::path>]
+	Checking for equivalence with:
+	[std::filesystem::path]
+
+	  Contents of
+	  C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/WorkingCopy/UpdateSuppressedByInstabilityLocation/TestRunOutput.txt
+	  vs
+	  C:/Users/olive/OneDrive/sequoia/TestMaterials/TestFramework/TestRunnerEndToEndFreeTest/Prediction/UpdateSuppressedByInstabilityLocation/TestRunOutput.txt
+
+	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
+	  operator== returned false
+
+	    First difference detected on line 7:
+	    [char]
+	    operator== returned false
+	    Obtained : N
+	    Predicted: '\n'
+
+	    Surrounding substring(s):
+	    Obtained : ...\nNothing to do: no changes since the last run, therefore 'prune' has pruned all tests
+
+	    Predicted: ...\n\n...
+
+	=======================================
+
+	Tests/TestFramework/TestRunnerEndToEndFreeTest.cpp, Line 316
+	Updated Materials
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<std::filesystem::path>]
+	Checking for equivalence with:
+	[std::filesystem::path]
+
+	  Contents of
+	  C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/WorkingCopy/RunWithUpdateOutput/TestRunOutput.txt
+	  vs
+	  C:/Users/olive/OneDrive/sequoia/TestMaterials/TestFramework/TestRunnerEndToEndFreeTest/Prediction/RunWithUpdateOutput/TestRunOutput.txt
+
+	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
+	  operator== returned false
+
+	    First difference detected on line 5:
+	    [char]
+	    operator== returned false
+	    Obtained : N
+	    Predicted: '\n'
+
+	    Surrounding substring(s):
+	    Obtained : ...\nNothing to do: no changes since the last run, therefore 'prune' has pruned all tests
+
+	    Predicted: ...\n\n...
+
+	=======================================
+
+	Tests/TestFramework/TestRunnerEndToEndFreeTest.cpp, Line 319
+	Updated Test Materials
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<std::filesystem::path>]
+	Checking for equivalence with:
+	[std::filesystem::path]
+
+	  Contents of
+	  C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/WorkingCopy/UpdatedTestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/NoSeqpat/baz.txt
+	  vs
+	  C:/Users/olive/OneDrive/sequoia/TestMaterials/TestFramework/TestRunnerEndToEndFreeTest/Prediction/UpdatedTestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/NoSeqpat/baz.txt
+
+	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
+	  operator== returned false
+
+	    First difference detected at character 0:
+	    [char]
+	    operator== returned false
+	    Obtained : O
+	    Predicted: U
+
+	    Full strings:
+	    Obtained : Old
+	    Predicted: Updated
+
+	  Contents of
+	  C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/WorkingCopy/UpdatedTestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/NoSeqpat/baz2.txt
+	  vs
+	  C:/Users/olive/OneDrive/sequoia/TestMaterials/TestFramework/TestRunnerEndToEndFreeTest/Prediction/UpdatedTestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/NoSeqpat/baz2.txt
+
+	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
+	  operator== returned false
+
+	    First difference detected at character 0:
+	    [char]
+	    operator== returned false
+	    Obtained : O
+	    Predicted: U
+
+	    Full strings:
+	    Obtained : Old
+	    Predicted: Updated
+
+	  Contents of
+	  C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/WorkingCopy/UpdatedTestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/RemovedSeqpat/bar2.txt
+	  vs
+	  C:/Users/olive/OneDrive/sequoia/TestMaterials/TestFramework/TestRunnerEndToEndFreeTest/Prediction/UpdatedTestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/RemovedSeqpat/bar2.txt
+
+	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
+	  operator== returned false
+
+	    First difference detected at character 0:
+	    [char]
+	    operator== returned false
+	    Obtained : O
+	    Predicted: U
+
+	    Full strings:
+	    Obtained : Old
+	    Predicted: Updated
+
+	  Contents of
+	  C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/WorkingCopy/UpdatedTestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/RetainedSeqpat/foo.txt
+	  vs
+	  C:/Users/olive/OneDrive/sequoia/TestMaterials/TestFramework/TestRunnerEndToEndFreeTest/Prediction/UpdatedTestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/RetainedSeqpat/foo.txt
+
+	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
+	  operator== returned false
+
+	    First difference detected at character 0:
+	    [char]
+	    operator== returned false
+	    Obtained : O
+	    Predicted: U
+
+	    Full strings:
+	    Obtained : Old
+	    Predicted: Updated
+
+	  Contents of
+	  C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/WorkingCopy/UpdatedTestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/RetainedSeqpat/foo2.txt
+	  vs
+	  C:/Users/olive/OneDrive/sequoia/TestMaterials/TestFramework/TestRunnerEndToEndFreeTest/Prediction/UpdatedTestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/RetainedSeqpat/foo2.txt
+
+	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
+	  operator== returned false
+
+	    First difference detected at character 0:
+	    [char]
+	    operator== returned false
+	    Obtained : O
+	    Predicted: U
+
+	    Full strings:
+	    Obtained : Old
+	    Predicted: Updated
+
+	=======================================
+
+	Tests/TestFramework/TestRunnerEndToEndFreeTest.cpp, Line 323
+	Pruned output, post materials update
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<std::filesystem::path>]
+	Checking for equivalence with:
+	[std::filesystem::path]
+
+	  Contents of
+	  C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/WorkingCopy/RunWithPruneOutput/TestRunOutput.txt
+	  vs
+	  C:/Users/olive/OneDrive/sequoia/TestMaterials/TestFramework/TestRunnerEndToEndFreeTest/Prediction/RunWithPruneOutput/TestRunOutput.txt
+
+	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
+	  operator== returned false
+
+	    First difference detected on line 5:
+	    [char]
+	    operator== returned false
+	    Obtained : N
+	    Predicted: '\n'
+
+	    Surrounding substring(s):
+	    Obtained : ...\nNothing to do: no changes since the last run, therefore 'prune' has pruned all tests
+
+	    Predicted: ...\n\n...
+
+	=======================================
+
+	Tests/TestFramework/TestRunnerEndToEndFreeTest.cpp, Line 344
+	Rebuild and run after source/test changes (pruned)
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<std::filesystem::path>]
+	Checking for equivalence with:
+	[std::filesystem::path]
+
+	  Contents of
+	  C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/WorkingCopy/RebuiltOutput/TestRunOutput.txt
+	  vs
+	  C:/Users/olive/OneDrive/sequoia/TestMaterials/TestFramework/TestRunnerEndToEndFreeTest/Prediction/RebuiltOutput/TestRunOutput.txt
+
+	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
+	  operator== returned false
+
+	    First difference detected on line 29:
+	    [char]
+	    operator== returned false
+	    Obtained : F
+	    Predicted: S
+
+	    Surrounding substring(s):
+	    Obtained : ...\n	False Positive Checks:                     2;  Failures:  0
+	    ...
+	    Predicted: ...\n	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 39]
+	    ...
+
+	=======================================
+
+	Tests/TestFramework/TestRunnerEndToEndFreeTest.cpp, Line 347
+	Test Runner Output
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<std::filesystem::path>]
+	Checking for equivalence with:
+	[std::filesystem::path]
+
+	  Contents of
+	  C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/WorkingCopy/RebuiltOutput/TestRunOutput.txt
+	  vs
+	  C:/Users/olive/OneDrive/sequoia/TestMaterials/TestFramework/TestRunnerEndToEndFreeTest/Prediction/RebuiltOutput/TestRunOutput.txt
+
+	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
+	  operator== returned false
+
+	    First difference detected on line 29:
+	    [char]
+	    operator== returned false
+	    Obtained : F
+	    Predicted: S
+
+	    Surrounding substring(s):
+	    Obtained : ...\n	False Positive Checks:                     2;  Failures:  0
+	    ...
+	    Predicted: ...\n	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 39]
+	    ...
+
+	=======================================
+
+	Tests/TestFramework/TestRunnerEndToEndFreeTest.cpp, Line 366
+	Locate instabilities
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<std::filesystem::path>]
+	Checking for equivalence with:
+	[std::filesystem::path]
+
+	  Contents of
+	  C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/WorkingCopy/RunLocateInstabilities/TestRunOutput.txt
+	  vs
+	  C:/Users/olive/OneDrive/sequoia/TestMaterials/TestFramework/TestRunnerEndToEndFreeTest/Prediction/RunLocateInstabilities/TestRunOutput.txt
+
+	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
+	  operator== returned false
+
+	    First difference detected on line 37:
+	    [char]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 0
+
+	    Surrounding substring(s):
+	    Obtained : ...               1;  Failures:  1  [Deep checks: 42]...
+	    Predicted: ...               1;  Failures:  0  [Deep checks: 37]...
+
+	=======================================
+
+	Tests/TestFramework/TestRunnerEndToEndFreeTest.cpp, Line 370
+	Locate instabilities
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<std::filesystem::path>]
+	Checking for equivalence with:
+	[std::filesystem::path]
+
+	  Contents of
+	  C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/WorkingCopy/RunLocateInstabilitiesPrune/TestRunOutput.txt
+	  vs
+	  C:/Users/olive/OneDrive/sequoia/TestMaterials/TestFramework/TestRunnerEndToEndFreeTest/Prediction/RunLocateInstabilitiesPrune/TestRunOutput.txt
+
+	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
+	  operator== returned false
+
+	    First difference detected on line 27:
+	    [char]
+	    operator== returned false
+	    Obtained : F
+	    Predicted: '\n'
+
+	    Surrounding substring(s):
+	    Obtained : ...\nFoo:
+	    ...
+	    Predicted: ...\n\n...
+
+	=======================================
+
+	Tests/TestFramework/TestRunnerEndToEndFreeTest.cpp, Line 380
+	Do a dump
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<std::filesystem::path>]
+	Checking for equivalence with:
+	[std::filesystem::path]
+
+	  Contents of
+	  C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/WorkingCopy/RunPostUpdate/TestRunOutput.txt
+	  vs
+	  C:/Users/olive/OneDrive/sequoia/TestMaterials/TestFramework/TestRunnerEndToEndFreeTest/Prediction/RunPostUpdate/TestRunOutput.txt
+
+	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
+	  operator== returned false
+
+	    First difference detected on line 34:
+	    [char]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 0
+
+	    Surrounding substring(s):
+	    Obtained : ...               1;  Failures:  1  [Deep checks: 42]...
+	    Predicted: ...               1;  Failures:  0  [Deep checks: 37]...
+
+	=======================================
+
+	Tests/TestFramework/TestRunnerEndToEndFreeTest.cpp, Line 384
+	Dump File
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<std::filesystem::path>]
+	Checking for equivalence with:
+	[std::filesystem::path]
+
+	  Contents of
+	  C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/WorkingCopy/Dump/Dump.txt
+	  vs
+	  C:/Users/olive/OneDrive/sequoia/TestMaterials/TestFramework/TestRunnerEndToEndFreeTest/Prediction/Dump/Dump.txt
+
+	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
+	  operator== returned false
+
+	    First difference detected on line 185:
+	    [char]
+	    operator== returned false
+	    Obtained : F
+	    Predicted: P
+
+	    Surrounding substring(s):
+	    Obtained : ...\nFirst difference detected at character 0:
+	    ...
+	    Predicted: ...\nPath type
+	    ...
+
+	=======================================
+
+	Tests/TestFramework/TestRunnerEndToEndFreeTest.cpp, Line 436
+	Critical failure fixed
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<std::filesystem::path>]
+	Checking for equivalence with:
+	[std::filesystem::path]
+
+	  Contents of
+	  C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/WorkingCopy/RunFixedCriticalFailure/TestRunOutput.txt
+	  vs
+	  C:/Users/olive/OneDrive/sequoia/TestMaterials/TestFramework/TestRunnerEndToEndFreeTest/Prediction/RunFixedCriticalFailure/TestRunOutput.txt
+
+	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
+	  operator== returned false
+
+	    First difference detected on line 6:
+	    [char]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 0
+
+	    Surrounding substring(s):
+	    Obtained : ...               1;  Failures:  1  [Deep checks: 42]...
+	    Predicted: ...               1;  Failures:  0  [Deep checks: 37]...
+
+	=======================================
+
+	Tests/TestFramework/TestRunnerEndToEndFreeTest.cpp, Line 440
+	Passing test not included by prune
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<std::filesystem::path>]
+	Checking for equivalence with:
+	[std::filesystem::path]
+
+	  Contents of
+	  C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/WorkingCopy/AnotherPassingTestExcludedByPrune/TestRunOutput.txt
+	  vs
+	  C:/Users/olive/OneDrive/sequoia/TestMaterials/TestFramework/TestRunnerEndToEndFreeTest/Prediction/AnotherPassingTestExcludedByPrune/TestRunOutput.txt
+
+	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
+	  operator== returned false
+
+	    First difference detected on line 8:
+	    [char]
+	    operator== returned false
+	    Obtained : '\n'
+	    Predicted: P
+
+	    Surrounding substring(s):
+	    Obtained : ...\n\n...
+	    Predicted: ...\nProbability:
+	    ...
+
+	=======================================
+
