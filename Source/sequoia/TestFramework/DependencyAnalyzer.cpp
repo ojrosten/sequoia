@@ -408,12 +408,14 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    std::vector<fs::path> aggregate_passes(const prune_paths& prunePaths, const std::size_t numReps)
+    std::optional<std::vector<fs::path>> aggregate_passes(const prune_paths& prunePaths, const std::size_t numReps)
     {
       std::vector<fs::path> intersection{};
       for(std::size_t i{}; i < numReps; ++i)
       {
         const auto file{prunePaths.selected_passes(i)};
+        if(!fs::exists(file)) return std::nullopt;
+
         std::vector<fs::path> tests{};
         read_tests(file, tests);
         if(i)
@@ -566,10 +568,18 @@ namespace sequoia::testing
     {
     case prune_mode::passive:
     {
-      auto executedCases{aggregate_passes(prunePaths, numReps)};
-      executedCases.insert(executedCases.end(), failingCases.begin(), failingCases.end());
+      if(auto optPasses{aggregate_passes(prunePaths, numReps)})
+      {
+        auto& executedCases{optPasses.value()};
+        executedCases.insert(executedCases.end(), failingCases.begin(), failingCases.end());
 
-      update_prune_files(projPaths, std::move(executedCases), std::move(failingCases), std::nullopt);
+        update_prune_files(projPaths, std::move(executedCases), std::move(failingCases), std::nullopt);
+      }
+      else
+      {
+        update_prune_files(projPaths, std::move(failingCases), timeStamp, std::nullopt);
+      }
+
       break;
     }
     case prune_mode::active:
