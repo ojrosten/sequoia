@@ -288,25 +288,38 @@ namespace sequoia::testing
     /// This returns the first write time that is greater than the argument `timeStamp`
     /// and std::nullopt, otherwise. If a non-null stamp is returned, this function
     /// also marks the corresponding node weight as stale
+    
     [[nodiscard]]
-    std::optional<fs::file_time_type>
-    consider_materials(tests_dependency_graph& g,
-                       node_iterator i,
-                       const fs::path& relFilePath,
-                       const fs::path& materialsRepo,
-                       const fs::file_time_type timeStamp)
+    bool materials_modified(const fs::path& relFilePath,
+                            const fs::path& materialsRepo,
+                            const fs::file_time_type timeStamp)
     {
       const auto materials{materialsRepo / fs::path{relFilePath}.replace_extension("")};
       if(fs::exists(materials))
       {
         for(const auto& entry : fs::recursive_directory_iterator(materials))
         {
-          if(auto writeTime{fs::last_write_time(entry)}; writeTime > timeStamp)
-          {
-            g.mutate_node_weight(i, [](auto& w) { w.stale = true; });
-            return writeTime;
-          }
+          if(fs::last_write_time(entry) > timeStamp) return true;
         }
+      }
+
+      return false;
+    }
+
+    [[nodiscard]]
+    std::optional<fs::file_time_type> materials_max_write_time(const fs::path& relFilePath, const fs::path& materialsRepo)
+    {
+      const auto materials{materialsRepo / fs::path{relFilePath}.replace_extension("")};
+      if(fs::exists(materials))
+      {
+        fs::file_time_type maxTime{fs::last_write_time(materials)};
+
+        for(const auto& entry : fs::recursive_directory_iterator(materials))
+        {
+          maxTime = std::max(maxTime, fs::last_write_time(entry));
+        }
+
+        return maxTime;
       }
 
       return std::nullopt;
@@ -383,25 +396,29 @@ namespace sequoia::testing
         {
           const auto relPath{fs::relative(weight.file, projPaths.tests())};
 
-          const auto materialsWriteTime{
-            [&]() -> std::optional<fs::file_time_type> {
-              if(!weight.stale || std::binary_search(passingTestsFromFile.begin(), passingTestsFromFile.end(), relPath))
-                return consider_materials(g, i, relPath, projPaths.test_materials(), timeStamp);
+          if(passesStamp && std::binary_search(passingTestsFromFile.begin(), passingTestsFromFile.end(), relPath))
+          {
+            const auto materialsWriteTime{materials_max_write_time(relPath, projPaths.test_materials())};
+            if(!weight.stale && (materialsWriteTime > timeStamp))
+              g.mutate_node_weight(i, [](auto& w) { w.stale = true; });
 
-              return std::nullopt;
-            }()
-          };
+            const auto maxWriteTime{
+              [materialsWriteTime,&weight]() {
+                const auto fileWriteTime{fs::last_write_time(weight.file)};
+                return materialsWriteTime ? std::max(materialsWriteTime.value(), fileWriteTime) : fileWriteTime;
+              }()
+            };
 
-          const auto maxWriteTime{
-            [materialsWriteTime,&weight]() {
-              const auto fileWriteTime{fs::last_write_time(weight.file)};
-              return materialsWriteTime ? std::max(materialsWriteTime.value(), fileWriteTime) : fileWriteTime;
-            }()
-          };
-
-          // Note: if optional does not contain a value, it compares less than
-          if(weight.stale && (passesStamp > maxWriteTime))
-            consider_passing_tests(g, i, relPath, passingTestsFromFile);
+            if(weight.stale && (passesStamp.value() > maxWriteTime))
+              consider_passing_tests(g, i, relPath, passingTestsFromFile);
+          }
+          else if(!weight.stale)
+          {
+            if(materials_modified(relPath, projPaths.test_materials(), timeStamp))
+            {
+              g.mutate_node_weight(i, [](auto& w) { w.stale = true; });
+            }
+          }
 
           if(weight.stale) staleTests.push_back(relPath);
         }

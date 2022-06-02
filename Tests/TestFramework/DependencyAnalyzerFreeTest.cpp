@@ -314,7 +314,7 @@ namespace sequoia::testing
                        {{{"Stuff/FooTest.cpp"}}, modification_time::very_early},
                        {{"Stuff/FooTest.cpp"}});
 
-    /*check_tests_to_run(LINE("Materials stale; test previously passed (when selected); materials subsequently modified some early some late"),
+    check_tests_to_run(LINE("Materials stale; test previously passed (when selected); materials subsequently modified some early some late"),
                        projPaths,
                        "namespace",
                        {{{materials / "Stuff" / "FooTest" / "Prediction" / "RepresentativeCasesTemp" / "NoSeqpat" / "baz.txt"}, modification_time::early},
@@ -322,7 +322,7 @@ namespace sequoia::testing
                        },
                        {},
                        {{{"Stuff/FooTest.cpp"}}, modification_time::late},
-                       {{"Stuff/FooTest.cpp"}});*/
+                       {{"Stuff/FooTest.cpp"}});
 
     check_tests_to_run(LINE("Nothing stale, but a previous failure"),
                        projPaths,
