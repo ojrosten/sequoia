@@ -23,7 +23,7 @@ namespace sequoia::testing
     using multi_test_list     = std::vector<test_list>;
 
   private:
-    enum class modification_time { early, late };
+    enum class modification_time { very_early, early, late , very_late};
 
     struct updated_file
     {
@@ -68,6 +68,9 @@ namespace sequoia::testing
                             const std::vector<std::filesystem::path>& toRun);
 
     void check_data(std::string_view description, const data& obtained, const data& prediction);
+
+    [[nodiscard]]
+    static std::chrono::seconds to_duration(modification_time modTime);
 
     static auto read(const std::filesystem::path& file) -> opt_test_list;
 

@@ -21,14 +21,14 @@ namespace sequoia::testing
 
   namespace
   {
-    constexpr auto pruneOffset{std::chrono::seconds{-1}};
-    constexpr auto earlyPassOffset{std::chrono::seconds{-2}};
-    constexpr auto latePassOffset{std::chrono::seconds{3}};
-    constexpr auto earlyEditOffset{std::chrono::seconds{1}};
-    constexpr auto lateEditOffset{std::chrono::seconds{4}};
-    constexpr auto earlyExecutableOffset{std::chrono::seconds{-3}};
-    constexpr auto lateExecutableOffset{std::chrono::seconds{2}};
-    constexpr auto updatePruneOffset{std::chrono::seconds{4}};
+    constexpr auto earlyExecutableOffset{std::chrono::seconds{-1}};
+    constexpr auto resetOffset{std::chrono::seconds{0}};
+    constexpr auto earlyPassOffset{std::chrono::seconds{1}}; // very_early
+    constexpr auto earlyEditOffset{std::chrono::seconds{2}};  // early
+    constexpr auto lateExecutableOffset{std::chrono::seconds{3}};
+    constexpr auto latePassOffset{std::chrono::seconds{4}};   // late
+    constexpr auto lateEditOffset{std::chrono::seconds{5}};   // very_late
+    constexpr auto updatePruneOffset{std::chrono::seconds{5}};
   }
 
   dependency_analyzer_free_test::data::data(opt_test_list fail, opt_test_list pass)
@@ -37,6 +37,25 @@ namespace sequoia::testing
   {
     if(failures) std::sort(failures->begin(), failures->end());
     if(passes)   std::sort(passes->begin(), passes->end());
+  }
+
+  [[nodiscard]]
+  std::chrono::seconds dependency_analyzer_free_test::to_duration(modification_time modTime)
+  {
+    using enum modification_time;
+    switch(modTime)
+    {
+    case very_early:
+      return earlyPassOffset;
+    case early:
+      return earlyEditOffset;
+    case late:
+      return latePassOffset;
+    case very_late:
+      return lateEditOffset;
+    }
+
+    throw std::logic_error{"Unrecognized option for modification_time"};
   }
 
   auto dependency_analyzer_free_test::read(const fs::path& file) -> opt_test_list
@@ -81,13 +100,11 @@ namespace sequoia::testing
     write_tests(projPaths, failureFile, failures);
     write_tests(projPaths, passesFile, passes.tests);
 
-    const auto passingTimeOffest{(passes.modification == modification_time::early) ? earlyPassOffset : latePassOffset};
-    fs::last_write_time(passesFile, m_ResetTime + passingTimeOffest);
+    fs::last_write_time(passesFile, m_ResetTime + to_duration(passes.modification));
 
     for(const auto& f : makeStale)
     {
-      const auto offset{(f.modification == modification_time::early) ? earlyEditOffset : lateEditOffset};
-      fs::last_write_time(f.file, m_ResetTime + offset);
+      fs::last_write_time(f.file, m_ResetTime + to_duration(f.modification));
     }
 
     opt_test_list actual{tests_to_run(projPaths, cutoff)};
@@ -110,7 +127,7 @@ namespace sequoia::testing
 
   void dependency_analyzer_free_test::run_tests()
   {
-    m_ResetTime = std::chrono::file_clock::now() + pruneOffset;
+    m_ResetTime = std::chrono::file_clock::now() + resetOffset;
 
     const auto fake{working_materials() / "FakeProject"};
     const auto mainDir{fake / "TestAll"};
@@ -174,7 +191,7 @@ namespace sequoia::testing
                        "namespace",
                        {{{testRepo / "HouseAllocationTest.cpp"}, modification_time::early}},
                        {},
-                       {{{"HouseAllocationTest.cpp"}}, modification_time::early},
+                       {{{"HouseAllocationTest.cpp"}}, modification_time::very_early},
                        {{"HouseAllocationTest.cpp"}});
 
     check_tests_to_run(LINE("Test hpp stale (no cutoff)"),
@@ -294,18 +311,18 @@ namespace sequoia::testing
                        "namespace",
                        {{{materials / "Stuff" / "FooTest" / "Prediction" / "RepresentativeCasesTemp" / "NoSeqpat" / "baz.txt"}, modification_time::early}},
                        {},
-                       {{{"Stuff/FooTest.cpp"}}, modification_time::early},
+                       {{{"Stuff/FooTest.cpp"}}, modification_time::very_early},
                        {{"Stuff/FooTest.cpp"}});
 
-    check_tests_to_run(LINE("Materials stale; test previously passed (when selected); materials subsequently modified some early some late"),
+    /*check_tests_to_run(LINE("Materials stale; test previously passed (when selected); materials subsequently modified some early some late"),
                        projPaths,
                        "namespace",
                        {{{materials / "Stuff" / "FooTest" / "Prediction" / "RepresentativeCasesTemp" / "NoSeqpat" / "baz.txt"}, modification_time::early},
-                        {{materials / "Stuff" / "FooTest" / "Prediction" / "RepresentativeCasesTemp" / "NoSeqpat" / "baz2.txt"}, modification_time::early}
+                        {{materials / "Stuff" / "FooTest" / "Prediction" / "RepresentativeCasesTemp" / "NoSeqpat" / "baz2.txt"}, modification_time::very_late}
                        },
                        {},
-                       {{{"Stuff/FooTest.cpp"}}, modification_time::early},
-                       {{"Stuff/FooTest.cpp"}});
+                       {{{"Stuff/FooTest.cpp"}}, modification_time::late},
+                       {{"Stuff/FooTest.cpp"}});*/
 
     check_tests_to_run(LINE("Nothing stale, but a previous failure"),
                        projPaths,
