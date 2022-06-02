@@ -80,7 +80,7 @@ namespace sequoia::testing
     write_tests(projPaths, failureFile, failures);
     write_tests(projPaths, passesFile, passes.tests);
 
-    const auto passingTimeOffest{(passes.status == passing_status::stale) ? stalePassOffset : freshPassOffset};
+    const auto passingTimeOffest{(passes.status == status::stale) ? stalePassOffset : freshPassOffset};
     fs::last_write_time(passesFile, m_ResetTime + passingTimeOffest);
 
     const auto staleTime{m_ResetTime + editOffset};
@@ -165,7 +165,7 @@ namespace sequoia::testing
                        "namespace",
                        {{testRepo / "HouseAllocationTest.cpp"}},
                        {},
-                       {{{"HouseAllocationTest.cpp"}}, passing_status::fresh},
+                       {{{"HouseAllocationTest.cpp"}}, status::fresh},
                        {});
 
     check_tests_to_run(LINE("Test cpp stale; has previously passed (when selected), but this should be ignored"),
@@ -173,7 +173,7 @@ namespace sequoia::testing
                        "namespace",
                        {{testRepo / "HouseAllocationTest.cpp"}},
                        {},
-                       {{{"HouseAllocationTest.cpp"}}, passing_status::stale},
+                       {{{"HouseAllocationTest.cpp"}}, status::stale},
                        {{"HouseAllocationTest.cpp"}});
 
     check_tests_to_run(LINE("Test hpp stale (no cutoff)"),
@@ -213,7 +213,7 @@ namespace sequoia::testing
                        "namespace",
                        {{testRepo / "Stuff" / "OldSchoolTestingUtilities.hpp"}},
                        {},
-                       {{{"Maybe/MaybeTest.cpp"}}, passing_status::fresh},
+                       {{{"Maybe/MaybeTest.cpp"}}, status::fresh},
                        {{"Stuff/OldschoolTest.cpp"}, {"Stuff/OldschoolTestingDiagnostics.cpp"}});
 
     check_tests_to_run(LINE("Reused utils stale, but two of the tests have passed"),
@@ -221,7 +221,7 @@ namespace sequoia::testing
                        "namespace",
                        {{testRepo / "Stuff" / "OldSchoolTestingUtilities.hpp"}},
                        {},
-                       {{{"Maybe/MaybeTest.cpp"}, {"Stuff/OldschoolTest.cpp"}}, passing_status::fresh},
+                       {{{"Maybe/MaybeTest.cpp"}, {"Stuff/OldschoolTest.cpp"}}, status::fresh},
                        {{"Stuff/OldschoolTestingDiagnostics.cpp"}});
 
     check_tests_to_run(LINE("Reused utils stale, but two of the tests have passed and a different one has failed"),
@@ -229,7 +229,7 @@ namespace sequoia::testing
                        "namespace",
                        {{testRepo / "Stuff" / "OldSchoolTestingUtilities.hpp"}},
                        {{"HouseAllocationTest.cpp"}},
-                       {{{"Maybe/MaybeTest.cpp"}, {"Stuff/OldschoolTest.cpp"}}, passing_status::fresh},
+                       {{{"Maybe/MaybeTest.cpp"}, {"Stuff/OldschoolTest.cpp"}}, status::fresh},
                        {{"Stuff/OldschoolTestingDiagnostics.cpp"}, {"HouseAllocationTest.cpp"}});
 
     check_tests_to_run(LINE("Reused utils stale, relative path"),
@@ -280,6 +280,22 @@ namespace sequoia::testing
                        {},
                        {{"Stuff/FooTest.cpp"}});
 
+    check_tests_to_run(LINE("Materials naively stale, but test previously passed (when selected)"),
+                       projPaths,
+                       "namespace",
+                       {{materials / "Stuff" / "FooTest" / "Prediction" / "RepresentativeCasesTemp" / "NoSeqpat" / "baz.txt"}},
+                       {},
+                       {{{"Stuff/FooTest.cpp"}}, status::fresh},
+                       {});
+    
+    check_tests_to_run(LINE("Materials stale; test previously passed (when selected), but materials subsequently modified"),
+                       projPaths,
+                       "namespace",
+                       {{materials / "Stuff" / "FooTest" / "Prediction" / "RepresentativeCasesTemp" / "NoSeqpat" / "baz.txt"}},
+                       {},
+                       {{{"Stuff/FooTest.cpp"}}, status::stale},
+                       {{"Stuff/FooTest.cpp"}});
+
     check_tests_to_run(LINE("Nothing stale, but a previous failure"),
                        projPaths,
                        "namespace",
@@ -293,7 +309,7 @@ namespace sequoia::testing
                        "namespace",
                        {},
                        {{"Maths/ProbabilityTest.cpp"}},
-                       {{{"Maths/ProbabilityTest.cpp"}}, passing_status::fresh},
+                       {{{"Maths/ProbabilityTest.cpp"}}, status::fresh},
                        {{"Maths/ProbabilityTest.cpp"}});
 
     check_tests_to_run(LINE("Both stale and a previous failure"),

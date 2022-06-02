@@ -23,12 +23,12 @@ namespace sequoia::testing
     using multi_test_list     = std::vector<test_list>;
 
   private:
-    enum class passing_status { stale, fresh };
+    enum class status { stale, fresh };
 
     struct passing_tests
     {
       std::vector<std::filesystem::path> tests{};
-      passing_status status{passing_status::stale};
+      status status{status::stale};
     };
 
     struct data
