@@ -23,12 +23,18 @@ namespace sequoia::testing
     using multi_test_list     = std::vector<test_list>;
 
   private:
-    enum class status { stale, fresh };
+    enum class modification_time { early, late };
+
+    struct updated_file
+    {
+      std::filesystem::path file;
+      modification_time modification{modification_time::early};
+    };
 
     struct passing_tests
     {
       std::vector<std::filesystem::path> tests{};
-      status status{status::stale};
+      modification_time modification{modification_time::early};
     };
 
     struct data
@@ -56,7 +62,7 @@ namespace sequoia::testing
     void check_tests_to_run(std::string_view description,
                             const project_paths& projPaths,
                             std::string_view cutoff,
-                            const std::vector<std::filesystem::path>& makeStale,
+                            const std::vector<updated_file>& makeStale,
                             std::vector<std::filesystem::path> failures,
                             passing_tests passes,
                             const std::vector<std::filesystem::path>& toRun);
