@@ -284,10 +284,6 @@ namespace sequoia::testing
 
       return externalDependencies;
     }
-
-    /// This returns the first write time that is greater than the argument `timeStamp`
-    /// and std::nullopt, otherwise. If a non-null stamp is returned, this function
-    /// also marks the corresponding node weight as stale
     
     [[nodiscard]]
     bool materials_modified(const fs::path& relFilePath,
