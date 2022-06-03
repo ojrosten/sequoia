@@ -598,12 +598,19 @@ namespace sequoia::testing
     template<class CheckType, test_mode Mode, class Advisor>
     static void test(CheckType flavour, test_logger<Mode>& logger, const type& obtained, const type& prediction, const tutor<Advisor>& advisor)
     {
-      if(check(equality, "Has value", logger, obtained.has_value(), prediction.has_value()))
+      if(obtained && prediction)
       {
-        if(obtained && prediction)
-        {
-          check(flavour, "Contents of optional", logger, *obtained, *prediction, advisor);
-        }
+        check(flavour, "Contents of optional", logger, *obtained, *prediction, advisor);
+      }
+      else
+      {
+        const bool obtainedIsNull{obtained}, predictionIsNull{prediction};
+
+        check(equality,
+              nullable_type_message(obtainedIsNull, predictionIsNull),
+              logger,
+              static_cast<bool>(obtained),
+              static_cast<bool>(prediction));
       }
     }
   };
