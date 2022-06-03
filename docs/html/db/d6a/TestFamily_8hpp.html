@@ -76,7 +76,8 @@ $(function() {
 
 <p>Utilities for grouping tests into families.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;<a class="el" href="../../dd/d3e/FreeTestCore_8hpp_source.html">sequoia/TestFramework/FreeTestCore.hpp</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="../../d2/de5/FileSystemUtilities_8hpp_source.html">sequoia/TestFramework/FileSystemUtilities.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../dd/d3e/FreeTestCore_8hpp_source.html">sequoia/TestFramework/FreeTestCore.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../dc/d7f/Summary_8hpp_source.html">sequoia/TestFramework/Summary.hpp</a>&quot;</code><br />
 <code>#include &lt;chrono&gt;</code><br />
 <code>#include &lt;future&gt;</code><br />
@@ -88,15 +89,16 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d75/structsequoia_1_1as__bitmask_3_01testing_1_1recovery__mode_01_4.html">sequoia::as_bitmask&lt; testing::recovery_mode &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d4e/structsequoia_1_1testing_1_1materials__info.html">sequoia::testing::materials_info</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d40/classsequoia_1_1testing_1_1family__info.html">sequoia::testing::family_info</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/df0/classsequoia_1_1testing_1_1family__info_1_1materials__setter.html">sequoia::testing::family_info::materials_setter</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">helper class for <a class="el" href="../../de/d4a/classsequoia_1_1testing_1_1test__family.html" title="Allows tests to be grouped together into a family of related tests.">test_family</a>  <a href="../../d7/d40/classsequoia_1_1testing_1_1family__info.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d3d/structsequoia_1_1testing_1_1family__results.html">sequoia::testing::family_results</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/dc9/structsequoia_1_1testing_1_1paths.html">sequoia::testing::paths</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/da0/structsequoia_1_1testing_1_1test__paths.html">sequoia::testing::test_paths</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/da9/structsequoia_1_1testing_1_1paths__comparator.html">sequoia::testing::paths_comparator</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -112,10 +114,15 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
-<tr class="memitem:a14d7a9ca3d0aba3f7e54c1c44d6a7e28"><td class="memItemLeft" align="right" valign="top"><a id="a14d7a9ca3d0aba3f7e54c1c44d6a7e28" name="a14d7a9ca3d0aba3f7e54c1c44d6a7e28"></a>enum class &#160;</td><td class="memItemRight" valign="bottom"><b>update_mode</b> { <b>none</b> =0
+<tr class="memitem:a14d7a9ca3d0aba3f7e54c1c44d6a7e28"><td class="memItemLeft" align="right" valign="top"><a id="a14d7a9ca3d0aba3f7e54c1c44d6a7e28" name="a14d7a9ca3d0aba3f7e54c1c44d6a7e28"></a>enum class &#160;</td><td class="memItemRight" valign="bottom"><b>update_mode</b> { <b>none</b> = 0
 , <b>soft</b>
  }</td></tr>
 <tr class="separator:a14d7a9ca3d0aba3f7e54c1c44d6a7e28"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adb3785ee939ab73abdab6ae9be64f4d2"><td class="memItemLeft" align="right" valign="top"><a id="adb3785ee939ab73abdab6ae9be64f4d2" name="adb3785ee939ab73abdab6ae9be64f4d2"></a>enum class &#160;</td><td class="memItemRight" valign="bottom"><b>recovery_mode</b> { <b>none</b> = 0
+, <b>recovery</b> = 1
+, <b>dump</b> = 2
+ }</td></tr>
+<tr class="separator:adb3785ee939ab73abdab6ae9be64f4d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5bf3cc5ec793288c6c7da7ceeb3249a7"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d6a/TestFamily_8hpp.html#a5bf3cc5ec793288c6c7da7ceeb3249a7">sequoia::testing::concurrency_mode</a> { <b>serial</b>
 , <a class="el" href="../../db/d6a/TestFamily_8hpp.html#a5bf3cc5ec793288c6c7da7ceeb3249a7ab72f3bd391ba731a35708bfd8cd8a68f">dynamic</a>
 , <a class="el" href="../../db/d6a/TestFamily_8hpp.html#a5bf3cc5ec793288c6c7da7ceeb3249a7a0d3fda0bdbb9d619e09cdf3eecba7999">family</a>
@@ -129,6 +136,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a32b78a893c55f5fedc27ccf9bb724290"><td class="memItemLeft" align="right" valign="top"><a id="a32b78a893c55f5fedc27ccf9bb724290" name="a32b78a893c55f5fedc27ccf9bb724290"></a>
 std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::to_string</b> (concurrency_mode mode)</td></tr>
 <tr class="separator:a32b78a893c55f5fedc27ccf9bb724290"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9053684fe79bcc5e2c9a148871f202c7"><td class="memItemLeft" align="right" valign="top"><a id="a9053684fe79bcc5e2c9a148871f202c7" name="a9053684fe79bcc5e2c9a148871f202c7"></a>
+active_recovery_files&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::make_active_recovery_paths</b> (recovery_mode mode, const project_paths &amp;projPaths)</td></tr>
+<tr class="separator:a9053684fe79bcc5e2c9a148871f202c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab5585f51c00bb4da11c431d3f89cec54"><td class="memItemLeft" align="right" valign="top"><a id="ab5585f51c00bb4da11c431d3f89cec54" name="ab5585f51c00bb4da11c431d3f89cec54"></a>
 std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::summarize</b> (const family_summary &amp;summary, const summary_detail suppression, indentation ind_0, indentation ind_1)</td></tr>
 <tr class="separator:ab5585f51c00bb4da11c431d3f89cec54"><td class="memSeparator" colspan="2">&#160;</td></tr>

@@ -19,11 +19,12 @@ var searchData=
   ['directed_5ffixed_5ftopology_5fchecker_16',['directed_fixed_topology_checker',['../df/df0/classsequoia_1_1testing_1_1directed__fixed__topology__checker.html',1,'sequoia::testing']]],
   ['directed_5fflavour_5fconstant_17',['directed_flavour_constant',['../de/d61/structsequoia_1_1maths_1_1directed__flavour__constant.html',1,'sequoia::maths']]],
   ['directed_5finit_5fchecker_18',['directed_init_checker',['../da/d97/classsequoia_1_1testing_1_1directed__init__checker.html',1,'sequoia::testing']]],
-  ['do_5fswap_19',['do_swap',['../d1/d63/structsequoia_1_1testing_1_1impl_1_1do__swap.html',1,'sequoia::testing::impl']]],
-  ['do_5fswap_3c_20allocation_5fchecker_3c_20t_2c_20getters_20_3e_2e_2e_2e_20_3e_20',['do_swap&lt; allocation_checker&lt; T, Getters &gt;... &gt;',['../d4/d37/structsequoia_1_1testing_1_1impl_1_1do__swap_3_01allocation__checker_3_01T_00_01Getters_01_4_8_8_8_01_4.html',1,'sequoia::testing::impl']]],
-  ['do_5fswap_3c_20dual_5fallocation_5fchecker_3c_20t_2c_20getters_20_3e_2e_2e_2e_20_3e_21',['do_swap&lt; dual_allocation_checker&lt; T, Getters &gt;... &gt;',['../d8/d8b/structsequoia_1_1testing_1_1impl_1_1do__swap_3_01dual__allocation__checker_3_01T_00_01Getters_01_4_8_8_8_01_4.html',1,'sequoia::testing::impl']]],
-  ['do_5fswap_3c_3e_22',['do_swap&lt;&gt;',['../d9/dfd/structsequoia_1_1testing_1_1impl_1_1do__swap_3_4.html',1,'sequoia::testing::impl']]],
-  ['doubly_5fnormal_5fbeast_23',['doubly_normal_beast',['../d7/d85/structsequoia_1_1testing_1_1doubly__normal__beast.html',1,'sequoia::testing']]],
-  ['dual_5fallocation_5fchecker_24',['dual_allocation_checker',['../dd/df2/classsequoia_1_1testing_1_1impl_1_1dual__allocation__checker.html',1,'sequoia::testing::impl']]],
-  ['dynamic_5fedge_5ftraits_25',['dynamic_edge_traits',['../d5/de5/structsequoia_1_1maths_1_1graph__impl_1_1dynamic__edge__traits.html',1,'sequoia::maths::graph_impl']]]
+  ['discoverable_5fpaths_19',['discoverable_paths',['../d9/d74/classsequoia_1_1testing_1_1discoverable__paths.html',1,'sequoia::testing']]],
+  ['do_5fswap_20',['do_swap',['../d1/d63/structsequoia_1_1testing_1_1impl_1_1do__swap.html',1,'sequoia::testing::impl']]],
+  ['do_5fswap_3c_20allocation_5fchecker_3c_20t_2c_20getters_20_3e_2e_2e_2e_20_3e_21',['do_swap&lt; allocation_checker&lt; T, Getters &gt;... &gt;',['../d4/d37/structsequoia_1_1testing_1_1impl_1_1do__swap_3_01allocation__checker_3_01T_00_01Getters_01_4_8_8_8_01_4.html',1,'sequoia::testing::impl']]],
+  ['do_5fswap_3c_20dual_5fallocation_5fchecker_3c_20t_2c_20getters_20_3e_2e_2e_2e_20_3e_22',['do_swap&lt; dual_allocation_checker&lt; T, Getters &gt;... &gt;',['../d8/d8b/structsequoia_1_1testing_1_1impl_1_1do__swap_3_01dual__allocation__checker_3_01T_00_01Getters_01_4_8_8_8_01_4.html',1,'sequoia::testing::impl']]],
+  ['do_5fswap_3c_3e_23',['do_swap&lt;&gt;',['../d9/dfd/structsequoia_1_1testing_1_1impl_1_1do__swap_3_4.html',1,'sequoia::testing::impl']]],
+  ['doubly_5fnormal_5fbeast_24',['doubly_normal_beast',['../d7/d85/structsequoia_1_1testing_1_1doubly__normal__beast.html',1,'sequoia::testing']]],
+  ['dual_5fallocation_5fchecker_25',['dual_allocation_checker',['../dd/df2/classsequoia_1_1testing_1_1impl_1_1dual__allocation__checker.html',1,'sequoia::testing::impl']]],
+  ['dynamic_5fedge_5ftraits_26',['dynamic_edge_traits',['../d5/de5/structsequoia_1_1maths_1_1graph__impl_1_1dynamic__edge__traits.html',1,'sequoia::maths::graph_impl']]]
 ];

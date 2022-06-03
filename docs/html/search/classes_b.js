@@ -34,10 +34,11 @@ var searchData=
   ['node_5fweight_5fstorage_5ftraits_3c_20nodeweight_20_3e_31',['node_weight_storage_traits&lt; NodeWeight &gt;',['../d6/db2/structsequoia_1_1maths_1_1node__weight__storage__traits_3_01NodeWeight_01_4.html',1,'sequoia::maths']]],
   ['noexcept_5fspec_32',['noexcept_spec',['../de/d17/structsequoia_1_1maths_1_1impl_1_1noexcept__spec.html',1,'sequoia::maths::impl']]],
   ['noexcept_5fspec_3c_20c_20_3e_33',['noexcept_spec&lt; C &gt;',['../d7/d3c/structsequoia_1_1maths_1_1impl_1_1noexcept__spec_3_01C_01_4.html',1,'sequoia::maths::impl']]],
-  ['null_5fadvisor_34',['null_advisor',['../da/d10/structsequoia_1_1testing_1_1null__advisor.html',1,'sequoia::testing']]],
-  ['null_5fdata_5fpolicy_35',['null_data_policy',['../d1/d81/structsequoia_1_1utilities_1_1null__data__policy.html',1,'sequoia::utilities']]],
-  ['null_5ffunc_5fobj_36',['null_func_obj',['../d1/df7/structsequoia_1_1maths_1_1null__func__obj.html',1,'sequoia::maths']]],
-  ['null_5fmutator_37',['null_mutator',['../d2/da1/structsequoia_1_1testing_1_1impl_1_1null__mutator.html',1,'sequoia::testing::impl']]],
-  ['null_5fproxy_5ftag_38',['null_proxy_tag',['../d4/d4b/structsequoia_1_1maths_1_1graph__impl_1_1heterogeneous__node__storage_1_1null__proxy__tag.html',1,'sequoia::maths::graph_impl::heterogeneous_node_storage']]],
-  ['null_5fweight_39',['null_weight',['../de/d05/structsequoia_1_1maths_1_1null__weight.html',1,'sequoia::maths']]]
+  ['normal_5fpath_34',['normal_path',['../d9/d72/classsequoia_1_1normal__path.html',1,'sequoia']]],
+  ['null_5fadvisor_35',['null_advisor',['../da/d10/structsequoia_1_1testing_1_1null__advisor.html',1,'sequoia::testing']]],
+  ['null_5fdata_5fpolicy_36',['null_data_policy',['../d1/d81/structsequoia_1_1utilities_1_1null__data__policy.html',1,'sequoia::utilities']]],
+  ['null_5ffunc_5fobj_37',['null_func_obj',['../d1/df7/structsequoia_1_1maths_1_1null__func__obj.html',1,'sequoia::maths']]],
+  ['null_5fmutator_38',['null_mutator',['../d2/da1/structsequoia_1_1testing_1_1impl_1_1null__mutator.html',1,'sequoia::testing::impl']]],
+  ['null_5fproxy_5ftag_39',['null_proxy_tag',['../d4/d4b/structsequoia_1_1maths_1_1graph__impl_1_1heterogeneous__node__storage_1_1null__proxy__tag.html',1,'sequoia::maths::graph_impl::heterogeneous_node_storage']]],
+  ['null_5fweight_40',['null_weight',['../de/d05/structsequoia_1_1maths_1_1null__weight.html',1,'sequoia::maths']]]
 ];

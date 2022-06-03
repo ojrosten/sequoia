@@ -67,37 +67,39 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="../../d8/dbc/classsequoia_1_1testing_1_1family__info-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">sequoia::testing::family_info Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>helper class for <a class="el" href="../../de/d4a/classsequoia_1_1testing_1_1test__family.html" title="Allows tests to be grouped together into a family of related tests.">test_family</a>  
+ <a href="../../d7/d40/classsequoia_1_1testing_1_1family__info.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="../../db/d6a/TestFamily_8hpp_source.html">TestFamily.hpp</a>&gt;</code></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
-Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/df0/classsequoia_1_1testing_1_1family__info_1_1materials__setter.html">materials_setter</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aa97e18a144fa8060d4b21155adee04bf"><td class="memItemLeft" align="right" valign="top"><a id="aa97e18a144fa8060d4b21155adee04bf" name="aa97e18a144fa8060d4b21155adee04bf"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>family_info</b> (std::string_view name, std::filesystem::path testRepo, std::filesystem::path testMaterialsRepo, std::filesystem::path outputDir, <a class="el" href="../../da/d58/structsequoia_1_1testing_1_1recovery__paths.html">recovery_paths</a> recovery)</td></tr>
-<tr class="separator:aa97e18a144fa8060d4b21155adee04bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1253c6703f2d5953eadd3705a9408dca"><td class="memItemLeft" align="right" valign="top"><a id="a1253c6703f2d5953eadd3705a9408dca" name="a1253c6703f2d5953eadd3705a9408dca"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>family_info</b> (std::string_view name, const <a class="el" href="../../d4/dbe/classsequoia_1_1testing_1_1project__paths.html">project_paths</a> &amp;projPaths, recovery_mode recoveryMode)</td></tr>
+<tr class="separator:a1253c6703f2d5953eadd3705a9408dca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae6acc6c072b4b0103662705e6be49bf7"><td class="memItemLeft" align="right" valign="top"><a id="ae6acc6c072b4b0103662705e6be49bf7" name="ae6acc6c072b4b0103662705e6be49bf7"></a>
 const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>name</b> () const noexcept</td></tr>
 <tr class="separator:ae6acc6c072b4b0103662705e6be49bf7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a09bea110c3eaa8f498903eb8ce84094d"><td class="memItemLeft" align="right" valign="top"><a id="a09bea110c3eaa8f498903eb8ce84094d" name="a09bea110c3eaa8f498903eb8ce84094d"></a>
-const std::filesystem::path &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>test_repo</b> () const noexcept</td></tr>
-<tr class="separator:a09bea110c3eaa8f498903eb8ce84094d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a78a0fede6e45b0d2a2ef14b769bbe6a6"><td class="memItemLeft" align="right" valign="top"><a id="a78a0fede6e45b0d2a2ef14b769bbe6a6" name="a78a0fede6e45b0d2a2ef14b769bbe6a6"></a>
-const std::filesystem::path &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>output_dir</b> () const noexcept</td></tr>
-<tr class="separator:a78a0fede6e45b0d2a2ef14b769bbe6a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2341d4cb2586e5527ac9920daa0cc219"><td class="memItemLeft" align="right" valign="top"><a id="a2341d4cb2586e5527ac9920daa0cc219" name="a2341d4cb2586e5527ac9920daa0cc219"></a>
-const <a class="el" href="../../da/d58/structsequoia_1_1testing_1_1recovery__paths.html">recovery_paths</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>recovery</b> () const noexcept</td></tr>
-<tr class="separator:a2341d4cb2586e5527ac9920daa0cc219"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4864d02ba430e22dc4672f88e685fb66"><td class="memItemLeft" align="right" valign="top"><a id="a4864d02ba430e22dc4672f88e685fb66" name="a4864d02ba430e22dc4672f88e685fb66"></a>
+const <a class="el" href="../../d4/dbe/classsequoia_1_1testing_1_1project__paths.html">project_paths</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>proj_paths</b> () const noexcept</td></tr>
+<tr class="separator:a4864d02ba430e22dc4672f88e685fb66"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1283b0c2c97ee9c9c28cfd7cff0ef24e"><td class="memItemLeft" align="right" valign="top"><a id="a1283b0c2c97ee9c9c28cfd7cff0ef24e" name="a1283b0c2c97ee9c9c28cfd7cff0ef24e"></a>
+recovery_mode&#160;</td><td class="memItemRight" valign="bottom"><b>get_recovery_mode</b> () const noexcept</td></tr>
+<tr class="separator:a1283b0c2c97ee9c9c28cfd7cff0ef24e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8182849234e12da3a21007e495216555"><td class="memItemLeft" align="right" valign="top"><a id="a8182849234e12da3a21007e495216555" name="a8182849234e12da3a21007e495216555"></a>
+<a class="el" href="../../d0/d4e/structsequoia_1_1testing_1_1materials__info.html">materials_info</a>&#160;</td><td class="memItemRight" valign="bottom"><b>set_materials</b> (const std::filesystem::path &amp;sourceFile, std::vector&lt; std::filesystem::path &gt; &amp;materialsPaths)</td></tr>
+<tr class="separator:a8182849234e12da3a21007e495216555"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<hr/>The documentation for this class was generated from the following files:<ul>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p >helper class for <a class="el" href="../../de/d4a/classsequoia_1_1testing_1_1test__family.html" title="Allows tests to be grouped together into a family of related tests.">test_family</a> </p>
+<p >The primary purpose of this class to allow code that would otherwise appear in the class template <a class="el" href="../../de/d4a/classsequoia_1_1testing_1_1test__family.html" title="Allows tests to be grouped together into a family of related tests.">test_family</a> to be moved out of thia header and into the associated cpp. </p>
+</div><hr/>The documentation for this class was generated from the following files:<ul>
 <li>C:/Users/olive/OneDrive/sequoia/Source/sequoia/TestFramework/<a class="el" href="../../db/d6a/TestFamily_8hpp_source.html">TestFamily.hpp</a></li>
 <li>C:/Users/olive/OneDrive/sequoia/Source/sequoia/TestFramework/<a class="el" href="../../d4/db0/TestFamily_8cpp.html">TestFamily.cpp</a></li>
 </ul>

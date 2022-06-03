@@ -75,7 +75,7 @@ $(function() {
 <p>Definitions for <a class="el" href="../../d8/d3c/DependencyAnalyzer_8hpp.html" title="Facility to detect changes on disk and only run the relevant tests.">DependencyAnalyzer.hpp</a>.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="../../d8/d3c/DependencyAnalyzer_8hpp_source.html">sequoia/TestFramework/DependencyAnalyzer.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d2/dbb/FileSystem_8hpp_source.html">sequoia/TestFramework/FileSystem.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d2/de5/FileSystemUtilities_8hpp_source.html">sequoia/TestFramework/FileSystemUtilities.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../d8/d97/DynamicGraph_8hpp_source.html">sequoia/Maths/Graph/DynamicGraph.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../d4/d59/GraphTraversalFunctions_8hpp_source.html">sequoia/Maths/Graph/GraphTraversalFunctions.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../de/db5/Streaming_8hpp_source.html">sequoia/Streaming/Streaming.hpp</a>&quot;</code><br />
@@ -83,9 +83,30 @@ $(function() {
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ae09da11a36a678e42116130e7553a5b0"><td class="memItemLeft" align="right" valign="top"><a id="ae09da11a36a678e42116130e7553a5b0" name="ae09da11a36a678e42116130e7553a5b0"></a>
-std::optional&lt; std::vector&lt; std::filesystem::path &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::tests_to_run</b> (const fs::path &amp;sourceRepo, const fs::path &amp;testRepo, const fs::path &amp;materialsRepo, const std::filesystem::path &amp;previousFailures, const std::optional&lt; fs::file_time_type &gt; &amp;timeStamp, const std::optional&lt; fs::file_time_type &gt; &amp;exeTimeStamp, std::string_view cutoff)</td></tr>
-<tr class="separator:ae09da11a36a678e42116130e7553a5b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abe31819cc47e0a41bc2d773145370e66"><td class="memItemLeft" align="right" valign="top"><a id="abe31819cc47e0a41bc2d773145370e66" name="abe31819cc47e0a41bc2d773145370e66"></a>
+std::vector&lt; fs::path &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::read_tests</b> (const fs::path &amp;file, std::vector&lt; fs::path &gt; &amp;tests)</td></tr>
+<tr class="separator:abe31819cc47e0a41bc2d773145370e66"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8e1c86d6c0d0b1300c80c040e09d25a6"><td class="memItemLeft" align="right" valign="top"><a id="a8e1c86d6c0d0b1300c80c040e09d25a6" name="a8e1c86d6c0d0b1300c80c040e09d25a6"></a>
+std::vector&lt; fs::path &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::read_tests</b> (const fs::path &amp;file)</td></tr>
+<tr class="separator:a8e1c86d6c0d0b1300c80c040e09d25a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4576ad18de60b4afbc2bf3775aec2aa7"><td class="memItemLeft" align="right" valign="top"><a id="a4576ad18de60b4afbc2bf3775aec2aa7" name="a4576ad18de60b4afbc2bf3775aec2aa7"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::write_tests</b> (const project_paths &amp;projPaths, const fs::path &amp;file, const std::vector&lt; fs::path &gt; &amp;tests)</td></tr>
+<tr class="separator:a4576ad18de60b4afbc2bf3775aec2aa7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeea8e7b542651b06fd3a2ef481a22077"><td class="memItemLeft" align="right" valign="top"><a id="aeea8e7b542651b06fd3a2ef481a22077" name="aeea8e7b542651b06fd3a2ef481a22077"></a>
+std::optional&lt; std::vector&lt; fs::path &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::tests_to_run</b> (const project_paths &amp;projPaths, std::string_view cutoff)</td></tr>
+<tr class="separator:aeea8e7b542651b06fd3a2ef481a22077"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ade5be6ff9a7e653a8dfaf423ed075041"><td class="memItemLeft" align="right" valign="top"><a id="ade5be6ff9a7e653a8dfaf423ed075041" name="ade5be6ff9a7e653a8dfaf423ed075041"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::update_prune_files</b> (const project_paths &amp;projPaths, std::vector&lt; fs::path &gt; failedTests, fs::file_time_type updateTime, std::optional&lt; std::size_t &gt; id)</td></tr>
+<tr class="separator:ade5be6ff9a7e653a8dfaf423ed075041"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8cf68ec0f3b571ff71af83f03a3393ad"><td class="memItemLeft" align="right" valign="top"><a id="a8cf68ec0f3b571ff71af83f03a3393ad" name="a8cf68ec0f3b571ff71af83f03a3393ad"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::update_prune_files</b> (const project_paths &amp;projPaths, std::vector&lt; fs::path &gt; executedTests, std::vector&lt; fs::path &gt; failedTests, std::optional&lt; std::size_t &gt; id)</td></tr>
+<tr class="separator:a8cf68ec0f3b571ff71af83f03a3393ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3eb01b0374b6063fdd023818d79d400f"><td class="memItemLeft" align="right" valign="top"><a id="a3eb01b0374b6063fdd023818d79d400f" name="a3eb01b0374b6063fdd023818d79d400f"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::setup_instability_analysis_prune_folder</b> (const project_paths &amp;projPaths)</td></tr>
+<tr class="separator:a3eb01b0374b6063fdd023818d79d400f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a97d452bd03bdb5d38660461198b622ef"><td class="memItemLeft" align="right" valign="top"><a id="a97d452bd03bdb5d38660461198b622ef" name="a97d452bd03bdb5d38660461198b622ef"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::aggregate_instability_analysis_prune_files</b> (const project_paths &amp;projPaths, prune_mode mode, std::filesystem::file_time_type timeStamp, std::size_t numReps)</td></tr>
+<tr class="separator:a97d452bd03bdb5d38660461198b622ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >Definitions for <a class="el" href="../../d8/d3c/DependencyAnalyzer_8hpp.html" title="Facility to detect changes on disk and only run the relevant tests.">DependencyAnalyzer.hpp</a>. </p>

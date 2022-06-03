@@ -77,7 +77,8 @@ $(function() {
 <h2 class="groupheader">Concept definition</h2>
 <div class="fragment"><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> T, <span class="keyword">class</span> Stream&gt;</div>
 <div class="line"><span class="keyword">concept </span><a class="code hl_concept" href="../../d3/dcc/conceptsequoia_1_1serializable__to.html">sequoia::serializable_to</a> =  <span class="keyword">requires</span>(std::remove_reference_t&lt;Stream&gt;&amp; stream, <span class="keyword">const</span> std::remove_reference_t&lt;T&gt;&amp; t) {</div>
-<div class="line">   stream &lt;&lt; t;</div>
+<div class="line">    <span class="keyword">typename</span> Stream::char_type;</div>
+<div class="line">    stream &lt;&lt; t;</div>
 <div class="line">  }</div>
 <div class="ttc" id="aconceptsequoia_1_1serializable__to_html"><div class="ttname"><a href="../../d3/dcc/conceptsequoia_1_1serializable__to.html">sequoia::serializable_to</a></div><div class="ttdoc">A concept which is realized by a T const&amp; which be serialized to a Stream&amp;.</div><div class="ttdef"><b>Definition:</b> Concepts.hpp:65</div></div>
 </div><!-- fragment --><a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
