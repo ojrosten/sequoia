@@ -7,7 +7,8 @@
 	  Underlying pointers differ
 	  [int*]
 	  operator== returned false
-	  Expected non-null pointer, but found null
+	  Obtained : null
+	  Predicted: not null
 
 	=======================================
 
@@ -20,12 +21,13 @@
 	  Underlying pointers differ
 	  [int*]
 	  operator== returned false
-	  Expected null pointer, but found non-null
+	  Obtained : not null
+	  Predicted: null
 
 	=======================================
 
 	Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 36
-	Equality for Different pointers
+	Equality for different pointers
 
 	[std::unique_ptr<int, std::default_delete<int> >]
 	operator== returned false
@@ -33,7 +35,7 @@
 	  Underlying pointers differ
 	  [int*]
 	  operator== returned false
-	  Pointers both non-null, but different
+	  Pointers both non-null, but they point to different addresses
 
 	=======================================
 
@@ -191,7 +193,8 @@
 	  Underlying pointers differ
 	  [int*]
 	  operator== returned false
-	  Expected non-null pointer, but found null
+	  Obtained : null
+	  Predicted: not null
 
 	=======================================
 
@@ -204,12 +207,13 @@
 	  Underlying pointers differ
 	  [int*]
 	  operator== returned false
-	  Expected null pointer, but found non-null
+	  Obtained : not null
+	  Predicted: null
 
 	=======================================
 
 	Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 77
-	Equality for Different pointers
+	Equality for different pointers
 
 	[std::shared_ptr<int>]
 	operator== returned false
@@ -217,7 +221,7 @@
 	  Underlying pointers differ
 	  [int*]
 	  operator== returned false
-	  Pointers both non-null, but different
+	  Pointers both non-null, but they point to different addresses
 
 	=======================================
 
@@ -363,7 +367,8 @@
 	    Underlying pointers differ
 	    [int*]
 	    operator== returned false
-	    Expected non-null pointer, but found null
+	    Obtained : null
+	    Predicted: not null
 
 	=======================================
 
@@ -378,12 +383,13 @@
 	    Underlying pointers differ
 	    [int*]
 	    operator== returned false
-	    Expected null pointer, but found non-null
+	    Obtained : not null
+	    Predicted: null
 
 	=======================================
 
 	Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 112
-	Equality for Different pointers
+	Equality for different pointers
 
 	[std::weak_ptr<int>]
 	  Underlying pointers differ
@@ -393,7 +399,7 @@
 	    Underlying pointers differ
 	    [int*]
 	    operator== returned false
-	    Pointers both non-null, but different
+	    Pointers both non-null, but they point to different addresses
 
 	=======================================
 

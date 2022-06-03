@@ -108,7 +108,17 @@
 	=======================================
 
 	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 69
-	Double check with ignored advice
+	Double check with advice for ints ignored
+
+	[double]
+	operator== returned false
+	Obtained : 6.5
+	Predicted: 5.6
+
+	=======================================
+
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 72
+	Double check with advice for floats ignored
 
 	[double]
 	operator== returned false
@@ -118,6 +128,286 @@
 	=======================================
 
 	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 76
+	Float check
+
+	[float]
+	operator== returned false
+	Obtained : 4.2
+	Predicted: -1.7
+
+	=======================================
+
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 77
+	Float check with advice
+
+	[float]
+	operator== returned false
+	Obtained : 4.2
+	Predicted: -1.7
+	Advice: Float, float, hmmm... doesn't quite work
+
+	=======================================
+
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 80
+	Float check with advice for ints ignored
+
+	[double]
+	operator== returned false
+	Obtained : 6.5
+	Predicted: 5.6
+
+	=======================================
+
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 83
+	Float check with advice for doubles utilized
+
+	[double]
+	operator== returned false
+	Obtained : 6.5
+	Predicted: 5.6
+	Advice: double advice
+
+	=======================================
+
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 90
+	Equality for null vs. non-null pointer
+
+	[int*]
+	operator== returned false
+	Obtained : null
+	Predicted: not null
+
+	=======================================
+
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 91
+	Equality for non-null vs null pointer
+
+	[int*]
+	operator== returned false
+	Obtained : not null
+	Predicted: null
+
+	=======================================
+
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 92
+	Equality for different pointers
+
+	[int*]
+	operator== returned false
+	Pointers both non-null, but they point to different addresses
+
+	=======================================
+
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 93
+	Equivalence for null vs. non-null pointer
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<int*>]
+	Checking for equivalence with:
+	[int*]
+
+	  Obtained : null
+	  Predicted: not null
+	  [bool]
+	  check failed
+
+	=======================================
+
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 94
+	Different pointers pointing to different values
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<int*>]
+	Checking for equivalence with:
+	[int*]
+
+	  Pointees differ
+	  [int]
+	  operator== returned false
+	  Obtained : 42
+	  Predicted: 43
+
+	=======================================
+
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 100
+	Equality for null vs. non-null pointer
+
+	[int const*]
+	operator== returned false
+	Obtained : null
+	Predicted: not null
+
+	=======================================
+
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 101
+	Equality for non-null vs null pointer
+
+	[int const*]
+	operator== returned false
+	Obtained : not null
+	Predicted: null
+
+	=======================================
+
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 102
+	Equality for different pointers
+
+	[int const*]
+	operator== returned false
+	Pointers both non-null, but they point to different addresses
+
+	=======================================
+
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 103
+	Equivalence for null vs. non-null pointer
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<int const*>]
+	Checking for equivalence with:
+	[int const*]
+
+	  Obtained : null
+	  Predicted: not null
+	  [bool]
+	  check failed
+
+	=======================================
+
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 104
+	Different pointers pointing to different values
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<int const*>]
+	Checking for equivalence with:
+	[int const*]
+
+	  Pointees differ
+	  [int]
+	  operator== returned false
+	  Obtained : 42
+	  Predicted: 43
+
+	=======================================
+
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 110
+	Equality for null vs. non-null pointer
+
+	[int const*]
+	operator== returned false
+	Obtained : null
+	Predicted: not null
+
+	=======================================
+
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 111
+	Equality for non-null vs null pointer
+
+	[int const*]
+	operator== returned false
+	Obtained : not null
+	Predicted: null
+
+	=======================================
+
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 112
+	Equality for different pointers
+
+	[int const*]
+	operator== returned false
+	Pointers both non-null, but they point to different addresses
+
+	=======================================
+
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 113
+	Equivalence for null vs. non-null pointer
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<int const*>]
+	Checking for equivalence with:
+	[int const*]
+
+	  Obtained : null
+	  Predicted: not null
+	  [bool]
+	  check failed
+
+	=======================================
+
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 114
+	Different pointers pointing to different values
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<int const*>]
+	Checking for equivalence with:
+	[int const*]
+
+	  Pointees differ
+	  [int]
+	  operator== returned false
+	  Obtained : 42
+	  Predicted: 43
+
+	=======================================
+
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 120
+	Equality for null vs. non-null pointer
+
+	[int volatile*]
+	operator== returned false
+	Obtained : null
+	Predicted: not null
+
+	=======================================
+
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 121
+	Equality for non-null vs null pointer
+
+	[int volatile*]
+	operator== returned false
+	Obtained : not null
+	Predicted: null
+
+	=======================================
+
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 122
+	Equality for different pointers
+
+	[int volatile*]
+	operator== returned false
+	Pointers both non-null, but they point to different addresses
+
+	=======================================
+
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 130
+	Equality for null vs. non-null pointer
+
+	[int const volatile*]
+	operator== returned false
+	Obtained : null
+	Predicted: not null
+
+	=======================================
+
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 131
+	Equality for non-null vs null pointer
+
+	[int const volatile*]
+	operator== returned false
+	Obtained : not null
+	Predicted: null
+
+	=======================================
+
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 132
+	Equality for different pointers
+
+	[int const volatile*]
+	operator== returned false
+	Pointers both non-null, but they point to different addresses
+
+	=======================================
+
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 140
 	Equality checking
 
 	[sequoia::testing::perfectly_normal_type]
@@ -131,7 +421,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 78
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 142
 	Equality checking with advice requiring implicit conversion
 
 	[sequoia::testing::perfectly_normal_type]
@@ -147,7 +437,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 83
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 147
 	Equality checking with advice
 
 	[sequoia::testing::perfectly_normal_type]
@@ -162,7 +452,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 88
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 152
 	Equality checking via fallback
 
 	[sequoia::testing::perfectly_normal_type]
@@ -176,7 +466,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 90
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 154
 	Equality checking via fallback with advice requiring implicit conversion
 
 	[sequoia::testing::perfectly_normal_type]
@@ -192,7 +482,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 95
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 159
 	Equality checking via fallback with advice
 
 	[sequoia::testing::perfectly_normal_type]
@@ -207,7 +497,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 100
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 164
 	Equality checking via two fallbacks
 
 	[sequoia::testing::perfectly_normal_type]
@@ -221,7 +511,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 102
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 166
 	Equality checking via two fallbacks with advice requiring implicit conversion
 
 	[sequoia::testing::perfectly_normal_type]
@@ -237,7 +527,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 107
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 171
 	Equality checking via two fallbacks with advice
 
 	[sequoia::testing::perfectly_normal_type]
@@ -252,7 +542,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 115
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 179
 	Equivalence checking
 
 	Comparison performed using:
@@ -268,7 +558,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 117
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 181
 	Equivalence checking with advice
 
 	Comparison performed using:
@@ -285,7 +575,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 122
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 186
 	Self-equivalence checking
 
 	Comparison performed using:
@@ -301,7 +591,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 124
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 188
 	Self-equivalence checking with advice requiring implicit conversion
 
 	Comparison performed using:
@@ -318,7 +608,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 129
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 193
 	Self-equivalence checking with advice
 
 	Comparison performed using:
@@ -335,7 +625,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 134
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 198
 	Equivalence checking via fallback
 
 	Comparison performed using:
@@ -351,7 +641,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 136
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 200
 	Equivalence checking via fallback with advice
 
 	Comparison performed using:
@@ -368,7 +658,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 141
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 205
 	Self-equivalence checking via fallback
 
 	Comparison performed using:
@@ -384,7 +674,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 143
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 207
 	Self-equivalence checking via fallback with advice requiring implicit conversion
 
 	Comparison performed using:
@@ -401,7 +691,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 148
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 212
 	Self-equivalence checking via fallback with advice
 
 	Comparison performed using:
@@ -418,7 +708,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 157
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 221
 	Weak equivalence checking
 
 	Comparison performed using:
@@ -440,7 +730,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 161
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 225
 	Weak equivalence checking with advice
 
 	Comparison performed using:
@@ -464,7 +754,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 166
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 230
 	Self-weak-equivalence checking
 
 	Comparison performed using:
@@ -486,7 +776,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 168
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 232
 	Self-weak-equivalence checking with advice ignored because implicit conversions from either int or double to only_weakly_checkable don't exist
 
 	Comparison performed using:
@@ -508,7 +798,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 173
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 237
 	Self-weak-equivalence checking with advice
 
 	Comparison performed using:
@@ -532,7 +822,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 182
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 246
 	Best available for int
 
 	[int]
@@ -542,7 +832,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 183
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 247
 	Advice for best available for int
 
 	[int]
@@ -553,7 +843,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 186
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 250
 	Best available for only_equivalence_checkable
 
 	[sequoia::testing::only_equivalence_checkable]
@@ -565,7 +855,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 190
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 254
 	Best available for only_equivalence_checkable with advice requiring implicit conversion
 
 	[sequoia::testing::only_equivalence_checkable]
@@ -578,7 +868,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 196
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 260
 	Best available for only_weakly_checkable
 
 	[sequoia::testing::only_weakly_checkable]
@@ -596,7 +886,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 200
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 264
 	Best available for only_weakly_checkable with advice
 
 	[sequoia::testing::only_weakly_checkable]

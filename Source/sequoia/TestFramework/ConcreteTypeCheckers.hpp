@@ -63,9 +63,6 @@
 
 namespace sequoia::testing
 {
-  [[nodiscard]]
-  std::string nullable_type_message(bool obtainedHoldsValue, bool predictedHoldsValue);
-
   /*! \brief Comparisons for `std::basic_string_view`
   
       Some support is offered for wide string views etc., though test failures are ultimately reported
@@ -645,6 +642,42 @@ namespace sequoia::testing
     }
   };
 
+  /*! \brief Compares instance of pointers
+
+     Testing equality is performed via `binary_comparison`, and so does not require this
+     specialization of `value_tester`.
+
+     The `test(equivalence_check_t,...)` function checks whether the pointers either both point to
+     something or both point to nullptr, reporting a failure if this is not the case. If both
+     pointers are not null, a check is dispatched to test the bound type. This is done using
+     the strongest available check.
+  */
+
+  template<class T>
+  struct value_tester<T*>
+  {
+    using type = T*;
+
+    template<test_mode Mode, class Advisor>
+    static void test(equivalence_check_t, test_logger<Mode>& logger, type obtained, type prediction, const tutor<Advisor>& advisor)
+    {
+      if(obtained && prediction)
+      {
+        check(with_best_available, "Pointees differ", logger, *obtained, *prediction, advisor);
+      }
+      else
+      {
+        const auto obtainedIsNull{static_cast<bool>(obtained)}, predictionIsNull{static_cast<bool>(prediction)};
+
+        check(equality,
+              nullable_type_message(obtainedIsNull, predictionIsNull),
+              logger,
+              obtainedIsNull,
+              predictionIsNull);
+      }
+    }
+  };
+
   /*! \brief Helper for testing smart pointers
   
       The general pattern for smart pointers is that `test(equality, ...)` checks for equality
@@ -691,7 +724,7 @@ namespace sequoia::testing
 
       The `test(equivalence_check_t,...)` overload checks whether the pointers either both point to
       something or both point to nullptr, reporting a failure if this is not the case. If both
-      pointers are not null, a check is dispatched to test the underlying type. This is done using
+      pointers are not null, a check is dispatched to test the bound type. This is done using
       the strongest available check.
    */
 
