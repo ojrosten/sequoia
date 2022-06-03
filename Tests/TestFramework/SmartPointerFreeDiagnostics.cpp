@@ -31,9 +31,11 @@ namespace sequoia::testing
   {
     {
       using ptr_t = std::unique_ptr<int>;
-      check(equality, LINE("null vs. not null"), ptr_t{}, std::make_unique<int>(42));
-      check(equality, LINE("not null vs. null "), std::make_unique<int>(42), ptr_t{});
-      check(equality, LINE("Different pointers"), std::make_unique<int>(42), std::make_unique<int>(42));
+      check(equality, LINE("Equality for null vs. not null"), ptr_t{}, std::make_unique<int>(42));
+      check(equality, LINE("Equality for not null vs. null "), std::make_unique<int>(42), ptr_t{});
+      check(equality, LINE("Equality for Different pointers"), std::make_unique<int>(42), std::make_unique<int>(42));
+      check(equivalence, LINE("Equivalence for null vs. not null"), ptr_t{}, std::make_unique<int>(42));
+      check(equivalence, LINE("Equivalence for not null vs. null "), std::make_unique<int>(42), ptr_t{});
       check(equivalence, LINE("Different pointers pointing to different values"), std::make_unique<int>(42), std::make_unique<int>(43));
 
       check(equivalence,
@@ -70,9 +72,11 @@ namespace sequoia::testing
   {
     {
       using ptr_t = std::shared_ptr<int>;
-      check(equality, LINE("null vs. not null"), ptr_t{}, std::make_shared<int>(42));
-      check(equality, LINE("not null vs. null "), std::make_shared<int>(42), ptr_t{});
-      check(equality, LINE("Different pointers"), std::make_shared<int>(42), std::make_shared<int>(42));
+      check(equality, LINE("Equality for null vs. not null"), ptr_t{}, std::make_shared<int>(42));
+      check(equality, LINE("Equality for not null vs. null "), std::make_shared<int>(42), ptr_t{});
+      check(equality, LINE("Equality for Different pointers"), std::make_shared<int>(42), std::make_shared<int>(42));
+      check(equivalence, LINE("Equivalence for null vs. not null"), ptr_t{}, std::make_shared<int>(42));
+      check(equivalence, LINE("Equivalence for not null vs. null "), std::make_shared<int>(42), ptr_t{});
       check(equivalence, LINE("Different pointers pointing to different values"), std::make_shared<int>(42), std::make_shared<int>(43));
 
       check(equivalence,
@@ -103,9 +107,11 @@ namespace sequoia::testing
       auto p{std::make_shared<int>(42)}, q{std::make_shared<int>(43)};
       wptr_t wp{p}, wq{q};
 
-      check(equality, LINE("null vs. not null"), wptr_t{}, wp);
-      check(equality, LINE("not null vs. null "), wp, wptr_t{});
-      check(equality, LINE("Different pointers"), wp, wq);
+      check(equality, LINE("Equality for null vs. not null"), wptr_t{}, wp);
+      check(equality, LINE("Equality for not null vs. null "), wp, wptr_t{});
+      check(equality, LINE("Equality for Different pointers"), wp, wq);
+      check(equivalence, LINE("Equivalence for null vs. not null"), wptr_t{}, wp);
+      check(equivalence, LINE("Equivalence for not null vs. null "), wp, wptr_t{});
       check(equivalence, LINE("Different pointers pointing to different values"), wp, wq);
     }
   }

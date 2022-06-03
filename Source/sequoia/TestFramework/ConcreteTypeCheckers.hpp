@@ -63,6 +63,9 @@
 
 namespace sequoia::testing
 {
+  [[nodiscard]]
+  std::string nullable_type_message(bool obtainedHoldsValue, bool predictedHoldsValue);
+
   /*! \brief Comparisons for `std::basic_string_view`
   
       Some support is offered for wide string views etc., though test failures are ultimately reported
@@ -635,6 +638,13 @@ namespace sequoia::testing
     }
   };
 
+  /*! \brief Helper for testing smart pointers
+  
+      The general pattern for smart pointers is that `test(equality, ...)` checks for equality
+      of the underlying pointers, whereas `test(equivalence, ...) checks the pointees, using
+      the strongest available check.
+   */
+
   template<class T>
   struct smart_pointer_tester
   {
@@ -657,17 +667,10 @@ namespace sequoia::testing
       }
       else
       {
-        const bool obtainedIsBound{obtained}, predictionIsBound{prediction};
-
-        auto messageFn{[](std::string_view name, const bool bound) -> std::string {
-            auto mess{std::string{name} + " is "};
-            if(!bound) mess.append("not ");
-            return mess.append("null");
-          }
-        };
+        const bool obtainedIsNull{obtained}, predictionIsNull{prediction};
 
         check(equality,
-              messageFn("obtained", obtainedIsBound).append(" but ").append(messageFn("prediction", predictionIsBound)),
+              nullable_type_message(obtainedIsNull, predictionIsNull),
               logger,
               static_cast<bool>(obtained),
               static_cast<bool>(prediction));
@@ -763,18 +766,11 @@ namespace sequoia::testing
     template<test_mode Mode>
     static void test(weak_equivalence_check_t, test_logger<Mode>& logger, const type& obtained, const type& prediction)
     {
-      const bool obtainedIsBound{obtained}, predictionIsBound{prediction};
+      const bool obtainedIsNull{obtained}, predictionIsNull{prediction};
 
-      auto messageFn{[](std::string_view name, const bool bound) -> std::string {
-           auto mess{std::string{name} + " has a function "};
-           if(!bound) mess.append("not ");
-           return mess.append("bound");
-        }
-      };
-
-      check(messageFn("obtained", obtainedIsBound).append(" but ").append(messageFn("prediction", predictionIsBound)),
+      check(nullable_type_message(obtainedIsNull, predictionIsNull),
             logger,
-            (obtainedIsBound && predictionIsBound) || (!obtainedIsBound && !predictionIsBound));
+            (obtainedIsNull && predictionIsNull) || (!obtainedIsNull && !predictionIsNull));
     }
   };
 
