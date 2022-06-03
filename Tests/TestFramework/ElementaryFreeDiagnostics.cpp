@@ -139,6 +139,11 @@ namespace sequoia::testing
       check(equality, LINE("Equality for non-null vs null pointer"), &x, p);
       check(equality, LINE("Equality for different pointers"), &x, &y);
     }
+
+    {
+      int x[1]{42}, y[1]{1729};
+      check(equality, LINE("Built-in arrays of the same length"), x, y);
+    }
   }
 
   void elementary_false_positive_free_diagnostics::test_equality_checks()
@@ -302,6 +307,11 @@ namespace sequoia::testing
       check(equality, LINE("Equality of null pointer with itself"), p, p);
       check(equality, LINE("Equality of non-null pointer with itself"), &x, &x);
       check(equivalence, LINE("Different pointers pointing to the same values"), &x, &y);
+    }
+
+    {
+      int x[1]{1729}, y[1]{1729};
+      check(equality, LINE("Built-in arrays of the same length"), x, y);
     }
   }
 

@@ -467,7 +467,19 @@
 
 	=======================================
 
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 146
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 145
+	Built-in arrays of the same length
+
+	[int [1]]
+	  Element 0 of range incorrect
+	  [int]
+	  operator== returned false
+	  Obtained : 42
+	  Predicted: 1729
+
+	=======================================
+
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 151
 	Equality checking
 
 	[sequoia::testing::perfectly_normal_type]
@@ -481,7 +493,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 148
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 153
 	Equality checking with advice requiring implicit conversion
 
 	[sequoia::testing::perfectly_normal_type]
@@ -497,7 +509,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 153
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 158
 	Equality checking with advice
 
 	[sequoia::testing::perfectly_normal_type]
@@ -512,7 +524,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 158
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 163
 	Equality checking via fallback
 
 	[sequoia::testing::perfectly_normal_type]
@@ -526,7 +538,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 160
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 165
 	Equality checking via fallback with advice requiring implicit conversion
 
 	[sequoia::testing::perfectly_normal_type]
@@ -542,7 +554,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 165
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 170
 	Equality checking via fallback with advice
 
 	[sequoia::testing::perfectly_normal_type]
@@ -557,7 +569,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 170
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 175
 	Equality checking via two fallbacks
 
 	[sequoia::testing::perfectly_normal_type]
@@ -571,7 +583,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 172
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 177
 	Equality checking via two fallbacks with advice requiring implicit conversion
 
 	[sequoia::testing::perfectly_normal_type]
@@ -587,7 +599,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 177
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 182
 	Equality checking via two fallbacks with advice
 
 	[sequoia::testing::perfectly_normal_type]
@@ -602,7 +614,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 185
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 190
 	Equivalence checking
 
 	Comparison performed using:
@@ -618,7 +630,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 187
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 192
 	Equivalence checking with advice
 
 	Comparison performed using:
@@ -635,7 +647,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 192
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 197
 	Self-equivalence checking
 
 	Comparison performed using:
@@ -651,7 +663,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 194
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 199
 	Self-equivalence checking with advice requiring implicit conversion
 
 	Comparison performed using:
@@ -668,7 +680,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 199
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 204
 	Self-equivalence checking with advice
 
 	Comparison performed using:
@@ -685,7 +697,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 204
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 209
 	Equivalence checking via fallback
 
 	Comparison performed using:
@@ -701,7 +713,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 206
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 211
 	Equivalence checking via fallback with advice
 
 	Comparison performed using:
@@ -718,7 +730,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 211
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 216
 	Self-equivalence checking via fallback
 
 	Comparison performed using:
@@ -734,7 +746,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 213
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 218
 	Self-equivalence checking via fallback with advice requiring implicit conversion
 
 	Comparison performed using:
@@ -751,7 +763,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 218
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 223
 	Self-equivalence checking via fallback with advice
 
 	Comparison performed using:
@@ -768,7 +780,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 227
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 232
 	Weak equivalence checking
 
 	Comparison performed using:
@@ -790,7 +802,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 231
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 236
 	Weak equivalence checking with advice
 
 	Comparison performed using:
@@ -814,7 +826,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 236
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 241
 	Self-weak-equivalence checking
 
 	Comparison performed using:
@@ -836,7 +848,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 238
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 243
 	Self-weak-equivalence checking with advice ignored because implicit conversions from either int or double to only_weakly_checkable don't exist
 
 	Comparison performed using:
@@ -858,7 +870,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 243
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 248
 	Self-weak-equivalence checking with advice
 
 	Comparison performed using:
@@ -882,7 +894,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 252
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 257
 	Best available for int
 
 	[int]
@@ -892,7 +904,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 253
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 258
 	Advice for best available for int
 
 	[int]
@@ -903,7 +915,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 256
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 261
 	Best available for only_equivalence_checkable
 
 	[sequoia::testing::only_equivalence_checkable]
@@ -915,7 +927,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 260
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 265
 	Best available for only_equivalence_checkable with advice requiring implicit conversion
 
 	[sequoia::testing::only_equivalence_checkable]
@@ -928,7 +940,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 266
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 271
 	Best available for only_weakly_checkable
 
 	[sequoia::testing::only_weakly_checkable]
@@ -946,7 +958,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 270
+	Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 275
 	Best available for only_weakly_checkable with advice
 
 	[sequoia::testing::only_weakly_checkable]

@@ -222,7 +222,7 @@ namespace sequoia
   {};
 
   template<class T>
-  struct is_deep_equality_comparable : std::bool_constant<std::equality_comparable<T>>
+  struct is_deep_equality_comparable : std::bool_constant<std::equality_comparable<T> && !std::is_array_v<T>>
   {};
 
   template<class T>
