@@ -123,7 +123,7 @@ static void&#160;</td><td class="memItemRight" valign="bottom"><b>test_pointees<
 <div class="textblock"><div class="compoundTemplParams">template&lt;class T&gt;<br />
 struct sequoia::testing::value_tester&lt; std::unique_ptr&lt; T &gt; &gt;</div><p >Compares instance of <code>std::unique_ptr</code> </p>
 <p >The <code>test(equality_check_t,...)</code> overload checks that the underlying pointers point to the same thing.</p>
-<p >The <code>test(equivalence_check_t,...)</code> overload checks whether the pointers either both point to something or both point to nullptr, reporting a failure if this is not the case. If both pointers are not null, a check is dispatched to test the underlying type. This is done using the strongest available check. </p>
+<p >The <code>test(equivalence_check_t,...)</code> overload checks whether the pointers either both point to something or both point to nullptr, reporting a failure if this is not the case. If both pointers are not null, a check is dispatched to test the bound type. This is done using the strongest available check. </p>
 </div><hr/>The documentation for this struct was generated from the following file:<ul>
 <li>C:/Users/olive/OneDrive/sequoia/Source/sequoia/TestFramework/<a class="el" href="../../dc/d9c/ConcreteTypeCheckers_8hpp_source.html">ConcreteTypeCheckers.hpp</a></li>
 </ul>
