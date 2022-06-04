@@ -1,0 +1,15 @@
+	False Positive Failure:
+	Tests/TestFramework/ChronoFreeDiagnostics.cpp, Line 53
+
+	[std::chrono::duration<long long, std::ratio<1, 1> >]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/ChronoFreeDiagnostics.cpp, Line 56
+	Time point
+
+	[std::chrono::time_point<std::chrono::steady_clock, std::chrono::duration<long long, std::ratio<1, 1000000000> > >]
+
+	=======================================
+

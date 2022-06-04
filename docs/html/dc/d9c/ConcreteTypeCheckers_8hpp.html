@@ -79,11 +79,14 @@ $(function() {
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="../../d2/d0d/FreeCheckers_8hpp_source.html">sequoia/TestFramework/FreeCheckers.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../d4/d87/FileEditors_8hpp_source.html">sequoia/TestFramework/FileEditors.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d2/dbb/FileSystem_8hpp_source.html">sequoia/TestFramework/FileSystem.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d5/d03/Factory_8hpp_source.html">sequoia/Runtime/Factory.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d2/de5/FileSystemUtilities_8hpp_source.html">sequoia/TestFramework/FileSystemUtilities.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d5/d03/Factory_8hpp_source.html">sequoia/Core/Object/Factory.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d2/dbb/FileSystem_8hpp_source.html">sequoia/FileSystem/FileSystem.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../de/db5/Streaming_8hpp_source.html">sequoia/Streaming/Streaming.hpp</a>&quot;</code><br />
+<code>#include &lt;any&gt;</code><br />
 <code>#include &lt;array&gt;</code><br />
 <code>#include &lt;functional&gt;</code><br />
+<code>#include &lt;memory&gt;</code><br />
 <code>#include &lt;optional&gt;</code><br />
 <code>#include &lt;tuple&gt;</code><br />
 <code>#include &lt;variant&gt;</code><br />
@@ -93,10 +96,10 @@ $(function() {
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/de0/structsequoia_1_1testing_1_1value__tester_3_01std_1_1basic__string__view_3_01Char_00_01Traits_01_4_01_4.html">sequoia::testing::value_tester&lt; std::basic_string_view&lt; Char, Traits &gt; &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks equality of <code>std::basic_string_view</code>  <a href="../../d4/de0/structsequoia_1_1testing_1_1value__tester_3_01std_1_1basic__string__view_3_01Char_00_01Traits_01_4_01_4.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Comparisons for <code>std::basic_string_view</code>  <a href="../../d4/de0/structsequoia_1_1testing_1_1value__tester_3_01std_1_1basic__string__view_3_01Char_00_01Traits_01_4_01_4.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d4d/structsequoia_1_1testing_1_1value__tester_3_01std_1_1basic__string_3_01Char_00_01Traits_00_01Allocator_01_4_01_4.html">sequoia::testing::value_tester&lt; std::basic_string&lt; Char, Traits, Allocator &gt; &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks equality of <code>std::basic_string_view</code>  <a href="../../d3/d4d/structsequoia_1_1testing_1_1value__tester_3_01std_1_1basic__string_3_01Char_00_01Traits_00_01Allocator_01_4_01_4.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Comparisons for <code>std::basic_string</code>  <a href="../../d3/d4d/structsequoia_1_1testing_1_1value__tester_3_01std_1_1basic__string_3_01Char_00_01Traits_00_01Allocator_01_4_01_4.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/de1/structsequoia_1_1testing_1_1value__tester_3_01std_1_1pair_3_01S_00_01T_01_4_01_4.html">sequoia::testing::value_tester&lt; std::pair&lt; S, T &gt; &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compares instances of <code>std::pair</code>  <a href="../../d3/de1/structsequoia_1_1testing_1_1value__tester_3_01std_1_1pair_3_01S_00_01T_01_4_01_4.html#details">More...</a><br /></td></tr>
@@ -119,8 +122,29 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/def/structsequoia_1_1testing_1_1value__tester_3_01std_1_1optional_3_01T_01_4_01_4.html">sequoia::testing::value_tester&lt; std::optional&lt; T &gt; &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compares instances of <code>std::optional</code>  <a href="../../dc/def/structsequoia_1_1testing_1_1value__tester_3_01std_1_1optional_3_01T_01_4_01_4.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d2b/structsequoia_1_1testing_1_1value__tester_3_01std_1_1any_01_4.html">sequoia::testing::value_tester&lt; std::any &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compares an instance of <code>std::any</code> to the value of the type it purportedly holds.  <a href="../../d1/d2b/structsequoia_1_1testing_1_1value__tester_3_01std_1_1any_01_4.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d92/structsequoia_1_1testing_1_1value__tester_3_01T_01_5_01_4.html">sequoia::testing::value_tester&lt; T * &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compares instance of pointers.  <a href="../../dd/d92/structsequoia_1_1testing_1_1value__tester_3_01T_01_5_01_4.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d16/structsequoia_1_1testing_1_1smart__pointer__tester.html">sequoia::testing::smart_pointer_tester&lt; T &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper for testing smart pointers.  <a href="../../db/d16/structsequoia_1_1testing_1_1smart__pointer__tester.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d68/structsequoia_1_1testing_1_1value__tester_3_01std_1_1unique__ptr_3_01T_01_4_01_4.html">sequoia::testing::value_tester&lt; std::unique_ptr&lt; T &gt; &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compares instance of <code>std::unique_ptr</code>  <a href="../../d7/d68/structsequoia_1_1testing_1_1value__tester_3_01std_1_1unique__ptr_3_01T_01_4_01_4.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/d03/structsequoia_1_1testing_1_1value__tester_3_01std_1_1shared__ptr_3_01T_01_4_01_4.html">sequoia::testing::value_tester&lt; std::shared_ptr&lt; T &gt; &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compares instance of <code>std::shared_ptr</code>  <a href="../../da/d03/structsequoia_1_1testing_1_1value__tester_3_01std_1_1shared__ptr_3_01T_01_4_01_4.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d2e/structsequoia_1_1testing_1_1value__tester_3_01std_1_1weak__ptr_3_01T_01_4_01_4.html">sequoia::testing::value_tester&lt; std::weak_ptr&lt; T &gt; &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compares instance of <code>std::weak_ptr</code>  <a href="../../dd/d2e/structsequoia_1_1testing_1_1value__tester_3_01std_1_1weak__ptr_3_01T_01_4_01_4.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/dd6/structsequoia_1_1testing_1_1value__tester_3_01std_1_1function_3_01R_07Args_8_8_8_08_4_01_4.html">sequoia::testing::value_tester&lt; std::function&lt; R(Args...)&gt; &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Provides a <code>weak_equivalence</code> test for <code>std::function</code>  <a href="../../d1/dd6/structsequoia_1_1testing_1_1value__tester_3_01std_1_1function_3_01R_07Args_8_8_8_08_4_01_4.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/da6/structsequoia_1_1testing_1_1value__tester_3_01std_1_1chrono_1_1time__point_3_01Clock_00_01Duration_01_4_01_4.html">sequoia::testing::value_tester&lt; std::chrono::time_point&lt; Clock, Duration &gt; &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compares instance of <code>std::chrono::time_point</code>  <a href="../../d7/da6/structsequoia_1_1testing_1_1value__tester_3_01std_1_1chrono_1_1time__point_3_01Clock_00_01Duration_01_4_01_4.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>

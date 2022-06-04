@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.2"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Sequoia: C:/Users/olive/OneDrive/sequoia/Source/sequoia/Core/Utilities/AssignmentUtilities.hpp Source File</title>
+<title>Sequoia: C:/Users/olive/OneDrive/sequoia/Source/sequoia/Core/ContainerUtilities/AssignmentUtilities.hpp Source File</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -62,7 +62,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="../../dir_74389ed8173ad57b461b9d623a1f3867.html">Source</a></li><li class="navelem"><a class="el" href="../../dir_2cc7e707cf7d8b577b4d17c7cb9b6739.html">sequoia</a></li><li class="navelem"><a class="el" href="../../dir_af73bbb9d00c4493f0602a21eb50c280.html">Core</a></li><li class="navelem"><a class="el" href="../../dir_808fb4007d242bfeb608f1b0cb0a10ff.html">Utilities</a></li>  </ul>
+<li class="navelem"><a class="el" href="../../dir_74389ed8173ad57b461b9d623a1f3867.html">Source</a></li><li class="navelem"><a class="el" href="../../dir_2cc7e707cf7d8b577b4d17c7cb9b6739.html">sequoia</a></li><li class="navelem"><a class="el" href="../../dir_af73bbb9d00c4493f0602a21eb50c280.html">Core</a></li><li class="navelem"><a class="el" href="../../dir_c6019eb4225e83f679fbedf683d878b8.html">ContainerUtilities</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -125,8 +125,8 @@ $(function() {
 <div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span> </div>
 <div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>        T tmp{from, get_allocator(to, from, allocGetters)...};</div>
 <div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>        <span class="keyword">constexpr</span> <span class="keywordtype">bool</span></div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>          copyPropagation{copy_propagation&lt;T, FilteredAllocGetters...&gt;()},</div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>          movePropagation{move_propagation&lt;T, FilteredAllocGetters...&gt;()};</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>          movePropagation{move_propagation&lt;T, FilteredAllocGetters...&gt;()},</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>          copyPropagation{copy_propagation&lt;T, FilteredAllocGetters...&gt;()};</div>
 <div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span> </div>
 <div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (movePropagation || !copyPropagation)</div>
 <div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>        {</div>

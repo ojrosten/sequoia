@@ -57,10 +57,10 @@ namespace sequoia
     return camel_to_words(str, separator, onUpper);
   }
 
-  std::string& to_camel_case(std::string& text);
+  std::string& to_camel_case(std::string& text, std::string_view separator="");
 
   [[nodiscard]]
-  std::string to_camel_case(std::string_view text);
+  std::string to_camel_case(std::string_view text, std::string_view separator = "");
 
   std::string& to_snake_case(std::string& text);
 

@@ -1,0 +1,9 @@
+
+Analyzing dependencies...
+
+  Warning: Time stamp of previous run does not exist, so unable to prune.
+           This should be automatically rectified for the next successful run.
+           No action required.
+
+Nothing to do: try creating some tests!
+Run with --help to see options

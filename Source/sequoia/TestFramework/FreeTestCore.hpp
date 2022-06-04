@@ -16,9 +16,10 @@
 */
 
 #include "sequoia/TestFramework/ConcreteTypeCheckers.hpp"
-#include "sequoia/TestFramework/FileSystem.hpp"
+#include "sequoia/TestFramework/FileSystemUtilities.hpp"
 
 #include "sequoia/Core/Meta/Concepts.hpp"
+#include "sequoia/FileSystem/FileSystem.hpp"
 #include "sequoia/TextProcessing/Substitutions.hpp"
 
 #include <memory>
@@ -108,9 +109,9 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    std::filesystem::path source_filename() const noexcept
+    normal_path source_filename() const noexcept
     {
-      return std::filesystem::path{source_file()}.lexically_normal();
+      return {source_file()};
     }
 
     [[nodiscard]]
@@ -161,7 +162,7 @@ namespace sequoia::testing
       return testing::report_line(file, line, message, test_repository());
     }
 
-    void set_filesystem_data(std::filesystem::path testRepo, const std::filesystem::path& outputDir, std::string_view familyName)
+    void set_filesystem_data(const project_paths& projPaths, std::string_view familyName)
     {
       namespace fs = std::filesystem;
 
@@ -178,10 +179,10 @@ namespace sequoia::testing
         }
       };
 
-      m_TestRepo                = std::move(testRepo);
-      m_DiagnosticsOutput       = makePath(diagnostics_output_path(outputDir),  "Output");
-      m_CaughtExceptionsOutput  = makePath(diagnostics_output_path(outputDir),  "Exceptions");
-      m_InstabilityAnalysisDir  = directory_for_instability_analysis(outputDir, source_file(), name());
+      m_TestRepo                = projPaths.tests();
+      m_DiagnosticsOutput       = makePath(projPaths.output().diagnostics(),  "Output");
+      m_CaughtExceptionsOutput  = makePath(projPaths.output().diagnostics(),  "Exceptions");
+      m_InstabilityAnalysisDir  = directory_for_instability_analysis(projPaths, source_file(), name());
 
       fs::create_directories(m_DiagnosticsOutput.parent_path());
     }
@@ -193,9 +194,9 @@ namespace sequoia::testing
       m_AuxiliaryMaterials  = std::move(auxiliaryMaterials);
     }
 
-    void set_recovery_paths(recovery_paths paths)
+    void set_recovery_paths(active_recovery_files files)
     {
-      Checker::recovery(std::move(paths));
+      Checker::recovery(std::move(files));
     }
   protected:
     using duration = std::chrono::steady_clock::duration;

@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.20)
 
-project(SequioaTestFrameworkHarness DESCRIPTION "End-to-end testing of the Sequoia testing framework"
+project(SequoiaTestFrameworkHarness DESCRIPTION "End-to-end testing of the Sequoia testing framework"
                                     LANGUAGES CXX)
 
 include(../build_system/Utilities.cmake)

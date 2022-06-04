@@ -1,0 +1,35 @@
+
+Analyzing dependencies...
+[19ms]
+
+
+Running tests...
+
+Probability:
+[2 (0)ms]
+	Standard Top Level Checks:                 3;  Failures:  1  [Deep checks: 39]
+
+	Tests/Maths/ProbabilityTest.cpp, Line 22
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<maths::probability>]
+	Checking for equivalence with:
+	[double]
+
+	  Description
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0.9
+
+	=======================================
+
+
+-----------Grand Totals-----------
+[2 (0)ms]
+	Standard Top Level Checks:                 3;  Failures:  1  [Deep checks: 39]
+	Standard Performance Checks:               0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
+	False Positive Checks:                     0;  Failures:  0
+	False Positive Performance Checks:         0;  Failures:  0

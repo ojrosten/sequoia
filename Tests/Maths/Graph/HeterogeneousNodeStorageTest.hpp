@@ -11,8 +11,6 @@
 
 #include "sequoia/TestFramework/RegularTestCore.hpp"
 
-#include "sequoia/Maths/Graph/HeterogeneousNodeStorage.hpp"
-
 namespace sequoia::testing
 {
   class test_heterogeneous_node_storage final : public regular_test
@@ -24,18 +22,5 @@ namespace sequoia::testing
     std::string_view source_file() const noexcept final;
   private:
     void run_tests() final;
-
-    template<class... Ts>
-    class storage_tester : public maths::graph_impl::heterogeneous_node_storage<Ts...>
-    {
-    public:
-      template<class... Args>
-      constexpr explicit storage_tester(Args&&... args)
-        : maths::graph_impl::heterogeneous_node_storage<Ts...>(std::forward<Args>(args)...)
-      {
-      }
-    };
-
-    constexpr static auto make_storage() -> storage_tester<float, int>;
   };
 }

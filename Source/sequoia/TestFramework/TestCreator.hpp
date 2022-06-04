@@ -12,7 +12,7 @@
   */
 
 #include "sequoia/Core/Object/Factory.hpp"
-#include "sequoia/TestFramework/FileSystem.hpp"
+#include "sequoia/TestFramework/FileSystemUtilities.hpp"
 #include "sequoia/TextProcessing/Indent.hpp"
 
 #include <array>
@@ -45,7 +45,9 @@ namespace sequoia::testing
   [[nodiscard]]
   template_spec generate_template_spec(std::string_view str);
 
-  void cmake_nascent_tests(const std::filesystem::path& mainCppDir, const std::filesystem::path& buildDir, std::ostream& stream);
+  void cmake_nascent_tests(const project_paths& projPaths, std::ostream& stream);
+
+  enum class nascent_test_flavour { standard, framework_diagnostics };
 
   class nascent_test_base
   {
@@ -58,6 +60,11 @@ namespace sequoia::testing
       , m_CodeIndent{codeIndent}
       , m_Stream{&stream}
     {}
+
+    [[nodiscard]]
+    nascent_test_flavour flavour() const noexcept { return m_Flavour; }
+
+    void flavour(nascent_test_flavour f) { m_Flavour = f; }
 
     [[nodiscard]]
     const std::string& family() const noexcept { return m_Family; }
@@ -79,6 +86,11 @@ namespace sequoia::testing
 
     void forename(std::string name) { m_Forename = std::move(name); }
 
+    [[nodiscard]]
+    const std::string& surname() const noexcept { return m_Surname; }
+
+    void surname(std::string name) { m_Surname = std::move(name); }
+
     void generate_source_files(gen_source_option opt)
     {
       m_SourceOption = opt;
@@ -95,6 +107,9 @@ namespace sequoia::testing
 
     [[nodiscard]]
     friend bool operator!=(const nascent_test_base&, const nascent_test_base&) noexcept = default;
+
+    [[nodiscard]]
+    static std::vector<std::string> framework_diagnostics_stubs();
   protected:
     nascent_test_base(const nascent_test_base&)     = default;
     nascent_test_base(nascent_test_base&&) noexcept = default;
@@ -112,9 +127,9 @@ namespace sequoia::testing
     [[nodiscard]]
     std::filesystem::path build_source_path(const std::filesystem::path& filename) const;
 
-    template<invocable_r<std::filesystem::path, std::filesystem::path> WhenAbsent, std::size_t N, std::invocable<std::string&> FileTransformer>
+    template<invocable_r<std::filesystem::path, std::filesystem::path> WhenAbsent,std::invocable<std::string&> FileTransformer>
     void finalize(WhenAbsent fn,
-                  const std::array<std::string_view, N>& stubs,
+                  const std::vector<std::string>& stubs,
                   const std::vector<std::string>& constructors,
                   std::string_view nameStub,
                   FileTransformer transformer);
@@ -149,7 +164,8 @@ namespace sequoia::testing
     indentation m_CodeIndent{"  "};
     std::ostream* m_Stream;
 
-    std::string m_Family{}, m_TestType{}, m_Forename{}, m_CamelName{};
+    nascent_test_flavour m_Flavour{nascent_test_flavour::standard};
+    std::string m_Family{}, m_TestType{}, m_Forename{}, m_Surname{}, m_CamelName{};
     std::filesystem::path m_Header{}, m_HostDir{}, m_HeaderPath{};
     gen_source_option m_SourceOption{};
 
@@ -185,14 +201,9 @@ namespace sequoia::testing
     [[nodiscard]]
     friend bool operator!=(const nascent_semantics_test&, const nascent_semantics_test&) noexcept = default;
 
-    constexpr static std::array<std::string_view, 5> stubs() noexcept
-    {
-      return {"TestingUtilities.hpp",
-              "TestingDiagnostics.hpp",
-              "TestingDiagnostics.cpp",
-              "Test.hpp",
-              "Test.cpp"};
-    };
+
+    [[nodiscard]]
+    static std::vector<std::string> stubs();
   private:
     std::string m_QualifiedName{};
 
@@ -215,11 +226,8 @@ namespace sequoia::testing
   public:
     using nascent_test_base::nascent_test_base;
 
-    constexpr static std::array<std::string_view, 2> stubs() noexcept
-    {
-      return {"AllocationTest.hpp",
-              "AllocationTest.cpp"};
-    };
+    [[nodiscard]]
+    static std::vector<std::string> stubs();
 
     void finalize();
 
@@ -245,10 +253,8 @@ namespace sequoia::testing
     [[nodiscard]]
     friend bool operator!=(const nascent_behavioural_test&, const nascent_behavioural_test&) noexcept = default;
 
-    constexpr static std::array<std::string_view, 2> stubs() noexcept
-    {
-      return {"Test.hpp", "Test.cpp"};
-    };
+    [[nodiscard]]
+    static std::vector<std::string> stubs();
 
     void set_namespace(std::string n) { m_Namespace = std::move(n); }
   private:

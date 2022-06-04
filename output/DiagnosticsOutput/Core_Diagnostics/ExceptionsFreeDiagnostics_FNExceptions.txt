@@ -1,0 +1,16 @@
+Tests/TestFramework/ExceptionsFreeDiagnostics.cpp, Line 36
+
+Expected Exception Type:
+[std::runtime_error]
+Error
+
+	=======================================
+
+Tests/TestFramework/ExceptionsFreeDiagnostics.cpp, Line 38
+
+Expected Exception Type:
+[int]
+1
+
+	=======================================
+

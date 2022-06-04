@@ -110,19 +110,22 @@ namespace sequoia::testing
         static_assert(deep_equality_comparable<int>);
         static_assert(deep_equality_comparable<std::vector<int>>);
         static_assert(deep_equality_comparable<std::array<int, 3>>);
+        static_assert(deep_equality_comparable<std::map<int, double>>);
         static_assert(deep_equality_comparable<std::tuple<int>>);
         static_assert(deep_equality_comparable<std::tuple<int, double>>);
+        static_assert(deep_equality_comparable<std::pair<int, double>>);
+        static_assert(deep_equality_comparable<std::optional<int>>);
         static_assert(deep_equality_comparable<std::variant<int, float>>);
-        static_assert(deep_equality_comparable<std::map<int, double>>);
         static_assert(deep_equality_comparable<std::tuple<std::vector<int>, std::array<std::pair<int, float>, 2>>>);
 
         static_assert(!deep_equality_comparable<bar>);
         static_assert(!deep_equality_comparable<std::vector<bar>>);
         static_assert(!deep_equality_comparable<std::array<bar, 3>>);
+        static_assert(!deep_equality_comparable<std::map<int, bar>>);
         static_assert(!deep_equality_comparable<std::tuple<bar>>);
         static_assert(!deep_equality_comparable<std::tuple<bar, double>>);
+        static_assert(!deep_equality_comparable<std::optional<bar>>);
         static_assert(!deep_equality_comparable<std::variant<int, bar>>);
-        static_assert(!deep_equality_comparable<std::map<int, bar>>);
         static_assert(!deep_equality_comparable<std::tuple<std::vector<bar>, std::array<std::pair<int, float>, 2>>>);
         static_assert(!deep_equality_comparable<std::tuple<std::vector<int>, std::array<std::pair<bar, float>, 2>>>);
         static_assert(!deep_equality_comparable<std::tuple<std::vector<int>, std::array<std::pair<int, bar>, 2>>>);

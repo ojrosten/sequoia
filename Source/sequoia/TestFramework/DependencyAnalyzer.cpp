@@ -10,7 +10,7 @@
  */
 
 #include "sequoia/TestFramework/DependencyAnalyzer.hpp"
-#include "sequoia/TestFramework/FileSystem.hpp"
+#include "sequoia/TestFramework/FileSystemUtilities.hpp"
 
 #include "sequoia/Maths/Graph/DynamicGraph.hpp"
 #include "sequoia/Maths/Graph/GraphTraversalFunctions.hpp"
@@ -25,11 +25,11 @@ namespace sequoia::testing
   namespace
   {
     [[nodiscard]]
-    bool is_stale(fs::path file, const fs::file_time_type& timeStamp, const std::optional<fs::file_time_type>& exeTimeStamp)
+    bool is_stale(const fs::path& file, const fs::file_time_type& timeStamp, const std::optional<fs::file_time_type>& exeTimeStamp)
     {
       const auto lwt{fs::last_write_time(file)};
       if(exeTimeStamp.has_value() && (lwt >= exeTimeStamp.value()))
-        throw std::runtime_error{"Exectuable is out of date; please build it!\n"};
+        throw std::runtime_error{"Executable is out of date; please build it!\n"};
 
       return lwt > timeStamp;
     }
@@ -65,14 +65,14 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    bool is_cpp(const std::filesystem::path& file)
+    bool is_cpp(const fs::path& file)
     {
       const auto ext{file.extension()};
       return (ext == ".cpp") || (ext == ".cc") || (ext == ".cxx");
     }
 
     [[nodiscard]]
-    bool is_header(const std::filesystem::path& file)
+    bool is_header(const fs::path& file)
     {
       const auto ext{file.extension()};
       return (ext == ".hpp") || (ext == ".h") || (ext == ".hxx");
@@ -154,12 +154,12 @@ namespace sequoia::testing
                     return "";
                   }()
                 };
-                
 
                 if(includedFile.has_extension())
                 {
                   if(includedFile.parent_path().empty())
                   {
+                    // Maybe check if this file actually exists... if path is absolute
                     includedFile = file.parent_path() / includedFile;
                   }
 
@@ -187,7 +187,7 @@ namespace sequoia::testing
     using tests_dependency_graph = maths::graph<maths::directed_flavour::directed, maths::null_weight, file_info>;
     using node_iterator = tests_dependency_graph::const_iterator;
 
-    void add_files(tests_dependency_graph& g, const std::filesystem::path& repo, const fs::file_time_type& timeStamp, const std::optional<fs::file_time_type>& exeTimeStamp)
+    void add_files(tests_dependency_graph& g, const fs::path& repo, const fs::file_time_type& timeStamp, const std::optional<fs::file_time_type>& exeTimeStamp)
     {
       for(const auto& entry : fs::recursive_directory_iterator(repo))
       {
@@ -199,13 +199,16 @@ namespace sequoia::testing
       }
     }
 
-    // pre-condition: the nodes of g have been sorted by file path
-    void build_dependencies(tests_dependency_graph& g,
-                            const std::filesystem::path& sourceRepo,
-                            const std::filesystem::path& testRepo,
-                            std::string_view cutoff)
+    /// pre-condition: the nodes of g have been sorted by file path
+    /// Return value: external dependencies
+    [[nodiscard]]
+    std::set<std::string> build_dependencies(tests_dependency_graph& g,
+                                             const fs::path& sourceRepo,
+                                             const fs::path& testRepo,
+                                             std::string_view cutoff)
     {
       using size_type = tests_dependency_graph::size_type;
+      std::set<std::string> externalDependencies{};
 
       for(auto i{g.cbegin_node_weights()}; i != g.cend_node_weights(); ++i)
       {
@@ -229,7 +232,7 @@ namespace sequoia::testing
                   if(includedFile.is_absolute())
                   {
                     if(b->file == includedFile) return b;
-                    else                       continue;
+                    else                        continue;
                   }
 
                   if((b->file == sourceRepo / includedFile) || (b->file == testRepo / includedFile))
@@ -271,53 +274,83 @@ namespace sequoia::testing
                 }
               }
             }
+            else
+            {
+              externalDependencies.insert(includedFile.generic_string());
+            }
           }
         }
       }
-    }
 
-    void consider_materials(tests_dependency_graph& g,
-                            node_iterator i,
-                            const fs::path& relFilePath,
+      return externalDependencies;
+    }
+    
+    [[nodiscard]]
+    bool materials_modified(const fs::path& relFilePath,
                             const fs::path& materialsRepo,
-                            const std::filesystem::file_time_type timeStamp)
+                            const fs::file_time_type timeStamp)
     {
       const auto materials{materialsRepo / fs::path{relFilePath}.replace_extension("")};
       if(fs::exists(materials))
       {
         for(const auto& entry : fs::recursive_directory_iterator(materials))
         {
-          if(fs::last_write_time(entry) > timeStamp)
-          {
-            g.mutate_node_weight(i, [](auto& w) { w.stale = true; });
-            break;
-          }
+          if(fs::last_write_time(entry) > timeStamp) return true;
         }
       }
+
+      return false;
     }
-  }
 
-  [[nodiscard]]
-  std::optional<std::vector<std::filesystem::path>>
-  tests_to_run(const fs::path& sourceRepo,
-               const fs::path& testRepo,
-               const fs::path& materialsRepo,
-               const std::filesystem::path& previousFailures,
-               const std::optional<fs::file_time_type>& timeStamp,
-               const std::optional<fs::file_time_type>& exeTimeStamp,
-               std::string_view cutoff)
-  {
-    using namespace maths;
+    [[nodiscard]]
+    std::optional<fs::file_time_type> materials_max_write_time(const fs::path& relFilePath, const fs::path& materialsRepo)
+    {
+      const auto materials{materialsRepo / fs::path{relFilePath}.replace_extension("")};
+      if(fs::exists(materials))
+      {
+        fs::file_time_type maxTime{fs::last_write_time(materials)};
 
-    if(!timeStamp) return std::nullopt;
+        for(const auto& entry : fs::recursive_directory_iterator(materials))
+        {
+          maxTime = std::max(maxTime, fs::last_write_time(entry));
+        }
 
-    std::vector<std::filesystem::path> testsToRun{};
+        return maxTime;
+      }
 
-    tests_dependency_graph g{};
+      return std::nullopt;
+    }
 
-    add_files(g, sourceRepo, timeStamp.value(), exeTimeStamp);
-    add_files(g, testRepo, timeStamp.value(), exeTimeStamp);
-    g.sort_nodes([&g](auto i, auto j) {
+    void consider_passing_tests(tests_dependency_graph& g,
+                            node_iterator i,
+                            const fs::path& relFilePath,
+                            const std::vector<fs::path>& passingTests)
+    {
+      if(auto iter{std::lower_bound(passingTests.begin(), passingTests.end(), relFilePath)}; (iter != passingTests.end() && (*iter == relFilePath)))
+      {
+        g.mutate_node_weight(i, [](auto& w) { w.stale = false; });
+      }
+    }
+
+    [[nodiscard]]
+    std::optional<fs::file_time_type> get_stamp(const fs::path& file)
+    {
+      if(fs::exists(file)) return fs::last_write_time(file);
+
+      return std::nullopt;
+    }
+
+    [[nodiscard]]
+    std::vector<fs::path> find_stale_tests(fs::file_time_type timeStamp, const project_paths& projPaths, std::string_view cutoff)
+    {
+      using namespace maths;
+
+      tests_dependency_graph g{};
+
+      const auto exeTimeStamp{get_stamp(projPaths.executable())};
+      add_files(g, projPaths.source(), timeStamp, exeTimeStamp);
+      add_files(g, projPaths.tests(), timeStamp, exeTimeStamp);
+      g.sort_nodes([&g](auto i, auto j) {
         const fs::path&
           lfile{(g.cbegin_node_weights() + i)->file},
           rfile{(g.cbegin_node_weights() + j)->file};
@@ -326,39 +359,138 @@ namespace sequoia::testing
           lname{lfile.filename()},
           rname{rfile.filename()};
 
-        return lname != rname ? lname < rname : lfile < rfile ;
-      });
+        return lname != rname ? lname < rname : lfile < rfile;
+        });
 
-    build_dependencies(g, sourceRepo, testRepo, cutoff);
+      // TO DO: process these!
+      const auto externalDependencies{build_dependencies(g, projPaths.source_root(), projPaths.tests(), cutoff)};
 
-    auto nodesLate{
-      [&g](const std::size_t node) {
-        for(auto i{g.cbegin_edges(node)}; i != g.cend_edges(node); ++i)
-        {
-          if((g.cbegin_node_weights() + i->target_node())->stale)
+      auto nodesLate{
+        [&g](const std::size_t node) {
+          for(auto i{g.cbegin_edges(node)}; i != g.cend_edges(node); ++i)
           {
-            g.mutate_node_weight(g.cbegin_node_weights() + node, [](auto& w) { w.stale = true; });
-            break;
+            if((g.cbegin_node_weights() + i->target_node())->stale)
+            {
+              g.mutate_node_weight(g.cbegin_node_weights() + node, [](auto& w) { w.stale = true; });
+              break;
+            }
           }
         }
-      }
-    };
+      };
 
-    depth_first_search(g, find_disconnected_t{0}, null_func_obj{}, nodesLate);
+      depth_first_search(g, find_disconnected_t{0}, null_func_obj{}, nodesLate);
 
-    for(auto i{g.cbegin_node_weights()}; i != g.cend_node_weights(); ++i)
-    {
-      if(const auto& weight{*i}; is_cpp(weight.file) && in_repo(weight.file, testRepo))
+      const auto passesFile{projPaths.prune().selected_passes(std::nullopt)};
+      const auto passingTestsFromFile{read_tests(passesFile)};
+      const auto passesStamp{get_stamp(passesFile)};
+
+      std::vector<fs::path> staleTests{};
+
+      for(auto i{g.cbegin_node_weights()}; i != g.cend_node_weights(); ++i)
       {
-        const auto relPath{fs::relative(weight.file, testRepo)};
+        if(const auto& weight{*i}; is_cpp(weight.file) && in_repo(weight.file, projPaths.tests()))
+        {
+          const auto relPath{fs::relative(weight.file, projPaths.tests())};
 
-        if(!weight.stale) consider_materials(g, i, relPath, materialsRepo, timeStamp.value());
+          if(passesStamp && std::binary_search(passingTestsFromFile.begin(), passingTestsFromFile.end(), relPath))
+          {
+            const auto materialsWriteTime{materials_max_write_time(relPath, projPaths.test_materials())};
+            if(!weight.stale && (materialsWriteTime > timeStamp))
+              g.mutate_node_weight(i, [](auto& w) { w.stale = true; });
 
-        if(weight.stale) testsToRun.push_back(relPath);
+            const auto maxWriteTime{
+              [materialsWriteTime,&weight]() {
+                const auto fileWriteTime{fs::last_write_time(weight.file)};
+                return materialsWriteTime ? std::max(materialsWriteTime.value(), fileWriteTime) : fileWriteTime;
+              }()
+            };
+
+            if(weight.stale && (passesStamp.value() > maxWriteTime))
+              consider_passing_tests(g, i, relPath, passingTestsFromFile);
+          }
+          else if(!weight.stale)
+          {
+            if(materials_modified(relPath, projPaths.test_materials(), timeStamp))
+            {
+              g.mutate_node_weight(i, [](auto& w) { w.stale = true; });
+            }
+          }
+
+          if(weight.stale) staleTests.push_back(relPath);
+        }
       }
+
+      std::sort(staleTests.begin(), staleTests.end());
+
+      return staleTests;
     }
 
-    if(std::ifstream ifile{previousFailures})
+    void update_prune_stamp_on_disk(const prune_paths& prunePaths, fs::file_time_type time)
+    {
+      const auto stamp{prunePaths.stamp()};
+      if(!fs::exists(stamp))
+      {
+        std::ofstream{stamp};
+      }
+      fs::last_write_time(stamp, time);
+    }
+
+    [[nodiscard]]
+    prune_paths prepare(const project_paths& projPaths, std::vector<fs::path>& failedTests)
+    {
+      std::sort(failedTests.begin(), failedTests.end());
+
+      return projPaths.prune();
+    }
+
+    [[nodiscard]]
+    std::vector<fs::path> aggregate_failures(const prune_paths& prunePaths, const std::size_t numReps)
+    {
+      std::vector<fs::path> allTests{};
+      for(std::size_t i{}; i < numReps; ++i)
+      {
+        const auto file{prunePaths.failures(i)};
+        read_tests(file, allTests);
+      }
+
+      std::sort(allTests.begin(), allTests.end());
+      auto last{std::unique(allTests.begin(), allTests.end())};
+      allTests.erase(last, allTests.end());
+
+      return allTests;
+    }
+
+    [[nodiscard]]
+    std::optional<std::vector<fs::path>> aggregate_passes(const prune_paths& prunePaths, const std::size_t numReps)
+    {
+      std::vector<fs::path> intersection{};
+      for(std::size_t i{}; i < numReps; ++i)
+      {
+        const auto file{prunePaths.selected_passes(i)};
+        if(!fs::exists(file)) return std::nullopt;
+
+        std::vector<fs::path> tests{};
+        read_tests(file, tests);
+        if(i)
+        {
+          std::vector<fs::path> currentIntersection{};
+          std::set_intersection(tests.begin(), tests.end(), intersection.begin(), intersection.end(), std::back_inserter(currentIntersection));
+          intersection = std::move(currentIntersection);
+        }
+        else
+        {
+          intersection = std::move(tests);
+        }
+      }
+
+      return intersection;
+    }
+  }
+
+  [[nodiscard]]
+  std::vector<fs::path>& read_tests(const fs::path& file, std::vector<fs::path>& tests)
+  {
+    if(std::ifstream ifile{file})
     {
       while(ifile)
       {
@@ -366,16 +498,146 @@ namespace sequoia::testing
         ifile >> source;
         if(!source.empty())
         {
-          source = rebase_from(source, testRepo);
-          testsToRun.push_back(source);
+          tests.push_back(source);
         }
       }
     }
 
-    std::sort(testsToRun.begin(), testsToRun.end());
-    auto last{std::unique(testsToRun.begin(), testsToRun.end())};
-    testsToRun.erase(last, testsToRun.end());
+    return tests;
+  }
+
+  [[nodiscard]]
+  std::vector<fs::path> read_tests(const fs::path& file)
+  {
+    std::vector<fs::path> tests{};
+    return read_tests(file, tests);
+  }
+
+  void write_tests(const project_paths& projPaths, const fs::path& file, const std::vector<fs::path>& tests)
+  {
+    if(std::ofstream ostream{file})
+    {
+      for(const auto& test : tests)
+      {
+        ostream << rebase_from(test, projPaths.tests()).generic_string() << "\n";
+      }
+    }
+  }
+
+  [[nodiscard]]
+  std::optional<std::vector<fs::path>>
+  tests_to_run(const project_paths& projPaths, std::string_view cutoff)
+  {
+    const auto prunePaths{projPaths.prune()};
+    const auto timeStamp{get_stamp(prunePaths.stamp())};
+
+    if(!timeStamp) return std::nullopt;
+
+    const auto staleTests{find_stale_tests(timeStamp.value(), projPaths, cutoff)};
+
+    const std::vector<fs::path> failingTests{read_tests(prunePaths.failures(std::nullopt))};
+
+    std::vector<fs::path> testsToRun{};
+    std::set_union(staleTests.begin(), staleTests.end(), failingTests.begin(), failingTests.end(), std::back_inserter(testsToRun));
 
     return testsToRun;
+  }
+
+  void update_prune_files(const project_paths& projPaths,
+                          std::vector<fs::path> failedTests,
+                          fs::file_time_type updateTime,
+                          std::optional<std::size_t> id)
+  {
+    const auto prunePaths{prepare(projPaths, failedTests)};
+
+    write_tests(projPaths, prunePaths.failures(id), failedTests);
+    fs::remove(prunePaths.selected_passes(id));
+    update_prune_stamp_on_disk(prunePaths, updateTime);
+  }
+
+  void update_prune_files(const project_paths& projPaths,
+                          std::vector<fs::path> executedTests,
+                          std::vector<fs::path> failedTests,
+                          std::optional<std::size_t> id)
+  {
+    std::sort(executedTests.begin(), executedTests.end());
+    const auto prunePaths{prepare(projPaths, failedTests)};
+    const auto passesFile{prunePaths.selected_passes(id)},
+               failuresFile{prunePaths.failures(id)};
+
+    const auto previousPasses{read_tests(passesFile)};
+    std::vector<fs::path> trialPasses{};
+
+    std::set_union(executedTests.begin(),
+                   executedTests.end(),
+                   previousPasses.begin(),
+                   previousPasses.end(),
+                   std::back_inserter(trialPasses));
+
+    std::vector<fs::path> passingTests{};
+    std::set_difference(trialPasses.begin(),
+                        trialPasses.end(),
+                        failedTests.begin(),
+                        failedTests.end(),
+                        std::back_inserter(passingTests));
+
+    const auto previousFailures{read_tests(failuresFile)};
+
+    std::vector<fs::path> remainingPreviousFailures{};
+    std::set_difference(previousFailures.begin(),
+                        previousFailures.end(),
+                        passingTests.begin(),
+                        passingTests.end(),
+                        std::back_inserter(remainingPreviousFailures));
+
+    std::vector<fs::path> allFailures{};
+    std::set_union(remainingPreviousFailures.begin(),
+                   remainingPreviousFailures.end(),
+                   failedTests.begin(),
+                   failedTests.end(),
+                   std::back_inserter(allFailures));
+
+    write_tests(projPaths, failuresFile, allFailures);
+    write_tests(projPaths, passesFile, passingTests);
+  }
+
+  void setup_instability_analysis_prune_folder(const project_paths& projPaths)
+  {
+    const auto dir{projPaths.prune().instability_analysis()};
+    fs::remove_all(dir);
+    fs::create_directories(dir);
+  }
+
+  void aggregate_instability_analysis_prune_files(const project_paths& projPaths, prune_mode mode, std::filesystem::file_time_type timeStamp, std::size_t numReps)
+  {
+    const auto prunePaths{projPaths.prune()};
+    auto failingCases{aggregate_failures(prunePaths, numReps)};
+
+    switch(mode)
+    {
+    case prune_mode::passive:
+    {
+      if(auto optPasses{aggregate_passes(prunePaths, numReps)})
+      {
+        auto& executedCases{optPasses.value()};
+        executedCases.insert(executedCases.end(), failingCases.begin(), failingCases.end());
+
+        update_prune_files(projPaths, std::move(executedCases), std::move(failingCases), std::nullopt);
+      }
+      else
+      {
+        update_prune_files(projPaths, std::move(failingCases), timeStamp, std::nullopt);
+      }
+
+      break;
+    }
+    case prune_mode::active:
+    {
+      update_prune_files(projPaths, std::move(failingCases), timeStamp, std::nullopt);
+      break;
+    }
+    }
+
+    fs::remove_all(prunePaths.instability_analysis());
   }
 }

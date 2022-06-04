@@ -53,7 +53,24 @@
 
 	=======================================
 
-	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 42
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 40
+	Advice for different pointers pointing to different values
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<std::unique_ptr<int, std::default_delete<int> > >]
+	Checking for equivalence with:
+	[std::unique_ptr<int, std::default_delete<int> >]
+
+	  Pointees differ
+	  [int]
+	  operator== returned false
+	  Obtained : 42
+	  Predicted: 43
+	  Advice: int advice
+
+	=======================================
+
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 48
 	Different pointers pointing to different values
 
 	Comparison performed using:
@@ -71,7 +88,7 @@
 
 	=======================================
 
-	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 49
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 55
 	Different pointers pointing to different values
 
 	Comparison performed using:
@@ -95,7 +112,7 @@
 
 	=======================================
 
-	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 57
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 63
 	Different pointers pointing to different values
 
 	Comparison performed using:
@@ -135,7 +152,7 @@
 
 	=======================================
 
-	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 67
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 73
 	null vs. not null
 
 	[std::shared_ptr<int>]
@@ -148,7 +165,7 @@
 
 	=======================================
 
-	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 68
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 74
 	not null vs. null 
 
 	[std::shared_ptr<int>]
@@ -161,7 +178,7 @@
 
 	=======================================
 
-	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 69
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 75
 	Different pointers
 
 	[std::shared_ptr<int>]
@@ -174,7 +191,7 @@
 
 	=======================================
 
-	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 70
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 76
 	Different pointers pointing to different values
 
 	Comparison performed using:
@@ -190,7 +207,24 @@
 
 	=======================================
 
-	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 73
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 79
+	Advice for different pointers pointing to different values
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<std::shared_ptr<int> >]
+	Checking for equivalence with:
+	[std::shared_ptr<int>]
+
+	  Pointees differ
+	  [int]
+	  operator== returned false
+	  Obtained : 42
+	  Predicted: 43
+	  Advice: int advice
+
+	=======================================
+
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 85
 	Different use counts
 
 	Comparison performed using:
@@ -206,7 +240,7 @@
 
 	=======================================
 
-	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 79
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 91
 	Different pointers pointing to different values
 
 	Comparison performed using:
@@ -246,7 +280,7 @@
 
 	=======================================
 
-	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 94
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 106
 	null vs. not null
 
 	[std::weak_ptr<int>]
@@ -261,7 +295,7 @@
 
 	=======================================
 
-	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 95
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 107
 	not null vs. null 
 
 	[std::weak_ptr<int>]
@@ -276,7 +310,7 @@
 
 	=======================================
 
-	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 96
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 108
 	Different pointers
 
 	[std::weak_ptr<int>]
@@ -291,7 +325,7 @@
 
 	=======================================
 
-	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 97
+	Tests/TestFramework/PointerTestingDiagnostics.cpp, Line 109
 	Different pointers pointing to different values
 
 	Comparison performed using:

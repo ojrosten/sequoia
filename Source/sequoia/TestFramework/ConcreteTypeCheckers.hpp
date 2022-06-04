@@ -48,10 +48,12 @@
 
 #include "sequoia/TestFramework/FreeCheckers.hpp"
 #include "sequoia/TestFramework/FileEditors.hpp"
-#include "sequoia/TestFramework/FileSystem.hpp"
+#include "sequoia/TestFramework/FileSystemUtilities.hpp"
 #include "sequoia/Core/Object/Factory.hpp"
+#include "sequoia/FileSystem/FileSystem.hpp"
 #include "sequoia/Streaming/Streaming.hpp"
 
+#include <any>
 #include <array>
 #include <functional>
 #include <memory>
@@ -61,7 +63,7 @@
 
 namespace sequoia::testing
 {
-  /*! \brief Checks equality of `std::basic_string_view`
+  /*! \brief Comparisons for `std::basic_string_view`
   
       Some support is offered for wide string views etc., though test failures are ultimately reported
       using normal strings, which has its limitations when the character type is bigger than a `char`. 
@@ -70,6 +72,9 @@ namespace sequoia::testing
   struct value_tester<std::basic_string_view<Char, Traits>>
   {
     using string_view_type = std::basic_string_view<Char, Traits>;
+
+    template<class Allocator>
+    using string_type      = std::basic_string<Char, Traits, Allocator>;
   private:
     using iter_type = typename string_view_type::const_iterator;
     using size_type = typename string_view_type::size_type;
@@ -208,9 +213,15 @@ namespace sequoia::testing
         }
       }
     }
+
+    template<test_mode Mode, class Advisor, class Allocator>
+    static void test(equivalence_check_t, test_logger<Mode>& logger, string_view_type obtained, string_type<Allocator> prediction, const tutor<Advisor>& advisor)
+    {
+      test(equality, logger, obtained, string_view_type{prediction}, advisor);
+    }
   };
 
-  /*! \brief Checks equality of `std::basic_string_view`
+  /*! \brief Comparisons for `std::basic_string`
 
       Some support is offered for wide string views etc., though test failures are ultimately reported
       using normal strings, which has its limitations when the character type is bigger than a `char`.
@@ -452,8 +463,8 @@ namespace sequoia::testing
       {
         if(!path.empty())
         {
-          const auto pathFinalToken{*(--path.end())};
-          const auto predictionFinalToken{*(--prediction.end())};
+          const auto pathFinalToken{back(path)};
+          const auto predictionFinalToken{back(prediction)};
           if(compare(pathFinalToken, predictionFinalToken))
           {
             switch(pathType)
@@ -483,7 +494,7 @@ namespace sequoia::testing
           std::vector<fs::path> paths{};
           for(const auto& p : fs::directory_iterator(dir))
           {
-            if(std::find(excluded_files.begin(),      excluded_files.end(),      p.path().filename()) == excluded_files.end()
+            if(    std::find(excluded_files.begin(),      excluded_files.end(),      p.path().filename()) == excluded_files.end()
                 && std::find(excluded_extensions.begin(), excluded_extensions.end(), p.path().extension()) == excluded_extensions.end())
             {
                paths.push_back(p);
@@ -545,7 +556,7 @@ namespace sequoia::testing
     template<class CheckType, test_mode Mode, class Advisor>
     static void test(CheckType flavour, test_logger<Mode>& logger, const type& obtained, const type& prediction, tutor<Advisor> advisor)
     {
-      if(check(flavour, "Variant Index", logger, obtained.index(), prediction.index()))
+      if(check(equality, "Variant Index", logger, obtained.index(), prediction.index()))
       {
         check_value(flavour, logger, obtained, prediction, advisor, std::make_index_sequence<sizeof...(Ts)>());
       }
@@ -582,54 +593,127 @@ namespace sequoia::testing
     using type = std::optional<T>;
 
     template<class CheckType, test_mode Mode, class Advisor>
-    static void test(CheckType flavour, test_logger<Mode>& logger, const type& obtained, const type& prediction, tutor<Advisor> advisor)
+    static void test(CheckType flavour, test_logger<Mode>& logger, const type& obtained, const type& prediction, const tutor<Advisor>& advisor)
     {
-      if(check(flavour, "Has value", logger, obtained.has_value(), prediction.has_value()))
+      if(obtained && prediction)
       {
-        if(obtained && prediction)
+        check(flavour, "Contents of optional", logger, *obtained, *prediction, advisor);
+      }
+      else
+      {
+        const bool obtainedIsNull{obtained}, predictionIsNull{prediction};
+
+        check(equality,
+              nullable_type_message(obtainedIsNull, predictionIsNull),
+              logger,
+              static_cast<bool>(obtained),
+              static_cast<bool>(prediction));
+      }
+    }
+  };
+
+  /*! \brief Compares an instance of `std::any` to the value of the type it purportedly holds
+
+      The semantics are such that, under the hood, `with_best_available` is utilized. Therefore,
+      the equivalence of `std::any` to the value of a purported type may ultimately delegate
+      to an `equality`/`equivalence`/`weak_equivalence` check.
+   */
+
+  template<>
+  struct value_tester<std::any>
+  {
+    using type = std::any;
+
+    template<test_mode Mode, class T, class Advisor>
+    static void test(equivalence_check_t, test_logger<Mode>& logger, const type& obtained, const T& prediction, const tutor<Advisor>& advisor)
+    {
+      if(check("Has value", logger, obtained.has_value()))
+      {
+        try
         {
-          check(flavour, "Contents of optional", logger, *obtained, *prediction, advisor);
+          const auto& val{std::any_cast<T>(obtained)};
+          check(with_best_available, "Value held by std::any", logger, val, prediction, advisor);
+        }
+        catch(const std::bad_any_cast&)
+        {
+          check("std::any does not hold the expected type", logger, false);
         }
       }
     }
   };
+
+  /*! \brief Compares instance of pointers
+
+     Testing equality is performed via `binary_comparison`, and so does not require this
+     specialization of `value_tester`.
+
+     The `test(equivalence_check_t,...)` function checks whether the pointers either both point to
+     something or both point to nullptr, reporting a failure if this is not the case. If both
+     pointers are not null, a check is dispatched to test the bound type. This is done using
+     the strongest available check.
+  */
+
+  template<class T>
+  struct value_tester<T*>
+  {
+    using type = T*;
+
+    template<test_mode Mode, class Advisor>
+    static void test(equivalence_check_t, test_logger<Mode>& logger, type obtained, type prediction, const tutor<Advisor>& advisor)
+    {
+      if(obtained && prediction)
+      {
+        check(with_best_available, "Pointees differ", logger, *obtained, *prediction, advisor);
+      }
+      else
+      {
+        const auto obtainedIsNull{static_cast<bool>(obtained)}, predictionIsNull{static_cast<bool>(prediction)};
+
+        check(equality,
+              nullable_type_message(obtainedIsNull, predictionIsNull),
+              logger,
+              obtainedIsNull,
+              predictionIsNull);
+      }
+    }
+  };
+
+  /*! \brief Helper for testing smart pointers
+  
+      The general pattern for smart pointers is that `test(equality, ...)` checks for equality
+      of the underlying pointers, whereas `test(equivalence, ...) checks the pointees, using
+      the strongest available check.
+   */
 
   template<class T>
   struct smart_pointer_tester
   {
     using type = T;
 
-    template<test_mode Mode>
-    static void test(equality_check_t, test_logger<Mode>& logger, const type& obtained, const type& prediction)
+    template<test_mode Mode, class Advisor>
+    static void test(equality_check_t, test_logger<Mode>& logger, const type& obtained, const type& prediction, const tutor<Advisor>& advisor)
     {
-      check(equality, "Underlying pointers differ", logger, obtained.get(), prediction.get());
+      check(equality, "Underlying pointers differ", logger, obtained.get(), prediction.get(), advisor);
     }
   protected:
     ~smart_pointer_tester() = default;
 
-    template<test_mode Mode>
-    static void test_pointees(test_logger<Mode>& logger, const type& obtained, const type& prediction)
+    template<test_mode Mode, class Advisor>
+    static void test_pointees(test_logger<Mode>& logger, const type& obtained, const type& prediction, const tutor<Advisor>& advisor)
     {
       if(obtained && prediction)
       {
-        check(with_best_available, "Pointees differ", logger, *obtained, *prediction);
+        check(with_best_available, "Pointees differ", logger, *obtained, *prediction, advisor);
       }
       else
       {
-        const bool obtainedIsBound{obtained}, predictionIsBound{prediction};
-
-        auto messageFn{[](std::string_view name, const bool bound) -> std::string {
-            auto mess{std::string{name} + " is "};
-            if(!bound) mess.append("not ");
-            return mess.append("null");
-          }
-        };
+        const bool obtainedIsNull{obtained}, predictionIsNull{prediction};
 
         check(equality,
-          messageFn("obtained", obtainedIsBound).append(" but ").append(messageFn("prediction", predictionIsBound)),
-          logger,
-          static_cast<bool>(obtained),
-          static_cast<bool>(prediction));
+              nullable_type_message(obtainedIsNull, predictionIsNull),
+              logger,
+              static_cast<bool>(obtained),
+              static_cast<bool>(prediction));
       }
     }
   };
@@ -640,7 +724,7 @@ namespace sequoia::testing
 
       The `test(equivalence_check_t,...)` overload checks whether the pointers either both point to
       something or both point to nullptr, reporting a failure if this is not the case. If both
-      pointers are not null, a check is dispatched to test the underlying type. This is done using
+      pointers are not null, a check is dispatched to test the bound type. This is done using
       the strongest available check.
    */
 
@@ -651,11 +735,11 @@ namespace sequoia::testing
     using base_t = smart_pointer_tester<std::unique_ptr<T>>;
     using base_t::test;
 
-    template<test_mode Mode>
-    static void test(equivalence_check_t, test_logger<Mode>& logger, const type& obtained, const type& prediction)
+    template<test_mode Mode, class Advisor>
+    static void test(equivalence_check_t, test_logger<Mode>& logger, const type& obtained, const type& prediction, const tutor<Advisor>& advisor)
     {
       using base_t = base_t;
-      base_t::test_pointees(logger, obtained, prediction);
+      base_t::test_pointees(logger, obtained, prediction, advisor);
     }
   };
 
@@ -676,11 +760,11 @@ namespace sequoia::testing
     using base_t = smart_pointer_tester<std::shared_ptr<T>>;
     using base_t::test;
 
-    template<test_mode Mode>
-    static void test(equivalence_check_t, test_logger<Mode>& logger, const type& obtained, const type& prediction)
+    template<test_mode Mode, class Advisor>
+    static void test(equivalence_check_t, test_logger<Mode>& logger, const type& obtained, const type& prediction, const tutor<Advisor>& advisor)
     {
       check(equality, "Use count", logger, obtained.use_count(), prediction.use_count());
-      base_t::test_pointees(logger, obtained, prediction);
+      base_t::test_pointees(logger, obtained, prediction, advisor);
     }
   };
 
@@ -722,18 +806,34 @@ namespace sequoia::testing
     template<test_mode Mode>
     static void test(weak_equivalence_check_t, test_logger<Mode>& logger, const type& obtained, const type& prediction)
     {
-      const bool obtainedIsBound{obtained}, predictionIsBound{prediction};
+      const bool obtainedIsNull{obtained}, predictionIsNull{prediction};
 
-      auto messageFn{[](std::string_view name, const bool bound) -> std::string {
-           auto mess{std::string{name} + " has a function "};
-           if(!bound) mess.append("not ");
-           return mess.append("bound");
-        }
-      };
-
-      check(messageFn("obtained", obtainedIsBound).append(" but ").append(messageFn("prediction", predictionIsBound)),
+      check(nullable_type_message(obtainedIsNull, predictionIsNull),
             logger,
-            (obtainedIsBound && predictionIsBound) || (!obtainedIsBound && !predictionIsBound));
+            (obtainedIsNull && predictionIsNull) || (!obtainedIsNull && !predictionIsNull));
+    }
+  };
+
+  /*! \brief Compares instance of `std::chrono::time_point`
+
+      For the advice to be invoked, `tutor` must be constructed by a function object
+      with an overload `operator()(std::chrono::nanoseconds, std::chrono::nanoseconds)`.
+   */
+
+  template<class Clock, class Duration>
+  struct value_tester<std::chrono::time_point<Clock, Duration>>
+  {
+    using type = std::chrono::time_point<Clock, Duration>;
+
+    template<test_mode Mode, class Advisor>
+    static void test(equality_check_t, test_logger<Mode>& logger, const type& obtained, const type& prediction, const tutor<Advisor>& advisor)
+    {
+      using ns = std::chrono::nanoseconds;
+      check(equality,
+            "Time since epoch",
+            logger,
+            std::chrono::duration_cast<ns>(obtained.time_since_epoch()),
+            std::chrono::duration_cast<ns>(prediction.time_since_epoch()), advisor);
     }
   };
 }

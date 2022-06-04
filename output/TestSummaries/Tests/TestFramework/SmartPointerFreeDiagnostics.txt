@@ -1,0 +1,4 @@
+Smart Pointer False Positive Free Diagnostics
+False Positive Checks:                    25;  Failures:  0
+Smart Pointer False Negative Free Diagnostics
+False Negative Checks:                    12;  Failures:  0

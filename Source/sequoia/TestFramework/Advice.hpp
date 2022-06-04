@@ -95,17 +95,30 @@ namespace sequoia::testing
   /*! \brief class template used to wrap function objects which proffer advice.
 
       An appropriate instantiation of this class template may be supplied as the
-      final argument of many of the check methods. For example, consider 
+      final argument of many of the check methods. For example, consider
       checking equality of an `int`:
 
       <pre>
-      check(equality, LINE(""), x, 41, tutor{[](double value, double prediction) {
+      check(equality, LINE(""), x, 41, tutor{[](int value, int prediction) {
           return value == 42 ? "Are you sure the universe isn't trying to tell you something?" : "";
       }});
       </pre>
 
       In the case the `x != 41`, not only will failure be reported in the usual manner
       but, if `x == 42`, some spectacularly useful advice will be proffered.
+
+      Matters are similar, though somewhat more subtle for types which specialize
+      \ref value_tester_primary "value_tester". Consider some type, `T` for which this
+      is done. Perhaps `T` wraps an `int` in which case the specialization of `value_tester`
+      will invoke a `check` for `int`s. In this case, the advice function object should
+      generally provide an overload for `int`s, as above. Suppose instead that the
+      overload is for `T`s. This will only be called in this particular example if `T`
+      can be implicitly constructed from an `int`; otherwise the advice function object
+      will simply be ignored.
+
+      Note that in the case where the advice function object provides a single binary
+      overload of `operator()` then narrowing conversions are forbidden. However, if
+      there are multiple binary overloads, narrowing conversions may occur.
 
       \anchor tutor_primary
    */

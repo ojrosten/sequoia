@@ -31,6 +31,8 @@ namespace sequoia::testing
 
     void test_basic_output();
 
+    void test_prune_basic_output();
+
     void test_instability_analysis();
 
     template<std::invocable<test_runner&> Manipulator, concrete_test... Ts>
@@ -55,6 +57,13 @@ namespace sequoia::testing
                                    Ts&&... ts);
 
     [[nodiscard]]
-    std::filesystem::path aux_project() const;
+    std::filesystem::path fake_project() const;
+
+    [[nodiscard]]
+    std::string zeroth_arg() const;
+
+    void write(std::string_view dirName, std::stringstream& output) const;
+
+    void check_output(std::string_view description, std::string_view dirName, std::stringstream& output);
   };
 }

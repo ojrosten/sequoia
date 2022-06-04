@@ -13,6 +13,7 @@
 
 #include "sequoia/TestFramework/TestFamilySelector.hpp"
 
+#include "sequoia/Core/Logic/Bitmask.hpp"
 #include "sequoia/PlatformSpecific/Helpers.hpp"
 #include "sequoia/TextProcessing/Indent.hpp"
 
@@ -22,11 +23,16 @@
 namespace sequoia::testing
 {
   enum class runner_mode { none=0, help=1, test=2, create=4, init=8};
+}
 
+namespace sequoia
+{
   template<>
-  struct as_bitmask<runner_mode> : std::true_type
-  {};
+  struct as_bitmask<testing::runner_mode> : std::true_type {};
+}
 
+namespace sequoia::testing
+{
   [[nodiscard]]
   std::string report_time(const family_summary& s);
 
@@ -40,7 +46,18 @@ namespace sequoia::testing
   class test_runner
   {
   public:
-    test_runner(int argc, char** argv, std::string copyright, project_paths paths, std::string codeIndent="  ", std::ostream& stream=std::cout);
+    test_runner(int argc,
+                char** argv,
+                std::string copyright,
+                std::string codeIndent="  ",
+                std::ostream& stream=std::cout);
+
+    test_runner(int argc,
+                char** argv,
+                std::string copyright,
+                const project_paths::initializer& pathsFromProjectRoot,
+                std::string codeIndent="  ",
+                std::ostream& stream=std::cout);
 
     test_runner(const test_runner&)     = delete;
     test_runner(test_runner&&) noexcept = default;
@@ -51,7 +68,7 @@ namespace sequoia::testing
     template<class Test, class... Tests>
     void add_test_family(std::string_view name, Test test, Tests... tests)
     {
-      m_Selector.add_test_family(name, std::move(test), std::move(tests)...);
+      m_Selector.add_test_family(name, m_RecoveryMode, std::move(test), std::move(tests)...);
     }
 
     void execute([[maybe_unused]] timer_resolution r={});
@@ -76,34 +93,36 @@ namespace sequoia::testing
     runner_mode      m_RunnerMode{runner_mode::none};
     output_mode      m_OutputMode{output_mode::standard};
     update_mode      m_UpdateMode{update_mode::none};
+    recovery_mode    m_RecoveryMode{recovery_mode::none};
     concurrency_mode m_ConcurrencyMode{concurrency_mode::dynamic};
     instability_mode m_InstabilityMode{instability_mode::none};
 
     std::size_t m_NumReps{1},
                 m_RunnerID{};
 
-    std::filesystem::path m_Executable{};
-
-    std::vector<std::filesystem::path> m_FailedTestSourceFiles;
-
     void process_args(int argc, char** argv);
 
     void finalize_concurrency_mode();
 
     [[nodiscard]]
-    family_summary process_family(const family_results& results);
+    family_summary process_family(family_results results);
 
     [[nodiscard]]
     bool concurrent_execution() const noexcept { return m_ConcurrencyMode != concurrency_mode::serial; }
 
     void check_argument_consistency();
 
-    void run_tests(std::optional<std::size_t> index);
+    void run_tests(std::optional<std::size_t> id);
+
+    [[nodiscard]]
+    bool nothing_to_do();
 
     [[nodiscard]]
     bool mode(runner_mode m) const noexcept
     {
       return (m_RunnerMode & m) == m;
     }
+
+    void prune();
  };
 }

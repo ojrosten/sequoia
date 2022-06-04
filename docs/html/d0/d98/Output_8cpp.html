@@ -75,6 +75,7 @@ $(function() {
 <p>Definitions for <a class="el" href="../../d8/dbf/Output_8hpp.html" title="A collection of functions for formatting test output.">Output.hpp</a>.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="../../d8/dbf/Output_8hpp_source.html">sequoia/TestFramework/Output.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d2/dbb/FileSystem_8hpp_source.html">sequoia/FileSystem/FileSystem.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../d5/de0/Patterns_8hpp_source.html">sequoia/TextProcessing/Patterns.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../d1/d50/Substitutions_8hpp_source.html">sequoia/TextProcessing/Substitutions.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../de/d56/Preprocessor_8hpp_source.html">sequoia/PlatformSpecific/Preprocessor.hpp</a>&quot;</code><br />
@@ -106,12 +107,18 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testi
 <tr class="memitem:a0ebe2e1f997fae9248f9e866bab6a470"><td class="memItemLeft" align="right" valign="top"><a id="a0ebe2e1f997fae9248f9e866bab6a470" name="a0ebe2e1f997fae9248f9e866bab6a470"></a>
 std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::equality_operator_failure_message</b> ()</td></tr>
 <tr class="separator:a0ebe2e1f997fae9248f9e866bab6a470"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a09d4683da5c29087a6ab230f81726334"><td class="memItemLeft" align="right" valign="top"><a id="a09d4683da5c29087a6ab230f81726334" name="a09d4683da5c29087a6ab230f81726334"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::pointer_prediction_message</b> ()</td></tr>
+<tr class="separator:a09d4683da5c29087a6ab230f81726334"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1df9702ae3f6626b3b97532e56b4ddb8"><td class="memItemLeft" align="right" valign="top"><a id="a1df9702ae3f6626b3b97532e56b4ddb8" name="a1df9702ae3f6626b3b97532e56b4ddb8"></a>
 std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::default_prediction_message</b> (std::string_view obtained, std::string_view prediction)</td></tr>
 <tr class="separator:a1df9702ae3f6626b3b97532e56b4ddb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6a63d974623d7fdcaadaf50b528b3a78"><td class="memItemLeft" align="right" valign="top"><a id="a6a63d974623d7fdcaadaf50b528b3a78" name="a6a63d974623d7fdcaadaf50b528b3a78"></a>
 std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::prediction_message</b> (const std::string &amp;obtained, const std::string &amp;prediction)</td></tr>
 <tr class="separator:a6a63d974623d7fdcaadaf50b528b3a78"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afacf3838a05ffa241d640a3f17319f18"><td class="memItemLeft" align="right" valign="top"><a id="afacf3838a05ffa241d640a3f17319f18" name="afacf3838a05ffa241d640a3f17319f18"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::nullable_type_message</b> (const bool obtainedHoldsValue, const bool predictedHoldsValue)</td></tr>
+<tr class="separator:afacf3838a05ffa241d640a3f17319f18"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a874f8928bdcfa9f54061ce84c59a286a"><td class="memItemLeft" align="right" valign="top"><a id="a874f8928bdcfa9f54061ce84c59a286a" name="a874f8928bdcfa9f54061ce84c59a286a"></a>
 std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::report_line</b> (const std::filesystem::path &amp;file, const int line, std::string_view message, const std::filesystem::path &amp;repository)</td></tr>
 <tr class="separator:a874f8928bdcfa9f54061ce84c59a286a"><td class="memSeparator" colspan="2">&#160;</td></tr>

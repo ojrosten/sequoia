@@ -17,15 +17,10 @@ int main(int argc, char** argv)
     using namespace testing;
     using namespace std::literals::chrono_literals;
 
-    const auto root{project_root(argc, argv)};
-
     test_runner runner{argc,
                        argv,
                        "Oliver J. Rosten",
-                       project_paths{root,
-                                     root / "TestFrameworkDiagnostics" / "TestFrameworkDiagnosticsMain.cpp",
-                                     root / "TestCommon" / "TestIncludes.hpp"}
-    };
+                       {"TestFrameworkDiagnostics/TestFrameworkDiagnosticsMain.cpp", {"TestAll/TestMain.cpp"}, "TestCommon/TestIncludes.hpp"}};
 
     runner.add_test_family(
       "Test Runner",
@@ -39,7 +34,7 @@ int main(int argc, char** argv)
       "Test Framework Auxiliary",
       failure_info_test{"failure_info Unit Test"},
       failure_info_false_positive_test{"failure_info False Positive Test"},
-      file_system_free_test{"File System Free Test"},
+      file_system_utilities_free_test{"File System Free Test"},
       output_free_test{"Output Free Test"},
       dependency_analyzer_free_test{"Dependency Analyzer Free Test"},
       materials_updater_free_test{"Free Test"}
@@ -47,10 +42,26 @@ int main(int argc, char** argv)
 
     runner.add_test_family(
       "Core Diagnostics",
-      false_positive_diagnostics{"False Positive Diagnostics"},
-      false_negative_diagnostics{"False Negative Diagnostics"},
-      pointer_testing_false_positive_diagnostics{"Pointer False Positive Diagnostics"},
-      pointer_testing_false_negative_diagnostics{"Pointer False Negative Diagnostics"}
+      elementary_false_positive_free_diagnostics{"Elementary False Positive Free Diagnostics"},
+      elementary_false_negative_free_diagnostics{"Elementary False Negative Free Diagnostics"},
+      exceptions_false_positive_free_diagnostics{"Exceptions False Positive Free Diagnostics"},
+      exceptions_false_negative_free_diagnostics{"Exceptions False Negative Free Diagnostics"},
+      //chrono_false_positive_free_diagnostics{"Chrono False Positive Free Diagnostics"},
+      //chrono_false_negative_free_diagnostics{"Chrono False Negative Free Diagnostics"},
+      complex_false_positive_free_diagnostics{"Complex False Positive Free Diagnostics"},
+      complex_false_negative_free_diagnostics{"Complex False Negative Free Diagnostics"},
+      container_false_positive_free_diagnostics{"Container False Positive Free Diagnostics"},
+      container_false_negative_free_diagnostics{"Container False Negative Free Diagnostics"},
+      path_false_positive_free_diagnostics{"Path False Positive Free Diagnostics"},
+      path_false_negative_free_diagnostics{"Path False Negative Free Diagnostics"},
+      string_false_positive_free_diagnostics{"String False Positive Free Diagnostics"},
+      string_false_negative_free_diagnostics{"String False Negative Free Diagnostics"},
+      sum_types_false_positive_free_diagnostics{"Sum Types False Positive Free Diagnostics"},
+      sum_types_false_negative_free_diagnostics{"Sum Types False Negative Free Diagnostics"},
+      smart_pointer_false_positive_free_diagnostics{"Smart Pointer False Positive Free Diagnostics"},
+      smart_pointer_false_negative_free_diagnostics{"Smart Pointer False Negative Free Diagnostics"},
+      function_false_positive_free_diagnostics{"Function False Positive Free Diagnostics"},
+      function_false_negative_free_diagnostics{"Function False Negative Free Diagnostics"}
     );
     
     runner.add_test_family(

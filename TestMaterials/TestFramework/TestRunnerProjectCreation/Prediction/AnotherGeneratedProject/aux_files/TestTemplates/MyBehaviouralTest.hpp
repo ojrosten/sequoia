@@ -13,7 +13,7 @@
 
 namespace sequoia::testing
 {
-	class ?_behavioural_test final : public ?_test
+	class ?forename_?surname final : public ?_test
 	{
 	public:
 		using ?_test::?_test;

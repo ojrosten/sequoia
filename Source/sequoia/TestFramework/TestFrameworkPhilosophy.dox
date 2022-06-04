@@ -456,10 +456,10 @@
     on the `int`s at the end of the chain.
 
 	One frequent challenge with writing unit tests is their linear structure. Again, consider 
-	writing a container. Perhaps one of the first things to test is `push_back`. Next, it ma
+	writing a container. Perhaps one of the first things to test is `push_back`. Next, it may
 	be reasonable to check that `erase` returns us to where we started. Following this 
 	maybe invoke `push_back` twice. Should we test `erase` again? And if so back to one element or
-	zero elements, or should we do both> Part of the issue is that the more is done, the more
+	zero elements, or should we do both? Part of the issue is that the more is done, the more
 	unwieldy the unit test becomes. To alleviate this, `sequoia` provides a graph-based testing
 	solution defined in \ref StateTransitionUtilities.hpp. The idea is that nodes corresponds to
 	states of the type under test. Directed edges define transitions between nodes. When invoked,

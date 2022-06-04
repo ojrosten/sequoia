@@ -63,12 +63,14 @@ namespace sequoia
   /// \brief A concept which is realized by a `T const&` which be serialized to a `Stream&`.
   template<class T, class Stream>
   concept serializable_to = requires(std::remove_reference_t<Stream>& stream, const std::remove_reference_t<T>& t) {
-   stream << t;
+    typename Stream::char_type;
+    stream << t;
   };
 
   /// \brief A concept which is realized by a `Stream&` which may be deserialized to a `T&`.
   template<class T, class Stream>
   concept deserializable_from = requires(std::remove_reference_t<Stream>& stream, std::remove_reference_t<T>& t) {
+    typename Stream::char_type;
     stream >> t;
   };
 

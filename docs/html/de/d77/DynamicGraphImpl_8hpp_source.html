@@ -112,7 +112,7 @@ $(function() {
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <span class="keyword">class </span>EdgeStorageTraits,</div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    std::integral IndexType</div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>  &gt;</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <span class="keyword">requires</span> ownership::creator&lt;EdgeWeightCreator&gt;</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <span class="keyword">requires</span> object::creator&lt;EdgeWeightCreator&gt;</div>
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno"><a class="line" href="../../d5/de5/structsequoia_1_1maths_1_1graph__impl_1_1dynamic__edge__traits.html">   51</a></span>  <span class="keyword">struct </span><a class="code hl_struct" href="../../d5/de5/structsequoia_1_1maths_1_1graph__impl_1_1dynamic__edge__traits.html">dynamic_edge_traits</a> : <span class="keyword">public</span></div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <a class="code hl_struct" href="../../d1/d76/structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator.html">edge_type_generator</a></div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    &lt;</div>
@@ -135,8 +135,8 @@ $(function() {
 <div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    <span class="keyword">constexpr</span> <span class="keyword">static</span> <span class="keywordtype">bool</span> shared_edge_v{edge_type_gen::shared_edge_v};</div>
 <div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span> </div>
 <div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    <span class="keyword">using</span> edge_storage_handler = std::conditional_t&lt;shared_edge_v,</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>                                                    <a class="code hl_struct" href="../../d3/d1c/structsequoia_1_1ownership_1_1shared.html">ownership::shared&lt;edge_type&gt;</a>,</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>                                                    <a class="code hl_struct" href="../../de/db9/structsequoia_1_1ownership_1_1independent.html">ownership::independent&lt;edge_type&gt;</a>&gt;;</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>                                                    <a class="code hl_struct" href="../../d4/d54/structsequoia_1_1object_1_1shared.html">object::shared&lt;edge_type&gt;</a>,</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>                                                    <a class="code hl_struct" href="../../da/de1/structsequoia_1_1object_1_1by__value.html">object::by_value&lt;edge_type&gt;</a>&gt;;</div>
 <div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span> </div>
 <div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    <span class="keyword">using</span> edge_storage_traits</div>
 <div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>      = <span class="keyword">typename</span> EdgeStorageTraits::template traits_type&lt;edge_type, edge_storage_handler&gt;;</div>
@@ -155,8 +155,8 @@ $(function() {
 <div class="ttc" id="astructsequoia_1_1maths_1_1graph__impl_1_1dynamic__edge__traits_html"><div class="ttname"><a href="../../d5/de5/structsequoia_1_1maths_1_1graph__impl_1_1dynamic__edge__traits.html">sequoia::maths::graph_impl::dynamic_edge_traits</a></div><div class="ttdef"><b>Definition:</b> DynamicGraphImpl.hpp:59</div></div>
 <div class="ttc" id="astructsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator_html"><div class="ttname"><a href="../../d1/d76/structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator.html">sequoia::maths::graph_impl::edge_type_generator</a></div><div class="ttdef"><b>Definition:</b> GraphDetails.hpp:180</div></div>
 <div class="ttc" id="astructsequoia_1_1maths_1_1graph__impl_1_1node__allocator__generator_html"><div class="ttname"><a href="../../d7/d48/structsequoia_1_1maths_1_1graph__impl_1_1node__allocator__generator.html">sequoia::maths::graph_impl::node_allocator_generator</a></div><div class="ttdef"><b>Definition:</b> DynamicGraphImpl.hpp:35</div></div>
-<div class="ttc" id="astructsequoia_1_1ownership_1_1independent_html"><div class="ttname"><a href="../../de/db9/structsequoia_1_1ownership_1_1independent.html">sequoia::ownership::independent</a></div><div class="ttdef"><b>Definition:</b> Handlers.hpp:80</div></div>
-<div class="ttc" id="astructsequoia_1_1ownership_1_1shared_html"><div class="ttname"><a href="../../d3/d1c/structsequoia_1_1ownership_1_1shared.html">sequoia::ownership::shared</a></div><div class="ttdef"><b>Definition:</b> Handlers.hpp:32</div></div>
+<div class="ttc" id="astructsequoia_1_1object_1_1by__value_html"><div class="ttname"><a href="../../da/de1/structsequoia_1_1object_1_1by__value.html">sequoia::object::by_value</a></div><div class="ttdef"><b>Definition:</b> Handlers.hpp:71</div></div>
+<div class="ttc" id="astructsequoia_1_1object_1_1shared_html"><div class="ttname"><a href="../../d4/d54/structsequoia_1_1object_1_1shared.html">sequoia::object::shared</a></div><div class="ttdef"><b>Definition:</b> Handlers.hpp:38</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

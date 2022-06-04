@@ -75,7 +75,7 @@ $(function() {
 <p>Definitions for <a class="el" href="../../d3/d80/FailureInfo_8hpp.html" title="Utilities for recording information from test failures.">FailureInfo.hpp</a>.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="../../d3/d80/FailureInfo_8hpp_source.html">sequoia/TestFramework/FailureInfo.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d2/dbb/FileSystem_8hpp_source.html">sequoia/TestFramework/FileSystem.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d2/de5/FileSystemUtilities_8hpp_source.html">sequoia/TestFramework/FileSystemUtilities.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../d8/dbf/Output_8hpp_source.html">sequoia/TestFramework/Output.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../d1/d50/Substitutions_8hpp_source.html">sequoia/TextProcessing/Substitutions.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../de/db5/Streaming_8hpp_source.html">sequoia/Streaming/Streaming.hpp</a>&quot;</code><br />
@@ -96,9 +96,9 @@ std::ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia
 <tr class="memitem:a6460146f87ab966b45d891be66134eb4"><td class="memItemLeft" align="right" valign="top"><a id="a6460146f87ab966b45d891be66134eb4" name="a6460146f87ab966b45d891be66134eb4"></a>
 std::istream &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::operator&gt;&gt;</b> (std::istream &amp;s, failure_output &amp;output)</td></tr>
 <tr class="separator:a6460146f87ab966b45d891be66134eb4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a08227dcbb6b58078fc521630324484b9"><td class="memItemLeft" align="right" valign="top"><a id="a08227dcbb6b58078fc521630324484b9" name="a08227dcbb6b58078fc521630324484b9"></a>
-std::filesystem::path&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::directory_for_instability_analysis</b> (const fs::path &amp;outputDir, fs::path source, std::string_view name)</td></tr>
-<tr class="separator:a08227dcbb6b58078fc521630324484b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a72b380a8cc72462d6d125e9a5b4eba09"><td class="memItemLeft" align="right" valign="top"><a id="a72b380a8cc72462d6d125e9a5b4eba09" name="a72b380a8cc72462d6d125e9a5b4eba09"></a>
+std::filesystem::path&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::directory_for_instability_analysis</b> (const project_paths &amp;projPaths, fs::path source, std::string_view name)</td></tr>
+<tr class="separator:a72b380a8cc72462d6d125e9a5b4eba09"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa3a4272271aa87658b6d98f865f71d05"><td class="memItemLeft" align="right" valign="top"><a id="aa3a4272271aa87658b6d98f865f71d05" name="aa3a4272271aa87658b6d98f865f71d05"></a>
 std::filesystem::path&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::source_from_instability_analysis</b> (const fs::path &amp;dir)</td></tr>
 <tr class="separator:aa3a4272271aa87658b6d98f865f71d05"><td class="memSeparator" colspan="2">&#160;</td></tr>

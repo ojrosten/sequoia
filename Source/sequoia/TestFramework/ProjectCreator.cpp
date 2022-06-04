@@ -10,9 +10,10 @@
  */
 
 #include "sequoia/TestFramework/ProjectCreator.hpp"
-#include "sequoia/TestFramework/FileSystem.hpp"
+#include "sequoia/TestFramework/FileSystemUtilities.hpp"
 #include "sequoia/TestFramework/TestRunnerUtilities.hpp"
 
+#include "sequoia/FileSystem/FileSystem.hpp"
 #include "sequoia/PlatformSpecific/Preprocessor.hpp"
 #include "sequoia/Streaming/Streaming.hpp"
 #include "sequoia/TextProcessing/Substitutions.hpp"
@@ -106,7 +107,7 @@ namespace sequoia::testing
             {
               const auto count{pos - left + token.size()};
               const auto relPath{fs::relative(parentProjRoot / "TestAll" / text.substr(left, count), newProjRoot / "TestAll")};
-              text.replace(left, count, relPath.lexically_normal().generic_string());
+              text.replace(left, count, relPath.generic_string());
             }
           }
         }
@@ -125,13 +126,13 @@ namespace sequoia::testing
       }
     );
 
-    read_modify_write(project_template_path(newProjRoot) / relCmakeLocation, [setBuildSysPath](std::string& text) {
+    read_modify_write(auxiliary_paths::project_template(newProjRoot) / relCmakeLocation, [setBuildSysPath](std::string& text) {
         setBuildSysPath(text);
       }
     );
   }
 
-  void init_projects(const std::filesystem::path& parentProjRoot, const std::vector<project_data>& projects, std::ostream& stream)
+  void init_projects(const project_paths& parentProjectPaths, const std::vector<project_data>& projects, std::ostream& stream)
   {
     stream << "Initializing Project(s)....\n\n";
 
@@ -161,10 +162,11 @@ namespace sequoia::testing
 
       report(stream, "Creating new project at location:", data.project_root.generic_string());
 
+      const auto& parentProjRoot{parentProjectPaths.project_root()};
       fs::create_directories(data.project_root);
-      fs::copy(project_template_path(parentProjRoot), data.project_root, fs::copy_options::recursive | fs::copy_options::skip_existing);
-      fs::create_directory(project_paths::source_path(data.project_root));
-      fs::copy(aux_files_path(parentProjRoot), aux_files_path(data.project_root), fs::copy_options::recursive | fs::copy_options::skip_existing);
+      fs::copy(parentProjectPaths.aux_paths().project_template(), data.project_root, fs::copy_options::recursive | fs::copy_options::skip_existing);
+      fs::create_directory(project_paths::source(data.project_root));
+      fs::copy(parentProjectPaths.aux_paths().dir(), auxiliary_paths::dir(data.project_root), fs::copy_options::recursive | fs::copy_options::skip_existing);
 
       generate_test_main(data.copyright, data.project_root, data.code_indent);
       generate_build_system_files(parentProjRoot, data.project_root);
@@ -175,7 +177,7 @@ namespace sequoia::testing
         const auto buildDir{project_paths::cmade_build_dir(data.project_root, mainDir)};
 
         invoke(cd_cmd(mainDir)
-            && cmake_cmd(working_path_v, buildDir, data.output)
+            && cmake_cmd(parentProjectPaths.cmade_build_dir(), buildDir, data.output)
             && build_cmd(buildDir, data.output)
             && git_first_cmd(data.project_root, data.output)
             && (data.do_build == build_invocation::launch_ide ? launch_cmd(data.project_root, buildDir) : shell_command{})
@@ -230,7 +232,7 @@ namespace sequoia::testing
       {
         const auto devenv{vs2019Dir / "Common7" / "IDE" / "devenv"};
 
-        const auto token{*(--root.end())};
+        const auto token{back(root)};
         const auto sln{(buildDir / token).concat("Tests.sln")};
 
         return {"Attempting to open IDE...", std::string{"\""}.append(devenv.string()).append("\" ").append("/Run ").append(sln.string()), ""};

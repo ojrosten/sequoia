@@ -75,8 +75,9 @@ $(function() {
 <p>Definitions for <a class="el" href="../../d8/df2/ProjectCreator_8hpp.html" title="Utilities for creating new projects, especially from the commandline.">ProjectCreator.hpp</a>.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="../../d8/df2/ProjectCreator_8hpp_source.html">sequoia/TestFramework/ProjectCreator.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d2/dbb/FileSystem_8hpp_source.html">sequoia/TestFramework/FileSystem.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d2/de5/FileSystemUtilities_8hpp_source.html">sequoia/TestFramework/FileSystemUtilities.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../d9/d8f/TestRunnerUtilities_8hpp_source.html">sequoia/TestFramework/TestRunnerUtilities.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d2/dbb/FileSystem_8hpp_source.html">sequoia/FileSystem/FileSystem.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../de/d56/Preprocessor_8hpp_source.html">sequoia/PlatformSpecific/Preprocessor.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../de/db5/Streaming_8hpp_source.html">sequoia/Streaming/Streaming.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../d1/d50/Substitutions_8hpp_source.html">sequoia/TextProcessing/Substitutions.hpp</a>&quot;</code><br />
@@ -92,9 +93,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::gen
 <tr class="memitem:a95038caa4a77ef3b23c1b7d7e9b70c78"><td class="memItemLeft" align="right" valign="top"><a id="a95038caa4a77ef3b23c1b7d7e9b70c78" name="a95038caa4a77ef3b23c1b7d7e9b70c78"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::generate_build_system_files</b> (const std::filesystem::path &amp;parentProjRoot, const std::filesystem::path &amp;newProjRoot)</td></tr>
 <tr class="separator:a95038caa4a77ef3b23c1b7d7e9b70c78"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2ccb4f8f0b7b1588f98ad8251667d5e6"><td class="memItemLeft" align="right" valign="top"><a id="a2ccb4f8f0b7b1588f98ad8251667d5e6" name="a2ccb4f8f0b7b1588f98ad8251667d5e6"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::init_projects</b> (const std::filesystem::path &amp;parentProjRoot, const std::vector&lt; project_data &gt; &amp;projects, std::ostream &amp;stream)</td></tr>
-<tr class="separator:a2ccb4f8f0b7b1588f98ad8251667d5e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1797cc5d15679d12ee2ed6c5365e5bb9"><td class="memItemLeft" align="right" valign="top"><a id="a1797cc5d15679d12ee2ed6c5365e5bb9" name="a1797cc5d15679d12ee2ed6c5365e5bb9"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::init_projects</b> (const project_paths &amp;parentProjectPaths, const std::vector&lt; project_data &gt; &amp;projects, std::ostream &amp;stream)</td></tr>
+<tr class="separator:a1797cc5d15679d12ee2ed6c5365e5bb9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0dbd3f0dee7a6fd8cc9aa0625c1fa2da"><td class="memItemLeft" align="right" valign="top"><a id="a0dbd3f0dee7a6fd8cc9aa0625c1fa2da" name="a0dbd3f0dee7a6fd8cc9aa0625c1fa2da"></a>
 shell_command&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::git_first_cmd</b> (const std::filesystem::path &amp;root, const std::filesystem::path &amp;output)</td></tr>
 <tr class="separator:a0dbd3f0dee7a6fd8cc9aa0625c1fa2da"><td class="memSeparator" colspan="2">&#160;</td></tr>

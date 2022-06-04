@@ -6,7 +6,7 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "BarFreeTest.hpp"
-#include "generatedProject/Stuff/Bar.hpp"
+#include "fakeProject/Stuff/Bar.hpp"
 
 /* #include "Stuff/FooTestingUtilities.hpp" */
 /** #include "Stuff/FooTestingUtilities.hpp" **/

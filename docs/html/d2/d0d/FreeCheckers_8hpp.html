@@ -143,11 +143,11 @@ requires implements_general_equivalence_check&lt;Mode, CheckType, T, S, U...&gt;
 <tr class="memitem:a5fd8ababa0fae7e42c053e162b405489"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d2/d0d/FreeCheckers_8hpp.html#a5fd8ababa0fae7e42c053e162b405489">sequoia::testing::general_equivalence_check</a> (CheckType flavour, std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const T &amp;obtained, const S &amp;s, const U &amp;... u)</td></tr>
 <tr class="memdesc:a5fd8ababa0fae7e42c053e162b405489"><td class="mdescLeft">&#160;</td><td class="mdescRight">generic function that generates a check from any class providing a static check method.  <a href="../../d2/d0d/FreeCheckers_8hpp.html#a5fd8ababa0fae7e42c053e162b405489">More...</a><br /></td></tr>
 <tr class="separator:a5fd8ababa0fae7e42c053e162b405489"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0bda1c5a5fddb098dc5aa04b20b53095"><td class="memTemplParams" colspan="2"><a id="a0bda1c5a5fddb098dc5aa04b20b53095" name="a0bda1c5a5fddb098dc5aa04b20b53095"></a>
+<tr class="memitem:ac2528231940be92189c4bc363e6ed46d"><td class="memTemplParams" colspan="2"><a id="ac2528231940be92189c4bc363e6ed46d" name="ac2528231940be92189c4bc363e6ed46d"></a>
 template&lt;bool IsFinalMessage, test_mode Mode, class Compare , class T , class Advisor &gt; <br />
-requires (std::invocable&lt;Compare, T, T&gt; &amp;&amp; (!IsFinalMessage || reportable&lt;T&gt;))</td></tr>
-<tr class="memitem:a0bda1c5a5fddb098dc5aa04b20b53095"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::binary_comparison</b> (final_message_constant&lt; IsFinalMessage &gt;, sentinel&lt; Mode &gt; &amp;sentry, Compare compare, const T &amp;obtained, const T &amp;prediction, tutor&lt; Advisor &gt; advisor)</td></tr>
-<tr class="separator:a0bda1c5a5fddb098dc5aa04b20b53095"><td class="memSeparator" colspan="2">&#160;</td></tr>
+requires (std::invocable&lt;Compare, T, T&gt; &amp;&amp; (!IsFinalMessage || reportable&lt;T&gt;) &amp;&amp; !std::is_array_v&lt;T&gt;)</td></tr>
+<tr class="memitem:ac2528231940be92189c4bc363e6ed46d"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::binary_comparison</b> (final_message_constant&lt; IsFinalMessage &gt;, sentinel&lt; Mode &gt; &amp;sentry, Compare compare, const T &amp;obtained, const T &amp;prediction, tutor&lt; Advisor &gt; advisor)</td></tr>
+<tr class="separator:ac2528231940be92189c4bc363e6ed46d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abeb595ebd2ddeb9e5ef491f2f8fbd5f3"><td class="memTemplParams" colspan="2"><a id="abeb595ebd2ddeb9e5ef491f2f8fbd5f3" name="abeb595ebd2ddeb9e5ef491f2f8fbd5f3"></a>
 template&lt;class CheckType , test_mode Mode, class T , class Advisor &gt; <br />
 requires binary_tester_for&lt;CheckType, Mode, T, tutor&lt;Advisor&gt;&gt;</td></tr>

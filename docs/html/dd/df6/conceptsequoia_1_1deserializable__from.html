@@ -77,9 +77,10 @@ $(function() {
 <h2 class="groupheader">Concept definition</h2>
 <div class="fragment"><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> T, <span class="keyword">class</span> Stream&gt;</div>
 <div class="line"><span class="keyword">concept </span><a class="code hl_concept" href="../../dd/df6/conceptsequoia_1_1deserializable__from.html">sequoia::deserializable_from</a> =  <span class="keyword">requires</span>(std::remove_reference_t&lt;Stream&gt;&amp; stream, std::remove_reference_t&lt;T&gt;&amp; t) {</div>
+<div class="line">    <span class="keyword">typename</span> Stream::char_type;</div>
 <div class="line">    stream &gt;&gt; t;</div>
 <div class="line">  }</div>
-<div class="ttc" id="aconceptsequoia_1_1deserializable__from_html"><div class="ttname"><a href="../../dd/df6/conceptsequoia_1_1deserializable__from.html">sequoia::deserializable_from</a></div><div class="ttdoc">A concept which is realized by a Stream&amp; which may be deserialized to a T&amp;.</div><div class="ttdef"><b>Definition:</b> Concepts.hpp:71</div></div>
+<div class="ttc" id="aconceptsequoia_1_1deserializable__from_html"><div class="ttname"><a href="../../dd/df6/conceptsequoia_1_1deserializable__from.html">sequoia::deserializable_from</a></div><div class="ttdoc">A concept which is realized by a Stream&amp; which may be deserialized to a T&amp;.</div><div class="ttdef"><b>Definition:</b> Concepts.hpp:72</div></div>
 </div><!-- fragment --><a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >A concept which is realized by a <code>Stream&amp;</code> which may be deserialized to a <code>T&amp;</code>. </p>
 </div></div><!-- contents -->

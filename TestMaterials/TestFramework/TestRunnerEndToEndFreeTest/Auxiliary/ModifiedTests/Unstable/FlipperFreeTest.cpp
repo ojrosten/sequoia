@@ -22,6 +22,6 @@ namespace sequoia::testing
 	void flipper_free_test::run_tests()
 	{
 		check(equality, LINE(""), flipper{}.x, true);
-		check(LINE(""), !fs::exists(temp_test_summaries_path(test_repository().parent_path() / "output") / "FlipperFreeTest_cpp"));
+		check(LINE(""), !fs::exists(output_paths::instability_analysis(test_repository().parent_path()) / "FlipperFreeTest_cpp"));
 	}
 }

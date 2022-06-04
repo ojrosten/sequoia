@@ -212,14 +212,10 @@ namespace sequoia::testing
   void test_runner_end_to_end_test::test_project_creation()
   {
     const auto seqRoot{test_repository().parent_path()};
-    const auto testMain{seqRoot/"TestAll/TestMain.cpp"};
-    const auto includeTarget{seqRoot/"TestCommon/TestIncludes.hpp"};
-
-    const project_paths paths{seqRoot, testMain, includeTarget};
 
     check(LINE("Command processor existance"), std::system(nullptr) > 0);
 
-    commandline_arguments args{"",
+    commandline_arguments args{(seqRoot / "build").generic_string(),
                                "init",
                                "Oliver Jacob Rosten",
                                generated_project().string(),
@@ -228,7 +224,7 @@ namespace sequoia::testing
                                "--no-ide"};
 
     std::stringstream outputStream{};
-    test_runner tr{args.size(), args.get(), "Oliver J. Rosten", paths, "  ", outputStream};
+    test_runner tr{args.size(), args.get(), "Oliver J. Rosten", {"TestAll/TestMain.cpp", {}, "TestCommon/TestIncludes.hpp"}, "  ", outputStream};
 
     //=================== Initialize, cmake and build new project ===================//
 
@@ -396,7 +392,7 @@ namespace sequoia::testing
     fs::copy(generatedWorkingCopy / "RepresentativeCases", generatedWorkingCopy / "RepresentativeCasesTemp", fs::copy_options::recursive);
     fs::remove_all(generatedWorkingCopy / "RepresentativeCases");
 
-    run_and_check(LINE("Recovery mode"), b, "RunRecovery", "--recovery");
+    run_and_check(LINE("Recovery mode"), b, "RunRecovery", "recover");
 
     fs::create_directory(working_materials() / "Recovery");
     fs::copy(generated_project() / "output" / "Recovery" / "Recovery.txt", working_materials() / "Recovery");
@@ -411,10 +407,36 @@ namespace sequoia::testing
     fs::copy(generatedPredictive / "RepresentativeCases", generatedPredictive / "RepresentativeCasesTemp", fs::copy_options::recursive);
     fs::remove_all(generatedPredictive / "RepresentativeCases");
 
-    run_and_check(LINE("Recovery mode, throw mid-check"), b, "RunRecoveryMidCheck", "--recovery");
+    run_and_check(LINE("Recovery mode, throw mid-check"), b, "RunRecoveryMidCheck", "recover");
 
     fs::create_directory(working_materials() / "RecoveryMidCheck");
     fs::copy(generated_project() / "output" / "Recovery" / "Recovery.txt", working_materials() / "RecoveryMidCheck");
     check(equivalence, LINE("Recovery File"), working_materials() / "RecoveryMidCheck", predictive_materials() / "RecoveryMidCheck");
+
+    //=================== Change one of the failing tests, and 'select' it at the same time as breaking a different test ===================//
+
+    copy_aux_materials("FurtherModifiedTests/UsefulThingsFreeTest.cpp", "Tests/Utilities");
+    copy_aux_materials("FurtherModifiedTests/ProbabilityTest.cpp", "Tests/Maths");
+    rebuild_run_and_check(LINE("Rebuild, run and 'select' after fixing a test"), b, "RunSelectedFixedTest", "CMakeOutput5.txt", "BuildOutput5.txt", "select UsefulThingsFreeTest.cpp");
+
+    check(equivalence, LINE("Fixed Test Output"), working_materials() / "RunSelectedFixedTest", predictive_materials() / "RunSelectedFixedTest");
+
+    //=================== Rerun with prune to confirm that the previously selected test - now passing - is not run ===================//
+
+    run_and_check(LINE("Passing test not included by prune"), b, "PassingTestExcludedByPrune", "prune -c namespace");
+
+    //=================== Fix failing test and 'select' it===================//
+
+    fs::copy(generatedPredictive / "RepresentativeCasesTemp", generatedPredictive / "RepresentativeCases", fs::copy_options::recursive);
+    fs::remove_all(generatedPredictive / "RepresentativeCasesTemp");
+
+    fs::copy(generatedWorkingCopy / "RepresentativeCasesTemp", generatedWorkingCopy / "RepresentativeCases", fs::copy_options::recursive);
+    fs::remove_all(generatedWorkingCopy / "RepresentativeCasesTemp");
+
+    run_and_check(LINE("Critical failure fixed"), b, "RunFixedCriticalFailure", "select FooTest.cpp");
+
+    //=================== Rerun with prune to confirm that the previously selected test - now passing - is not run ===================//
+
+    run_and_check(LINE("Passing test not included by prune"), b, "AnotherPassingTestExcludedByPrune", "prune -c namespace");
   }
 }

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.2"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Sequoia: C:/Users/olive/OneDrive/sequoia/Source/sequoia/Runtime/Factory.hpp File Reference</title>
+<title>Sequoia: C:/Users/olive/OneDrive/sequoia/Source/sequoia/Core/Object/Factory.hpp File Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -62,7 +62,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="../../dir_74389ed8173ad57b461b9d623a1f3867.html">Source</a></li><li class="navelem"><a class="el" href="../../dir_2cc7e707cf7d8b577b4d17c7cb9b6739.html">sequoia</a></li><li class="navelem"><a class="el" href="../../dir_04a07a3ff99cecc6d56519af4051804e.html">Runtime</a></li>  </ul>
+<li class="navelem"><a class="el" href="../../dir_74389ed8173ad57b461b9d623a1f3867.html">Source</a></li><li class="navelem"><a class="el" href="../../dir_2cc7e707cf7d8b577b4d17c7cb9b6739.html">sequoia</a></li><li class="navelem"><a class="el" href="../../dir_af73bbb9d00c4493f0602a21eb50c280.html">Core</a></li><li class="navelem"><a class="el" href="../../dir_df38718cd72b94194e0ba7ea51278eed.html">Object</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -72,10 +72,12 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>Generic factory with statically defined products.  
+<p>Factory implementation(s)  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="../../d3/d84/Concepts_8hpp_source.html">sequoia/Core/Meta/Concepts.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d7/de4/Iterator_8hpp_source.html">sequoia/Core/Utilities/Iterator.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d3/da1/Creator_8hpp_source.html">sequoia/Core/Object/Creator.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d7/de4/Iterator_8hpp_source.html">sequoia/Core/ContainerUtilities/Iterator.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../db/d8f/Utilities_8hpp_source.html">sequoia/Core/Meta/Utilities.hpp</a>&quot;</code><br />
 <code>#include &lt;variant&gt;</code><br />
 <code>#include &lt;array&gt;</code><br />
 <code>#include &lt;tuple&gt;</code><br />
@@ -87,11 +89,14 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d41/classsequoia_1_1runtime_1_1factory.html">sequoia::runtime::factory&lt; Products &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/df4/classsequoia_1_1object_1_1factory__dereference__policy.html">sequoia::object::factory_dereference_policy&lt; Iterator &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d0c/classsequoia_1_1object_1_1factory.html">sequoia::object::factory&lt; Products &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generic factory with statically defined products.  <a href="../../dc/d0c/classsequoia_1_1object_1_1factory.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p >Generic factory with statically defined products. </p>
+<div class="textblock"><p >Factory implementation(s) </p>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

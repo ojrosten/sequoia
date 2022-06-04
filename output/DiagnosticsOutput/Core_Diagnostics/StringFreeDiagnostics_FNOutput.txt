@@ -1,0 +1,38 @@
+	False Positive Failure:
+	Tests/TestFramework/StringFreeDiagnostics.cpp, Line 117
+	Differing strings
+
+	[std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/StringFreeDiagnostics.cpp, Line 118
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<std::basic_string<char, std::char_traits<char>, std::allocator<char> > >]
+	Checking for equivalence with:
+	[char [4]]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/StringFreeDiagnostics.cpp, Line 125
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<std::basic_string<char, std::char_traits<char>, std::allocator<char> > >]
+	Checking for equivalence with:
+	[std::basic_string_view<char, std::char_traits<char> >]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/StringFreeDiagnostics.cpp, Line 130
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<std::basic_string<wchar_t, std::char_traits<wchar_t>, std::allocator<wchar_t> > >]
+	Checking for equivalence with:
+	[std::basic_string_view<wchar_t, std::char_traits<wchar_t> >]
+
+	=======================================
+

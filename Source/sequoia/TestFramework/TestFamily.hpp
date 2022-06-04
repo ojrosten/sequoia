@@ -12,6 +12,7 @@
 
  */
 
+#include "sequoia/TestFramework/FileSystemUtilities.hpp"
 #include "sequoia/TestFramework/FreeTestCore.hpp"
 #include "sequoia/TestFramework/Summary.hpp"
 
@@ -23,8 +24,20 @@
 
 namespace sequoia::testing
 {
-  enum class update_mode { none=0, soft};
+  enum class update_mode { none = 0, soft };
 
+  enum class recovery_mode { none = 0, recovery = 1, dump = 2 };
+}
+
+namespace sequoia
+{
+  template<>
+  struct as_bitmask<testing::recovery_mode> : std::true_type {};
+}
+
+
+namespace sequoia::testing
+{
   /*! \brief Specifies the granularity at which concurrent execution is applied */
   enum class concurrency_mode {
     serial,    /// serial execution
@@ -36,55 +49,43 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string to_string(concurrency_mode mode);
 
+  [[nodiscard]]
+  active_recovery_files make_active_recovery_paths(recovery_mode mode, const project_paths& projPaths);
+
   struct materials_info
   {
     std::filesystem::path working, prediction, auxiliary;
   };
 
+  /*! \brief helper class for test_family
+
+      The primary purpose of this class to allow code that would otherwise appear
+      in the class template test_family to be moved out of thia header and into
+      the associated cpp.
+   */
   class family_info
   {
   public:
-    class [[nodiscard]] materials_setter
-    {
-    public:
-      explicit materials_setter(family_info& info);
-
-      materials_setter(const materials_setter&)     = delete;
-      materials_setter(materials_setter&&) noexcept = default;
-
-      materials_setter& operator=(const materials_setter&)     = delete;
-      materials_setter& operator=(materials_setter&&) noexcept = default;
-
-      [[nodiscard]]
-      materials_info set_materials(const std::filesystem::path& sourceFile);
-    private:
-      family_info* m_pInfo;
-      std::vector<std::filesystem::path> m_MaterialsPaths{};
-    };
-    
-    family_info(std::string_view name,
-                std::filesystem::path testRepo,
-                std::filesystem::path testMaterialsRepo,
-                std::filesystem::path outputDir,
-                recovery_paths recovery);
+    family_info(std::string_view name, const project_paths& projPaths, recovery_mode recoveryMode);
 
     [[nodiscard]]
     const std::string& name() const noexcept { return m_Name; }
 
     [[nodiscard]]
-    const std::filesystem::path& test_repo() const noexcept { return m_TestRepo; }
+    const project_paths& proj_paths() const noexcept { return *m_Paths; }
 
     [[nodiscard]]
-    const std::filesystem::path& output_dir() const noexcept { return m_OutputDir; }
+    recovery_mode get_recovery_mode() const noexcept
+    {
+      return m_Recovery;
+    }
 
     [[nodiscard]]
-    const recovery_paths& recovery() const noexcept { return m_Recovery; }
+    materials_info set_materials(const std::filesystem::path& sourceFile, std::vector<std::filesystem::path>& materialsPaths);
   private:
-    friend materials_setter;
-    
     std::string m_Name{};
-    std::filesystem::path m_TestRepo{}, m_TestMaterialsRepo{}, m_OutputDir{};
-    recovery_paths m_Recovery;
+    const project_paths* m_Paths;
+    recovery_mode m_Recovery;
   };
 
   struct family_results
@@ -94,20 +95,19 @@ namespace sequoia::testing
     std::vector<std::filesystem::path> failed_tests{};
   };
 
-  struct paths
+  struct test_paths
   {
 #ifdef _MSC_VER
     // TO DO: remove once there's a Workaround for msvc bug which manifests when
     // a type lacking a default constructor is used in a std::future.
     // https://developercommunity.visualstudio.com/content/problem/60897/c-shared-state-futuresstate-default-constructs-the.html
-    paths() = default;
+    test_paths() = default;
 #endif
 
-    paths(const std::filesystem::path& sourceFile,
-          const std::filesystem::path& workingMaterials,
-          const std::filesystem::path& predictiveMaterials,
-          const std::filesystem::path& outputDir,
-          const std::filesystem::path& testRepo);
+    test_paths(const std::filesystem::path& sourceFile,
+               const std::filesystem::path& workingMaterials,
+               const std::filesystem::path& predictiveMaterials,
+               const project_paths& projPaths);
 
     std::filesystem::path
       test_file,
@@ -120,7 +120,7 @@ namespace sequoia::testing
   struct paths_comparator
   {
     [[nodiscard]]
-    bool operator()(const paths& lhs, const paths& rhs) const noexcept
+    bool operator()(const test_paths& lhs, const test_paths& rhs) const noexcept
     {
       return lhs.workingMaterials < rhs.workingMaterials;
     }
@@ -134,6 +134,7 @@ namespace sequoia::testing
 
     log_summary::duration execution_time{};
     log_summary log{};
+    std::vector<std::filesystem::path> failed_tests{};
   };
 
   class family_processor
@@ -141,7 +142,7 @@ namespace sequoia::testing
   public:
     explicit family_processor(update_mode mode);
 
-    void process(log_summary summary, const paths& files);
+    void process(log_summary summary, const test_paths& files);
 
     [[nodiscard]]
     family_results finalize_and_acquire();
@@ -149,7 +150,7 @@ namespace sequoia::testing
     update_mode m_Mode{};
     timer m_Timer{};
     std::set<std::filesystem::path> m_FilesWrittenTo{};
-    std::set<paths, paths_comparator> m_Updateables{};
+    std::set<test_paths, paths_comparator> m_Updateables{};
     family_results m_Results{};
 
     void to_file(const std::filesystem::path& filename, const log_summary& summary);
@@ -162,36 +163,20 @@ namespace sequoia::testing
   class test_family
   {
   public:
-    test_family(std::string name,
-                std::filesystem::path testRepo,
-                std::filesystem::path testMaterialsRepo,
-                std::filesystem::path outputDir,
-                recovery_paths recovery,
-                Tests... tests)
-      : m_Info{std::move(name),
-               std::move(testRepo),
-               std::move(testMaterialsRepo),
-               std::move(outputDir),
-               std::move(recovery)}
+    test_family(std::string name, const project_paths& projPaths, recovery_mode recoveryMode, Tests... tests)
+      : m_Info{std::move(name), projPaths, recoveryMode}
       , m_Tests{std::move(tests)...}
     {
-      family_info::materials_setter setter{m_Info};
+      std::vector<std::filesystem::path> materialsPaths{};
+
       std::apply(
-        [this,&setter](auto&... t) { ( set_materials(setter, t), ... ); },
+        [this,recoveryMode,&materialsPaths](auto&... t) { ( set_materials(recoveryMode, materialsPaths, t), ... ); },
         m_Tests
       );
     }
 
-    test_family(std::string name,
-                std::filesystem::path testRepo,
-                std::filesystem::path testMaterialsRepo,
-                std::filesystem::path outputDir,
-                recovery_paths recovery)
-      : m_Info{std::move(name),
-               std::move(testRepo),
-               std::move(testMaterialsRepo),
-               std::move(outputDir),
-               std::move(recovery)}
+    test_family(std::string name, const project_paths& projPaths, recovery_mode recoveryMode)
+      : m_Info{std::move(name), projPaths, recoveryMode}
     {}
 
     test_family(const test_family&)     = delete;
@@ -200,20 +185,14 @@ namespace sequoia::testing
     test_family& operator=(const test_family&)     = delete;
     test_family& operator=(test_family&&) noexcept = default;
 
-    [[nodiscard]]
-    family_info::materials_setter make_materials_setter()
-    {
-      return family_info::materials_setter{m_Info};
-    }
-
     template<concrete_test T>
-    void add_test(family_info::materials_setter& setter, T test)
+    void add_test(std::vector<std::filesystem::path>& materialsPaths, T test)
     {
       using test_type = std::optional<std::remove_cvref_t<T>>;
 
       auto& t{std::get<test_type>(m_Tests)};
       t = std::move(test);
-      set_materials(setter, t);
+      set_materials(m_Info.get_recovery_mode(), materialsPaths, t);
     }
 
     [[nodiscard]]
@@ -223,12 +202,11 @@ namespace sequoia::testing
     {
       family_processor processor{updateMode};
       auto pathsMaker{
-        [&info=m_Info](auto& test) -> paths {
+        [&info=m_Info](auto& test) -> test_paths {
           return {test.source_filename(),
                   test.working_materials(),
                   test.predictive_materials(),
-                  info.output_dir(),
-                  info.test_repo()};
+                  info.proj_paths()};
         }
       };
 
@@ -247,7 +225,7 @@ namespace sequoia::testing
       }
       else
       {
-        using data = std::pair<log_summary, paths>;
+        using data = std::pair<log_summary, test_paths>;
         std::vector<std::future<data>> results{};
 
         auto generator{
@@ -255,7 +233,7 @@ namespace sequoia::testing
             if(optTest.has_value())
             {
               results.emplace_back(
-                                   std::async([&test=*optTest,pathsMaker,index](){
+                std::async([&test=*optTest,pathsMaker,index](){
                   return std::make_pair(test.execute(index), pathsMaker(test)); })
               );
             }
@@ -266,8 +244,8 @@ namespace sequoia::testing
 
         for(auto& r : results)
         {
-          const auto[summary, paths]{r.get()};
-          processor.process(summary, paths);
+          const auto[summary, test_paths]{r.get()};
+          processor.process(summary, test_paths);
         }
       }
 
@@ -297,15 +275,15 @@ namespace sequoia::testing
 
     void reset()
     {
-      family_info::materials_setter setter{m_Info};
-      
+      std::vector<std::filesystem::path> materialsPaths{};
+
       auto reset{
-        [this,&setter](auto& optTest){
+        [this,&materialsPaths](auto& optTest){
           if(optTest)
           {
             using type = typename std::remove_cvref_t<decltype(optTest)>::value_type;
             *optTest = type{optTest->name()};
-            set_materials(setter, optTest);
+            set_materials(m_Info.get_recovery_mode(), materialsPaths, optTest);
           }
         }
       };
@@ -317,14 +295,14 @@ namespace sequoia::testing
     std::tuple<std::optional<Tests>...> m_Tests;
 
     template<concrete_test T>
-    void set_materials(family_info::materials_setter& setter, std::optional<T>& t)
+    void set_materials(recovery_mode recoveryMode, std::vector<std::filesystem::path>& materialsPaths, std::optional<T>& t)
     {
       if(t.has_value())
       {
-        t->set_filesystem_data(m_Info.test_repo(), m_Info.output_dir(), name());
-        t->set_recovery_paths(m_Info.recovery());
+        t->set_filesystem_data(m_Info.proj_paths(), name());
+        t->set_recovery_paths(make_active_recovery_paths(recoveryMode, m_Info.proj_paths()));
 
-        const auto info{setter.set_materials(t->source_filename())};
+        const auto info{m_Info.set_materials(t->source_filename(), materialsPaths)};
 
         t->set_materials(info.working, info.prediction, info.auxiliary);
       }

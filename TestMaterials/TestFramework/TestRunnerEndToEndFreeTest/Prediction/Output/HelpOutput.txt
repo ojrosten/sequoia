@@ -21,8 +21,9 @@ create | c |
     --header | -h | header of class to test
   free_test | free | header
     --family | -f | family
-    --forename | -name | forename
+    --test-class-forename | --forename | test class is named <forename>_...
     gen-source | g | namespace
+    --framework-diagnostics | --diagnostics |
   performance_test | performance | header
     --family | -f | family
 init | i | copyright owner, path ending with project name, code indent
@@ -33,7 +34,7 @@ update-materials | u |
 locate-instabilities | locate | number of repetitions >= 2
   --sandbox | -s |
   --runner-id private option, best avoided
+recover
 dump
 --async-depth | -a | depth [null,family,unit]
 --verbose | -v |
---recovery | -r |

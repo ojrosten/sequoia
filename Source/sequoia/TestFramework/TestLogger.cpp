@@ -272,10 +272,10 @@ namespace sequoia::testing
 
   template<test_mode Mode>
   [[nodiscard]]
-  const recovery_paths& test_logger<Mode>::recovery() const noexcept { return m_Recovery; }
+  const active_recovery_files& test_logger<Mode>::recovery() const noexcept { return m_Recovery; }
 
   template<test_mode Mode>
-  void test_logger<Mode>::recovery(recovery_paths paths)
+  void test_logger<Mode>::recovery(active_recovery_files paths)
   {
     m_Recovery = std::move(paths);
   }

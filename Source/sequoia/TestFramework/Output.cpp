@@ -10,6 +10,8 @@
  */
 
 #include "sequoia/TestFramework/Output.hpp"
+
+#include "sequoia/FileSystem/FileSystem.hpp"
 #include "sequoia/TextProcessing/Patterns.hpp"
 #include "sequoia/TextProcessing/Substitutions.hpp"
 #include "sequoia/PlatformSpecific/Preprocessor.hpp"
@@ -81,6 +83,12 @@ namespace sequoia::testing
       }
 
       return name;
+    }
+
+    [[nodiscard]]
+    std::string nullable_type_message(const bool holdsValue)
+    {
+      return std::string{holdsValue ? "not " : ""}.append("null");
     }
   }
 
@@ -168,6 +176,12 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
+  std::string pointer_prediction_message()
+  {
+    return "Pointers both non-null, but they point to different addresses";
+  }
+
+  [[nodiscard]]
   std::string default_prediction_message(std::string_view obtained, std::string_view prediction)
   {
     return append_lines(std::string{"Obtained : "}.append(obtained), std::string{"Predicted: "}.append(prediction));
@@ -180,18 +194,10 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string pointer_prediction_message(bool obtainedIsNull, bool predictionIsNull)
+  std::string nullable_type_message(const bool obtainedHoldsValue, const bool predictedHoldsValue)
   {
-    if(obtainedIsNull && predictionIsNull)
-      return "Pointers both non-null, but different";
-
-    if(obtainedIsNull && !predictionIsNull)
-      return "Expected null pointer, but found non-null";
-
-    if(predictionIsNull)
-      return "Expected non-null pointer, but found null";
-
-    return "Pointers both null";
+    return std::string{"Obtained : "}.append(nullable_type_message(obtainedHoldsValue)).append("\n")
+               .append("Predicted: ").append(nullable_type_message(predictedHoldsValue));
   }
 
   [[nodiscard]]
@@ -226,7 +232,7 @@ namespace sequoia::testing
             ++filepathIter;
           }
 
-          std::filesystem::path p{*(--repository.end())};
+          std::filesystem::path p{back(repository)};
           for(; filepathIter != file.end(); ++filepathIter)
           {
             p /= *filepathIter;

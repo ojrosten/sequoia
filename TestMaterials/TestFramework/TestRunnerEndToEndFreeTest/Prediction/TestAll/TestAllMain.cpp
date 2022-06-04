@@ -35,27 +35,26 @@ int main(int argc, char** argv)
 		using namespace testing;
 		using namespace std::literals::chrono_literals;
 
-		const auto paths{project_paths{project_root(argc, argv)}};
-		test_runner runner{argc, argv, "Oliver Jacob Rosten", paths, "\t"};
+		test_runner runner{argc, argv, "Oliver Jacob Rosten", "\t"};
 
 		runner.add_test_family(
 			"Utilities",
-			utilities_free_test{"Free Test"}
+			utilities_free_test{"Utilities Free Test"}
 		);
 
 		runner.add_test_family(
 			"Useful Things",
-			useful_things_free_test{"Free Test"}
+			useful_things_free_test{"Useful Things Free Test"}
 		);
 
 		runner.add_test_family(
 			"Bar",
-			bar_free_test{"Free Test"}
+			bar_free_test{"Bar Free Test"}
 		);
 
 		runner.add_test_family(
 			"Unstable",
-			flipper_free_test{"Free Test"}
+			flipper_free_test{"Flipper Free Test"}
 		);
 
 		runner.add_test_family(
@@ -90,7 +89,7 @@ int main(int argc, char** argv)
 
 		runner.add_test_family(
 			"Container",
-			container_performance_test{"Performance Test"},
+			container_performance_test{"Container Performance Test"},
 			container_allocation_test{"Allocation Test"}
 		);
 

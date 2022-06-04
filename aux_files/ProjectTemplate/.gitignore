@@ -12,3 +12,6 @@ output/Recovery
 
 #ignore temporary data from tests
 output/TestsTemporaryData
+
+#ignore file recording prune info
+output/Prune

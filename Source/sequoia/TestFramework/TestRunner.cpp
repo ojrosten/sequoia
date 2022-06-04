@@ -11,6 +11,7 @@
 
 #include "sequoia/TestFramework/TestRunner.hpp"
 
+#include "sequoia/TestFramework/DependencyAnalyzer.hpp"
 #include "sequoia/TestFramework/ProjectCreator.hpp"
 #include "sequoia/TestFramework/Summary.hpp"
 #include "sequoia/TestFramework/TestCreator.hpp"
@@ -72,6 +73,24 @@ namespace sequoia::testing
 
       nascent_tests.emplace_back(std::move(nascent));
     }
+
+    [[nodiscard]]
+    std::string to_async_option(concurrency_mode mode)
+    {
+      switch(mode)
+      {
+      case concurrency_mode::serial:
+        return " -a null";
+      case concurrency_mode::dynamic:
+        return "";
+      case concurrency_mode::family:
+        return " -a family";
+      case concurrency_mode::unit:
+        return " -a unit";
+      }
+
+      throw std::logic_error{"Illegal option for concurrency_mode"};
+    }
   }
 
   [[nodiscard]]
@@ -82,9 +101,22 @@ namespace sequoia::testing
 
   //=========================================== test_runner ===========================================//
 
-  test_runner::test_runner(int argc, char** argv, std::string copyright, project_paths paths, std::string codeIndent, std::ostream& stream)
+  test_runner::test_runner(int argc,
+                           char** argv,
+                           std::string copyright,
+                           std::string codeIndent,
+                           std::ostream& stream)
+    : test_runner{argc, argv, std::move(copyright), {"TestAll/TestAllMain.cpp", {}, "TestAll/TestAllMain.cpp"}, std::move(codeIndent), stream}
+  {}
+
+  test_runner::test_runner(int argc,
+                           char** argv,
+                           std::string copyright,
+                           const project_paths::initializer& pathsFromProjectRoot,
+                           std::string codeIndent,
+                           std::ostream& stream)
     : m_Copyright{std::move(copyright)}
-    , m_Selector{std::move(paths)}
+    , m_Selector{project_paths{argc, argv, pathsFromProjectRoot}}
     , m_CodeIndent{std::move(codeIndent)}
     , m_Stream{&stream}
   {
@@ -92,9 +124,9 @@ namespace sequoia::testing
 
     process_args(argc, argv);
 
-    fs::create_directory(proj_paths().output());
-    fs::create_directory(diagnostics_output_path(proj_paths().output()));
-    fs::create_directory(test_summaries_path(proj_paths().output()));
+    fs::create_directory(proj_paths().output().dir());
+    fs::create_directory(proj_paths().output().diagnostics());
+    fs::create_directory(proj_paths().output().test_summaries());
   }
 
   void test_runner::process_args(int argc, char** argv)
@@ -110,6 +142,15 @@ namespace sequoia::testing
           throw std::logic_error{"Unable to find nascent test"};
 
         std::visit(variant_visitor{[&args](auto& nascent){ nascent.family(args[0]);}}, nascentTests.back());
+      }
+    };
+
+    const option diagnosticsOption{"--framework-diagnostics", {"--diagnostics"}, {},
+      [&nascentTests](const arg_list&) {
+        if(nascentTests.empty())
+          throw std::logic_error{"Unable to find nascent test"};
+
+        std::visit(variant_visitor{[](auto& nascent) { nascent.flavour(nascent_test_flavour::framework_diagnostics); }}, nascentTests.back());
       }
     };
 
@@ -138,7 +179,7 @@ namespace sequoia::testing
       }
     };
 
-    const option nameOption{"--forename", {"-name"}, {"forename"},
+    const option forenameOption{"--test-class-forename", {"--forename"}, {"test class is named <forename>_..."},
       [&nascentTests](const arg_list& args){
         if(nascentTests.empty())
           throw std::logic_error{"Unable to find nascent test"};
@@ -192,7 +233,7 @@ namespace sequoia::testing
     const std::initializer_list<maths::tree_initializer<option>> semanticsOptions{{equivOption}, {familyOption}, {headerOption}, {genSemanticsSourceOption}};
     const std::initializer_list<maths::tree_initializer<option>> allocationOptions{{familyOption}, {headerOption}};
     const std::initializer_list<maths::tree_initializer<option>> performanceOptions{{familyOption}};
-    const std::initializer_list<maths::tree_initializer<option>> freeOptions{{familyOption}, {nameOption}, {genFreeSourceOption}};
+    const std::initializer_list<maths::tree_initializer<option>> freeOptions{{familyOption}, {forenameOption}, {genFreeSourceOption}, {diagnosticsOption}};
 
     const auto help{
       parse_invoke_depth_first(argc, argv,
@@ -317,12 +358,26 @@ namespace sequoia::testing
                         }}}
                     }
                   }},
+                  {{{"recover", {}, {},
+                    [this, recovery{proj_paths().output().recovery()}](const arg_list&) {
+                      if(!std::filesystem::create_directory(recovery.dir()))
+                      {
+                        std::filesystem::remove(recovery.recovery_file());
+                      }
+                      m_RecoveryMode |= recovery_mode::recovery;
+                      if(m_ConcurrencyMode == concurrency_mode::dynamic)
+                        m_ConcurrencyMode = concurrency_mode::serial;
+                    }
+                  }}},
                   {{{"dump", {}, {},
-                    [this, recoveryDir{recovery_path(proj_paths().output())}](const arg_list&) {
-                      std::filesystem::create_directory(recoveryDir);
-                      m_Selector.dump_file(recoveryDir / "Dump.txt");
-                      std::filesystem::remove(m_Selector.dump_file());
-                      m_ConcurrencyMode = concurrency_mode::serial;
+                    [this, recovery{proj_paths().output().recovery()}](const arg_list&) {
+                      if(!std::filesystem::create_directory(recovery.dir()))
+                      {
+                        std::filesystem::remove(recovery.dump_file());
+                      }
+                      m_RecoveryMode |= recovery_mode::dump;
+                      if(m_ConcurrencyMode == concurrency_mode::dynamic)
+                        m_ConcurrencyMode = concurrency_mode::serial;
                     }
                   }}},
                   {{{"--async-depth", {"-a"}, {"depth [null,family,unit]"},
@@ -348,21 +403,9 @@ namespace sequoia::testing
                       }
                     }
                   }}},
-                  {{{"--verbose",  {"-v"}, {}, [this](const arg_list&) { m_OutputMode = output_mode::verbose; }}}},
-                  {{{"--recovery", {"-r"}, {},
-                    [this,recoveryDir{recovery_path(proj_paths().output())}] (const arg_list&) {
-                      std::filesystem::create_directory(recoveryDir);
-                      m_Selector.recovery_file(recoveryDir / "Recovery.txt");
-                      std::filesystem::remove(m_Selector.recovery_file());
-                      m_ConcurrencyMode = concurrency_mode::serial;
-                    }
-                  }}}
+                  {{{"--verbose",  {"-v"}, {}, [this](const arg_list&) { m_OutputMode = output_mode::verbose; }}}}
                 },
-                [this](std::string_view exe){
-                    const fs::path executable{exe};
-                    m_Executable = executable.is_absolute() ? executable : working_path() / executable;
-                    m_Selector.executable_time_stamp(m_Executable);
-                })
+                [this](std::string_view){})
         };
 
     if(!help.empty())
@@ -378,31 +421,43 @@ namespace sequoia::testing
       check_argument_consistency();
 
       if(mode(runner_mode::create))
-        cmake_nascent_tests(proj_paths().main_cpp_dir(), proj_paths().cmade_build_dir(), stream());
+        cmake_nascent_tests(proj_paths(), stream());
   
       if(mode(runner_mode::init))
-        init_projects(proj_paths().project_root(), nascentProjects, stream());
+        init_projects(proj_paths(), nascentProjects, stream());
 
       if(mode(runner_mode::test))
-        m_Selector.prune(stream());
+      {
+        if((m_InstabilityMode == instability_mode::single_instance) || (m_InstabilityMode == instability_mode::coordinator))
+        {
+          setup_instability_analysis_prune_folder(proj_paths());
+        }
+
+        // Note: this needs to be done here, before test families are added
+        prune();
+      }
     }
   }
 
   void test_runner::check_argument_consistency()
   {
+    using parsing::commandline::warning;
+    using parsing::commandline::error;
+
     if((m_InstabilityMode != instability_mode::none) && (m_UpdateMode == update_mode::soft))
     {
-      using parsing::commandline::warning;
-
       m_UpdateMode = update_mode::none;
       stream() << warning("Update of materials suppressed when checking for instabilities\n");
     }
 
-    stream() << m_Selector.check_argument_consistency(m_ConcurrencyMode);
+    if((m_ConcurrencyMode != concurrency_mode::serial) && (m_RecoveryMode != recovery_mode::none))
+      throw std::runtime_error{error("Can't run asynchronously in recovery/dump mode\n")};
+
+    stream() << m_Selector.check_argument_consistency();
   }
 
   [[nodiscard]]
-  family_summary test_runner::process_family(const family_results& results)
+  family_summary test_runner::process_family(family_results results)
   {
     family_summary familySummary{results.execution_time};
     std::string output{};
@@ -424,44 +479,32 @@ namespace sequoia::testing
 
     stream() << output;
 
-    std::copy(results.failed_tests.begin(), results.failed_tests.end(), std::back_inserter(m_FailedTestSourceFiles));
+
+    familySummary.failed_tests = std::move(results.failed_tests);
 
     return familySummary;
   }
 
   void test_runner::execute([[maybe_unused]] timer_resolution r)
   {
-    if(!mode(runner_mode::test)) return;
+    if(!mode(runner_mode::test))
+      return;
 
+    fs::create_directories(proj_paths().prune().dir());
     stream() << m_Selector.check_for_missing_tests();
 
-    if(m_Selector.empty())
-    {
-      if(m_Selector.pruned())
-      {
-        stream() << "Nothing to do: no changes since the last run, therefore 'prune' has pruned all tests\n";
-      }
-      else if(!m_Selector.bespoke_selection())
-      {
-        stream() << "Nothing to do; try creating some tests!\nRun with --help to see options\n";
-      }
-
-      return;
-    }
+    if(nothing_to_do()) return;
 
     finalize_concurrency_mode();
 
     if((m_InstabilityMode != instability_mode::sandbox))
     {
-      fs::remove_all(temp_test_summaries_path(proj_paths().output()));
-
-      if(m_Selector.pruned())
-        fs::remove(prune_path(proj_paths()));
+      fs::remove_all(proj_paths().output().instability_analysis());
     }
 
     if(m_InstabilityMode == instability_mode::coordinator)
     {
-      if(m_Executable.empty())
+      if(proj_paths().executable().empty())
         throw std::runtime_error{"Unable to run in sandbox mode, as executable cannot be found"};
 
       const auto specified{
@@ -470,7 +513,7 @@ namespace sequoia::testing
           // TO DO: use ranges when supported by libc++
           for(auto i{selector.begin_selected_sources()}; i != selector.end_selected_sources(); ++i)
           {
-            if(i->second) srcs.append(" select " + i->first.generic_string());
+            if(i->second) srcs.append(" select " + i->first.path().generic_string());
           }
 
           for(auto i{selector.begin_selected_families()}; i != selector.end_selected_families(); ++i)
@@ -482,29 +525,11 @@ namespace sequoia::testing
         }()
       };
 
-      auto asyncOption{
-        [mode{m_ConcurrencyMode}] (){
-          switch(mode)
-          {
-          case concurrency_mode::serial:
-            return " -a null";
-          case concurrency_mode::dynamic:
-            return "";
-          case concurrency_mode::family:
-            return " -a family";
-          case concurrency_mode::unit:
-            return " -a unit";
-          }
-
-          throw std::logic_error{"Illegal option for concurrency_mode"};
-        }
-      };
-
       for(std::size_t i{}; i < m_NumReps; ++i)
       {
-        invoke(runtime::shell_command(m_Executable.string().append(" locate ").append(std::to_string(m_NumReps))
-                                                           .append(" --runner-id ").append(std::to_string(i)).append(specified)
-                                                           .append(asyncOption())));
+        invoke(runtime::shell_command(proj_paths().executable().string().append(" locate ").append(std::to_string(m_NumReps))
+                                                               .append(" --runner-id ").append(std::to_string(i)).append(specified)
+                                                               .append(to_async_option(m_ConcurrencyMode))));
       }
     }
     else
@@ -531,7 +556,8 @@ namespace sequoia::testing
     if(   (m_InstabilityMode == instability_mode::single_instance)
        || (m_InstabilityMode == instability_mode::coordinator))
     {
-      const auto outputDir{temp_test_summaries_path(m_Selector.proj_paths().output())};
+      aggregate_instability_analysis_prune_files(m_Selector.proj_paths(), m_Selector.pruned(), m_Selector.current_time_stamp(), m_NumReps);
+      const auto outputDir{m_Selector.proj_paths().output().instability_analysis()};
       stream() << instability_analysis(outputDir, m_NumReps);
     }
   }
@@ -548,10 +574,18 @@ namespace sequoia::testing
     }
   }
 
-  void test_runner::run_tests(const std::optional<std::size_t> index)
+  void test_runner::run_tests(const std::optional<std::size_t> id)
   {
     const timer t{};
     log_summary summary{};
+    std::vector<fs::path> failedTests;
+
+    auto update{
+      [&summary, &failedTests](const family_summary& familySummary) {
+        summary += familySummary.log;
+        failedTests.insert(failedTests.end(), familySummary.failed_tests.begin(), familySummary.failed_tests.end());
+      }
+    };
 
     stream() << "\nRunning tests...\n\n";
     if(!concurrent_execution())
@@ -559,7 +593,7 @@ namespace sequoia::testing
       for(auto& family : m_Selector)
       {
         stream() << family.name() << ":\n";
-        summary += process_family(family.execute(m_UpdateMode, m_ConcurrencyMode, index)).log;
+        update(process_family(family.execute(m_UpdateMode, m_ConcurrencyMode, id)));
       }
     }
     else
@@ -574,19 +608,67 @@ namespace sequoia::testing
       for(auto& family : m_Selector)
       {
         results.emplace_back(family.name(),
-          std::async([&family, umode = m_UpdateMode, cmode = m_ConcurrencyMode, index](){
-            return family.execute(umode, cmode, index); }));
+          std::async([&family, umode=m_UpdateMode, cmode=m_ConcurrencyMode, id](){
+            return family.execute(umode, cmode, id); }));
       }
 
       for(auto& res : results)
       {
         stream() << res.first << ":\n";
-        summary += process_family(res.second.get()).log;
+        update(process_family(res.second.get()));
       }
     }
     stream() << "\n-----------Grand Totals-----------\n";
     stream() << summarize(summary, t.time_elapsed(), summary_detail::absent_checks | summary_detail::timings, indentation{"\t"}, no_indent);
 
-    m_Selector.update_prune_info(m_FailedTestSourceFiles.begin(), m_FailedTestSourceFiles.end());
+    m_Selector.update_prune_info(std::move(failedTests), id);
+  }
+
+  [[nodiscard]]
+  bool test_runner::nothing_to_do()
+  {
+    if(!m_Selector.families_presented())
+    {
+      stream() << "Nothing to do: try creating some tests!\nRun with --help to see options\n";
+      return true;
+    }
+    else if(m_Selector.empty())
+    {
+      if(m_Selector.pruned() == prune_mode::active)
+        stream() << "Nothing to do: no changes since the last run, therefore 'prune' has pruned all tests\n";
+
+      return true;
+    }
+
+    return false;
+  }
+
+  void test_runner::prune()
+  {
+    if(m_Selector.pruned() == prune_mode::passive) return;
+
+    // Do this here: if pruning throws an exception, this output should make it clearer what's going on
+    stream() << "\nAnalyzing dependencies...\n";
+    const timer t{};
+
+    switch(m_Selector.prune())
+    {
+    case prune_outcome::not_attempted:
+      break;
+    case prune_outcome::no_time_stamp:
+      {
+        using parsing::commandline::warning;
+        stream() << warning({"Time stamp of previous run does not exist, so unable to prune.",
+                            "This should be automatically rectified for the next successful run.",
+                            "No action required."});
+      }
+      break;
+    case prune_outcome::success:
+      {
+        const auto [dur, unit] {testing::stringify(t.time_elapsed())};
+        stream() << "[" << dur << unit << "]\n\n";
+      }
+      break;
+    } 
   }
 }

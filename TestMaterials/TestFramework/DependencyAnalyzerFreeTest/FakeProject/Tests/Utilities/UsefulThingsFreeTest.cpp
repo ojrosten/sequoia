@@ -6,7 +6,7 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "UsefulThingsFreeTest.hpp"
-#include "generatedProject/Utilities/UsefulThings.hpp"
+#include "fakeProject/Utilities/UsefulThings.hpp"
 
 namespace sequoia::testing
 {

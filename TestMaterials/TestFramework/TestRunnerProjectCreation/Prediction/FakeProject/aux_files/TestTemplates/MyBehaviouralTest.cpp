@@ -13,12 +13,12 @@
 namespace sequoia::testing
 {
 	[[nodiscard]]
-	std::string_view ?_behavioural_test::source_file() const noexcept
+	std::string_view ?forename_?surname::source_file() const noexcept
 	{
 		return __FILE__;
 	}
 
-	void ?_behavioural_test::run_tests()
+	void ?forename_?surname::run_tests()
 	{
 		// e.g. check(equality, LINE("Useful description"), some_function(), 42);
 	}

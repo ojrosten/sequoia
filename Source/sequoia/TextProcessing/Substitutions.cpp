@@ -13,7 +13,7 @@
 
 namespace sequoia
 {
-  std::string& to_camel_case(std::string& text)
+  std::string& to_camel_case(std::string& text, std::string_view separator)
   {
     if(text.empty()) return text;
 
@@ -33,23 +33,24 @@ namespace sequoia
     size_t pos{};
     while((pos = text.find("_", pos)) != std::string::npos)
     {
-      text.erase(pos, 1);
-      if((pos < text.length()) && std::isalpha(text[pos]))
+      text.replace(pos, 1, separator);
+      const auto next{pos + separator.size()};
+      if((next < text.length()) && std::isalpha(text[next]))
       {
-        text[pos] = upper(text[pos]);
+        text[next] = upper(text[next]);
       }
 
-      pos += 1;
+      pos += (separator.size() + 1);
     }
 
     return text;
   }
 
   [[nodiscard]]
-  std::string to_camel_case(std::string_view text)
+  std::string to_camel_case(std::string_view text, std::string_view separator)
   {
     std::string str{text};
-    return to_camel_case(str);
+    return to_camel_case(str, separator);
   }
 
   std::string& to_snake_case(std::string& text)

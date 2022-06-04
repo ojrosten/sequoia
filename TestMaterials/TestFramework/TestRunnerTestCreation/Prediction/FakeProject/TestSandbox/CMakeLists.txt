@@ -20,14 +20,15 @@ target_sources(TestAll PRIVATE
                ${TestDir}/CoupleTestingDiagnostics.cpp
                ${TestDir}/Global/Stuff/DefsFreeTest.cpp
                ${TestDir}/Global/Stuff/GlobalFreeTest.cpp
+               ${TestDir}/Maths/AngleFreeDiagnostics.cpp
                ${TestDir}/Maths/AngleTest.cpp
                ${TestDir}/Maths/AngleTestingDiagnostics.cpp
                ${TestDir}/Maths/ProbabilityTest.cpp
                ${TestDir}/Maths/ProbabilityTestingDiagnostics.cpp
                ${TestDir}/Maybe/MaybeTest.cpp
                ${TestDir}/Maybe/MaybeTestingDiagnostics.cpp
-               ${TestDir}/Stuff/BazagainTest.cpp
-               ${TestDir}/Stuff/BazzerTest.cpp
+               ${TestDir}/Stuff/BazagainFreeTest.cpp
+               ${TestDir}/Stuff/BazzerFreeTest.cpp
                ${TestDir}/Stuff/ContainerAllocationTest.cpp
                ${TestDir}/Stuff/ContainerPerformanceTest.cpp
                ${TestDir}/Stuff/ContainerTest.cpp

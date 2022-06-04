@@ -1,8 +1,8 @@
 var searchData=
 [
-  ['mapper_0',['mapper',['../d7/df1/structsequoia_1_1impl_1_1type__to__type_1_1mapper.html',1,'sequoia::impl::type_to_type']]],
-  ['materials_5finfo_1',['materials_info',['../d0/d4e/structsequoia_1_1testing_1_1materials__info.html',1,'sequoia::testing']]],
-  ['materials_5fsetter_2',['materials_setter',['../d5/df0/classsequoia_1_1testing_1_1family__info_1_1materials__setter.html',1,'sequoia::testing::family_info']]],
+  ['make_5fshared_5fbraced_0',['make_shared_braced',['../d9/d5c/structsequoia_1_1object_1_1make__shared__braced.html',1,'sequoia::object']]],
+  ['mapper_1',['mapper',['../d7/df1/structsequoia_1_1impl_1_1type__to__type_1_1mapper.html',1,'sequoia::impl::type_to_type']]],
+  ['materials_5finfo_2',['materials_info',['../d0/d4e/structsequoia_1_1testing_1_1materials__info.html',1,'sequoia::testing']]],
   ['materials_5fupdater_5ffree_5ftest_3',['materials_updater_free_test',['../d7/d6e/classsequoia_1_1testing_1_1materials__updater__free__test.html',1,'sequoia::testing']]],
   ['monotonic_5fsequence_4',['monotonic_sequence',['../d7/ddc/classsequoia_1_1maths_1_1monotonic__sequence.html',1,'sequoia::maths']]],
   ['monotonic_5fsequence_5fallocation_5ftest_5',['monotonic_sequence_allocation_test',['../da/d11/classsequoia_1_1testing_1_1monotonic__sequence__allocation__test.html',1,'sequoia::testing']]],
@@ -36,5 +36,6 @@ var searchData=
   ['move_5fonly_5fscoped_5fallocation_5ffalse_5fpositive_5fdiagnostics_33',['move_only_scoped_allocation_false_positive_diagnostics',['../d7/da3/classsequoia_1_1testing_1_1move__only__scoped__allocation__false__positive__diagnostics.html',1,'sequoia::testing']]],
   ['move_5fonly_5fstate_5ftransition_5ffalse_5fnegative_5fdiagnostics_34',['move_only_state_transition_false_negative_diagnostics',['../d4/dda/classsequoia_1_1testing_1_1move__only__state__transition__false__negative__diagnostics.html',1,'sequoia::testing']]],
   ['move_5fonly_5fstate_5ftransition_5ffalse_5fpositive_5fdiagnostics_35',['move_only_state_transition_false_positive_diagnostics',['../dd/da8/classsequoia_1_1testing_1_1move__only__state__transition__false__positive__diagnostics.html',1,'sequoia::testing']]],
-  ['mutable_5freference_36',['mutable_reference',['../da/d63/structsequoia_1_1data__structures_1_1partition__impl_1_1mutable__reference.html',1,'sequoia::data_structures::partition_impl']]]
+  ['move_5fonly_5ftype_36',['move_only_type',['../d3/d11/structsequoia_1_1testing_1_1move__only__type.html',1,'sequoia::testing']]],
+  ['mutable_5freference_37',['mutable_reference',['../da/d63/structsequoia_1_1data__structures_1_1partition__impl_1_1mutable__reference.html',1,'sequoia::data_structures::partition_impl']]]
 ];

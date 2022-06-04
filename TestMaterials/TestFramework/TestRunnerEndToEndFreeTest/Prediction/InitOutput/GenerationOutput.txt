@@ -1,9 +1,9 @@
 
 Placing under version control...
 
-Initialized empty Git repository in /Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/.git/
-[trunk (root-commit) c9070d2] First commit
- 27 files changed, 1888 insertions(+)
+Initialized empty Git repository in C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/.git/
+[trunk (root-commit) 619288d] First commit
+ 29 files changed, 1967 insertions(+)
  create mode 100644 .gitignore
  create mode 100644 LICENSE.md
  create mode 100644 Source/CMakeLists.txt
@@ -22,6 +22,8 @@ Initialized empty Git repository in /Users/Claire/Dropbox/Sequoia/output/TestsTe
  create mode 100644 aux_files/SourceTemplates/MyFreeFunctions.hpp
  create mode 100644 aux_files/SourceTemplates/MyMoveOnlyClass.hpp
  create mode 100644 aux_files/SourceTemplates/MyRegularClass.hpp
+ create mode 100644 aux_files/TestTemplates/MyBehaviouralDiagnostics.cpp
+ create mode 100644 aux_files/TestTemplates/MyBehaviouralDiagnostics.hpp
  create mode 100644 aux_files/TestTemplates/MyBehaviouralTest.cpp
  create mode 100644 aux_files/TestTemplates/MyBehaviouralTest.hpp
  create mode 100644 aux_files/TestTemplates/MyClassAllocationTest.cpp

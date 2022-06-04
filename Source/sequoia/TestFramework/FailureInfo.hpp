@@ -11,7 +11,8 @@
     \brief Utilities for recording information from test failures.
  */
 
-#include <filesystem>
+#include "sequoia/TestFramework/FileSystemUtilities.hpp"
+
 #include <vector>
 
 namespace sequoia::testing
@@ -66,7 +67,7 @@ namespace sequoia::testing
   std::istream& operator>>(std::istream& s, failure_output& output);
 
   [[nodiscard]]
-  std::filesystem::path directory_for_instability_analysis(const std::filesystem::path& outputDir,
+  std::filesystem::path directory_for_instability_analysis(const project_paths& projPaths,
                                                            std::filesystem::path source,
                                                            std::string_view name);
 
