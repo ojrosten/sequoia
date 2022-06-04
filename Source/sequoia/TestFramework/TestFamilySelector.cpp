@@ -102,9 +102,11 @@ namespace sequoia::testing
   std::vector<fs::path> family_selector::get_executed_tests() const
   {
     std::vector<fs::path> executedTests{};
-    for(const auto& src : m_SelectedSources)
+
+    for(const auto& f : m_Families)
     {
-      if(src.second) executedTests.push_back(src.first);
+      auto activeTests{f.active_test_paths()};
+      executedTests.insert(executedTests.end(), activeTests.begin(), activeTests.end());
     }
 
     return executedTests;

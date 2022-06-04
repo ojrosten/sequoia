@@ -175,7 +175,7 @@ namespace sequoia::testing
       std::string include_cutoff{};
     };
 
-    using family_map = std::map<std::string, bool, std::less<>>;
+    using family_map  = std::map<std::string, bool, std::less<>>;
     using source_list = std::vector<std::pair<normal_path, bool>>;
 
     project_paths              m_Paths;

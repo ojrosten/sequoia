@@ -60,7 +60,7 @@ namespace sequoia::testing
   /*! \brief helper class for test_family
 
       The primary purpose of this class to allow code that would otherwise appear
-      in the class template test_family to be moved out of thia header and into
+      in the class template test_family to be moved out of this header and into
       the associated cpp.
    */
   class family_info
@@ -290,6 +290,22 @@ namespace sequoia::testing
       
       std::apply([reset](auto&... optTest){ (reset(optTest), ...); }, m_Tests);
     }
+
+    [[nodiscard]]
+    std::vector<std::filesystem::path> active_test_paths() const
+    {
+      std::vector<std::filesystem::path> paths{};
+
+      auto addPath{
+        [this,&paths](const auto& optTest) {
+          if(optTest) paths.push_back(rebase_from(optTest.value().source_filename(), m_Info.proj_paths().tests()));
+        }
+      };
+
+      std::apply([addPath](auto&... optTest) { (addPath(optTest), ...); }, m_Tests);
+
+      return paths;
+    }
   private:
     family_info m_Info;
     std::tuple<std::optional<Tests>...> m_Tests;
@@ -317,10 +333,10 @@ namespace sequoia::testing
       : m_pFamily{std::make_unique<essence<test_family<Tests...>>>(std::forward<test_family<Tests...>>(f))}
     {}
 
-    family_vessel(const family_vessel&) = delete;
+    family_vessel(const family_vessel&)     = delete;
     family_vessel(family_vessel&&) noexcept = default;
 
-    family_vessel& operator=(const family_vessel&) = delete;
+    family_vessel& operator=(const family_vessel&)     = delete;
     family_vessel& operator=(family_vessel&&) noexcept = default;
 
     [[nodiscard]]
@@ -343,6 +359,13 @@ namespace sequoia::testing
       return m_pFamily->execute(updateMode, concurrenyMode, index);
     }
 
+
+    [[nodiscard]]
+    std::vector<std::filesystem::path> active_test_paths() const
+    {
+      return m_pFamily->active_test_paths();
+    }
+
     void reset()
     {
       m_pFamily->reset();
@@ -356,6 +379,7 @@ namespace sequoia::testing
       virtual family_results execute(update_mode updateMode,
                                      concurrency_mode concurrenyMode,
                                      std::optional<std::size_t> index) = 0;
+      virtual std::vector<std::filesystem::path> active_test_paths() const = 0;
       virtual void reset() = 0;
     };
 
@@ -383,6 +407,12 @@ namespace sequoia::testing
                              std::optional<std::size_t> index) final
       {
         return m_Family.execute(updateMode, concurrenyMode, index);
+      }
+
+      [[nodiscard]]
+      std::vector<std::filesystem::path> active_test_paths() const
+      {
+        return m_Family.active_test_paths();
       }
 
       void reset()

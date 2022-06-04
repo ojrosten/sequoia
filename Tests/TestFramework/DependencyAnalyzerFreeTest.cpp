@@ -221,7 +221,7 @@ namespace sequoia::testing
     check_tests_to_run(LINE("Reused utils stale"),
                        projPaths,
                        "namespace",
-                       {{{testRepo / "Stuff" / "OldSchoolTestingUtilities.hpp"}, modification_time::early}},
+                       {{{testRepo / "Stuff" / "OldschoolTestingUtilities.hpp"}, modification_time::early}},
                        {},
                        {},
                        {{"Maybe/MaybeTest.cpp"}, {"Stuff/OldschoolTest.cpp"}, {"Stuff/OldschoolTestingDiagnostics.cpp"}});
@@ -229,7 +229,7 @@ namespace sequoia::testing
     check_tests_to_run(LINE("Reused utils stale, but one of the tests has passed"),
                        projPaths,
                        "namespace",
-                       {{{testRepo / "Stuff" / "OldSchoolTestingUtilities.hpp"}, modification_time::early}},
+                       {{{testRepo / "Stuff" / "OldschoolTestingUtilities.hpp"}, modification_time::early}},
                        {},
                        {{{"Maybe/MaybeTest.cpp"}}, modification_time::late},
                        {{"Stuff/OldschoolTest.cpp"}, {"Stuff/OldschoolTestingDiagnostics.cpp"}});
@@ -237,7 +237,7 @@ namespace sequoia::testing
     check_tests_to_run(LINE("Reused utils stale, but two of the tests have passed"),
                        projPaths,
                        "namespace",
-                       {{{testRepo / "Stuff" / "OldSchoolTestingUtilities.hpp"}, modification_time::early}},
+                       {{{testRepo / "Stuff" / "OldschoolTestingUtilities.hpp"}, modification_time::early}},
                        {},
                        {{{"Maybe/MaybeTest.cpp"}, {"Stuff/OldschoolTest.cpp"}}, modification_time::late},
                        {{"Stuff/OldschoolTestingDiagnostics.cpp"}});
@@ -245,7 +245,7 @@ namespace sequoia::testing
     check_tests_to_run(LINE("Reused utils stale, but two of the tests have passed and a different one has failed"),
                        projPaths,
                        "namespace",
-                       {{{testRepo / "Stuff" / "OldSchoolTestingUtilities.hpp"}, modification_time::early}},
+                       {{{testRepo / "Stuff" / "OldschoolTestingUtilities.hpp"}, modification_time::early}},
                        {{"HouseAllocationTest.cpp"}},
                        {{{"Maybe/MaybeTest.cpp"}, {"Stuff/OldschoolTest.cpp"}}, modification_time::late},
                        {{"Stuff/OldschoolTestingDiagnostics.cpp"}, {"HouseAllocationTest.cpp"}});
