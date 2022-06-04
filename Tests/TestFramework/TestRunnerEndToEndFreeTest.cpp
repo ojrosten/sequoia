@@ -425,7 +425,7 @@ namespace sequoia::testing
 
     run_and_check(LINE("Passing test not included by prune"), b, "PassingTestExcludedByPrune", "prune -c namespace");
 
-    //=================== Fix failing test and 'select' it===================//
+    //=================== Fix a failing test and 'select' it ===================//
 
     fs::copy(generatedPredictive / "RepresentativeCasesTemp", generatedPredictive / "RepresentativeCases", fs::copy_options::recursive);
     fs::remove_all(generatedPredictive / "RepresentativeCasesTemp");
@@ -437,6 +437,19 @@ namespace sequoia::testing
 
     //=================== Rerun with prune to confirm that the previously selected test - now passing - is not run ===================//
 
-    run_and_check(LINE("Passing test not included by prune"), b, "AnotherPassingTestExcludedByPrune", "prune -c namespace");
+    run_and_check(LINE("Fixed test not included by prune"), b, "AnotherPassingTestExcludedByPrune", "prune -c namespace");
+
+    //=================== Fix the final failing test and 'test' it ===================//
+
+    copy_aux_materials("ModifiedTests/Maths/ProbabilityTest.cpp", "Tests/Maths");
+
+    rebuild_run_and_check(LINE("Rebuild, run and 'test' after fixing a test"), b, "RunFamilyWithFixedTest", "CMakeOutput6.txt", "BuildOutput6.txt", "test Probability");
+
+    check(equivalence, LINE("Fixed Test Output"), working_materials() / "RunSelectedFixedTest", predictive_materials() / "RunSelectedFixedTest");
+
+    //=================== Rerun with prune to confirm that the previously selected test - now passing - is not run ===================//
+
+    run_and_check(LINE("Final fixed test not included by prune"), b, "FinalPassingTestExcludedByPrune", "prune -c namespace");
+
   }
 }
