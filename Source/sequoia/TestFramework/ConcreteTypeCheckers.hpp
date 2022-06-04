@@ -595,12 +595,19 @@ namespace sequoia::testing
     template<class CheckType, test_mode Mode, class Advisor>
     static void test(CheckType flavour, test_logger<Mode>& logger, const type& obtained, const type& prediction, const tutor<Advisor>& advisor)
     {
-      if(check(equality, "Has value", logger, obtained.has_value(), prediction.has_value()))
+      if(obtained && prediction)
       {
-        if(obtained && prediction)
-        {
-          check(flavour, "Contents of optional", logger, *obtained, *prediction, advisor);
-        }
+        check(flavour, "Contents of optional", logger, *obtained, *prediction, advisor);
+      }
+      else
+      {
+        const bool obtainedIsNull{obtained}, predictionIsNull{prediction};
+
+        check(equality,
+              nullable_type_message(obtainedIsNull, predictionIsNull),
+              logger,
+              static_cast<bool>(obtained),
+              static_cast<bool>(prediction));
       }
     }
   };
@@ -635,6 +642,49 @@ namespace sequoia::testing
     }
   };
 
+  /*! \brief Compares instance of pointers
+
+     Testing equality is performed via `binary_comparison`, and so does not require this
+     specialization of `value_tester`.
+
+     The `test(equivalence_check_t,...)` function checks whether the pointers either both point to
+     something or both point to nullptr, reporting a failure if this is not the case. If both
+     pointers are not null, a check is dispatched to test the bound type. This is done using
+     the strongest available check.
+  */
+
+  template<class T>
+  struct value_tester<T*>
+  {
+    using type = T*;
+
+    template<test_mode Mode, class Advisor>
+    static void test(equivalence_check_t, test_logger<Mode>& logger, type obtained, type prediction, const tutor<Advisor>& advisor)
+    {
+      if(obtained && prediction)
+      {
+        check(with_best_available, "Pointees differ", logger, *obtained, *prediction, advisor);
+      }
+      else
+      {
+        const auto obtainedIsNull{static_cast<bool>(obtained)}, predictionIsNull{static_cast<bool>(prediction)};
+
+        check(equality,
+              nullable_type_message(obtainedIsNull, predictionIsNull),
+              logger,
+              obtainedIsNull,
+              predictionIsNull);
+      }
+    }
+  };
+
+  /*! \brief Helper for testing smart pointers
+  
+      The general pattern for smart pointers is that `test(equality, ...)` checks for equality
+      of the underlying pointers, whereas `test(equivalence, ...) checks the pointees, using
+      the strongest available check.
+   */
+
   template<class T>
   struct smart_pointer_tester
   {
@@ -657,17 +707,10 @@ namespace sequoia::testing
       }
       else
       {
-        const bool obtainedIsBound{obtained}, predictionIsBound{prediction};
-
-        auto messageFn{[](std::string_view name, const bool bound) -> std::string {
-            auto mess{std::string{name} + " is "};
-            if(!bound) mess.append("not ");
-            return mess.append("null");
-          }
-        };
+        const bool obtainedIsNull{obtained}, predictionIsNull{prediction};
 
         check(equality,
-              messageFn("obtained", obtainedIsBound).append(" but ").append(messageFn("prediction", predictionIsBound)),
+              nullable_type_message(obtainedIsNull, predictionIsNull),
               logger,
               static_cast<bool>(obtained),
               static_cast<bool>(prediction));
@@ -681,7 +724,7 @@ namespace sequoia::testing
 
       The `test(equivalence_check_t,...)` overload checks whether the pointers either both point to
       something or both point to nullptr, reporting a failure if this is not the case. If both
-      pointers are not null, a check is dispatched to test the underlying type. This is done using
+      pointers are not null, a check is dispatched to test the bound type. This is done using
       the strongest available check.
    */
 
@@ -763,18 +806,11 @@ namespace sequoia::testing
     template<test_mode Mode>
     static void test(weak_equivalence_check_t, test_logger<Mode>& logger, const type& obtained, const type& prediction)
     {
-      const bool obtainedIsBound{obtained}, predictionIsBound{prediction};
+      const bool obtainedIsNull{obtained}, predictionIsNull{prediction};
 
-      auto messageFn{[](std::string_view name, const bool bound) -> std::string {
-           auto mess{std::string{name} + " has a function "};
-           if(!bound) mess.append("not ");
-           return mess.append("bound");
-        }
-      };
-
-      check(messageFn("obtained", obtainedIsBound).append(" but ").append(messageFn("prediction", predictionIsBound)),
+      check(nullable_type_message(obtainedIsNull, predictionIsNull),
             logger,
-            (obtainedIsBound && predictionIsBound) || (!obtainedIsBound && !predictionIsBound));
+            (obtainedIsNull && predictionIsNull) || (!obtainedIsNull && !predictionIsNull));
     }
   };
 

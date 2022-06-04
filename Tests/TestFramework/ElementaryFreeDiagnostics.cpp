@@ -66,9 +66,84 @@ namespace sequoia::testing
     check(equality, LINE("Double check with advice"), 6.5, 5.6, tutor{[](double, double){
         return "Double, double, toil and trouble";
       }});
-    check(equality, LINE("Double check with ignored advice"), 6.5, 5.6, tutor{[](int, int) {
-        return "int adivce";
+    check(equality, LINE("Double check with advice for ints ignored"), 6.5, 5.6, tutor{[](int, int) {
+        return "int advice";
       }});
+    check(equality, LINE("Double check with advice for floats ignored"), 6.5, 5.6, tutor{[](float, float) {
+       return "float advice";
+     }});
+
+    check(equality, LINE("Float check"), 4.2f, -1.7f);
+    check(equality, LINE("Float check with advice"), 4.2f, -1.7f, tutor{[](float, float) {
+        return "Float, float, hmmm... doesn't quite work";
+      }});
+    check(equality, LINE("Float check with advice for ints ignored"), 6.5, 5.6, tutor{[](int, int) {
+        return "int advice";
+      }});
+    check(equality, LINE("Float check with advice for doubles utilized"), 6.5, 5.6, tutor{[](double, double) {
+        return "double advice";
+      }});
+
+    {
+      int x{42}, y{42}, z{43};
+      int* p{};
+      check(equality, LINE("Equality for null vs. non-null pointer"), p, &x);
+      check(equality, LINE("Equality for non-null vs null pointer"), &x, p);
+      check(equality, LINE("Equality for different pointers"), &x, &y);
+      check(equivalence, LINE("Equivalence for null vs. non-null pointer"), p, &x);
+      check(equivalence, LINE("Different pointers pointing to different values"), &x, &z);
+    }
+
+    {
+      const int x{42}, y{42}, z{43};
+      const int* p{};
+      check(equality, LINE("Equality for null vs. non-null pointer"), p, &x);
+      check(equality, LINE("Equality for non-null vs null pointer"), &x, p);
+      check(equality, LINE("Equality for different pointers"), &x, &y);
+      check(equivalence, LINE("Equivalence for null vs. non-null pointer"), p, &x);
+      check(equivalence, LINE("Different pointers pointing to different values"), &x, &z);
+    }
+
+    {
+      int x{42}, y{42}, z{43};
+      int* const p{};
+      check(equality, LINE("Equality for null vs. non-null pointer"), p, &x);
+      check(equality, LINE("Equality for non-null vs null pointer"), &x, p);
+      check(equality, LINE("Equality for different pointers"), &x, &y);
+      check(equivalence, LINE("Equivalence for null vs. non-null pointer"), p, &x);
+      check(equivalence, LINE("Different pointers pointing to different values"), &x, &z);
+    }
+
+    {
+      const int x{42}, y{42}, z{43};
+      const int* const p{};
+      check(equality, LINE("Equality for null vs. non-null pointer"), p, &x);
+      check(equality, LINE("Equality for non-null vs null pointer"), &x, p);
+      check(equality, LINE("Equality for different pointers"), &x, &y);
+      check(equivalence, LINE("Equivalence for null vs. non-null pointer"), p, &x);
+      check(equivalence, LINE("Different pointers pointing to different values"), &x, &z);
+    }
+
+    {
+      volatile int x{42}, y{42};
+      volatile int* p{};
+      check(equality, LINE("Equality for null vs. non-null pointer"), p, &x);
+      check(equality, LINE("Equality for non-null vs null pointer"), &x, p);
+      check(equality, LINE("Equality for different pointers"), &x, &y);
+    }
+
+    {
+      const volatile int x{42}, y{42};
+      const volatile int* p{};
+      check(equality, LINE("Equality for null vs. non-null pointer"), p, &x);
+      check(equality, LINE("Equality for non-null vs null pointer"), &x, p);
+      check(equality, LINE("Equality for different pointers"), &x, &y);
+    }
+
+    {
+      int x[1]{42}, y[1]{1729};
+      check(equality, LINE("Built-in arrays of the same length"), x, y);
+    }
   }
 
   void elementary_false_positive_free_diagnostics::test_equality_checks()
@@ -224,6 +299,20 @@ namespace sequoia::testing
 
     check(equality, LINE("Integer test"), 5, 5);
     check(equality, LINE("Double test"), 5.0, 5.0);
+
+    {
+      int x{42}, y{42};
+      int* p{};
+
+      check(equality, LINE("Equality of null pointer with itself"), p, p);
+      check(equality, LINE("Equality of non-null pointer with itself"), &x, &x);
+      check(equivalence, LINE("Different pointers pointing to the same values"), &x, &y);
+    }
+
+    {
+      int x[1]{1729}, y[1]{1729};
+      check(equality, LINE("Built-in arrays of the same length"), x, y);
+    }
   }
 
   void elementary_false_negative_free_diagnostics::test_equivalence_checks()

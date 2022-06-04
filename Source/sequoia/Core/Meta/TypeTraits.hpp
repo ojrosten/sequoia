@@ -121,7 +121,13 @@ namespace sequoia
   struct is_const_pointer<const T*> : std::true_type {};
 
   template<class T>
+  struct is_const_pointer<const T* volatile> : std::true_type {};
+
+  template<class T>
   struct is_const_pointer<const T* const> : std::true_type {};
+
+  template<class T>
+  struct is_const_pointer<const T* const volatile> : std::true_type {};
 
   template<class T>
   inline constexpr bool is_const_pointer_v{is_const_pointer<T>::value};
@@ -216,7 +222,7 @@ namespace sequoia
   {};
 
   template<class T>
-  struct is_deep_equality_comparable : std::bool_constant<std::equality_comparable<T>>
+  struct is_deep_equality_comparable : std::bool_constant<std::equality_comparable<T> && !std::is_array_v<T>>
   {};
 
   template<class T>

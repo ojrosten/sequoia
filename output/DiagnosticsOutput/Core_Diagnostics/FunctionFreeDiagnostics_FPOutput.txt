@@ -6,7 +6,8 @@
 	Checking for weak equivalence with:
 	[std::function<void ()>]
 
-	  obtained has a function bound but prediction has a function not bound
+	  Obtained : not null
+	  Predicted: null
 	  [bool]
 	  check failed
 
@@ -20,7 +21,8 @@
 	Checking for weak equivalence with:
 	[std::function<void ()>]
 
-	  obtained has a function not bound but prediction has a function bound
+	  Obtained : null
+	  Predicted: not null
 	  [bool]
 	  check failed
 
@@ -34,7 +36,8 @@
 	Checking for weak equivalence with:
 	[std::function<int ()>]
 
-	  obtained has a function bound but prediction has a function not bound
+	  Obtained : not null
+	  Predicted: null
 	  [bool]
 	  check failed
 
@@ -48,7 +51,8 @@
 	Checking for weak equivalence with:
 	[std::function<int ()>]
 
-	  obtained has a function not bound but prediction has a function bound
+	  Obtained : null
+	  Predicted: not null
 	  [bool]
 	  check failed
 
@@ -62,7 +66,8 @@
 	Checking for weak equivalence with:
 	[std::function<void (int)>]
 
-	  obtained has a function bound but prediction has a function not bound
+	  Obtained : not null
+	  Predicted: null
 	  [bool]
 	  check failed
 
@@ -76,7 +81,8 @@
 	Checking for weak equivalence with:
 	[std::function<void (int)>]
 
-	  obtained has a function not bound but prediction has a function bound
+	  Obtained : null
+	  Predicted: not null
 	  [bool]
 	  check failed
 

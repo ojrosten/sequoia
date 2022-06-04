@@ -1,5 +1,5 @@
 	Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 34
-	null vs. not null
+	Equality for null vs. not null
 
 	[std::unique_ptr<int, std::default_delete<int> >]
 	operator== returned false
@@ -7,12 +7,13 @@
 	  Underlying pointers differ
 	  [int*]
 	  operator== returned false
-	  Expected non-null pointer, but found null
+	  Obtained : null
+	  Predicted: not null
 
 	=======================================
 
 	Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 35
-	not null vs. null 
+	Equality for not null vs. null 
 
 	[std::unique_ptr<int, std::default_delete<int> >]
 	operator== returned false
@@ -20,12 +21,13 @@
 	  Underlying pointers differ
 	  [int*]
 	  operator== returned false
-	  Expected null pointer, but found non-null
+	  Obtained : not null
+	  Predicted: null
 
 	=======================================
 
 	Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 36
-	Different pointers
+	Equality for different pointers
 
 	[std::unique_ptr<int, std::default_delete<int> >]
 	operator== returned false
@@ -33,11 +35,41 @@
 	  Underlying pointers differ
 	  [int*]
 	  operator== returned false
-	  Pointers both non-null, but different
+	  Pointers both non-null, but they point to different addresses
 
 	=======================================
 
 	Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 37
+	Equivalence for null vs. not null
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<std::unique_ptr<int, std::default_delete<int> > >]
+	Checking for equivalence with:
+	[std::unique_ptr<int, std::default_delete<int> >]
+
+	  Obtained : null
+	  Predicted: not null
+	  [bool]
+	  check failed
+
+	=======================================
+
+	Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 38
+	Equivalence for not null vs. null 
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<std::unique_ptr<int, std::default_delete<int> > >]
+	Checking for equivalence with:
+	[std::unique_ptr<int, std::default_delete<int> >]
+
+	  Obtained : not null
+	  Predicted: null
+	  [bool]
+	  check failed
+
+	=======================================
+
+	Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 39
 	Different pointers pointing to different values
 
 	Comparison performed using:
@@ -53,7 +85,7 @@
 
 	=======================================
 
-	Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 40
+	Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 42
 	Advice for different pointers pointing to different values
 
 	Comparison performed using:
@@ -70,7 +102,7 @@
 
 	=======================================
 
-	Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 48
+	Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 50
 	Different pointers pointing to different values
 
 	Comparison performed using:
@@ -88,7 +120,7 @@
 
 	=======================================
 
-	Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 55
+	Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 57
 	Different pointers pointing to different values
 
 	Comparison performed using:
@@ -112,7 +144,7 @@
 
 	=======================================
 
-	Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 63
+	Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 65
 	Different pointers pointing to different values
 
 	Comparison performed using:
@@ -152,34 +184,8 @@
 
 	=======================================
 
-	Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 73
-	null vs. not null
-
-	[std::shared_ptr<int>]
-	operator== returned false
-
-	  Underlying pointers differ
-	  [int*]
-	  operator== returned false
-	  Expected non-null pointer, but found null
-
-	=======================================
-
-	Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 74
-	not null vs. null 
-
-	[std::shared_ptr<int>]
-	operator== returned false
-
-	  Underlying pointers differ
-	  [int*]
-	  operator== returned false
-	  Expected null pointer, but found non-null
-
-	=======================================
-
 	Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 75
-	Different pointers
+	Equality for null vs. not null
 
 	[std::shared_ptr<int>]
 	operator== returned false
@@ -187,11 +193,81 @@
 	  Underlying pointers differ
 	  [int*]
 	  operator== returned false
-	  Pointers both non-null, but different
+	  Obtained : null
+	  Predicted: not null
 
 	=======================================
 
 	Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 76
+	Equality for not null vs. null 
+
+	[std::shared_ptr<int>]
+	operator== returned false
+
+	  Underlying pointers differ
+	  [int*]
+	  operator== returned false
+	  Obtained : not null
+	  Predicted: null
+
+	=======================================
+
+	Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 77
+	Equality for different pointers
+
+	[std::shared_ptr<int>]
+	operator== returned false
+
+	  Underlying pointers differ
+	  [int*]
+	  operator== returned false
+	  Pointers both non-null, but they point to different addresses
+
+	=======================================
+
+	Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 78
+	Equivalence for null vs. not null
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<std::shared_ptr<int> >]
+	Checking for equivalence with:
+	[std::shared_ptr<int>]
+
+	  Use count
+	  [long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	  Obtained : null
+	  Predicted: not null
+	  [bool]
+	  check failed
+
+	=======================================
+
+	Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 79
+	Equivalence for not null vs. null 
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<std::shared_ptr<int> >]
+	Checking for equivalence with:
+	[std::shared_ptr<int>]
+
+	  Use count
+	  [long]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
+
+	  Obtained : not null
+	  Predicted: null
+	  [bool]
+	  check failed
+
+	=======================================
+
+	Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 80
 	Different pointers pointing to different values
 
 	Comparison performed using:
@@ -207,7 +283,7 @@
 
 	=======================================
 
-	Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 79
+	Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 83
 	Advice for different pointers pointing to different values
 
 	Comparison performed using:
@@ -224,7 +300,7 @@
 
 	=======================================
 
-	Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 85
+	Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 89
 	Different use counts
 
 	Comparison performed using:
@@ -240,7 +316,7 @@
 
 	=======================================
 
-	Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 91
+	Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 95
 	Different pointers pointing to different values
 
 	Comparison performed using:
@@ -280,8 +356,8 @@
 
 	=======================================
 
-	Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 106
-	null vs. not null
+	Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 110
+	Equality for null vs. not null
 
 	[std::weak_ptr<int>]
 	  Underlying pointers differ
@@ -291,12 +367,13 @@
 	    Underlying pointers differ
 	    [int*]
 	    operator== returned false
-	    Expected non-null pointer, but found null
+	    Obtained : null
+	    Predicted: not null
 
 	=======================================
 
-	Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 107
-	not null vs. null 
+	Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 111
+	Equality for not null vs. null 
 
 	[std::weak_ptr<int>]
 	  Underlying pointers differ
@@ -306,12 +383,13 @@
 	    Underlying pointers differ
 	    [int*]
 	    operator== returned false
-	    Expected null pointer, but found non-null
+	    Obtained : not null
+	    Predicted: null
 
 	=======================================
 
-	Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 108
-	Different pointers
+	Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 112
+	Equality for different pointers
 
 	[std::weak_ptr<int>]
 	  Underlying pointers differ
@@ -321,11 +399,65 @@
 	    Underlying pointers differ
 	    [int*]
 	    operator== returned false
-	    Pointers both non-null, but different
+	    Pointers both non-null, but they point to different addresses
 
 	=======================================
 
-	Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 109
+	Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 113
+	Equivalence for null vs. not null
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<std::weak_ptr<int> >]
+	Checking for equivalence with:
+	[std::weak_ptr<int>]
+
+	  Underlying pointers differ
+	  Comparison performed using:
+	  [sequoia::testing::value_tester<std::shared_ptr<int> >]
+	  Checking for equivalence with:
+	  [std::shared_ptr<int>]
+
+	    Use count
+	    [long]
+	    operator== returned false
+	    Obtained : 0
+	    Predicted: 2
+
+	    Obtained : null
+	    Predicted: not null
+	    [bool]
+	    check failed
+
+	=======================================
+
+	Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 114
+	Equivalence for not null vs. null 
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<std::weak_ptr<int> >]
+	Checking for equivalence with:
+	[std::weak_ptr<int>]
+
+	  Underlying pointers differ
+	  Comparison performed using:
+	  [sequoia::testing::value_tester<std::shared_ptr<int> >]
+	  Checking for equivalence with:
+	  [std::shared_ptr<int>]
+
+	    Use count
+	    [long]
+	    operator== returned false
+	    Obtained : 2
+	    Predicted: 0
+
+	    Obtained : not null
+	    Predicted: null
+	    [bool]
+	    check failed
+
+	=======================================
+
+	Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 115
 	Different pointers pointing to different values
 
 	Comparison performed using:

@@ -323,7 +323,7 @@ $(function() {
 <div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span>  }</div>
 <div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span> </div>
 <div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span>  <span class="keyword">template</span>&lt;<span class="keywordtype">bool</span> IsFinalMessage, test_mode Mode, <span class="keyword">class</span> Compare, <span class="keyword">class</span> T, <span class="keyword">class</span> Advisor&gt;</div>
-<div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span>    <span class="keyword">requires</span> (std::invocable&lt;Compare, T, T&gt; &amp;&amp; (!IsFinalMessage || reportable&lt;T&gt;))</div>
+<div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span>    <span class="keyword">requires</span> (std::invocable&lt;Compare, T, T&gt; &amp;&amp; (!IsFinalMessage || reportable&lt;T&gt;) &amp;&amp; !std::is_array_v&lt;T&gt;)</div>
 <div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span>  <span class="keywordtype">void</span> binary_comparison(final_message_constant&lt;IsFinalMessage&gt;, sentinel&lt;Mode&gt;&amp; sentry, Compare compare, <span class="keyword">const</span> T&amp; obtained, <span class="keyword">const</span> T&amp; prediction, tutor&lt;Advisor&gt; advisor)</div>
 <div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span>  {</div>
 <div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>    sentry.log_check();</div>

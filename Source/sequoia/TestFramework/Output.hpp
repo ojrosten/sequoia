@@ -89,13 +89,16 @@ namespace sequoia::testing
   std::string operator_message(std::string_view op, std::string_view retVal);
 
   [[nodiscard]]
+  std::string nullable_type_message(bool obtainedHoldsValue, bool predictedHoldsValue);
+
+  [[nodiscard]]
   std::string equality_operator_failure_message();
 
   [[nodiscard]]
-  std::string default_prediction_message(std::string_view obtained, std::string_view prediction);
+  std::string pointer_prediction_message();
 
   [[nodiscard]]
-  std::string pointer_prediction_message(bool obtainedIsNull, bool predictionIsNull);
+  std::string default_prediction_message(std::string_view obtained, std::string_view prediction);
 
   [[nodiscard]]
   std::string prediction_message(const std::string& obtained, const std::string& prediction);
@@ -113,7 +116,7 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string prediction_message(Ptr obtained, Ptr prediction)
   {
-    return pointer_prediction_message(obtained, prediction);
+    return (obtained && prediction) ? pointer_prediction_message() : nullable_type_message(obtained, prediction);
   }
 
   template<serializable T>

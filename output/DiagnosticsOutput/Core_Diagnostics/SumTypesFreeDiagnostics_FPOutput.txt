@@ -139,7 +139,8 @@
 	[std::optional<int>]
 	operator== returned false
 
-	  Has value
+	  Obtained : null
+	  Predicted: not null
 	  [bool]
 	  check failed
 
@@ -151,7 +152,8 @@
 	[std::optional<int>]
 	operator== returned false
 
-	  Has value
+	  Obtained : not null
+	  Predicted: null
 	  [bool]
 	  check failed
 
@@ -194,7 +196,8 @@
 	Checking for equivalence with:
 	[std::optional<sequoia::testing::only_equivalence_checkable>]
 
-	  Has value
+	  Obtained : null
+	  Predicted: not null
 	  [bool]
 	  check failed
 
@@ -208,7 +211,8 @@
 	Checking for equivalence with:
 	[std::optional<sequoia::testing::only_equivalence_checkable>]
 
-	  Has value
+	  Obtained : not null
+	  Predicted: null
 	  [bool]
 	  check failed
 
@@ -244,7 +248,8 @@
 	Checking for weak equivalence with:
 	[std::optional<sequoia::testing::only_weakly_checkable>]
 
-	  Has value
+	  Obtained : null
+	  Predicted: not null
 	  [bool]
 	  check failed
 
@@ -258,7 +263,8 @@
 	Checking for weak equivalence with:
 	[std::optional<sequoia::testing::only_weakly_checkable>]
 
-	  Has value
+	  Obtained : not null
+	  Predicted: null
 	  [bool]
 	  check failed
 
