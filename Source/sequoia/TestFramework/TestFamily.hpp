@@ -290,6 +290,22 @@ namespace sequoia::testing
       
       std::apply([reset](auto&... optTest){ (reset(optTest), ...); }, m_Tests);
     }
+
+    [[nodiscard]]
+    std::vector<std::filesystem::path> active_test_paths() const
+    {
+      std::vector<std::filesystem::path> paths{};
+
+      auto addPath{
+        [this,&paths](const auto& optTest) {
+          if(optTest) paths.push_back(optTest.valeu().filename());
+        }
+      };
+
+      std::apply([addPath](auto&... optTest) { (addPath(optTest), ...); }, m_Tests);
+
+      return paths;
+    }
   private:
     family_info m_Info;
     std::tuple<std::optional<Tests>...> m_Tests;
@@ -317,10 +333,10 @@ namespace sequoia::testing
       : m_pFamily{std::make_unique<essence<test_family<Tests...>>>(std::forward<test_family<Tests...>>(f))}
     {}
 
-    family_vessel(const family_vessel&) = delete;
+    family_vessel(const family_vessel&)     = delete;
     family_vessel(family_vessel&&) noexcept = default;
 
-    family_vessel& operator=(const family_vessel&) = delete;
+    family_vessel& operator=(const family_vessel&)     = delete;
     family_vessel& operator=(family_vessel&&) noexcept = default;
 
     [[nodiscard]]
