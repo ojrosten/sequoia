@@ -170,6 +170,9 @@ namespace sequoia::testing
 
     check_tests_to_run(LINE("Nothing stale"), projPaths, "", {}, {}, {}, {});
 
+    fs::copy(projPaths.prune().external_dependencies(), working_materials());
+    check(weak_equivalence, LINE("External Dependencies"), working_materials(), predictive_materials());
+
     check_tests_to_run(LINE("Test cpp stale (no cutoff)"),
                        projPaths,
                        "",
