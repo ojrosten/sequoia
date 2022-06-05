@@ -50,6 +50,8 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Utilities/UtilitiesFreeTest.cpp
                ${TestDir}/Utilities/VariadicTest.cpp
                ${TestDir}/Utilities/VariadicTestingDiagnostics.cpp
+               ${TestDir}/Weather/CloudTest.cpp
+               ${TestDir}/Weather/CloudTestingDiagnostics.cpp
                ${TestDir}/hominins/HumanTest.cpp
                ${TestDir}/hominins/HumanTestingDiagnostics.cpp)
 

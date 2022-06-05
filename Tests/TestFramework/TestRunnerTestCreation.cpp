@@ -134,6 +134,7 @@ namespace sequoia::testing
                                , "create", "move_only_test", "bar::baz::foo<maths::floating_point T>", "T", "--family", "Iterator"
                                , "create", "move_only", "variadic<class... T>", "std::tuple<T...>"
                                , "create", "move_only_test", "multiple<class... T>", "std::tuple<T...>", "gen-source", "Utilities"
+                               , "create", "move_only_test", "cloud", "double", "gen-source", "Weather"
                                , "create", "free_test", "Utilities.h"
                                , "create", "free_test", "Source/fakeProject/Stuff/Baz.h", "--forename", "bazzer"
                                , "create", "free_test", "Source/fakeProject/Stuff/Baz.h", "--forename", "bazagain", "--family", "Bazzer"

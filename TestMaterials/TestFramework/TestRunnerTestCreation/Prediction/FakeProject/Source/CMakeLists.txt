@@ -12,6 +12,7 @@ set(SourceList
     fakeProject/Maths/Probability.cpp
     fakeProject/Stuff/Doohicky.cpp
     fakeProject/Stuff/Widget.cpp
+    fakeProject/Weather/Cloud.cpp
     fakeProject/hominins/Human.cpp)
 
 add_library(MyProject STATIC ${SourceList})
