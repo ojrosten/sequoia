@@ -142,7 +142,7 @@ namespace sequoia::runtime
         }
         else
         {
-          str.append(" -- -j4");
+          str.append(" -- -j8");
         }
 
         return {"Building...", str, output};
