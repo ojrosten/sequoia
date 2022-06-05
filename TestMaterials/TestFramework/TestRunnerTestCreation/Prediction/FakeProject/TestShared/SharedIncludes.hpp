@@ -40,3 +40,5 @@
 #include "Utilities/UtilitiesFreeTest.hpp"
 #include "Utilities/VariadicTest.hpp"
 #include "Utilities/VariadicTestingDiagnostics.hpp"
+#include "hominins/HumanTest.hpp"
+#include "hominins/HumanTestingDiagnostics.hpp"

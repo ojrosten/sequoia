@@ -49,7 +49,9 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Utilities/MultipleTestingDiagnostics.cpp
                ${TestDir}/Utilities/UtilitiesFreeTest.cpp
                ${TestDir}/Utilities/VariadicTest.cpp
-               ${TestDir}/Utilities/VariadicTestingDiagnostics.cpp)
+               ${TestDir}/Utilities/VariadicTestingDiagnostics.cpp
+               ${TestDir}/hominins/HumanTest.cpp
+               ${TestDir}/hominins/HumanTestingDiagnostics.cpp)
 
 target_include_directories(TestAll PRIVATE ${SourceDir})
 target_include_directories(TestAll PRIVATE ${TestDir})

@@ -125,6 +125,7 @@ namespace sequoia::testing
                                , "create", "regular_test", "stuff::widget", "std::vector<int>", "gen-source", "Stuff"
                                , "create", "regular_test", "maths::probability", "double", "g", "Maths"
                                , "create", "regular_test", "maths::angle", "long double", "gen-source", "Maths"
+                               , "create", "regular_test", "human", "std::string", "g", "hominins"
                                , "create", "regular_test", "stuff::thingummy<class T>", "std::vector<T>", "g", "Thingummies"
                                , "create", "regular_test", "container<class T>", "const std::vector<T>"
                                , "create", "regular_test", "other::couple<class S, class T>", "S", "-e", "T",
