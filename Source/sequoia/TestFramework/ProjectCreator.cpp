@@ -43,7 +43,7 @@ namespace sequoia::testing
       return true;
     }
 
-    void set_proj_name(std::string& text, const std::filesystem::path& projRoot)
+    void set_proj_name(std::string& text, const fs::path& projRoot)
     {
       if(projRoot.empty()) return;
 
@@ -59,7 +59,7 @@ namespace sequoia::testing
       throw std::runtime_error{"Code indent must comprise only spaces or tabs"};
   }
 
-  void generate_test_main(std::string_view copyright, const std::filesystem::path& newProjRoot, indentation codeIndent)
+  void generate_test_main(std::string_view copyright, const fs::path& newProjRoot, indentation codeIndent)
   {
     auto modifier{
       [copyright, codeIndent](std::string& text) {
@@ -89,12 +89,12 @@ namespace sequoia::testing
     read_modify_write(newProjRoot / "TestAll" / "TestAllMain.cpp", modifier);
   }
 
-  void generate_build_system_files(const std::filesystem::path& parentProjRoot, const std::filesystem::path& newProjRoot)
+  void generate_build_system_files(const fs::path& parentProjRoot, const fs::path& newProjRoot)
   {
     if(newProjRoot.empty())
       throw std::logic_error{"Pre-condition violated: path should not be empty"};
 
-    const std::filesystem::path relCmakeLocation{"TestAll/CMakeLists.txt"};
+    const fs::path relCmakeLocation{"TestAll/CMakeLists.txt"};
 
     auto setBuildSysPath{
       [&parentProjRoot,&newProjRoot](std::string& text) {
@@ -189,7 +189,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  shell_command git_first_cmd(const std::filesystem::path& root, const std::filesystem::path& output)
+  shell_command git_first_cmd(const fs::path& root, const fs::path& output)
   {
     if(!output.empty())
     {
@@ -204,7 +204,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  shell_command launch_cmd(const project_paths& parentProjectPaths, const std::filesystem::path& root, const std::filesystem::path& buildDir)
+  shell_command launch_cmd(const project_paths& parentProjectPaths, const fs::path& root, const fs::path& buildDir)
   {
     if(root.empty()) return {};
 
