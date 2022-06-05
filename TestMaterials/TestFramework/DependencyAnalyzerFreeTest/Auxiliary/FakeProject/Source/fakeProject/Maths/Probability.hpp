@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include "Some/External/MathematicalDependency.hpp"
+
 #include <compare>
 
 namespace maths

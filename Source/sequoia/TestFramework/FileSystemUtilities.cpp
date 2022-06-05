@@ -201,6 +201,12 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
+  std::filesystem::path prune_paths::external_dependencies() const
+  {
+    return make_path(std::nullopt, ".external");
+  }
+
+  [[nodiscard]]
   fs::path prune_paths::instability_analysis() const
   {
     return m_Dir / "InstabilityAnalysis";

@@ -129,7 +129,7 @@ namespace sequoia::testing
   {
     m_ResetTime = std::chrono::file_clock::now() + resetOffset;
 
-    const auto fake{working_materials() / "FakeProject"};
+    const auto fake{auxiliary_materials() / "FakeProject"};
     const auto mainDir{fake / "TestAll"};
     commandline_arguments args{(project_paths::cmade_build_dir(fake, mainDir) /= "TestAll").generic_string()};
     const project_paths projPaths{args.size(), args.get(), {{"TestAll/TestAllMain.cpp"}, {}, {"TestAll/TestAllMain.cpp"}}};

@@ -1,0 +1,11 @@
+Some/External/Dependency.h
+Some/External/MathematicalDependency.hpp
+Some/External/TestingDependency.hxx
+sequoia/TestFramework/FileEditors.hpp
+sequoia/TestFramework/FreeTestCore.hpp
+sequoia/TestFramework/MoveOnlyAllocationTestCore.hpp
+sequoia/TestFramework/MoveOnlyTestCore.hpp
+sequoia/TestFramework/PerformanceTestCore.hpp
+sequoia/TestFramework/RegularAllocationTestCore.hpp
+sequoia/TestFramework/RegularTestCore.hpp
+sequoia/TextProcessing/Substitutions.hpp

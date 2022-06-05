@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include "Some/External/TestingDependency.hxx"
+
 #include "sequoia/TestFramework/RegularAllocationTestCore.hpp"
 
 namespace sequoia::testing

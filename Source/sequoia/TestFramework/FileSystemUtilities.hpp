@@ -200,6 +200,9 @@ namespace sequoia::testing
     std::filesystem::path selected_passes(std::optional<std::size_t> id) const;
 
     [[nodiscard]]
+    std::filesystem::path external_dependencies() const;
+
+    [[nodiscard]]
     std::filesystem::path instability_analysis() const;
 
     [[nodiscard]]
