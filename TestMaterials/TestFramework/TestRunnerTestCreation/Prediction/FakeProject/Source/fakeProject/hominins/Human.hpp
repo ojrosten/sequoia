@@ -11,7 +11,6 @@
 
 #include <compare>
 
-template<?>
 class human
 {
 public:
