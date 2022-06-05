@@ -621,6 +621,7 @@ namespace sequoia::testing
     if(m_TemplateData.empty())
     {
       replace_all(text, "\ttemplate<?>\n", "");
+      replace_all(text, "template<?>\n", "");
     }
     else
     {
