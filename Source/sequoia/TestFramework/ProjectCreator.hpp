@@ -43,5 +43,5 @@ namespace sequoia::testing
   runtime::shell_command git_first_cmd(const std::filesystem::path& root, const std::filesystem::path& output);
 
   [[nodiscard]]
-  runtime::shell_command launch_cmd(const std::filesystem::path& root, const std::filesystem::path& buildDir);
+  runtime::shell_command launch_cmd(const project_paths& parentProjectPaths, const std::filesystem::path& root, const std::filesystem::path& buildDir);
 }
