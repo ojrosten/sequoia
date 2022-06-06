@@ -11,8 +11,9 @@
     \brief Utilities for creating new tests, especially from the commandline.
   */
 
+#include "sequoia/TestFramework/ProjectPaths.hpp"
+
 #include "sequoia/Core/Object/Factory.hpp"
-#include "sequoia/TestFramework/FileSystemUtilities.hpp"
 #include "sequoia/TextProcessing/Indent.hpp"
 
 #include <array>

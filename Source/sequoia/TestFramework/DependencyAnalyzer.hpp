@@ -12,7 +12,7 @@
 
  */
 
-#include "sequoia/TestFramework/FileSystemUtilities.hpp"
+#include "sequoia/TestFramework/ProjectPaths.hpp"
 
 namespace sequoia::testing
 {

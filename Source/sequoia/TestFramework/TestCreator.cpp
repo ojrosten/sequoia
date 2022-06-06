@@ -12,6 +12,7 @@
 #include "sequoia/TestFramework/TestCreator.hpp"
 
 #include "sequoia/TestFramework/FileEditors.hpp"
+#include "sequoia/TestFramework/FileSystemUtilities.hpp"
 #include "sequoia/TestFramework/TestRunnerUtilities.hpp"
 
 #include "sequoia/Parsing/CommandLineArguments.hpp"
@@ -80,10 +81,10 @@ namespace sequoia::testing
       throw std::logic_error{"Unrecognized option for nascent_test_flavour"};
     }
 
-    template<std::invocable<fs::path> Amender, invocable_r<fs::path, file_info> PathGenerator>
+    template<std::invocable<fs::path> Amender, invocable_r<fs::path, main_paths> PathGenerator>
     void ammend_file(const project_paths& projPaths, Amender f, PathGenerator g)
     {
-      f(g(projPaths.main_cpp()));
+      f(g(projPaths.main()));
       for(const auto& mainCpp : projPaths.ancillary_main_cpps())
       {
         f(g(mainCpp));
@@ -226,7 +227,7 @@ namespace sequoia::testing
       }
     };
 
-    cmake(projPaths.main_cpp().dir(), projPaths.cmade_build_dir());
+    cmake(projPaths.main().dir(), projPaths.cmade_build_dir());
     for(const auto& mainCpp : projPaths.ancillary_main_cpps())
     {
       cmake(mainCpp.dir(), project_paths::cmade_build_dir(projPaths.project_root(), mainCpp.dir()));
@@ -301,7 +302,7 @@ namespace sequoia::testing
     {
       if(const auto str{outputFile.string()}; str.find("Utilities.hpp") == npos)
       {
-        add_include(m_Paths.common_includes(), fs::relative(outputFile, m_Paths.tests()).generic_string());
+        add_include(m_Paths.main().common_includes(), fs::relative(outputFile, m_Paths.tests()).generic_string());
       }
     }
     else if(outputFile.extension() == ".cpp")
@@ -312,7 +313,7 @@ namespace sequoia::testing
         }
       };
 
-      ammend_file(m_Paths, addToCMake, [](const file_info& info) { return info.dir(); });
+      ammend_file(m_Paths, addToCMake, [](const main_paths& info) { return info.dir(); });
     }
 
     return stringify(outputFile);
@@ -352,7 +353,7 @@ namespace sequoia::testing
       }
     };
 
-    ammend_file(m_Paths, addToFamily, [](const file_info& info) { return info.file(); });
+    ammend_file(m_Paths, addToFamily, [](const main_paths& info) { return info.file(); });
 
     stream() << '\n';
   }
@@ -414,7 +415,7 @@ namespace sequoia::testing
 
     add_to_cmake(sourceRoot, sourceRoot, srcPath, "set(SourceList", ")\n", "");
 
-    read_modify_write(paths().main_cpp().dir() / "CMakeLists.txt", [&root = paths().project_root()](std::string& text) {
+    read_modify_write(paths().main().dir() / "CMakeLists.txt", [&root = paths().project_root()](std::string& text) {
         replace_all(text, "#!", "");
       }
     );

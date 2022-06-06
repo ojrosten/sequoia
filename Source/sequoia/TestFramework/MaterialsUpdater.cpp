@@ -14,6 +14,7 @@
 #include "sequoia/TestFramework/CoreInfrastructure.hpp"
 #include "sequoia/TestFramework/FileEditors.hpp"
 #include "sequoia/TestFramework/FileSystemUtilities.hpp"
+#include "sequoia/TestFramework/ProjectPaths.hpp"
 
 namespace sequoia::testing
 {

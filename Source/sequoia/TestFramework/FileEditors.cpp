@@ -11,8 +11,8 @@
 
 #include "sequoia/Streaming/Streaming.hpp"
 #include "sequoia/TestFramework/FileEditors.hpp"
-#include "sequoia/TestFramework/FileSystemUtilities.hpp"
 #include "sequoia/TestFramework/Output.hpp"
+#include "sequoia/TestFramework/ProjectPaths.hpp"
 
 #include <fstream>
 #include <regex>
