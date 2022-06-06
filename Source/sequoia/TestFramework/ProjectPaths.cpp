@@ -85,6 +85,13 @@ namespace sequoia::testing
     throw_unless_regular_file(m_CommonIncludes, "\nCommon includes not found");
   }
 
+  //===================================== source_paths =====================================//
+
+  source_paths::source_paths(fs::path projectRoot)
+    : m_Source{(projectRoot /= "Source") /= uncapitalize(back(projectRoot).generic_string())}
+    , m_SourceRoot{m_Source.parent_path()}
+  {}
+
   //===================================== auxiliary_paths =====================================//
 
   auxiliary_paths::auxiliary_paths(const fs::path& projectRoot)
@@ -243,8 +250,7 @@ namespace sequoia::testing
   project_paths::project_paths(int argc, char** argv, const initializer& pathsFromRoot)
     : m_Discovered{argc, argv}
     , m_Main{project_root() / pathsFromRoot.mainCpp, project_root() / pathsFromRoot.commonIncludes}
-    , m_Source{source(project_root())}
-    , m_SourceRoot{m_Source.parent_path()}
+    , m_Source{project_root()}
     , m_Tests{tests(project_root())}
     , m_TestMaterials{test_materials(project_root())}
     , m_Build{build(project_root())}
@@ -275,12 +281,6 @@ namespace sequoia::testing
     }
 
     return dir /= fs::relative(mainCppDir, projectRoot);
-  }
-
-  [[nodiscard]]
-  fs::path project_paths::source(fs::path projectRoot)
-  {
-    return (projectRoot /= "Source") /= uncapitalize(back(projectRoot).generic_string());
   }
 
   [[nodiscard]]

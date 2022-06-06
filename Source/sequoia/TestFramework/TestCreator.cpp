@@ -251,7 +251,7 @@ namespace sequoia::testing
     if(filename.empty())
       throw std::runtime_error{"Header name is empty"};
 
-    if(const auto path{find_in_tree(m_Paths.source(), filename)}; !path.empty())
+    if(const auto path{find_in_tree(m_Paths.source().project(), filename)}; !path.empty())
       return path;
 
     for(auto e : st_HeaderExtensions)
@@ -259,7 +259,7 @@ namespace sequoia::testing
       if(e != filename.extension())
       {
         const auto alternative{std::filesystem::path{filename}.replace_extension(e)};
-        if(const auto path{find_in_tree(m_Paths.source(), alternative)}; !path.empty())
+        if(const auto path{find_in_tree(m_Paths.source().project(), alternative)}; !path.empty())
           return path;
       }
     }
@@ -369,12 +369,12 @@ namespace sequoia::testing
 
   void nascent_test_base::finalize_header(const std::filesystem::path& sourcePath)
   {
-    const auto relSourcePath{fs::relative(sourcePath, m_Paths.source())};
+    const auto relSourcePath{fs::relative(sourcePath, m_Paths.source().project())};
     const auto dir{(m_Paths.tests() / relSourcePath).parent_path()};
     fs::create_directories(dir);
 
     m_HostDir = dir;
-    m_HeaderPath = fs::relative(sourcePath, m_Paths.source_root());
+    m_HeaderPath = fs::relative(sourcePath, m_Paths.source().source_root());
   }
 
   void nascent_test_base::on_source_path_error() const
@@ -389,7 +389,7 @@ namespace sequoia::testing
       }
     }
 
-    mess.append(" in the source repository\n").append(fs::relative(m_Paths.source(), m_Paths.tests()).generic_string());
+    mess.append(" in the source repository\n").append(fs::relative(m_Paths.source().project(), m_Paths.tests()).generic_string());
 
     throw std::runtime_error{mess};
   }
@@ -398,7 +398,7 @@ namespace sequoia::testing
   {
     const auto srcPath{fs::path{headerPath}.replace_extension("cpp")};
 
-    const auto sourceRoot{paths().source_root()};
+    const auto sourceRoot{paths().source().source_root()};
     stream() << std::quoted(fs::relative(srcPath, paths().project_root()) .generic_string()) << '\n';
     fs::copy_file(paths().aux_paths().source_templates() / "MyCpp.cpp", srcPath);
 
@@ -502,7 +502,7 @@ namespace sequoia::testing
   {
     const auto headerTemplate{std::string{"My"}.append(capitalize(to_camel_case(test_type()))).append("Class.hpp")};
 
-    const auto headerPath{filename.is_absolute() ? filename : paths().source() / rebase_from(m_SourceDir / filename, paths().source())};
+    const auto headerPath{filename.is_absolute() ? filename : paths().source().project() / rebase_from(m_SourceDir / filename, paths().source().project())};
 
     stream() << std::quoted(fs::relative(headerPath, paths().project_root()).generic_string()) << '\n';
     fs::create_directories(headerPath.parent_path());
@@ -707,7 +707,7 @@ namespace sequoia::testing
   [[nodiscard]]
   std::filesystem::path nascent_behavioural_test::when_header_absent(const std::filesystem::path& filename)
   {
-    const auto headerPath{filename.is_absolute() ? filename : paths().source() / rebase_from(filename, paths().source())};
+    const auto headerPath{filename.is_absolute() ? filename : paths().source().project() / rebase_from(filename, paths().source().project())};
 
     stream() << fs::relative(headerPath, paths().project_root()).generic_string() << '\n';
     fs::create_directories(headerPath.parent_path());

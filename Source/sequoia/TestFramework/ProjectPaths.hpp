@@ -20,29 +20,6 @@ namespace sequoia::testing
 {
   inline constexpr std::string_view seqpat{".seqpat"};
 
-  class main_paths
-  {
-  public:
-    main_paths(std::filesystem::path file, std::filesystem::path commonIncludes);
-
-    [[nodiscard]]
-    const std::filesystem::path& file() const noexcept { return m_File; }
-
-    [[nodiscard]]
-    const std::filesystem::path& dir() const noexcept { return m_Dir; }
-
-    [[nodiscard]]
-    const std::filesystem::path& common_includes() const noexcept { return m_CommonIncludes; }
-
-    [[nodiscard]]
-    friend bool operator==(const main_paths&, const main_paths&) noexcept = default;
-
-    [[nodiscard]]
-    friend bool operator!=(const main_paths&, const main_paths&) noexcept = default;
-  private:
-    std::filesystem::path m_File{}, m_Dir{}, m_CommonIncludes{};
-  };
-
   /*! \brief Paths which are potentially discoverable from the commandline arguments */
 
   class discoverable_paths
@@ -74,6 +51,60 @@ namespace sequoia::testing
 
     [[nodiscard]]
     static discoverable_paths make(int argc, char** argv);
+  };
+
+  /*! \brief Paths relating to the `main` cpp */
+
+  class main_paths
+  {
+  public:
+    main_paths(std::filesystem::path file, std::filesystem::path commonIncludes);
+
+    [[nodiscard]]
+    const std::filesystem::path& file() const noexcept { return m_File; }
+
+    [[nodiscard]]
+    const std::filesystem::path& dir() const noexcept { return m_Dir; }
+
+    [[nodiscard]]
+    const std::filesystem::path& common_includes() const noexcept { return m_CommonIncludes; }
+
+    [[nodiscard]]
+    friend bool operator==(const main_paths&, const main_paths&) noexcept = default;
+
+    [[nodiscard]]
+    friend bool operator!=(const main_paths&, const main_paths&) noexcept = default;
+  private:
+    std::filesystem::path m_File{}, m_Dir{}, m_CommonIncludes{};
+  };
+
+  /*! Paths relating to the source directory */
+
+  class source_paths
+  {
+  public:
+    explicit source_paths(std::filesystem::path projectRoot);
+
+    [[nodiscard]]
+    const std::filesystem::path& project() const noexcept
+    {
+      return m_Source;
+    }
+
+    [[nodiscard]]
+    const std::filesystem::path& source_root() const noexcept
+    {
+      return m_SourceRoot;
+    }
+
+    [[nodiscard]]
+    friend bool operator==(const source_paths&, const source_paths&) noexcept = default;
+
+    [[nodiscard]]
+    friend bool operator!=(const source_paths&, const source_paths&) noexcept = default;
+  private:
+  private:
+    std::filesystem::path m_Source, m_SourceRoot;
   };
 
   /*! \brief Paths for auxiliary materials, used in creating projects/tests */
@@ -317,18 +348,9 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    const std::filesystem::path& source() const noexcept
+    const source_paths& source() const noexcept
     {
       return m_Source;
-    }
-
-    [[nodiscard]]
-    static std::filesystem::path source(std::filesystem::path projectRoot);
-
-    [[nodiscard]]
-    const std::filesystem::path& source_root() const noexcept
-    {
-      return m_SourceRoot;
     }
 
     [[nodiscard]]
@@ -411,10 +433,9 @@ namespace sequoia::testing
   private:
     discoverable_paths m_Discovered;
     main_paths m_Main;
+    source_paths m_Source;
 
     std::filesystem::path
-      m_Source{},
-      m_SourceRoot{},
       m_Tests{},
       m_TestMaterials{},
       m_Build{},

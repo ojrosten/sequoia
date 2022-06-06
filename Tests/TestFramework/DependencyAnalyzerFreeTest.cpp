@@ -165,7 +165,7 @@ namespace sequoia::testing
     fs::last_write_time(projPaths.executable(), m_ResetTime + lateExecutableOffset);
 
     const auto& testRepo{projPaths.tests()};
-    const auto& sourceRepo{projPaths.source()};
+    const auto& sourceRepo{projPaths.source().project()};
     const auto& materials{projPaths.test_materials()};
 
     check_tests_to_run(LINE("Nothing stale"), projPaths, "", {}, {}, {}, {});

@@ -239,7 +239,7 @@ namespace sequoia::testing
                     else                        continue;
                   }
 
-                  if((b->file == (projPaths.source_root() / includedFile)) || (b->file == (projPaths.tests() / includedFile)))
+                  if((b->file == (projPaths.source().source_root() / includedFile)) || (b->file == (projPaths.tests() / includedFile)))
                     return b;
 
                   if(const auto trial{file.parent_path() / includedFile}; fs::exists(trial) && (b->file == fs::canonical(trial)))
@@ -355,7 +355,7 @@ namespace sequoia::testing
       tests_dependency_graph g{};
 
       const auto exeTimeStamp{get_stamp(projPaths.executable())};
-      add_files(g, projPaths.source(), timeStamp, exeTimeStamp);
+      add_files(g, projPaths.source().project(), timeStamp, exeTimeStamp);
       add_files(g, projPaths.tests(), timeStamp, exeTimeStamp);
       g.sort_nodes([&g](auto i, auto j) {
         const fs::path&
