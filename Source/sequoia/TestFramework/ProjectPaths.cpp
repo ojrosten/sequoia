@@ -111,7 +111,7 @@ namespace sequoia::testing
         if      constexpr(with_msvc_v)  return "win";
         else if constexpr(with_clang_v) return "clang";
         else if constexpr(with_gcc_v)   return "gcc";
-        else                            static_assert(dependent_false<int>::value, "Compiler not supported");
+        else                            throw std::runtime_error{"Compiler not supported"};
       }
     };
 
