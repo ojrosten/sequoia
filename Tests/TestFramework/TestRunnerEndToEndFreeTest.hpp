@@ -24,7 +24,8 @@ namespace sequoia::testing
 
     void run_executable(const std::filesystem::path& outputDir, std::string_view options) const;
 
-    std::filesystem::path mainDir, buildDir;
+    main_paths main;
+    build_paths build;
 
   private:
     [[nodiscard]]

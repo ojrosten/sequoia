@@ -60,6 +60,8 @@ namespace sequoia::testing
   public:
     main_paths(std::filesystem::path file, std::filesystem::path commonIncludes);
 
+    explicit main_paths(std::filesystem::path file);
+
     [[nodiscard]]
     const std::filesystem::path& file() const noexcept { return m_File; }
 
@@ -78,7 +80,7 @@ namespace sequoia::testing
     std::filesystem::path m_File{}, m_Dir{}, m_CommonIncludes{};
   };
 
-  /*! Paths relating to the source directory */
+  /*! \brief Paths relating to the source directory */
 
   class source_paths
   {
@@ -88,7 +90,7 @@ namespace sequoia::testing
     [[nodiscard]]
     const std::filesystem::path& project() const noexcept
     {
-      return m_Source;
+      return m_Project;
     }
 
     [[nodiscard]]
@@ -104,7 +106,35 @@ namespace sequoia::testing
     friend bool operator!=(const source_paths&, const source_paths&) noexcept = default;
   private:
   private:
-    std::filesystem::path m_Source, m_SourceRoot;
+    std::filesystem::path m_Project, m_SourceRoot;
+  };
+
+  /*! \brief Paths relating to the build directory */
+
+  class build_paths
+  {
+  public:
+    explicit build_paths(std::filesystem::path projectRoot, const main_paths& main);
+
+    [[nodiscard]]
+    const std::filesystem::path& dir() const { return m_Dir; }
+
+    [[nodiscard]]
+    const std::filesystem::path& cmade_dir() const noexcept
+    {
+      return m_CMadeBuildDir;
+    }
+
+    [[nodiscard]]
+    friend bool operator==(const build_paths&, const build_paths&) noexcept = default;
+
+    [[nodiscard]]
+    friend bool operator!=(const build_paths&, const build_paths&) noexcept = default;
+  private:
+    std::filesystem::path m_Dir, m_CMadeBuildDir{};
+
+    [[nodiscard]]
+    std::filesystem::path cmade_dir(const main_paths& main);
   };
 
   /*! \brief Paths for auxiliary materials, used in creating projects/tests */
@@ -372,7 +402,7 @@ namespace sequoia::testing
     static std::filesystem::path test_materials(std::filesystem::path projectRoot);
 
     [[nodiscard]]
-    const std::filesystem::path& build() const noexcept
+    const build_paths& build() const noexcept
     {
       return m_Build;
     }
@@ -385,9 +415,6 @@ namespace sequoia::testing
 
     [[nodiscard]]
     static std::filesystem::path build_system(std::filesystem::path projectRoot);
-
-    [[nodiscard]]
-    static std::filesystem::path build(std::filesystem::path projectRoot);
 
     [[nodiscard]]
     const auxiliary_paths& aux_paths() const noexcept
@@ -408,12 +435,6 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    const std::filesystem::path& cmade_build_dir() const noexcept
-    {
-      return m_CMadeBuildDir;
-    }
-
-    [[nodiscard]]
     const std::vector<main_paths>& ancillary_main_cpps() const noexcept
     {
       return m_AncillaryMainCpps;
@@ -427,25 +448,18 @@ namespace sequoia::testing
 
     [[nodiscard]]
     friend bool operator!=(const project_paths&, const project_paths&) noexcept = default;
-
-    [[nodiscard]]
-    static std::filesystem::path cmade_build_dir(const std::filesystem::path& projectRoot, const std::filesystem::path& mainCppDir);
   private:
     discoverable_paths m_Discovered;
-    main_paths m_Main;
-    source_paths m_Source;
+    main_paths         m_Main;
+    source_paths       m_Source;
+    build_paths        m_Build;
+    auxiliary_paths    m_Auxiliary;
+    output_paths       m_Output;
 
     std::filesystem::path
       m_Tests{},
       m_TestMaterials{},
-      m_Build{},
       m_BuildSystem{};
-
-    auxiliary_paths m_Auxiliary;
-    output_paths m_Output;
-
-    std::filesystem::path
-      m_CMadeBuildDir{};
 
     std::vector<main_paths> m_AncillaryMainCpps{};
   };

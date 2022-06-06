@@ -175,14 +175,14 @@ namespace sequoia::testing
 
       if(data.do_build != build_invocation::no)
       {
-        const auto mainDir{data.project_root / "TestAll"};
-        const auto buildDir{project_paths::cmade_build_dir(data.project_root, mainDir)};
+        const main_paths main{data.project_root / "TestAll/TestAllMain.cpp"};
+        const build_paths build{data.project_root, main};
 
-        invoke(cd_cmd(mainDir)
-            && cmake_cmd(parentProjectPaths.cmade_build_dir(), buildDir, data.output)
-            && build_cmd(buildDir, data.output)
+        invoke(cd_cmd(main.dir())
+            && cmake_cmd(parentProjectPaths.build().cmade_dir(), build.cmade_dir(), data.output)
+            && build_cmd(build.cmade_dir(), data.output)
             && git_first_cmd(data.project_root, data.output)
-            && (data.do_build == build_invocation::launch_ide ? launch_cmd(parentProjectPaths, data.project_root, buildDir) : shell_command{})
+            && (data.do_build == build_invocation::launch_ide ? launch_cmd(parentProjectPaths, data.project_root, build.dir()) : shell_command{})
         );
       }
     }
@@ -210,7 +210,7 @@ namespace sequoia::testing
 
     if constexpr(with_msvc_v)
     {
-      const auto cmakeCache{parentProjectPaths.cmade_build_dir() / "CMakeCache.txt"};
+      const auto cmakeCache{parentProjectPaths.build().cmade_dir() / "CMakeCache.txt"};
 
       if(const auto optText{read_to_string(cmakeCache)})
       {

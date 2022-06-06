@@ -85,12 +85,38 @@ namespace sequoia::testing
     throw_unless_regular_file(m_CommonIncludes, "\nCommon includes not found");
   }
 
+  main_paths::main_paths(fs::path file)
+    : main_paths{file, file}
+  {}
+
   //===================================== source_paths =====================================//
 
   source_paths::source_paths(fs::path projectRoot)
-    : m_Source{(projectRoot /= "Source") /= uncapitalize(back(projectRoot).generic_string())}
-    , m_SourceRoot{m_Source.parent_path()}
+    : m_Project{std::move((projectRoot /= "Source") /= uncapitalize(back(projectRoot).generic_string()))}
+    , m_SourceRoot{m_Project.parent_path()}
   {}
+
+  //===================================== build_paths =====================================//
+
+  build_paths::build_paths(fs::path projectRoot, const main_paths& main)
+    : m_Dir{std::move(projectRoot /= "build")}
+    , m_CMadeBuildDir{cmade_dir(main)}
+  {}
+
+  [[nodiscard]]
+  fs::path build_paths::cmade_dir(const main_paths& main)
+  {
+    auto compilerDir{
+      []() -> std::string {
+        if      constexpr(with_msvc_v)  return "win";
+        else if constexpr(with_clang_v) return "clang";
+        else if constexpr(with_gcc_v)   return "gcc";
+        else                            static_assert(dependent_false<int>::value, "Compiler not supported");
+      }
+    };
+
+    return (dir() / "CMade").append(compilerDir()) /= fs::relative(main.dir(), dir().parent_path());
+  }
 
   //===================================== auxiliary_paths =====================================//
 
@@ -251,36 +277,15 @@ namespace sequoia::testing
     : m_Discovered{argc, argv}
     , m_Main{project_root() / pathsFromRoot.mainCpp, project_root() / pathsFromRoot.commonIncludes}
     , m_Source{project_root()}
-    , m_Tests{tests(project_root())}
-    , m_TestMaterials{test_materials(project_root())}
-    , m_Build{build(project_root())}
-    , m_BuildSystem{build_system(project_root())}
+    , m_Build{project_root(), main()}
     , m_Auxiliary{project_root()}
     , m_Output{project_root()}
-    , m_CMadeBuildDir{cmade_build_dir(project_root(), main().dir())}
+    , m_Tests{tests(project_root())}
+    , m_TestMaterials{test_materials(project_root())}
+    , m_BuildSystem{build_system(project_root())}
     , m_AncillaryMainCpps{make_ancillary_info(project_root(), main().common_includes(), pathsFromRoot)}
   {
     throw_unless_directory(project_root(), "\nRepository root not found");
-  }
-
-  [[nodiscard]]
-  fs::path project_paths::cmade_build_dir(const fs::path& projectRoot, const fs::path& mainCppDir)
-  {
-    fs::path dir{project_paths::build(projectRoot).append("CMade")};
-    if constexpr(with_msvc_v)
-    {
-      dir /= "win";
-    }
-    else if constexpr(with_clang_v)
-    {
-      dir /= "clang";
-    }
-    else if constexpr(with_gcc_v)
-    {
-      dir /= "gcc";
-    }
-
-    return dir /= fs::relative(mainCppDir, projectRoot);
   }
 
   [[nodiscard]]
@@ -296,12 +301,6 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  fs::path project_paths::build(fs::path projectRoot)
-  {
-    return projectRoot /= "build";
-  }
-
-  [[nodiscard]]
   fs::path project_paths::build_system(fs::path projectRoot)
   {
     return projectRoot /= "build_system";
@@ -310,6 +309,6 @@ namespace sequoia::testing
   [[nodiscard]]
   prune_paths project_paths::prune() const
   {
-    return output().prune(build(), cmade_build_dir());
+    return output().prune(build().dir(), build().cmade_dir());
   }
 }

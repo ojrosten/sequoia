@@ -227,10 +227,10 @@ namespace sequoia::testing
       }
     };
 
-    cmake(projPaths.main().dir(), projPaths.cmade_build_dir());
+    cmake(projPaths.main().dir(), projPaths.build().cmade_dir());
     for(const auto& mainCpp : projPaths.ancillary_main_cpps())
     {
-      cmake(mainCpp.dir(), project_paths::cmade_build_dir(projPaths.project_root(), mainCpp.dir()));
+      cmake(mainCpp.dir(), build_paths{projPaths.project_root(), mainCpp}.cmade_dir());
     }
   }
 
