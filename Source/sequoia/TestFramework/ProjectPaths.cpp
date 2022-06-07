@@ -89,6 +89,13 @@ namespace sequoia::testing
     : main_paths{file, file}
   {}
 
+  [[nodiscard]]
+  fs::path main_paths::default_main_cpp_from_root()
+  {
+    return "TestAll/TestAllMain.cpp";
+  }
+
+
   //===================================== source_paths =====================================//
 
   source_paths::source_paths(fs::path projectRoot)
@@ -116,6 +123,12 @@ namespace sequoia::testing
     };
 
     return (dir() / "CMade").append(compilerDir()) /= fs::relative(main.dir(), dir().parent_path());
+  }
+
+  [[nodiscard]]
+  fs::path build_paths::cmake_cache() const
+  {
+    return cmade_dir() / "CMakeCache.txt";
   }
 
   //===================================== auxiliary_paths =====================================//

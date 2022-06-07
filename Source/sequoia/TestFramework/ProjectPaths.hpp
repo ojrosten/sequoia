@@ -72,6 +72,9 @@ namespace sequoia::testing
     const std::filesystem::path& common_includes() const noexcept { return m_CommonIncludes; }
 
     [[nodiscard]]
+    static std::filesystem::path default_main_cpp_from_root();
+
+    [[nodiscard]]
     friend bool operator==(const main_paths&, const main_paths&) noexcept = default;
 
     [[nodiscard]]
@@ -124,6 +127,9 @@ namespace sequoia::testing
     {
       return m_CMadeBuildDir;
     }
+
+    [[nodiscard]]
+    std::filesystem::path cmake_cache() const;
 
     [[nodiscard]]
     friend bool operator==(const build_paths&, const build_paths&) noexcept = default;

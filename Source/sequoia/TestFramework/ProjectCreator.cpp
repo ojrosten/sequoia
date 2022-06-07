@@ -86,7 +86,7 @@ namespace sequoia::testing
       }
     };
 
-    read_modify_write(newProjRoot / "TestAll" / "TestAllMain.cpp", modifier);
+    read_modify_write(newProjRoot / main_paths::default_main_cpp_from_root(), modifier);
   }
 
   void generate_build_system_files(const fs::path& parentProjRoot, const fs::path& newProjRoot)
@@ -175,7 +175,7 @@ namespace sequoia::testing
 
       if(data.do_build != build_invocation::no)
       {
-        const main_paths main{data.project_root / "TestAll/TestAllMain.cpp"};
+        const main_paths main{data.project_root / main_paths::default_main_cpp_from_root()};
         const build_paths build{data.project_root, main};
 
         invoke(cd_cmd(main.dir())
@@ -210,7 +210,7 @@ namespace sequoia::testing
 
     if constexpr(with_msvc_v)
     {
-      const auto cmakeCache{parentProjectPaths.build().cmade_dir() / "CMakeCache.txt"};
+      const auto cmakeCache{parentProjectPaths.build().cmake_cache()};
 
       if(const auto optText{read_to_string(cmakeCache)})
       {

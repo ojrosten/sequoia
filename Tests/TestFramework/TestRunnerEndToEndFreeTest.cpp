@@ -76,7 +76,7 @@ namespace sequoia::testing
   }
 
   cmd_builder::cmd_builder(const std::filesystem::path& projRoot)
-    : main{projRoot / "TestAll/TestAllMain.cpp"}
+    : main{projRoot / main_paths::default_main_cpp_from_root()}
     , build{projRoot, main}
   {}
 
@@ -348,7 +348,7 @@ namespace sequoia::testing
     fs::create_directory(working_materials() / "TestAll");
     const auto generatedProject{working_materials().parent_path() / "GeneratedProject"};
 
-    const fs::path mainCpp{"TestAll/TestAllMain.cpp"}, mainCmake{"TestAll/CMakeLists.txt"};
+    const fs::path mainCpp{main_paths::default_main_cpp_from_root()}, mainCmake{"TestAll/CMakeLists.txt"};
     fs::copy_file(generatedProject / mainCpp,   working_materials() / mainCpp);
     fs::copy_file(generatedProject / mainCmake, working_materials() / mainCmake);
     check(equivalence, LINE("TestAllMain.cpp"),  working_materials() / mainCpp,   predictive_materials() / mainCpp);
