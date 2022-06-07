@@ -308,12 +308,12 @@ namespace sequoia::testing
     else if(outputFile.extension() == ".cpp")
     {
       auto addToCMake{
-        [this, outputFile](const fs::path& cppDir) {
-          add_to_cmake(cppDir,  m_Paths.tests(), outputFile, "target_sources(", ")\n", "${TestDir}/");
+        [this, outputFile](const fs::path& mainCMake) {
+          add_to_cmake(mainCMake, m_Paths.tests(), outputFile, "target_sources(", ")\n", "${TestDir}/");
         }
       };
 
-      ammend_file(m_Paths, addToCMake, [](const main_paths& info) { return info.dir(); });
+      ammend_file(m_Paths, addToCMake, [](const main_paths& info) { return info.cmake_lists(); });
     }
 
     return stringify(outputFile);
@@ -413,7 +413,7 @@ namespace sequoia::testing
 
     read_modify_write(srcPath, setCppText);
 
-    add_to_cmake(sourceRoot, sourceRoot, srcPath, "set(SourceList", ")\n", "");
+    add_to_cmake(paths().source().cmake_lists(), sourceRoot, srcPath, "set(SourceList", ")\n", "");
 
     read_modify_write(paths().main().cmake_lists(), [&root = paths().project_root()](std::string& text) {
         replace_all(text, "#!", "");

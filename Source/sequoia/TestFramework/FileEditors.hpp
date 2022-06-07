@@ -22,7 +22,7 @@ namespace sequoia::testing
 {
   void add_include(const std::filesystem::path& file, std::string_view includePath);
 
-  void add_to_cmake(const std::filesystem::path& cmakeDir,
+  void add_to_cmake(const std::filesystem::path& cmakeLists,
                     const std::filesystem::path& hostDir,
                     const std::filesystem::path& file,
                     std::string_view patternOpen,
