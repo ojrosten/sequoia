@@ -72,6 +72,9 @@ namespace sequoia::testing
     const std::filesystem::path& common_includes() const noexcept { return m_CommonIncludes; }
 
     [[nodiscard]]
+    std::filesystem::path cmake_lists() const;
+
+    [[nodiscard]]
     static std::filesystem::path default_main_cpp_from_root();
 
     [[nodiscard]]
@@ -88,7 +91,7 @@ namespace sequoia::testing
   class source_paths
   {
   public:
-    explicit source_paths(std::filesystem::path projectRoot);
+    explicit source_paths(const std::filesystem::path& projectRoot);
 
     [[nodiscard]]
     const std::filesystem::path& project() const noexcept
@@ -103,13 +106,22 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
+    std::filesystem::path cmake_lists() const;
+
+    [[nodiscard]]
+    static std::filesystem::path cmake_lists(std::filesystem::path projectRoot);
+
+    [[nodiscard]]
     friend bool operator==(const source_paths&, const source_paths&) noexcept = default;
 
     [[nodiscard]]
     friend bool operator!=(const source_paths&, const source_paths&) noexcept = default;
   private:
   private:
-    std::filesystem::path m_Project, m_SourceRoot;
+    std::filesystem::path m_SourceRoot, m_Project;
+
+    [[nodiscard]]
+    static std::filesystem::path source_root(std::filesystem::path projectRoot);
   };
 
   /*! \brief Paths relating to the build directory */

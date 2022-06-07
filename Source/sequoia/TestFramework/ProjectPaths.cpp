@@ -90,6 +90,12 @@ namespace sequoia::testing
   {}
 
   [[nodiscard]]
+  fs::path main_paths::cmake_lists() const
+  {
+    return dir() / "CMakeLists.txt";
+  }
+
+  [[nodiscard]]
   fs::path main_paths::default_main_cpp_from_root()
   {
     return "TestAll/TestAllMain.cpp";
@@ -98,10 +104,28 @@ namespace sequoia::testing
 
   //===================================== source_paths =====================================//
 
-  source_paths::source_paths(fs::path projectRoot)
-    : m_Project{std::move((projectRoot /= "Source") /= uncapitalize(back(projectRoot).generic_string()))}
-    , m_SourceRoot{m_Project.parent_path()}
+  source_paths::source_paths(const fs::path& projectRoot)
+    : m_SourceRoot{source_root(projectRoot)}
+    , m_Project{source_root() / uncapitalize(back(projectRoot).generic_string())}
   {}
+
+  [[nodiscard]]
+  fs::path source_paths::cmake_lists() const
+  {
+    return source_root() / "CMakeLists.txt";
+  }
+
+  [[nodiscard]]
+  fs::path source_paths::cmake_lists(std::filesystem::path projectRoot)
+  {
+    return source_root(projectRoot) /= "CMakeLists.txt";
+  }
+
+  [[nodiscard]]
+  fs::path source_paths::source_root(std::filesystem::path projectRoot)
+  {
+    return projectRoot /= "Source";
+  }
 
   //===================================== build_paths =====================================//
 
