@@ -32,6 +32,7 @@ int main(int argc, char** argv)
 
     runner.add_test_family(
       "Test Framework Auxiliary",
+      commands_free_test{"Commands Free Test"},
       failure_info_test{"failure_info Unit Test"},
       failure_info_false_positive_test{"failure_info False Positive Test"},
       file_system_utilities_free_test{"File System Free Test"},

@@ -10,7 +10,7 @@
 /*! \file */
 
 #include "sequoia/TestFramework/FreeTestCore.hpp"
-#include "sequoia/Runtime/ShellCommands.hpp"
+#include "sequoia/TestFramework/Commands.hpp"
 
 namespace sequoia::testing
 {

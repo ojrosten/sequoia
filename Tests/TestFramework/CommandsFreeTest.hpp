@@ -5,21 +5,25 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
+#pragma once
+
 /*! \file */
 
-#include "ShellCommandsFreeTest.hpp"
-#include "sequoia/Runtime/ShellCommands.hpp"
+#include "sequoia/TestFramework/FreeTestCore.hpp"
 
 namespace sequoia::testing
 {
-  [[nodiscard]]
-  std::string_view shell_commands_free_test::source_file() const noexcept
+  class commands_free_test final : public free_test
   {
-    return __FILE__;
-  }
+  public:
+    using free_test::free_test;
 
-  void shell_commands_free_test::run_tests()
-  {
-  }
+  private:
+    [[nodiscard]]
+    std::string_view source_file() const noexcept final;
 
+    void run_tests() final;
+
+    void test_exceptions();
+  };
 }

@@ -11,66 +11,12 @@
 
 #include "sequoia/Runtime/ShellCommands.hpp"
 
-#include "sequoia/Parsing/CommandLineArguments.hpp"
 #include "sequoia/PlatformSpecific/Preprocessor.hpp"
-#include "sequoia/Streaming/Streaming.hpp"
-#include "sequoia/TextProcessing/Patterns.hpp"
 
 #include <iostream>
 
 namespace sequoia::runtime
 {
-  namespace fs = std::filesystem;
-
-  namespace
-  {
-    [[nodiscard]]
-    std::string cmake_extractor(const std::optional<std::filesystem::path>& parentBuildDir,
-                                const std::filesystem::path& buildDir)
-    {
-      const auto cacheDir{parentBuildDir.has_value() ? parentBuildDir.value() : buildDir};
-
-      const fs::path cmakeCache{cacheDir / "CMakeCache.txt"};
-      if(!fs::exists(cmakeCache))
-        throw std::runtime_error{"Unable to find CMakeCache.txt in " + cacheDir.generic_string()};
-
-      if(const auto optText{read_to_string(cmakeCache)})
-      {
-        constexpr auto npos{std::string::npos};
-        const auto& text{optText.value()};
-
-        const auto finder{
-          [&text](std::string_view pattern) {
-            const auto pos{text.find(pattern)};
-            const auto offset{pos < npos ? pos + pattern.size() : pos};
-
-            return find_sandwiched_text(text, "=", "\n", offset);
-          }
-        };
-
-        auto positions{finder("CMAKE_GENERATOR:")};
-        if((positions.first != npos) && (positions.second != npos))
-        {
-          auto generator{text.substr(positions.first, positions.second - positions.first)};
-          if(generator != "Unix Makefiles")
-            return std::string{"-G \""}.append(generator).append("\"");
-        }
-
-        positions = finder("CMAKE_CXX_COMPILER:");
-        if((positions.first != npos) && (positions.second != npos))
-        {
-          return std::string{"-D CMAKE_CXX_COMPILER="}.append(text.substr(positions.first, positions.second - positions.first));
-        }
-
-        throw std::runtime_error{"Unable to deduce cmake command from " + cmakeCache.generic_string()};
-      }
-      else
-      {
-        throw std::runtime_error{"Unable to read from " + cmakeCache.generic_string()};
-      }
-    }
-  }
-
   shell_command::shell_command(std::string cmd, const std::filesystem::path& output, append_mode app)
     : m_Command{std::move(cmd)}
   {
@@ -113,42 +59,5 @@ namespace sequoia::runtime
   shell_command cd_cmd(const std::filesystem::path& dir)
   {
     return std::string{"cd "}.append(dir.string());
-  }
-
-  [[nodiscard]]
-  shell_command cmake_cmd(const std::optional<std::filesystem::path>& parentBuildDir,
-                          const std::filesystem::path& buildDir,
-                          const std::filesystem::path& output)
-  {
-    auto cmd{std::string{"cmake -S ."}.append(" -B \"").append(buildDir.string()).append("\" ")};
-    cmd.append(cmake_extractor(parentBuildDir, buildDir));
-
-    return {"Running CMake...", cmd, output};
-  }
-
-  [[nodiscard]]
-  shell_command build_cmd(const std::filesystem::path& buildDir, const std::filesystem::path& output)
-  {
-    const auto cmd{
-      [&output]() -> shell_command {
-        std::string str{"cmake --build . --target TestAll"};
-        if constexpr(with_msvc_v)
-        {
-#ifdef CMAKE_INTDIR
-          str.append(" --config ").append(std::string{CMAKE_INTDIR});
-#else
-          std::cerr << parsing::commandline::warning("Unable to find preprocessor definition for CMAKE_INTDIR");
-#endif
-        }
-        else
-        {
-          str.append(" -- -j8");
-        }
-
-        return {"Building...", str, output};
-      }()
-    };
-
-    return cd_cmd(buildDir) && cmd;
   }
 }

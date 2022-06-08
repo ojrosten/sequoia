@@ -11,7 +11,7 @@
     \brief Utilities for creating new projects, especially from the commandline.
   */
 
-#include "sequoia/Runtime/ShellCommands.hpp"
+#include "sequoia/TestFramework/Commands.hpp"
 #include "sequoia/TextProcessing/Indent.hpp"
 
 #include <vector>

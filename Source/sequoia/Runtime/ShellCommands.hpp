@@ -69,12 +69,4 @@ namespace sequoia::runtime
 
   [[nodiscard]]
   shell_command cd_cmd(const std::filesystem::path& dir);
-
-  [[nodiscard]]
-  shell_command cmake_cmd(const std::optional<std::filesystem::path>& parentBuildDir,
-                          const std::filesystem::path& buildDir,
-                          const std::filesystem::path& output);
-
-  [[nodiscard]]
-  shell_command build_cmd(const std::filesystem::path& buildDir, const std::filesystem::path& output);
 }
