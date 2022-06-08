@@ -109,17 +109,14 @@ namespace sequoia::testing
     fs::copy(auxiliary_paths::dir(root), auxiliary_paths::dir(fake_project()), fs::copy_options::recursive);
     fs::create_directory(fake_project() / "TestSandbox");
 
-    const main_paths templateMain{auxiliary_paths::project_template(root) / main_paths::default_main_cpp_from_root()};
-
     fs::copy(source_paths{auxiliary_paths::project_template(root)}.cmake_lists(), source_paths{fake_project()}.source_root());
-    fs::copy(templateMain.file(), fake_project() / "TestSandbox" / "TestSandbox.cpp");
 
-    const main_paths fakeMain{fake_project() / "TestSandbox" / "TestSandbox.cpp"};
+    const main_paths templateMain{auxiliary_paths::project_template(root) / main_paths::default_main_cpp_from_root()},
+                     fakeMain{fake_project() / "TestSandbox" / "TestSandbox.cpp"};
+
+    fs::copy(templateMain.file(), fakeMain.file());
     fs::copy(templateMain.cmake_lists(), fakeMain.cmake_lists());
     read_modify_write(fakeMain.cmake_lists(), [](std::string& text) { replace_all(text, "TestAllMain.cpp", "TestSandbox.cpp"); } );
-
-    const auto testMain{fake_project().append("TestSandbox").append("TestSandbox.cpp")};
-    const auto includeTarget{fake_project().append("TestShared").append("SharedIncludes.hpp")};
 
     commandline_arguments args{  zeroth_arg()
                                , "create", "regular_test", "other::functional::maybe<class T>", "std::optional<T>"

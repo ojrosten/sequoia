@@ -80,10 +80,7 @@ namespace sequoia::testing
     : m_File{std::move(file)}
     , m_Dir{m_File.parent_path()}
     , m_CommonIncludes{std::move(commonIncludes)}
-  {
-    throw_unless_regular_file(m_File, "\nTry ensuring that the application is run from the appropriate directory");
-    throw_unless_regular_file(m_CommonIncludes, "\nCommon includes not found");
-  }
+  {}
 
   main_paths::main_paths(fs::path file)
     : main_paths{file, file}
@@ -332,6 +329,8 @@ namespace sequoia::testing
     , m_AncillaryMainCpps{make_ancillary_info(project_root(), main().common_includes(), pathsFromRoot)}
   {
     throw_unless_directory(project_root(), "\nRepository root not found");
+    throw_unless_regular_file(main().file(), "\nTry ensuring that the application is run from the appropriate directory");
+    throw_unless_regular_file(main().common_includes(), "\nCommon includes not found");
   }
 
   [[nodiscard]]
