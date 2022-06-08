@@ -64,7 +64,6 @@
 #include "Parsing/CommandLineArgumentsTest.hpp"
 #include "Runtime/FactoryTest.hpp"
 #include "Runtime/FactoryTestingDiagnostics.hpp"
-#include "Runtime/ShellCommandsFreeTest.hpp"
 #include "Runtime/ShellCommandsTest.hpp"
 #include "Runtime/ShellCommandsTestingDiagnostics.hpp"
 #include "Streaming/StreamingFreeTest.hpp"
