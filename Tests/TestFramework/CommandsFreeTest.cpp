@@ -49,7 +49,6 @@ namespace sequoia::testing
     test_exceptions();
   }
 
-
   void commands_free_test::test_exceptions()
   {
     const auto& root{working_materials()};
