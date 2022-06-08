@@ -94,7 +94,7 @@ namespace sequoia::testing
     if(newProjRoot.empty())
       throw std::logic_error{"Pre-condition violated: path should not be empty"};
 
-    const fs::path relCmakeLocation{"TestAll/CMakeLists.txt"};
+    const fs::path relCmakeLocation{main_paths::default_cmake_from_root()};
 
     auto setBuildSysPath{
       [&parentProjRoot,&newProjRoot](std::string& text) {

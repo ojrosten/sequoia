@@ -78,6 +78,9 @@ namespace sequoia::testing
     static std::filesystem::path default_main_cpp_from_root();
 
     [[nodiscard]]
+    static std::filesystem::path default_cmake_from_root();
+
+    [[nodiscard]]
     friend bool operator==(const main_paths&, const main_paths&) noexcept = default;
 
     [[nodiscard]]

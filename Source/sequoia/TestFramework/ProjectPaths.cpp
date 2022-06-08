@@ -101,6 +101,12 @@ namespace sequoia::testing
     return "TestAll/TestAllMain.cpp";
   }
 
+  [[nodiscard]]
+  fs::path main_paths::default_cmake_from_root()
+  {
+    return "TestAll/CMakeLists.txt";
+  }
+
 
   //===================================== source_paths =====================================//
 
@@ -124,6 +130,9 @@ namespace sequoia::testing
   [[nodiscard]]
   fs::path source_paths::source_root(std::filesystem::path projectRoot)
   {
+    if(projectRoot.empty())
+      throw std::runtime_error{"Project root required to construct source path"};
+
     return projectRoot /= "Source";
   }
 

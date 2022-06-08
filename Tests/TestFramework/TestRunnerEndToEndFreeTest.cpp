@@ -348,7 +348,8 @@ namespace sequoia::testing
     fs::create_directory(working_materials() / "TestAll");
     const auto generatedProject{working_materials().parent_path() / "GeneratedProject"};
 
-    const fs::path mainCpp{main_paths::default_main_cpp_from_root()}, mainCmake{"TestAll/CMakeLists.txt"};
+    const fs::path mainCpp{main_paths::default_main_cpp_from_root()},
+                   mainCmake{main_paths::default_cmake_from_root()};
     fs::copy_file(generatedProject / mainCpp,   working_materials() / mainCpp);
     fs::copy_file(generatedProject / mainCmake, working_materials() / mainCmake);
     check(equivalence, LINE("TestAllMain.cpp"),  working_materials() / mainCpp,   predictive_materials() / mainCpp);

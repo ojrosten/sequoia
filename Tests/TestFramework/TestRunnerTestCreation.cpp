@@ -108,8 +108,8 @@ namespace sequoia::testing
     const auto root{test_repository().parent_path()};
     fs::copy(auxiliary_paths::dir(root), auxiliary_paths::dir(fake_project()), fs::copy_options::recursive);
     fs::create_directory(fake_project() / "TestSandbox");
-    fs::copy(auxiliary_paths::project_template(root) / "Source" / "CMakeLists.txt", fake_project() / "Source");
-    fs::copy(auxiliary_paths::project_template(root) / "TestAll" / "CMakeLists.txt", fake_project() / "TestSandbox");
+    fs::copy(source_paths{auxiliary_paths::project_template(root)}.cmake_lists(), fake_project() / "Source");
+    fs::copy(auxiliary_paths::project_template(root) / main_paths::default_cmake_from_root(), fake_project() / "TestSandbox");
     fs::copy(auxiliary_paths::project_template(root) / main_paths::default_main_cpp_from_root(), fake_project() / "TestSandbox" / "TestSandbox.cpp");
     read_modify_write(fake_project() / "TestSandbox" / "CMakeLists.txt" , [](std::string& text) {
         replace_all(text, "TestAllMain.cpp", "TestSandbox.cpp");
