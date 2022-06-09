@@ -316,7 +316,7 @@ namespace sequoia::testing
       ammend_file(m_Paths, addToCMake, [](const main_paths& info) { return info.cmake_lists(); });
     }
 
-    return stringify(outputFile);
+    return std::string{"\""}.append(stringify(outputFile)).append("\"");
   }
 
   template<invocable_r<std::filesystem::path, std::filesystem::path> WhenAbsent, std::invocable<std::string&> FileTransformer>
@@ -344,7 +344,7 @@ namespace sequoia::testing
 
     for(const auto& stub : stubs)
     {
-      stream() << std::quoted(create_file(nameStub, stub, transformer)) << '\n';
+      stream() << create_file(nameStub, stub, transformer) << '\n';
     }
 
     auto addToFamily{
