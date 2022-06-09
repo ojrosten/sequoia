@@ -14,6 +14,8 @@
 #include "sequoia/Streaming/Streaming.hpp"
 #include "sequoia/TextProcessing/Patterns.hpp"
 
+#include <iostream>
+
 namespace sequoia::testing
 {
   using namespace runtime;
