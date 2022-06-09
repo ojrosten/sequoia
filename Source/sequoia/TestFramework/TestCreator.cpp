@@ -12,10 +12,11 @@
 #include "sequoia/TestFramework/TestCreator.hpp"
 
 #include "sequoia/TestFramework/FileEditors.hpp"
+#include "sequoia/TestFramework/FileSystemUtilities.hpp"
 #include "sequoia/TestFramework/TestRunnerUtilities.hpp"
 
 #include "sequoia/Parsing/CommandLineArguments.hpp"
-#include "sequoia/Runtime/ShellCommands.hpp"
+#include "sequoia/TestFramework/Commands.hpp"
 #include "sequoia/Streaming/Streaming.hpp"
 #include "sequoia/TextProcessing/Substitutions.hpp"
 
@@ -80,10 +81,10 @@ namespace sequoia::testing
       throw std::logic_error{"Unrecognized option for nascent_test_flavour"};
     }
 
-    template<std::invocable<fs::path> Amender, invocable_r<fs::path, file_info> PathGenerator>
+    template<std::invocable<fs::path> Amender, invocable_r<fs::path, main_paths> PathGenerator>
     void ammend_file(const project_paths& projPaths, Amender f, PathGenerator g)
     {
-      f(g(projPaths.main_cpp()));
+      f(g(projPaths.main()));
       for(const auto& mainCpp : projPaths.ancillary_main_cpps())
       {
         f(g(mainCpp));
@@ -217,19 +218,19 @@ namespace sequoia::testing
     using namespace runtime;
 
     auto cmake{
-      [&stream](const fs::path& mainCppDir, const fs::path& cmadeBuildDir){
-        if(fs::exists(mainCppDir) && fs::exists(cmadeBuildDir))
+      [&stream](const main_paths& main, const build_paths& buildPaths) {
+        if(fs::exists(main.dir()) && fs::exists(buildPaths.cmade_dir()))
         {
           stream << "\n";
-          invoke(cd_cmd(mainCppDir) && cmake_cmd(std::nullopt, cmadeBuildDir, {}));
+          invoke(cd_cmd(main.dir()) && cmake_cmd(std::nullopt, buildPaths, {}));
         }
       }
     };
 
-    cmake(projPaths.main_cpp().dir(), projPaths.cmade_build_dir());
-    for(const auto& mainCpp : projPaths.ancillary_main_cpps())
+    cmake(projPaths.main(), projPaths.build());
+    for(const auto& main : projPaths.ancillary_main_cpps())
     {
-      cmake(mainCpp.dir(), project_paths::cmade_build_dir(projPaths.project_root(), mainCpp.dir()));
+      cmake(main, build_paths{projPaths.project_root(), main});
     }
   }
 
@@ -250,7 +251,7 @@ namespace sequoia::testing
     if(filename.empty())
       throw std::runtime_error{"Header name is empty"};
 
-    if(const auto path{find_in_tree(m_Paths.source(), filename)}; !path.empty())
+    if(const auto path{find_in_tree(m_Paths.source().project(), filename)}; !path.empty())
       return path;
 
     for(auto e : st_HeaderExtensions)
@@ -258,7 +259,7 @@ namespace sequoia::testing
       if(e != filename.extension())
       {
         const auto alternative{std::filesystem::path{filename}.replace_extension(e)};
-        if(const auto path{find_in_tree(m_Paths.source(), alternative)}; !path.empty())
+        if(const auto path{find_in_tree(m_Paths.source().project(), alternative)}; !path.empty())
           return path;
       }
     }
@@ -301,18 +302,18 @@ namespace sequoia::testing
     {
       if(const auto str{outputFile.string()}; str.find("Utilities.hpp") == npos)
       {
-        add_include(m_Paths.common_includes(), fs::relative(outputFile, m_Paths.tests()).generic_string());
+        add_include(m_Paths.main().common_includes(), fs::relative(outputFile, m_Paths.tests()).generic_string());
       }
     }
     else if(outputFile.extension() == ".cpp")
     {
       auto addToCMake{
-        [this, outputFile](const fs::path& cppDir) {
-          add_to_cmake(cppDir,  m_Paths.tests(), outputFile, "target_sources(", ")\n", "${TestDir}/");
+        [this, outputFile](const fs::path& mainCMake) {
+          add_to_cmake(mainCMake, m_Paths.tests(), outputFile, "target_sources(", ")\n", "${TestDir}/");
         }
       };
 
-      ammend_file(m_Paths, addToCMake, [](const file_info& info) { return info.dir(); });
+      ammend_file(m_Paths, addToCMake, [](const main_paths& info) { return info.cmake_lists(); });
     }
 
     return stringify(outputFile);
@@ -352,7 +353,7 @@ namespace sequoia::testing
       }
     };
 
-    ammend_file(m_Paths, addToFamily, [](const file_info& info) { return info.file(); });
+    ammend_file(m_Paths, addToFamily, [](const main_paths& info) { return info.file(); });
 
     stream() << '\n';
   }
@@ -368,12 +369,12 @@ namespace sequoia::testing
 
   void nascent_test_base::finalize_header(const std::filesystem::path& sourcePath)
   {
-    const auto relSourcePath{fs::relative(sourcePath, m_Paths.source())};
+    const auto relSourcePath{fs::relative(sourcePath, m_Paths.source().project())};
     const auto dir{(m_Paths.tests() / relSourcePath).parent_path()};
     fs::create_directories(dir);
 
     m_HostDir = dir;
-    m_HeaderPath = fs::relative(sourcePath, m_Paths.source_root());
+    m_HeaderPath = fs::relative(sourcePath, m_Paths.source().source_root());
   }
 
   void nascent_test_base::on_source_path_error() const
@@ -388,7 +389,7 @@ namespace sequoia::testing
       }
     }
 
-    mess.append(" in the source repository\n").append(fs::relative(m_Paths.source(), m_Paths.tests()).generic_string());
+    mess.append(" in the source repository\n").append(fs::relative(m_Paths.source().project(), m_Paths.tests()).generic_string());
 
     throw std::runtime_error{mess};
   }
@@ -397,7 +398,7 @@ namespace sequoia::testing
   {
     const auto srcPath{fs::path{headerPath}.replace_extension("cpp")};
 
-    const auto sourceRoot{paths().source_root()};
+    const auto sourceRoot{paths().source().source_root()};
     stream() << std::quoted(fs::relative(srcPath, paths().project_root()) .generic_string()) << '\n';
     fs::copy_file(paths().aux_paths().source_templates() / "MyCpp.cpp", srcPath);
 
@@ -412,9 +413,9 @@ namespace sequoia::testing
 
     read_modify_write(srcPath, setCppText);
 
-    add_to_cmake(sourceRoot, sourceRoot, srcPath, "set(SourceList", ")\n", "");
+    add_to_cmake(paths().source().cmake_lists(), sourceRoot, srcPath, "set(SourceList", ")\n", "");
 
-    read_modify_write(paths().main_cpp().dir() / "CMakeLists.txt", [&root = paths().project_root()](std::string& text) {
+    read_modify_write(paths().main().cmake_lists(), [&root = paths().project_root()](std::string& text) {
         replace_all(text, "#!", "");
       }
     );
@@ -501,7 +502,7 @@ namespace sequoia::testing
   {
     const auto headerTemplate{std::string{"My"}.append(capitalize(to_camel_case(test_type()))).append("Class.hpp")};
 
-    const auto headerPath{filename.is_absolute() ? filename : paths().source() / rebase_from(m_SourceDir / filename, paths().source())};
+    const auto headerPath{filename.is_absolute() ? filename : paths().source().project() / rebase_from(m_SourceDir / filename, paths().source().project())};
 
     stream() << std::quoted(fs::relative(headerPath, paths().project_root()).generic_string()) << '\n';
     fs::create_directories(headerPath.parent_path());
@@ -621,6 +622,7 @@ namespace sequoia::testing
     if(m_TemplateData.empty())
     {
       replace_all(text, "\ttemplate<?>\n", "");
+      replace_all(text, "template<?>\n", "");
     }
     else
     {
@@ -705,7 +707,7 @@ namespace sequoia::testing
   [[nodiscard]]
   std::filesystem::path nascent_behavioural_test::when_header_absent(const std::filesystem::path& filename)
   {
-    const auto headerPath{filename.is_absolute() ? filename : paths().source() / rebase_from(filename, paths().source())};
+    const auto headerPath{filename.is_absolute() ? filename : paths().source().project() / rebase_from(filename, paths().source().project())};
 
     stream() << fs::relative(headerPath, paths().project_root()).generic_string() << '\n';
     fs::create_directories(headerPath.parent_path());

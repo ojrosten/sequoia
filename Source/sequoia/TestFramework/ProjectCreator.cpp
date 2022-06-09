@@ -10,12 +10,13 @@
  */
 
 #include "sequoia/TestFramework/ProjectCreator.hpp"
-#include "sequoia/TestFramework/FileSystemUtilities.hpp"
+#include "sequoia/TestFramework/ProjectPaths.hpp"
 #include "sequoia/TestFramework/TestRunnerUtilities.hpp"
 
 #include "sequoia/FileSystem/FileSystem.hpp"
 #include "sequoia/PlatformSpecific/Preprocessor.hpp"
 #include "sequoia/Streaming/Streaming.hpp"
+#include "sequoia/TextProcessing/Patterns.hpp"
 #include "sequoia/TextProcessing/Substitutions.hpp"
 
 namespace sequoia::testing
@@ -25,6 +26,8 @@ namespace sequoia::testing
 
   namespace
   {
+    constexpr auto npos{std::string::npos};
+
     [[nodiscard]]
     bool is_appropriate_root(const fs::path& root)
     {
@@ -40,7 +43,7 @@ namespace sequoia::testing
       return true;
     }
 
-    void set_proj_name(std::string& text, const std::filesystem::path& projRoot)
+    void set_proj_name(std::string& text, const fs::path& projRoot)
     {
       if(projRoot.empty()) return;
 
@@ -52,11 +55,11 @@ namespace sequoia::testing
 
   void check_indent(const indentation& ind)
   {
-    if(std::string_view{ind}.find_first_not_of("\t ") != std::string::npos)
+    if(std::string_view{ind}.find_first_not_of("\t ") != npos)
       throw std::runtime_error{"Code indent must comprise only spaces or tabs"};
   }
 
-  void generate_test_main(std::string_view copyright, const std::filesystem::path& newProjRoot, indentation codeIndent)
+  void generate_test_main(std::string_view copyright, const fs::path& newProjRoot, indentation codeIndent)
   {
     auto modifier{
       [copyright, codeIndent](std::string& text) {
@@ -83,19 +86,18 @@ namespace sequoia::testing
       }
     };
 
-    read_modify_write(newProjRoot / "TestAll" / "TestAllMain.cpp", modifier);
+    read_modify_write(newProjRoot / main_paths::default_main_cpp_from_root(), modifier);
   }
 
-  void generate_build_system_files(const std::filesystem::path& parentProjRoot, const std::filesystem::path& newProjRoot)
+  void generate_build_system_files(const fs::path& parentProjRoot, const fs::path& newProjRoot)
   {
     if(newProjRoot.empty())
       throw std::logic_error{"Pre-condition violated: path should not be empty"};
 
-    const std::filesystem::path relCmakeLocation{"TestAll/CMakeLists.txt"};
+    const fs::path relCmakeLocation{main_paths::default_cmake_from_root()};
 
     auto setBuildSysPath{
       [&parentProjRoot,&newProjRoot](std::string& text) {
-        constexpr auto npos{std::string::npos};
         std::string_view token{"/build_system"};
         if(const auto pos{text.find(token)}; pos != npos)
         {
@@ -120,7 +122,7 @@ namespace sequoia::testing
       }
     );
 
-    read_modify_write(newProjRoot / "Source" / "CMakeLists.txt", [setBuildSysPath, &newProjRoot](std::string& text) {
+    read_modify_write(source_paths::cmake_lists(newProjRoot), [setBuildSysPath, &newProjRoot](std::string& text) {
         setBuildSysPath(text);
         set_proj_name(text, newProjRoot);
       }
@@ -165,7 +167,7 @@ namespace sequoia::testing
       const auto& parentProjRoot{parentProjectPaths.project_root()};
       fs::create_directories(data.project_root);
       fs::copy(parentProjectPaths.aux_paths().project_template(), data.project_root, fs::copy_options::recursive | fs::copy_options::skip_existing);
-      fs::create_directory(project_paths::source(data.project_root));
+      fs::create_directory(source_paths(data.project_root).project());
       fs::copy(parentProjectPaths.aux_paths().dir(), auxiliary_paths::dir(data.project_root), fs::copy_options::recursive | fs::copy_options::skip_existing);
 
       generate_test_main(data.copyright, data.project_root, data.code_indent);
@@ -173,21 +175,21 @@ namespace sequoia::testing
 
       if(data.do_build != build_invocation::no)
       {
-        const auto mainDir{data.project_root / "TestAll"};
-        const auto buildDir{project_paths::cmade_build_dir(data.project_root, mainDir)};
+        const main_paths main{data.project_root / main_paths::default_main_cpp_from_root()};
+        const build_paths build{data.project_root, main};
 
-        invoke(cd_cmd(mainDir)
-            && cmake_cmd(parentProjectPaths.cmade_build_dir(), buildDir, data.output)
-            && build_cmd(buildDir, data.output)
+        invoke(cd_cmd(main.dir())
+            && cmake_cmd(parentProjectPaths.build(), build, data.output)
+            && build_cmd(build, data.output)
             && git_first_cmd(data.project_root, data.output)
-            && (data.do_build == build_invocation::launch_ide ? launch_cmd(data.project_root, buildDir) : shell_command{})
+            && (data.do_build == build_invocation::launch_ide ? launch_cmd(parentProjectPaths, data.project_root, build.dir()) : shell_command{})
         );
       }
     }
   }
 
   [[nodiscard]]
-  shell_command git_first_cmd(const std::filesystem::path& root, const std::filesystem::path& output)
+  shell_command git_first_cmd(const fs::path& root, const fs::path& output)
   {
     if(!output.empty())
     {
@@ -202,40 +204,28 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  shell_command launch_cmd(const std::filesystem::path& root, const std::filesystem::path& buildDir)
+  shell_command launch_cmd(const project_paths& parentProjectPaths, const fs::path& root, const fs::path& buildDir)
   {
     if(root.empty()) return {};
 
     if constexpr(with_msvc_v)
     {
-      const auto vs2019Dir{
-        []() -> std::filesystem::path {
-          const fs::path vs2019Path{"C:/Program Files (x86)/Microsoft Visual Studio/2019"};
-          if(const auto enterprise{vs2019Path / "Enterprise"}; fs::exists(enterprise))
-          {
-            return enterprise;
-          }
-          else if(const auto pro{vs2019Path / "Professional"}; fs::exists(pro))
-          {
-            return pro;
-          }
-          else if(const auto community{vs2019Path / "Community"}; fs::exists(community))
-          {
-            return community;
-          }
+      const auto cmakeCache{parentProjectPaths.build().cmake_cache()};
 
-          return "";
-        }()
-      };
-
-      if(!vs2019Dir.empty())
+      if(const auto optText{read_to_string(cmakeCache)})
       {
-        const auto devenv{vs2019Dir / "Common7" / "IDE" / "devenv"};
+        const auto [first, last]{find_sandwiched_text(optText.value(), "CMAKE_GENERATOR_INSTANCE:INTERNAL=", "\n")};
+        if((first != npos) && (last != npos))
+        {
+          const auto devenv{fs::path(optText->substr(first, last - first)).append("Common7/IDE/devenv.exe")};
+          if(fs::exists(devenv))
+          {
+            const auto token{back(root)};
+            const auto sln{(buildDir / token).concat("Tests.sln")};
 
-        const auto token{back(root)};
-        const auto sln{(buildDir / token).concat("Tests.sln")};
-
-        return {"Attempting to open IDE...", std::string{"\""}.append(devenv.string()).append("\" ").append("/Run ").append(sln.string()), ""};
+            return {"Attempting to open IDE...", std::string{"\""}.append(devenv.string()).append("\" ").append("/Run ").append(sln.string()), ""};
+          }
+        }
       }
     }
 

@@ -108,16 +108,15 @@ namespace sequoia::testing
     const auto root{test_repository().parent_path()};
     fs::copy(auxiliary_paths::dir(root), auxiliary_paths::dir(fake_project()), fs::copy_options::recursive);
     fs::create_directory(fake_project() / "TestSandbox");
-    fs::copy(auxiliary_paths::project_template(root) / "Source" / "CMakeLists.txt", fake_project() / "Source");
-    fs::copy(auxiliary_paths::project_template(root) / "TestAll" / "CMakeLists.txt", fake_project() / "TestSandbox");
-    fs::copy(auxiliary_paths::project_template(root) / "TestAll"/ "TestAllMain.cpp", fake_project() / "TestSandbox" / "TestSandbox.cpp");
-    read_modify_write(fake_project() / "TestSandbox" / "CMakeLists.txt" , [](std::string& text) {
-        replace_all(text, "TestAllMain.cpp", "TestSandbox.cpp");
-      }
-    );
 
-    const auto testMain{fake_project().append("TestSandbox").append("TestSandbox.cpp")};
-    const auto includeTarget{fake_project().append("TestShared").append("SharedIncludes.hpp")};
+    fs::copy(source_paths{auxiliary_paths::project_template(root)}.cmake_lists(), source_paths{fake_project()}.source_root());
+
+    const main_paths templateMain{auxiliary_paths::project_template(root) / main_paths::default_main_cpp_from_root()},
+                     fakeMain{fake_project() / "TestSandbox" / "TestSandbox.cpp"};
+
+    fs::copy(templateMain.file(), fakeMain.file());
+    fs::copy(templateMain.cmake_lists(), fakeMain.cmake_lists());
+    read_modify_write(fakeMain.cmake_lists(), [](std::string& text) { replace_all(text, "TestAllMain.cpp", "TestSandbox.cpp"); } );
 
     commandline_arguments args{  zeroth_arg()
                                , "create", "regular_test", "other::functional::maybe<class T>", "std::optional<T>"
@@ -125,6 +124,7 @@ namespace sequoia::testing
                                , "create", "regular_test", "stuff::widget", "std::vector<int>", "gen-source", "Stuff"
                                , "create", "regular_test", "maths::probability", "double", "g", "Maths"
                                , "create", "regular_test", "maths::angle", "long double", "gen-source", "Maths"
+                               , "create", "regular_test", "human", "std::string", "g", "hominins"
                                , "create", "regular_test", "stuff::thingummy<class T>", "std::vector<T>", "g", "Thingummies"
                                , "create", "regular_test", "container<class T>", "const std::vector<T>"
                                , "create", "regular_test", "other::couple<class S, class T>", "S", "-e", "T",
@@ -133,6 +133,7 @@ namespace sequoia::testing
                                , "create", "move_only_test", "bar::baz::foo<maths::floating_point T>", "T", "--family", "Iterator"
                                , "create", "move_only", "variadic<class... T>", "std::tuple<T...>"
                                , "create", "move_only_test", "multiple<class... T>", "std::tuple<T...>", "gen-source", "Utilities"
+                               , "create", "move_only_test", "cloud", "double", "gen-source", "Weather"
                                , "create", "free_test", "Utilities.h"
                                , "create", "free_test", "Source/fakeProject/Stuff/Baz.h", "--forename", "bazzer"
                                , "create", "free_test", "Source/fakeProject/Stuff/Baz.h", "--forename", "bazagain", "--family", "Bazzer"

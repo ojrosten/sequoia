@@ -40,3 +40,7 @@
 #include "Utilities/UtilitiesFreeTest.hpp"
 #include "Utilities/VariadicTest.hpp"
 #include "Utilities/VariadicTestingDiagnostics.hpp"
+#include "Weather/CloudTest.hpp"
+#include "Weather/CloudTestingDiagnostics.hpp"
+#include "hominins/HumanTest.hpp"
+#include "hominins/HumanTestingDiagnostics.hpp"

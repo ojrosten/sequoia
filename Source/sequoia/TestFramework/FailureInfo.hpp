@@ -11,7 +11,7 @@
     \brief Utilities for recording information from test failures.
  */
 
-#include "sequoia/TestFramework/FileSystemUtilities.hpp"
+#include "sequoia/TestFramework/ProjectPaths.hpp"
 
 #include <vector>
 

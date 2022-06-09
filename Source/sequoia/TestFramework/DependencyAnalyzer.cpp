@@ -97,6 +97,15 @@ namespace sequoia::testing
       return str;
     }
 
+    /// No rebasing perfomed
+    void write_tests(const fs::path& file, const std::vector<fs::path>& tests)
+    {
+      if(std::ofstream ostream{file})
+      {
+        for(const auto& test : tests)  ostream << test.generic_string() << "\n";
+      }
+    }
+
     [[nodiscard]]
     std::vector<fs::path> get_includes(const fs::path& file, std::string_view cutoff)
     {
@@ -200,15 +209,10 @@ namespace sequoia::testing
     }
 
     /// pre-condition: the nodes of g have been sorted by file path
-    /// Return value: external dependencies
-    [[nodiscard]]
-    std::set<std::string> build_dependencies(tests_dependency_graph& g,
-                                             const fs::path& sourceRepo,
-                                             const fs::path& testRepo,
-                                             std::string_view cutoff)
+    void build_dependencies(tests_dependency_graph& g, const project_paths& projPaths, std::string_view cutoff)
     {
       using size_type = tests_dependency_graph::size_type;
-      std::set<std::string> externalDependencies{};
+      std::vector<fs::path> externalDependencies{};
 
       for(auto i{g.cbegin_node_weights()}; i != g.cend_node_weights(); ++i)
       {
@@ -226,7 +230,7 @@ namespace sequoia::testing
           if(auto [b, e] {std::equal_range(g.cbegin_node_weights(), g.cend_node_weights(), includedFile, comparer)}; b != e)
           {
             auto found{
-              [&includedFile,&sourceRepo,&testRepo,&file](auto b, auto e) {
+              [&includedFile,&projPaths,&file](auto b, auto e) {
                 while(b != e)
                 {
                   if(includedFile.is_absolute())
@@ -235,7 +239,7 @@ namespace sequoia::testing
                     else                        continue;
                   }
 
-                  if((b->file == sourceRepo / includedFile) || (b->file == testRepo / includedFile))
+                  if((b->file == (projPaths.source().source_root() / includedFile)) || (b->file == (projPaths.tests() / includedFile)))
                     return b;
 
                   if(const auto trial{file.parent_path() / includedFile}; fs::exists(trial) && (b->file == fs::canonical(trial)))
@@ -274,17 +278,20 @@ namespace sequoia::testing
                 }
               }
             }
-            else
-            {
-              externalDependencies.insert(includedFile.generic_string());
-            }
+          }
+          else
+          {
+            externalDependencies.push_back(includedFile);
           }
         }
       }
 
-      return externalDependencies;
+      std::sort(externalDependencies.begin(), externalDependencies.end());
+      externalDependencies.erase(std::unique(externalDependencies.begin(), externalDependencies.end()), externalDependencies.end());
+
+      write_tests(projPaths.prune().external_dependencies(), externalDependencies);
     }
-    
+
     [[nodiscard]]
     bool materials_modified(const fs::path& relFilePath,
                             const fs::path& materialsRepo,
@@ -348,7 +355,7 @@ namespace sequoia::testing
       tests_dependency_graph g{};
 
       const auto exeTimeStamp{get_stamp(projPaths.executable())};
-      add_files(g, projPaths.source(), timeStamp, exeTimeStamp);
+      add_files(g, projPaths.source().project(), timeStamp, exeTimeStamp);
       add_files(g, projPaths.tests(), timeStamp, exeTimeStamp);
       g.sort_nodes([&g](auto i, auto j) {
         const fs::path&
@@ -362,8 +369,7 @@ namespace sequoia::testing
         return lname != rname ? lname < rname : lfile < rfile;
         });
 
-      // TO DO: process these!
-      const auto externalDependencies{build_dependencies(g, projPaths.source_root(), projPaths.tests(), cutoff)};
+      build_dependencies(g, projPaths, cutoff);
 
       auto nodesLate{
         [&g](const std::size_t node) {

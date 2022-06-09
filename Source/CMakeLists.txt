@@ -11,6 +11,7 @@ set(SourceList sequoia/TestFramework/Advice.cpp
     sequoia/Streaming/Streaming.cpp
     sequoia/TestFramework/AllocationCheckersCore.cpp
     sequoia/TestFramework/AllocationCheckersDetails.cpp
+    sequoia/TestFramework/Commands.cpp
     sequoia/TestFramework/ConcreteTypeCheckers.cpp
     sequoia/TestFramework/DependencyAnalyzer.cpp
     sequoia/TestFramework/FailureInfo.cpp
@@ -22,6 +23,7 @@ set(SourceList sequoia/TestFramework/Advice.cpp
     sequoia/TestFramework/Output.cpp
     sequoia/TestFramework/PerformanceTestCore.cpp
     sequoia/TestFramework/ProjectCreator.cpp
+    sequoia/TestFramework/ProjectPaths.cpp
     sequoia/TestFramework/RegularTestCore.cpp
     sequoia/TestFramework/SemanticsCheckersDetails.cpp
     sequoia/TestFramework/Summary.cpp

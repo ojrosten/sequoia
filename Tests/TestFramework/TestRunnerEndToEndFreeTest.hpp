@@ -10,7 +10,7 @@
 /*! \file */
 
 #include "sequoia/TestFramework/FreeTestCore.hpp"
-#include "sequoia/Runtime/ShellCommands.hpp"
+#include "sequoia/TestFramework/Commands.hpp"
 
 namespace sequoia::testing
 {
@@ -24,7 +24,8 @@ namespace sequoia::testing
 
     void run_executable(const std::filesystem::path& outputDir, std::string_view options) const;
 
-    std::filesystem::path mainDir, buildDir;
+    main_paths main;
+    build_paths build;
 
   private:
     [[nodiscard]]

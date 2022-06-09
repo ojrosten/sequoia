@@ -12,7 +12,6 @@
 
  */
 
-#include "sequoia/TestFramework/FileSystemUtilities.hpp"
 #include "sequoia/TestFramework/FreeTestCore.hpp"
 #include "sequoia/TestFramework/Summary.hpp"
 

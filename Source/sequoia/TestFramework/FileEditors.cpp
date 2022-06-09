@@ -11,8 +11,8 @@
 
 #include "sequoia/Streaming/Streaming.hpp"
 #include "sequoia/TestFramework/FileEditors.hpp"
-#include "sequoia/TestFramework/FileSystemUtilities.hpp"
 #include "sequoia/TestFramework/Output.hpp"
+#include "sequoia/TestFramework/ProjectPaths.hpp"
 
 #include <fstream>
 #include <regex>
@@ -151,15 +151,13 @@ namespace sequoia::testing
     write_to_file(file, text);
   }
 
-  void add_to_cmake(const std::filesystem::path& cmakeDir,
+  void add_to_cmake(const std::filesystem::path& cmakeLists,
                     const std::filesystem::path& hostDir,
                     const std::filesystem::path& file,
                     std::string_view patternOpen,
                     std::string_view patternClose,
                     std::string_view cmakeEntryPrexfix)
   {
-    const auto cmakeLists{cmakeDir / "CMakeLists.txt"};
-
     auto addEntry{
       [file{file.lexically_relative(hostDir)}, &cmakeLists, patternOpen, patternClose, cmakeEntryPrexfix] (std::string& text) {
         constexpr auto npos{std::string::npos};

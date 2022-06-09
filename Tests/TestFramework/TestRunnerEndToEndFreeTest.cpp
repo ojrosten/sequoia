@@ -76,15 +76,15 @@ namespace sequoia::testing
   }
 
   cmd_builder::cmd_builder(const std::filesystem::path& projRoot)
-    : mainDir{projRoot / "TestAll"}
-    , buildDir{project_paths::cmade_build_dir(projRoot, mainDir)}
+    : main{projRoot / main_paths::default_main_cpp_from_root()}
+    , build{projRoot, main}
   {}
 
   void cmd_builder::create_build_run(const std::filesystem::path& creationOutput, std::string_view buildOutput, const std::filesystem::path& output) const
   {
-    invoke(   cd_cmd(buildDir)
+    invoke(   cd_cmd(build.cmade_dir())
            && shell_command{"", create_cmd(), creationOutput / "CreationOutput.txt" }
-           && build_cmd(buildDir, buildOutput)
+           && build_cmd(build, buildOutput)
            && shell_command{"", run_cmd(), output / "TestRunOutput.txt" }
            && shell_command{"",
                             run_cmd().append(" select ../../../Tests/HouseAllocationTest.cpp")
@@ -102,7 +102,7 @@ namespace sequoia::testing
 
   void cmd_builder::rebuild_run(const std::filesystem::path& outputDir, std::string_view cmakeOutput, std::string_view buildOutput, std::string_view options) const
   {
-    invoke(cd_cmd(mainDir) && cmake_cmd(std::nullopt, buildDir, cmakeOutput) && build_cmd(buildDir, buildOutput) && run(outputDir, options));
+    invoke(cd_cmd(main.dir()) && cmake_cmd(std::nullopt, build, cmakeOutput) && build_cmd(build, buildOutput) && run(outputDir, options));
   }
 
   void cmd_builder::run_executable(const std::filesystem::path& outputDir, std::string_view options) const
@@ -114,7 +114,7 @@ namespace sequoia::testing
   [[nodiscard]]
   shell_command cmd_builder::run(const std::filesystem::path& outputDir, std::string_view options) const
   {
-    return cd_cmd(buildDir) && shell_command("", run_cmd().append(" ").append(options), outputDir / "TestRunOutput.txt");
+    return cd_cmd(build.cmade_dir()) && shell_command("", run_cmd().append(" ").append(options), outputDir / "TestRunOutput.txt");
   }
 
   [[nodiscard]]
@@ -164,7 +164,7 @@ namespace sequoia::testing
 
     // Note: the act of creation invokes cmake, and so the first check implicitly checks the cmake output
     check(equivalence, description, working_materials() / "CreationOutput", predictive_materials() / "CreationOutput");
-    check(append_lines(description, "Second build output existance"), fs::exists(b.buildDir / "BuildOutput2.txt"));
+    check(append_lines(description, "Second build output existance"), fs::exists(b.build.cmade_dir() / "BuildOutput2.txt"));
     check(equivalence, append_lines(description, "Test Runner Output"), working_materials() / "Output", predictive_materials() / "Output");
   }
 
@@ -180,8 +180,8 @@ namespace sequoia::testing
 
     b.rebuild_run(working_materials() / relOutputDir, CMakeOutput, BuildOutput, options);
     check(equivalence, description, working_materials() / relOutputDir, predictive_materials() / relOutputDir);
-    check(append_lines(description, "CMake output existance"), fs::exists(b.mainDir / CMakeOutput));
-    check(append_lines(description, "Build output existance"), fs::exists(b.buildDir / BuildOutput));
+    check(append_lines(description, "CMake output existance"), fs::exists(b.main.dir() / CMakeOutput));
+    check(append_lines(description, "Build output existance"), fs::exists(b.build.cmade_dir() / BuildOutput));
   }
 
   void test_runner_end_to_end_test::check_timings(std::string_view description, const std::filesystem::path& relOutputFile, const double speedupFactor)
@@ -236,8 +236,8 @@ namespace sequoia::testing
 
     const cmd_builder b{generated_project()};
 
-    check(LINE("First CMake output existance"), fs::exists(b.mainDir / "GenerationOutput.txt"));
-    check(LINE("First build output existance"), fs::exists(b.buildDir / "GenerationOutput.txt"));
+    check(LINE("First CMake output existance"), fs::exists(b.main.dir() / "GenerationOutput.txt"));
+    check(LINE("First build output existance"), fs::exists(b.build.cmade_dir() / "GenerationOutput.txt"));
     check(LINE("First git output existance"), fs::exists(generated_project() / "GenerationOutput.txt"));
     check(LINE(".git existance"), fs::exists(generated_project() / ".git"));
 
@@ -348,7 +348,8 @@ namespace sequoia::testing
     fs::create_directory(working_materials() / "TestAll");
     const auto generatedProject{working_materials().parent_path() / "GeneratedProject"};
 
-    const fs::path mainCpp{"TestAll/TestAllMain.cpp"}, mainCmake{"TestAll/CMakeLists.txt"};
+    const fs::path mainCpp{main_paths::default_main_cpp_from_root()},
+                   mainCmake{main_paths::default_cmake_from_root()};
     fs::copy_file(generatedProject / mainCpp,   working_materials() / mainCpp);
     fs::copy_file(generatedProject / mainCmake, working_materials() / mainCmake);
     check(equivalence, LINE("TestAllMain.cpp"),  working_materials() / mainCpp,   predictive_materials() / mainCpp);

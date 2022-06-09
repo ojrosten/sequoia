@@ -16,7 +16,6 @@
 */
 
 #include "sequoia/TestFramework/ConcreteTypeCheckers.hpp"
-#include "sequoia/TestFramework/FileSystemUtilities.hpp"
 
 #include "sequoia/Core/Meta/Concepts.hpp"
 #include "sequoia/FileSystem/FileSystem.hpp"

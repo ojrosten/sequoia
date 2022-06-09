@@ -129,10 +129,10 @@ namespace sequoia::testing
   {
     m_ResetTime = std::chrono::file_clock::now() + resetOffset;
 
-    const auto fake{working_materials() / "FakeProject"};
-    const auto mainDir{fake / "TestAll"};
-    commandline_arguments args{(project_paths::cmade_build_dir(fake, mainDir) /= "TestAll").generic_string()};
-    const project_paths projPaths{args.size(), args.get(), {{"TestAll/TestAllMain.cpp"}, {}, {"TestAll/TestAllMain.cpp"}}};
+    const auto fake{auxiliary_materials() / "FakeProject"};
+    const main_paths main{fake / main_paths::default_main_cpp_from_root()};
+    commandline_arguments args{(build_paths{fake, main}.cmade_dir() / "TestAll").generic_string()};
+    const project_paths projPaths{args.size(), args.get(), {main.file(), {}, main.file()}};
 
     check(equality, LINE("No timestamp"), tests_to_run(projPaths, ""), opt_test_list{});
 
@@ -165,10 +165,13 @@ namespace sequoia::testing
     fs::last_write_time(projPaths.executable(), m_ResetTime + lateExecutableOffset);
 
     const auto& testRepo{projPaths.tests()};
-    const auto& sourceRepo{projPaths.source()};
+    const auto& sourceRepo{projPaths.source().project()};
     const auto& materials{projPaths.test_materials()};
 
     check_tests_to_run(LINE("Nothing stale"), projPaths, "", {}, {}, {}, {});
+
+    fs::copy(projPaths.prune().external_dependencies(), working_materials());
+    check(weak_equivalence, LINE("External Dependencies"), working_materials(), predictive_materials());
 
     check_tests_to_run(LINE("Test cpp stale (no cutoff)"),
                        projPaths,

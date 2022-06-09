@@ -106,7 +106,12 @@ namespace sequoia::testing
                            std::string copyright,
                            std::string codeIndent,
                            std::ostream& stream)
-    : test_runner{argc, argv, std::move(copyright), {"TestAll/TestAllMain.cpp", {}, "TestAll/TestAllMain.cpp"}, std::move(codeIndent), stream}
+    : test_runner{argc,
+                  argv,
+                  std::move(copyright),
+                    {main_paths::default_main_cpp_from_root(), {}, main_paths::default_main_cpp_from_root()},
+                  std::move(codeIndent),
+                  stream}
   {}
 
   test_runner::test_runner(int argc,

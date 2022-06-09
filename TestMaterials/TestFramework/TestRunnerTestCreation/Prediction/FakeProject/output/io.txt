@@ -40,6 +40,15 @@ Creating files for new test:
 "Tests/Maths/AngleTest.cpp"
 
 Creating files for new test:
+"Source/fakeProject/hominins/Human.hpp"
+"Source/fakeProject/hominins/Human.cpp"
+"Tests/hominins/HumanTestingUtilities.hpp"
+"Tests/hominins/HumanTestingDiagnostics.hpp"
+"Tests/hominins/HumanTestingDiagnostics.cpp"
+"Tests/hominins/HumanTest.hpp"
+"Tests/hominins/HumanTest.cpp"
+
+Creating files for new test:
 "Source/fakeProject/Thingummies/Thingummy.hpp"
 "Tests/Thingummies/ThingummyTestingUtilities.hpp"
 "Tests/Thingummies/ThingummyTestingDiagnostics.hpp"
@@ -89,6 +98,15 @@ Creating files for new test:
 "Tests/Utilities/MultipleTestingDiagnostics.cpp"
 "Tests/Utilities/MultipleTest.hpp"
 "Tests/Utilities/MultipleTest.cpp"
+
+Creating files for new test:
+"Source/fakeProject/Weather/Cloud.hpp"
+"Source/fakeProject/Weather/Cloud.cpp"
+"Tests/Weather/CloudTestingUtilities.hpp"
+"Tests/Weather/CloudTestingDiagnostics.hpp"
+"Tests/Weather/CloudTestingDiagnostics.cpp"
+"Tests/Weather/CloudTest.hpp"
+"Tests/Weather/CloudTest.cpp"
 
 Creating files for new test:
 "Tests/Utilities/UtilitiesFreeTest.hpp"

@@ -57,6 +57,12 @@ int main(int argc, char** argv)
         );
 
         runner.add_test_family(
+            "Human",
+            human_false_positive_test{"False Positive Test"},
+            human_test{"Unit Test"}
+        );
+
+        runner.add_test_family(
             "Thingummy",
             thingummy_false_positive_test{"False Positive Test"},
             thingummy_test{"Unit Test"}
@@ -92,6 +98,12 @@ int main(int argc, char** argv)
             "Multiple",
             multiple_false_positive_test{"False Positive Test"},
             multiple_test{"Unit Test"}
+        );
+
+        runner.add_test_family(
+            "Cloud",
+            cloud_false_positive_test{"False Positive Test"},
+            cloud_test{"Unit Test"}
         );
 
         runner.add_test_family(
