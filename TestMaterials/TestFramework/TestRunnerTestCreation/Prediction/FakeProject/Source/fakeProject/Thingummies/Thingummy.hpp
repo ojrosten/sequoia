@@ -18,9 +18,6 @@ namespace stuff
     {
     public:
         [[nodiscard]]
-        friend bool operator==(const thingummy&, const thingummy&) noexcept = default;
-
-        [[nodiscard]]
         friend auto operator<=>(const thingummy&, const thingummy&) noexcept = default;
     };
 }

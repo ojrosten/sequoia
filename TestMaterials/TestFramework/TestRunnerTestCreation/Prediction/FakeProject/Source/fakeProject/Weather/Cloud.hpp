@@ -21,8 +21,5 @@ public:
     cloud& operator=(cloud&&) noexcept = default;
 
     [[nodiscard]]
-    friend bool operator==(const cloud&, const cloud&) noexcept = default;
-
-    [[nodiscard]]
     friend auto operator<=>(const cloud&, const cloud&) noexcept = default;
 };

@@ -1,10 +1,6 @@
-
   Warning: Test Family 'Absent' not found
-
   Warning: Test Family 'FooTest.cpp' not found
---If trying to select a source file use 'select' rather than 'test'
-
+    If trying to select a source file use 'select' rather than 'test'
   Warning: Test File 'Plurgh.cpp' not found
-
   Warning: Test File 'Foo' not found
---If trying to test a family use 'test' rather than 'select'
+    If trying to test a family use 'test' rather than 'select'

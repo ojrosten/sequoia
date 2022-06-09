@@ -4,8 +4,7 @@
 	Expected Exception Type:
 	[int]
 	Unexpected exception thrown (caught by std::exception&):
-	"
-	  Error: while parsing option "test": expected 1 argument, [case], but found 0 arguments"
+	"  Error: while parsing option "test": expected 1 argument, [case], but found 0 arguments"
 
 	=======================================
 
@@ -15,8 +14,7 @@
 	Expected Exception Type:
 	[int]
 	Unexpected exception thrown (caught by std::exception&):
-	"
-	  Error: unrecognized option '--asyng'"
+	"  Error: unrecognized option '--asyng'"
 
 	=======================================
 
@@ -26,8 +24,7 @@
 	Expected Exception Type:
 	[int]
 	Unexpected exception thrown (caught by std::exception&):
-	"
-	  Error: Commandline option not bound to a function object"
+	"  Error: Commandline option not bound to a function object"
 
 	=======================================
 
@@ -37,8 +34,7 @@
 	Expected Exception Type:
 	[int]
 	Unexpected exception thrown (caught by std::exception&):
-	"
-	  Error: unrecognized option '-ac'"
+	"  Error: unrecognized option '-ac'"
 
 	=======================================
 

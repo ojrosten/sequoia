@@ -22,7 +22,7 @@ namespace sequoia::parsing::commandline
     [[nodiscard]]
     std::string make(std::string_view type, std::string_view message, std::string_view indent)
     {
-      return std::string{"\n"}.append(indent).append(type).append(": ").append(message);
+      return std::string{indent}.append(type).append(": ").append(message);
     }
 
     [[nodiscard]]
