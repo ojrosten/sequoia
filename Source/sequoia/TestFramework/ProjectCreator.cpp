@@ -182,7 +182,7 @@ namespace sequoia::testing
             && cmake_cmd(parentProjectPaths.build(), build, data.output)
             && build_cmd(build, data.output)
             && git_first_cmd(data.project_root, data.output)
-            && (data.do_build == build_invocation::launch_ide ? launch_cmd(parentProjectPaths, data.project_root, build.dir()) : shell_command{})
+            && (data.do_build == build_invocation::launch_ide ? launch_cmd(parentProjectPaths, data.project_root, build.cmade_dir()) : shell_command{})
         );
       }
     }
