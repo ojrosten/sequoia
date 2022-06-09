@@ -119,7 +119,7 @@ namespace sequoia::testing
     {
       using parsing::commandline::warning;
       m_PruneInfo.mode = prune_mode::passive;
-      return warning("'prune' ignored if either test families or test source files are specified");
+      return warning("'prune' ignored if either test families or test source files are specified\n");
     }
 
     return "";
@@ -152,7 +152,7 @@ namespace sequoia::testing
     check(m_SelectedFamilies, "Family", [](const std::string& name) -> std::string {
         if(auto pos{name.rfind('.')}; pos < std::string::npos)
         {
-          return "--If trying to select a source file use 'select' rather than 'test'\n";
+          return "    If trying to select a source file use 'select' rather than 'test'\n";
         }
         
         return "";
@@ -162,7 +162,7 @@ namespace sequoia::testing
     check(m_SelectedSources, "File", [](const std::filesystem::path& p) -> std::string {
         if(!p.has_extension())
         {
-          return "--If trying to test a family use 'test' rather than 'select'\n";
+          return "    If trying to test a family use 'test' rather than 'select'\n";
         }
         
         return "";

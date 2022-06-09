@@ -30,7 +30,6 @@ Typo in argument
 
 Expected Exception Type:
 [std::runtime_error]
-
   Error: unrecognized option '--asyng'
 
 	=======================================
@@ -40,7 +39,6 @@ Alias mismatch
 
 Expected Exception Type:
 [std::runtime_error]
-
   Error: unrecognized option '-a'
 
 	=======================================
@@ -50,7 +48,6 @@ Missing alias
 
 Expected Exception Type:
 [std::runtime_error]
-
   Error: unrecognized option '-'
 
 	=======================================
@@ -60,7 +57,6 @@ Extra space in argument
 
 Expected Exception Type:
 [std::runtime_error]
-
   Error: unrecognized option '- a'
 
 	=======================================
@@ -70,7 +66,6 @@ Concatenated alias with only partial match
 
 Expected Exception Type:
 [std::runtime_error]
-
   Error: unrecognized option '-ac'
 
 	=======================================
@@ -80,7 +75,6 @@ Final argument missing
 
 Expected Exception Type:
 [std::runtime_error]
-
   Error: while parsing option "test": expected 1 argument, [case], but found 0 arguments
 
 	=======================================
@@ -90,7 +84,6 @@ Two options, one with nesting, illegal argument
 
 Expected Exception Type:
 [std::runtime_error]
-
   Error: unrecognized option 'blah'
 
 	=======================================

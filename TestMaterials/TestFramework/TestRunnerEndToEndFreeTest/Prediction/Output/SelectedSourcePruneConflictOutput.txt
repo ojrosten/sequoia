@@ -1,5 +1,5 @@
-
   Warning: 'prune' ignored if either test families or test source files are specified
+
 Running tests...
 
 Foo:

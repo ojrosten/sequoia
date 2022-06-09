@@ -76,7 +76,6 @@ Neither name nor source unique
 
 Expected Exception Type:
 [std::runtime_error]
-
   Error: Family/Test: "Duplicates/Free Test"
 Source file: ".../Tests/TestFramework/TestRunnerTest.cpp"
 Please do not include tests in the same family which both have the same name and are defined in the same source file.
@@ -97,7 +96,6 @@ Insufficient repetitions for instability analysis
 
 Expected Exception Type:
 [std::runtime_error]
-
   Error: Number of repetitions must be >= 2
 
 	=======================================

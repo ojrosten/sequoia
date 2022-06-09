@@ -277,7 +277,7 @@ namespace sequoia::testing
     if(fs::exists(outputFile))
     {
       using namespace parsing::commandline;
-      return warning(stringify(outputFile).append(" already exists, so not created\n"));
+      return warning(stringify(outputFile).append(" already exists, so not created"));
     }
 
     const auto inputFile{(m_Paths.aux_paths().test_templates() / nameStub).concat(nameEnding)};
