@@ -22,8 +22,5 @@ public:
     multiple& operator=(multiple&&) noexcept = default;
 
     [[nodiscard]]
-    friend bool operator==(const multiple&, const multiple&) noexcept = default;
-
-    [[nodiscard]]
     friend auto operator<=>(const multiple&, const multiple&) noexcept = default;
 };

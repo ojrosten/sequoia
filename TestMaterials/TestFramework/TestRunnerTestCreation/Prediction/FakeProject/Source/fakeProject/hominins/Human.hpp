@@ -15,8 +15,5 @@ class human
 {
 public:
     [[nodiscard]]
-    friend bool operator==(const human&, const human&) noexcept = default;
-
-    [[nodiscard]]
     friend auto operator<=>(const human&, const human&) noexcept = default;
 };

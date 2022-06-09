@@ -17,9 +17,6 @@ namespace maths
     {
     public:
         [[nodiscard]]
-        friend bool operator==(const angle&, const angle&) noexcept = default;
-
-        [[nodiscard]]
         friend auto operator<=>(const angle&, const angle&) noexcept = default;
     };
 }

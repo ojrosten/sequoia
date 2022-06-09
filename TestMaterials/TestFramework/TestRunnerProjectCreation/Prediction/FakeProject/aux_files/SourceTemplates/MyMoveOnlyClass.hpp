@@ -24,9 +24,6 @@ namespace
 		?type& operator=(?type&&) noexcept = default;
 
 		[[nodiscard]]
-		friend bool operator==(const ?type&, const ?type&) noexcept = default;
-
-		[[nodiscard]]
 		friend auto operator<=>(const ?type&, const ?type&) noexcept = default;
 	};
 ?}

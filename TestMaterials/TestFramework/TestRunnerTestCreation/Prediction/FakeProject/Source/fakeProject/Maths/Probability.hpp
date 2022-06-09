@@ -17,9 +17,6 @@ namespace maths
     {
     public:
         [[nodiscard]]
-        friend bool operator==(const probability&, const probability&) noexcept = default;
-
-        [[nodiscard]]
         friend auto operator<=>(const probability&, const probability&) noexcept = default;
     };
 }
