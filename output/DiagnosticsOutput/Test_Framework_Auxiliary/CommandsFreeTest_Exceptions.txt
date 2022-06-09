@@ -1,4 +1,4 @@
-Tests/TestFramework/CommandsFreeTest.cpp, Line 59
+Tests/TestFramework/CommandsFreeTest.cpp, Line 58
 No cache file
 
 Expected Exception Type:
@@ -7,7 +7,7 @@ Unable to find CMakeCache.txt in output/TestsTemporaryData/TestFramework/Command
 
 	=======================================
 
-Tests/TestFramework/CommandsFreeTest.cpp, Line 63
+Tests/TestFramework/CommandsFreeTest.cpp, Line 62
 'Parent' with no cache file
 
 Expected Exception Type:
@@ -16,7 +16,7 @@ Unable to find CMakeCache.txt in output/TestsTemporaryData/TestFramework/Command
 
 	=======================================
 
-Tests/TestFramework/CommandsFreeTest.cpp, Line 67
+Tests/TestFramework/CommandsFreeTest.cpp, Line 66
 Empty cache file
 
 Expected Exception Type:
@@ -25,7 +25,7 @@ Unable to deduce cmake command from output/TestsTemporaryData/TestFramework/Comm
 
 	=======================================
 
-Tests/TestFramework/CommandsFreeTest.cpp, Line 71
+Tests/TestFramework/CommandsFreeTest.cpp, Line 70
 No CXX compiler when Unix Makefiles specified
 
 Expected Exception Type:

@@ -23,16 +23,15 @@ namespace sequoia::testing
       std::string operator()(std::string mess) const
       {
         constexpr auto npos{std::string::npos};
-        if(const auto start{mess.find(pattern)}; start != npos)
+        const auto [first, last] {find_sandwiched_text(mess, pattern, "output")};
+        if((first != npos) && (last != npos))
         {
-          const auto pos{start + pattern.size()};
-          if(const auto end{mess.find("output", pos)}; end != npos)
+          mess.erase(first, last - first);
+          const auto [first2, last2] {find_sandwiched_text(mess, "CMade/", "/", first)};
+          if((first2 != npos) && (last2 != npos))
           {
-            mess.erase(pos, end - pos);
+            mess.replace(first2, last2 - first2, "...");
           }
-
-          const auto [first, last] {find_sandwiched_text(mess, "CMade/", "/", pos)};
-          mess.replace(first, last-first, "...");
         }
 
         return mess;
