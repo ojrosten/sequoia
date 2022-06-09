@@ -84,7 +84,7 @@ namespace sequoia::testing
   {
     invoke(   cd_cmd(build.cmade_dir())
            && shell_command{"", create_cmd(), creationOutput / "CreationOutput.txt" }
-           && build_cmd(build.cmade_dir(), buildOutput)
+           && build_cmd(build, buildOutput)
            && shell_command{"", run_cmd(), output / "TestRunOutput.txt" }
            && shell_command{"",
                             run_cmd().append(" select ../../../Tests/HouseAllocationTest.cpp")
@@ -102,7 +102,7 @@ namespace sequoia::testing
 
   void cmd_builder::rebuild_run(const std::filesystem::path& outputDir, std::string_view cmakeOutput, std::string_view buildOutput, std::string_view options) const
   {
-    invoke(cd_cmd(main.dir()) && cmake_cmd(std::nullopt, build.cmade_dir(), cmakeOutput) && build_cmd(build.cmade_dir(), buildOutput) && run(outputDir, options));
+    invoke(cd_cmd(main.dir()) && cmake_cmd(std::nullopt, build, cmakeOutput) && build_cmd(build, buildOutput) && run(outputDir, options));
   }
 
   void cmd_builder::run_executable(const std::filesystem::path& outputDir, std::string_view options) const

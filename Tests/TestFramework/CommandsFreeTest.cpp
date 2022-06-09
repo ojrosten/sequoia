@@ -9,6 +9,7 @@
 
 #include "CommandsFreeTest.hpp"
 #include "sequoia/TestFramework/Commands.hpp"
+#include "sequoia/TextProcessing/Patterns.hpp"
 
 namespace sequoia::testing
 {
@@ -29,6 +30,9 @@ namespace sequoia::testing
           {
             mess.erase(pos, end - pos);
           }
+
+          const auto [first, last] {find_sandwiched_text(mess, "CMade/", "/", pos)};
+          mess.replace(first, last-first, "...");
         }
 
         return mess;
@@ -53,19 +57,19 @@ namespace sequoia::testing
   {
     const auto& root{working_materials()};
     check_exception_thrown<std::runtime_error>(LINE("No cache file"),
-      [&root]() { return cmake_cmd(std::nullopt, root / "NoCacheFile", ""); },
+      [&root]() { return cmake_cmd(std::nullopt, build_paths{root, {root / "NoCacheFile/CMakeLists.txt" , ""}}, ""); },
       postprocessor{" in "});
 
     check_exception_thrown<std::runtime_error>(LINE("'Parent' with no cache file"),
-      [&root]() { return cmake_cmd(root / "NoCacheFile", root / "HasCacheFile", ""); },
+      [&root]() { return cmake_cmd(build_paths{root, {root / "NoCacheFile/CMakeLists.txt" , ""}}, build_paths{root, {root / "NoCacheFile/CMakeLists.txt" , ""}}, ""); },
       postprocessor{" in "});
 
     check_exception_thrown<std::runtime_error>(LINE("Empty cache file"),
-      [&root]() { return cmake_cmd(std::nullopt, root / "EmptyCacheFile", ""); },
+      [&root]() { return cmake_cmd(std::nullopt, build_paths{root, {root / "EmptyCacheFile/CMakeLists.txt" , ""}}, ""); },
       postprocessor{" from "});
 
     check_exception_thrown<std::runtime_error>(LINE("No CXX compiler when Unix Makefiles specified"),
-      [&root]() { return cmake_cmd(std::nullopt, root / "NoCXXCompiler", ""); },
+      [&root]() { return cmake_cmd(std::nullopt, build_paths{root, {root / "NoCXXCompiler/CMakeLists.txt" , ""}}, ""); },
       postprocessor{" from "});
   }
 }

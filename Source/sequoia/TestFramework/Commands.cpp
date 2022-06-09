@@ -23,14 +23,14 @@ namespace sequoia::testing
   namespace
   {
     [[nodiscard]]
-    std::string cmake_extractor(const std::optional<std::filesystem::path>& parentBuildDir,
-      const std::filesystem::path& buildDir)
+    std::string cmake_extractor(const std::optional<build_paths>& parentBuildPaths,
+                                const build_paths& buildPaths)
     {
-      const auto cacheDir{parentBuildDir.has_value() ? parentBuildDir.value() : buildDir};
+      const auto buildPathsToUse{parentBuildPaths.has_value() ? parentBuildPaths.value() : buildPaths};
 
-      const fs::path cmakeCache{cacheDir / "CMakeCache.txt"};
+      const fs::path cmakeCache{buildPathsToUse.cmake_cache()};
       if(!fs::exists(cmakeCache))
-        throw std::runtime_error{"Unable to find CMakeCache.txt in " + cacheDir.generic_string()};
+        throw std::runtime_error{"Unable to find CMakeCache.txt in " + buildPathsToUse.cmade_dir().generic_string()};
 
       if(const auto optText{read_to_string(cmakeCache)})
       {
@@ -69,20 +69,19 @@ namespace sequoia::testing
     }
   }
 
-
   [[nodiscard]]
-  shell_command cmake_cmd(const std::optional<std::filesystem::path>& parentBuildDir,
-    const std::filesystem::path& buildDir,
-    const std::filesystem::path& output)
+  shell_command cmake_cmd(const std::optional<build_paths>& parentBuildPaths,
+                          const build_paths& buildPaths,
+                          const std::filesystem::path& output)
   {
-    auto cmd{std::string{"cmake -S ."}.append(" -B \"").append(buildDir.string()).append("\" ")};
-    cmd.append(cmake_extractor(parentBuildDir, buildDir));
+    auto cmd{std::string{"cmake -S ."}.append(" -B \"").append(buildPaths.cmade_dir().string()).append("\" ")};
+    cmd.append(cmake_extractor(parentBuildPaths, buildPaths));
 
     return {"Running CMake...", cmd, output};
   }
 
   [[nodiscard]]
-  shell_command build_cmd(const std::filesystem::path& buildDir, const std::filesystem::path& output)
+  shell_command build_cmd(const build_paths& build, const std::filesystem::path& output)
   {
     const auto cmd{
       [&output]() -> shell_command {
@@ -104,6 +103,6 @@ namespace sequoia::testing
       }()
     };
 
-    return cd_cmd(buildDir) && cmd;
+    return cd_cmd(build.cmade_dir()) && cmd;
   }
 }

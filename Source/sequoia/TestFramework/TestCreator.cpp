@@ -218,19 +218,19 @@ namespace sequoia::testing
     using namespace runtime;
 
     auto cmake{
-      [&stream](const fs::path& mainCppDir, const fs::path& cmadeBuildDir){
-        if(fs::exists(mainCppDir) && fs::exists(cmadeBuildDir))
+      [&stream](const main_paths& main, const build_paths& buildPaths) {
+        if(fs::exists(main.dir()) && fs::exists(buildPaths.cmade_dir()))
         {
           stream << "\n";
-          invoke(cd_cmd(mainCppDir) && cmake_cmd(std::nullopt, cmadeBuildDir, {}));
+          invoke(cd_cmd(main.dir()) && cmake_cmd(std::nullopt, buildPaths, {}));
         }
       }
     };
 
-    cmake(projPaths.main().dir(), projPaths.build().cmade_dir());
-    for(const auto& mainCpp : projPaths.ancillary_main_cpps())
+    cmake(projPaths.main(), projPaths.build());
+    for(const auto& main : projPaths.ancillary_main_cpps())
     {
-      cmake(mainCpp.dir(), build_paths{projPaths.project_root(), mainCpp}.cmade_dir());
+      cmake(main, build_paths{projPaths.project_root(), main});
     }
   }
 

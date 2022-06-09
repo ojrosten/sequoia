@@ -179,8 +179,8 @@ namespace sequoia::testing
         const build_paths build{data.project_root, main};
 
         invoke(cd_cmd(main.dir())
-            && cmake_cmd(parentProjectPaths.build().cmade_dir(), build.cmade_dir(), data.output)
-            && build_cmd(build.cmade_dir(), data.output)
+            && cmake_cmd(parentProjectPaths.build(), build, data.output)
+            && build_cmd(build, data.output)
             && git_first_cmd(data.project_root, data.output)
             && (data.do_build == build_invocation::launch_ide ? launch_cmd(parentProjectPaths, data.project_root, build.dir()) : shell_command{})
         );

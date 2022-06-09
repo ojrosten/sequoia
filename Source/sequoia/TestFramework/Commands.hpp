@@ -13,14 +13,16 @@
 
 #include "sequoia/Runtime/ShellCommands.hpp"
 
+#include "sequoia/TestFramework/ProjectPaths.hpp"
+
 namespace sequoia::testing
 {
 
   [[nodiscard]]
-  runtime::shell_command cmake_cmd(const std::optional<std::filesystem::path>& parentBuildDir,
-                                  const std::filesystem::path& buildDir,
-                                  const std::filesystem::path& output);
+  runtime::shell_command cmake_cmd(const std::optional<build_paths>& parentBuildPaths,
+                                   const build_paths& buildPaths,
+                                   const std::filesystem::path& output);
 
   [[nodiscard]]
-  runtime::shell_command build_cmd(const std::filesystem::path& buildDir, const std::filesystem::path& output);
+  runtime::shell_command build_cmd(const build_paths& build, const std::filesystem::path& output);
 }
