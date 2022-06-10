@@ -22,5 +22,7 @@ var searchData=
   ['performancetestdiagnostics_2ehpp_19',['PerformanceTestDiagnostics.hpp',['../de/d77/PerformanceTestDiagnostics_8hpp.html',1,'']]],
   ['preprocessor_2ehpp_20',['Preprocessor.hpp',['../de/d56/Preprocessor_8hpp.html',1,'']]],
   ['projectcreator_2ecpp_21',['ProjectCreator.cpp',['../d0/d91/ProjectCreator_8cpp.html',1,'']]],
-  ['projectcreator_2ehpp_22',['ProjectCreator.hpp',['../d8/df2/ProjectCreator_8hpp.html',1,'']]]
+  ['projectcreator_2ehpp_22',['ProjectCreator.hpp',['../d8/df2/ProjectCreator_8hpp.html',1,'']]],
+  ['projectpaths_2ecpp_23',['ProjectPaths.cpp',['../df/d14/ProjectPaths_8cpp.html',1,'']]],
+  ['projectpaths_2ehpp_24',['ProjectPaths.hpp',['../db/dc0/ProjectPaths_8hpp.html',1,'']]]
 ];
