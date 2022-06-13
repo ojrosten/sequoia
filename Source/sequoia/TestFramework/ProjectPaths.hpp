@@ -103,9 +103,9 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    const std::filesystem::path& source_root() const noexcept
+    const std::filesystem::path& repo() const noexcept
     {
-      return m_SourceRoot;
+      return m_Repo;
     }
 
     [[nodiscard]]
@@ -120,10 +120,10 @@ namespace sequoia::testing
     [[nodiscard]]
     friend bool operator!=(const source_paths&, const source_paths&) noexcept = default;
   private:
-    std::filesystem::path m_SourceRoot, m_Project;
+    std::filesystem::path m_Repo, m_Project;
 
     [[nodiscard]]
-    static std::filesystem::path source_root(std::filesystem::path projectRoot);
+    static std::filesystem::path repo(std::filesystem::path projectRoot);
   };
 
   /*! \brief Paths relating to the Tests directory */
@@ -231,13 +231,13 @@ namespace sequoia::testing
     auxiliary_paths(const std::filesystem::path& projectRoot);
 
     [[nodiscard]]
-    const std::filesystem::path& dir() const noexcept
+    const std::filesystem::path& repo() const noexcept
     {
       return m_Dir;
     }
 
     [[nodiscard]]
-    static std::filesystem::path dir(std::filesystem::path projectRoot);
+    static std::filesystem::path repo(std::filesystem::path projectRoot);
 
     [[nodiscard]]
     const std::filesystem::path& test_templates() const noexcept
@@ -374,7 +374,7 @@ namespace sequoia::testing
     static std::filesystem::path dir(std::filesystem::path projectRoot);
 
     [[nodiscard]]
-    const std::filesystem::path tests_temporary_data() const noexcept
+    const std::filesystem::path& tests_temporary_data() const noexcept
     {
       return m_TestsTemporaryData;
     }
@@ -534,7 +534,7 @@ namespace sequoia::testing
     output_paths         m_Output;
     tests_paths          m_Tests;
     test_materials_paths m_Materials;
-    build_system_paths  m_BuildSystem;
+    build_system_paths   m_BuildSystem;
 
     std::vector<main_paths> m_AncillaryMainCpps{};
   };

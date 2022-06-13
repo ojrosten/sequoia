@@ -239,7 +239,7 @@ namespace sequoia::testing
                     else                        continue;
                   }
 
-                  if((b->file == (projPaths.source().source_root() / includedFile)) || (b->file == (projPaths.tests().repo() / includedFile)))
+                  if((b->file == (projPaths.source().repo() / includedFile)) || (b->file == (projPaths.tests().repo() / includedFile)))
                     return b;
 
                   if(const auto trial{file.parent_path() / includedFile}; fs::exists(trial) && (b->file == fs::canonical(trial)))

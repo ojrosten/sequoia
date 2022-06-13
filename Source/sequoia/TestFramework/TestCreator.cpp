@@ -374,7 +374,7 @@ namespace sequoia::testing
     fs::create_directories(dir);
 
     m_HostDir = dir;
-    m_HeaderPath = fs::relative(sourcePath, m_Paths.source().source_root());
+    m_HeaderPath = fs::relative(sourcePath, m_Paths.source().repo());
   }
 
   void nascent_test_base::on_source_path_error() const
@@ -398,7 +398,7 @@ namespace sequoia::testing
   {
     const auto srcPath{fs::path{headerPath}.replace_extension("cpp")};
 
-    const auto sourceRoot{paths().source().source_root()};
+    const auto sourceRoot{paths().source().repo()};
     stream() << std::quoted(fs::relative(srcPath, paths().project_root()) .generic_string()) << '\n';
     fs::copy_file(paths().aux_paths().source_templates() / "MyCpp.cpp", srcPath);
 

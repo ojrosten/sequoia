@@ -108,24 +108,24 @@ namespace sequoia::testing
   //===================================== source_paths =====================================//
 
   source_paths::source_paths(const fs::path& projectRoot)
-    : m_SourceRoot{source_root(projectRoot)}
-    , m_Project{source_root() / uncapitalize(back(projectRoot).generic_string())}
+    : m_Repo{repo(projectRoot)}
+    , m_Project{repo() / uncapitalize(back(projectRoot).generic_string())}
   {}
 
   [[nodiscard]]
   fs::path source_paths::cmake_lists() const
   {
-    return source_root() / "CMakeLists.txt";
+    return repo() / "CMakeLists.txt";
   }
 
   [[nodiscard]]
   fs::path source_paths::cmake_lists(std::filesystem::path projectRoot)
   {
-    return source_root(projectRoot) /= "CMakeLists.txt";
+    return repo(projectRoot) /= "CMakeLists.txt";
   }
 
   [[nodiscard]]
-  fs::path source_paths::source_root(std::filesystem::path projectRoot)
+  fs::path source_paths::repo(std::filesystem::path projectRoot)
   {
     if(projectRoot.empty())
       throw std::runtime_error{"Project root required to construct source path"};
@@ -182,14 +182,14 @@ namespace sequoia::testing
   //===================================== auxiliary_paths =====================================//
 
   auxiliary_paths::auxiliary_paths(const fs::path& projectRoot)
-    : m_Dir{dir(projectRoot)}
+    : m_Dir{repo(projectRoot)}
     , m_TestTemplates{test_templates(projectRoot)}
     , m_SourceTemplates{source_templates(projectRoot)}
     , m_ProjectTemplate{project_template(projectRoot)}
   {}
 
   [[nodiscard]]
-  fs::path auxiliary_paths::dir(fs::path projectRoot)
+  fs::path auxiliary_paths::repo(fs::path projectRoot)
   {
     return projectRoot /= "aux_files";
   }
@@ -197,19 +197,19 @@ namespace sequoia::testing
   [[nodiscard]]
   fs::path auxiliary_paths::test_templates(fs::path projectRoot)
   {
-    return dir(projectRoot) /= "TestTemplates";
+    return repo(projectRoot) /= "TestTemplates";
   }
 
   [[nodiscard]]
   fs::path auxiliary_paths::source_templates(fs::path projectRoot)
   {
-    return dir(projectRoot) /= "SourceTemplates";
+    return repo(projectRoot) /= "SourceTemplates";
   }
 
   [[nodiscard]]
   fs::path auxiliary_paths::project_template(fs::path projectRoot)
   {
-    return dir(projectRoot) /= "ProjectTemplate";
+    return repo(projectRoot) /= "ProjectTemplate";
   }
 
   //===================================== recovery_paths =====================================//
