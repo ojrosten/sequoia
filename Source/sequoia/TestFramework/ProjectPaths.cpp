@@ -133,6 +133,24 @@ namespace sequoia::testing
     return projectRoot /= "Source";
   }
 
+  //===================================== tests_paths =====================================//
+
+  tests_paths::tests_paths(fs::path projectRoot)
+    : m_Repo{std::move(projectRoot /= "Tests")}
+  {}
+
+  //===================================== test_materials_paths =====================================//
+
+  test_materials_paths::test_materials_paths(fs::path projectRoot)
+    : m_Repo{std::move(projectRoot /= "TestMaterials")}
+  {}
+
+  //===================================== build_system_paths =====================================//
+
+  build_system_paths::build_system_paths(fs::path projectRoot)
+    : m_Repo{std::move(projectRoot /= "build_system")}
+  {}
+
   //===================================== build_paths =====================================//
 
   build_paths::build_paths(fs::path projectRoot, const main_paths& main)
@@ -323,32 +341,14 @@ namespace sequoia::testing
     , m_Build{project_root(), main()}
     , m_Auxiliary{project_root()}
     , m_Output{project_root()}
-    , m_Tests{tests(project_root())}
-    , m_TestMaterials{test_materials(project_root())}
-    , m_BuildSystem{build_system(project_root())}
+    , m_Tests{project_root()}
+    , m_Materials{project_root()}
+    , m_BuildSystem{project_root()}
     , m_AncillaryMainCpps{make_ancillary_info(project_root(), main().common_includes(), pathsFromRoot)}
   {
     throw_unless_directory(project_root(), "\nRepository root not found");
     throw_unless_regular_file(main().file(), "\nTry ensuring that the application is run from the appropriate directory");
     throw_unless_regular_file(main().common_includes(), "\nCommon includes not found");
-  }
-
-  [[nodiscard]]
-  fs::path project_paths::tests(fs::path projectRoot)
-  {
-    return projectRoot /= "Tests";
-  }
-
-  [[nodiscard]]
-  fs::path project_paths::test_materials(fs::path projectRoot)
-  {
-    return projectRoot /= "TestMaterials";
-  }
-
-  [[nodiscard]]
-  fs::path project_paths::build_system(fs::path projectRoot)
-  {
-    return projectRoot /= "build_system";
   }
 
   [[nodiscard]]

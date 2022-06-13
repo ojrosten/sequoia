@@ -178,7 +178,7 @@ namespace sequoia::testing
         }
       };
 
-      m_TestRepo                = projPaths.tests();
+      m_TestRepo                = projPaths.tests().repo();
       m_DiagnosticsOutput       = makePath(projPaths.output().diagnostics(),  "Output");
       m_CaughtExceptionsOutput  = makePath(projPaths.output().diagnostics(),  "Exceptions");
       m_InstabilityAnalysisDir  = directory_for_instability_analysis(projPaths, source_file(), name());

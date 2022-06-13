@@ -228,7 +228,7 @@ namespace sequoia::testing
       if(i != m_SelectedSources.end())
       {
         f.add_test(materialsPath, std::forward<Test>(test));
-        i->first = rebase_from(src, proj_paths().tests());
+        i->first = rebase_from(src, proj_paths().tests().repo());
         i->second = true;
       }
 

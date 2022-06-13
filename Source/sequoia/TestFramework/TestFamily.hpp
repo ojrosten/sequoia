@@ -297,7 +297,7 @@ namespace sequoia::testing
 
       auto addPath{
         [this,&paths](const auto& optTest) {
-          if(optTest) paths.push_back(rebase_from(optTest.value().source_filename(), m_Info.proj_paths().tests()));
+          if(optTest) paths.push_back(rebase_from(optTest.value().source_filename(), m_Info.proj_paths().tests().repo()));
         }
       };
 

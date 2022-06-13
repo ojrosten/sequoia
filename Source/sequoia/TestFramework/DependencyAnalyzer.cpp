@@ -239,7 +239,7 @@ namespace sequoia::testing
                     else                        continue;
                   }
 
-                  if((b->file == (projPaths.source().source_root() / includedFile)) || (b->file == (projPaths.tests() / includedFile)))
+                  if((b->file == (projPaths.source().source_root() / includedFile)) || (b->file == (projPaths.tests().repo() / includedFile)))
                     return b;
 
                   if(const auto trial{file.parent_path() / includedFile}; fs::exists(trial) && (b->file == fs::canonical(trial)))
@@ -356,7 +356,7 @@ namespace sequoia::testing
 
       const auto exeTimeStamp{get_stamp(projPaths.executable())};
       add_files(g, projPaths.source().project(), timeStamp, exeTimeStamp);
-      add_files(g, projPaths.tests(), timeStamp, exeTimeStamp);
+      add_files(g, projPaths.tests().repo(), timeStamp, exeTimeStamp);
       g.sort_nodes([&g](auto i, auto j) {
         const fs::path&
           lfile{(g.cbegin_node_weights() + i)->file},
@@ -394,13 +394,13 @@ namespace sequoia::testing
 
       for(auto i{g.cbegin_node_weights()}; i != g.cend_node_weights(); ++i)
       {
-        if(const auto& weight{*i}; is_cpp(weight.file) && in_repo(weight.file, projPaths.tests()))
+        if(const auto& weight{*i}; is_cpp(weight.file) && in_repo(weight.file, projPaths.tests().repo()))
         {
-          const auto relPath{fs::relative(weight.file, projPaths.tests())};
+          const auto relPath{fs::relative(weight.file, projPaths.tests().repo())};
 
           if(passesStamp && std::binary_search(passingTestsFromFile.begin(), passingTestsFromFile.end(), relPath))
           {
-            const auto materialsWriteTime{materials_max_write_time(relPath, projPaths.test_materials())};
+            const auto materialsWriteTime{materials_max_write_time(relPath, projPaths.test_materials().repo())};
             if(!weight.stale && (materialsWriteTime > timeStamp))
               g.mutate_node_weight(i, [](auto& w) { w.stale = true; });
 
@@ -416,7 +416,7 @@ namespace sequoia::testing
           }
           else if(!weight.stale)
           {
-            if(materials_modified(relPath, projPaths.test_materials(), timeStamp))
+            if(materials_modified(relPath, projPaths.test_materials().repo(), timeStamp))
             {
               g.mutate_node_weight(i, [](auto& w) { w.stale = true; });
             }
@@ -525,7 +525,7 @@ namespace sequoia::testing
     {
       for(const auto& test : tests)
       {
-        ostream << rebase_from(test, projPaths.tests()).generic_string() << "\n";
+        ostream << rebase_from(test, projPaths.tests().repo()).generic_string() << "\n";
       }
     }
   }

@@ -120,11 +120,76 @@ namespace sequoia::testing
     [[nodiscard]]
     friend bool operator!=(const source_paths&, const source_paths&) noexcept = default;
   private:
-  private:
     std::filesystem::path m_SourceRoot, m_Project;
 
     [[nodiscard]]
     static std::filesystem::path source_root(std::filesystem::path projectRoot);
+  };
+
+  /*! \brief Paths relating to the Tests directory */
+
+  class tests_paths
+  {
+  public:
+    explicit tests_paths(std::filesystem::path projectRoot);
+
+    [[nodiscard]]
+    const std::filesystem::path& repo() const noexcept
+    {
+      return m_Repo;
+    }
+
+    [[nodiscard]]
+    friend bool operator==(const tests_paths&, const tests_paths&) noexcept = default;
+
+    [[nodiscard]]
+    friend bool operator!=(const tests_paths&, const tests_paths&) noexcept = default;
+  private:
+    std::filesystem::path m_Repo;
+  };
+
+  /*! \brief Paths relating to the TestMaterials directory */
+
+  class test_materials_paths
+  {
+  public:
+    explicit test_materials_paths(std::filesystem::path projectRoot);
+
+    [[nodiscard]]
+    const std::filesystem::path& repo() const noexcept
+    {
+      return m_Repo;
+    }
+
+    [[nodiscard]]
+    friend bool operator==(const test_materials_paths&, const test_materials_paths&) noexcept = default;
+
+    [[nodiscard]]
+    friend bool operator!=(const test_materials_paths&, const test_materials_paths&) noexcept = default;
+  private:
+    std::filesystem::path m_Repo;
+  };
+
+  /*! \brief Paths relating to the build_system directory */
+
+  class build_system_paths
+  {
+  public:
+    explicit build_system_paths(std::filesystem::path projectRoot);
+
+    [[nodiscard]]
+    const std::filesystem::path& repo() const noexcept
+    {
+      return m_Repo;
+    }
+
+    [[nodiscard]]
+    friend bool operator==(const build_system_paths&, const build_system_paths&) noexcept = default;
+
+    [[nodiscard]]
+    friend bool operator!=(const build_system_paths&, const build_system_paths&) noexcept = default;
+  private:
+    std::filesystem::path m_Repo;
   };
 
   /*! \brief Paths relating to the build directory */
@@ -405,22 +470,16 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    const std::filesystem::path& tests() const noexcept
+    const tests_paths& tests() const noexcept
     {
       return m_Tests;
     }
 
     [[nodiscard]]
-    static std::filesystem::path tests(std::filesystem::path projectRoot);
-
-    [[nodiscard]]
-    const std::filesystem::path& test_materials() const noexcept
+    const test_materials_paths& test_materials() const noexcept
     {
-      return m_TestMaterials;
+      return m_Materials;
     }
-
-    [[nodiscard]]
-    static std::filesystem::path test_materials(std::filesystem::path projectRoot);
 
     [[nodiscard]]
     const build_paths& build() const noexcept
@@ -429,13 +488,10 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    const std::filesystem::path& build_system() const noexcept
+    const build_system_paths& build_system() const noexcept
     {
       return m_BuildSystem;
     }
-
-    [[nodiscard]]
-    static std::filesystem::path build_system(std::filesystem::path projectRoot);
 
     [[nodiscard]]
     const auxiliary_paths& aux_paths() const noexcept
@@ -470,17 +526,15 @@ namespace sequoia::testing
     [[nodiscard]]
     friend bool operator!=(const project_paths&, const project_paths&) noexcept = default;
   private:
-    discoverable_paths m_Discovered;
-    main_paths         m_Main;
-    source_paths       m_Source;
-    build_paths        m_Build;
-    auxiliary_paths    m_Auxiliary;
-    output_paths       m_Output;
-
-    std::filesystem::path
-      m_Tests{},
-      m_TestMaterials{},
-      m_BuildSystem{};
+    discoverable_paths   m_Discovered;
+    main_paths           m_Main;
+    source_paths         m_Source;
+    build_paths          m_Build;
+    auxiliary_paths      m_Auxiliary;
+    output_paths         m_Output;
+    tests_paths          m_Tests;
+    test_materials_paths m_Materials;
+    build_system_paths  m_BuildSystem;
 
     std::vector<main_paths> m_AncillaryMainCpps{};
   };

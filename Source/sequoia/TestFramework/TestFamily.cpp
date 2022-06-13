@@ -33,9 +33,9 @@ namespace sequoia::testing
       
       if(!name.is_absolute())
       {
-        if(const auto testRepo{projPaths.tests()}; !testRepo.empty())
+        if(const auto testRepo{projPaths.tests().repo()}; !testRepo.empty())
         {
-          return projPaths.output().test_summaries() / back(projPaths.tests()) / rebase_from(name, testRepo);
+          return projPaths.output().test_summaries() / back(testRepo) / rebase_from(name, testRepo);
         }
       }
       else
@@ -91,7 +91,7 @@ namespace sequoia::testing
                          const fs::path& workingMaterials,
                          const fs::path& predictiveMaterials,
                          const project_paths& projPaths)
-    : test_file{rebase_from(sourceFile, projPaths.tests())}
+    : test_file{rebase_from(sourceFile, projPaths.tests().repo())}
     , summary{test_summary_filename(sourceFile, projPaths)}
     , workingMaterials{workingMaterials}
     , predictions{predictiveMaterials}
@@ -171,17 +171,17 @@ namespace sequoia::testing
 
     const auto rel{
       [&sourceFile, &projPaths] (){
-        if(projPaths.tests().empty()) return fs::path{};
+        if(projPaths.tests().repo().empty()) return fs::path{};
 
         auto folderName{fs::path{sourceFile}.replace_extension()};
         if(folderName.is_absolute())
-          folderName = fs::relative(folderName, projPaths.test_materials());
+          folderName = fs::relative(folderName, projPaths.test_materials().repo());
 
-        return rebase_from(folderName, projPaths.tests());
+        return rebase_from(folderName, projPaths.tests().repo());
       }()
     };
 
-    const auto materials{!rel.empty() ? m_Paths->test_materials() / rel : fs::path{}};
+    const auto materials{!rel.empty() ? m_Paths->test_materials().repo() / rel : fs::path{}};
     if(fs::exists(materials))
     {
       const auto output{projPaths.output().tests_temporary_data() / rel};
