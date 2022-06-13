@@ -162,6 +162,15 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
+    static std::filesystem::path auxiliary_folder_name();
+
+    [[nodiscard]]
+    static std::filesystem::path working_folder_name();
+
+    [[nodiscard]]
+    static std::filesystem::path predictions_folder_name();
+
+    [[nodiscard]]
     friend bool operator==(const test_materials_paths&, const test_materials_paths&) noexcept = default;
 
     [[nodiscard]]

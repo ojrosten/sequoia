@@ -188,15 +188,15 @@ namespace sequoia::testing
 
       const auto[original, workingCopy, prediction, originalAux, workingAux]{
          [&output,&materials] () -> std::array<fs::path, 5>{
-          const auto original{materials / "WorkingCopy"};
-          const auto prediction{materials / "Prediction"};
+          const auto original{materials / test_materials_paths::working_folder_name()};
+          const auto prediction{materials / test_materials_paths::predictions_folder_name()};
 
           if(fs::exists(prediction))
           {
-            const auto auxiliary{materials / "Auxiliary"};
+            const auto auxiliary{materials / test_materials_paths::auxiliary_folder_name()};
             const auto origAux{fs::exists(auxiliary) ? auxiliary : ""};
-            const auto workAux{fs::exists(auxiliary) ? output / "Auxiliary" : ""};
-            return {original, output / "WorkingCopy", prediction, origAux, workAux};
+            const auto workAux{fs::exists(auxiliary) ? output / test_materials_paths::auxiliary_folder_name() : ""};
+            return {original, output / test_materials_paths::working_folder_name(), prediction, origAux, workAux};
           }
 
           return { materials, output};
