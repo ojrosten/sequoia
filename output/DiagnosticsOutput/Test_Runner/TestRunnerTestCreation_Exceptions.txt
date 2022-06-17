@@ -52,7 +52,7 @@ Expected Exception Type:
 
 	=======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 166
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 165
 Plurgh.h does not exist
 
 Expected Exception Type:
@@ -62,7 +62,7 @@ Unable to locate file Plurgh.h or Plurgh.hpp or Plurgh.hxx in the source reposit
 
 	=======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 175
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 174
 Typo in specified class header
 
 Expected Exception Type:

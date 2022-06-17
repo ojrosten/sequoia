@@ -105,13 +105,12 @@ namespace sequoia::testing
   {
     namespace fs = std::filesystem;
 
-    const auto root{test_repository().parent_path()};
-    fs::copy(auxiliary_paths::repo(root), auxiliary_paths::repo(fake_project()), fs::copy_options::recursive);
+    fs::copy(auxiliary_paths::repo(project_root()), auxiliary_paths::repo(fake_project()), fs::copy_options::recursive);
     fs::create_directory(fake_project() / "TestSandbox");
 
-    fs::copy(source_paths{auxiliary_paths::project_template(root)}.cmake_lists(), source_paths{fake_project()}.repo());
+    fs::copy(source_paths{auxiliary_paths::project_template(project_root())}.cmake_lists(), source_paths{fake_project()}.repo());
 
-    const main_paths templateMain{auxiliary_paths::project_template(root) / main_paths::default_main_cpp_from_root()},
+    const main_paths templateMain{auxiliary_paths::project_template(project_root()) / main_paths::default_main_cpp_from_root()},
                      fakeMain{fake_project() / "TestSandbox" / "TestSandbox.cpp"};
 
     fs::copy(templateMain.file(), fakeMain.file());

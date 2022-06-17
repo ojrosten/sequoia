@@ -120,6 +120,12 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
+    const std::filesystem::path& project_root() const noexcept
+    {
+      return m_ProjectRoot;
+    }
+
+    [[nodiscard]]
     const std::filesystem::path& working_materials() const noexcept
     {
       return m_WorkingMaterials;
@@ -138,12 +144,6 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    const std::filesystem::path& test_repository() const noexcept
-    {
-      return m_TestRepo;
-    }
-
-    [[nodiscard]]
     const std::filesystem::path& diagnostics_output_filename() const noexcept
     {
       return m_DiagnosticsOutput;
@@ -158,7 +158,7 @@ namespace sequoia::testing
     [[nodiscard]]
     std::string report_line(const std::filesystem::path& file, int line, std::string_view message)
     {
-      return testing::report_line(file, line, message, test_repository());
+      return testing::report_line(file, line, message, m_TestRepo.repo());
     }
 
     void set_filesystem_data(const project_paths& projPaths, std::string_view familyName)
@@ -178,7 +178,8 @@ namespace sequoia::testing
         }
       };
 
-      m_TestRepo                = projPaths.tests().repo();
+      m_ProjectRoot             = projPaths.project_root();
+      m_TestRepo                = projPaths.tests();
       m_DiagnosticsOutput       = makePath(projPaths.output().diagnostics(),  "Output");
       m_CaughtExceptionsOutput  = makePath(projPaths.output().diagnostics(),  "Exceptions");
       m_InstabilityAnalysisDir  = directory_for_instability_analysis(projPaths, source_file(), name());
@@ -211,11 +212,12 @@ namespace sequoia::testing
     }
   private:
     std::string m_Name{};
+    tests_paths m_TestRepo{};
     std::filesystem::path
+      m_ProjectRoot{},
       m_WorkingMaterials{},
       m_PredictiveMaterials{},
       m_AuxiliaryMaterials{},
-      m_TestRepo{},
       m_DiagnosticsOutput{},
       m_CaughtExceptionsOutput{},
       m_InstabilityAnalysisDir{};

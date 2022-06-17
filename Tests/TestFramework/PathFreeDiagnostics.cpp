@@ -31,11 +31,11 @@ namespace sequoia::testing
     const general_weak_equivalence_check_t<bespoke_file_checker_t> bespoke_path_weak_equivalence{bespoke_file_checker};
   }
 
-  log_summary& postprocess(log_summary& summary, const std::filesystem::path& testRepo)
+  log_summary& postprocess(log_summary& summary, const std::filesystem::path& projectRoot)
   {
     std::string updatedOutput{summary.diagnostics_output()};
 
-    replace_all(updatedOutput, testRepo.parent_path().generic_string() + "/", "");
+    replace_all(updatedOutput, projectRoot.generic_string() + "/", "");
 
     summary.diagnostics_output(updatedOutput);
 
@@ -46,6 +46,13 @@ namespace sequoia::testing
   std::string_view path_false_positive_free_diagnostics::source_file() const noexcept
   {
     return __FILE__;
+  }
+
+  [[nodiscard]]
+  log_summary path_false_positive_free_diagnostics::summarize(duration delta) const
+  {
+    auto summary{free_false_positive_test::summarize(delta)};
+    return postprocess(summary, project_root());
   }
 
   void path_false_positive_free_diagnostics::run_tests()
@@ -131,6 +138,13 @@ namespace sequoia::testing
   std::string_view path_false_negative_free_diagnostics::source_file() const noexcept
   {
     return __FILE__;
+  }
+
+  [[nodiscard]]
+  log_summary path_false_negative_free_diagnostics::summarize(duration delta) const
+  {
+    auto summary{free_false_negative_test::summarize(delta)};
+    return postprocess(summary, project_root());
   }
 
   void path_false_negative_free_diagnostics::run_tests()

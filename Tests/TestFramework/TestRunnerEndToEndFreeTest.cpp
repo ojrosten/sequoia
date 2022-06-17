@@ -211,11 +211,9 @@ namespace sequoia::testing
 
   void test_runner_end_to_end_test::test_project_creation()
   {
-    const auto seqRoot{test_repository().parent_path()};
-
     check(LINE("Command processor existance"), std::system(nullptr) > 0);
 
-    commandline_arguments args{(seqRoot / "build").generic_string(),
+    commandline_arguments args{build_paths{project_root(), main_paths{}}.dir().generic_string(),
                                "init",
                                "Oliver Jacob Rosten",
                                generated_project().string(),
