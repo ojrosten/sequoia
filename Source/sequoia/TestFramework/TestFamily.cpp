@@ -174,8 +174,6 @@ namespace sequoia::testing
         if(projPaths.tests().repo().empty()) return fs::path{};
 
         auto folderName{fs::path{sourceFile}.replace_extension()};
-        if(folderName.is_absolute())
-          folderName = fs::relative(folderName, projPaths.test_materials().repo());
 
         return rebase_from(folderName, projPaths.tests().repo());
       }()
