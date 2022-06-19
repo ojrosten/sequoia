@@ -42,5 +42,6 @@ var searchData=
   ['bucketed_5fsequence_39',['bucketed_sequence',['../d4/db3/classsequoia_1_1data__structures_1_1bucketed__sequence.html',1,'sequoia::data_structures']]],
   ['bucketed_5fsequence_5ftraits_40',['bucketed_sequence_traits',['../db/d6e/structsequoia_1_1data__structures_1_1bucketed__sequence__traits.html',1,'sequoia::data_structures']]],
   ['build_5fpaths_41',['build_paths',['../d2/d9f/classsequoia_1_1testing_1_1build__paths.html',1,'sequoia::testing']]],
-  ['by_5fvalue_42',['by_value',['../da/de1/structsequoia_1_1object_1_1by__value.html',1,'sequoia::object']]]
+  ['build_5fsystem_5fpaths_42',['build_system_paths',['../dd/d31/classsequoia_1_1testing_1_1build__system__paths.html',1,'sequoia::testing']]],
+  ['by_5fvalue_43',['by_value',['../da/de1/structsequoia_1_1object_1_1by__value.html',1,'sequoia::object']]]
 ];
