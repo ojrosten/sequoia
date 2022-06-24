@@ -179,35 +179,37 @@ namespace sequoia::testing
       }()
     };
 
-    const auto materials{!rel.empty() ? m_Paths->test_materials().repo() / rel : fs::path{}};
-    if(fs::exists(materials))
+    const auto materialsDir{!rel.empty() ? m_Paths->test_materials().repo() / rel : fs::path{}};
+    if(fs::exists(materialsDir))
     {
-      const auto output{projPaths.output().tests_temporary_data() / rel};
+      const auto tempOutputDir{projPaths.output().tests_temporary_data() / rel};
 
-      const auto[original, workingCopy, prediction, originalAux, workingAux]{
-         [&output,&materials] () -> std::array<fs::path, 5>{
-          const auto original{materials / test_materials_paths::working_folder_name()};
-          const auto prediction{materials / test_materials_paths::predictions_folder_name()};
+      const auto[originalWorkingMaterials, workingCopy, prediction, originalAux, workingAux]{
+         [&tempOutputDir,&materialsDir] () -> std::array<fs::path, 5>{
+          const auto prediction{materialsDir / test_materials_paths::predictions_folder_name()};
 
           if(fs::exists(prediction))
           {
-            const auto auxiliary{materials / test_materials_paths::auxiliary_folder_name()};
-            const auto origAux{fs::exists(auxiliary) ? auxiliary : ""};
-            const auto workAux{fs::exists(auxiliary) ? output / test_materials_paths::auxiliary_folder_name() : ""};
-            return {original, output / test_materials_paths::working_folder_name(), prediction, origAux, workAux};
+            const auto originalWorkingMaterials{materialsDir / test_materials_paths::working_folder_name()};
+            const auto workingCopy{tempOutputDir / test_materials_paths::working_folder_name()};
+
+            const auto originalAuxiliaryMaterials{materialsDir / test_materials_paths::auxiliary_folder_name()};
+            const auto workingAuxiliaryMaterias{tempOutputDir / test_materials_paths::auxiliary_folder_name()};
+
+            return {originalWorkingMaterials, workingCopy, prediction, originalAuxiliaryMaterials, workingAuxiliaryMaterias};
           }
 
-          return { materials, output};
+          return {materialsDir, tempOutputDir};
         }()
       };
 
       if(std::find(materialsPaths.cbegin(), materialsPaths.cend(), workingCopy) == materialsPaths.cend())
       {
-        fs::remove_all(output);
-        fs::create_directories(output);
-        if(fs::exists(original))
+        fs::remove_all(tempOutputDir);
+        fs::create_directories(tempOutputDir);
+        if(fs::exists(originalWorkingMaterials))
         {
-          fs::copy(original, workingCopy, fs::copy_options::recursive | fs::copy_options::overwrite_existing);
+          fs::copy(originalWorkingMaterials, workingCopy, fs::copy_options::recursive | fs::copy_options::overwrite_existing);
         }
         else
         {
