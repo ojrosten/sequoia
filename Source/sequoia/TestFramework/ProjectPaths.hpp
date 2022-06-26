@@ -8,7 +8,7 @@
 #pragma once
 
 /*! \file
-    \brief File paths and related utilities.
+    \brief File paths pertaining to a `sequoia` project.
  */
 
 #include <filesystem>
@@ -146,6 +146,9 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
+    std::filesystem::path project_root() const;
+
+    [[nodiscard]]
     friend bool operator==(const tests_paths&, const tests_paths&) noexcept = default;
 
     [[nodiscard]]
@@ -168,15 +171,6 @@ namespace sequoia::testing
     {
       return m_Repo;
     }
-
-    [[nodiscard]]
-    static std::filesystem::path auxiliary_folder_name();
-
-    [[nodiscard]]
-    static std::filesystem::path working_folder_name();
-
-    [[nodiscard]]
-    static std::filesystem::path predictions_folder_name();
 
     [[nodiscard]]
     friend bool operator==(const test_materials_paths&, const test_materials_paths&) noexcept = default;

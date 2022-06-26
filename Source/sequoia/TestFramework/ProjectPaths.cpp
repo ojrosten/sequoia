@@ -139,29 +139,17 @@ namespace sequoia::testing
     : m_Repo{std::move(projectRoot /= "Tests")}
   {}
 
+  [[nodiscard]]
+  std::filesystem::path tests_paths::project_root() const
+  {
+    return m_Repo.parent_path();
+  }
+
   //===================================== test_materials_paths =====================================//
 
   test_materials_paths::test_materials_paths(fs::path projectRoot)
     : m_Repo{std::move(projectRoot /= "TestMaterials")}
   {}
-
-  [[nodiscard]]
-  std::filesystem::path test_materials_paths::auxiliary_folder_name()
-  {
-    return "Auxiliary";
-  }
-
-  [[nodiscard]]
-  std::filesystem::path test_materials_paths::working_folder_name()
-  {
-    return "WorkingCopy";
-  }
-
-  [[nodiscard]]
-  std::filesystem::path test_materials_paths::predictions_folder_name()
-  {
-    return "Prediction";
-  }
 
   //===================================== build_system_paths =====================================//
 

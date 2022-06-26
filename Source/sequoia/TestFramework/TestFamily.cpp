@@ -165,67 +165,35 @@ namespace sequoia::testing
   //============================== family_info ==============================//
 
   [[nodiscard]]
-  materials_info family_info::set_materials(const std::filesystem::path& sourceFile, std::vector<std::filesystem::path>& materialsPaths)
+  individual_materials_paths family_info::set_materials(const std::filesystem::path& sourceFile, std::vector<std::filesystem::path>& materialsPaths)
   {
-    const auto& projPaths{*m_Paths};
+    individual_materials_paths materials{sourceFile, *m_Paths};
+    if(!fs::exists(materials.original_materials())) return {};
 
-    const auto rel{
-      [&sourceFile, &projPaths] (){
-        if(projPaths.tests().repo().empty()) return fs::path{};
-
-        auto folderName{fs::path{sourceFile}.replace_extension()};
-
-        return rebase_from(folderName, projPaths.tests().repo());
-      }()
-    };
-
-    const auto materialsDir{!rel.empty() ? m_Paths->test_materials().repo() / rel : fs::path{}};
-    if(fs::exists(materialsDir))
+    const auto workingCopy{materials.working()};
+    if(std::find(materialsPaths.cbegin(), materialsPaths.cend(), workingCopy) == materialsPaths.cend())
     {
-      const auto tempOutputDir{projPaths.output().tests_temporary_data() / rel};
+      fs::remove_all(materials.temporary_materials());
+      fs::create_directories(materials.temporary_materials());
 
-      const auto[originalWorkingMaterials, workingCopy, prediction, originalAux, workingAux]{
-         [&tempOutputDir,&materialsDir] () -> std::array<fs::path, 5>{
-          const auto prediction{materialsDir / test_materials_paths::predictions_folder_name()};
-
-          if(fs::exists(prediction))
-          {
-            const auto originalWorkingMaterials{materialsDir / test_materials_paths::working_folder_name()};
-            const auto workingCopy{tempOutputDir / test_materials_paths::working_folder_name()};
-
-            const auto originalAuxiliaryMaterials{materialsDir / test_materials_paths::auxiliary_folder_name()};
-            const auto workingAuxiliaryMaterias{tempOutputDir / test_materials_paths::auxiliary_folder_name()};
-
-            return {originalWorkingMaterials, workingCopy, prediction, originalAuxiliaryMaterials, workingAuxiliaryMaterias};
-          }
-
-          return {materialsDir, tempOutputDir};
-        }()
-      };
-
-      if(std::find(materialsPaths.cbegin(), materialsPaths.cend(), workingCopy) == materialsPaths.cend())
+      if(const auto originalWorking{materials.original_working()}; fs::exists(originalWorking))
       {
-        fs::remove_all(tempOutputDir);
-        fs::create_directories(tempOutputDir);
-        if(fs::exists(originalWorkingMaterials))
-        {
-          fs::copy(originalWorkingMaterials, workingCopy, fs::copy_options::recursive | fs::copy_options::overwrite_existing);
-        }
-        else
-        {
-          fs::create_directory(workingCopy);
-        }
-
-        if(fs::exists(originalAux))
-          fs::copy(originalAux, workingAux, fs::copy_options::recursive | fs::copy_options::overwrite_existing);
-
-        materialsPaths.emplace_back(workingCopy);
+        fs::copy(originalWorking, workingCopy, fs::copy_options::recursive | fs::copy_options::overwrite_existing);
+      }
+      else
+      {
+        fs::create_directory(workingCopy);
       }
 
-      return {workingCopy, prediction, workingAux};
+      if(const auto originalAux{materials.original_auxiliary()}; fs::exists(originalAux))
+      {
+        fs::copy(originalAux, materials.auxiliary(), fs::copy_options::recursive | fs::copy_options::overwrite_existing);
+      }
+
+      materialsPaths.emplace_back(workingCopy);
     }
 
-    return {};
+    return materials;
   }
 
   family_info::family_info(std::string_view name, const project_paths& projPaths, recovery_mode recoveryMode)

@@ -16,6 +16,7 @@
 */
 
 #include "sequoia/TestFramework/ConcreteTypeCheckers.hpp"
+#include "sequoia/TestFramework/IndividualTestPaths.hpp"
 
 #include "sequoia/Core/Meta/Concepts.hpp"
 #include "sequoia/FileSystem/FileSystem.hpp"
@@ -120,27 +121,27 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    const std::filesystem::path& project_root() const noexcept
+    std::filesystem::path project_root() const
     {
-      return m_ProjectRoot;
+      return m_TestRepo.project_root();
     }
 
     [[nodiscard]]
-    const std::filesystem::path& working_materials() const noexcept
+    std::filesystem::path working_materials() const
     {
-      return m_WorkingMaterials;
+      return m_Materials.working();
     }
 
     [[nodiscard]]
-    const std::filesystem::path& predictive_materials() const noexcept
+    std::filesystem::path predictive_materials() const
     {
-      return m_PredictiveMaterials;
+      return m_Materials.prediction();
     }
 
     [[nodiscard]]
-    const std::filesystem::path& auxiliary_materials() const noexcept
+    std::filesystem::path auxiliary_materials() const
     {
-      return m_AuxiliaryMaterials;
+      return m_Materials.auxiliary();
     }
 
     [[nodiscard]]
@@ -178,7 +179,6 @@ namespace sequoia::testing
         }
       };
 
-      m_ProjectRoot             = projPaths.project_root();
       m_TestRepo                = projPaths.tests();
       m_DiagnosticsOutput       = makePath(projPaths.output().diagnostics(),  "Output");
       m_CaughtExceptionsOutput  = makePath(projPaths.output().diagnostics(),  "Exceptions");
@@ -187,11 +187,9 @@ namespace sequoia::testing
       fs::create_directories(m_DiagnosticsOutput.parent_path());
     }
 
-    void set_materials(std::filesystem::path workingMaterials, std::filesystem::path predictiveMaterials, std::filesystem::path auxiliaryMaterials)
+    void set_materials(individual_materials_paths materials)
     {
-      m_WorkingMaterials    = std::move(workingMaterials);
-      m_PredictiveMaterials = std::move(predictiveMaterials);
-      m_AuxiliaryMaterials  = std::move(auxiliaryMaterials);
+      m_Materials = std::move(materials);
     }
 
     void set_recovery_paths(active_recovery_files files)
@@ -213,11 +211,9 @@ namespace sequoia::testing
   private:
     std::string m_Name{};
     tests_paths m_TestRepo{};
+    individual_materials_paths m_Materials{};
+    
     std::filesystem::path
-      m_ProjectRoot{},
-      m_WorkingMaterials{},
-      m_PredictiveMaterials{},
-      m_AuxiliaryMaterials{},
       m_DiagnosticsOutput{},
       m_CaughtExceptionsOutput{},
       m_InstabilityAnalysisDir{};

@@ -125,6 +125,9 @@ namespace sequoia::testing
   [[nodiscard]]
   fs::path rebase_from(const fs::path& p, const fs::path& dir)
   {
+    if(dir.empty())
+      throw std::logic_error{"Tring to rebase from an empty path"};
+
     if(fs::exists(dir) && !fs::is_directory(dir))
       throw std::logic_error{"Trying to rebase from something other than a directory"};
 

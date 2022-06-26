@@ -28,7 +28,7 @@ namespace sequoia::testing
   [[nodiscard]]
   std::filesystem::path test_runner_test_creation::fake_project() const
   {
-    return working_materials() / "FakeProject";
+    return working_materials() /= "FakeProject";
   }
 
   [[nodiscard]]
@@ -156,7 +156,7 @@ namespace sequoia::testing
       file << outputStream.str();
     }
 
-    check(equivalence, LINE(""), fake_project(), predictive_materials() / "FakeProject");
+    check(equivalence, LINE(""), fake_project(), predictive_materials() /= "FakeProject");
   }
 
   void test_runner_test_creation::test_creation_failure()
