@@ -333,6 +333,15 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
+  fs::path output_paths::instability_analysis_file(fs::path projectRoot, fs::path source, std::string_view name, std::size_t index)
+  {
+    const auto ext{replace(source.filename().extension().string(), ".", "_")};
+
+    return (instability_analysis(std::move(projectRoot)) / source.filename().replace_extension().concat(ext))
+      .append(replace_all(name, " ", "_")).append("Output_" + std::to_string(index) + ".txt");
+  }
+
+  [[nodiscard]]
   fs::path output_paths::instability_analysis(fs::path projectRoot)
   {
     return tests_temporary_data(projectRoot) /= "InstabilityAnalysis";

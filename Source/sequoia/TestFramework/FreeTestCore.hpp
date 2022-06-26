@@ -182,7 +182,6 @@ namespace sequoia::testing
       m_TestRepo                = projPaths.tests();
       m_DiagnosticsOutput       = makePath(projPaths.output().diagnostics(),  "Output");
       m_CaughtExceptionsOutput  = makePath(projPaths.output().diagnostics(),  "Exceptions");
-      m_InstabilityAnalysisDir  = directory_for_instability_analysis(projPaths, source_file(), name());
 
       fs::create_directories(m_DiagnosticsOutput.parent_path());
     }
@@ -215,8 +214,7 @@ namespace sequoia::testing
     
     std::filesystem::path
       m_DiagnosticsOutput{},
-      m_CaughtExceptionsOutput{},
-      m_InstabilityAnalysisDir{};
+      m_CaughtExceptionsOutput{};
 
     void log_critical_failure(std::string_view tag, std::string_view what)
     {
@@ -232,7 +230,7 @@ namespace sequoia::testing
     {
       if(index.has_value())
       {
-        const auto file{m_InstabilityAnalysisDir / ("Output_" + std::to_string(*index) + ".txt")};
+        const auto file{output_paths::instability_analysis_file(project_root(), source_file(), name(), index.value())};
         impl::serialize(file, Checker::failure_messages());
       }
     }

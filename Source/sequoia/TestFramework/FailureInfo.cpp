@@ -110,6 +110,24 @@ namespace sequoia::testing
 
       return "";
     }
+
+    [[nodiscard]]
+    fs::path source_from_instability_analysis(const fs::path& dir)
+    {
+      auto parent{dir.parent_path()};
+      if(!parent.empty())
+      {
+        std::string str{(--parent.end())->string()};
+        if(auto pos{str.find_last_of('_')}; pos != std::string::npos)
+        {
+          str[pos] = '.';
+        }
+
+        return str;
+      }
+
+      return "";
+    }
   }
   
   std::ostream& operator<<(std::ostream& s, const failure_info& info)
@@ -192,40 +210,12 @@ namespace sequoia::testing
       if(!s.fail())
         output.push_back(info);
     }
-     
+
     return s;
   }
 
   [[nodiscard]]
-  std::filesystem::path directory_for_instability_analysis(const project_paths& projPaths, fs::path source, std::string_view name)
-  {
-    const auto ext{replace(source.filename().extension().string(), ".", "_")};
-
-    return projPaths.output().instability_analysis()
-        / source.filename().replace_extension().concat(ext)
-        / replace_all(name, " ", "_");
-  }
-
-  [[nodiscard]]
-  std::filesystem::path source_from_instability_analysis(const fs::path& dir)
-  {
-    auto parent{dir.parent_path()};
-    if(!parent.empty())
-    {
-      std::string str{(--parent.end())->string()};
-      if(auto pos{str.find_last_of('_')}; pos != std::string::npos)
-      {
-        str[pos] = '.';
-      }
-
-      return str;
-    }
-
-    return "";
-  }
-
-  [[nodiscard]]
-  std::string instability_analysis(const std::filesystem::path& root, const std::size_t trials)
+  std::string instability_analysis(const fs::path& root, const std::size_t trials)
   {
     if(trials <= 1) return "";
 

@@ -430,6 +430,9 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
+    static std::filesystem::path instability_analysis_file(std::filesystem::path projectRoot, std::filesystem::path source, std::string_view name, std::size_t index);
+
+    [[nodiscard]]
     static std::filesystem::path instability_analysis(std::filesystem::path projectRoot);
 
     [[nodiscard]]

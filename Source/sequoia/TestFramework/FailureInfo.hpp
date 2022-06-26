@@ -67,13 +67,5 @@ namespace sequoia::testing
   std::istream& operator>>(std::istream& s, failure_output& output);
 
   [[nodiscard]]
-  std::filesystem::path directory_for_instability_analysis(const project_paths& projPaths,
-                                                           std::filesystem::path source,
-                                                           std::string_view name);
-
-  [[nodiscard]]
-  std::filesystem::path source_from_instability_analysis(const std::filesystem::path& dir);
-
-  [[nodiscard]]
   std::string instability_analysis(const std::filesystem::path& root, const std::size_t trials);
 }
