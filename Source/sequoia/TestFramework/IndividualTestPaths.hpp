@@ -61,4 +61,34 @@ namespace sequoia::testing
 
     individual_materials_paths(const std::filesystem::path& relativePath, const test_materials_paths& materials, const output_paths& output);
   };
+
+  class individual_diagnostics_paths
+  {
+  public:
+    individual_diagnostics_paths() = default;
+
+    individual_diagnostics_paths(std::filesystem::path projectRoot, std::string_view family, std::string_view source, std::string_view mode);
+
+    [[nodiscard]]
+    const std::filesystem::path& diagnostics_file() const noexcept
+    {
+      return m_Diagnostics;
+    }
+
+    [[nodiscard]]
+    const std::filesystem::path& caught_exceptions_file() const noexcept
+    {
+      return m_CaughtExceptions;
+    }
+
+    [[nodiscard]]
+    friend bool operator==(const individual_diagnostics_paths&, const individual_diagnostics_paths&) noexcept = default;
+
+    [[nodiscard]]
+    friend bool operator!=(const individual_diagnostics_paths&, const individual_diagnostics_paths&) noexcept = default;
+  private:
+    std::filesystem::path
+      m_Diagnostics,
+      m_CaughtExceptions;
+  };
 }

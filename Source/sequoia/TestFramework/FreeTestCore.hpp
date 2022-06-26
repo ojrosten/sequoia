@@ -147,13 +147,13 @@ namespace sequoia::testing
     [[nodiscard]]
     const std::filesystem::path& diagnostics_output_filename() const noexcept
     {
-      return m_DiagnosticsOutput;
+      return m_Diagnostics.diagnostics_file();
     }
 
     [[nodiscard]]
     const std::filesystem::path& caught_exceptions_output_filename() const noexcept
     {
-      return m_CaughtExceptionsOutput;
+      return m_Diagnostics.caught_exceptions_file();
     }
 
     [[nodiscard]]
@@ -164,11 +164,10 @@ namespace sequoia::testing
 
     void set_filesystem_data(const project_paths& projPaths, std::string_view familyName)
     {
-      m_TestRepo                = projPaths.tests();
-      m_DiagnosticsOutput       = output_paths::diagnostics_file(      project_root(), familyName, source_file(), to_tag(mode));
-      m_CaughtExceptionsOutput  = output_paths::caught_exceptions_file(project_root(), familyName, source_file(), to_tag(mode));
+      m_TestRepo    = projPaths.tests();
+      m_Diagnostics = individual_diagnostics_paths(project_root(), familyName, source_file(), to_tag(mode));
 
-      std::filesystem::create_directories(m_DiagnosticsOutput.parent_path());
+      std::filesystem::create_directories(m_Diagnostics.diagnostics_file().parent_path());
     }
 
     void set_materials(individual_materials_paths materials)
@@ -196,10 +195,7 @@ namespace sequoia::testing
     std::string m_Name{};
     tests_paths m_TestRepo{};
     individual_materials_paths m_Materials{};
-    
-    std::filesystem::path
-      m_DiagnosticsOutput{},
-      m_CaughtExceptionsOutput{};
+    individual_diagnostics_paths m_Diagnostics{};
 
     void log_critical_failure(std::string_view tag, std::string_view what)
     {

@@ -14,9 +14,30 @@
 #include "sequoia/TestFramework/IndividualTestPaths.hpp"
 #include "sequoia/TestFramework/FileSystemUtilities.hpp"
 
+#include "sequoia/TextProcessing/Substitutions.hpp"
+
 namespace sequoia::testing
 {
   namespace fs = std::filesystem;
+
+  namespace
+  {
+    [[nodiscard]]
+    fs::path versioned_diagnostics(std::filesystem::path dir, std::string_view family, std::string_view source, std::string_view mode, std::string_view suffix)
+    {
+      const auto file{
+              fs::path{source}.filename()
+                              .replace_extension()
+                              .concat("_")
+                              .concat(mode)
+                              .concat(suffix)
+                              .concat(".txt")};
+
+      return (dir /= fs::path{replace_all(family, " ", "_")}) /= file;
+    }
+  }
+
+  //===================================== individual_materials_paths =====================================//
 
   individual_materials_paths::individual_materials_paths(fs::path sourceFile, const project_paths& projPaths)
     : individual_materials_paths{rebase_from(sourceFile.replace_extension(), projPaths.tests().repo()), projPaths.test_materials(), projPaths.output()}
@@ -62,4 +83,11 @@ namespace sequoia::testing
 
     return fs::exists(p) ? p : "";
   }
+
+  //===================================== individual_diagnostics_paths =====================================//
+
+  individual_diagnostics_paths::individual_diagnostics_paths(std::filesystem::path projectRoot, std::string_view family, std::string_view source, std::string_view mode)
+    : m_Diagnostics{versioned_diagnostics(output_paths::diagnostics(projectRoot), family, source, mode, "Output")}
+    , m_CaughtExceptions{versioned_diagnostics(output_paths::diagnostics(projectRoot), family, source, mode, "Exceptions")}
+  {}
 }

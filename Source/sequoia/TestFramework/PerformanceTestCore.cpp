@@ -85,7 +85,6 @@ namespace sequoia::testing
             if(auto contents{read_to_string(filename)})
               return contents.value();
 
-
             throw std::runtime_error{report_failed_read(filename)};
           }
 
