@@ -35,6 +35,20 @@ namespace sequoia::testing
 
       return ancillaryInfo;
     }
+
+    [[nodiscard]]
+    fs::path versioned_diagnostics(std::filesystem::path dir, std::string_view family, std::string_view source, std::string_view mode, std::string_view suffix)
+    {
+      const auto file{
+              fs::path{source}.filename()
+                              .replace_extension()
+                              .concat("_")
+                              .concat(mode)
+                              .concat(suffix)
+                              .concat(".txt")};
+
+      return (dir /= fs::path{replace_all(family, " ", "_")}) /= file;
+    }
   }
 
   discoverable_paths::discoverable_paths(int argc, char** argv)
@@ -324,6 +338,18 @@ namespace sequoia::testing
   fs::path output_paths::diagnostics(fs::path projectRoot)
   {
     return dir(projectRoot) /= "DiagnosticsOutput";
+  }
+
+  [[nodiscard]]
+  fs::path output_paths::diagnostics_file(std::filesystem::path projectRoot, std::string_view family, std::string_view source, std::string_view mode)
+  {
+    return versioned_diagnostics(diagnostics(projectRoot), family, source, mode, "Output");
+  }
+
+  [[nodiscard]]
+  fs::path output_paths::caught_exceptions_file(std::filesystem::path projectRoot, std::string_view family, std::string_view source, std::string_view mode)
+  {
+    return versioned_diagnostics(diagnostics(projectRoot), family, source, mode, "Exceptions");
   }
 
   [[nodiscard]]

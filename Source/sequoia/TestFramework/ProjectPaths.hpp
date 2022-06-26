@@ -415,6 +415,12 @@ namespace sequoia::testing
     static std::filesystem::path diagnostics(std::filesystem::path projectRoot);
 
     [[nodiscard]]
+    static std::filesystem::path diagnostics_file(std::filesystem::path projectRoot, std::string_view family, std::string_view source, std::string_view mode);
+
+    [[nodiscard]]
+    static std::filesystem::path caught_exceptions_file(std::filesystem::path projectRoot, std::string_view family, std::string_view source, std::string_view mode);
+
+    [[nodiscard]]
     const std::filesystem::path& test_summaries() const noexcept
     {
       return m_TestSummaries;

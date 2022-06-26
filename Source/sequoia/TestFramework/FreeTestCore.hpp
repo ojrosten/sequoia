@@ -164,26 +164,11 @@ namespace sequoia::testing
 
     void set_filesystem_data(const project_paths& projPaths, std::string_view familyName)
     {
-      namespace fs = std::filesystem;
-
-      auto makePath{
-        [famName{fs::path{replace_all(familyName, " ", "_")}},this](fs::path dir, std::string_view suffix){
-            const auto file{
-              fs::path{source_file()}.filename()
-                                     .replace_extension()
-                                     .concat("_")
-                                     .concat(to_tag(mode))
-                                     .concat(suffix)
-                                     .concat(".txt")};
-            return (dir /= famName) /= file;
-        }
-      };
-
       m_TestRepo                = projPaths.tests();
-      m_DiagnosticsOutput       = makePath(projPaths.output().diagnostics(),  "Output");
-      m_CaughtExceptionsOutput  = makePath(projPaths.output().diagnostics(),  "Exceptions");
+      m_DiagnosticsOutput       = output_paths::diagnostics_file(      project_root(), familyName, source_file(), to_tag(mode));
+      m_CaughtExceptionsOutput  = output_paths::caught_exceptions_file(project_root(), familyName, source_file(), to_tag(mode));
 
-      fs::create_directories(m_DiagnosticsOutput.parent_path());
+      std::filesystem::create_directories(m_DiagnosticsOutput.parent_path());
     }
 
     void set_materials(individual_materials_paths materials)
