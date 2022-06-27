@@ -54,7 +54,7 @@ namespace sequoia::testing
 
   void commands_free_test::test_exceptions()
   {
-    const auto& root{working_materials()};
+    const auto root{working_materials()};
     check_exception_thrown<std::runtime_error>(LINE("No cache file"),
       [&root]() { return cmake_cmd(std::nullopt, build_paths{root, {root / "NoCacheFile/CMakeLists.txt" , ""}}, ""); },
       postprocessor{" in "});

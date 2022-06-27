@@ -190,7 +190,7 @@ namespace sequoia::testing
   auto family_selector::find_filename(const normal_path& filename) -> source_list::iterator
   {
     return std::find_if(m_SelectedSources.begin(), m_SelectedSources.end(),
-      [&filename, &repo = m_Paths.tests(), &root = m_Paths.project_root()](const auto& element){
+      [&filename, &repo = m_Paths.tests().repo(), &root = m_Paths.project_root()](const auto& element){
       const auto& source{element.first};
 
       if(filename.path().empty() || source.path().empty() || (back(source) != back(filename)))

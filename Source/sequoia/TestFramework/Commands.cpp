@@ -5,7 +5,9 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/*! \file */
+/*! \file
+    \brief Definitions for Commands.hpp
+ */
 
 #include "sequoia/TestFramework/Commands.hpp"
 

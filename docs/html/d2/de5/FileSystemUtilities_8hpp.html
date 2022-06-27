@@ -68,8 +68,7 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#func-members">Functions</a> &#124;
-<a href="#var-members">Variables</a>  </div>
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">FileSystemUtilities.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
@@ -78,7 +77,6 @@ $(function() {
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="../../d0/dae/CoreInfrastructure_8hpp_source.html">sequoia/TestFramework/CoreInfrastructure.hpp</a>&quot;</code><br />
 <code>#include &lt;filesystem&gt;</code><br />
-<code>#include &lt;optional&gt;</code><br />
 </div>
 <p><a href="../../d2/de5/FileSystemUtilities_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -88,35 +86,9 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/df0/structsequoia_1_1testing_1_1serializer_3_01std_1_1filesystem_1_1file__type_01_4.html">sequoia::testing::serializer&lt; std::filesystem::file_type &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/da8/classsequoia_1_1testing_1_1file__info.html">sequoia::testing::file_info</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d74/classsequoia_1_1testing_1_1discoverable__paths.html">sequoia::testing::discoverable_paths</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Paths which are potentially discoverable from the commandline arguments.  <a href="../../d9/d74/classsequoia_1_1testing_1_1discoverable__paths.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/d97/classsequoia_1_1testing_1_1auxiliary__paths.html">sequoia::testing::auxiliary_paths</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Paths for auxiliary materials, used in creating projects/tests.  <a href="../../d4/d97/classsequoia_1_1testing_1_1auxiliary__paths.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/db2/classsequoia_1_1testing_1_1recovery__paths.html">sequoia::testing::recovery_paths</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Holds details of the file to which the last successfully completed test is registered.  <a href="../../dd/db2/classsequoia_1_1testing_1_1recovery__paths.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/df6/classsequoia_1_1testing_1_1prune__paths.html">sequoia::testing::prune_paths</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Paths used when using dependencies to prune the number of tests.  <a href="../../dd/df6/classsequoia_1_1testing_1_1prune__paths.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d48/classsequoia_1_1testing_1_1output__paths.html">sequoia::testing::output_paths</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Paths in the output directory.  <a href="../../d9/d48/classsequoia_1_1testing_1_1output__paths.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/dbe/classsequoia_1_1testing_1_1project__paths.html">sequoia::testing::project_paths</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Paths used by the project.  <a href="../../d4/dbe/classsequoia_1_1testing_1_1project__paths.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d13/structsequoia_1_1testing_1_1project__paths_1_1initializer.html">sequoia::testing::project_paths::initializer</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a0840df681dd2454885b3edbd35d16dce"><td class="memTemplParams" colspan="2"><a id="a0840df681dd2454885b3edbd35d16dce" name="a0840df681dd2454885b3edbd35d16dce"></a>
-template&lt;std::predicate&lt; std::filesystem::path &gt; Pred&gt; </td></tr>
-<tr class="memitem:a0840df681dd2454885b3edbd35d16dce"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::throw_if</b> (const std::filesystem::path &amp;p, std::string_view message, Pred pred)</td></tr>
-<tr class="separator:a0840df681dd2454885b3edbd35d16dce"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a402a8ef59501b7684b0ed294415e9adb"><td class="memItemLeft" align="right" valign="top"><a id="a402a8ef59501b7684b0ed294415e9adb" name="a402a8ef59501b7684b0ed294415e9adb"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::throw_unless_exists</b> (const std::filesystem::path &amp;p, std::string_view message=&quot;&quot;)</td></tr>
 <tr class="separator:a402a8ef59501b7684b0ed294415e9adb"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -132,12 +104,6 @@ std::filesystem::path&#160;</td><td class="memItemRight" valign="bottom"><b>sequ
 <tr class="memitem:a261c836e1be9487cb8f45a543f7f505f"><td class="memItemLeft" align="right" valign="top"><a id="a261c836e1be9487cb8f45a543f7f505f" name="a261c836e1be9487cb8f45a543f7f505f"></a>
 std::filesystem::path&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::rebase_from</b> (const std::filesystem::path &amp;filename, const std::filesystem::path &amp;dir)</td></tr>
 <tr class="separator:a261c836e1be9487cb8f45a543f7f505f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
-Variables</h2></td></tr>
-<tr class="memitem:a50280302f68a0bff6e9ad78e3824e750"><td class="memItemLeft" align="right" valign="top"><a id="a50280302f68a0bff6e9ad78e3824e750" name="a50280302f68a0bff6e9ad78e3824e750"></a>
-constexpr std::string_view&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::seqpat</b> {&quot;.seqpat&quot;}</td></tr>
-<tr class="separator:a50280302f68a0bff6e9ad78e3824e750"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >File paths and related utilities. </p>

@@ -302,14 +302,14 @@ namespace sequoia::testing
     {
       if(const auto str{outputFile.string()}; str.find("Utilities.hpp") == npos)
       {
-        add_include(m_Paths.main().common_includes(), fs::relative(outputFile, m_Paths.tests()).generic_string());
+        add_include(m_Paths.main().common_includes(), fs::relative(outputFile, m_Paths.tests().repo()).generic_string());
       }
     }
     else if(outputFile.extension() == ".cpp")
     {
       auto addToCMake{
         [this, outputFile](const fs::path& mainCMake) {
-          add_to_cmake(mainCMake, m_Paths.tests(), outputFile, "target_sources(", ")\n", "${TestDir}/");
+          add_to_cmake(mainCMake, m_Paths.tests().repo(), outputFile, "target_sources(", ")\n", "${TestDir}/");
         }
       };
 
@@ -370,11 +370,11 @@ namespace sequoia::testing
   void nascent_test_base::finalize_header(const std::filesystem::path& sourcePath)
   {
     const auto relSourcePath{fs::relative(sourcePath, m_Paths.source().project())};
-    const auto dir{(m_Paths.tests() / relSourcePath).parent_path()};
+    const auto dir{(m_Paths.tests().repo() / relSourcePath).parent_path()};
     fs::create_directories(dir);
 
     m_HostDir = dir;
-    m_HeaderPath = fs::relative(sourcePath, m_Paths.source().source_root());
+    m_HeaderPath = fs::relative(sourcePath, m_Paths.source().repo());
   }
 
   void nascent_test_base::on_source_path_error() const
@@ -389,7 +389,7 @@ namespace sequoia::testing
       }
     }
 
-    mess.append(" in the source repository\n").append(fs::relative(m_Paths.source().project(), m_Paths.tests()).generic_string());
+    mess.append(" in the source repository\n").append(fs::relative(m_Paths.source().project(), m_Paths.tests().repo()).generic_string());
 
     throw std::runtime_error{mess};
   }
@@ -398,7 +398,7 @@ namespace sequoia::testing
   {
     const auto srcPath{fs::path{headerPath}.replace_extension("cpp")};
 
-    const auto sourceRoot{paths().source().source_root()};
+    const auto sourceRoot{paths().source().repo()};
     stream() << std::quoted(fs::relative(srcPath, paths().project_root()) .generic_string()) << '\n';
     fs::copy_file(paths().aux_paths().source_templates() / "MyCpp.cpp", srcPath);
 

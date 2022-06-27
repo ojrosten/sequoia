@@ -61,8 +61,10 @@ var searchData=
   ['project_5fpaths_58',['project_paths',['../d4/dbe/classsequoia_1_1testing_1_1project__paths.html',1,'sequoia::testing']]],
   ['projectcreator_2ecpp_59',['ProjectCreator.cpp',['../d0/d91/ProjectCreator_8cpp.html',1,'']]],
   ['projectcreator_2ehpp_60',['ProjectCreator.hpp',['../d8/df2/ProjectCreator_8hpp.html',1,'']]],
-  ['proper_5fstring_61',['proper_string',['../d6/dbe/classsequoia_1_1parsing_1_1commandline_1_1proper__string.html',1,'sequoia::parsing::commandline']]],
-  ['proxy_62',['proxy',['../d0/d59/classsequoia_1_1object_1_1data__pool_1_1proxy.html',1,'sequoia::object::data_pool']]],
-  ['proxy_5fdereference_5fpolicy_63',['proxy_dereference_policy',['../db/d8a/structsequoia_1_1maths_1_1graph__impl_1_1proxy__dereference__policy.html',1,'sequoia::maths::graph_impl']]],
-  ['prune_5fpaths_64',['prune_paths',['../dd/df6/classsequoia_1_1testing_1_1prune__paths.html',1,'sequoia::testing']]]
+  ['projectpaths_2ecpp_61',['ProjectPaths.cpp',['../df/d14/ProjectPaths_8cpp.html',1,'']]],
+  ['projectpaths_2ehpp_62',['ProjectPaths.hpp',['../db/dc0/ProjectPaths_8hpp.html',1,'']]],
+  ['proper_5fstring_63',['proper_string',['../d6/dbe/classsequoia_1_1parsing_1_1commandline_1_1proper__string.html',1,'sequoia::parsing::commandline']]],
+  ['proxy_64',['proxy',['../d0/d59/classsequoia_1_1object_1_1data__pool_1_1proxy.html',1,'sequoia::object::data_pool']]],
+  ['proxy_5fdereference_5fpolicy_65',['proxy_dereference_policy',['../db/d8a/structsequoia_1_1maths_1_1graph__impl_1_1proxy__dereference__policy.html',1,'sequoia::maths::graph_impl']]],
+  ['prune_5fpaths_66',['prune_paths',['../dd/df6/classsequoia_1_1testing_1_1prune__paths.html',1,'sequoia::testing']]]
 ];

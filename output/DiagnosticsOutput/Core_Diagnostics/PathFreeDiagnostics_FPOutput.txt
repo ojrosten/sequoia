@@ -1,4 +1,4 @@
-	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 60
+	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 67
 	Inequivalence of two different paths, neither of which exists
 
 	Comparison performed using:
@@ -14,7 +14,7 @@
 
 	=======================================
 
-	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 65
+	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 72
 	Inequivalence of two different paths, one of which exists
 
 	Comparison performed using:
@@ -34,7 +34,7 @@
 
 	=======================================
 
-	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 70
+	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 77
 	Inequivalence of directory/file
 
 	Comparison performed using:
@@ -54,7 +54,7 @@
 
 	=======================================
 
-	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 75
+	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 82
 	Inequivalence of differently named files
 
 	Comparison performed using:
@@ -74,7 +74,7 @@
 
 	=======================================
 
-	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 80
+	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 87
 	Inequivalence of file contents
 
 	Comparison performed using:
@@ -102,7 +102,7 @@
 
 	=======================================
 
-	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 85
+	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 92
 	Inequivalence of differently named directories with the same contents
 
 	Comparison performed using:
@@ -118,7 +118,7 @@
 
 	=======================================
 
-	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 90
+	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 97
 	Inequivalence of directories with the same files but different contents
 
 	Comparison performed using:
@@ -146,7 +146,7 @@
 
 	=======================================
 
-	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 95
+	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 102
 	Inequivalence of directories with some common files
 
 	Comparison performed using:
@@ -168,7 +168,7 @@
 
 	=======================================
 
-	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 100
+	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 107
 	Inequivalence of directories with some common files
 
 	Comparison performed using:
@@ -190,7 +190,7 @@
 
 	=======================================
 
-	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 105
+	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 112
 	File inequivalence when default file checking is used
 
 	Comparison performed using:
@@ -218,7 +218,7 @@
 
 	=======================================
 
-	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 110
+	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 117
 	Range inequivalence when default file checking us used
 
 	[std::vector<std::filesystem::path, std::allocator<std::filesystem::path> >]
@@ -249,7 +249,7 @@
 
 	=======================================
 
-	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 115
+	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 122
 	Weak inequivalence of directories with some common files
 
 	Comparison performed using:
@@ -271,7 +271,7 @@
 
 	=======================================
 
-	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 120
+	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 127
 	Directory weak inequivalence when default file checking is used
 
 	Comparison performed using:
@@ -299,7 +299,7 @@
 
 	=======================================
 
-	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 125
+	Tests/TestFramework/PathFreeDiagnostics.cpp, Line 132
 	Weak inequivalence of range when default file checking is used
 
 	[std::vector<std::filesystem::path, std::allocator<std::filesystem::path> >]

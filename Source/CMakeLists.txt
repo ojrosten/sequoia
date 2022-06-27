@@ -14,6 +14,7 @@ set(SourceList sequoia/TestFramework/Advice.cpp
     sequoia/TestFramework/Commands.cpp
     sequoia/TestFramework/ConcreteTypeCheckers.cpp
     sequoia/TestFramework/DependencyAnalyzer.cpp
+    sequoia/TestFramework/IndividualTestPaths.cpp
     sequoia/TestFramework/FailureInfo.cpp
     sequoia/TestFramework/FileEditors.cpp
     sequoia/TestFramework/FileSystemUtilities.cpp

@@ -129,7 +129,7 @@ namespace sequoia::testing
   {
     m_ResetTime = std::chrono::file_clock::now() + resetOffset;
 
-    const auto fake{auxiliary_materials() / "FakeProject"};
+    const auto fake{auxiliary_materials() /= "FakeProject"};
     const main_paths main{fake / main_paths::default_main_cpp_from_root()};
     commandline_arguments args{(build_paths{fake, main}.cmade_dir() / "TestAll").generic_string()};
     const project_paths projPaths{args.size(), args.get(), {main.file(), {}, main.file()}};
@@ -164,9 +164,9 @@ namespace sequoia::testing
   {
     fs::last_write_time(projPaths.executable(), m_ResetTime + lateExecutableOffset);
 
-    const auto& testRepo{projPaths.tests()};
+    const auto& testRepo{projPaths.tests().repo()};
     const auto& sourceRepo{projPaths.source().project()};
-    const auto& materials{projPaths.test_materials()};
+    const auto& materials{projPaths.test_materials().repo()};
 
     check_tests_to_run(LINE("Nothing stale"), projPaths, "", {}, {}, {}, {});
 

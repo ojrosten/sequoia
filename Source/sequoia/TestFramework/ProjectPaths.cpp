@@ -108,30 +108,54 @@ namespace sequoia::testing
   //===================================== source_paths =====================================//
 
   source_paths::source_paths(const fs::path& projectRoot)
-    : m_SourceRoot{source_root(projectRoot)}
-    , m_Project{source_root() / uncapitalize(back(projectRoot).generic_string())}
+    : m_Repo{repo(projectRoot)}
+    , m_Project{repo() / uncapitalize(back(projectRoot).generic_string())}
   {}
 
   [[nodiscard]]
   fs::path source_paths::cmake_lists() const
   {
-    return source_root() / "CMakeLists.txt";
+    return repo() / "CMakeLists.txt";
   }
 
   [[nodiscard]]
   fs::path source_paths::cmake_lists(std::filesystem::path projectRoot)
   {
-    return source_root(projectRoot) /= "CMakeLists.txt";
+    return repo(projectRoot) /= "CMakeLists.txt";
   }
 
   [[nodiscard]]
-  fs::path source_paths::source_root(std::filesystem::path projectRoot)
+  fs::path source_paths::repo(std::filesystem::path projectRoot)
   {
     if(projectRoot.empty())
       throw std::runtime_error{"Project root required to construct source path"};
 
     return projectRoot /= "Source";
   }
+
+  //===================================== tests_paths =====================================//
+
+  tests_paths::tests_paths(fs::path projectRoot)
+    : m_Repo{std::move(projectRoot /= "Tests")}
+  {}
+
+  [[nodiscard]]
+  std::filesystem::path tests_paths::project_root() const
+  {
+    return m_Repo.parent_path();
+  }
+
+  //===================================== test_materials_paths =====================================//
+
+  test_materials_paths::test_materials_paths(fs::path projectRoot)
+    : m_Repo{std::move(projectRoot /= "TestMaterials")}
+  {}
+
+  //===================================== build_system_paths =====================================//
+
+  build_system_paths::build_system_paths(fs::path projectRoot)
+    : m_Repo{std::move(projectRoot /= "build_system")}
+  {}
 
   //===================================== build_paths =====================================//
 
@@ -164,14 +188,14 @@ namespace sequoia::testing
   //===================================== auxiliary_paths =====================================//
 
   auxiliary_paths::auxiliary_paths(const fs::path& projectRoot)
-    : m_Dir{dir(projectRoot)}
+    : m_Dir{repo(projectRoot)}
     , m_TestTemplates{test_templates(projectRoot)}
     , m_SourceTemplates{source_templates(projectRoot)}
     , m_ProjectTemplate{project_template(projectRoot)}
   {}
 
   [[nodiscard]]
-  fs::path auxiliary_paths::dir(fs::path projectRoot)
+  fs::path auxiliary_paths::repo(fs::path projectRoot)
   {
     return projectRoot /= "aux_files";
   }
@@ -179,19 +203,19 @@ namespace sequoia::testing
   [[nodiscard]]
   fs::path auxiliary_paths::test_templates(fs::path projectRoot)
   {
-    return dir(projectRoot) /= "TestTemplates";
+    return repo(projectRoot) /= "TestTemplates";
   }
 
   [[nodiscard]]
   fs::path auxiliary_paths::source_templates(fs::path projectRoot)
   {
-    return dir(projectRoot) /= "SourceTemplates";
+    return repo(projectRoot) /= "SourceTemplates";
   }
 
   [[nodiscard]]
   fs::path auxiliary_paths::project_template(fs::path projectRoot)
   {
-    return dir(projectRoot) /= "ProjectTemplate";
+    return repo(projectRoot) /= "ProjectTemplate";
   }
 
   //===================================== recovery_paths =====================================//
@@ -309,6 +333,15 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
+  fs::path output_paths::instability_analysis_file(fs::path projectRoot, fs::path source, std::string_view name, std::size_t index)
+  {
+    const auto ext{replace(source.filename().extension().string(), ".", "_")};
+
+    return (instability_analysis(std::move(projectRoot)) / source.filename().replace_extension().concat(ext))
+      .append(replace_all(name, " ", "_")).append("Output_" + std::to_string(index) + ".txt");
+  }
+
+  [[nodiscard]]
   fs::path output_paths::instability_analysis(fs::path projectRoot)
   {
     return tests_temporary_data(projectRoot) /= "InstabilityAnalysis";
@@ -323,32 +356,14 @@ namespace sequoia::testing
     , m_Build{project_root(), main()}
     , m_Auxiliary{project_root()}
     , m_Output{project_root()}
-    , m_Tests{tests(project_root())}
-    , m_TestMaterials{test_materials(project_root())}
-    , m_BuildSystem{build_system(project_root())}
+    , m_Tests{project_root()}
+    , m_Materials{project_root()}
+    , m_BuildSystem{project_root()}
     , m_AncillaryMainCpps{make_ancillary_info(project_root(), main().common_includes(), pathsFromRoot)}
   {
     throw_unless_directory(project_root(), "\nRepository root not found");
     throw_unless_regular_file(main().file(), "\nTry ensuring that the application is run from the appropriate directory");
     throw_unless_regular_file(main().common_includes(), "\nCommon includes not found");
-  }
-
-  [[nodiscard]]
-  fs::path project_paths::tests(fs::path projectRoot)
-  {
-    return projectRoot /= "Tests";
-  }
-
-  [[nodiscard]]
-  fs::path project_paths::test_materials(fs::path projectRoot)
-  {
-    return projectRoot /= "TestMaterials";
-  }
-
-  [[nodiscard]]
-  fs::path project_paths::build_system(fs::path projectRoot)
-  {
-    return projectRoot /= "build_system";
   }
 
   [[nodiscard]]

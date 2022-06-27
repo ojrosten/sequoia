@@ -33,9 +33,9 @@ namespace sequoia::testing
       
       if(!name.is_absolute())
       {
-        if(const auto testRepo{projPaths.tests()}; !testRepo.empty())
+        if(const auto testRepo{projPaths.tests().repo()}; !testRepo.empty())
         {
-          return projPaths.output().test_summaries() / back(projPaths.tests()) / rebase_from(name, testRepo);
+          return projPaths.output().test_summaries() / back(testRepo) / rebase_from(name, testRepo);
         }
       }
       else
@@ -91,7 +91,7 @@ namespace sequoia::testing
                          const fs::path& workingMaterials,
                          const fs::path& predictiveMaterials,
                          const project_paths& projPaths)
-    : test_file{rebase_from(sourceFile, projPaths.tests())}
+    : test_file{rebase_from(sourceFile, projPaths.tests().repo())}
     , summary{test_summary_filename(sourceFile, projPaths)}
     , workingMaterials{workingMaterials}
     , predictions{predictiveMaterials}
@@ -165,67 +165,35 @@ namespace sequoia::testing
   //============================== family_info ==============================//
 
   [[nodiscard]]
-  materials_info family_info::set_materials(const std::filesystem::path& sourceFile, std::vector<std::filesystem::path>& materialsPaths)
+  individual_materials_paths family_info::set_materials(const std::filesystem::path& sourceFile, std::vector<std::filesystem::path>& materialsPaths)
   {
-    const auto& projPaths{*m_Paths};
+    individual_materials_paths materials{sourceFile, *m_Paths};
+    if(!fs::exists(materials.original_materials())) return {};
 
-    const auto rel{
-      [&sourceFile, &projPaths] (){
-        if(projPaths.tests().empty()) return fs::path{};
-
-        auto folderName{fs::path{sourceFile}.replace_extension()};
-        if(folderName.is_absolute())
-          folderName = fs::relative(folderName, projPaths.test_materials());
-
-        return rebase_from(folderName, projPaths.tests());
-      }()
-    };
-
-    const auto materials{!rel.empty() ? m_Paths->test_materials() / rel : fs::path{}};
-    if(fs::exists(materials))
+    const auto workingCopy{materials.working()};
+    if(std::find(materialsPaths.cbegin(), materialsPaths.cend(), workingCopy) == materialsPaths.cend())
     {
-      const auto output{projPaths.output().tests_temporary_data() / rel};
+      fs::remove_all(materials.temporary_materials());
+      fs::create_directories(materials.temporary_materials());
 
-      const auto[original, workingCopy, prediction, originalAux, workingAux]{
-         [&output,&materials] () -> std::array<fs::path, 5>{
-          const auto original{materials / "WorkingCopy"};
-          const auto prediction{materials / "Prediction"};
-
-          if(fs::exists(prediction))
-          {
-            const auto auxiliary{materials / "Auxiliary"};
-            const auto origAux{fs::exists(auxiliary) ? auxiliary : ""};
-            const auto workAux{fs::exists(auxiliary) ? output / "Auxiliary" : ""};
-            return {original, output / "WorkingCopy", prediction, origAux, workAux};
-          }
-
-          return { materials, output};
-        }()
-      };
-
-      if(std::find(materialsPaths.cbegin(), materialsPaths.cend(), workingCopy) == materialsPaths.cend())
+      if(const auto originalWorking{materials.original_working()}; fs::exists(originalWorking))
       {
-        fs::remove_all(output);
-        fs::create_directories(output);
-        if(fs::exists(original))
-        {
-          fs::copy(original, workingCopy, fs::copy_options::recursive | fs::copy_options::overwrite_existing);
-        }
-        else
-        {
-          fs::create_directory(workingCopy);
-        }
-
-        if(fs::exists(originalAux))
-          fs::copy(originalAux, workingAux, fs::copy_options::recursive | fs::copy_options::overwrite_existing);
-
-        materialsPaths.emplace_back(workingCopy);
+        fs::copy(originalWorking, workingCopy, fs::copy_options::recursive | fs::copy_options::overwrite_existing);
+      }
+      else
+      {
+        fs::create_directory(workingCopy);
       }
 
-      return {workingCopy, prediction, workingAux};
+      if(const auto originalAux{materials.original_auxiliary()}; fs::exists(originalAux))
+      {
+        fs::copy(originalAux, materials.auxiliary(), fs::copy_options::recursive | fs::copy_options::overwrite_existing);
+      }
+
+      materialsPaths.emplace_back(workingCopy);
     }
 
-    return {};
+    return materials;
   }
 
   family_info::family_info(std::string_view name, const project_paths& projPaths, recovery_mode recoveryMode)

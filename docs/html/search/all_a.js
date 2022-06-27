@@ -1,8 +1,8 @@
 var searchData=
 [
-  ['make_5fshared_5fbraced_0',['make_shared_braced',['../d9/d5c/structsequoia_1_1object_1_1make__shared__braced.html',1,'sequoia::object']]],
-  ['mapper_1',['mapper',['../d7/df1/structsequoia_1_1impl_1_1type__to__type_1_1mapper.html',1,'sequoia::impl::type_to_type']]],
-  ['materials_5finfo_2',['materials_info',['../d0/d4e/structsequoia_1_1testing_1_1materials__info.html',1,'sequoia::testing']]],
+  ['main_5fpaths_0',['main_paths',['../dc/d82/classsequoia_1_1testing_1_1main__paths.html',1,'sequoia::testing']]],
+  ['make_5fshared_5fbraced_1',['make_shared_braced',['../d9/d5c/structsequoia_1_1object_1_1make__shared__braced.html',1,'sequoia::object']]],
+  ['mapper_2',['mapper',['../d7/df1/structsequoia_1_1impl_1_1type__to__type_1_1mapper.html',1,'sequoia::impl::type_to_type']]],
   ['materials_5fupdater_5ffree_5ftest_3',['materials_updater_free_test',['../d7/d6e/classsequoia_1_1testing_1_1materials__updater__free__test.html',1,'sequoia::testing']]],
   ['materialsupdater_2ecpp_4',['MaterialsUpdater.cpp',['../d9/d5c/MaterialsUpdater_8cpp.html',1,'']]],
   ['materialsupdater_2ehpp_5',['MaterialsUpdater.hpp',['../dd/d4b/MaterialsUpdater_8hpp.html',1,'']]],

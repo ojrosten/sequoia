@@ -16,6 +16,7 @@
 */
 
 #include "sequoia/TestFramework/ConcreteTypeCheckers.hpp"
+#include "sequoia/TestFramework/IndividualTestPaths.hpp"
 
 #include "sequoia/Core/Meta/Concepts.hpp"
 #include "sequoia/FileSystem/FileSystem.hpp"
@@ -120,77 +121,58 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    const std::filesystem::path& working_materials() const noexcept
+    std::filesystem::path project_root() const
     {
-      return m_WorkingMaterials;
+      return m_TestRepo.project_root();
     }
 
     [[nodiscard]]
-    const std::filesystem::path& predictive_materials() const noexcept
+    std::filesystem::path working_materials() const
     {
-      return m_PredictiveMaterials;
+      return m_Materials.working();
     }
 
     [[nodiscard]]
-    const std::filesystem::path& auxiliary_materials() const noexcept
+    std::filesystem::path predictive_materials() const
     {
-      return m_AuxiliaryMaterials;
+      return m_Materials.prediction();
     }
 
     [[nodiscard]]
-    const std::filesystem::path& test_repository() const noexcept
+    std::filesystem::path auxiliary_materials() const
     {
-      return m_TestRepo;
+      return m_Materials.auxiliary();
     }
 
     [[nodiscard]]
     const std::filesystem::path& diagnostics_output_filename() const noexcept
     {
-      return m_DiagnosticsOutput;
+      return m_Diagnostics.diagnostics_file();
     }
 
     [[nodiscard]]
     const std::filesystem::path& caught_exceptions_output_filename() const noexcept
     {
-      return m_CaughtExceptionsOutput;
+      return m_Diagnostics.caught_exceptions_file();
     }
 
     [[nodiscard]]
     std::string report_line(const std::filesystem::path& file, int line, std::string_view message)
     {
-      return testing::report_line(file, line, message, test_repository());
+      return testing::report_line(file, line, message, m_TestRepo.repo());
     }
 
     void set_filesystem_data(const project_paths& projPaths, std::string_view familyName)
     {
-      namespace fs = std::filesystem;
+      m_TestRepo    = projPaths.tests();
+      m_Diagnostics = individual_diagnostics_paths(project_root(), familyName, source_file(), to_tag(mode));
 
-      auto makePath{
-        [famName{fs::path{replace_all(familyName, " ", "_")}},this](fs::path dir, std::string_view suffix){
-            const auto file{
-              fs::path{source_file()}.filename()
-                                     .replace_extension()
-                                     .concat("_")
-                                     .concat(to_tag(mode))
-                                     .concat(suffix)
-                                     .concat(".txt")};
-            return (dir /= famName) /= file;
-        }
-      };
-
-      m_TestRepo                = projPaths.tests();
-      m_DiagnosticsOutput       = makePath(projPaths.output().diagnostics(),  "Output");
-      m_CaughtExceptionsOutput  = makePath(projPaths.output().diagnostics(),  "Exceptions");
-      m_InstabilityAnalysisDir  = directory_for_instability_analysis(projPaths, source_file(), name());
-
-      fs::create_directories(m_DiagnosticsOutput.parent_path());
+      std::filesystem::create_directories(m_Diagnostics.diagnostics_file().parent_path());
     }
 
-    void set_materials(std::filesystem::path workingMaterials, std::filesystem::path predictiveMaterials, std::filesystem::path auxiliaryMaterials)
+    void set_materials(individual_materials_paths materials)
     {
-      m_WorkingMaterials    = std::move(workingMaterials);
-      m_PredictiveMaterials = std::move(predictiveMaterials);
-      m_AuxiliaryMaterials  = std::move(auxiliaryMaterials);
+      m_Materials = std::move(materials);
     }
 
     void set_recovery_paths(active_recovery_files files)
@@ -211,14 +193,9 @@ namespace sequoia::testing
     }
   private:
     std::string m_Name{};
-    std::filesystem::path
-      m_WorkingMaterials{},
-      m_PredictiveMaterials{},
-      m_AuxiliaryMaterials{},
-      m_TestRepo{},
-      m_DiagnosticsOutput{},
-      m_CaughtExceptionsOutput{},
-      m_InstabilityAnalysisDir{};
+    tests_paths m_TestRepo{};
+    individual_materials_paths m_Materials{};
+    individual_diagnostics_paths m_Diagnostics{};
 
     void log_critical_failure(std::string_view tag, std::string_view what)
     {
@@ -234,7 +211,7 @@ namespace sequoia::testing
     {
       if(index.has_value())
       {
-        const auto file{m_InstabilityAnalysisDir / ("Output_" + std::to_string(*index) + ".txt")};
+        const auto file{output_paths::instability_analysis_file(project_root(), source_file(), name(), index.value())};
         impl::serialize(file, Checker::failure_messages());
       }
     }

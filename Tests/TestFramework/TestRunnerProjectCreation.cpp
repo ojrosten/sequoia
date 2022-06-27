@@ -33,7 +33,7 @@ namespace sequoia::testing
     check_exception_thrown<std::runtime_error>(
       LINE("Project name with space"),
       [this]() {
-        commandline_arguments args{zeroth_arg(), "init", "Oliver Jacob Rosten", (working_materials() / "Generated Project").string(), "  "};
+        commandline_arguments args{zeroth_arg(), "init", "Oliver Jacob Rosten", (working_materials() /= "Generated Project").string(), "  "};
 
         std::stringstream outputStream{};
         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", make_project_paths(), "  ", outputStream};
@@ -44,7 +44,7 @@ namespace sequoia::testing
     check_exception_thrown<std::runtime_error>(
       LINE("Project name with $"),
       [this]() {
-        commandline_arguments args{zeroth_arg(), "init", "Oliver Jacob Rosten", (working_materials() / "Generated$Project").string(), "  "};
+        commandline_arguments args{zeroth_arg(), "init", "Oliver Jacob Rosten", (working_materials() /= "Generated$Project").string(), "  "};
 
         std::stringstream outputStream{};
         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", make_project_paths(), "  ", outputStream};
@@ -95,7 +95,7 @@ namespace sequoia::testing
     check_exception_thrown<std::runtime_error>(
       LINE("Illegal indent"),
       [this]() {
-        commandline_arguments args{zeroth_arg(), "init", "Oliver Jacob Rosten", (working_materials() / "GeneratedProject").string(), "  "};
+        commandline_arguments args{zeroth_arg(), "init", "Oliver Jacob Rosten", (working_materials() /= "GeneratedProject").string(), "  "};
 
         std::stringstream outputStream{};
         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", make_project_paths(), "\t  x", outputStream};
@@ -106,7 +106,7 @@ namespace sequoia::testing
     check_exception_thrown<std::runtime_error>(
       LINE("Illegal init indent"),
       [this]() {
-        commandline_arguments args{zeroth_arg(), "init", "Oliver Jacob Rosten", (working_materials() / "GeneratedProject").string(), "\n"};
+        commandline_arguments args{zeroth_arg(), "init", "Oliver Jacob Rosten", (working_materials() /= "GeneratedProject").string(), "\n"};
 
         std::stringstream outputStream{};
         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", make_project_paths(), "  ", outputStream};
@@ -124,7 +124,7 @@ namespace sequoia::testing
   [[nodiscard]]
   std::filesystem::path test_runner_project_creation::fake_project() const
   {
-    return working_materials() / "FakeProject";
+    return working_materials() /= "FakeProject";
   }
 
   [[nodiscard]]
@@ -136,11 +136,11 @@ namespace sequoia::testing
   void test_runner_project_creation::test_project_creation()
   {
     namespace fs = std::filesystem;
-    fs::copy(auxiliary_paths::dir(test_repository().parent_path()), auxiliary_paths::dir(fake_project()), fs::copy_options::recursive);
+    fs::copy(auxiliary_paths::repo(project_root()), auxiliary_paths::repo(fake_project()), fs::copy_options::recursive);
 
     {
       auto generated{
-        [&mat=working_materials()] () { return mat / "GeneratedProject"; }
+        [this] () { return working_materials() /= "GeneratedProject"; }
       };
 
       commandline_arguments args{zeroth_arg(), "init", "Oliver Jacob Rosten", generated().string(), "  ", "--no-build"};
@@ -155,12 +155,12 @@ namespace sequoia::testing
         file << outputStream.rdbuf();
       }
 
-      check(equivalence, LINE(""), generated(), predictive_materials() / "GeneratedProject");
-      check(equivalence, LINE(""), fake_project(), predictive_materials() / "FakeProject");
+      check(equivalence, LINE(""), generated(), predictive_materials() /= "GeneratedProject");
+      check(equivalence, LINE(""), fake_project(), predictive_materials() /= "FakeProject");
     }
 
     {
-      const auto hostDir{working_materials() / "AnotherGeneratedProject"};
+      const auto hostDir{working_materials() /= "AnotherGeneratedProject"};
       commandline_arguments args{zeroth_arg(), "init", "Oliver Jacob Rosten", hostDir.generic_string(), "  ", "--no-build"};
 
       std::stringstream outputStream{};
@@ -168,7 +168,7 @@ namespace sequoia::testing
 
       tr.execute();
 
-      check(equivalence, LINE(""), hostDir, predictive_materials() / "AnotherGeneratedProject");
+      check(equivalence, LINE(""), hostDir, predictive_materials() /= "AnotherGeneratedProject");
     }
   }
 }

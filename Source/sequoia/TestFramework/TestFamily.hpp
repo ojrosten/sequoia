@@ -13,6 +13,7 @@
  */
 
 #include "sequoia/TestFramework/FreeTestCore.hpp"
+#include "sequoia/TestFramework//IndividualTestPaths.hpp"
 #include "sequoia/TestFramework/Summary.hpp"
 
 #include <chrono>
@@ -51,11 +52,6 @@ namespace sequoia::testing
   [[nodiscard]]
   active_recovery_files make_active_recovery_paths(recovery_mode mode, const project_paths& projPaths);
 
-  struct materials_info
-  {
-    std::filesystem::path working, prediction, auxiliary;
-  };
-
   /*! \brief helper class for test_family
 
       The primary purpose of this class to allow code that would otherwise appear
@@ -80,7 +76,7 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    materials_info set_materials(const std::filesystem::path& sourceFile, std::vector<std::filesystem::path>& materialsPaths);
+    individual_materials_paths set_materials(const std::filesystem::path& sourceFile, std::vector<std::filesystem::path>& materialsPaths);
   private:
     std::string m_Name{};
     const project_paths* m_Paths;
@@ -297,7 +293,7 @@ namespace sequoia::testing
 
       auto addPath{
         [this,&paths](const auto& optTest) {
-          if(optTest) paths.push_back(rebase_from(optTest.value().source_filename(), m_Info.proj_paths().tests()));
+          if(optTest) paths.push_back(rebase_from(optTest.value().source_filename(), m_Info.proj_paths().tests().repo()));
         }
       };
 
@@ -317,9 +313,7 @@ namespace sequoia::testing
         t->set_filesystem_data(m_Info.proj_paths(), name());
         t->set_recovery_paths(make_active_recovery_paths(recoveryMode, m_Info.proj_paths()));
 
-        const auto info{m_Info.set_materials(t->source_filename(), materialsPaths)};
-
-        t->set_materials(info.working, info.prediction, info.auxiliary);
+        t->set_materials(m_Info.set_materials(t->source_filename(), materialsPaths));
       }
     }
   };

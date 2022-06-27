@@ -260,7 +260,7 @@ namespace sequoia::testing
   [[nodiscard]]
   std::filesystem::path test_runner_test::fake_project() const
   {
-    return auxiliary_materials() /  "FakeProject";
+    return auxiliary_materials() /= "FakeProject";
   }
 
   [[nodiscard]]
@@ -271,7 +271,7 @@ namespace sequoia::testing
 
   void test_runner_test::write(std::string_view dirName, std::stringstream& output) const
   {
-    const auto outputDir{working_materials() / dirName};
+    const auto outputDir{working_materials() /= dirName};
     fs::create_directory(outputDir);
 
     if(std::ofstream file{outputDir / "io.txt"})
@@ -285,7 +285,7 @@ namespace sequoia::testing
   void test_runner_test::check_output(std::string_view description, std::string_view dirName, std::stringstream& output)
   {
     write(dirName, output);
-    check(equivalence, description, working_materials() / dirName, predictive_materials() / dirName);
+    check(equivalence, description, working_materials() /= dirName, predictive_materials() /= dirName);
   }
 
   void test_runner_test::test_exceptions()
@@ -456,7 +456,7 @@ namespace sequoia::testing
       runner.execute();
     }
 
-    const auto outputDir{working_materials() / "RecoveryAndDumpOutput"};
+    const auto outputDir{working_materials() /= "RecoveryAndDumpOutput"};
     fs::create_directory(outputDir);
 
     if(std::ofstream file{outputDir / "io.txt"})
@@ -464,15 +464,15 @@ namespace sequoia::testing
       file << outputStream.str();
     }
 
-    fs::copy(fake_project() / "output" / "Recovery" / "Recovery.txt", working_materials() / "RecoveryAndDumpOutput");
-    fs::copy(fake_project() / "output" / "Recovery" / "Dump.txt", working_materials() / "RecoveryAndDumpOutput");
+    fs::copy(fake_project() / "output" / "Recovery" / "Recovery.txt", working_materials() /= "RecoveryAndDumpOutput");
+    fs::copy(fake_project() / "output" / "Recovery" / "Dump.txt", working_materials() /= "RecoveryAndDumpOutput");
     fs::copy(fake_project() / "output" / "TestSummaries",
-             working_materials() / "RecoveryAndDumpOutput" / "TestSummaries",
+             working_materials() /= "RecoveryAndDumpOutput/TestSummaries",
              fs::copy_options::recursive);
 
     check(equivalence, LINE("Recovery and Dump"),
-                      working_materials() / "RecoveryAndDumpOutput",
-                      predictive_materials() / "RecoveryAndDumpOutput");
+                      working_materials() /= "RecoveryAndDumpOutput",
+                      predictive_materials() /= "RecoveryAndDumpOutput");
   }
 
   void test_runner_test::test_basic_output()
@@ -629,7 +629,7 @@ namespace sequoia::testing
 
     runner.execute();
 
-    const auto outputDir{working_materials() / outputDirName};
+    const auto outputDir{working_materials() /= outputDirName};
     fs::create_directory(outputDir);
 
     if(std::ofstream file{outputDir / "io.txt"})
@@ -639,7 +639,7 @@ namespace sequoia::testing
 
     check(equivalence, LINE(append_lines(message, make_type_info<Ts...>())),
                       outputDir,
-                      predictive_materials() / outputDirName);
+                      predictive_materials() /= outputDirName);
   }
 
   template<concrete_test... Ts>
