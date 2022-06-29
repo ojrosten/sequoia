@@ -389,7 +389,7 @@ namespace sequoia::testing
       }
 
       [[nodiscard]]
-      std::size_t size() const noexcept
+      std::size_t size() const noexcept final
       {
         return m_Family.size();
       }
@@ -403,12 +403,12 @@ namespace sequoia::testing
       }
 
       [[nodiscard]]
-      std::vector<std::filesystem::path> active_test_paths() const
+      std::vector<std::filesystem::path> active_test_paths() const final
       {
         return m_Family.active_test_paths();
       }
 
-      void reset()
+      void reset() final
       {
         m_Family.reset();
       }
