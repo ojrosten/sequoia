@@ -165,7 +165,7 @@ namespace sequoia
       {};
 
       using hetero_init_type = node_init_constant<true>;
-      using homo_init_type = node_init_constant<false>;
+      using homo_init_type   = node_init_constant<false>;
     public:
       using connectivity_type = Connectivity;
       using nodes_type        = Nodes;

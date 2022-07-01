@@ -110,14 +110,7 @@ namespace sequoia
     constexpr static bool naive_treatment() noexcept
     {
       using allocator = std::invoke_result_t<AllocGetter, T>;
-      if constexpr(std::is_void_v<allocator>)
-      {
-        return true;
-      }
-      else
-      {
-        return std::allocator_traits<allocator>::is_always_equal::value;
-      }
+      return std::allocator_traits<allocator>::is_always_equal::value;
     }
 
     template<class T, std::invocable<T> AllocGetter, std::invocable<T>... AllocGetters>
@@ -127,8 +120,10 @@ namespace sequoia
       {
         return (consistent<T, AllocGetter, AllocGetters>() && ...);
       }
-
-      return true;
+      else
+      {
+        return true;
+      }
     }
 
     template<class T, std::invocable<T> AllocGetterL, std::invocable<T> AllocGetterR>
@@ -156,24 +151,24 @@ namespace sequoia
     constexpr static bool copy_propagation() noexcept
     {
       using allocator = std::invoke_result_t<AllocGetter, T>;
-      return std::allocator_traits<allocator>::propagate_on_container_copy_assignment::value
-        || std::allocator_traits<allocator>::is_always_equal::value;
+      return    std::allocator_traits<allocator>::propagate_on_container_copy_assignment::value
+             || std::allocator_traits<allocator>::is_always_equal::value;
     }
 
     template<class T, class AllocGetter, class... AllocGetters>
     constexpr static bool move_propagation() noexcept
     {
       using allocator = std::invoke_result_t<AllocGetter, T>;
-      return std::allocator_traits<allocator>::propagate_on_container_move_assignment::value
-        || std::allocator_traits<allocator>::is_always_equal::value;
+      return    std::allocator_traits<allocator>::propagate_on_container_move_assignment::value
+             || std::allocator_traits<allocator>::is_always_equal::value;
     }
 
     template<class T, class AllocGetter, class... AllocGetters>
     constexpr static bool swap_propagation() noexcept
     {
       using allocator = std::invoke_result_t<AllocGetter, T>;
-      return std::allocator_traits<allocator>::propagate_on_container_swap::value
-        || std::allocator_traits<allocator>::is_always_equal::value;
+      return    std::allocator_traits<allocator>::propagate_on_container_swap::value
+             || std::allocator_traits<allocator>::is_always_equal::value;
     }
   };
 }
