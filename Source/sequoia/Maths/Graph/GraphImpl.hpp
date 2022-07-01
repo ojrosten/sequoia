@@ -157,6 +157,15 @@ namespace sequoia
       friend struct sequoia::assignment_helper;
 
       using node_weight_type = typename Nodes::weight_type;
+
+      constexpr static bool heteroNodes{std::is_same_v<node_weight_type, graph_impl::heterogeneous_tag>};
+
+      template<bool Hetero>
+      struct node_init_constant : std::bool_constant<Hetero>
+      {};
+
+      using hetero_init_type = node_init_constant<true>;
+      using homo_init_type = node_init_constant<false>;
     public:
       using connectivity_type = Connectivity;
       using nodes_type        = Nodes;
@@ -169,10 +178,9 @@ namespace sequoia
       constexpr graph_primitive() = default;
 
       constexpr graph_primitive(edges_initializer edges)
-        : graph_primitive(get_init_type(), edges)
-      {
-        static_assert(std::is_empty_v<node_weight_type> || std::is_default_constructible_v<node_weight_type>);
-      }
+        requires (std::is_empty_v<node_weight_type> || std::is_default_constructible_v<node_weight_type>)
+        : graph_primitive(node_init_constant<heteroNodes>{}, edges)
+      {}
 
       constexpr graph_primitive(edges_initializer edges, std::initializer_list<node_weight_type> nodeWeights)
         requires (!std::is_empty_v<node_weight_type> && !std::same_as<node_weight_type, graph_impl::heterogeneous_tag>)
@@ -599,26 +607,6 @@ namespace sequoia
       }
     private:
       constexpr static bool emptyNodes{std::is_empty_v<typename Nodes::weight_type>};
-      constexpr static bool heteroNodes{std::is_same_v<node_weight_type, graph_impl::heterogeneous_tag>};
-
-      template<bool Hetero>
-      struct node_init_constant : std::bool_constant<Hetero>
-      {};
-
-      using hetero_init_type = node_init_constant<true>;
-      using homo_init_type   = node_init_constant<false>;
-
-      constexpr static auto get_init_type()
-      {
-        if constexpr(heteroNodes)
-        {
-          return hetero_init_type{};
-        }
-        else
-        {
-          return homo_init_type{};
-        }
-      }
 
       constexpr graph_primitive(homo_init_type, edges_initializer edges, std::initializer_list<node_weight_type> nodeWeights)
         requires (!std::same_as<node_weight_type, graph_impl::heterogeneous_tag>)
