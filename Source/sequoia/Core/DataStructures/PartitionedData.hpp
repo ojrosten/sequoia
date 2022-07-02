@@ -705,16 +705,6 @@ namespace sequoia
         return *this;
       }
 
-      template<alloc Allocator, alloc PartitionsAllocator>
-      void reset(const Allocator& allocator, const PartitionsAllocator& partitionsAllocator) noexcept
-      {
-        const PartitionsType partitions(partitionsAllocator);
-        m_Partitions = partitions;
-
-        const container_type container{allocator};
-        m_Storage = container;
-      }
-
       void swap(partitioned_sequence_base& other)
         // TO DO: Strictly speaking incorrect but will be fine when ranges::swap available
         noexcept(noexcept(std::swap(this->m_Partitions, other.m_Partitions)) && noexcept(std::swap(this->m_Storage, other.m_Storage)))
@@ -979,6 +969,16 @@ namespace sequoia
             push_back_to_partition(dist, element);
           }
         }
+      }
+
+      template<alloc Allocator, alloc PartitionsAllocator>
+      void reset(const Allocator& allocator, const PartitionsAllocator& partitionsAllocator) noexcept
+      {
+        const PartitionsType partitions(partitionsAllocator);
+        m_Partitions = partitions;
+
+        const container_type container{allocator};
+        m_Storage = container;
       }
 
       void init(const container_type& c)
