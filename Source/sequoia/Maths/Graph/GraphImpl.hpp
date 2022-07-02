@@ -154,8 +154,6 @@ namespace sequoia
     class MSVC_EMPTY_BASE_HACK graph_primitive : public Connectivity, public Nodes
     {
     private:
-      friend struct sequoia::assignment_helper;
-
       using node_weight_type = typename Nodes::weight_type;
 
       constexpr static bool heteroNodes{std::is_same_v<node_weight_type, graph_impl::heterogeneous_tag>};
@@ -215,10 +213,7 @@ namespace sequoia
         build_tree(std::numeric_limits<size_type>::max(), tree, tdc);
       }
 
-      constexpr graph_primitive(const graph_primitive& in)
-        : Connectivity{static_cast<const Connectivity&>(in)}
-        , Nodes{static_cast<const Nodes&>(in)}
-      {}
+      constexpr graph_primitive(const graph_primitive&) = default;
 
       [[nodiscard]]
       constexpr size_type size() const noexcept
@@ -468,47 +463,7 @@ namespace sequoia
 
       constexpr graph_primitive& operator=(graph_primitive&&) noexcept = default;
 
-      constexpr graph_primitive& operator=(const graph_primitive& in)
-      {
-        if(&in != this)
-        {
-          using edge_storage = typename Connectivity::edge_storage_type;
-
-          auto edgeAllocGetter{
-            []([[maybe_unused]] const graph_primitive& in){
-              if constexpr(has_allocator_type_v<edge_storage>)
-              {
-                return in.get_edge_allocator();
-              }
-            }
-          };
-
-          auto edgePartitionsAllocGetter{
-            []([[maybe_unused]] const graph_primitive& in){
-              if constexpr(has_partitions_allocator<edge_storage>)
-              {
-                return in.get_edge_allocator(partitions_allocator_tag{});
-              }
-            }
-          };
-
-          auto nodeAllocGetter{
-            []([[maybe_unused]] const graph_primitive& in){
-              if constexpr(!heteroNodes && !emptyNodes)
-              {
-                if constexpr(graph_impl::has_allocating_nodes<Nodes>)
-                {
-                  return in.get_node_allocator();
-                }
-              }
-            }
-          };
-
-          assignment_helper::assign(*this, in, edgeAllocGetter, edgePartitionsAllocGetter, nodeAllocGetter);
-        }
-
-        return *this;
-      }
+      constexpr graph_primitive& operator=(const graph_primitive&) = default;
 
       void swap(graph_primitive& rhs)
         noexcept(noexcept(this->Connectivity::swap(rhs)) && noexcept(this->Nodes::swap(rhs)))

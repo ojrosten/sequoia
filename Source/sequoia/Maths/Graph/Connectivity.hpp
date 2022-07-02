@@ -259,7 +259,7 @@ namespace sequoia
         if(&in != this)
         {
           auto allocGetter{
-            [](const connectivity& in){
+            []([[maybe_unused]] const connectivity& in){
               if constexpr(has_allocator_type_v<edge_storage_type>)
               {
                 return in.m_Edges.get_allocator();
@@ -268,7 +268,7 @@ namespace sequoia
           };
 
           auto partitionsAllocGetter{
-            [](const connectivity& in){
+            []([[maybe_unused]] const connectivity& in){
               if constexpr(has_partitions_allocator<edge_storage_type>)
               {
                 return in.m_Edges.get_partitions_allocator();
@@ -280,6 +280,22 @@ namespace sequoia
         }
 
         return *this;
+      }
+
+      template<alloc... Allocs>
+      void reset(const Allocs&... allocs)
+        requires (sizeof...(Allocs) > 0)
+      {
+        const edge_storage_type edgeStorage(allocs...);
+        m_Edges = edgeStorage;
+      }
+
+      template<alloc Alloc, alloc PartitionsAlloc>
+      void reset(const Alloc& edgeAllocator, const PartitionsAlloc& partitionsAlloc)
+        requires (has_allocator_type_v<edge_storage_type> && has_partitions_allocator<edge_storage_type>)
+      {
+        const edge_storage_type edgeStorage(edgeAllocator, partitionsAlloc);
+        m_Edges = edgeStorage;
       }
 
       void swap(connectivity& rhs)
@@ -898,7 +914,7 @@ namespace sequoia
       [[nodiscard]]
       constexpr static auto direct_edge_copy() noexcept
       {
-        return edge_copy_constant<direct_edge_init_v || (EdgeTraits::shared_edge_v && protectiveEdgeWeightProxy)>{};
+        return edge_copy_constant<direct_edge_init_v || (EdgeTraits::shared_edge_v && faithfulEdgeWeightProxy)>{};
       }
 
       template<bool HasAlloc>
@@ -907,7 +923,7 @@ namespace sequoia
       using has_partitions_alloc_type = has_partitions_alloc_constant<true>;
       using no_partitions_alloc_type = has_partitions_alloc_constant<false>;
 
-      constexpr static bool protectiveEdgeWeightProxy{
+      constexpr static bool faithfulEdgeWeightProxy{
         std::is_same_v<typename edge_type::weight_proxy_type, object::faithful_wrapper<edge_weight_type>>
       };
 
