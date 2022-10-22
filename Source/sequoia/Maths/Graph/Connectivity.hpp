@@ -283,7 +283,8 @@ namespace sequoia
       }
 
       template<alloc... Allocs>
-        requires (sizeof...(Allocs) > 0)
+        requires ((sizeof...(Allocs) > 0)
+                  && (std::allocator_traits<Allocs>::propagate_on_container_copy_assignment::value && ...))
       void reset(const Allocs&... allocs)
       {
         m_Edges.reset(allocs...);

@@ -78,7 +78,6 @@ namespace sequoia::maths::graph_impl
   {
     friend struct sequoia::assignment_helper;
 
-  private:
     template<class S> using Container = typename Traits::template container_type<S>;
   public:
     using weight_maker_type          = WeightMaker;
@@ -146,6 +145,14 @@ namespace sequoia::maths::graph_impl
 
       const auto index{distance(cbegin_node_weights(), pos)};
       m_NodeWeights[index].mutate(fn);
+    }
+
+    template<alloc Allocator>
+      requires (std::allocator_traits<Allocator>::propagate_on_container_copy_assignment::value)
+    void reset(const Allocator& allocator) noexcept
+    {
+      const node_weight_container_type storage(allocator);
+      m_NodeWeights = storage;
     }
 
     [[nodiscard]]
@@ -217,13 +224,6 @@ namespace sequoia::maths::graph_impl
     {
       using std::swap;
       swap(m_NodeWeights, rhs.m_NodeWeights);
-    }
-
-    template<alloc Allocator>
-    void reset(const Allocator& allocator) noexcept
-    {
-      const node_weight_container_type storage(allocator);
-      m_NodeWeights = storage;
     }
 
     constexpr void swap_nodes(const size_type i, const size_type j)

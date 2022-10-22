@@ -84,9 +84,6 @@ namespace sequoia
       requires object::handler<Handler>
     class bucketed_sequence
     {
-    private:
-      friend struct sequoia::assignment_helper;
-
       using held_type    = typename Handler::product_type;
       using storage_type = typename Traits::template buckets_type<held_type>;
     public:
@@ -501,7 +498,6 @@ namespace sequoia
     class partitioned_sequence_base
     {
       friend struct sequoia::assignment_helper;
-
     public:
       using value_type          = T;
       using handler_type        = Handler;
