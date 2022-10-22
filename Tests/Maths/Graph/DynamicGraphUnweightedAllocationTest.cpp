@@ -79,16 +79,13 @@ namespace sequoia::testing
     check(equality, LINE("May fail if stl implementation doesn't actually shrink to fit!"), g.edges_capacity(), 0_sz);
     check(equality, LINE("May fail if stl implementation doesn't actually shrink to fit!"), g.node_capacity(), 0_sz);
 
-    // x----x
     using edge_init_t = typename Graph::edge_init_type;
 
     auto nodeMaker{ [](Graph& g) { g.add_node(); } };
 
     check_semantics(LINE(""),
                     g,
-                    Graph{{{}},
-                    edge_allocator{},
-                    edge_partitions_allocator{}},
+                    Graph{{{}}, edge_allocator{}, edge_partitions_allocator{}},
                     nodeMaker,
                     allocation_info{edge_alloc_getter<Graph>{}, {0_c, {0_c, 0_mu}, {0_anp, 0_awp}}},
                     allocation_info{edge_partitions_alloc_getter<Graph>{}, {0_c, {1_c, 1_mu}, {1_anp, 1_awp}}});
@@ -161,7 +158,6 @@ namespace sequoia::testing
     g.insert_node(0u);
     check(equality, LINE(""), g, Graph{{{}, {}}, edge_allocator{}});
 
-    // x----x
     using edge_init_t = typename Graph::edge_init_type;
     using edge_allocator = typename Graph::edge_allocator_type;
 

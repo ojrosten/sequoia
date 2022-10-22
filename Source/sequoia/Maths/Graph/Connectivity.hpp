@@ -283,19 +283,10 @@ namespace sequoia
       }
 
       template<alloc... Allocs>
-      void reset(const Allocs&... allocs)
         requires (sizeof...(Allocs) > 0)
+      void reset(const Allocs&... allocs)
       {
-        const edge_storage_type edgeStorage(allocs...);
-        m_Edges = edgeStorage;
-      }
-
-      template<alloc Alloc, alloc PartitionsAlloc>
-      void reset(const Alloc& edgeAllocator, const PartitionsAlloc& partitionsAlloc)
-        requires (has_allocator_type_v<edge_storage_type> && has_partitions_allocator<edge_storage_type>)
-      {
-        const edge_storage_type edgeStorage(edgeAllocator, partitionsAlloc);
-        m_Edges = edgeStorage;
+        m_Edges.reset(allocs...);
       }
 
       void swap(connectivity& rhs)

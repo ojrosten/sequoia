@@ -19,8 +19,8 @@ namespace sequoia::testing
     class T,
     class Handler,
     bool PropagateCopy=true,
-    bool PropagateMove=true,
-    bool PropagateSwap=true
+    bool PropagateMove=false,
+    bool PropagateSwap=false
   >
   struct custom_bucketed_storage_traits
   {
@@ -48,8 +48,8 @@ namespace sequoia::testing
     class T,
     class Handler,
     bool PropagateCopy=true,
-    bool PropagateMove=true,
-    bool PropagateSwap=true
+    bool PropagateMove=false,
+    bool PropagateSwap=false
   >
   struct custom_partitioned_sequence_traits
   {

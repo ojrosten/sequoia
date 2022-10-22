@@ -433,6 +433,13 @@ namespace sequoia
       [[nodiscard]]
       partition_iterator operator[](const size_type i) { return begin_partition(i); }
 
+      void reset(const allocator_type& allocator) noexcept
+        requires (std::allocator_traits<allocator_type>::propagate_on_container_copy_assignment::value)
+      {
+        const storage_type buckets(allocator);
+        m_Buckets = buckets;
+      }
+
       [[nodiscard]]
       friend bool operator==(const bucketed_sequence& lhs, const bucketed_sequence& rhs) noexcept
       {
@@ -464,12 +471,6 @@ namespace sequoia
       bucketed_sequence(partition_impl::indirect_copy_type, const bucketed_sequence& in)
         : bucketed_sequence(in, in.m_Buckets.get_allocator())
       {}
-
-      void reset(const allocator_type& allocator) noexcept
-      {
-        const storage_type buckets(allocator);
-        m_Buckets = buckets;
-      }
 
       void check_range(const size_type index) const
       {
@@ -652,6 +653,18 @@ namespace sequoia
         {
           throw std::out_of_range("partitioned_sequence::swap_partitions - index out of range");
         }
+      }
+
+      template<alloc Allocator, alloc PartitionsAllocator>
+        requires (   std::allocator_traits<Allocator>::propagate_on_container_copy_assignment::value
+                  && std::allocator_traits<PartitionsAllocator>::propagate_on_container_copy_assignment::value)
+      void reset(const Allocator& allocator, const PartitionsAllocator& partitionsAllocator) noexcept
+      {
+        const PartitionsType partitions(partitionsAllocator);
+        m_Partitions = partitions;
+
+        const container_type container{allocator};
+        m_Storage = container;
       }
 
       [[nodiscard]]
@@ -969,16 +982,6 @@ namespace sequoia
             push_back_to_partition(dist, element);
           }
         }
-      }
-
-      template<alloc Allocator, alloc PartitionsAllocator>
-      void reset(const Allocator& allocator, const PartitionsAllocator& partitionsAllocator) noexcept
-      {
-        const PartitionsType partitions(partitionsAllocator);
-        m_Partitions = partitions;
-
-        const container_type container{allocator};
-        m_Storage = container;
       }
 
       void init(const container_type& c)
