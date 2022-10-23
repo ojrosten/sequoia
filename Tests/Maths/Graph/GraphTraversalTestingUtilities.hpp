@@ -14,26 +14,21 @@
 
 namespace sequoia::testing
 {
-  enum class traversal_flavour{ BFS, DFS, PDFS, PRS};
+  using bfs_type  = maths::breadth_first_search_type;
+  using dfs_type  = maths::depth_first_search_type;
+  using pdfs_type = maths::pseudo_depth_first_search_type;
+  using prs_type  = maths::priority_search_type;
 
   [[nodiscard]]
-  std::string to_string(const traversal_flavour f);
-
-  template<traversal_flavour F>
-  struct traversal_constant : std::integral_constant<traversal_flavour, F> {};
-
-  using bfs_type  = traversal_constant<traversal_flavour::BFS>;
-  using dfs_type  = traversal_constant<traversal_flavour::DFS>;
-  using pdfs_type = traversal_constant<traversal_flavour::PDFS>;
-  using prs_type  = traversal_constant<traversal_flavour::PRS>;
+  std::string to_string(maths::traversal_flavour f);
 
 
-  template<traversal_flavour F>
+  template<maths::traversal_flavour F>
   struct Traverser;
 
-  template<> struct Traverser<traversal_flavour::BFS>
+  template<> struct Traverser<maths::traversal_flavour::breadth_first>
   {
-    constexpr static auto flavour{traversal_flavour::BFS};
+    constexpr static auto flavour{maths::traversal_flavour::breadth_first};
 
     template<class G, maths::disconnected_discovery_mode Mode, class... Fn>
     static void traverse(const G& g, const maths::traversal_conditions<Mode> conditions, Fn&&... fn)
@@ -46,9 +41,9 @@ namespace sequoia::testing
     static std::string iterator_description() noexcept { return "forward"; }
   };
 
-  template<> struct Traverser<traversal_flavour::DFS>
+  template<> struct Traverser<maths::traversal_flavour::depth_first>
   {
-    constexpr static auto flavour{traversal_flavour::DFS};
+    constexpr static auto flavour{maths::traversal_flavour::depth_first};
 
     template<class G, maths::disconnected_discovery_mode Mode, class... Fn>
     static void traverse(const G& g, const maths::traversal_conditions<Mode> conditions, Fn&&... fn)
@@ -61,9 +56,9 @@ namespace sequoia::testing
     static std::string iterator_description() noexcept { return "forward"; }
   };
 
-  template<> struct Traverser<traversal_flavour::PDFS>
+  template<> struct Traverser<maths::traversal_flavour::pseudo_depth_first>
   {
-    constexpr static auto flavour{traversal_flavour::PDFS};
+    constexpr static auto flavour{maths::traversal_flavour::pseudo_depth_first};
 
     template<class G, maths::disconnected_discovery_mode Mode, class... Fn>
     static void traverse(const G& g, const maths::traversal_conditions<Mode> conditions, Fn&&... fn)
@@ -76,9 +71,9 @@ namespace sequoia::testing
     static std::string iterator_description() noexcept { return "reverse"; }
   };
 
-  template<> struct Traverser<traversal_flavour::PRS>
+  template<> struct Traverser<maths::traversal_flavour::priority>
   {
-    constexpr static auto flavour{traversal_flavour::PRS};
+    constexpr static auto flavour{maths::traversal_flavour::priority};
 
     template<class G, maths::disconnected_discovery_mode Mode, class... Fn>
     static void traverse(const G& g, const maths::traversal_conditions<Mode> conditions, Fn&&... fn)
@@ -113,7 +108,7 @@ namespace sequoia::testing
     std::vector<std::size_t> m_Order;
   };
 
-  template<maths::network G, traversal_flavour Flavour>
+  template<maths::network G, maths::traversal_flavour Flavour>
   class edge_tracker
   {
   public:
@@ -125,7 +120,7 @@ namespace sequoia::testing
 
     template<std::input_or_output_iterator I> void operator()(I iter)
     {
-      const auto pos{dist(traversal_constant<Flavour>{}, iter)};
+      const auto pos{dist(maths::traversal_constant<Flavour>{}, iter)};
       m_Order.emplace_back(iter.partition_index(), static_cast<std::size_t>(pos));
     }
 
@@ -170,7 +165,7 @@ namespace sequoia::testing
     }
   };
 
-  template<maths::network G, traversal_flavour Flavour>
+  template<maths::network G, maths::traversal_flavour Flavour>
   struct value_tester<edge_tracker<G, Flavour>>
   {
     using type = edge_tracker<G, Flavour>;

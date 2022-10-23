@@ -12,17 +12,18 @@
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::string to_string(const traversal_flavour f)
+  std::string to_string(const maths::traversal_flavour f)
   {
+    using enum maths::traversal_flavour;
     switch(f)
     {
-    case traversal_flavour::BFS:
+    case breadth_first:
       return "Breadth-first search";
-    case traversal_flavour::DFS:
+    case depth_first:
       return "Depth-first search";
-    case traversal_flavour::PDFS:
+    case pseudo_depth_first:
       return "Pseudo Depth-first search";
-    case traversal_flavour::PRS:
+    case priority:
       return "Priority search";
     }
 

@@ -84,51 +84,40 @@ namespace sequoia::maths::graph_impl
     }
   };
 
-  template <static_network G>
-  struct queue_constructor<G, data_structures::static_stack<typename G::edge_index_type, G::order()>>
-  {
-    constexpr static auto make(const G&)
-    {
-      return data_structures::static_stack<typename G::edge_index_type, G::order()>{};
-    }
-  };
-
-  template <static_network G>
-  struct queue_constructor<G, data_structures::static_queue<typename G::edge_index_type, G::order()>>
-  {
-    [[nodiscard]]
-    constexpr static auto make(const G&)
-    {
-      return data_structures::static_queue<typename G::edge_index_type, G::order()>{};
-    }
-  };
-
-  template <static_network G, class Comparer>
-  struct queue_constructor<G, data_structures::static_priority_queue<typename G::edge_index_type, G::order(), Comparer>>
-  {
-    [[nodiscard]]
-    constexpr static auto make(const G& g)
-    {
-      return data_structures::static_priority_queue<typename G::edge_index_type, G::order(), Comparer>{Comparer{g}};
-    }
-  };
-
   template<static_network G>
-  struct stack_selector<G>
-  {
-    using stack_type = data_structures::static_stack<typename G::edge_index_type, G::order()>;
-  };
-
-  template<static_network G>
-  struct queue_selector<G>
+  struct queue_traits<G, traversal_flavour::breadth_first>
   {
     using queue_type = data_structures::static_queue<typename G::edge_index_type, G::order()>;
+
+    [[nodiscard]]
+    constexpr static queue_type make(const G&)
+    {
+      return {};
+    }
+  };
+
+  template<static_network G>
+  struct queue_traits<G, traversal_flavour::pseudo_depth_first>
+  {
+    using queue_type = data_structures::static_stack<typename G::edge_index_type, G::order()>;
+
+    [[nodiscard]]
+    constexpr static queue_type make(const G&)
+    {
+      return {};
+    }
   };
 
   template<static_network G, class Compare>
-  struct priority_queue_selector<G, Compare>
+  struct queue_traits<G, traversal_flavour::priority, Compare>
   {
     using queue_type = data_structures::static_priority_queue<typename G::edge_index_type, G::order(), Compare>;
+
+    [[nodiscard]]
+    constexpr static queue_type make(const G& g)
+    {
+      return queue_type{Compare{g}};
+    }
   };
 
 }

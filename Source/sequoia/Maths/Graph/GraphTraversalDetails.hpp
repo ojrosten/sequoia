@@ -27,6 +27,21 @@ namespace sequoia::maths
 
   enum class disconnected_discovery_mode { on, off };
 
+  enum class traversal_flavour { breadth_first, depth_first, pseudo_depth_first, priority };
+
+  template<traversal_flavour F>
+  struct traversal_constant : std::integral_constant<traversal_flavour, F> {};
+
+  using breadth_first_search_type      = traversal_constant<traversal_flavour::breadth_first>;
+  using depth_first_search_type        = traversal_constant<traversal_flavour::depth_first>;
+  using pseudo_depth_first_search_type = traversal_constant<traversal_flavour::pseudo_depth_first>;
+  using priority_search_type           = traversal_constant<traversal_flavour::priority>;
+
+  constexpr breadth_first_search_type      breadth_first{};
+  constexpr depth_first_search_type        depth_first{};
+  constexpr pseudo_depth_first_search_type pseudo_depth_first{};
+  constexpr priority_search_type           priority_first{};
+
   class traversal_conditions_base
   {
   public:
@@ -128,7 +143,8 @@ namespace sequoia::maths
 
 namespace sequoia::maths::graph_impl
 {
-  enum class edge_processing_mode { immediate, deferred };
+  template<network G, traversal_flavour F, class... QDetails>
+  struct queue_traits;
 
   template<bool Forward> struct iterator_getter
   {
@@ -174,8 +190,6 @@ namespace sequoia::maths::graph_impl
   private:
     const G& m_Graph;
   };
-
-  template<network G, class Q> struct queue_constructor;
 
   template<network G, graph_flavour GraphFlavour=G::flavour>
   class loop_processor
@@ -226,13 +240,7 @@ namespace sequoia::maths::graph_impl
     bool m_Matched{true};
   };
 
-  template<network G> struct stack_selector;
-
-  template<network G> struct queue_selector;
-
-  template<network G, class Compare> struct priority_queue_selector;
-
-  template<network G, class Q>
+  template<network G, class... QClasses>
   class traversal_helper
   {
   public:
@@ -241,6 +249,7 @@ namespace sequoia::maths::graph_impl
 
     template
     <
+      traversal_flavour F,
       disconnected_discovery_mode FindDisconnected,
       class NBEF,
       class NAEF,
@@ -252,7 +261,8 @@ namespace sequoia::maths::graph_impl
             && (std::invocable<NAEF, edge_index_type>    )
             && (std::invocable<EFTF, const_edge_iterator>)
             && (std::invocable<ESTF, const_edge_iterator>)
-    constexpr auto traverse(const G& graph,
+    constexpr auto traverse(traversal_constant<F>,
+                            const G& graph,
                             traversal_conditions<FindDisconnected> conditions,
                             NBEF&& nodeBeforeEdgesFn,
                             NAEF&& nodeAfterEdgesFn,
@@ -268,12 +278,14 @@ namespace sequoia::maths::graph_impl
       static_assert(!directed(G::directedness) || !hasEdgeSecondFn,
                     "For a directed graph, edges are traversed only once: the edgeSecondTraversalFn is ignored and so should be the null_func_obj");
 
+      using Q = typename queue_traits<G, F, QClasses...>::queue_type;
+
       if(conditions.starting_index() < graph.order())
       {
         auto discovered{traversal_tracking_traits<G>::make_bitset(graph)};
         auto processed{traversal_tracking_traits<G>::make_bitset(graph)};
 
-        auto nodeIndexQueue{queue_constructor<G, Q>::make(graph)};
+        auto nodeIndexQueue{queue_traits<G, F, QClasses...>::make(graph)};
 
         do
         {

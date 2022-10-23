@@ -16,7 +16,7 @@ namespace sequoia::testing
 {
   namespace
   {
-    template<maths::dynamic_network G, traversal_flavour Flavour>
+    template<maths::dynamic_network G, maths::traversal_flavour Flavour>
     struct trackers
     {
       explicit trackers(const G& g) : edgeFirst{g}, edgeSecond{g} {}
@@ -30,7 +30,7 @@ namespace sequoia::testing
     trackers<G, Traverser::flavour> traverse_graph(const G& g, const maths::traversal_conditions<Mode> conditions)
     {
       trackers<G, Traverser::flavour> t{g};
-      if constexpr(maths::undirected(G::flavour) && (Traverser::flavour != traversal_flavour::DFS))
+      if constexpr(maths::undirected(G::flavour) && (Traverser::flavour != maths::traversal_flavour::depth_first))
       {
         Traverser::traverse(g, conditions, t.nodeBefore, t.nodeAfter, t.edgeFirst, t.edgeSecond);
       }
@@ -246,9 +246,9 @@ namespace sequoia::testing
     using NSTraits = NodeWeightStorageTraits;
     using graph_type = graph_type_generator_t<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, ESTraits, NSTraits>;
 
-    tracker_test<graph_type, Traverser<traversal_flavour::BFS>>();
-    tracker_test<graph_type, Traverser<traversal_flavour::DFS>>();
-    tracker_test<graph_type, Traverser<traversal_flavour::PDFS>>();
+    tracker_test<graph_type, Traverser<maths::traversal_flavour::breadth_first>>();
+    tracker_test<graph_type, Traverser<maths::traversal_flavour::depth_first>>();
+    tracker_test<graph_type, Traverser<maths::traversal_flavour::pseudo_depth_first>>();
 
     if constexpr(!std::is_empty_v<NodeWeight>)
     {
@@ -272,16 +272,14 @@ namespace sequoia::testing
 
     check(LINE("node_comparer sees that weight_0 > weight_1 and so returns false"), !compare(0, 1));
 
-    auto stack = graph_impl::queue_constructor<graph_type, std::stack<std::size_t>>::make(graph);
+    auto stack = graph_impl::queue_traits<graph_type, traversal_flavour::pseudo_depth_first>::make(graph);
     stack.push(0);
     stack.push(1);
     check(equality, LINE(""), stack.top(), 1_sz);
     stack.pop();
     check(equality, LINE(""), stack.top(), 0_sz);
 
-    using PQ_t = std::priority_queue<std::size_t, std::vector<std::size_t>, graph_impl::node_comparer<graph_type, std::less<int>>>;
-
-    auto pqueue = graph_impl::queue_constructor<graph_type, PQ_t>::make(graph);
+    auto pqueue = graph_impl::queue_traits<graph_type, traversal_flavour::priority, graph_impl::node_comparer<graph_type, std::less<int>>>::make(graph);
     pqueue.push(0);
     pqueue.push(1);
 
@@ -299,8 +297,8 @@ namespace sequoia::testing
     constexpr auto GraphFlavour{Graph::flavour};
     constexpr bool mutualInfo{mutual_info(GraphFlavour)};
     constexpr bool undirected{maths::undirected(GraphFlavour)};
-    constexpr bool isBFS{Traverser::flavour == traversal_flavour::BFS};
-    constexpr bool isDFS{Traverser::flavour == traversal_flavour::DFS};
+    constexpr bool isBFS{Traverser::flavour == traversal_flavour::breadth_first};
+    constexpr bool isDFS{Traverser::flavour == traversal_flavour::depth_first};
     constexpr bool forwardIter{Traverser::uses_forward_iterator()};
 
     auto make_message{
@@ -609,7 +607,7 @@ namespace sequoia::testing
     check(equivalence, LINE(""), tracker, std::vector<std::size_t>{0,2,4,3,6,1,5});
   }
 
-  //=============================== Weighted BFS  ===============================//
+  //=============================== Weighted breadth_first  ===============================//
 
   template<maths::dynamic_network Graph>
   void test_graph_traversals::test_weighted_BFS_tasks()

@@ -42,8 +42,8 @@ namespace sequoia::maths
                                       ESTF&& edgeSecondTraversalFn = null_func_obj{},
                                       TaskProcessingModel&& taskProcessingModel = TaskProcessingModel{})
   {
-    using queue_type = typename graph_impl::queue_selector<G>::queue_type;
-    return graph_impl::traversal_helper<G, queue_type>{}.traverse(
+    return graph_impl::traversal_helper<G>{}.traverse(
+             breadth_first,
              graph,
              conditions,
              std::forward<NBEF>(nodeBeforeEdgesFn),
@@ -74,8 +74,8 @@ namespace sequoia::maths
                                       EFTF&& edgeFirstTraversalFn  = null_func_obj{},
                                       TaskProcessingModel&& taskProcessingModel = TaskProcessingModel{})
   {
-    using queue_type = typename graph_impl::queue_selector<G>::queue_type;
-    return graph_impl::traversal_helper<G, queue_type>{}.traverse(
+    return graph_impl::traversal_helper<G>{}.traverse(
+             breadth_first,
              graph,
              conditions,
              std::forward<NBEF>(nodeBeforeEdgesFn),
@@ -109,8 +109,8 @@ namespace sequoia::maths
                                            ESTF&& edgeSecondTraversalFn = null_func_obj{},
                                            TaskProcessingModel&& taskProcessingModel = TaskProcessingModel{})
   {
-    using stack_type = typename graph_impl::stack_selector<G>::stack_type;
-    return graph_impl::traversal_helper<G, stack_type>{}.traverse(
+    return graph_impl::traversal_helper<G>{}.traverse(
+             pseudo_depth_first,
              graph,
              conditions,
              std::forward<NBEF>(nodeBeforeEdgesFn),
@@ -141,8 +141,8 @@ namespace sequoia::maths
                                            EFTF&& edgeFirstTraversalFn  = null_func_obj{},
                                            TaskProcessingModel&& taskProcessingModel = TaskProcessingModel{})
   {
-    using stack_type = typename graph_impl::stack_selector<G>::stack_type;
-    return graph_impl::traversal_helper<G, stack_type>{}.traverse(
+    return graph_impl::traversal_helper<G>{}.traverse(
+             pseudo_depth_first,
              graph,
              conditions,
              std::forward<NBEF>(nodeBeforeEdgesFn),
@@ -172,7 +172,7 @@ namespace sequoia::maths
                                       ETUN&& edgeToUndiscoveredNodeFn = null_func_obj{},
                                       TaskProcessingModel&& taskProcessingModel = TaskProcessingModel{})
   {
-    return graph_impl::traversal_helper<G, void>{}.recursive_dfs(
+    return graph_impl::traversal_helper<G>{}.recursive_dfs(
       graph,
       conditions,
       std::forward<NBEF>(nodeBeforeEdgesFn),
@@ -206,8 +206,8 @@ namespace sequoia::maths
                                  ESTF&& edgeSecondTraversalFn = null_func_obj{},
                                  TaskProcessingModel&& taskProcessingModel = TaskProcessingModel{})
   {
-    using queue_type = typename graph_impl::priority_queue_selector<G, QCompare>::queue_type;
-    return graph_impl::traversal_helper<G, queue_type>{}.traverse(
+    return graph_impl::traversal_helper<G, QCompare>{}.traverse(
+             priority_first,
              graph,
              conditions,
              std::forward<NBEF>(nodeBeforeEdgesFn),
@@ -239,8 +239,8 @@ namespace sequoia::maths
                                  EFTF&& edgeFirstTraversalFn  = null_func_obj{},
                                  TaskProcessingModel&& taskProcessingModel = TaskProcessingModel{})
   {
-    using queue_type = typename graph_impl::priority_queue_selector<G, QCompare>::queue_type;
-    return graph_impl::traversal_helper<G, queue_type>{}.traverse(
+    return graph_impl::traversal_helper<G, QCompare>{}.traverse(
+             priority_first,
              graph,
              conditions,
              std::forward<NBEF>(nodeBeforeEdgesFn),

@@ -91,51 +91,39 @@ namespace sequoia::maths::graph_impl
     }
   };
 
-  template<dynamic_network G, class Container, class Comparer>
-  struct queue_constructor<G, std::priority_queue<std::size_t, Container, Comparer>>
-  {
-    [[nodiscard]]
-    static auto make(const G& g)
-    {
-      return std::priority_queue<std::size_t, Container, Comparer>{Comparer{g}};
-    }
-  };
-
-  template <dynamic_network G, class Container>
-  struct queue_constructor<G, std::stack<std::size_t, Container>>
-  {
-    [[nodiscard]]
-    static auto make(const G&)
-    {
-      return std::stack<std::size_t, Container>{};
-    }
-  };
-
-  template <dynamic_network G, class Container>
-  struct queue_constructor<G, std::queue<std::size_t, Container>>
-  {
-    [[nodiscard]]
-    static auto make(const G&)
-    {
-      return std::queue<std::size_t, Container>{};
-    }
-  };
-
   template<dynamic_network G>
-  struct stack_selector<G>
-  {
-    using stack_type = std::stack<std::size_t>;
-  };
-
-  template<dynamic_network G>
-  struct queue_selector<G>
+  struct queue_traits<G, traversal_flavour::breadth_first>
   {
     using queue_type = std::queue<std::size_t>;
+
+    [[nodiscard]]
+    static queue_type make(const G&)
+    {
+      return {};
+    }
+  };
+
+  template<dynamic_network G>
+  struct queue_traits<G, traversal_flavour::pseudo_depth_first>
+  {
+    using queue_type = std::stack<std::size_t>;
+
+    [[nodiscard]]
+    static queue_type make(const G&)
+    {
+      return {};
+    }
   };
 
   template<dynamic_network G, class Compare>
-  struct priority_queue_selector<G, Compare>
+  struct queue_traits<G, traversal_flavour::priority, Compare>
   {
     using queue_type = std::priority_queue<std::size_t, std::vector<size_t>, Compare>;
+
+    [[nodiscard]]
+    static queue_type make(const G& g)
+    {
+      return queue_type{Compare{g}};
+    }
   };
 }

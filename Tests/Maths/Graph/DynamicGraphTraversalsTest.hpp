@@ -60,7 +60,7 @@ namespace sequoia::testing
     template<maths::dynamic_network G, class MessageMaker>
     void test_square_graph(const G& g, const std::size_t start, MessageMaker messageMaker, pdfs_type);
 
-    //=================== For weighted BFS  =================//
+    //=================== For weighted breadth_first  =================//
 
     template<maths::dynamic_network Graph>
     void test_node_and_first_edge_traversal();
