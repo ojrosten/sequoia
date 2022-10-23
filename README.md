@@ -23,8 +23,8 @@ of these charities.
 
 git 2.33.0  
 CMake 3.20  
-clang 15.0.3  
-g++ 12.2
+clang 15.0.3   
+g++ 12.2  
 Visual Studio 2022  
 
 ## Testing Framework API:
