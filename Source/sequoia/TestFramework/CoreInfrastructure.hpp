@@ -92,8 +92,7 @@ namespace sequoia::testing
   };
 
   [[nodiscard]]
-  SPECULATIVE_CONSTEVAL
-  std::size_t operator "" _sz(unsigned long long int n) noexcept
+  consteval std::size_t operator "" _sz(unsigned long long int n) noexcept
   {
     return static_cast<std::size_t>(n);
   }
