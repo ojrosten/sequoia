@@ -272,14 +272,15 @@ namespace sequoia::testing
 
     check(LINE("node_comparer sees that weight_0 > weight_1 and so returns false"), !compare(0, 1));
 
-    auto stack = graph_impl::queue_traits<graph_type, traversal_flavour::pseudo_depth_first>::make(graph);
+    auto stack = graph_impl::queue_traits<graph_type, traversal_flavour::pseudo_depth_first>::make();
     stack.push(0);
     stack.push(1);
     check(equality, LINE(""), stack.top(), 1_sz);
     stack.pop();
     check(equality, LINE(""), stack.top(), 0_sz);
 
-    auto pqueue = graph_impl::queue_traits<graph_type, traversal_flavour::priority, graph_impl::node_comparer<graph_type, std::less<int>>>::make(graph);
+    using compare_t = graph_impl::node_comparer<graph_type, std::less<int>>;
+    auto pqueue = graph_impl::queue_traits<graph_type, traversal_flavour::priority, compare_t>::make(compare_t{graph});
     pqueue.push(0);
     pqueue.push(1);
 

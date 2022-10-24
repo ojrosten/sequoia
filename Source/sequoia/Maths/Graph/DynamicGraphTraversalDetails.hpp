@@ -97,7 +97,7 @@ namespace sequoia::maths::graph_impl
     using queue_type = std::queue<std::size_t>;
 
     [[nodiscard]]
-    static queue_type make(const G&)
+    static queue_type make()
     {
       return {};
     }
@@ -109,7 +109,7 @@ namespace sequoia::maths::graph_impl
     using queue_type = std::stack<std::size_t>;
 
     [[nodiscard]]
-    static queue_type make(const G&)
+    static queue_type make()
     {
       return {};
     }
@@ -121,9 +121,9 @@ namespace sequoia::maths::graph_impl
     using queue_type = std::priority_queue<std::size_t, std::vector<size_t>, Compare>;
 
     [[nodiscard]]
-    static queue_type make(const G& g)
+    static queue_type make(Compare c)
     {
-      return queue_type{Compare{g}};
+      return queue_type{std::move(c)};
     }
   };
 }

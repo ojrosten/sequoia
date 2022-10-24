@@ -38,11 +38,11 @@ namespace sequoia::maths
   constexpr auto traverse(traversal_constant<F> tc,
                           const G& graph,
                           const traversal_conditions<Mode> conditions,
-                          NBEF&& nodeBeforeEdgesFn                  = null_func_obj{},
-                          NAEF&& nodeAfterEdgesFn                   = null_func_obj{},
-                          EFTF&& edgeFirstTraversalFn               = null_func_obj{},
-                          ESTF&& edgeSecondTraversalFn              = null_func_obj{},
-                          TaskProcessingModel&& taskProcessingModel = TaskProcessingModel{})
+                          NBEF&& nodeBeforeEdgesFn                  = {},
+                          NAEF&& nodeAfterEdgesFn                   = {},
+                          EFTF&& edgeFirstTraversalFn               = {},
+                          ESTF&& edgeSecondTraversalFn              = {},
+                          TaskProcessingModel&& taskProcessingModel = {})
   {
     return graph_impl::traversal_helper<G>{}.traverse(
              tc,
@@ -73,10 +73,10 @@ namespace sequoia::maths
   constexpr auto traverse(traversal_constant<F> tc,
                           const G& graph,
                           const traversal_conditions<Mode> conditions,
-                          NBEF&& nodeBeforeEdgesFn                  = null_func_obj{},
-                          NAEF&& nodeAfterEdgesFn                   = null_func_obj{},
-                          EFTF&& edgeFirstTraversalFn               = null_func_obj{},
-                          TaskProcessingModel&& taskProcessingModel = TaskProcessingModel{})
+                          NBEF&& nodeBeforeEdgesFn                  = {},
+                          NAEF&& nodeAfterEdgesFn                   = {},
+                          EFTF&& edgeFirstTraversalFn               = {},
+                          TaskProcessingModel&& taskProcessingModel = {})
   {
     return graph_impl::traversal_helper<G>{}.traverse(
              tc,
@@ -104,10 +104,10 @@ namespace sequoia::maths
           && (std::invocable<ETUN, typename G::const_edge_iterator>)
     constexpr auto depth_first_search(const G& graph,
                                       const traversal_conditions<Mode> conditions,
-                                      NBEF&& nodeBeforeEdgesFn        = null_func_obj{},
-                                      NAEF&& nodeAfterEdgesFn         = null_func_obj{},
-                                      ETUN&& edgeToUndiscoveredNodeFn = null_func_obj{},
-                                      TaskProcessingModel&& taskProcessingModel = TaskProcessingModel{})
+                                      NBEF&& nodeBeforeEdgesFn                  = {},
+                                      NAEF&& nodeAfterEdgesFn                   = {},
+                                      ETUN&& edgeToUndiscoveredNodeFn           = {},
+                                      TaskProcessingModel&& taskProcessingModel = {})
   {
     return graph_impl::traversal_helper<G>{}.recursive_dfs(
       graph,
@@ -124,10 +124,10 @@ namespace sequoia::maths
     class TaskProcessingModel = concurrency::serial<void>,
     network G,
     disconnected_discovery_mode Mode,
-    class NBEF = null_func_obj,
-    class NAEF = null_func_obj,
-    class EFTF = null_func_obj,
-    class ESTF = null_func_obj,
+    class NBEF     = null_func_obj,
+    class NAEF     = null_func_obj,
+    class EFTF     = null_func_obj,
+    class ESTF     = null_func_obj,
     class QCompare = graph_impl::node_comparer<G, std::less<typename G::node_weight_type>>
   >
     requires (G::directedness != directed_flavour::directed)
@@ -135,16 +135,16 @@ namespace sequoia::maths
           && (std::invocable<NAEF, typename G::edge_index_type>)
           && (std::invocable<EFTF, typename G::const_edge_iterator>)
           && (std::invocable<ESTF, typename G::const_edge_iterator>)
-  constexpr auto traverse(priority_search_type,
+  constexpr auto traverse(priority_first_search_type,
                           const G& graph,
                           const traversal_conditions<Mode> conditions,
-                          NBEF&& nodeBeforeEdgesFn                  = null_func_obj{},
-                          NAEF&& nodeAfterEdgesFn                   = null_func_obj{},
-                          EFTF&& edgeFirstTraversalFn               = null_func_obj{},
-                          ESTF&& edgeSecondTraversalFn              = null_func_obj{},
-                          TaskProcessingModel&& taskProcessingModel = TaskProcessingModel{})
+                          NBEF&& nodeBeforeEdgesFn                  = {},
+                          NAEF&& nodeAfterEdgesFn                   = {},
+                          EFTF&& edgeFirstTraversalFn               = {},
+                          ESTF&& edgeSecondTraversalFn              = {},
+                          TaskProcessingModel&& taskProcessingModel = {})
   {
-    return graph_impl::traversal_helper<G, QCompare>{}.traverse(
+    return graph_impl::traversal_helper<G>{}.traverse(
              priority_first,
              graph,
              conditions,
@@ -152,7 +152,8 @@ namespace sequoia::maths
              std::forward<NAEF>(nodeAfterEdgesFn),
              std::forward<EFTF>(edgeFirstTraversalFn),
              std::forward<ESTF>(edgeSecondTraversalFn),
-             std::forward<TaskProcessingModel>(taskProcessingModel)
+             std::forward<TaskProcessingModel>(taskProcessingModel),
+             QCompare{graph}
            );
   }
 
@@ -161,24 +162,24 @@ namespace sequoia::maths
     class TaskProcessingModel = concurrency::serial<void>,
     network G,
     disconnected_discovery_mode Mode,
-    class NBEF = null_func_obj,
-    class NAEF = null_func_obj,
-    class EFTF = null_func_obj,
+    class NBEF     = null_func_obj,
+    class NAEF     = null_func_obj,
+    class EFTF     = null_func_obj,
     class QCompare = graph_impl::node_comparer<G, std::less<typename G::node_weight_type>>
   >
     requires (G::directedness == directed_flavour::directed)
           && (std::invocable<NBEF, typename G::edge_index_type>)
           && (std::invocable<NAEF, typename G::edge_index_type>)
           && (std::invocable<EFTF, typename G::const_edge_iterator>)
-  constexpr auto traverse(priority_search_type,
+  constexpr auto traverse(priority_first_search_type,
                           const G& graph,
                           const traversal_conditions<Mode> conditions,
-                          NBEF&& nodeBeforeEdgesFn     = null_func_obj{},
-                          NAEF&& nodeAfterEdgesFn      = null_func_obj{},
-                          EFTF&& edgeFirstTraversalFn  = null_func_obj{},
-                          TaskProcessingModel&& taskProcessingModel = TaskProcessingModel{})
+                          NBEF&& nodeBeforeEdgesFn                  = {},
+                          NAEF&& nodeAfterEdgesFn                   = {},
+                          EFTF&& edgeFirstTraversalFn               = {},
+                          TaskProcessingModel&& taskProcessingModel = {})
   {
-    return graph_impl::traversal_helper<G, QCompare>{}.traverse(
+    return graph_impl::traversal_helper<G>{}.traverse(
              priority_first,
              graph,
              conditions,
@@ -186,7 +187,8 @@ namespace sequoia::maths
              std::forward<NAEF>(nodeAfterEdgesFn),
              std::forward<EFTF>(edgeFirstTraversalFn),
              null_func_obj{},
-             std::forward<TaskProcessingModel>(taskProcessingModel)
+             std::forward<TaskProcessingModel>(taskProcessingModel),
+             QCompare{graph}
            );
   }
 }

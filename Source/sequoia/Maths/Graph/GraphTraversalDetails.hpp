@@ -35,12 +35,12 @@ namespace sequoia::maths
   using breadth_first_search_type      = traversal_constant<traversal_flavour::breadth_first>;
   using depth_first_search_type        = traversal_constant<traversal_flavour::depth_first>;
   using pseudo_depth_first_search_type = traversal_constant<traversal_flavour::pseudo_depth_first>;
-  using priority_search_type           = traversal_constant<traversal_flavour::priority>;
+  using priority_first_search_type     = traversal_constant<traversal_flavour::priority>;
 
   constexpr breadth_first_search_type      breadth_first{};
   constexpr depth_first_search_type        depth_first{};
   constexpr pseudo_depth_first_search_type pseudo_depth_first{};
-  constexpr priority_search_type           priority_first{};
+  constexpr priority_first_search_type     priority_first{};
 
   class traversal_conditions_base
   {
@@ -241,7 +241,7 @@ namespace sequoia::maths::graph_impl
     bool m_Matched{true};
   };
 
-  template<network G, class... QClasses>
+  template<network G>
   class traversal_helper
   {
   public:
@@ -256,7 +256,8 @@ namespace sequoia::maths::graph_impl
       class NAEF,
       class EFTF,
       class ESTF,
-      class TaskProcessingModel
+      class TaskProcessingModel,
+      class... QArgs
     >
       requires (std::invocable<NBEF, edge_index_type>    )
             && (std::invocable<NAEF, edge_index_type>    )
@@ -269,7 +270,8 @@ namespace sequoia::maths::graph_impl
                             NAEF&& nodeAfterEdgesFn,
                             EFTF&& edgeFirstTraversalFn,
                             ESTF&& edgeSecondTraversalFn,
-                            TaskProcessingModel&& taskProcessingModel)
+                            TaskProcessingModel&& taskProcessingModel,
+                            QArgs&&... qargs)
     {
       // Note: do not forward any of the Fns as they could in principle end up repeatedly moved from.
       // However, the Fns should not be captured by value as they may have mutable state with
@@ -279,14 +281,14 @@ namespace sequoia::maths::graph_impl
       static_assert(!directed(G::directedness) || !hasEdgeSecondFn,
                     "For a directed graph, edges are traversed only once: the edgeSecondTraversalFn is ignored and so should be the null_func_obj");
 
-      using Q = typename queue_traits<G, F, QClasses...>::queue_type;
+      using Q = typename queue_traits<G, F, QArgs...>::queue_type;
 
       if(conditions.starting_index() < graph.order())
       {
         auto discovered{traversal_tracking_traits<G>::make_bitset(graph)};
         auto processed{traversal_tracking_traits<G>::make_bitset(graph)};
 
-        auto nodeIndexQueue{queue_traits<G, F, QClasses...>::make(graph)};
+        auto nodeIndexQueue{queue_traits<G, F, QArgs...>::make(std::forward<QArgs>(qargs)...)};
 
         do
         {

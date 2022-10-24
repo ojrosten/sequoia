@@ -90,7 +90,7 @@ namespace sequoia::maths::graph_impl
     using queue_type = data_structures::static_queue<typename G::edge_index_type, G::order()>;
 
     [[nodiscard]]
-    constexpr static queue_type make(const G&)
+    constexpr static queue_type make()
     {
       return {};
     }
@@ -102,7 +102,7 @@ namespace sequoia::maths::graph_impl
     using queue_type = data_structures::static_stack<typename G::edge_index_type, G::order()>;
 
     [[nodiscard]]
-    constexpr static queue_type make(const G&)
+    constexpr static queue_type make()
     {
       return {};
     }
@@ -114,9 +114,9 @@ namespace sequoia::maths::graph_impl
     using queue_type = data_structures::static_priority_queue<typename G::edge_index_type, G::order(), Compare>;
 
     [[nodiscard]]
-    constexpr static queue_type make(const G& g)
+    constexpr static queue_type make(Compare c)
     {
-      return queue_type{Compare{g}};
+      return queue_type{std::move(c)};
     }
   };
 

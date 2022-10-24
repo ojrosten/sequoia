@@ -17,7 +17,7 @@ namespace sequoia::testing
   using bfs_type  = maths::breadth_first_search_type;
   using dfs_type  = maths::depth_first_search_type;
   using pdfs_type = maths::pseudo_depth_first_search_type;
-  using prs_type  = maths::priority_search_type;
+  using prs_type  = maths::priority_first_search_type;
 
   [[nodiscard]]
   std::string to_string(maths::traversal_flavour f);
