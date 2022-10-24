@@ -602,7 +602,7 @@ namespace sequoia::testing
     auto graph{generate_priority_test_graph<Graph>()};
 
     node_tracker tracker;
-    maths::priority_search(graph, maths::ignore_disconnected_t{}, tracker);
+    traverse(maths::priority_first, graph, maths::ignore_disconnected_t{}, tracker);
 
     check(equivalence, LINE(""), tracker, std::vector<std::size_t>{0,2,4,3,6,1,5});
   }

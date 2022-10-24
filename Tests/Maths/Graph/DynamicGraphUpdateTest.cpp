@@ -511,7 +511,7 @@ namespace sequoia::testing
     using namespace maths;
     graph_updater<Graph> updater(graph);
     auto firstNodeFn = [&updater](const std::size_t index){ updater.firstNodeTraversal(index); };
-    priority_search(graph, find_disconnected_t{}, firstNodeFn);
+    traverse(priority_first, graph, find_disconnected_t{}, firstNodeFn);
 
     // node_weight *=  (2 + traversal index)
     //
@@ -529,7 +529,7 @@ namespace sequoia::testing
     check(equality, LINE(""), graph.cbegin_node_weights(), graph.cend_node_weights(), expectedNodeWeights.cbegin(), expectedNodeWeights.cend());
 
     auto secondNodeFn = [&updater](const std::size_t index){ updater.secondNodeTraversal(index); };
-    priority_search(graph, find_disconnected_t{}, null_func_obj{}, secondNodeFn);
+    traverse(priority_first, graph, find_disconnected_t{}, null_func_obj{}, secondNodeFn);
 
     // node_weight / = (2 + traversal index)
     //
@@ -545,7 +545,7 @@ namespace sequoia::testing
     check(equality, LINE(""), graph.cbegin_node_weights(), graph.cend_node_weights(), expectedNodeWeights.cbegin(), expectedNodeWeights.cend());
 
     auto firstEdgeFn = [&updater](auto citer) { updater.firstEdgeTraversal(citer); };
-    priority_search(graph, find_disconnected_t{}, null_func_obj{}, null_func_obj{}, firstEdgeFn);
+    traverse(priority_first, graph, find_disconnected_t{}, null_func_obj{}, null_func_obj{}, firstEdgeFn);
 
     // edge_weight += 10 + traversal index
     //
@@ -620,11 +620,11 @@ namespace sequoia::testing
     auto secondEdgeFn = [&updater](auto citer) { updater.secondEdgeTraversal(citer); };
     if constexpr(undirected(Graph::flavour))
     {
-      priority_search(graph, find_disconnected_t{}, null_func_obj{}, null_func_obj{}, null_func_obj{}, secondEdgeFn);
+      traverse(priority_first, graph, find_disconnected_t{}, null_func_obj{}, null_func_obj{}, null_func_obj{}, secondEdgeFn);
     }
     else
     {
-      priority_search(graph, find_disconnected_t{}, null_func_obj{}, null_func_obj{}, secondEdgeFn);
+      traverse(priority_first, graph, find_disconnected_t{}, null_func_obj{}, null_func_obj{}, secondEdgeFn);
     }
 
     // edge_weight -= (10 + traversal index)

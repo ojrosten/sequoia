@@ -104,7 +104,7 @@ namespace sequoia::testing
       }
     };
 
-    maths::priority_search(g, find_disconnected_t{}, nodeEarlyFn);
+    maths::traverse(priority_first, g, find_disconnected_t{}, nodeEarlyFn);
 
     return orderedNodeWeights;
   }

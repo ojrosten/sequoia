@@ -135,13 +135,14 @@ namespace sequoia::maths
           && (std::invocable<NAEF, typename G::edge_index_type>)
           && (std::invocable<EFTF, typename G::const_edge_iterator>)
           && (std::invocable<ESTF, typename G::const_edge_iterator>)
-  constexpr auto priority_search(const G& graph,
-                                 const traversal_conditions<Mode> conditions,
-                                 NBEF&& nodeBeforeEdgesFn     = null_func_obj{},
-                                 NAEF&& nodeAfterEdgesFn      = null_func_obj{},
-                                 EFTF&& edgeFirstTraversalFn  = null_func_obj{},
-                                 ESTF&& edgeSecondTraversalFn = null_func_obj{},
-                                 TaskProcessingModel&& taskProcessingModel = TaskProcessingModel{})
+  constexpr auto traverse(priority_search_type,
+                          const G& graph,
+                          const traversal_conditions<Mode> conditions,
+                          NBEF&& nodeBeforeEdgesFn                  = null_func_obj{},
+                          NAEF&& nodeAfterEdgesFn                   = null_func_obj{},
+                          EFTF&& edgeFirstTraversalFn               = null_func_obj{},
+                          ESTF&& edgeSecondTraversalFn              = null_func_obj{},
+                          TaskProcessingModel&& taskProcessingModel = TaskProcessingModel{})
   {
     return graph_impl::traversal_helper<G, QCompare>{}.traverse(
              priority_first,
@@ -169,12 +170,13 @@ namespace sequoia::maths
           && (std::invocable<NBEF, typename G::edge_index_type>)
           && (std::invocable<NAEF, typename G::edge_index_type>)
           && (std::invocable<EFTF, typename G::const_edge_iterator>)
-  constexpr auto priority_search(const G& graph,
-                                 const traversal_conditions<Mode> conditions,
-                                 NBEF&& nodeBeforeEdgesFn     = null_func_obj{},
-                                 NAEF&& nodeAfterEdgesFn      = null_func_obj{},
-                                 EFTF&& edgeFirstTraversalFn  = null_func_obj{},
-                                 TaskProcessingModel&& taskProcessingModel = TaskProcessingModel{})
+  constexpr auto traverse(priority_search_type,
+                          const G& graph,
+                          const traversal_conditions<Mode> conditions,
+                          NBEF&& nodeBeforeEdgesFn     = null_func_obj{},
+                          NAEF&& nodeAfterEdgesFn      = null_func_obj{},
+                          EFTF&& edgeFirstTraversalFn  = null_func_obj{},
+                          TaskProcessingModel&& taskProcessingModel = TaskProcessingModel{})
   {
     return graph_impl::traversal_helper<G, QCompare>{}.traverse(
              priority_first,

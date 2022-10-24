@@ -78,7 +78,7 @@ namespace sequoia::testing
     template<class G, maths::disconnected_discovery_mode Mode, class... Fn>
     static void traverse(const G& g, const maths::traversal_conditions<Mode> conditions, Fn&&... fn)
     {
-      maths::priority_search(g, conditions, std::forward<Fn>(fn)...);
+      maths::traverse(maths::priority_first, g, conditions, std::forward<Fn>(fn)...);
     }
 
     constexpr static bool uses_forward_iterator() noexcept { return true; }
