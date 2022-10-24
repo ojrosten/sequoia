@@ -124,7 +124,7 @@ namespace sequoia::testing
     static void check(const transition_graph& g, EdgeFn edgeFn)
     {
       using namespace maths;
-      breadth_first_search(g, find_disconnected_t{0}, null_func_obj{}, null_func_obj{}, edgeFn);
+      traverse(breadth_first, g, find_disconnected_t{0}, null_func_obj{}, null_func_obj{}, edgeFn);
     }
 
     struct info

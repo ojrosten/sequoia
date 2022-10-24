@@ -78,6 +78,7 @@ namespace sequoia::maths
     constexpr traversal_conditions& operator=(const traversal_conditions&) = default;
 
     template<class Bitset>
+    [[nodiscard]]
     constexpr std::size_t compute_restart_index(const Bitset& b)
     {
       if(m_NumDiscovered)

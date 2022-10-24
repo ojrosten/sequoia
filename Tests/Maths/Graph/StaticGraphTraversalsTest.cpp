@@ -36,7 +36,7 @@ namespace sequoia::testing
     };
 
     constexpr g_type g{{edge_t{1}}, {}};
-    pseudo_depth_first_search(g, find_disconnected_t{}, null_func_obj{}, lateNodeFn);
+    traverse(pseudo_depth_first, g, find_disconnected_t{}, null_func_obj{}, lateNodeFn);
 
     return ordering;
   }
@@ -68,7 +68,7 @@ namespace sequoia::testing
       }
     };
 
-    breadth_first_search(g, find_disconnected_t{}, null_func_obj{}, null_func_obj{}, edgeFn);
+    traverse(breadth_first, g, find_disconnected_t{}, null_func_obj{}, null_func_obj{}, edgeFn);
 
     return edgeData;
   }

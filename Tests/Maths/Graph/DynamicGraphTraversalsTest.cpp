@@ -133,14 +133,14 @@ namespace sequoia::testing
       if constexpr(Graph::directedness == directed_flavour::directed)
       {
         return early
-          ? breadth_first_search(graph, ignore_disconnected_t{}, fn, null_func_obj{}, null_func_obj{}, ProcessingModel{std::forward<Args>(args)...})
-          : breadth_first_search(graph, ignore_disconnected_t{}, null_func_obj{}, fn, null_func_obj{}, ProcessingModel{std::forward<Args>(args)...});
+          ? traverse(breadth_first, graph, ignore_disconnected_t{}, fn, null_func_obj{}, null_func_obj{}, ProcessingModel{std::forward<Args>(args)...})
+          : traverse(breadth_first, graph, ignore_disconnected_t{}, null_func_obj{}, fn, null_func_obj{}, ProcessingModel{std::forward<Args>(args)...});
       }
       else
       {
         return early
-          ? breadth_first_search(graph, ignore_disconnected_t{}, fn, null_func_obj{}, null_func_obj{}, null_func_obj{}, ProcessingModel{std::forward<Args>(args)...})
-          : breadth_first_search(graph, ignore_disconnected_t{}, null_func_obj{}, fn, null_func_obj{}, null_func_obj{}, ProcessingModel{std::forward<Args>(args)...});
+          ? traverse(breadth_first, graph, ignore_disconnected_t{}, fn, null_func_obj{}, null_func_obj{}, null_func_obj{}, ProcessingModel{std::forward<Args>(args)...})
+          : traverse(breadth_first, graph, ignore_disconnected_t{}, null_func_obj{}, fn, null_func_obj{}, null_func_obj{}, ProcessingModel{std::forward<Args>(args)...});
       }
     }
 
@@ -156,11 +156,11 @@ namespace sequoia::testing
       using namespace maths;
       if constexpr(Graph::directedness == maths::directed_flavour::directed)
       {
-        return breadth_first_search(graph, ignore_disconnected_t{}, null_func_obj{}, null_func_obj{}, fn, ProcessingModel{std::forward<Args>(args)...});
+        return traverse(breadth_first, graph, ignore_disconnected_t{}, null_func_obj{}, null_func_obj{}, fn, ProcessingModel{std::forward<Args>(args)...});
       }
       else
       {
-        return breadth_first_search(graph, ignore_disconnected_t{}, null_func_obj{}, null_func_obj{}, fn, null_func_obj{}, ProcessingModel{std::forward<Args>(args)...});
+        return traverse(breadth_first, graph, ignore_disconnected_t{}, null_func_obj{}, null_func_obj{}, fn, null_func_obj{}, ProcessingModel{std::forward<Args>(args)...});
       }
     }
 
@@ -174,7 +174,7 @@ namespace sequoia::testing
       };
 
       using namespace maths;
-      return breadth_first_search(graph, ignore_disconnected_t{}, null_func_obj{}, null_func_obj{}, null_func_obj{}, fn, ProcessingModel{std::forward<Args>(args)...});
+      return traverse(breadth_first, graph, ignore_disconnected_t{}, null_func_obj{}, null_func_obj{}, null_func_obj{}, fn, ProcessingModel{std::forward<Args>(args)...});
     }
 
     [[nodiscard]]
