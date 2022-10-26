@@ -43,7 +43,7 @@ namespace sequoia::maths::graph_impl
   };
 
   template<dynamic_network G>
-  struct queue_traits_base<G, traversal_flavour::breadth_first>
+  struct traversal_traits_base<G, traversal_flavour::breadth_first>
   {
     using queue_type = std::queue<std::size_t>;
 
@@ -52,7 +52,7 @@ namespace sequoia::maths::graph_impl
   };
 
   template<dynamic_network G>
-  struct queue_traits_base<G, traversal_flavour::pseudo_depth_first>
+  struct traversal_traits_base<G, traversal_flavour::pseudo_depth_first>
   {
     using queue_type = std::stack<std::size_t>;
 
@@ -61,7 +61,7 @@ namespace sequoia::maths::graph_impl
   };
 
   template<dynamic_network G, class Compare>
-  struct queue_traits_base<G, traversal_flavour::priority, Compare>
+  struct traversal_traits_base<G, traversal_flavour::priority, Compare>
   {
     using queue_type = std::priority_queue<std::size_t, std::vector<size_t>, Compare>;
 

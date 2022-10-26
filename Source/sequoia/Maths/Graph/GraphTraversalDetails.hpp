@@ -168,12 +168,12 @@ namespace sequoia::maths::graph_impl
 
 
   template<network G, traversal_flavour F, class... QArgs>
-  struct queue_traits_base;
+  struct traversal_traits_base;
 
   template<network G, traversal_flavour F, class... QArgs>
-  struct queue_traits : queue_traits_base<G, F, QArgs...>
+  struct traversal_traits : traversal_traits_base<G, F, QArgs...>
   {
-    using queue_type = queue_traits_base<G, F, QArgs...>::queue_type;
+    using queue_type = traversal_traits_base<G, F, QArgs...>::queue_type;
 
     [[nodiscard]]
     constexpr static queue_type make(QArgs... args)
@@ -308,7 +308,7 @@ namespace sequoia::maths::graph_impl
         auto discovered{traversal_tracking_traits<G>::make_bitset(graph)};
         auto processed{traversal_tracking_traits<G>::make_bitset(graph)};
 
-        auto nodeIndexQueue{queue_traits<G, F, QArgs...>::make(std::forward<QArgs>(qargs)...)};
+        auto nodeIndexQueue{traversal_traits<G, F, QArgs...>::make(std::forward<QArgs>(qargs)...)};
 
         do
         {
@@ -319,7 +319,7 @@ namespace sequoia::maths::graph_impl
 
           while(!nodeIndexQueue.empty())
           {
-            const auto nodeIndex{queue_traits<G, F, QArgs...>::get_container_element(nodeIndexQueue)};
+            const auto nodeIndex{traversal_traits<G, F, QArgs...>::get_container_element(nodeIndexQueue)};
             nodeIndexQueue.pop();
 
             auto onDiscovery{[&nodeIndexQueue](const edge_index_type nextNode) { nodeIndexQueue.push(nextNode); }};
@@ -327,8 +327,8 @@ namespace sequoia::maths::graph_impl
             inner_loop(graph,
                        nodeIndex,
                        conditions,
-                       queue_traits<G, F, QArgs...>::begin(graph, nodeIndex),
-                       queue_traits<G, F, QArgs...>::end(graph, nodeIndex),
+                       traversal_traits<G, F, QArgs...>::begin(graph, nodeIndex),
+                       traversal_traits<G, F, QArgs...>::end(graph, nodeIndex),
                        discovered,
                        processed,
                        onDiscovery,
