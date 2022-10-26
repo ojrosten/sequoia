@@ -296,7 +296,7 @@ namespace sequoia::parsing::commandline
         [&ind](auto) { ind.trim(2); }
       };
 
-      depth_first_search(optTree, maths::ignore_disconnected_t{subTreeRootNode}, nodeEarly, nodeLate);
+      traverse(maths::depth_first, optTree, maths::ignore_disconnected_t{subTreeRootNode}, nodeEarly, nodeLate);
     }
 
     return help;

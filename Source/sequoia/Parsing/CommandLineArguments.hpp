@@ -157,16 +157,17 @@ namespace sequoia::parsing::commandline
       using namespace maths;
       for(const auto& operTree : operations)
       {
-        depth_first_search(operTree,
-                           ignore_disconnected_t{},
-                           [&operTree](const auto node) {
-                              const operation& oper{operTree.cbegin_node_weights()[node]};
-                              if(oper.early) oper.early(oper.arguments);
-                           },
-                           [&operTree](const auto node) {
-                              const operation& oper{operTree.cbegin_node_weights()[node]};
-                              if(oper.late) oper.late(oper.arguments);
-                           });
+       traverse(depth_first,
+                operTree,
+                ignore_disconnected_t{},
+                [&operTree](const auto node) {
+                   const operation& oper{operTree.cbegin_node_weights()[node]};
+                   if(oper.early) oper.early(oper.arguments);
+                },
+                [&operTree](const auto node) {
+                   const operation& oper{operTree.cbegin_node_weights()[node]};
+                   if(oper.late) oper.late(oper.arguments);
+                });
       }
     }
 

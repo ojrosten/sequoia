@@ -355,12 +355,13 @@ namespace sequoia::maths::graph_impl
       requires (std::invocable<NBEF, edge_index_type>)
             && (std::invocable<NAEF, edge_index_type>)
             && (std::invocable<ETUN, typename G::const_edge_iterator>)
-    constexpr auto recursive_dfs(const G& graph,
-                                 traversal_conditions<FindDisconnected> conditions,
-                                 NBEF&& nodeBeforeEdgesFn,
-                                 NAEF&& nodeAfterEdgesFn,
-                                 ETUN&& edgeToUndiscoveredNodeFn,
-                                 TaskProcessingModel&& taskProcessingModel)
+    constexpr auto traverse(depth_first_search_type,
+                            const G& graph,
+                            traversal_conditions<FindDisconnected> conditions,
+                            NBEF&& nodeBeforeEdgesFn,
+                            NAEF&& nodeAfterEdgesFn,
+                            ETUN&& edgeToUndiscoveredNodeFn,
+                            TaskProcessingModel&& taskProcessingModel)
     {
       // Note: do not forward any of the Fns as they could in principle end up repeatedly moved from.
       // However, the Fns should not be captured by value as they may have mutable state with

@@ -384,7 +384,7 @@ namespace sequoia::testing
         }
       };
 
-      depth_first_search(g, find_disconnected_t{0}, null_func_obj{}, nodesLate);
+      traverse(depth_first, g, find_disconnected_t{0}, null_func_obj{}, nodesLate);
 
       const auto passesFile{projPaths.prune().selected_passes(std::nullopt)};
       const auto passingTestsFromFile{read_tests(passesFile)};

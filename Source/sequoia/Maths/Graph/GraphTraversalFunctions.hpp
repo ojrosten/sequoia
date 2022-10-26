@@ -102,14 +102,16 @@ namespace sequoia::maths
     requires (std::invocable<NBEF, typename G::edge_index_type>)
           && (std::invocable<NAEF, typename G::edge_index_type>)
           && (std::invocable<ETUN, typename G::const_edge_iterator>)
-    constexpr auto depth_first_search(const G& graph,
-                                      const traversal_conditions<Mode> conditions,
-                                      NBEF&& nodeBeforeEdgesFn                  = {},
-                                      NAEF&& nodeAfterEdgesFn                   = {},
-                                      ETUN&& edgeToUndiscoveredNodeFn           = {},
-                                      TaskProcessingModel&& taskProcessingModel = {})
+    constexpr auto traverse(depth_first_search_type,
+                            const G& graph,
+                            const traversal_conditions<Mode> conditions,
+                            NBEF&& nodeBeforeEdgesFn                  = {},
+                            NAEF&& nodeAfterEdgesFn                   = {},
+                            ETUN&& edgeToUndiscoveredNodeFn           = {},
+                            TaskProcessingModel&& taskProcessingModel = {})
   {
-    return graph_impl::traversal_helper<G>{}.recursive_dfs(
+    return graph_impl::traversal_helper<G>{}.traverse(
+      depth_first,
       graph,
       conditions,
       std::forward<NBEF>(nodeBeforeEdgesFn),
