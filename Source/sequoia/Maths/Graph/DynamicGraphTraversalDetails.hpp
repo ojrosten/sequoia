@@ -48,9 +48,6 @@ namespace sequoia::maths::graph_impl
     using queue_type = std::queue<std::size_t>;
 
     [[nodiscard]]
-    constexpr static bool uses_forward_iterator() noexcept { return true; }
-
-    [[nodiscard]]
     static auto get_container_element(const queue_type& q) { return q.front(); }
   };
 
@@ -60,9 +57,6 @@ namespace sequoia::maths::graph_impl
     using queue_type = std::stack<std::size_t>;
 
     [[nodiscard]]
-    constexpr static bool uses_forward_iterator() noexcept { return false; }
-
-    [[nodiscard]]
     static auto get_container_element(const queue_type& s) { return s.top(); }
   };
 
@@ -70,9 +64,6 @@ namespace sequoia::maths::graph_impl
   struct queue_traits_base<G, traversal_flavour::priority, Compare>
   {
     using queue_type = std::priority_queue<std::size_t, std::vector<size_t>, Compare>;
-
-    [[nodiscard]]
-    constexpr static bool uses_forward_iterator() noexcept { return true; }
 
     [[nodiscard]]
     static auto get_container_element(const queue_type& q) { return q.top(); }

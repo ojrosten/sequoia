@@ -144,9 +144,7 @@ namespace sequoia::maths
 
 namespace sequoia::maths::graph_impl
 {
-
-
-  template<bool Forward> struct iterator_getter
+  template<traversal_flavour F> struct iterator_getter
   {
     template<network G>
     [[nodiscard]]
@@ -157,7 +155,7 @@ namespace sequoia::maths::graph_impl
     constexpr static auto end(const G& graph, const typename G::edge_index_type nodeIndex) { return graph.cend_edges(nodeIndex); }
   };
 
-  template<> struct iterator_getter<false>
+  template<> struct iterator_getter<traversal_flavour::pseudo_depth_first>
   {
     template<network G>
     [[nodiscard]]
@@ -175,7 +173,7 @@ namespace sequoia::maths::graph_impl
   template<network G, traversal_flavour F, class... QArgs>
   struct queue_traits : queue_traits_base<G, F, QArgs...>
   {
-    using queue_type = typename queue_traits_base<G, F, QArgs...>::queue_type;
+    using queue_type = queue_traits_base<G, F, QArgs...>::queue_type;
 
     [[nodiscard]]
     constexpr static queue_type make(QArgs... args)
@@ -186,13 +184,13 @@ namespace sequoia::maths::graph_impl
     [[nodiscard]]
     static auto begin(const G& graph, const std::size_t nodeIndex)
     {
-      return iterator_getter<queue_traits_base<G, F, QArgs...>::uses_forward_iterator()>::begin(graph, nodeIndex);
+      return iterator_getter<F>::begin(graph, nodeIndex);
     }
 
     [[nodiscard]]
     static auto end(const G& graph, const std::size_t nodeIndex)
     {
-      return iterator_getter<queue_traits_base<G, F, QArgs...>::uses_forward_iterator()>::end(graph, nodeIndex);
+      return iterator_getter<F>::end(graph, nodeIndex);
     }
   };
 
