@@ -30,75 +30,39 @@ namespace sequoia::maths::graph_impl
     }
   };
 
-  template<std::integral IndexType, std::size_t MaxDepth, class Compare> struct traversal_traits_base<data_structures::static_priority_queue<IndexType, MaxDepth, Compare>>
+  template<static_network G>
+  struct queue_traits_base<G, traversal_flavour::breadth_first>
   {
+    using queue_type = data_structures::static_queue<typename G::edge_index_type, G::order()>;
+
     [[nodiscard]]
     constexpr static bool uses_forward_iterator() noexcept { return true; }
 
     [[nodiscard]]
-    constexpr static auto get_container_element(const data_structures::static_priority_queue<IndexType, MaxDepth, Compare>& q)
-    {
-      return q.top();
-    }
+    static auto get_container_element(const queue_type& q) { return q.front(); }
   };
 
-  template<std::integral IndexType, std::size_t MaxDepth>
-  struct traversal_traits_base<data_structures::static_stack<IndexType, MaxDepth>>
+  template<static_network G>
+  struct queue_traits_base<G, traversal_flavour::pseudo_depth_first>
   {
+    using queue_type = data_structures::static_stack<typename G::edge_index_type, G::order()>;
+
     [[nodiscard]]
     constexpr static bool uses_forward_iterator() noexcept { return false; }
 
     [[nodiscard]]
-    constexpr static auto get_container_element(const data_structures::static_stack<IndexType, MaxDepth>& s)
-    {
-      return s.top();
-    }
+    static auto get_container_element(const queue_type& s) { return s.top(); }
   };
 
-  template<std::integral IndexType, std::size_t MaxDepth>
-  struct traversal_traits_base<data_structures::static_queue<IndexType, MaxDepth>>
+  template<static_network G, class Compare>
+  struct queue_traits_base<G, traversal_flavour::priority, Compare>
   {
+    using queue_type = data_structures::static_priority_queue<typename G::edge_index_type, G::order(), Compare>;
+
     [[nodiscard]]
     constexpr static bool uses_forward_iterator() noexcept { return true; }
 
     [[nodiscard]]
-    constexpr static auto get_container_element(const data_structures::static_queue<IndexType, MaxDepth>& q)
-    {
-      return q.front();
-    }
-  };
-
-  template<static_network G, class Q>
-  struct traversal_traits<G, Q> : public traversal_traits_base<Q>
-  {
-    [[nodiscard]]
-    constexpr static auto begin(const G& graph, const typename G::edge_index_type nodeIndex)
-    {
-      return iterator_getter<traversal_traits_base<Q>::uses_forward_iterator()>::begin(graph, nodeIndex);
-    }
-
-    [[nodiscard]]
-    constexpr static auto end(const G& graph, const typename G::edge_index_type nodeIndex)
-    {
-      return iterator_getter<traversal_traits_base<Q>::uses_forward_iterator()>::end(graph, nodeIndex);
-    }
-  };
-
-  template<static_network G>
-  struct queue_type_generator<G, traversal_flavour::breadth_first>
-  {
-    using queue_type = data_structures::static_queue<typename G::edge_index_type, G::order()>;
-  };
-
-  template<static_network G>
-  struct queue_type_generator<G, traversal_flavour::pseudo_depth_first>
-  {
-    using queue_type = data_structures::static_stack<typename G::edge_index_type, G::order()>;
-  };
-
-  template<static_network G, class Compare>
-  struct queue_type_generator<G, traversal_flavour::priority, Compare>
-  {
-    using queue_type = data_structures::static_priority_queue<typename G::edge_index_type, G::order(), Compare>;
+    static auto get_container_element(const queue_type& q) { return q.top(); }
   };
 }

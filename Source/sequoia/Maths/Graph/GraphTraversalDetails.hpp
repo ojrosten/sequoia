@@ -144,20 +144,7 @@ namespace sequoia::maths
 
 namespace sequoia::maths::graph_impl
 {
-  template<network G, traversal_flavour F, class... QArgs>
-  struct queue_type_generator;
 
-  template<network G, traversal_flavour F, class... QArgs>
-  struct queue_traits
-  {
-    using queue_type = typename queue_type_generator<G, F, QArgs...>::queue_type;
-
-    [[nodiscard]]
-    constexpr static queue_type make(QArgs... args)
-    {
-      return queue_type{std::forward<QArgs>(args)...};
-    }
-  };
 
   template<bool Forward> struct iterator_getter
   {
@@ -181,8 +168,33 @@ namespace sequoia::maths::graph_impl
     constexpr static auto end(const G& graph, const typename G::edge_index_type nodeIndex) { return graph.crend_edges(nodeIndex); }
   };
 
-  template<class Q> struct traversal_traits_base;
-  template<network G, class Q> struct traversal_traits;
+
+  template<network G, traversal_flavour F, class... QArgs>
+  struct queue_traits_base;
+
+  template<network G, traversal_flavour F, class... QArgs>
+  struct queue_traits : queue_traits_base<G, F, QArgs...>
+  {
+    using queue_type = typename queue_traits_base<G, F, QArgs...>::queue_type;
+
+    [[nodiscard]]
+    constexpr static queue_type make(QArgs... args)
+    {
+      return queue_type{std::forward<QArgs>(args)...};
+    }
+
+    [[nodiscard]]
+    static auto begin(const G& graph, const std::size_t nodeIndex)
+    {
+      return iterator_getter<queue_traits_base<G, F, QArgs...>::uses_forward_iterator()>::begin(graph, nodeIndex);
+    }
+
+    [[nodiscard]]
+    static auto end(const G& graph, const std::size_t nodeIndex)
+    {
+      return iterator_getter<queue_traits_base<G, F, QArgs...>::uses_forward_iterator()>::end(graph, nodeIndex);
+    }
+  };
 
   template<network G> struct traversal_tracking_traits;
 
@@ -293,8 +305,6 @@ namespace sequoia::maths::graph_impl
       static_assert(!directed(G::directedness) || !hasEdgeSecondFn,
                     "For a directed graph, edges are traversed only once: the edgeSecondTraversalFn is ignored and so should be the null_func_obj");
 
-      using Q = typename queue_traits<G, F, QArgs...>::queue_type;
-
       if(conditions.starting_index() < graph.order())
       {
         auto discovered{traversal_tracking_traits<G>::make_bitset(graph)};
@@ -311,7 +321,7 @@ namespace sequoia::maths::graph_impl
 
           while(!nodeIndexQueue.empty())
           {
-            const auto nodeIndex{traversal_traits<G, Q>::get_container_element(nodeIndexQueue)};
+            const auto nodeIndex{queue_traits<G, F, QArgs...>::get_container_element(nodeIndexQueue)};
             nodeIndexQueue.pop();
 
             auto onDiscovery{[&nodeIndexQueue](const edge_index_type nextNode) { nodeIndexQueue.push(nextNode); }};
@@ -319,8 +329,8 @@ namespace sequoia::maths::graph_impl
             inner_loop(graph,
                        nodeIndex,
                        conditions,
-                       traversal_traits<G, Q>::begin(graph, nodeIndex),
-                       traversal_traits<G, Q>::end(graph, nodeIndex),
+                       queue_traits<G, F, QArgs...>::begin(graph, nodeIndex),
+                       queue_traits<G, F, QArgs...>::end(graph, nodeIndex),
                        discovered,
                        processed,
                        onDiscovery,
