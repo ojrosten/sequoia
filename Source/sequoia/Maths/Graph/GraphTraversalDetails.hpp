@@ -144,8 +144,20 @@ namespace sequoia::maths
 
 namespace sequoia::maths::graph_impl
 {
-  template<network G, traversal_flavour F, class... QDetails>
-  struct queue_traits;
+  template<network G, traversal_flavour F, class... QArgs>
+  struct queue_type_generator;
+
+  template<network G, traversal_flavour F, class... QArgs>
+  struct queue_traits
+  {
+    using queue_type = typename queue_type_generator<G, F, QArgs...>::queue_type;
+
+    [[nodiscard]]
+    constexpr static queue_type make(QArgs... args)
+    {
+      return queue_type{std::forward<QArgs>(args)...};
+    }
+  };
 
   template<bool Forward> struct iterator_getter
   {

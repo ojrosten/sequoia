@@ -85,39 +85,20 @@ namespace sequoia::maths::graph_impl
   };
 
   template<static_network G>
-  struct queue_traits<G, traversal_flavour::breadth_first>
+  struct queue_type_generator<G, traversal_flavour::breadth_first>
   {
     using queue_type = data_structures::static_queue<typename G::edge_index_type, G::order()>;
-
-    [[nodiscard]]
-    constexpr static queue_type make()
-    {
-      return {};
-    }
   };
 
   template<static_network G>
-  struct queue_traits<G, traversal_flavour::pseudo_depth_first>
+  struct queue_type_generator<G, traversal_flavour::pseudo_depth_first>
   {
     using queue_type = data_structures::static_stack<typename G::edge_index_type, G::order()>;
-
-    [[nodiscard]]
-    constexpr static queue_type make()
-    {
-      return {};
-    }
   };
 
   template<static_network G, class Compare>
-  struct queue_traits<G, traversal_flavour::priority, Compare>
+  struct queue_type_generator<G, traversal_flavour::priority, Compare>
   {
     using queue_type = data_structures::static_priority_queue<typename G::edge_index_type, G::order(), Compare>;
-
-    [[nodiscard]]
-    constexpr static queue_type make(Compare c)
-    {
-      return queue_type{std::move(c)};
-    }
   };
-
 }
