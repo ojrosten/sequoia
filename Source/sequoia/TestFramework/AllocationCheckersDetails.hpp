@@ -319,15 +319,10 @@ namespace sequoia::testing::impl
 
   //================================ Variadic Allocation Checking ================================//
 
-  template<test_mode Mode, class CheckFn, class Checker, class... Checkers>
-  void check_allocation([[maybe_unused]] test_logger<Mode>& logger, CheckFn check, const Checker& checker, [[maybe_unused]] const Checkers&... moreCheckers)
+  template<test_mode Mode, class CheckFn, class... Checkers>
+  void check_allocation([[maybe_unused]] test_logger<Mode>& logger, CheckFn check, const Checkers&... checkers)
   {
-    check(checker);
-
-    if constexpr (sizeof...(Checkers) > 0)
-    {
-      check_allocation(logger, check, moreCheckers...);
-    }
+    (check(checkers), ...);
   }
 
   //================================ checks using dual_allocation_checker ================================//
