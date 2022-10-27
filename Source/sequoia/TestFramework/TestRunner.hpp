@@ -65,10 +65,11 @@ namespace sequoia::testing
     test_runner& operator=(const test_runner&)     = delete;
     test_runner& operator=(test_runner&&) noexcept = default;
 
-    template<class Test, class... Tests>
-    void add_test_family(std::string_view name, Test test, Tests... tests)
+    template<concrete_test... Tests>
+      requires (sizeof...(Tests) > 0)
+    void add_test_family(std::string_view name, Tests... tests)
     {
-      m_Selector.add_test_family(name, m_RecoveryMode, std::move(test), std::move(tests)...);
+      m_Selector.add_test_family(name, m_RecoveryMode, std::move(tests)...);
     }
 
     void execute([[maybe_unused]] timer_resolution r={});

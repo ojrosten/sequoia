@@ -32,22 +32,23 @@ namespace sequoia::testing
 
     explicit family_selector(project_paths paths);
 
-    template<class Test, class... Tests>
-    void add_test_family(std::string_view name, recovery_mode recoveryMode, Test test, Tests... tests)
+    template<concrete_test... Tests>
+      requires (sizeof...(Tests) > 0)
+    void add_test_family(std::string_view name, recovery_mode recoveryMode, Tests... tests)
     {
       m_FamiliesPresented = true;
 
-      check_for_duplicates(name, test, tests...);
+      check_for_duplicates(name, tests...);
 
       const bool done{
-        [this, name, recoveryMode](Test& test, Tests&... tests) {
+        [this, name, recoveryMode](Tests&... tests) {
           if(!m_SelectedSources.empty())
           {
-            using family_t = test_family<std::remove_cvref_t<Test>, std::remove_cvref_t<Tests>...>;
+            using family_t = test_family<std::remove_cvref_t<Tests>...>;
             family_t f{std::string{name}, m_Paths, recoveryMode};
             std::vector<std::filesystem::path> materialsPath{};
 
-            add_tests(f, materialsPath, std::move(test), std::move(tests)...);
+            add_tests(f, materialsPath, std::move(tests)...);
             if(!f.empty())
             {
               m_Families.push_back(std::move(f));
@@ -57,14 +58,14 @@ namespace sequoia::testing
           }
 
           return false;
-        }(test, tests...)
+        }(tests...)
       };
 
       if(!done && (((pruned() == prune_mode::passive) && m_SelectedSources.empty()) || !m_SelectedFamilies.empty()))
       {
         if(mark_family(name))
         {
-          m_Families.push_back(test_family{std::string{name}, m_Paths, recoveryMode, std::move(test), std::move(tests)...});
+          m_Families.push_back(test_family{std::string{name}, m_Paths, recoveryMode, std::move(tests)...});
         }
       }
     }
@@ -195,44 +196,42 @@ namespace sequoia::testing
 
     using duplicate_set = std::set<std::pair<std::string_view, std::filesystem::path>>;
 
-    template<class Test, class... Tests>
-    static void check_for_duplicates(std::string_view name, const Test& test, const Tests&... tests)
+    template<concrete_test... Tests>
+      requires (sizeof...(Tests) > 0)
+    static void check_for_duplicates(std::string_view name, const Tests&... tests)
     {
        duplicate_set namesAndSources{};
-       check_for_duplicates(namesAndSources, name, test, tests...);
+
+       auto check{
+         [&,name](concrete_test auto const& test) {
+           if(!namesAndSources.emplace(test.name(), test.source_filename()).second)
+             throw std::runtime_error{duplication_message(name, test.name(), test.source_filename())};
+         }
+       };
+
+       (check(tests),...);
     }
 
-    template<class Test, class... Tests>
-    static void check_for_duplicates(duplicate_set& namesAndSources,
-                                     std::string_view name,
-                                     const Test& test,
-                                     const Tests&... tests)
-    {
-      if(!namesAndSources.emplace(test.name(), test.source_filename()).second)
-        throw std::runtime_error{duplication_message(name, test.name(), test.source_filename())};
-
-      if constexpr(sizeof...(Tests) > 0)
-      {
-        check_for_duplicates(namesAndSources, name,tests...);
-      }
-    }
-
-    template<concrete_test... AllTests, concrete_test Test, concrete_test... Tests>
+    template<concrete_test... AllTests, concrete_test... Tests>
+      requires (sizeof...(Tests) > 0)
     void add_tests(test_family<AllTests...>& f,
                    std::vector<std::filesystem::path>& materialsPath,
-                   Test&& test,
                    Tests&&... tests)
     {
-      const normal_path src{test.source_filename()};
-      auto i{find_filename(src)};
-      if(i != m_SelectedSources.end())
-      {
-        f.add_test(materialsPath, std::forward<Test>(test));
-        i->first = rebase_from(src, proj_paths().tests().repo());
-        i->second = true;
-      }
+      auto add{
+        [&]<concrete_test T>(T&& test) {
+          const normal_path src{test.source_filename()};
+          auto i{find_filename(src)};
+          if(i != m_SelectedSources.end())
+          {
+            f.add_test(materialsPath, std::forward<T>(test));
+            i->first = rebase_from(src, proj_paths().tests().repo());
+            i->second = true;
+          }
+        }
+      };
 
-      if constexpr(sizeof...(Tests) > 0) add_tests(f, materialsPath, std::forward<Tests>(tests)...);
+      (add(std::forward<Tests>(tests)), ...);
     }
 
     [[nodiscard]]
