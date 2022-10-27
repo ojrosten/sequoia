@@ -317,18 +317,11 @@ namespace sequoia::testing::impl
     return make_scoped_allocation_checkers<allocation_checker>(info, std::forward<Args>(args)...);
   }
 
-  //================================ Variadic Allocation Checking ================================//
-
-  template<test_mode Mode, class CheckFn, class... Checkers>
-  void check_allocation([[maybe_unused]] test_logger<Mode>& logger, CheckFn check, const Checkers&... checkers)
-  {
-    (check(checkers), ...);
-  }
-
   //================================ checks using dual_allocation_checker ================================//
 
-  template<auto AllocEvent, test_mode Mode, movable_comparable T, alloc_getter<T> Getter, alloc_getter<T>... Getters>
-  void check_no_allocation(std::string_view detail, test_logger<Mode>& logger, const T& x, const T& y, const dual_allocation_checker<T, Getter>& checker, const dual_allocation_checker<T, Getters>&... moreCheckers)
+  template<auto AllocEvent, test_mode Mode, movable_comparable T,  alloc_getter<T>... Getters>
+    requires (sizeof...(Getters) > 0)
+  void check_no_allocation(std::string_view detail, test_logger<Mode>& logger, const T& x, const T& y, const dual_allocation_checker<T, Getters>&... checkers)
   {
     auto checkFn{
         [detail, &logger, &x, &y](const auto& checker){
@@ -336,11 +329,12 @@ namespace sequoia::testing::impl
       }
     };
 
-    check_allocation(logger, checkFn, checker, moreCheckers...);
+    (checkFn(checkers), ...);
   }
 
-  template<test_mode Mode, movable_comparable T, alloc_getter<T> Getter, alloc_getter<T>... Getters>
-  void check_copy_assign_allocation(test_logger<Mode>& logger, const T& x, const T& y, const dual_allocation_checker<T, Getter>& checker, const dual_allocation_checker<T, Getters>&... moreCheckers)
+  template<test_mode Mode, movable_comparable T, alloc_getter<T>... Getters>
+    requires (sizeof...(Getters) > 0)
+  void check_copy_assign_allocation(test_logger<Mode>& logger, const T& x, const T& y, const dual_allocation_checker<T, Getters>&... checkers)
   {
     auto checkFn{
       [&logger, &x, &y](const auto& checker){
@@ -348,11 +342,12 @@ namespace sequoia::testing::impl
       }
     };
 
-    check_allocation(logger, checkFn, checker, moreCheckers...);
+    (checkFn(checkers), ...);
   }
 
-  template<test_mode Mode, movable_comparable T, alloc_getter<T> Getter, alloc_getter<T>... Getters>
-  void check_move_assign_allocation(test_logger<Mode>& logger, const T& x, const dual_allocation_checker<T, Getter>& checker, const dual_allocation_checker<T, Getters>&... moreCheckers)
+  template<test_mode Mode, movable_comparable T, alloc_getter<T>... Getters>
+    requires (sizeof...(Getters) > 0)
+  void check_move_assign_allocation(test_logger<Mode>& logger, const T& x, const dual_allocation_checker<T, Getters>&... checkers)
   {
     auto checkFn{
       [&logger, &x](const auto& checker){
@@ -360,11 +355,12 @@ namespace sequoia::testing::impl
       }
     };
 
-    check_allocation(logger, checkFn, checker, moreCheckers...);
+    (checkFn(checkers), ...);
   }
 
-  template<test_mode Mode, movable_comparable T, alloc_getter<T> Getter, alloc_getter<T>... Getters>
-  void check_mutation_after_swap(test_logger<Mode>& logger, const T& x, const T& y, const dual_allocation_checker<T, Getter>& checker, const dual_allocation_checker<T, Getters>&... moreCheckers)
+  template<test_mode Mode, movable_comparable T, alloc_getter<T>... Getters>
+    requires (sizeof...(Getters) > 0)
+  void check_mutation_after_swap(test_logger<Mode>& logger, const T& x, const T& y, const dual_allocation_checker<T, Getters>&... checkers)
   {
     auto checkFn{
       [&logger, &x, &y](const auto& checker){
@@ -372,10 +368,11 @@ namespace sequoia::testing::impl
       }
     };
 
-    check_allocation(logger, checkFn, checker, moreCheckers...);
+    (checkFn(checkers), ...);
   }
 
   template<test_mode Mode, movable_comparable T, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
+    requires (sizeof...(Getters) > 0)
   void check_mutation_after_swap(test_logger<Mode>& logger, T& lhs, const T& rhs, const T& y, Mutator yMutator, dual_allocation_checker<T, Getters>... checkers)
   {
     if(check("Mutation after swap pre-condition violated", logger, lhs == y))
@@ -389,8 +386,9 @@ namespace sequoia::testing::impl
 
   //================================ checks using allocation_checker ================================//
 
-  template<auto AllocEvent, test_mode Mode, movable_comparable T, alloc_getter<T> Getter, alloc_getter<T>... Getters>
-  void check_no_allocation(test_logger<Mode>& logger, const T& container, std::string_view tag, const allocation_checker<T, Getter>& checker, const allocation_checker<T, Getters>&... moreCheckers)
+  template<auto AllocEvent, test_mode Mode, movable_comparable T, alloc_getter<T>... Getters>
+    requires (sizeof...(Getters) > 0)
+  void check_no_allocation(test_logger<Mode>& logger, const T& container, std::string_view tag, const allocation_checker<T, Getters>&... checkers)
   {
     auto checkFn{
         [tag, &logger, &container](const auto& checker){
@@ -399,11 +397,12 @@ namespace sequoia::testing::impl
       }
     };
 
-    check_allocation(logger, checkFn, checker, moreCheckers...);
+    (checkFn(checkers), ...);
   }
 
-  template<test_mode Mode, movable_comparable T, alloc_getter<T> Getter, alloc_getter<T>... Getters>
-  void check_copy_x_allocation(test_logger<Mode>& logger, const T& container, const allocation_checker<T, Getter>& checker, const allocation_checker<T, Getters>&... moreCheckers)
+  template<test_mode Mode, movable_comparable T, alloc_getter<T>... Getters>
+    requires (sizeof...(Getters) > 0)
+  void check_copy_x_allocation(test_logger<Mode>& logger, const T& container, const allocation_checker<T, Getters>&... checkers)
   {
     auto checkFn{
       [&logger, &container](const auto& checker){
@@ -412,11 +411,12 @@ namespace sequoia::testing::impl
       }
     };
 
-    check_allocation(logger, checkFn, checker, moreCheckers...);
+    (checkFn(checkers), ...);
   }
 
-  template<test_mode Mode, movable_comparable T, alloc_getter<T> Getter, alloc_getter<T>... Getters>
-  void check_copy_y_allocation(test_logger<Mode>& logger, const T& container, const allocation_checker<T, Getter>& checker, const allocation_checker<T, Getters>&... moreCheckers)
+  template<test_mode Mode, movable_comparable T, alloc_getter<T>... Getters>
+    requires (sizeof...(Getters) > 0)
+  void check_copy_y_allocation(test_logger<Mode>& logger, const T& container, const allocation_checker<T, Getters>&... checkers)
   {
     auto checkFn{
       [&logger, &container](const auto& checker){
@@ -425,11 +425,12 @@ namespace sequoia::testing::impl
       }
     };
 
-    check_allocation(logger, checkFn, checker, moreCheckers...);
+    (checkFn(checkers), ...);
   }
 
-  template<test_mode Mode, movable_comparable T, alloc_getter<T> Getter, alloc_getter<T>... Getters>
-  void check_move_y_allocation(test_logger<Mode>& logger, const T& container, const allocation_checker<T, Getter>& checker, const allocation_checker<T, Getters>&... moreCheckers)
+  template<test_mode Mode, movable_comparable T, alloc_getter<T>... Getters>
+    requires (sizeof...(Getters) > 0)
+  void check_move_y_allocation(test_logger<Mode>& logger, const T& container, const allocation_checker<T, Getters>&... checkers)
   {
     auto checkFn{
       [&logger, &container](const auto& checker){
@@ -438,11 +439,12 @@ namespace sequoia::testing::impl
       }
     };
 
-    check_allocation(logger, checkFn, checker, moreCheckers...);
+    (checkFn(checkers), ...);
   }
 
-  template<test_mode Mode, movable_comparable T, alloc_getter<T> Getter, alloc_getter<T>... Getters>
-  void check_mutation_allocation(std::string_view priorOp, test_logger<Mode>& logger, const T& y, const allocation_checker<T, Getter>& checker, const allocation_checker<T, Getters>&... moreCheckers)
+  template<test_mode Mode, movable_comparable T, alloc_getter<T>... Getters>
+    requires (sizeof...(Getters) > 0)
+  void check_mutation_allocation(std::string_view priorOp, test_logger<Mode>& logger, const T& y, const allocation_checker<T, Getters>&... checkers)
   {
     auto checkFn{
       [priorOp, &logger, &y](const auto& checker){
@@ -455,11 +457,12 @@ namespace sequoia::testing::impl
       }
     };
 
-    check_allocation(logger, checkFn, checker, moreCheckers...);
+    (checkFn(checkers), ...);
   }
 
-  template<test_mode Mode, movable_comparable T, alloc_getter<T> Getter, alloc_getter<T>... Getters>
-  void check_para_copy_y_allocation(test_logger<Mode>& logger, const T& container, const allocation_checker<T, Getter>& checker, const allocation_checker<T, Getters>&... moreCheckers)
+  template<test_mode Mode, movable_comparable T, alloc_getter<T>... Getters>
+    requires (sizeof...(Getters) > 0)
+  void check_para_copy_y_allocation(test_logger<Mode>& logger, const T& container, const allocation_checker<T, Getters>&... checkers)
   {
     auto checkFn{
       [&logger, &container](const auto& checker){
@@ -468,10 +471,11 @@ namespace sequoia::testing::impl
       }
     };
 
-    check_allocation(logger, checkFn, checker, moreCheckers...);
+    (checkFn(checkers), ...);
   }
 
   template<test_mode Mode, movable_comparable T, alloc_getter<T>... Getters>
+    requires (sizeof...(Getters) > 0)
   void check_para_copy_y_allocation(test_logger<Mode>& logger, const T& container, std::tuple<allocation_checker<T, Getters>...> checkers)
   {
     auto fn{[&logger,&container](auto&&... checkers){
@@ -482,12 +486,12 @@ namespace sequoia::testing::impl
     std::apply(fn, checkers);
   }
 
-  template<test_mode Mode, container_tag tag, movable_comparable T, alloc_getter<T> Getter, alloc_getter<T>... Getters>
+  template<test_mode Mode, container_tag tag, movable_comparable T, alloc_getter<T>... Getters>
+    requires (sizeof...(Getters) > 0)
   void check_para_move_allocation(test_logger<Mode>& logger,
                                   container_tag_constant<tag>,
                                   const T& container,
-                                  const allocation_checker<T, Getter>& checker,
-                                  const allocation_checker<T, Getters>&... moreCheckers)
+                                  const allocation_checker<T, Getters>&... checkers)
   {
     auto checkFn{
       [&logger, &container](const auto& checker){
@@ -508,7 +512,7 @@ namespace sequoia::testing::impl
       }
     };
 
-    check_allocation(logger, checkFn, checker, moreCheckers...);
+    (checkFn(checkers), ...);
   }
 
   template<test_mode Mode, container_tag tag, movable_comparable T, alloc_getter<T>... Getters>
@@ -528,13 +532,15 @@ namespace sequoia::testing::impl
   }
 
   template<test_mode Mode, movable_comparable T, alloc_getter<T>... Getters>
+    requires (sizeof...(Getters) > 0)
   void check_initialization_allocations(test_logger<Mode>& logger, const T& x, const T& y, const allocation_info<T, Getters>&... info)
   {
     check_init_allocations(logger, x, y, std::tuple_cat(make_allocation_checkers(info, 0)...));
   }
 
-  template<test_mode Mode, movable_comparable T, alloc_getter<T> Getter, alloc_getter<T>... Getters>
-  void check_init_allocations(test_logger<Mode>& logger, const T& x, const T& y, const allocation_checker<T, Getter>& checker, const allocation_checker<T, Getters>&... moreCheckers)
+  template<test_mode Mode, movable_comparable T, alloc_getter<T>... Getters>
+    requires (sizeof...(Getters) > 0)
+  void check_init_allocations(test_logger<Mode>& logger, const T& x, const T& y, const allocation_checker<T, Getters>&... checkers)
   {
     auto checkFn{
       [&logger, &x, &y](const auto& checker){
@@ -562,7 +568,7 @@ namespace sequoia::testing::impl
       }
     };
 
-    check_allocation(logger, checkFn, checker, moreCheckers...);
+    (checkFn(checkers), ...);
   }
 
   template<test_mode Mode, movable_comparable T, alloc_getter<T>... Getters>
@@ -577,8 +583,9 @@ namespace sequoia::testing::impl
     std::apply(fn, checkers);
   }
 
-  template<test_mode Mode, movable_comparable T, alloc_getter<T> Getter, alloc_getter<T>... Getters>
-  void check_serialization_allocation(test_logger<Mode>& logger, const T& container, const allocation_checker<T, Getter>& checker, const allocation_checker<T, Getters>&... moreCheckers)
+  template<test_mode Mode, movable_comparable T, alloc_getter<T>... Getters>
+    requires (sizeof...(Getters) > 0)
+  void check_serialization_allocation(test_logger<Mode>& logger, const T& container, const allocation_checker<T, Getters>&... checkers)
   {
     auto checkFn{
       [&logger, &container](const auto& checker){
@@ -587,7 +594,7 @@ namespace sequoia::testing::impl
       }
     };
 
-    check_allocation(logger, checkFn, checker, moreCheckers...);
+    (checkFn(checkers), ...);
   }
 
 
