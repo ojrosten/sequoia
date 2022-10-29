@@ -182,13 +182,13 @@ namespace sequoia::maths::graph_impl
     }
 
     [[nodiscard]]
-    static auto begin(const G& graph, const std::size_t nodeIndex)
+    constexpr static auto begin(const G& graph, const std::size_t nodeIndex)
     {
       return iterator_getter<F>::begin(graph, nodeIndex);
     }
 
     [[nodiscard]]
-    static auto end(const G& graph, const std::size_t nodeIndex)
+    constexpr static auto end(const G& graph, const std::size_t nodeIndex)
     {
       return iterator_getter<F>::end(graph, nodeIndex);
     }

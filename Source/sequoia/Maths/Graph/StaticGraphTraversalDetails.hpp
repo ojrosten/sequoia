@@ -36,7 +36,7 @@ namespace sequoia::maths::graph_impl
     using queue_type = data_structures::static_queue<typename G::edge_index_type, G::order()>;
 
     [[nodiscard]]
-    static auto get_container_element(const queue_type& q) { return q.front(); }
+    constexpr static auto get_container_element(const queue_type& q) { return q.front(); }
   };
 
   template<static_network G>
@@ -45,7 +45,7 @@ namespace sequoia::maths::graph_impl
     using queue_type = data_structures::static_stack<typename G::edge_index_type, G::order()>;
 
     [[nodiscard]]
-    static auto get_container_element(const queue_type& s) { return s.top(); }
+    constexpr static auto get_container_element(const queue_type& s) { return s.top(); }
   };
 
   template<static_network G, class Compare>
@@ -54,6 +54,6 @@ namespace sequoia::maths::graph_impl
     using queue_type = data_structures::static_priority_queue<typename G::edge_index_type, G::order(), Compare>;
 
     [[nodiscard]]
-    static auto get_container_element(const queue_type& q) { return q.top(); }
+    constexpr static auto get_container_element(const queue_type& q) { return q.top(); }
   };
 }
