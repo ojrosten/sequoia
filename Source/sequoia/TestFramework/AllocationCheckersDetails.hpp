@@ -319,7 +319,7 @@ namespace sequoia::testing::impl
 
   //================================ checks using dual_allocation_checker ================================//
 
-  template<auto AllocEvent, test_mode Mode, movable_comparable T,  alloc_getter<T>... Getters>
+  template<auto AllocEvent, test_mode Mode, movable_comparable T, alloc_getter<T>... Getters>
     requires (sizeof...(Getters) > 0)
   void check_no_allocation(std::string_view detail, test_logger<Mode>& logger, const T& x, const T& y, const dual_allocation_checker<T, Getters>&... checkers)
   {
