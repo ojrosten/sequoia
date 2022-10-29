@@ -173,7 +173,7 @@ namespace sequoia::maths::graph_impl
   template<network G, traversal_flavour F, class... QArgs>
   struct traversal_traits : traversal_traits_base<G, F, QArgs...>
   {
-    using queue_type = traversal_traits_base<G, F, QArgs...>::queue_type;
+    using queue_type = typename traversal_traits_base<G, F, QArgs...>::queue_type;
 
     [[nodiscard]]
     constexpr static queue_type make(QArgs... args)
