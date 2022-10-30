@@ -435,12 +435,14 @@ namespace sequoia
         m_Edges.add_slot();
       }
 
-      void insert_node(const size_type node)
+      size_type insert_node(const size_type node)
       {
         m_Edges.insert_slot(node);
         fix_edge_data(node,
                       [](const auto targetNode, const auto node) { return targetNode >= node; },
                       [](const auto index) { return index + 1; });
+
+        return node;
       }
 
       void erase_node(const size_type node)

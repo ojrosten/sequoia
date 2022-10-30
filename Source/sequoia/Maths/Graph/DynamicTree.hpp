@@ -80,14 +80,17 @@ namespace sequoia::maths
       lhs.swap(rhs);
     }
 
-    // TO DO: think about whether this should/should not preserve initialization structure
     template<class... Args>
-    size_type add_node(size_type parent, Args&&... args)
+    size_type add_node(const size_type parent, Args&&... args)
     {
-      return base_type::tree_join(tree_link_direction_constant<TreeLinkDir>{}, parent, std::forward<Args>(args)...);
+      return base_type::add_node_to_tree(tree_link_direction_constant<TreeLinkDir>{}, parent, std::forward<Args>(args)...);
     }
 
-    // insert_node
+    template<class... Args>
+    size_type insert_node(const size_type pos, const size_type parent, Args&&... args)
+    {
+      return base_type::insert_node_to_tree(tree_link_direction_constant<TreeLinkDir>{}, pos, parent, std::forward<Args>(args)...);
+    }
 
     // prune (subtle for backward edges)
   };

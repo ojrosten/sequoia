@@ -173,7 +173,8 @@ namespace sequoia::maths::graph_impl
   template<network G, traversal_flavour F, class... QArgs>
   struct traversal_traits : traversal_traits_base<G, F, QArgs...>
   {
-    using queue_type = typename traversal_traits_base<G, F, QArgs...>::queue_type;
+    using queue_type      = typename traversal_traits_base<G, F, QArgs...>::queue_type;
+    using edge_index_type = typename G::edge_index_type;
 
     [[nodiscard]]
     constexpr static queue_type make(QArgs... args)
@@ -182,13 +183,13 @@ namespace sequoia::maths::graph_impl
     }
 
     [[nodiscard]]
-    constexpr static auto begin(const G& graph, const std::size_t nodeIndex)
+    constexpr static auto begin(const G& graph, const edge_index_type nodeIndex)
     {
       return iterator_getter<F>::begin(graph, nodeIndex);
     }
 
     [[nodiscard]]
-    constexpr static auto end(const G& graph, const std::size_t nodeIndex)
+    constexpr static auto end(const G& graph, const edge_index_type nodeIndex)
     {
       return iterator_getter<F>::end(graph, nodeIndex);
     }

@@ -141,6 +141,13 @@ namespace sequoia
       std::initializer_list<tree_initializer> children{};
     };
 
+    template<class NodeWeight>
+      requires std::is_empty_v<NodeWeight>
+    struct tree_initializer<NodeWeight>
+    {
+      std::initializer_list<tree_initializer> children{};
+    };
+
     enum class tree_link_direction {symmetric, forward, backward};
 
     template<tree_link_direction d>
@@ -508,18 +515,15 @@ namespace sequoia
       template<class... Args>
       size_type add_node(Args&&... args)
       {
-        Connectivity::add_node();
-        if constexpr (!emptyNodes) Nodes::add_node(std::forward<Args>(args)...);
-        return (this->order()-1);
+        return insert_node(this->order(), std::forward<Args>(args)...);
       }
 
       template<class... Args>
       size_type insert_node(const size_type pos, Args&&... args)
       {
-        const auto node{insert_node_impl(pos, std::forward<Args>(args)...)};
-        Connectivity::insert_node(node);
+        insertion_sentinel sentinel{*this, pos};
 
-        return node;
+        return Connectivity::insert_node(insert_node_impl(pos, std::forward<Args>(args)...));
       }
 
       void erase_node(const size_type node)
@@ -541,11 +545,11 @@ namespace sequoia
       }
 
       template<tree_link_direction dir, class... Args>
-      size_type tree_join(tree_link_direction_constant<dir>, size_type parent, Args&&... args)
+      size_type insert_node_to_tree(tree_link_direction_constant<dir>, size_type pos, size_type parent, Args&&... args)
       {
-        const auto n{add_node(std::forward<Args>(args)...)};
+        const auto n{insert_node(pos, std::forward<Args>(args)...)};
 
-        if(n)
+        if(this->order() > 1)
         {
           if constexpr((dir != tree_link_direction::forward) && (Connectivity::directedness == directed_flavour::directed))
           {
@@ -560,7 +564,36 @@ namespace sequoia
 
         return n;
       }
+
+      template<tree_link_direction dir, class... Args>
+      size_type add_node_to_tree(tree_link_direction_constant<dir> tldc, size_type parent, Args&&... args)
+      {
+        return insert_node_to_tree(tldc, Nodes::size(), parent, std::forward<Args>(args)...);
+      }
     private:
+      class [[nodiscard]] insertion_sentinel
+      {
+      public:
+        insertion_sentinel(graph_primitive& g, size_type index)
+          : m_Graph{g}
+          , m_NodeIndex{index}
+        {}
+
+        ~insertion_sentinel()
+        {
+          if constexpr(!emptyNodes)
+          {
+            if(static_cast<Nodes&>(m_Graph).size() > static_cast<Connectivity&>(m_Graph).order())
+              m_Graph.remove_excess_node(m_NodeIndex);
+          }
+        }
+      private:
+        graph_primitive& m_Graph{};
+        size_type m_NodeIndex{};
+      };
+
+      friend insertion_sentinel;
+
       constexpr static bool emptyNodes{std::is_empty_v<typename Nodes::weight_type>};
 
       constexpr graph_primitive(homo_init_type, edges_initializer edges, std::initializer_list<node_weight_type> nodeWeights)
@@ -602,7 +635,7 @@ namespace sequoia
 
         for(const auto& child : tree.children)
         {
-          const auto n{tree_join(tdc, root, child.node)};
+          const auto n{add_node_to_tree(tdc, root, child.node)};
           build_tree(n, child, tdc);
         }
       }
@@ -622,13 +655,21 @@ namespace sequoia
       template<class... Args>
       size_type insert_node_impl(const size_type pos, Args&&... args)
       {
-        const auto node{(pos < this->order()) ? pos : (this->order() - 1)};
+        const auto node{std::min(pos, this->order())};
         if constexpr (!emptyNodes)
         {
-          Nodes::insert_node(this->cbegin_node_weights() + pos, std::forward<Args>(args)...);
+          Nodes::insert_node(this->cbegin_node_weights() + node, std::forward<Args>(args)...);
         }
 
         return node;
+      }
+
+      void remove_excess_node(size_type index)
+      {
+        if(!emptyNodes)
+        {
+          Nodes::erase_node(this->cbegin_node_weights() + index);
+        }
       }
     };
   }
