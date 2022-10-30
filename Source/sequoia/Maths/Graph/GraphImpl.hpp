@@ -154,8 +154,8 @@ namespace sequoia
     struct tree_link_direction_constant : std::integral_constant<tree_link_direction, d> {};
 
     using symmetric_tree_type = tree_link_direction_constant<tree_link_direction::symmetric>;
-    using forward_tree_type  = tree_link_direction_constant<tree_link_direction::forward>;
-    using backward_tree_type = tree_link_direction_constant<tree_link_direction::backward>;
+    using forward_tree_type   = tree_link_direction_constant<tree_link_direction::forward>;
+    using backward_tree_type  = tree_link_direction_constant<tree_link_direction::backward>;
 
     template<network Connectivity, class Nodes>
     class MSVC_EMPTY_BASE_HACK graph_primitive : public Connectivity, public Nodes

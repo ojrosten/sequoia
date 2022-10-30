@@ -92,7 +92,70 @@ namespace sequoia::maths
       return base_type::insert_node_to_tree(tree_link_direction_constant<TreeLinkDir>{}, pos, parent, std::forward<Args>(args)...);
     }
 
-    // prune (subtle for backward edges)
+    void prune(const size_type node)
+    {
+      prune(node, tree_link_direction_constant<link_dir>{});
+    }
+  private:
+    void prune(const size_type node, forward_tree_type ftt)
+    {
+      for(auto i{this->cbegin_edges(node)}; i != this->cend_edges(node); ++i)
+      {
+        const auto target{i->target_node()};
+        prune(target, ftt);
+        this->erase_node(target);
+      }
+    }
+
+    void prune(const size_type node, symmetric_tree_type stt)
+    {
+      if(this->cbegin_edges(node) != this->cend_edges(node))
+      {
+        for(auto i{std::next(this->cbegin_edges(node))}; i != this->cend_edges(node); ++i)
+        {
+          const auto target{i->target_node()};
+          prune(target, stt);
+          this->erase_node(target);
+        }
+      }
+    }
+
+    void prune(const size_type node, backward_tree_type btt)
+    {
+      if(node >= this->order()) return;
+
+      std::vector<bool> toDelete(this->order(), false);
+      toDelete[node] = true;
+
+      for(size_type i{}; i < this->order(); ++i)
+      {
+        if(!toDelete[i]) prune(i, toDelete, btt);
+      }
+
+      for(size_type i{}; i < this->order(); ++i)
+      {
+        // Erase nodes with the highest indicies first
+        const auto j{this->order() - 1 - i};
+        if(toDelete[j]) this->erase_node(j);
+      }
+    }
+
+    void prune(const size_type node, std::vector<bool>& toDelete, backward_tree_type btt)
+    {
+      if(auto begin{this->cbegin_edges(node)};  begin != this->cend_edges(node))
+      {
+        const auto target{begin->target_node()};
+        if(toDelete[target])
+        {
+          toDelete[node] = true;
+        }
+        else
+        {
+          prune(target, toDelete, btt);
+          if(toDelete[target]) toDelete[node] = true;
+        }
+      }
+    }
   };
 
   template<class Tree>
