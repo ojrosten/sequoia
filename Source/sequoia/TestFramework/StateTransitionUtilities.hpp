@@ -75,6 +75,25 @@ namespace sequoia::testing
       check(g, edgeFn);
     }
 
+    template<std::invocable<std::string, T, T, T> CheckFn>
+    static void check(std::string_view description, const transition_graph& g, CheckFn checkFn)
+    {
+      auto edgeFn{
+        [description,&g,checkFn](auto i) {
+          const auto [parent,target,message] {make(description, i)};
+
+          const auto& parentObject{(g.cbegin_node_weights() + parent)->fn()};
+          const auto& w{i->weight()};
+          checkFn(message,
+                  w.fn(parentObject),
+                  (g.cbegin_node_weights() + target)->fn(),
+                  parentObject);
+        }
+      };
+
+      check(g, edgeFn);
+    }
+
     template<std::invocable<std::string, std::function<T()>, std::function<T()>, std::function<T()>, std::weak_ordering> CheckFn>
       requires std::totally_ordered<T>
     static void check(std::string_view description, const transition_graph& g, CheckFn checkFn)

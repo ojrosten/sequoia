@@ -10,6 +10,7 @@
 #include "TreeTest.hpp"
 
 #include "sequoia/Maths/Graph/DynamicTree.hpp"
+#include "sequoia/TestFramework/StateTransitionUtilities.hpp"
 
 namespace sequoia::testing
 {
@@ -34,13 +35,39 @@ namespace sequoia::testing
   {
     using tree_type = tree<Directedness, TreeLinkDir, null_weight, int>;
     using initializer = tree_initializer<int>;
-    
+
     tree_type x{}, y{{1}}, z{{1, {{2}}}};
 
     check(equivalence, LINE(""), y, initializer{1});
     check(equivalence, LINE(""), z, initializer{1, {{2}}});
 
-    check_semantics(LINE(""), x, y);
-    check_semantics(LINE(""), z, y);
+    using tree_state_graph = transition_checker<tree_type>::transition_graph;
+    using edge_t = transition_checker<tree_type>::edge;
+
+    tree_state_graph g{
+      {
+        {
+          edge_t{1, "Add node to empty tree", [](tree_type t) { t.add_node(tree_type::npos, 42); return t; }}
+        }, // end node 0 edges
+        {
+          edge_t{2, "Add second node", [](tree_type t) { t.add_node(0, -7); return t; }}
+        }, // end node 1 edges
+        {} // end node 2 edges
+      }, // end edges
+      {
+        tree_type{},
+        tree_type{{42}},
+        tree_type{{42, {{-7}}}}
+      } // end nodes
+    };
+
+    auto checker{
+        [this](std::string_view description, const tree_type& obtained, const tree_type& prediction, const tree_type& parent) {
+          check(equality, description, obtained, prediction);
+          check_semantics(description, prediction, parent);
+        }
+    };
+
+    transition_checker<tree_type>::check(LINE(""), g, checker);
   }
 }
