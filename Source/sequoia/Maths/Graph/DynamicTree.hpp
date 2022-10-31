@@ -99,25 +99,26 @@ namespace sequoia::maths
   private:
     void prune(const size_type node, forward_tree_type ftt)
     {
-      for(auto i{this->cbegin_edges(node)}; i != this->cend_edges(node); ++i)
+      while(std::distance(this->crbegin_edges(node), this->crend_edges(node)))
       {
-        const auto target{i->target_node()};
+        const auto target{this->crbegin_edges(node)->target_node()};
         prune(target, ftt);
-        this->erase_node(target);
       }
+
+      this->erase_node(node);
     }
 
     void prune(const size_type node, symmetric_tree_type stt)
     {
-      if(this->cbegin_edges(node) != this->cend_edges(node))
+      const std::ptrdiff_t offset{node == 0 ? 0 : 1};
+
+      while(std::distance(this->crbegin_edges(node), this->crend_edges(node)) > offset)
       {
-        for(auto i{std::next(this->cbegin_edges(node))}; i != this->cend_edges(node); ++i)
-        {
-          const auto target{i->target_node()};
-          prune(target, stt);
-          this->erase_node(target);
-        }
+        const auto target{this->crbegin_edges(node)->target_node()};
+        prune(target, stt);
       }
+
+      this->erase_node(node);
     }
 
     void prune(const size_type node, backward_tree_type btt)
@@ -132,10 +133,10 @@ namespace sequoia::maths
         if(!toDelete[i]) prune(i, toDelete, btt);
       }
 
-      for(size_type i{}; i < this->order(); ++i)
+      for(size_type i{}; i < toDelete.size(); ++i)
       {
         // Erase nodes with the highest indicies first
-        const auto j{this->order() - 1 - i};
+        const auto j{toDelete.size() - 1 - i};
         if(toDelete[j]) this->erase_node(j);
       }
     }

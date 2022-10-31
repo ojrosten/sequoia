@@ -52,7 +52,10 @@ namespace sequoia::testing
         {
           edge_t{2, "Add second node", [](tree_type t) { t.add_node(0, -7); return t; }}
         }, // end node 1 edges
-        {} // end node 2 edges
+        {
+          edge_t{1, "Prune single node", [](tree_type t) { t.prune(1); return t; } },
+          edge_t{0, "Prune both nodes", [](tree_type t) { t.prune(0); return t; }}
+        } // end node 2 edges
       }, // end edges
       {
         tree_type{},
