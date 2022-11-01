@@ -96,6 +96,8 @@ namespace sequoia::maths
     {
       prune(node, tree_link_direction_constant<link_dir>{});
     }
+
+    using base_type::sort_edges;
   private:
     void prune(const size_type node, forward_tree_type ftt)
     {

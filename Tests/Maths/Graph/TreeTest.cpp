@@ -47,20 +47,48 @@ namespace sequoia::testing
     tree_state_graph g{
       {
         {
-          edge_t{1, "Add node to empty tree", [](tree_type t) { t.add_node(tree_type::npos, 42); return t; }}
+          edge_t{1, LINE("Add node to empty tree"), [](tree_type t) { t.add_node(tree_type::npos, 42); return t; }}
         }, // end node 0 edges
         {
-          edge_t{2, "Add second node", [](tree_type t) { t.add_node(0, -7); return t; }}
+          edge_t{2, LINE("Add second node"), [](tree_type t) { t.add_node(0, -7); return t; }},
+          edge_t{3, LINE("Add second node"), [](tree_type t) { t.add_node(0, 6); return t; }}
         }, // end node 1 edges
         {
-          edge_t{1, "Prune single node", [](tree_type t) { t.prune(1); return t; } },
-          edge_t{0, "Prune both nodes", [](tree_type t) { t.prune(0); return t; }}
-        } // end node 2 edges
+          edge_t{4, LINE("Add third node"),    [](tree_type t) { t.add_node(0, 6); return t; }},
+          edge_t{1, LINE("Prune single node"), [](tree_type t) { t.prune(1); return t; }},
+          edge_t{0, LINE("Prune both nodes"),  [](tree_type t) { t.prune(0); return t; }}
+        }, // end node 2 edges
+        {
+          edge_t{4, LINE("Insert node"), [](tree_type t) {
+              t.insert_node(1, 0, -7);
+              t.sort_edges(t.cbegin_edges(0), t.cend_edges(0), [](const auto& l, const auto& r) { return l.target_node() < r.target_node(); });
+              return t;
+            }
+          }
+        }, // end node 3 edges
+        {
+          edge_t{0, LINE("Prune three nodes"), [](tree_type t) { t.prune(0); return t; }},
+          edge_t{2, LINE("Prune right node"),  [](tree_type t) { t.prune(2); return t; }},
+          edge_t{3, LINE("Prune left node"),   [](tree_type t) { t.prune(1); return t; }}
+        } // end node 4 edges
       }, // end edges
       {
         tree_type{},
+        // empty
         tree_type{{42}},
-        tree_type{{42, {{-7}}}}
+        // 42
+        tree_type{{42, {{-7}}}},
+        // -7
+        //  \
+        //   42
+        tree_type{{42, {{6}}}},
+        //  6
+        //  \
+        //   42
+        tree_type{{42, {{-7}, {6}}}}
+        // -7  6
+        //  \ /
+        //   42
       } // end nodes
     };
 
