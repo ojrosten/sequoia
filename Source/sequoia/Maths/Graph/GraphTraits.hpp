@@ -31,11 +31,13 @@ namespace sequoia::maths
   };
 
   template<class G>
-  inline constexpr bool dynamic_nodes = requires(std::remove_const_t<G>& g) { g.add_node(); } 
-                          || requires(std::remove_const_t<G> & g) { g.add_node(0); };
+  inline constexpr bool dynamic_nodes{
+       requires(std::remove_const_t<G>& g) { g.erase_node(0); }
+    || requires(std::remove_const_t<G>& g) { g.prune(0); }
+  };
 
   template<class G>
-  inline constexpr bool static_nodes = (!dynamic_nodes<G>);
+  inline constexpr bool static_nodes{!dynamic_nodes<G>};
 
   template<class G>
   concept dynamic_network = network<G> && dynamic_nodes<G>;

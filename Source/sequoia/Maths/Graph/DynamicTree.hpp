@@ -81,12 +81,14 @@ namespace sequoia::maths
     }
 
     template<class... Args>
+      requires std::is_constructible_v<NodeWeight, Args...>
     size_type add_node(const size_type parent, Args&&... args)
     {
       return base_type::add_node_to_tree(tree_link_direction_constant<TreeLinkDir>{}, parent, std::forward<Args>(args)...);
     }
 
     template<class... Args>
+      requires std::is_constructible_v<NodeWeight, Args...>
     size_type insert_node(const size_type pos, const size_type parent, Args&&... args)
     {
       return base_type::insert_node_to_tree(tree_link_direction_constant<TreeLinkDir>{}, pos, parent, std::forward<Args>(args)...);
@@ -98,6 +100,8 @@ namespace sequoia::maths
     }
 
     using base_type::sort_edges;
+    using base_type::swap_edges;
+    using base_type::swap_nodes;
   private:
     void prune(const size_type node, forward_tree_type ftt)
     {
