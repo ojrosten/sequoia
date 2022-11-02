@@ -67,10 +67,15 @@ namespace sequoia::testing
           }
         }, // end node 3 edges
         {
-          edge_t{0, LINE("Prune three nodes"), [](tree_type t) { t.prune(0); return t; }},
-          edge_t{2, LINE("Prune right node"),  [](tree_type t) { t.prune(2); return t; }},
-          edge_t{3, LINE("Prune left node"),   [](tree_type t) { t.prune(1); return t; }}
-        } // end node 4 edges
+          edge_t{0, LINE("Prune three nodes"),   [](tree_type t) { t.prune(0); return t; }},
+          edge_t{2, LINE("Prune right node"),    [](tree_type t) { t.prune(2); return t; }},
+          edge_t{3, LINE("Prune left node"),     [](tree_type t) { t.prune(1); return t; }},
+          edge_t{5, LINE("Add to right branch"), [](tree_type t) { t.add_node(2, 3); return t; }}
+        }, // end node 4 edges
+        {
+          edge_t{0, LINE("Prune four nodes"),   [](tree_type t) { t.prune(0); return t; }},
+          edge_t{2, LINE("Prune right branch"), [](tree_type t) { t.prune(2); return t; }}
+        } // end node 5 edges
       }, // end edges
       {
         tree_type{},
@@ -85,7 +90,13 @@ namespace sequoia::testing
         //  6
         //  \
         //   42
-        tree_type{{42, {{-7}, {6}}}}
+        tree_type{{42, {{-7}, {6}}}},
+        // -7  6
+        //  \ /
+        //   42
+        tree_type{{42, {{-7}, {6, {{3}}}}}}
+        //       3
+        //      /
         // -7  6
         //  \ /
         //   42
