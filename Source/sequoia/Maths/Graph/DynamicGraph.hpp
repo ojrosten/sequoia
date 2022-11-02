@@ -131,13 +131,14 @@ namespace sequoia::maths
     {}
 
     template<tree_link_direction dir>
-      requires ((dir == tree_link_direction::symmetric) || (primitive_type::connectivity::directedness == directed_flavour::directed))
+      requires (    !std::same_as<node_weight_type, graph_impl::heterogeneous_tag>
+                 && (dir == tree_link_direction::symmetric) || (primitive_type::connectivity::directedness == directed_flavour::directed))
     graph_base(std::initializer_list<tree_initializer<node_weight_type>> forest, tree_link_direction_constant<dir> tdc)
       : primitive_type{forest, tdc}
     {}
 
     template<tree_link_direction dir>
-      requires (    !std::is_empty_v<node_weight_type> && !std::same_as<node_weight_type, graph_impl::heterogeneous_tag>
+      requires (    !std::same_as<node_weight_type, graph_impl::heterogeneous_tag>
                  && ((dir == tree_link_direction::symmetric) || (primitive_type::connectivity::directedness == directed_flavour::directed)))
     graph_base(tree_initializer<node_weight_type> tree, tree_link_direction_constant<dir> tdc)
       : primitive_type{tree, tdc}

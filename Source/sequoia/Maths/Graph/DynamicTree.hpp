@@ -21,9 +21,9 @@ namespace sequoia::maths
     tree_link_direction TreeLinkDir,
     class EdgeWeight,
     class NodeWeight,
-    class EdgeWeightCreator = object::faithful_producer<EdgeWeight>,
-    class NodeWeightCreator = object::faithful_producer<NodeWeight>,
-    class EdgeStorageTraits = bucketed_edge_storage_traits,
+    class EdgeWeightCreator       = object::faithful_producer<EdgeWeight>,
+    class NodeWeightCreator       = object::faithful_producer<NodeWeight>,
+    class EdgeStorageTraits       = bucketed_edge_storage_traits,
     class NodeWeightStorageTraits = node_weight_storage_traits<NodeWeight>
   >
     requires (      object::creator<EdgeWeightCreator> && object::creator<NodeWeightCreator>
@@ -99,9 +99,10 @@ namespace sequoia::maths
       prune(node, tree_link_direction_constant<link_dir>{});
     }
 
-    using base_type::sort_edges;
     using base_type::swap_edges;
+    using base_type::sort_edges;
     using base_type::swap_nodes;
+    using base_type::sort_nodes;
   private:
     void prune(const size_type node, forward_tree_type ftt)
     {

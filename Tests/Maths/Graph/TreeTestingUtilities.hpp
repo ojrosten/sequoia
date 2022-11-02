@@ -42,7 +42,8 @@ namespace sequoia::testing
       check_node(flavour, logger, 0, tree_type::npos, actual, prediction);
     }
   private:
-    using edge_iterator = typename tree_type::const_edge_iterator;
+    using edge_iterator    = typename tree_type::const_edge_iterator;
+    using node_weight_type = typename tree_type::node_weight_type;
 
     template<class CheckType, test_mode Mode>
     static size_type check_node(CheckType flavour, test_logger<Mode>& logger, size_type node, size_type parent, const tree_type& actual, const maths::tree_initializer<NodeWeight>& prediction)
@@ -53,7 +54,8 @@ namespace sequoia::testing
       {
         if constexpr (TreeLinkDir != maths::tree_link_direction::backward)
         {
-          check(flavour, "Node weight for node " + std::to_string(node), logger, actual.cbegin_node_weights()[node], prediction.node);
+          if constexpr(!std::is_empty_v<node_weight_type>)
+            check(flavour, "Node weight for node " + std::to_string(node), logger, actual.cbegin_node_weights()[node], prediction.node);
 
           if (auto optIter{ check_num_edges(logger, node, parent, actual, prediction) })
           {
@@ -74,7 +76,8 @@ namespace sequoia::testing
         {
           if (auto optIter{ check_num_edges(logger, node, parent, actual, prediction) })
           {
-            check(flavour, "Node weight for node " + std::to_string(node), logger, actual.cbegin_node_weights()[node], prediction.node);
+            if constexpr(!std::is_empty_v<node_weight_type>)
+              check(flavour, "Node weight for node " + std::to_string(node), logger, actual.cbegin_node_weights()[node], prediction.node);
 
             for (const auto& child : prediction.children)
             {

@@ -202,7 +202,7 @@ namespace sequoia
       {}
 
       template<tree_link_direction dir>
-        requires (    !std::is_empty_v<node_weight_type> && !std::same_as<node_weight_type, graph_impl::heterogeneous_tag>
+        requires (    !std::same_as<node_weight_type, graph_impl::heterogeneous_tag>
                    && ((dir == tree_link_direction::symmetric) || (Connectivity::directedness == directed_flavour::directed)))
       constexpr graph_primitive(std::initializer_list<tree_initializer<node_weight_type>> forest, tree_link_direction_constant<dir> tdc)
       {
@@ -213,7 +213,7 @@ namespace sequoia
       }
 
       template<tree_link_direction dir>
-      requires (    !std::is_empty_v<node_weight_type> && !std::same_as<node_weight_type, graph_impl::heterogeneous_tag>
+      requires (    !std::same_as<node_weight_type, graph_impl::heterogeneous_tag>
                  && ((dir == tree_link_direction::symmetric) || (Connectivity::directedness == directed_flavour::directed)))
       constexpr graph_primitive(tree_initializer<node_weight_type> tree, tree_link_direction_constant<dir> tdc)
       {
@@ -568,7 +568,7 @@ namespace sequoia
       template<tree_link_direction dir, class... Args>
       size_type add_node_to_tree(tree_link_direction_constant<dir> tldc, size_type parent, Args&&... args)
       {
-        return insert_node_to_tree(tldc, Nodes::size(), parent, std::forward<Args>(args)...);
+        return insert_node_to_tree(tldc, this->order(), parent, std::forward<Args>(args)...);
       }
     private:
       class [[nodiscard]] insertion_sentinel
@@ -628,7 +628,7 @@ namespace sequoia
       {}
 
       template<tree_link_direction dir>
-        requires (!std::is_empty_v<node_weight_type> && !std::same_as<node_weight_type, graph_impl::heterogeneous_tag>)
+        requires (!std::same_as<node_weight_type, graph_impl::heterogeneous_tag> && !std::is_empty_v<node_weight_type>)
       constexpr void build_tree(size_type root, tree_initializer<node_weight_type> tree, tree_link_direction_constant<dir> tdc)
       {
         if(root >= Connectivity::order()) root = add_node(tree.node);
@@ -636,6 +636,19 @@ namespace sequoia
         for(const auto& child : tree.children)
         {
           const auto n{add_node_to_tree(tdc, root, child.node)};
+          build_tree(n, child, tdc);
+        }
+      }
+
+      template<tree_link_direction dir>
+        requires (!std::same_as<node_weight_type, graph_impl::heterogeneous_tag> && std::is_empty_v<node_weight_type>)
+      constexpr void build_tree(size_type root, tree_initializer<node_weight_type> tree, tree_link_direction_constant<dir> tdc)
+      {
+        if(root >= Connectivity::order()) root = add_node();
+
+        for(const auto& child : tree.children)
+        {
+          const auto n{add_node_to_tree(tdc, root)};
           build_tree(n, child, tdc);
         }
       }

@@ -26,5 +26,8 @@ namespace sequoia::testing
 
     template<maths::directed_flavour Directedness, maths::tree_link_direction TreeLinkDir>
     void test_tree(maths::directed_flavour_constant<Directedness>, maths::tree_link_direction_constant<TreeLinkDir>);
+
+    template<maths::directed_flavour Directedness, maths::tree_link_direction TreeLinkDir>
+    void test_tree_unweighted_nodes(maths::directed_flavour_constant<Directedness>, maths::tree_link_direction_constant<TreeLinkDir>);
   };
 }

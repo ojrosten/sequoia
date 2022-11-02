@@ -28,6 +28,11 @@ namespace sequoia::testing
     test_tree(directed_type{},   backward_tree_type{});
     test_tree(directed_type{},   symmetric_tree_type{});
     test_tree(undirected_type{}, symmetric_tree_type{});
+
+    test_tree_unweighted_nodes(directed_type{}, forward_tree_type{});
+    test_tree_unweighted_nodes(directed_type{}, backward_tree_type{});
+    test_tree_unweighted_nodes(directed_type{}, symmetric_tree_type{});
+    test_tree_unweighted_nodes(undirected_type{}, symmetric_tree_type{});
   }
 
   template<maths::directed_flavour Directedness, maths::tree_link_direction TreeLinkDir>
@@ -111,5 +116,20 @@ namespace sequoia::testing
     };
 
     transition_checker<tree_type>::check(LINE(""), g, checker);
+  }
+
+  template<maths::directed_flavour Directedness, maths::tree_link_direction TreeLinkDir>
+  void tree_test::test_tree_unweighted_nodes(maths::directed_flavour_constant<Directedness>, maths::tree_link_direction_constant<TreeLinkDir>)
+  {
+    using tree_type = tree<Directedness, TreeLinkDir, null_weight, null_weight>;
+    using initializer = tree_initializer<null_weight>;
+
+    tree_type x{}, y{{}}, z{{{{}}}};
+
+    check(equivalence, LINE(""), y, initializer{});
+    check(equivalence, LINE(""), z, initializer{{{}}});
+
+    check_semantics(LINE(""), x, y);
+    check_semantics(LINE(""), y, z);
   }
 }
