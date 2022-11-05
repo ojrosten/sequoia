@@ -100,5 +100,18 @@ namespace sequoia::testing
     static_assert(std::is_same_v<flatten_t<type_list<int, type_list<type_list<char, unsigned>, type_list<float, type_list<double, long>>>>>,
       type_list<int, char, unsigned, float, double, long>>);
 
+    //       long bool  unsigned
+    //         \   /    /
+    //     char float int
+    //       \   |   /
+    //         double
+    static_assert(
+        std::is_same_v<
+          flatten_t<type_list<double, type_list<char, type_list<float, type_list<long, bool>>, type_list<int, type_list<unsigned>>>>>
+          ,
+          type_list<double, char, float, long, bool, int, unsigned>
+        >
+      );
+
   }
 }
