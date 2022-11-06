@@ -133,7 +133,7 @@ namespace sequoia::object
     }
 
     [[nodiscard]]
-    friend bool operator==(const factory& lhs, const factory& rhs) noexcept = default;
+    friend bool operator==(const factory&, const factory&) noexcept = default;
 
     [[nodiscard]]
     friend bool operator!=(const factory&, const factory&) noexcept = default;

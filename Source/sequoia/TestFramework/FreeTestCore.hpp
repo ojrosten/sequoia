@@ -65,7 +65,7 @@ namespace sequoia::testing
       performed.
 
       The semantics are such that, of the special member functions, only explicit construction from a
-      string_view and (virtual) destruction are publicly available. Moves are protected; copy
+      string_view is publicly available. Destruction and moves are protected; copy
       contruction / assignment are deleted.
 
       \anchor basic_test_primary
@@ -79,8 +79,6 @@ namespace sequoia::testing
     constexpr static test_mode mode{Checker::mode};
 
     explicit basic_test(std::string name) : m_Name{std::move(name)} {}
-
-    virtual ~basic_test() = default;
 
     basic_test(const basic_test&)            = delete;
     basic_test& operator=(const basic_test&) = delete;
@@ -181,6 +179,8 @@ namespace sequoia::testing
     }
   protected:
     using duration = std::chrono::steady_clock::duration;
+
+    ~basic_test() = default;
 
     basic_test(basic_test&&)            noexcept = default;
     basic_test& operator=(basic_test&&) noexcept = default;
