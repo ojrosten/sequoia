@@ -66,6 +66,28 @@ namespace sequoia::testing
     using type = type_list<flatten_t<Ts>..., flatten_t<T>>;
   };
 
+  template<class T>
+  struct to_tuple;
+
+  template<class... Ts>
+  struct to_tuple<type_list<Ts...>>
+  {
+    using type = std::tuple<Ts...>;
+  };
+
+  template<class T>
+  using to_tuple_t = typename to_tuple<T>::type;
+
+  struct composite
+  {
+    std::string name{};
+  };
+
+  template<class T>
+  struct entity
+  {
+    to_tuple_t<flatten_t<T>> attributes;
+  };
 
 
   [[nodiscard]]
@@ -100,6 +122,15 @@ namespace sequoia::testing
     static_assert(std::is_same_v<flatten_t<type_list<int, type_list<type_list<char, unsigned>, type_list<float, type_list<double, long>>>>>,
       type_list<int, char, unsigned, float, double, long>>);
 
+    // Could interpret this as:
+    //
+    //   int
+    //    |
+    //    x
+    //    |
+    //    x
+    static_assert(std::is_same_v<flatten_t<type_list<type_list<int>>>, int>);
+
     //       long bool  unsigned
     //         \   /    /
     //     char float int
@@ -121,5 +152,22 @@ namespace sequoia::testing
         >
       );
 
+    // int double   float
+    //  \    /       /
+    // composite composite
+    //     \        /
+    //      composite
+
+    entity<
+      type_list<
+        composite,
+          type_list<
+            composite,
+              type_list<int, double>,
+            composite,
+              type_list<float>
+          >
+      > 
+    > e{};
   }
 }
