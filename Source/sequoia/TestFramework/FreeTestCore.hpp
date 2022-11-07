@@ -163,7 +163,7 @@ namespace sequoia::testing
     void set_filesystem_data(const project_paths& projPaths, std::string_view familyName)
     {
       m_TestRepo    = projPaths.tests();
-      m_Diagnostics = individual_diagnostics_paths(project_root(), familyName, source_file(), to_tag(mode));
+      m_Diagnostics = {project_root(), familyName, source_file(), to_tag(mode)};
 
       std::filesystem::create_directories(m_Diagnostics.diagnostics_file().parent_path());
     }
@@ -230,7 +230,7 @@ namespace sequoia::testing
     
     /// The override in a derived test should call the checks performed by the test.
     virtual void run_tests() = 0;
-  };  
+  };
 
   template<class T>
   concept concrete_test = !std::is_abstract_v<T> && std::movable<T> && std::constructible_from<std::string>

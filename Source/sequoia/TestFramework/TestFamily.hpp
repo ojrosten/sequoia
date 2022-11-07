@@ -162,10 +162,8 @@ namespace sequoia::testing
       : m_Info{std::move(name), projPaths, recoveryMode}
       , m_Tests{std::move(tests)...}
     {
-      std::vector<std::filesystem::path> materialsPaths{};
-
       std::apply(
-        [this,recoveryMode,&materialsPaths](auto&... t) { ( set_materials(recoveryMode, materialsPaths, t), ... ); },
+        [this,recoveryMode](auto&... t) { ( set_materials(recoveryMode, t), ... ); },
         m_Tests
       );
     }
@@ -181,13 +179,13 @@ namespace sequoia::testing
     test_family& operator=(test_family&&) noexcept = default;
 
     template<concrete_test T>
-    void add_test(std::vector<std::filesystem::path>& materialsPaths, T test)
+    void add_test(T test)
     {
       using test_type = std::optional<std::remove_cvref_t<T>>;
 
       auto& t{std::get<test_type>(m_Tests)};
       t = std::move(test);
-      set_materials(m_Info.get_recovery_mode(), materialsPaths, t);
+      set_materials(m_Info.get_recovery_mode(), t);
     }
 
     [[nodiscard]]
@@ -270,15 +268,15 @@ namespace sequoia::testing
 
     void reset()
     {
-      std::vector<std::filesystem::path> materialsPaths{};
+      m_MaterialsPaths = {};
 
       auto reset{
-        [this,&materialsPaths](auto& optTest){
+        [this](auto& optTest){
           if(optTest)
           {
             using type = typename std::remove_cvref_t<decltype(optTest)>::value_type;
             *optTest = type{optTest->name()};
-            set_materials(m_Info.get_recovery_mode(), materialsPaths, optTest);
+            set_materials(m_Info.get_recovery_mode(), optTest);
           }
         }
       };
@@ -304,16 +302,17 @@ namespace sequoia::testing
   private:
     family_info m_Info;
     std::tuple<std::optional<Tests>...> m_Tests;
+    std::vector<std::filesystem::path> m_MaterialsPaths;
 
     template<concrete_test T>
-    void set_materials(recovery_mode recoveryMode, std::vector<std::filesystem::path>& materialsPaths, std::optional<T>& t)
+    void set_materials(recovery_mode recoveryMode, std::optional<T>& t)
     {
       if(t.has_value())
       {
         t->set_filesystem_data(m_Info.proj_paths(), name());
         t->set_recovery_paths(make_active_recovery_paths(recoveryMode, m_Info.proj_paths()));
 
-        t->set_materials(m_Info.set_materials(t->source_filename(), materialsPaths));
+        t->set_materials(m_Info.set_materials(t->source_filename(), m_MaterialsPaths));
       }
     }
   };

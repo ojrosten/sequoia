@@ -46,9 +46,8 @@ namespace sequoia::testing
           {
             using family_t = test_family<std::remove_cvref_t<Tests>...>;
             family_t f{std::string{name}, m_Paths, recoveryMode};
-            std::vector<std::filesystem::path> materialsPath{};
 
-            add_tests(f, materialsPath, std::move(tests)...);
+            add_tests(f, std::move(tests)...);
             if(!f.empty())
             {
               m_Families.push_back(std::move(f));
@@ -214,9 +213,7 @@ namespace sequoia::testing
 
     template<concrete_test... AllTests, concrete_test... Tests>
       requires (sizeof...(Tests) > 0)
-    void add_tests(test_family<AllTests...>& f,
-                   std::vector<std::filesystem::path>& materialsPath,
-                   Tests&&... tests)
+    void add_tests(test_family<AllTests...>& f, Tests&&... tests)
     {
       auto add{
         [&]<concrete_test T>(T&& test) {
@@ -224,7 +221,7 @@ namespace sequoia::testing
           auto i{find_filename(src)};
           if(i != m_SelectedSources.end())
           {
-            f.add_test(materialsPath, std::forward<T>(test));
+            f.add_test(std::forward<T>(test));
             i->first = rebase_from(src, proj_paths().tests().repo());
             i->second = true;
           }
