@@ -439,7 +439,7 @@ namespace sequoia::testing
     );
 
     check(LINE(""), []() {
-        static_assert(is_initializable_v<foo, std::vector<int>>);
+        static_assert(!is_initializable_v<foo, std::vector<int>>);
         return true;
       }()
     );
