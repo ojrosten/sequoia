@@ -19,6 +19,11 @@
 
 namespace sequoia::testing
 {
+  namespace
+  {
+    struct foo { int x{}; };
+  }
+  
   [[nodiscard]]
   std::string_view type_traits_test::source_file() const noexcept
   {
@@ -33,6 +38,7 @@ namespace sequoia::testing
     test_is_const_pointer();
     test_is_const_reference();
     test_is_tuple();
+    test_is_initializable();
     test_has_allocator_type();
   }
 
@@ -419,6 +425,33 @@ namespace sequoia::testing
 
     check(LINE(""), []() {
         static_assert(!is_const_reference_v<int&>);
+        return true;
+      }()
+    );
+  }
+
+  void type_traits_test::test_is_initializable()
+  {
+    check(LINE(""), []() {
+        static_assert(std::is_same_v<std::false_type, is_initializable_t<foo, std::vector<int>>>);
+        return true;
+      }()
+    );
+
+    check(LINE(""), []() {
+        static_assert(is_initializable_v<foo, std::vector<int>>);
+        return true;
+      }()
+    );
+
+    check(LINE(""), []() {
+        static_assert(std::is_same_v<std::true_type, is_initializable_t<foo, int>>);
+        return true;
+      }()
+    );
+
+    check(LINE(""), []() {
+        static_assert(is_initializable_v<foo, int>);
         return true;
       }()
     );

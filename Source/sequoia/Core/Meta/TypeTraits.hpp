@@ -160,6 +160,24 @@ namespace sequoia
   template<class... Ts>
   inline constexpr bool is_tuple_v{is_tuple<Ts...>::value};
 
+  /*! \brief Primary class template for determining if a type can be brace-initialized
+      by Args...
+ ` */
+  template<class T, class... Args>
+  struct is_initializable : std::false_type
+  {};
+
+  template<class T, class... Args>
+    requires requires (Args&&... args) { T{std::forward<Args>(args)...}; }
+  struct is_initializable<T, Args...> : std::true_type {};
+
+  template<class T, class... Args>
+  using is_initializable_t = typename is_initializable<T, Args...>::type;
+
+  template<class T, class... Args>
+  inline constexpr bool is_initializable_v{is_initializable<T, Args...>::value};
+
+
   /*! \brief Class template for determining if a type defines a nested type `allocator_type` */
   template<class T>
   struct has_allocator_type : std::bool_constant< requires { typename T::allocator_type; } >

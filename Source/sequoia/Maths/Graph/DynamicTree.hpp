@@ -81,14 +81,14 @@ namespace sequoia::maths
     }
 
     template<class... Args>
-      requires std::is_constructible_v<NodeWeight, Args...>
+      requires is_initializable_v<NodeWeight, Args...>
     size_type add_node(const size_type parent, Args&&... args)
     {
       return base_type::add_node_to_tree(tree_link_direction_constant<TreeLinkDir>{}, parent, std::forward<Args>(args)...);
     }
 
     template<class... Args>
-      requires std::is_constructible_v<NodeWeight, Args...>
+      requires is_initializable_v<NodeWeight, Args...>
     size_type insert_node(const size_type pos, const size_type parent, Args&&... args)
     {
       return base_type::insert_node_to_tree(tree_link_direction_constant<TreeLinkDir>{}, pos, parent, std::forward<Args>(args)...);
