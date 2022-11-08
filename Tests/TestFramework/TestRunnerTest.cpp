@@ -181,7 +181,7 @@ namespace sequoia::testing
       }
     };
 
-    class consistently_failing_free_test : public free_test
+    class consistently_failing_free_test final : public free_test
     {
       using free_test::free_test;
 
@@ -198,7 +198,7 @@ namespace sequoia::testing
     };
 
     template<std::size_t N>
-    class consistently_passing_free_test : public free_test
+    class consistently_passing_free_test final : public free_test
     {
       using free_test::free_test;
 
@@ -214,7 +214,7 @@ namespace sequoia::testing
       }
     };
 
-    class critical_free_test : public free_test
+    class critical_free_test final : public free_test
     {
       using free_test::free_test;
 
