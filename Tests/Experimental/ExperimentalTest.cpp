@@ -15,14 +15,13 @@ namespace sequoia::testing
   struct flatten;
 
   template<class... Ts>
-  using flatten_t = typename flatten<Ts...>::type;
-
-
-  template<class... Ts>
   struct flatten
   {
-    using type = type_list<flatten_t<Ts>...>;
+    using type = type_list<typename flatten<Ts>::type...>;
   };
+  
+  template<class... Ts>
+  using flatten_t = typename flatten<Ts...>::type;
 
   template<class T>
   struct flatten<T>
