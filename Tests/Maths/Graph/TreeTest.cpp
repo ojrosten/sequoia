@@ -46,8 +46,8 @@ namespace sequoia::testing
     check(equivalence, LINE(""), y, initializer{1});
     check(equivalence, LINE(""), z, initializer{1, {{2}}});
 
-    using tree_state_graph = transition_checker<tree_type>::transition_graph;
-    using edge_t = transition_checker<tree_type>::edge;
+    using tree_state_graph = typename transition_checker<tree_type>::transition_graph;
+    using edge_t           = typename transition_checker<tree_type>::edge;
 
     tree_state_graph g{
       {
