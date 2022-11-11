@@ -97,6 +97,7 @@ namespace sequoia::testing
            && shell_command{"", run_cmd().append(" test Foo prune"), output / "SpecifiedFamilyPruneConflictOutput.txt"}
            && shell_command{"", run_cmd().append(" prune --cutoff namespace"), output / "FullyPrunedOutput.txt"}
            && shell_command{"", run_cmd().append(" -v"), output / "VerboseOutput.txt"}
+           && shell_command{"", run_cmd().append(" -v select FooTest.cpp test Foo"), output / "SelectFromTestedFamilyOutput.txt"}
            && shell_command{"", run_cmd().append(" --help"), output / "HelpOutput.txt"});
   }
 

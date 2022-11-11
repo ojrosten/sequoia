@@ -172,10 +172,8 @@ namespace sequoia::testing
     return messages;
   }
 
-  bool family_selector::mark_family(std::string_view name)
+  bool family_selector::find_and_mark_family(std::string_view name)
   {
-    if(m_SelectedFamilies.empty()) return true;
-
     auto i{m_SelectedFamilies.find(name)};
     if(i != m_SelectedFamilies.end())
     {

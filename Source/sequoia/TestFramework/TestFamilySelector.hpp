@@ -40,33 +40,32 @@ namespace sequoia::testing
 
       check_for_duplicates(name, tests...);
 
-      const bool done{
-        [this, name, recoveryMode](Tests&... tests) {
-          if(!m_SelectedSources.empty())
-          {
-            using family_t = test_family<std::remove_cvref_t<Tests>...>;
-            family_t f{std::string{name}, m_Paths, recoveryMode};
-
-            add_tests(f, std::move(tests)...);
-            if(!f.empty())
-            {
-              m_Families.push_back(std::move(f));
-              mark_family(name);
-              return true;
-            }
-          }
-
-          return false;
-        }(tests...)
-      };
-
-      if(!done && (((pruned() == prune_mode::passive) && m_SelectedSources.empty()) || !m_SelectedFamilies.empty()))
+      if(!m_SelectedFamilies.empty())
       {
-        if(mark_family(name))
+        if(find_and_mark_family(name))
         {
           m_Families.push_back(test_family{std::string{name}, m_Paths, recoveryMode, std::move(tests)...});
+          if(!m_SelectedSources.empty())
+          {
+            (find_and_mark_source(tests), ...);
+          }
+
+          return;
         }
       }
+
+      if(!m_SelectedSources.empty())
+      {
+        using family_t = test_family<std::remove_cvref_t<Tests>...>;
+        family_t f{std::string{name}, m_Paths, recoveryMode};
+
+        add_tests(f, std::move(tests)...);
+        if(!f.empty()) m_Families.push_back(std::move(f));
+      }
+      else if((pruned() == prune_mode::passive) && m_SelectedFamilies.empty())
+      {
+        m_Families.push_back(test_family{std::string{name}, m_Paths, recoveryMode, std::move(tests)...});
+      } 
     }
 
     const project_paths& proj_paths() const noexcept;
@@ -185,7 +184,23 @@ namespace sequoia::testing
     source_list                m_SelectedSources{};
     bool                       m_FamiliesPresented{};
 
-    bool mark_family(std::string_view name);
+    bool find_and_mark_family(std::string_view name);
+
+    template <concrete_test T>
+    bool find_and_mark_source(const T& test)
+    {
+      const normal_path src{test.source_filename()};
+      auto i{find_filename(src)};
+      if(i != m_SelectedSources.end())
+      {
+        i->first = rebase_from(src, proj_paths().tests().repo());
+        i->second = true;
+
+        return true;
+      }
+
+      return false;
+    }
 
     [[nodiscard]]
     auto find_filename(const normal_path& filename) -> source_list::iterator;
@@ -217,14 +232,7 @@ namespace sequoia::testing
     {
       auto add{
         [&]<concrete_test T>(T&& test) {
-          const normal_path src{test.source_filename()};
-          auto i{find_filename(src)};
-          if(i != m_SelectedSources.end())
-          {
-            f.add_test(std::forward<T>(test));
-            i->first = rebase_from(src, proj_paths().tests().repo());
-            i->second = true;
-          }
+            if(find_and_mark_source(test)) f.add_test(std::forward<T>(test));
         }
       };
 
