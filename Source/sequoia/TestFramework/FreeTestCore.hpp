@@ -72,7 +72,7 @@ namespace sequoia::testing
    */
 
   template<class Checker>
-    requires requires() { Checker::mode; }
+    requires std::is_same_v<decltype(Checker::mode), const test_mode>
   class basic_test : protected Checker
   {
   public:

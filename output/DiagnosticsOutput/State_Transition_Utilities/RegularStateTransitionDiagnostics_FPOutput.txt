@@ -1,24 +1,24 @@
-	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 134
+	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 145
 	Mistake in transition functions
 
 	Transition from node 0 to 1
 	Adding 1.1
-	[sequoia::testing::(anonymous namespace)::foo]
+	[double]
 	operator== returned false
-	Obtained : 1.000000
-	Predicted: 1.100000
+	Obtained : 1
+	Predicted: 1.1
 
 	=======================================
 
-	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 134
+	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 145
 	Mistake in transition functions
 
 	Transition from node 1 to 0
 	Subtracting 1.1
-	[sequoia::testing::(anonymous namespace)::foo]
+	[double]
 	operator== returned false
-	Obtained : 0.100000
-	Predicted: 0.000000
+	Obtained : 0.1
+	Predicted: 0
 
 	=======================================
 

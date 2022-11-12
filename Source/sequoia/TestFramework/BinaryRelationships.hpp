@@ -40,21 +40,29 @@ namespace sequoia::testing
 
       \anchor within_tolerance_primary
    */
-  template<class T>
+  template<class ToleranceType>
   class within_tolerance
   {
-    T m_Tol{};
+    ToleranceType m_Tol{};
   public:
-    using value_type = T;
+    using tolerance_type = ToleranceType;
 
-    constexpr explicit within_tolerance(T tol) : m_Tol{std::move(tol)} {};
+    constexpr explicit within_tolerance(ToleranceType tol) : m_Tol{std::move(tol)} {};
+
+    template<class T>
+    constexpr static bool has_std_abs{requires(const T & x) { { std::abs(x) } -> std::convertible_to<ToleranceType>; }};
+
+    template<class T>
+    constexpr static bool has_adl_abs{requires(const T & x) { { abs(x) } -> std::convertible_to<ToleranceType>; }};
 
     [[nodiscard]]
-    constexpr const T& tol() const noexcept
+    constexpr const tolerance_type& tol() const noexcept
     {
       return m_Tol;
     }
 
+    template<class T>
+      requires (has_std_abs<T> || has_adl_abs<T>)
     [[nodiscard]]
     constexpr bool operator()(const T& obtained, const T& prediction) const noexcept
     {
@@ -66,10 +74,10 @@ namespace sequoia::testing
   template<class T>
   struct failure_reporter<within_tolerance<T>>
   {
-    template<bool IsFinalMessage>
-      requires reportable<T>
+    template<bool IsFinalMessage, class ComparedType>
+      requires reportable<ComparedType>
     [[nodiscard]]
-    static std::string report(final_message_constant<IsFinalMessage>, const within_tolerance<T>& c, const T& obtained, const T& prediction)
+    static std::string report(final_message_constant<IsFinalMessage>, const within_tolerance<T>& c, const ComparedType& obtained, const ComparedType& prediction)
     {
       return prediction_message(obtained, prediction).append(" +/- ").append(to_string(c.tol()));
     }

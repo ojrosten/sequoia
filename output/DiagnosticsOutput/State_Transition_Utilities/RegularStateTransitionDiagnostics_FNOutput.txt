@@ -1,296 +1,408 @@
 	False Positive Failure:
-	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 83
+	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 56
 
 	Transition from node 0 to 1
 	Adding 1.1
-	[sequoia::testing::(anonymous namespace)::foo]
+	[double]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 83
+	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 56
 
 	Transition from node 0 to 1
 	Adding 1.1
-	[sequoia::testing::(anonymous namespace)::foo]
+	[double]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 83
-
-	Transition from node 0 to 1
-	Adding 1.1
-	--Regular Semantics--
-	[sequoia::testing::(anonymous namespace)::foo]
-
-	=======================================
-
-	False Positive Failure:
-	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 83
-
-	Transition from node 1 to 0
-	Subtracting 1.1
-	[sequoia::testing::(anonymous namespace)::foo]
-
-	=======================================
-
-	False Positive Failure:
-	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 83
-
-	Transition from node 1 to 0
-	Subtracting 1.1
-	[sequoia::testing::(anonymous namespace)::foo]
-
-	=======================================
-
-	False Positive Failure:
-	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 83
-
-	Transition from node 1 to 0
-	Subtracting 1.1
-	--Regular Semantics--
-	[sequoia::testing::(anonymous namespace)::foo]
-
-	=======================================
-
-	False Positive Failure:
-	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 83
-
-	Transition from node 1 to 2
-	Multiplying by 2
-	[sequoia::testing::(anonymous namespace)::foo]
-
-	=======================================
-
-	False Positive Failure:
-	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 83
-
-	Transition from node 1 to 2
-	Multiplying by 2
-	[sequoia::testing::(anonymous namespace)::foo]
-
-	=======================================
-
-	False Positive Failure:
-	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 83
-
-	Transition from node 1 to 2
-	Multiplying by 2
-	--Regular Semantics--
-	[sequoia::testing::(anonymous namespace)::foo]
-
-	=======================================
-
-	False Positive Failure:
-	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 83
-
-	Transition from node 2 to 1
-	Dividing by 2
-	[sequoia::testing::(anonymous namespace)::foo]
-
-	=======================================
-
-	False Positive Failure:
-	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 83
-
-	Transition from node 2 to 1
-	Dividing by 2
-	[sequoia::testing::(anonymous namespace)::foo]
-
-	=======================================
-
-	False Positive Failure:
-	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 83
-
-	Transition from node 2 to 1
-	Dividing by 2
-	--Regular Semantics--
-	[sequoia::testing::(anonymous namespace)::foo]
-
-	=======================================
-
-	False Positive Failure:
-	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 95
-
-	Transition from node 0 to 1
-	Adding 1.1
-	[sequoia::testing::(anonymous namespace)::foo]
-
-	=======================================
-
-	False Positive Failure:
-	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 95
-
-	Transition from node 0 to 1
-	Adding 1.1
-	[sequoia::testing::(anonymous namespace)::foo]
-
-	=======================================
-
-	False Positive Failure:
-	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 95
+	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 56
 
 	Transition from node 0 to 1
 	Adding 1.1
 	--Regular Semantics--
-	[sequoia::testing::(anonymous namespace)::foo]
+	[double]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 95
+	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 56
 
 	Transition from node 1 to 0
 	Subtracting 1.1
-	[sequoia::testing::(anonymous namespace)::foo]
+	[double]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 95
+	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 56
 
 	Transition from node 1 to 0
 	Subtracting 1.1
-	[sequoia::testing::(anonymous namespace)::foo]
+	[double]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 95
+	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 56
 
 	Transition from node 1 to 0
 	Subtracting 1.1
 	--Regular Semantics--
-	[sequoia::testing::(anonymous namespace)::foo]
+	[double]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 95
+	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 56
 
 	Transition from node 1 to 2
 	Multiplying by 2
-	[sequoia::testing::(anonymous namespace)::foo]
+	[double]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 95
+	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 56
 
 	Transition from node 1 to 2
 	Multiplying by 2
-	[sequoia::testing::(anonymous namespace)::foo]
+	[double]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 95
+	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 56
 
 	Transition from node 1 to 2
 	Multiplying by 2
 	--Regular Semantics--
-	[sequoia::testing::(anonymous namespace)::foo]
+	[double]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 95
+	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 56
 
 	Transition from node 2 to 1
 	Dividing by 2
-	[sequoia::testing::(anonymous namespace)::foo]
+	[double]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 95
+	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 56
 
 	Transition from node 2 to 1
 	Dividing by 2
-	[sequoia::testing::(anonymous namespace)::foo]
+	[double]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 95
+	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 56
 
 	Transition from node 2 to 1
 	Dividing by 2
 	--Regular Semantics--
-	[sequoia::testing::(anonymous namespace)::foo]
+	[double]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 106
+	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 68
 
 	Transition from node 0 to 1
 	Adding 1.1
-	[sequoia::testing::(anonymous namespace)::foo]
+	[double]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 106
+	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 68
 
 	Transition from node 0 to 1
 	Adding 1.1
-	[sequoia::testing::(anonymous namespace)::foo]
+	[double]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 106
+	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 68
+
+	Transition from node 0 to 1
+	Adding 1.1
+	--Regular Semantics--
+	[double]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 68
 
 	Transition from node 1 to 0
 	Subtracting 1.1
-	[sequoia::testing::(anonymous namespace)::foo]
+	[double]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 106
+	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 68
 
 	Transition from node 1 to 0
 	Subtracting 1.1
-	[sequoia::testing::(anonymous namespace)::foo]
+	[double]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 106
+	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 68
+
+	Transition from node 1 to 0
+	Subtracting 1.1
+	--Regular Semantics--
+	[double]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 68
 
 	Transition from node 1 to 2
 	Multiplying by 2
-	[sequoia::testing::(anonymous namespace)::foo]
+	[double]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 106
+	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 68
 
 	Transition from node 1 to 2
 	Multiplying by 2
-	[sequoia::testing::(anonymous namespace)::foo]
+	[double]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 106
+	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 68
 
-	Transition from node 2 to 1
-	Dividing by 2
-	[sequoia::testing::(anonymous namespace)::foo]
+	Transition from node 1 to 2
+	Multiplying by 2
+	--Regular Semantics--
+	[double]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 106
+	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 68
 
 	Transition from node 2 to 1
 	Dividing by 2
-	[sequoia::testing::(anonymous namespace)::foo]
+	[double]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 68
+
+	Transition from node 2 to 1
+	Dividing by 2
+	[double]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 68
+
+	Transition from node 2 to 1
+	Dividing by 2
+	--Regular Semantics--
+	[double]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 79
+
+	Transition from node 0 to 1
+	Adding 1.1
+	[double]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 79
+
+	Transition from node 0 to 1
+	Adding 1.1
+	[double]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 79
+
+	Transition from node 1 to 0
+	Subtracting 1.1
+	[double]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 79
+
+	Transition from node 1 to 0
+	Subtracting 1.1
+	[double]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 79
+
+	Transition from node 1 to 2
+	Multiplying by 2
+	[double]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 79
+
+	Transition from node 1 to 2
+	Multiplying by 2
+	[double]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 79
+
+	Transition from node 2 to 1
+	Dividing by 2
+	[double]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 79
+
+	Transition from node 2 to 1
+	Dividing by 2
+	[double]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 110
+
+	Transition from node 0 to 1
+	Adding (1.1, -0.7)
+	[std::complex<double>]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 110
+
+	Transition from node 0 to 1
+	Adding (1.1, -0.7)
+	[std::complex<double>]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 110
+
+	Transition from node 0 to 1
+	Adding (1.1, -0.7)
+	--Regular Semantics--
+	[std::complex<double>]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 110
+
+	Transition from node 1 to 0
+	Subtracting (1.1, -0.7)
+	[std::complex<double>]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 110
+
+	Transition from node 1 to 0
+	Subtracting (1.1, -0.7)
+	[std::complex<double>]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 110
+
+	Transition from node 1 to 0
+	Subtracting (1.1, -0.7)
+	--Regular Semantics--
+	[std::complex<double>]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 110
+
+	Transition from node 1 to 2
+	Multiplying by 2
+	[std::complex<double>]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 110
+
+	Transition from node 1 to 2
+	Multiplying by 2
+	[std::complex<double>]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 110
+
+	Transition from node 1 to 2
+	Multiplying by 2
+	--Regular Semantics--
+	[std::complex<double>]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 110
+
+	Transition from node 2 to 1
+	Dividing by 2
+	[std::complex<double>]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 110
+
+	Transition from node 2 to 1
+	Dividing by 2
+	[std::complex<double>]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 110
+
+	Transition from node 2 to 1
+	Dividing by 2
+	--Regular Semantics--
+	[std::complex<double>]
 
 	=======================================
 
