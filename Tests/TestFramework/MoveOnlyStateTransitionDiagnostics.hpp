@@ -23,6 +23,9 @@ namespace sequoia::testing
     std::string_view source_file() const noexcept final;
 
     void run_tests() final;
+
+    void test_orderable();
+    void test_equality_comparable();
   };
 
   class move_only_state_transition_false_positive_diagnostics final : public move_only_false_positive_test
@@ -35,5 +38,8 @@ namespace sequoia::testing
     std::string_view source_file() const noexcept final;
 
     void run_tests() final;
+
+    void test_orderable();
+    void test_equality_comparable();
   };
 }

@@ -1,184 +1,368 @@
 	False Positive Failure:
-	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 95
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 100
 
 	Transition from node 0 to 1
 	Adding 1.1
-	[sequoia::testing::(anonymous namespace)::bar]
+	[sequoia::testing::(anonymous namespace)::foo<double>]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 95
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 100
 
 	Transition from node 0 to 1
 	Adding 1.1
-	[sequoia::testing::(anonymous namespace)::bar]
+	[sequoia::testing::(anonymous namespace)::foo<double>]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 95
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 100
 
 	Transition from node 0 to 1
 	Adding 1.1
 	--Move-only Semantics--
-	[sequoia::testing::(anonymous namespace)::bar]
+	[sequoia::testing::(anonymous namespace)::foo<double>]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 95
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 100
 
 	Transition from node 1 to 0
 	Subtracting 1.1
-	[sequoia::testing::(anonymous namespace)::bar]
+	[sequoia::testing::(anonymous namespace)::foo<double>]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 95
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 100
 
 	Transition from node 1 to 0
 	Subtracting 1.1
-	[sequoia::testing::(anonymous namespace)::bar]
+	[sequoia::testing::(anonymous namespace)::foo<double>]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 95
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 100
 
 	Transition from node 1 to 0
 	Subtracting 1.1
 	--Move-only Semantics--
-	[sequoia::testing::(anonymous namespace)::bar]
+	[sequoia::testing::(anonymous namespace)::foo<double>]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 95
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 100
 
 	Transition from node 1 to 2
 	Multiplying by 2
-	[sequoia::testing::(anonymous namespace)::bar]
+	[sequoia::testing::(anonymous namespace)::foo<double>]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 95
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 100
 
 	Transition from node 1 to 2
 	Multiplying by 2
-	[sequoia::testing::(anonymous namespace)::bar]
+	[sequoia::testing::(anonymous namespace)::foo<double>]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 95
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 100
 
 	Transition from node 1 to 2
 	Multiplying by 2
 	--Move-only Semantics--
-	[sequoia::testing::(anonymous namespace)::bar]
+	[sequoia::testing::(anonymous namespace)::foo<double>]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 95
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 100
 
 	Transition from node 2 to 1
 	Dividing by 2
-	[sequoia::testing::(anonymous namespace)::bar]
+	[sequoia::testing::(anonymous namespace)::foo<double>]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 95
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 100
 
 	Transition from node 2 to 1
 	Dividing by 2
-	[sequoia::testing::(anonymous namespace)::bar]
+	[sequoia::testing::(anonymous namespace)::foo<double>]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 95
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 100
 
 	Transition from node 2 to 1
 	Dividing by 2
 	--Move-only Semantics--
-	[sequoia::testing::(anonymous namespace)::bar]
+	[sequoia::testing::(anonymous namespace)::foo<double>]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 106
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 111
 
 	Transition from node 0 to 1
 	Adding 1.1
-	[sequoia::testing::(anonymous namespace)::bar]
+	[sequoia::testing::(anonymous namespace)::foo<double>]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 106
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 111
 
 	Transition from node 0 to 1
 	Adding 1.1
-	[sequoia::testing::(anonymous namespace)::bar]
+	[sequoia::testing::(anonymous namespace)::foo<double>]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 106
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 111
 
 	Transition from node 1 to 0
 	Subtracting 1.1
-	[sequoia::testing::(anonymous namespace)::bar]
+	[sequoia::testing::(anonymous namespace)::foo<double>]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 106
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 111
 
 	Transition from node 1 to 0
 	Subtracting 1.1
-	[sequoia::testing::(anonymous namespace)::bar]
+	[sequoia::testing::(anonymous namespace)::foo<double>]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 106
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 111
 
 	Transition from node 1 to 2
 	Multiplying by 2
-	[sequoia::testing::(anonymous namespace)::bar]
+	[sequoia::testing::(anonymous namespace)::foo<double>]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 106
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 111
 
 	Transition from node 1 to 2
 	Multiplying by 2
-	[sequoia::testing::(anonymous namespace)::bar]
+	[sequoia::testing::(anonymous namespace)::foo<double>]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 106
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 111
 
 	Transition from node 2 to 1
 	Dividing by 2
-	[sequoia::testing::(anonymous namespace)::bar]
+	[sequoia::testing::(anonymous namespace)::foo<double>]
 
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 106
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 111
 
 	Transition from node 2 to 1
 	Dividing by 2
-	[sequoia::testing::(anonymous namespace)::bar]
+	[sequoia::testing::(anonymous namespace)::foo<double>]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 143
+
+	Transition from node 0 to 1
+	Adding (1.1, -0.7)
+	[sequoia::testing::(anonymous namespace)::foo<std::complex<double> >]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 143
+
+	Transition from node 0 to 1
+	Adding (1.1, -0.7)
+	[sequoia::testing::(anonymous namespace)::foo<std::complex<double> >]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 143
+
+	Transition from node 0 to 1
+	Adding (1.1, -0.7)
+	--Move-only Semantics--
+	[sequoia::testing::(anonymous namespace)::foo<std::complex<double> >]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 143
+
+	Transition from node 1 to 0
+	Subtracting (1.1, -0.7)
+	[sequoia::testing::(anonymous namespace)::foo<std::complex<double> >]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 143
+
+	Transition from node 1 to 0
+	Subtracting (1.1, -0.7)
+	[sequoia::testing::(anonymous namespace)::foo<std::complex<double> >]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 143
+
+	Transition from node 1 to 0
+	Subtracting (1.1, -0.7)
+	--Move-only Semantics--
+	[sequoia::testing::(anonymous namespace)::foo<std::complex<double> >]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 143
+
+	Transition from node 1 to 2
+	Multiplying by 2
+	[sequoia::testing::(anonymous namespace)::foo<std::complex<double> >]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 143
+
+	Transition from node 1 to 2
+	Multiplying by 2
+	[sequoia::testing::(anonymous namespace)::foo<std::complex<double> >]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 143
+
+	Transition from node 1 to 2
+	Multiplying by 2
+	--Move-only Semantics--
+	[sequoia::testing::(anonymous namespace)::foo<std::complex<double> >]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 143
+
+	Transition from node 2 to 1
+	Dividing by 2
+	[sequoia::testing::(anonymous namespace)::foo<std::complex<double> >]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 143
+
+	Transition from node 2 to 1
+	Dividing by 2
+	[sequoia::testing::(anonymous namespace)::foo<std::complex<double> >]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 143
+
+	Transition from node 2 to 1
+	Dividing by 2
+	--Move-only Semantics--
+	[sequoia::testing::(anonymous namespace)::foo<std::complex<double> >]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 154
+
+	Transition from node 0 to 1
+	Adding (1.1, -0.7)
+	[sequoia::testing::(anonymous namespace)::foo<std::complex<double> >]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 154
+
+	Transition from node 0 to 1
+	Adding (1.1, -0.7)
+	[sequoia::testing::(anonymous namespace)::foo<std::complex<double> >]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 154
+
+	Transition from node 1 to 0
+	Subtracting (1.1, -0.7)
+	[sequoia::testing::(anonymous namespace)::foo<std::complex<double> >]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 154
+
+	Transition from node 1 to 0
+	Subtracting (1.1, -0.7)
+	[sequoia::testing::(anonymous namespace)::foo<std::complex<double> >]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 154
+
+	Transition from node 1 to 2
+	Multiplying by 2
+	[sequoia::testing::(anonymous namespace)::foo<std::complex<double> >]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 154
+
+	Transition from node 1 to 2
+	Multiplying by 2
+	[sequoia::testing::(anonymous namespace)::foo<std::complex<double> >]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 154
+
+	Transition from node 2 to 1
+	Dividing by 2
+	[sequoia::testing::(anonymous namespace)::foo<std::complex<double> >]
+
+	=======================================
+
+	False Positive Failure:
+	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 154
+
+	Transition from node 2 to 1
+	Dividing by 2
+	[sequoia::testing::(anonymous namespace)::foo<std::complex<double> >]
 
 	=======================================
 

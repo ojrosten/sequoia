@@ -11,53 +11,51 @@
 
 #include "sequoia/TestFramework/StateTransitionUtilities.hpp"
 
+#include <complex>
+
 namespace sequoia::testing
 {
   namespace
   {
-    struct bar
+    template<class T>
+    struct foo
     {
-      bar() = default;
+      foo() = default;
 
-      explicit bar(double val)
-        : x{val}
+      explicit foo(T val)
+        : z{val}
       {}
 
-      bar(const bar&)     = delete;
-      bar(bar&&) noexcept = default;
+      foo(const foo&)     = delete;
+      foo(foo&&) noexcept = default;
 
-      bar& operator=(const bar&)     = delete;
-      bar& operator=(bar&&) noexcept = default;
+      foo& operator=(const foo&)     = delete;
+      foo& operator=(foo&&) noexcept = default;
 
-      double x{};
-
-      [[nodiscard]]
-      friend auto operator<=>(const bar&, const bar&) noexcept = default;
+      T z{};
 
       [[nodiscard]]
-      friend bar operator-(const bar& lhs, const bar& rhs)
+      friend auto operator<=>(const foo&, const foo&) noexcept = default;
+
+      [[nodiscard]]
+      friend foo operator-(const foo& lhs, const foo& rhs)
       {
-        return bar{lhs.x - rhs.x};
+        return foo{lhs.z - rhs.z};
       }
 
       template<class Stream>
-      friend Stream& operator<<(Stream& s, const bar& b)
+      friend Stream& operator<<(Stream& s, const foo& b)
       {
-        s << b.x;
+        s << b.z;
         return s;
       }
     };
 
+    template<class T>
     [[nodiscard]]
-    std::string to_string(const bar& f)
+    double abs(const foo<T>& f)
     {
-      return std::to_string(f.x);
-    }
-
-    [[nodiscard]]
-    bar abs(const bar& f)
-    {
-      return bar{std::abs(f.x)};
+      return std::abs(f.z);
     }
   }
 
@@ -69,41 +67,91 @@ namespace sequoia::testing
 
   void move_only_state_transition_false_negative_diagnostics::run_tests()
   {
-    using bar_graph = transition_checker<bar>::transition_graph;
-    using edge_t = transition_checker<bar>::edge;
+    test_orderable();
+    test_equality_comparable();
+  }
 
-    bar_graph g{
-      { { edge_t{1, "Adding 1.1", [](const bar& f) -> bar { return bar{f.x + 1.1}; }, std::weak_ordering::greater }},
+  void move_only_state_transition_false_negative_diagnostics::test_orderable()
+  {
+    using foo_t     = foo<double>;
+    using foo_graph = transition_checker<foo_t>::transition_graph;
+    using edge_t    = transition_checker<foo_t>::edge;
 
-        { edge_t{0, "Subtracting 1.1", [](const bar& f) -> bar { return bar{f.x - 1.1}; }, std::weak_ordering::less},
-          edge_t{2, "Multiplying by 2", [](const bar& f) -> bar { return bar{f.x * 2}; }, std::weak_ordering::greater} },
+    foo_graph g{
+      { { edge_t{1, "Adding 1.1", [](const foo_t& f) -> foo_t { return foo_t{f.z + 1.1}; }, std::weak_ordering::greater }},
 
-        { edge_t{1, "Dividing by 2", [](const bar& f) -> bar { return bar{f.x / 2}; }, std::weak_ordering::less} }
+        { edge_t{0, "Subtracting 1.1", [](const foo_t& f) -> foo_t { return foo_t{f.z - 1.1}; }, std::weak_ordering::less},
+          edge_t{2, "Multiplying by 2", [](const foo_t& f) -> foo_t { return foo_t{f.z * 2}; }, std::weak_ordering::greater} },
+
+        { edge_t{1, "Dividing by 2", [](const foo_t& f) -> foo_t { return foo_t{f.z / 2}; }, std::weak_ordering::less} }
       },
-      {[](){ return bar{}; }, [](){ return bar{1.1}; }, [](){ return bar{2.2}; }}
+      {[](){ return foo_t{}; }, [](){ return foo_t{1.1}; }, [](){ return foo_t{2.2}; }}
     };
 
     {
       auto checker{
-        [this](std::string_view description, std::function<bar()> obtained, std::function<bar()> prediction, std::function<bar()> parent, std::weak_ordering ordering) {
+        [this](std::string_view description, std::function<foo_t()> obtained, std::function<foo_t()> prediction, std::function<foo_t()> parent, std::weak_ordering ordering) {
           check(equality, description, obtained(), prediction());
-          check(within_tolerance{bar{0.1}}, description, obtained(), prediction());
+          check(within_tolerance{0.1}, description, obtained(), prediction());
           check_semantics(description, prediction, parent, ordering);
         }
       };
 
-      transition_checker<bar>::check(LINE(""), g, checker);
+      transition_checker<foo_t>::check(LINE(""), g, checker);
     }
 
     {
       auto checker{
-        [this](std::string_view description, const bar& obtained, const bar& prediction) {
+        [this](std::string_view description, const foo_t& obtained, const foo_t& prediction) {
           check(equality, description, obtained, prediction);
-          check(within_tolerance{bar{0.1}}, description, obtained, prediction);
+          check(within_tolerance{0.1}, description, obtained, prediction);
         }
       };
 
-      transition_checker<bar>::check(LINE(""), g, checker);
+      transition_checker<foo_t>::check(LINE(""), g, checker);
+    }
+  }
+
+  void move_only_state_transition_false_negative_diagnostics::test_equality_comparable()
+  {
+    using cmplx = std::complex<double>;
+    using foo_t = foo<cmplx>;
+    using complex_graph = transition_checker<foo_t>::transition_graph;
+    using edge_t = transition_checker<foo_t>::edge;
+
+    complex_graph g{
+      { { edge_t{1, "Adding (1.1, -0.7)", [](const foo_t& f) { return foo_t{f.z + cmplx{1.1, -0.7}}; } } },
+
+        { edge_t{0, "Subtracting (1.1, -0.7)", [](const foo_t& f) { return foo_t{f.z - cmplx{1.1, -0.7}}; } },
+          edge_t{2, "Multiplying by 2", [](const foo_t& f) { return foo_t{f.z * 2.0}; } }
+        },
+
+        { edge_t{1, "Dividing by 2", [](const foo_t& f) { return foo_t{f.z / 2.0}; }}}
+      },
+      {[]() { return foo_t{}; }, []() { return foo_t{{1.1, -0.7}}; }, []() { return foo_t{{2.2, -1.4}}; }}
+    };
+
+    {
+      auto checker{
+        [this](std::string_view description, std::function<foo_t()> obtained, std::function<foo_t()> prediction, std::function<foo_t()> parent) {
+          check(equality, description, obtained(), prediction());
+          check(within_tolerance{0.1}, description, obtained(), prediction());
+          check_semantics(description, prediction, parent);
+        }
+      };
+
+      transition_checker<foo_t>::check(LINE(""), g, checker);
+    }
+
+    {
+      auto checker{
+        [this](std::string_view description, const foo_t& obtained, const foo_t& prediction) {
+          check(equality, description, obtained, prediction);
+          check(within_tolerance{0.1}, description, obtained, prediction);
+        }
+      };
+
+      transition_checker<foo_t>::check(LINE(""), g, checker);
     }
   }
 
@@ -115,24 +163,55 @@ namespace sequoia::testing
 
   void move_only_state_transition_false_positive_diagnostics::run_tests()
   {
-    using bar_graph = transition_checker<bar>::transition_graph;
-    using edge_t = transition_checker<bar>::edge;
+    test_orderable();
+    test_equality_comparable();
+  }
 
-    bar_graph g{
-      { { edge_t{1, "Adding 1.1", [](const bar& f) -> bar { return bar{f.x + 1.0}; }, std::weak_ordering::greater }},
-        { edge_t{0, "Subtracting 1.1", [](const bar& f) -> bar { return bar{f.x - 1.0}; }, std::weak_ordering::less} },
+  void move_only_state_transition_false_positive_diagnostics::test_orderable()
+  {
+    using foo_t     = foo<double>;
+    using foo_graph = transition_checker<foo_t>::transition_graph;
+    using edge_t    = transition_checker<foo_t>::edge;
+
+    foo_graph g{
+      { { edge_t{1, "Adding 1.1", [](const foo_t& f) -> foo_t { return foo_t{f.z + 1.0}; }, std::weak_ordering::greater }},
+        { edge_t{0, "Subtracting 1.1", [](const foo_t& f) -> foo_t { return foo_t{f.z - 1.0}; }, std::weak_ordering::less} },
       },
-      {[](){ return bar{}; }, [](){ return bar{1.1}; }}
+      {[](){ return foo_t{}; }, [](){ return foo_t{1.1}; }}
     };
 
-    g.node_weight(g.cbegin_node_weights()+1, [](){ return bar{1.1}; });
+    g.node_weight(g.cbegin_node_weights()+1, [](){ return foo_t{1.1}; });
 
     auto checker{
-        [this](std::string_view description, const bar& obtained, const bar& prediction) {
+        [this](std::string_view description, const foo_t& obtained, const foo_t& prediction) {
           check(equality, description, obtained, prediction);
         }
     };
 
-    transition_checker<bar>::check(LINE("Mistake in transition functions"), g, checker);
+    transition_checker<foo_t>::check(LINE("Mistake in transition functions"), g, checker);
+  }
+
+  void move_only_state_transition_false_positive_diagnostics::test_equality_comparable()
+  {
+    using cmplx = std::complex<double>;
+    using foo_t = foo<cmplx>;
+    using complex_graph = transition_checker<foo_t>::transition_graph;
+    using edge_t = transition_checker<foo_t>::edge;
+
+    complex_graph g{
+      { { edge_t{1, "Adding (1.1, -0.7)", [](const foo_t& f) { return foo_t{f.z + cmplx{1.0, -0.7}}; } } },
+
+        { edge_t{0, "Subtracting (1.1, -0.7)", [](const foo_t& f) { return foo_t{f.z - cmplx{1.0, -0.7}}; } } }
+      },
+      {[]() { return foo_t{}; }, []() { return foo_t{{1.1, -0.7}}; }}
+    };
+
+    auto checker{
+        [this](std::string_view description, const foo_t& obtained, const foo_t& prediction) {
+          check(equality, description, obtained, prediction);
+        }
+    };
+
+    transition_checker<foo_t>::check(LINE("Mistake in transition functions"), g, checker);
   }
 }

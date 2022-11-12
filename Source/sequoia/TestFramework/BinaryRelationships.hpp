@@ -40,7 +40,7 @@ namespace sequoia::testing
 
       \anchor within_tolerance_primary
    */
-  template<class ToleranceType>
+  template<std::totally_ordered ToleranceType>
   class within_tolerance
   {
     ToleranceType m_Tol{};
@@ -50,10 +50,10 @@ namespace sequoia::testing
     constexpr explicit within_tolerance(ToleranceType tol) : m_Tol{std::move(tol)} {};
 
     template<class T>
-    constexpr static bool has_std_abs{requires(const T & x) { { std::abs(x) } -> std::convertible_to<ToleranceType>; }};
+    constexpr static bool has_std_abs{requires(const T& x) { { std::abs(x) } -> std::convertible_to<ToleranceType>; }};
 
     template<class T>
-    constexpr static bool has_adl_abs{requires(const T & x) { { abs(x) } -> std::convertible_to<ToleranceType>; }};
+    constexpr static bool has_adl_abs{requires(const T& x) { { abs(x) } -> std::convertible_to<ToleranceType>; }};
 
     [[nodiscard]]
     constexpr const tolerance_type& tol() const noexcept
