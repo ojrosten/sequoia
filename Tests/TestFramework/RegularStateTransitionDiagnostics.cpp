@@ -30,7 +30,7 @@ namespace sequoia::testing
   void regular_state_transition_false_negative_diagnostics::test_orderable()
   {
     using double_graph = transition_checker<double>::transition_graph;
-    using edge_t = transition_checker<double>::edge;
+    using edge_t       = transition_checker<double>::edge;
 
     double_graph g{
       { { edge_t{1, "Adding 1.1", [](double f)  { return f + 1.1; }, std::weak_ordering::greater} },
@@ -82,9 +82,9 @@ namespace sequoia::testing
 
   void regular_state_transition_false_negative_diagnostics::test_equality_comparable()
   {
-    using cmplx = std::complex<double>;
+    using cmplx         = std::complex<double>;
     using complex_graph = transition_checker<cmplx>::transition_graph;
-    using edge_t = transition_checker<cmplx>::edge;
+    using edge_t        = transition_checker<cmplx>::edge;
 
     complex_graph g{
       { { edge_t{1, "Adding (1.1, -0.7)", [](cmplx f) { return f + cmplx{1.1, -0.7}; } } },
@@ -110,6 +110,28 @@ namespace sequoia::testing
       transition_checker<cmplx>::check(LINE(""), g, checker);
     }
 
+    {
+      auto checker{
+        [this](std::string_view description, std::function<cmplx()> obtained, std::function<cmplx()> prediction, std::function<cmplx()> parent) {
+          check(equality, description, obtained(), prediction());
+          check(within_tolerance{0.1}, description, obtained(), prediction());
+          check_semantics(description, prediction(), parent());
+        }
+      };
+
+      transition_checker<cmplx>::check(LINE(""), g, checker);
+    }
+
+    {
+      auto checker{
+        [this](std::string_view description, cmplx obtained, cmplx prediction) {
+          check(equality, description, obtained, prediction);
+          check(within_tolerance{0.1}, description, obtained, prediction);
+        }
+      };
+
+      transition_checker<cmplx>::check(LINE(""), g, checker);
+    }
   }
 
   [[nodiscard]]
@@ -127,7 +149,7 @@ namespace sequoia::testing
   void regular_state_transition_false_positive_diagnostics::test_orderable()
   {
     using double_graph = transition_checker<double>::transition_graph;
-    using edge_t = transition_checker<double>::edge;
+    using edge_t       = transition_checker<double>::edge;
 
     double_graph g{
       { { edge_t{1, "Adding 1.1", [](double f) { return f + 1.0; }, std::weak_ordering::greater } },
@@ -147,5 +169,24 @@ namespace sequoia::testing
 
   void regular_state_transition_false_positive_diagnostics::test_equality_comparable()
   {
+    using cmplx         = std::complex<double>;
+    using complex_graph = transition_checker<cmplx>::transition_graph;
+    using edge_t        = transition_checker<cmplx>::edge;
+
+    complex_graph g{
+      { { edge_t{1, "Adding (1.1, -0.7)", [](cmplx f) { return f + cmplx{1.0, -0.7}; } } },
+
+        { edge_t{0, "Subtracting (1.1, -0.7)", [](cmplx f) { return f - cmplx{1.0, -0.7}; } } }
+      },
+      {cmplx{0.0, 0.0}, cmplx{1.1, -0.7}}
+    };
+
+    auto checker{
+        [this](std::string_view description, cmplx obtained, cmplx prediction) {
+          check(equality, description, obtained, prediction);
+        }
+    };
+
+    transition_checker<cmplx>::check(LINE("Mistake in transition functions"), g, checker);
   }
 }

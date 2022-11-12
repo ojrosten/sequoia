@@ -94,6 +94,46 @@ namespace sequoia::testing
       check(g, edgeFn);
     }
 
+    template<std::invocable<std::string, T, T, T, std::weak_ordering> CheckFn>
+      requires (std::totally_ordered<T>&& pseudoregular<T>)
+    static void check(std::string_view description, const transition_graph& g, CheckFn checkFn)
+    {
+      auto edgeFn{
+        [description,&g,checkFn](auto i) {
+          const auto [parent,target,message] {make(description, i)};
+
+          const auto parentIter{(g.cbegin_node_weights() + parent)};
+          const auto& w{i->weight()};
+          checkFn(message,
+                  w.fn(parentIter->fn()),
+                  (g.cbegin_node_weights() + target)->fn(),
+                  parentIter->fn(),
+                  w.ordering);
+        }
+      };
+
+      check(g, edgeFn);
+    }
+
+    template<std::invocable<std::string, std::function<T()>, std::function<T()>, std::function<T()>> CheckFn>
+    static void check(std::string_view description, const transition_graph& g, CheckFn checkFn)
+    {
+      auto edgeFn{
+        [description,&g,checkFn](auto i) {
+          const auto [parent,target,message] {make(description, i)};
+
+          const auto parentIter{(g.cbegin_node_weights() + parent)};
+          const auto& w{i->weight()};
+          checkFn(message,
+                  [&]() { return w.fn(parentIter->fn()); },
+                  (g.cbegin_node_weights() + target)->fn,
+                  parentIter->fn);
+        }
+      };
+
+      check(g, edgeFn);
+    }
+
     template<std::invocable<std::string, std::function<T()>, std::function<T()>, std::function<T()>, std::weak_ordering> CheckFn>
       requires std::totally_ordered<T>
     static void check(std::string_view description, const transition_graph& g, CheckFn checkFn)
@@ -115,26 +155,7 @@ namespace sequoia::testing
       check(g, edgeFn);
     }
 
-    template<std::invocable<std::string, T, T, T, std::weak_ordering> CheckFn>
-      requires (std::totally_ordered<T> && pseudoregular<T>)
-    static void check(std::string_view description, const transition_graph& g, CheckFn checkFn)
-    {
-      auto edgeFn{
-        [description,&g,checkFn](auto i) {
-          const auto [parent,target,message] {make(description, i)};
 
-          const auto parentIter{(g.cbegin_node_weights() + parent)};
-          const auto& w{i->weight()};
-          checkFn(message,
-                  w.fn(parentIter->fn()),
-                  (g.cbegin_node_weights() + target)->fn(),
-                  parentIter->fn(),
-                  w.ordering);
-        }
-      };
-
-      check(g, edgeFn);
-    }
   private:
     using edge_iterator = typename transition_graph::const_edge_iterator;
     using size_type = typename transition_graph::size_type;

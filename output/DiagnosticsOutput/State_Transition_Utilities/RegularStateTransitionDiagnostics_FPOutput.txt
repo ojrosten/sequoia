@@ -1,4 +1,4 @@
-	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 145
+	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 167
 	Mistake in transition functions
 
 	Transition from node 0 to 1
@@ -10,7 +10,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 145
+	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 167
 	Mistake in transition functions
 
 	Transition from node 1 to 0
@@ -19,6 +19,30 @@
 	operator== returned false
 	Obtained : 0.1
 	Predicted: 0
+
+	=======================================
+
+	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 190
+	Mistake in transition functions
+
+	Transition from node 0 to 1
+	Adding (1.1, -0.7)
+	[std::complex<double>]
+	operator== returned false
+	Obtained : (1,-0.7)
+	Predicted: (1.1,-0.7)
+
+	=======================================
+
+	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 190
+	Mistake in transition functions
+
+	Transition from node 1 to 0
+	Subtracting (1.1, -0.7)
+	[std::complex<double>]
+	operator== returned false
+	Obtained : (0.1,0)
+	Predicted: (0,0)
 
 	=======================================
 
