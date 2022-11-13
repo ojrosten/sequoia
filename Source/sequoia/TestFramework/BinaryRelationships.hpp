@@ -50,10 +50,10 @@ namespace sequoia::testing
     constexpr explicit within_tolerance(ToleranceType tol) : m_Tol{std::move(tol)} {};
 
     template<class T>
-    constexpr static bool has_std_abs{requires(const T& x) { { std::abs(x) } -> std::convertible_to<ToleranceType>; }};
+    constexpr static bool has_std_abs{requires(const T& x) { { std::abs(x) } -> std::same_as<ToleranceType>; }};
 
     template<class T>
-    constexpr static bool has_adl_abs{requires(const T& x) { { abs(x) } -> std::convertible_to<ToleranceType>; }};
+    constexpr static bool has_adl_abs{requires(const T& x) { { abs(x) } -> std::same_as<ToleranceType>; }};
 
     [[nodiscard]]
     constexpr const tolerance_type& tol() const noexcept
