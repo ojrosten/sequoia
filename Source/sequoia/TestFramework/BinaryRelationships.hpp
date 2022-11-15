@@ -22,11 +22,22 @@
 
 namespace sequoia::testing
 {
-   /*! \brief Specialize this struct template to provide custom reporting for comparisons
-              performed with a binary operator.
+  namespace abs_detail
+  {
+    using std::abs;
 
-      \anchor failure_reporter_primary
-   */
+    template<class T, class NormType>
+    constexpr static bool has_abs{requires(const T& x) { { abs(x) } -> std::same_as<NormType>; }};
+  }
+
+  template<class T, class NormType>
+  constexpr static bool has_abs{abs_detail::has_abs<T, NormType>};
+
+  /*! \brief Specialize this struct template to provide custom reporting for comparisons
+             performed with a binary operator.
+
+     \anchor failure_reporter_primary
+  */
   
   template<class Compare>
   struct failure_reporter
@@ -49,20 +60,14 @@ namespace sequoia::testing
 
     constexpr explicit within_tolerance(ToleranceType tol) : m_Tol{std::move(tol)} {};
 
-    template<class T>
-    constexpr static bool has_std_abs{requires(const T& x) { { std::abs(x) } -> std::same_as<ToleranceType>; }};
-
-    template<class T>
-    constexpr static bool has_adl_abs{requires(const T& x) { { abs(x) } -> std::same_as<ToleranceType>; }};
-
     [[nodiscard]]
-    constexpr const tolerance_type& tol() const noexcept
+    constexpr tolerance_type tol() const noexcept
     {
       return m_Tol;
     }
 
     template<class T>
-      requires (has_std_abs<T> || has_adl_abs<T>)
+      requires has_abs<T, ToleranceType>
     [[nodiscard]]
     constexpr bool operator()(const T& obtained, const T& prediction) const noexcept
     {
